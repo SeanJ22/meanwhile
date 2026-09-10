@@ -230,7 +230,7 @@ test("legistar's composite wrapper conserves, and agrees with the adapter EXACTL
    * function.
    */
   const { normalizeWithDrops } = await import("../lib/sources/legistar/index.ts");
-  const { CAPABILITIES } = await import("../lib/sources/composite/wiring.ts");
+  const { CAPABILITIES, wiringForSourceName } = await import("../lib/sources/composite/wiring.ts");
 
   const events = JSON.parse(
     readFileSync(join(import.meta.dirname, "fixtures", "legistar-pima-events.json"), "utf8"),
@@ -252,7 +252,7 @@ test("legistar's composite wrapper conserves, and agrees with the adapter EXACTL
 
   const cap = CAPABILITIES.find((c) => c.name === "legistar");
   assert.ok(cap, "the legistar capability must be registered");
-  const child = cap.make([]);
+  const child = cap.make(wiringForSourceName("legistar"));
   assert.ok(child.normalizeWithDrops, "the legistar child must report its drops");
   const wrapped = child.normalizeWithDrops(raw as never, now) as unknown as {
     accounting: Record<string, unknown>;

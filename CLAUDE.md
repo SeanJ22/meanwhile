@@ -140,16 +140,16 @@ One line each. The clauses are in the policy named.
 
 **Shipping**
 - Verify locally, ship once, name the deploy. One integration owner, one combined head, one merge at the end. (266)
-- A gate is real or it is not a gate: run the exact set CI requires, name each, and a check that cannot run says so. (267)
-- Reader-facing truth changes through exactly one door, the nightly window, in shadow until READER, TRUTH and FRESHNESS are independently reproduced. (268)
+- A gate is real or it is not a gate: run the exact set CI requires, name each, and a check that cannot run says so. (287)
+- Reader-facing routine civic truth changes through exactly one door: validated candidate/version promotion in the production data plane, scheduled only by the standing runner; bounded source shadows may compare, but two authoritative writers may never persist. (282)
 - An operation that can return nothing is asked what it returned; a zero-row extraction is a failed extraction. (269)
 - A session checks a prerequisite once and never polls; an unmet proof blocks activation, not merge, when the code is inert and guarded; one session at a time touches shared infrastructure. (277)
-- Classify first, spend second: only a positively proven non-shipping commit takes the cheap path, and it attests rather than disappears; shipping, mixed and unknown take the full proof; no workflow keeps a second path table. (278)
+- GitHub Actions has no runtime path-cost tier: draft PR activity gets deterministic structural checks; ready PRs and ordinary pushes get full normal certification; exact-tree reuse stays fail-closed, and deploy classification never suppresses Build Check. (285)
 - Cheap deterministic checks run first and all report; a head that fails them does not buy the browser, the suite or the builds; the corrected head runs the full verification, and a withheld tier fails loudly rather than skipping quietly. (279)
-- Runtime freshness is typed local stages: acquisition is its own sealed failure domain, certification runs only the proofs that depend on the changed holding, promotion coalesces to at most one commit, one grant table governs every scarce provider, and escalation is thresholded on how long a thing has been owed. (280)
-- One clock. Authority transfers by derivation from the proof state, never by decision, and neither two authoritative clocks nor none is a lawful arrangement. (280)
-- One logical change is one shipping transaction with one expensive certification; the head freezes before the spend and reopens only on a named invalidation with evidence. (281)
-- The subject of a correctness proof is a tree, not a SHA: a shipped tree proven identical to the certified candidate attests rather than re-runs, fails closed in every direction, and never rests on another attestation. (281)
+- Runtime freshness is typed durable local stages: acquisition is its own sealed failure domain, certification runs only proofs that depend on the changed holding, and promotion atomically advances a production data pointer or durably receipts a validated no-change with zero Git commits, software builds or deploys. (283)
+- One clock: the standing runner is the sole routine civic-data freshness clock. A proved source cutover disables its old writer in the same transaction; neither two authoritative clocks nor none is lawful. (283)
+- One logical change is one shipping transaction with one expensive certification; the head freezes before the spend and reopens only on a named invalidation with evidence. (288)
+- The subject of a correctness proof is a tree, not a SHA: a shipped tree proven identical to the certified candidate attests rather than re-runs, fails closed in every direction, and never rests on another attestation. (288)
 
 **Sessions**
 - A session runs unattended; nothing it runs may ask it a question; a decision that is the author's becomes a row and the session continues. (271)
@@ -172,12 +172,12 @@ One line each. The clauses are in the policy named.
 Next.js App Router + TypeScript + React. Tailwind + shadcn/ui; tokens in
 `docs/DESIGN.md` and `app/globals.css`. Postgres on Neon through Drizzle;
 schema changes only through migrations (`pnpm db:apply`). Deployed on Netlify,
-never Vercel; the build is the command in `netlify.toml`. Scheduler is GitHub
-Actions for code CI only; the standing runner is the freshness clock. Auth.js
+never Vercel; the build is the command in `netlify.toml`. GitHub Actions is
+software CI only; the standing runner is the sole routine civic-data freshness clock. Auth.js
 email magic link only; owner admin through Sign in with Google. MapLibre GL
 with a vector tile provider. Mobile is responsive web first. What is installed
-lives in `package.json` and `pnpm-lock.yaml`; what runs when lives in
-`lib/ops/refresh-cadence.ts`.
+lives in `package.json` and `pnpm-lock.yaml`; routine civic-data timing derives
+from the one typed source-contract registry executed by the standing runner.
 
 ## Repo layout
 

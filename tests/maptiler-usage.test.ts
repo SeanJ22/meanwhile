@@ -11,13 +11,24 @@ import {
   timelineUrl,
   type MapTilerTimeline,
 } from "../lib/control-plane/maptiler/client.ts";
+import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
+import { readMapTilerUsageDigests } from "../lib/control-plane/admin-data.ts";
+import {
+  appendMapTilerUsageCollectionDigest,
+  mapTilerUsageCollectionOutcome,
+  mapTilerUsageCollectionOutcomes,
+} from "../lib/control-plane/freshness-cycle-outcome.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
   allowanceFrom,
+  maptilerHistoryNumbers,
   maptilerSectionNumbers,
   burnFrom,
   classifyKeyLabel,
   normalizeTimeline,
+  projectMapTilerAttemptHistory,
   projectPanel,
+  retainMapTilerLastKnownGood,
 } from "../lib/control-plane/maptiler/usage.ts";
 import {
   DEFAULT_MAPTILER_ALLOWANCE,
@@ -26,7 +37,11 @@ import {
   type MapTilerUsageDay,
   type MapTilerUsageSnapshot,
 } from "../lib/control-plane/maptiler/types.ts";
-import { assertAggregateOnly, auditRenderedNumbers } from "../lib/control-plane/owner-surface.ts";
+import {
+  assertAggregateOnly,
+  auditRenderedNumbers,
+  ownerDigestAttention,
+} from "../lib/control-plane/owner-surface.ts";
 
 /**
  * **THE BILL, READ BACK** (MAPQ-5 through MAPQ-7, 2026-09-07).
@@ -210,6 +225,21 @@ test("a 200 records enough provenance to audit the number back to the bytes", as
   assert.equal(result.provenance.error, null);
 });
 
+test("a 200 with no measured rows is a failed extraction, never measured zero", async () => {
+  const body = JSON.stringify({ since: "2026-09-01", until: "2026-09-30", datasets: [] });
+  const result = await fetchTimeline({
+    period: "current_billing_period",
+    classifier: "api_keys",
+    group: "request",
+    token: "T",
+    nowIso: "2026-09-07T12:00:00.000Z",
+    fetcher: async () => ({ status: 200, text: async () => body }),
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.timeline, null);
+  assert.match(result.provenance.error ?? "", /zero-row extraction/i);
+});
+
 test("a token never survives a message", () => {
   assert.equal(scrubToken("failed with abc123 in it", "abc123"), "failed with <redacted> in it");
   assert.equal(scrubToken("nothing to hide", null), "nothing to hide");
@@ -245,6 +275,196 @@ test("services stay separable — Tiles and Rendered maps never collapse", async
     panel.byService.every((s) => s.requests > 0),
     "a service row with no number explains nothing",
   );
+});
+
+test("normalization refuses omitted identities, dates, and counts instead of manufacturing zero", () => {
+  const timeline = (dataset: object): MapTilerTimeline => ({
+    since: "2026-09-01",
+    until: "2026-09-30",
+    datasets: [dataset],
+  });
+  assert.throws(
+    () => normalizeTimeline({ timeline: timeline({ data: [{ date: "2026-09-01", value: 1 }] }), classifier: "api_keys", group: "request" }),
+    /ITEM_ID_MISSING/,
+  );
+  assert.throws(
+    () => normalizeTimeline({ timeline: timeline({ item_id: "key", data: [{ value: 1 }] }), classifier: "api_keys", group: "request" }),
+    /DATE_INVALID/,
+  );
+  assert.throws(
+    () => normalizeTimeline({ timeline: timeline({ item_id: "key", data: [{ date: "2026-09-01" }] }), classifier: "api_keys", group: "request" }),
+    /COUNT_INVALID/,
+  );
+  assert.throws(
+    () => normalizeTimeline({ timeline: timeline({ item_id: "key", data: [{ date: "2026-09-01", value: -1 }] }), classifier: "api_keys", group: "request" }),
+    /COUNT_INVALID/,
+  );
+});
+
+test("the standing collector refuses a partial classifier answer", async () => {
+  const keys = JSON.stringify(await fixture("maptiler-timeline-api-keys.json"));
+  const candidate = await collectMapTilerUsage({
+    nowIso: "2026-09-08T12:00:00.000Z",
+    token: "T",
+    fetcher: async (url) => url.includes("classifier=api_keys")
+      ? { status: 200, text: async () => keys }
+      : { status: 503, text: async () => "unavailable" },
+  });
+  assert.equal(candidate.connection, "COULD_NOT_ASK");
+  assert.equal(candidate.days.length, 0, "partial rows must never become the current measurement");
+  assert.equal(candidate.provenance.length, 2);
+  assert.match(candidate.detail ?? "", /partial result was refused/i);
+});
+
+test("the standing collector requires both classifiers to describe one billing window", async () => {
+  const keys = await fixture("maptiler-timeline-api-keys.json");
+  const services = await fixture("maptiler-timeline-services.json");
+  const candidate = await collectMapTilerUsage({
+    nowIso: "2026-09-08T12:00:00.000Z",
+    token: "T",
+    fetcher: async (url) => ({
+      status: 200,
+      text: async () => JSON.stringify(
+        url.includes("classifier=api_keys") ? keys : { ...services, until: "2026-10-01" },
+      ),
+    }),
+  });
+  assert.equal(candidate.connection, "COULD_NOT_ASK");
+  assert.match(candidate.detail ?? "", /different billing windows/i);
+});
+
+test("failed collection retains the prior measured snapshot and exposes LKG in Admin", async () => {
+  const previous = await snapshot({
+    collectedAt: "2026-09-07T12:00:00.000Z",
+    publisher: "standing-runtime/maptiler-observer",
+  });
+  const candidate = await collectMapTilerUsage({
+    nowIso: "2026-09-08T12:00:00.000Z",
+    token: "T",
+    fetcher: async () => ({ status: 503, text: async () => "unavailable" }),
+  });
+  const retained = retainMapTilerLastKnownGood({ candidate, previous });
+  assert.equal(retained.connection, "CONNECTED");
+  assert.equal(retained.collectedAt, previous.collectedAt, "failed refresh must not erase the measured instant");
+  assert.deepEqual(retained.days, previous.days, "failed refresh must not erase or partially replace LKG rows");
+  assert.equal(retained.latestAttempt?.connection, "COULD_NOT_ASK");
+  assert.equal(retained.latestAttempt?.attemptedAt, candidate.collectedAt);
+
+  const panel = projectPanel({ snapshot: retained });
+  assert.equal(panel.readingState, "MEASURED_LKG");
+  assert.match(panel.says, /last-known-good/i);
+  assert.match(panel.latestAttemptSays ?? "", /standing runner will retry/i);
+  assert.ok(panel.used !== null, "LKG remains a measured value, not an unknown or zero");
+});
+
+test("every MapTiler attempt is append-only history before the replaceable current/LKG projection", async () => {
+  const repos = createMemoryRepositories();
+  const previous = await snapshot({ publisher: "standing-runtime/maptiler-observer" });
+  const failed = await collectMapTilerUsage({
+    nowIso: "2026-09-08T12:00:00.000Z",
+    token: "T",
+    fetcher: async () => ({ status: 503, text: async () => "unavailable" }),
+  });
+  const visible = retainMapTilerLastKnownGood({ candidate: failed, previous });
+  const outcome = mapTilerUsageCollectionOutcome({
+    candidate: failed,
+    visible,
+    finishedAt: "2026-09-08T12:00:02.000Z",
+    testedSha: "a".repeat(40),
+    host: "test-host",
+    provider: repos.describe(),
+    durable: repos.durable,
+  });
+  const receipt = await appendMapTilerUsageCollectionDigest(repos, {
+    outcome,
+    lines: ["Map provider automatic collection: RETAINED_LKG."],
+  });
+  assert.equal(outcome.disposition, "RETAINED_LKG");
+  assert.equal(outcome.authorityBoundary.gitWrites, 0);
+  assert.equal(outcome.authorityBoundary.softwareReleaseEvents, 0);
+  assert.equal(ownerDigestAttention(receipt).level, "AMBER");
+
+  const keys = JSON.stringify(await fixture("maptiler-timeline-api-keys.json"));
+  const services = JSON.stringify(await fixture("maptiler-timeline-services.json"));
+  const succeeded = await collectMapTilerUsage({
+    nowIso: "2026-09-08T13:00:00.000Z",
+    token: "T",
+    actorCounter: async () => null,
+    fetcher: async (url) => ({
+      status: 200,
+      text: async () => url.includes("classifier=api_keys") ? keys : services,
+    }),
+  });
+  const current = retainMapTilerLastKnownGood({ candidate: succeeded, previous: visible });
+  const succeededOutcome = mapTilerUsageCollectionOutcome({
+    candidate: succeeded,
+    visible: current,
+    finishedAt: "2026-09-08T13:00:02.000Z",
+    testedSha: "a".repeat(40),
+    host: "test-host",
+    provider: repos.describe(),
+    durable: repos.durable,
+  });
+  await appendMapTilerUsageCollectionDigest(repos, {
+    outcome: succeededOutcome,
+    lines: ["Map provider automatic collection: PROMOTED_CURRENT."],
+  });
+
+  const stored = await repos.ownerDigests.read("owner-digest");
+  assert.equal(stored.length, 2);
+  assert.deepEqual(mapTilerUsageCollectionOutcomes(stored), [outcome, succeededOutcome]);
+  assert.equal(
+    stored[0]?.runtimeOutcome?.kind,
+    "MAPTILER_USAGE_COLLECTION",
+    "a failed attempt must not exist only on the replaceable owner snapshot",
+  );
+
+  const adminRead = await readMapTilerUsageDigests(repos);
+  assert.equal(adminRead.kind, "HELD");
+  if (adminRead.kind !== "HELD") throw new Error("map-provider history was not held");
+  assert.deepEqual(
+    adminRead.value.map((row) => row.digestId),
+    [succeededOutcome.cycleId, outcome.cycleId],
+    "Admin must read the dedicated append-only map history newest first, not filter the bounded latest-digest list",
+  );
+  const history = projectMapTilerAttemptHistory(
+    adminRead.value,
+    "2026-09-09T12:30:00.000Z",
+  );
+  assert.deepEqual(
+    history.windows.map((window) => ({
+      id: window.id,
+      attempts: window.attempts,
+      promoted: window.promotedCurrent,
+      lkg: window.retainedLkg,
+    })),
+    [
+      { id: "24h", attempts: 1, promoted: 1, lkg: 0 },
+      { id: "7d", attempts: 2, promoted: 1, lkg: 1 },
+      { id: "30d", attempts: 2, promoted: 1, lkg: 1 },
+    ],
+  );
+  assert.equal(history.attempts.length, 2, "the exact 30-day drilldown must retain both receipts");
+  assert.equal(auditRenderedNumbers(maptilerHistoryNumbers(history)).ok, true);
+});
+
+test("a missing actor aggregate is an explicit UNKNOWN beside a valid provider measurement", async () => {
+  const keys = JSON.stringify(await fixture("maptiler-timeline-api-keys.json"));
+  const services = JSON.stringify(await fixture("maptiler-timeline-services.json"));
+  const candidate = await collectMapTilerUsage({
+    nowIso: "2026-09-08T12:00:00.000Z",
+    token: "T",
+    actorCounter: async () => null,
+    fetcher: async (url) => ({
+      status: 200,
+      text: async () => url.includes("classifier=api_keys") ? keys : services,
+    }),
+  });
+  assert.equal(candidate.connection, "CONNECTED");
+  const panel = projectPanel({ snapshot: candidate });
+  assert.equal(panel.readingState, "MEASURED_CURRENT");
+  assert.equal(panel.actors?.state, "UNKNOWN");
+  assert.match(panel.actors?.says ?? "", /unknown, not zero/i);
 });
 
 /* -------------------------------------------------------------- classify */
@@ -477,6 +697,9 @@ test("the admin page audits the map panel from the same projection it renders", 
 
   assert.match(src, /maptilerSectionNumbers[(]/, "the page must feed the panel's numbers to the audit");
   assert.match(src, /numbers[.]push[(][.][.][.]maptilerSectionNumbers[(]/, "they must land in the audited array");
+  assert.match(src, /readMapTilerUsageDigests[(]/, "Admin must read the dedicated append-only provider history");
+  assert.match(src, /projectMapTilerAttemptHistory[(]/, "Admin must project 24h, 7d and 30d windows from durable receipts");
+  assert.match(src, /numbers[.]push[(][.][.][.]maptilerHistoryNumbers[(]/, "history figures must land in the page audit");
 
   /* ONE projection, shared. */
   const projections = [...src.matchAll(/projectPanel[(]/g)].length;
@@ -487,11 +710,23 @@ test("the admin page audits the map panel from the same projection it renders", 
       "same object to both the audit and the component, or it can audit one set of numbers " +
       "and render another",
   );
-  assert.match(src, /<MapTilerSection panel=[{]maptilerPanel[}]/, "the component must render the audited projection");
+  assert.match(
+    src,
+    /<MapTilerSection[\s\S]*?panel=[{]maptilerPanel[}][\s\S]*?history=[{]maptilerHistory[}]/,
+    "the component must render both audited current/LKG and append-only history projections",
+  );
 
   /* And the audit must still run AFTER the numbers are pushed. */
   const pushAt = src.indexOf("maptilerSectionNumbers(");
   const auditAt = src.indexOf("auditRenderedNumbers(numbers)");
   assert.ok(pushAt > 0 && auditAt > 0, "both the push and the audit must be present");
   assert.ok(pushAt < auditAt, "the numbers must be pushed before the audit reads the array");
+
+  const section = await readFile(
+    join(process.cwd(), "app", "(admin)", "admin", "sections", "maptiler.tsx"),
+    "utf8",
+  );
+  for (const visible of ["Automatic collection history", "history.windows.map", "history.attempts.map", "Receipt <code>"]) {
+    assert.match(section, new RegExp(visible.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${visible} is not visibly rendered`);
+  }
 });

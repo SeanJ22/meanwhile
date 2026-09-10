@@ -784,29 +784,3 @@ export function buildCorpusDocument(input: {
     candidacies: input.normalized.candidacies,
   };
 }
-
-/** Where the corpus lands. `scripts/candidate-universe.mts` globs this directory. */
-export const CORPUS_PATH = "data/states/az/candidates/az-2026-sos-candidate-filings.json";
-
-/**
- * Write the corpus.
- *
- * Refuses a document carrying no candidacies, for the same reason
- * `extractFilingRows` refuses a zero: the only thing worse than not having the
- * corpus is having an empty one that every downstream denominator believes.
- */
-export async function upsertCorpus(
-  doc: CorpusDocument,
-  root: string,
-): Promise<{ readonly path: string; readonly bytes: number }> {
-  const { writeFileSync, mkdirSync } = await import("node:fs");
-  const { join, dirname } = await import("node:path");
-  if (doc.candidacies.length === 0 || doc.contests.length === 0) {
-    throw new Error(`${SOURCE_NAME}: refusing to write a corpus with zero contests or zero candidacies`);
-  }
-  const path = join(root, CORPUS_PATH);
-  mkdirSync(dirname(path), { recursive: true });
-  const body = `${JSON.stringify(doc, null, 1)}\n`;
-  writeFileSync(path, body, "utf8");
-  return { path: CORPUS_PATH, bytes: Buffer.byteLength(body, "utf8") };
-}

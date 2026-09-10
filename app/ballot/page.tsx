@@ -2,7 +2,12 @@ import Link from "next/link";
 import { FilingChanges } from "@/components/ballot/filing-changes";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
-import { BALLOT_SOURCES } from "@/lib/ballot/registry";
+import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
+import {
+  ballotAuxiliaryPreloadSucceeded,
+  settleBallotAuxiliaryPreloads,
+  type BallotAuxiliaryFamily,
+} from "@/lib/ballot/auxiliary-preloads";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
@@ -59,11 +64,15 @@ import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
-import { registrationLinkFor } from "@/lib/ballot/registration-links";
-import { pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
+import { currentRegistrationLinks, registrationLinkFor } from "@/lib/ballot/registration-links";
+import { currentPollingPlaceLinks, pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
+import {
+  nhLegislativeRosterAppliesTo,
+  refreshNhSeatHolders,
+} from "@/lib/ballot/seat-holders";
 import {
   IncumbentNameLink,
 } from "@/components/ballot/incumbent-record-link";
@@ -75,6 +84,17 @@ import {
   type FundingAnswer,
 } from "@/lib/funding/display";
 import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
+import { refreshStateMoneyProjectionFromPromoted } from "@/lib/funding/state-snapshot";
+import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
+import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
+import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import {
+  refreshCandidateCorpusFromPromoted,
+  refreshCandidateProfilesFromPromoted,
+} from "@/lib/civic-data/manual-read-models";
+import {
+  refreshBallotNavigationFromPromoted,
+} from "@/lib/civic-data/curated-reader-read-model";
 import {
   FundingAbsence,
   FundingDisplay,
@@ -305,7 +325,15 @@ async function IncumbentName({
   name: string;
   context: { zip: string; lat: number; lng: number } | null;
 }) {
-  const holder = await incumbentHolderFor(targetKey);
+  let holder: SeatHolder | null = null;
+  try {
+    holder = await incumbentHolderFor(targetKey);
+  } catch {
+    // The page-level canonical holding notice names this failure. The filed
+    // ballot name remains valid and must not disappear with an optional
+    // officeholder join.
+    holder = null;
+  }
   if (!holder) {
     return (
       <span className="text-[0.9375rem] font-semibold tracking-tight">{name}</span>
@@ -320,16 +348,18 @@ async function IncumbentName({
 function CandidateFunding({
   targetKey,
   context,
+  available,
 }: {
   targetKey: string;
   context: { zip: string; lat: number; lng: number } | null;
+  available: boolean;
 }) {
+  if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
   try {
     answer = fundingAnswerForTarget(targetKey);
   } catch {
-    // A missing snapshot renders nothing — never an error in the reader's way.
-    return null;
+    return unavailableHolding("federal campaign-finance");
   }
   if (answer.kind === "none") return null;
   // Item 12: the wrapper carries the marker `pnpm measure:ballot` counts, so
@@ -395,6 +425,7 @@ async function BallotBattlecard({
   contestId,
   contestVoteFor,
   context,
+  authorityAvailability,
 }: {
   name: string;
   partyLine: React.ReactNode;
@@ -439,6 +470,7 @@ async function BallotBattlecard({
    */
   contestVoteFor: number;
   context: { zip: string; lat: number; lng: number } | null;
+  authorityAvailability: BallotAuthorityAvailability;
 }) {
   /*
    * ONE lookup, used for three things: whether the record section has content,
@@ -447,7 +479,14 @@ async function BallotBattlecard({
    * each section so the card cannot say "no voting record" in one place and
    * render committees for the same person in another.
    */
-  const holder = await incumbentHolderFor(targetKey);
+  let holder: SeatHolder | null = null;
+  if (authorityAvailability.officeholders && authorityAvailability.funding) {
+    try {
+      holder = await incumbentHolderFor(targetKey);
+    } catch {
+      holder = null;
+    }
+  }
 
   /*
    * ITEMS 10-15 (2026-08-26) — INCUMBENCY COMES FROM HOLDING THE OFFICE.
@@ -461,20 +500,29 @@ async function BallotBattlecard({
    * `contestIncumbency` reads the OFFICEHOLDER side, per contest, and returns
    * three states. A miss is UNKNOWN, never `Challenger`.
    */
-  const incumbency = await contestIncumbency(
-    {
-      id: contestId,
-      title: contestTitle,
-      ocdId: contestOcdId,
-      candidates: contestCandidates,
-      federal,
-      voteFor: contestVoteFor,
-    },
-    incumbentHolderFor,
-  );
-  const standing = incumbency.decisions.get(targetKey) ?? {
+  let resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null = null;
+  if (authorityAvailability.officeholders) {
+    try {
+      resolvedStanding = await contestIncumbency(
+        {
+          id: contestId,
+          title: contestTitle,
+          ocdId: contestOcdId,
+          candidates: contestCandidates,
+          federal,
+          voteFor: contestVoteFor,
+        },
+        authorityAvailability.funding ? incumbentHolderFor : async () => null,
+      );
+    } catch {
+      resolvedStanding = null;
+    }
+  }
+  const standing = resolvedStanding?.decisions.get(targetKey) ?? {
     standing: "UNKNOWN" as const,
-    basis: "this candidate was not among the names this contest was resolved against",
+    basis: authorityAvailability.officeholders
+      ? "this candidate was not among the names this contest was resolved against"
+      : "the canonical officeholder authority could not be read",
     source: null,
   };
 
@@ -483,10 +531,18 @@ async function BallotBattlecard({
    * because it is exact; otherwise the officeholder the contest resolution
    * matched to this candidate by seat.
    */
-  const recordHolder = holder ?? incumbency.holderFor.get(targetKey) ?? null;
+  const recordHolder = holder ?? resolvedStanding?.holderFor.get(targetKey) ?? null;
 
   const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
-  const positions = positionsFor(targetKey);
+  let positions: ReturnType<typeof positionsFor> = [];
+  let positionsUnavailable = !authorityAvailability.candidatePublications;
+  if (!positionsUnavailable) {
+    try {
+      positions = positionsFor(targetKey);
+    } catch {
+      positionsUnavailable = true;
+    }
+  }
   /*
    * RULING 126 (2026-08-24). Until this line existed, `money` was `null` for
    * every non-federal candidate — so a Morris County commissioner candidate,
@@ -518,7 +574,15 @@ async function BallotBattlecard({
    * in `pnpm identity:az`, and a nominee it could not resolve comes back as the
    * OURS-gap state rather than as silence.
    */
-  const stateMoney = stateMoneyForCard(targetKey, contestId).records;
+  let stateMoney: ReturnType<typeof stateMoneyForCard>["records"] = [];
+  let stateMoneyUnavailable = !federal && !authorityAvailability.stateMoney;
+  if (!federal && !stateMoneyUnavailable) {
+    try {
+      stateMoney = stateMoneyForCard(targetKey, contestId).records;
+    } catch {
+      stateMoneyUnavailable = true;
+    }
+  }
   const contactCandidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
   const filingContact = contactCandidacyId ? candidateContactForCandidacy(contactCandidacyId) : null;
 
@@ -571,7 +635,9 @@ async function BallotBattlecard({
           </>
         ) : null,
         positions:
-          positions.length > 0 ? (
+          positionsUnavailable ? (
+            unavailableHolding("candidate-publication")
+          ) : positions.length > 0 ? (
             <CandidatePositions headline={positionsHeadline(positions)} positions={positions} />
           ) : null,
         /*
@@ -617,15 +683,21 @@ async function BallotBattlecard({
          * is the same asymmetry BAL-33 was reported for.
          */
         committees:
-          recordHolder && memberDirectoryReaches(recordHolder.id) ? (
+          !authorityAvailability.officeholders ? (
+            unavailableHolding("officeholder-directory")
+          ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
             <MemberCommitteesContent holder={recordHolder} />
           ) : null,
         offices:
-          recordHolder && memberDirectoryReaches(recordHolder.id) ? (
+          !authorityAvailability.officeholders ? (
+            unavailableHolding("officeholder-directory")
+          ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
-          <CandidateFunding targetKey={targetKey} context={context} />
+          <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} />
+        ) : stateMoneyUnavailable ? (
+          unavailableHolding("state campaign-finance")
         ) : stateMoney.length > 0 ? (
           <StateMoneySection records={stateMoney} bare />
         ) : null,
@@ -650,7 +722,9 @@ async function BallotBattlecard({
          * to `plural:947e2e2b-04eb-4f92-9f83-aef8760517e0`, which carries
          * positions in the snapshot.
          */
-        record: recordHolder ? (
+        record: !authorityAvailability.officeholders ? (
+          unavailableHolding("officeholder-directory")
+        ) : recordHolder ? (
           <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
         ) : null,
         /*
@@ -666,6 +740,7 @@ async function BallotBattlecard({
          */
         sources: (
           <>
+            {!authorityAvailability.candidateProfiles && unavailableHolding("candidate-profile")}
             {holder && <CandidateSources holder={holder} />}
             <CandidateContact card={card ?? null} links={links} filing={filingContact} />
             <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
@@ -693,22 +768,37 @@ function CandidateSources({ holder }: { holder: SeatHolder }) {
   return <CardSourcesList sources={sources} />;
 }
 
+interface BallotAuthorityAvailability {
+  readonly candidateProfiles: boolean;
+  readonly candidatePublications: boolean;
+  readonly funding: boolean;
+  readonly stateMoney: boolean;
+  readonly officeholders: boolean;
+}
+
+function unavailableHolding(family: string) {
+  return (
+    <p className="text-[0.8125rem] leading-relaxed text-voice" data-ballot-authority-unavailable={family}>
+      Our canonical {family} holding could not be read for this request. This is an unknown holding state, not evidence that no record exists.
+    </p>
+  );
+}
+
 
 export default async function BallotPage({
   searchParams,
 }: {
   searchParams: Promise<{ zip?: string }>;
 }) {
-  await refreshFundingFromPromoted();
   const { zip: zipParam } = await searchParams;
   const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
 
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
 
-  // Every registered source is asked; a source whose contests match none of
-  // the point's divisions contributes nothing. One source answers per state,
-  // and the ballot follows wherever the zip actually is (2e).
+    // Resolve the applicable state authority before opening its canonical
+    // pointer. An unavailable ballot in another state cannot take this
+    // Reader path down.
   let set: BallotSet | null = null;
   let matched: {
     contests: Contest[];
@@ -716,6 +806,8 @@ export default async function BallotPage({
   } | null = null;
   let coverageNotes: string[] = [];
   let attempted = false;
+  let divisionHoldingUnavailable = false;
+  const ballotLoaderFailures: string[] = [];
   /* ASK04: the reader's resolved divisions, hoisted so the Ask surface at the
      foot of the page receives the SAME division list the contests were matched
      against. Rebuilding it there would be a second answer to one question. */
@@ -733,26 +825,118 @@ export default async function BallotPage({
 
   if (centroid) {
     attempted = true;
-    const divisions = await divisionsAt(centroid.lat, centroid.lng);
+    let pointDivisionIds: string[] = [];
+    try {
+      const divisions = await divisionsAt(centroid.lat, centroid.lng);
+      pointDivisionIds = divisions.map((division) => division.ocdId);
+    } catch {
+      // The static, versioned zip-area index can still identify the requested
+      // state authority. The unavailable registry/officeholder holding is
+      // named below and may not turn a readable ballot into a 500.
+      divisionHoldingUnavailable = true;
+    }
     /*
      * A ZIP IS AN AREA (`NJ01`, 2026-08-22). The centroid answer is kept whole
      * and widened to every division whose territory reaches inside this zip —
      * see `lib/ballot/zip-divisions.ts` for why, and for what this deliberately
      * does not claim.
      */
-    const ocdIds = await divisionIdsForZipArea(zip, divisions.map((d) => d.ocdId));
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds);
     askOcdIds = ocdIds;
-    for (const { source } of BALLOT_SOURCES) {
-      const candidate = source.normalize(await source.fetch());
-      const hit = contestsForDivisions(candidate, ocdIds);
-      if (hit.contests.length > 0 || hit.absences.length > 0) {
-        set = candidate;
-        matched = hit;
-        coverageNotes = candidate.coverageNotes ?? [];
-        break;
+    for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
+      try {
+        const candidate = source.normalize(await source.fetch());
+        const hit = contestsForDivisions(candidate, ocdIds);
+        if (hit.contests.length > 0 || hit.absences.length > 0) {
+          set = candidate;
+          matched = hit;
+          coverageNotes = candidate.coverageNotes ?? [];
+          break;
+        }
+      } catch {
+        ballotLoaderFailures.push(state);
       }
     }
   }
+
+  /*
+   * The exact ballot authority has now answered. Only now may supporting
+   * projections be opened, each in its own failure domain. Their outcome
+   * controls only their own section; none can erase or replace `set`.
+   */
+  const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
+  if (set && matched) {
+    auxiliaryPreloads.set("candidate-profiles", refreshCandidateProfilesFromPromoted);
+    auxiliaryPreloads.set("candidate-publications", refreshCandidateCorpusFromPromoted);
+    auxiliaryPreloads.set("registry-runtime", refreshRegistryRuntimeFromPromoted);
+    auxiliaryPreloads.set("federal-directory", refreshFederalDirectoryFromPromoted);
+    if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
+      // Incumbency completeness comes from the General Court's own whole
+      // membership projection. It must be established before the synchronous
+      // exact-seat resolver runs; a failed/absent read leaves that resolver
+      // explicitly incomplete and is surfaced in the holding-gap list below.
+      auxiliaryPreloads.set("nh-members", refreshNhSeatHolders);
+    }
+    auxiliaryPreloads.set(
+      "ballot-navigation",
+      process.env.NODE_ENV === "production"
+        ? refreshBallotNavigationFromPromoted
+        : async () => null,
+    );
+    if (matched.contests.some((contest) => isFederalContest(contest))) {
+      auxiliaryPreloads.set("federal-funding", refreshFundingFromPromoted);
+    }
+    if (matched.contests.some((contest) => !isFederalContest(contest))) {
+      const state = set.election.state as StateCampaignFinanceJurisdiction;
+      auxiliaryPreloads.set(
+        "state-money",
+        () => refreshStateMoneyProjectionFromPromoted(state),
+      );
+    }
+  }
+  const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
+  const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
+    .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
+    .map(([family]) => family);
+  const auxiliaryFailed = new Set(auxiliaryFailures);
+  const authorityAvailability: BallotAuthorityAvailability = {
+    candidateProfiles:
+      auxiliaryPreloads.has("candidate-profiles") && !auxiliaryFailed.has("candidate-profiles"),
+    candidatePublications:
+      auxiliaryPreloads.has("candidate-publications") && !auxiliaryFailed.has("candidate-publications"),
+    funding:
+      auxiliaryPreloads.has("federal-funding") && !auxiliaryFailed.has("federal-funding"),
+    stateMoney:
+      auxiliaryPreloads.has("state-money") && !auxiliaryFailed.has("state-money"),
+    officeholders:
+      auxiliaryPreloads.has("registry-runtime") &&
+      auxiliaryPreloads.has("federal-directory") &&
+      !auxiliaryFailed.has("registry-runtime") &&
+      !auxiliaryFailed.has("federal-directory"),
+  };
+
+  let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
+  let pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
+  if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
+    try {
+      registrationLinks = currentRegistrationLinks();
+      pollingPlaceLinks = currentPollingPlaceLinks();
+    } catch {
+      auxiliaryFailures.push("ballot-navigation");
+      auxiliaryFailed.add("ballot-navigation");
+    }
+  }
+
+  const availableCardForNominee = (contestId: string, name: string): CandidateCardData | null =>
+    authorityAvailability.candidateProfiles ? cardForNominee(contestId, name) : null;
+  const availableLinksForNominee = (contestId: string, name: string): CandidateLinks | null =>
+    authorityAvailability.candidateProfiles ? linksForNominee(contestId, name) : null;
+  const availableCardForCandidacy = (candidacyId: string): CandidateCardData | null =>
+    authorityAvailability.candidateProfiles ? cardForCandidacy(candidacyId) : null;
+  const availableLinksForCandidacy = (candidacyId: string): CandidateLinks | null =>
+    authorityAvailability.candidateProfiles ? linksForCandidacy(candidacyId) : null;
+  const availableDerivedBlurbFor = (candidateId: string) =>
+    authorityAvailability.candidatePublications ? derivedBlurbFor(candidateId) : null;
 
   const dates =
     set && matched && matched.contests.length > 0
@@ -1189,6 +1373,23 @@ export default async function BallotPage({
         </div>
       )}
 
+      {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
+        <section
+          className="mt-4 rounded-[8px] border border-line bg-panel p-4 text-[0.8125rem] leading-relaxed text-voice lg:max-w-3xl"
+          data-ballot-canonical-holding-gaps
+        >
+          <p>
+            The ballot below came from its canonical election authority, but one or more independent supporting holdings could not be read for this request. Their sections are marked unknown; the ballot and every other available holding remain in place.
+          </p>
+          <ul className="mt-2 list-disc pl-5">
+            {divisionHoldingUnavailable && <li>registry division and officeholder resolution</li>}
+            {auxiliaryFailures.map((family) => (
+              <li key={family}>{family.replaceAll("-", " ")}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* Item 4 (2026-08-14 second session): the standing header — the
           tester's "that's when you want to catch somebody and make them
           ready to vote." The dates a reader acts on, at the top, each from
@@ -1197,8 +1398,8 @@ export default async function BallotPage({
       {dates &&
         set &&
         (() => {
-          const reg = registrationLinkFor(set.election.state);
-          const polls = pollingPlaceLinkFor(set.election.state);
+          const reg = registrationLinkFor(set.election.state, registrationLinks);
+          const polls = pollingPlaceLinkFor(set.election.state, pollingPlaceLinks);
           const regStep = dates.steps.find((s) =>
             /registration deadline/i.test(s.label),
           );
@@ -1327,8 +1528,8 @@ export default async function BallotPage({
                 {/*
                   ITEM 15 (2026-08-19): the IN-APP answer, from the same panel
                   the map pill opens. This was a link OUT to the state's tool
-                  while `data/voting-sites.json` held six retrieved, sourced,
-                  dated voting locations for this reader's own township. The
+                  while the canonical voting-site projection held six retrieved,
+                  sourced, dated locations for this reader's own township. The
                   authority's tool is still offered below it, labelled as
                   leaving.
 
@@ -1508,7 +1709,25 @@ export default async function BallotPage({
         </p>
       )}
 
-      {attempted && !matched && (
+      {attempted && !matched && ballotLoaderFailures.length > 0 && (
+        <p
+          className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl"
+          data-ballot-authority-unavailable={ballotLoaderFailures.join(",")}
+        >
+          The canonical ballot authority for this area could not be read. This is an unknown holding state, not evidence that no candidates or ballot items exist.
+        </p>
+      )}
+
+      {attempted && !matched && ballotLoaderFailures.length === 0 && divisionHoldingUnavailable && (
+        <p
+          className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl"
+          data-ballot-division-authority-unavailable
+        >
+          The canonical division registry could not be read, so this request could not be assigned to a ballot authority. This is an unknown holding state, not evidence that no ballot exists.
+        </p>
+      )}
+
+      {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
         <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl">
           We haven&apos;t built the ballot for this area yet. Ballot coverage
           currently reaches Pima County AZ, Morris County NJ, and Merrimack
@@ -1842,7 +2061,7 @@ export default async function BallotPage({
               {lineup ? (
                 <>
                 <ul className="ballot-candidate-grid mt-3.5">
-                  {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
+                  {photosFirst(lineup.nominees, (n) => Boolean(availableCardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
                       key={nominee.name}
                       data-candidate-target={`${contest.id}|${nominee.name}`}
@@ -1858,9 +2077,9 @@ export default async function BallotPage({
                             {nominee.note && <> · {nominee.note}</>}
                           </>
                         }
-                        card={cardForNominee(contest.id, nominee.name)}
-                        links={linksForNominee(contest.id, nominee.name)}
-                        derivedBlurb={derivedBlurbFor(`${contest.id}|${nominee.name}`)}
+                        card={availableCardForNominee(contest.id, nominee.name)}
+                        links={availableLinksForNominee(contest.id, nominee.name)}
+                        derivedBlurb={availableDerivedBlurbFor(`${contest.id}|${nominee.name}`)}
                         nameSlot={
                           <IncumbentName
                             targetKey={`${contest.id}|${nominee.name}`}
@@ -1887,8 +2106,8 @@ export default async function BallotPage({
                             name={nominee.name}
                             partyLine={nominee.partyLabel}
                             partyLabel={nominee.partyLabel ?? null}
-                            card={cardForNominee(contest.id, nominee.name)}
-                            links={linksForNominee(contest.id, nominee.name)}
+                            card={availableCardForNominee(contest.id, nominee.name)}
+                            links={availableLinksForNominee(contest.id, nominee.name)}
                             targetKey={`${contest.id}|${nominee.name}`}
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
@@ -1905,6 +2124,7 @@ export default async function BallotPage({
                                 ? { zip, lat: centroid.lat, lng: centroid.lng }
                                 : null
                             }
+                            authorityAvailability={authorityAvailability}
                           />
                         }
                       />
@@ -1990,7 +2210,7 @@ export default async function BallotPage({
                       </p>
                     ))}
                   <ul className="ballot-candidate-grid mt-3.5">
-                    {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
+                    {photosFirst(candidatesOf(set, contest), (x) => Boolean(availableCardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
                         key={cand.id}
                         data-candidate-target={cand.id}
@@ -2032,9 +2252,9 @@ export default async function BallotPage({
                               )}
                             </>
                           }
-                          card={cardForCandidacy(cand.id)}
-                          links={linksForCandidacy(cand.id)}
-                          derivedBlurb={derivedBlurbFor(cand.id)}
+                          card={availableCardForCandidacy(cand.id)}
+                          links={availableLinksForCandidacy(cand.id)}
+                          derivedBlurb={availableDerivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
                           nameSlot={
                             <IncumbentName
@@ -2058,8 +2278,8 @@ export default async function BallotPage({
                               name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
                               partyLine={cand.partyLabel}
                               partyLabel={cand.partyLabel ?? null}
-                              card={cardForCandidacy(cand.id)}
-                              links={linksForCandidacy(cand.id)}
+                              card={availableCardForCandidacy(cand.id)}
+                              links={availableLinksForCandidacy(cand.id)}
                               targetKey={cand.id}
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
@@ -2076,6 +2296,7 @@ export default async function BallotPage({
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
                                   : null
                               }
+                              authorityAvailability={authorityAvailability}
                             />
                           }
                         />

@@ -22,10 +22,10 @@
  * every entry maps to `{ house: RollCallRef[], senate: RollCallRef[] }`, and
  * either side may legitimately be empty:
  *
- *  - `[]` with `houseNote`/`senateNote` set — that chamber does not vote on
- *    this question at all (the House does not vote on nominations), or has
- *    not acted yet (the stock-trading ban is pending in the Senate). Both
- *    are FIRST-CLASS honest answers, not gaps.
+ *  - `[]` with a structural `houseNote` — that chamber does not vote on
+ *    this class of question at all (the House does not vote on nominations).
+ *    Current chamber or law status is never asserted by reviewed input; it
+ *    requires its own official acquisition and durable receipt.
  *  - A member who was not in office, or did not vote, renders "did not
  *    vote" — also first-class.
  *
@@ -58,17 +58,17 @@
  *
  * ## Roll call ids are fetched, never assumed
  *
- * The ids in this file are placed by `pnpm key-votes:fetch`, which resolves
- * each entry against the official chamber sources (clerk.house.gov and
- * senate.gov) and records what it found. An entry whose roll call has not
- * been verified carries `null` and renders as an honest absence — never a
- * plausible number. That is the same rule as a candidate position: no
- * source, no claim.
+ * The reviewed v1 selection binds these questions to the roll identities in
+ * `lib/votes/key-vote-selection-v1.ts`. `pnpm key-votes:positions`
+ * reacquires each selected roll from the official chamber, and the canonical
+ * projection carries its current question, tally, URL verification, and
+ * member positions in the canonical projection. An unverified roll is held;
+ * no tracked file is changed.
  */
 
 /** The criteria, published verbatim on the surface. Never paraphrased. */
 export const KEY_VOTES_CRITERIA =
-  "Major legislation that became law (plus one pending measure, marked), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.";
+  "Major legislation that became law (plus one additional selected proposal), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.";
 
 export type KeyVoteGroup = "LAWS" | "PEOPLE";
 
@@ -107,7 +107,10 @@ export interface KeyVoteEntry {
   /** Where the explainer's facts came from, and when it was read. */
   explainerSource: string;
   explainerReadAt: string;
-  /** Marked on the surface when the measure has not become law. */
+  /**
+   * Current official status, when acquired into the canonical projection.
+   * Reviewed question input never supplies this mutable claim.
+   */
   pending?: boolean;
   /** Which roll call counts as this entry's vote, where a chamber voted twice. */
   whichVote?: { house?: string; senate?: string };
@@ -325,7 +328,7 @@ function law(
 
 /**
  * VOTES ON LAWS — twenty entries, the author's list, including the April
- * 2024 package as FOUR siblings and one pending measure.
+ * 2024 package as FOUR siblings and one additional selected proposal.
  *
  * The count read "seventeen" until 2026-08-18 (g19), when it was checked
  * against the array rather than against the previous comment. A stale count
@@ -476,11 +479,6 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
     "stock-trading-ban",
     "Banning members of Congress from trading individual stocks",
     "Would bar members of Congress, and in most versions their spouses, from buying and selling individual company shares while in office, requiring blind trusts or divestment instead.",
-    {
-      pending: true,
-      senateNote:
-        "The Senate hasn't voted on this. It passed the House and is waiting.",
-    },
   ),
 ];
 
@@ -609,8 +607,8 @@ for (const entry of KEY_VOTES_LAWS) {
  * roll call. A parked entry has none, so fill-only would happily let the
  * next run write one in — which is exactly the failure the park exists to
  * prevent, arriving through the door the last fix left open.
- * `scripts/fetch-law-votes.mts` skips these and prints that it did;
- * `tests/key-votes.test.ts` holds both halves.
+ * The reviewed selection gate skips these; `tests/key-votes.test.ts` holds
+ * both halves.
  */
 export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
   /*
@@ -640,9 +638,9 @@ export const PARKED_KEY_VOTES: Readonly<Record<string, string>> = {
    *
    * The map stays because the MECHANISM is still right: an entry whose answer
    * cannot be resolved without the author's judgement must block every run
-   * rather than let fill-only write a guess in. `scripts/fetch-law-votes.mts`
-   * skips whatever is here and prints that it did; `tests/key-votes.test.ts`
-   * holds both halves whether the map is empty or not.
+   * rather than let a resolver write a guess in. The reviewed selection gate
+   * skips whatever is here; `tests/key-votes.test.ts` holds both halves
+   * whether the map is empty or not.
    */
 };
 

@@ -2,6 +2,9 @@
 /**
  * **NJ ELEC — ACQUIRED STATEWIDE, PROJECTED TO A BALLOT.** Item 4 of the
  * 2026-08-24 state-campaign-money session. **RULING 126** governs the output: it
+ *
+ * @freshness-reads-here — the candidate clock follows the complete official
+ * walk; the catch-path clock dates only the durable failed source attempt.
  * renders for readers and never enters anything sold. Split into acquisition
  * and projection by Session C3, lane C, 2026-09-01, under **RULING 229**.
  *
@@ -75,7 +78,6 @@
  * parameter, answered 200 with 326,271 records, and would have shipped.
  */
 
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -106,6 +108,12 @@ import {
 } from "../lib/hunt/source-universe.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
+import { stateCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readNjMorrisFiling } from "../lib/sources/ballot-nj-morris/index.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const AS_OF = today();
@@ -118,6 +126,12 @@ const arg = (flag: string): string | undefined => {
   return i >= 0 ? process.argv[i + 1] : undefined;
 };
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+if (!process.argv.includes("--promote")) {
+  throw new Error("REFUSING_TRACKED_STATE_MONEY_WRITE: invoke this owner-only acquisition with --promote.");
+}
+prepareProductionCivicDataWrite();
+const officialRawBodies: string[] = [];
+let candidateSubmitted = false;
 
 const YEAR = arg("--year") ?? "2026";
 /**
@@ -130,7 +144,7 @@ const YEAR = arg("--year") ?? "2026";
  * corpus accumulates across runs, and what is still owed is printed with its
  * denominator every time.
  */
-const BATCH = Number(arg("--locations") ?? "60");
+const BATCH = Number(arg("--locations") ?? String(Number.MAX_SAFE_INTEGER));
 
 /* ── The acquisition corpus — the state, accumulated across runs ─────────── */
 
@@ -148,16 +162,6 @@ interface EntityCorpus {
 }
 
 function loadCorpus(): EntityCorpus {
-  if (existsSync(CORPUS_FILE)) {
-    const parsed = JSON.parse(readFileSync(CORPUS_FILE, "utf8")) as EntityCorpus;
-    if (parsed.byLocation && typeof parsed.byLocation === "object") return parsed;
-    /* A file that parsed into the wrong shape is a FAILED read. Starting an
-       empty corpus over it would silently discard everything already acquired. */
-    throw new Error(
-      `${CORPUS_FILE} parsed but carries no byLocation map. Refusing to overwrite an acquisition ` +
-        "corpus this run cannot read.",
-    );
-  }
   return {
     formatVersion: 1,
     electionYear: YEAR,
@@ -194,11 +198,14 @@ interface Contest {
   title: string;
 }
 
-const ballot = JSON.parse(
-  await import("node:fs").then((fs) =>
-    fs.readFileSync(join(ROOT, "data/states/nj/ballot/nj-morris-2026.json"), "utf8"),
-  ),
-) as { contests: Contest[]; candidacies: Candidacy[] };
+const ballotProjection = await readNjMorrisFiling({ bypassCache: true });
+if (ballotProjection.kind !== "PROMOTED") {
+  throw new Error(
+    `NJ_BALLOT_AUTHORITY_UNAVAILABLE:${ballotProjection.kind}: campaign-finance acquisition requires ` +
+      "the canonical promoted Morris filing projection and never reads its tracked bootstrap.",
+  );
+}
+const ballot = ballotProjection.value.ballot as { contests: Contest[]; candidacies: Candidacy[] };
 
 const contestById = new Map(ballot.contests.map((c) => [c.id, c]));
 
@@ -251,10 +258,12 @@ function baseNameFor(ocdId: string): string | null {
 
 /* ── The location dropdown, and the codes it holds ────────────────────────── */
 
+async function main(): Promise<void> {
 console.log(`state-money-nj · NJ ELEC, election year ${YEAR}, as of ${AS_OF}\n`);
 
 const pageRes = await fetch(ELEC_LOCATION_PAGE, { headers: { "User-Agent": UA } });
 const pageHtml = await pageRes.text();
+officialRawBodies.push(pageHtml);
 console.log(`  ${ELEC_LOCATION_PAGE} — HTTP ${pageRes.status}, ${pageHtml.length} bytes`);
 const codes = parseLocationCodes(pageHtml);
 console.log(`  location codes read from the page: ${codes.size}`);
@@ -262,7 +271,7 @@ if (codes.size < 100) {
   console.error(
     `  CANNOT RUN — only ${codes.size} location codes parsed. A short list is a parse failure, not a short dropdown (RULING 100).`,
   );
-  process.exit(2);
+  throw new Error(`ELEC_LOCATION_DENOMINATOR_SHORT:${codes.size}`);
 }
 
 /* ── Which locations this ballot needs, with the misses NAMED ─────────────── */
@@ -300,7 +309,7 @@ if (unresolvedBases.length > 0) {
    THE ACQUISITION DENOMINATOR — every location ELEC's own dropdown states
    ══════════════════════════════════════════════════════════════════════════ */
 
-writeFileSync(
+void ([
   UNIVERSE_FILE,
   `${JSON.stringify(
     {
@@ -321,9 +330,9 @@ writeFileSync(
     null,
     1,
   )}\n`,
-  "utf8",
-);
-console.log(`  wrote the location universe (${codes.size} location(s)) to ${UNIVERSE_FILE}`);
+  "utf8"
+]);
+console.log(`  normalized the location universe (${codes.size} location(s)) in memory`);
 
 const corpus = loadCorpus();
 const alreadyHeld = new Set(Object.keys(corpus.byLocation));
@@ -360,6 +369,7 @@ async function askElec(locationCode: string): Promise<Answer> {
     body: elecRequestBody({ locationCode, electionYear: YEAR, nonPacOnly: true, length: 500 }),
   });
   const text = await res.text();
+  officialRawBodies.push(text);
   let rows: ElecEntity[] = [];
   let recordsTotal: number | null = null;
   try {
@@ -392,6 +402,7 @@ async function moneyFor(entityId: string): Promise<ElecMoneyTotal | null> {
       headers: { "User-Agent": UA, "X-Requested-With": "XMLHttpRequest", Referer: ELEC_LOCATION_PAGE },
     });
     const text = await res.text();
+    officialRawBodies.push(text);
     const parsed = JSON.parse(text) as Record<string, unknown>[];
     if (!Array.isArray(parsed)) throw new Error("not an array");
     // An EMPTY array is a real answer: the committee is registered and has
@@ -414,7 +425,7 @@ console.log(
 );
 if (control.rows.length > 0) {
   console.error("  CANNOT RUN — the control location returned rows. The filter is not filtering (RULING 68).");
-  process.exit(2);
+  throw new Error("ELEC_CONTROL_LOCATION_RETURNED_ROWS");
 }
 
 /* ── Walk every location, contest by contest ──────────────────────────────── */
@@ -462,7 +473,7 @@ for (const name of worklist.slice(0, BATCH)) {
   );
 }
 
-writeFileSync(CORPUS_FILE, `${JSON.stringify(corpus, null, 1)}\n`, "utf8");
+void corpus;
 
 const heldLocations = Object.keys(corpus.byLocation);
 const entitiesByLocation = new Map<string, ElecEntity[]>(
@@ -690,7 +701,7 @@ const snapshot: StateMoneySnapshot = {
 };
 
 const out = join(ROOT, "data/states/nj/funding/state-money-nj-2026.json");
-writeFileSync(out, `${JSON.stringify(snapshot, null, 1)}\n`, "utf8");
+void out;
 
 console.log(`\n─── the three-way split, with denominators ───`);
 console.log(`  candidacies on the certified ballot        ${ballot.candidacies.length}`);
@@ -768,4 +779,48 @@ console.log(
 console.log(`\n  contests walked ${contestsWalked} of ${ballot.contests.length}`);
 console.log(`
   second-hop filing calls ${filingCalls} · failures ${filingFailures} · entities cached ${moneyCache.size}`);
-console.log(`  wrote ${out}`);
+const candidate = stateCampaignFinanceCandidate({
+  jurisdiction: "NJ",
+  snapshot,
+  rawBodies: officialRawBodies,
+  requestedUrl: ELEC_LOCATION_PAGE,
+  finalUrl: ELEC_LOCATION_PAGE,
+  retrievedAt: new Date().toISOString(),
+  query: `Every location in ELEC's official dropdown; ${heldLocations.length}/${codes.size} locations acquired for ${YEAR}`,
+  paginationComplete: heldLocations.length === codes.size && short === 0,
+  declaredTotal: null,
+  excludedFacts: [...unreadLocations].sort().map((location) => ({
+    key: `location:${location}`,
+    code: "LOCATION_ACQUISITION_HELD",
+    detail: `${location} did not produce a complete official entity listing; no absence was inferred.`,
+  })),
+});
+candidateSubmitted = true;
+const promotion = await processRegisteredManualCandidate(
+  new PostgresRoutineDataStore(),
+  "nj-elec-campaign-finance",
+  candidate,
+  candidate.retrieval.retrievedAt,
+);
+if (!promotion.promoted) throw new Error(`NJ campaign-finance promotion refused: ${promotion.candidate.failureCode}`);
+console.log(`  promoted ${promotion.promoted.versionId}; no tracked runtime artifact was written`);
+}
+
+try {
+  await main();
+} catch (error) {
+  if (!candidateSubmitted) {
+    const attemptedAt = new Date().toISOString();
+    const failed = failedAcquisitionCandidate({
+      sourceId: "nj-elec-campaign-finance",
+      recordClass: "STATE_CAMPAIGN_FINANCE",
+      scope: "US-NJ:campaign-finance:2026",
+      requestedUrl: ELEC_LOCATION_PAGE,
+      attemptedAt,
+      failureDetail: error instanceof Error ? error.message : String(error),
+      parserVersion: "nj-campaign-finance/2",
+    });
+    await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "nj-elec-campaign-finance", failed, attemptedAt);
+  }
+  throw error;
+}

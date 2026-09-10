@@ -168,6 +168,14 @@ export interface CycleInput {
 
 export interface ResearchLanes {
   readonly decide: (row: ScheduledObligation) => ExecutorDecision;
+  /**
+   * Optional canonical order for the actual due model rows. `runCycle` sorts a
+   * copy of the rows it already owns, so a caller can reorder but cannot omit,
+   * duplicate, or manufacture work. Absent, the historical oldest-due order
+   * stands. The standing runtime supplies the reader-impact comparator that it
+   * also records for Admin.
+   */
+  readonly compareModelRows?: (left: ScheduledObligation, right: ScheduledObligation) => number;
   readonly admitScout: (
     row: ScheduledObligation,
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
@@ -506,6 +514,15 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       decisions.set(row.obligation.id, decision);
       (decision.kind === "BOUNDED_MODEL_WORKER" ? modelRows : deterministicRows).push(row);
     }
+    /*
+     * NH328 — `dueNow` is oldest-first, but the bounded Scout lane is governed
+     * by reader impact. Apply the canonical comparator to the ACTUAL due model
+     * set after lane classification and before admission. Sorting this existing
+     * array cannot add, remove, or duplicate an obligation; it only determines
+     * which due row reaches a scarce Scout slot first. The deterministic lane
+     * deliberately remains oldest-first.
+     */
+    if (research.compareModelRows !== undefined) modelRows.sort(research.compareModelRows);
   }
   const deferredBy: Record<string, number> = {};
   let modelDispatched = 0;

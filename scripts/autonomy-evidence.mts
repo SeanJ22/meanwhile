@@ -38,7 +38,7 @@
  * by name, and no value of it appears in the output.
  */
 
-import { mkdirSync, readFileSync, readdirSync, existsSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -50,11 +50,12 @@ import { readStagingManifest } from "../lib/control-plane/scheduler/promotion-ta
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
+import { freshnessCycleOutcomes } from "../lib/control-plane/freshness-cycle-outcome.ts";
+import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
 const OUT_DIR = join(ROOT, "data", "health", "autonomous-advancement");
-const RUNS_DIR = join(ROOT, "data", "health", "freshness-shadow-runs");
 const NOW = new Date().toISOString();
 
 const url = controlPlaneUrlFromEnv();
@@ -213,36 +214,25 @@ interface CycleRecord {
 }
 
 const cycles: CycleRecord[] = [];
-if (existsSync(RUNS_DIR)) {
-  for (const file of readdirSync(RUNS_DIR).sort()) {
-    if (!file.endsWith(".json")) continue;
-    let parsed: Record<string, unknown>;
-    try {
-      parsed = JSON.parse(readFileSync(join(RUNS_DIR, file), "utf8")) as Record<string, unknown>;
-    } catch {
-      continue;
-    }
-    const provider = typeof parsed.provider === "string" ? parsed.provider : null;
+for (const parsed of freshnessCycleOutcomes(await repos.ownerDigests.read(DIGEST_LOG_KEY))) {
+    const provider = parsed.provider;
     /* Only the POSTGRES cycles. A file-store cycle is a real cycle and is not
        the authoritative control plane, and mixing them would let a claim about
        the durable store rest on a run that never touched it. */
     if (provider === null || !provider.toLowerCase().includes("postgres")) continue;
-    const registry = (parsed.registry ?? {}) as Record<string, unknown>;
-    const dispositions = Array.isArray(parsed.dispositions)
-      ? (parsed.dispositions as { obligationId: string; disposition: string | null }[])
-      : [];
+    const registry = parsed.registry;
+    const dispositions = parsed.dispositions;
     cycles.push({
-      file: `data/health/freshness-shadow-runs/${file}`,
-      startedAt: typeof parsed.startedAt === "string" ? parsed.startedAt : null,
+      file: `canonical owner digest ${parsed.cycleId}`,
+      startedAt: parsed.startedAt,
       provider,
-      only: typeof registry.only === "string" ? registry.only : null,
-      registeredUnits: typeof registry.registeredUnits === "number" ? registry.registeredUnits : null,
-      nonMeetingUnits: typeof registry.nonMeetingUnits === "number" ? registry.nonMeetingUnits : null,
-      dispatched: typeof parsed.dispatched === "number" ? parsed.dispatched : null,
-      discharged: Array.isArray(parsed.worked) ? parsed.worked.length : null,
+      only: registry?.only ?? null,
+      registeredUnits: registry?.registeredUnits ?? null,
+      nonMeetingUnits: null,
+      dispatched: parsed.dispatched,
+      discharged: parsed.worked.length,
       dispositions,
     });
-  }
 }
 
 const unfiltered = cycles.filter((c) => c.only === null);

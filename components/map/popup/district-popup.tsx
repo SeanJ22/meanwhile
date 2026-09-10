@@ -13,7 +13,7 @@ import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
 import { displayPersonName } from "@/lib/officials/person-name";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
-import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 
 import {
@@ -149,6 +149,8 @@ interface DistrictPopupProps {
   district: DistrictHit;
   /** People sourced as representing this division. Empty is a real answer. */
   representation?: SeatHolder[];
+  /** Completeness evidence projected beside the representation response. */
+  rosterGaps?: RosterReaderGap[];
   /**
    * WHICH empty this is (M112, 2026-08-16). A division the reader is not
    * standing in has to be asked about, and neither a question in flight nor a
@@ -222,6 +224,7 @@ interface DistrictPopupProps {
 export function DistrictPopup({
   district,
   representation = [],
+  rosterGaps = [],
   representationNoteState = "gap",
   upcomingMeetings,
   listingCount,
@@ -271,7 +274,7 @@ export function DistrictPopup({
           The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
-      <RosterCompletenessGaps gaps={rosterGapsForDivision(district.ocdId)} />
+      <RosterCompletenessGaps gaps={rosterGaps} />
 
       {/*
         **BC-8 (2026-08-24) — THE COUNT IS A DOOR.**

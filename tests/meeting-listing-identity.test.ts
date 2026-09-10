@@ -4,6 +4,9 @@ import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { listingMultiplicityForSource, meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 const bodyId = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission";
 const sourceId = (id: string) => `ical:newbury-ical-conservation-commission:calendar.${id}.field_date_and_time.0@www.newbury.nh.gov`;

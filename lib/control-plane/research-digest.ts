@@ -41,10 +41,8 @@ export function researchDigestLines(m: ResearchMetrics): string[] {
     const o = m.ordering;
     lines.push(
       `  queue by band      band 1 ${o.bands[1]} · band 2 ${o.bands[2]} · band 3 ${o.bands[3]} (${o.appliesTo}; ${o.rule})`,
-      `  ordering inputs    readerImpactAt; ${o.inputs.pilotJurisdictions}; open red reader questions ${o.inputs.openRedQuestions.count}` +
-        (o.inputs.openRedQuestions.zips.length > 0 ? ` (ZIPs ${o.inputs.openRedQuestions.zips.join(", ")})` : "") +
-        (o.inputs.openRedQuestions.run ? ` from ${o.inputs.openRedQuestions.run}` : "") +
-        `; universe providers ${o.inputs.universeProviders.join(", ")}; tie-break ${o.inputs.tieBreak}`,
+      `  ordering inputs    ${o.inputs.readerImpactAt}; ${o.inputs.pilotJurisdictions}; ` +
+        `universe providers ${o.inputs.universeProviders.join(", ")}; tie-break ${o.inputs.tieBreak}`,
     );
   }
   lines.push(`  funnel             ${m.funnel.stages.map((s) => `${s.stage} ${s.count}`).join(" -> ")} (pipeline stages: ${m.funnel.pipelineSource})`);
@@ -157,7 +155,7 @@ export const METRIC_GROUP_MEANING: Readonly<Record<keyof ResearchDigestRows, str
  * (ADM-46, 2026-09-06.)
  *
  * The owner likes the funnel and asked for two things it did not do: stop
- * printing code paths as prose — `data/method/candidates.json lifecycle
+ * printing code paths as prose — `cp_method_candidates/live lifecycle
  * counts`, `distinct obligations with a non-refused Scout result in
  * repos.scoutResults`, and the promotion-pipeline sentence that named a
  * directory and another lane — and SAY why a zero is a zero.

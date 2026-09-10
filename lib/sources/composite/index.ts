@@ -8,6 +8,11 @@ import type {
   PartialScopeFailure,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  captureSourceAcquisitions,
+  type SourceAcquisitionEvidence,
+} from "../acquisition-trace.ts";
+import { runInSourceAcquisitionDomain } from "../acquisition-deadline.ts";
 
 /**
  * The composite meeting source — trackers **D11**, **D12**, **M06**.
@@ -27,8 +32,10 @@ import type {
  * - **Namespaced ids.** Every child's `Meeting.id` must begin with its own
  *   source name. A child that violates that is excluded and reported as a
  *   failure, because un-namespaced ids collide silently downstream.
- * - **In-memory cache, short TTL, no database.** Live fetching does not need
- *   persistence (D10's row says so in terms); persistence is its own change.
+ * - **Acquisition is not authority.** This object only fans out one bounded
+ *   acquisition. Each source/body result is persisted and promoted through
+ *   its own canonical meeting-partition contract; the composite cache never
+ *   becomes a Reader fallback or a shared pointer.
  * - **Children come from registry data**, not a hardcoded list — see
  *   `wiring.ts` beside this file and `lib/registry/source-wiring.ts` (§0b).
  */
@@ -39,21 +46,21 @@ import type {
  *
  * `ok: false` used to carry a vendor timeout and a violated id-namespace
  * contract in the same flag, and `scripts/ingest.ts` treated both the same
- * way: name it, skip it, carry its rows forward, exit 0. So a WALL and a
- * defect in our own code were indistinguishable in the log, in the snapshot
- * and in the run's exit status — and the defect rendered as a wall, which is
- * the failed-operation-as-empty-success shape wearing the other face.
+ * way: name it, skip it, and carry rows forward inside one aggregate snapshot.
+ * So a WALL and a defect in our own code were indistinguishable in the log and
+ * in the snapshot — the failed-operation-as-empty-success shape wearing the
+ * other face.
  *
  * - `WALL` — the retrieval did not land: a refusal, a timeout, a challenge
  *   page, an unreachable host. The body's records are still there and the
  *   ladder still has rungs; this is friction, and `CLAUDE.md` is explicit
  *   that it is never a terminal state. Carry-forward keeps the source's last
- *   known rows and the run stays green, because ten healthy sources must not
- *   lose their refresh over one vendor's edge.
+ *   known version stays live through that exact partition pointer, while
+ *   independently healthy partitions can still promote.
  * - `JOB` — the run itself is broken: a child returned ids outside its own
  *   namespace, or its `normalize` threw. Nothing about the ladder fixes it,
  *   nobody is waiting for a wall to fall, and a green run would hide it. The
- *   run goes red.
+ *   affected source/body partition records a failed attempt and keeps LKG.
  *
  * `SOURCE_BLOCKED` is deliberately not among these: a wall is recorded on the
  * rung it stopped at, and the next rung is attempted.
@@ -66,8 +73,9 @@ export interface ChildRunReport {
   /** Why the child contributed nothing, when it didn't. */
   error: string | null;
   /**
-   * Present exactly when `ok` is false. A `WALL` is named and skipped and the
-   * run continues; a `JOB` failure turns the run red. See `ChildFailureKind`.
+   * Present exactly when `ok` is false. Both kinds are persisted against only
+   * the affected source/body partition; the distinction controls diagnosis,
+   * not an aggregate process verdict. See `ChildFailureKind`.
    */
   failure?: ChildFailureKind;
   /**
@@ -129,6 +137,8 @@ export interface ChildRunReport {
    * objects are out of scope.
    */
   publishedLookbackDays?: number | null;
+  /** Exact successful HTTP bodies and observed final redirect URLs for this child. */
+  acquisitions?: readonly SourceAcquisitionEvidence[];
 }
 
 export interface CompositeReport {
@@ -158,7 +168,7 @@ const ZERO_DROPS: NormalizeDropCounts = {
 interface CacheEntry {
   at: number;
   raw: TaggedRaw[];
-  fetchReports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number }>;
+  fetchReports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
 }
 
 export interface CompositeOptions {
@@ -166,29 +176,8 @@ export interface CompositeOptions {
   ttlMs?: number;
   /** How long one child may take before it is recorded as timed out. */
   timeoutMs?: number;
-}
-
-function withTimeout<T>(
-  promise: Promise<T>,
-  ms: number,
-  label: string,
-): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(
-      () => reject(new Error(`${label} timed out after ${ms}ms`)),
-      ms,
-    );
-    promise.then(
-      (v) => {
-        clearTimeout(timer);
-        resolve(v);
-      },
-      (e) => {
-        clearTimeout(timer);
-        reject(e);
-      },
-    );
-  });
+  /** Batch promotion only: bind exact acquired bytes/final redirects into the candidate. */
+  captureAcquisitionEvidence?: boolean;
 }
 
 /**
@@ -326,10 +315,13 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
   private readonly children: ReportingMeetingSource<unknown>[];
   private readonly ttlMs: number;
   private readonly timeoutMs: number;
+  private readonly captureAcquisitionEvidence: boolean;
   private readonly cache = new Map<string, CacheEntry>();
 
   /** The last run's full accounting, for the report script and the route. */
   lastReport: CompositeReport | null = null;
+  /** Fresh normalized rows before cross-route Reader composition/deduplication. */
+  lastPartitionRows: readonly Meeting[] = [];
 
   constructor(
     children: ReportingMeetingSource<unknown>[],
@@ -338,6 +330,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
     this.children = children;
     this.ttlMs = options.ttlMs ?? 5 * 60_000;
     this.timeoutMs = options.timeoutMs ?? 20_000;
+    this.captureAcquisitionEvidence = options.captureAcquisitionEvidence ?? false;
   }
 
   private cacheKey(query: MeetingQuery): string {
@@ -365,15 +358,28 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
 
     const fetchReports = new Map<
       string,
-      { ok: boolean; error: string | null; fetched: number; rung?: number }
+      { ok: boolean; error: string | null; fetched: number; rung?: number; acquisitions?: readonly SourceAcquisitionEvidence[] }
     >();
     const tagged: TaggedRaw[] = [];
 
-    const settled = await Promise.allSettled(
+    const runChildren = async (
+      runForSource: <T>(source: string, operation: () => Promise<T>) => Promise<T>,
+    ) => Promise.allSettled(
       this.children.map((child) =>
-        withTimeout(child.fetch(query), this.timeoutMs, child.name),
+        runForSource(child.name, () => runInSourceAcquisitionDomain(
+          {
+            sourceLabel: child.name,
+            timeoutMs: this.timeoutMs,
+            parentSignal: query.signal,
+          },
+          (signal) => child.fetch({ ...query, signal }),
+        )),
       ),
     );
+    const captured = this.captureAcquisitionEvidence
+      ? await captureSourceAcquisitions(runChildren)
+      : { value: await runChildren((_source, operation) => operation()), evidence: [] };
+    const settled = captured.value;
 
     settled.forEach((result, i) => {
       const child = this.children[i];
@@ -382,6 +388,9 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ok: true,
           error: null,
           fetched: result.value.length,
+          ...(this.captureAcquisitionEvidence
+            ? { acquisitions: captured.evidence.filter((row) => row.source === child.name) }
+            : {}),
         });
         for (const raw of result.value) {
           tagged.push({ source: child.name, raw });
@@ -390,7 +399,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
         // The failure is the report's job, not the map's problem: the other
         // children's rows are already in `tagged`.
         // F22: the furthest ladder rung this retrieval reached, when the
-        // shared client knows it. A whole-child timeout from `withTimeout`
+        // shared client knows it. A whole-child acquisition deadline
         // knows no rung and stays undefined — absent is recorded as absent
         // rather than filled in with a plausible number.
         const rung = (result.reason as { rung?: number } | undefined)?.rung;
@@ -399,6 +408,9 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           error: String(result.reason?.message ?? result.reason),
           fetched: 0,
           ...(typeof rung === "number" ? { rung } : {}),
+          ...(this.captureAcquisitionEvidence
+            ? { acquisitions: captured.evidence.filter((row) => row.source === child.name) }
+            : {}),
         });
       }
     });
@@ -409,7 +421,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
   }
 
   private pendingFetch: {
-    reports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number }>;
+    reports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
     fromCache: boolean;
   } | null = null;
 
@@ -457,6 +469,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: 0,
           normalized: 0,
           drops: { ...ZERO_DROPS },
+          ...(fetched.acquisitions ? { acquisitions: fetched.acquisitions } : {}),
           ...declaredWindow,
         });
         continue;
@@ -565,6 +578,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: fetched.fetched,
           normalized: meetings.length,
           drops,
+          ...(fetched.acquisitions ? { acquisitions: fetched.acquisitions } : {}),
           ...(unreachableOcdIds && unreachableOcdIds.length > 0
             ? { unreachableOcdIds }
             : {}),
@@ -587,11 +601,13 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: fetched.fetched,
           normalized: 0,
           drops: { ...ZERO_DROPS },
+          ...(fetched.acquisitions ? { acquisitions: fetched.acquisitions } : {}),
           ...declaredWindow,
         });
       }
     }
 
+    this.lastPartitionRows = merged;
     const { rows, collapsed } = collapseDuplicateSittings(merged);
 
     this.lastReport = {

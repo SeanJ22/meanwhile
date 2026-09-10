@@ -270,10 +270,10 @@ export interface FreshnessRisk {
 }
 
 /**
- * The risk a freshness-shadow run record carries, projected for the contract
- * — ONE implementation shared by `pnpm owner:publish` and `pnpm pilot:health`
- * so the page and the script keep reading the same FRESHNESS sentence for the
- * same SHA (9.4.26). Undefined when the record carries no measured risk, or
+ * The risk a canonical freshness-cycle receipt carries, projected for the
+ * contract — ONE implementation used by the standing owner-snapshot publisher, so Admin reads
+ * one FRESHNESS interpretation for a given receipt (9.4.26). Undefined when
+ * the record carries no measured risk, or
  * an activation this contract does not know, so the contract falls back to
  * its "no instrument" reading rather than a guessed number.
  */

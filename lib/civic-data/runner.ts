@@ -1,63 +1,445 @@
-import type { RoutineRecordClass } from "./types.ts";
+import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
+import { ROUTINE_SOURCE_CONTRACTS, cadenceMsAt, type RoutineSourceContract } from "./contracts.ts";
+import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
+import { SOURCE_AUTHORITIES, authorityFor } from "./source-authority.ts";
+import {
+  parseRoutineRunnerReceipt,
+  successfulRoutineRunnerReceiptIssue,
+} from "./runner-receipt.ts";
+import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
+
+/**
+ * The standing parent supplies one exact start instant to the routine child so
+ * either process can persist the same idempotent supervisor incident if the
+ * child is killed outside its own catchable failure domain.
+ */
+export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";
+
+export function routineSupervisorCycleId(host: string, startedAt: string): string {
+  const parsed = Date.parse(startedAt);
+  if (!Number.isFinite(parsed) || new Date(parsed).toISOString() !== startedAt) {
+    throw new Error(`ROUTINE_SUPERVISOR_STARTED_AT_INVALID:${startedAt}`);
+  }
+  if (!host.trim() || /[\r\n]/.test(host)) throw new Error("ROUTINE_SUPERVISOR_HOST_INVALID");
+  return `routine-civic-data-supervisor:${host}:${startedAt}`;
+}
 
 export interface RoutineSourceTask {
   readonly id: string;
   readonly sourceId: string;
+  readonly acquisitionFailureDomain: string;
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
   readonly requestedUrl: string;
+  readonly authorityMode: RoutineSourceContract["acquisitionAdapter"]["authorityMode"];
   readonly parserVersion: string;
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
+  readonly contract: RoutineSourceContract;
 }
-
-const HOUR = 60 * 60 * 1_000;
-const DAY = 24 * HOUR;
 
 /**
  * The standing machine's direct-promotion portfolio. Each command is a data
  * operation only: source bytes -> candidate -> validation -> atomic pointer.
  */
+export function routineTaskFromContract(contract: RoutineSourceContract): RoutineSourceTask {
+  if (contract.authorityConstraint.registry !== "SOURCE_AUTHORITIES" || contract.authorityConstraint.sourceId !== contract.sourceId) {
+    throw new Error(`ROUTINE_CONTRACT_AUTHORITY_MISMATCH:${contract.id}`);
+  }
+  if (
+    contract.validationContract.length !== VALIDATION_CHECKS.length ||
+    contract.validationContract.some((check, index) => check !== VALIDATION_CHECKS[index])
+  ) throw new Error(`ROUTINE_CONTRACT_VALIDATION_MISMATCH:${contract.id}`);
+  if (!contract.autoPromotable) throw new Error(`ROUTINE_CONTRACT_NOT_AUTO_PROMOTABLE:${contract.id}`);
+  const authority = contract.acquisitionAdapter.authorityMode === "SINGLE_ROUTE"
+    ? authorityFor(contract.sourceId, contract.recordClass, contract.acquisitionAdapter.requestedUrl)
+    : (() => {
+        const registered = SOURCE_AUTHORITIES[contract.sourceId];
+        return (registered.recordClasses as readonly RoutineRecordClass[]).includes(contract.recordClass) && registered.routePrefixes.length > 0
+          ? { ok: true as const, contract: registered }
+          : { ok: false as const, code: "REGISTERED_SOURCE_ROUTES_INVALID" };
+      })();
+  if (!authority.ok || !authority.contract.routineAutoPromotion) {
+    throw new Error(`ROUTINE_CONTRACT_AUTHORITY_REFUSED:${contract.id}:${authority.ok ? "SOURCE_NOT_AUTO_PROMOTABLE" : authority.code}`);
+  }
+  if (authority.contract.parserVersion !== contract.parserNormalizerVersion) {
+    throw new Error(`ROUTINE_CONTRACT_PARSER_MISMATCH:${contract.id}`);
+  }
+  return {
+    id: contract.id,
+    sourceId: contract.sourceId,
+    acquisitionFailureDomain: "acquisitionFailureDomain" in contract &&
+        typeof contract.acquisitionFailureDomain === "string"
+      ? contract.acquisitionFailureDomain
+      : `routine-source:${contract.sourceId}`,
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    requestedUrl: contract.acquisitionAdapter.authorityMode === "SINGLE_ROUTE"
+      ? contract.acquisitionAdapter.requestedUrl
+      : "",
+    authorityMode: contract.acquisitionAdapter.authorityMode,
+    parserVersion: contract.parserNormalizerVersion,
+    command: contract.acquisitionAdapter.command,
+    cadenceMs: contract.cadence.defaultEveryMs,
+    retryMs: contract.retry.afterMs,
+    contract,
+  };
+}
+
 export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
-  {
-    id: "fec-funding",
-    sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    requestedUrl: "https://api.open.fec.gov/v1/",
-    parserVersion: "fec-funding/2",
-    command: ["scripts/fetch-fec.mts", "--promote"],
-    cadenceMs: 7 * DAY,
-    retryMs: 6 * HOUR,
-  },
-  {
-    id: "nh-members",
-    sourceId: "nh-general-court",
-    recordClass: "STATE_LEGISLATOR",
-    scope: "US-NH",
-    requestedUrl: "https://gc.nh.gov/downloads/Members.txt",
-    parserVersion: "nh-general-court/2",
-    command: ["scripts/nh-gencourt-members.mts", "--promote"],
-    cadenceMs: DAY,
-    retryMs: HOUR,
-  },
-  {
-    id: "census-acs-population",
-    sourceId: "census-data-api",
-    recordClass: "CENSUS_REFERENCE",
-    scope: "acs-population",
-    requestedUrl: "https://api.census.gov/data/2024/acs/acs5",
-    parserVersion: "census-data-api/2",
-    command: ["scripts/acs-population-promote.mts"],
-    cadenceMs: 30 * DAY,
-    retryMs: 6 * HOUR,
-  },
-] as const;
+  ...ROUTINE_SOURCE_CONTRACTS,
+  ...MEETING_PARTITION_CONTRACTS,
+].map(routineTaskFromContract);
+
+/**
+ * Admit at most one child from any shared upstream in one supervisor pass.
+ * A provider that hangs at the outer child ceiling can therefore consume one
+ * lane for one child, rather than extending the pass by every body hosted by
+ * that provider. The next pass rotates to the least-recently-considered due
+ * partition, using durable source attempts plus append-only supervisor faults.
+ */
+export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
+/** Polling admission is not acquisition; source contracts retain their own cadence. */
+export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
+/** Canonical clock reads are independent HTTP queries, not one serial failure chain. */
+export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
+/** `PostgresRoutineDataStore.clock` performs one batch plus at most one candidate read. */
+export const ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK = 2;
+
+export interface RoutineTaskAdmissionCandidate {
+  readonly task: RoutineSourceTask;
+  /**
+   * Newest durable source attempt or unreceipted supervisor attempt. `null`
+   * means this task has never been considered and therefore goes first.
+   */
+  readonly lastConsideredAt: string | null;
+}
+
+function consideredAtMs(candidate: RoutineTaskAdmissionCandidate): number {
+  if (candidate.lastConsideredAt === null) return Number.NEGATIVE_INFINITY;
+  const parsed = Date.parse(candidate.lastConsideredAt);
+  // A corrupt clock must not silently omit work. Treat it as never considered
+  // so the source is attempted and its normal durable validation can expose
+  // the bad state rather than reporting a false cadence hold.
+  return Number.isFinite(parsed) ? parsed : Number.NEGATIVE_INFINITY;
+}
+
+export function routineFailureDomainFrontier(
+  candidates: readonly RoutineTaskAdmissionCandidate[],
+  perDomain: number = ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+  rotationSeed: number = 0,
+): readonly RoutineTaskAdmissionCandidate[] {
+  if (!Number.isSafeInteger(perDomain) || perDomain <= 0) {
+    throw new Error(`ROUTINE_FAILURE_DOMAIN_FRONTIER_INVALID:${perDomain}`);
+  }
+  if (!Number.isSafeInteger(rotationSeed) || rotationSeed < 0) {
+    throw new Error(`ROUTINE_FAILURE_DOMAIN_FRONTIER_ROTATION_INVALID:${rotationSeed}`);
+  }
+  const ids = candidates.map(({ task }) => task.id);
+  if (new Set(ids).size !== ids.length) throw new Error("ROUTINE_FAILURE_DOMAIN_FRONTIER_DUPLICATE_TASK");
+
+  const registryIndex = new Map(ids.map((id, index) => [id, index]));
+  const byDomain = new Map<string, RoutineTaskAdmissionCandidate[]>();
+  for (const candidate of candidates) {
+    const domain = candidate.task.acquisitionFailureDomain;
+    if (!domain || domain !== domain.trim() || /[\r\n]/.test(domain)) {
+      throw new Error(`ROUTINE_FAILURE_DOMAIN_INVALID:${candidate.task.id}`);
+    }
+    const group = byDomain.get(domain) ?? [];
+    group.push(candidate);
+    byDomain.set(domain, group);
+  }
+
+  const admitted = new Set<string>();
+  for (const group of byDomain.values()) {
+    const groupIndex = new Map(group.map(({ task }, index) => [task.id, index]));
+    const rotation = rotationSeed % group.length;
+    group
+      .sort((left, right) =>
+        consideredAtMs(left) - consideredAtMs(right) ||
+        (
+          (groupIndex.get(left.task.id)! - rotation + group.length) % group.length -
+          (groupIndex.get(right.task.id)! - rotation + group.length) % group.length
+        ) ||
+        registryIndex.get(left.task.id)! - registryIndex.get(right.task.id)!,
+      )
+      .slice(0, perDomain)
+      .forEach(({ task }) => admitted.add(task.id));
+  }
+  // Preserve registry order across providers so logs and deterministic tests
+  // never depend on Map iteration after the per-domain fairness decision.
+  return candidates.filter(({ task }) => admitted.has(task.id));
+}
+
+/** A restart in the same admission slot makes the same deterministic choice. */
+export function routineFailureDomainRotationSeed(startedAt: string): number {
+  const parsed = Date.parse(startedAt);
+  if (!Number.isFinite(parsed) || new Date(parsed).toISOString() !== startedAt) {
+    throw new Error(`ROUTINE_FAILURE_DOMAIN_ROTATION_TIME_INVALID:${startedAt}`);
+  }
+  return Math.floor(parsed / ROUTINE_DATA_ADMISSION_MS);
+}
+
+export function routineFailureDomainCount(
+  tasks: readonly Pick<RoutineSourceTask, "acquisitionFailureDomain">[] = ROUTINE_SOURCE_TASKS,
+): number {
+  const domains = tasks.map(({ acquisitionFailureDomain }) => acquisitionFailureDomain);
+  if (domains.some((domain) => !domain || domain !== domain.trim() || /[\r\n]/.test(domain))) {
+    throw new Error("ROUTINE_FAILURE_DOMAIN_INVALID");
+  }
+  return new Set(domains).size;
+}
+
+export interface RoutineSupervisorHistoryIssue {
+  readonly rowIndex: number;
+  readonly digestId: string;
+  readonly code: "ROUTINE_SUPERVISOR_HISTORY_ROW_INVALID";
+  readonly detail: string;
+}
+
+export interface RoutineSupervisorAttemptHistory {
+  /** Latest valid supervisor-only attempt for each registered task. */
+  readonly attempts: ReadonlyMap<string, string>;
+  /** Corrupt rows are explicit evidence; they never erase valid sibling rows. */
+  readonly issues: readonly RoutineSupervisorHistoryIssue[];
+}
+
+function historyObject(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function canonicalHistoryTime(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString() === value ? value : null;
+}
+
+function historyText(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0 && !/[\r\n]/.test(value);
+}
+
+/**
+ * Extract only supervisor attempts that lack an exact source-authored receipt.
+ *
+ * Owner history is durable input, not trusted TypeScript memory. Each relevant
+ * row is therefore validated independently. A corrupt newer row is reported
+ * but cannot reset clocks recovered from other valid rows, which would let the
+ * first hung partition monopolize a shared provider forever.
+ */
+export function routineUnreceiptedSupervisorAttemptHistory(
+  rows: readonly unknown[],
+  registeredTaskIds: ReadonlySet<string>,
+): RoutineSupervisorAttemptHistory {
+  const attempts = new Map<string, string>();
+  const issues: RoutineSupervisorHistoryIssue[] = [];
+
+  for (let rowIndex = 0; rowIndex < rows.length; rowIndex += 1) {
+    const row = historyObject(rows[rowIndex]);
+    const outcome = historyObject(row?.runtimeOutcome);
+    if (outcome?.kind !== "ROUTINE_CIVIC_DATA_SUPERVISOR") continue;
+
+    const digestId = historyText(row?.digestId) ? row.digestId : `owner-digest-row-${rowIndex}`;
+    const reasons: string[] = [];
+    const startedAt = canonicalHistoryTime(outcome.startedAt);
+    const finishedAt = canonicalHistoryTime(outcome.finishedAt);
+    if (startedAt === null || finishedAt === null || Date.parse(finishedAt) < Date.parse(startedAt)) {
+      reasons.push("cycle time is not a canonical increasing ISO interval");
+    }
+    if (!historyText(outcome.cycleId) || !historyText(outcome.host) || !historyText(outcome.provider)) {
+      reasons.push("cycle, host, or provider identity is missing");
+    }
+    if (outcome.durable !== true) reasons.push("outcome is not durable");
+    if (
+      !Number.isSafeInteger(outcome.attemptedTasks) || Number(outcome.attemptedTasks) < 0 ||
+      !Number.isSafeInteger(outcome.verifiedSourceSuccesses) || Number(outcome.verifiedSourceSuccesses) < 0 ||
+      !Number.isSafeInteger(outcome.verifiedSourceFailures) || Number(outcome.verifiedSourceFailures) < 0
+    ) reasons.push("attempt or source-outcome counts are malformed");
+
+    const failures = Array.isArray(outcome.failures) ? outcome.failures : null;
+    const taskReceipts = Array.isArray(outcome.taskReceipts) ? outcome.taskReceipts : null;
+    const receiptEvidence = outcome.taskReceiptEvidence;
+    if (failures === null) reasons.push("failures are not an array");
+    if (taskReceipts === null) reasons.push("task receipts are not an array");
+    if (receiptEvidence !== "EXACT" && receiptEvidence !== "UNAVAILABLE_OUTER_SUPERVISOR") {
+      reasons.push("task-receipt evidence mode is invalid");
+    }
+
+    const failureTaskIds: string[] = [];
+    if (failures !== null) {
+      for (const failureValue of failures) {
+        const failure = historyObject(failureValue);
+        if (
+          failure === null || !historyText(failure.taskId) ||
+          !historyText(failure.code) || typeof failure.detail !== "string"
+        ) {
+          reasons.push("a supervisor failure reference is malformed");
+          continue;
+        }
+        failureTaskIds.push(failure.taskId);
+      }
+    }
+
+    const exactReceiptTaskIds = new Set<string>();
+    const exactReceiptCandidateIds = new Set<string>();
+    let exactSuccesses = 0;
+    let exactFailures = 0;
+    if (taskReceipts !== null) {
+      for (const referenceValue of taskReceipts) {
+        const reference = historyObject(referenceValue);
+        const receiptValue = historyObject(reference?.receipt);
+        let parsedReceipt: ReturnType<typeof parseRoutineRunnerReceipt> | null = null;
+        try {
+          parsedReceipt = receiptValue === null
+            ? null
+            : parseRoutineRunnerReceipt(`RCD_RECEIPT=${JSON.stringify(receiptValue)}`);
+        } catch {
+          parsedReceipt = null;
+        }
+        if (
+          reference === null || !historyText(reference.taskId) ||
+          (reference.classification !== "VERIFIED_SOURCE_SUCCESS" &&
+            reference.classification !== "VERIFIED_SOURCE_FAILURE") ||
+          parsedReceipt === null || !parsedReceipt.ok ||
+          parsedReceipt.receipt.source !== reference.taskId
+        ) {
+          reasons.push("an exact task receipt reference is malformed or contradictory");
+          continue;
+        }
+        if (exactReceiptTaskIds.has(reference.taskId) || exactReceiptCandidateIds.has(parsedReceipt.receipt.candidateId)) {
+          reasons.push("exact task or candidate receipt identity is duplicated");
+          continue;
+        }
+        const successIssue = successfulRoutineRunnerReceiptIssue(parsedReceipt.receipt);
+        if (
+          (reference.classification === "VERIFIED_SOURCE_SUCCESS" && successIssue !== null) ||
+          (reference.classification === "VERIFIED_SOURCE_FAILURE" && (
+            parsedReceipt.receipt.state === "PROMOTED" ||
+            parsedReceipt.receipt.decision === "GOOD" ||
+            parsedReceipt.receipt.promotedVersion !== null
+          ))
+        ) {
+          reasons.push("an exact task receipt classification contradicts its receipt");
+          continue;
+        }
+        exactReceiptTaskIds.add(reference.taskId);
+        exactReceiptCandidateIds.add(parsedReceipt.receipt.candidateId);
+        if (reference.classification === "VERIFIED_SOURCE_SUCCESS") exactSuccesses += 1;
+        else exactFailures += 1;
+      }
+    }
+
+    if (receiptEvidence === "UNAVAILABLE_OUTER_SUPERVISOR" && (taskReceipts?.length ?? 0) !== 0) {
+      reasons.push("unavailable task-receipt evidence carries task receipts");
+    }
+    if (receiptEvidence === "EXACT") {
+      if (exactSuccesses !== outcome.verifiedSourceSuccesses || exactFailures !== outcome.verifiedSourceFailures) {
+        reasons.push("exact task receipts do not reconcile to source-outcome counts");
+      }
+      if ((taskReceipts?.length ?? 0) > Number(outcome.attemptedTasks)) {
+        reasons.push("exact task receipts exceed the attempted-task denominator");
+      }
+    }
+    const expectedState = (failures?.length ?? 0) === 0 ? "SUCCEEDED" : "FAILED";
+    if (outcome.state !== expectedState) reasons.push("outcome state contradicts supervisor failures");
+
+    if (reasons.length > 0 || finishedAt === null) {
+      issues.push({
+        rowIndex,
+        digestId,
+        code: "ROUTINE_SUPERVISOR_HISTORY_ROW_INVALID",
+        detail: [...new Set(reasons)].join("; ") || "finished-at time is invalid",
+      });
+      continue;
+    }
+
+    for (const taskId of failureTaskIds) {
+      if (!registeredTaskIds.has(taskId) || exactReceiptTaskIds.has(taskId)) continue;
+      const prior = attempts.get(taskId);
+      if (prior === undefined || Date.parse(prior) < Date.parse(finishedAt)) attempts.set(taskId, finishedAt);
+    }
+  }
+  return { attempts, issues };
+}
+
+export type RoutineTaskSelection =
+  | {
+      readonly ok: true;
+      readonly only: ReadonlySet<string> | null;
+    }
+  | {
+      readonly ok: false;
+      readonly code: "EMPTY_ROUTINE_TASK_SELECTION" | "UNKNOWN_ROUTINE_TASK_SELECTION";
+      readonly detail: string;
+    };
+
+/**
+ * Resolve every explicit selection before the runner opens its durable store.
+ * A misspelled or retired task id must refuse the whole pass instead of
+ * reporting an empty successful run (or partially running the known ids).
+ */
+export function routineTaskSelection(
+  args: readonly string[],
+  tasks: readonly Pick<RoutineSourceTask, "id">[] = ROUTINE_SOURCE_TASKS,
+): RoutineTaskSelection {
+  const onlyArgs = args.filter((arg) => arg === "--only" || arg.startsWith("--only="));
+  if (onlyArgs.length === 0) return { ok: true, only: null };
+
+  const tokens = onlyArgs.flatMap((arg) =>
+    arg === "--only" ? [""] : arg.slice("--only=".length).split(","),
+  );
+  if (tokens.some((token) => token.trim().length === 0)) {
+    return {
+      ok: false,
+      code: "EMPTY_ROUTINE_TASK_SELECTION",
+      detail: "--only requires one or more non-empty routine source task ids",
+    };
+  }
+
+  const only = new Set(tokens.map((token) => token.trim()));
+  const known = new Set(tasks.map((task) => task.id));
+  const unknown = [...only].filter((id) => !known.has(id)).sort();
+  if (unknown.length > 0) {
+    return {
+      ok: false,
+      code: "UNKNOWN_ROUTINE_TASK_SELECTION",
+      detail: `unknown or retired routine source task id(s): ${unknown.join(", ")}`,
+    };
+  }
+  return { ok: true, only };
+}
 
 export interface RoutineTaskClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
+}
+
+export type RoutineTaskClockRead =
+  | {
+      readonly task: RoutineSourceTask;
+      readonly ok: true;
+      readonly clock: RoutineTaskClock | undefined;
+      readonly error: null;
+    }
+  | {
+      readonly task: RoutineSourceTask;
+      readonly ok: false;
+      readonly clock: undefined;
+      readonly error: string;
+    };
+
+/** Ordered, source-isolated canonical clock reads for one frozen admission instant. */
+export async function readRoutineTaskClocks(
+  tasks: readonly RoutineSourceTask[],
+  readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>,
+  concurrency: number = ROUTINE_CLOCK_READ_CONCURRENCY,
+): Promise<readonly RoutineTaskClockRead[]> {
+  const reads = await runBoundedWorkPool(tasks, concurrency, readClock);
+  return reads.map((read) => read.ok
+    ? { task: tasks[read.index]!, ok: true as const, clock: read.value, error: null }
+    : { task: tasks[read.index]!, ok: false as const, clock: undefined, error: read.error });
 }
 
 export function routineTaskDue(task: RoutineSourceTask, clock: RoutineTaskClock | undefined, nowMs: number): boolean {
@@ -65,10 +447,11 @@ export function routineTaskDue(task: RoutineSourceTask, clock: RoutineTaskClock 
   const attempted = Date.parse(clock.lastAttemptedAt);
   const succeeded = clock.lastSucceededAt ? Date.parse(clock.lastSucceededAt) : Number.NaN;
   if (!Number.isFinite(attempted)) return true;
+  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
   if (!Number.isFinite(succeeded)) return nowMs - attempted >= task.retryMs;
   // Once a due read fails, the source's retry clock owns the next attempt.
   // Measuring from the older success would make every pilot cycle retry at
   // once merely because the ordinary cadence had already elapsed.
   if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
-  return nowMs - succeeded >= task.cadenceMs;
+  return nowMs - succeeded >= cadenceMsAt(task.contract, nowMs);
 }

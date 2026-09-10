@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -128,50 +128,16 @@ test("the rate is a pair, never a bare percentage", () => {
   assert.deepEqual(rate, { failures: 2, completed: 3 });
 });
 
-/**
- * The watcher is worth nothing if it is not RUN. This asserts the workflow
- * that runs it exists and names the script, so deleting the schedule fails the
- * build rather than quietly returning the product to the state RULING 56 was
- * adopted to end.
- */
-test("a workflow actually runs the watcher on a schedule", () => {
-  const yml = readFileSync(join(ROOT, ".github", "workflows", "job-watch.yml"), "utf8");
-  assert.match(yml, /schedule:/, "it runs on a schedule");
-  assert.match(yml, /watch:workflows/, "it runs the watcher");
-  assert.match(yml, /--open/, "it is allowed to open the row, not only report");
-});
-
-/**
- * Every workflow the repo schedules is watched. A new scheduled job that
- * nobody added to the list would fail silently exactly as these two did.
- */
-test("every scheduled workflow in the repo is on the watch list", () => {
+test("PDC terminal boundary: no job watcher is dispatchable and GitHub owns zero routine clocks", () => {
   const dir = join(ROOT, ".github", "workflows");
-  const watcher = readFileSync(join(ROOT, "scripts", "watch-workflows.mts"), "utf8");
-
-  const scheduled = readdirSync(dir).filter((f) => {
-    if (!f.endsWith(".yml")) return false;
-    if (f === "job-watch.yml") return false; // the watcher itself
-    return /^\s*schedule:/m.test(readFileSync(join(dir, f), "utf8"));
-  });
-
-  /*
-   * RULING 116: a guard may pin an INVARIANT or a DIRECTION, never the size of
-   * a set that legitimately moves. This asserted `>= 5` and went red on
-   * 2026-08-24 because RULING 124 consolidated five scheduled refreshes into
-   * one — the guard failed on the day the work was done, which is precisely
-   * the shape that trains a reader to edit the constant.
-   *
-   * The invariant is the second assertion and it never needed the first: EVERY
-   * scheduled workflow is watched. The floor stays at 1 only so that a repo
-   * with no schedules at all cannot pass this vacuously.
-   */
-  assert.ok(
-    scheduled.length >= 1,
-    "no scheduled workflow found at all — this guard would pass without looking",
-  );
-  const missing = scheduled.filter((f) => !watcher.includes(f));
-  assert.deepEqual(missing, [], `scheduled workflows nothing watches: ${missing.join(", ")}`);
+  const scheduled = readdirSync(dir)
+    .filter((file) => /\.ya?ml$/.test(file))
+    .filter((file) => /^\s*schedule:/m.test(readFileSync(join(dir, file), "utf8")));
+  assert.deepEqual(scheduled, [], `GITHUB_ROUTINE_OPS_CRONS=${scheduled.length}: ${scheduled.join(", ")}`);
+  assert.equal(existsSync(join(dir, "job-watch.yml")), false, "job-watch.yml is still dispatchable");
+  assert.equal(existsSync(join(ROOT, "scripts", "watch-workflows.mts")), false, "the job-watch CLI still exists");
+  const pkg = readFileSync(join(ROOT, "package.json"), "utf8");
+  assert.doesNotMatch(pkg, /"watch:workflows"\s*:/, "the retired watcher still has a familiar executable alias");
 });
 
 
@@ -389,16 +355,6 @@ test("a long single line is capped rather than carried whole", () => {
   const shaped = shapeFailureTail(`${"x".repeat(5000)}\n`, { lineChars: 80 });
   assert.equal(shaped!.lines[0].length, 80);
   assert.match(shaped!.lines[0], /…$/);
-});
-
-test("the watcher composes the tail into the row it opens", () => {
-  // The wiring, asserted in the script's own source. A perfect shaper that
-  // nothing calls is the chromium-pin shape: a fix that cannot be observed.
-  const src = readFileSync(join(ROOT, "scripts", "watch-workflows.mts"), "utf8");
-  assert.match(src, /failureTail: failureTailOf\(consecutive\.newest\.databaseId\)/);
-  assert.match(src, /WHAT THE FAILING RUN PRINTED/);
-  // RULING 127: the tail is redacted before it can reach a committed row.
-  assert.match(src, /redactSecrets\(rendered, SECRETS\)/);
 });
 
 test("the cause line is surfaced even when it sits far above the tail", () => {

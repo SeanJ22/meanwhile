@@ -63,7 +63,11 @@ test("THE SHIPPED SHAPE: a row in the store that no ledger entry claims is REFUS
   assert.equal(failures.length, 1);
   assert.equal(failures[0].check, "ledger-claims-the-row");
   assert.match(failures[0].detail, /AAA2/);
-  assert.match(reconciliationReport(failures), /push-allowlist/, "and it points at the profile, which is the cause");
+  assert.match(
+    reconciliationReport(failures),
+    /No workflow or direct-main writer/,
+    "the remedy cannot restore the retired transport",
+  );
 });
 
 test("a stated open count that is not the store's is REFUSED", () => {

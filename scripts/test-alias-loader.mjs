@@ -9,6 +9,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import ts from "typescript";
 
 const root = process.cwd();
 
@@ -64,6 +65,26 @@ export function resolve(specifier, context, nextResolve) {
  * only class keys actually declared by the imported module; paint remains a
  * browser assertion and an unknown class key still resolves to undefined. */
 export function load(url, context, nextLoad) {
+  /*
+   * Node's built-in type stripping intentionally refuses TSX. Admin's
+   * canonical runtime-outcome projection has a server-rendered component
+   * contract, so silently omitting its TSX test from the certified suite
+   * would leave the owner-facing PDC evidence outside certification.
+   * Transpile TSX only for this test loader; the app still uses Next.
+   */
+  if (url.endsWith(".tsx")) {
+    const source = readFileSync(fileURLToPath(url), "utf8");
+    const compiled = ts.transpileModule(source, {
+      compilerOptions: {
+        jsx: ts.JsxEmit.ReactJSX,
+        module: ts.ModuleKind.ESNext,
+        target: ts.ScriptTarget.ES2022,
+      },
+      fileName: fileURLToPath(url),
+      reportDiagnostics: false,
+    });
+    return { format: "module", shortCircuit: true, source: compiled.outputText };
+  }
   if (!url.endsWith(".module.css")) return nextLoad(url, context);
   const css = readFileSync(fileURLToPath(url), "utf8");
   const classKeys = [...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map(match => match[1]);

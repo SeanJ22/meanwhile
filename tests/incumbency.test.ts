@@ -31,11 +31,13 @@ import {
   splitDisplayName,
   type SeatHolderRef,
 } from "../lib/ballot/incumbency.ts";
-import { nhLegislativeHolders, nhSeatKeyFromTitle, sits } from "../lib/ballot/seat-holders.ts";
+import { nhLegislativeHolders, nhSeatKeyFromTitle, refreshNhSeatHolders, sits } from "../lib/ballot/seat-holders.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
 import { votingRecordEmptyLine } from "../lib/ballot/battlecard-sections.ts";
 
 const ROOT = join(import.meta.dirname, "..");
+await refreshNhSeatHolders({ store: new MemoryRoutineDataStore() });
 
 
 /**
@@ -315,7 +317,7 @@ test("the ballot page reads incumbency from the contest resolution, not from the
   assert.ok(!/incumbent=\{holder !== null\}/.test(src), "the federal-only derivation is gone");
   assert.ok(src.includes("contestIncumbency("), "the contest resolution is what feeds the chip");
   assert.ok(
-    src.includes("record: recordHolder ?"),
-    "and the voting-record panel gates on whether records exist, not on the federal join (Item 14)",
+    /record:\s*!authorityAvailability\.officeholders\s*\?[\s\S]*?:\s*recordHolder\s*\?/.test(src),
+    "the voting-record panel first names an unavailable canonical officeholder holding, then gates content on an exact record (Item 14)",
   );
 });

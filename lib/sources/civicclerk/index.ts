@@ -21,6 +21,7 @@ import {
 } from "../normalize-account.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -265,7 +266,7 @@ export function makeCivicClerkSource(
   return {
     name: SOURCE_NAME,
 
-    async fetch(): Promise<CivicClerkRaw[]> {
+    async fetch(meetingQuery?: MeetingQuery): Promise<CivicClerkRaw[]> {
       const now = Date.now();
       const from = new Date(now - WINDOW_BACK_DAYS * 86_400_000)
         .toISOString()
@@ -290,6 +291,7 @@ export function makeCivicClerkSource(
         const url = `${wiring.config.apiBase}/v1/Events?${query}`;
         const body = await politeGetJson<{ value?: CivicClerkEvent[] }>(url, {
           fetchImpl,
+          signal: meetingQuery?.signal,
         });
         collected.push({
           wiring,

@@ -1,8 +1,6 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import type { KeyVoteEntry } from "./key-votes.ts";
 import type { VotePosition } from "./types.ts";
+import { getFederalKeyVotesReadModel } from "./key-votes-projection.ts";
 
 /**
  * The chamber rule, in code (B15).
@@ -13,8 +11,8 @@ import type { VotePosition } from "./types.ts";
  * wrong array — the component is handed rows that are already chamber-
  * correct and has no access to the other chamber's.
  *
- * The snapshot is committed (`data/votes/key-votes-snapshot.json`, written
- * by `pnpm key-votes:fetch`); nothing fetches per page load.
+ * Rows come only from the initialized canonical key-vote projection. The
+ * bundled JSON is an explicit first seed, never a store-error fallback.
  */
 
 export interface KeyVoteRowData {
@@ -35,26 +33,16 @@ export interface KeyVoteRowData {
   note: string | null;
 }
 
-interface KeyVotesSnapshot {
+export interface KeyVotesSnapshot {
   formatVersion: 1;
   fetchedAt: string;
   criteria: string;
   entries: KeyVoteEntry[];
-  misses: { id: string; chamber: string; reason: string }[];
+  misses: readonly { readonly id: string; readonly chamber: string; readonly reason: string }[];
 }
 
-let cache: KeyVotesSnapshot | null = null;
-
 export function getKeyVotesSnapshot(): KeyVotesSnapshot {
-  if (!cache) {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "votes", "key-votes-snapshot.json"),
-        "utf8",
-      ),
-    ) as KeyVotesSnapshot;
-  }
-  return cache;
+  return getFederalKeyVotesReadModel().snapshot;
 }
 
 /**

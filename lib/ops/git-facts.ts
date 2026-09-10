@@ -1,8 +1,8 @@
 /**
  * **THE TWO GIT FACTS EVERY RUN RECORD NEEDS.** (A.1, 2026-08-30. RULING 103.)
  *
- * `reader-suite.mts`, `visual-suite.mts`, `control-set.mts`, `pilot-health.mts`
- * and `status-ledger.mts` all need the same two answers: which commit am I
+ * `reader-suite.mts`, `visual-suite.mts`, `control-set.mts` and
+ * `status-ledger.mts` all need the same two answers: which commit am I
  * measuring, and does this tree contain that one. Each had grown its own copy,
  * and `pnpm dupes` named them — correctly, because the interesting behaviour in
  * those lines is what they do when git CANNOT answer.

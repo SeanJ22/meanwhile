@@ -43,36 +43,17 @@ export const FAILURE_CLASSES: readonly FailureClass[] = [
   {
     id: "push-refused-by-ruleset",
     remedy:
-      "The branch ruleset refused this push. The bypass is granted to the Deploy keys category, " +
-      "which means SSH: confirm this job passes PUSH_DEPLOY_KEY to the step that runs " +
-      "scripts/push-main.mjs, and that the push target is git@github.com and not an https URL. " +
-      "An HTTPS push authenticates as the Actions app, which has no bypass. See " +
-      "docs/deploy-key-setup.md.",
+      "The branch ruleset correctly refused a direct push. Terminal PDC permits no workflow, " +
+      "runtime process, deploy key, or app bypass around software CI. Remove the direct writer; " +
+      "a real software change must use the normal pull-request and exact-head certification path.",
     shapes: [/\bGH013\b/, /repository rule violations/i, /\bGH006\b/, /protected branch (update failed|hook declined)/i],
-  },
-  {
-    id: "push-outside-allowlist",
-    remedy:
-      "This workflow tried to push a path it does not declare. Either narrow what it stages, or " +
-      "declare the path in lib/ops/push-allowlist.ts with the reason — declaring it is a decision, " +
-      "not a formality. Widening a profile to a whole directory is refused.",
-    shapes: [/PATH GUARD REFUSED THIS PUSH/, /paths outside the allowlist/i],
-  },
-  {
-    id: "deploy-key-missing-or-malformed",
-    remedy:
-      "The PUSH_DEPLOY_KEY secret is absent, empty, or is not an OpenSSH private key. In GitHub " +
-      "Actions an unset secret interpolates to an empty string, so this is what a missing repository " +
-      "secret looks like from inside the job. The public half belongs in Settings -> Deploy keys; " +
-      "the private half is the secret.",
-    shapes: [/PUSH_DEPLOY_KEY is (not set|set but EMPTY|malformed)/i, /does not look like an OpenSSH private key/i],
   },
   {
     id: "tracker-store-and-views-disagree",
     remedy:
-      "A tracker store was written without its generated views, or the other way round. Run " +
-      "`corepack pnpm tracker:views`, commit docs/tracker.md, docs/log.md, docs/tracker-opened.json " +
-      "and docs/tracker.xlsx alongside the store, and check the pusher's allowlist grants all five.",
+      "An engineering tracker store was changed without its deterministic views, or the other way " +
+      "round. Regenerate the views locally and carry store plus views through the same ordinary " +
+      "software pull request. Do not add a workflow, direct-main writer, or bypass to repair it.",
     shapes: [
       /states an open count other than/i,
       /the stated open count is the store's/i,
@@ -92,9 +73,9 @@ export const FAILURE_CLASSES: readonly FailureClass[] = [
   {
     id: "staleness-guard",
     remedy:
-      "A source's oldest row has crossed its allowed age. The refresh is refusing to commit a " +
-      "snapshot it knows is stale rather than shipping it quietly. Run `pnpm source:headroom` and " +
-      "read the SERVING-EDGE column, which is the clock that moves.",
+      "A source's oldest serving row crossed its allowed age. Inspect that source's canonical " +
+      "attempt, retry/backoff, hold, and LKG receipts in Admin; repair its source-scoped data-plane " +
+      "contract. Do not refresh or revert a tracked snapshot and do not dispatch software CI.",
     shapes: [/headroom/i, /oldest row/i, /past its RULING 53 window/i],
   },
   {

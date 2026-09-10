@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { loadIndex } from "../lib/governance/ledger.ts";
-import { CURRENT_STATUSES } from "../lib/governance/schema.ts";
+import { CURRENT_STATUSES, DOMAINS } from "../lib/governance/schema.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -28,10 +28,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  * ledger does not contain.
  */
 
-function tsx(script: string, cwd: string): string {
+function runTypedScript(script: string, cwd: string): string {
   return execFileSync(
     process.execPath,
-    [join(ROOT, "node_modules", "tsx", "dist", "cli.mjs"), script],
+    ["--experimental-strip-types", script],
     { cwd, stdio: "pipe", encoding: "utf8" },
   );
 }
@@ -68,7 +68,7 @@ test("every generated governance view reproduces byte-for-byte", () => {
   // regenerated and diffed. Here the diff IS the test.
   const dir = scratchRepo();
   try {
-    tsx(join(dir, "scripts", "governance-compile.mts"), dir);
+    runTypedScript(join(dir, "scripts", "governance-compile.mts"), dir);
     for (const p of [
       "docs/governance/index.json",
       "docs/governance/current-decisions.md",
@@ -99,7 +99,7 @@ test("a hand-edited generated view is caught by governance:check", () => {
     writeFileSync(p, readFileSync(p, "utf8") + "\n\n## RULING 999 — smuggled in by hand\n", "utf8");
     let failed = false;
     try {
-      tsx(join(dir, "scripts", "governance-check.mts"), dir);
+      runTypedScript(join(dir, "scripts", "governance-check.mts"), dir);
     } catch {
       failed = true;
     }
@@ -118,7 +118,7 @@ test("shortening the constitution cannot delete law from the ledger", () => {
   const dir = scratchRepo();
   try {
     writeFileSync(join(dir, "CLAUDE.md"), "# CLAUDE.md\n\nDeliberately emptied by this test.\n", "utf8");
-    tsx(join(dir, "scripts", "governance-compile.mts"), dir);
+    runTypedScript(join(dir, "scripts", "governance-compile.mts"), dir);
     const ledger = readFileSync(join(dir, "docs", "governance", "ledger.jsonl"), "utf8");
     for (const phrase of ["Get out of my way", "PDFs ARE DATA", "Never generate a candidate position"]) {
       assert.ok(
@@ -183,8 +183,7 @@ test("the constitution stays a ROOT constitution, not a second copy of the polic
 test("no superseded operative text sits in current authority", () => {
   const index = loadIndex();
   for (const p of [
-    "docs/governance/policies/discovery.md",
-    "docs/governance/policies/shipping-ci.md",
+    ...DOMAINS.map((domain) => `docs/governance/policies/${domain}.md`),
     "docs/governance/current-decisions.md",
   ]) {
     const text = readFileSync(join(ROOT, p), "utf8");
@@ -209,13 +208,28 @@ test("no superseded operative text sits in current authority", () => {
   }
 });
 
+test("PDC current law cannot keep the retired runtime Git pusher as an instruction", () => {
+  const currentAuthority = [
+    "CLAUDE.md",
+    "AGENTS.md",
+    "docs/governance/current-decisions.md",
+    ...DOMAINS.map((domain) => `docs/governance/policies/${domain}.md`),
+  ].map((path) => readFileSync(join(ROOT, path), "utf8")).join("\n");
+
+  assert.doesNotMatch(currentAuthority, /Scheduled pushers authenticate as a deploy key/);
+  assert.doesNotMatch(currentAuthority, /A scheduled pusher declares which paths it may write/);
+  assert.doesNotMatch(currentAuthority, /A bot observation, integrity reading, intake or refresh report takes the exact-file cheap path/);
+  assert.match(currentAuthority, /No routine Git-pusher credential exists/);
+  assert.match(currentAuthority, /Runtime events are not bookkeeping commits/);
+});
+
 test("the final governance acceptance gate passes", () => {
   // The whole remediation brief, checked against measured state rather than
   // asserted in a report. If a later change breaks any of the 27 criteria, the
   // suite says which one — the same reason every other gate here exists.
   const out = execFileSync(
     process.execPath,
-    [join(ROOT, "node_modules", "tsx", "dist", "cli.mjs"), join(ROOT, "scripts", "governance-accept.mts")],
+    ["--experimental-strip-types", join(ROOT, "scripts", "governance-accept.mts")],
     { cwd: ROOT, encoding: "utf8", stdio: "pipe" },
   );
   assert.match(out, /GOVERNANCE REMEDIATION: COMPLETE/);

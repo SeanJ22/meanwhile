@@ -23340,10 +23340,12 @@ suite output instead of an API that cannot serve a running job's log.
 1. Fast-forward the main checkout; the runner's next cycle spawns the new
    child code; kill the parent once so the window scheduler is live
    (the trigger relaunches it).
-2. `pnpm control-plane:bootstrap` with the env loaded (the live control plane
-   is already at schema v5 from the shadow window; the v4 runner had been
-   re-recording 4 until this head), then `pnpm control-plane:gate`.
-3. `gh workflow run refresh-daily.yml --repo SeanJ22/we-the-people --field all_sources=true`,
+2. Historical instruction, now retired by PDC: the standalone
+   `control-plane:bootstrap` command no longer exists. Schema bootstrap belongs
+   only to the exact installed STANDING_PARENT runtime; `pnpm control-plane:gate`
+   remains the read-only check.
+3. Historical instruction, now retired by PDC — **do not execute**:
+   `gh workflow run refresh-daily.yml --repo SeanJ22/we-the-people --field all_sources=true`,
    watch it, read back the bot's commit on `main`, `docs/refresh-run.json`
    (`gate.verdict` GREEN, no `ROUTE_UNREAD`), and the per-source as-of fields
    before/after (`generatedAt`, `curatedAt`, `fetchedAt`, `datasetHash`,

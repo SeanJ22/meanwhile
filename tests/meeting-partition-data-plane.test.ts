@@ -1,0 +1,631 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import test from "node:test";
+
+import {
+  MEETING_PARTITION_CONTRACTS,
+  LEGACY_MEETINGS_AGGREGATE_SCOPE,
+} from "../lib/civic-data/meeting-partitions.ts";
+import { readMeetingsProjection, type MeetingPartitionReadback } from "../lib/meetings/snapshot.ts";
+import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
+import { getMeetingSource } from "../lib/meetings/registry.ts";
+import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
+import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
+import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
+import type { Meeting } from "../lib/sources/types.ts";
+import type { ChildRunReport } from "../lib/sources/composite/index.ts";
+import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.ts";
+import {
+  preloadCanonicalMeetingDependencies,
+  promoteMeetingPartition,
+  promoteMeetingPartitions,
+  reconcileSuccessfulMeetingPartition,
+  selectedMeetingPartitions,
+} from "../scripts/ingest.ts";
+
+const FIRST = "2026-09-08T12:00:00.000Z";
+const SECOND = "2026-09-08T13:00:00.000Z";
+
+const legistar = MEETING_PARTITION_CONTRACTS.find((partition) => partition.meetingSource === "legistar")!;
+const insite = MEETING_PARTITION_CONTRACTS.find((partition) =>
+  partition.meetingSource === "legistar-insite" && partition.bodyId.includes("place:mesa"),
+)!;
+
+function urlFor(source: string): string {
+  return source === "legistar"
+    ? "https://webapi.legistar.com/v1/pima/events"
+    : source === "legistar-insite"
+      ? "https://mesa.legistar.com/Calendar.aspx"
+      : `https://calendar.google.com/calendar/ical/${source}/basic.ics`;
+}
+
+function evidence(source: string, version: string) {
+  const bytes = `${source}:${version}`;
+  return [{
+    source,
+    requestedUrl: urlFor(source),
+    finalUrl: urlFor(source),
+    httpStatus: 200,
+    rawHash: createHash("sha256").update(bytes).digest("hex"),
+    byteCount: Buffer.byteLength(bytes),
+  }];
+}
+
+function meeting(partition: typeof legistar, version: string, suffix: string): Meeting {
+  return {
+    id: `${partition.meetingSource}:${suffix}`,
+    ocdId: partition.ocdId,
+    bodyId: partition.bodyId,
+    bodyName: partition.wiring.config.insiteBodyName ?? partition.wiring.publishingOrg,
+    title: `${partition.wiring.jurisdiction} meeting ${suffix}`,
+    startsAt: "2026-09-20T17:00:00.000Z",
+    timeZone: partition.wiring.timeZone,
+    location: null,
+    agendaUrl: null,
+    jurisdiction: partition.wiring.jurisdiction,
+    status: "SCHEDULED",
+    provenance: {
+      sourceUrl: urlFor(partition.meetingSource),
+      sourceOrg: partition.wiring.publishingOrg,
+      collectedAt: version,
+      verifiedAt: null,
+    },
+  };
+}
+
+function report(source: string, version: string, ok = true): ChildRunReport {
+  return {
+    source,
+    ok,
+    error: ok ? null : `${source} timed out`,
+    ...(ok ? {} : { failure: "WALL" as const }),
+    fetched: ok ? 1 : 0,
+    normalized: ok ? 1 : 0,
+    drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+    ...(ok ? { acquisitions: evidence(source, version) } : {}),
+  };
+}
+
+function agendaDocument(row: Meeting, retrievedAt: string): AgendaDocument {
+  return {
+    id: `${row.id}@${"b".repeat(64)}`,
+    meetingId: row.id,
+    ocdId: row.ocdId,
+    documentUrl: `${urlFor(row.id.split(":")[0]!)}?agenda=1`,
+    contentHash: "b".repeat(64),
+    retrievedAt,
+    contentType: "text/html",
+    text: "Official agenda",
+    extraction: "html",
+    extractionNote: null,
+    sourceUrl: urlFor(row.id.split(":")[0]!),
+    sourceOrg: row.provenance.sourceOrg,
+    collectedAt: retrievedAt,
+    verifiedAt: null,
+  };
+}
+
+class CountingMeetingStore extends MemoryRoutineDataStore {
+  readPromotionsCalls = 0;
+
+  override async readPromotions<T = unknown>(
+    recordClass: RoutineRecordClass,
+    scopes: readonly string[],
+  ) {
+    this.readPromotionsCalls += 1;
+    return super.readPromotions<T>(recordClass, scopes);
+  }
+}
+
+test("an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence", async () => {
+  const store = new MemoryRoutineDataStore();
+  const source = report(legistar.meetingSource, FIRST);
+  const [result] = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [],
+    agendaDocuments: [],
+    reports: [{ ...source, fetched: 0, normalized: 0 }],
+    generatedAt: FIRST,
+  });
+  assert.equal(result?.outcome.promoted, null);
+  assert.equal(result?.outcome.candidate.state, "CANNOT_TELL");
+  assert.equal(result?.outcome.candidate.failureCode, "ZERO_IS_NOT_ABSENCE");
+  assert.equal(result?.outcome.candidate.receipt?.checks.find(({ check }) => check === "SOURCE_AUTHENTICITY")?.verdict, "PASS");
+  assert.equal(await store.readPromotion("MEETING", legistar.scope), null);
+  assert.deepEqual((await store.events(result!.candidate.id)).map(({ state }) => state), ["FETCHED", "NORMALIZED", "CANNOT_TELL"]);
+});
+
+test("a successful thin response retains unexplained in-window rows with exact held evidence", async () => {
+  const store = new MemoryRoutineDataStore();
+  const prior = meeting(legistar, FIRST, "retained-on-thin-success");
+  const [seeded] = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [prior],
+    agendaDocuments: [],
+    reports: [report(legistar.meetingSource, FIRST)],
+    generatedAt: FIRST,
+  });
+  assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
+
+  const fresh = meeting(legistar, SECOND, "new-row");
+  const [next] = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [fresh],
+    agendaDocuments: [],
+    reports: [report(legistar.meetingSource, SECOND)],
+    generatedAt: SECOND,
+  });
+  assert.equal(next?.outcome.candidate.state, "PROMOTED");
+  const snapshot = next?.outcome.promoted?.payload as { meetings: Meeting[]; counts: { fresh: number; carried: number }; };
+  assert.deepEqual(snapshot.meetings.map(({ id }) => id).sort(), [fresh.id, prior.id].sort());
+  assert.equal(snapshot.counts.fresh, 1);
+  assert.equal(snapshot.counts.carried, 1);
+  assert.equal(snapshot.meetings.find(({ id }) => id === prior.id)?.carried?.reason, "UNEXPLAINED_DISAPPEARANCE");
+  assert.equal(next?.outcome.candidate.candidate.changeSet?.removed.length, 0);
+  assert.deepEqual(next?.outcome.candidate.receipt?.excludedFacts.map(({ key, code }) => ({ key, code })), [{
+    key: `meeting:${prior.id}`,
+    code: "MEETING_UNEXPLAINED_DISAPPEARANCE_RETAINED",
+  }]);
+});
+
+test("caller-invented narrow bounds cannot remove an in-window meeting", async () => {
+  const store = new MemoryRoutineDataStore();
+  const prior = meeting(legistar, FIRST, "must-remain-in-window");
+  const [seeded] = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [prior],
+    agendaDocuments: [],
+    reports: [report(legistar.meetingSource, FIRST)],
+    generatedAt: FIRST,
+  });
+  assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
+
+  const fresh = meeting(legistar, SECOND, "fresh-row");
+  const snapshot = {
+    formatVersion: 1 as const,
+    generatedAt: SECOND,
+    counts: { fresh: 1, carried: 0, total: 1 },
+    sources: [{ ...report(legistar.meetingSource, SECOND), error: null, fetched: 1, normalized: 1 }],
+    meetings: [fresh],
+    agendaDocuments: [],
+  };
+  const refused = await promoteMeetingPartition(store, legistar, snapshot, [], [{
+    key: `meeting:${prior.id}`,
+    code: "OUTSIDE_REGISTERED_SERVING_WINDOW",
+    windowContract: "MEETING_READER_SERVING_WINDOW_V1",
+    lowerBound: "2026-09-21T00:00:00.000Z",
+    upperBound: "2026-09-22T00:00:00.000Z",
+    priorStartsAt: prior.startsAt,
+  }]);
+  assert.equal(refused.outcome.candidate.state, "HORIZON_UNRESOLVED");
+  assert.equal(refused.outcome.candidate.failureCode, "REMOVAL_EVIDENCE_MISMATCH");
+  assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, seeded?.candidate.id);
+});
+
+test("only exact out-of-window meeting evidence removes a row and its attached agenda document", async () => {
+  const store = new MemoryRoutineDataStore();
+  const seedAt = "2026-01-01T12:00:00.000Z";
+  const old = { ...meeting(legistar, seedAt, "aged-out"), startsAt: "2025-12-20T17:00:00.000Z" };
+  const document = agendaDocument(old, seedAt);
+  const seeded = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [old],
+    agendaDocuments: [document],
+    reports: [report(legistar.meetingSource, seedAt)],
+    generatedAt: seedAt,
+  });
+  assert.equal(seeded[0]?.outcome.candidate.state, "PROMOTED");
+
+  const fresh = meeting(legistar, SECOND, "still-served");
+  const previous = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  assert.equal(previous.kind, "PROMOTED");
+  const priorPartition = previous.kind === "PROMOTED"
+    ? previous.value
+    : null;
+  const reconciliation = reconcileSuccessfulMeetingPartition({
+    sourceName: legistar.meetingSource,
+    generatedAt: SECOND,
+    freshMeetings: [fresh],
+    freshAgendaDocuments: [],
+    previous: priorPartition,
+  });
+  assert.deepEqual(reconciliation.removalEvidence.map(({ key }) => key).sort(), [
+    `agenda-document:${document.id}`,
+    `meeting:${old.id}`,
+  ].sort());
+
+  const snapshot = {
+    formatVersion: 1 as const,
+    generatedAt: SECOND,
+    counts: { fresh: 1, carried: 0, total: 1 },
+    sources: [{ ...report(legistar.meetingSource, SECOND), error: null, fetched: 1, normalized: 1 }],
+    meetings: [fresh],
+    agendaDocuments: [],
+  };
+  const mismatched = reconciliation.removalEvidence.map((row) =>
+    row.key.startsWith("agenda-document:") ? { ...row, parentMeetingKey: "meeting:not-the-parent" } : row
+  );
+  const refused = await promoteMeetingPartition(store, legistar, snapshot, [], mismatched);
+  assert.equal(refused.outcome.candidate.state, "HORIZON_UNRESOLVED");
+  assert.equal(refused.outcome.candidate.failureCode, "REMOVAL_EVIDENCE_MISMATCH");
+  assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, seeded[0]?.candidate.id);
+
+  const validAt = "2026-09-08T13:00:01.000Z";
+  const validReconciliation = reconcileSuccessfulMeetingPartition({
+    sourceName: legistar.meetingSource,
+    generatedAt: validAt,
+    freshMeetings: [fresh],
+    freshAgendaDocuments: [],
+    previous: priorPartition,
+  });
+  const promoted = await promoteMeetingPartition(store, legistar, {
+    ...snapshot,
+    generatedAt: validAt,
+    sources: [{ ...report(legistar.meetingSource, validAt), error: null, fetched: 1, normalized: 1 }],
+  }, [], validReconciliation.removalEvidence);
+  assert.equal(promoted.outcome.candidate.state, "PROMOTED");
+  assert.deepEqual(promoted.outcome.candidate.candidate.changeSet?.removed.map(({ key }) => key).sort(), [
+    `agenda-document:${document.id}`,
+    `meeting:${old.id}`,
+  ].sort());
+});
+
+test("one meeting source/body failure retains only its LKG while another partition promotes", async () => {
+  const store = new MemoryRoutineDataStore();
+  const first = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "pima-1"), meeting(insite, FIRST, "mesa-1")],
+    agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+  assert.equal(first.every((result) => result.outcome.promoted !== null), true);
+  const legistarLkg = first[0]!.candidate.id;
+
+  const second = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(insite, SECOND, "mesa-2")],
+    agendaDocuments: [],
+    reports: [report("legistar", SECOND, false), report("legistar-insite", SECOND)],
+    generatedAt: SECOND,
+  });
+  assert.equal(second[0]!.outcome.promoted, null);
+  assert.equal(second[0]!.outcome.candidate.state, "SOURCE_BLOCKED");
+  assert.equal(second[0]!.outcome.candidate.lastKnownGoodVersion, legistarLkg);
+  assert.equal(second[1]!.outcome.candidate.state, "PROMOTED");
+  assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, legistarLkg);
+  assert.equal((await store.readPromotion("MEETING", insite.scope))?.versionId, second[1]!.candidate.id);
+  assert.equal(await store.readPromotion("MEETING", LEGACY_MEETINGS_AGGREGATE_SCOPE), null);
+
+  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.equal(read.value.meetings.some((row) => row.id === "legistar:pima-1"), true);
+    assert.equal(read.value.meetings.some((row) => row.id === "legistar-insite:mesa-2"), true);
+    assert.equal(read.partitions.find((row) => row.contractId === legistar.id)?.versionId, legistarLkg);
+    assert.equal(read.metadata.stale, "UNKNOWN", "missing sibling proofs must not report aggregate CURRENT");
+    assert.match(read.detail, /aggregate freshness is UNKNOWN until every partition is proof-valid/);
+  }
+
+  const failedClock = await store.clock(legistar.sourceId, legistar.recordClass, legistar.scope);
+  const healthyClock = await store.clock(insite.sourceId, insite.recordClass, insite.scope);
+  const failedTask = routineTaskFromContract(legistar);
+  const healthyTask = routineTaskFromContract(insite);
+  assert.equal(failedClock.lastAttemptedAt, SECOND);
+  assert.equal(failedClock.lastSucceededAt, FIRST);
+  assert.equal(healthyClock.lastAttemptedAt, SECOND);
+  assert.equal(healthyClock.lastSucceededAt, SECOND);
+  assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 30 * 60_000), false);
+  assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 60 * 60_000), true);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000), false);
+});
+
+test("meeting Reader repair composes the shared aggregate once and correlates exact partition receipts", async () => {
+  const store = new CountingMeetingStore();
+  const promoted = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "aggregate-pima"), meeting(insite, FIRST, "aggregate-mesa")],
+    agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
+  const before = await Promise.all(promoted.map(async ({ candidate }) => ({
+    contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
+    pointer: await store.readPromotion("MEETING", candidate.scope),
+    candidate: await store.readCandidate(candidate.id),
+    events: await store.events(candidate.id),
+  })));
+  store.readPromotionsCalls = 0;
+
+  const repairs = await repairMeetingReaderProjectionReadbacks(
+    store,
+    [legistar, insite],
+    SECOND,
+    "f".repeat(40),
+  );
+  assert.equal(store.readPromotionsCalls, 2, "one pointer batch plus one actual aggregate Reader read");
+  assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
+    { contractId: legistar.id, ok: true },
+    { contractId: insite.id, ok: true },
+  ]);
+  for (const repair of repairs) {
+    assert.equal(repair.ok, true);
+    if (!repair.ok) continue;
+    assert.equal(repair.value.kind, "RECORDED");
+    if (repair.value.kind !== "RECORDED") continue;
+    const expected = promoted.find(({ candidate }) => candidate.scope ===
+      (repair.contractId === legistar.id ? legistar.scope : insite.scope));
+    assert.equal(repair.value.receipt.contractId, repair.contractId);
+    assert.equal(repair.value.receipt.versionId, expected?.candidate.id);
+    assert.equal(repair.value.receipt.status, "PASS");
+  }
+
+  for (const snapshot of before) {
+    const contract = snapshot.contractId === legistar.id ? legistar : insite;
+    const candidateId = snapshot.candidate!.candidate.id;
+    assert.deepEqual(await store.readPromotion("MEETING", contract.scope), snapshot.pointer);
+    assert.deepEqual(await store.readCandidate(candidateId), snapshot.candidate);
+    const afterEvents = await store.events(candidateId);
+    assert.deepEqual(afterEvents.slice(0, snapshot.events.length), snapshot.events);
+    assert.equal(afterEvents.length, snapshot.events.length + 1);
+    assert.equal(afterEvents.at(-1)?.state, "PROMOTED");
+    assert.match(afterEvents.at(-1)?.detail ?? "", new RegExp(`^${READER_PROJECTION_READBACK_PREFIX}`));
+  }
+});
+
+test("a semantic refusal holds only the exact source/body partition", async () => {
+  const store = new MemoryRoutineDataStore();
+  const goodMeeting = meeting(legistar, FIRST, "good");
+  const source = report("legistar", FIRST);
+  const snapshot = {
+    formatVersion: 1 as const,
+    generatedAt: FIRST,
+    counts: { fresh: 1, carried: 0, total: 1 },
+    sources: [{ ...source, error: null, fetched: 1, normalized: 1 }],
+    meetings: [goodMeeting],
+    agendaDocuments: [],
+  };
+  const good = await promoteMeetingPartition(store, legistar, snapshot);
+  assert.equal(good.outcome.candidate.state, "PROMOTED");
+  const bad = await promoteMeetingPartition(
+    store,
+    legistar,
+    { ...snapshot, generatedAt: SECOND },
+    ["source/body semantic probe failed"],
+  );
+  assert.equal(bad.outcome.promoted, null);
+  assert.equal(bad.outcome.candidate.state, "SEMANTIC_INVALID");
+  assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, good.candidate.id);
+  assert.equal(await store.readPromotion("MEETING", insite.scope), null);
+});
+
+test("the batched Reader bounds database calls and isolates a corrupt partition", async () => {
+  const store = new MemoryRoutineDataStore();
+  const seeded = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "pima-corrupt"), meeting(insite, FIRST, "mesa-good")],
+    agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+  const corruptId = seeded[0]!.candidate.id;
+  const corruptPayload = structuredClone(seeded[0]!.candidate.readModel) as {
+    meetings: Array<Meeting>;
+  };
+  corruptPayload.meetings[0] = {
+    ...corruptPayload.meetings[0]!,
+    bodyId: insite.bodyId,
+  };
+  let scalarPromotionReads = 0;
+  let scalarCandidateReads = 0;
+  let promotionBatchReads = 0;
+  let candidateBatchReads = 0;
+  let requestedScopes: readonly string[] = [];
+  let requestedCandidateIds: readonly string[] = [];
+  const corruptingStore = {
+    async readPromotion<_T>(_recordClass: RoutineRecordClass, _scope: string) {
+      scalarPromotionReads += 1;
+      throw new Error("the aggregate Reader must use the batch promotion door");
+    },
+    async readCandidate(_candidateId: string) {
+      scalarCandidateReads += 1;
+      throw new Error("the aggregate Reader must use the batch candidate door");
+    },
+    async readPromotions<T>(recordClass: RoutineRecordClass, scopes: readonly string[]) {
+      promotionBatchReads += 1;
+      requestedScopes = [...scopes];
+      return (await store.readPromotions<T>(recordClass, scopes)).map((pointer) =>
+        pointer.versionId === corruptId
+          ? { ...pointer, payload: structuredClone(corruptPayload) as T }
+          : pointer
+      );
+    },
+    async readCandidates(candidateIds: readonly string[]) {
+      candidateBatchReads += 1;
+      requestedCandidateIds = [...candidateIds];
+      return (await store.readCandidates(candidateIds)).map((row) =>
+        row.candidateId === corruptId
+          ? {
+              ...row,
+              record: {
+                ...row.record,
+                candidate: {
+                  ...row.record.candidate,
+                  normalization: {
+                    ...row.record.candidate.normalization,
+                    normalizedHash: normalizedHash(corruptPayload),
+                  },
+                  readModel: structuredClone(corruptPayload),
+                },
+              },
+            }
+          : row
+      );
+    },
+  };
+
+  const read = await readMeetingsProjection({ store: corruptingStore, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-good"]);
+    const corrupt = read.partitions.find((row) => row.contractId === legistar.id);
+    assert.equal(corrupt?.kind, "STORE_UNREACHABLE");
+    assert.match(corrupt?.detail ?? "", /MEETING_PARTITION_ROW_SCOPE_MISMATCH/);
+    assert.equal(read.partitions.find((row) => row.contractId === insite.id)?.kind, "PROMOTED");
+  }
+  assert.equal(scalarPromotionReads, 0);
+  assert.equal(scalarCandidateReads, 0);
+  assert.equal(promotionBatchReads, 1);
+  assert.equal(candidateBatchReads, 1);
+  assert.deepEqual(requestedScopes, MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope));
+  assert.deepEqual(new Set(requestedCandidateIds), new Set(seeded.map((row) => row.candidate.id)));
+});
+
+test("batched pointer/candidate proof failure cannot suppress an unrelated partition", async () => {
+  const store = new MemoryRoutineDataStore();
+  const seeded = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "pima-proof-bad"), meeting(insite, FIRST, "mesa-proof-good")],
+    agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+  const mismatchedId = seeded[0]!.candidate.id;
+  const batchStore = {
+    readPromotion: store.readPromotion.bind(store),
+    readCandidate: store.readCandidate.bind(store),
+    async readPromotions<T>(recordClass: RoutineRecordClass, scopes: readonly string[]) {
+      return (await store.readPromotions<T>(recordClass, scopes)).map((pointer) =>
+        pointer.versionId === mismatchedId
+          ? { ...pointer, payload: { ...pointer.payload, generatedAt: SECOND } }
+          : pointer
+      );
+    },
+    readCandidates: store.readCandidates.bind(store),
+  };
+
+  const read = await readMeetingsProjection({ store: batchStore, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-proof-good"]);
+    const refused = read.partitions.find((row) => row.contractId === legistar.id);
+    assert.equal(refused?.kind, "STORE_UNREACHABLE");
+    assert.match(refused?.detail ?? "", /pointer payload differs from the validated candidate read model/);
+    assert.equal(read.partitions.find((row) => row.contractId === insite.id)?.kind, "PROMOTED");
+  }
+});
+
+test("a cross-partition id collision holds every claimant and never hides an unrelated good row", async () => {
+  const store = new MemoryRoutineDataStore();
+  const ical = MEETING_PARTITION_CONTRACTS.filter((partition) => partition.meetingSource === "ical").slice(0, 2);
+  assert.equal(ical.length, 2);
+  await promoteMeetingPartitions({
+    store,
+    partitions: [ical[0]!, ical[1]!, insite],
+    meetings: [
+      meeting(ical[0]!, FIRST, "collision"),
+      meeting(ical[1]!, FIRST, "collision"),
+      meeting(insite, FIRST, "unrelated"),
+    ],
+    agendaDocuments: [],
+    reports: [report("ical", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+
+  const read = await readMeetingsProjection({ store, bypassCache: true, allowUnconfiguredBootstrap: false, now: SECOND });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:unrelated"]);
+    for (const partition of ical) {
+      const partitionReadback: MeetingPartitionReadback | undefined = read.partitions.find(
+        (row) => row.contractId === partition.id,
+      );
+      assert.equal(partitionReadback?.kind, "STORE_UNREACHABLE");
+      assert.match(partitionReadback?.detail ?? "", /MEETING_PARTITION_ID_COLLISION:ical:collision/);
+    }
+  }
+});
+
+test("production membership and scopes are one-to-one and the global disposition is absent", () => {
+  assert.equal(MEETING_PARTITION_CONTRACTS.length > 100, true);
+  assert.equal(new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id)).size, MEETING_PARTITION_CONTRACTS.length);
+  assert.equal(new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope)).size, MEETING_PARTITION_CONTRACTS.length);
+  assert.equal(MEETING_PARTITION_CONTRACTS.some((partition) => partition.scope === LEGACY_MEETINGS_AGGREGATE_SCOPE), false);
+});
+
+test("one partition invocation narrows a shared adapter to exactly one body", () => {
+  const sourceName = "ical";
+  const siblings = MEETING_PARTITION_CONTRACTS.filter((partition) => partition.meetingSource === sourceName);
+  assert.equal(siblings.length > 1, true, "the control source must exercise shared-adapter membership");
+  const selected = siblings[0]!;
+  assert.deepEqual(
+    wiringForSelectedMeetingSource(sourceName, [{ sourceName, bodyId: selected.bodyId }])
+      .map((row) => row.bodyId),
+    [selected.bodyId],
+  );
+  assert.throws(
+    () => wiringForSelectedMeetingSource(sourceName, [{ sourceName, bodyId: "not-wired" }]),
+    /MEETING_PARTITION_SELECTION_NOT_WIRED/,
+  );
+});
+
+test("the executable promotion door accepts exactly one registered partition", () => {
+  assert.deepEqual(
+    selectedMeetingPartitions(["--promote", `--only-partition=${legistar.id}`]).map((row) => row.id),
+    [legistar.id],
+  );
+  assert.throws(() => selectedMeetingPartitions(["--promote"]), /MEETING_PARTITION_EXACTLY_ONE_REQUIRED/);
+  assert.throws(
+    () => selectedMeetingPartitions([`--partitions=${legistar.id},${insite.id}`]),
+    /MEETING_PARTITION_BATCH_ARGUMENT_RETIRED/,
+  );
+});
+
+test("a canonical preload outage emits no fabricated source attempt", async () => {
+  const observed: string[] = [];
+  const originalLog = console.log;
+  console.log = (...values: unknown[]) => observed.push(values.map(String).join(" "));
+  try {
+    await assert.rejects(
+      preloadCanonicalMeetingDependencies({
+        sourceName: "composite",
+        refreshRegistry: async () => { throw new Error("registry store unavailable"); },
+        refreshVenues: async () => undefined,
+      }),
+      /registry store unavailable/,
+    );
+  } finally {
+    console.log = originalLog;
+  }
+  assert.deepEqual(observed.filter((line) => line.includes("RCD_MEETING_PARTITION_RECEIPT=")), []);
+});
+
+test("production Reader configuration cannot reopen live composite acquisition", () => {
+  const env = process.env as Record<string, string | undefined>;
+  const priorNodeEnv = env.NODE_ENV;
+  const priorMeetingSource = env.WTP_MEETING_SOURCE;
+  env.NODE_ENV = "production";
+  env.WTP_MEETING_SOURCE = "composite";
+  try {
+    assert.throws(getMeetingSource, /PRODUCTION_MEETING_SOURCE_MUST_BE_CANONICAL:composite/);
+  } finally {
+    if (priorNodeEnv === undefined) delete env.NODE_ENV;
+    else env.NODE_ENV = priorNodeEnv;
+    if (priorMeetingSource === undefined) delete env.WTP_MEETING_SOURCE;
+    else env.WTP_MEETING_SOURCE = priorMeetingSource;
+  }
+});

@@ -60,7 +60,8 @@
  *
  * Once the served commit is confirmed, this spawns
  * `scripts/production-integrity.mts --sha=<served> --write`, which itself spawns
- * `scripts/db-shipping-gate.mts`. It contacts no database of its own.
+ * `scripts/db-shipping-gate.mts` and then appends that exact outcome to the
+ * existing control-plane software-release log.
  * `tests/migration-shipping-invariant.test.ts` holds the set of files permitted
  * to query `drizzle.__drizzle_migrations` closed to FOUR, and a fifth would
  * break it — correctly, because two implementations of "does production hold
@@ -75,14 +76,10 @@
  * call anywhere in this file and `tests/production-integrity.test.ts` sweeps for
  * one.
  *
- * ## It cannot start a deploy loop
+ * ## It cannot start a deploy or software-CI feedback loop
  *
- * The record it writes lives at `data/ops/production-integrity.json`, and
- * `data/ops/` is in `NON_SHIPPING_PREFIXES` (`lib/ops/deploy-paths.ts`, commit
- * `6e591077`, "an ops record must not cost a build"). `classifyDeploy` therefore
- * returns `cancel` for a commit carrying only that file: the observer's own
- * output can never trigger the deploy the observer exists to observe.
- * `tests/post-deploy-observer.test.ts` asserts it through `classifyDeploy`.
+ * The observer creates no Git commit. Its durable output is an append in the
+ * production control plane, so it cannot trigger Netlify or Build Check at all.
  *
  *   --expect=<sha>       the commit that should become the served one.
  *                        Defaults to HEAD.

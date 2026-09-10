@@ -1,17 +1,33 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { READER_SURFACES, datasetFamily, validateDatasetMapping } from "../lib/holdings/datasets.ts";
 import { MODULE_DATASETS, moduleDatasetInputPaths, readModuleDataset } from "../lib/holdings/module-datasets.ts";
-import { CONTROL_PATH, INPUT_PATH, PLAN_PATH, VAULT_PATH, checkManifests, expectedManifests, loadManifestContext, statesFromIdentity, writeManifests } from "../lib/holdings/manifest.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { CONTROL_PATH, INPUT_PATH, PLAN_PATH, TRACKED_FIRST_SEED_AUTHORITY_BOUNDARY, VAULT_PATH, canonicalDatasetPaths, checkManifests, expectedManifests, loadManifestContext, statesFromIdentity, writeManifests } from "../lib/holdings/manifest.ts";
+import { sourceClosure } from "../lib/ops/generator-digest.ts";
 import { classify, scanText } from "../scripts/doc-dates.mjs";
 
 const SCRIPT = resolve("scripts/state-manifest.mts");
 const BASE = "3f9a138fd39f6160659329e17c496d2dd99cee00";
+const LAW_TITLES_PATH = "data/votes/law-titles-cache.json";
+const LAW_TITLES_SHA256 = "eb0b9ce579c2d157dca57bde6cd7e55507c63be6e29b46d3514e669656940ce5";
+const LAW_TITLES_CUTOVER = {
+  formerPath: LAW_TITLES_PATH,
+  frozenSha256: LAW_TITLES_SHA256,
+  disposition: "RETIRED_TO_PRODUCTION_DATA_PLANE",
+  formerContentDisposition: "NON_SERVING_ACQUISITION_SURPLUS",
+  contractId: "federal-key-votes",
+  recordClass: "FEDERAL_KEY_VOTE",
+  scope: "US:reviewed-key-vote-selection:v1",
+  servingSeedPaths: ["data/votes/key-votes-snapshot.json", "data/votes/key-vote-positions.json"],
+  readerImplementation: "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection",
+  reason: "The frozen tracked cache is historical evidence; official law and vote facts now advance through the exact production promotion contract.",
+} as const;
 function fixtureConsumers(root: string, datasetPath: string): void {
   const family = datasetFamily(datasetPath);
   assert.ok(family, `Fixture must name a registered dataset: ${datasetPath}`);
@@ -46,6 +62,24 @@ function fileBytes(root: string, prefix = ""): Record<string, string> {
   return result;
 }
 
+function installLawTitlesCutover(root: string, overrides: Record<string, unknown> = {}): void {
+  const input = JSON.parse(readFileSync(join(root, INPUT_PATH), "utf8"));
+  input.files.push({ path: LAW_TITLES_PATH, basePath: LAW_TITLES_PATH, sha256: LAW_TITLES_SHA256, source: "SESSION_BASE" });
+  input.authorityCutovers = [{ ...LAW_TITLES_CUTOVER, ...overrides }];
+  writeFileSync(join(root, INPUT_PATH), JSON.stringify(input));
+  const plan = JSON.parse(readFileSync(join(root, PLAN_PATH), "utf8"));
+  plan.exemptions.push({ oldPath: LAW_TITLES_PATH, newPath: LAW_TITLES_PATH, disposition: "EXEMPT", sha256: LAW_TITLES_SHA256, referenceCount: 1, references: [{ path: "docs/repo-inventory.md", count: 1 }] });
+  writeFileSync(join(root, PLAN_PATH), JSON.stringify(plan));
+  for (const path of LAW_TITLES_CUTOVER.servingSeedPaths) {
+    fixtureConsumers(root, path);
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), "{}\n");
+  }
+  const readerPath = join(root, "lib/votes/key-votes-projection.ts");
+  mkdirSync(dirname(readerPath), { recursive: true });
+  writeFileSync(readerPath, "const seeds = ['key-votes-snapshot.json', 'key-vote-positions.json'];\nexport async function readFederalKeyVotesProjection() { return seeds; }\n");
+}
+
 test("source UTC observations and scheduling deadlines preserve their dates without excusing authorship stamps", (t) => {
   const root = fixture(t);
   const control = JSON.parse(readFileSync(join(root, CONTROL_PATH), "utf8"));
@@ -75,6 +109,56 @@ test("dataset-to-surface contract refuses absent datasets and absent reader surf
   assert.ok(validateDatasetMapping([path], (p) => p !== path).some((p) => p.includes("dataset does not exist")));
   assert.ok(validateDatasetMapping([path], (p) => p !== "app/ballot/page.tsx").some((p) => p.includes("reader surface ballot does not exist")));
   assert.ok(validateDatasetMapping(["data/states/az/unregistered/new.json"], () => true).some((p) => p.includes("no declared reader-surface mapping")));
+});
+
+test("an exact authority cutover preserves the frozen law-title evidence but removes the dead Git path from current holdings", (t) => {
+  const root = fixture(t);
+  installLawTitlesCutover(root);
+  const context = loadManifestContext(root);
+  assert.equal(canonicalDatasetPaths(root).includes(LAW_TITLES_PATH), false);
+  assert.equal(context.datasets.some((dataset) => dataset.path === LAW_TITLES_PATH), false);
+  assert.equal(context.authorityCutovers.length, 1);
+  assert.equal(context.authorityCutovers[0].contract.id, "federal-key-votes");
+  const az = expectedManifests(context).get("docs/states/az.md")!;
+  assert.match(az, /Tracked authorities retired to the production data plane/);
+  assert.match(az, /RETIRED_TO_PRODUCTION_DATA_PLANE/);
+  assert.match(az, /NON_SERVING_ACQUISITION_SURPLUS/);
+  assert.match(az, /FEDERAL_KEY_VOTE \/ US:reviewed-key-vote-selection:v1/);
+  assert.match(az, /civic_data_candidates\+civic_data_candidate_events\+civic_data_promotions/);
+  assert.match(az, /readFederalKeyVotesProjection/);
+  assert.doesNotMatch(az, /\[data\/votes\/law-titles-cache\.json\]\(\.\.\/\.\.\/data\/votes\/law-titles-cache\.json\)/);
+});
+
+test("an authority-cutover label cannot hide a present file or drift from its frozen hash and production contract", (t) => {
+  const wrongHashRoot = fixture(t);
+  installLawTitlesCutover(wrongHashRoot, { frozenSha256: "0".repeat(64) });
+  assert.throws(() => loadManifestContext(wrongHashRoot), /does not bind the exact frozen manifest input/);
+
+  const wrongContractRoot = fixture(t);
+  installLawTitlesCutover(wrongContractRoot, { scope: "US:wrong-scope" });
+  assert.throws(() => loadManifestContext(wrongContractRoot), /permanent production contract does not match/);
+
+  const presentRoot = fixture(t);
+  installLawTitlesCutover(presentRoot);
+  mkdirSync(dirname(join(presentRoot, LAW_TITLES_PATH)), { recursive: true });
+  writeFileSync(join(presentRoot, LAW_TITLES_PATH), "{}\n");
+  assert.throws(() => loadManifestContext(presentRoot), /retired tracked authority still exists/);
+});
+
+test("every migrated contract bootstrap fixture rendered by a state manifest is labeled evidence, never live Reader authority", () => {
+  const currentDatasets = new Set(canonicalDatasetPaths(resolve(".")));
+  const manifestLines = readdirSync("docs/states")
+    .filter((name) => name.endsWith(".md"))
+    .flatMap((name) => readFileSync(join("docs/states", name), "utf8").split(/\r?\n/));
+  let renderedFixturePaths = 0;
+  for (const contract of MANUAL_PRODUCTION_SOURCE_CONTRACTS) for (const path of contract.bootstrapFixturePaths) {
+    if (!currentDatasets.has(path)) continue;
+    renderedFixturePaths++;
+    const rows = manifestLines.filter((line) => line.startsWith(`| [${path}](../../${path}) |`));
+    assert.ok(rows.length > 0, `${path}: migrated first-seed evidence disappeared from the generated inventory`);
+    assert.ok(rows.every((line) => line.includes(TRACKED_FIRST_SEED_AUTHORITY_BOUNDARY)), `${path}: a generated row still describes migrated tracked bytes as current Reader authority`);
+  }
+  assert.ok(renderedFixturePaths > 0, "the migrated bootstrap-fixture guard ran over an empty denominator");
 });
 
 test("a new state's first acquisition creates a required manifest without a state list edit", (t) => {
@@ -208,8 +292,12 @@ test("unknown canonical TypeScript and a different context root fail closed", (t
 
 test("imported module values cannot pass freshness after a supporting source changes", (t) => {
   const root = fixture(t);
-  const files = [...moduleDatasetInputPaths(MODULE_DATASETS.map((entry) => entry.path)), "lib/holdings/module-datasets.ts"];
+  // Copy the real transitive import closure: production Reader projections may
+  // wrap a static first seed without making their runtime modules authoritative
+  // manifest inputs. The explicit adapter dependency below is still hash-bound.
+  const files = sourceClosure(resolve("."), resolve("lib/holdings/module-datasets.ts"));
   for (const path of files) { mkdirSync(dirname(join(root, path)), { recursive: true }); writeFileSync(join(root, path), readFileSync(path)); }
+  symlinkSync(resolve("node_modules"), join(root, "node_modules"), "junction");
   const script = `import { readFileSync, writeFileSync } from 'node:fs';
     const m = await import(${JSON.stringify(pathToFileURL(join(root, "lib/holdings/module-datasets.ts")).href)});
     const path = ${JSON.stringify(join(root, "lib/officials/body-form.ts"))};

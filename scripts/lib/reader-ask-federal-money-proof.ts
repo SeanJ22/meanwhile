@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { BALLOT_SOURCES } from "../../lib/ballot/registry.ts";
 import { lineupForContest } from "../../lib/ballot/general-lineup.ts";
 import { ballotAskInventory } from "../../lib/ask/ballot-inventory.ts";
-import { getFundingSnapshot } from "../../lib/funding/snapshot.ts";
+import { getFundingSnapshot, refreshFundingFromPromoted } from "../../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../../lib/funding/display.ts";
 import { seatHolderById } from "../../lib/registry/server.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
@@ -13,6 +13,7 @@ import type { EvidencePack, EvidenceRecord } from "../../lib/ask/evidence.ts";
 
 /** Every existing FEC primary answer, through the actual Ask handler. */
 export async function federalMoneyAskProof() {
+  await refreshFundingFromPromoted();
   delete process.env.ANTHROPIC_API_KEY;
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
   const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");

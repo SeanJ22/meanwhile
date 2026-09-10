@@ -5,7 +5,7 @@ import { officeTypeForTitle } from "../officials/office-blurbs.ts";
 import { topOfficesFor } from "../officials/top-offices.ts";
 /* ASK-5 (2026-08-24): the SAME store the battlecard and the representation
    view read. See `peopleFor` below for what reading a different one cost. */
-import { rosterHoldersForBody } from "../registry/body-rosters.ts";
+import { projectedBodyRoster } from "../registry/body-roster-client.ts";
 
 import type { NamedEntityBinding } from "./named-entity.ts";
 import { routeForTopic, type RouteStep, type TopicRoute } from "./topics.ts";
@@ -261,7 +261,7 @@ function peopleFor(
    * are.
    */
   if (bodies.length === 1) {
-    for (const top of topOfficesFor(rosterHoldersForBody(bodies[0].bodyId))) {
+    for (const top of topOfficesFor([...projectedBodyRoster(bodies[0]).members])) {
       if (top.role === "Runs it day to day") push(top.holder);
     }
   }
@@ -410,7 +410,7 @@ export function resolveRouting(
        * The gap is about OUR RECORD, so it is asked of our record: it renders
        * only where the bodies genuinely hold nobody.
        */
-      bodies.every((body) => rosterHoldersForBody(body.bodyId).length === 0)
+      bodies.every((body) => projectedBodyRoster(body).members.length === 0)
     ) {
       // The body exists; who sits on it is unsourced. Say which half.
       gap = "We haven't sourced who sits on this body yet.";

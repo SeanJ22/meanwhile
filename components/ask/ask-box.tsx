@@ -220,7 +220,7 @@ export function AskBox({
    */
   onOpenPerson?: (holder: SeatHolder) => void;
 }) {
-  const { venues, meetings, allMeetings } = useShellData();
+  const { venues, meetings, allMeetings, everydayRouting } = useShellData();
   const ui = useUi();
   /* WGH-15: the reader's HOME, so an Ask subject is not browse-scoped only. */
   const home = useResolvedLocation(zip);
@@ -550,7 +550,7 @@ export function AskBox({
 
     void (async () => {
       const started = Date.now();
-      let result = answerQuestion(question, coverage, zip, { entities });
+      let result = answerQuestion(question, coverage, zip, { entities, everydayRouting });
 
       /*
        * M119's first rule: an exact name is a SEARCH, not a question.
@@ -651,6 +651,7 @@ export function AskBox({
           result = answerQuestion(question, coverage, zip, {
             classified: topic,
             entities,
+            everydayRouting,
           });
         }
       }

@@ -163,6 +163,16 @@ export function unresolvedNomineeGapRecord(
  * `stateMoneyForTarget`.
  */
 export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney {
+  // Arizona's certified-lineup bridge has no authority over another state's
+  // candidacy. Select the state/contest before opening that independent
+  // identity holding so an AZ outage cannot erase an NH or NJ finance answer.
+  if (!contestId.startsWith("ballot-az-")) {
+    return {
+      records: stateMoneyForTarget(cardKey),
+      resolution: "DIRECT_CANDIDACY_KEY",
+      resolvedTargetKey: cardKey,
+    };
+  }
   // Certified Arizona card keys require the committed identity projection.
   // Its absence is a failed holding read, never an invitation to ask the
   // finance corpus with a display-name key and manufacture a no-record answer.

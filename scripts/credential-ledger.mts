@@ -287,7 +287,7 @@ for (const spec of [
 /* ----------------------------------------------------------- 4. CONGRESS_API_KEY --- */
 {
   const key = "CONGRESS_API_KEY";
-  const readBy = "`scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts`";
+  const readBy = "`scripts/fetch-votes.mts`, `scripts/fetch-key-vote-positions.mts`";
   const what = "Congress.gov — sitting federal members, their portraits and their official pages";
   if (!absent(key, what, readBy)) {
     const url = `https://api.congress.gov/v3/member/congress/119/NJ?format=json&limit=5&currentMember=true&api_key=${E[key]}`;
@@ -405,7 +405,7 @@ for (const spec of [
 /* ----------------------------------------------------------------- 7. FEC_API_KEY --- */
 {
   const key = "FEC_API_KEY";
-  const readBy = "`scripts/fetch-fec.mts`, `.github/workflows/refresh-fec-snapshot.yml`";
+  const readBy = "`scripts/fetch-fec.mts` through the standing production civic-data runner";
   const what = "OpenFEC — federal candidates and committee filings";
   if (!absent(key, what, readBy)) {
     const url = `https://api.open.fec.gov/v1/candidates/?state=NJ&per_page=5&sort=name&api_key=${E[key]}`;
@@ -474,7 +474,7 @@ for (const spec of [
 /* ------------------------------------------------------------ 9. LEGISCAN_API_KEY --- */
 {
   const key = "LEGISCAN_API_KEY";
-  const readBy = "`scripts/fetch-legiscan.mts`, `.github/workflows/refresh-legiscan-snapshot.yml`";
+  const readBy = "`scripts/api-keys-walk.mts` research credential probe only; no production promotion door";
   const what = "LegiScan — state bills and roll-call votes (CC BY 4.0, attribution is law)";
   if (!absent(key, what, readBy)) {
     const url = `https://api.legiscan.com/?key=${E[key]}&op=getSessionList&state=NJ`;

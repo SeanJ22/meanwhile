@@ -312,6 +312,39 @@ test("the commit production was built from reads as live, and that outranks the 
   assert.equal(item.farthest.key, "DEPLOYED_TO_PRODUCTION");
 });
 
+test("the exact durable post-deploy outcome reaches the owner-facing lifecycle", () => {
+  const observedAt = "2026-09-06T12:30:00.000Z";
+  const integrity: SoftwareReleaseReviewRecord = {
+    ...row({ sha: SHA_A, decision: "POST_DEPLOY_INTEGRITY", createdAt: observedAt }),
+    productionIntegrity: {
+      formatVersion: 1,
+      deployedSha: SHA_A,
+      mainSha: SHA_A,
+      observed: "HELD",
+      failureClass: null,
+      detail: "HOLDS — exact post-deploy schema gate passed",
+      observedAt,
+      moment: "post-deploy",
+      gateExit: 0,
+    },
+    sourceRunId: "post-deploy-observer-42",
+  };
+  const model = buildStewardModel(
+    input({
+      deployedSha: SHA_A,
+      reviewRows: [
+        row({ sha: SHA_A, decision: "APPROVE", section: "map-movement", createdAt: "2026-09-06T12:00:00.000Z" }),
+        integrity,
+      ],
+    }),
+  );
+  const verified = itemFor(model, SHA_A).lifecycle.find((stage) => stage.key === "VERIFIED_ON_PRODUCTION");
+  assert.ok(verified);
+  assert.equal(verified.state, "REACHED");
+  assert.match(verified.says, /HELD/);
+  assert.match(verified.says, /exact post-deploy schema gate passed/);
+});
+
 /* ---------------------------------------------------------- the lifecycle */
 
 test("SEEDED: a commit that is not main's head is NEVER reported unmerged", () => {

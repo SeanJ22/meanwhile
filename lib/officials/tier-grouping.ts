@@ -1,5 +1,5 @@
 import type { CoverageSummary } from "../registry/coverage.ts";
-import { rosterHoldersForBody } from "../registry/body-rosters.ts";
+import { projectedBodyRoster } from "../registry/body-roster-client.ts";
 
 import type { SeatHolder } from "./lookup.ts";
 
@@ -95,7 +95,7 @@ export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
       ((b.divisionType && LOCAL_SCOPE_RANK[b.divisionType]) ?? 3),
   );
   for (const body of bodiesByScope) {
-    for (const holder of rosterHoldersForBody(body.bodyId)) {
+    for (const holder of projectedBodyRoster(body).members) {
       push(local, holder, holder.officeTitle, "local", body.ocdId);
     }
   }

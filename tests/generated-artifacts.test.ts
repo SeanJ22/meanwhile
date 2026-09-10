@@ -50,6 +50,7 @@ import {
   type DigestFile,
 } from "../lib/ops/generated-register.ts";
 import { checkArtifact } from "../lib/ops/generator-digest.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 
 const ROOT = process.cwd();
 
@@ -68,6 +69,24 @@ test("RULING 92: every registered generated artifact exists and names its genera
       );
     }
   }
+});
+
+test("promoted manual civic-data fixtures are immutable bootstrap evidence, not generated runtime outputs", () => {
+  const promotedBootstrapPaths = new Map<string, string>(
+    MANUAL_PRODUCTION_SOURCE_CONTRACTS.flatMap((contract) =>
+      contract.bootstrapFixturePaths.map((path) => [path, contract.id] as const),
+    ),
+  );
+
+  assert.deepEqual(
+    GENERATED.filter(({ path }) => promotedBootstrapPaths.has(path)).map(({ path, command }) => ({
+      path,
+      contractId: promotedBootstrapPaths.get(path),
+      command,
+    })),
+    [],
+    "a tracked first-seed fixture cannot remain registered as a regenerable production output after its authority transfers to the civic-data plane",
+  );
 });
 
 test("RULING 92: a file declaring itself GENERATED is registered here", () => {

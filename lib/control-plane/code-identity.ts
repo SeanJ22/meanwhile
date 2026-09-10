@@ -6,29 +6,32 @@
  *
  * The Fleet Promotion Activation Audit compared the runner heartbeat's
  * `testedSha` with the raw tip of `main` and read the runner as STALE. The tip
- * was `54d4d946`, a post-deploy integrity reading that changed
+ * was `54d4d946`, a then-Git-backed post-deploy integrity reading that changed
  * `data/ops/production-integrity.json` and `docs/status-ledger.md` and nothing
  * else; the runner had tested `972d1a60`, its parent, which was the newest
  * commit whose tree changes anything the runner executes. The runner was
  * current. The EVIDENCE MODEL was wrong: one SHA cannot say both "what main
- * points at" and "what code is current", because on this repository the two
- * legitimately differ every time an observer commits its reading.
+ * points at" and "what code is current" when a non-shipping commit follows an
+ * application-bearing one. The observer Git writer that exposed this defect is
+ * now retired; the distinction remains valid for human-authored non-shipping
+ * evidence commits.
  *
  * ## Three identities, one classification
  *
  * ```
  *   rawMainSha               what the integration ref pointed at when this was read
  *   effectiveExecutableSha   the newest first-parent commit on main whose landing
- *                            changed a path the canonical shipping classification
- *                            calls proof-bearing — SHIPPING or UNKNOWN, never a
- *                            positively proven NON_SHIPPING (ops-only) commit
+ *                            changed a path the canonical deploy classification
+ *                            calls production-bearing — SHIPPING or UNKNOWN,
+ *                            never a positively proven NON_SHIPPING commit
  *   runnerTestedSha          what the runner's own process reports it executed
  * ```
  *
- * The classification is `classifyCommitCost` from `lib/ops/deploy-paths.ts` —
- * RULING 278's one answer to "can these changed paths affect what is built,
- * served, migrated, read or proved". There is deliberately no second table
- * here: an ops-only commit is one that rule already calls NON_SHIPPING, and a
+ * The classification is `classifyDeploy` from `lib/ops/deploy-paths.ts` — the
+ * existing answer to "can these changed paths affect what production serves".
+ * CI has no path-cost exception. There is no second path table here: a
+ * docs/evidence commit is one the deploy rule
+ * already cancels, and a
  * commit that rule cannot classify (a merge with no first-parent diff, a root
  * commit, an unreadable diff) counts as EXECUTABLE. Unknown never weakens the
  * stale reading; it can only make the runner look behind, never current.
@@ -59,7 +62,7 @@
  */
 import { execFileSync } from "node:child_process";
 
-import { classifyCommitCost, type CommitClass } from "../ops/deploy-paths.ts";
+import { classifyDeploy } from "../ops/deploy-paths.ts";
 
 export const CODE_IDENTITY_FORMAT_VERSION = 1;
 
@@ -77,11 +80,12 @@ export const CODE_IDENTITY_VERDICTS = [
   "CANNOT_TELL",
 ] as const;
 export type CodeIdentityVerdict = (typeof CODE_IDENTITY_VERDICTS)[number];
+export type DeployCommitClass = "NON_SHIPPING" | "SHIPPING" | "UNKNOWN";
 
 /** One commit on main's first-parent line, with the canonical classification it received. */
 export interface ClassifiedCommit {
   readonly sha: string;
-  readonly klass: CommitClass;
+  readonly klass: DeployCommitClass;
   /** The classification's own sentence, quoted rather than paraphrased. */
   readonly reason: string;
   /** How many paths the commit changed against its first parent; null when the diff could not be read. */
@@ -127,8 +131,8 @@ export interface CodeIdentity {
  * commit the canonical rule does not positively call NON_SHIPPING.
  *
  * `commits` is newest first, starting at raw main. A commit whose changed-path
- * list is null or empty is UNKNOWN under `classifyCommitCost` and therefore
- * EXECUTABLE here — the same direction the cost rule takes (FULL proof).
+ * list is null or empty is UNKNOWN under `classifyDeploy` and therefore
+ * EXECUTABLE here — the same fail-closed direction the deploy rule takes.
  */
 export function deriveEffectiveExecutable(
   commits: readonly WalkedCommit[],
@@ -139,14 +143,20 @@ export function deriveEffectiveExecutable(
   for (const commit of commits) {
     if (inspected >= bound) break;
     inspected += 1;
-    const decision = classifyCommitCost(commit.changed);
+    const deploy = classifyDeploy(commit.changed);
+    const klass: DeployCommitClass =
+      deploy.verdict === "cancel"
+        ? "NON_SHIPPING"
+        : deploy.verdict === "build"
+          ? "SHIPPING"
+          : "UNKNOWN";
     const classified: ClassifiedCommit = {
       sha: commit.sha,
-      klass: decision.klass,
-      reason: decision.reason,
+      klass,
+      reason: deploy.reason,
       changedPathCount: commit.changed === null ? null : commit.changed.length,
     };
-    if (decision.klass === "NON_SHIPPING") {
+    if (klass === "NON_SHIPPING") {
       nonShippingAbove.push(classified);
       continue;
     }

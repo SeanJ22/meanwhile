@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import test, { after, before } from "node:test";
 
 import { GATE_ORDER } from "../lib/control-plane/readiness/gates.ts";
@@ -10,6 +10,14 @@ import {
   READINESS_DERIVATION_CONTRACT,
   type ReadinessStateSnapshot,
 } from "../lib/control-plane/readiness/model.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import {
+  READINESS_AUTHORITY_COVERAGE,
+  STATIC_READINESS_REFERENCES,
+  readinessAuthorityCoverageIssues,
+} from "../lib/civic-data/readiness-authority.ts";
 
 /**
  * **THE ADMIN MUST NOT CONTRADICT THE LIVE PRODUCT** (ADM-40 / §9A.9, ADM-41 /
@@ -38,23 +46,35 @@ const ROOT = process.cwd();
 let store: string;
 let snapshots: Record<string, ReadinessStateSnapshot>;
 
-before(() => {
-  store = mkdtempSync(join(tmpdir(), "wtp-readiness-"));
+function publishSnapshots(out: string, overlay?: string): Record<string, ReadinessStateSnapshot> {
   // The publisher's default target is the local file store (CC-F3); `--out`
   // moves that store outside the repository so the run leaves nothing behind
   // and cannot be mistaken for a committed artifact.
   execFileSync(
     process.execPath,
-    ["--experimental-strip-types", "--no-warnings", join(ROOT, "scripts/readiness-refresh.mts"), `--out=${store}`],
-    { cwd: ROOT, encoding: "utf8", timeout: 240_000, maxBuffer: 8 * 1024 * 1024 },
+    [
+      "--experimental-strip-types",
+      "--no-warnings",
+      join(ROOT, "scripts/readiness-refresh.mts"),
+      `--out=${out}`,
+      "--fixture-operational-reference",
+      ...(overlay ? [`--fixture-input-overlay=${overlay}`] : []),
+    ],
+    { cwd: ROOT, encoding: "utf8", timeout: 240_000, maxBuffer: 8 * 1024 * 1024, env: { ...process.env, NODE_ENV: "test" } },
   );
-  const dir = join(store, "aggregates", "readiness-snapshots");
-  snapshots = {};
+  const dir = join(out, "aggregates", "readiness-snapshots");
+  const result: Record<string, ReadinessStateSnapshot> = {};
   for (const file of readdirSync(dir)) {
     const record = JSON.parse(readFileSync(join(dir, file), "utf8")) as { value?: ReadinessStateSnapshot } & ReadinessStateSnapshot;
     const snapshot = (record.value ?? record) as ReadinessStateSnapshot;
-    snapshots[snapshot.state] = snapshot;
+    result[snapshot.state] = snapshot;
   }
+  return result;
+}
+
+before(() => {
+  store = mkdtempSync(join(tmpdir(), "wtp-readiness-"));
+  snapshots = publishSnapshots(store);
 }, { timeout: 300_000 });
 
 after(() => {
@@ -95,44 +115,24 @@ test("the publisher writes all three pilot states under the CURRENT derivation c
 
 /* ============================================================ ADM-40 §9A.9 */
 
-test("ADM-40: New Hampshire and New Jersey candidate filings are no longer blank, and carry their real counts", () => {
-  // 47 candidacies from sos.nh.gov; 275 from the Morris County Clerk. Both were
-  // on disk and both rendered as nothing.
-  for (const [state, filings, contests] of [["nh", 47, 13], ["nj", 275, 99]] as const) {
-    const row = snap(state).capabilities.find((r) => r.capabilityId === "ballot.candidate-filings")!;
-    assert.equal(row.coverageLabel, `${filings} filings · ${contests} contests`);
-    assert.equal(cell(state, "ballot.candidate-filings", "SOURCE_KNOWN").state, "CURRENT");
-    assert.equal(cell(state, "ballot.candidate-filings", "ACQUIRED").state, "CURRENT");
-    assert.match(row.coverageSays ?? "", /Secretary of State|County Clerk/);
+test("PDC: ballot candidacy and state-finance readiness never reproject tracked manual-production seeds", () => {
+  for (const state of ["az", "nh", "nj"]) {
+    for (const capabilityId of ["ballot.candidate-filings", "finance.state-disclosure"]) {
+      const row = snap(state).capabilities.find((candidate) => candidate.capabilityId === capabilityId)!;
+      assert.equal(row.coverage.held, false, `${state} ${capabilityId} manufactured readiness from a tracked seed`);
+      assert.ok(row.gates.every(({ state: gateState }) => gateState === "NOT_WALKED"));
+      assert.equal(snap(state).delivery.some((delivery) => delivery.capabilityId === capabilityId), false);
+    }
   }
-  // The .gov / official-clerk provenance and the as-of reach the face.
-  assert.match(
-    snap("nh").capabilities.find((r) => r.capabilityId === "ballot.candidate-filings")!.coverageSays ?? "",
-    /New Hampshire Secretary of State/,
-  );
-  assert.equal(
-    snap("nj").capabilities.find((r) => r.capabilityId === "ballot.candidate-filings")!.asOf,
-    "2026-09-06",
-  );
 });
 
-test("ADM-40: Federal · FEC carries a REAL per-state denominator, never the national one", () => {
-  // Every candidate row in data/fec/fec-2026.json carries its own `state`, and
-  // every absence a state-bearing targetKey. The national ballot total (38) may
-  // never appear as any state's denominator.
-  const seen: Record<string, number> = {};
+test("PDC: Federal FEC readiness never reprojects the retired tracked corpus", () => {
   for (const state of ["az", "nh", "nj"]) {
     const row = snap(state).capabilities.find((r) => r.capabilityId === "finance.federal-fec")!;
-    assert.equal(row.coverage.held, true, `${state} federal FEC is still a gap`);
-    if (row.coverage.held) {
-      assert.ok(row.coverage.value.denominator > 0);
-      assert.notEqual(row.coverage.value.denominator, 38, `${state} inherited the national FEC denominator`);
-      assert.match(row.coverage.value.denominatorSource, new RegExp(state.toUpperCase()));
-      seen[state] = row.coverage.value.denominator;
-    }
-    assert.equal(cell(state, "finance.federal-fec", "SOURCE_KNOWN").state, "CURRENT");
+    assert.equal(row.coverage.held, false, `${state} manufactured FEC readiness outside canonical Admin`);
+    assert.equal(snap(state).delivery.some((delivery) => delivery.capabilityId === "finance.federal-fec"), false);
+    assert.ok(row.gates.every(({ state: gateState }) => gateState === "NOT_WALKED"));
   }
-  assert.equal(new Set(Object.values(seen)).size, 3, `the three states share an FEC denominator: ${JSON.stringify(seen)}`);
 });
 
 test("§9A.9: something the Reader is served says so — never 'no data' and never an empty cell", () => {
@@ -147,15 +147,28 @@ test("§9A.9: something the Reader is served says so — never 'no data' and nev
       assert.notEqual(shown.state, "NOT_WALKED");
       assert.notEqual(shown.state, "CURRENT", "a standing declaration must never read as a verified rendering");
     }
-    // The capabilities the owner named as live are among them.
+    // Only adopted static division/geography deliveries remain here. Runtime
+    // civic-data delivery is proved by canonical Admin.
     const ids = new Set(delivered.map((d) => d.capabilityId));
     assert.ok(ids.has("districts.congressional"), `${state} does not declare the districts served`);
-    assert.ok(ids.has("finance.federal-fec"), `${state} does not declare federal money served`);
+    assert.ok(!ids.has("finance.federal-fec"), `${state} duplicates canonical FEC delivery`);
+    assert.ok(!ids.has("finance.state-disclosure"), `${state} duplicates canonical state-finance delivery`);
+    assert.ok(!ids.has("ballot.candidate-filings"), `${state} duplicates canonical ballot delivery`);
+    assert.ok(![...ids].some((id) => id.startsWith("meetings.")), `${state} duplicates canonical meeting delivery`);
   }
-  assert.ok(
-    new Set(snap("nh").delivery.map((d) => d.capabilityId)).has("ballot.candidate-filings"),
-    "NH candidate listings are live and still not declared served",
-  );
+});
+
+test("PDC-7: Admin does not report retired Plural/OpenStates state rosters as Reader delivery", () => {
+  for (const state of ["az", "nh", "nj"]) {
+    assert.ok(
+      !snap(state).delivery.some(({ capabilityId }) => capabilityId === "officials.state-federal-seats"),
+      `${state} still publishes an intermediary state-roster delivery`,
+    );
+    const row = snap(state).capabilities.find(({ capabilityId }) => capabilityId === "officials.state-federal-seats");
+    assert.ok(row, `${state} has no explicit officials capability gap`);
+    assert.equal(row.coverage.held, false);
+    assert.ok(row.gates.every(({ state: gateState }) => gateState === "NOT_WALKED"));
+  }
 });
 
 test("§9A.9: every cell says something, and no cell says a machine constant", () => {
@@ -173,7 +186,7 @@ test("§9A.9: every cell says something, and no cell says a machine constant", (
 
 /* ============================================================ the owner's third finding */
 
-test("ADM-40: Arizona, New Hampshire and New Jersey do NOT produce the same breakdown", () => {
+test("ADM-40: the remaining static readiness denominators retain real state differences", () => {
   const az = gridSignature("az");
   const nh = gridSignature("nh");
   const nj = gridSignature("nj");
@@ -181,24 +194,18 @@ test("ADM-40: Arizona, New Hampshire and New Jersey do NOT produce the same brea
   assert.notEqual(az, nj, "Arizona and New Jersey produce an identical grid");
   assert.notEqual(nh, nj, "New Hampshire and New Jersey produce an identical grid");
 
-  // Not merely different — different in the GATE PATTERN, not only in the
-  // counts. The 9.4 grids differed only by coverage numbers, which is what let
-  // three states read as "the exact same breakdown".
-  const pattern = (state: string) =>
-    snap(state).capabilities.map((r) => `${r.capabilityId}|${r.gates.map((g) => g.state).join(",")}`).join("\n");
-  assert.notEqual(pattern("nh"), pattern("nj"), "NH and NJ still share a gate pattern; only the counts differ");
-  assert.notEqual(pattern("az"), pattern("nh"));
-
-  // And name one difference each, so the test explains itself when it fails.
-  // NH: the Secretary of State now publishes one statewide question. The
-  // source and question are held; an external reconciliation remains open.
-  assert.equal(cell("nh", "ballot.statewide-propositions", "SOURCE_KNOWN").state, "CURRENT");
-  assert.equal(cell("nh", "ballot.statewide-propositions", "ACQUIRED").state, "CURRENT");
-  assert.equal(cell("nh", "ballot.statewide-propositions", "VERIFIED").state, "NOT_WALKED");
-  // NJ: no such statement exists, so nobody has looked. A different fact.
-  assert.equal(cell("nj", "ballot.statewide-propositions", "VERIFIED").state, "NOT_WALKED");
-  // AZ: eleven statewide measure contests are known and none has question text.
-  assert.equal(cell("az", "ballot.statewide-propositions", "SOURCE_KNOWN").state, "CURRENT");
+  assert.notEqual(
+    snap("az").capabilities.find((row) => row.capabilityId === "districts.congressional")?.coverageLabel,
+    snap("nh").capabilities.find((row) => row.capabilityId === "districts.congressional")?.coverageLabel,
+  );
+  for (const state of ["az", "nh", "nj"]) {
+    for (const capabilityId of ["ballot.candidate-filings", "finance.state-disclosure"]) {
+      assert.ok(
+        snap(state).capabilities.find((row) => row.capabilityId === capabilityId)?.gates.every(({ state: gateState }) => gateState === "NOT_WALKED"),
+        `${state} ${capabilityId} must be answered by canonical Admin, not used to manufacture a legacy-grid difference`,
+      );
+    }
+  }
 });
 
 /* ============================================================ ADM-39 */
@@ -218,36 +225,96 @@ test("ADM-39: neither summary tile is a dash — both hold a measurement with a 
 
 /* ============================================================ ADM-41 §9A.10 */
 
-test("ADM-41: the ZIP population is the ACS 2024 estimate, and a zero is never asserted as a count", () => {
-  const az = snap("az");
-  const zip = (code: string) => {
-    const row = az.zips.find((z) => z.zip === code);
-    assert.ok(row, `no AZ zip row for ${code}`);
-    return row;
-  };
-  // Verified independently against api.census.gov on 2026-09-06.
-  const sasabe = zip("85633");
-  assert.equal(sasabe.population.held, true);
-  if (sasabe.population.held) assert.equal(sasabe.population.value.value, 48);
-  assert.equal(sasabe.populationMargin, 29);
-  assert.equal(sasabe.populationBasis, "COUNTED");
-
-  // The owner's exact objection: "0 people" presented as a fact.
-  const rillito = zip("85654");
-  assert.equal(rillito.populationBasis, "RECORDED_AS_NONE");
-  if (rillito.population.held) assert.equal(rillito.population.value.value, 0);
-  assert.equal(rillito.populationMargin, 14);
-
-  // The vintage reaches the published record, so the page cannot label it wrong.
-  const pilot = zip("85701");
-  assert.equal(pilot.population.held, true);
-  if (pilot.population.held) {
-    assert.equal(pilot.population.value.value, 5498);
-    assert.equal(pilot.population.value.denominator, 7_378_838);
-    assert.match(pilot.population.value.denominatorSource, /American Community Survey, 5-Year estimates, 2024 release/);
-    assert.match(pilot.population.value.contract, /ZIP Code Tabulation Area/);
+test("PDC: readiness authority coverage accounts for every production contract", () => {
+  const contracts = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
+  assert.equal(contracts.length, 157, "the coverage guard must move when the production contract denominator moves");
+  assert.deepEqual(
+    ROUTINE_SOURCE_CONTRACTS.map(({ id }) => id),
+    ["fec-funding", "nh-members", "az-state-legislators", "nj-state-legislators", "az-state-rollcalls", "nh-state-rollcalls", "nj-state-rollcalls", "census-acs-population", "nj-morris-filing", "dotgov"],
+    "the guard must move when the canonical contract denominator moves",
+  );
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, 124);
+  assert.equal(contracts.some(({ id }) => id === "meetings"), false);
+  assert.deepEqual(readinessAuthorityCoverageIssues(), []);
+  assert.deepEqual(
+    READINESS_AUTHORITY_COVERAGE.map(({ contractId }) => contractId).sort(),
+    contracts.map(({ id }) => id).sort(),
+  );
+  assert.ok(READINESS_AUTHORITY_COVERAGE.every(({ legacyTrackedBootstrap }) => legacyTrackedBootstrap === "FORBIDDEN"));
+  assert.deepEqual(
+    READINESS_AUTHORITY_COVERAGE.filter(({ disposition }) => disposition === "CANONICAL_READINESS_INPUT").map(({ contractId }) => contractId),
+    ["jurisdiction-operational-reference"],
+  );
+  assert.deepEqual(
+    READINESS_AUTHORITY_COVERAGE.filter(({ disposition }) => disposition === "CANONICAL_NON_READER").map(({ contractId }) => contractId),
+    ["dotgov"],
+  );
+  assert.deepEqual(STATIC_READINESS_REFERENCES.map(({ id }) => id), ["registry-division-identities", "census-gis-geography"]);
+  assert.ok(STATIC_READINESS_REFERENCES.every(({ mayAssertRuntimeFreshness }) => mayAssertRuntimeFreshness === false));
+  assert.ok(STATIC_READINESS_REFERENCES.every(({ mayAssertProductionContractDelivery }) => mayAssertProductionContractDelivery === false));
+  const source = readFileSync(join(ROOT, "scripts", "readiness-refresh.mts"), "utf8");
+  assert.match(source, /PRODUCTION_CONTRACT_IDS = READINESS_AUTHORITY_COVERAGE\.map\(\(\{ contractId \}\) => contractId\)/);
+  for (const retiredTrackedAuthority of [
+    "data/fec/fec-2026.json",
+    "data/meetings-snapshot.json",
+    "state-money-${code}-2026.json",
+    "ballotFiles(",
+    "stateDisclosureFor(",
+    "azStateDisclosureVerification(",
+    "refreshPopulationFromPromoted",
+    "zipPopulationReading",
+    "statePopulation(",
+  ]) {
+    assert.equal(source.includes(retiredTrackedAuthority), false, `readiness still calls ${retiredTrackedAuthority}`);
   }
-  assert.equal(pilot.populationMargin, 734);
+  for (const state of ["az", "nh", "nj"]) {
+    assert.ok(snap(state).zips.every(({ population }) => !population.held), `${state} copied ACS values into readiness`);
+    assert.equal(snap(state).summary.populationInCompleteZip.held, false);
+    for (const capabilityId of ["finance.federal-fec", "officials.state-federal-seats", "meetings.county-boards", "meetings.city-councils", "meetings.school-boards"]) {
+      assert.equal(snap(state).delivery.some((row) => row.capabilityId === capabilityId), false, `${state} duplicated ${capabilityId}`);
+    }
+    assert.equal(snap(state).delivery.some((row) => row.capabilityId === "finance.state-disclosure"), false);
+    assert.equal(snap(state).delivery.some((row) => row.capabilityId === "ballot.candidate-filings"), false);
+  }
+});
+
+test("PDC: changing the five tracked manual-production bootstrap families cannot alter readiness", () => {
+  const targetIds = new Set([
+    "az-sos-ballot",
+    "nh-curated-ballot",
+    "az-sos-campaign-finance",
+    "nh-sos-campaign-finance",
+    "nj-elec-campaign-finance",
+  ]);
+  const overlay = mkdtempSync(join(tmpdir(), "wtp-readiness-poison-"));
+  const output = mkdtempSync(join(tmpdir(), "wtp-readiness-poison-output-"));
+  try {
+    for (const contract of MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter(({ id }) => targetIds.has(id))) {
+      for (const rel of contract.bootstrapFixturePaths) {
+        const path = join(overlay, rel);
+        mkdirSync(dirname(path), { recursive: true });
+        writeFileSync(path, JSON.stringify({
+          generatedAt: "2099-12-31T23:59:59.000Z",
+          collectedAt: "2099-12-31T23:59:59.000Z",
+          contests: Array.from({ length: 97 }, (_, index) => ({ id: `poison-${index}`, type: "MEASURE", ocdId: "ocd-division/country:us/state:az" })),
+          candidacies: Array.from({ length: 101 }, (_, index) => ({ id: `poison-${index}` })),
+          measures: Array.from({ length: 97 }, (_, index) => ({ contestId: `poison-${index}` })),
+          records: Array.from({ length: 103 }, (_, index) => ({ id: `poison-${index}` })),
+          split: { candidaciesInScope: 103, filed: 103 },
+          reconciliation: { committeesTested: 103, agreed: 103 },
+        }), "utf8");
+      }
+    }
+    const poisoned = publishSnapshots(output, overlay);
+    for (const state of ["az", "nh", "nj"]) {
+      assert.deepEqual(poisoned[state].capabilities, snap(state).capabilities, `${state} readiness changed with poisoned tracked seeds`);
+      assert.deepEqual(poisoned[state].delivery, snap(state).delivery, `${state} delivery changed with poisoned tracked seeds`);
+      assert.deepEqual(poisoned[state].summary, snap(state).summary, `${state} summary changed with poisoned tracked seeds`);
+    }
+  } finally {
+    rmSync(overlay, { recursive: true, force: true });
+    rmSync(output, { recursive: true, force: true });
+  }
 });
 
 test("ADM-41: a Census county division is not rendered as though it were the town", () => {
@@ -264,16 +331,4 @@ test("ADM-41: a Census county division is not rendered as though it were the tow
   // An incorporated place is still rendered plainly, with no suffix invented.
   const tucson = snap("az").zips.find((z) => z.zip === "85701");
   if (tucson?.place.held) assert.doesNotMatch(tucson.place.value, /census county division/);
-});
-
-test("ADM-41: the state denominators are the 2024 release, in the same run as the ZIP numerators", () => {
-  const totals: Record<string, number> = { az: 7_378_838, nh: 1_394_868, nj: 9_343_809 };
-  for (const [state, total] of Object.entries(totals)) {
-    const held = snap(state).summary.populationInCompleteZip;
-    assert.equal(held.held, true);
-    if (held.held) {
-      assert.equal(held.value.denominator, total, `${state} is still on a superseded ACS vintage`);
-      assert.match(held.value.contract, /ACS 5-Year 2024/);
-    }
-  }
 });

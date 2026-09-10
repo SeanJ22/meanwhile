@@ -1,12 +1,11 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { getFederalDirectoryFile } from "./federal-directory-read-model.ts";
 
 /**
  * The congress-legislators directory table (item 7, 2026-08-16).
  *
- * Read once per process from `data/congress-legislators/directory.json`,
- * which `pnpm congress:migrate` derives from the SHA-pinned snapshot. Never a
- * live fetch, never YAML at runtime.
+ * Read from the GOOD federal-directory projection initialized by the request
+ * boundary. The tracked JSON is an explicit first seed only; a store error
+ * never reopens it.
  *
  * **Kept out of the coverage payload on purpose.** 3,891 committee
  * membership rows and 1,306 district offices have no business travelling
@@ -48,7 +47,7 @@ export interface MemberDirectoryEntry {
   committees: DirectoryCommittee[];
 }
 
-interface DirectoryFile {
+export interface DirectoryFile {
   source: DirectorySource;
   counts: Record<string, number>;
   committees: Record<
@@ -58,21 +57,8 @@ interface DirectoryFile {
   byMember: Record<string, MemberDirectoryEntry>;
 }
 
-let cache: DirectoryFile | null = null;
-
-/** Throws if the table is missing — callers choose their honest fallback. */
-function load(): DirectoryFile {
-  cache ??= JSON.parse(
-    readFileSync(
-      join(process.cwd(), "data", "congress-legislators", "directory.json"),
-      "utf8",
-    ),
-  ) as DirectoryFile;
-  return cache;
-}
-
 export function directorySource(): DirectorySource {
-  return load().source;
+  return getFederalDirectoryFile().source;
 }
 
 /**
@@ -92,7 +78,7 @@ export function directoryFor(holderId: string): {
   const bioguide = holderId.slice("congress:".length);
 
   // An unavailable normalized holding is a failed read, never an empty member.
-  const file = load();
+  const file = getFederalDirectoryFile();
 
   const entry = file.byMember[bioguide];
   if (!entry) return null;

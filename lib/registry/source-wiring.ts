@@ -1,9 +1,42 @@
 import type { OcdId } from "../sources/types.ts";
 import type { AgendaSourceType } from "./types.ts";
-import { TUCSON_CLERKSBOARDS } from "./curated-bodies.ts";
 
 /** The one Tucson division every clerksboards body sits on. */
 const TUCSON_OCD_ID = "ocd-division/country:us/state:az/place:tucson" as OcdId;
+
+/**
+ * SOURCE_WIRING-owned Tucson route membership. Curated body presentation
+ * derives its LIVE status from these rows; it cannot add a production clock.
+ */
+const TUCSON_CLERKSBOARDS_ROUTES = [
+  ["2018-parks-connections-bond-oversight-commission", "128"],
+  ["armory-park-historic-zone-advisory-board", "9"],
+  ["barrio-historico-historic-zone-advisory-board", "12"],
+  ["board-of-adjustment", "8"],
+  ["citizens-water-advisory-committee", "23"],
+  ["city-of-tucson-deferred-compensation-plan-management-board", "25"],
+  ["commission-on-disability-issues", "3"],
+  ["commission-on-equitable-housing-and-development", "131"],
+  ["community-police-advisory-review-board", "19"],
+  ["complete-streets-coordinating-council", "130"],
+  ["design-review-board", "26"],
+  ["fort-lowell-historic-zone-advisory-board", "39"],
+  ["human-relations-commission", "42"],
+  ["industrial-development-authority", "43"],
+  ["park-tucson-commission", "57"],
+  ["pima-county-tucson-women-s-commission", "50"],
+  ["planning-commission", "38"],
+  ["public-art-and-community-design-committee", "49"],
+  ["tucson-commission-on-lesbian-gay-bisexual-transgender-and-queer-issues", "40"],
+  ["tucson-convention-center-commission", "15"],
+  ["tucson-fire-public-safety-personnel-retirement-system-board", "58"],
+  ["tucson-greens-committee", "41"],
+  ["tucson-parks-and-recreation-commission", "63"],
+  ["tucson-police-public-safety-personnel-retirement-system-board", "59"],
+  ["tucson-transit-advisory-committee", "133"],
+  ["tucson-pima-county-historical-commission", "61"],
+  ["veterans-affairs-committee", "65"],
+] as const;
 
 /**
  * Which bodies the composite meeting source serves, and how — 4.6.4.
@@ -71,10 +104,49 @@ export interface BodySourceWiring {
   verifiedAt: string;
 }
 
+/**
+ * The adapter routes a wiring row actually belongs to.  Most agenda-source
+ * types have one implementation.  LEGISTAR is deliberately explicit because
+ * WebAPI and InSite are independent publication routes and therefore require
+ * independent candidates, clocks, and LKG pointers.
+ *
+ * This is the production membership boundary: adapter-owned client/tenant
+ * arrays may be derived from these rows, but may not add another body.
+ */
+export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly string[] {
+  if (row.agendaSourceType === "LEGISTAR") {
+    const routes = row.config.sourceRoutes?.split(",").map((route) => route.trim()).filter(Boolean) ?? [];
+    if (routes.length === 0 || routes.some((route) => route !== "legistar" && route !== "legistar-insite")) {
+      throw new Error(`MEETING_SOURCE_ROUTES_INVALID:${row.bodyId}`);
+    }
+    return [...new Set(routes)];
+  }
+  const routeByType: Partial<Record<AgendaSourceType, string>> = {
+    CIVICPLUS: "civicplus",
+    ONBASE: "onbase",
+    APPTEGY: "apptegy",
+    DILIGENT: "diligent",
+    CIVICWEB: "diligent",
+    CIVICCLERK: "civicclerk",
+    CLERKSBOARDS: "clerksboards",
+    BOARDBOOK: "boardbook",
+    IQM2: "iqm2",
+    REVIZE: "revize",
+    SCHEDULEPAGE: "schedulepage",
+    ICAL: "ical",
+  };
+  const route = routeByType[row.agendaSourceType];
+  return route ? [route] : [];
+}
+
+export function wiringForMeetingSource(sourceName: string): BodySourceWiring[] {
+  return SOURCE_WIRING.filter((row) => meetingSourceNamesForWiring(row).includes(sourceName));
+}
+
 export const SOURCE_WIRING: BodySourceWiring[] = [
   // ── Legistar ────────────────────────────────────────────────────────────
-  // The adapter keeps its own client registry (lib/sources/legistar/client-registry.ts)
-  // including the curated venue table; this row is what routes the body to it.
+  // Both Legistar adapters derive their clients/tenants from these rows. The
+  // promoted venue projection supplies mutable venue facts separately.
   {
     bodyId: "ocd-division/country:us/state:az/county:pima#governing",
     ocdId: "ocd-division/country:us/state:az/county:pima",
@@ -82,38 +154,25 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     jurisdiction: "Pima County, AZ",
     publishingOrg: "Pima County Clerk of the Board",
     timeZone: "America/Phoenix",
-    config: { slug: "pima" },
+    config: {
+      slug: "pima",
+      sourceRoutes: "legistar,legistar-insite",
+      insiteHost: "pima.legistar.com",
+      insiteBodyNames: "Board of Supervisors",
+      insiteBodyName: "Board of Supervisors",
+      insiteClerkScheduleUrl: "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
+      insiteFeedId: "43473383",
+      insiteFeedGuid: "88b7d677-6602-4f79-b987-4677f7f035e6",
+      insiteFeedRange: "Next Month",
+      insiteFeedObservedAt: "2026-08-28",
+      venueSourceId: "legistar",
+    },
     verifiedAt: "2026-08-13",
   },
   /**
-   * **THE ROW THAT MAKES THE REGISTRY THE AUTHORITY FOR MESA** (2026-08-28).
-   *
-   * Mesa was already serving. `lib/sources/legistar-insite/tenant-registry.ts` carried
-   * it, ten of its sittings are in `data/meetings-snapshot.json` under
-   * `…place:mesa#governing`, and there was no row for it here — so a
-   * repo-wide search for that body id found it in a source adapter and in the
-   * derived registry, and nowhere in between.
-   *
-   * How a tenant reached production without one: `buildCompositeSource` gates
-   * each capability on `wiringForTypes(...).length === 0`, and the
-   * `legistar-insite` capability is built as `makeLegistarInSiteSource()` —
-   * with no arguments, so it falls through to its own `INSITE_TENANTS` and
-   * never sees the rows. Pima's row above satisfied the gate; Mesa rode in
-   * behind it. The same is true of `legistar` itself, which reads
-   * `LEGISTAR_CLIENTS`. **Both adapters predate `SOURCE_WIRING` and keep their
-   * own tables, so for them a row here is not what makes a body serve — it is
-   * what makes the registry able to SAY the body serves**, which is what
-   * failure attribution (`wiringForSourceName`), the coverage audit and the
-   * reader-facing gap notes all read.
-   *
-   * `lib/ops/tenant-body-binding.ts` is the guard that stops the next one
-   * arriving unannounced: it walks every adapter-owned tenant table and
-   * requires a wired body id to resolve to exactly one registry body of the
-   * matching division.
-   *
-   * `config.slug` is the InSite tenant slug, which is also the `{client}` path
-   * segment at `webapi.legistar.com`. Both routes serve the LEGISTAR type and
-   * both were 200 on the date below.
+   * Mesa's InSite membership is declared here and nowhere else. Its adapter
+   * tenant is a derived projection of this row, so deleting this row removes
+   * the production route rather than leaving a hidden tenant behind.
    */
   {
     bodyId: "ocd-division/country:us/state:az/place:mesa#governing",
@@ -122,7 +181,14 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     jurisdiction: "Mesa, AZ",
     publishingOrg: "City of Mesa City Clerk",
     timeZone: "America/Phoenix",
-    config: { slug: "mesa" },
+    config: {
+      slug: "mesa",
+      sourceRoutes: "legistar-insite",
+      insiteHost: "mesa.legistar.com",
+      insiteBodyNames: "City Council|City Council Study Session|City Council Strategic Planning Session",
+      insiteBodyName: "City Council",
+      venueSourceId: "legistar-insite",
+    },
     // The city's own page for this body's sittings, read 2026-08-28 (200,
     // 159,373 bytes) and permitted by `www.mesaaz.gov/robots.txt`, which
     // disallows only this page's `/PublicComments` child. It carries the
@@ -259,20 +325,17 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
    * clerksboards.tucsonaz.gov serves one server-rendered page per body with
    * the published schedule, location and current agenda.
    *
-   * DERIVED, NOT LISTED (g18). These were five hand-written entries sitting
-   * beside a five-entry LIVE_BOARD_IDS in curated-bodies.ts, and BOTH had to
-   * be edited for a board to actually be read. Widening one alone marked
-   * bodies LIVE with nothing fetching them - a coverage status claiming a
-   * calendar nobody had asked for. Now there is one list: LIVE_BOARD_IDS
-   * decides, and the wiring follows it.
+   * SOURCE_WIRING owns the exact board-route tuples below. Curated presentation
+   * derives LIVE/type status from these rows, so a coverage list cannot add or
+   * remove an authoritative meeting contract or clock.
    *
-   * 24 boards as of 2026-08-18, from 5. The 32 still uncovered are classified
-   * in curated-bodies.ts - 30 of them publish no fixed schedule at all, which
+   * 27 boards as of 2026-08-18, from 5. The 29 still uncovered are classified
+   * in curated-bodies.ts - all 29 publish no fixed schedule, which
    * is a finding about those bodies and not a gap in our retrieval.
    */
-  ...TUCSON_CLERKSBOARDS.map(
-    ({ bodyId, boardId }): BodySourceWiring => ({
-      bodyId,
+  ...TUCSON_CLERKSBOARDS_ROUTES.map(
+    ([bodySlot, boardId]): BodySourceWiring => ({
+      bodyId: `${TUCSON_OCD_ID}#${bodySlot}`,
       ocdId: TUCSON_OCD_ID,
       agendaSourceType: "CLERKSBOARDS",
       jurisdiction: "Tucson, AZ",

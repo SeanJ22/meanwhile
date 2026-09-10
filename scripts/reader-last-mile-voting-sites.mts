@@ -3,7 +3,10 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { POST } from "../app/api/voting-sites/route.ts";
-import { loadVotingSites } from "../lib/ballot/voting-sites-server.ts";
+import {
+  loadVotingSites,
+  readVotingSitesProjection,
+} from "../lib/ballot/voting-sites-server.ts";
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
@@ -24,6 +27,7 @@ function interior(feature: GeoFeature): { lat: number; lng: number } {
 
 /** Execute the real route; only the external address geocoder is replaced by a held-geometry fixture. */
 export async function proveVotingSites() {
+  await readVotingSitesProjection();
   const manifest = JSON.parse(readFileSync("data/derived/resolver-geometry.json", "utf8")) as { files: string[] };
   const features = manifest.files.flatMap((file) => (JSON.parse(readFileSync(file, "utf8")) as { features: GeoFeature[] }).features);
   const holdings = loadVotingSites();
@@ -57,12 +61,12 @@ export async function proveVotingSites() {
       results.push({ jurisdictionId: jurisdiction.ocdId, geometryIdentity: feature.properties.ocdId, point, siteIds: actual.sites.map((site) => site.id), expectedCount: jurisdiction.sites.length, returnedCount: actual.sites.length, refusal: actual.refusal, sourceUrl: actual.sourceUrl, answer, payloadSha256: createHash("sha256").update(JSON.stringify(answer)).digest("hex") });
     }
   } finally { globalThis.fetch = originalFetch; }
-  return { execution: "Every held voting jurisdiction through the actual POST handler and canonical filesystem/geography selectors. External Census geocoding alone is a deterministic interior-point fixture; no civic records, identities or reader payloads are stubbed. Deployed filesystem availability is separately required by reader-trace-check.", results };
+  return { execution: "Every promoted voting jurisdiction through the actual POST handler and canonical data-plane/geography selectors. External Census geocoding alone is a deterministic interior-point fixture; no civic records, identities or reader payloads are stubbed.", results };
 }
 
 if (process.argv[1]?.endsWith("reader-last-mile-voting-sites.mts")) {
   const result = await proveVotingSites();
-  const proof = { ...result, exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), sourceHashes: Object.fromEntries(["data/voting-sites.json", "app/api/voting-sites/route.ts", "lib/ballot/voting-sites-server.ts"].map(path => [path, createHash("sha256").update(readFileSync(path)).digest("hex")])) };
+  const proof = { ...result, exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), sourceHashes: Object.fromEntries(["app/api/voting-sites/route.ts", "lib/ballot/voting-sites-server.ts", "lib/ballot/voting-sites-data-plane.ts"].map(path => [path, createHash("sha256").update(readFileSync(path)).digest("hex")])) };
   writeFileSync("docs/evidence/reader-last-mile-voting-sites.json", JSON.stringify(proof, null, 2) + "\n");
   console.log(JSON.stringify({ jurisdictions: proof.results.length, sites: proof.results.reduce((total, row) => total + row.returnedCount, 0) }));
 }

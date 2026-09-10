@@ -1,4 +1,5 @@
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 
@@ -52,7 +53,11 @@ import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
  */
 
 const BASE = "https://azgovernor.gov";
-const OUT = process.argv[2] ?? "data/states/az/hunt/az-executive-orders.json";
+const OUT = process.argv[2] ?? join(".scratch", "az-executive-orders.json");
+const OUT_REPO_PATH = relative(process.cwd(), resolve(OUT)).replaceAll("\\", "/");
+if (!OUT_REPO_PATH.startsWith("../") && /^(?:data|docs|app|lib|scripts|public|\.github)\//.test(OUT_REPO_PATH)) {
+  throw new Error(`AZ_EXECUTIVE_ACTION_RUNTIME_OUTPUT_IN_TRACKED_TREE_FORBIDDEN:${OUT_REPO_PATH}`);
+}
 /** The host asks for ten seconds between requests. It gets ten seconds. */
 const CRAWL_DELAY_MS = 10_000;
 /** How many index pages to walk. Stated, so a partial walk cannot read as all. */
@@ -184,6 +189,7 @@ report.withDate = recent.filter((o) => o.date).length;
 report.withPdf = recent.filter((o) => o.pdf).length;
 report.orders = [...orders.values()].sort((a, b) => (a.number < b.number ? 1 : -1));
 
+mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, JSON.stringify(report, null, 2), "utf8");
 
 /*

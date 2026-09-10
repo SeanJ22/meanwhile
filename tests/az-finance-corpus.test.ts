@@ -97,9 +97,20 @@ test("the acquisition script reads no ballot file and names no pilot ZIP", () =>
     );
   }
   assert.ok(reads.length > 0, "no ROOT-relative path was found — the matcher is broken, not the script");
-  assert.ok(
-    reads.some((p) => /^data\/states\/[^/]+\/identity\//.test(p)),
-    "the script does not read the identity layer, so it has nothing to project onto",
+  assert.match(
+    source,
+    /readAzBallotProjection\(\{\s*bypassCache:\s*true\s*\}\)/,
+    "the script must read the canonical promoted ballot/identity projection",
+  );
+  assert.match(
+    source,
+    /AZ_BALLOT_IDENTITY_AUTHORITY_UNAVAILABLE/,
+    "an unavailable canonical identity authority must refuse rather than fall back to a tracked file",
+  );
+  assert.doesNotMatch(
+    source,
+    /readFileSync\([^)]*data[^)]*identity/,
+    "tracked identity files are bootstrap evidence, not the production acquisition authority",
   );
 });
 

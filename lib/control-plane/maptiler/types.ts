@@ -38,7 +38,7 @@
  */
 
 /** The record shape. Bumped when the shape changes, never when the numbers do. */
-export const MAPTILER_USAGE_FORMAT_VERSION = 1;
+export const MAPTILER_USAGE_FORMAT_VERSION = 2;
 
 /** The service credential. Server-side only; never `NEXT_PUBLIC_`, never a log line. */
 export const MAPTILER_SERVICE_TOKEN_VAR = "MAPTILER_SERVICE_TOKEN";
@@ -114,6 +114,19 @@ export type MapTilerConnection =
   | "COULD_NOT_ASK";
 
 /**
+ * The newest automatic collection attempt, whether or not it produced a
+ * promotable reading. Keeping this beside a retained good measurement makes a
+ * failed refresh visible without replacing that measurement with an empty or
+ * partial answer.
+ */
+export interface MapTilerUsageAttempt {
+  readonly attemptedAt: string;
+  readonly connection: MapTilerConnection;
+  readonly detail: string | null;
+  readonly provenance: readonly MapTilerFetchProvenance[];
+}
+
+/**
  * **THE PUBLISHED READING.** One aggregate, written by a publisher that can
  * reach both MapTiler and the reader store, read by the admin console at one
  * instant.
@@ -135,6 +148,11 @@ export interface MapTilerUsageSnapshot {
   readonly days: readonly MapTilerUsageDay[];
   readonly provenance: readonly MapTilerFetchProvenance[];
   /**
+   * Always written by the standing collector. Optional only for version-one
+   * snapshots already in the durable store before the permanent cutover.
+   */
+  readonly latestAttempt?: MapTilerUsageAttempt | null;
+  /**
    * OUR OWN side of the comparison (MAPQ-7), when the publisher could read it.
    *
    * Aggregate counts of reader-app events by the actor class the runner already
@@ -143,6 +161,8 @@ export interface MapTilerUsageSnapshot {
    * are read at one instant and cannot drift apart.
    */
   readonly actors: MapTilerActorCounts | null;
+  /** Why the reader-event comparison is unknown. Null when `actors` is measured. */
+  readonly actorsDetail?: string | null;
 }
 
 /**

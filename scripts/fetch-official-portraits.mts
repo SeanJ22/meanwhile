@@ -38,7 +38,6 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { stripImageMetadata } from "./strip-image-metadata.mts";
 import { stamp } from "./stamp.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -211,157 +210,12 @@ export async function stage(
  * Commons pipeline works.
  */
 export async function ship(
-  results: PortraitResult[],
-  judgments: Record<string, string>,
+  _results: PortraitResult[],
+  _judgments: Record<string, string>,
 ): Promise<{ shipped: number; recorded: number }> {
-  const manifestPath = join(ROOT, "lib", "registry", "official-photos.json");
-  const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
-    photos: Record<string, unknown>[];
-    missing: Record<string, unknown>[];
-  };
-  const cardsPath = join(ROOT, "data", "ballot", "candidate-cards-2026.json");
-  const cardsFile = JSON.parse(await readFile(cardsPath, "utf8")) as {
-    cards: Record<string, Record<string, unknown>>;
-    hunts: { key: string; name: string; note: string; attemptedAt: string }[];
-  };
-
-  let shipped = 0;
-  let recorded = 0;
-  const today = stamp();
-
-  for (const row of results) {
-    const judgment = judgments[row.key];
-    if (row.outcome !== "STAGED" || !judgment) {
-      const rung = `Official-portrait rung (door 2, ${today}): ${row.outcome}${
-        row.outcome === "STAGED" ? " but FAILED the human portrait judgment" : ""
-      } — ${row.detail}; page ${row.pageUrl}`;
-      if (row.key.startsWith("ballot-")) {
-        const hunt = cardsFile.hunts.find((h) => h.key === row.key);
-        if (hunt) hunt.note = `${hunt.note} ${rung}`;
-        else
-          cardsFile.hunts.push({
-            key: row.key,
-            name: row.name,
-            note: rung,
-            attemptedAt: today,
-          });
-      } else {
-        manifest.missing = manifest.missing.filter(
-          (m) => m.officeholderId !== row.key,
-        );
-        manifest.missing.push({
-          officeholderId: row.key,
-          name: row.name,
-          reason: rung,
-          attemptedAt: today,
-        });
-      }
-      recorded++;
-      continue;
-    }
-
-    const raw = await readFile(row.stagedFile!);
-    const { bytes, stripped } = stripImageMetadata(raw);
-    if (!stripped) throw new Error(`${row.stagedFile}: cannot strip metadata`);
-    const ext = row.stagedFile!.endsWith(".png") ? "png" : "jpg";
-    const isBallot = row.key.startsWith("ballot-");
-    const safe = row.key
-      .replace(/^statewide:/, "statewide-")
-      .replace(/^roster:/, "roster-")
-      .replace(/^congress:/, "")
-      .replace(/^ballot-/, "")
-      .replace(/[^a-zA-Z0-9-]+/g, "-");
-    const rel = join(isBallot ? "candidates" : "officials", `${safe}.${ext}`);
-    await mkdir(dirname(join(ROOT, "public", rel)), { recursive: true });
-    await writeFile(join(ROOT, "public", rel), bytes);
-    const url = `/${rel.replace(/\\/g, "/")}`;
-
-    // The basis, recorded on the row. This is what makes door 2 auditable:
-    // a reader of the manifest can tell licence-based rows from
-    // official-portrait rows without reading any prose.
-    const license = `Official portrait published by ${row.publisher} (${row.pageUrl}) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.`;
-
-    if (isBallot) {
-      const card = cardsFile.cards[row.key] ?? {
-        photoUrl: null,
-        photoSource: null,
-        bio: null,
-        bioSourceUrl: null,
-        bioSourceLabel: null,
-        email: null,
-        phone: null,
-      };
-      card.photoUrl = url;
-      card.photoSource = `${judgment} — official portrait published by ${row.publisher}, read ${today} from ${row.pageUrl}; committed copy served from our origin`;
-      cardsFile.cards[row.key] = card;
-      const note = `PHOTO RESOLVED ${today} (door 2, official portrait): ${row.imageUrl} off ${row.pageUrl}, judged "${judgment}"; committed at ${url}.`;
-      const hunt = cardsFile.hunts.find((h) => h.key === row.key);
-      if (hunt) hunt.note = `${hunt.note} ${note}`;
-      else
-        cardsFile.hunts.push({
-          key: row.key,
-          name: row.name,
-          note,
-          attemptedAt: today,
-        });
-    } else {
-      manifest.missing = manifest.missing.filter(
-        (m) => m.officeholderId !== row.key,
-      );
-      manifest.photos = manifest.photos.filter(
-        (p) => p.officeholderId !== row.key,
-      );
-      manifest.photos.push({
-        officeholderId: row.key,
-        name: row.name,
-        url,
-        sourceUrl: row.pageUrl,
-        license,
-        attribution: row.publisher,
-        basis: "OFFICIAL_PORTRAIT",
-        judgment,
-        collectedAt: new Date().toISOString(),
-      });
-    }
-    shipped++;
-  }
-
-  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
-  await writeFile(cardsPath, `${JSON.stringify(cardsFile, null, 2)}\n`, "utf8");
-
-  /*
-   * Regenerate the client-safe derivative (2026-08-15).
-   *
-   * `body-rosters.ts` is client-bundled and imports the tiny
-   * `roster-photos.json` rather than the full manifest. Only the Commons
-   * ship script rewrote it, so shipping roster portraits through THIS door
-   * updated the manifest and left the derivative behind — twenty local
-   * officials with a licensed row and no photo on screen. The sync test
-   * caught it, which is what it is for; regenerating here is what stops the
-   * two paths disagreeing about which script you happened to run.
-   */
-  const rosterPhotos: Record<string, string> = {};
-  for (const photo of manifest.photos) {
-    const id = String(photo.officeholderId);
-    if (id.startsWith("roster:") && photo.license) {
-      rosterPhotos[id] = String(photo.url);
-    }
-  }
-  await writeFile(
-    join(ROOT, "lib", "registry", "roster-photos.json"),
-    `${JSON.stringify(
-      Object.fromEntries(Object.entries(rosterPhotos).sort()),
-      null,
-      2,
-    )}\n`,
-    "utf8",
+  throw new Error(
+    "TRACKED_PORTRAIT_BINDING_WRITER_RETIRED: reviewed official-photo and roster-photo bindings must be included in a registry-runtime-bindings package and promoted with scripts/promote-registry-runtime.mts --promote.",
   );
-
-  console.log(
-    `\n=== shipped ${shipped}; ${recorded} misses recorded with their rung; ` +
-      `${Object.keys(rosterPhotos).length} roster photos in the client derivative ===`,
-  );
-  return { shipped, recorded };
 }
 
 // ── CLI ──────────────────────────────────────────────────────────────────

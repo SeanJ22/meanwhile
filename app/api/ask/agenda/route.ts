@@ -1,4 +1,5 @@
-import { readSnapshot } from "@/lib/meetings/snapshot";
+import { readMeetingsProjection } from "@/lib/meetings/snapshot";
+import type { CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 import type { AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { classifyAgendaPublication, type AgendaPublicationReading } from "@/lib/ask/agenda-publication";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
@@ -87,6 +88,8 @@ export interface AgendaMeetingReply {
   readable: number;
   publication: AgendaPublicationReading;
   listingIdentity: ReturnType<typeof meetingListingKnowledgeFor>["readback"];
+  dataState: "PROMOTED" | "BOOTSTRAP";
+  dataMetadata: CivicDataReadMetadata;
 }
 
 const MAX_BODY_BYTES = 2048;
@@ -127,13 +130,32 @@ export async function POST(request: Request) {
   // No corpus is a STATE, and it is reported as one — never as an answer
   // of "nothing is scheduled", which is the same absence-as-assertion the
   // render rule forbids one layer up.
-  const snapshot = readSnapshot();
-  if (!snapshot) {
+  let read;
+  try {
+    read = await readMeetingsProjection();
+  } catch (error) {
     return Response.json(
-      { error: "the meetings corpus is not available right now" },
+      {
+        error: "the meetings projection could not be validated",
+        dataState: "STORE_UNREACHABLE",
+        code: "MEETINGS_PROJECTION_INVALID",
+        detail: error instanceof Error ? error.message : "unknown meetings projection error",
+      },
       { status: 503 },
     );
   }
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") {
+    return Response.json(
+      {
+        error: "the meetings corpus is not available right now",
+        dataState: read.kind,
+        ...(read.kind === "STORE_UNREACHABLE" ? { code: read.code } : {}),
+        detail: read.detail,
+      },
+      { status: 503 },
+    );
+  }
+  const snapshot = read.value;
 
   const documents = (snapshot.agendaDocuments ?? []) as AgendaDocumentLike[];
 
@@ -203,6 +225,8 @@ export async function POST(request: Request) {
       readable: publication.acquisition === "ITEMS_READER_READY" || publication.acquisition === "READ_NO_ITEMS_EXTRACTED" ? 1 : 0,
       publication,
       listingIdentity: meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback,
+      dataState: read.kind,
+      dataMetadata: read.metadata,
     };
     return Response.json(reply);
   }

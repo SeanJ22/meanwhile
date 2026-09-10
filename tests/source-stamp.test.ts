@@ -80,16 +80,15 @@ describe("git verification reports rather than guesses", () => {
      * value is declared, so CI does not need git to reproduce the artifact, and
      * the person who edits the constant has the history to check it against.
      *
-     * **TWO GATES, TWO CLONE DEPTHS, TWO ANSWERS** (2026-09-02). "CI" above is
-     * not one place. `build-check.yml` — the gate every PR passes — checks out
-     * at depth 1, so this test SKIPS there. `refresh-daily.yml` checks out with
-     * `fetch-depth: 0` because `push-main.mjs` has to rebase, so this test RUNS
-     * there, on whatever `main` carries. Commit 7514e68e (2026-09-01) moved
+     * **THE HISTORICAL FAILURE THIS FULL-HISTORY CHECK RETAINS** (2026-09-02).
+     * The former PR checkout was shallow while the former routine refresh had
+     * full history. Commit 7514e68e (2026-09-01) moved
      * `data/states/nj/hunt/wikipedia-nj-morris.json` without moving
      * `build-nj-rosters.mts`'s declaration: the PR gate could not see it, the
-     * next two scheduled refreshes could, and both went red on a defect that
+     * two later refresh executions could, and both went red on a defect that
      * was already on `main` — with every governed artifact's data thrown away
-     * behind it.
+     * behind it. Those refresh executables are now deleted; this local
+     * full-history proof remains an engineering check, never a runtime gate.
      *
      * They cannot be made to ask the SAME question cheaply: the full answer
      * needs every commit that ever touched each source, and the PR gate
@@ -98,7 +97,7 @@ describe("git verification reports rather than guesses", () => {
      * sufficient for its purpose — "did THIS change move a source without
      * moving its declaration" — from the PR's own base..head diff, which needs
      * no history. Until it does, this asymmetry is the stated reason a
-     * scheduled refresh can go red on a stamp a merged PR never saw.
+     * shallow CI cannot claim the full-history half ran.
      */
     if (isShallowClone()) {
       assert.ok(true, "shallow clone — verification is not available here, and says so");

@@ -11,13 +11,13 @@
  *
  * The correction's operative instruction was to **walk the roll-call routes
  * with counts per route before any statement about what Pima publishes**. This
- * is that walk, over the committed outcomes store, and its output is the record
+ * is that walk, over the promoted outcomes projection, and its output is the record
  * a later session should read instead of the sentence it replaces.
  *
- * It reads the STORE rather than the network. The routes were walked when the
- * store was built and every route is named in each sitting's `routesWalked`;
- * re-fetching would measure today's tenant rather than the run that produced
- * the rows the Ask engine actually answers from.
+ * It reads the canonical projection rather than the network. The routes were
+ * walked when that version was built and every route is named in each sitting's
+ * `routesWalked`; re-fetching would measure today's tenant rather than the
+ * version the Ask engine actually answers from.
  *
  * ## What a zero here would mean
  *
@@ -29,35 +29,18 @@
  * tuned away into a clean report.
  */
 
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
+import { getOutcomeSnapshot, readOutcomeProjection } from "../lib/outcomes/store.ts";
+import type { PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 
-const ROOT = process.cwd();
-const STORE = join(ROOT, "data", "states", "az", "outcomes", "legistar-outcomes.json");
-const OUT = join(ROOT, "data", "health", "rollcall-walks");
-
-interface Sitting {
-  startsAt: string;
-  bodyName: string;
-  meetingId: string;
-  sourceOrg?: string;
-  rollCalls?: { votes?: unknown[]; members?: unknown[] }[];
-  failedRollCallExtractions?: unknown[];
-  voteRequestFailures?: unknown[];
-  /* Strings, as the store writes them: ["WEBAPI_EVENTS", "WEBAPI_EVENTITEMS", ...]. */
-  routesWalked?: string[];
+const projection = await readOutcomeProjection();
+if (projection.kind !== "PROMOTED") {
+  throw new Error(`Pima outcome projection is ${projection.kind}; a roll-call proof requires the canonical production pointer.`);
 }
+const store = getOutcomeSnapshot();
 
-const store = JSON.parse(readFileSync(STORE, "utf8")) as {
-  generatedAt?: string;
-  tenants: string[];
-  sittings: Sitting[];
-};
-
-const rowsOf = (s: Sitting): number =>
-  (s.rollCalls ?? []).reduce((n, r) => n + (r.votes ?? r.members ?? []).length, 0);
+const rowsOf = (s: PersistedSittingOutcomes): number =>
+  s.rollCalls.reduce((n, r) => n + r.votes.length, 0);
 
 /* --------------------------------------------------------- per route --- */
 
@@ -80,7 +63,7 @@ const totalFailed = store.sittings.reduce(
 const totalReqFail = store.sittings.reduce((n, s) => n + (s.voteRequestFailures ?? []).length, 0);
 const withRolls = store.sittings.filter((s) => (s.rollCalls ?? []).length > 0).length;
 
-console.log(`rollcall:walk · ${STORE}`);
+console.log(`rollcall:walk · canonical ${projection.metadata.recordClass}/${projection.metadata.scope} @ ${projection.metadata.versionId}`);
 console.log(`  tenants: ${store.tenants.join(", ")} · generated ${store.generatedAt ?? "unstamped"}`);
 console.log(
   `  ${floorLine(
@@ -105,9 +88,9 @@ console.log(`    failed roll-call extractions ${totalFailed}   (OURS — the att
 console.log(`    vote request failures        ${totalReqFail}`);
 
 console.log(`\n  PER SITTING`);
-for (const s of [...store.sittings].sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1))) {
+for (const s of [...store.sittings].sort((a, b) => (a.startsAt ?? "").localeCompare(b.startsAt ?? ""))) {
   console.log(
-    `    ${s.startsAt.slice(0, 10)}  ${s.bodyName.slice(0, 30).padEnd(30)} ` +
+    `    ${(s.startsAt ?? "UNKNOWN").slice(0, 10)}  ${s.bodyName.slice(0, 30).padEnd(30)} ` +
       `rolls ${String((s.rollCalls ?? []).length).padStart(3)}  ` +
       `rows ${String(rowsOf(s)).padStart(4)}  ` +
       `failed ${String((s.failedRollCallExtractions ?? []).length).padStart(2)}`,
@@ -115,7 +98,7 @@ for (const s of [...store.sittings].sort((a, b) => (a.startsAt < b.startsAt ? -1
 }
 
 /*
- * THE SENTENCE THIS REPLACES, stated so the correction travels with the data.
+ * THE SENTENCE THIS REPLACES, stated so the correction travels with the evidence.
  */
 console.log(
   `\n  THE CLAIM THIS WALK CORRECTS: "we hold no Pima roll-call votes", offered with the owner's\n` +
@@ -124,34 +107,4 @@ console.log(
     "  direction, and the statement it was offered in support of is false.",
 );
 
-mkdirSync(OUT, { recursive: true });
-const path = join(OUT, `${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
-writeFileSync(
-  path,
-  `${JSON.stringify(
-    {
-      at: new Date().toISOString(),
-      store: "data/states/az/outcomes/legistar-outcomes.json",
-      tenants: store.tenants,
-      sittings: store.sittings.length,
-      sittingsWithRolls: withRolls,
-      rollCallsHeld: totalRolls,
-      personVoteRowsHeld: totalRows,
-      failedRollCallExtractions: totalFailed,
-      voteRequestFailures: totalReqFail,
-      routesWalked: Object.fromEntries([...perRoute].map(([k, v]) => [k, v.sittings])),
-      perSitting: store.sittings.map((s) => ({
-        startsAt: s.startsAt,
-        bodyName: s.bodyName,
-        meetingId: s.meetingId,
-        rollCalls: (s.rollCalls ?? []).length,
-        personVoteRows: rowsOf(s),
-        failedRollCallExtractions: (s.failedRollCallExtractions ?? []).length,
-      })),
-    },
-    null,
-    2,
-  )}\n`,
-  "utf8",
-);
-console.log(`\n  record: ${path}`);
+console.log(`\n  immutable version: ${projection.metadata.versionId}`);

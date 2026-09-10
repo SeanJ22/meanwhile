@@ -12,6 +12,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -195,12 +196,13 @@ export function makeOnBaseSource(
   return {
     name: SOURCE_NAME,
 
-    async fetch(): Promise<OnBaseRaw[]> {
+    async fetch(query?: MeetingQuery): Promise<OnBaseRaw[]> {
       const collected: OnBaseRaw[] = [];
       for (const wiring of wiringRows) {
         const { text } = await politeGetText(wiring.config.baseUrl, {
           fetchImpl,
           accept: "text/html",
+          signal: query?.signal,
         });
         collected.push({
           wiring,

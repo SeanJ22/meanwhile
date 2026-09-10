@@ -24,12 +24,13 @@
        schtasks /Create answered Access is denied (0x80070005) unelevated on
        2026-08-31; Set-ScheduledTask answered the same on 2026-09-01. An
        unattended session never elevates itself. `install` still tries, prints
-       the refusal verbatim, installs the per-user startup entry, and prints
-       the exact elevated command the owner runs once.
+       the refusal verbatim, installs the per-user Startup fallback only when
+       no active task remains, and prints the exact elevated command once.
 
     5. The per-user startup entry (%APPDATA%\...\Startup\wtp-pilot-runner.cmd)
-       is the unelevated fallback: it survives a reboot; it does NOT relaunch a
-       killed runner.
+       is FALLBACK-ONLY when Task Scheduler registration is refused. A live
+       scheduled task and this entry may never coexist: both fire at logon and
+       `MultipleInstances IgnoreNew` cannot constrain an external launcher.
 
     6. `prove-relaunch` KILLS the runner to measure the relaunch. It refuses
        (exit 2) unless the relaunch trigger is present on the live task, because
@@ -38,7 +39,7 @@
     THE COMMANDS
     ------------
         pnpm pilot:install     register the task with BOTH triggers, or print why
-                               not; write the startup entry either way
+                               not; install Startup only as the refused-task fallback
         pnpm pilot:start       start the runner NOW, without waiting for a logon
         pnpm pilot:stop        stop the running runner
         pnpm pilot:status      what is installed, every trigger, whether the
@@ -59,23 +60,37 @@
             read-only JSON; exit 0 when the relaunch trigger is present, else 1
         powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action prove-relaunch
             kills the runner, polls every 15 s for up to 8 min for a NEW pid,
-            writes data/ops/runner-relaunch-proof.json beside this script's repo
+            writes ignored host evidence at .runtime/ops/runner-relaunch-proof.json
+            in the installed runtime checkout; it never dirties Git
 
-    The elevated one-liner, run ONCE from an elevated PowerShell in the repo:
+    The elevated one-liner, run ONCE from an elevated PowerShell after the
+    software deploy and exact-head certification have both completed:
 
-        powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install
+        powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install `
+          -RepoPath C:\Users\seanj\dev\wtp-production-runtime `
+          -EnvFile C:\absolute\private\production.env `
+          -ExpectedDeployedSha <the-full-40-character-deployed-SHA>
 
     WHAT IT RUNS
     ------------
-    `node --env-file=.env.local --experimental-strip-types scripts/pilot-runner.mts --interval=<n>`
-    with the repository as its working directory. `--env-file` is how
-    `WTP_CONTROL_PLANE_DATABASE_URL` reaches the process; the file is
-    gitignored, only its PATH is written anywhere, and no value of any variable
-    is written into the task, the startup entry, the log, the digest or any
-    record this script writes.
+    The task calls `scripts/pilot-runtime-launch.ps1` with only the validated
+    absolute repository and environment-file paths plus the interval. The
+    stable launcher revalidates the clean detached checkout, completes
+    `pnpm install --frozen-lockfile`, then starts `pilot-runner.mts`. The
+    deployed SHA is an INITIAL installation proof, not a permanent task
+    argument: the runner hands the dedicated checkout to later exact deployed,
+    certified SHAs and exits for this same trigger to relaunch it.
 
-    PROMOTION STAYS OFF. The runner passes no flag that could promote anything,
-    and `runCycle` has no parameter that would accept one.
+    The parent loads the environment file once; every child inherits its
+    environment and never reopens a cwd-relative `.env.local`. No
+    environment-file byte or variable value is read, printed, or persisted by
+    this installer or launcher.
+
+    RESEARCH PROMOTION STAYS OFF. The research cycle passes no flag that could
+    promote its staged output. The same standing host independently invokes the
+    typed routine civic-data registry, whose source-scoped candidates may
+    promote only through the permanent data plane. A research pause, failure,
+    or provider-circuit branch does not pause that routine-data tick.
 
     WHERE THE OWNER READS IT
     ------------------------
@@ -86,16 +101,23 @@
 #>
 
 param(
-    [ValidateSet("install", "start", "stop", "status", "disable", "uninstall", "verify-triggers", "prove-relaunch", "install-window")]
+    [ValidateSet("validate-config", "install", "start", "stop", "status", "disable", "uninstall", "verify-triggers", "prove-relaunch", "owner-command")]
     [string]$Action = "status",
 
-    # The repository the runner runs in. Defaults to the main checkout rather
-    # than to wherever this script happens to sit, because a mechanism pointed
-    # at a temporary worktree stops working the moment that worktree is removed.
-    [string]$RepoPath = "C:\Users\seanj\dev\we-the-people",
+    # These three facts are intentionally explicit for every installation. A
+    # temporary worktree, dirty main checkout, relative secret path, branch tip,
+    # or merely-latest SHA is refused by the executable validator.
+    [string]$RepoPath = "",
+    [string]$EnvFile = "",
+    [string]$ExpectedDeployedSha = "",
 
     # Minutes between cycles.
-    [int]$IntervalMinutes = 60
+    [int]$IntervalMinutes = 60,
+
+    # Opaque, bounded JSON supplied by scripts/installed-runtime-command.mjs.
+    # Only the installed checkout's typed dispatcher interprets it; this host
+    # controller proves which checkout is allowed to do so first.
+    [string]$OwnerCommandPayload = ""
 )
 
 $TaskName    = "WeThePeople Pilot Runner"
@@ -109,44 +131,16 @@ $RelaunchIntervalMinutes = 5
 $RelaunchDurationDays    = 3650
 $RelaunchMinDurationDays = 365
 
-# Records this script writes land beside the script's OWN repository, which is
-# the checkout a session commits from; $RepoPath is where the runner runs.
 $ScriptRepo = Split-Path -Parent $PSScriptRoot
-$ProofFile  = Join-Path $ScriptRepo "data\ops\runner-relaunch-proof.json"
+$ProofFile  = $null
 
-$ElevatedOneLiner = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install"
+$ElevatedOneLiner = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install -RepoPath <absolute-clean-runtime-repo> -EnvFile <absolute-env-file> -ExpectedDeployedSha <40-char-deployed-sha>"
 
-# THE NIGHTLY WINDOW'S BACKUP WAKEUP (RULING 242). The window itself runs on
-# the pilot runner's own clock at 04:00 America/New_York; this task only nudges
-# a live runner with a RUN_WINDOW_NOW intent, or runs the window under the
-# lease if the runner is dead. Registered from an ELEVATED shell only, like the
-# runner's task (invariant 4 above).
-$WindowTaskName         = "WeThePeople Nightly Window"
-$WindowEasternZoneId    = "Eastern Standard Time"
-$WindowEasternHour      = 4
-$WindowElevatedOneLiner = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install-window"
-
-function Get-WindowArgs {
-    return "--env-file=.env.local --experimental-strip-types scripts/nightly-window.mts --wakeup"
-}
-
-function Get-WindowLocalTimes {
-    # 04:00 America/New_York expressed in THIS host's local clock, once for
-    # standard time and once for daylight time. Task Scheduler triggers are
-    # host-local; registering both distinct values means one of them lands on
-    # 04:00 Eastern whichever rule is in force, and the other fires an hour
-    # off — where `--wakeup` is a no-op because the window already ran.
-    $eastern = [System.TimeZoneInfo]::FindSystemTimeZoneById($WindowEasternZoneId)
-    $local   = [System.TimeZoneInfo]::Local
-    $year    = (Get-Date).Year
-    $times   = @()
-    foreach ($probe in @((Get-Date -Year $year -Month 1 -Day 15), (Get-Date -Year $year -Month 7 -Day 15))) {
-        $easternAt = New-Object DateTime($probe.Year, $probe.Month, $probe.Day, $WindowEasternHour, 0, 0, [DateTimeKind]::Unspecified)
-        $localAt   = [System.TimeZoneInfo]::ConvertTime($easternAt, $eastern, $local)
-        $times    += $localAt.ToString("HH:mm")
-    }
-    return @($times | Select-Object -Unique)
-}
+# PDC V2 retired the separate nightly-window Scheduled Task. The standing
+# runner's internal due-check is the sole clock for that research-only window.
+# Keep the old fixed task name only so install/uninstall can delete a task made
+# by an earlier release; no surviving action may create or run it.
+$LegacyWindowTaskName = "WeThePeople Nightly Window"
 
 function Get-NodePath {
     $node = (Get-Command node -ErrorAction SilentlyContinue)
@@ -154,12 +148,195 @@ function Get-NodePath {
     return $node.Source
 }
 
-function Get-RunnerArgs {
-    return "--env-file=.env.local --experimental-strip-types scripts/pilot-runner.mts --interval=$IntervalMinutes"
+function Get-PowerShellPath {
+    $powershell = (Get-Command powershell.exe -ErrorAction SilentlyContinue)
+    if ($null -eq $powershell) { $powershell = (Get-Command powershell -ErrorAction SilentlyContinue) }
+    if ($null -eq $powershell) { throw "powershell is not on PATH; the launch mechanism needs an absolute executable path." }
+    return $powershell.Source
+}
+
+function Resolve-RuntimeConfig {
+    # One executable validator owns these predicates and is also imported by
+    # deterministic tests. It never reads the environment file; it returns only
+    # normalized paths and the SHA that was supplied.
+    if ([string]::IsNullOrWhiteSpace($RepoPath) -or
+        [string]::IsNullOrWhiteSpace($EnvFile) -or
+        [string]::IsNullOrWhiteSpace($ExpectedDeployedSha)) {
+        throw "RepoPath, EnvFile, and ExpectedDeployedSha are required. Supply an absolute clean detached runtime repository, an absolute private environment file, and the full deployed SHA."
+    }
+    if (-not [System.IO.Path]::IsPathRooted($RepoPath)) {
+        throw "RepoPath must be absolute so the exact target checkout owns its validator."
+    }
+    $node = Get-NodePath
+    # Execute the validator from the exact checkout being installed. An
+    # engineering worktree may invoke this installer, but unshipped code in
+    # that worktree is not allowed to certify a different production tree.
+    $validator = Join-Path ([System.IO.Path]::GetFullPath($RepoPath)) "scripts\pilot-runtime-config.mjs"
+    if (-not (Test-Path -LiteralPath $validator -PathType Leaf)) {
+        throw "runtime config validator is missing: $validator"
+    }
+    # Bootstrap the validator itself before executing it: its worktree bytes
+    # must be the blob carried by the explicit deployed commit. Otherwise a
+    # dirty target could replace its validator with one that falsely says the
+    # rest of the target is clean.
+    $expectedValidatorOutput = @(& git -C $RepoPath rev-parse "${ExpectedDeployedSha}:scripts/pilot-runtime-config.mjs" 2>$null)
+    $expectedValidatorExit = $LASTEXITCODE
+    $expectedValidatorBlob = [string]($expectedValidatorOutput | Select-Object -First 1)
+    $expectedValidatorBlob = $expectedValidatorBlob.Trim()
+    if ($expectedValidatorExit -ne 0 -or $expectedValidatorBlob -notmatch '^[0-9a-fA-F]{40}$') {
+        throw "the expected deployed commit does not carry a readable runtime config validator"
+    }
+    $workingValidatorOutput = @(& git -C $RepoPath hash-object --path="scripts/pilot-runtime-config.mjs" "scripts/pilot-runtime-config.mjs" 2>$null)
+    $workingValidatorExit = $LASTEXITCODE
+    $workingValidatorBlob = [string]($workingValidatorOutput | Select-Object -First 1)
+    $workingValidatorBlob = $workingValidatorBlob.Trim()
+    if ($workingValidatorExit -ne 0 -or $workingValidatorBlob -notmatch '^[0-9a-fA-F]{40}$' -or $workingValidatorBlob -ne $expectedValidatorBlob) {
+        throw "the target checkout's runtime config validator does not equal the expected deployed commit's validator (expected $expectedValidatorBlob, exit $expectedValidatorExit; found $workingValidatorBlob, exit $workingValidatorExit)"
+    }
+    $validatorArgs = @(
+        $validator,
+        "--repo", $RepoPath,
+        "--env-file", $EnvFile,
+        "--expected-sha", $ExpectedDeployedSha
+    )
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        $answer = @(& $node @validatorArgs 2>&1)
+        $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+    if ($code -ne 0) {
+        throw (($answer | ForEach-Object { [string]$_ }) -join "`n")
+    }
+    try {
+        $resolved = (($answer | ForEach-Object { [string]$_ }) -join "`n") | ConvertFrom-Json
+    }
+    catch {
+        throw "runtime config validator returned unreadable output"
+    }
+    $script:RepoPath = [string]$resolved.repoPath
+    $script:EnvFile = [string]$resolved.envFile
+    $script:ExpectedDeployedSha = [string]$resolved.expectedSha
+    $script:ProofFile = Join-Path $script:RepoPath ".runtime\ops\runner-relaunch-proof.json"
+    $script:ElevatedOneLiner = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install -RepoPath `"$script:RepoPath`" -EnvFile `"$script:EnvFile`" -ExpectedDeployedSha $script:ExpectedDeployedSha"
+    return $resolved
+}
+
+function Quote-TaskArgument {
+    param([string]$Value)
+    if ($Value.Contains('"')) { throw "a launch path may not contain a double quote" }
+    return '"' + $Value + '"'
+}
+
+function Test-SameResolvedPath {
+    param([string]$Left, [string]$Right)
+    if ([string]::IsNullOrWhiteSpace($Left) -or [string]::IsNullOrWhiteSpace($Right)) { return $false }
+    try {
+        $a = [System.IO.Path]::GetFullPath($Left).TrimEnd('\')
+        $b = [System.IO.Path]::GetFullPath($Right).TrimEnd('\')
+        return [string]::Equals($a, $b, [System.StringComparison]::OrdinalIgnoreCase)
+    }
+    catch { return $false }
+}
+
+function Get-LauncherArgs {
+    $launcher = Join-Path $RepoPath "scripts\pilot-runtime-launch.ps1"
+    if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+        throw "runtime launcher is missing: $launcher"
+    }
+    return "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File $(Quote-TaskArgument $launcher) -RepoPath $(Quote-TaskArgument $RepoPath) -EnvFile $(Quote-TaskArgument $EnvFile) -IntervalMinutes $IntervalMinutes"
+}
+
+function ConvertFrom-LauncherArgs {
+    param([string]$Arguments)
+    $pattern = '^-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "([^"]+)" -RepoPath "([^"]+)" -EnvFile "([^"]+)" -IntervalMinutes ([0-9]+)$'
+    $match = [regex]::Match($Arguments, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+    if (-not $match.Success) {
+        throw "the installed entrypoint does not carry the exact stable-launcher argument contract"
+    }
+    $minutes = [int]$match.Groups[4].Value
+    if ($minutes -lt 1) { throw "the installed entrypoint carries an invalid interval ($minutes minute(s))" }
+    return [ordered]@{
+        launcher        = $match.Groups[1].Value
+        repoPath        = $match.Groups[2].Value
+        envFile         = $match.Groups[3].Value
+        intervalMinutes = $minutes
+    }
+}
+
+function Assert-CurrentInstallerMatchesRuntimeHead {
+    param([string]$RuntimeRepo, [string]$RuntimeHead)
+    # A task created by transition-era code may have the same fixed name and a
+    # plausible command line. It is not thereby this authority. Bind the
+    # currently executing installer to the installed checkout's committed
+    # installer blob before allowing `start` to reactivate that checkout.
+    $currentOutput = @(& git -C $ScriptRepo hash-object --path="scripts/pilot-task.ps1" "scripts/pilot-task.ps1" 2>$null)
+    $currentExit = $LASTEXITCODE
+    $currentBlob = [string]($currentOutput | Select-Object -First 1)
+    $currentBlob = $currentBlob.Trim()
+    $runtimeOutput = @(& git -C $RuntimeRepo rev-parse "${RuntimeHead}:scripts/pilot-task.ps1" 2>$null)
+    $runtimeExit = $LASTEXITCODE
+    $runtimeBlob = [string]($runtimeOutput | Select-Object -First 1)
+    $runtimeBlob = $runtimeBlob.Trim()
+    if ($currentExit -ne 0 -or $runtimeExit -ne 0 -or
+        $currentBlob -notmatch '^[0-9a-fA-F]{40}$' -or
+        $runtimeBlob -notmatch '^[0-9a-fA-F]{40}$' -or
+        $currentBlob -ne $runtimeBlob) {
+        throw "the installed runtime does not carry this exact permanent installer; refusing to reactivate a stale or transition-era authority"
+    }
+}
+
+function Resolve-InstalledRuntime {
+    param($LaunchConfig)
+    $runtimeHeadOutput = @(& git -C $LaunchConfig.repoPath rev-parse HEAD 2>$null)
+    $runtimeHeadExit = $LASTEXITCODE
+    $runtimeHead = [string]($runtimeHeadOutput | Select-Object -First 1)
+    $runtimeHead = $runtimeHead.Trim()
+    if ($runtimeHeadExit -ne 0 -or $runtimeHead -notmatch '^[0-9a-fA-F]{40}$') {
+        throw "the installed runtime checkout has no readable exact HEAD"
+    }
+
+    $script:RepoPath = [string]$LaunchConfig.repoPath
+    $script:EnvFile = [string]$LaunchConfig.envFile
+    $script:ExpectedDeployedSha = $runtimeHead
+    $script:IntervalMinutes = [int]$LaunchConfig.intervalMinutes
+    $resolved = Resolve-RuntimeConfig
+    Assert-CurrentInstallerMatchesRuntimeHead -RuntimeRepo $resolved.repoPath -RuntimeHead $resolved.expectedSha
+
+    $expectedLauncher = Join-Path $resolved.repoPath "scripts\pilot-runtime-launch.ps1"
+    if (-not (Test-SameResolvedPath $LaunchConfig.launcher $expectedLauncher)) {
+        throw "the installed entrypoint does not name the stable launcher in its validated runtime checkout"
+    }
+    $expectedArguments = Get-LauncherArgs
+    return [ordered]@{
+        repoPath        = [string]$resolved.repoPath
+        envFile         = [string]$resolved.envFile
+        expectedSha     = [string]$resolved.expectedSha
+        intervalMinutes = [int]$LaunchConfig.intervalMinutes
+        launcher        = $expectedLauncher
+        launcherArgs    = $expectedArguments
+    }
+}
+
+function Remove-LegacyWindowTaskOrThrow {
+    $legacy = Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue
+    if (-not $legacy) { return }
+
+    # `/End` may answer nonzero when no instance is running; deletion and its
+    # readback are the authority for whether the retired clock still exists.
+    [void](Invoke-Schtasks @("/End", "/TN", $LegacyWindowTaskName))
+    $deleteCode = Invoke-Schtasks @("/Delete", "/TN", $LegacyWindowTaskName, "/F")
+    $remaining = Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue
+    if ($deleteCode -ne 0 -or $remaining) {
+        throw "the retired Scheduled Task '$LegacyWindowTaskName' could not be deleted (schtasks exit $deleteCode); refusing to leave a second operational clock installed"
+    }
 }
 
 function Install-StartupEntry {
-    param([string]$Node, [string]$NodeArgs)
+    param([string]$PowerShell, [string]$LauncherArgs)
     # `start "" /min` detaches the runner from the logon script so Windows does
     # not hold the logon open on a process that never exits.
     $body = @"
@@ -167,15 +344,104 @@ function Install-StartupEntry {
 rem WeThePeople pilot runner - installed by scripts/pilot-task.ps1
 rem Delete this file to stop the runner coming back at logon.
 cd /d "$RepoPath"
-start "" /min "$Node" $NodeArgs
+start "" /min "$PowerShell" $LauncherArgs
 "@
     Set-Content -Path $StartupFile -Value $body -Encoding ascii
     return $StartupFile
 }
 
+function Remove-StartupEntryOrThrow {
+    if (Test-Path $StartupFile) {
+        Remove-Item -LiteralPath $StartupFile -Force -ErrorAction Stop
+    }
+    if (Test-Path $StartupFile) {
+        throw "the scheduled task landed but the competing Startup entry could not be removed: $StartupFile"
+    }
+}
+
 function Get-RunnerProcesses {
     Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" |
         Where-Object { $_.CommandLine -like "*pilot-runner.mts*" }
+}
+
+function Get-ProcessTreeSnapshot {
+    param([object[]]$Roots)
+    $rootRows = @($Roots)
+    if ($rootRows.Count -eq 0) { return @() }
+    $all = @(Get-CimInstance Win32_Process)
+    $pending = @($rootRows | ForEach-Object { [int]$_.ProcessId })
+    $ids = @()
+    while ($pending.Count -gt 0) {
+        $current = [int]$pending[0]
+        $pending = @($pending | Select-Object -Skip 1)
+        if ($ids -contains $current) { continue }
+        $ids += $current
+        $pending += @($all | Where-Object { [int]$_.ParentProcessId -eq $current } | ForEach-Object { [int]$_.ProcessId })
+    }
+    return @($all | Where-Object { $ids -contains [int]$_.ProcessId })
+}
+
+function Invoke-TaskkillTree {
+    param([int]$ProcessId)
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    $code = 0
+    try {
+        # `/T` is load-bearing: routine-data, intake and console publishers are
+        # child processes and may hold a production write capability after the
+        # parent exits. Killing only pilot-runner can therefore leave the old
+        # authority alive across a release/import boundary.
+        & taskkill.exe /PID $ProcessId /T /F *> $null
+        $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
+    }
+    catch {
+        $code = 1
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+    return $code
+}
+
+function Stop-RunnerProcessTrees {
+    param([object[]]$Roots = @())
+    $rootRows = @($Roots)
+    if ($rootRows.Count -eq 0) { $rootRows = @(Get-RunnerProcesses) }
+    $captured = @(Get-ProcessTreeSnapshot -Roots $rootRows)
+    $problems = @()
+
+    foreach ($root in $rootRows) {
+        $processId = [int]$root.ProcessId
+        $code = Invoke-TaskkillTree -ProcessId $processId
+        if ($code -ne 0 -and $null -ne (Get-Process -Id $processId -ErrorAction SilentlyContinue)) {
+            $problems += "taskkill /T could not terminate pilot-runner process tree rooted at pid $processId (exit $code)."
+        }
+    }
+
+    # A parent can exit between capture and taskkill. Explicitly close every
+    # captured descendant still alive so an orphan cannot keep a production
+    # handle merely because its former root no longer exists.
+    foreach ($row in $captured) {
+        $processId = [int]$row.ProcessId
+        if ($null -eq (Get-Process -Id $processId -ErrorAction SilentlyContinue)) { continue }
+        $code = Invoke-TaskkillTree -ProcessId $processId
+        if ($code -ne 0 -and $null -ne (Get-Process -Id $processId -ErrorAction SilentlyContinue)) {
+            $problems += "captured runner descendant pid $processId remained after taskkill /T (exit $code)."
+        }
+    }
+
+    $remainingCaptured = @($captured | Where-Object {
+        $null -ne (Get-Process -Id ([int]$_.ProcessId) -ErrorAction SilentlyContinue)
+    } | ForEach-Object { [int]$_.ProcessId })
+    if ($remainingCaptured.Count -gt 0) {
+        $problems += "captured runner process tree still has live pid(s): $($remainingCaptured -join ', ')."
+    }
+    return [pscustomobject]@{
+        rootPids           = @($rootRows | ForEach-Object { [int]$_.ProcessId })
+        capturedPids       = @($captured | ForEach-Object { [int]$_.ProcessId })
+        remainingPids      = $remainingCaptured
+        problems           = $problems
+    }
 }
 
 function ConvertFrom-Iso8601Duration {
@@ -232,6 +498,7 @@ function Get-TaskFacts {
     $present = $null -ne $task
     $info = $null
     if ($present) { $info = Get-ScheduledTaskInfo -TaskName $TaskName }
+    $taskAction = if ($present -and @($task.Actions).Count -eq 1) { @($task.Actions)[0] } else { $null }
     $pids = @(Get-RunnerProcesses | ForEach-Object { [int]$_.ProcessId })
     $relaunch = Test-RelaunchTrigger $task
     # Built explicitly: a `$( ... @() )` subexpression flattens an empty array
@@ -243,9 +510,199 @@ function Get-TaskFacts {
         state                  = $(if ($present) { [string]$task.State } else { $null })
         triggers               = $triggers
         relaunchTriggerPresent = $relaunch
+        startupEntryPresent    = [bool](Test-Path $StartupFile)
+        singleEntrypoint       = [bool]($present -and $task.State -ne "Disabled" -and $relaunch -and -not (Test-Path $StartupFile))
+        executable             = $(if ($null -ne $taskAction) { [string]$taskAction.Execute } else { $null })
+        workingDirectory       = $(if ($null -ne $taskAction) { [string]$taskAction.WorkingDirectory } else { $null })
+        arguments              = $(if ($null -ne $taskAction) { [string]$taskAction.Arguments } else { $null })
         lastRunTime            = $(if ($null -ne $info -and $info.LastRunTime -is [datetime] -and $info.LastRunTime.Year -gt 1) { $info.LastRunTime.ToString("o") } else { $null })
         lastTaskResult         = $(if ($null -ne $info) { ('0x{0:X8}' -f [uint32]$info.LastTaskResult) } else { $null })
         runningPids            = $pids
+    }
+}
+
+function Resolve-TaskRuntimeOrThrow {
+    param($Facts, [switch]$AllowDisabled)
+    if (-not $Facts.taskPresent) { throw "the Scheduled Task is absent" }
+    $configurationIsSole = $Facts.relaunchTriggerPresent -and -not $Facts.startupEntryPresent
+    if ((-not $AllowDisabled -and -not $Facts.singleEntrypoint) -or
+        ($AllowDisabled -and -not $configurationIsSole)) {
+        throw "the Scheduled Task is disabled, lacks its relaunch trigger, or competes with a Startup entry"
+    }
+    $launch = ConvertFrom-LauncherArgs ([string]$Facts.arguments)
+    $runtime = Resolve-InstalledRuntime $launch
+    $powershell = Get-PowerShellPath
+    if (-not (Test-SameResolvedPath $Facts.executable $powershell)) {
+        throw "the Scheduled Task does not execute the expected PowerShell host"
+    }
+    if (-not (Test-SameResolvedPath $Facts.workingDirectory $runtime.repoPath)) {
+        throw "the Scheduled Task working directory is not the validated runtime checkout"
+    }
+    if ([string]$Facts.arguments -ne [string]$runtime.launcherArgs) {
+        throw "the Scheduled Task arguments do not exactly equal the validated stable-launcher configuration"
+    }
+    return $runtime
+}
+
+function Resolve-StartupRuntimeOrThrow {
+    if (-not (Test-Path -LiteralPath $StartupFile -PathType Leaf)) {
+        throw "the Startup entry is absent"
+    }
+    $body = Get-Content -LiteralPath $StartupFile -Raw
+    $launchLine = [regex]::Match($body, '(?m)^start "" /min "([^"]+)" (.+)\r?$')
+    $repoLine = [regex]::Match($body, '(?m)^cd /d "([^"]+)"\r?$')
+    if (-not $launchLine.Success -or -not $repoLine.Success) {
+        throw "the Startup entry does not carry the exact fallback launcher shape"
+    }
+    $launch = ConvertFrom-LauncherArgs $launchLine.Groups[2].Value.Trim()
+    $runtime = Resolve-InstalledRuntime $launch
+    $powershell = Get-PowerShellPath
+    if (-not (Test-SameResolvedPath $launchLine.Groups[1].Value $powershell)) {
+        throw "the Startup entry does not execute the expected PowerShell host"
+    }
+    if (-not (Test-SameResolvedPath $repoLine.Groups[1].Value $runtime.repoPath)) {
+        throw "the Startup entry changes to a different directory than the validated runtime checkout"
+    }
+    if ([string]$launchLine.Groups[2].Value.Trim() -ne [string]$runtime.launcherArgs) {
+        throw "the Startup entry arguments do not exactly equal the validated stable-launcher configuration"
+    }
+    return $runtime
+}
+
+function Test-CommandLineToken {
+    param([string]$CommandLine, [string]$Token)
+    if ([string]::IsNullOrWhiteSpace($CommandLine)) { return $false }
+    $escaped = [regex]::Escape($Token)
+    return [regex]::IsMatch($CommandLine, "(?i)(?:^|\s)`"?$escaped`"?(?=\s|$)")
+}
+
+function Test-RunnerProcessIdentity {
+    param($Process, $Runtime)
+    $node = Get-NodePath
+    if (-not (Test-SameResolvedPath ([string]$Process.ExecutablePath) $node)) { return $false }
+    $commandLine = [string]$Process.CommandLine
+    $scriptAbsolute = Join-Path $Runtime.repoPath "scripts\pilot-runner.mts"
+    $scriptNamed = (Test-CommandLineToken $commandLine "scripts/pilot-runner.mts") -or
+        (Test-CommandLineToken $commandLine $scriptAbsolute)
+    return $scriptNamed -and
+        (Test-CommandLineToken $commandLine "--env-file=$($Runtime.envFile)") -and
+        (Test-CommandLineToken $commandLine "--interval=$($Runtime.intervalMinutes)") -and
+        (Test-CommandLineToken $commandLine "--release-handoff")
+}
+
+function Read-RunnerIdentity {
+    param($Runtime)
+    $all = @(Get-RunnerProcesses)
+    $matching = @($all | Where-Object { Test-RunnerProcessIdentity $_ $Runtime })
+    return [ordered]@{
+        all      = $all
+        matching = $matching
+    }
+}
+
+function Wait-ForVerifiedRunnerOrThrow {
+    param($Runtime, [int]$TimeoutSeconds = 120)
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    do {
+        $identity = Read-RunnerIdentity $Runtime
+        if ($identity.all.Count -gt 0) {
+            if ($identity.all.Count -eq 1 -and $identity.matching.Count -eq 1) {
+                return $identity.matching[0]
+            }
+            $allPids = @($identity.all | ForEach-Object { [int]$_.ProcessId })
+            $matchingPids = @($identity.matching | ForEach-Object { [int]$_.ProcessId })
+            throw "runner process identity mismatch: found $($identity.all.Count) named process(es) [$($allPids -join ', ')], but $($identity.matching.Count) [$($matchingPids -join ', ')] match the validated repo, environment path, interval, and release-handoff contract"
+        }
+        if ((Get-Date) -ge $deadline) { break }
+        Start-Sleep -Seconds 2
+    } while ($true)
+    throw "no verified permanent pilot-runner process appeared within $TimeoutSeconds seconds"
+}
+
+function Resolve-ActiveRuntimeOrThrow {
+    # Every mutating host-control door resolves the same sole, permanent
+    # entrypoint. A fixed task name, a plausible process name, or an old
+    # Startup file is not authority.
+    if (Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue) {
+        throw "the retired Scheduled Task '$LegacyWindowTaskName' is still installed"
+    }
+    $facts = Get-TaskFacts
+    if ($facts.taskPresent -and $facts.state -ne "Disabled") {
+        return [ordered]@{
+            facts      = $facts
+            runtime    = Resolve-TaskRuntimeOrThrow $facts
+            entrypoint = "Scheduled Task"
+        }
+    }
+    if (Test-Path -LiteralPath $StartupFile -PathType Leaf) {
+        return [ordered]@{
+            facts      = $facts
+            runtime    = Resolve-StartupRuntimeOrThrow
+            entrypoint = "Startup fallback"
+        }
+    }
+    throw "no validated permanent runtime entrypoint is installed"
+}
+
+function Read-OnlyVerifiedRunnerOrThrow {
+    param($Runtime, [bool]$Required = $true)
+    $identity = Read-RunnerIdentity $Runtime
+    if ($identity.all.Count -eq 0) {
+        if ($Required) { throw "the validated permanent runtime has no running pilot parent" }
+        return $null
+    }
+    if ($identity.all.Count -ne 1 -or $identity.matching.Count -ne 1) {
+        $allPids = @($identity.all | ForEach-Object { [int]$_.ProcessId })
+        $matchingPids = @($identity.matching | ForEach-Object { [int]$_.ProcessId })
+        throw "runner process identity mismatch: found $($identity.all.Count) named process(es) [$($allPids -join ', ')], but $($identity.matching.Count) [$($matchingPids -join ', ')] match the validated installed runtime"
+    }
+    return $identity.matching[0]
+}
+
+function Invoke-RuntimeNodeWithAuthority {
+    # Mint an immediate-parent capability only around one exact Node child,
+    # then restore every prior process value. The environment file cannot
+    # become a durable authority source and no later child inherits a stale
+    # capability accidentally.
+    param($Runtime, [string]$Capability, [string[]]$NodeArgs, [string]$Contract = "")
+    $names = @(
+        "WTP_RUNTIME_AUTHORITY_REPO",
+        "WTP_RUNTIME_AUTHORITY_SHA",
+        "WTP_RUNTIME_AUTHORITY_CAPABILITY",
+        "WTP_RUNTIME_AUTHORITY_CONTRACT",
+        "WTP_RUNTIME_AUTHORITY_PARENT_PID",
+        "WTP_RUNTIME_AUTHORITY_NONCE"
+    )
+    $before = @{}
+    foreach ($name in $names) {
+        $before[$name] = [Environment]::GetEnvironmentVariable($name, "Process")
+    }
+    try {
+        [Environment]::SetEnvironmentVariable("WTP_RUNTIME_AUTHORITY_REPO", [string]$Runtime.repoPath, "Process")
+        [Environment]::SetEnvironmentVariable("WTP_RUNTIME_AUTHORITY_SHA", [string]$Runtime.expectedSha, "Process")
+        [Environment]::SetEnvironmentVariable("WTP_RUNTIME_AUTHORITY_CAPABILITY", $Capability, "Process")
+        [Environment]::SetEnvironmentVariable("WTP_RUNTIME_AUTHORITY_CONTRACT", $(if ([string]::IsNullOrWhiteSpace($Contract)) { $null } else { $Contract }), "Process")
+        [Environment]::SetEnvironmentVariable("WTP_RUNTIME_AUTHORITY_PARENT_PID", [string]$PID, "Process")
+        [Environment]::SetEnvironmentVariable("WTP_RUNTIME_AUTHORITY_NONCE", [guid]::NewGuid().ToString("N"), "Process")
+
+        $node = Get-NodePath
+        $previousPreference = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        Push-Location $Runtime.repoPath
+        try {
+            $lines = @(& $node "--env-file=$($Runtime.envFile)" @NodeArgs 2>&1)
+            $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
+        }
+        finally {
+            Pop-Location
+            $ErrorActionPreference = $previousPreference
+        }
+        return [ordered]@{ lines = $lines; exitCode = $code }
+    }
+    finally {
+        foreach ($name in $names) {
+            [Environment]::SetEnvironmentVariable($name, $before[$name], "Process")
+        }
     }
 }
 
@@ -291,30 +748,21 @@ function Invoke-PauseNote {
     # action's exit code - a stop is never blocked by a note about the stop.
     # ErrorActionPreference is Continue for the call so a stderr line cannot be
     # promoted to a terminating error, exactly as Invoke-Schtasks does.
-    param([string]$IntentAction, [string]$Note, [string]$By)
+    param($Runtime, [string]$IntentAction, [string]$Note, [string]$By)
     $prev = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $node = Get-NodePath
         $noteArgs = @(
-            "--env-file=.env.local",
             "--experimental-strip-types",
             "scripts/runner-pause-note.mts",
             "--action=$IntentAction",
             "--note=$Note",
             "--by=$By"
         )
-        Push-Location $RepoPath
-        try {
-            $lines = & $node @noteArgs
-            $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
-        }
-        finally {
-            Pop-Location
-        }
-        foreach ($line in @($lines)) { Write-Output "  $line" }
-        if ($code -ne 0) {
-            Write-Output "  pause note exited $code ($IntentAction); the note is best effort and the action above stands."
+        $result = Invoke-RuntimeNodeWithAuthority -Runtime $Runtime -Capability "OWNER_DISPATCH" -NodeArgs $noteArgs
+        foreach ($line in @($result.lines)) { Write-Output "  $line" }
+        if ($result.exitCode -ne 0) {
+            Write-Output "  pause note exited $($result.exitCode) ($IntentAction); the note is best effort and the action above stands."
         }
     }
     catch {
@@ -356,15 +804,58 @@ function Write-TriggerLines {
 }
 
 switch ($Action) {
+    "validate-config" {
+        $resolved = Resolve-RuntimeConfig
+        Write-Output "RUNTIME CONFIG VALID"
+        Write-Output "  repository:      $($resolved.repoPath)"
+        Write-Output "  environment:     $($resolved.envFile) (path only; contents were not read)"
+        Write-Output "  deployed SHA:    $($resolved.expectedSha)"
+    }
+
+    "owner-command" {
+        # This is the only package-visible route to an owner-triggered
+        # production child. The package wrapper contributes no authority: the
+        # live host configuration, installed code identity and exact running
+        # parent are all read back here before the installed dispatcher starts.
+        if ([string]::IsNullOrWhiteSpace($OwnerCommandPayload) -or
+            $OwnerCommandPayload.Length -gt 32768 -or
+            $OwnerCommandPayload -notmatch '^[A-Za-z0-9+/]+={0,2}$') {
+            throw "owner command payload is absent, oversized, or not canonical base64"
+        }
+        $active = Resolve-ActiveRuntimeOrThrow
+        $runtime = $active.runtime
+        $parent = Read-OnlyVerifiedRunnerOrThrow -Runtime $runtime -Required $true
+        $dispatch = Join-Path $runtime.repoPath "scripts\installed-runtime-dispatch.mts"
+        if (-not (Test-Path -LiteralPath $dispatch -PathType Leaf)) {
+            throw "the validated installed runtime lacks its closed owner dispatcher"
+        }
+        $nodeArgs = @(
+            "--experimental-strip-types",
+            "scripts/installed-runtime-dispatch.mts",
+            "--payload=$OwnerCommandPayload"
+        )
+        $result = Invoke-RuntimeNodeWithAuthority -Runtime $runtime -Capability "OWNER_DISPATCH" -NodeArgs $nodeArgs
+        foreach ($line in @($result.lines)) { Write-Output $line }
+        if ($result.exitCode -ne 0) {
+            Write-Output "OWNER COMMAND REFUSED: installed dispatcher exited $($result.exitCode)."
+            exit $result.exitCode
+        }
+        Write-Output "owner command completed through verified runtime $($runtime.expectedSha), standing parent pid $($parent.ProcessId), and the closed installed dispatcher"
+    }
+
     "install" {
-        if (-not (Test-Path $RepoPath)) { throw "repo path does not exist: $RepoPath" }
-        $node = Get-NodePath
-        $nodeArgs = Get-RunnerArgs
+        $resolved = Resolve-RuntimeConfig
+        # Cutover cleanup is part of installation. An older release may have
+        # registered a second daily task for the nightly research window; new
+        # runtime authority does not start until that obsolete clock is gone.
+        Remove-LegacyWindowTaskOrThrow
+        $powershell = Get-PowerShellPath
+        $launcherArgs = Get-LauncherArgs
         $taskLanded = $false
         $refusal = $null
 
         try {
-            $taskAction = New-ScheduledTaskAction -Execute $node -Argument $nodeArgs -WorkingDirectory $RepoPath
+            $taskAction = New-ScheduledTaskAction -Execute $powershell -Argument $launcherArgs -WorkingDirectory $RepoPath
             # Trigger 1: every logon, which includes every logon after a reboot.
             $logonTrigger = New-ScheduledTaskTrigger -AtLogOn
             # Trigger 2: the RELAUNCH trigger. Fires every 5 minutes for 3650
@@ -395,103 +886,158 @@ switch ($Action) {
             Write-Output "SCHEDULED TASK REFUSED: $refusal"
             Write-Output "  The Task Scheduler service on this host will not accept a registration"
             Write-Output "  from an unelevated shell. That is a WALL, named. The per-user startup"
-            Write-Output "  entry below is installed either way; it survives a reboot and does NOT"
+            Write-Output "  entry below is installed only if no active Scheduled Task remains; it survives a reboot and does NOT"
             Write-Output "  relaunch a killed runner. To get the task with both triggers, run this"
             Write-Output "  ONCE from an ELEVATED PowerShell in $RepoPath :"
             Write-Output "    $ElevatedOneLiner"
         }
 
-        $file = Install-StartupEntry -Node $node -NodeArgs $nodeArgs
+        # Judge the live end state even after a refused registration: an older
+        # active task may still exist, and installing Startup beside it would
+        # create the exact dual clock this action must prevent.
+        $facts = Get-TaskFacts
+        if ($facts.taskPresent -and $facts.state -ne "Disabled") {
+            if (-not $facts.relaunchTriggerPresent) {
+                throw "SCHEDULED TASK READBACK FAILED: an active task exists without its required relaunch trigger. No competing Startup clock was installed."
+            }
+            $actionMatches = (Test-SameResolvedPath $facts.executable $powershell) -and
+                (Test-SameResolvedPath $facts.workingDirectory $RepoPath) -and
+                ([string]$facts.arguments -eq [string]$launcherArgs)
+            if (-not $actionMatches) {
+                throw "SCHEDULED TASK READBACK FAILED: the active task does not name the stable launcher, validated clean repository, and absolute environment path. No competing Startup clock was installed."
+            }
+            $taskLanded = $true
+        }
+        elseif ($taskLanded) {
+            throw "SCHEDULED TASK READBACK FAILED: registration reported success but no active task exists. No Startup clock was installed."
+        }
+        $file = $null
+        if ($taskLanded) {
+            # One clock, structurally. Leaving the old fallback beside a live
+            # AtLogOn task would launch two independent writers at logon.
+            Remove-StartupEntryOrThrow
+        }
+        else {
+            $file = Install-StartupEntry -PowerShell $powershell -LauncherArgs $launcherArgs
+        }
 
         Write-Output ""
         Write-Output "INSTALLED"
         if ($taskLanded) {
             # What LANDED is read back from the live task, not from what was asked.
-            $facts = Get-TaskFacts
             Write-Output "  scheduled task:  $TaskName  state=$($facts.state)"
             Write-TriggerLines $facts
         }
         else {
             Write-Output "  scheduled task:  REFUSED - see above"
         }
-        Write-Output "  startup entry:   $file  (runs at every logon, including after a reboot)"
-        Write-Output "  runs:            $node $nodeArgs"
+        if ($taskLanded) {
+            Write-Output "  startup entry:   ABSENT (the live Scheduled Task is the only logon clock)"
+        }
+        else {
+            Write-Output "  startup entry:   $file  (fallback runs at logon; no Scheduled Task authority was proven)"
+        }
+        Write-Output "  runs:            $powershell $launcherArgs"
         Write-Output "  in:              $RepoPath"
         Write-Output "  digest:          `$WTP_MIRROR\pilot-digest.md  (default G:\My Drive\we-the-people)"
         Write-Output "  start it now:    pnpm pilot:start"
         if (-not $taskLanded) { exit 1 }
     }
 
-    "install-window" {
-        # The BACKUP WAKEUP for the nightly window (RULING 242). Daily, at the
-        # host-local equivalent(s) of 04:00 America/New_York, running
-        # `nightly-window.mts --wakeup`. Refused unelevated on this host, like
-        # `install`; the exact elevated one-liner is printed.
-        if (-not (Test-Path $RepoPath)) { throw "repo path does not exist: $RepoPath" }
-        $node = Get-NodePath
-        $windowArgs = Get-WindowArgs
-        $localTimes = @(Get-WindowLocalTimes)
-        $windowLanded = $false
-
-        try {
-            $windowAction = New-ScheduledTaskAction -Execute $node -Argument $windowArgs -WorkingDirectory $RepoPath
-            $windowTriggers = @()
-            foreach ($t in $localTimes) {
-                $windowTriggers += New-ScheduledTaskTrigger -Daily -At $t
-            }
-            $windowSettings = New-ScheduledTaskSettingsSet `
-                -AllowStartIfOnBatteries `
-                -DontStopIfGoingOnBatteries `
-                -StartWhenAvailable `
-                -ExecutionTimeLimit (New-TimeSpan -Hours 2) `
-                -MultipleInstances IgnoreNew
-            $windowPrincipal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
-            Register-ScheduledTask -TaskName $WindowTaskName -Action $windowAction `
-                -Trigger $windowTriggers `
-                -Settings $windowSettings -Principal $windowPrincipal -Force | Out-Null
-            $windowLanded = $true
-        }
-        catch {
-            Write-Output "SCHEDULED TASK REFUSED: $($_.Exception.Message)"
-            Write-Output "  The Task Scheduler service on this host will not accept a registration"
-            Write-Output "  from an unelevated shell. That is a WALL, named. The window still runs on"
-            Write-Output "  the pilot runner's own clock at 04:00 America/New_York; only the BACKUP"
-            Write-Output "  wakeup is missing. To register it, run this ONCE from an ELEVATED"
-            Write-Output "  PowerShell in $RepoPath :"
-            Write-Output "    $WindowElevatedOneLiner"
-        }
-
-        Write-Output ""
-        Write-Output "NIGHTLY WINDOW BACKUP WAKEUP"
-        Write-Output "  task:            $WindowTaskName  $(if ($windowLanded) { 'REGISTERED' } else { 'REFUSED - see above' })"
-        Write-Output "  fires daily at:  $($localTimes -join ', ') host-local = 04:00 America/New_York (standard and daylight)"
-        Write-Output "  runs:            $node $windowArgs"
-        Write-Output "  in:              $RepoPath"
-        Write-Output "  the clock:       the pilot runner (scripts/pilot-runner.mts) runs the window itself; this task only nudges it"
-        if (-not $windowLanded) { exit 1 }
-    }
-
     "start" {
-        # The RESUME_RUNNER note goes in BEFORE the launch so the runner's first
-        # poll finds it and honors it; a runner already alive starts a cycle now.
-        Invoke-PauseNote -IntentAction "RESUME_RUNNER" -Note "pnpm pilot:start on $env:COMPUTERNAME" -By "pilot:start"
-        if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
-            schtasks /Run /TN $TaskName
+        if (Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue) {
+            throw "the retired Scheduled Task '$LegacyWindowTaskName' is still installed; refusing to start while a second clock remains"
+        }
+        $hasExplicitConfig = -not [string]::IsNullOrWhiteSpace($RepoPath) -and
+            -not [string]::IsNullOrWhiteSpace($EnvFile) -and
+            -not [string]::IsNullOrWhiteSpace($ExpectedDeployedSha)
+        $requested = $null
+        if ($hasExplicitConfig) {
+            if ($IntervalMinutes -lt 1) { throw "IntervalMinutes must be at least 1" }
+            $resolved = Resolve-RuntimeConfig
+            Assert-CurrentInstallerMatchesRuntimeHead -RuntimeRepo $resolved.repoPath -RuntimeHead $resolved.expectedSha
+            $requested = [ordered]@{
+                repoPath        = [string]$resolved.repoPath
+                envFile         = [string]$resolved.envFile
+                expectedSha     = [string]$resolved.expectedSha
+                intervalMinutes = $IntervalMinutes
+                launcher        = Join-Path $resolved.repoPath "scripts\pilot-runtime-launch.ps1"
+                launcherArgs    = Get-LauncherArgs
+            }
+        }
+
+        # Resolve the installed entrypoint BEFORE looking at or starting a
+        # process. A fixed task name is not identity: an old task can point at
+        # transition code, a mutable branch, or a different secret/config.
+        $facts = Get-TaskFacts
+        $runtime = $null
+        $entrypoint = ""
+        if ($facts.taskPresent) {
+            $runtime = Resolve-TaskRuntimeOrThrow $facts
+            $entrypoint = "Scheduled Task"
+        }
+        elseif (Test-Path -LiteralPath $StartupFile -PathType Leaf) {
+            $runtime = Resolve-StartupRuntimeOrThrow
+            $entrypoint = "Startup fallback"
+        }
+        elseif ($requested -ne $null) {
+            $runtime = $requested
+            $entrypoint = "explicit direct launch"
         }
         else {
-            $node = Get-NodePath
-            $nodeArgs = Get-RunnerArgs
-            Start-Process -FilePath $node -ArgumentList $nodeArgs -WorkingDirectory $RepoPath -WindowStyle Minimized
-            Write-Output "started (no scheduled task on this host; launched directly)"
+            throw "no validated installed entrypoint exists; supply RepoPath, EnvFile, and ExpectedDeployedSha or run pnpm pilot:install first"
         }
-        Write-Output "running processes: $((Get-RunnerProcesses | Measure-Object).Count)"
+
+        if ($requested -ne $null) {
+            if (-not (Test-SameResolvedPath $requested.repoPath $runtime.repoPath) -or
+                -not (Test-SameResolvedPath $requested.envFile $runtime.envFile) -or
+                $requested.expectedSha -ne $runtime.expectedSha -or
+                $requested.intervalMinutes -ne $runtime.intervalMinutes) {
+                throw "the explicit start configuration disagrees with the installed entrypoint; refusing competing runtime authorities"
+            }
+        }
+
+        $identity = Read-RunnerIdentity $runtime
+        if ($identity.all.Count -gt 0) {
+            if ($identity.all.Count -ne 1 -or $identity.matching.Count -ne 1) {
+                $allPids = @($identity.all | ForEach-Object { [int]$_.ProcessId })
+                throw "a runner-like process already exists but does not uniquely match the validated permanent runtime (pids $($allPids -join ', ')); no second process was launched"
+            }
+            $verified = $identity.matching[0]
+            Write-Output "already running: verified permanent pilot-runner pid $($verified.ProcessId); no second process launched"
+        }
+        else {
+            if ($entrypoint -eq "Scheduled Task") {
+                $runCode = Invoke-Schtasks @("/Run", "/TN", $TaskName)
+                if ($runCode -ne 0) { throw "schtasks /Run refused the validated task (exit $runCode)" }
+            }
+            else {
+                $powershell = Get-PowerShellPath
+                Start-Process -FilePath $powershell -ArgumentList $runtime.launcherArgs -WorkingDirectory $runtime.repoPath -WindowStyle Hidden
+            }
+            $verified = Wait-ForVerifiedRunnerOrThrow -Runtime $runtime
+            Write-Output "started: verified permanent pilot-runner pid $($verified.ProcessId) through $entrypoint"
+        }
+
+        # A RESUME intent is written only after a uniquely matching permanent
+        # process is observable. A refused or stale start must not fabricate an
+        # owner-visible claim that the runtime resumed.
+        Invoke-PauseNote -IntentAction "RESUME_RUNNER" -Note "pnpm pilot:start on $env:COMPUTERNAME" -By "pilot:start" -Runtime $runtime
+        Write-Output "runtime identity: repo $($runtime.repoPath); SHA $($runtime.expectedSha); interval $($runtime.intervalMinutes)m; release handoff enabled"
     }
 
     "stop" {
-        if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) { schtasks /End /TN $TaskName }
-        Get-RunnerProcesses | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
-        Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:stop on $env:COMPUTERNAME" -By "pilot:stop"
-        Write-Output "stopped. It comes back at the next logon unless you also run pnpm pilot:disable."
+        $active = Resolve-ActiveRuntimeOrThrow
+        $runtime = $active.runtime
+        [void](Read-OnlyVerifiedRunnerOrThrow -Runtime $runtime -Required $false)
+        $roots = @(Get-RunnerProcesses)
+        $stopped = Stop-RunnerProcessTrees -Roots $roots
+        if ($active.entrypoint -eq "Scheduled Task") { [void](Invoke-Schtasks @("/End", "/TN", $TaskName)) }
+        if ($stopped.problems.Count -gt 0 -or @(Get-RunnerProcesses).Count -ne 0) {
+            throw "one or more pilot-runner process trees remained after stop: $($stopped.problems -join ' ')"
+        }
+        Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:stop on $env:COMPUTERNAME" -By "pilot:stop" -Runtime $runtime
+        Write-Output "stopped: $($stopped.capturedPids.Count) process-tree member(s) terminated and read back absent. The enabled task may return at its next trigger; use pnpm pilot:disable for a durable pause."
     }
 
     "disable" {
@@ -501,26 +1047,42 @@ switch ($Action) {
         # capture every schtasks exit code, then re-derive the live task and
         # refuse to print success unless the task is actually Disabled or absent,
         # no runner process remains, and the startup fallback is gone.
+        $runtime = $null
+        $before = Get-TaskFacts
+        if ($before.taskPresent -and $before.state -eq "Disabled" -and -not $before.startupEntryPresent) {
+            $runtime = Resolve-TaskRuntimeOrThrow $before -AllowDisabled
+        }
+        elseif ($before.taskPresent -or $before.startupEntryPresent -or $before.runningPids.Count -gt 0) {
+            $active = Resolve-ActiveRuntimeOrThrow
+            $runtime = $active.runtime
+            [void](Read-OnlyVerifiedRunnerOrThrow -Runtime $runtime -Required $false)
+        }
+
         $schtasksProblems = @()
         if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
-            $endCode = Invoke-Schtasks @("/End", "/TN", $TaskName)
             $disableCode = Invoke-Schtasks @("/Change", "/TN", $TaskName, "/DISABLE")
             if ($disableCode -ne 0) {
                 $schtasksProblems += "schtasks /Change /DISABLE exited $disableCode (Access is denied (1) means it needs an ELEVATED shell; the task is still enabled)."
             }
+            # Disable the clock before terminating its process tree. Otherwise
+            # the five-minute relaunch trigger can race the descendant census.
+            $roots = @(Get-RunnerProcesses)
+            $treeStop = Stop-RunnerProcessTrees -Roots $roots
+            foreach ($problem in @($treeStop.problems)) { $schtasksProblems += $problem }
+            $endCode = Invoke-Schtasks @("/End", "/TN", $TaskName)
             # /End refusing is not on its own fatal — the task may not be running,
-            # and Stop-Process below kills the process directly — but a nonzero
+            # and taskkill /T above kills the full process tree — but a nonzero
             # code is still recorded rather than swallowed.
             if ($endCode -ne 0) {
                 $schtasksProblems += "schtasks /End exited $endCode."
             }
         }
+        else {
+            $treeStop = Stop-RunnerProcessTrees
+            foreach ($problem in @($treeStop.problems)) { $schtasksProblems += $problem }
+        }
 
         $killProblems = @()
-        foreach ($proc in @(Get-RunnerProcesses)) {
-            try { Stop-Process -Id $proc.ProcessId -Force -ErrorAction Stop }
-            catch { $killProblems += "could not stop pilot-runner pid $($proc.ProcessId): $($_.Exception.Message)" }
-        }
         if (Test-Path $StartupFile) {
             try { Remove-Item $StartupFile -Force -ErrorAction Stop }
             catch { $killProblems += "could not remove the startup entry $StartupFile : $($_.Exception.Message)" }
@@ -528,7 +1090,9 @@ switch ($Action) {
 
         # The owner's own record that this stop was deliberate (ADM-5). Best
         # effort; the verdict below is measured, never inferred from this.
-        Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:disable on $env:COMPUTERNAME" -By "pilot:disable"
+        if ($null -ne $runtime) {
+            Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:disable on $env:COMPUTERNAME" -By "pilot:disable" -Runtime $runtime
+        }
 
         # Re-derive the live state AFTER acting, and judge on that alone.
         $facts = Get-TaskFacts
@@ -574,14 +1138,70 @@ switch ($Action) {
     }
 
     "uninstall" {
-        if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) { schtasks /Delete /TN $TaskName /F }
-        Get-RunnerProcesses | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+        $deleteProblems = @()
+        $roots = @(Get-RunnerProcesses)
+        foreach ($name in @($TaskName, $LegacyWindowTaskName)) {
+            if (Get-ScheduledTask -TaskName $name -ErrorAction SilentlyContinue) {
+                $deleteCode = Invoke-Schtasks @("/Delete", "/TN", $name, "/F")
+                if ($deleteCode -ne 0) { $deleteProblems += "schtasks /Delete for '$name' exited $deleteCode." }
+            }
+        }
+        $treeStop = Stop-RunnerProcessTrees -Roots $roots
+        foreach ($problem in @($treeStop.problems)) { $deleteProblems += $problem }
         if (Test-Path $StartupFile) { Remove-Item $StartupFile -Force }
-        Write-Output "uninstalled: no scheduled task, no startup entry, no running process."
+        $remainingTasks = @()
+        foreach ($name in @($TaskName, $LegacyWindowTaskName)) {
+            if (Get-ScheduledTask -TaskName $name -ErrorAction SilentlyContinue) {
+                $remainingTasks += $name
+            }
+        }
+        $remainingProcesses = @((Get-RunnerProcesses)).Count
+        if ($deleteProblems.Count -gt 0 -or $remainingTasks.Count -gt 0 -or (Test-Path $StartupFile) -or $remainingProcesses -gt 0) {
+            Write-Output "UNINSTALL INCOMPLETE - obsolete launch authority remains:"
+            foreach ($problem in $deleteProblems) { Write-Output "  - $problem" }
+            foreach ($name in $remainingTasks) { Write-Output "  - Scheduled Task '$name' is still present." }
+            if (Test-Path $StartupFile) { Write-Output "  - startup entry is still present at $StartupFile." }
+            if ($remainingProcesses -gt 0) { Write-Output "  - $remainingProcesses pilot-runner process(es) are still running." }
+            exit 1
+        }
+        Write-Output "uninstalled: standing task and retired nightly-window task absent; no startup entry or runner process remains."
     }
 
     "status" {
         $facts = Get-TaskFacts
+        $problems = @()
+        $runtime = $null
+        $verifiedProcess = $null
+
+        if (Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue) {
+            $problems += "the retired Scheduled Task '$LegacyWindowTaskName' is still installed"
+        }
+        try {
+            if ($facts.taskPresent -and $facts.state -ne "Disabled") {
+                $runtime = Resolve-TaskRuntimeOrThrow $facts
+            }
+            elseif (Test-Path -LiteralPath $StartupFile -PathType Leaf) {
+                $runtime = Resolve-StartupRuntimeOrThrow
+            }
+            elseif ($facts.taskPresent) {
+                # A disabled current task is inert, but its action is still
+                # validated so status never blesses a stale task that could be
+                # re-enabled later.
+                $runtime = Resolve-TaskRuntimeOrThrow $facts -AllowDisabled
+            }
+        }
+        catch {
+            $problems += $_.Exception.Message
+        }
+
+        if ($null -ne $runtime) {
+            try { $verifiedProcess = Read-OnlyVerifiedRunnerOrThrow -Runtime $runtime -Required $false }
+            catch { $problems += $_.Exception.Message }
+        }
+        elseif ($facts.runningPids.Count -gt 0) {
+            $problems += "runner-like processes exist without a validated installed runtime"
+        }
+
         if (-not $facts.taskPresent) {
             Write-Output "scheduled task:  NOT REGISTERED (refused without elevation on this host)"
         }
@@ -598,8 +1218,29 @@ switch ($Action) {
             Write-Output "                 that the pilot is idle. `pnpm pilot:install` installs it."
         }
 
-        Write-Output "running now:     $($facts.runningPids.Count) pilot-runner process(es)"
-        foreach ($p in $facts.runningPids) { Write-Output "                 pid $p" }
+        if (Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue) {
+            Write-Output "legacy window:   PRESENT - obsolete second clock; run pnpm pilot:uninstall or reinstall from an elevated shell"
+        }
+        else {
+            Write-Output "legacy window:   ABSENT (the standing runner owns the single nightly research clock)"
+        }
+
+        if ($facts.taskPresent -and $facts.state -ne "Disabled" -and $facts.startupEntryPresent) {
+            Write-Output "ENTRYPOINT CONFLICT: the live Scheduled Task and Startup entry can both launch the runner. Run pnpm pilot:install with the authority required to update the task; install must remove the fallback."
+        }
+
+        if ($null -ne $verifiedProcess) {
+            Write-Output "running now:     VERIFIED permanent pilot-runner pid $($verifiedProcess.ProcessId)"
+        }
+        elseif ($facts.runningPids.Count -eq 0) {
+            Write-Output "running now:     0 pilot-runner processes"
+        }
+        else {
+            Write-Output "running now:     UNVERIFIED runner-like pid(s) $($facts.runningPids -join ', ')"
+        }
+        if ($null -ne $runtime) {
+            Write-Output "runtime:         VERIFIED clean detached checkout $($runtime.repoPath) at $($runtime.expectedSha)"
+        }
 
         $mirror = if ($env:WTP_MIRROR) { $env:WTP_MIRROR } else { "G:\My Drive\we-the-people" }
         $digest = Join-Path $mirror "pilot-digest.md"
@@ -609,68 +1250,152 @@ switch ($Action) {
         else {
             Write-Output "digest:          NOT PRESENT at $digest - no cycle has delivered one yet"
         }
+        if ($problems.Count -gt 0) {
+            Write-Output "STATUS REFUSED - permanent authority was not proven:"
+            foreach ($problem in $problems) { Write-Output "  - $problem" }
+            exit 1
+        }
     }
 
     "verify-triggers" {
-        # Read-only. Exit 0 when the relaunch trigger is present on the live task.
+        # Read-only. Exit 0 only for one live, crash-relaunching entrypoint,
+        # the exact stable installed checkout, and one matching parent process.
         $facts = Get-TaskFacts
-        Write-Output (ConvertTo-Json $facts -Depth 5)
-        if ($facts.relaunchTriggerPresent) { exit 0 } else { exit 1 }
+        try {
+            if (Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue) {
+                throw "the retired nightly-window task is still installed"
+            }
+            $runtime = Resolve-TaskRuntimeOrThrow $facts
+            $verified = Read-OnlyVerifiedRunnerOrThrow -Runtime $runtime -Required $true
+            $record = [ordered]@{
+                facts                   = $facts
+                runtimeSha              = $runtime.expectedSha
+                runtimeRepository       = $runtime.repoPath
+                stableLauncherVerified  = $true
+                processIdentityVerified = $true
+                processId               = [int]$verified.ProcessId
+                verdict                 = "VERIFIED"
+            }
+            Write-Output (ConvertTo-Json $record -Depth 6)
+            exit 0
+        }
+        catch {
+            $record = [ordered]@{
+                facts                   = $facts
+                stableLauncherVerified  = $false
+                processIdentityVerified = $false
+                verdict                 = "REFUSED"
+                detail                  = $_.Exception.Message
+            }
+            Write-Output (ConvertTo-Json $record -Depth 6)
+            exit 1
+        }
     }
 
     "prove-relaunch" {
         # THE ACCEPTANCE MEASUREMENT. Kills the runner and waits for the task to
-        # bring a NEW pid back. Refuses when nothing would bring it back.
+        # bring a NEW, identity-matching pid back. Refuses when the task,
+        # launcher, checkout or initial process is not the permanent authority.
         $facts = Get-TaskFacts
         if (-not $facts.taskPresent) {
             Write-Output "REFUSED: the scheduled task '$TaskName' is not registered; nothing would relaunch a killed runner."
             exit 2
         }
-        if (-not $facts.relaunchTriggerPresent) {
-            Write-Output "REFUSED: the relaunch trigger is NOT present on the live task. Killing the runner now"
-            Write-Output "  would leave it down until a logon. Add the trigger first, from an ELEVATED"
+        if (-not $facts.singleEntrypoint) {
+            Write-Output "REFUSED: one active Scheduled Task with its relaunch trigger and NO competing Startup entry was not proven. Killing the runner now"
+            Write-Output "  could leave it down or relaunch competing writers. Repair the entrypoint first, from an ELEVATED"
             Write-Output "  PowerShell in $RepoPath :"
             Write-Output "    $ElevatedOneLiner"
             exit 2
         }
-        if ($facts.runningPids.Count -ne 1) {
-            Write-Output "REFUSED: expected exactly one running pilot-runner process to kill; found $($facts.runningPids.Count) [$($facts.runningPids -join ', ')]."
+        if (Get-ScheduledTask -TaskName $LegacyWindowTaskName -ErrorAction SilentlyContinue) {
+            Write-Output "REFUSED: the retired nightly-window task is still installed; killing now could leave competing operational clocks."
             exit 2
         }
+        try {
+            $runtime = Resolve-TaskRuntimeOrThrow $facts
+            $verifiedBefore = Read-OnlyVerifiedRunnerOrThrow -Runtime $runtime -Required $true
+        }
+        catch {
+            Write-Output "REFUSED: the live task/runtime/process did not prove permanent identity: $($_.Exception.Message)"
+            exit 2
+        }
+        $ProofFile = Join-Path $runtime.repoPath ".runtime\ops\runner-relaunch-proof.json"
 
-        $killedPid = [int]$facts.runningPids[0]
+        $killedPid = [int]$verifiedBefore.ProcessId
         $measuredAt = (Get-Date).ToUniversalTime().ToString("o")
         Write-Output "killing pilot-runner pid $killedPid at $measuredAt"
-        Stop-Process -Id $killedPid -Force
+        $treeStop = Stop-RunnerProcessTrees -Roots @($verifiedBefore)
+        if ($treeStop.problems.Count -gt 0 -or $treeStop.remainingPids.Count -gt 0) {
+            Write-Output "REFUSED: the old runner process tree was not fully terminated: $($treeStop.problems -join ' ')"
+            exit 2
+        }
         $t0 = Get-Date
 
         $relaunchedPid = $null
         $seconds = $null
+        $identityFailure = $null
         $deadline = $t0.AddMinutes(8)
-        while ($null -eq $relaunchedPid -and (Get-Date) -lt $deadline) {
+        while ($null -eq $relaunchedPid -and $null -eq $identityFailure -and (Get-Date) -lt $deadline) {
             Start-Sleep -Seconds 15
             $elapsed = [int][math]::Round(((Get-Date) - $t0).TotalSeconds)
-            $fresh = @(Get-RunnerProcesses | Where-Object { [int]$_.ProcessId -ne $killedPid })
-            if ($fresh.Count -gt 0) {
-                $relaunchedPid = [int]$fresh[0].ProcessId
+            $identity = Read-RunnerIdentity $runtime
+            $freshMatching = @($identity.matching | Where-Object { [int]$_.ProcessId -ne $killedPid })
+            if ($identity.all.Count -gt 0 -and
+                ($identity.all.Count -ne 1 -or $freshMatching.Count -ne 1)) {
+                $allPids = @($identity.all | ForEach-Object { [int]$_.ProcessId })
+                $matchingPids = @($freshMatching | ForEach-Object { [int]$_.ProcessId })
+                $identityFailure = "runner identity mismatch after relaunch: named [$($allPids -join ', ')], fresh exact matches [$($matchingPids -join ', ')]"
+                Write-Output "  +${elapsed}s: $identityFailure"
+            }
+            elseif ($freshMatching.Count -eq 1) {
+                $relaunchedPid = [int]$freshMatching[0].ProcessId
                 $seconds = $elapsed
-                Write-Output "  +${elapsed}s: NEW pilot-runner pid $relaunchedPid"
+                Write-Output "  +${elapsed}s: NEW verified permanent pilot-runner pid $relaunchedPid"
             }
             else {
-                Write-Output "  +${elapsed}s: no new pilot-runner process yet"
+                Write-Output "  +${elapsed}s: no new verified permanent pilot-runner process yet"
             }
         }
 
         $after = Get-TaskFacts
+        $stableAfter = $false
+        $afterDetail = $identityFailure
+        try {
+            $runtimeAfter = Resolve-TaskRuntimeOrThrow $after
+            $stableAfter = (Test-SameResolvedPath $runtime.repoPath $runtimeAfter.repoPath) -and
+                (Test-SameResolvedPath $runtime.envFile $runtimeAfter.envFile) -and
+                $runtime.expectedSha -eq $runtimeAfter.expectedSha -and
+                $runtime.intervalMinutes -eq $runtimeAfter.intervalMinutes
+            if (-not $stableAfter) { $afterDetail = "the task/runtime configuration changed during the proof" }
+            if ($null -ne $relaunchedPid) {
+                $finalIdentity = Read-OnlyVerifiedRunnerOrThrow -Runtime $runtimeAfter -Required $true
+                if ([int]$finalIdentity.ProcessId -ne $relaunchedPid) {
+                    $afterDetail = "the final exact process identity does not equal the observed relaunch pid"
+                    $relaunchedPid = $null
+                }
+            }
+        }
+        catch {
+            $stableAfter = $false
+            $afterDetail = $_.Exception.Message
+            $relaunchedPid = $null
+        }
+        $relaunchVerified = $null -ne $relaunchedPid -and $stableAfter -and $null -eq $afterDetail
         $record = [ordered]@{
             measuredAt             = $measuredAt
             killedPid              = $killedPid
             relaunchedPid          = $relaunchedPid
             secondsToRelaunch      = $seconds
+            runtimeSha             = $runtime.expectedSha
+            runtimeRepository      = $runtime.repoPath
+            stableLauncherVerified = [bool]$stableAfter
+            processIdentityVerified = [bool]$relaunchVerified
             relaunchTriggerPresent = [bool]$after.relaunchTriggerPresent
             taskStateAfter         = $after.state
             lastTaskResult         = $after.lastTaskResult
-            verdict                = $(if ($null -ne $relaunchedPid) { "RELAUNCHED" } else { "NOT_RELAUNCHED" })
+            detail                 = $afterDetail
+            verdict                = $(if ($relaunchVerified) { "RELAUNCHED" } else { "NOT_RELAUNCHED" })
         }
         $json = ConvertTo-Json $record -Depth 3
         Write-Utf8NoBom -Path $ProofFile -Text ($json + "`n")

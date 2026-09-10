@@ -1,5 +1,6 @@
 import type { SeatHolder } from "./lookup.ts";
 import { stateOcdIdFrom } from "./lookup.ts";
+import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 
 /**
  * Statewide elected executives, curated from each state's own site
@@ -123,6 +124,7 @@ export interface StatewideExecutive {
   verification: StatewideVerification;
 }
 
+/** Bundled first-seed/test evidence. Production readers use currentStatewideExecutives(). */
 export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
   {
     stateOcdId: "ocd-division/country:us/state:az",
@@ -626,6 +628,10 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
   },
 ];
 
+export function currentStatewideExecutives(): readonly StatewideExecutive[] {
+  return getRegistryRuntimeReadModel().statewideExecutives;
+}
+
 /**
  * The statewide executives for whichever state these divisions sit in —
  * the `senatorsFor` shape: identifiers in, holders out, the state read
@@ -639,7 +645,7 @@ export function statewideExecutivesFor(ocdIds: string[]): SeatHolder[] {
   }
 
   const holders: SeatHolder[] = [];
-  for (const executive of STATEWIDE_EXECUTIVES) {
+  for (const executive of currentStatewideExecutives()) {
     if (!states.has(executive.stateOcdId)) continue;
     // Item 1 (2026-08-16): the entry already recorded the publisher and the
     // read date; the holder handed to the surfaces did not carry them, so a

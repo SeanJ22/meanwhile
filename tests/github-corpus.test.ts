@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -134,33 +134,18 @@ test("corpora: the members the corpus genuinely does not carry are NAMED, not co
 /* The rung is in the SHARED code path, not in a session script               */
 /* ========================================================================== */
 
-test("corpora: the photo fetcher walks the git road before recording an absence", () => {
-  const source = readFileSync(join(ROOT, "scripts", "fetch-official-photos.mts"), "utf8");
-  const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-
-  assert.ok(
-    code.includes("portraitOverGit"),
-    "the git rung is not in the fetcher — a wall that falls becomes a permanent step",
-  );
-  /*
-   * The ORDER is the rule. A fetcher that recorded the miss and then tried git
-   * would have written the absence already, which is the defect this closes.
-   */
-  const missAt = code.indexOf("missing.push");
-  const gitAt = code.indexOf("portraitOverGit(bioguide)");
-  assert.ok(gitAt !== -1 && missAt !== -1, "expected both the miss and the git rung");
-  assert.ok(
-    gitAt < missAt,
-    "the git road must be walked BEFORE an absence is recorded, not after",
-  );
+test("corpora: the tracked official-photo fetcher is retired from production", () => {
+  assert.equal(existsSync(join(ROOT, "scripts", "fetch-official-photos.mts")), false);
+  const promoter = readFileSync(join(ROOT, "scripts", "promote-registry-runtime.mts"), "utf8");
+  assert.match(promoter, /processRegisteredManualCandidate/);
+  assert.doesNotMatch(promoter, /writeFile(?:Sync)?\s*\(/);
 });
 
-test("corpora: a portrait fetched over git is cited to git, not to the Pages URL", () => {
-  const source = readFileSync(join(ROOT, "scripts", "fetch-official-photos.mts"), "utf8");
-  assert.ok(
-    source.includes("https://github.com/${CORPUS_SLUG}/blob/${viaGit}"),
-    "provenance must name the road actually walked — a row citing a source nobody read is the RULING 107 defect",
-  );
+test("corpora: reviewed portrait bindings enter the canonical registry package with exact source receipts", () => {
+  const plane = readFileSync(join(ROOT, "lib", "registry", "runtime-data-plane.ts"), "utf8");
+  assert.match(plane, /officialPhotos/);
+  assert.match(plane, /RUNTIME_SOURCE_NOT_RECEIPTED/);
+  assert.match(plane, /manualSourceReceipt/);
 });
 
 test("corpora: sources.md records both repositories with licence, tier and access method", () => {

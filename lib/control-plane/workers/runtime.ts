@@ -12,6 +12,7 @@ import { dispatchOne, type DeclaredExecutor, type DispatchResult } from "../sche
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
+import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
 import { normalizedParserResult } from "./parser.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
@@ -39,6 +40,12 @@ export function evidenceProjection(input: ParserInput): WorkerEvidence {
 }
 
 export interface FleetRuntime {
+  /**
+   * The production standing runner sets this after PDC authority transfer.
+   * Isolated deterministic worker tests may omit it, but no production
+   * runtime may use a legacy meeting ACQUIRER as a callable fallback.
+   */
+  readonly routineMeetingsAuthority?: "PERMANENT_CIVIC_DATA_PLANE";
   readonly roleExecutor?: (task: RouteTask, holder: string) => DeclaredExecutor;
   readonly repos: ControlPlaneRepositories;
   readonly readEvidence: (artifactId: string) => Promise<ParserInput>;
@@ -189,6 +196,15 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
 }
 
 export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask): Promise<DispatchResult> {
+  if (
+    runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
+    task.workerTask?.role === "ACQUIRER" &&
+    isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
+  ) {
+    throw new Error(
+      "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: permanent SOURCE_WIRING-derived meeting-partition contracts are the only standing acquisition authorities",
+    );
+  }
   // Scout and model-assisted audit share the same durable spend ledger. Hold
   // admission through completion so concurrent calls cannot spend one allowance.
   if (task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner) {
@@ -242,6 +258,11 @@ export async function drainWorkerQueue(
   const attempts = (await runtime.repos.attempts.list()).map(a => a.value);
   for (const row of await runtime.repos.routeTasks.list()) {
     let task = row.value;
+    if (
+      runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
+      task.workerTask?.role === "ACQUIRER" &&
+      isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
+    ) continue;
     if (!accepts(task)) continue;
     if (out.length >= maximum) break;
     const now = (runtime.now ?? (() => new Date().toISOString()))();

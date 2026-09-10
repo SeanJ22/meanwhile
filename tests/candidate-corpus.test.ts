@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -16,6 +17,15 @@ import {
   positionsHeadline,
   positionsSummary,
 } from "../lib/candidates/positions.ts";
+import {
+  installCandidateCorpusFirstSeed,
+  installRegistryRuntimeFirstSeeds,
+} from "./helpers/registry-runtime-first-seed.ts";
+
+await Promise.all([
+  installCandidateCorpusFirstSeed(),
+  installRegistryRuntimeFirstSeeds(),
+]);
 
 const ROOT = process.cwd();
 
@@ -251,25 +261,23 @@ test("D05: the revision detector hashes the TEXT, not the bytes", () => {
   // request while the words did not. A revised campaign position is one of
   // this product's real accountability signals, and a signal that fires
   // constantly cannot carry it.
-  const script = readFileSync(
-    join(ROOT, "scripts", "fetch-candidate-corpus.mts"),
-    "utf8",
-  );
-  assert.match(script, /contentHashOf\(\s*text \? new TextEncoder\(\)\.encode\(text\) : bytes/);
-  assert.match(script, /NOT THE RAW BYTES/);
+  const corpus = getCandidateCorpus();
+  const extracted = corpus.documents.filter((document) => document.extraction === "html");
+  assert.ok(extracted.length > 0, "the first seed has no extracted publication to prove");
+  for (const document of extracted) {
+    const expected = createHash("sha256").update(document.text!).digest("hex");
+    assert.equal(document.contentHash, expected, document.id);
+    assert.equal(document.id, `${document.candidateKey}@${expected}`, document.id);
+  }
 });
 
-test("D05: a wall is a rung, and the archive is wired in rather than walked by hand", () => {
+test("D05: a wall remains durable evidence after the legacy Git collector is retired", () => {
   // Two New Hampshire hosts refuse this egress at rungs 2, 3 AND 4. The
   // Internet Archive holds their pages, and an archived copy of a
   // government's own page is that government's own words with a date. The
-  // rung lives in the script so it costs the next session nothing.
-  const script = readFileSync(
-    join(ROOT, "scripts", "fetch-candidate-corpus.mts"),
-    "utf8",
-  );
-  assert.match(script, /function waybackFor/);
-  assert.match(script, /archive\.org\/wayback\/available/);
+  // The executable is deliberately gone: reviewed candidate publications now
+  // enter through the manual data-plane admission contract, never a Git writer.
+  assert.equal(existsSync(join(ROOT, "scripts", "fetch-candidate-corpus.mts")), false);
 
   const corpus = JSON.parse(
     readFileSync(join(ROOT, "data", "candidates", "corpus-2026.json"), "utf8"),

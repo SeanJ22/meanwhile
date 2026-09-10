@@ -1630,3 +1630,77 @@ answer statewide.
   are the live ones and NH306 stays open with that evidence.
 - **Generalises:** **yes**: a brief's "done" is a claim to read back, and a
   readback that returns nothing is the result, not a failure to look.
+
+## pdc-v2-terminal-cutover · 2026-09-09
+
+### Arizona's complete official member roster, and the official vote horizon that does not exist
+
+- **Conceived:** the permanent cutover could not retire the aggregate vendor
+  authority while Arizona's current-person and roll-call contracts merely
+  probed a landing page. The question was split: what exact official route can
+  bound current membership, and what exact permitted official route can bound
+  every member-level vote for the current term?
+- **Query:** `https://www.azleg.gov/MemberRoster/`, the member links carrying
+  `legislature=57&session=130&legislator=<id>`, the Legislature's voting-record
+  FAQ, `https://www.azleg.gov/robots.txt`, and
+  `https://apps.azleg.gov/robots.txt`.
+- **Returned:** the two named roster tables returned 93 unique numeric member
+  ids: exactly 60 active House members, 30 active Senators, and three rows the
+  publisher explicitly marks resigned. The official FAQ says individual voting
+  records are not available online; the otherwise tempting application host
+  disallows automated access, and the available journals do not bound the
+  current member-level horizon. The roster is therefore implementable while
+  the vote contract must record an authenticated `HORIZON_UNRESOLVED` attempt,
+  retry, and preserve LKG/unknown rather than promote a vendor substitute.
+- **Generalises:** **yes**, to every source split in the permanent plane: one
+  official publisher may be authoritative for one record class and unable to
+  establish another. Reachability and licensing do not manufacture a complete
+  authority horizon.
+
+### New Hampshire's anonymous whole-session roll-call exports
+
+- **Conceived:** the visible roll-call search surface looked interactive, but
+  the official Downloads page documents the underlying tables. The question
+  was whether the legislature exposed a finite source-native union that could
+  be reconciled without a browser, credential, or per-member scrape.
+- **Query:**
+  `https://gc.nh.gov/dynamicdatadump/RollCallSummary.txt`,
+  `https://gc.nh.gov/dynamicdatadump/RollCallHistory.txt`, and
+  `https://gc.nh.gov/dynamicdatadump/legislators.txt`, read serially under the
+  publisher's 11-second crawl delay; schema checked against the General Court's
+  published table documentation.
+- **Returned:** 419 unique 2026 roll summaries (329 House, 90 Senate), 131,199
+  unique member positions with no orphan roll, and 420 exact publisher person
+  identities. The exact labels include `Yea`, `Nay`, two distinct not-voting
+  states, `Presiding`, and one publisher-blank value; the blank is retained as
+  unknown rather than silently coerced. The companion identity route resolves
+  386 of 388 current members, while official roll detail supplies the two
+  explicitly recorded exceptions.
+- **Generalises:** **yes**, to official data dumps whose tables form one
+  authority only as a reconciled set. Summary, history, and identity must agree
+  exactly; a successful download of any one is not a complete candidate.
+
+### New Jersey's member API independently reconciled against four official archives
+
+- **Conceived:** a per-member voting-record API alone can silently omit a
+  member, while an archive alone can lose the stable person join. The question
+  was whether two official representations could prove each other's complete
+  current-session horizon.
+- **Query:** `https://www.njleg.state.nj.us/api/votingRecords`, every selected
+  `https://www.njleg.state.nj.us/api/votingRecords/2026/<Roster_Key>/Bills`
+  route, and the four official archives
+  `https://pub.njleg.gov/votes/A2026.zip`, `S2026.zip`,
+  `CA2026-2027.zip`, and `CS2026-2027.zip`; current membership was independently
+  read from `https://www.njleg.state.nj.us/legislative-roster`'s
+  `__NEXT_DATA__.props.pageProps.legrosterData[0]`.
+- **Returned:** the roster and API selected exactly 120 stable numeric member
+  ids (80 Assembly, 40 Senate). All member requests succeeded and their union
+  contained 34,129 positions across 1,418 events; it reconciled exactly to 215
+  Assembly floor, 214 Senate floor, 497 Assembly committee, and 492 Senate
+  committee events in the four archives, with no duplicate person/event row.
+  Legacy numeric pseudo-years were present but absent from the official session
+  list, proving that choosing the numeric maximum would select the wrong term.
+- **Generalises:** **yes**, to any source with both query and bulk forms: the
+  query supplies stable identity, the independently published bulk corpus
+  supplies a complete-universe denominator, and promotion requires their exact
+  agreement rather than trusting either representation alone.

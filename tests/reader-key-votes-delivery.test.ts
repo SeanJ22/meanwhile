@@ -7,6 +7,9 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
 import { keyVotePositionKey } from "../lib/votes/key-vote-positions.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("shared key-vote projection retains exact current member/chamber positions and source timestamp", async () => {
   const held = JSON.parse(readFileSync("data/votes/key-vote-positions.json", "utf8"));

@@ -296,7 +296,7 @@ export function makeApptegySource(
           pagesFetched += 1;
           const body: ApptegyResponse = await politeGetJson<ApptegyResponse>(
             url,
-            { fetchImpl },
+            { fetchImpl, signal: query.signal },
           );
           const batch = body.events ?? [];
           events.push(...batch);

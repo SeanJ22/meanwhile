@@ -378,11 +378,12 @@ test("a snapshot must state its carry-forward, and may not carry without a refus
     /carriedForward must be stated as an integer/,
   );
 
-  // Carrying rows forward while reporting nothing unreachable is a refresh
-  // presenting stale data as freshly checked.
+  // Carrying a successful-response row requires exact source-scoped
+  // disappearance evidence; otherwise the refresh is presenting stale data
+  // as freshly checked.
   assert.throws(
     () => validateSnapshot(base({ carriedForward: 1 })),
-    /while reporting nothing unreachable/,
+    /reports 1 successful-response carry row\(s\) but 0 row\(s\) name UNEXPLAINED_DISAPPEARANCE/,
   );
 
   // hotfix-0817: the count and the rows have to be the same fact. A source claiming a

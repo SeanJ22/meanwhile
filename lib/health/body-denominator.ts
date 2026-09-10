@@ -77,8 +77,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { CURATED_BODIES } from "../registry/curated-bodies.ts";
-import { loadPromotedBodies } from "../registry/promoted-bodies.ts";
+import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import type { Body } from "../registry/types.ts";
 
 import {
@@ -111,37 +110,20 @@ export interface BodyEnumerationEvidence {
  * swallowed: reading one of two and calling the result the denominator would
  * manufacture a coverage defect for every body the unread store holds.
  */
-export function loadBodyEnumerationEvidence(root: string = process.cwd()): BodyEnumerationEvidence {
-  const sources: string[] = [];
-  const bodies: Body[] = [];
-
+export function loadBodyEnumerationEvidence(_root: string = process.cwd()): BodyEnumerationEvidence {
   try {
-    bodies.push(...CURATED_BODIES);
-    sources.push("lib/registry/curated-bodies.ts");
+    return {
+      bodies: getRegistryRuntimeReadModel().registry.bodies,
+      sources: ["canonical REGISTRY_RUNTIME_BINDING GOOD projection"],
+      missing: null,
+    };
   } catch (error) {
     return {
       bodies: null,
-      sources,
-      missing: `lib/registry/curated-bodies.ts could not be read: ${String(error)}`,
+      sources: [],
+      missing: `canonical REGISTRY_RUNTIME_BINDING projection could not be read: ${String(error)}`,
     };
   }
-
-  const promotedPath = join(root, "lib", "registry", "promoted-bodies.json");
-  try {
-    /* Read through the store's own loader so the "corrupt store, not an empty
-       one" refusal applies here too, rather than being re-implemented. */
-    const store = loadPromotedBodies(promotedPath);
-    bodies.push(...store.bodies);
-    sources.push("lib/registry/promoted-bodies.json");
-  } catch (error) {
-    return {
-      bodies: null,
-      sources,
-      missing: `lib/registry/promoted-bodies.json could not be read: ${String(error)}`,
-    };
-  }
-
-  return { bodies, sources, missing: null };
 }
 
 /**

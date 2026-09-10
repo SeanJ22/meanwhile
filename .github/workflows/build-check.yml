@@ -40,19 +40,20 @@ name: Build check
 #
 # This used to read `push:` with no branch filter, which meant ONE merge cost
 # THREE runs of the same check plus a Netlify deploy each: the branch push, the
-# pull request, and the merge to `main`. On top of the scheduled refreshes that
-# exhausted the Actions balance, and an exhausted balance does not fail loudly —
+# pull request, and the merge to `main`. Together with the since-retired
+# scheduled refreshes, that exhausted the Actions balance; an exhausted balance does not fail loudly —
 # it produced completed jobs with zero steps recorded, which read as a broken
 # tree for a whole session (`NS04`, RULING 81).
 #
 # NOTHING STOPS GATING. Every branch that matters becomes a pull request, and
-# every merge lands on `main`; `pnpm closeout` pushes close-out records straight
-# to `main` and RULING 75 requires the tip to go green, which is this check on
-# the `main` push. The two surviving triggers cover everything the third did.
+# every merge lands on `main`. Close-out records ship inside their software PR,
+# and RULING 75 requires the resulting `main` tip to go green, which is this
+# check on the `main` push. The two surviving triggers cover everything the third did.
 on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   # THE SMOKE INPUT — a credential proof that invents no schema change.
   # (2026-08-28, the audit of the schema gate written the same day.)
   #
@@ -83,9 +84,9 @@ on:
       # moment where BOTH phases are owed, so it is the one that fails on a
       # CONTRACT migration that pre-deploy deliberately allows.
       #
-      # It is dispatched by hand against the commit that actually shipped.
-      # Nothing runs it automatically yet, and that gap is stated rather than
-      # papered over: see the header of scripts/db-shipping-gate.mts.
+      # Manual dispatch remains useful for an exact re-read. The automatic
+      # post-deploy measurement runs in post-deploy-integrity.yml after a
+      # shipping main push has been observed at /api/build.
       schema_moment:
         description: "Which side of the deploy to ask from."
         type: choice
@@ -103,8 +104,7 @@ permissions:
   # check-runs` answers 403 — and `scripts/certified-tree.mjs` would read that
   # as CANNOT_TELL and take the full proof. Safe, and permanently useless: the
   # attestation could never fire and nobody would see why, because the failure
-  # looks exactly like a head that did not qualify. `refresh-daily.yml` carries
-  # `actions: read` for the same class of reason, recorded there.
+  # looks exactly like a head that did not qualify.
   #
   # This is the minimum that endpoint needs. Nothing else is widened, and the
   # token still cannot write anything.
@@ -113,7 +113,7 @@ permissions:
 # NO COMMIT ON `main` MAY END WITH A CANCELLED CHECK. (2026-08-26.)
 #
 # **Measured, not argued.** On 2026-08-26 between 17:54 and 17:56 the eight
-# scheduled pushers were dispatched to prove the deploy key. Five landed commits
+# then-scheduled pushers were dispatched to prove the deploy key. Five landed commits
 # inside two minutes — `1bf635d`, `a9fb8cc`, `3be63c6`, `48ebed9`, `b85f572` —
 # and **every one of their build checks was CANCELLED by the next push**. Those
 # five commits sit on `main` in a state that is not passed and not failed. The
@@ -149,14 +149,13 @@ permissions:
 #
 # AND THAT COST CAME DUE (RULING 278, 2026-09-05). Three post-deploy readings
 # landed on `main` on one afternoon and bought 12m 09s, 9m 57s and 12m 01s of
-# shipping-grade proof each, for commits carrying `data/ops/
-# production-integrity.json` and its generated view. The `data/**` skip rejected
-# above is STILL rejected, and for the reason given. What was adopted instead is
-# an EXACT-FILE allowlist in `lib/ops/deploy-paths.ts` — six files, each written
-# by exactly one scheduled pusher under a grant that cannot carry code, each
-# with the guards that read it named and RUN on the cheap path. Classification
-# happens before any expensive step in every job below, and UNKNOWN, MIXED and
-# every pull request answer FULL.
+# shipping-grade proof each, for commits carrying the old tracked post-deploy
+# reading and its generated view. PDC deletes that transition rather than
+# preserving a cheaper version of it: runtime outcomes append to the standing
+# control-plane log and create no Git commit. Consequently Build Check has no
+# runtime-path classifier at all. Draft pull requests alone receive the bounded
+# deterministic tier below; every ready PR and every ordinary push receives the
+# normal software proof (subject only to exact-tree certification reuse).
 concurrency:
   group: build-check-${{ github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
@@ -180,40 +179,33 @@ jobs:
         mode: [standalone, default]
     name: build (${{ matrix.mode }})
     steps:
-      # Depth 2 rather than 1: `scripts/ci-cost.mjs` reads this commit's own
-      # changed-path list with `git show`, which needs a parent. Still a shallow
-      # clone, so nothing that depends on shallowness changes.
+      # Depth 2 rather than 1 gives the exact-tree reuse check the candidate and
+      # its parent while keeping the checkout shallow.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
       # v7 targets Node 24 natively; package-manager-cache off because pnpm is
-      # not on PATH until corepack enable. Same reasoning as
-      # intake-tripwire.yml, where R45 worked it out.
+      # not on PATH until corepack enable.
       #
-      # It also has to come BEFORE the classifier below, which imports a `.ts`
-      # module and therefore needs a Node that strips types. The runner image's
-      # preinstalled Node does not, and the classifier would answer FULL on the
-      # import failure — safe, and permanently useless.
+      # It also has to come before the dependency-free PR-tier and exact-tree
+      # adapters, which import type-strippable local modules.
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
 
-      # ══ CLASSIFY FIRST, SPEND SECOND (RULING 278) ══
-      #
-      # The canonical answer comes from `lib/ops/deploy-paths.ts` through
-      # `scripts/ci-cost.mjs`. THERE IS NO PATH LIST IN THIS FILE and there may
-      # never be one — `tests/ci-cost.test.ts` reads this workflow and fails if
-      # a second truth table appears here, because two lists are two answers
-      # free to disagree about whether a commit was proved.
-      #
-      # It needs no install: bare Node, one git call, one import. UNKNOWN and
-      # MIXED both answer FULL, so every step below runs unless the commit was
-      # POSITIVELY proven to be a scheduled job's operational bookkeeping.
-      - name: Classify the commit (canonical shipping classifier)
-        id: cost
-        run: node scripts/ci-cost.mjs
+      # Draft pull requests prove the deterministic contract before buying a
+      # build. The adapter fails closed to `full`, and `ready_for_review` is an
+      # explicit full-certification event even when the head SHA did not move.
+      - name: Classify the pull request certification tier
+        id: pr_tier
+        if: github.event_name == 'pull_request'
+        env:
+          WTP_EVENT_NAME: ${{ github.event_name }}
+          WTP_EVENT_ACTION: ${{ github.event.action }}
+          WTP_PR_DRAFT: ${{ github.event.pull_request.draft }}
+        run: node scripts/pr-ci-tier.mjs
 
       # ══ IS THIS THE TREE THAT ALREADY PASSED? (FCP-9C) ══
       #
@@ -226,8 +218,8 @@ jobs:
       # commit SHA, seventeen more billed minutes and another slice of the
       # forty-five the owner spent unable to proceed.
       #
-      # `scripts/certified-tree.mjs` is an ADAPTER, exactly as ci-cost.mjs is:
-      # the relation lives in lib/control-plane/shipping/tree-equivalence.ts and
+      # `scripts/certified-tree.mjs` is an adapter; the relation lives in
+      # lib/control-plane/shipping/tree-equivalence.ts and
       # there is no second table here. It answers `yes` only when the pushed head
       # is a two-parent merge, main's tip is an ancestor of the candidate, the
       # trees are the same object, and every required context is GREEN at the
@@ -235,7 +227,6 @@ jobs:
       # runs. It needs no install — bare node, git, and one `gh api` call.
       - name: Is this the tree that already passed? (FCP-9C)
         id: certified
-        if: steps.cost.outputs.cost != 'CHEAP'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/certified-tree.mjs
@@ -253,38 +244,39 @@ jobs:
       # failure it already knew about. Seventeen billed runner-minutes for an
       # answer this step has before the first dependency is fetched.
       #
-      # It is skipped on the classifier's CHEAP path for the same reason every
-      # other step is: a positively proven non-shipping commit has nothing to
-      # verify (RULING 278).
+      # It is skipped only when this exact tree already has the required green
+      # certification. Runtime writers can no longer create a Git commit that
+      # needs a special path-cost exception.
       - name: Preflight — the cheap deterministic checks (RULING 279)
         id: preflight
-        if: steps.cost.outputs.cost != 'CHEAP' && steps.certified.outputs.certified != 'yes'
+        if: github.event_name == 'pull_request' || steps.certified.outputs.certified != 'yes'
         run: node scripts/preflight.mjs
 
       # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
-      # SECOND TABLE (RULING 278). Three outcomes, and every later step reads
+      # SECOND TABLE. Four outcomes, and every later step reads
       # this one output rather than re-deriving the decision from its parts:
       #
       #   yes            verify this head fully
-      #   no-cheap       the classifier proved it ships nothing; attest and stop
+      #   draft          run the deterministic PR tier; certify fully when ready
       #   no-certified   this exact tree already passed; attest and stop (FCP-9C)
       #   no-preflight   a cheap check failed; fail loudly and buy nothing more
       #
-      # `no-certified` sits BELOW `no-cheap` and ABOVE `no-preflight`, and the
-      # order is the argument: a positively proven non-shipping commit is
-      # cheapest, a tree already proved needs no second proof, and a head that
-      # has neither answer must pass the cheap tier before it buys the expensive
-      # one. A tree that already passed also already passed this preflight, on
-      # the same bytes, which is why the preflight step is skipped rather than
-      # re-run — the same reasoning, and the same fail-closed direction, as the
-      # classifier's cheap path.
+      # Pull-request state is resolved first. A draft must run its deterministic
+      # tier even for a non-shipping diff, and a ready PR must buy a fresh full
+      # certification on ready_for_review/open/synchronize rather than reusing
+      # the same head's earlier draft contexts. Non-PR ordering remains
+      # exact-tree reuse, preflight, then full proof.
       - name: Decide whether the expensive tier runs
         id: tier
         if: always()
         shell: bash
         run: |
-          if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then
-            echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"
+          if [ -n "${{ steps.pr_tier.outputs.tier }}" ] && [ "${{ steps.preflight.outcome }}" != "success" ]; then
+            echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.pr_tier.outputs.tier }}" = "draft" ]; then
+            echo "expensive=draft" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then
+            echo "expensive=yes" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then
             echo "expensive=no-certified" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
@@ -390,13 +382,6 @@ jobs:
           path: trace-files.txt
           if-no-files-found: warn
 
-      # THE CHEAP PATH IS EXPLICIT, NOT AN ABSENCE (RULING 278).
-      #
-      # A skipped job vanishes from the Actions page and a required context that
-      # never arrives disarms branch protection rather than blocking it
-      # (RULING 156). So this job still runs, still reports `build (<mode>)`,
-      # and says in as many words what it decided and why. "Nothing happened" and
-      # "nothing needed to happen, and here is the proof" are different claims.
 # THE RED PATH SAYS WHY, IN THIS JOB'S OWN LOG. (RULING 279.)
       #
       # The preflight step has already failed the job by this point — this adds
@@ -414,9 +399,11 @@ jobs:
           echo "    node scripts/preflight.mjs" >&2
           exit 1
 
-      - name: Cheap attestation — nothing here could differ
-        if: steps.tier.outputs.expensive == 'no-cheap'
-        run: node scripts/ci-cost.mjs --attest=build
+      - name: Draft pull request — full build waits for ready for review
+        if: steps.tier.outputs.expensive == 'draft'
+        run: |
+          echo "Draft preflight passed. This required build context still reports, while"
+          echo "the two production builds wait for the ready_for_review certification run."
 
       # THE REQUIRED CONTEXT STILL ARRIVES, AND IT SAYS WHAT IT REUSED.
       # (FCP-9C. RULING 156: a required check that does not report disarms
@@ -428,7 +415,11 @@ jobs:
         run: node scripts/certified-tree.mjs --attest=build
 
   # ---------------------------------------------------------------------------
-  # THE SUITE, ON LINUX, ON EVERY PR (Prompt B item 1c, 2026-08-20).
+  # THE SUITE, ON LINUX, ON EVERY READY PR (Prompt B item 1c, 2026-08-20).
+  #
+  # A draft proves the deterministic tier below. Marking it ready emits the
+  # explicitly subscribed `ready_for_review` event and runs this full suite on
+  # the same head before that pull request can ship.
   #
   # RULING 13: a green build check did not mean the tests ran. This file ran
   # `pnpm build` and the bundle budgets and never `pnpm test`, so the four
@@ -444,7 +435,7 @@ jobs:
   # "the tests ran" is readable without opening a log.
   #
   # Chromium because tests/beacon-guard.test.ts proves the synthetic-run guard
-  # by driving a real browser — the same reason the refresh gates install it.
+  # by driving a real browser. No routine refresh gate survives.
   gates:
     name: gates (test · lint · tsc)
     runs-on: ubuntu-latest
@@ -457,30 +448,24 @@ jobs:
         with:
           fetch-depth: 3
 
-      # SETUP-NODE MOVED ABOVE THE HOLDINGS FETCH (RULING 278), because the
-      # classifier below imports a `.ts` module and needs a Node that strips
-      # types; the runner image's preinstalled Node does not, and the classifier
-      # would answer FULL on the import failure — safe, and permanently useless.
-      # The holdings fetch is git only and does not care where it sits.
+      # Setup Node precedes the dependency-free PR-tier and exact-tree adapters,
+      # which import type-strippable local modules. The holdings fetch is git
+      # only and does not care where it sits.
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
 
-      # ══ CLASSIFY FIRST, SPEND SECOND (RULING 278) ══
-      #
-      # The canonical answer comes from `lib/ops/deploy-paths.ts` through
-      # `scripts/ci-cost.mjs`. THERE IS NO PATH LIST IN THIS FILE and there may
-      # never be one — `tests/ci-cost.test.ts` reads this workflow and fails if
-      # a second truth table appears here.
-      #
-      # UNKNOWN, MIXED and every pull request answer FULL, so the whole gate set
-      # below runs unless the commit was POSITIVELY proven to be a scheduled
-      # job's operational bookkeeping. The cheap path is not "run nothing": the
-      # guards that read those artifacts from disk still run, further down.
-      - name: Classify the commit (canonical shipping classifier)
-        id: cost
-        run: node scripts/ci-cost.mjs
+      # One dependency-free classifier owns the draft/full event table. Unknown
+      # payloads, pushes and dispatches all answer full.
+      - name: Classify the pull request certification tier
+        id: pr_tier
+        if: github.event_name == 'pull_request'
+        env:
+          WTP_EVENT_NAME: ${{ github.event_name }}
+          WTP_EVENT_ACTION: ${{ github.event.action }}
+          WTP_PR_DRAFT: ${{ github.event.pull_request.draft }}
+        run: node scripts/pr-ci-tier.mjs
 
       # ══ IS THIS THE TREE THAT ALREADY PASSED? (FCP-9C) ══
       #
@@ -493,8 +478,8 @@ jobs:
       # commit SHA, seventeen more billed minutes and another slice of the
       # forty-five the owner spent unable to proceed.
       #
-      # `scripts/certified-tree.mjs` is an ADAPTER, exactly as ci-cost.mjs is:
-      # the relation lives in lib/control-plane/shipping/tree-equivalence.ts and
+      # `scripts/certified-tree.mjs` is an adapter; the relation lives in
+      # lib/control-plane/shipping/tree-equivalence.ts and
       # there is no second table here. It answers `yes` only when the pushed head
       # is a two-parent merge, main's tip is an ancestor of the candidate, the
       # trees are the same object, and every required context is GREEN at the
@@ -502,7 +487,6 @@ jobs:
       # runs. It needs no install — bare node, git, and one `gh api` call.
       - name: Is this the tree that already passed? (FCP-9C)
         id: certified
-        if: steps.cost.outputs.cost != 'CHEAP'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/certified-tree.mjs
@@ -520,38 +504,39 @@ jobs:
       # failure it already knew about. Seventeen billed runner-minutes for an
       # answer this step has before the first dependency is fetched.
       #
-      # It is skipped on the classifier's CHEAP path for the same reason every
-      # other step is: a positively proven non-shipping commit has nothing to
-      # verify (RULING 278).
+      # It is skipped only when this exact tree already has the required green
+      # certification. Runtime outcomes never enter Git, so no runtime path can
+      # waive this software proof.
       - name: Preflight — the cheap deterministic checks (RULING 279)
         id: preflight
-        if: steps.cost.outputs.cost != 'CHEAP' && steps.certified.outputs.certified != 'yes'
+        if: github.event_name == 'pull_request' || steps.certified.outputs.certified != 'yes'
         run: node scripts/preflight.mjs
 
       # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
-      # SECOND TABLE (RULING 278). Three outcomes, and every later step reads
+      # SECOND TABLE. Four outcomes, and every later step reads
       # this one output rather than re-deriving the decision from its parts:
       #
       #   yes            verify this head fully
-      #   no-cheap       the classifier proved it ships nothing; attest and stop
+      #   draft          run the deterministic PR tier; certify fully when ready
       #   no-certified   this exact tree already passed; attest and stop (FCP-9C)
       #   no-preflight   a cheap check failed; fail loudly and buy nothing more
       #
-      # `no-certified` sits BELOW `no-cheap` and ABOVE `no-preflight`, and the
-      # order is the argument: a positively proven non-shipping commit is
-      # cheapest, a tree already proved needs no second proof, and a head that
-      # has neither answer must pass the cheap tier before it buys the expensive
-      # one. A tree that already passed also already passed this preflight, on
-      # the same bytes, which is why the preflight step is skipped rather than
-      # re-run — the same reasoning, and the same fail-closed direction, as the
-      # classifier's cheap path.
+      # Pull-request state is resolved first. A draft must run its deterministic
+      # tier even for a non-shipping diff, and a ready PR must buy a fresh full
+      # certification on ready_for_review/open/synchronize rather than reusing
+      # the same head's earlier draft contexts. Non-PR ordering remains
+      # exact-tree reuse, preflight, then full proof.
       - name: Decide whether the expensive tier runs
         id: tier
         if: always()
         shell: bash
         run: |
-          if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then
-            echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"
+          if [ -n "${{ steps.pr_tier.outputs.tier }}" ] && [ "${{ steps.preflight.outcome }}" != "success" ]; then
+            echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.pr_tier.outputs.tier }}" = "draft" ]; then
+            echo "expensive=draft" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then
+            echo "expensive=yes" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then
             echo "expensive=no-certified" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
@@ -564,9 +549,8 @@ jobs:
       # Fetch the frozen base and the pinned integration source; keep checkout shallow.
       - name: Enable corepack (pnpm pinned by packageManager)
         # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
-        # runs the guard test files, which import from node_modules.
-        if: steps.tier.outputs.expensive != 'no-certified'
+        # node. Drafts install for their deterministic contract checks.
+        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
         run: corepack enable
 
       # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
@@ -581,16 +565,14 @@ jobs:
       - name: Where is the pnpm store
         id: pnpm-store
         # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
-        # runs the guard test files, which import from node_modules.
-        if: steps.tier.outputs.expensive != 'no-certified'
+        # node. Drafts install for their deterministic contract checks.
+        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
         # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
-        # runs the guard test files, which import from node_modules.
-        if: steps.tier.outputs.expensive != 'no-certified'
+        # node. Drafts install for their deterministic contract checks.
+        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -602,9 +584,8 @@ jobs:
 
       - name: Install
         # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
-        # runs the guard test files, which import from node_modules.
-        if: steps.tier.outputs.expensive != 'no-certified'
+        # node. Drafts install for their deterministic contract checks.
+        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
         run: corepack pnpm install --frozen-lockfile
 
       # P-006 · the browser, cached. This install carries a 15-minute timeout
@@ -645,7 +626,7 @@ jobs:
       # direction to be wrong in. A key that invalidates too eagerly costs one
       # download; a key that invalidates too rarely serves a stale browser.
       - name: Lint
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 10
         run: corepack pnpm lint
 
@@ -663,10 +644,11 @@ jobs:
       # app/layout.tsx now writes its own props type, so nothing in the tree
       # depends on a generated global, and the check belongs where it proves
       # something: a fresh checkout, no build, no cached .next. This job
-      # deliberately does NOT build — tests/push-main.test.ts asserts that, so
+      # deliberately does NOT build — tests/draft-pr-ci.test.ts and
+      # tests/gate-parity.test.ts assert that, so
       # a future "just add a build step" cannot quietly restore the old lie.
       - name: Types (fresh checkout, no build)
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 10
         run: corepack pnpm exec tsc --noEmit
 
@@ -700,29 +682,36 @@ jobs:
       # `scripts/gates.mjs` carries the same three, and
       # `tests/gate-parity.test.ts` fails if this file and that one ever drift.
       - name: Governance ledger and its generated views
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 10
         run: corepack pnpm governance:check
 
       - name: Orchestration plans (RULING 190)
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 5
         run: corepack pnpm orchestration:check
 
       - name: Method knowledge store
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 5
         run: corepack pnpm method:check
 
       - name: Canonical state holdings and residual paths
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 5
         run: corepack pnpm state-holdings:check
 
       - name: Generated state manifests against committed observations
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
         timeout-minutes: 5
         run: corepack pnpm state-manifest --check
+
+      - name: Draft pull request — deterministic tier complete
+        if: success() && steps.tier.outputs.expensive == 'draft'
+        run: |
+          echo "Draft certification completed preflight, install, lint, types, governance,"
+          echo "generated-state and state-holdings integrity. Browser and full-suite proof"
+          echo "run when this exact head receives ready_for_review."
 
       # THE SHIPPING INVARIANT — ASKED BEFORE THE MERGE, NOT THE MORNING AFTER.
       # (2026-08-28, the P0 schema drift. Intake tripwire run 33211710028.)
@@ -737,8 +726,9 @@ jobs:
       # `apply-migrations` anywhere in CI or in the deploy.
       #
       # This job is where the answer can still change what happens. It runs on
-      # every pull request and on every push to `main`, so the question is asked
-      # of the EXACT head that is about to ship.
+      # every ready pull request and on every push to `main`, so the question is
+      # asked of the EXACT head that is about to ship. Drafts defer this
+      # shipping-only question until their `ready_for_review` run.
       #
       # SCOPED, so a docs-only pull request is not gated on a database round
       # trip: the gate reads the changed paths first and exits NOT APPLICABLE
@@ -865,11 +855,12 @@ jobs:
       # marks state DEGRADED, alerts, and blocks the next release until a
       # re-check passes.
       #
-      # NO CREDENTIAL, NO DATABASE. It reads `data/ops/production-integrity.json`,
-      # a committed record, so it runs on a fork pull request and on a laptop
-      # with no .env.local. That is also why an absent NH272 secret cannot make
-      # it green: the record itself carries CREDENTIAL_ABSENT and the gate reads
-      # that as unproven rather than as passing.
+      # THE AUTHORITY IS THE CANONICAL CONTROL-PLANE LOG, READ-ONLY. The role in
+      # `WTP_CONTROL_PLANE_DATABASE_URL_READONLY` can SELECT the existing
+      # software-release outcome log and cannot append, mutate Git or touch the
+      # serving database. Missing/unreachable/NOT_RECORDED all become
+      # NOT_ASSESSED and freeze a software-bearing pull request; there is no
+      # tracked-file fallback.
       #
       # IT DOES MAKE ONE NETWORK CALL, AND IT NEEDS NO CREDENTIAL EITHER
       # (2026-08-29). Rule 4 — a healthy reading must still cover the production
@@ -894,20 +885,10 @@ jobs:
       - name: Release freeze (refuses a release on a DEGRADED production reading)
         if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
+        env:
+          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
         run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
 
-      # ══ THE CHEAP PATH IS A PROOF, NOT AN ABSENCE (RULING 278) ══
-      #
-      # Everything above is skipped on a positively-proven operational commit
-      # because none of it could reach a different verdict. What COULD differ is
-      # the bytes the scheduled job just wrote — and those have guards, four of
-      # them, which read the files from disk. `ci-cost --prove` runs exactly the
-      # guards that `lib/ops/deploy-paths.ts` names for the artifacts that
-      # actually changed, and refuses to run at all on a commit classified FULL.
-      #
-      # This is why `Install` above is NOT gated: the proofs are the repository's
-      # own test files and they need `node_modules`. With the store cache warm
-      # that install is four seconds, measured on run 33996825942.
       - name: Preflight was red — nothing expensive was bought
         if: always() && steps.tier.outputs.expensive == 'no-preflight'
         run: |
@@ -918,11 +899,6 @@ jobs:
           echo "    node scripts/preflight.mjs" >&2
           exit 1
 
-      - name: Cheap path — the guards that read what changed
-        if: steps.tier.outputs.expensive == 'no-cheap'
-        timeout-minutes: 5
-        run: node scripts/ci-cost.mjs --prove
-
 # THE RED PATH SAYS WHY, IN THIS JOB'S OWN LOG. (RULING 279.)
       #
       # The preflight step has already failed the job by this point — this adds
@@ -930,10 +906,6 @@ jobs:
       # of skipped steps, and "skipped" is what a job that had nothing to do
       # looks like too. A required check must never be ambiguous about which of
       # those happened.
-      - name: Cheap attestation — nothing else could differ
-        if: steps.tier.outputs.expensive == 'no-cheap'
-        run: node scripts/ci-cost.mjs --attest=gates
-
       # THE REQUIRED CONTEXT STILL ARRIVES, AND IT SAYS WHAT IT REUSED.
       # (FCP-9C. RULING 156: a required check that does not report disarms
       # protection rather than blocking it, so this job runs, reports

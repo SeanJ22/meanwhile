@@ -6,6 +6,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { directoryFor } from "../lib/officials/directory.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("all normalized directory entries survive exact Bioguide projection", () => {
   const held = JSON.parse(readFileSync("data/congress-legislators/directory.json", "utf8"));

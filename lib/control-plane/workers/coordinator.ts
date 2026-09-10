@@ -11,7 +11,7 @@ import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY
 import { workerTaskAdmission } from "./scheduling.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
-import { scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
+import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { isScheduled } from "../scheduler/obligation.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute, ResearchSpan } from "./research-types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
@@ -80,6 +80,15 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   const plan = item.autonomousPlan;
   const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,reason,task});
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
+  if (
+    runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
+    isRetiredRoutineMeetingAcquisition(plan.contract)
+  ) {
+    return decision(
+      "BLOCKED",
+      "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: immutable artifacts and results remain available for projection, but only the matching permanent source/body meeting-partition contract may acquire or refresh this source",
+    );
+  }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
   const records = [] as Awaited<ReturnType<typeof repos.workerResults.read>>[number][];
   for (const record of await repos.workerResults.read(item.id)) {

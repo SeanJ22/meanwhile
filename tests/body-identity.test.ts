@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import { membersOfBody } from "../lib/registry/body-membership.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";

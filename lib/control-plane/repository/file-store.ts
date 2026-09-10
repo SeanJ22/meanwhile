@@ -90,6 +90,7 @@ import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
+import type { CandidateStore } from "../../method/candidate.ts";
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
   AppendOnlyViolation,
@@ -709,6 +710,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
     /* Level 1 — Research (schema v4). */
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
+    methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),

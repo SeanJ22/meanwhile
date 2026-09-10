@@ -109,9 +109,7 @@ export interface WindowView {
   readonly deferred: Held<Measured>;
   readonly byRecordClass: Held<readonly RecordClassRow[]>;
   readonly verdicts: Held<{ readonly shown: Measured; readonly rows: readonly ItemVerdict[] }>;
-  readonly legacy: Held<{ readonly source: string; readonly ran: Measured; readonly rows: readonly { readonly id: string; readonly outcome: string; readonly reason: string }[] }>;
   readonly controls: Held<{ readonly recall: Measured; readonly falseAbsences: Measured; readonly falsePresences: Measured }>;
-  readonly verification: Held<{ readonly instrument: string; readonly verdict: string; readonly detail: string }>;
   readonly incidents: Held<{ readonly shown: Measured; readonly rows: readonly WindowIncident[] }>;
   readonly proof: Held<{ readonly windowId: string; readonly recordPath: string | null; readonly digestPath: string | null; readonly leaseId: string; readonly windowsRecorded: number }>;
 }
@@ -149,9 +147,7 @@ export function buildWindowView(input: WindowViewInput): WindowView {
       deferred: g(),
       byRecordClass: g(),
       verdicts: g(),
-      legacy: g(),
       controls: g(),
-      verification: g(),
       incidents: g(),
       proof: g(),
     };
@@ -173,7 +169,6 @@ export function buildWindowView(input: WindowViewInput): WindowView {
     deferred: measured(t.deferred, t.items, `items of class ${t.recordClass} the window deferred, of every item in that class`, source),
   }));
   const incidentRows = input.incidents.kind === "HELD" ? input.incidents.value : run.incidents;
-  const legacy = run.legacyRefresh;
   const controls = run.controls;
   return {
     nowIso: input.nowIso,
@@ -206,14 +201,6 @@ export function buildWindowView(input: WindowViewInput): WindowView {
       shown: measured(Math.min(p.verdicts.length, VERDICTS_SHOWN), p.verdicts.length, `item verdicts listed, of every verdict the window recorded (cap ${VERDICTS_SHOWN})`, source),
       rows: p.verdicts.slice(0, VERDICTS_SHOWN),
     }),
-    legacy:
-      legacy === null
-        ? gap("OURS", failed.find((s) => s.stage === "LEGACY_REFRESH")?.reason ?? "the legacy refresh stage recorded no reading")
-        : held({
-            source: legacy.source,
-            ran: measured(legacy.sources.filter((s) => s.ran).length, legacy.sources.length, "legacy refresh sources that ran in the isolated checkout, of every source the report lists", `docs/refresh-run.${legacy.source === "JSON" ? "json" : "md"} in the window's checkout`),
-            rows: legacy.sources.map((s) => ({ id: s.id, outcome: s.outcome, reason: s.reason })),
-          }),
     controls:
       controls === null
         ? gap("OURS", "NOT MEASURED: the window's batch carried no injected controls, so recall and the false-absence and false-presence rates cannot be stated")
@@ -222,10 +209,6 @@ export function buildWindowView(input: WindowViewInput): WindowView {
             falseAbsences: measured(controls.falseAbsences, controls.knownPresentCount, "known-present controls the surface denied, of every known-present control", "the control set scored in this window"),
             falsePresences: measured(controls.falsePresences, controls.knownAbsenceCount, "known-absence controls the surface asserted, of every known-absence control", "the control set scored in this window"),
           }),
-    verification:
-      run.postPromotionVerification === null
-        ? gap("OURS", failed.find((s) => s.stage === "POST_PROMOTION_VERIFICATION")?.reason ?? "the verification stage recorded nothing")
-        : held({ instrument: run.postPromotionVerification.instrument, verdict: run.postPromotionVerification.verdict, detail: run.postPromotionVerification.detail }),
     incidents: held({
       shown: measured(Math.min(incidentRows.length, INCIDENTS_SHOWN), incidentRows.length, `incidents listed, of every incident this window opened (cap ${INCIDENTS_SHOWN})`, "the windowIncidents log for this window, or the record's own list when the log could not be read"),
       rows: incidentRows.slice(0, INCIDENTS_SHOWN),
@@ -244,7 +227,6 @@ export function renderedNumbersOf(view: WindowView): RenderedNumber[] {
     ["refused", view.refused],
     ["deferred", view.deferred],
     ["verdicts shown", view.verdicts.held ? held(view.verdicts.value.shown) : none],
-    ["legacy sources ran", view.legacy.held ? held(view.legacy.value.ran) : none],
     ["control recall", view.controls.held ? held(view.controls.value.recall) : none],
     ["control false absences", view.controls.held ? held(view.controls.value.falseAbsences) : none],
     ["control false presences", view.controls.held ? held(view.controls.value.falsePresences) : none],
@@ -269,9 +251,6 @@ export function countClaimsOf(view: WindowView): CountClaim[] {
   }
   if (view.incidents.held) {
     claims.push({ label: "incidents shown", stated: view.incidents.value.shown.value, rendered: view.incidents.value.rows.length });
-  }
-  if (view.legacy.held) {
-    claims.push({ label: "legacy sources listed", stated: view.legacy.value.ran.denominator, rendered: view.legacy.value.rows.length });
   }
   return claims;
 }

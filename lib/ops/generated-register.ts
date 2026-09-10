@@ -37,12 +37,6 @@ export interface GeneratedArtifact {
  * commit — the same discipline `tests/guard-census.json` applies to guards.
  */
 export const GENERATED: GeneratedArtifact[] = [
-  {
-    path: "lib/funding/official-candidacies.json",
-    command: "corepack pnpm reader:finance-identity",
-    checkCommand: "corepack pnpm reader:finance-identity --check",
-    pure: true,
-  },
   ...readdirSync(fileURLToPath(new URL("../../docs/states/", import.meta.url)))
     .filter((name) => /^[a-z]{2}\.md$/.test(name)).sort().map((name) => ({
       path: `docs/states/${name}`,
@@ -180,17 +174,6 @@ export const GENERATED: GeneratedArtifact[] = [
   },
   {
     /*
-     * The symmetric invitation list (2026-08-23, the questionnaire brief).
-     * Pure: it reads the committed ballot and contacts files. It sends nothing,
-     * and every row it writes carries `invitedOn: null`.
-     */
-    path: "data/questionnaire/invitations-nj-morris-2026.json",
-    command: "corepack pnpm questionnaire:invitations --write",
-    checkCommand: "corepack pnpm questionnaire:invitations --check",
-    pure: true,
-  },
-  {
-    /*
      * **Registered 2026-08-23 (item 2), and it was generated all along.**
      *
      * `pnpm schools:classify` writes the INDEPENDENT / DEPENDENT stamp every
@@ -273,16 +256,6 @@ export const GENERATED: GeneratedArtifact[] = [
       "re-recording a plat is a real change this artifact should pick up.",
   },
   {
-    path: "lib/registry/registry.json",
-    command: "corepack pnpm registry:build",
-    pure: false,
-    impurity:
-      "fetches the canonical OCD division-id list over the network to reconcile identifiers. " +
-      "Everything else it reads is committed, and the run IS byte-idempotent against unchanged " +
-      "inputs — collectedAt stamps are carried forward per row rather than restamped, so a " +
-      "rebuild that changes nothing produces no diff.",
-  },
-  {
     path: "data/states/nj/hunt/nj-morris-municipal-sites.json",
     command: "corepack pnpm nj:rosters --index",
     pure: false,
@@ -325,72 +298,12 @@ export const GENERATED: GeneratedArtifact[] = [
     impurity: "reads the encyclopedia and fetches every citation — both move",
   },
   {
-    /*
-     * FOUND BY THIS GUARD ON ITS FIRST RUN — it declared itself generated and
-     * was in no register, which is precisely the state a hand-edit becomes
-     * permanent in.
-     */
-    path: "lib/officials/directory-source.ts",
-    command: "corepack pnpm congress:migrate",
-    pure: false,
-    impurity:
-      "pins a SHA of the unitedstates/congress-legislators repository and stamps the date it " +
-      "was read; re-running it legitimately moves both.",
-  },
-  {
     path: "docs/evidence/njhunt6-morris-rosters.jsonl",
     command: "corepack pnpm nj:wire",
     pure: false,
     impurity:
       "a retrieval ledger records the bytes a body sent on a DATE. Regenerating it from " +
       "today's artifacts is correct; demanding byte-equality with a past walk is not.",
-  },
-  /*
-   * **THE ARIZONA ACQUISITION CHAIN, REGISTERED AS ONE.** (2026-09-01.)
-   *
-   * These four are generated in a fixed order — the identity registry, then
-   * the certified-lineup reconciliation that resolves into it, then the
-   * statewide finance corpus, then the reader snapshot projected from both.
-   * None was registered before, which is the state RULING 92 calls the one a
-   * hand edit becomes permanent in, and it was already load-bearing: the
-   * reconciliation is what puts $11,109,720 on Katie Hobbs's card.
-   *
-   * All four are IMPURE by the same honest reason — they read a live
-   * publisher, and the publisher moves. Registering an impure artifact still
-   * buys the thing that matters: nobody can hand-edit one and have it survive
-   * a regeneration unnoticed.
-   */
-  {
-    path: "data/states/az/identity/az-2026-candidate-registry.json",
-    command: "corepack pnpm identity:az",
-    pure: false,
-    impurity:
-      "reads the Secretary of State's candidate-filing list and the certified canvass; a " +
-      "withdrawal, a court order or a new independent filing changes the universe",
-  },
-  {
-    path: "data/states/az/identity/az-2026-certified-lineup-reconciliation.json",
-    command: "corepack pnpm identity:az",
-    pure: false,
-    impurity:
-      "derived from the registry above, so it inherits every movement in it — and an " +
-      "ambiguity that resolves later becomes a mapping that did not exist before",
-  },
-  {
-    path: "data/states/az/campaign-finance/az-2026-statewide-corpus.json",
-    command: "corepack pnpm money:az",
-    pure: false,
-    impurity:
-      "walks SeeTheMoney across every discovered filter state and reads each committee's " +
-      "itemised ledger; the totals move whenever a committee files",
-  },
-  {
-    path: "data/states/az/funding/state-money-az-2026.json",
-    command: "corepack pnpm money:az",
-    pure: false,
-    impurity:
-      "the reader projection of the corpus above — applicable candidates only, so it moves " +
-      "both when the publisher moves and when the identity layer resolves another candidacy",
   },
   {
     /*

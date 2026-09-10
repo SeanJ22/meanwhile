@@ -19,8 +19,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  * fails with `error TS2304: Cannot find name 'LayoutProps'` — which is what
  * the Linux gates job reported the first time it ran, on 2026-08-20.
  *
- * The workflow half of the fix is asserted in `tests/push-main.test.ts`: the
- * type check runs in the `gates` job, and that job does not build. This is
+ * The workflow half of the fix is asserted in `tests/draft-pr-ci.test.ts` and
+ * `tests/gate-parity.test.ts`: the type check runs in the `gates` job, and that
+ * job does not build. This is
  * the source half. It fails if any first-party file annotates against one of
  * the generated globals again, because the next such annotation would make
  * the fresh-checkout gate red and the tempting repair — move the check back

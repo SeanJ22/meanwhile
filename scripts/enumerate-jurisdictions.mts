@@ -3,25 +3,25 @@
  * AN ELECTION, BEFORE A READER NEEDS ONE.**
  * (Session C3, lane C, 2026-09-01. RULING 229, RULING 205, RULING 207.)
  *
- * Writes `data/states/<st>/jurisdictions/<st>.json`. **A GENERATED ARTIFACT** (RULING 92):
- * never hand-edited, and fixing this generator is not finished until the output
- * is regenerated and diffed (RULING 102).
+ * Builds the reviewed jurisdiction-routing projection and submits it to the
+ * canonical production candidate/event/promotion plane. It never writes a
+ * tracked repository file. The retired JSON copies are seed/test evidence.
  *
  * ## The defect, measured
  *
  * `data/campaign-finance/filing-regimes.json` routes Arizona correctly and knows
  * exactly TWO custodians by name: the Secretary of State, and Pima County. The
- * Arizona SOS's own bulk drop names **109 filing jurisdictions**. The 2022
- * Census of Governments names **675 Arizona governments**. Every one of those
- * that is not the SOS or Pima County was, until this file existed, not an open
+ * Arizona SOS's current bulk guide defines a jurisdiction reference table but
+ * does not publish its current rows over HTTPS. The 2022 Census of Governments
+ * names Arizona governments. Every one of those that is not the SOS or Pima County was, until this file existed, not an open
  * obligation, not a debt row, not a denominator and not a name — it was
  * invisible, which is how a two-custodian corpus comes to be described as
  * "Arizona".
  *
  * ## THE SCOPE DISTINCTION IS THE POINT, and it is data
  *
- * `ftp://ftp.azsos.gov/cfsdata2/` is an ARIZONA route and belongs to all 675
- * rows. `https://pimacountyaz.easyvotecampaignfinance.com/...` is a PIMA route
+ * The Secretary's documented bulk route is an ARIZONA route.
+ * `https://pimacountyaz.easyvotecampaignfinance.com/...` is a PIMA route
  * and belongs to Pima County and to the districts A.R.S. § 16-928 routes
  * through the Pima County officer — and to nothing else. Every source row
  * carries `scope`, so the difference is checkable rather than conventional.
@@ -39,11 +39,7 @@
  * recorded as unread; a plausible citation typed from memory would be a
  * fabrication in the one field whose whole job is being checkable.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { COVERED_STATES } from "../lib/coverage/states.ts";
-import { readRecords } from "../lib/reference/index.ts";
 import type {
   Jurisdiction,
   JurisdictionClass,
@@ -53,31 +49,37 @@ import type {
 } from "../lib/hunt/jurisdiction-universe.ts";
 import { adaptedSplit, completenessCaveat } from "../lib/hunt/jurisdiction-universe.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { today } from "./doc-dates.mjs";
+import {
+  JURISDICTION_REFERENCE_STATES,
+  jurisdictionOperationalReferenceCandidate,
+  jurisdictionOperationalReferenceFailureCandidate,
+  type JurisdictionReferenceState,
+} from "../lib/civic-data/operational-references.ts";
+import {
+  acquireJurisdictionReferenceInputs,
+  AZ_BULK_FILING_GUIDE_URL,
+  CENSUS_GOVERNMENT_UNITS_URL,
+  type CensusJurisdictionUnitInput,
+  type JurisdictionReferenceAcquisitionFailure,
+} from "../lib/civic-data/jurisdiction-reference-acquisition.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
-const ROOT = process.cwd();
 const GENERATOR = "scripts/enumerate-jurisdictions.mts";
-const AS_OF = today();
+let asOf = "";
+let acquiredCensusUnits: readonly CensusJurisdictionUnitInput[] = [];
+let acquiredDependentSchoolSystems: readonly CensusJurisdictionUnitInput[] = [];
 
 /* ------------------------------------------------------------- the sources */
 
 const CENSUS_CITATION =
-  "data/reference/census_govt_units_2022.csv — U.S. Census Bureau, 2022 Census of Governments: " +
-  "Organization — Governments Integrated Directory (staged 2026-08-19, sha256 recorded in the .md note)";
-const DEP_CITATION =
-  "data/reference/census_govt_units_2022_dependent_school_systems.csv — the same directory's " +
-  "DEPENDENT school systems sheet: school operations run as an agency of another government";
-const AZ_FILING_JURISDICTIONS_PATH = join(
-  ROOT,
-  "tests",
-  "fixtures",
-  "campaign-finance",
-  "azsos-cfsdata2-Jurisdictions.txt",
-);
+  `${CENSUS_GOVERNMENT_UNITS_URL} — U.S. Census Bureau, 2022 Census of Governments: ` +
+  "Organization — Governments Integrated Directory; acquired during this exact candidate run";
 const AZ_FILING_CITATION =
-  "tests/fixtures/campaign-finance/azsos-cfsdata2-Jurisdictions.txt — the Arizona Secretary of " +
-  "State's OWN filing-jurisdiction table, retrieved from ftp://ftp.azsos.gov/cfsdata2/ (FTP RETR 226, " +
-  "2026-08-29, recorded in data/states/az/campaign-finance/az-pima-2026-held.json)";
+  `${AZ_BULK_FILING_GUIDE_URL} — the Arizona Secretary of State's current Bulk Filing Guide, ` +
+  "acquired over HTTPS during this exact candidate run; it defines Jurisdictions.txt but does not " +
+  "publish that table's current row set over HTTPS, so this projection makes no live row-count claim for it";
 const ARS_16_928 =
   "A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm and quoted verbatim " +
   "in data/campaign-finance/filing-regimes.json";
@@ -102,28 +104,28 @@ interface CensusUnit {
 }
 
 function censusUnits(stateCode: string): CensusUnit[] {
-  return readRecords("census_govt_units_2022")
+  return acquiredCensusUnits
     .filter((r) => r.state === stateCode)
     .map((r) => ({
-      name: r.unit_name,
-      govType: r.gov_type,
-      county: r.county_area_name || "",
-      web: r.web_address || "",
-      pid: r.census_id_pid6,
-      active: r.is_active !== "N",
+      name: r.name,
+      govType: r.govType,
+      county: r.county,
+      web: r.web,
+      pid: r.pid,
+      active: r.active,
     }));
 }
 
 function dependentSchoolSystems(stateCode: string): CensusUnit[] {
-  return readRecords("census_govt_units_2022_dependent_school_systems")
+  return acquiredDependentSchoolSystems
     .filter((r) => r.state === stateCode)
     .map((r) => ({
-      name: r.unit_name,
-      govType: "DEPENDENT SCHOOL SYSTEM",
-      county: r.county_area_name || "",
-      web: r.web_address || "",
-      pid: r.census_id_pid6,
-      active: r.is_active !== "N",
+      name: r.name,
+      govType: r.govType,
+      county: r.county,
+      web: r.web,
+      pid: r.pid,
+      active: r.active,
     }));
 }
 
@@ -233,9 +235,9 @@ function azStatewideFinanceSources(): JurisdictionSource[] {
       url: "ftp://ftp.azsos.gov/cfsdata2/",
       state: "REQUIRES_NEW_ADAPTER",
       owed:
-        "write an FTP client. The drop is anonymous and live (FTP RETR 226, 2026-08-29) and carries " +
-        "8,828 committees and the state's 109 filing jurisdictions. The missing piece is entirely on " +
-        "our side, which is a fact about our tooling and never a fact about the record.",
+        "acquire the current external reference tables through a publisher-supported production transport. " +
+        "The official HTTPS guide documents the legacy FTP route and the Jurisdictions table, but the table's " +
+        "current rows are not promoted or counted here without an authoritative HTTPS response.",
       citation: AZ_FILING_CITATION,
     },
   ];
@@ -347,7 +349,7 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
     routeId: "az-sos-cfs-bulk-ftp",
     url: "ftp://ftp.azsos.gov/cfsdata2/",
     state: "REQUIRES_NEW_ADAPTER",
-    owed: "an FTP client. See the state row.",
+    owed: "a publisher-supported production transport for the current reference rows. See the state row.",
     citation: AZ_FILING_CITATION,
   });
 
@@ -527,65 +529,13 @@ interface StatePlan {
   }[];
 }
 
-/**
- * Arizona's own filing-jurisdiction table, READ rather than remembered.
- *
- * The generator does not hardcode 109. It reads the state's file and counts it,
- * so a re-pull that changes the number changes this output — which is the whole
- * difference between a denominator and a number in a comment.
- */
-function azFilingJurisdictions(): { total: number; byType: Map<string, number> } {
-  const text = readFileSync(AZ_FILING_JURISDICTIONS_PATH, "utf8");
-  const lines = text.split(/\r?\n/).filter((l) => l.trim() !== "");
-  const rows = lines.slice(1).map((l) => l.split("\t"));
-  if (rows.length === 0) {
-    throw new Error(
-      `${AZ_FILING_JURISDICTIONS_PATH} yielded zero rows. A zero-row extraction is a FAILED extraction, ` +
-        "never an empty table, and this generator refuses to publish an Arizona denominator it did not read.",
-    );
-  }
-  const byType = new Map<string, number>();
-  for (const r of rows) {
-    const t = (r[2] ?? "").trim();
-    byType.set(t, (byType.get(t) ?? 0) + 1);
-  }
-  return { total: rows.length, byType };
-}
-
 const ROUTING: Omit<StatePlan, "code">[] = [
   {
     name: "Arizona",
     sourcesFor: arizonaSources,
-    extraEnumerations: () => {
-      const f = azFilingJurisdictions();
-      return [
-        {
-          id: "azsos-jurisdictions",
-          describe:
-            "Arizona Secretary of State, Jurisdictions.txt — the state's OWN campaign-finance filing " +
-            `jurisdiction table (${[...f.byType].map(([k, v]) => `${v} ${k}`).join(", ")})`,
-          path: "tests/fixtures/campaign-finance/azsos-cfsdata2-Jurisdictions.txt",
-          rowsRead: f.total,
-        },
-      ];
-    },
-    extraDisagreements: (units) => {
-      const f = azFilingJurisdictions();
-      const censusMunis = units.filter((u) => u.govType === "MUNICIPAL").length;
-      const azCityTown = f.byType.get("City/Town") ?? 0;
+    extraEnumerations: () => [],
+    extraDisagreements: () => {
       const out: EnumerationDisagreement[] = [
-        {
-          about: "how many Arizona city/town governments there are",
-          counts: [
-            { source: "Arizona Secretary of State, Jurisdictions.txt (City/Town filing jurisdictions)", count: azCityTown },
-            { source: "2022 Census of Governments (MUNICIPAL units)", count: censusMunis },
-          ],
-          whyItIsNotReconciledHere:
-            "Two authorities counting two slightly different things: a CAMPAIGN-FINANCE FILING " +
-            "jurisdiction is not identical to a Census MUNICIPAL government, and the two files were " +
-            "produced four years apart. Both are recorded. Silently choosing either number would be " +
-            "inventing a denominator, and averaging them would be worse.",
-        },
         {
           about: "Arizona community college districts",
           counts: [
@@ -666,7 +616,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
   if (units.length === 0) {
     throw new Error(
       `the Census enumeration yielded ZERO ${plan.code} governments. That is a failed read of ` +
-        "data/reference/census_govt_units_2022.csv, never a state with no local government.",
+        `${CENSUS_GOVERNMENT_UNITS_URL}, never a state with no local government.`,
     );
   }
   const dependents = dependentSchoolSystems(plan.code);
@@ -735,9 +685,9 @@ function build(plan: StatePlan): JurisdictionRegistry {
     formatVersion: 1,
     stateCode: plan.code,
     generatedBy: GENERATOR,
-    generatedOn: AS_OF,
+    generatedOn: asOf,
     _note: [
-      "GENERATED ARTIFACT — never hand-edited (RULING 92). Regenerate with `pnpm jurisdictions:enumerate`.",
+      "CANONICAL DATA-PLANE PROJECTION — never hand-edited. Rebuild and validate with `pnpm jurisdictions:check`; promote only with the owner-invoked `pnpm jurisdictions:promote`.",
       "",
       "THIS IS WHAT THE PROJECT KNOWS NOW. It is never a complete list of this state's governments, and",
       "it may never be read as one. A government absent from every enumeration read here is absent from",
@@ -769,13 +719,13 @@ function build(plan: StatePlan): JurisdictionRegistry {
       {
         id: "census-govt-units-2022",
         describe: "U.S. Census Bureau, 2022 Census of Governments: Organization",
-        path: "data/reference/census_govt_units_2022.csv",
+        path: CENSUS_GOVERNMENT_UNITS_URL,
         rowsRead: units.length,
       },
       {
         id: "census-dependent-school-systems-2022",
         describe: "the same directory's DEPENDENT school systems sheet",
-        path: "data/reference/census_govt_units_2022_dependent_school_systems.csv",
+        path: `${CENSUS_GOVERNMENT_UNITS_URL}#Govt_Units_2022_Final.xlsx/DEP School Dist`,
         rowsRead: dependents.length,
       },
       ...plan.extraEnumerations(),
@@ -789,52 +739,139 @@ function build(plan: StatePlan): JurisdictionRegistry {
 
 /* ------------------------------------------------------------------- main */
 
-const DRY = process.argv.includes("--dry");
-
-console.log(`jurisdictions:enumerate · as of ${AS_OF}\n`);
-for (const plan of PLANS) {
-  const registry = build(plan);
-  const split = adaptedSplit(registry);
-  const empty =
-    `the ${plan.code} enumeration yielded no government at all — a failed read of the Census directory, ` +
-    "never a state without local government";
-  console.log(
-    `  ${floorLine(
-      floored(
-        `${plan.code} jurisdictions reachable by SOME adapted route`,
-        `every ${plan.code} government this project has enumerated`,
-        split.enumerated,
-        split.adapted,
-        empty,
-      ),
-    )}`,
-  );
-  console.log(
-    `  ${floorLine(
-      floored(
-        `${plan.code} jurisdictions adapted at LOCAL scope`,
-        `every ${plan.code} government this project has enumerated`,
-        split.enumerated,
-        split.locallyAdapted,
-        empty,
-      ),
-    )}`,
-  );
-  console.log(`      ${completenessCaveat(registry)}`);
-  for (const [k, v] of Object.entries(registry.counts).sort()) {
-    console.log(`      ${k.padEnd(28)} ${v}`);
-  }
-  for (const d of registry.disagreements) {
-    console.log(`      DISAGREEMENT — ${d.about}: ${d.counts.map((c) => `${c.count} (${c.source})`).join(" vs ")}`);
-  }
-  const directory = join(ROOT, "data", "states", plan.code.toLowerCase(), "jurisdictions");
-  const out = join(directory, `${plan.code.toLowerCase()}.json`);
-  if (DRY) {
-    console.log(`      --dry: nothing written. Would write ${out}`);
-  } else {
-    if (!existsSync(directory)) mkdirSync(directory, { recursive: true });
-    writeFileSync(out, `${JSON.stringify(registry, null, 1)}\n`, "utf8");
-    console.log(`      wrote ${out}`);
-  }
-  console.log("");
+const CHECK = process.argv.includes("--check");
+const PROMOTE = process.argv.includes("--promote");
+if (CHECK === PROMOTE) {
+  throw new Error("JURISDICTION_REFERENCE_MODE_REQUIRED: choose exactly one of --check or --promote");
 }
+if (PROMOTE) prepareProductionCivicDataWrite();
+
+const store = CHECK ? new MemoryRoutineDataStore() : new PostgresRoutineDataStore();
+
+async function recordFailedAttempt(failure: JurisdictionReferenceAcquisitionFailure): Promise<never> {
+  const candidate = jurisdictionOperationalReferenceFailureCandidate(failure);
+  const outcome = await processRegisteredManualCandidate(
+    store,
+    "jurisdiction-operational-reference",
+    candidate,
+    candidate.retrieval.retrievedAt,
+  );
+  throw new Error(
+    `JURISDICTION_REFERENCE_PROMOTION_REFUSED:${outcome.candidate.state}:` +
+      `${outcome.candidate.failureCode ?? failure.stage}:${outcome.candidate.failureDetail ?? failure.detail}`,
+  );
+}
+
+const acquisition = await acquireJurisdictionReferenceInputs();
+if (acquisition.kind === "FAILED") {
+  await recordFailedAttempt(acquisition);
+  throw new Error("JURISDICTION_REFERENCE_FAILED_ATTEMPT_DID_NOT_TERMINATE");
+}
+acquiredCensusUnits = acquisition.censusUnits;
+acquiredDependentSchoolSystems = acquisition.dependentSchoolSystems;
+const retrievedAt = acquisition.receipts.map((receipt) => receipt.retrievedAt).sort().at(-1)!;
+asOf = retrievedAt.slice(0, 10);
+
+console.log(`jurisdictions:enumerate · acquired authoritative inputs as of ${asOf}\n`);
+const built = new Map<JurisdictionReferenceState, JurisdictionRegistry>();
+try {
+  for (const plan of PLANS) {
+    const registry = build(plan);
+    const state = plan.code.toLowerCase() as JurisdictionReferenceState;
+    if (!JURISDICTION_REFERENCE_STATES.includes(state)) {
+      throw new Error(`JURISDICTION_REFERENCE_STATE_UNREGISTERED:${plan.code}`);
+    }
+    built.set(state, registry);
+    const split = adaptedSplit(registry);
+    const empty =
+      `the ${plan.code} enumeration yielded no government at all — a failed read of the Census directory, ` +
+      "never a state without local government";
+    console.log(
+      `  ${floorLine(
+        floored(
+          `${plan.code} jurisdictions reachable by SOME adapted route`,
+          `every ${plan.code} government this project has enumerated`,
+          split.enumerated,
+          split.adapted,
+          empty,
+        ),
+      )}`,
+    );
+    console.log(
+      `  ${floorLine(
+        floored(
+          `${plan.code} jurisdictions adapted at LOCAL scope`,
+          `every ${plan.code} government this project has enumerated`,
+          split.enumerated,
+          split.locallyAdapted,
+          empty,
+        ),
+      )}`,
+    );
+    console.log(`      ${completenessCaveat(registry)}`);
+    for (const [k, v] of Object.entries(registry.counts).sort()) {
+      console.log(`      ${k.padEnd(28)} ${v}`);
+    }
+    for (const d of registry.disagreements) {
+      console.log(`      DISAGREEMENT — ${d.about}: ${d.counts.map((c) => `${c.count} (${c.source})`).join(" vs ")}`);
+    }
+    console.log("      candidate projection built; no repository file written");
+    console.log("");
+  }
+} catch (error) {
+  const censusReceipt = acquisition.receipts.find(({ sourceId }) => sourceId === "census-government-units-2022")!;
+  await recordFailedAttempt({
+    kind: "FAILED",
+    stage: "WORKBOOK",
+    requestedUrl: censusReceipt.requestedUrl,
+    finalUrl: censusReceipt.finalUrl,
+    httpStatus: censusReceipt.httpStatus,
+    retrievedAt,
+    rawHash: censusReceipt.rawHash,
+    byteCount: censusReceipt.byteCount,
+    detail: `jurisdiction projection build failed: ${error instanceof Error ? error.message : String(error)}`,
+    receipts: acquisition.receipts,
+  });
+}
+
+if (JURISDICTION_REFERENCE_STATES.some((state) => !built.has(state))) {
+  const censusReceipt = acquisition.receipts.find(({ sourceId }) => sourceId === "census-government-units-2022")!;
+  await recordFailedAttempt({
+    kind: "FAILED",
+    stage: "WORKBOOK",
+    requestedUrl: censusReceipt.requestedUrl,
+    finalUrl: censusReceipt.finalUrl,
+    httpStatus: censusReceipt.httpStatus,
+    retrievedAt,
+    rawHash: censusReceipt.rawHash,
+    byteCount: censusReceipt.byteCount,
+    detail: `jurisdiction projection omitted required states: ${[...built.keys()].join(",")}`,
+    receipts: acquisition.receipts,
+  });
+}
+const registries = Object.fromEntries(
+  JURISDICTION_REFERENCE_STATES.map((state) => [state, built.get(state)!]),
+) as Record<JurisdictionReferenceState, JurisdictionRegistry>;
+const candidate = jurisdictionOperationalReferenceCandidate({
+  registries,
+  sourceReceipts: acquisition.receipts,
+  workbook: acquisition.workbook,
+  retrievedAt,
+});
+const outcome = await processRegisteredManualCandidate(
+  store,
+  "jurisdiction-operational-reference",
+  candidate,
+  candidate.retrieval.retrievedAt,
+);
+if (outcome.candidate.state !== "PROMOTED") {
+  throw new Error(
+    `JURISDICTION_REFERENCE_PROMOTION_REFUSED:${outcome.candidate.state}:` +
+      `${outcome.candidate.failureCode ?? "UNKNOWN"}:${outcome.candidate.failureDetail ?? "no detail"}`,
+  );
+}
+console.log(
+  `${CHECK ? "validated in the deterministic memory store" : "promoted to the production data plane"}: ` +
+    `${candidate.id}; ${candidate.normalization.outputRecords} jurisdiction rows; ` +
+    `${outcome.candidate.candidate.changeSet?.outcome ?? "change outcome unavailable"}`,
+);

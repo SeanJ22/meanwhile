@@ -190,10 +190,13 @@ test("fresh Reader closure admission requires authority while inherited historic
 
 test("legacy execution-authority compatibility is pinned to exact pre-seam path and bytes", () => {
   const root = process.cwd();
-  const path = "docs/evidence/reader-last-mile-final-closure-receipt.json";
-  const receipt = JSON.parse(readReaderEvidence(root, path).toString("utf8")) as ReaderClosureReceipt;
+  const path = "docs/evidence/reader-last-mile-closure-receipt.json";
+  const bytes = readReaderEvidence(root, path);
+  assert.equal(sha256(bytes), "3aa9b15510ef18786b67e8b0781151caac6432fd2d963f4fba741195681f6f51");
+  const receipt = JSON.parse(bytes.toString("utf8")) as ReaderClosureReceipt;
   assert.equal(isKnownLegacyReaderClosureReceipt(root, path, receipt), true);
   assert.equal(isKnownLegacyReaderClosureReceipt(root, "docs/evidence/reader-last-mile-forged-receipt.json", receipt), false);
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, "docs/evidence/reader-last-mile-final-closure-receipt.json", receipt), false);
   assert.equal(isKnownLegacyReaderClosureReceipt(root, path, { ...receipt, holdingsDigest: "0".repeat(64) }), false);
 });
 

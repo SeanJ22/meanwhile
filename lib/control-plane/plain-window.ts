@@ -52,9 +52,7 @@ export interface PlainWindow {
 }
 
 const STAGE_LABEL: Record<string, string> = {
-  LEGACY_REFRESH: "Refresh",
   PIPELINE_EVALUATION: "Evaluate",
-  POST_PROMOTION_VERIFICATION: "Verify",
   DIGEST: "Digest",
 };
 

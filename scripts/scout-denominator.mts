@@ -16,8 +16,10 @@
  *        scripts/scout-denominator.mts --label=before|after [--out=<path>]
  * ```
  *
- * The registry is built EXACTLY as `freshness-shadow.mts` builds it (the same
- * five providers, root = cwd), and "due" is EXACTLY its derivation:
+ * The registry is the four research-provider subset of
+ * `freshness-shadow.mts` (root = cwd); the deterministic promoted-fact
+ * provider is outside this Scout-class denominator. "Due" uses the standing
+ * runtime's exact derivation:
  * `scheduleObligation` over the durable row's runtime fields, held out when
  * the debt backoff has not elapsed, pulled in when it has.
  */
@@ -32,11 +34,13 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories, DispositionCommit } from "../lib/control-plane/repository/types.ts";
 import { buildRegistry, registryLines, type RegisteredUnit } from "../lib/control-plane/scheduler/registry.ts";
-import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
-import { candidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import {
+  candidateEnrichmentProvider,
+  preloadCandidateEnrichmentAuthorities,
+} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { loadDebts, type StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
@@ -52,6 +56,7 @@ import { SCOUT_OUTCOMES, type ScoutResult } from "../lib/control-plane/scheduler
 import { headSha } from "../lib/ops/git-facts.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
+import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 
 const ROOT = process.cwd();
 const NOW = new Date().toISOString();
@@ -272,6 +277,8 @@ try {
   );
   process.exit(1);
 }
+await preloadOperationalReferenceBundle({ bypassCache: true });
+await preloadCandidateEnrichmentAuthorities();
 
 console.log(`scout:denominator · ${LABEL ?? "(unlabelled)"} reading at ${NOW}`);
 line(`store: ${repos.describe()}`);
@@ -281,7 +288,6 @@ line(`testedSha: ${headSha(ROOT) ?? "null (no HEAD resolvable)"}`);
 
 const registry = buildRegistry(
   [
-    meetingsProvider(),
     campaignFinanceProvider(),
     trackerIntakeProvider(),
     localJurisdictionsProvider(),

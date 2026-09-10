@@ -1,4 +1,5 @@
 import { directoryFor } from "@/lib/officials/directory";
+import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 
 /**
@@ -22,7 +23,7 @@ export const dynamic = "force-dynamic";
 
 const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
 
   /*
@@ -53,7 +54,10 @@ export function GET(request: Request) {
   const member = read.value as string;
 
   let found;
-  try { found = directoryFor(member); }
+  try {
+    await refreshFederalDirectoryFromPromoted();
+    found = directoryFor(member);
+  }
   catch {
     return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the directory records just now." },
       { status: 503, headers: { "Cache-Control": "private, no-store" } });

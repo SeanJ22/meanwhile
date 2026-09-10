@@ -25,7 +25,7 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -133,7 +133,7 @@ test("a docs-only change is NOT gated", () => {
   const involvement = schemaInvolvement([
     "docs/state.md",
     "docs/tracker-working.csv",
-    "docs/intake-report.md",
+    "docs/context.md",
     "README.md",
   ]);
   assert.equal(involvement.involved, false, involvement.reason);
@@ -545,21 +545,34 @@ test("ONE DETECTOR — the gate reuses the comparator, it does not reimplement i
   );
 });
 
-test("THE TRIPWIRE STAYS, and it is still an independent daily check", () => {
-  /*
-   * The pre-merge gate only ever sees changes arriving through a pull request
-   * or a push. Drift from anywhere else — a rollback, a second branch writing
-   * the same database, a hand-applied statement — is invisible to it and
-   * visible to the daily sweep. Removing the tripwire because a better gate
-   * exists upstream would trade defence in depth for a single point of failure.
-   */
-  const text = readFileSync(join(WORKFLOWS, "intake-tripwire.yml"), "utf8");
-  assert.match(text, /run:\s*corepack pnpm db:check/, "the daily schema gate is gone");
-  assert.match(text, /^\s*- cron:/m, "the tripwire is no longer scheduled");
-  assert.match(
-    text,
-    /steps\.schema\.outcome/,
-    "nothing reads the schema gate's outcome, so its failure would be swallowed",
+test("PDC terminal boundary: the schema/intake tripwire is not a GitHub routine clock", () => {
+  assert.equal(
+    existsSync(join(WORKFLOWS, "intake-tripwire.yml")),
+    false,
+    "intake-tripwire.yml is still a dispatchable scheduled runtime observer",
+  );
+});
+
+test("the production migration applier commits each migration and its journal row atomically", () => {
+  const source = readFileSync(join(ROOT, "scripts", "apply-migrations.mts"), "utf8");
+  const transactionAt = source.indexOf("await sql.transaction");
+  const statementAt = source.indexOf("transaction.query(statement)", transactionAt);
+  // Keep the table token split so the detector above does not mistake this
+  // assertion for another executable journal querier.
+  const journalAt = source.indexOf("INSERT INTO drizzle." + "__drizzle_migrations", transactionAt);
+  const transactionEnd = source.indexOf("]);", transactionAt);
+
+  assert.ok(transactionAt >= 0, "the migration applier has no atomic transaction boundary");
+  assert.ok(statementAt > transactionAt, "DDL statements are not inside the migration transaction");
+  assert.ok(journalAt > statementAt, "the journal row is not ordered after the migration statements");
+  assert.ok(
+    transactionEnd > journalAt,
+    "the journal row is outside the migration transaction, allowing half-applied unjournalled schema",
+  );
+  assert.doesNotMatch(
+    source.slice(source.indexOf("for (const entry of pending)")),
+    /await sql\.query\(statement\)/,
+    "a migration statement still executes outside the atomic migration transaction",
   );
 });
 
@@ -570,16 +583,14 @@ test("NOTHING applies a migration automatically, and no gate may heal what it fi
    * that ever ran `db:apply`, `drizzle-kit migrate` or `apply-migrations` in
    * CI or in the deploy: applying has only ever been a person at a terminal.
    *
-   * The repair is a GATE, not an auto-apply. `intake-tripwire.yml` states why
-   * in its own words — a gate that could fix what it finds would apply an
-   * unreviewed migration at 4am against production — and a pull-request check
-   * that could do it would be worse, because the SQL would be unreviewed by
-   * definition. So this asserts the absence deliberately: adding auto-apply is
-   * allowed, and it has to move this guard in the same diff.
+   * The repair is a GATE, not an auto-apply. A gate that could fix what it
+   * finds would apply unreviewed SQL against production; a pull-request check
+   * doing so would be worse because the SQL would be unreviewed by definition.
+   * This therefore asserts the absence deliberately.
    */
   const offenders: string[] = [];
   const files = readdirSync(WORKFLOWS).filter((f) => f.endsWith(".yml"));
-  assert.ok(files.length >= 5, `only ${files.length} workflow file(s) found — the sweep saw nothing`);
+  assert.equal(files.length, 2, `expected the two release/CI workflow files, found ${files.length}`);
   for (const file of files) {
     const text = readFileSync(join(WORKFLOWS, file), "utf8");
     for (const line of text.split("\n")) {
@@ -645,13 +656,14 @@ test("the smoke path did not change the gate's COMMAND — gate parity is not sp
   assert.ok(GATES.map((g) => g.command).includes(GATE_COMMAND));
 });
 
-test("the second reading is dispatchable — pre-deploy is not the only moment", () => {
+test("the second reading is automatic after a shipping main push", () => {
   /*
    * A pre-merge answer is true about the moment it was taken. `post-deploy` is
    * where BOTH phases are owed, and it is the one that fails on a CONTRACT
-   * migration that pre-deploy deliberately allows. Nothing runs it
-   * automatically yet; the gap is stated in the gate's own header rather than
-   * papered over, and this asserts the half that DOES exist.
+   * migration that pre-deploy deliberately allows. Netlify emits no usable
+   * deployment-status event in this repository, so the software-release
+   * workflow starts on the shipping main push and waits for that exact SHA to
+   * be served before taking the second reading.
    */
   const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
   assert.match(text, /schema_moment:/);
@@ -663,12 +675,16 @@ test("the second reading is dispatchable — pre-deploy is not the only moment",
     /process\.env\.WTP_SCHEMA_GATE_MOMENT === "post-deploy"/,
     "the environment variable the workflow sets is not read by the gate",
   );
+  const postDeploy = readFileSync(join(WORKFLOWS, "post-deploy-integrity.yml"), "utf8");
+  const productionIntegrity = readFileSync(join(ROOT, "scripts", "production-integrity.mts"), "utf8");
+  assert.match(postDeploy, /on:\s*\n\s*push:\s*\n\s*branches:\s*\[main\]/);
+  assert.match(postDeploy, /api\/build/);
+  assert.match(postDeploy, /scripts\/post-deploy-observer\.mts/);
   assert.match(
-    gate,
-    /deployment_status/,
-    "the gate must name the route that would run the post-deploy reading automatically, so the " +
-      "remaining gap is a stated decision rather than a silence",
+    productionIntegrity,
+    /"scripts\/db-shipping-gate\.mts",\s*"--moment=post-deploy",\s*"--smoke"/,
   );
+  assert.match(gate, /post-deploy-integrity\.yml/);
 });
 
 test("SMOKE MAY NOT MANUFACTURE A DIFF — the flag overrides the exit, never the finding", () => {

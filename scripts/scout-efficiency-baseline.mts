@@ -331,6 +331,7 @@ const costPerOutcomeClass = classes.map((outcome) => {
   return { outcome, attempts: inClass.length, usd: usdSum, meanUsd: measuredIn === 0 ? null : usdSum / measuredIn };
 });
 
+const canonicalCandidateCounts = await candidateStoreCounts(repos);
 const record: EfficiencyRecord = {
   formatVersion: 1,
   label: LABEL,
@@ -363,7 +364,7 @@ const record: EfficiencyRecord = {
   costPerOutcome: costPerUsefulOutcome({
     results: shown,
     candidateCounts: (() => {
-      const counts = candidateStoreCounts(ROOT);
+      const counts = canonicalCandidateCounts;
       return counts === null ? null : { validated: counts.VALIDATED, admitted: counts.ADMITTED };
     })(),
     confirmed: null,

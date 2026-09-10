@@ -72,6 +72,13 @@ export interface StandingObligation extends FreshnessObligation {
   readonly occurrenceCount: number;
   /** The occurrence currently open, if one is. */
   readonly openOccurrenceId: string | null;
+  /**
+   * Set when an authority transfer permanently removes this clock from the
+   * standing corpus. The row remains as history, but `active: false` and a
+   * null next-due make it impossible to dispatch as live work.
+   */
+  readonly retiredAt?: string;
+  readonly retirementReason?: string;
   readonly updatedAt: string;
 }
 
@@ -261,6 +268,57 @@ export async function syncObligations(
     all.push(written.value);
   }
   return { all, registered, alreadyDurable, refreshed };
+}
+
+/**
+ * Permanently stop clocks whose executable provider has been retired.
+ *
+ * Aggregate repositories intentionally have no delete operation: the owner
+ * must retain the historical occurrence/debt trail. Retirement therefore has
+ * one precise durable representation — inactive, no next due, and an explicit
+ * reason/time. The call is idempotent and reports both rows it changed and
+ * rows a prior cycle had already retired.
+ */
+export async function retireObligationsByPrefix(
+  repos: ControlPlaneRepositories,
+  prefixes: readonly string[],
+  now: string,
+  reason: string,
+): Promise<{
+  readonly retired: readonly string[];
+  readonly alreadyRetired: readonly string[];
+}> {
+  const retired: string[] = [];
+  const alreadyRetired: string[] = [];
+  if (prefixes.length === 0) return { retired, alreadyRetired };
+
+  for (const row of await repos.obligations.list()) {
+    if (!prefixes.some((prefix) => row.id.startsWith(prefix))) continue;
+    const held = row.value;
+    if (
+      held.active === false &&
+      held.nextDueAt === null &&
+      held.retirementReason === reason
+    ) {
+      alreadyRetired.push(row.id);
+      continue;
+    }
+    await repos.obligations.compareAndSet(
+      row.id,
+      row.revision,
+      {
+        ...held,
+        active: false,
+        nextDueAt: null,
+        retiredAt: held.retiredAt ?? now,
+        retirementReason: reason,
+        updatedAt: now,
+      },
+      now,
+    );
+    retired.push(row.id);
+  }
+  return { retired, alreadyRetired };
 }
 
 /**

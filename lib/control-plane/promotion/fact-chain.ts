@@ -28,11 +28,8 @@
  * re-offers the same records and the log dedupes them; a refusal whose reasons
  * did not change is the same refusal.
  */
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
-import { LEGISTAR_CLIENTS } from "../../sources/legistar/client-registry.ts";
 import { SOURCE_WIRING, type BodySourceWiring } from "../../registry/source-wiring.ts";
+import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
 import { fingerprint } from "../ids.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
@@ -75,15 +72,11 @@ export function factItemId(recordClass: MeetingFactClass, factKey: string): stri
   return `pp-${fingerprint(["fleet-fact", recordClass, factKey])}`;
 }
 
-/** Body ids the Reader recognises: the registry file, the Legistar clients, and every wiring row. */
+/** Body ids the Reader recognises: the canonical registry and SOURCE_WIRING. */
 export function readRegistryBodyIds(root: string, wiring: readonly BodySourceWiring[] = SOURCE_WIRING): ReadonlySet<string> {
-  const ids = new Set<string>([...LEGISTAR_CLIENTS.map((c) => c.bodyId), ...wiring.map((w) => w.bodyId)]);
-  try {
-    const registry = JSON.parse(readFileSync(join(root, "lib/registry/registry.json"), "utf8")) as { bodies?: { id: string }[] };
-    for (const body of registry.bodies ?? []) ids.add(body.id);
-  } catch {
-    /* The client registry and the wiring rows still name registry bodies; a missing file narrows, never widens. */
-  }
+  const ids = new Set<string>(wiring.map((row) => row.bodyId));
+  void root;
+  for (const body of getRegistryRuntimeReadModel().registry.bodies) ids.add(body.id);
   return ids;
 }
 
@@ -94,7 +87,7 @@ export interface FactChainOptions {
   readonly root?: string;
   readonly registryBodyIds?: ReadonlySet<string>;
   readonly wiring?: readonly BodySourceWiring[];
-  readonly freshness?: (input: { recordClass: MeetingFactClass; subjectId: string; lastSuccessfulAcquisitionAt: string | null }) => Promise<FactFreshnessReading>;
+  readonly freshness?: (input: { recordClass: MeetingFactClass; subjectId: string; meetingSource: string; lastSuccessfulAcquisitionAt: string | null }) => Promise<FactFreshnessReading>;
 }
 
 /** One completed extraction chain, bridged. */
@@ -404,7 +397,12 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
       const agreeingAt = [artifact.recordedAt, ...item.confirmations.filter((c) => c.source !== null && factAgreementIn(fact, c.source!).sameFact).map((c) => c.at)];
       const lastSuccess = agreeingAt.sort().at(-1) ?? null;
       const readingKey = `${fact.recordClass}|${fact.body.bodyId}`;
-      const reading = await freshness({ recordClass: fact.recordClass, subjectId: fact.body.bodyId, lastSuccessfulAcquisitionAt: lastSuccess });
+      const reading = await freshness({
+        recordClass: fact.recordClass,
+        subjectId: fact.body.bodyId,
+        meetingSource: fact.source.sourceId,
+        lastSuccessfulAcquisitionAt: lastSuccess,
+      });
       if (!readingKeys.has(readingKey)) { readingKeys.add(readingKey); readings.push(reading); }
       const burdens: ApprovalBurden[] = [
         { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verified.checks.length} checks PASS on ${verified.recordId}` : `${failedChecks.join(", ")} not PASS on ${verified.recordId}` },

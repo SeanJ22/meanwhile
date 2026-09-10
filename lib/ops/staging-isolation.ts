@@ -447,15 +447,13 @@ export function evaluateIsolation(input: {
 /* ----------------------------------------------------- record-path safety */
 
 /**
- * Would writing here overwrite the production integrity record?
+ * Would writing here overwrite the retired historical production record?
  *
  * The staging observer must be STRUCTURALLY incapable of writing
- * `data/ops/production-integrity.json`: that file is what
- * `scripts/release-freeze-gate.mts` reads to decide whether the next
- * production-changing release may ship, so a staging reading landing in it
- * would be a fact about the branch-deploy host deciding what production is
- * allowed to do — a green one blessing a release, or a red one freezing the
- * repository over a host no reader visits.
+ * `data/ops/production-integrity.json`. Release certification now reads the
+ * canonical control-plane log, never this file. A staging reading landing in
+ * the retired production artifact would still erase historical provenance and
+ * make evidence about the branch-deploy host look like a production reading.
  *
  * **Compared case-INSENSITIVELY, and that is not sloppiness.** On Windows two
  * paths differing only in case are ONE FILE, so a case-sensitive comparison

@@ -9,14 +9,9 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
 import { test } from "node:test";
 
 import { FAILURE_CLASSES, diagnose } from "../lib/ops/failure-classes.ts";
-import { classifyRejection } from "../lib/ops/push-rejection.ts";
-
-const ROOT = join(import.meta.dirname, "..");
 
 /** Captured from job-watch run 32989362288, 2026-08-26 16:37 UTC, verbatim. */
 const GH013 = `
@@ -42,41 +37,6 @@ const TRACKER_DISAGREEMENT = `
 `;
 
 /* -------------------------------------------------------------------------- */
-/* THE REJECTION CLASSIFIER                                                    */
-/* -------------------------------------------------------------------------- */
-
-test("a ruleset refusal is POLICY and is NOT retried", () => {
-  const v = classifyRejection(GH013);
-  assert.equal(v.kind, "POLICY", "GH013 from run 32989362288 is a decision on the server");
-  assert.equal(v.retryable, false, "attempts 2 through 5 of that run were guaranteed to fail identically");
-  assert.match(v.reason, /deploy-key path|Deploy keys/i, "and the remedy names the actual cause");
-});
-
-test("a losing race IS retried, because rebasing changes the input", () => {
-  const v = classifyRejection(
-    " ! [rejected]        HEAD -> main (non-fast-forward)\nhint: Updates were rejected because the tip of your current branch is behind",
-  );
-  assert.equal(v.kind, "RACE");
-  assert.equal(v.retryable, true);
-});
-
-test("an unrecognised rejection is retried and says it is unrecognised", () => {
-  const v = classifyRejection("error: RPC failed; curl 92 HTTP/2 stream 5 was not closed cleanly");
-  assert.equal(v.kind, "UNKNOWN");
-  assert.equal(
-    v.retryable,
-    true,
-    "treating an unrecognised transient as permanent would turn a recoverable run red; the other direction costs seconds",
-  );
-});
-
-test("a credential refusal is POLICY — every retry presents the same credential", () => {
-  const v = classifyRejection("git@github.com: Permission denied (publickey).\nfatal: Could not read from remote repository.");
-  assert.equal(v.kind, "POLICY");
-  assert.equal(v.retryable, false);
-});
-
-/* -------------------------------------------------------------------------- */
 /* THE DIAGNOSER                                                               */
 /* -------------------------------------------------------------------------- */
 
@@ -87,7 +47,7 @@ test("the diagnoser names the ruleset refusal from the real log", () => {
     d.classes.some((c) => c.id === "push-refused-by-ruleset"),
     "the GH013 class is recognised",
   );
-  assert.match(d.message, /Deploy keys/, "and the remedy is in plain words, not 'see the logs'");
+  assert.match(d.message, /normal pull-request/, "and the remedy preserves the software-only boundary");
 });
 
 test("the diagnoser reports EVERY matching class, not the first (RULING 164)", () => {
@@ -107,7 +67,7 @@ test("the diagnoser recognises the store-and-views disagreement it was NOT deriv
   const d = diagnose(TRACKER_DISAGREEMENT);
   assert.equal(d.verdict, "KNOWN");
   assert.ok(d.classes.some((c) => c.id === "tracker-store-and-views-disagree"));
-  assert.match(d.message, /tracker:views/, "and it names the command that fixes it");
+  assert.match(d.message, /ordinary software pull request/, "and it cannot restore a direct writer");
 });
 
 test("an unrecognised failure says so LOUDLY and shows what it saw", () => {
@@ -128,27 +88,4 @@ test("every failure class carries at least one shape and a remedy that is not a 
       `${c.id}'s remedy sends the reader back to the logs, which is where they already are`,
     );
   }
-});
-
-/* -------------------------------------------------------------------------- */
-/* THE STEP IS WIRED INTO EVERY WORKFLOW THAT CAN FAIL                         */
-/* -------------------------------------------------------------------------- */
-
-test("every scheduled pusher ends with the diagnosing step", () => {
-  const dir = join(ROOT, ".github/workflows");
-  const files = readdirSync(dir).filter((f) => {
-    if (!f.endsWith(".yml") || f === "build-check.yml") return false;
-    const body = readFileSync(join(dir, f), "utf8")
-      .split(/\r?\n/)
-      .filter((line) => !/^\s*#/.test(line))
-      .join("\n");
-    return /node\s+scripts\/push-main\.mjs/.test(body);
-  });
-  assert.equal(files.length, 7, `expected the seven remaining pushers, saw ${files.length}`);
-  const missing = files.filter((f) => !readFileSync(join(dir, f), "utf8").includes("corepack pnpm diagnose"));
-  assert.deepEqual(
-    missing,
-    [],
-    "a workflow with no diagnosing step dies with `Process completed with exit code 1` and nothing else",
-  );
 });

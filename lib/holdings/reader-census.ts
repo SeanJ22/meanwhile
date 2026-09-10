@@ -17,6 +17,7 @@ import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type
 import { photoMayRender } from "../photos/review.ts";
 import { type StateMoneyRecord } from "../funding/state-money.ts";
 import { currentExtraction, type CandidateDocument } from "../candidates/corpus.ts";
+import { readOfficeholderStatementsProjection } from "../corpus/data-plane.ts";
 import { projectAutonomousActivity, type AutonomousActivitySnapshot, type AutonomousObligationActivity } from "../control-plane/workers/activity.ts";
 import { localFinanceEvidenceFor } from "../ask/local-finance.ts";
 import { checkReaderTraces } from "./reader-trace.ts";
@@ -217,7 +218,8 @@ interface RawRecord { value: ObjectRow; pointer: string; unit: string; identityK
 
 /** The canonical manifest inventories vaulted image bytes outside datasets. */
 function readerDatasets(context: ManifestContext): Dataset[] {
-  const officialPhotos = object(context.datasets.find((dataset) => dataset.path === "lib/registry/official-photos.json")?.value).photos as ObjectRow[] ?? [];
+  const officialPhotos = (object(context.datasets.find((dataset) => dataset.path === "lib/registry/official-photos.json")?.value).photos as ObjectRow[] ?? [])
+    .filter((row) => !string(row.officeholderId).startsWith("plural:"));
   const candidateCards = object(object(context.datasets.find((dataset) => dataset.path === "data/ballot/candidate-cards-2026.json")?.value).cards);
   const portraitAssets = context.assetObjects.filter((asset) => /^public\/(candidates|officials)\//.test(asset.originalPath ?? "")).map((asset): Dataset => {
     const path = asset.originalPath!;
@@ -704,7 +706,7 @@ const routineCivicDataReaderSources = new Map<string, ReadonlySet<string>>([
   ["lib/db/schema.ts", new Set(["federal-finance", "registry", "votes"])],
   ["lib/db/write-guard.ts", new Set(["federal-finance", "registry", "votes"])],
   ["lib/funding/snapshot.ts", new Set(["federal-finance"])],
-  ["lib/officials/directory-source.ts", new Set(["congress"])],
+  ["lib/officials/federal-directory-read-model.ts", new Set(["congress"])],
   ["lib/registry/representation.ts", new Set(["congress", "registry"])],
   ["lib/registry/server.ts", new Set(["congress", "registry"])],
   ["lib/sources/legiscan/snapshot.ts", new Set(["votes"])],
@@ -730,7 +732,6 @@ export function readerRowStructuralSha256(row: CensusRow): string {
 }
 function readerSourceImpact(path: string): { acceptance: string; reason: string } | null {
   if (routineCivicDataReaderSources.has(path)) return { acceptance: "LM-F10", reason: "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers." };
-  if (path === "lib/funding/official-candidacies.json") return { acceptance: "LM-F4", reason: "Controlled official/candidacy state-money bridge." };
   if (path.startsWith("data/fec/")) return { acceptance: "LM-F2/LM-F5", reason: "Canonical federal-finance holding." };
   if (/^data\/states\/nj\/ballot\//.test(path)) return { acceptance: "LM-F2/LM-F5", reason: "Canonical NJ ballot/contact holding." };
   if (/^(?:data\/meetings-snapshot\.json|app\/api\/(?:agenda|meetings|ask\/(?:agenda|grounded))\/route\.ts|components\/(?:map|shell)\/|lib\/(?:ask\/(?:answer|evidence|meeting-knowledge|synthesize)|map\/marker-pool|meetings\/|state\/(?:data\.tsx|defaults\.ts|types\.ts)))/.test(path)) {
@@ -741,7 +742,6 @@ function readerSourceImpact(path: string): { acceptance: string; reason: string 
 }
 function readerSourceInvalidatesFamily(path: string, family: string): boolean {
   if (routineCivicDataReaderSources.has(path)) return routineCivicDataReaderSources.get(path)!.has(family);
-  if (path === "lib/funding/official-candidacies.json") return family === "state-money";
   if (path.startsWith("data/fec/")) return family === "federal-finance";
   if (/^data\/states\/nj\/ballot\//.test(path)) return family === "ballot";
   if (/^(?:data\/meetings-snapshot\.json|app\/api\/(?:agenda|meetings|ask\/(?:agenda|grounded))\/route\.ts|components\/(?:map|shell)\/|lib\/(?:ask\/(?:answer|evidence|meeting-knowledge|synthesize)|map\/marker-pool|meetings\/|state\/(?:data\.tsx|defaults\.ts|types\.ts)))/.test(path)) {
@@ -1246,14 +1246,22 @@ export function applyReaderApplicability(census: ReaderCensus, projection: Reade
 export async function projectCanonicalReaderRecords(root: string, census: ReaderCensus): Promise<ReaderProjectionReport> {
   const context = loadManifestContext(root);
   const sourceRows = new Map<string, { dataset: Dataset; raw: RawRecord }>(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}`, { dataset, raw }] as const)));
-  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, stateVotes, prl, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries] = await Promise.all([
+  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, stateVotes, prl, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries, keyProjection] = await Promise.all([
     import("../registry/server.ts"), import("../ballot/registry.ts"), import("../meetings/snapshot.ts"), import("../corpus/unified.ts"),
     import("../funding/state-snapshot.ts"), import("../funding/snapshot.ts"), import("../registry/body-rosters.ts"), import("../registry/body-membership.ts"),
     import("../area/facts.ts"), import("../ballot/election-dates.ts"), import("../ballot/polling-place-links.ts"), import("../ballot/registration-links.ts"),
     import("../ballot/measure-summary.ts"), import("../meetings/notice-summary.ts"), import("../meetings/minutes-summaries.ts"), import("../meetings/venue-cache.ts"),
     import("../registry/comment-access.ts"), import("../identity/az-2026.ts"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"),
     import("../ballot/general-lineup.ts"), import("../ballot/analyses.ts"), import("../votes/snapshot.ts"), import("../sources/legiscan/snapshot.ts"),
-    import("../sources/prl/snapshot.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"),
+    import("../sources/prl/snapshot.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"), import("../votes/key-votes-projection.ts"),
+  ]);
+  await Promise.all([
+    federal.refreshFundingFromPromoted(),
+    votes.readFederalRollCallsProjection(),
+    keyProjection.readFederalKeyVotesProjection(),
+    votingSites.readVotingSitesProjection(),
+    prl.readPrlProjection(),
+    readOfficeholderStatementsProjection(),
   ]);
   const sets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
   const [{ readerContestScope }, { ballotRecordsFor }] = await Promise.all([import("../ballot/reader-scope.ts"), import("../ask/ballot-inventory.ts")]);
@@ -1304,8 +1312,15 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const currentMeetingWindow = (meeting: { startsAt: string }) => Date.parse(meeting.startsAt) >= asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000 && Date.parse(meeting.startsAt) <= asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
   const corpusById = new Map(corpus.unifiedCorpus().snapshots.map((row) => [row.id, row]));
   const federalVotes = votes.getVotesSnapshot();
-  const legislativeVotes = stateVotes.getStateVotesSnapshot();
-  const allVoteRecords = [...federalVotes.votes, ...federalVotes.positions, ...legislativeVotes.rollCalls, ...legislativeVotes.positions];
+  const legislativeVotes = stateVotes.OFFICIAL_STATE_VOTE_SCOPES.map((scope) =>
+    stateVotes.getStateVotesSnapshot(scope)
+  );
+  const allVoteRecords = [
+    ...federalVotes.votes,
+    ...federalVotes.positions,
+    ...legislativeVotes.flatMap((snapshot) => snapshot.rollCalls),
+    ...legislativeVotes.flatMap((snapshot) => snapshot.positions),
+  ];
   const voteIdentity = (row: ObjectRow) => [row.id, row.officeholderId, row.voteId ?? row.rollCallId].filter(Boolean).join("|");
   const voteRecords = new Map(allVoteRecords.map((row) => [voteIdentity(object(row)), row]));
   const voting = votingSites.loadVotingSites();
@@ -1509,6 +1524,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
       }
       case "nh-legislative-members": {
         const holders = await import("../ballot/seat-holders.ts");
+        if (holders.nhSeatHolderReadState().kind === "STORE_UNREACHABLE") await holders.refreshNhSeatHolders();
         const electedStatus = string(raw.electedStatus) as Parameters<typeof holders.sits>[0];
         const title = raw.chamber === "S" ? `State Senator, District ${string(raw.district)}` : `State Representative, ${string(raw.county)} County District ${string(raw.district)}`;
         const selected = holders.nhLegislativeHolders(title);
@@ -1535,7 +1551,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
       if(subjectOfficialId&&!currentBallotHolderIds.has(subjectOfficialId)) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current CandidateDetails canonical recordHolder IDs",reason:`This official-specific record belongs to ${subjectOfficialId}, which is not a recordHolder for a current ballot card. It remains held for the declared official/API/Ask question; no current candidate or identity pairing is manufactured.`};
       if(subjectOfficialId&&["prl","congress"].includes(record.family)&&!scopedOfficialIds.has(subjectOfficialId)) surfaceDispositions.map={status:"IDENTITY_UNRESOLVED",selector:"canonical scoped division membership / exact official ID",reason:`The source profile identifies ${subjectOfficialId}, but no verified geographic division relationship exposes that official on the current map. Exact identity is preserved; it cannot be attached to another division or person.`};
       if(record.family==="votes"&&["votes","rollCalls"].includes(record.unit)) {
-        const id=string(raw.id);const positions=[...federalVotes.positions,...legislativeVotes.positions].filter((position)=>string(object(position).voteId??object(position).rollCallId)===id);
+        const id=string(raw.id);const positions=[...federalVotes.positions,...legislativeVotes.flatMap((snapshot)=>snapshot.positions)].filter((position)=>string(object(position).voteId??object(position).rollCallId)===id);
         if(!positions.some((position)=>currentBallotHolderIds.has(position.officeholderId))) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current CandidateDetails recordHolder IDs → canonical recorded positions",reason:`No current ballot card's exact official has a held position on vote ${id}. The vote remains on its full votes/Ask endpoints and applicable official records; it cannot be attributed to an unrelated candidate.`};
       }
       if(["state-officeholders","statewide-executives","campaign-sites"].includes(record.family)||record.family==="registry"&&record.unit==="officeholders") {
@@ -2247,7 +2263,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
     } else if (record.family === "congress" && record.unit === "byMember") {
       const holderId = record.canonicalIdentity.find((id) => /^congress:[A-Z]\d{6}$/.test(id));
       if (!holderId) throw new Error(`Directory lacks canonical BioGUIDE identity: ${record.auditId}`);
-      const response = directoryRoute.GET(new Request(`http://localhost/api/directory?member=${encodeURIComponent(holderId)}`));
+      const response = await directoryRoute.GET(new Request(`http://localhost/api/directory?member=${encodeURIComponent(holderId)}`));
       if (response.status !== 200) throw new Error(`Directory actual route failed ${holderId}`);
       const directory = await response.json() as import("../../hooks/use-member-directory.ts").MemberDirectory;
       const committeeRows = buildCommitteeTree(directory.committees).flatMap((node) => [node, ...node.children]);
@@ -2284,14 +2300,14 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const url = sourceRows.get(record.auditId)?.identityKey ?? "";
       const selected = billSummaries.summaryForBill(url);
       if (!selected) throw new Error(`Held bill summary unavailable ${record.auditId}`);
-      const markup = renderToStaticMarkup(createElement(BillPlainSummary, { billUrl: url }));
+      const markup = renderToStaticMarkup(createElement(BillPlainSummary, { billUrl: url, summary: selected, pending: false }));
       add(record, "components/map/popup/official-popup.tsx", "summaryForBill → BillPlainSummary", selected, [url], markup, [selected.summary], [], { summaries: { expected: 1, actual: [...markup.matchAll(/<details\b/g)].length } });
     } else if (record.family === "votes" && ["votes", "positions", "rollCalls"].includes(record.unit)) {
       const selected = raw.officeholderId ? voteByMember.get(`${raw.officeholderId}#${raw.voteId ?? raw.rollCallId}`) : voteById.get(string(raw.id));
       if (!selected || raw.officeholderId && selected.vote.position !== raw.position) throw new Error(`Actual member-vote payload lost or changed ${record.auditId}`);
       const markup = renderToStaticMarkup(createElement(RecentVoteRecords, { votes: [selected.vote], attribution: selected.attribution, failed: false, reactionContext: null }));
       add(record, "components/map/popup/official-popup.tsx", "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)", selected, raw.officeholderId ? [selected.member, selected.vote.id] : [selected.vote.id], markup,
-        [selected.vote.title, selected.vote.question, selected.vote.result, ({ YES: "Voted yes", NO: "Voted no", PRESENT: "Voted present", NOT_VOTING: "Did not vote" })[selected.vote.position], selected.vote.rollCallUrl, selected.vote.billUrl, selected.attribution?.text, selected.attribution?.url, selected.attribution?.licenceUrl].filter((value): value is string => Boolean(value)), [], { recordedVotes: { expected: 1, actual: occurrences(markup, "data-recent-vote-id") } });
+        [selected.vote.title, selected.vote.question, selected.vote.result, ({ YES: "Voted yes", NO: "Voted no", ABSTAIN: "Abstained", PRESENT: "Voted present", NOT_VOTING: "Did not vote", UNKNOWN: "Publisher position unclassified" })[selected.vote.position], selected.vote.rollCallUrl, selected.vote.billUrl, selected.attribution?.text, selected.attribution?.url, selected.attribution?.licenceUrl].filter((value): value is string => Boolean(value)), [], { recordedVotes: { expected: 1, actual: occurrences(markup, "data-recent-vote-id") } });
     } else if (record.family === "ballot-navigation" && record.holdingPath.includes("polling-place")) {
       const selected = polling.pollingPlaceLinkFor(string(raw.state));
       if (!selected) throw new Error(`Held polling lookup unavailable ${record.auditId}`);

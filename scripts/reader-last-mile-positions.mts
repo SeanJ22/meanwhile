@@ -7,7 +7,7 @@ import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, searchTerms, type PositionAnswer } from "../lib/corpus/positions.ts";
 import { reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { ROSTER_FILES } from "../lib/coverage/artifacts.ts";
+import { PRODUCTION_OFFICEHOLDER_ROSTER_FILES } from "../lib/officials/roster-authority.ts";
 import { rosterPath } from "../lib/holdings/runtime-paths.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
@@ -83,7 +83,7 @@ try {
     console.log(JSON.stringify({ zip, proved: proofs.length, remaining: pending.size }));
   }
 } finally { await context.close(); await browser.close(); }
-const sourcePaths = ["data/candidates/corpus-2026.json", "data/corpus/statements.json", "data/states/az/identity/az-2026-candidate-registry.json", "data/states/az/identity/az-2026-certified-lineup-reconciliation.json", "lib/funding/official-candidacies.json", "lib/funding/campaign-money.ts", "lib/identity/reader-person.ts", "lib/identity/az-2026.ts", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "app/api/positions/[subject]/[topic]/route.ts", "components/officials/positions-section.tsx", "components/ballot/candidate-battlecard.tsx", ...ROSTER_FILES.map(rosterPath)];
+const sourcePaths = ["data/candidates/corpus-2026.json", "data/corpus/statements.json", "data/states/az/identity/az-2026-candidate-registry.json", "data/states/az/identity/az-2026-certified-lineup-reconciliation.json", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", "lib/identity/reader-person.ts", "lib/identity/az-2026.ts", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "app/api/positions/[subject]/[topic]/route.ts", "components/officials/positions-section.tsx", "components/ballot/candidate-battlecard.tsx", ...PRODUCTION_OFFICEHOLDER_ROSTER_FILES.map(rosterPath)];
 const sourceHashes = Object.fromEntries(sourcePaths.map(path => [path, createHash("sha256").update(readFileSync(path)).digest("hex")]));
 const output = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes, execution: "Actual candidate battlecard gestures, typed source-grounded query, real positions HTTP route, every returned quotation/citation/count inspected in rendered DOM.", expectedCount: inventory.records.length, proofs, dispositions, unresolved: [...pending.values()] };
 writeFileSync("docs/evidence/reader-last-mile-positions.json", JSON.stringify(output, null, 2) + "\n");

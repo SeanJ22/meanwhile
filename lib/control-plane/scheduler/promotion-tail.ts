@@ -24,7 +24,7 @@
  * ```
  *
  * Everything above the line runs here, unattended, on every cycle. Nothing
- * below it does. **This module writes only under `data/control-plane/staging/`
+ * below it does. **This module writes only under `.runtime/control-plane/staging/`
  * and can write nowhere else** — it never touches `data/funding/`,
  * `data/meetings-snapshot.json`, `data/ballot/` or any other reader-content
  * path, and `tests/obligation-registry.test.ts` asserts that over the module's
@@ -34,7 +34,7 @@
  *
  * A later session must be able to point at it. So each staged record set is a
  * real JSON file named for its obligation, and
- * `data/control-plane/staging/manifest.json` lists every entry with its state,
+ * `.runtime/control-plane/staging/manifest.json` lists every entry with its state,
  * its date, the obligation it answers, the route it came from, its next due
  * time and its path. An in-memory "staged" would prove nothing tomorrow.
  *
@@ -62,7 +62,7 @@ import { join } from "node:path";
 import type { RouteDescriptor } from "./registry.ts";
 
 /** The one directory this module may write to. Enforced, not just documented. */
-export const STAGING_DIR = ["data", "control-plane", "staging"] as const;
+export const STAGING_DIR = [".runtime", "control-plane", "staging"] as const;
 export const STAGING_MANIFEST = "manifest.json";
 
 export const STAGED_STATES = [

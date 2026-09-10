@@ -20,11 +20,23 @@
  *
  *   pnpm verify:migration --tag=0016_known_cerebro [--target=production]
  */
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";
+
+import {
+  declaredMigrationCatalog,
+  declaredMigrationCatalogCount,
+} from "../lib/db/migration-catalog.ts";
+import {
+  appliedMigrationReceiptCensus,
+  hasExactAppliedMigrationReceipt,
+  readAppliedMigrationWhen,
+} from "../lib/db/applied-migrations.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
@@ -47,52 +59,52 @@ if (!url) {
 }
 
 const sqlPath = join("lib", "db", "migrations", `${tag}.sql`);
-let migration: string;
+let migrationBytes: Buffer;
 try {
-  migration = readFileSync(sqlPath, "utf8");
+  migrationBytes = readFileSync(sqlPath);
 } catch {
   console.error(`verify:migration — no committed SQL at ${sqlPath}`);
   process.exit(2);
 }
+const migration = migrationBytes.toString("utf8");
+const migrationSha256 = createHash("sha256").update(migrationBytes).digest("hex");
 
 const sql = neon(url);
+const declared = declaredMigrationCatalog(migration);
+const declaredObjectCount = declaredMigrationCatalogCount(declared);
 
-/** Every table the committed SQL creates, with the columns it declares. */
-const declaredTables = new Map<string, string[]>();
-for (const block of migration.split("--> statement-breakpoint")) {
-  const created = /CREATE TABLE (?:IF NOT EXISTS )?"([^"]+)" \(([\s\S]*?)\n\);/.exec(block);
-  if (!created) continue;
-  const columns = created[2]
-    .split("\n")
-    .map((line) => /^\s*"([^"]+)"/.exec(line)?.[1])
-    .filter((c): c is string => Boolean(c));
-  declaredTables.set(created[1], columns);
+const journal = JSON.parse(
+  readFileSync(join(process.cwd(), "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
+) as { readonly entries?: readonly { readonly tag?: unknown; readonly when?: unknown }[] };
+const journalEntries = (journal.entries ?? []).filter((entry) => entry.tag === tag);
+if (journalEntries.length !== 1 || typeof journalEntries[0]?.when !== "number" || !Number.isFinite(journalEntries[0].when)) {
+  console.error(`verify:migration — ${tag} does not have one exact committed journal entry`);
+  process.exit(2);
 }
-
-/** Every index the committed SQL creates by name. */
-const declaredIndexes = [...migration.matchAll(/CREATE (?:UNIQUE )?INDEX "([^"]+)"/g)].map(
-  (m) => m[1],
-);
+const journalWhen = Number(journalEntries[0]!.when);
 
 console.log(`verify:migration  tag=${tag}  target=${target}  via ${envName}`);
 console.log(
-  `  committed SQL declares ${declaredTables.size} table(s) and ${declaredIndexes.length} index(es)`,
+  `  committed SQL declares ${declared.tables.size} table(s), ${declared.indexes.length} index(es), ` +
+    `${declared.constraints.length} constraint(s), ${declared.functions.length} function(s), and ` +
+    `${declared.triggers.length} trigger(s)`,
 );
 
 // RULING 100: a partial that reconciles is still wrong. A migration whose SQL
 // this parser read as ZERO tables would otherwise sail through with nothing to
 // compare, and report success about a comparison it never made.
-if (declaredTables.size === 0 && declaredIndexes.length === 0) {
+if (declaredObjectCount === 0) {
   console.error(
     `  NOT ASSERTABLE — parsed no CREATE TABLE and no CREATE INDEX out of ${sqlPath}.` +
       " That is a fact about this reader, not about the migration.",
   );
   process.exit(1);
 }
+console.log(`  ${floorLine(floored("declared migration objects parsed", sqlPath, declaredObjectCount, declaredObjectCount))}`);
 
 let mismatched = 0;
 
-for (const [table, columns] of declaredTables) {
+for (const [table, columns] of declared.tables) {
   const live = (await sql`
     select column_name from information_schema.columns
     where table_schema = 'public' and table_name = ${table}
@@ -118,7 +130,7 @@ for (const [table, columns] of declaredTables) {
   );
 }
 
-for (const index of declaredIndexes) {
+for (const index of declared.indexes) {
   const found = (await sql`
     select indexname from pg_indexes where schemaname = 'public' and indexname = ${index}
   `) as { indexname: string }[];
@@ -130,9 +142,75 @@ for (const index of declaredIndexes) {
   }
 }
 
+for (const constraint of declared.constraints) {
+  const found = (await sql`
+    select constraint_name
+      from information_schema.table_constraints
+     where constraint_schema = 'public'
+       and table_name = ${constraint.table}
+       and constraint_name = ${constraint.name}
+  `) as { constraint_name: string }[];
+  if (found.length !== 1) {
+    mismatched += 1;
+    console.log(`  ABSENT  constraint ${constraint.table}.${constraint.name}`);
+  } else {
+    console.log(`  MATCH   constraint ${constraint.table}.${constraint.name}`);
+  }
+}
+
+for (const declaredFunction of declared.functions) {
+  const found = (await sql`
+    select p.proname
+      from pg_catalog.pg_proc p
+      join pg_catalog.pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.proname = ${declaredFunction}
+  `) as { proname: string }[];
+  if (found.length !== 1) {
+    mismatched += 1;
+    console.log(`  ${found.length === 0 ? "ABSENT" : "DIFFER"} function ${declaredFunction} — live overloads=${found.length}`);
+  } else {
+    console.log(`  MATCH   function ${declaredFunction}`);
+  }
+}
+
+for (const trigger of declared.triggers) {
+  const found = (await sql`
+    select t.tgname, t.tgconstraint <> 0 as is_constraint
+      from pg_catalog.pg_trigger t
+      join pg_catalog.pg_class c on c.oid = t.tgrelid
+      join pg_catalog.pg_namespace n on n.oid = c.relnamespace
+     where n.nspname = 'public'
+       and c.relname = ${trigger.table}
+       and t.tgname = ${trigger.name}
+       and not t.tgisinternal
+  `) as { tgname: string; is_constraint: boolean }[];
+  const agrees = found.length === 1 && Boolean(found[0]!.is_constraint) === trigger.constraint;
+  if (!agrees) {
+    mismatched += 1;
+    console.log(`  ${found.length === 0 ? "ABSENT" : "DIFFER"} trigger ${trigger.table}.${trigger.name}`);
+  } else {
+    console.log(`  MATCH   trigger ${trigger.table}.${trigger.name}`);
+  }
+}
+
+const applied = await readAppliedMigrationWhen(url);
+const appliedJournal = appliedMigrationReceiptCensus(applied, journalWhen);
+if (!hasExactAppliedMigrationReceipt(applied, journalWhen, migrationSha256)) {
+  mismatched += 1;
+  const readFailure = applied.ok
+    ? `live physical rows=${appliedJournal?.rowCount ?? 0}, usable hashes=${appliedJournal?.hashes.length ?? 0}`
+    : `read refused=${applied.why.replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[REDACTED_DATABASE_URL]")}`;
+  console.log(
+    `  DIFFER journal ${tag} — expected created_at=${journalWhen}, sha256=${migrationSha256}; ` +
+      readFailure,
+  );
+} else {
+  console.log(`  MATCH   journal ${tag} created_at=${journalWhen} sha256=${migrationSha256}`);
+}
+
 // The smallest read that proves each table ANSWERS rather than merely existing.
 console.log("  — smallest read, one count per table —");
-for (const table of declaredTables.keys()) {
+for (const table of declared.tables.keys()) {
   // The name came out of a committed .sql file, never from a request — but a
   // table name cannot be a bind parameter, so it is checked against the
   // identifier shape before it is interpolated rather than trusted for its
@@ -153,6 +231,8 @@ if (mismatched > 0) {
 }
 
 console.log(
-  `\nOK — ${target} matches ${sqlPath} on every declared column and index` +
-    ` (${declaredTables.size} table(s), ${declaredIndexes.length} index(es)).`,
+  `\nOK — ${target} matches ${sqlPath} on its exact journal hash and every declared catalog object` +
+    ` (${declared.tables.size} table(s), ${declared.indexes.length} index(es), ` +
+    `${declared.constraints.length} constraint(s), ${declared.functions.length} function(s), ` +
+    `${declared.triggers.length} trigger(s)).`,
 );

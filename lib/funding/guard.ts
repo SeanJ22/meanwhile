@@ -3,14 +3,13 @@ import type { FundingSnapshot } from "./types.ts";
 /**
  * The thin-snapshot guard (session brief 2, wall clock 2026-08-14).
  *
- * The 0819 session caught an FEC 504 leaving Kelly at 5 contributor rows
- * BY EYE and reran by hand. The weekly refresh
- * (.github/workflows/refresh-fec-snapshot.yml) now runs with nobody
- * watching, so the eyeball becomes a mechanism: before writing, the fetch
- * script compares the new snapshot against the last committed one, and a
- * shrink FAILS the run — the old snapshot stays, the workflow log says
- * why. Failing loudly and shipping nothing is the designed outcome; a
- * thinner book must never publish silently.
+ * The 0819 session caught an FEC 504 leaving Kelly at 5 contributor rows by
+ * eye. The Git-writing weekly refresh that existed then is retired. This pure
+ * comparator remains as immutable regression evidence for the thin-response
+ * class; the permanent `fec-funding` contract acquires and validates a source
+ * candidate in the standing data plane, durably refuses a shrink, and leaves
+ * its prior GOOD version live. No Git commit or software workflow reports the
+ * source outcome.
  *
  * What counts as a shrink:
  *  - the candidate count falling below the prior snapshot's;
@@ -22,15 +21,14 @@ import type { FundingSnapshot } from "./types.ts";
  *  - a retained candidate's contributor rows falling below the prior
  *    count — the Kelly-504 shape verbatim.
  *
- * A LEGITIMATE shrink (a committee amendment, a candidate withdrawal) is
- * overridden by a human rerunning with `--allow-shrink`, recorded in the
- * tracker. The guard never auto-approves: it cannot tell an amendment
- * from an outage, and guessing in the generous direction is how a thin
- * book ships.
+ * The comparator never auto-approves a legitimate shrink: it cannot tell a
+ * committee amendment from an outage, and guessing in the generous direction
+ * is how a thin book ships. Any acceptance belongs to the canonical
+ * source-scoped promotion evidence, never a direct CLI bypass.
  */
 
 export interface ShrinkRegression {
-  /** Which comparison failed, for the workflow log. */
+  /** Which source-scoped comparison failed, for the durable outcome receipt. */
   kind:
     | "CANDIDATE_COUNT"
     | "CANDIDATE_MISSING"
@@ -91,7 +89,8 @@ export function findShrinkRegressions(
   // tracked candidate THIS run. That set churns as new contributions arrive
   // and the top-N list shifts, and a committee dropping OUT of it is not a
   // data outage — it simply is no longer among anyone's largest donors this
-  // week. Treating that churn as a shrink red-failed every daily refresh
+  // week. Treating that churn as a shrink once falsely refused every aggregate
+  // refresh
   // (C00422774, the ADVANCING DEMOCRACY AND MOBILIZATION PAC, was the case
   // that surfaced it: absent from the run's derived set, never fetched, never
   // "stopped answering").

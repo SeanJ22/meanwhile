@@ -109,6 +109,25 @@ export function assertNoForbiddenColumns(columns: string[]): void {
   }
 }
 
+/**
+ * Derive the acquisition denominator from PRL's own national file.
+ *
+ * Production no longer filters this source through a tracked congressional
+ * roster. Exact Bioguide ids are the source's stable identities; malformed
+ * non-empty ids remain outside this list and therefore make the bounded
+ * candidate fail its row-count reconciliation rather than disappearing.
+ */
+export function sourceBioguides(csv: string): string[] {
+  const rows = parseCsv(csv).filter((row) => row.length > 1);
+  const idColumn = rows[0]?.indexOf("bioguide_id") ?? -1;
+  if (idColumn < 0) throw new Error('PRL: the file has no column "bioguide_id"');
+  return [...new Set(
+    rows.slice(1)
+      .map((row) => row[idColumn]?.trim() ?? "")
+      .filter((id) => /^[A-Z]\d{6}$/.test(id)),
+  )].sort();
+}
+
 export interface NormalizeResult {
   profiles: PrlMemberProfile[];
   /** Every count this run must state (the no-silent-empty rule). */

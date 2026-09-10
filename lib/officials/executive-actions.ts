@@ -1,6 +1,18 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  civicDataReadNotInitialized,
+  mayUseTestFixture,
+  promotedVersionOrThrow,
+  readPromotedCivicData,
+  readPromotedOrBootstrap,
+  type CivicDataBootstrap,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
+
 /**
  * **WHAT AN OFFICEHOLDER HAS DONE, from the office's own publication.**
  * (AZ03, 2026-08-28.)
@@ -218,7 +230,77 @@ export interface ExecutiveActionStore {
   actions: ExecutiveAction[];
 }
 
-let cache: ExecutiveActionStore | null | undefined;
+let actionReadState: CivicDataReadResult<ExecutiveActionStore> = civicDataReadNotInitialized(
+  AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+  AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+  "The Arizona official-action pointer has not been read for this process.",
+);
+
+function actionTestSeed(): ExecutiveActionStore | null {
+  if (!mayUseTestFixture()) return null;
+  try {
+    return JSON.parse(
+      readFileSync(join(process.cwd(), "data", "states", "az", "officials", "az-governor-actions.json"), "utf8"),
+    ) as ExecutiveActionStore;
+  } catch {
+    return null;
+  }
+}
+
+function actionTestBootstrap(): CivicDataBootstrap<ExecutiveActionStore> {
+  const value = actionTestSeed();
+  if (!value) throw new Error("AZ_OFFICIAL_ACTION_TEST_SEED_MISSING");
+  const sourceThrough = value.actions.map((action) => action.collectedAt).sort().at(-1) ?? value.source.collectedAt;
+  return {
+    value,
+    sourceId: AZ_OFFICIAL_ACTIONS_CONTRACT.sourceId,
+    version: sourceThrough,
+    versionId: `test-seed:az-official-actions:${sourceThrough}`,
+    sourceThrough,
+    retrievedAt: /^\d{4}-\d{2}-\d{2}$/.test(sourceThrough) ? `${sourceThrough}T00:00:00.000Z` : sourceThrough,
+    detail: "Node test fixture selected only inside the explicit test process.",
+  };
+}
+
+function validateActionProjection(value: ExecutiveActionStore, version: string): void {
+  if (!Array.isArray(value.actions) || value.actions.length === 0) {
+    throw new Error(`Arizona official-action projection ${version} contains no action records.`);
+  }
+  if (new Set(value.actions.map((action) => action.id)).size !== value.actions.length) {
+    throw new Error(`Arizona official-action projection ${version} contains duplicate action ids.`);
+  }
+}
+
+/** Read the exact GOOD pointer. Production never opens the tracked first seed. */
+export async function readExecutiveActionsProjection(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<ExecutiveActionStore>> {
+  actionReadState = mayUseTestFixture()
+    ? await readPromotedOrBootstrap<ExecutiveActionStore>({
+        ...options,
+        recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+        scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+        bootstrap: actionTestBootstrap,
+        allowUnconfiguredBootstrap: true,
+      })
+    : await readPromotedCivicData<ExecutiveActionStore>(
+        AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+        AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+        options,
+      );
+  if (actionReadState.kind === "PROMOTED" || actionReadState.kind === "BOOTSTRAP") {
+    validateActionProjection(actionReadState.value, actionReadState.metadata.versionId ?? "unknown");
+  }
+  return actionReadState;
+}
+
+export async function refreshExecutiveActionsFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  return promotedVersionOrThrow(await readExecutiveActionsProjection(options));
+}
+
+export const executiveActionsReadState = (): CivicDataReadResult<ExecutiveActionStore> => actionReadState;
 
 /**
  * The committed store, or null.
@@ -231,20 +313,19 @@ let cache: ExecutiveActionStore | null | undefined;
  * we have recorded nothing, which is indistinguishable from honest missing data.
  */
 export function executiveActionStore(): ExecutiveActionStore | null {
-  if (cache !== undefined) return cache;
-  try {
-    cache = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "states", "az", "officials", "az-governor-actions.json"), "utf8"),
-    ) as ExecutiveActionStore;
-  } catch {
-    cache = null;
-  }
-  return cache;
+  if (actionReadState.kind === "PROMOTED" || actionReadState.kind === "BOOTSTRAP") return actionReadState.value;
+  return actionReadState.kind === "STORE_UNREACHABLE" && actionReadState.code === "READ_NOT_INITIALIZED"
+    ? actionTestSeed()
+    : null;
 }
 
 /** Test seam — the suite must never inherit another test's cached read. */
 export function resetExecutiveActionCache(): void {
-  cache = undefined;
+  actionReadState = civicDataReadNotInitialized(
+    AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+    AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+    "The Arizona official-action pointer has not been read for this process.",
+  );
 }
 
 export interface ActionWindow {

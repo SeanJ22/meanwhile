@@ -10,7 +10,7 @@
  */
 
 import { mkdirSync, readFileSync, renameSync, writeFileSync, existsSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import { runOcr, ocrEngineAvailable } from "../lib/extract/ocr.ts";
@@ -107,7 +107,11 @@ const ARGS = new Map(
   }),
 );
 
-const STATE_PATH = ARGS.get("state") ?? "data/states/az/hunt/azleg-actions-progress.json";
+const STATE_PATH = ARGS.get("state") ?? join(".scratch", "azleg-actions-progress.json");
+const STATE_REPO_PATH = relative(process.cwd(), resolve(STATE_PATH)).replaceAll("\\", "/");
+if (!STATE_REPO_PATH.startsWith("../") && /^(?:data|docs|app|lib|scripts|public|\.github)\//.test(STATE_REPO_PATH)) {
+  throw new Error(`AZLEG_RUNTIME_STATE_IN_TRACKED_TREE_FORBIDDEN:${STATE_REPO_PATH}`);
+}
 /** Where PDF bytes are cached so a re-run never re-asks the host for one. */
 const PDF_CACHE = ARGS.get("cache") ?? join(process.env.TEMP ?? ".", "wtp-azleg-pdfs");
 /** The host asks for 120 seconds between requests. It gets 120 seconds. */

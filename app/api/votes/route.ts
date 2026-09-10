@@ -1,18 +1,28 @@
 import type { VotesSnapshot } from "@/lib/votes/types";
-import { getVotesSnapshot } from "@/lib/votes/snapshot";
+import { getVotesSnapshot, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
 import { keyVotesForMember, type MemberKeyVotes } from "@/lib/votes/key-votes-reader";
 import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
 import { partyByOfficeholderId } from "@/lib/registry/server";
-import { getStateVotesSnapshot, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
+import {
+  getStateVotesSnapshot,
+  OFFICIAL_STATE_VOTE_SCOPES,
+  readOfficialStateVotesProjection,
+  type OfficialStateVoteScope,
+} from "@/lib/sources/legiscan/snapshot";
+import { officialStateVoteScopeForOfficeholderId } from "@/lib/state-rollcalls/authority";
+import type { StateVotesSnapshot } from "@/lib/sources/legiscan/types";
 import { stateRollAttribution } from "@/lib/sources/legiscan/types";
+import { summaryForBill, summaryPendingForBill } from "@/lib/votes/bill-summaries";
+import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
 
 /**
  * GET /api/votes?member=congress:C001133 — a federal member
- * GET /api/votes?member=plural:<uuid>    — a state legislator (D49)
+ * GET /api/votes?member=<official-source>:<person-id> — a state legislator
  *
- * A member's recent recorded votes, from the promoted projection or bundled
- * bootstrap LKG — never a live fetch against a publisher. Returns newest-first with
+ * A member's recent recorded votes, from proof-validated state or federal
+ * canonical projections — never a tracked runtime fallback or live fetch
+ * against a publisher. Returns newest-first with
  * the member's position attached, plus the snapshot's generatedAt so the
  * surface can say how fresh "recent" is.
  *
@@ -23,17 +33,149 @@ import { stateRollAttribution } from "@/lib/sources/legiscan/types";
 export const runtime = "nodejs";
 
 const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
-const STATE_ID = /^plural:[0-9a-f-]{36}$/i;
+const RETIRED_TEST_STATE_ID = /^plural:[0-9a-f-]{36}$/i;
+
+export interface FederalVoteSupportingReaders {
+  readonly parties: () => Promise<ReadonlyMap<string, string | null>>;
+  readonly keyVotes: (member: string) => Promise<MemberKeyVotes>;
+}
+
+export interface FederalVoteSupportingHoldings {
+  readonly parties: ReadonlyMap<string, string | null>;
+  readonly partyBreakdownHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
+  readonly curated: MemberKeyVotes;
+  readonly keyVotesHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
+}
+
+export interface HeldStateVoteScope {
+  readonly scope: OfficialStateVoteScope;
+  readonly snapshot: StateVotesSnapshot;
+  readonly versionId: string | null;
+  readonly authorityKind: "PROMOTED_OFFICIAL" | "RESEARCH_TEST_FIXTURE";
+}
+
+export interface StateVoteScopeReaders {
+  readonly read: (scope: OfficialStateVoteScope) => Promise<HeldStateVoteScope>;
+}
+
+export type StateVoteMemberHolding =
+  | {
+      readonly kind: "HELD";
+      readonly holding: HeldStateVoteScope;
+      readonly unavailableScopes: readonly OfficialStateVoteScope[];
+    }
+  | {
+      readonly kind: "HELD_NO_RECORD";
+      readonly generatedAt: string;
+      readonly scopesChecked: readonly OfficialStateVoteScope[];
+    }
+  | {
+      readonly kind: "HOLDING_UNAVAILABLE";
+      readonly reason: "SCOPE_UNAVAILABLE";
+      readonly unavailableScopes: readonly OfficialStateVoteScope[];
+      readonly matchedScopes: readonly OfficialStateVoteScope[];
+    };
+
+async function readCanonicalStateVoteScope(scope: OfficialStateVoteScope): Promise<HeldStateVoteScope> {
+  // The retained LegiScan bytes are a deterministic node:test fixture only.
+  // Production always opens the exact canonical pointer below.
+  if (mayUseTestFixture() && !process.env.DATABASE_URL) {
+    return {
+      scope,
+      snapshot: getStateVotesSnapshot(scope),
+      versionId: null,
+      authorityKind: "RESEARCH_TEST_FIXTURE",
+    };
+  }
+  const result = await readOfficialStateVotesProjection(scope);
+  if (result.kind !== "PROMOTED") {
+    throw new Error(result.detail);
+  }
+  return {
+    scope,
+    snapshot: result.value,
+    versionId: result.metadata.versionId,
+    authorityKind: "PROMOTED_OFFICIAL",
+  };
+}
+
+/**
+ * Read the one state authority encoded in the member's source-namespaced
+ * identifier. Identity and scope are fixed before the store opens, so an AZ
+ * request cannot wait on, be erased by, or be satisfied from NH/NJ.
+ */
+export async function settleStateVoteMemberHolding(
+  member: string,
+  scope: OfficialStateVoteScope,
+  readers: StateVoteScopeReaders = { read: readCanonicalStateVoteScope },
+): Promise<StateVoteMemberHolding> {
+  let holding: HeldStateVoteScope;
+  try {
+    holding = await readers.read(scope);
+  } catch {
+    return {
+      kind: "HOLDING_UNAVAILABLE",
+      reason: "SCOPE_UNAVAILABLE",
+      unavailableScopes: [scope],
+      matchedScopes: [],
+    };
+  }
+  if (holding.snapshot.positions.some((position) => position.officeholderId === member)) {
+    return { kind: "HELD", holding, unavailableScopes: [] };
+  }
+  return {
+    kind: "HELD_NO_RECORD",
+    generatedAt: holding.snapshot.generatedAt,
+    scopesChecked: [scope],
+  };
+}
+
+/** Retained only so old vendor ids can exercise deterministic fixtures. */
+function researchFixtureScopeForMember(member: string): OfficialStateVoteScope | null {
+  if (!mayUseTestFixture() || !RETIRED_TEST_STATE_ID.test(member)) return null;
+  const matches = OFFICIAL_STATE_VOTE_SCOPES.filter((scope) =>
+    getStateVotesSnapshot(scope).positions.some((position) => position.officeholderId === member)
+  );
+  return matches.length === 1 ? matches[0]! : null;
+}
+
+/**
+ * Party labels and the curated key-vote projection are supporting holdings
+ * beside the federal roll-call record. Neither is authority for the other,
+ * so one unavailable holding must not erase the independently held record.
+ */
+export async function settleFederalVoteSupportingHoldings(
+  member: string,
+  readers: FederalVoteSupportingReaders = {
+    parties: partyByOfficeholderId,
+    keyVotes: keyVotesForMember,
+  },
+): Promise<FederalVoteSupportingHoldings> {
+  const [partyResult, keyVoteResult] = await Promise.allSettled([
+    Promise.resolve().then(() => readers.parties()),
+    Promise.resolve().then(() => readers.keyVotes(member)),
+  ]);
+
+  return {
+    parties: partyResult.status === "fulfilled" ? partyResult.value : new Map(),
+    partyBreakdownHoldingStatus: partyResult.status === "fulfilled" ? "HELD" : "HOLDING_UNAVAILABLE",
+    curated: keyVoteResult.status === "fulfilled"
+      ? keyVoteResult.value
+      : { member, chamber: null, rows: [], positionsReadAt: null },
+    keyVotesHoldingStatus: keyVoteResult.status === "fulfilled" ? "HELD" : "HOLDING_UNAVAILABLE",
+  };
+}
 
 /** A state legislator's recent roll calls, in the federal rows' shape. */
-function stateVotes(member: string) {
-  let snap;
-  try {
-    snap = getStateVotesSnapshot();
-  } catch {
-    return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
-  }
+export function stateVoteAttributionForHolding(
+  holding: Pick<HeldStateVoteScope, "authorityKind">,
+  rolls: Parameters<typeof stateRollAttribution>[0],
+) {
+  return holding.authorityKind === "PROMOTED_OFFICIAL" ? null : stateRollAttribution(rolls);
+}
 
+function stateVotes(member: string, holding: HeldStateVoteScope, unavailableScopes: readonly OfficialStateVoteScope[]) {
+  const snap = holding.snapshot;
   const positions = new Map(
     snap.positions
       .filter((p) => p.officeholderId === member)
@@ -64,34 +206,58 @@ function stateVotes(member: string) {
       // never sum to the recorded result — which is exactly the condition the
       // federal breakdown refuses on.
       partyBreakdown: null,
+      billSummary: null,
+      billSummaryPending: false,
     }));
 
   return Response.json({
     member,
     holdingStatus: "HELD",
+    authorityScope: holding.scope,
+    canonicalVersionId: holding.versionId,
+    unavailableSiblingScopes: unavailableScopes,
     count: votes.length,
     generatedAt: snap.generatedAt,
-    attribution: stateRollAttribution(matchedRolls),
+    attribution: stateVoteAttributionForHolding(holding, matchedRolls),
     votes,
   });
 }
 
 export async function GET(request: Request) {
   const member = new URL(request.url).searchParams.get("member");
-  if (!member || (!FEDERAL_ID.test(member) && !STATE_ID.test(member))) {
+  const officialStateScope = member ? officialStateVoteScopeForOfficeholderId(member) : null;
+  const researchStateScope = member ? researchFixtureScopeForMember(member) : null;
+  const stateScope = officialStateScope ?? researchStateScope;
+  if (!member || (!FEDERAL_ID.test(member) && stateScope === null)) {
     return Response.json(
-      { error: "member must be a congress:<bioguide> or plural:<uuid> id" },
+      { error: "member must be a congress:<bioguide> or source-namespaced official state person id" },
       { status: 400 },
     );
   }
 
-  if (STATE_ID.test(member)) {
-    await refreshStateVotesFromPromoted();
-    return stateVotes(member);
+  if (stateScope !== null) {
+    const holding = await settleStateVoteMemberHolding(member, stateScope);
+    if (holding.kind === "HOLDING_UNAVAILABLE") {
+      return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
+    }
+    if (holding.kind === "HELD_NO_RECORD") {
+      return Response.json({
+        member,
+        holdingStatus: "HELD",
+        count: 0,
+        generatedAt: holding.generatedAt,
+        authorityScopesChecked: holding.scopesChecked,
+        attribution: null,
+        votes: [],
+      });
+    }
+    return stateVotes(member, holding.holding, holding.unavailableScopes);
   }
 
   let snap: VotesSnapshot;
   try {
+    const read = await readFederalRollCallsProjection();
+    if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(read.detail);
     snap = getVotesSnapshot();
   } catch {
     return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
@@ -108,7 +274,7 @@ export async function GET(request: Request) {
   // party labels, refused (null) unless it sums exactly to the
   // chamber's recorded tally. The surface renders the honest
   // unavailable state on null.
-  const parties = await partyByOfficeholderId();
+  const supporting = await settleFederalVoteSupportingHoldings(member);
 
   // A member sits in one chamber, so their votes share a chamber and the
   // roll number orders them newest-first.
@@ -118,7 +284,9 @@ export async function GET(request: Request) {
     .map((v) => ({
       ...v,
       position: positions.get(v.id),
-      partyBreakdown: partyBreakdownFor(v.id, v.result, snap.positions, parties),
+      partyBreakdown: partyBreakdownFor(v.id, v.result, snap.positions, supporting.parties),
+      billSummary: summaryForBill(v.billUrl),
+      billSummaryPending: summaryPendingForBill(v.billUrl),
     }));
 
   /*
@@ -131,13 +299,7 @@ export async function GET(request: Request) {
    * chamber (nobody outside Congress) gets an empty list and the column does
    * not render at all, rather than a header over nothing.
    */
-  let curated: MemberKeyVotes;
-  try { curated = await keyVotesForMember(member); }
-  catch {
-    return Response.json({ member, holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the held key-vote records just now." },
-      { status: 503, headers: { "Cache-Control": "no-store" } });
-  }
-  const { chamber, rows: keyVotes } = curated;
+  const { chamber, rows: keyVotes } = supporting.curated;
 
   return Response.json({
     member,
@@ -145,8 +307,10 @@ export async function GET(request: Request) {
     count: votes.length,
     generatedAt: snap.generatedAt,
     votes,
+    partyBreakdownHoldingStatus: supporting.partyBreakdownHoldingStatus,
     chamber,
     keyVotes,
+    keyVotesHoldingStatus: supporting.keyVotesHoldingStatus,
     keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
   });
 }

@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { allSeatHolders } from "../../lib/registry/server.ts";
 import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-rosters.ts";
-import { getVotesSnapshot } from "../../lib/votes/snapshot.ts";
-import { getStateVotesSnapshot } from "../../lib/sources/legiscan/snapshot.ts";
+import { getVotesSnapshot, readFederalRollCallsProjection } from "../../lib/votes/snapshot.ts";
+import { getStateVotesSnapshot, OFFICIAL_STATE_VOTE_SCOPES } from "../../lib/sources/legiscan/snapshot.ts";
 import { bodyIdentityIndex } from "../../lib/ask/body-identity.ts";
 import { snapshotEntities, titleCaseName } from "../../lib/ask/inventory.ts";
 import { contactsForBody, contactRecord } from "../../lib/ask/contacts.ts";
@@ -15,7 +15,7 @@ import type { EvidenceRecord, EvidencePack } from "../../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
-const SOURCE_PATHS = ["app/api/ask/grounded/route.ts", "lib/ask/votes.ts", "lib/ask/contacts.ts", "lib/ask/local-finance.ts", "lib/ask/official-identity.ts", "lib/registry/server.ts", "lib/funding/official-candidacies.json", "data/votes/votes-snapshot.json", "data/votes/state-votes-snapshot.json", "data/states/az/officials/az-governor-actions.json", "data/states/az/campaign-finance/az-pima-2026-held.json", "data/states/az/campaign-finance/az-pima-2026-transactions.json"];
+const SOURCE_PATHS = ["app/api/ask/grounded/route.ts", "lib/ask/votes.ts", "lib/ask/contacts.ts", "lib/ask/local-finance.ts", "lib/ask/official-identity.ts", "lib/registry/server.ts", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", "lib/votes/snapshot.ts", "lib/votes/data-plane.ts", "data/votes/state-votes-snapshot.json", "lib/officials/executive-actions.ts", "lib/civic-data/read-model.ts", "data/states/az/campaign-finance/az-pima-2026-held.json", "data/states/az/campaign-finance/az-pima-2026-transactions.json"];
 
 interface ExpectedRecord { id: string; sourceUrl?: string | null; retrievedAt?: string | null; text?: string }
 interface DeliveryProof {
@@ -49,6 +49,8 @@ interface DeliveryProof {
 }
 export async function exhaustiveAskProof(progress: (message: string) => void = () => {}) {
   delete process.env.ANTHROPIC_API_KEY;
+  const federalProjection = await readFederalRollCallsProjection();
+  if (federalProjection.kind !== "PROMOTED" && federalProjection.kind !== "BOOTSTRAP") throw new Error(federalProjection.detail);
   // This local synthetic corpus walk has its own test budget; production intake is unchanged.
   process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
@@ -91,7 +93,11 @@ export async function exhaustiveAskProof(progress: (message: string) => void = (
 
   const holders = new Map((await allSeatHolders()).map((holder) => [holder.id, holder]));
   const federal = getVotesSnapshot();
-  const state = getStateVotesSnapshot();
+  const stateSnapshots = OFFICIAL_STATE_VOTE_SCOPES.map((scope) => getStateVotesSnapshot(scope));
+  const state = {
+    rollCalls: stateSnapshots.flatMap((snapshot) => snapshot.rollCalls),
+    positions: stateSnapshots.flatMap((snapshot) => snapshot.positions),
+  };
   const federalById = new Map(federal.votes.map((vote) => [vote.id, vote]));
   const stateById = new Map(state.rollCalls.map((vote) => [vote.id, vote]));
   const votingIds = [...new Set([...federal.positions, ...state.positions].map((position) => position.officeholderId))].sort();

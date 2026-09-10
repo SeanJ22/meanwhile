@@ -1316,11 +1316,15 @@ domains, 693 typed as election offices.*
 
 **`cisagov/dotgov-data`, `current-full.csv`.** Every domain in the .gov TLD
 with the registrant's own organization name, city, state, and CISA's own
-`Domain type`. US Government work, public domain. Committed as
-`data/dotgov/snapshot.json` by `pnpm dotgov:fetch`, SHA-pinned
-(`47f9693e…`, the zone-file commit of 2026-08-16T07:38:32Z), thin-guarded at
-15,000 domains and 500 election-typed domains, refreshed by
-`.github/workflows/refresh-dotgov-snapshot.yml` on Mondays.
+`Domain type`. US Government work, public domain. The standing runner now owns
+the monthly canonical `dotgov` production-data contract: it resolves the
+publisher's current commit, fetches `current-full.csv` at that exact SHA,
+thin-guards at 15,000 domains and 500 election-typed domains, and durably
+receipts and promotes the candidate with LKG retained on refusal. The tracked
+`data/dotgov/snapshot.json` preserves the SHA-pinned 2026-08-16 acquisition
+(`47f9693e…`) as bundled first-bootstrap evidence only. The former
+`pnpm dotgov:fetch` tracked writer and
+`.github/workflows/refresh-dotgov-snapshot.yml` clock are retired and deleted.
 
 **What it is a rung for.** The first, cheapest question in any hunt for a
 body's own publications: does this government have a .gov, and what is it?
@@ -1471,8 +1475,11 @@ were used only to find what the authority publishes, which is what the
 author's ruling permits them for.
 
 **306 sites across 44 jurisdictions — 41 with sites, 3 recorded as refusals
-with their rungs.** `pnpm voting-sites:fetch` regenerates
-`data/voting-sites.json` and prints every count.
+with their rungs in the retained bootstrap evidence.** `pnpm
+voting-sites:fetch` now submits an owner-invoked candidate to the permanent
+civic-data plane. Each authority scope either advances from current official
+bytes or retains its prior GOOD rows with a durable refusal; it never rewrites
+the tracked bootstrap file or triggers a software release.
 
 ### Arizona — Pima County: HIT at rung 8 → 12 → 7
 

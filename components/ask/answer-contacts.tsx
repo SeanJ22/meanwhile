@@ -1,4 +1,5 @@
-import { contactReadLine, type AskContact } from "../../lib/ask/contacts";
+import type { AskContact } from "../../lib/ask/contacts";
+import { contactReadLine } from "../../lib/ask/contact-render";
 
 /** One sourced contact answer shared by map and ballot Ask. */
 export function AskAnswerContacts({ contacts }: { contacts: readonly AskContact[] }) {

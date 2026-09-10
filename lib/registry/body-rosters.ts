@@ -18,7 +18,7 @@
 
 import type { Provenance } from "../sources/types.ts";
 
-import ROSTER_PHOTOS from "./roster-photos.json" with { type: "json" };
+import { getRegistryRuntimeReadModel } from "./runtime-read-model.ts";
 import { AZ_CAWCD_ROSTERS } from "./cawcd-rosters.ts";
 import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 
@@ -2490,11 +2490,22 @@ export function projectReaderRoster(roster: BodyRoster): { roster: BodyRoster; d
 }
 
 const READER_ROSTERS = HELD_BODY_ROSTERS.map(projectReaderRoster);
+/** Bundled first-seed/test evidence. Production readers use currentBodyRosters(). */
 export const BODY_ROSTERS: BodyRoster[] = READER_ROSTERS.map(result => result.roster);
 export const ROSTER_READER_DISPOSITIONS = READER_ROSTERS.flatMap(result => result.dispositions);
 const readerRosterIdentities = new Map(ROSTER_READER_DISPOSITIONS.map(row => [row.sourceId, row]));
 export function rosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
   return readerRosterIdentities.get(id) ?? null;
+}
+
+/** The one promoted body-person/contact projection initialized at a request boundary. */
+export function currentBodyRosters(): readonly BodyRoster[] {
+  return getRegistryRuntimeReadModel().bodyRosters;
+}
+
+/** Reader eligibility derived from the normalized promoted roster, never a retired held row. */
+export function currentRosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
+  return getRegistryRuntimeReadModel().rosterReaderDispositions.find((row) => row.sourceId === id) ?? null;
 }
 
 export interface RosterReaderGap {
@@ -2520,7 +2531,7 @@ const ROSTER_MEMBER_DENOMINATORS = [{
 
 export function rosterGapForBody(bodyId: string | null): RosterReaderGap | null {
   const expected = ROSTER_MEMBER_DENOMINATORS.find(row => row.bodyId === bodyId);
-  const roster = BODY_ROSTERS.find(row => row.bodyId === bodyId);
+  const roster = currentBodyRosters().find(row => row.bodyId === bodyId);
   if (!expected || !roster || roster.members.length >= expected.members) return null;
   const unresolvedSlots = expected.members - roster.members.length;
   return { bodyId: roster.bodyId, expectedMembers: expected.members, verifiedMembers: roster.members.length,
@@ -2530,13 +2541,13 @@ export function rosterGapForBody(bodyId: string | null): RosterReaderGap | null 
 
 export function rosterGapsForDivision(ocdId: string | null): RosterReaderGap[] {
   if (!ocdId) return [];
-  return BODY_ROSTERS.filter(roster => roster.bodyId === `${ocdId}#governing` || roster.bodyId === `${ocdId}#board`)
+  return currentBodyRosters().filter(roster => roster.bodyId === `${ocdId}#governing` || roster.bodyId === `${ocdId}#board`)
     .flatMap(roster => { const gap = rosterGapForBody(roster.bodyId); return gap ? [gap] : []; });
 }
 
 export function rosterForBody(bodyId: string | null): BodyRoster | null {
   if (!bodyId) return null;
-  return BODY_ROSTERS.find((r) => r.bodyId === bodyId) ?? null;
+  return currentBodyRosters().find((r) => r.bodyId === bodyId) ?? null;
 }
 
 /** A roster member in the shape every officeholder surface renders. */
@@ -2544,6 +2555,8 @@ export interface RosterHolder {
   id: string;
   name: string;
   officeTitle: string;
+  /** The body jurisdiction projected for client-side explanatory copy. */
+  officeJurisdictionOcdId: string;
   /** The roster's exact term or appointment wording, not an inferred term end. */
   termNote: string | null;
   /** M61: widened from `null`. The type used to forbid a party outright. */
@@ -2594,11 +2607,12 @@ export interface RosterHolder {
 export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
   const roster = rosterForBody(bodyId);
   if (!roster) return [];
-  const photos = ROSTER_PHOTOS as Record<string, string>;
+  const photos = getRegistryRuntimeReadModel().rosterPhotos;
   return roster.members.map((member) => ({
     id: member.id,
     name: member.name,
     officeTitle: member.officeTitle,
+    officeJurisdictionOcdId: roster.bodyId.split("#")[0],
     termNote: member.termNote,
     // M61: carried through where a roster holds it. Null today for every
     // curated local — see the roster's `partisanship`, which says whether
@@ -2638,7 +2652,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
 export function divisionOcdIdForRosterHolder(
   holderId: string,
 ): string | null {
-  for (const roster of BODY_ROSTERS) {
+  for (const roster of currentBodyRosters()) {
     if (roster.members.some((member) => member.id === holderId)) {
       return roster.bodyId.split("#")[0];
     }

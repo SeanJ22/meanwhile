@@ -1,3 +1,9 @@
+import { officeholderIdentityMayEnterReader } from "./roster-authority.ts";
+import {
+  currentCuratedReaderRecords,
+  type CampaignSiteProjectionRecord,
+} from "../civic-data/curated-reader-read-model.ts";
+
 /**
  * Campaign and personal sites, curated per officeholder (3e).
  *
@@ -23,6 +29,7 @@ export interface CampaignSite {
   attemptedAt: string;
 }
 
+/** Initial adoption/node:test evidence; production reads `campaign-sites`. */
 export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
   // The 2026-08-14 hunt. Misses and not-yet-attempted are in
   // docs/source-ladder.md — an absent key here is not a claim that no site
@@ -117,6 +124,34 @@ export const CAMPAIGN_SITES: Readonly<Record<string, CampaignSite>> = {
   },
 };
 
-export function campaignSiteFor(officeholderId: string): CampaignSite | null {
-  return CAMPAIGN_SITES[officeholderId] ?? null;
+export function currentCampaignSites(): Readonly<Record<string, CampaignSite>> {
+  const seed: CampaignSiteProjectionRecord[] = Object.entries(CAMPAIGN_SITES).map(([officeholderId, site]) => ({
+    id: `campaign-site:${officeholderId}`,
+    officeholderId,
+    site: site as unknown as Readonly<Record<string, unknown>>,
+  }));
+  return Object.fromEntries(
+    currentCuratedReaderRecords("campaign-sites", seed).map((record) => [
+      record.officeholderId,
+      record.site as unknown as CampaignSite,
+    ]),
+  );
+}
+
+export function campaignSiteFor(
+  officeholderId: string,
+  projection?: Readonly<Record<string, CampaignSite>>,
+): CampaignSite | null {
+  if (!officeholderIdentityMayEnterReader(officeholderId)) return null;
+  let records = projection;
+  if (!records) {
+    try {
+      records = currentCampaignSites();
+    } catch {
+      // Campaign links are an independent optional projection. Withhold the
+      // link on a store read failure; never block the canonical roster.
+      records = {};
+    }
+  }
+  return records[officeholderId] ?? null;
 }

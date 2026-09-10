@@ -16,7 +16,6 @@
  *   data/ops/gate-runs/*.json          pnpm gates
  *   data/health/walk-runs/*.json       pnpm walk:all
  *   data/health/reader-suite-runs/*    pnpm reader:suite
- *   data/ops/production-integrity.json the post-deploy observer
  * ```
  *
  * ## The rule that makes this different from what it replaces
@@ -93,17 +92,12 @@ function newest<T>(dir: string): (T & { path: string }) | null {
 export interface RunRecordSet {
   readonly gates: (GateRunRecord & { path: string }) | null;
   readonly walk: (WalkRunRecord & { path: string }) | null;
-  readonly observer: { readonly path: string; readonly raw: unknown } | null;
 }
 
 export function loadRunRecords(root: string = process.cwd()): RunRecordSet {
-  const integrityPath = join(root, "data", "ops", "production-integrity.json");
   return {
     gates: newest<GateRunRecord>(join(root, "data", "ops", "gate-runs")),
     walk: newest<WalkRunRecord>(join(root, "data", "health", "walk-runs")),
-    observer: existsSync(integrityPath)
-      ? { path: integrityPath, raw: JSON.parse(readFileSync(integrityPath, "utf8")) }
-      : null,
   };
 }
 
@@ -302,87 +296,6 @@ export function resolveCapability(
       );
     }
 
-    case "OBSERVER": {
-      if (records.observer === null) {
-        return unproven(entry, "no post-deploy observer record exists at data/ops/production-integrity.json.");
-      }
-      /*
-       * **READ THE SCHEMA THE OBSERVER ACTUALLY WRITES.** (B WI1.5.)
-       *
-       * This adapter expected `sha` and `verdict: "HEALTHY" | "OK"`. The
-       * post-deploy observer writes `deployedSha`, `mainSha` and
-       * `observed: "HELD"`. So every field read came back undefined, the
-       * result was STALE, and the A.1 report explained the STALE by saying the
-       * observer record "names no SHA" — a claim about the DATA that was
-       * really a fact about the READER. The record names f762a72e in two
-       * fields.
-       *
-       * Failing closed was right and is kept: an unrecognised shape is STALE,
-       * never PROVEN. What changes is that the shape is now recognised.
-       *
-       * `deployedSha` is the tree the reading is ABOUT — what production was
-       * actually serving. `mainSha` is where the branch stood, and the two
-       * differing is exactly the drift the observer exists to catch, so the
-       * deployed tree is the one placed against the release.
-       */
-      const raw = records.observer.raw as {
-        observed?: string;
-        deployedSha?: string;
-        mainSha?: string;
-        observedAt?: string;
-        runId?: string;
-        detail?: string;
-        failureClass?: string | null;
-        /* The pre-B field names, still read so an archived record resolves. */
-        verdict?: string;
-        sha?: string;
-      };
-      const observed = raw.observed ?? raw.verdict ?? null;
-      const held = observed === "HELD" || observed === "HEALTHY" || observed === "OK";
-      const drift =
-        raw.deployedSha && raw.mainSha && raw.deployedSha !== raw.mainSha
-          ? ` (main stood at ${raw.mainSha.slice(0, 8)} — the deployed tree is the one placed)`
-          : "";
-      return place(
-        raw.deployedSha ?? raw.sha ?? null,
-        raw.observedAt ?? "unknown",
-        raw.runId ?? "post-deploy-observer",
-        records.observer.path,
-        held,
-        `the post-deploy observer recorded ${JSON.stringify(observed ?? "none")} ` +
-          `for claim \`${source.claim}\`${drift}` +
-          (raw.failureClass ? `, failure class ${JSON.stringify(raw.failureClass)}` : ""),
-        /*
-         * The observer runs in CI after a deploy, against a tree that is by
-         * construction already on main — so its provenance is not absent, it
-         * is knowable. It is stated explicitly rather than defaulted, because
-         * a default that happens to be right is the shape this whole work item
-         * is about.
-         *
-         * **AND THE CLASS IS `CI`, NOT `SCHEDULED`.** (Session B resume, W5.)
-         *
-         * The comment above said "runs in CI" while the field said SCHEDULED,
-         * and the field was wrong: `.github/workflows/post-deploy-integrity.yml`
-         * is triggered by `push` to main, and its own header explains at length
-         * why it is NOT on a schedule and NOT on `deployment_status`.
-         *
-         * It changes no proof class — `proofClassOf` only asks whether the run
-         * was LOCAL_SESSION — so nothing went green that should not have. What
-         * it corrupts is attribution: `lib/ops/schedule-audit.ts` assigns each
-         * SCHEDULED run to "the most recent slot at or before its creation", so
-         * every push-triggered observer run was being placed in a cron slot it
-         * has no relationship to. A record that misdescribes how it was invoked
-         * is a record that will be reasoned from wrongly later.
-         */
-        {
-          runClass: "CI",
-          workingTreeClean: true,
-          integratedAtRunTime:
-            raw.deployedSha && raw.mainSha ? raw.deployedSha === raw.mainSha : null,
-          integrationRef: "main",
-        },
-      );
-    }
   }
 }
 

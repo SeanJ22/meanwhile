@@ -1,28 +1,27 @@
-import held from "../../../data/states/az/meetings/legistar-venues.json" with { type: "json" };
+import { requiredVenueEntries } from "../../meetings/venue-cache.ts";
+import {
+  wiringForMeetingSource,
+  type BodySourceWiring,
+} from "../../registry/source-wiring.ts";
 import type { OcdId } from "../types.ts";
 
 /**
- * Which Legistar clients this adapter knows, and where their meetings happen.
+ * Which Legistar clients this adapter knows.
  *
- * Two things live here that the API cannot tell us, and both need a real
- * source rather than a plausible guess.
+ * The API cannot tell us the OCD-ID, so that stable adapter configuration
+ * lives here. Mutable venue resolutions do not: the `venues` getter reads the
+ * canonical promoted `venue-resolutions` projection at acquisition time.
  *
  * **1. The OCD-ID.** Legistar knows it is "pima". It does not know that means
  * `ocd-division/country:us/state:az/county:pima`. That mapping is the join key
  * for everything downstream, so it is stated explicitly per client and never
  * inferred from the slug.
  *
- * **2. Coordinates.** The events endpoint returns a room name and nothing else
- * — no address, no latitude, no longitude. A pin needs coordinates, and
- * `lib/sources/types.ts` is explicit that a meeting which cannot be placed is
- * dropped rather than guessed at. So every venue below carries an address read
- * from the body's own website and coordinates from the Census geocoder, each
- * with the URL it came from. A venue string the table does not know produces a
- * dropped meeting and a warning, never an approximate pin.
- *
- * Adding a client is adding an entry here. It is deliberately a small amount of
- * hand work per jurisdiction, because the alternative — geocoding a room name
- * at runtime — invents locations.
+ * The events endpoint returns a room name and no coordinates. The promoted
+ * projection supplies exact, cited resolutions; a missing pointer or missing
+ * client scope fails closed before the adapter can treat zero venues as zero
+ * meetings. Unknown published room strings still drop and are counted rather
+ * than being approximately geocoded.
  */
 
 /**
@@ -128,24 +127,42 @@ export interface LegistarClient {
  */
 export const PLACELESS_VENUES = ["virtual meeting", "virtual", "zoom", "webex"];
 
-export const LEGISTAR_CLIENTS: LegistarClient[] = [
-  {
-    slug: "pima",
-    ocdId: "ocd-division/country:us/state:az/county:pima",
-    bodyId: "ocd-division/country:us/state:az/county:pima#governing",
-    jurisdiction: "Pima County, AZ",
-    publishingOrg: "Pima County Clerk of the Board",
-    timeZone: "America/Phoenix",
-    insiteHost: "pima.legistar.com",
-    insiteFeed: {
-      id: "43473383",
-      guid: "88b7d677-6602-4f79-b987-4677f7f035e6",
-      range: "Next Month",
-      observedAt: "2026-08-28",
-    },
-    venues: held.records.LEGISTAR_CLIENT_VENUES.pima,
-  },
-];
+export function legistarClientsFromWiring(
+  rows: readonly BodySourceWiring[] = wiringForMeetingSource("legistar"),
+): LegistarClient[] {
+  return rows.map((row) => {
+    const slug = row.config.slug?.trim();
+    if (!slug || row.ocdId === null) {
+      throw new Error(`LEGISTAR_SOURCE_WIRING_INVALID:${row.bodyId}`);
+    }
+    const insiteFeed = row.config.insiteFeedId && row.config.insiteFeedGuid &&
+        row.config.insiteFeedRange && row.config.insiteFeedObservedAt
+      ? {
+          id: row.config.insiteFeedId,
+          guid: row.config.insiteFeedGuid,
+          range: row.config.insiteFeedRange,
+          observedAt: row.config.insiteFeedObservedAt,
+        }
+      : undefined;
+    const ocdId = row.ocdId;
+    return {
+      slug,
+      ocdId,
+      bodyId: row.bodyId,
+      jurisdiction: row.jurisdiction,
+      publishingOrg: row.publishingOrg,
+      timeZone: row.timeZone,
+      ...(row.config.insiteHost ? { insiteHost: row.config.insiteHost } : {}),
+      ...(insiteFeed ? { insiteFeed } : {}),
+      get venues() {
+        return requiredVenueEntries("legistar", ocdId);
+      },
+    };
+  });
+}
+
+/** Compatibility projection, derived exclusively from SOURCE_WIRING. */
+export const LEGISTAR_CLIENTS: LegistarClient[] = legistarClientsFromWiring();
 
 /** Reduce a venue string to something two spellings of one room agree on. */
 export function venueKey(value: string): string {

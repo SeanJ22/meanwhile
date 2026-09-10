@@ -2,7 +2,7 @@ import type { CoverageTier } from "../meetings/constants.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
 
-import { governingRosterHoldersForDivision } from "./body-rosters.ts";
+import { projectedGoverningHoldersForDivision } from "./body-roster-client.ts";
 import type { CoverageSummary } from "./coverage.ts";
 
 /**
@@ -59,7 +59,7 @@ export function representationForDivision(
   if (!ocdId) return [];
   const seat = coverage?.seats.find((s) => s.ocdId === ocdId);
   if (seat?.representatives.length) return seat.representatives;
-  return governingRosterHoldersForDivision(ocdId);
+  return projectedGoverningHoldersForDivision(coverage, ocdId);
 }
 
 /**

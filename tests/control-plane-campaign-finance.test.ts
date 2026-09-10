@@ -78,6 +78,9 @@ import {
   federalObligation,
 } from "../lib/control-plane/campaign-finance/obligations.ts";
 import { coverageFixture } from "./control-plane-fixtures.ts";
+import { installFundingFirstSeed } from "./helpers/registry-runtime-first-seed.ts";
+
+await installFundingFirstSeed();
 
 const ROOT = resolve(import.meta.dirname, "..");
 const NOW = "2026-08-28T00:00:00.000Z";

@@ -42,7 +42,8 @@ import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
 import type { WindowView } from "../lib/control-plane/window-view.ts";
 import { findingPlain, roleLead, verdictPlain, workItemStatePlain } from "../lib/control-plane/workers/plain-roles.ts";
 import type { WorkerRoleView } from "../lib/control-plane/workers/readback.ts";
-import { ACS_STATE_DATASET, ACS_ZCTA_DATASET, statePopulation, zipPopulation } from "../lib/reference/acs-population.ts";
+import { ACS_STATE_DATASET, ACS_ZCTA_DATASET, refreshPopulationFromPromoted, statePopulation, zipPopulation } from "../lib/reference/acs-population.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { REFERENCE_ROW_COUNTS, readTable } from "../lib/reference/index.ts";
 import { normalize, toCsv, type AcsFetch } from "../lib/sources/census-acs-population/index.ts";
 import {
@@ -60,6 +61,7 @@ import {
 } from "../scripts/tracker-core.mjs";
 
 const ROOT = process.cwd();
+await refreshPopulationFromPromoted({ store: new MemoryRoutineDataStore() });
 const src = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
 /*
  * Admin C split the 1,236-line home page into section components. A guard that
@@ -154,7 +156,8 @@ test("ADM-12: a candidate is named from the record and never re-derived from the
   assert.match(federal.name, /U\.S\. Representative District 6/);
   const publisher = src("scripts/publish-owner-snapshot.mts");
   assert.match(publisher, /candidateNames\(\)/, "the publisher carries the slug → name map on the snapshot");
-  assert.match(publisher, /candidate-cards-2026\.json/);
+  assert.match(publisher, /canonical candidate-profile projection/);
+  assert.doesNotMatch(publisher, /candidate-cards-2026\.json/, "the operational snapshot must not republish tracked civic data");
 });
 
 test("ADM-12: every console surface renders keys through <Name>, raw key on hover", () => {
@@ -229,7 +232,7 @@ test("ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a
   assert.equal(isRowDecision(queued), false);
 });
 
-test("ADM-16: the page renders the split and the receipt, the routes return to the console page the form came from, and the sync is scheduled on the runner", () => {
+test("ADM-16: the page renders the split and receipt, while tracked tracker synchronization stays outside the immutable runtime", () => {
   const page = surface("home");
   assert.match(page, /splitDecided\(/);
   assert.match(page, /total=\{waiting\.length\}/, "the count is the WAITING cards, not every card");
@@ -253,11 +256,9 @@ test("ADM-16: the page renders the split and the receipt, the routes return to t
   assert.match(canon, /subjectTitle: resolution\.subjectTitle/);
   assert.match(canon, /"Opened by"\] \?\? ""\)\.trim\(\) === DASHBOARD_OPENER/, "work opened is found by the dashboard opener, never guessed");
   const runner = src("scripts/pilot-runner.mts");
-  const sync = runner.indexOf('name: "decision sync"');
-  const snapshot = runner.indexOf('name: "owner snapshot"');
-  assert.ok(sync > 0 && snapshot > sync, "the decision sync runs before the snapshot republishes");
-  assert.match(runner, /scripts\/apply-owner-decisions\.mts/);
+  assert.doesNotMatch(runner, /scripts\/apply-owner-decisions\.mts/, "a tracked engineering writer cannot dirty the clean detached production runtime");
   const apply = src("scripts/apply-owner-decisions.mts");
+  assert.match(apply, /engineering sync, deliberately outside the standing runtime/);
   assert.match(apply, /owner-decisions-pull\.mts/);
   assert.match(apply, /"move", "--only=dashboard", "--session=dashboard-decision-nonhunt"/);
   assert.match(apply, /canonicalize-owner-decisions\.mts/);
@@ -503,7 +504,7 @@ test("ADM-10: a role lead says what is happening, says plainly when nothing need
 const METRICS: ResearchMetrics = {
   computedAt: "2026-09-04T16:57:00.000Z",
   capacity: { meanUsdPerAttempt: 0.3867, measuredAttempts: 1, unmeasuredAttempts: 3, windowHours: 24, ceilingUsd: 25, attemptsPerDayAtCap: 64, denominator: "d" },
-  ordering: { rule: "r", scope: "s", inputs: { readerImpactAt: "FreshnessObligation.readerImpactAt", pilotJurisdictions: "p", openRedQuestions: { count: 0, zips: [], run: null }, universeProviders: [], tieBreak: "oldest nextDueAt first within a band" }, bands: { 1: 182, 2: 2151, 3: 0 }, appliesTo: "BOUNDED_MODEL_WORKER" },
+  ordering: { rule: "r", scope: "s", inputs: { readerImpactAt: "FreshnessObligation.readerImpactAt", pilotJurisdictions: "p", universeProviders: [], tieBreak: "oldest nextDueAt first within a band" }, bands: { 1: 182, 2: 2151, 3: 0 }, appliesTo: "BOUNDED_MODEL_WORKER" },
   funnel: { stages: [{ stage: "SCOUTED", count: 22, source: "s" }, { stage: "CONFIRMED", count: 0, source: "s" }, { stage: "VALIDATED", count: 18, source: "s" }], pipelineSource: "p" },
   share: { thisCycle: { deterministic: 1, model: 0, modelShare: 0 }, window: { deterministic: 211, model: 21, modelShare: 21 / 232, cycles: 18, since: "2026-09-01T00:00:00.000Z" }, delta: -0.091 },
   cacheByRole: [{ role: "SCOUT", cacheRead: 955734, cacheWrite: 100, uncachedInput: 4540417, hitRate: 0.174, repeatedPrefixTurns: 4, repeatedPrefixMisses: 0, attempts: 27, denominator: "d" }],
@@ -542,9 +543,7 @@ test("ADM-13: the window reads as one sentence, a stage strip and a split; defin
     time: held({ windowId: "nw-1", localDate: "2026-09-04", zone: "America/New_York", scheduledFor: "2026-09-04T08:00:00.000Z", startedAt: "2026-09-04T08:04:50.476Z", finishedAt: "2026-09-04T08:15:00.553Z", trigger: "RUNNER_CLOCK", mode: "SHADOW", host: "SeanLenovo", testedSha: "a6f7fd4d", caughtUp: [] }),
     gate: held({ reason: "SHADOW — READER NOT_READY, TRUTH NOT_READY, FRESHNESS NOT_READY; promotion OFF", openRecordClasses: [], readFrom: null }),
     stages: held([
-      { stage: "LEGACY_REFRESH", outcome: "COMPLETED", startedAt: "", finishedAt: "", reason: null },
       { stage: "PIPELINE_EVALUATION", outcome: "COMPLETED", startedAt: "", finishedAt: "", reason: null },
-      { stage: "POST_PROMOTION_VERIFICATION", outcome: "COMPLETED", startedAt: "", finishedAt: "", reason: null },
       { stage: "DIGEST", outcome: "COMPLETED", startedAt: "", finishedAt: "", reason: null },
     ] as never),
     promoted: held(m(0, 43)),
@@ -553,18 +552,16 @@ test("ADM-13: the window reads as one sentence, a stage strip and a split; defin
     deferred: held(m(0, 43)),
     byRecordClass: held([{ recordClass: "OFFICIAL_MEETING_DOCUMENT_INVENTORY", promoteWould: m(0, 3), refuseWould: m(3, 3), deferred: m(0, 3) }]),
     verdicts: held({ shown: m(0, 0), rows: [] }),
-    legacy: held({ source: "JSON", ran: m(3, 5), rows: [] }),
     controls: { held: false, gap: { whose: "OURS", says: "no controls" } },
-    verification: held({ instrument: "scripts/staging-observer.mts", verdict: "HELD", detail: "" }),
     incidents: held({ shown: m(0, 0), rows: [] }),
     proof: held({ windowId: "nw-1", recordPath: null, digestPath: null, leaseId: "ls-1", windowsRecorded: 3 }),
   };
   const plain = plainWindow(view);
   assert.equal(
     plain.headline,
-    "The window for September 4 ran on time at September 4, 4:04 AM ET in shadow mode (nothing reaches readers yet); all 4 stages completed; nothing was promoted because the gate is closed (reader, truth and freshness are not yet independently proven) — of 43 items, 43 refused; no incidents.",
+    "The window for September 4 ran on time at September 4, 4:04 AM ET in shadow mode (nothing reaches readers yet); all 2 stages completed; nothing was promoted because the gate is closed (reader, truth and freshness are not yet independently proven) — of 43 items, 43 refused; no incidents.",
   );
-  assert.deepEqual(plain.stages.map((s) => [s.label, s.ok]), [["Refresh", true], ["Evaluate", true], ["Verify", true], ["Digest", true]]);
+  assert.deepEqual(plain.stages.map((s) => [s.label, s.ok]), [["Evaluate", true], ["Digest", true]]);
   assert.deepEqual(plain.split, { items: 43, promoted: 0, wouldPromote: 0, refused: 43, deferred: 0 });
   assert.equal(plain.classes[0].label, "official meeting document inventory");
   assert.equal(recordClassLabel("campaign-finance"), "campaign finance");
@@ -573,7 +570,7 @@ test("ADM-13: the window reads as one sentence, a stage strip and a split; defin
   const page = src("app/(admin)/admin/research/page.tsx");
   assert.match(page, /\{windowPlain\.headline\}/);
   assert.match(page, /className="stage-strip"/);
-  assert.match(page, /Window detail — definitions, the gate, the legacy refresh, controls, proof<\/summary>/);
+  assert.match(page, /Window detail — definitions, the gate, controls, proof<\/summary>/);
 });
 
 /* ================================================================== *
@@ -710,9 +707,11 @@ test("ADM-23: population-weighted completeness is a measured share of the state'
   assert.ok(!populationInCompleteZip(a, [zip("85700", null, ["CURRENT"])]).held);
   const refresh = src("scripts/readiness-refresh.mts");
   assert.match(refresh, /population: population\.population/);
-  assert.match(refresh, /statePopulation: statePopulation\(spec\.code\)/);
+  assert.match(refresh, /statePopulation: null/);
+  assert.match(refresh, /canonical civic-data receipt in Admin/);
+  assert.doesNotMatch(refresh, /statePopulation\(spec\.code\)/, "readiness may not revive tracked ACS as a second authority");
   assert.doesNotMatch(src("lib/control-plane/readiness/extract.ts"), /not yet ingested/);
-  assert.match(refresh, /no Census tabulation area/, "the publisher names the gap a PO-box ZIP is");
+  assert.match(refresh, /Routine ACS population is shown from the canonical civic-data receipt in Admin/, "the readiness publisher names the canonical owner instead of copying tracked ACS truth");
   const panel = src("app/(admin)/readiness/[state]/readiness-panel.tsx");
   assert.match(panel, /\{z\.population\.gap\.says\}/, "the panel renders the published gap sentence, never a hardcoded one");
   assert.doesNotMatch(panel, /"population not on file"/);

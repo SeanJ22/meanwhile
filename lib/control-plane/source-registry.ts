@@ -9,14 +9,14 @@
  * answer a different question and have never been compared:
  *
  * ```
- *   lib/ops/refresh-cadence.ts      five sources and the clock they ride
+ *   lib/civic-data/contracts.ts     routine production contracts
+ *   lib/civic-data/manual-contracts.ts owner-invoked production contracts
  *   lib/sources/composite/wiring.ts thirteen meeting adapters
  *   lib/registry/source-wiring.ts   which government body each adapter serves
  *   lib/hunt/platform-tenancy.ts    which vendor platforms are recognised, and
  *                                   which of those have an adapter
  *   docs/sources.md                 the prose register of permission and licence
  *   docs/credential-ledger.md       what each credential returned when CALLED
- *   .github/workflows/refresh-*.yml what actually runs on a clock
  * ```
  *
  * **This module is the JOIN, not a seventh register.** Everything that can be
@@ -38,25 +38,22 @@
  *
  * **2. "Not present here" is not "not configured".** The deployed console is a
  * Netlify function. It holds the credentials the WEBSITE needs and nothing
- * else: the nightly refresh's keys live in the repository's Actions secrets,
- * and the hunt keys live in the owner's own `.env.local`. A page that read
- * `process.env` and printed "not configured" for a key that works every night
- * would be stating a falsehood with a green tick beside it. So every credential
+ * else; acquisition credentials live with the standing runner or in the
+ * owner's private workstation settings. A page that read `process.env` and
+ * printed "not configured" for an off-host key would be stating a falsehood
+ * with a green tick beside it. So every credential
  * declares WHERE it must live ({@link CredentialHolder}), and a reading taken
  * somewhere else is returned as a named gap whose owner is `UNKNOWABLE_NOW` —
  * *this page cannot see that store* — never as a No.
  *
  * **3. No live source call, ever.** *"Do not burn API calls merely because a
- * key exists."* Nothing here fetches, and nothing here reads a file. The
- * measured half — what the nightly refresh recorded, and which variables the
- * host holds — arrives as an argument.
+ * key exists."* Nothing here fetches, and nothing here reads a file. The only
+ * host observation supplied by the caller is credential presence.
  *
- * **4. The retired schedules stay retired.** RULING 124 consolidated five
- * per-source crons into one daily run, and §7 of the brief is explicit that the
- * old schedules must not be shown as though they were re-enabled. So
- * {@link SCHEDULER_TRUTH} states the one scheduled run, names each legacy
- * workflow as dispatch-only, and the test reads `.github/workflows/` and fails
- * if any of the five grows a `schedule:` block again.
+ * **4. Routine operation is shown once.** The canonical routine-data panel is
+ * derived from `lib/civic-data/contracts.ts` and durable data-plane events.
+ * This wider capability registry never reconstructs a second clock from
+ * repository-maintained runtime records.
  *
  * ## WHY DISPOSITION AND HEALTH ARE TWO COLUMNS
  *
@@ -72,11 +69,14 @@
  */
 import { KNOWN_PLATFORMS, UNHANDLED_PLATFORMS } from "../hunt/platform-tenancy.ts";
 import { CREDENTIAL_STORE_SAYS, type CredentialStore } from "../ops/credential-stores.ts";
-import { REFRESH_SOURCES, cadenceOn, nextCadenceDay, type Cadence, type RefreshSource } from "../ops/refresh-cadence.ts";
-import type { RefreshDebt, RefreshRun, RefreshSourceRun } from "../ops/refresh-report.ts";
 import { CAPABILITIES, wiringForSourceName } from "../sources/composite/wiring.ts";
 import { SOURCE_WIRING } from "../registry/source-wiring.ts";
 import { KEY_VAR as CENSUS_KEY_VAR } from "../sources/census-acs-population/index.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../civic-data/manual-contracts.ts";
+import {
+  meetingPartitionsForSource,
+  observableRoutineContracts,
+} from "../civic-data/meeting-partitions.ts";
 import {
   gap,
   held,
@@ -249,18 +249,11 @@ export interface AdapterFact {
   readonly says: string;
 }
 
-export interface RefreshUsage {
-  /** Does this route ride the one scheduled run? */
-  readonly onNightlyRefresh: boolean;
-  /** The cadence in force today, when it rides the run. */
-  readonly cadence: Cadence | null;
-  /** One sentence the owner reads. */
+export interface ProductionOperation {
+  /** Canonical production contracts this capability route feeds. */
+  readonly contractIds: readonly string[];
+  /** One sentence the owner reads. Cadence/outcomes remain in the canonical panel. */
   readonly says: string;
-  /**
-   * The per-source workflow that still exists and no longer runs on a clock.
-   * Named so a dispatch-only surface is never mistaken for a schedule.
-   */
-  readonly legacyWorkflow: string | null;
 }
 
 export interface Blocker {
@@ -285,7 +278,7 @@ export interface SourceRow {
   readonly adapter: AdapterFact;
   /** What the product does with it today. */
   readonly productUsage: string;
-  readonly refresh: RefreshUsage;
+  readonly operation: ProductionOperation;
   readonly lastSuccess: Held<string>;
   readonly nextDue: Held<string>;
   readonly health: HealthLevel;
@@ -372,12 +365,11 @@ interface DeclaredRoute {
   readonly credential: CredentialNeed;
   readonly adapter: AdapterFact;
   readonly productUsage: string;
-  /** Joins to a `REFRESH_SOURCES` id when this route rides the nightly run. */
-  readonly refreshSourceId: string | null;
-  /** What to say about refresh when it rides nothing. */
-  readonly offClockSays: string;
-  readonly legacyWorkflow: string | null;
-  /** Health for a route the nightly refresh does not measure. */
+  /** Joins this capability to the permanent routine or owner-invoked contract registry. */
+  readonly productionContractIds: readonly string[];
+  /** What this capability does operationally; never a second cadence or outcome claim. */
+  readonly operationSays: string;
+  /** Static health for a route the canonical production panel does not measure. */
   readonly restingHealth: HealthLevel;
   readonly restingHealthWhy: string;
   readonly spendConcern: string;
@@ -396,11 +388,11 @@ const UNCALLED = "Nothing calls this route, so nothing measures it. That is a st
  * Every source or outside API this repository can name, one row per ROUTE.
  *
  * A provider with two routes gets two rows on purpose. Plural Open States is
- * the clear case: the nightly bulk file and the v3 API answer the same question
+ * the clear case: the bulk file and the v3 API answer the same question
  * with different costs and different credentials, and a single row would have
  * to hide one of them to state the other. The same is true of the Census (a
- * keyed API and committed bulk files) and the FEC (a keyed API and a committed
- * directory).
+ * keyed API and version-pinned reference files) and the FEC (a keyed API and a
+ * version-pinned directory).
  *
  * Excluded on purpose, and stated rather than silently dropped: database
  * connection strings, the admin session and break-glass secrets, and the
@@ -415,28 +407,24 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     source: "Congress.gov API",
     provider: "Library of Congress",
     family: "Federal API",
-    capability: "Roll-call votes in both chambers, and the sitting delegation's own pages and portraits.",
+    capability: "Official House/Senate roll calls, reviewed key-question roll identities, and exact member positions.",
     disposition: "ACTIVE",
-    dispositionWhy: "The key is held and two build commands read it; what is missing is a clock.",
+    dispositionWhy: "Owner-invoked acquisitions promote through the canonical civic-data candidate/event/promotion store. The absence of a clock is deliberate.",
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: {
       active: true,
-      at: "scripts/fetch-votes.mts, scripts/fetch-law-votes.mts",
-      says: "Two build commands read the API. The roster itself comes from the keyless bulk file, which is the row below.",
+      at: "scripts/fetch-votes.mts, scripts/fetch-key-vote-positions.mts",
+      says: "Explicit commands acquire official chamber/Congress.gov records and can write only durable candidate/outcome/promotion rows.",
     },
-    productUsage: "Federal roll-call votes committed under data/votes/, served on a member's record.",
-    refreshSourceId: null,
-    offClockSays: "Nothing re-reads this on a clock. It is run by hand, and the committed votes are as old as the last hand run.",
-    legacyWorkflow: null,
-    restingHealth: "AMBER",
+    productUsage: "Federal recent and reviewed key-vote records served from proof-validated promoted projections.",
+    productionContractIds: ["congress-rollcalls", "federal-key-votes"],
+    operationSays: "Explicit owner invocation only. The two canonical manual contracts own receipts, promotion, and Reader delivery.",
+    restingHealth: "UNKNOWN",
     restingHealthWhy:
-      "The key answered when it was last called, and no scheduled run reads it — so how old the committed votes are is not being watched by anything.",
+      "The canonical Admin outcome projection owns attempt, promotion, hold, LKG, and source-history state; this older route registry does not infer it.",
     spendConcern: "One keyed read per chamber per run. No published ceiling for this key is recorded in this repository.",
-    blocker: {
-      what: "Federal roll-call votes are on no schedule, so a new vote does not reach a reader until somebody runs the command.",
-      whose: "OURS",
-    },
-    ownerAction: "Decide whether federal roll-call votes join the nightly refresh, and at what cadence.",
+    blocker: null,
+    ownerAction: null,
     namedOnly: false,
     evidence: [
       { what: "the key's last measured call — 5 New Jersey members, each stating New Jersey", at: "docs/credential-ledger.md" },
@@ -454,11 +442,10 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: { active: true, at: "scripts/fetch-fec.mts, scripts/routine-civic-data-runner.mts", says: "Reads the API, validates a candidate version, and atomically promotes the runtime funding projection." },
     productUsage: "Who paid for a federal candidate's campaign, on the candidate's own card.",
-    refreshSourceId: null,
-    offClockSays: "Runs on the standing local civic-data runner's weekly clock; it no longer rides the GitHub nightly software/data-file run.",
-    legacyWorkflow: "Refresh FEC snapshot (retired)",
+    productionContractIds: ["fec-funding"],
+    operationSays: "The standing runner invokes the canonical weekly contract; its durable events own cadence, health, and LKG.",
     restingHealth: "UNKNOWN",
-    restingHealthWhy: "This registry does not read the production candidate ledger, so it cannot grade the standing runner from an unrelated nightly-run receipt.",
+    restingHealthWhy: "The canonical production-data panel owns attempt, promotion, hold, LKG, and source-history state; this capability registry does not infer it.",
     spendConcern:
       "Committees file monthly or quarterly and the agency's own processing lag is measured in days, so the weekly cadence is already the point at which a faster read returns the same answer.",
     blocker: null,
@@ -466,7 +453,7 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     namedOnly: false,
     evidence: [
       { what: "the fetch and what it writes", at: "scripts/fetch-fec.mts" },
-      { what: "the cadence and the reason for it", at: "lib/ops/refresh-cadence.ts" },
+      { what: "the single production contract, cadence, retry, store and projection", at: "lib/civic-data/contracts.ts" },
     ],
   },
   {
@@ -481,9 +468,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: { active: false, at: null, says: "No module reads it. The measured walk recorded that it closes no field at either pilot zip." },
     productUsage: "None today. A later who-is-lobbying-my-delegation surface is the named use it is held for.",
-    refreshSourceId: null,
-    offClockSays: "Nothing calls it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing calls it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
     spendConcern: "No calls are made, so no quota is spent.",
@@ -507,9 +493,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: { active: false, at: null, says: "No module reads it. Its value was re-measured rather than assumed." },
     productUsage: "None today. The Congressional Directory is the named later use.",
-    refreshSourceId: null,
-    offClockSays: "Nothing calls it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing calls it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
     spendConcern: "No calls are made, so no quota is spent.",
@@ -528,22 +513,21 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     family: "Federal API",
     capability: "Population by ZIP code tabulation area and by state, from the five-year American Community Survey.",
     disposition: "ACTIVE",
-    dispositionWhy: "The key works, one adapter reads it, and the population it returns is on the readiness panel.",
+    dispositionWhy: "The key works and the standing runner promotes the official annual release through the canonical data plane.",
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: {
       active: true,
       at: "lib/sources/census-acs-population/index.ts",
       says: "The one adapter in this repository that exports the whole fetch, normalise and upsert triple, and it takes the key as a parameter rather than reading the environment itself.",
     },
-    productUsage: "The population figure behind every readiness reading, committed under data/reference/.",
-    refreshSourceId: null,
-    offClockSays: "Nothing re-reads this on a clock. It is run by hand when a new release lands.",
-    legacyWorkflow: null,
-    restingHealth: "AMBER",
+    productUsage: "The promoted ACS population projection used by readiness and jurisdiction views.",
+    productionContractIds: ["census-acs-population"],
+    operationSays: "The standing runner invokes the canonical monthly contract; its durable events own cadence, health, and LKG.",
+    restingHealth: "UNKNOWN",
     restingHealthWhy:
-      "The survey publishes a new five-year release once a year and the committed file is the 2023 release, so it is not going stale quickly — but nothing watches for the next release either.",
+      "The canonical production-data panel owns the current release, attempts, promotion, hold, and LKG state; this capability registry does not infer it.",
     spendConcern:
-      "One keyed call returns every ZIP code tabulation area and one returns every state, so a full refresh is two calls. This host answers a rejected key with a success code and an error page, which is why the credential check compares the body rather than the status.",
+      "One keyed call returns every ZIP code tabulation area and one returns every state, so a full acquisition is two calls. This host answers a rejected key with a success code and an error page, which is why the credential check compares the body rather than the status.",
     blocker: null,
     ownerAction: null,
     namedOnly: false,
@@ -563,13 +547,12 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     disposition: "CREDENTIAL_NOT_REQUIRED",
     dispositionWhy: "One public file, no key, no rate wall. It is preferred over the keyed API for the roster on purpose.",
     credential: NO_KEY,
-    adapter: { active: true, at: "lib/sources/congress/index.ts", says: "Reads the bulk file at build time; nothing fetches it on a page load." },
+    adapter: { active: true, at: "scripts/fetch-congress-legislators.mts", says: "Acquires the public roster only on explicit owner invocation and promotes it through the canonical data plane." },
     productUsage: "The federal half of who governs a reader's address.",
-    refreshSourceId: null,
-    offClockSays: "Rebuilt by hand with the officials build. Nothing re-reads it on a clock.",
-    legacyWorkflow: null,
-    restingHealth: "AMBER",
-    restingHealthWhy: "The roster is committed and correct as at the last officials build; no scheduled run checks whether the upstream file has moved.",
+    productionContractIds: ["congress-bulk-roster"],
+    operationSays: "Explicit owner invocation only. The canonical manual contract owns receipts, promotion, and Reader delivery.",
+    restingHealth: "UNKNOWN",
+    restingHealthWhy: "The canonical production-data panel owns acquisition, validation, promotion, and LKG state; this capability registry does not infer it.",
     spendConcern: "One request for the whole country. No quota and no key.",
     blocker: null,
     ownerAction: null,
@@ -583,21 +566,20 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     family: "Federal bulk file",
     capability: "District and ZIP boundaries, and the official count of American governments every coverage claim is measured against.",
     disposition: "CREDENTIAL_NOT_REQUIRED",
-    dispositionWhy: "Committed public-domain files. No key, and the denominators every readiness number is stated over come from here.",
+    dispositionWhy: "Version-pinned public-domain engineering references. No key, and the denominators every readiness number is stated over come from here.",
     credential: NO_KEY,
-    adapter: { active: true, at: "data/reference/census_govt_units_2022.csv, lib/geo/", says: "Committed rather than fetched, so a build cannot be blocked by an outage." },
+    adapter: { active: true, at: "data/reference/census_govt_units_2022.csv, lib/geo/", says: "Adopted as a reviewed software reference, so a build cannot be blocked by an outage." },
     productUsage: "Every boundary the map draws, and the official universe behind every coverage figure.",
-    refreshSourceId: null,
-    offClockSays: "Committed files. The Census of Governments is published every five years, so a clock would have nothing to do.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Static engineering reference. A new upstream edition requires a reviewed software change, not a runtime clock.",
     restingHealth: "GREEN",
     restingHealthWhy:
-      "The files are committed in this repository and the suite reads them on every run, so their presence and shape are proven by the test gate rather than asserted here.",
+      "The version-pinned references ship with the software and the suite reads them on every run, so their presence and shape are certified rather than inferred.",
     spendConcern: "Nothing is fetched at run time. No quota.",
     blocker: null,
     ownerAction: null,
     namedOnly: false,
-    evidence: [{ what: "the committed universe and the coverage rule it anchors", at: "docs/sources.md — the keyless sources" }],
+    evidence: [{ what: "the adopted universe and the coverage rule it anchors", at: "docs/sources.md — the keyless sources" }],
   },
   {
     id: "fec-directory-bulk",
@@ -606,15 +588,14 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     family: "Federal bulk file",
     capability: "Which office holds campaign-finance records in each state, with its own address, email and phone.",
     disposition: "CREDENTIAL_NOT_REQUIRED",
-    dispositionWhy: "A committed public-domain file: 349 offices across 56 jurisdictions, no key.",
+    dispositionWhy: "A version-pinned public-domain reference: 349 offices across 56 jurisdictions, no key.",
     credential: NO_KEY,
-    adapter: { active: true, at: "data/reference/fec_combined_federal_state_disclosure_directory.csv", says: "Committed; re-fetched by hand." },
+    adapter: { active: true, at: "data/reference/fec_combined_federal_state_disclosure_directory.csv", says: "Adopted through a reviewed software change." },
     productUsage: "The route from a state to its own campaign-finance authority, which is how a state money hunt starts.",
-    refreshSourceId: null,
-    offClockSays: "Committed file, re-fetched by hand.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Static engineering reference. A revised directory requires a reviewed software change, not a runtime clock.",
     restingHealth: "AMBER",
-    restingHealthWhy: "Committed and correct as at the last hand fetch; nothing watches the upstream for a revision.",
+    restingHealthWhy: "The adopted version is software-certified; upstream revision discovery is not represented as live source health.",
     spendConcern: "Nothing is fetched at run time. No quota.",
     blocker: null,
     ownerAction: null,
@@ -628,15 +609,14 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     family: "Federal bulk file",
     capability: "Every domain in the .gov top-level domain with its registrant, city, state and CISA's own type.",
     disposition: "CREDENTIAL_NOT_REQUIRED",
-    dispositionWhy: "A public CSV with no key. It rides the nightly refresh on a monthly cadence.",
+    dispositionWhy: "A public CSV with no key. The standing runner owns its monthly canonical production contract.",
     credential: NO_KEY,
-    adapter: { active: true, at: "scripts/fetch-dotgov.mts", says: "Fetches the published CSV and writes the committed snapshot." },
+    adapter: { active: true, at: "scripts/fetch-dotgov.mts", says: "Acquires the published CSV, validates a candidate, and promotes only through the canonical data plane." },
     productUsage: "A discovery rung — the cheapest first answer to whether a government publishes anything and where.",
-    refreshSourceId: "dotgov",
-    offClockSays: "",
-    legacyWorkflow: "Refresh dotgov snapshot",
+    productionContractIds: ["dotgov"],
+    operationSays: "The standing runner invokes the canonical monthly contract; its durable events own cadence, health, and LKG.",
     restingHealth: "UNKNOWN",
-    restingHealthWhy: "",
+    restingHealthWhy: "The canonical production-data panel owns attempt, promotion, hold, LKG, and source-history state; this capability registry does not infer it.",
     spendConcern:
       "The federal register gains and loses a handful of entries a month, so a daily read would be a build spent to learn nothing. This is why the cadence is monthly.",
     blocker: {
@@ -655,18 +635,16 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     provider: "LegiScan (licensed, attribution required)",
     family: "State API",
     capability: "State bills and roll-call votes.",
-    disposition: "ACTIVE",
-    dispositionWhy: "The key is retained for licensed research and legacy attribution, but this secondary source cannot auto-promote official legislative truth.",
+    disposition: "INTENTIONALLY_NOT_SPENT",
+    dispositionWhy: "The key is retained for licensed research but deliberately not spent: official legislative publishers own current vote acquisition and promotion.",
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
-    adapter: { active: true, at: "scripts/fetch-legiscan.mts, lib/sources/legiscan/", says: "The legacy command can read the licensed dataset for research; routine production promotion requires the registered official publisher." },
-    productUsage: "How a state legislator voted, on that legislator's record.",
-    refreshSourceId: null,
-    offClockSays: "No production refresh clock reads LegiScan. It remains a manually invoked research source while official state publishers own routine promotion.",
-    legacyWorkflow: "Refresh LegiScan snapshot (retired)",
-    restingHealth: "AMBER",
-    restingHealthWhy: "The committed legacy state-vote corpus remains readable, but this registry has no current licensed-source run receipt and official records now own routine promotion.",
-    spendConcern:
-      "The publisher rebuilds its dataset once a week and the fetch is gated on the dataset hash, so reading more often cannot return a different answer.",
+    adapter: { active: false, at: "lib/sources/legiscan/", says: "The retained parser can inspect already-held historical evidence; no executable source acquisition path calls the licensed API." },
+    productUsage: "Historical research evidence only. It is not a production acquisition, freshness, or promotion authority.",
+    productionContractIds: [],
+    operationSays: "No production contract reads LegiScan; historical research has no acquisition or promotion door.",
+    restingHealth: "UNKNOWN",
+    restingHealthWhy: "No current source call is made, so the registry does not manufacture a health verdict from historical files.",
+    spendConcern: "Deliberately zero: the official publisher path supplies production truth without spending this licensed key.",
     blocker: {
       what: "The licence requires attribution wherever the data appears, which is a standing obligation on every surface that shows a state vote.",
       whose: "THEIRS",
@@ -681,19 +659,21 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     provider: "Plural (Open States)",
     family: "State API",
     capability: "State legislators and their official contacts, per request.",
-    disposition: "INTENTIONALLY_NOT_SPENT",
+    disposition: "PRESERVE",
     dispositionWhy:
-      "The publisher's own nightly bulk file carries the same 7,976 legislators with their official emails, needs no key and costs no quota. The key is held for a question the bulk file cannot answer, and that question has not arisen.",
+      "The credential is retained for bounded research only. Neither the API nor its bulk intermediary may supply production officeholder truth; an official legislature must own that projection.",
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
-    adapter: { active: false, at: null, says: "The adapter exists and deliberately reads the bulk file instead. Nothing calls the API." },
-    productUsage: "None. The bulk-file row below is what serves state legislators.",
-    refreshSourceId: null,
-    offClockSays: "Nothing calls it, so nothing schedules it.",
-    legacyWorkflow: null,
+    adapter: { active: false, at: null, says: "No production adapter calls the API. Research use cannot promote or feed a Reader." },
+    productUsage: "None in production. The key is preserved only for bounded research questions.",
+    productionContractIds: [],
+    operationSays: "Nothing calls it in production, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
-    spendConcern: "Deliberately zero. Every legislator the product needs comes from the free bulk file.",
-    blocker: null,
+    spendConcern: "Deliberately zero in production.",
+    blocker: {
+      what: "A third-party intermediary is not the authority for current legislative membership; each legislature's own publication must be promoted before Reader use.",
+      whose: "OURS",
+    },
     ownerAction: null,
     namedOnly: false,
     evidence: [{ what: "the adapter's own account of why it reads the bulk file", at: "lib/sources/plural/index.ts" }],
@@ -704,21 +684,23 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     provider: "Plural (Open States), CC-0",
     family: "Federal bulk file",
     capability: "Every current state legislator in the country, with official emails.",
-    disposition: "CREDENTIAL_NOT_REQUIRED",
-    dispositionWhy: "A published nightly CSV, no key, CC-0. This is the route that actually serves state legislators.",
+    disposition: "NOT_APPLICABLE",
+    dispositionWhy: "The CC-0 file remains useful research evidence, but a third-party intermediary cannot be the production authority for current legislative membership.",
     credential: NO_KEY,
-    adapter: { active: true, at: "lib/sources/plural/index.ts", says: "Reads the committed bulk CSV." },
-    productUsage: "The state half of who governs a reader's address.",
-    refreshSourceId: null,
-    offClockSays: "Committed file, re-fetched by hand.",
-    legacyWorkflow: null,
-    restingHealth: "AMBER",
-    restingHealthWhy: "Committed and correct as at the last hand fetch; nothing watches the upstream nightly file for a change.",
+    adapter: { active: false, at: "lib/sources/plural/index.ts", says: "Manual research parser only; no production Reader or tracked writer calls it." },
+    productUsage: "None in production. Historical rows are retained as research/test evidence only.",
+    productionContractIds: [],
+    operationSays: "Research retrieval has no production acquisition, execution, or promotion door.",
+    restingHealth: "UNKNOWN",
+    restingHealthWhy: "Not a production source, so no production-health claim is made.",
     spendConcern: "No key and no quota.",
-    blocker: null,
+    blocker: {
+      what: "Official-publisher state membership is not yet projected for every covered state; Reader surfaces therefore show the holding as unavailable instead of falling back here.",
+      whose: "OURS",
+    },
     ownerAction: null,
     namedOnly: false,
-    evidence: [{ what: "the committed roster and the licence", at: "docs/sources.md — the keyless sources" }],
+    evidence: [{ what: "the retained historical roster and the licence", at: "docs/sources.md — the keyless sources" }],
   },
 
   /* --------------------------------------------------------- STATE PORTAL */
@@ -733,12 +715,11 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: NO_KEY,
     adapter: { active: true, at: "lib/sources/az-seethemoney/", says: "A four-route portfolio rather than one endpoint, because the portal splits the record four ways." },
     productUsage: "Arizona state campaign money on a candidate's card.",
-    refreshSourceId: null,
-    offClockSays: "Read by the shadow scheduler's campaign-finance obligations, which do not yet run on a clock of their own.",
-    legacyWorkflow: null,
-    restingHealth: "AMBER",
+    productionContractIds: ["az-sos-campaign-finance"],
+    operationSays: "Explicit owner invocation only. The canonical manual contract owns receipts, promotion, and Reader delivery.",
+    restingHealth: "UNKNOWN",
     restingHealthWhy:
-      "This host once answered with a success code and a two-byte empty body for a week, which is why every route here states what a real answer must contain before it counts as one.",
+      "The canonical production-data panel owns attempts, validation, promotion, hold, and LKG state; this capability registry does not infer it.",
     spendConcern: "A public portal with no published ceiling. The request pace is set in the route descriptors rather than by a quota.",
     blocker: null,
     ownerAction: null,
@@ -759,11 +740,10 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: NO_KEY,
     adapter: { active: true, at: "the state money path under lib/funding/", says: "Reads the committee endpoint and the filing-data endpoint." },
     productUsage: "New Jersey state campaign money on a candidate's card.",
-    refreshSourceId: null,
-    offClockSays: "Nothing re-reads it on a clock.",
-    legacyWorkflow: null,
-    restingHealth: "AMBER",
-    restingHealthWhy: "Walked and recorded working; no scheduled run re-reads it, so a change on the host would not be noticed.",
+    productionContractIds: ["nj-elec-campaign-finance"],
+    operationSays: "Explicit owner invocation only. The canonical manual contract owns receipts, promotion, and Reader delivery.",
+    restingHealth: "UNKNOWN",
+    restingHealthWhy: "The canonical production-data panel owns attempts, validation, promotion, hold, and LKG state; this capability registry does not infer it.",
     spendConcern: "A public search host with no published ceiling.",
     blocker: null,
     ownerAction: null,
@@ -779,13 +759,12 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     disposition: "CREDENTIAL_NOT_REQUIRED",
     dispositionWhy: "The clerk's own published page and its documents. No key.",
     credential: NO_KEY,
-    adapter: { active: true, at: "lib/sources/ballot-nj-morris/, scripts/build-nj-morris-ballot.mts", says: "Rebuilds the ballot, then checks the rebuild against the clerk's own published count." },
+    adapter: { active: true, at: "lib/sources/ballot-nj-morris/, scripts/build-nj-morris-ballot.mts", says: "Builds a candidate version, checks it against the clerk's published count, and promotes it only through the canonical production data plane." },
     productUsage: "The New Jersey pilot ballot, and the questionnaire invitations generated from it.",
-    refreshSourceId: "nj-filing",
-    offClockSays: "",
-    legacyWorkflow: "Refresh NJ filing",
+    productionContractIds: ["nj-morris-filing"],
+    operationSays: "The standing runner invokes the canonical filing contract; its durable events own cadence, health, and LKG.",
     restingHealth: "UNKNOWN",
-    restingHealthWhy: "",
+    restingHealthWhy: "The canonical production-data panel owns attempt, promotion, hold, LKG, and source-history state; this capability registry does not infer it.",
     spendConcern: "A public clerk's page. No key and no published ceiling.",
     blocker: {
       what: "The clerk revises documents on their own schedule and leaves the old path reachable, so a superseded document can still answer.",
@@ -794,8 +773,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     ownerAction: null,
     namedOnly: false,
     evidence: [
-      { what: "why the rebuild runs before the check, and what that fixed", at: "lib/ops/refresh-cadence.ts" },
-      { what: "the superseded-path hazard", at: ".github/workflows/refresh-nj-filing.yml" },
+      { what: "the single production contract, cadence, retry, store and projection", at: "lib/civic-data/contracts.ts" },
+      { what: "the superseded-path check and fail-closed candidate builder", at: "scripts/build-nj-morris-ballot.mts" },
     ],
   },
 
@@ -811,9 +790,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: NO_KEY,
     adapter: { active: true, at: "scripts/arcgis-catalog.mts, lib/geo/district-overlap.ts", says: "A catalogue walk that names every layer a server holds, so a boundary claim can cite the layer it came from." },
     productUsage: "District overlap and boundary evidence behind the map.",
-    refreshSourceId: null,
-    offClockSays: "Walked when a jurisdiction is worked. Nothing re-reads it on a clock.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "An engineer invokes the catalogue walk for a bounded jurisdiction investigation; it is not production runtime authority.",
     restingHealth: "AMBER",
     restingHealthWhy:
       "A GIS host publishes its services under a path that is not guessable and has already answered with a not-found on the obvious one, so a route that worked is not evidence that the neighbouring route exists.",
@@ -834,9 +812,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "SITE_RUNTIME", parts: 1 },
     adapter: { active: true, at: "lib/map/style.ts", says: "Builds the style URL the map loads." },
     productUsage: "Every map a reader sees.",
-    refreshSourceId: null,
-    offClockSays: "A live service. There is nothing to refresh on a clock.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Reader requests call this live service; it has no civic-data acquisition or promotion contract.",
     restingHealth: "GREEN",
     restingHealthWhy:
       "The key was last proven by fetching the style document and counting its layers rather than by reading a status code, and the same style URL the application builds is the one that was called.",
@@ -858,9 +835,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "SITE_RUNTIME", parts: 1 },
     adapter: { active: true, at: "lib/routing/classifier.ts", says: "Classifies a reader's question. The research fleet holds a separate credential of its own." },
     productUsage: "Routing a reader's typed question to the right answer path.",
-    refreshSourceId: null,
-    offClockSays: "A live service. There is nothing to refresh on a clock.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Reader requests call this live service; it has no civic-data acquisition or promotion contract.",
     restingHealth: "GREEN",
     restingHealthWhy: "The key was last proven by listing models and confirming at least one of them is a Claude model, rather than by reading a status code.",
     spendConcern:
@@ -883,9 +859,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "WORKSTATION", parts: 2 },
     adapter: { active: false, at: null, says: "No adapter, and the platform is not among the ones the tenancy sweep recognises." },
     productUsage: "None.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
     spendConcern: "No calls are made. A Socrata token raises a rate ceiling rather than unlocking data, so the cost of not holding one is speed, not access.",
@@ -908,9 +883,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: { active: false, at: null, says: "No adapter." },
     productUsage: "None.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
     spendConcern: "No calls are made.",
@@ -933,9 +907,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: { required: true, holder: "WORKSTATION", parts: 2 },
     adapter: { active: false, at: null, says: "No adapter, and none can be written against an account that does not exist yet." },
     productUsage: "None.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: "Waiting on the provider. Nothing has been called, so nothing has been measured.",
     spendConcern: "No calls are made.",
@@ -964,9 +937,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: NO_KEY,
     adapter: { active: false, at: null, says: "No adapter. CKAN's catalogue endpoints are open, so what is missing is code rather than permission." },
     productUsage: "None.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
     spendConcern: "No calls are made. CKAN portals are keyless for reading.",
@@ -989,9 +961,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: NO_KEY,
     adapter: { active: false, at: null, says: "No adapter. OpenFEMA is keyless, so what is missing is code rather than permission." },
     productUsage: "None.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: UNCALLED,
     spendConcern: "No calls are made. The service is keyless.",
@@ -1015,9 +986,8 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     credential: NO_KEY,
     adapter: { active: false, at: null, says: "No adapter carries this name." },
     productUsage: "None under this name.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it under this name, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it under this name, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: "Nothing has been called, because it is not established what would be called.",
     spendConcern: "No calls are made.",
@@ -1041,13 +1011,12 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
     capability: "An address to its political divisions.",
     disposition: "NOT_APPLICABLE",
     dispositionWhy:
-      "The endpoint that would have answered who represents an address was retired by Google in April 2025. What remains is a divisions lookup, and every division this product needs is already in the committed registry — so wiring it would add a dependency and answer nothing new.",
+      "The endpoint that would have answered who represents an address was retired by Google in April 2025. What remains is a divisions lookup, and every division this product needs is already in the canonical registry projection — so wiring it would add a dependency and answer nothing new.",
     credential: { required: true, holder: "WORKSTATION", parts: 1 },
     adapter: { active: false, at: null, says: "No adapter, and none is wanted." },
-    productUsage: "None. The committed registry resolves a point to its divisions without a third party.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productUsage: "None. The canonical registry projection resolves a point to its divisions without a third party.",
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN",
     restingHealthWhy: "Nothing calls it. It is recorded rather than deleted so the next session does not rediscover the retirement.",
     spendConcern: "No calls are made.",
@@ -1058,54 +1027,30 @@ const DECLARED_ROUTES: readonly DeclaredRoute[] = [
   },
 ];
 
-/* ==========================================================================
- * 4. THE REFRESH LAW — one clock, and five surfaces that are not one
+/* ===========================================================================
+ * 4. PRODUCTION EXECUTION BOUNDARY — the capability table is not a clock
  * ========================================================================== */
 
-export interface LegacyWorkflow {
-  readonly name: string;
-  /** The refresh source whose work it used to carry on its own cron. */
-  readonly sourceId: string;
-  readonly file: string;
-}
-
 /**
- * The five per-source workflows that lost their schedules under RULING 124 and
- * kept their manual trigger.
- *
- * Declared here and PINNED by `tests/admin-source-registry.test.ts`, which
- * reads `.github/workflows/` and fails if any of the five carries a `schedule:`
- * block again. §7 of the brief asks that the retired schedules never be shown
- * as though they were re-enabled; a test that reads the real workflows is the
- * only way to keep that true as the files change.
+ * The explicit terminal census. A non-empty value is an architecture defect:
+ * no capability route may acquire or promote routine civic data in Actions.
  */
-export const LEGACY_REFRESH_WORKFLOWS: readonly LegacyWorkflow[] = [
-  { name: "Refresh meetings snapshot", sourceId: "meetings", file: ".github/workflows/refresh-meetings-snapshot.yml" },
-  { name: "Refresh NJ filing", sourceId: "nj-filing", file: ".github/workflows/refresh-nj-filing.yml" },
-  { name: "Refresh FEC snapshot (retired)", sourceId: "fec", file: ".github/workflows/refresh-fec-snapshot.yml" },
-  { name: "Refresh LegiScan snapshot (retired)", sourceId: "legiscan", file: ".github/workflows/refresh-legiscan-snapshot.yml" },
-  { name: "Refresh dotgov snapshot", sourceId: "dotgov", file: ".github/workflows/refresh-dotgov-snapshot.yml" },
-];
+export const GITHUB_ROUTINE_DATA_ROUTE_IDS: readonly string[] = [];
 
-export interface SchedulerTruth {
-  /** The one scheduled run, by its own name. */
-  readonly theOneRun: string;
-  readonly whenItRuns: string;
-  readonly legacy: readonly LegacyWorkflow[];
-  /** What the calendar cadence is, and what it is not. */
+export interface ProductionExecutionBoundary {
+  readonly state: "SOFTWARE_CI_ONLY";
+  readonly githubRoutineDataRouteIds: readonly string[];
   readonly authority: string;
-  /** Where the long-term authority is going, and how far along it is. */
-  readonly migration: string;
+  readonly operations: string;
 }
 
-export const SCHEDULER_TRUTH: SchedulerTruth = {
-  theOneRun: "Refresh (daily, all sources)",
-  whenItRuns: "Once a day, at 09:11 UTC. It commits at most once, and commits nothing when nothing moved.",
-  legacy: LEGACY_REFRESH_WORKFLOWS,
+export const PRODUCTION_EXECUTION_BOUNDARY: ProductionExecutionBoundary = {
+  state: "SOFTWARE_CI_ONLY",
+  githubRoutineDataRouteIds: GITHUB_ROUTINE_DATA_ROUTE_IDS,
   authority:
-    "The daily run works off a calendar: weekly sources run on Mondays, monthly sources on the first. That is deliberate — asking when a file last changed gives the wrong answer on a shallow clone, silently, and a weekly source would read as refreshed today every day forever.",
-  migration:
-    "The calendar run is a backup wake-up rather than the freshness clock, and it says so about itself. The control-plane scheduler is the long-term authority: it derives when each record is next owed, claims the work durably and carries what failed as debt. It is shadow-run today and takes authority only when a run nobody involved in building it performs reproduces its results.",
+    "The typed contracts and durable store clock determine what is due. GitHub Actions does not acquire, promote, commit, build, or deploy routine civic data.",
+  operations:
+    "Canonical current attempts, promotions, holds, retries, LKG, next-due times, and Reader delivery appear in the production-data panel.",
 };
 
 /* ==========================================================================
@@ -1124,7 +1069,7 @@ function meetingAdapterRows(): DeclaredRoute[] {
   return CAPABILITIES.map((capability) => {
     const bodies = wiringForSourceName(capability.name).length;
     const label = platformLabel(capability.name);
-    const ownsItsOwnTenants = capability.name === "legistar" || capability.name === "legistar-insite";
+    const partitionContracts = meetingPartitionsForSource(capability.name);
     return {
       id: `meeting-${capability.name}`,
       source: label,
@@ -1140,21 +1085,18 @@ function meetingAdapterRows(): DeclaredRoute[] {
       adapter: {
         active: true,
         at: `lib/sources/${capability.name}/`,
-        says: ownsItsOwnTenants
-          ? "This adapter keeps its own tenant table as well as reading the wiring rows, so the count beside it is what the registry can SAY it serves rather than everything it actually serves."
-          : "Built from the wiring rows. A platform with no wired government contributes nothing rather than failing.",
+        says: "Built only from SOURCE_WIRING rows. A platform with no wired government contributes nothing rather than acquiring a hidden tenant.",
       },
       productUsage: "Meetings on the map, and the agenda behind each one.",
-      refreshSourceId: "meetings",
-      offClockSays: "",
-      legacyWorkflow: "Refresh meetings snapshot",
+      productionContractIds: partitionContracts.map((contract) => contract.id),
+      operationSays: "The standing runner invokes one canonical contract per wired source/body; each partition's durable events own cadence, health, and LKG.",
       restingHealth: "UNKNOWN" as HealthLevel,
-      restingHealthWhy: "",
-      spendConcern: "Public portals with no published ceiling. The scheduled refresh gives each platform a fixed budget per run.",
+      restingHealthWhy: "The canonical production-data panel owns attempts, promotion, holds, retries, LKG, and source history; this capability registry does not infer it.",
+      spendConcern: "Public portals with no published ceiling. The meetings contract gives each adapter a fixed request budget per attempt.",
       blocker:
         bodies === 0
           ? {
-              what: "No government is wired to this platform, so the adapter reads nothing at every run.",
+              what: "No government is wired to this platform, so the adapter reads nothing on each contract attempt.",
               whose: "OURS" as GapOwner,
             }
           : null,
@@ -1183,9 +1125,8 @@ function unadaptedPlatformRows(): DeclaredRoute[] {
     credential: NO_KEY,
     adapter: { active: false, at: null, says: "Recognised by the tenancy sweep, read by nothing." },
     productUsage: "None. A government on this platform is invisible to the meetings surface.",
-    refreshSourceId: null,
-    offClockSays: "Nothing reads it, so nothing schedules it.",
-    legacyWorkflow: null,
+    productionContractIds: [],
+    operationSays: "Nothing reads it, so it has no production execution contract.",
     restingHealth: "UNKNOWN" as HealthLevel,
     restingHealthWhy: "Nothing reads this platform, so nothing measures it. The governments on it are not absent; they are unread.",
     spendConcern: "No calls are made.",
@@ -1276,20 +1217,12 @@ export function registerDisagreements(): readonly RegisterDisagreement[] {
  * ========================================================================== */
 
 export interface SourceRegistryInput {
-  /** The UTC calendar day the cadence is computed against, `YYYY-MM-DD`. */
-  readonly today: string;
   /** When the page rendered, for the as-of line. */
   readonly nowIso: string;
   /** Route id to whether every variable it needs is present, from {@link readCredentialPresence}. */
   readonly credentialPresence: Readonly<Record<string, boolean>>;
   /** Where that reading was taken, in words. Never a store's address. */
   readonly credentialReadIn: string;
-  /** The nightly refresh's own record of its last run, when the caller holds one. */
-  readonly lastRun: RefreshRun | null;
-  /** How the caller came by that record, for the as-of sentence. */
-  readonly lastRunProvenance: string;
-  /** Sources carrying open freshness debt. */
-  readonly openDebt: readonly RefreshDebt[];
 }
 
 export interface FamilyGroup {
@@ -1307,29 +1240,13 @@ export interface SourceRegistryView {
   readonly inUse: Measured;
   readonly credentialsHeldAndUnspent: Measured;
   readonly namedOnly: Measured;
-  readonly onNightlyRefresh: Measured;
+  readonly githubRoutineDataRoutes: Measured;
   readonly meetingCoverage: Measured;
   readonly needsYou: readonly SourceRow[];
-  readonly scheduler: SchedulerTruth;
+  readonly executionBoundary: ProductionExecutionBoundary;
   readonly disagreements: readonly RegisterDisagreement[];
-  /** How the run record reached this page, said plainly. */
-  readonly refreshProvenance: string;
-}
-
-function parseDay(ymd: string): Date {
-  return new Date(`${ymd}T00:00:00Z`);
-}
-
-/** Say a cadence the way a person says it. */
-function cadenceWords(cadence: Cadence): string {
-  if (cadence === "daily") return "every day";
-  if (cadence === "weekly") return "once a week, on Mondays";
-  return "once a month, on the first";
-}
-
-/** What the nightly refresh recorded about one source, if it recorded anything. */
-function runRowFor(run: RefreshRun | null, sourceId: string): RefreshSourceRun | null {
-  return run?.sources.find((s) => s.id === sourceId) ?? null;
+  /** Where current production-operation truth is read, said plainly. */
+  readonly productionOutcomeAuthority: string;
 }
 
 /**
@@ -1359,96 +1276,58 @@ function credentialReadingFor(
   );
 }
 
-/** Health for a route the nightly refresh actually measured. */
-function refreshHealth(
-  runRow: RefreshSourceRun | null,
-  debt: RefreshDebt | null,
-  run: RefreshRun | null,
-): { level: HealthLevel; why: string } {
-  if (debt) {
-    return {
-      level: "RED",
-      why:
-        `The last ${debt.consecutiveFailures} attempt(s) did not land, first on ${debt.firstFailedOn} and most recently on ${debt.lastFailedOn}. ` +
-        `The recorded reason: ${debt.reason}`,
-    };
-  }
-  if (!run || !runRow) {
-    return {
-      level: "UNKNOWN",
-      why: "No run record reached this page, so nothing here has measured this route. That is a reading about this page, not about the source.",
-    };
-  }
-  if (runRow.outcome === "ROUTE_UNREAD") {
-    return { level: "RED", why: `The last run could not read the route: ${runRow.reason}` };
-  }
-  if (runRow.outcome === "NOT_DUE") {
-    return {
-      level: "AMBER",
-      why: `The last recorded run on ${run.runDate} did not read this route, because its cadence did not call for it that day.`,
-    };
-  }
-  if (runRow.outcome === "UNCHANGED") {
-    return { level: "GREEN", why: `The run on ${run.runDate} read the route and the facts had not moved. ${runRow.reason}` };
-  }
-  return { level: "GREEN", why: `The run on ${run.runDate} read the route and committed what changed. ${runRow.reason}` };
-}
-
 /**
  * Assemble every row. Nothing is fetched and nothing is read from disk; the
  * measured half arrives in `input`.
  */
 export function buildSourceRegistry(input: SourceRegistryInput): SourceRegistryView {
   const declared: DeclaredRoute[] = [...DECLARED_ROUTES, ...meetingAdapterRows(), ...unadaptedPlatformRows()];
-  const runDate = parseDay(input.today);
   const totalBodies = SOURCE_WIRING.length;
-  const bySourceId = new Map<string, RefreshSource>(REFRESH_SOURCES.map((s) => [s.id, s]));
+  const knownContractIds = new Set<string>([
+    ...observableRoutineContracts().map((contract) => contract.id),
+    ...MANUAL_PRODUCTION_SOURCE_CONTRACTS.map((contract) => contract.id),
+  ]);
 
   const rows: SourceRow[] = declared.map((route) => {
-    const refreshSource = route.refreshSourceId ? bySourceId.get(route.refreshSourceId) ?? null : null;
-    const runRow = refreshSource ? runRowFor(input.lastRun, refreshSource.id) : null;
-    const debt = refreshSource ? input.openDebt.find((d) => d.sourceId === refreshSource.id) ?? null : null;
-    const cadence = refreshSource ? cadenceOn(refreshSource, runDate) : null;
-
-    const refresh: RefreshUsage = refreshSource
+    // This is a capability-to-contract join, not a second membership registry.
+    // Membership, cadence and health remain solely in the permanent contract
+    // registries and canonical outcome projection.
+    for (const contractId of route.productionContractIds) {
+      if (!knownContractIds.has(contractId)) {
+        throw new Error(`${route.id}: unknown canonical production contract ${contractId}`);
+      }
+    }
+    const canonicalProductionCapability = route.productionContractIds.length > 0;
+    const operation: ProductionOperation = {
+      contractIds: route.productionContractIds,
+      says: route.operationSays,
+    };
+    const health = canonicalProductionCapability
       ? {
-          onNightlyRefresh: true,
-          cadence,
-          says: `Runs inside ${SCHEDULER_TRUTH.theOneRun}, ${cadenceWords(cadence as Cadence)}.`,
-          legacyWorkflow: route.legacyWorkflow,
+          level: "UNKNOWN" as const,
+          why: "This capability table does not duplicate current production-data health. The canonical production-data panel derives it from durable events.",
         }
-      : {
-          onNightlyRefresh: false,
-          cadence: null,
-          says: route.offClockSays,
-          legacyWorkflow: route.legacyWorkflow,
-        };
-
-    const health = refreshSource
-      ? refreshHealth(runRow, debt, input.lastRun)
       : { level: route.restingHealth, why: route.restingHealthWhy };
 
     /*
      * LAST SUCCESS IS A CLAIM ABOUT A READ, NOT ABOUT A RUN. A source that was
-     * not due on the last recorded run has no success in that record, and
-     * saying "last succeeded on the run date" would put a date beside a route
-     * nothing read that day. There is no per-source success history published
-     * anywhere, so the alternative is a named gap rather than a softer date.
+       * This static capability registry does not own current source attempts.
+       * Production contract rows get those dates from the canonical projection;
+       * every other route gets a named gap rather than a manufactured date.
      */
-    const lastSuccess: Held<string> =
-      runRow && input.lastRun && (runRow.outcome === "INGESTED" || runRow.outcome === "UNCHANGED")
-        ? held(input.lastRun.finishedAt)
-        : gap(
-            "OURS",
-            refreshSource
-              ? "The last recorded run did not read this route, and no history of earlier successful reads is published anywhere this page can reach."
-              : "Nothing records when this route last answered. It is not on the nightly run, and no per-route history is published.",
-          );
+    const lastSuccess: Held<string> = gap(
+      "OURS",
+      canonicalProductionCapability
+        ? "Current attempt and success times are shown only in the canonical production-data panel above."
+        : "Nothing records when this route last answered; no per-route history is published.",
+    );
 
-    const nextDueDay = refreshSource ? runRow?.nextDueAt ?? nextCadenceDay(refreshSource, runDate) : null;
-    const nextDue: Held<string> = nextDueDay
-      ? held(nextDueDay)
-      : gap("OURS", "Nothing schedules this route, so nothing is owed on a date.");
+    const nextDue: Held<string> = gap(
+      "OURS",
+      canonicalProductionCapability
+        ? "Current execution policy and next due time are shown only in the canonical production-data panel above."
+        : "Nothing schedules this route, so nothing is owed on a date.",
+    );
 
     const isMeetingAdapter = route.id.startsWith("meeting-") && route.adapter.active;
     const coverage: Held<Measured> = isMeetingAdapter
@@ -1486,7 +1365,7 @@ export function buildSourceRegistry(input: SourceRegistryInput): SourceRegistryV
       credentialReading: credentialReadingFor(route, input.credentialPresence, input.credentialReadIn),
       adapter: route.adapter,
       productUsage: route.productUsage,
-      refresh,
+      operation,
       lastSuccess,
       nextDue,
       health: health.level,
@@ -1548,11 +1427,11 @@ export function buildSourceRegistry(input: SourceRegistryInput): SourceRegistryV
       "routes named in the handoff inventory that appear nowhere in this repository, out of every route on this page",
       "counted from the built rows at render time",
     ),
-    onNightlyRefresh: measured(
-      rows.filter((r) => r.refresh.onNightlyRefresh).length,
+    githubRoutineDataRoutes: measured(
+      GITHUB_ROUTINE_DATA_ROUTE_IDS.length,
       rows.length,
-      "routes that ride the one scheduled run, out of every route on this page",
-      "counted from the built rows at render time",
+      "capability routes whose routine acquisition or promotion executes in GitHub Actions, out of every route on this page",
+      "the explicit terminal-zero route census, checked against workflow files by deterministic tests",
     ),
     meetingCoverage: measured(
       readableRows,
@@ -1561,11 +1440,10 @@ export function buildSourceRegistry(input: SourceRegistryInput): SourceRegistryV
       "the composite's capability table checked against the wiring table at render time",
     ),
     needsYou: rows.filter((r) => r.ownerAction !== null),
-    scheduler: SCHEDULER_TRUTH,
+    executionBoundary: PRODUCTION_EXECUTION_BOUNDARY,
     disagreements: registerDisagreements(),
-    refreshProvenance: input.lastRun
-      ? `${input.lastRunProvenance} The record is the run of ${input.lastRun.runDate}.`
-      : `${input.lastRunProvenance} No run record reached this page, so every last-read date below is a named gap rather than a date.`,
+    productionOutcomeAuthority:
+      "Current production outcomes are read only from canonical candidates, events, and promotion pointers by the panel above. This capability table accepts no run record or mutable operations file.",
   };
 }
 
@@ -1588,14 +1466,9 @@ export function sourceRegistryCountClaims(view: SourceRegistryView): readonly Co
       rendered: view.rows.filter((r) => r.namedOnly).length,
     },
     {
-      label: "routes on the one scheduled run",
-      stated: view.onNightlyRefresh.value,
-      rendered: view.rows.filter((r) => r.refresh.onNightlyRefresh).length,
-    },
-    {
-      label: "retired per-source schedules",
-      stated: view.scheduler.legacy.length,
-      rendered: LEGACY_REFRESH_WORKFLOWS.length,
+      label: "routes using GitHub for routine data",
+      stated: view.githubRoutineDataRoutes.value,
+      rendered: view.executionBoundary.githubRoutineDataRouteIds.length,
     },
   ];
   for (const group of view.families) {
@@ -1620,7 +1493,7 @@ export function sourceRegistryRenderedNumbers(view: SourceRegistryView): readonl
     push("routes something reads", view.inUse),
     push("keys held and not spent", view.credentialsHeldAndUnspent),
     push("named in the handoff, absent here", view.namedOnly),
-    push("on the one scheduled run", view.onNightlyRefresh),
+    push("using GitHub for routine data", view.githubRoutineDataRoutes),
     push("wired governments an adapter can read", view.meetingCoverage),
   ];
   for (const row of view.rows) {

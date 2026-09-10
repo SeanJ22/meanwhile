@@ -13,11 +13,12 @@
  * migration applied without its journal row re-runs forever.
  *
  * So the hand pass becomes a command. It uses the HTTP driver the rest of the
- * repo uses, applies each pending migration's statements in file order, and
- * writes the same `drizzle.__drizzle_migrations` row `drizzle-kit` would —
- * `hash` = sha256 of the file's raw bytes, `created_at` = the journal's own
- * `when`. A later `drizzle-kit migrate`, if its driver is ever fixed, reads
- * this table and sees the work as done.
+ * repo uses and applies each pending migration's statements plus its journal
+ * row in one Postgres transaction. `hash` is sha256 of the file's raw bytes;
+ * `created_at` is the journal's own `when`. A failed statement rolls the whole
+ * migration back, so production cannot be left half-migrated and unjournalled.
+ * A later `drizzle-kit migrate`, if its driver is ever fixed, reads this table
+ * and sees the work as done.
  *
  * ## Which database, and the refusals
  *
@@ -198,28 +199,27 @@ if (!nothingPending && !DRY) {
       process.exit(1);
     }
 
-    for (const statement of statements) {
-      const oneLine = statement.replace(/\s+/g, " ").slice(0, 110);
-      try {
-        await sql.query(statement);
-        statementsRun += 1;
-        console.log(`  OK    ${oneLine}`);
-      } catch (error) {
-        console.error(`  FAIL  ${oneLine}`);
-        console.error(`        ${(error as Error).message}`);
-        console.error(
-          `\n${entry.tag} failed partway. ${statementsRun} statement(s) applied in this run and ` +
-            `NOT journalled. Nothing is being guessed at or retried — read the error, fix the ` +
-            `cause, and run again.`,
-        );
-        process.exit(1);
-      }
+    try {
+      await sql.transaction((transaction) => [
+        ...statements.map((statement) => transaction.query(statement)),
+        transaction`
+          INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
+          VALUES (${hash}, ${entry.when})
+        `,
+      ]);
+    } catch (error) {
+      console.error(`  FAIL  transaction rolled back before the journal row was written`);
+      console.error(`        ${(error as Error).message}`);
+      console.error(
+        `\n${entry.tag} applied no durable statements in this run. Nothing is being guessed at ` +
+          `or retried — read the error, fix the cause, and run again.`,
+      );
+      process.exit(1);
     }
-
-    await sql`
-      INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
-      VALUES (${hash}, ${entry.when})
-    `;
+    statementsRun += statements.length;
+    for (const statement of statements) {
+      console.log(`  OK    ${statement.replace(/\s+/g, " ").slice(0, 110)}`);
+    }
     console.log(`  journalled  hash=${hash.slice(0, 16)}…  created_at=${entry.when}`);
   }
 

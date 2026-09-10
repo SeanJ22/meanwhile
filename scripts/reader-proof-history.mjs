@@ -3,6 +3,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { execFileSync, spawnSync } from "node:child_process";
+import { readerProofHead } from "./lib/reader-proof-head.mjs";
 
 const root = process.cwd();
 const receiptPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
@@ -17,11 +18,7 @@ function readEvidence(path) {
 }
 
 const receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
-const report = JSON.parse(readEvidence(receipt.inheritance.reportPath));
-const readerHead = report.currentReaderHead;
-if (!/^[0-9a-f]{40}$/.test(readerHead)) {
-  throw new Error("The reader closure receipt does not name an exact executed head.");
-}
+const readerHead = readerProofHead(receipt, readEvidence);
 
 function isAncestor() {
   const result = spawnSync("git", ["merge-base", "--is-ancestor", readerHead, "HEAD"], {

@@ -3,10 +3,10 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { campaignMoneyApiAnswer, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
-import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 import { stateMoneySources } from "../lib/funding/state-snapshot.ts";
 import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import officialBridge from "../lib/funding/official-candidacies.json" with { type: "json" };
+import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { ROSTER_READER_DISPOSITIONS } from "../lib/registry/body-rosters.ts";
 import { getOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
@@ -20,6 +20,8 @@ const exactHead = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" 
 const buildId = readFileSync(".next/BUILD_ID", "utf8").trim();
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const records: unknown[] = [];
+await Promise.all([refreshFundingFromPromoted(), refreshRegistryRuntimeFromPromoted()]);
+const officialBridge = getRegistryRuntimeReadModel().officialCandidacies;
 
 async function get(path: string): Promise<Record<string, unknown>> {
   const response = await fetch(`${base}${path}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-final-delta" } });

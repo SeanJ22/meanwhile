@@ -25,7 +25,7 @@ export interface ReaderOfficialActions {
 /** Same held selection and factual sentence as Ask; never match a person by name. */
 export function officialActionsForTarget(subjectId: string): ReaderOfficialActions {
   let resolvedTargetId: string | null = subjectId;
-  if (subjectId.startsWith("ballot-") && subjectId.includes("|")) {
+  if (subjectId.startsWith("ballot-az-") && subjectId.includes("|")) {
     if (!azLineupReconciliation()) throw new Error("The certified candidacy identity holding is unavailable");
     resolvedTargetId = reconciledCandidacyIdForCard(subjectId);
   }

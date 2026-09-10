@@ -1,3 +1,5 @@
+import { assertSanctionedRuntimeAuthority } from "../civic-data/runtime-authority.ts";
+
 /**
  * NOTHING BUT PRODUCTION WRITES TO PRODUCTION (2026-08-17, the author's P0).
  *
@@ -107,7 +109,7 @@ export type DbRole = "production" | "local";
  * A guard whose refusal has never been demonstrated is a comment.
  */
 export const SANCTIONED_WRITES: Record<string, string> = {
-  /** `scripts/intake-tripwire.mts`, via `purgeExpiredLimiterState`. */
+  /** Standing runner's intake observation, via `purgeExpiredLimiterState`. */
   "intake-limiter-purge": "an intake limiter purge",
   /** Standing data-plane runner; changes civic data versions, never code. */
   "routine-civic-data-promotion": "a routine civic data candidate/version promotion",
@@ -266,4 +268,10 @@ export function assertWriteAllowed(operation: string, env: Env = process.env as 
   // which one is being attempted before it can honour anything.
   const context = describeWriteContext(env, operation);
   if (!context.allowed) throw new ProductionWriteRefused(operation, context);
+  // A named non-Next production sanction is necessary but no longer
+  // sufficient. PDC V2 binds it to the clean detached installed runtime, its
+  // immediate admitted parent, and (for source children) one exact contract.
+  // Check the declaration even if NODE_ENV happens to be "production" so a
+  // developer shell cannot bypass the authority graph by changing that flag.
+  if (env[SANCTION_VARIABLE]) assertSanctionedRuntimeAuthority(operation, env);
 }

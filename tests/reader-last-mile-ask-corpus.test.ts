@@ -6,7 +6,9 @@ test("every quotable current corpus snapshot reaches Ask with its exact identity
   const evidence = await corpusAskProof();
   assert.equal(evidence.proofs.length, evidence.corpusSnapshotCount, "every snapshot has an executed proof or explicit extraction/quotability disposition");
   const executed = evidence.proofs.filter((proof) => proof.executionLevel === "REAL_ROUTE_HANDLER");
-  assert.ok(executed.length >= 78, "finite current eligible snapshot denominator");
+  assert.equal(evidence.corpusSnapshotCount, 95, "66 current candidate documents plus 29 exact statement first-seed snapshots");
+  assert.equal(executed.length, 76, "49 readable candidate documents plus 27 readable statement snapshots");
+  assert.equal(evidence.proofs.filter((proof) => proof.executionLevel === "NOT_EXECUTED").length, 19);
   for (const proof of executed) {
     assert.equal(proof.httpStatus, 200, proof.snapshotId);
     assert.equal(proof.modelAnswer, null, proof.snapshotId);

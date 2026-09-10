@@ -23,6 +23,7 @@ import {
   modelShareTrend,
   orderByReaderImpact,
   scoutCapacity,
+  type OrderingInputs,
   type ResearchMetrics,
 } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines, researchDigestRows } from "../lib/control-plane/research-digest.ts";
@@ -86,7 +87,7 @@ test("capacity: Attempts per day the ceiling supports at the measured mean, with
 });
 
 test("ordering: band 1 for a reader signal, band 2 for a universe provider, band 3 for the tail; oldest due first within a band; every input named", () => {
-  const inputs = { openRedQuestionZips: ["85701"], openRedQuestions: 1, readerSuiteRun: "reader-suite@x", pilotZips: ["85701", "85641", "07866", "03255"] };
+  const inputs = { pilotZips: ["85701", "85641", "07866", "03255"] };
   const rows = [
     { id: "freshness:meetings:x", subjectId: "ocd-division/country:us/state:az/place:nowhere", readerImpactAt: null, providerId: "meetings", nextDueAt: "2026-09-01T00:00:00.000Z" },
     { id: "freshness:candidate-enrichment:az:2026:x#site", subjectId: "az:2026:x", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: "2026-09-02T00:00:00.000Z" },
@@ -110,16 +111,29 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
   assert.equal(ordering.appliesTo, "BOUNDED_MODEL_WORKER");
   assert.equal(ordering.inputs.readerImpactAt, "FreshnessObligation.readerImpactAt");
   assert.match(ordering.inputs.pilotJurisdictions, /PILOT_ZIPS 85701, 85641, 07866, 03255/);
-  assert.deepEqual(ordering.inputs.openRedQuestions, { count: 1, zips: ["85701"], run: "reader-suite@x" });
   assert.deepEqual(ordering.inputs.universeProviders, UNIVERSE_PROVIDERS);
   assert.match(ordered[0].why, /readerImpactAt/);
   assert.match(ordered[1].why, /pilot jurisdiction \(county-of-pima\)/);
   assert.match(ordered[2].why, /RULING 229/);
   assert.match(ordered[4].why, /long tail/);
-  /* A red question's ZIP pulls its jurisdiction into band 1 even when it is not otherwise a pilot key. */
-  const red = bandFor({ id: "freshness:meetings:ocd-division/country:us/state:nj/place:rockaway", subjectId: "", readerImpactAt: null, providerId: "meetings", nextDueAt: NOW }, { ...inputs, pilotZips: [], openRedQuestionZips: ["07866"] });
-  assert.equal(red.band, 1);
-  assert.match(red.why, /open red reader question/);
+  /*
+   * Positive control for the deleted Git coupling: even an object carrying the
+   * retired fields (as an old stored record or a mutated tracked suite could)
+   * cannot influence the permanent function. Only canonical readerImpactAt or
+   * release-pinned pilot configuration can move this meeting into band 1.
+   */
+  const legacyMutation = {
+    pilotZips: [],
+    openRedQuestionZips: ["07866"],
+    openRedQuestions: 99,
+    readerSuiteRun: "reader-suite@forged",
+  } as unknown as OrderingInputs;
+  const unaffected = bandFor(
+    { id: "freshness:meetings:ocd-division/country:us/state:nj/place:rockaway", subjectId: "", readerImpactAt: null, providerId: "meetings", nextDueAt: NOW },
+    legacyMutation,
+  );
+  assert.equal(unaffected.band, 3);
+  assert.match(unaffected.why, /long tail/);
   assert.ok(Object.keys(PILOT_JURISDICTION_KEYS).length === 4);
   /* SEEDED (measured live 2026-09-02): a candidate SURNAMED Vail is not a pilot jurisdiction. */
   const surname = bandFor({ id: "freshness:candidate-enrichment:nh:2026:state-nh:united-states-senator:vail-john#candidate-wikipedia-api", subjectId: "nh:2026:state-nh:united-states-senator:vail-john", readerImpactAt: null, providerId: "candidate-enrichment", nextDueAt: NOW }, inputs);
@@ -239,7 +253,7 @@ test("the digest lines and rows print every number with its denominator, and an 
   const metrics: ResearchMetrics = {
     computedAt: NOW,
     capacity: scoutCapacity({ costs: [cost("a", 1.25)], nowIso: NOW, windowHours: 24, ceilingUsd: 25 }),
-    ordering: orderByReaderImpact([], { openRedQuestionZips: [], openRedQuestions: 0, readerSuiteRun: null, pilotZips: ["85701"] }).ordering,
+    ordering: orderByReaderImpact([], { pilotZips: ["85701"] }).ordering,
     funnel: graduationFunnel({ results: [], candidateCounts: null, pipeline: [], pipelineSource: "none recorded", deterministicReplays: 0 }),
     share: modelShareTrend({ thisCycle: { deterministic: 0, model: 0 }, windowCycles: [] }),
     cacheByRole: [],

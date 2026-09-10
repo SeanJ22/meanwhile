@@ -69,10 +69,11 @@
  * ```
  *
  * Additive: no existing table, column or statement moved, so a store at v8
- * reads exactly as it did and the three new tables are created on the next
- * `pnpm control-plane:bootstrap`.
+ * reads exactly as it did and the three new tables are created when the next
+ * exact installed STANDING_PARENT runtime opens the durable repository. There
+ * is no arbitrary-checkout production bootstrap command.
  */
-export const BOOTSTRAP_VERSION = 9;
+export const BOOTSTRAP_VERSION = 10;
 
 /**
  * The tables, and the shape each one carries.
@@ -142,6 +143,8 @@ export const AGGREGATE_KINDS = [
    *                    stored, because a stored verdict outlives its truth
    */
   "research_state",
+  /* PDC: mutable method-candidate lifecycle is canonical runtime state, never a tracked Git file. */
+  "method_candidates",
   /*
    * THE STATE READINESS CONTROL PANEL'S DATA PLANE. (2026-09-03 — version 7.)
    *
@@ -219,7 +222,7 @@ export const APPEND_ONLY_LOGS = [
    *                       America/New_York date it answered for
    *   window_incidents    a stage failure, typed, keyed by window id; the
    *                       next window catches up what it names
-   *   window_intents      RUN_WINDOW_NOW from the backup wakeup, and the
+   *   window_intents      explicit owner RUN_WINDOW_NOW requests, and the
    *                       runner's HONORED record beside it
    */
   "promotion_pipeline",

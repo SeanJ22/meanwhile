@@ -12,14 +12,12 @@
  * one; the owner not being able to proceed was the real one, and nothing in
  * this repository measured it. This module is that measurement.
  *
- * ## Two defects, defined so they can be counted
+ * ## The defect, defined so it can be counted
  *
  * ```
  *   REDUNDANT_CERTIFICATION   a transaction with more than one FULL hosted
  *                             certification where a later one carries no
  *                             InvalidationReason
- *   BOOKKEEPING_BOUGHT_FULL   a bot/report/observer commit that purchased a
- *                             full shipping-grade proof
  * ```
  *
  * Both are stated as predicates rather than as guidance, because guidance
@@ -50,8 +48,6 @@ export const FULL_CERTIFICATION_BUDGET = 1;
 
 export const AMPLIFICATION_DEFECTS = [
   "REDUNDANT_CERTIFICATION",
-  "BOOKKEEPING_BOUGHT_FULL",
-  "RECURSIVE_OBSERVER_CHAIN",
 ] as const;
 export type AmplificationDefect = (typeof AMPLIFICATION_DEFECTS)[number];
 
@@ -69,7 +65,7 @@ export interface AmplificationReading {
   readonly fullCertifications: number;
   /** Full runs that were superseded or cancelled mid-flight. */
   readonly supersededCertifications: number;
-  /** Cheap attestations of any kind. */
+  /** Exact-tree attestations that reused a fully certified tree. */
   readonly cheapAttestations: number;
   /** Runs stopped by a red cheap tier (RULING 279) — spend that was avoided. */
   readonly preflightRefusals: number;
@@ -83,8 +79,8 @@ export interface AmplificationReading {
    * became merge-ready (the first green FULL). Null when either end is unknown.
    */
   readonly ownerWaitMinutes: number | null;
-  /** Post-ship bookkeeping commits, by producer. */
-  readonly postShipCommits: number;
+  /** Canonical data-plane receipts observing this software release. */
+  readonly releaseObservations: number;
   /** Every certification beyond the first, with the reason it happened. */
   readonly beyondFirst: readonly {
     readonly sha: string;
@@ -110,20 +106,15 @@ function minutesBetween(a: string | null, b: string | null): number | null {
 /**
  * Read one transaction.
  *
- * The `bookkeepingProducers` set is supplied rather than derived here, because
- * the authority on which files a scheduled pusher writes is
- * `lib/ops/push-allowlist.ts` and there may not be a second list (RULING 278).
- * A caller that cannot supply it passes an empty set, and BOOKKEEPING_BOUGHT_FULL
- * is then simply not evaluated — an unevaluated defect is reported as such by
- * the caller, never as an absence of defects.
+ * Runtime bookkeeping commits and their path-cost class do not exist in the
+ * terminal architecture. The only non-full certification counted here is
+ * exact-tree reuse of a candidate that already passed the full tier.
  */
 export function readAmplification(txn: ShippingTransaction): AmplificationReading {
   const fulls = txn.certifications.filter((c) => c.kind === "FULL");
   const fullsThatRan = fulls.filter(ran);
   const superseded = fulls.filter((c) => c.outcome === "CANCELLED");
-  const cheap = txn.certifications.filter(
-    (c) => c.kind === "CHEAP_ATTESTATION" || c.kind === "TREE_EQUIVALENCE_ATTESTATION",
-  );
+  const cheap = txn.certifications.filter((c) => c.kind === "TREE_EQUIVALENCE_ATTESTATION");
   const refusals = txn.certifications.filter((c) => c.kind === "PREFLIGHT_REFUSED");
 
   const measuredMinutes = txn.certifications
@@ -180,7 +171,7 @@ export function readAmplification(txn: ShippingTransaction): AmplificationReadin
     preflightRefusals: refusals.length,
     runnerMinutes,
     ownerWaitMinutes,
-    postShipCommits: txn.postShipObservations.length,
+    releaseObservations: txn.releaseObservations.length,
     beyondFirst,
     defects,
     withinBudget: defects.length === 0 && fullsThatRan.length <= FULL_CERTIFICATION_BUDGET,
@@ -209,8 +200,10 @@ export const INCIDENT_2026_09_07 = {
     "805": "FCP-9A review freeze — the late exploratory pass may not change a green head",
     "807": "FCP-9C tree equivalence — the merge tree IS the certified tree",
   },
-  /** What survives every repair, and must: one full proof, one cheap observation. */
-  irreducible: ["806", "808"],
+  /** What survives every repair, and must: one full software proof. */
+  irreducible: ["806"],
+  /** The former observer Git hop is removed, not reclassified. */
+  retiredRuntimeFeedback: ["808"],
 } as const;
 
 /** Aggregate a fleet of transactions into the numbers Admin renders. */

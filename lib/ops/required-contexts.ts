@@ -23,9 +23,8 @@
  * long as that import stood — a feature that is permanently inert while
  * reporting itself correctly.
  *
- * `scripts/ci-cost.mjs` records the same trap one file over: its receipt reads
- * the workflow by TEXT SCAN rather than YAML parse, because "the receipt has to
- * work with bare Node or it is not a receipt."
+ * The dependency-free deploy and tree adapters keep the same boundary: no
+ * package import may hide behind a pre-install step.
  *
  * ## There is still exactly one list
  *

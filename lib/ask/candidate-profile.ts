@@ -29,7 +29,7 @@ export function projectCandidateProfile(
     if (card?.bio) {
       const retrievedAt = readDate(card.bioSourceLabel);
       if (sourceUrl(card.bioSourceUrl) && card.bioSourceLabel && retrievedAt) {
-        const holdingPath = `data/ballot/candidate-cards-2026.json#/cards/${pointer(key)}`;
+        const holdingPath = `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/cards/${pointer(key)}`;
         records.push({ kind: "CANDIDATE_BIO", id: `candidate-bio:${key}`, subjectId: subject.id,
           canonicalSubjectId: key, text: `“${card.bio}” — ${card.bioSourceLabel}`,
           sourceUrl: card.bioSourceUrl, sourceOrg: card.bioSourceLabel, retrievedAt,
@@ -61,7 +61,7 @@ export function projectCandidateProfile(
         canonicalSubjectId: key, text: `${label}: ${value}${provenanceLimitation ? ` ${provenanceLimitation}` : ""}`,
         sourceUrl: url, sourceOrg: publisher, retrievedAt,
         candidateProfile: { field, value, label, holdingKey: key,
-          holdingPath: `data/ballot/candidate-cards-2026.json#/cards/${pointer(key)}/${field}`,
+          holdingPath: `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/cards/${pointer(key)}/${field}`,
           sourceNote: sourceNote ?? null, provenanceLimitation } });
       denominators.candidateContactsReturned++;
     }
@@ -75,7 +75,7 @@ export function projectCandidateProfile(
         continue;
       }
       const label = link.label ?? (field === "official" ? "Official page" : "Campaign site");
-      const holdingPath = `data/ballot/candidate-links-2026.json#/links/${pointer(key)}/${field}`;
+      const holdingPath = `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/links/${pointer(key)}/${field}`;
       records.push({ kind: "CANDIDATE_LINK", id: `candidate-link:${key}:${field}`, subjectId: subject.id,
         canonicalSubjectId: key, text: `${label}: ${link.url}`, sourceUrl: link.url,
         sourceOrg: label, retrievedAt: link.attemptedAt,

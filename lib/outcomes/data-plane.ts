@@ -1,0 +1,469 @@
+import { createHash } from "node:crypto";
+
+import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import {
+  reconcileSourceScopedMembers,
+  type SourceScopedMember,
+} from "../civic-data/manual-source-isolation.ts";
+import { readPromotedCivicData, type CivicDataReadStore } from "../civic-data/read-model.ts";
+import { manualSourceReceiptStructureIssue } from "../civic-data/source-authority.ts";
+import { sourceProjectionEvidence, type CivicRecordMember, type ManualSourceSetReceipt, type RoutineCandidate } from "../civic-data/types.ts";
+import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
+import type { ExecutiveActionStore } from "../officials/executive-actions.ts";
+import type { OutcomeSnapshot, PersistedSittingOutcomes } from "./types.ts";
+
+export const AZ_OFFICIAL_ACTIONS_CONTRACT = {
+  contractId: "az-official-actions",
+  sourceId: "az-official-actions",
+  recordClass: "STATE_EXECUTIVE_ACTION",
+  scope: "US-AZ:governor:official-actions",
+  parserVersion: "az-official-actions/2",
+} as const;
+
+export const PIMA_LEGISTAR_OUTCOMES_CONTRACT = {
+  contractId: "pima-legistar-outcomes",
+  sourceId: "pima-legistar-outcomes",
+  recordClass: "MEETING_OUTCOME",
+  scope: "US-AZ:county:pima:legistar-outcomes",
+  parserVersion: "pima-legistar-outcomes/2",
+} as const;
+
+function sha256(value: string | Uint8Array): string {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function sourceReceiptHash(receipt: ManualSourceSetReceipt): string {
+  return sha256(canonicalCivicDataJson(receipt.sources.map((source) => ({
+    requestedUrl: source.requestedUrl,
+    finalUrl: source.finalUrl,
+    httpStatus: source.httpStatus,
+    rawHash: source.rawHash,
+    reviewOutcome: source.reviewOutcome ?? "SUPPORTED",
+    failureDetail: source.failureDetail ?? null,
+  })).sort((left, right) => `${left.finalUrl}:${left.rawHash}`.localeCompare(`${right.finalUrl}:${right.rawHash}`))));
+}
+
+export interface AzOfficialActionsPrior {
+  readonly versionId: string;
+  readonly store: ExecutiveActionStore;
+  readonly sourceReceipt: ManualSourceSetReceipt;
+}
+
+type AzActionIsolationRecord =
+  | { readonly kind: "EXECUTIVE_AUTHORITY"; readonly value: Pick<ExecutiveActionStore, "note" | "source" | "denominator"> }
+  | { readonly kind: "LEGISLATIVE_AUTHORITY"; readonly value: NonNullable<ExecutiveActionStore["legislative"]> }
+  | { readonly kind: "ACTION"; readonly value: ExecutiveActionStore["actions"][number] };
+
+function actionIsolationMembers(store: ExecutiveActionStore): readonly SourceScopedMember<AzActionIsolationRecord>[] {
+  return [
+    {
+      key: "projection:authority:executive",
+      record: {
+        kind: "EXECUTIVE_AUTHORITY",
+        value: { note: store.note, source: store.source, denominator: store.denominator },
+      },
+    },
+    ...(store.legislative ? [{
+      key: "projection:authority:legislative",
+      record: { kind: "LEGISLATIVE_AUTHORITY" as const, value: store.legislative },
+    }] : []),
+    ...store.actions.map((action) => ({
+      key: `action:${action.id}`,
+      record: { kind: "ACTION" as const, value: action },
+    })),
+  ];
+}
+
+function actionIsolationUrls(member: SourceScopedMember<AzActionIsolationRecord>): readonly string[] {
+  if (member.record.kind === "ACTION") {
+    return [member.record.value.documentUrl ?? member.record.value.sourceUrl];
+  }
+  if (member.record.kind === "EXECUTIVE_AUTHORITY") return [member.record.value.source.index];
+  return [member.record.value.index.chapters, member.record.value.index.letters];
+}
+
+function actionIsolationIssue(member: SourceScopedMember<AzActionIsolationRecord>): string | null {
+  if (member.record.kind === "EXECUTIVE_AUTHORITY") {
+    const { source, denominator } = member.record.value;
+    if (!/^https:\/\//.test(source.index) || !source.publisher || !source.collectedAt ||
+        denominator.detailPagesRead > denominator.indexedAcrossPagesWalked ||
+        [denominator.detailPagesRead, denominator.indexedAcrossPagesWalked, denominator.indexPagesWalked].some((count) => !Number.isInteger(count) || count < 0)) {
+      return "The executive publication index/denominator lacks exact provenance or has an impossible count.";
+    }
+    return null;
+  }
+  if (member.record.kind === "LEGISLATIVE_AUTHORITY") {
+    const legislative = member.record.value;
+    if (!/^https:\/\//.test(legislative.index.chapters) || !/^https:\/\//.test(legislative.index.letters) ||
+        legislative.chaptersRead > legislative.chaptersIndexed || legislative.lettersRetrieved > legislative.lettersIndexed) {
+      return "The legislative publication indexes/denominator lack exact provenance or have an impossible count.";
+    }
+    return null;
+  }
+  const action = member.record.value;
+  if (!action.id || !action.officeholderId || !action.designation || !action.sourceUrl || !action.sourceOrg || !action.collectedAt) {
+    return `${action.id || "unnamed action"} lacks identity or provenance.`;
+  }
+  if (action.occurredAtState === "PUBLISHED" && action.occurredAt === null) {
+    return `${action.id} claims a published date but carries none.`;
+  }
+  if ((action.kind === "BILL_SIGNED" || action.kind === "VETO") && action.occurredAt === null) {
+    return `${action.id} asserts a signed/vetoed disposition without a date read from its document.`;
+  }
+  return null;
+}
+
+function rebuildActionStore(
+  input: ExecutiveActionStore,
+  prior: ExecutiveActionStore | null,
+  members: readonly SourceScopedMember<AzActionIsolationRecord>[],
+): ExecutiveActionStore {
+  const executive = members.find((member) => member.record.kind === "EXECUTIVE_AUTHORITY")?.record;
+  const legislative = members.find((member) => member.record.kind === "LEGISLATIVE_AUTHORITY")?.record;
+  const fallbackExecutive = {
+    note: prior?.note ?? input.note,
+    source: prior?.source ?? input.source,
+    denominator: prior?.denominator ?? input.denominator,
+  };
+  return {
+    note: executive?.kind === "EXECUTIVE_AUTHORITY" ? executive.value.note : fallbackExecutive.note,
+    source: executive?.kind === "EXECUTIVE_AUTHORITY" ? executive.value.source : fallbackExecutive.source,
+    denominator: executive?.kind === "EXECUTIVE_AUTHORITY" ? executive.value.denominator : fallbackExecutive.denominator,
+    legislative: legislative?.kind === "LEGISLATIVE_AUTHORITY" ? legislative.value : null,
+    actions: members
+      .filter((member): member is SourceScopedMember<Extract<AzActionIsolationRecord, { kind: "ACTION" }>> => member.record.kind === "ACTION")
+      .map((member) => member.record.value)
+      .sort((left, right) => left.id.localeCompare(right.id)),
+  };
+}
+
+export async function readAzOfficialActionsPrior(
+  store: CivicDataReadStore,
+  now: string,
+): Promise<AzOfficialActionsPrior | null> {
+  const read = await readPromotedCivicData<ExecutiveActionStore>(
+    AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+    AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+    { store, now, bypassCache: true },
+  );
+  if (read.kind === "NOT_RECORDED") return null;
+  if (read.kind !== "PROMOTED") {
+    const code = read.kind === "STORE_UNREACHABLE" ? read.code : "BOOTSTRAP_NOT_PERMITTED";
+    throw new Error(`AZ_OFFICIAL_ACTIONS_BASE_UNAVAILABLE:${code}:${read.detail}`);
+  }
+  const candidate = await store.readCandidate(read.projection.versionId);
+  const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
+  const issue = manualSourceReceiptStructureIssue(sourceReceipt);
+  if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
+    throw new Error(`AZ_OFFICIAL_ACTIONS_BASE_PROOF_INVALID:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
+  }
+  return { versionId: read.projection.versionId, store: read.value, sourceReceipt };
+}
+
+function actionMembers(store: ExecutiveActionStore): readonly CivicRecordMember[] {
+  return [
+    { key: "projection:note", record: store.note },
+    { key: "projection:source", record: store.source },
+    { key: "projection:denominator:executive", record: store.denominator },
+    { key: "projection:denominator:legislative", record: store.legislative },
+    ...store.actions.map((record) => ({ key: `action:${record.id}`, record })),
+  ].sort((left, right) => left.key.localeCompare(right.key));
+}
+
+/**
+ * Candidate for a reviewed set of Arizona Governor/Legislature publications.
+ * The receipt is an exact-byte source set: a tracked projection is never
+ * accepted as publisher evidence and cannot move this pointer on its own.
+ */
+export function azOfficialActionsCandidate(input: {
+  readonly store: ExecutiveActionStore;
+  readonly sourceReceipt: ManualSourceSetReceipt;
+  readonly retrievedAt: string;
+  readonly sourceThrough: string;
+  readonly prior?: AzOfficialActionsPrior | null;
+}): RoutineCandidate {
+  const attemptedStore = input.store;
+  const sourceReceipt = input.sourceReceipt;
+  const reconciled = reconcileSourceScopedMembers({
+    current: actionIsolationMembers(attemptedStore),
+    currentReceipt: sourceReceipt,
+    prior: input.prior ? {
+      members: actionIsolationMembers(input.prior.store),
+      sourceReceipt: input.prior.sourceReceipt,
+    } : null,
+    memberIssue: actionIsolationIssue,
+    sourceUrls: actionIsolationUrls,
+  });
+  const store = rebuildActionStore(attemptedStore, input.prior?.store ?? null, reconciled.members);
+  const promotionReceipt = reconciled.promotionReceipt;
+  const members = actionMembers(store);
+  const violations: string[] = [];
+  const hasExecutiveAuthority = reconciled.members.some((member) => member.record.kind === "EXECUTIVE_AUTHORITY");
+  const ids = store.actions.map((action) => action.id);
+  const receiptedUrls = new Set(promotionReceipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
+  if (store.actions.length === 0) violations.push("The reviewed official-action projection has no action records.");
+  if (!hasExecutiveAuthority) {
+    violations.push("The official-action projection has no supported current or prior executive index/denominator authority.");
+  }
+  if (reconciled.supportedCurrentSources > 0 && reconciled.acceptedCurrentMembers === 0) {
+    violations.push("The current review supplied no valid source-scoped action or denominator member; retained LKG alone cannot count as a successful refresh.");
+  }
+  if (new Set(ids).size !== ids.length) violations.push("Official-action ids are duplicated.");
+  if (store.denominator.detailPagesRead > store.denominator.indexedAcrossPagesWalked) {
+    violations.push("The executive-order denominator reads more detail pages than its indexed horizon.");
+  }
+  if (store.legislative && (store.legislative.chaptersRead > store.legislative.chaptersIndexed || store.legislative.lettersRetrieved > store.legislative.lettersIndexed)) {
+    violations.push("The legislative denominator reads more documents than its named indexes contain.");
+  }
+  for (const action of store.actions) {
+    if (!action.id || !action.officeholderId || !action.designation || !action.sourceUrl || !action.sourceOrg || !action.collectedAt) {
+      violations.push(`${action.id || "unnamed action"} lacks identity or provenance.`);
+    }
+    if (action.occurredAtState === "PUBLISHED" && action.occurredAt === null) {
+      violations.push(`${action.id} claims a published date but carries none.`);
+    }
+    if ((action.kind === "BILL_SIGNED" || action.kind === "VETO") && action.occurredAt === null) {
+      violations.push(`${action.id} asserts a signed/vetoed disposition without a date read from its document.`);
+    }
+    const primaryUrl = action.documentUrl ?? action.sourceUrl;
+    if (!receiptedUrls.has(primaryUrl)) {
+      violations.push(`${action.id} lacks exact-byte evidence for ${primaryUrl}.`);
+    }
+  }
+  const rawHash = sourceReceiptHash(sourceReceipt);
+  const normalizedHash = sha256(canonicalCivicDataJson(store));
+  const primary = promotionReceipt.sources[0];
+  const acquired = reconciled.supportedCurrentSources > 0 && Boolean(primary);
+  return {
+    id: `cv-${sha256(`${AZ_OFFICIAL_ACTIONS_CONTRACT.sourceId}\u001f${AZ_OFFICIAL_ACTIONS_CONTRACT.scope}\u001f${rawHash}\u001f${normalizedHash}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    sourceId: AZ_OFFICIAL_ACTIONS_CONTRACT.sourceId,
+    recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+    scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(
+      AZ_OFFICIAL_ACTIONS_CONTRACT.sourceId,
+      AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
+      AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
+    ),
+    retrieval: {
+      succeeded: acquired,
+      requestedUrl: primary?.requestedUrl ?? "",
+      finalUrl: primary?.finalUrl ?? null,
+      httpStatus: primary?.httpStatus ?? null,
+      retrievedAt: input.retrievedAt,
+      rawHash: acquired ? rawHash : null,
+      manualSourceReceipt: promotionReceipt,
+      failureDetail: acquired
+        ? undefined
+        : sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")
+          ? `Every current Arizona official-publication source was blocked: ${sourceReceipt.sources.filter((source) => source.reviewOutcome === "BLOCKED").map((source) => `${source.requestedUrl} (${source.failureDetail})`).join("; ")}`
+          : "No reviewed Arizona official-publication bytes were supplied.",
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: AZ_OFFICIAL_ACTIONS_CONTRACT.parserVersion,
+      schemaVersion: "az-official-actions/2",
+      normalizedHash,
+      normalizedPayloadHash: normalizedHash,
+      inputRecords: members.length + reconciled.rejectedCurrentMembers,
+      outputRecords: members.length,
+      droppedRecords: reconciled.rejectedCurrentMembers,
+      missingRequiredFields: [],
+    },
+    identities: store.actions.map((action) => ({
+      subjectId: action.id,
+      jurisdiction: "US-AZ",
+      identifiers: { action_id: action.id, officeholder_id: action.officeholderId },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+      office: action.officeTitle,
+      session: action.sessionId ?? undefined,
+    })),
+    temporal: {
+      version: input.sourceThrough,
+      expectedVersion: input.sourceThrough,
+      sourceThrough: input.sourceThrough,
+      staleAtRetrieval: false,
+    },
+    semantics: { factKind: "official Arizona executive orders, enactments, signatures, and veto letters", violations },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "The exact Governor and Legislature publication URLs named by the owner-reviewed source-set receipt",
+      returnedRecords: members.length,
+      declaredTotal: null,
+      paginationComplete: store.denominator.reachedEndOfIndex,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [
+      {
+        consumer: "lib/officials/executive-actions.ts",
+        passed: store.actions.every((action) => action.officeholderId === "statewide:az/governor"),
+        detail: "Every promoted action is selected by the exact Arizona governor seat id; no name-only inheritance is admitted.",
+      },
+      {
+        consumer: "Ask and /api/official-actions",
+        passed: store.actions.every((action) => Boolean(action.documentUrl ?? action.sourceUrl)),
+        detail: "Each Reader action retains a primary publication URL and collection stamp.",
+      },
+    ],
+    normalizedPayload: store,
+    readModel: store,
+    civicRecords: members,
+    excludedFacts: [
+      ...sourceReceipt.sources
+        .filter((source) => source.reviewOutcome === "BLOCKED")
+        .map((source) => ({
+          key: `source:${source.requestedUrl}`,
+          code: "MANUAL_SOURCE_BLOCKED",
+          detail: `${source.requestedUrl} was blocked and could not authorize any current action member: ${source.failureDetail}.`,
+          record: source,
+        })),
+      ...reconciled.excludedFacts,
+    ],
+  };
+}
+
+function sittingMembers(sitting: PersistedSittingOutcomes): CivicRecordMember[] {
+  return [
+    {
+      key: `sitting:${sitting.meetingId}`,
+      record: {
+        meetingId: sitting.meetingId,
+        bodyId: sitting.bodyId,
+        eventId: sitting.eventId,
+        startsAt: sitting.startsAt,
+        extraction: sitting.extraction,
+        extractionNote: sitting.extractionNote,
+        publication: sitting.publication,
+        minutesPointer: sitting.minutesPointer,
+        routesWalked: sitting.routesWalked,
+        publicationObservations: sitting.publicationObservations,
+      },
+    },
+    ...sitting.agenda.map((record) => ({ key: `agenda:${sitting.meetingId}:${record.eventItemId}`, record })),
+    ...sitting.outcomes.map((record) => ({ key: `outcome:${sitting.meetingId}:${record.eventItemId}`, record })),
+    ...sitting.rollCalls.map((record) => ({ key: `roll-call:${sitting.meetingId}:${record.eventItemId}`, record })),
+  ];
+}
+
+function acquisitionHash(evidence: readonly SourceAcquisitionEvidence[]): string {
+  return sha256(canonicalCivicDataJson(evidence.map(({ source: _source, ...row }) => row)));
+}
+
+/** A Pima Legistar candidate built only from exact HTTP-response receipts. */
+export function pimaLegistarOutcomesCandidate(input: {
+  readonly snapshot: OutcomeSnapshot;
+  readonly acquisitions: readonly SourceAcquisitionEvidence[];
+  readonly retrievedAt: string;
+  readonly sourceThrough: string;
+  readonly failureDetail?: string;
+}): RoutineCandidate {
+  const { snapshot, acquisitions } = input;
+  const members = snapshot.sittings.flatMap(sittingMembers).sort((left, right) => left.key.localeCompare(right.key));
+  const ids = snapshot.sittings.map((sitting) => sitting.meetingId);
+  const violations: string[] = [];
+  if (new Set(ids).size !== ids.length) violations.push("Legistar sitting ids are duplicated.");
+  if (snapshot.tenants.some((tenant) => tenant !== "pima") || snapshot.sittings.some((sitting) => sitting.slug !== "pima")) {
+    violations.push("The Pima outcome contract contains a different tenant.");
+  }
+  const failedSittings = snapshot.sittings.filter((sitting) => sitting.extraction !== "RETRIEVED");
+  if (failedSittings.length > 0) {
+    violations.push(`${failedSittings.length} sitting acquisition(s) failed; their failure candidates remain durable but may not replace LKG.`);
+  }
+  const voteFailures = snapshot.sittings.flatMap((sitting) => sitting.voteRequestFailures.map((failure) => ({ sitting, failure })));
+  if (voteFailures.length > 0) {
+    violations.push(`${voteFailures.length} expected per-item vote request(s) failed; the prior GOOD projection remains live.`);
+  }
+  if (snapshot.sittings.some((sitting) => !sitting.meetingId.startsWith("legistar:pima:") || !sitting.sourceOrg || !sitting.publication.observedAt)) {
+    violations.push("A sitting lacks its exact tenant identity, publisher, or observation time.");
+  }
+  if (new Set(members.map((member) => member.key)).size !== members.length) {
+    violations.push("Outcome projection members do not have unique stable identities.");
+  }
+  const rawHash = acquisitions.length > 0 ? acquisitionHash(acquisitions) : null;
+  const normalizedPayload = { acquisitions, snapshot };
+  const projectionHash = sha256(canonicalCivicDataJson(snapshot));
+  const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
+  const primary = acquisitions[0];
+  return {
+    id: `cv-${sha256(`${PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId}\u001f${PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope}\u001f${rawHash ?? "failed"}\u001f${projectionHash}\u001f${input.failureDetail ?? "ok"}\u001f${input.retrievedAt}`).slice(0, 32)}`,
+    sourceId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
+    recordClass: PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+    scope: PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(
+      PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
+      PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+      PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+    ),
+    retrieval: {
+      succeeded: acquisitions.length > 0 && input.failureDetail === undefined,
+      requestedUrl: primary?.requestedUrl ?? "https://webapi.legistar.com/v1/pima/events",
+      finalUrl: primary?.finalUrl ?? null,
+      httpStatus: primary?.httpStatus ?? null,
+      retrievedAt: input.retrievedAt,
+      rawHash,
+      failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : "No Pima Legistar response bytes were acquired."),
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: PIMA_LEGISTAR_OUTCOMES_CONTRACT.parserVersion,
+      schemaVersion: "legistar-outcomes/2",
+      normalizedHash: projectionHash,
+      normalizedPayloadHash,
+      inputRecords: members.length,
+      outputRecords: members.length,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
+    identities: snapshot.sittings.map((sitting) => ({
+      subjectId: sitting.meetingId,
+      jurisdiction: "US-AZ",
+      identifiers: { meeting_id: sitting.meetingId, event_id: String(sitting.eventId) },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+    })),
+    temporal: {
+      version: input.sourceThrough,
+      expectedVersion: input.sourceThrough,
+      sourceThrough: input.sourceThrough,
+      staleAtRetrieval: false,
+    },
+    semantics: { factKind: "Pima Legistar agenda actions and exact per-person roll calls", violations },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "Pima Legistar events and each changed sitting's event-items and item-votes routes",
+      returnedRecords: members.length,
+      declaredTotal: null,
+      paginationComplete: true,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [
+      {
+        consumer: "lib/outcomes/store.ts",
+        passed: snapshot.sittings.every((sitting) => sitting.meetingId === `legistar:pima:${sitting.eventId}`),
+        detail: "Every outcome joins to its sitting by the adapter's exact source-namespaced meeting id.",
+      },
+      {
+        consumer: "Ask meeting outcomes and meeting Reader records",
+        passed: snapshot.sittings.every((sitting) => sitting.agenda.every((record) => record.recordClass === "AGENDA") && sitting.outcomes.every((record) => record.recordClass === "ACTION_SUMMARY") && sitting.rollCalls.every((record) => record.recordClass === "ROLL_CALL")),
+        detail: "Agenda, action, and per-person roll records retain distinct record classes before promotion.",
+      },
+    ],
+    normalizedPayload,
+    readModel: snapshot,
+    civicRecords: members,
+    excludedFacts: [
+      ...snapshot.sittings.flatMap((sitting) => sitting.failedRollCallExtractions.map((eventItemId) => ({
+        key: `${sitting.meetingId}:item:${eventItemId}`,
+        code: "ROLL_CALL_EXTRACTION_HELD",
+        detail: "The publisher marked a roll call and the votes route returned zero rows; no empty per-person roll was invented.",
+      }))),
+      ...voteFailures.map(({ sitting, failure }) => ({
+        key: `${sitting.meetingId}:item:${failure.eventItemId}`,
+        code: "VOTE_REQUEST_FAILED",
+        detail: failure.reason,
+      })),
+    ],
+  };
+}

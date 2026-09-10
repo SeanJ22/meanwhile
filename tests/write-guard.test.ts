@@ -8,6 +8,7 @@ import {
   assertWriteAllowed,
   describeWriteContext,
 } from "@/lib/db/write-guard";
+import { RuntimeAuthorityRefused } from "@/lib/civic-data/runtime-authority";
 
 /*
   The P0 of 2026-08-17: `pnpm dev` reads .env.local, .env.local carried the
@@ -185,7 +186,7 @@ const sanctionedEnv = () => ({
   WTP_SANCTIONED_WRITE: "intake-limiter-purge",
 });
 
-test("g13: the scheduled purge, declared as the workflow declares it, is allowed", () => {
+test("g13/PDC: a correctly scoped purge sanction still requires the admitted standing runtime", () => {
   const context = describeWriteContext(sanctionedEnv(), PURGE);
   assert.equal(context.allowed, true, context.reason);
   assert.equal(context.sanction, "intake-limiter-purge");
@@ -193,7 +194,7 @@ test("g13: the scheduled purge, declared as the workflow declares it, is allowed
   // production, and the context says so. Only the operation was opened.
   assert.equal(context.isProductionRuntime, false);
   assert.equal(context.dbRole, "production");
-  assert.doesNotThrow(() => assertWriteAllowed(PURGE, sanctionedEnv()));
+  assert.throws(() => assertWriteAllowed(PURGE, sanctionedEnv()), RuntimeAuthorityRefused);
 });
 
 test("PLANTED g13: the same script WITHOUT the declaration is still refused", () => {
@@ -303,77 +304,33 @@ test("g13: the sanction table is a closed list, and both narrow operations are o
   );
 });
 
-test("g13: the workflow declares exactly what the guard requires", () => {
-  // The three pieces live in a YAML file no test would otherwise read. A
-  // rename on either side breaks the job at 10:41 UTC and nowhere else.
-  const workflow = readFileSync(".github/workflows/intake-tripwire.yml", "utf8");
-  assert.match(workflow, /WTP_SANCTIONED_WRITE: intake-limiter-purge/);
-  assert.match(workflow, /WTP_PRODUCTION_DATABASE_URL_WRITE: \$\{\{ secrets\.DATABASE_URL \}\}/);
-  assert.match(workflow, /DATABASE_URL: \$\{\{ secrets\.DATABASE_URL \}\}/);
+test("g13: the standing intake runtime declares exactly what the guard requires", () => {
+  const runtime = readFileSync("scripts/intake-tripwire.mts", "utf8");
+  assert.match(runtime, /resolveProductionWriteHandle\(\)/);
+  assert.match(runtime, /process\.env\.DATABASE_URL = handle\.connection/);
+  assert.match(runtime, /process\.env\.WTP_DB_ROLE = "production"/);
+  assert.match(runtime, /process\.env\.WTP_SANCTIONED_WRITE = "intake-limiter-purge"/);
+  assert.match(runtime, /assertWriteAllowed\("an intake limiter purge"\)/);
+  assert.doesNotMatch(runtime, /git\s+(?:add|commit|push)|push-main|docs\/intake-report/);
 });
 
-test("g13 audit: every scheduled workflow that writes carries a sanction", () => {
+test("g13 audit: GitHub workflows have no production write handle or runtime sanction", () => {
   /*
-    The author's standing rule — a named instance is an example of a class. The
-    class here is "scheduled jobs that write to production". Enumerated, with
-    what each one does:
-
-      intake-tripwire.yml          WRITES — the limiter purge. Sanctioned here.
-      refresh-meetings-snapshot.yml  no DB write; commits a JSON file.
-      refresh-fec-snapshot.yml       no DB write; commits a JSON file.
-      refresh-dotgov-snapshot.yml    no DB write; commits a JSON file.
-      refresh-legiscan-snapshot.yml  no DB write; commits a JSON file.
-      build-check.yml                READS, and no DB write — it builds and
-                                     reads the build's own output (R51,
-                                     2026-08-18). It is also the one workflow
-                                     here that is not scheduled: it runs on
-                                     push and on pull requests.
-
-                                     ONE STEP GAINED DATABASE ACCESS ON
-                                     2026-08-28, and this is the "say so where
-                                     it is set" this guard asks for. The schema
-                                     shipping gate reads production's applied
-                                     migrations before a merge, because 0021
-                                     and 0022 shipped ahead of the schema and
-                                     the daily tripwire found it the morning
-                                     after. It resolves
-                                     WTP_PRODUCTION_DATABASE_URL_READONLY — the
-                                     read-only role, by name, one SELECT — and
-                                     it carries NO sanction, because it must
-                                     never be able to write. That is asserted
-                                     below rather than described: this workflow
-                                     may name the READONLY variable and nothing
-                                     else, and may not carry WTP_SANCTIONED_WRITE.
-
-      job-watch.yml                  no DB write; reads the Actions API and
-                                     commits a tracker row (RULING 56, NH Hunt
-                                     3, 2026-08-21). It holds no database
-                                     credential at all, deliberately: what it
-                                     watches is job outcomes, not data.
-
-    So: seven workflows, one of which writes to the database. Five commit files
-    to the repository and never open a connection, and one writes nothing at
-    all. This asserts that split rather than describing it, so a workflow that
-    grows a DATABASE_URL later cannot join the class silently.
+    Permanent PDC boundary: runtime intake and civic-data writes belong to the
+    standing production runner. GitHub holds only software certification and
+    post-deploy release verification, both read-only against production.
   */
   const dir = ".github/workflows";
-  const workflows = readdirSync(dir).filter((f) => f.endsWith(".yml"));
-  // 8 as of NJ Hunt 3 (2026-08-22): `refresh-nj-filing.yml` joined the set. It
-  // reads a county clerk's public PDFs and rebuilds a committed JSON file; it
-  // touches no database, which is why it appears here only as a count and not
-  // in `withDatabase` below.
-  // TEN as of 2026-08-29 (NH273): post-deploy-integrity.yml joined the set. It
-  // is the SECOND workflow to hold a database credential, and like build-check
-  // it holds the READ-ONLY one — it asks production whether it holds the
-  // migrations the deployed commit ships, and records the answer. It commits
-  // exactly one non-shipping file. It is held to reading below, by the same
-  // assertion build-check is, because it runs unattended on every push to
-  // `main` and an unattended job is the last place a write-capable string
-  // should be reachable.
-  //
-  // NINE as of 2026-08-24 (RULING 124): the eight below plus refresh-daily.yml,
-  // the one orchestrated run that now carries every source's cron.
-  assert.equal(workflows.length, 10, `the workflow set changed: ${workflows.join(", ")}`);
+  const workflows = readdirSync(dir).filter((f) => f.endsWith(".yml")).sort();
+  // Both workflows may read production for software-release certification.
+  // The post-deploy observer additionally holds one separately named,
+  // least-privilege control-plane role that can append/read back the existing
+  // software-release outcome log. It cannot write serving data or Git.
+  assert.deepEqual(
+    workflows,
+    ["build-check.yml", "post-deploy-integrity.yml"],
+    `GitHub Actions must remain software CI/release infrastructure only: ${workflows.join(", ")}`,
+  );
 
   const withDatabase: string[] = [];
   for (const file of workflows) {
@@ -382,15 +339,13 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   }
   assert.deepEqual(
     withDatabase,
-    ["build-check.yml", "intake-tripwire.yml", "post-deploy-integrity.yml"],
-    "a workflow gained database access — if it writes, it needs its own " +
-      "named sanction; if it only reads, say so where it is set",
+    ["build-check.yml", "post-deploy-integrity.yml"],
+    "only software certification and post-deploy release verification may read production",
   );
-  assert.match(
-    readFileSync(`${dir}/intake-tripwire.yml`, "utf8"),
-    /WTP_SANCTIONED_WRITE:/,
-    "the one writing workflow lost its sanction",
-  );
+  for (const file of workflows) {
+    const source = readFileSync(`${dir}/${file}`, "utf8");
+    assert.doesNotMatch(source, /WTP_PRODUCTION_DATABASE_URL_WRITE|WTP_SANCTIONED_WRITE/);
+  }
 
   /*
    * THE READER IS HELD TO READING (2026-08-28).
@@ -408,9 +363,9 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   assert.ok(databaseNames.length > 0, "the reader found no database variable to check at all");
   assert.deepEqual(
     [...new Set(databaseNames)],
-    ["WTP_PRODUCTION_DATABASE_URL_READONLY"],
-    "build-check.yml runs on every pull request and may name only the READ-ONLY production " +
-      "variable. A write-capable string here is reachable from any change.",
+    ["WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY"],
+    "build-check.yml may name only the read-only serving and control-plane variables. " +
+      "A write-capable string here is reachable from any change.",
   );
   assert.doesNotMatch(
     buildCheck,
@@ -419,26 +374,22 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   );
 
   /*
-   * THE OBSERVER IS HELD TO READING TOO (2026-08-29, NH273).
+   * THE OBSERVER MAY WRITE ONLY THE RELEASE-OUTCOME PARTITION.
    *
    * `post-deploy-integrity.yml` is the first workflow to hold a database
-   * credential AND run unattended on every push to `main`. `build-check.yml` at
-   * least fails in front of a person waiting on a pull request; this one runs
-   * while nobody is watching, which is the strongest case in the repository for
-   * holding it to exactly one read-only name.
-   *
-   * It is asserted with the same three clauses rather than a looser pair,
-   * because the reason build-check is held this way — a write-capable string in
-   * a broadly-reachable workflow — applies here more, not less.
+   * credential AND run unattended on every push to `main`. Serving production
+   * remains read-only. Its second role is deliberately named for post-deploy
+   * control-plane append/readback and must be provisioned at the database layer
+   * with no DDL and no access to any other table.
    */
   const observer = readFileSync(`${dir}/post-deploy-integrity.yml`, "utf8");
   const observerNames = [...observer.matchAll(/[A-Z_]*DATABASE_URL[A-Z_]*/g)].map((m) => m[0]);
   assert.ok(observerNames.length > 0, "the observer found no database variable to check at all");
   assert.deepEqual(
     [...new Set(observerNames)],
-    ["WTP_PRODUCTION_DATABASE_URL_READONLY"],
-    "post-deploy-integrity.yml runs unattended on every push to main and may name only the " +
-      "READ-ONLY production variable. It takes a reading; it does not reconcile anything.",
+    ["WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL"],
+    "post-deploy-integrity.yml may read serving production and append only its exact outcome " +
+      "through the separately provisioned control-plane role.",
   );
   assert.doesNotMatch(
     observer,

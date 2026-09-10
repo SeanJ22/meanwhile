@@ -1,15 +1,23 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { readFileSync } from "node:fs";
+import test, { before } from "node:test";
 
 import {
   cardForCandidacy,
   cardForNominee,
 } from "../lib/ballot/candidate-cards.ts";
 import { officialPhotoForPerson, personKey } from "../lib/photos/person.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   collectPhotoRows,
   findPersonPhotoClashes,
 } from "../scripts/photo-person-audit.mts";
+
+before(async () => {
+  const result = await readRegistryRuntimeProjection({ store: new MemoryRoutineDataStore() });
+  assert.equal(result.kind, "BOOTSTRAP", "the test-only immutable registry seed did not initialize");
+});
 
 /**
  * One person, one photo (item 6b, 2026-08-15).
@@ -82,4 +90,11 @@ test("person keys ignore suffixes, accents and punctuation, and nothing else", (
   // Distinct people stay distinct — the resolver must never merge two
   // humans into one face.
   assert.notEqual(personKey("Alma Hernandez"), personKey("Consuelo Hernandez"));
+});
+
+test("the production person-photo resolver reads only the promoted registry projection", () => {
+  const source = readFileSync("lib/photos/person.ts", "utf8");
+  assert.match(source, /getRegistryRuntimeReadModel\(\)/);
+  assert.match(source, /runtime\.statewideExecutives/);
+  assert.doesNotMatch(source, /readFileSync|statewide-executives\.ts/);
 });

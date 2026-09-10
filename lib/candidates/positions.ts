@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import {
   answerFor,
   answerSentence,
@@ -10,6 +7,7 @@ import {
 } from "./corpus.ts";
 import { CANDIDATE_ISSUES, type CandidateIssue } from "./issues.ts";
 import { verifiedReaderPersonKeys } from "../identity/reader-person.ts";
+import { currentCandidateCorpusProjection } from "../civic-data/manual-read-models.ts";
 
 /**
  * **P02's reader-facing shape** — one candidate, the same issue list,
@@ -22,23 +20,13 @@ import { verifiedReaderPersonKeys } from "../identity/reader-person.ts";
  * is the point: a composite ranks candidates, and ranking candidates is a
  * vote recommendation with extra steps.
  *
- * Server-side: the corpus is a committed file read through `node:fs`, the
- * same posture as the funding and votes snapshots. Nothing fetches per page
- * load.
+ * Server-side: the corpus is process-loaded from its proof-validated canonical
+ * promotion pointer. Nothing fetches a publisher per page load, and a tracked
+ * first seed is never a production fallback.
  */
 
-let cache: CandidateCorpus | null = null;
-
 export function getCandidateCorpus(): CandidateCorpus {
-  if (!cache) {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "candidates", "corpus-2026.json"),
-        "utf8",
-      ),
-    ) as CandidateCorpus;
-  }
-  return cache;
+  return currentCandidateCorpusProjection();
 }
 
 export function documentsFor(candidateKey: string): CandidateDocument[] {

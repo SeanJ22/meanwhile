@@ -23,7 +23,8 @@
 # ## The three outcomes, and none of them is a rollback
 #
 #   SERVING_EXPECTED   the reading is taken against the served commit through
-#                      the EXISTING gate and committed. A red reading marks
+#                      the EXISTING gate and appended to the canonical
+#                      software-release outcome log. A red reading marks
 #                      integrity DEGRADED, which freezes the next
 #                      production-changing release in build-check.yml's `gates`
 #                      job. NOTHING IS ROLLED BACK — the owner's decision of
@@ -37,19 +38,13 @@
 #   COULD_NOT_TELL     production could not be asked at all. Not a pass
 #                      (RULING 24); the job goes red.
 #
-# ## It cannot start a deploy loop
+# ## It cannot start a Git/deploy/Build feedback loop
 #
-# The only file it commits is `data/ops/production-integrity.json` and the
-# generated view of it, and `data/ops/` is in `NON_SHIPPING_PREFIXES`
-# (`lib/ops/deploy-paths.ts`, commit `6e591077` — "an ops record must not cost a
-# build"). `classifyDeploy` returns `cancel` for a commit carrying only those, so
-# the observer's own output can never trigger the deploy the observer exists to
-# observe. `tests/post-deploy-observer.test.ts` asserts that through
-# `classifyDeploy` rather than trusting this sentence.
-#
-# SINCE RULING 278 THE SKIP IS ALSO CHEAP. That verdict is now read BEFORE the
-# install rather than after it, from the same canonical table, so a bookkeeping
-# commit costs a checkout and one git call instead of a full dependency install.
+# It creates no commit. The exact outcome and readback are appended to the
+# existing `cp_log_software_release_reviews` control-plane log that Admin reads.
+# Therefore a deploy observation produces no Git push, no Netlify build and no
+# software Build check. `tests/post-deploy-integrity-data-plane.test.ts` holds
+# that boundary against the executable workflow.
 
 name: Post-deploy integrity
 
@@ -65,20 +60,19 @@ on:
         type: string
         required: false
       dry_run:
-        description: "Observe and take the reading, but record and commit nothing."
+        description: "Observe and take the reading, but append no durable outcome."
         type: boolean
         default: false
 
 permissions:
-  # The record is committed to `main`. The deploy-key bypass (RULING 165) is what
-  # actually authorises the push; this is the token scope the checkout needs.
-  contents: write
-  # ACTIONS READ — the diagnoser reads THIS run (the same reason
-  # intake-tripwire.yml and refresh-meetings-snapshot.yml carry it).
+  # Software release verification reads the exact checked-out commit and this
+  # run's diagnostics. It never mutates GitHub or the repository.
+  contents: read
+  # ACTIONS READ — the diagnoser reads THIS run after a failure.
   #
   # Declaring `permissions:` at all switches the token from the repository
   # default to exactly what is listed, so every scope not named here is `none`.
-  # With `contents: write` alone the `Name the cause` step below hits
+  # Without `actions: read`, the `Name the cause` step below hits
   # `gh: Resource not accessible by integration (HTTP 403)` on
   # `GET /actions/runs/{id}` and prints `diagnose: CANNOT RUN` — correctly, and
   # uselessly. `actions: read` is the minimum that endpoint needs; nothing else
@@ -102,9 +96,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: main
+          # Bind every executable observer, classifier and schema read to the
+          # same commit named below. Checking out moving `main` could run a
+          # later release's contracts while attributing the outcome to this
+          # trigger, exactly the cross-subsystem evidence mix PDC forbids.
+          ref: ${{ inputs.sha || github.sha }}
           # `scripts/post-deploy-observer.mts` asks `classifyDeploy` whether the
-          # pushed commit could change what production serves, which needs the
+          # exact requested commit could change what production serves, which needs the
           # commit's own changed-path list — and `git show --name-only` needs a
           # parent. Depth 2 is the smallest checkout that has one. If it still
           # cannot be read the observer treats the commit as a release and
@@ -127,48 +125,44 @@ jobs:
       # thing it already knew.
       #
       # The same canonical answer, from the same table, now arrives before any
-      # of that: `scripts/ci-cost.mjs` prints `deploy=` from `classifyDeploy` —
-      # the DEPLOY question, not the cost question, because the observer must
-      # skip exactly the commits Netlify was told to cancel and no others. THERE
-      # IS NO PATH LIST IN THIS FILE and `tests/ci-cost.test.ts` fails if one
-      # appears. `cannot-tell` builds, so an unreadable commit is still observed.
+      # of that: `scripts/deploy-classify.mjs` prints `deploy=` from
+      # `classifyDeploy`. This is only the DEPLOY question, because the observer
+      # must skip exactly the commits Netlify was told to cancel and no others.
+      # Build Check has no path-cost classifier. `cannot-tell` observes, so an
+      # unreadable commit still fails closed.
       - name: Could this commit have deployed at all?
-        id: cost
-        run: node scripts/ci-cost.mjs --sha=${{ inputs.sha || github.sha }}
+        id: deploy
+        run: node scripts/deploy-classify.mjs --sha=${{ inputs.sha || github.sha }}
 
-      # THE OBSERVER DOES NOT FAN OUT INTO ITSELF.
-      #
-      # Its own commit is `data/ops/production-integrity.json` plus the generated
-      # view of it, both non-shipping, so Netlify cancels that build and no
-      # deployment can result. Polling production for ten minutes waiting for a
-      # deploy that was correctly cancelled would time out on every quiet push
-      # and report PRODUCTION_BEHIND about nothing — an alarm that is wrong every
-      # night is an alarm nobody reads (RULING 115).
+      # A main push whose paths are non-shipping cannot have caused a Netlify
+      # deploy, so no post-deploy observation is owed. This classification is
+      # about the incoming SOFTWARE commit; the observer itself creates none.
       - name: Non-shipping commit — no deployment can result
-        if: steps.cost.outputs.deploy == 'cancel'
+        if: steps.deploy.outputs.deploy == 'cancel'
         run: |
-          echo "NOT_A_RELEASE — ${{ steps.cost.outputs.class }}."
+          echo "NOT_A_RELEASE — the canonical deploy predicate returned cancel."
           echo "Every changed path is non-shipping, so Netlify cancels this build and production"
           echo "cannot move. No deploy is owed for this commit, so no post-deploy reading is owed"
           echo "either: nothing is recorded and the previous reading stands unchanged."
-          echo "No install was run, no production poll was started, and no commit was made."
+          echo "No install was run and no production poll or durable outcome was started."
 
       - name: Enable corepack (pnpm pinned by packageManager)
-        if: steps.cost.outputs.deploy != 'cancel'
+        if: steps.deploy.outputs.deploy != 'cancel'
         run: corepack enable
 
       - name: Install
-        if: steps.cost.outputs.deploy != 'cancel'
+        if: steps.deploy.outputs.deploy != 'cancel'
         run: corepack pnpm install --frozen-lockfile
 
       # THE OBSERVATION AND THE READING, IN ONE STEP.
       #
-      # `WTP_PRODUCTION_DATABASE_URL_READONLY` is a real repository secret and it
-      # is the ONLY credential here. It is read-only by role: applying resolves a
-      # different variable through `lib/db/write-handle.ts`, which refuses this
-      # one by name. `NETLIFY_AUTH_TOKEN` is deliberately NOT used — it is not a
-      # repository secret at all, and `/api/build` answers the deployed-commit
-      # question without one.
+      # `WTP_PRODUCTION_DATABASE_URL_READONLY` reads the serving schema through
+      # the existing gate. `WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL` is a
+      # separate, narrowly privileged role: append/readback on the existing
+      # software-release log and its position allocator only. It cannot write
+      # the serving database, Git, GitHub or another control-plane table.
+      # `NETLIFY_AUTH_TOKEN` is deliberately NOT used; `/api/build` answers the
+      # deployed-commit question without one.
       #
       # `WTP_RUN_ID` declares this run synthetic so no request it makes could be
       # counted as reader signal in the sold store. `/api/build` writes nothing,
@@ -185,10 +179,11 @@ jobs:
       # reading and an unaskable production are both things a person must see.
       - name: Observe the deploy and take the post-deploy reading
         id: observe
-        if: steps.cost.outputs.deploy != 'cancel'
+        if: steps.deploy.outputs.deploy != 'cancel'
         timeout-minutes: 15
         env:
           WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
+          WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL: ${{ secrets.WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL }}
           WTP_RUN_ID: post-deploy-observer-${{ github.run_id }}
         run: |
           set +e
@@ -199,7 +194,7 @@ jobs:
           set -e
           echo "observer_exit=$code" >> "$GITHUB_OUTPUT"
           case "$code" in
-            0) echo "The reading held and was recorded." ;;
+            0) echo "The reading held and its canonical durable receipt was read back." ;;
             1)
               echo "::error title=Production integrity REFUSED::A post-deploy reading REFUSED. Integrity is now DEGRADED and the next production-changing release is frozen in build-check.yml's gates job. NOTHING WAS ROLLED BACK, and nothing will be."
               exit 1
@@ -212,56 +207,6 @@ jobs:
               exit "$code"
               ;;
           esac
-
-      # THE RECORD, COMMITTED THROUGH THE ONE DOOR EVERY SCHEDULED PUSHER USES.
-      #
-      # `scripts/push-main.mjs` (R48 rebase-and-retry, RULING 165 deploy key and
-      # per-workflow path allowlist) is the mechanism every other main-pushing
-      # workflow already uses. A second one would be a second set of rules for
-      # writing to `main`, and the allowlist is the whole of what stands between
-      # a scheduled job and the branch.
-      #
-      # The diff is re-checked at commit time, so an unchanged record never
-      # produces an empty commit — and a run whose reading did not move costs no
-      # commit, no push and no build.
-      #
-      # `steps.cost.outputs.deploy != 'cancel'` IS LOAD-BEARING, and it is here
-      # because run 34001422006 proved it is. (RULING 278, measured 2026-09-06.)
-      #
-      # **GitHub coerces `==` operands to NUMBERS when it can.** A SKIPPED step's
-      # output is the empty string, and `'' == '0'` is therefore TRUE — so with
-      # the observer skipped on the cheap path, this step RAN. It survived only
-      # because `git diff --quiet` found nothing and exited first; had the tree
-      # differed at all it would have reached `pnpm status:ledger` in a job that
-      # deliberately never installed, and turned a correct cheap skip into a red
-      # observer. A guard on a step output is not a guard against that step being
-      # skipped.
-      - name: Commit the reading
-        if: >-
-          steps.cost.outputs.deploy != 'cancel' &&
-          steps.observe.outputs.observer_exit == '0' &&
-          inputs.dry_run != true
-        env:
-          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
-        run: |
-          if git diff --quiet -- data/ops/production-integrity.json; then
-            echo "the reading is byte-identical to the one on main — nothing to commit"
-            exit 0
-          fi
-          # GENERATED STATUS MAY NOT LAG ITS INPUTS. (Session B resume, W5.)
-          #
-          # docs/status-ledger.md renders a row FROM this reading, so committing
-          # the reading alone left the ledger describing the previous one — which
-          # is what it was doing at 68a70354, still stamped 6923cd91 and citing an
-          # observer run three commits back. Regenerated and committed in the SAME
-          # commit: two commits could interleave, and the whole point is that the
-          # record and its view cannot disagree.
-          pnpm status:ledger
-          git config user.name "post-deploy-observer[bot]"
-          git config user.email "noreply@github.com"
-          git add data/ops/production-integrity.json docs/status-ledger.md
-          git commit -m "Post-deploy integrity reading: $(date -u +%Y-%m-%dT%H:%MZ)"
-          node scripts/push-main.mjs --workflow post-deploy-integrity
 
       # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
       #

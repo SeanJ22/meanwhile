@@ -53,12 +53,15 @@
  *   pnpm congress:fetch
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { parse } from "yaml";
 
 import { stamp } from "./stamp.mts";
+import { failedFederalDirectoryCandidate, federalDirectoryCandidate, type FederalDirectoryAcquisition, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
+import type { OfficeholderSet } from "../lib/officials/types.ts";
+import type { DirectoryFile } from "../lib/officials/directory.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
 /**
  * The pin. Re-read on 2026-09-07 after official House roll calls introduced
@@ -156,7 +159,7 @@ interface RawMembership {
   bioguide?: string;
 }
 
-async function fetchFile(name: string): Promise<unknown> {
+async function fetchFile(name: string): Promise<{ parsed: unknown; acquisition: FederalDirectoryAcquisition }> {
   const url = `${RAW}/${name}.yaml`;
   const response = await fetch(url, { headers: { "User-Agent": UA } });
   if (!response.ok) {
@@ -168,7 +171,10 @@ async function fetchFile(name: string): Promise<unknown> {
   if (text.trimStart().startsWith("<")) {
     throw new Error(`${name}: served HTML, not YAML, from ${url}`);
   }
-  return parse(text);
+  return {
+    parsed: parse(text),
+    acquisition: { requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body: text },
+  };
 }
 
 /**
@@ -214,15 +220,25 @@ function currentTerm(terms: RawTerm[]): RawTerm | null {
   return terms[terms.length - 1];
 }
 
+let attemptPersisted = false;
+let writePrepared = false;
+
 async function main() {
+  if (!process.argv.includes("--promote")) {
+    throw new Error("Refusing a non-promoting acquisition. Run with --promote; tracked federal runtime files are first-seed/test evidence only.");
+  }
+  prepareProductionCivicDataWrite();
+  writePrepared = true;
   const collectedAt = stamp();
   const counts: Record<string, number> = {};
+  const acquisitions: FederalDirectoryAcquisition[] = [];
 
   const raw: Record<string, unknown> = {};
   for (const file of FILES) {
     // Serialized, per the public-records rule: one request at a time, an
     // identified User-Agent with a contact address.
-    const parsed = await fetchFile(file.name);
+    const { parsed, acquisition } = await fetchFile(file.name);
+    acquisitions.push(acquisition);
     counts[file.name] = guard(file.name, parsed, file.min, file.shape);
     raw[file.name] = parsed;
     console.log(`  ${file.name}: ${counts[file.name]} rows`);
@@ -374,23 +390,98 @@ async function main() {
     memberships: Object.fromEntries(membershipsByBioguide),
   };
 
-  const dir = join(process.cwd(), "data", "congress-legislators");
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(
-    join(dir, "snapshot.json"),
-    JSON.stringify(snapshot, null, 2),
-    "utf8",
-  );
+  const nonVotingDelegates = new Set(["AS", "DC", "GU", "MP", "PR", "VI"]);
+  const officeholders: OfficeholderSet["officeholders"] = members.map((member) => ({
+    id: `congress:${member.bioguide}`,
+    name: member.name,
+    officeTitle: member.chamber === "senate" ? "U.S. Senator" : "U.S. Representative",
+    level: "FEDERAL",
+    termStart: member.termStart ?? "",
+    termEnd: member.termEnd ?? "",
+    birthDate: member.birthDate,
+    partyLabel: member.party,
+    websiteUrl: member.url,
+    contactFormUrl: member.contactForm,
+    phone: member.phone,
+    email: null,
+    campaignUrl: null,
+    photo: null,
+    social: Object.fromEntries(Object.entries(member.social).filter((entry): entry is [string, string] => Boolean(entry[1]))),
+    state: member.state ?? undefined,
+    chamber: member.chamber ?? undefined,
+    provenance: {
+      sourceUrl: `${RAW}/legislators-current.yaml`,
+      sourceOrg: snapshot.source.sourceOrg,
+      collectedAt,
+      verifiedAt: null,
+    },
+  }));
+  const divisions: OfficeholderSet["divisions"] = [];
+  const unmatched: OfficeholderSet["unmatched"] = [];
+  for (const member of members) {
+    const officeholderId = `congress:${member.bioguide}`;
+    if (!member.state || !member.chamber || (member.chamber === "house" && member.district === null)) {
+      unmatched.push({ officeholderId, reason: "current term lacks an exact state, chamber, or House district" });
+      continue;
+    }
+    if (member.chamber === "house" && nonVotingDelegates.has(member.state)) {
+      unmatched.push({ officeholderId, reason: `${member.state} non-voting delegate has no Reader congressional division` });
+      continue;
+    }
+    divisions.push({
+      officeholderId,
+      ocdId: member.chamber === "senate"
+        ? `ocd-division/country:us/state:${member.state.toLowerCase()}`
+        : `ocd-division/country:us/state:${member.state.toLowerCase()}/cd:${member.district === 0 ? "at-large" : member.district}`,
+      bodyId: null,
+    });
+  }
+  const roster: OfficeholderSet = { scope: "us", generatedAt: collectedAt, officeholders, divisions, unmatched };
+  const directory: DirectoryFile = {
+    source: snapshot.source,
+    counts: {
+      members: snapshot.members.length,
+      districtOffices: snapshot.counts.districtOffices,
+      committees: snapshot.committees.length,
+      membershipRows: snapshot.counts.membershipRows,
+      membersWithCommittee: snapshot.counts.membersWithCommittee,
+    },
+    committees: Object.fromEntries(snapshot.committees.map((committee) => [committee.id, committee])),
+    byMember: Object.fromEntries(snapshot.members.map((member) => [member.bioguide, {
+      districtOffices: member.districtOffices,
+      committees: snapshot.memberships[member.bioguide] ?? [],
+    }])),
+  };
+  const projection: FederalDirectoryReadModel = { formatVersion: 1, sourceSha: SHA, roster, directory };
+  const candidate = federalDirectoryCandidate({ acquisitions, retrievedAt: collectedAt, projection });
+  attemptPersisted = true;
+  const outcome = await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "congress-bulk-roster", candidate, collectedAt);
+  if (!outcome.promoted) throw new Error(`Federal directory candidate ${candidate.id} was held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
 
-  console.log("\nSnapshot written. Counts and their denominators:");
+  console.log("\nFederal directory promoted. Counts and their denominators:");
   for (const [key, value] of Object.entries(snapshot.counts)) {
     console.log(`  ${key}: ${value}`);
   }
   console.log(`\n  pinned at ${SHA}`);
   console.log(`  read ${collectedAt}`);
+  console.log(`  promoted ${outcome.promoted.versionId}`);
 }
 
-void main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : error);
+void main().catch(async (error: unknown) => {
+  const detail = error instanceof Error ? error.message : String(error);
+  if (writePrepared && !attemptPersisted) {
+    const attemptedAt = stamp();
+    try {
+      await processRegisteredManualCandidate(
+        new PostgresRoutineDataStore(),
+        "congress-bulk-roster",
+        failedFederalDirectoryCandidate(attemptedAt, detail),
+        attemptedAt,
+      );
+    } catch (receiptError) {
+      console.error(`Could not persist the failed federal-directory attempt: ${receiptError instanceof Error ? receiptError.message : receiptError}`);
+    }
+  }
+  console.error(detail);
   process.exitCode = 1;
 });

@@ -1,0 +1,544 @@
+#!/usr/bin/env tsx
+/**
+ * Standing official state-roll-call boundary.
+ *
+ * One invocation owns exactly one AZ/NH/NJ contract.  It never opens the
+ * retired LegiScan snapshot and has no tracked-output mode.  Until a state's
+ * complete official roll horizon and exact member-id join are implemented,
+ * a successful official probe is durably refused as an unbounded horizon;
+ * transport failures become durable source attempts.  Neither case can move
+ * or clear that state's LKG.
+ *
+ * @freshness-reads-here — retrievedAt is minted only after the official
+ * roll-call surface returned a non-empty body for the exact state contract.
+ */
+
+import {
+  officialStateRollCallsCandidate,
+  officialStateRollCallHorizonRefusalCandidate,
+} from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import {
+  isSourceAcquisitionFailure,
+  readPublisherBody,
+  recordRegisteredSourceAcquisitionFailure,
+  requestPublisher,
+  sourceAcquisitionFailure,
+  withPublisherAcquisitionDeadline,
+} from "../lib/civic-data/source-acquisition-failure.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
+import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
+import {
+  buildNhOfficialRollCallProjection,
+  decodeNhPublisherBytes,
+  NH_LEGISLATORS_URL,
+  NH_ROLL_HISTORY_URL,
+  NH_ROLL_SUMMARY_URL,
+  nhParticipantSourceVersion,
+  parseNhLegislators,
+  parseNhRollCallHistory,
+  parseNhRollCallSummary,
+  readNhOfficialDocumentsSerially,
+  type NhOfficialDocument,
+} from "../lib/sources/nh-general-court/official-data.ts";
+import {
+  buildNjOfficialRollCallProjection,
+  currentNjVotingSessionYear,
+  decodeNjVoteArchive,
+  NJ_MEMBER_REQUEST_CONCURRENCY,
+  NJ_VOTING_RECORDS_INDEX_URL,
+  njMemberVotingRecordsUrl,
+  njVoteArchiveDefinitions,
+  parseNjMemberVotingRecord,
+  parseNjVoteArchive,
+  parseNjVotingRecordsIndex,
+  validateNjMemberVotingRecordsFinalUrl,
+  validateNjVoteArchiveFinalUrl,
+  validateNjVotingRecordsIndexFinalUrl,
+  type NjSessionParticipant,
+  type NjVoteArchiveDefinition,
+} from "../lib/sources/nj-legislature/rollcalls.ts";
+import {
+  officialStateRollCallTargetByState,
+  type OfficialStateCode,
+} from "../lib/state-rollcalls/authority.ts";
+
+const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
+
+const AZ_HORIZON_GAP =
+  "The permitted official LegText landing surface does not establish one complete member-level House and Senate roll-call horizon. apps.azleg.gov is not used by this automated adapter.";
+
+interface NjTextDocument {
+  readonly kind: "MEMBER";
+  readonly participant: NjSessionParticipant;
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly body: string;
+}
+
+interface NjArchiveDocument {
+  readonly kind: "ARCHIVE";
+  readonly definition: NjVoteArchiveDefinition;
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly bytes: Uint8Array;
+}
+
+type NjDocument = NjTextDocument | NjArchiveDocument;
+
+export interface StateRollCallArguments {
+  readonly state: OfficialStateCode;
+}
+
+/** Exact registered CLI shape; no local fixture or tracked write is accepted. */
+export function parseStateRollCallArguments(args: readonly string[]): StateRollCallArguments {
+  if (args.filter((value) => value === "--promote").length !== 1) {
+    throw new Error("STATE_ROLL_CALL_PROMOTION_REQUIRED");
+  }
+  const stateArgs = args.filter((value) => value.startsWith("--state="));
+  const unknown = args.filter((value) => value !== "--promote" && !value.startsWith("--state="));
+  if (stateArgs.length !== 1 || unknown.length > 0) {
+    throw new Error("STATE_ROLL_CALL_EXACT_SCOPE_REQUIRED");
+  }
+  const target = officialStateRollCallTargetByState(stateArgs[0]!.slice("--state=".length));
+  if (!target) throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
+  return { state: target.state };
+}
+
+async function main(): Promise<void> {
+  const { state } = parseStateRollCallArguments(process.argv.slice(2));
+  const target = officialStateRollCallTargetByState(state);
+  if (!target) throw new Error(`STATE_ROLL_CALL_TARGET_MISSING:${state}`);
+
+  installNeonRequestDeadline();
+  prepareProductionCivicDataWrite();
+  const store = new PostgresRoutineDataStore();
+
+  if (state === "NH") {
+    let documents: readonly NhOfficialDocument[];
+    let projection: ReturnType<typeof buildNhOfficialRollCallProjection>;
+    let retrievedAt: string;
+    try {
+      documents = await withPublisherAcquisitionDeadline(
+        "New Hampshire General Court complete roll-call horizon",
+        ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+        async (signal) => readNhOfficialDocumentsSerially(
+          [NH_ROLL_SUMMARY_URL, NH_ROLL_HISTORY_URL, NH_LEGISLATORS_URL],
+          async (url): Promise<NhOfficialDocument> => {
+            const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+            const result = await requestPublisher(
+              "New Hampshire General Court complete roll-call horizon",
+              () => fetch(url, {
+                headers: { "user-agent": UA, accept: "text/plain,*/*" },
+                redirect: "follow",
+                signal: requestSignal,
+              }),
+            );
+            if (!result.ok) {
+              throw sourceAcquisitionFailure(
+                "PUBLISHER_RESPONSE_REFUSED",
+                `New Hampshire General Court export ${url} answered HTTP ${result.status}.`,
+              );
+            }
+            const bytes = await readPublisherBody(
+              "New Hampshire General Court complete roll-call horizon",
+              () => result.arrayBuffer(),
+            );
+            requestSignal.throwIfAborted();
+            return {
+              requestedUrl: url,
+              finalUrl: result.url || url,
+              httpStatus: result.status,
+              body: decodeNhPublisherBytes(bytes),
+            };
+          },
+          { signal },
+        ),
+      );
+      // @freshness-reads-here — the clock is minted only after all three
+      // serial publisher reads settled with complete non-empty bytes.
+      retrievedAt = new Date().toISOString();
+      projection = buildNhOfficialRollCallProjection({
+        summaries: parseNhRollCallSummary(documents[0]!.body),
+        history: parseNhRollCallHistory(documents[1]!.body),
+        legislators: parseNhLegislators(documents[2]!.body),
+        retrievedAt,
+        participantSourceVersion: nhParticipantSourceVersion(documents[1]!.body),
+      });
+    } catch (error) {
+      if (!isSourceAcquisitionFailure(error)) throw error;
+      const failed = await recordRegisteredSourceAcquisitionFailure({
+        store,
+        contractId: target.contractId,
+        failure: error,
+        requestedUrl: NH_ROLL_SUMMARY_URL,
+      });
+      console.log(failed.line);
+      process.exitCode = 2;
+      return;
+    }
+
+    const rosterPointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
+    const pointerPayload = rosterPointer?.payload as {
+      readonly identities?: readonly { readonly officeholderId?: unknown }[];
+    } | undefined;
+    const currentOfficeholderIds = Array.isArray(pointerPayload?.identities) &&
+        pointerPayload.identities.every((row) => typeof row.officeholderId === "string")
+      ? pointerPayload.identities.map((row) => row.officeholderId as string)
+      : [];
+    const candidate = officialStateRollCallsCandidate({
+      sourceId: target.sourceId,
+      jurisdiction: target.jurisdiction,
+      rawBodies: documents.map((document) => document.body),
+      requestedUrl: NH_ROLL_SUMMARY_URL,
+      finalUrl: documents[0]!.finalUrl,
+      httpStatus: documents.every((document) => document.httpStatus === 200) ? 200 : 0,
+      retrievedAt,
+      term: "2026",
+      expectedTerm: "2026",
+      session: "regular",
+      rolls: projection.rolls,
+      positions: projection.positions,
+      declaredRollTotal: projection.rolls.length,
+      sourceReconciliation: projection.tallyAudit,
+      identityAuthority: {
+        contractId: "nh-members",
+        versionId: rosterPointer?.versionId ?? "missing-canonical-nh-members-pointer",
+        currentOfficeholderIds,
+        sessionParticipantIds: projection.participantIds,
+        sessionParticipantSourceVersion: projection.participantSourceVersion,
+        sessionParticipantAudit: projection.participantAudit,
+      },
+    });
+    const outcome = await processRegisteredRoutineCandidate(
+      store,
+      target.contractId,
+      candidate,
+      retrievedAt,
+    );
+    console.log("RCD_RECEIPT=" + JSON.stringify({
+      source: target.contractId,
+      candidateId: candidate.id,
+      acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
+      state: outcome.candidate.state,
+      decision: outcome.candidate.receipt?.decision ?? null,
+      promotedVersion: outcome.promoted?.versionId ?? null,
+      lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+      structuralReleaseContract: ZERO_RELEASE_EVENTS,
+    }));
+    if (!outcome.promoted) process.exitCode = 2;
+    return;
+  }
+
+  if (state === "NJ") {
+    let acquired: {
+      readonly indexBody: string;
+      readonly memberBodies: readonly string[];
+      readonly archiveBodies: readonly string[];
+      readonly indexFinalUrl: string;
+      readonly retrievedAt: string;
+      readonly projection: ReturnType<typeof buildNjOfficialRollCallProjection>;
+    };
+    try {
+      acquired = await withPublisherAcquisitionDeadline(
+        "New Jersey Legislature complete voting-record horizon",
+        ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+        async (signal) => {
+          const indexSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+          const indexResponse = await requestPublisher(
+            "New Jersey Legislature voting-record session index",
+            () => fetch(NJ_VOTING_RECORDS_INDEX_URL, {
+              headers: { "user-agent": UA, accept: "application/json" },
+              redirect: "follow",
+              signal: indexSignal,
+            }),
+          );
+          if (indexResponse.status !== 200) {
+            throw sourceAcquisitionFailure(
+              "PUBLISHER_RESPONSE_REFUSED",
+              `New Jersey Legislature voting-record session index answered HTTP ${indexResponse.status}.`,
+            );
+          }
+          const indexBody = await readPublisherBody(
+            "New Jersey Legislature voting-record session index",
+            () => indexResponse.text(),
+          );
+          indexSignal.throwIfAborted();
+          const indexFinalUrl = validateNjVotingRecordsIndexFinalUrl(indexResponse.url || NJ_VOTING_RECORDS_INDEX_URL);
+          const sessionYear = currentNjVotingSessionYear(new Date().toISOString());
+          const index = parseNjVotingRecordsIndex(indexBody, sessionYear);
+          const requests: readonly (
+            | { readonly kind: "MEMBER"; readonly participant: NjSessionParticipant; readonly url: string }
+            | { readonly kind: "ARCHIVE"; readonly definition: NjVoteArchiveDefinition; readonly url: string }
+          )[] = [
+            ...index.participants.map((participant) => ({
+              kind: "MEMBER" as const,
+              participant,
+              url: njMemberVotingRecordsUrl(sessionYear, participant.rosterKey),
+            })),
+            ...njVoteArchiveDefinitions(sessionYear).map((definition) => ({
+              kind: "ARCHIVE" as const,
+              definition,
+              url: definition.url,
+            })),
+          ];
+          const settled = await runBoundedWorkPool(
+            requests,
+            NJ_MEMBER_REQUEST_CONCURRENCY,
+            async (request): Promise<
+              | { readonly ok: true; readonly document: NjDocument }
+              | { readonly ok: false; readonly error: unknown }
+            > => {
+              try {
+                const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+                const response = await requestPublisher(
+                  `New Jersey Legislature ${request.kind === "MEMBER" ? `member ${request.participant.rosterKey}` : request.definition.kind}`,
+                  () => fetch(request.url, {
+                    headers: {
+                      "user-agent": UA,
+                      accept: request.kind === "MEMBER" ? "application/json" : "application/zip,application/octet-stream",
+                    },
+                    redirect: "follow",
+                    signal: requestSignal,
+                  }),
+                );
+                if (response.status !== 200) {
+                  throw sourceAcquisitionFailure(
+                    "PUBLISHER_RESPONSE_REFUSED",
+                    `New Jersey Legislature ${request.url} answered HTTP ${response.status}.`,
+                  );
+                }
+                if (request.kind === "MEMBER") {
+                  const body = await readPublisherBody(
+                    `New Jersey Legislature member ${request.participant.rosterKey}`,
+                    () => response.text(),
+                  );
+                  requestSignal.throwIfAborted();
+                  const finalUrl = validateNjMemberVotingRecordsFinalUrl(
+                    response.url || request.url,
+                    sessionYear,
+                    request.participant.rosterKey,
+                  );
+                  return {
+                    ok: true,
+                    document: {
+                      kind: "MEMBER",
+                      participant: request.participant,
+                      requestedUrl: request.url,
+                      finalUrl,
+                      httpStatus: response.status,
+                      body,
+                    },
+                  };
+                }
+                const bytes = new Uint8Array(await readPublisherBody(
+                  `New Jersey Legislature ${request.definition.kind} archive`,
+                  () => response.arrayBuffer(),
+                ));
+                requestSignal.throwIfAborted();
+                const finalUrl = validateNjVoteArchiveFinalUrl(response.url || request.url, request.definition);
+                return {
+                  ok: true,
+                  document: {
+                    kind: "ARCHIVE",
+                    definition: request.definition,
+                    requestedUrl: request.url,
+                    finalUrl,
+                    httpStatus: response.status,
+                    bytes,
+                  },
+                };
+              } catch (error) {
+                return { ok: false, error };
+              }
+            },
+          );
+          const poolFailure = settled.find((result) => !result.ok);
+          if (poolFailure && !poolFailure.ok) {
+            throw new Error(`NJ_DOCUMENT_POOL_BROKEN:${poolFailure.error}`);
+          }
+          const failedDocument = settled
+            .map((result) => result.ok ? result.value : null)
+            .find((result) => result?.ok === false);
+          if (failedDocument && !failedDocument.ok) throw failedDocument.error;
+          const documents = settled.map((result) => {
+            if (!result.ok || !result.value.ok) throw new Error("NJ_DOCUMENT_POOL_RESULT_MISSING");
+            return result.value.document;
+          });
+          const memberDocuments = documents.filter((document): document is NjTextDocument => document.kind === "MEMBER");
+          const archiveDocuments = documents.filter((document): document is NjArchiveDocument => document.kind === "ARCHIVE");
+          const memberBodies = memberDocuments.map(({ body }) => body);
+          const archiveBodies = archiveDocuments.map(({ bytes, definition }) => decodeNjVoteArchive(bytes, definition.entryName));
+          const retrievedAt = new Date().toISOString();
+          if (currentNjVotingSessionYear(retrievedAt) !== sessionYear) {
+            throw sourceAcquisitionFailure(
+              "PUBLISHER_DOCUMENT_INVALID",
+              "New Jersey Legislature session boundary changed during one acquisition; no mixed-term candidate was emitted.",
+            );
+          }
+          const projection = buildNjOfficialRollCallProjection({
+            index,
+            memberRecords: memberDocuments.map(({ participant, body }) => parseNjMemberVotingRecord(body, participant, sessionYear)),
+            archives: archiveDocuments.map(({ definition }, archiveIndex) => parseNjVoteArchive(archiveBodies[archiveIndex]!, definition, sessionYear)),
+            retrievedAt,
+          });
+          return { indexBody, memberBodies, archiveBodies, indexFinalUrl, retrievedAt, projection };
+        },
+      );
+    } catch (error) {
+      if (!isSourceAcquisitionFailure(error)) throw error;
+      const failed = await recordRegisteredSourceAcquisitionFailure({
+        store,
+        contractId: target.contractId,
+        failure: error,
+        requestedUrl: NJ_VOTING_RECORDS_INDEX_URL,
+      });
+      console.log(failed.line);
+      process.exitCode = 2;
+      return;
+    }
+
+    const rosterPointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
+    const pointerPayload = rosterPointer?.payload as {
+      readonly roster?: { readonly officeholders?: readonly { readonly id?: unknown }[] };
+    } | undefined;
+    const currentOfficeholderIds = Array.isArray(pointerPayload?.roster?.officeholders) &&
+        pointerPayload.roster.officeholders.every((row) => typeof row.id === "string")
+      ? pointerPayload.roster.officeholders.map((row) => row.id as string)
+      : [];
+    const sessionYear = acquired.projection.rolls[0]!.term.slice(0, 4);
+    const candidate = officialStateRollCallsCandidate({
+      sourceId: target.sourceId,
+      jurisdiction: target.jurisdiction,
+      rawBodies: [acquired.indexBody, ...acquired.memberBodies, ...acquired.archiveBodies],
+      requestedUrl: NJ_VOTING_RECORDS_INDEX_URL,
+      finalUrl: acquired.indexFinalUrl,
+      httpStatus: 200,
+      retrievedAt: acquired.retrievedAt,
+      term: acquired.projection.rolls[0]!.term,
+      expectedTerm: `${sessionYear}-${Number(sessionYear) + 1}`,
+      session: acquired.projection.rolls[0]!.session,
+      rolls: acquired.projection.rolls,
+      positions: acquired.projection.positions,
+      declaredRollTotal: acquired.projection.rolls.length,
+      horizonAudit: {
+        authorityMode: "API_ARCHIVE_EXACT_RECONCILIATION",
+        ...acquired.projection.sourceAudit,
+      },
+      identityAuthority: {
+        contractId: "nj-state-legislators",
+        versionId: rosterPointer?.versionId ?? "missing-canonical-nj-state-legislators-pointer",
+        currentOfficeholderIds,
+        sessionParticipantIds: acquired.projection.participantIds,
+        sessionParticipantSourceVersion: acquired.projection.participantSourceVersion,
+      },
+    });
+    const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, acquired.retrievedAt);
+    console.log("RCD_RECEIPT=" + JSON.stringify({
+      source: target.contractId,
+      candidateId: candidate.id,
+      acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
+      state: outcome.candidate.state,
+      decision: outcome.candidate.receipt?.decision ?? null,
+      promotedVersion: outcome.promoted?.versionId ?? null,
+      lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+      structuralReleaseContract: ZERO_RELEASE_EVENTS,
+    }));
+    if (!outcome.promoted) process.exitCode = 2;
+    return;
+  }
+
+  let response: Response;
+  let body: string;
+  try {
+    const acquired = await withPublisherAcquisitionDeadline(
+      `${target.publisher} roll-call horizon`,
+      ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+      async (signal) => {
+        const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+        const result = await requestPublisher(
+          `${target.publisher} roll-call horizon`,
+          () => fetch(target.probeUrl, {
+            headers: { "user-agent": UA, accept: "text/html,text/plain;q=0.9,*/*;q=0.5" },
+            redirect: "follow",
+            signal: requestSignal,
+          }),
+        );
+        if (!result.ok) {
+          throw sourceAcquisitionFailure(
+            "PUBLISHER_RESPONSE_REFUSED",
+            `${target.publisher} roll-call horizon answered HTTP ${result.status}.`,
+          );
+        }
+        const raw = await readPublisherBody(
+          `${target.publisher} roll-call horizon`,
+          () => result.text(),
+        );
+        requestSignal.throwIfAborted();
+        if (raw.trim() === "") {
+          throw sourceAcquisitionFailure(
+            "PUBLISHER_DOCUMENT_INVALID",
+            `${target.publisher} roll-call horizon returned an empty document.`,
+          );
+        }
+        return { response: result, body: raw };
+      },
+    );
+    response = acquired.response;
+    body = acquired.body;
+  } catch (error) {
+    if (!isSourceAcquisitionFailure(error)) throw error;
+    const failed = await recordRegisteredSourceAcquisitionFailure({
+      store,
+      contractId: target.contractId,
+      failure: error,
+      requestedUrl: target.probeUrl,
+    });
+    console.log(failed.line);
+    process.exitCode = 2;
+    return;
+  }
+
+  const retrievedAt = new Date().toISOString();
+  const candidate = officialStateRollCallHorizonRefusalCandidate({
+    sourceId: target.sourceId,
+    jurisdiction: target.jurisdiction,
+    requestedUrl: target.probeUrl,
+    finalUrl: response.url || target.probeUrl,
+    httpStatus: response.status,
+    retrievedAt,
+    rawBody: body,
+    detail: AZ_HORIZON_GAP,
+  });
+  const outcome = await processRegisteredRoutineCandidate(
+    store,
+    target.contractId,
+    candidate,
+    retrievedAt,
+  );
+  if (outcome.promoted || outcome.candidate.state !== "HORIZON_UNRESOLVED") {
+    throw new Error(
+      `STATE_ROLL_CALL_HORIZON_REFUSAL_BROKEN:${target.contractId}:${outcome.candidate.state}`,
+    );
+  }
+  console.log("RCD_RECEIPT=" + JSON.stringify({
+    source: target.contractId,
+    candidateId: candidate.id,
+    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
+    state: outcome.candidate.state,
+    decision: outcome.candidate.receipt?.decision ?? null,
+    promotedVersion: null,
+    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  }));
+  process.exitCode = 2;
+}
+
+const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/state-rollcalls.mts");
+if (invokedDirectly) await main();

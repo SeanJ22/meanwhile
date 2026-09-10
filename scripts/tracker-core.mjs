@@ -228,7 +228,15 @@ export function readStore(path, root = ROOT) {
 export function writeStore(rows) {
   return toCsv(
     COLUMNS,
-    rows.map((r) => COLUMNS.map((c) => r[c] ?? "")),
+    rows.map((r) => COLUMNS.map((c) =>
+      // Historical watcher rows contain multiline log excerpts whose source
+      // text ended lines with a space. Once a row moves between stores those
+      // become newly-added physical lines and fail `git diff --check`, even
+      // though the evidence itself is unchanged. Normalize only horizontal
+      // whitespace at embedded line endings; words, line breaks, attribution,
+      // and every other byte with evidentiary meaning remain intact.
+      String(r[c] ?? "").replace(/[ \t]+(?=\r?\n)/g, "")
+    )),
   );
 }
 

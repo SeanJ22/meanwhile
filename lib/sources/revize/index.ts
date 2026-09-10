@@ -16,6 +16,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
@@ -395,13 +396,16 @@ export function makeRevizeSource(
     // which `lib/meetings/query.ts` clips independently.
     publishedLookbackDays: null,
 
-    async fetch(): Promise<RevizeRaw[]> {
+    async fetch(query?: MeetingQuery): Promise<RevizeRaw[]> {
       const collected: RevizeRaw[] = [];
       for (const wiring of wiringRows) {
-        const home = await politeGetText(`${wiring.config.base}/`, { fetchImpl });
+        const home = await politeGetText(`${wiring.config.base}/`, {
+          fetchImpl,
+          signal: query?.signal,
+        });
         const agendas = await politeGetText(
           `${wiring.config.base}/${wiring.config.agendaPage}`,
-          { fetchImpl },
+          { fetchImpl, signal: query?.signal },
         );
         collected.push({
           wiring,

@@ -1,132 +1,50 @@
 /**
- * The daily intake tripwire (T08 1f): identifier-free day counts out of
- * the two written stores, analyzed by lib/signal/tripwire.ts, written to
- * docs/intake-report.md for the author. Also the limiter table's purge —
- * expiry on the limiter's own schedule (48h), per the isolation contract.
+ * Production intake observation owned by the standing runtime.
  *
- * Run: `pnpm intake:tripwire` (needs DATABASE_URL). Exits 1 loudly when it
- * cannot run — a tripwire that silently skips is worse than none. Exits 0
- * whether or not days are flagged; a flag is a line for the author, never
- * an action.
+ * The permanent path reads the production stores, performs the existing
+ * sanctioned limiter purge, and
+ * emits one aggregate receipt for `scripts/pilot-runner.mts` to persist on its
+ * canonical control-plane heartbeat. A flag is data, not a process failure;
+ * an unreadable store is also a durable runtime outcome, not a software-CI
+ * failure.
+ *
+ * @freshness-reads-here — observedAt is the explicit start of this production
+ * store observation and is persisted as runtime evidence, not data currency.
  */
-import { writeFileSync } from "node:fs";
-import { join } from "node:path";
-
-import { config as loadEnv } from "dotenv";
 import { neon } from "@neondatabase/serverless";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
-
+import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { purgeExpiredLimiterState } from "../lib/db/intake-limiter.ts";
-import { organicDenominatorSentence } from "../lib/signal/search-log-reads.ts";
+import { assertWriteAllowed } from "../lib/db/write-guard.ts";
+import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import {
-  renderIntakeReport,
-  analyzeStore,
-  type IntakeDayCount,
-} from "../lib/signal/tripwire.ts";
+  collectIntakeRuntimeObservation,
+  unreadableIntakeRuntimeObservation,
+  type IntakeRuntimeObservation,
+} from "../lib/ops/intake-runtime.ts";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
-const url = process.env.DATABASE_URL;
-if (!url) {
-  console.error("DATABASE_URL missing — tripwire NOT RUN. This is a failure, not a quiet day.");
-  process.exit(1);
+const observedAt = new Date().toISOString();
+let observation: IntakeRuntimeObservation;
+
+try {
+  assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] });
+  const handle = resolveProductionWriteHandle();
+  process.env.DATABASE_URL = handle.connection;
+  process.env.WTP_DB_ROLE = "production";
+  process.env.WTP_SANCTIONED_WRITE = "intake-limiter-purge";
+  assertWriteAllowed("an intake limiter purge");
+  observation = await collectIntakeRuntimeObservation({
+    sql: neon(handle.connection) as unknown as Sql,
+    observedAt,
+    purgeExpired: () => purgeExpiredLimiterState(new Date(observedAt)),
+  });
+} catch (error) {
+  observation = unreadableIntakeRuntimeObservation(
+    observedAt,
+    `The standing runtime could not open the sanctioned production intake path (${error instanceof Error ? error.name : "error"}); no healthy verdict was recorded.`,
+  );
 }
-const sql = neon(url);
 
-// Identifier-free by construction: dates and counts leave the database,
-// nothing else. The suspect count reads the flag column only.
-const reactionRows = (await sql`
-  SELECT occurred_at::date::text AS day,
-         count(*)::int AS total,
-         count(*) FILTER (WHERE suspect_reason IS NOT NULL)::int AS suspect
-  FROM reactions
-  WHERE occurred_at > now() - interval '30 days'
-  GROUP BY 1 ORDER BY 1
-`) as { day: string; total: number; suspect: number }[];
-
-/*
- * C05 (2026-08-17): reader traffic only.
- *
- * This is an aggregate over the search log, so it reads through the exclusion
- * filter like every other one. It also gets STRICTER by doing so rather than
- * looser: a `pnpm walk:all` run fires roughly 28 events in about three
- * minutes, which is precisely the timing burst this tripwire exists to flag.
- * It was analysing our own robots and calling them anomalies.
- */
-const searchRows = (await sql`
-  SELECT occurred_at::date::text AS day, count(*)::int AS total
-  FROM search_log
-  WHERE occurred_at > now() - interval '30 days'
-    AND run_class = 'ORGANIC'
-  GROUP BY 1 ORDER BY 1
-`) as { day: string; total: number }[];
-
-// Every class, stated every run. An unattributable row is never counted as a
-// reader, so saying how many there are is the honest half of excluding them —
-// and the counts have to SUM to the total, or the census is describing a table
-// that is not the one we have.
-const census = (await sql`
-  SELECT
-    COUNT(*) FILTER (WHERE run_class = 'ORGANIC')::int   AS organic,
-    COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC')::int AS synthetic,
-    COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')::int   AS unknown,
-    COUNT(*) FILTER (WHERE run_class = 'AUTHOR')::int    AS author,
-    COUNT(*)::int                                        AS total
-  FROM search_log
-`) as {
-  organic: number;
-  synthetic: number;
-  unknown: number;
-  author: number;
-  total: number;
-}[];
-
-const reactionDays: IntakeDayCount[] = reactionRows.map((r) => ({
-  day: r.day,
-  total: r.total,
-  suspect: r.suspect,
-}));
-const searchLogDays: IntakeDayCount[] = searchRows.map((r) => ({
-  day: r.day,
-  total: r.total,
-  suspect: 0,
-}));
-
-const limiterRowsPurged = await purgeExpiredLimiterState();
-const remaining = (await sql`SELECT count(*)::int AS n FROM intake_limiter`) as {
-  n: number;
-}[];
-
-const report = renderIntakeReport({
-  generatedAt: new Date().toISOString(),
-  reactionDays,
-  searchLogDays,
-  limiterRowsPurged,
-  limiterRowsRemaining: remaining[0]?.n ?? 0,
-});
-
-const target = join(process.cwd(), "docs", "intake-report.md");
-writeFileSync(target, report, "utf8");
-
-// The count-and-denominator line — an operation that can return nothing
-// must be asked what it returned.
-const flags = [
-  ...analyzeStore("reactions", reactionDays),
-  ...analyzeStore("search_log", searchLogDays),
-];
-const c = census[0] ?? { organic: 0, synthetic: 0, unknown: 0, author: 0, total: 0 };
-const unaccounted = c.total - (c.organic + c.synthetic + c.unknown + c.author);
-console.log(
-  `search_log by run class (C05): ${c.organic} organic, ${c.synthetic} synthetic, ` +
-    `${c.unknown} unknown, ${c.author} author, ${c.total} total` +
-    // A class in the data that the census does not name would otherwise vanish
-    // silently into the difference. It is stated, loudly, as its own number.
-    (unaccounted === 0 ? "" : ` — ${unaccounted} row(s) IN A CLASS THIS CENSUS DOES NOT NAME`) +
-    `. ${organicDenominatorSentence(c)}`,
-);
-console.log(
-  `tripwire: ${reactionDays.length} reaction days, ${searchLogDays.length} search-log days analyzed; ` +
-    `${flags.length} flag(s); ${limiterRowsPurged} limiter rows purged, ${remaining[0]?.n ?? 0} remain; report written to docs/intake-report.md`,
-);
-for (const flag of flags) {
-  console.log(`FLAGGED ${flag.day} ${flag.store} ${flag.kind}: ${flag.detail}`);
-}
+console.log(`INTAKE_RUNTIME_RECEIPT=${JSON.stringify(observation)}`);
+if (observation.outcome === "UNREADABLE") process.exitCode = 2;

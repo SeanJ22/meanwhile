@@ -355,13 +355,13 @@ function buildSections(files: string[]): Section[] {
 
   /* 5 — drizzle schema */
   sections.push(
-    section("5. Drizzle schema, migrations, and production drift status", (out) => {
+    section("5. Drizzle schema and migrations", (out) => {
       out.push("");
       out.push(
         "Method: `pgTable(\"…\")` occurrences across tracked `lib/db/*.ts`; the migration " +
-          "list is the tracked `lib/db/migrations/*.sql` files; the drift status is READ FROM " +
-          "committed `data/ops/production-integrity.json` — no live database call is made by " +
-          "this generator, and the reading is quoted with its own as-of timestamp.",
+          "list is the tracked `lib/db/migrations/*.sql` files. Live production health and " +
+          "release observations belong to the canonical operations data plane and Admin, so " +
+          "this repository inventory does not project current operational status from Git.",
       );
       out.push("");
       const schemaFiles = files.filter((f) => /^lib\/db\/[^/]+\.ts$/.test(f));
@@ -387,23 +387,6 @@ function buildSections(files: string[]): Section[] {
       out.push(`**${migrations.length} committed migration file(s):**`);
       out.push("");
       for (const m of migrations) out.push(`- \`${m}\``);
-      out.push("");
-      out.push("**Production drift status, from committed evidence:**");
-      out.push("");
-      const integrityPath = join(ROOT, "data", "ops", "production-integrity.json");
-      if (!existsSync(integrityPath)) {
-        out.push(
-          "data/ops/production-integrity.json is ABSENT — the committed reading could not be " +
-            "quoted. That is a fact about this working tree, not about production.",
-        );
-      } else {
-        const integrity = JSON.parse(readFileSync(integrityPath, "utf8")) as Record<string, unknown>;
-        out.push(`- observed: \`${String(integrity.observed)}\``);
-        out.push(`- detail: ${cell(String(integrity.detail))}`);
-        out.push(`- deployedSha: \`${String(integrity.deployedSha)}\``);
-        out.push(`- observedAt: \`${String(integrity.observedAt)}\` (the reading's own as-of stamp; quoted, not current)`);
-        out.push(`- moment: \`${String(integrity.moment)}\`, gateExit: \`${String(integrity.gateExit)}\``);
-      }
       out.push("");
     }),
   );
@@ -623,14 +606,15 @@ function buildSections(files: string[]): Section[] {
     }),
   );
 
-  /* 12 — scheduled jobs */
+  /* 12 — GitHub workflow triggers and historical job evidence */
   sections.push(
-    section("12. Scheduled job inventory, and the measured dispatch-delay evidence", (out) => {
+    section("12. GitHub Actions trigger inventory and historical dispatch-delay evidence", (out) => {
       out.push("");
       out.push(
         "Method: every `.github/workflows/*.yml`, with its `cron:` line(s) extracted " +
-          "mechanically; a workflow with none is listed as dispatch/event-driven. The " +
-          "scheduler is GitHub Actions, not platform cron.",
+          "mechanically; a workflow with none is listed as dispatch/event-driven. This " +
+          "inventory is scoped to software CI/release workflows: GitHub Actions is not a " +
+          "routine civic-data or operational scheduler.",
       );
       out.push("");
       const wfDir = join(ROOT, ".github", "workflows");

@@ -1,31 +1,115 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  civicDataReadNotInitialized,
+  maySeedFixture,
+  mayUseTestFixture,
+  promotedVersionOrThrow,
+  readPromotedCivicData,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { VOTING_SITES_CONTRACT } from "./voting-sites-data-plane.ts";
 import type { VotingSitesFile } from "./voting-sites.ts";
 
 /**
- * The server half of B19 — reading the committed retrieval off disk.
+ * Server-only Reader projection for voting sites.
  *
- * **TWO PROJECTIONS, DELIBERATELY SEPARATE**, the same split
- * `lib/coverage/states.ts` makes and for a sharper reason: the first cut put
- * this `readFileSync` in the module the voting-sites PANEL imports, and
- * `node:fs` went straight into the client graph. The dev server refused to
- * build the page at all — "the chunking context does not support external
- * modules (request: node:fs)" — which is the lucky version of this mistake.
- * The unlucky version type-checks, builds, and ships a filesystem shim to
- * every reader on a map that is already 75% of their initial JavaScript.
- *
- * So: everything a browser may touch lives in `./voting-sites.ts` — types,
- * the model sentences, the narrowing, the directions handoff — and the file
- * read lives here, where only the route and the scripts reach it.
+ * Production reads the canonical promoted pointer. The tracked JSON remains
+ * available only as deterministic test evidence; it is never a runtime
+ * fallback and a store failure can never select it.
  */
 
 let cache: VotingSitesFile | null = null;
+let readState: CivicDataReadResult<VotingSitesFile> = civicDataReadNotInitialized(
+  VOTING_SITES_CONTRACT.recordClass,
+  VOTING_SITES_CONTRACT.scope,
+  "The voting-sites canonical pointer has not been read for this process.",
+);
 
-export function loadVotingSites(): VotingSitesFile {
-  if (cache) return cache;
-  cache = JSON.parse(
+function validateVotingSites(value: VotingSitesFile, version: string): void {
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(value.generatedAt) ||
+    !Array.isArray(value.jurisdictions) ||
+    value.jurisdictions.length === 0 ||
+    value.jurisdictions.some((jurisdiction) =>
+      !jurisdiction.ocdId ||
+      !jurisdiction.sourceUrl ||
+      !Array.isArray(jurisdiction.sites) ||
+      (jurisdiction.sites.length === 0 && jurisdiction.refusal === null)
+    )
+  ) {
+    throw new Error(`Voting-sites projection ${version} does not satisfy VotingSitesFile.`);
+  }
+}
+
+function fixture(): VotingSitesFile {
+  if (!mayUseTestFixture()) {
+    throw new Error("The bundled voting-sites file is deterministic test evidence, not a production authority.");
+  }
+  const value = JSON.parse(
     readFileSync(join(process.cwd(), "data", "voting-sites.json"), "utf8"),
   ) as VotingSitesFile;
-  return cache;
+  validateVotingSites(value, "bundled test fixture");
+  return value;
+}
+
+/** Read the canonical promoted voting-sites projection without a tracked fallback. */
+export async function readVotingSitesProjection(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<VotingSitesFile>> {
+  const result = await readPromotedCivicData<VotingSitesFile>(
+    VOTING_SITES_CONTRACT.recordClass,
+    VOTING_SITES_CONTRACT.scope,
+    options,
+  );
+  if (result.kind === "PROMOTED") {
+    if (result.metadata.sourceId !== VOTING_SITES_CONTRACT.sourceId) {
+      throw new Error(
+        `Voting-sites pointer names ${result.metadata.sourceId}, not ${VOTING_SITES_CONTRACT.sourceId}.`,
+      );
+    }
+    validateVotingSites(result.value, result.metadata.versionId ?? "unknown");
+    cache = result.value;
+  } else {
+    cache = null;
+  }
+  readState = result;
+  return result;
+}
+
+/** Request preload. Store failures remain explicit and never open tracked JSON. */
+export async function refreshVotingSitesFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  return promotedVersionOrThrow(await readVotingSitesProjection(options));
+}
+
+export function votingSitesReadState(): CivicDataReadResult<VotingSitesFile> {
+  return readState;
+}
+
+/** Synchronous projection accessor after the route has preloaded the pointer. */
+export function loadVotingSites(): VotingSitesFile {
+  if (cache) return cache;
+  // Central policy permits NOT_RECORDED, STORE_NOT_CONFIGURED, or
+  // READ_NOT_INITIALIZED here; a STORE_READ_FAILED result stays closed.
+  if (maySeedFixture(readState)) {
+    cache = fixture();
+    return cache;
+  }
+  throw new Error(
+    `Voting-sites holding is ${readState.kind}; call refreshVotingSitesFromPromoted before reading the projection.`,
+  );
+}
+
+/** Test seam. Never called by a production render path. */
+export function resetVotingSitesCache(): void {
+  cache = null;
+  readState = civicDataReadNotInitialized(
+    VOTING_SITES_CONTRACT.recordClass,
+    VOTING_SITES_CONTRACT.scope,
+    "The voting-sites canonical pointer has not been read for this process.",
+  );
 }

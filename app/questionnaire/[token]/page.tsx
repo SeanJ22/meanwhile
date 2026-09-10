@@ -135,7 +135,7 @@ export default async function QuestionnairePage({
    * resolve to neither, the page says something true and general rather than
    * printing a slug at the person it belongs to — see `candidacy-display.ts`.
    */
-  const display = displayFor(verdict.candidacyId);
+  const display = await displayFor(verdict.candidacyId);
 
   return (
     <Shell>

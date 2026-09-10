@@ -3,6 +3,7 @@ import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.t
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
+import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
  * (Session B, W3.5, 2026-08-30. Rewritten Session B resume, W3.B/C/E/F,
@@ -11,12 +12,12 @@ import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
  *
  * It observes, ACQUIRES for real, records, normalizes, STAGES — and **promotes
  * nothing to canonical reader truth**. `runCycle` has no parameter that could,
- * and the promotion tail writes only under `data/control-plane/staging/`.
+ * and the promotion tail writes only under ignored `.runtime/control-plane/staging/` diagnostics.
  *
  * ## Two lanes, one cycle (Level 1)
  *
  * The input is the OBLIGATION-PROVIDER REGISTRY
- * (`lib/control-plane/scheduler/registry.ts`) — five providers, one scheduled
+ * (`lib/control-plane/scheduler/registry.ts`) — four research providers, one scheduled
  * unit per (RECORD x REPRESENTATION). Every due unit is decided ONCE by the
  * canonical executor rule (`decideExecutor`):
  *
@@ -34,8 +35,8 @@ import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
  *
  * **The bytes reach a real vault** through `DurableEvidenceStore`; the Scout's
  * tools vault before the model sees anything. The typed Scout result is
- * appended to `scout_results`; route candidates are PROPOSED and VALIDATED
- * into `data/method/candidates.json` and never admitted here.
+ * appended to `scout_results`; route candidates are PROPOSED and VALIDATED in
+ * the adopted `cp_method_candidates/live` aggregate and never admitted here.
  *
  * ## What this process writes about itself
  *
@@ -72,7 +73,7 @@ import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname, platform } from "node:os";
 import { join } from "node:path";
 
@@ -94,14 +95,21 @@ import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/c
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
-import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
-import { candidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
-import { promotedFactsProvider } from "../lib/control-plane/scheduler/providers/promoted-facts.ts";
-import { factChainLines, factSubjectsFromRepositories } from "../lib/control-plane/promotion/fact-chain.ts";
-import type { FactSubject } from "../lib/control-plane/promotion/fact-freshness.ts";
+import {
+  candidateEnrichmentProvider,
+  preloadCandidateEnrichmentAuthorities,
+} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
+import {
+  factFreshnessFromPermanentMeetings,
+  permanentMeetingsReceipt,
+  type PermanentMeetingsReceipt,
+} from "../lib/control-plane/promotion/fact-freshness.ts";
+import { readRoutineDataObservabilityFromConnection } from "../lib/civic-data/observability-store.ts";
+import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   closeOccurrence,
@@ -110,6 +118,7 @@ import {
   resumeOpenOccurrence,
   persistDebts,
   recordNextDue,
+  retireObligationsByPrefix,
   syncObligations,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
@@ -150,10 +159,10 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { readCandidateStore, readMethodStore } from "../lib/method/candidate.ts";
+import { readMethodStore } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -164,6 +173,7 @@ import {
   modelShareTrend,
   orderByReaderImpact,
   scoutCapacity,
+  compareReaderImpact,
   type DispatchOrdering,
   type OrderingInputs,
   type ResearchMetrics,
@@ -179,6 +189,12 @@ import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import type { FreshnessCycleOutcome } from "../lib/control-plane/owner-surface.ts";
+import {
+  appendFreshnessCycleDigest,
+  freshnessCycleOutcomes,
+} from "../lib/control-plane/freshness-cycle-outcome.ts";
+import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
@@ -189,13 +205,15 @@ import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts"
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
+import { readMethodCandidateAuthorityStatus } from "../lib/control-plane/method-candidate-authority.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
 const ROOT = process.cwd();
-const CONTROL_PLANE_ROOT = join(ROOT, "data", "control-plane", "freshness-shadow");
-const RUNS_DIR = join(ROOT, "data", "health", "freshness-shadow-runs");
+const CONTROL_PLANE_ROOT = join(ROOT, ".runtime", "control-plane", "freshness-shadow");
+const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
 const NOW = new Date().toISOString();
 const HOST = hostname();
 const nowIso = (): string => new Date().toISOString();
@@ -212,11 +230,64 @@ const nowIso = (): string => new Date().toISOString();
  * fires at most once.
  */
 let crashRecorded = false;
-function recordCrash(error: unknown): void {
+let crashRepos: ControlPlaneRepositories | null = null;
+async function recordCrash(error: unknown): Promise<void> {
   if (crashRecorded) return;
   crashRecorded = true;
   const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
   const headline = message.split("\n")[0];
+  const finishedAt = new Date().toISOString();
+  const cycleId = `freshness-cycle:${HOST}:${NOW}`;
+  if (crashRepos !== null) {
+    try {
+      await appendFreshnessCycleDigest(crashRepos, {
+        outcome: {
+          kind: "FRESHNESS_CYCLE",
+          state: "FAILED",
+          cycleId,
+          startedAt: NOW,
+          finishedAt,
+          testedSha: headSha(ROOT),
+          host: HOST,
+          provider: crashRepos.describe(),
+          durable: crashRepos.durable,
+          executor: null,
+          registry: null,
+          obligations: null,
+          occurrencesOpened: null,
+          debtInherited: null,
+          debtPersisted: null,
+          debtCleared: null,
+          scheduled: null,
+          unscheduled: [],
+          dueCount: null,
+          dispatched: null,
+          worked: [],
+          dispositions: [],
+          dispatchDetails: [],
+          research: null,
+          deferred: null,
+          debts: null,
+          incidents: [],
+          risk: null,
+          health: null,
+          promotedToReaderTruth: false,
+          failure: { code: "CYCLE_CRASHED", detail: message },
+        },
+        lines: [
+          "PILOT HEALTH",
+          "  the cycle CRASHED before completing — a failed cycle, never an idle one",
+          `      ${headline}`,
+          "  ROLLUP    NOT GREEN — the cycle did not finish",
+        ],
+      });
+      console.error(`\n  canonical outcome: ${cycleId}`);
+    } catch (recordError) {
+      console.error(
+        `\n  freshness:shadow CRASHED and the canonical outcome append failed (${recordError instanceof Error ? recordError.message : String(recordError)}).`,
+      );
+    }
+  }
   try {
     mkdirSync(RUNS_DIR, { recursive: true });
     const path = nextRunRecordPath(RUNS_DIR, today());
@@ -225,7 +296,7 @@ function recordCrash(error: unknown): void {
       `${JSON.stringify(
         {
           startedAt: NOW,
-          finishedAt: new Date().toISOString(),
+          finishedAt,
           testedSha: headSha(ROOT),
           crashed: true,
           error: message,
@@ -242,7 +313,7 @@ function recordCrash(error: unknown): void {
       "utf8",
     );
     console.error(`\n  freshness:shadow CRASHED — ${headline}`);
-    console.log(`  run record: ${path}`);
+    console.log(`  local diagnostic: ${path}`);
   } catch (writeError) {
     console.error(
       `\n  freshness:shadow CRASHED and could not write a run record (${
@@ -252,11 +323,14 @@ function recordCrash(error: unknown): void {
   }
   process.exit(1);
 }
-process.on("uncaughtException", recordCrash);
-process.on("unhandledRejection", recordCrash);
+process.on("uncaughtException", (error) => { void recordCrash(error); });
+process.on("unhandledRejection", (error) => { void recordCrash(error); });
 
 const argv = process.argv.slice(2);
 const wantsPostgres = argv.includes("--provider=postgres");
+if (wantsPostgres) {
+  assertRuntimeAuthority({ capabilities: ["RESEARCH_CYCLE"] });
+}
 const dry = argv.includes("--dry");
 const noModel = argv.includes("--no-model");
 const canary = argv.includes("--canary");
@@ -328,6 +402,25 @@ if (wantsPostgres) {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
 }
+crashRepos = repos;
+
+if (wantsPostgres) {
+  const methodAuthority = await readMethodCandidateAuthorityStatus(repos);
+  if (methodAuthority.state !== "ADOPTED") {
+    throw new Error(
+      `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
+        "No Scout candidate write or tracked-file fallback was attempted.",
+    );
+  }
+}
+
+/*
+ * The standing obligation registry consumes the same proof-validated runtime
+ * authority as Admin. A missing/unreachable pointer is a named failed cycle;
+ * the retired tracked jurisdiction projections are never a silent fallback.
+ */
+await preloadOperationalReferenceBundle({ bypassCache: true });
+await preloadCandidateEnrichmentAuthorities();
 
 /*
  * THE CYCLE AND THE NIGHTLY WINDOW NEVER WRITE CONCURRENTLY (RULING 242). One
@@ -351,7 +444,8 @@ try {
 /* ----------------------------------------------------------- the registry --- */
 
 /*
- * FIVE PROVIDERS. (Session C3, lane C, 2026-09-01. RULING 229.) `local-jurisdictions`
+ * FOUR RESEARCH PROVIDERS. (Session C3, lane C, 2026-09-01. RULING 229.)
+ * `local-jurisdictions`
  * gives every named filing officer and election custodian a clock, and
  * `candidate-enrichment` makes campaign sites, positions, bios, photos and
  * contact standing obligations against each state's CANONICAL CANDIDATE
@@ -359,29 +453,19 @@ try {
  * never assumed statewide (R-C9).
  */
 /*
- * A SIXTH, FACT-SHAPED (PRDY-5, 2026-09-06). `promoted-facts` gives every
- * (record class, canonical body) the promotion pipeline holds a bridged
- * meeting-time or agenda fact for its own clock — `freshness:meeting-times:<bodyId>`,
- * `freshness:agendas:<bodyId>` — enumerated from the pipeline's own records
- * before the registry is built. A corpus obligation or a local-jurisdiction
- * route obligation for the same body stays a separate row: neither is the
- * freshness of a fact.
+ * PDC permanently removed the former tracked-snapshot meetings provider and
+ * the fact-shaped `meeting-times` / `agendas` acquisition providers. The
+ * SOURCE_WIRING-derived meeting-partition contracts own that acquisition, clock,
+ * promotion and LKG in the production civic-data store. The worker pipeline
+ * may still project immutable evidence into a fail-closed receipt; it may not
+ * open the same official feeds on a parallel schedule.
  */
-let factSubjects: readonly FactSubject[] = [];
-let factSubjectsFailure: string | null = null;
-try {
-  factSubjects = await factSubjectsFromRepositories(repos, NOW);
-} catch (error) {
-  factSubjectsFailure = error instanceof Error ? error.message : String(error);
-}
 const registry = buildRegistry(
   [
-    meetingsProvider(),
     campaignFinanceProvider(),
     trackerIntakeProvider(),
     localJurisdictionsProvider(),
     candidateEnrichmentProvider(),
-    promotedFactsProvider(factSubjects),
   ],
   { root: ROOT, nowIso: NOW },
 );
@@ -406,19 +490,42 @@ if (ONLY !== null || IDS !== null) {
   );
 }
 
-/* ---------------------------------------------- non-meeting share, stated --- */
+/* ------------------------------------- retire the superseded meetings clock --- */
 
-const nonMeeting = units.filter((u) => u.providerId !== "meetings");
+const LEGACY_MEETINGS_OBLIGATION_PREFIX = "freshness:meetings:";
+const LEGACY_MEETINGS_RETIREMENT_REASON =
+  "PDC authority transferred to the matching source/body production meeting-partition contract";
+const meetingsRetirement = await retireObligationsByPrefix(
+  repos,
+  [LEGACY_MEETINGS_OBLIGATION_PREFIX],
+  NOW,
+  LEGACY_MEETINGS_RETIREMENT_REASON,
+);
 console.log(
-  `  ${floorLine(
-    floored(
-      "scheduled units that are NOT meetings",
-      "the obligation-provider registry",
-      units.length,
-      nonMeeting.length,
-      units.length === 0 ? "the registry produced no units at all this cycle" : undefined,
-    ),
-  )}`,
+  `  legacy tracked-snapshot meetings clocks: ${meetingsRetirement.retired.length} retired this cycle; ` +
+    `${meetingsRetirement.alreadyRetired.length} already inactive with no next-due`,
+);
+const factClockRetirement = await retireObligationsByPrefix(
+  repos,
+  ["freshness:meeting-times:", "freshness:agendas:"],
+  NOW,
+  "PDC authority transferred meeting and agenda acquisition to source/body production meeting-partition contracts",
+);
+console.log(
+  `  legacy parallel meeting-fact clocks: ${factClockRetirement.retired.length} retired this cycle; ` +
+    `${factClockRetirement.alreadyRetired.length} already inactive with no next-due`,
+);
+const LEGACY_FEC_MODEL_OBLIGATION_PREFIX =
+  "freshness:campaign-finance:ballot-az-pima:us-house-6#";
+const fecModelRetirement = await retireObligationsByPrefix(
+  repos,
+  [LEGACY_FEC_MODEL_OBLIGATION_PREFIX],
+  NOW,
+  "PDC authority transferred federal acquisition to the FEC_FUNDING / federal-supported production civic-data contract",
+);
+console.log(
+  `  legacy parallel federal campaign-finance clocks: ${fecModelRetirement.retired.length} retired this cycle; ` +
+    `${fecModelRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
 
 const sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
@@ -471,8 +578,9 @@ const decisionDisagreements = units
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
 const runtimeConditions: string[] = [];
-if (factSubjectsFailure !== null) {
-  runtimeConditions.push(`fact subjects could not be read from the pipeline: ${factSubjectsFailure}; no fact-class obligation was enumerated this cycle`);
+let canonicalCandidateCounts = await candidateStoreCounts(repos);
+if (canonicalCandidateCounts === null) {
+  runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
 }
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
@@ -639,40 +747,18 @@ const dueDeterministic = dueDeterministicRows.length;
  * **READER IMPACT FIRST for the Scout lane.** (Work Item 5, 2026-09-02.
  * RULING 229.) Oldest-first answered what had waited longest; the Scout
  * ceiling is three a cycle, so WHICH three matters. Band 1 feeds a pilot
- * surface or an open red reader question, band 2 completes a source universe,
- * band 3 is the tail; oldest due first within a band. The inputs are read
- * here and NAMED on the record.
+ * surface, band 2 completes a source universe, band 3 is the tail; oldest due
+ * first within a band. Runtime reader impact is the obligation's canonical
+ * `readerImpactAt`; the installed release's pilot ZIP list is configuration.
+ *
+ * The retired implementation also selected the newest tracked
+ * `reader-suite-runs/*` output and joined it to `reader-questions.json`. That
+ * made a local software test (or a Git mutation of its output/corpus) change
+ * the standing data-plane order. It is deleted rather than replaced with a
+ * second ledger: canonical obligations already carry explicit reader impact,
+ * and software-suite outcomes remain software CI evidence.
  */
-function openRedReaderQuestions(): { readonly zips: readonly string[]; readonly count: number; readonly run: string | null } {
-  const dir = join(ROOT, "data", "health", "reader-suite-runs");
-  try {
-    const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
-    const latest = files.at(-1);
-    if (latest === undefined) return { zips: [], count: 0, run: null };
-    const run = JSON.parse(readFileSync(join(dir, latest), "utf8")) as {
-      runId?: string;
-      results?: { questionText?: string; verdict?: { kind?: string } }[];
-    };
-    const red = (run.results ?? []).filter((r) => r.verdict?.kind === "RED");
-    const corpus = JSON.parse(readFileSync(join(ROOT, "data", "health", "reader-questions.json"), "utf8")) as {
-      templateText?: string;
-      applicability?: { zips?: string[] };
-    }[];
-    const zips = new Set<string>();
-    for (const r of red) {
-      const q = corpus.find((c) => c.templateText === r.questionText);
-      for (const z of q?.applicability?.zips ?? []) zips.add(z);
-    }
-    return { zips: [...zips].sort(), count: red.length, run: run.runId ?? latest };
-  } catch {
-    return { zips: [], count: 0, run: null };
-  }
-}
-const redQuestions = openRedReaderQuestions();
 const orderingInputs: OrderingInputs = {
-  openRedQuestionZips: redQuestions.zips,
-  openRedQuestions: redQuestions.count,
-  readerSuiteRun: redQuestions.run,
   pilotZips: PILOT_ZIPS,
 };
 const modelOrder = orderByReaderImpact(
@@ -692,11 +778,24 @@ const scoutOrder = [
   ...modelOrder.ordered.filter((b) => dispatchPriority.has(b.row.id)),
   ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
 ];
+const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation): number => {
+  const leftOwner = dispatchPriority.has(left.obligation.id);
+  const rightOwner = dispatchPriority.has(right.obligation.id);
+  if (leftOwner !== rightOwner) return leftOwner ? -1 : 1;
+  const orderable = (row: ScheduledObligation) => ({
+    id: row.obligation.id,
+    subjectId: row.obligation.subjectId,
+    readerImpactAt: row.obligation.readerImpactAt,
+    providerId: registry.providerOf(row.obligation.id),
+    nextDueAt: row.nextDueAt,
+  });
+  return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
+};
 const openingOrder = [...dueDeterministicRows, ...scoutOrder.map((b) => b.row.entry)];
 if (dispatchOrdering !== null) {
   console.log(
     `  Scout lane order: band 1 ${dispatchOrdering.bands[1]} · band 2 ${dispatchOrdering.bands[2]} · band 3 ${dispatchOrdering.bands[3]} of ${dueModel.length} due model-class ` +
-      `(open red reader questions ${redQuestions.count}${redQuestions.zips.length > 0 ? ` at ${redQuestions.zips.join(", ")}` : ""})` +
+      `(canonical obligation reader impact plus release-pinned pilot jurisdictions)` +
       (dispatchPriority.size > 0 ? ` · owner dispatch first: ${scoutOrder.filter((b) => dispatchPriority.has(b.row.id)).length} of them` : ""),
   );
   for (const b of scoutOrder.slice(0, SCOUT_MAX)) {
@@ -972,14 +1071,14 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
 
 /**
  * **THE RELAUNCH PROOF TRAVELS WITH THE STATE.** (Work Item 3.2, RULING 246.)
- * The proof file is read from THIS checkout; the live trigger is asked of the
+ * The proof is host-local ignored evidence under THIS runtime checkout; the live trigger is asked of the
  * scheduled task through `scripts/pilot-task.ps1 -Action verify-triggers`
  * (win32 only; elsewhere the reading is NOT_MEASURABLE_ON_THIS_HOST). Neither
  * read can make the verdict ACTIVE by itself — `deriveLevel1` asks for a
  * RELAUNCHED proof within tolerance AND the trigger still present.
  */
 function measureHostSupervision(): HostSupervision {
-  const proofRel = join("data", "ops", "runner-relaunch-proof.json");
+  const proofRel = join(".runtime", "ops", "runner-relaunch-proof.json");
   const proofPath = join(ROOT, proofRel);
   let proof: RelaunchProof | null = null;
   if (existsSync(proofPath)) {
@@ -1106,7 +1205,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     running: [...running],
     runtimeConditions: [...runtimeConditions],
     methodCandidates: (() => {
-      const counts = candidateStoreCounts(ROOT);
+      const counts = canonicalCandidateCounts;
       return counts === null
         ? null
         : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
@@ -1248,8 +1347,9 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
         let amended = result;
         if (result.refusal === null && result.candidates.length > 0) {
           try {
-            const report = proposeScoutCandidates({ root: ROOT, result, artifacts, stamp: today() });
+            const report = await proposeScoutCandidates({ repos, root: ROOT, result, artifacts, stamp: today() });
             candidateReports.push(report);
+            canonicalCandidateCounts = report.counts;
             amended = {
               ...result,
               methodCandidateIds: report.proposed.map((p) => p.candidateId),
@@ -1280,7 +1380,9 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 
 // Keep a bounded share of the existing cycle for registered multi-worker work.
 // Otherwise an always-full refresh queue could starve the fleet indefinitely.
-const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.list()).filter(item => item.value.autonomousPlan);
+const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.list()).filter(item =>
+  item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
+);
 const fleetReserveMs = !dry && !canary && plannedWork.length ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
 // Registered investigations also need Scout after a known source fails or leaves
 // verification unresolved; initial source discovery is not the only model work.
@@ -1316,6 +1418,8 @@ const cycle = await runCycle({
   placeFirst: dispatchPriority,
   research: {
     decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
+    /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
+    compareModelRows: compareScoutRows,
     admitScout: () => {
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
       if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
@@ -1391,6 +1495,17 @@ console.log(
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   try {
+    const routineObservation = await readRoutineDataObservabilityFromConnection(
+      process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
+      { now: nowIso() },
+    );
+    const meetingsReceipt: PermanentMeetingsReceipt = permanentMeetingsReceipt(routineObservation);
+    if (meetingsReceipt.kind === "UNAVAILABLE") {
+      runtimeConditions.push(
+        `permanent meetings receipt unavailable to immutable fact projection: ${meetingsReceipt.detail}; ` +
+        "fact approval remains held and no legacy acquisition clock is reopened",
+      );
+    }
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
@@ -1407,7 +1522,12 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     const fleetDispatches = [...autonomous.dispatches, ...legacy];
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     /* PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result keeps the generic offer. */
-    const factReport = await projectFleetPipeline(repos, { readArtifactText: async (id) => (await fleet.readEvidence(id)).text, now: nowIso(), root: ROOT });
+    const factReport = await projectFleetPipeline(repos, {
+      readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
+      now: nowIso(),
+      root: ROOT,
+      freshness: async (input) => factFreshnessFromPermanentMeetings(meetingsReceipt, input),
+    });
     if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {
@@ -1420,14 +1540,12 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
  * RULING 224. Acquisition without promotion is inventory, not product. The tail
  * runs on EVERY cycle with no operator: acquire -> vault -> normalize ->
  * snapshot -> STAGED. Promotion itself is OFF and a session carries the last
- * mile, so nothing below writes outside data/control-plane/staging/.
+ * mile, so nothing below writes outside ignored `.runtime/control-plane/staging/` diagnostics.
  */
 const staged: StagedEntry[] = [];
 for (const result of cycle.dispatched) {
   const unit = units.find((u) => u.obligation.id === result.obligationId);
   if (unit === undefined) continue;
-  if (unit.record.recordClass === "meetings") continue;
-
   let body: string | null = null;
   for (const artifactId of result.artifactIds) {
     const entry = vault.ledger.get(artifactId);
@@ -1476,16 +1594,22 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
-    for (const f of readdirSync(RUNS_DIR).filter((x) => x.endsWith(".json")).sort()) {
-      const rec = JSON.parse(readFileSync(join(RUNS_DIR, f), "utf8")) as { startedAt?: string; research?: { lanes?: { deterministic?: { dispatched?: number }; model?: { dispatched?: number } } | null } };
+    const priorDigests = await repos.ownerDigests.read(DIGEST_LOG_KEY);
+    for (const rec of freshnessCycleOutcomes(priorDigests)) {
       const lanes = rec.research?.lanes;
-      if (!lanes || typeof rec.startedAt !== "string" || Date.parse(rec.startedAt) < since) continue;
-      windowCycles.push({ startedAt: rec.startedAt, deterministic: lanes.deterministic?.dispatched ?? 0, model: lanes.model?.dispatched ?? 0 });
+      if (!lanes || Date.parse(rec.startedAt) < since) continue;
+      windowCycles.push({
+        startedAt: rec.startedAt,
+        deterministic: lanes.deterministic?.dispatched ?? 0,
+        model: lanes.model?.dispatched ?? 0,
+      });
     }
-  } catch {
-    /* no run records readable: the window is what this cycle saw */
+  } catch (error) {
+    runtimeConditions.push(
+      `research share history was unavailable from the canonical owner log (${error instanceof Error ? error.message : String(error)}); the window contains this cycle only`,
+    );
   }
-  const counts = candidateStoreCounts(ROOT);
+  const counts = await candidateStoreCounts(repos);
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
   /*
@@ -1529,7 +1653,7 @@ if (!dry && !canary) {
   try {
     researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
-      candidates: readCandidateStore(join(ROOT,"data","method","candidates.json")).candidates,
+      candidates: (await readMethodCandidateStore(repos)).candidates,
       knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
@@ -1576,8 +1700,15 @@ const heartbeat: RunnerHeartbeat = {
 };
 try {
   const beat = await repos.runnerHeartbeat.read(RUNNER_ID);
-  if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, heartbeat, finishedAt);
-  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, heartbeat, finishedAt);
+  const nextHeartbeat: RunnerHeartbeat = {
+    ...heartbeat,
+    /* The intake observer runs immediately after this child. Preserve its
+       latest durable receipt while refreshing cycle/liveness fields; a cycle
+       crash before the observer runs must not erase the last known reading. */
+    intakeRuntime: beat?.value.intakeRuntime ?? null,
+  };
+  if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);
+  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, nextHeartbeat, finishedAt);
 } catch (error) {
   runtimeConditions.push(`the runner heartbeat could not be written: ${error instanceof Error ? error.message : String(error)}`);
 }
@@ -1662,14 +1793,9 @@ const lines = [
 console.log();
 for (const line of lines) console.log(line);
 
-/* --------------------------------------------------------- the run record --- */
+/* ------------------------------------------------------ canonical outcome --- */
 
-mkdirSync(RUNS_DIR, { recursive: true });
-const path = nextRunRecordPath(RUNS_DIR, today());
-writeFileSync(
-  path,
-  `${JSON.stringify(
-    {
+const runRecord = {
       startedAt: cycle.startedAt,
       finishedAt,
       researchProgression: researchProgression?.windowId === researchWindowId ? researchProgression : null,
@@ -1682,7 +1808,6 @@ writeFileSync(
         providers: registry.byProvider,
         registeredUnits: allUnits.length,
         workedUnits: units.length,
-        nonMeetingUnits: nonMeeting.length,
         only: ONLY,
       },
       obligations: sync.all.length,
@@ -1779,7 +1904,7 @@ writeFileSync(
       },
       vaulted: [...vault.ledger.values()],
       staged,
-      stagingManifest: `${["data", "control-plane", "staging"].join("/")}/manifest.json`,
+      stagingManifest: `${[".runtime", "control-plane", "staging"].join("/")}/manifest.json`,
       deferred: cycle.deferred.length,
       deferredReasons: cycle.deferred,
       reclaim: cycle.reclaim,
@@ -1791,11 +1916,64 @@ writeFileSync(
       digest: lines,
       provenance: readRunProvenance(headSha(ROOT), ROOT),
       codeIdentity,
-    },
-    null,
-    2,
-  )}\n`,
-  "utf8",
-);
-console.log(`\n  run record: ${path}`);
+} as const;
+
+const cycleId = `freshness-cycle:${HOST}:${NOW}`;
+const canonicalOutcome: FreshnessCycleOutcome = {
+  kind: "FRESHNESS_CYCLE",
+  state: "SUCCEEDED",
+  cycleId,
+  startedAt: runRecord.startedAt,
+  finishedAt: runRecord.finishedAt,
+  testedSha: runRecord.testedSha,
+  host: HOST,
+  provider: runRecord.provider,
+  durable: runRecord.durable,
+  executor: runRecord.executor,
+  registry: runRecord.registry,
+  obligations: runRecord.obligations,
+  occurrencesOpened: runRecord.occurrencesOpened,
+  debtInherited: runRecord.debtInherited,
+  debtPersisted: runRecord.debtPersisted,
+  debtCleared: runRecord.debtCleared,
+  scheduled: runRecord.scheduled,
+  unscheduled: runRecord.unscheduled,
+  dueCount: runRecord.dueCount,
+  dispatched: runRecord.dispatched,
+  worked: runRecord.worked,
+  dispositions: runRecord.dispositions.map((row) => ({
+    obligationId: row.obligationId,
+    disposition: row.disposition,
+    artifacts: row.artifacts,
+  })),
+  dispatchDetails: runRecord.dispatchDetails.map((row) => ({
+    obligationId: row.obligationId,
+    attemptId: row.attemptId,
+    outcome: row.outcome,
+    disposition: row.disposition,
+    detail: row.detail,
+  })),
+  research: { lanes: runRecord.research.lanes },
+  deferred: runRecord.deferred,
+  debts: runRecord.debts,
+  incidents: runRecord.incidents.map((incident) => ({
+    cause: incident.cause,
+    target: incident.target,
+    obligationsAffected: incident.obligationsAffected,
+    nextRetryAt: incident.nextRetryAt,
+  })),
+  risk: runRecord.risk as unknown as Readonly<Record<string, unknown>>,
+  health: runRecord.health as unknown as Readonly<Record<string, unknown>>,
+  promotedToReaderTruth: runRecord.promotedToReaderTruth,
+  failure: null,
+};
+
+/* Canonical append happens first. A local file is disposable diagnostics only. */
+await appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines });
+console.log(`\n  canonical outcome: ${cycleId}`);
+
+mkdirSync(RUNS_DIR, { recursive: true });
+const path = nextRunRecordPath(RUNS_DIR, today());
+writeFileSync(path, `${JSON.stringify(runRecord, null, 2)}\n`, "utf8");
+console.log(`  local diagnostic: ${path}`);
 await releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso());

@@ -101,6 +101,7 @@ function AgendaForMeeting({
   const [records, setRecords] = useState<MeetingReaderRecords | null>(null);
   const [publication, setPublication] = useState<AgendaPublicationReading | null>(null);
   const [holdingUnavailable, setHoldingUnavailable] = useState(false);
+  const [unavailableAuthorities, setUnavailableAuthorities] = useState<string[]>([]);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -117,11 +118,14 @@ function AgendaForMeeting({
           records: MeetingReaderRecords;
           holdingStatus: string;
           publication: AgendaPublicationReading | null;
+          supportingHoldingStatus?: "HELD" | "PARTIAL";
+          unavailableAuthorities?: string[];
         };
         setDocuments(payload.documents);
         setRecords(payload.records);
         setPublication(payload.publication);
         setHoldingUnavailable(payload.holdingStatus === "HOLDING_UNAVAILABLE");
+        setUnavailableAuthorities(payload.unavailableAuthorities ?? []);
       } catch {
         if (!controller.signal.aborted) setFailed(true);
       }
@@ -161,6 +165,9 @@ function AgendaForMeeting({
   }
 
   return <>
+    {unavailableAuthorities.length > 0 && <p className="mb-2 text-[0.6875rem] leading-relaxed text-muted" data-agenda-supporting-holding="PARTIAL">
+      The meeting and agenda remain available, but these supporting records could not be checked: {unavailableAuthorities.join(", ")}.
+    </p>}
     <MinutesRecord meetingId={meetingId} />
     <MeetingRecords records={records} />
     {holdingUnavailable ? <p className="mt-1.5 text-[0.75rem] text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>

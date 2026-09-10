@@ -10,9 +10,11 @@ import { meetingListingKnowledgeFor, minutesSummaryEvidenceFor, noticeSummaryEvi
 import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
+await installRegistryRuntimeFirstSeeds();
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
 test("all three measured Newbury dates retain two listings with unresolved distinct-meeting counts in real Ask", async () => {

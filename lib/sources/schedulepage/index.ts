@@ -977,6 +977,7 @@ export function makeSchedulePageSource(
             fetchImpl,
             accept: "text/html",
             profile,
+            signal: query?.signal,
           });
           /*
            * A MONTH GRID SERVES ONE MONTH, and reading only the default view
@@ -1019,6 +1020,7 @@ export function makeSchedulePageSource(
                   fetchImpl,
                   accept: "text/html",
                   profile,
+                  signal: query?.signal,
                 });
                 schedule += monthPage.text;
               } catch {
@@ -1034,6 +1036,7 @@ export function makeSchedulePageSource(
               fetchImpl,
               accept: "text/html",
               profile,
+              signal: query?.signal,
             });
             documents = page.text;
           }

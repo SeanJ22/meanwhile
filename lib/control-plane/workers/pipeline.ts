@@ -4,6 +4,7 @@ import { projectFactChains, type FactChainOptions, type FactChainReport } from "
 import { meetingFactContract } from "../promotion/meeting-facts.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 
 /**
  * PRDY-3 (2026-09-06): a completed extraction under a meeting-fact contract
@@ -17,6 +18,7 @@ export type FleetPipelineOptions = Pick<FactChainOptions, "readArtifactText" | "
 
 /** Offer exact worker outputs through the existing gated pipeline; missing confirmation remains a durable refusal. */
 export async function projectFleetPipeline(repos: ControlPlaneRepositories, options?: FleetPipelineOptions): Promise<FactChainReport | null> {
+  if (options && !options.registryBodyIds) await refreshRegistryRuntimeFromPromoted();
   const results = await repos.workerResults.readAll();
   if (!results.length) return null;
   const ctx = await contextFromRepositories(repos);

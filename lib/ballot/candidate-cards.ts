@@ -1,6 +1,4 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
+import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
 import { officialPhotoForPerson, personKey } from "../photos/person.ts";
 import { photoMayRender } from "../photos/review.ts";
 
@@ -87,25 +85,15 @@ export interface CandidateCardData {
   filedAddressSource: string | null;
 }
 
-interface CandidateCardsFile {
-  curatedAt: string;
-  note: string;
-  cards: Record<string, CandidateCardData>;
-  hunts: { key: string; name: string; note: string; attemptedAt: string }[];
+export interface CandidateCardsFile {
+  readonly curatedAt: string;
+  readonly note: string;
+  readonly cards: Readonly<Record<string, CandidateCardData>>;
+  readonly hunts: readonly { readonly key: string; readonly name: string; readonly note: string; readonly attemptedAt: string }[];
 }
 
-let cache: CandidateCardsFile | null = null;
-
 function load(): CandidateCardsFile {
-  if (!cache) {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "ballot", "candidate-cards-2026.json"),
-        "utf8",
-      ),
-    ) as CandidateCardsFile;
-  }
-  return cache;
+  return currentCandidateProfilesProjection().cards;
 }
 
 /**

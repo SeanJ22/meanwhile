@@ -98,6 +98,12 @@ export interface CarriedForward {
    * which is a recorded instant too.
    */
   lastFreshAt: string;
+  /**
+   * Exact reason this run retained the prior row. Older snapshots predate the
+   * discriminator; new successful-but-thin responses must name
+   * `UNEXPLAINED_DISAPPEARANCE` so they cannot masquerade as fresh.
+   */
+  reason?: "SOURCE_UNAVAILABLE" | "PARTIAL_SCOPE_UNAVAILABLE" | "UNEXPLAINED_DISAPPEARANCE";
 }
 
 /**
@@ -324,6 +330,8 @@ export interface MeetingQuery {
   /** Only meetings starting at or before this instant. */
   startsBefore?: string;
   status?: MeetingStatus[];
+  /** Exact source-child cancellation domain; never persisted or cached. */
+  signal?: AbortSignal;
 }
 
 /**

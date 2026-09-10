@@ -745,7 +745,7 @@ const RUN_HEADERS = syntheticRunHeaders({ ...process.env, WTP_RUN_ID: RUN_ID });
  * Recorded rather than assumed: a run record that says only "the walk passed"
  * cannot be read later against the release it was supposed to prove, and a
  * check run on an older tree than the deploy is a check about a different
- * product. `pnpm status:ledger` and `pnpm pilot:health` both read this field.
+ * product. `pnpm status:ledger` reads this field.
  */
 const TESTED_SHA: string | null = (() => {
   try {

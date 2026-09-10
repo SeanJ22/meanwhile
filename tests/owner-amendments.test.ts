@@ -24,6 +24,9 @@ import {
 } from "../lib/ask/local-finance.ts";
 import type { EvidenceSubject } from "../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 const ASK_BOX = readFileSync("components/ask/ask-box.tsx", "utf8");
 

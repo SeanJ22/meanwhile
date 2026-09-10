@@ -188,14 +188,14 @@ const RECORDED_CORPUS_ARTIFACTS: readonly (Partial<ArtifactProvenance> &
     contentHash: "recorded per snapshot as `contentHash`",
     jurisdiction: null,
     datasetId: null,
-    freshness: { staleAfterDays: 30, refreshedBy: "pnpm corpus:fetch" },
+    freshness: { staleAfterDays: null, refreshedBy: "immutable first seed; current outcomes are in the officeholder-statements canonical promotion contract" },
     permission: {
       state: "ALLOWED",
       basis: "public pages, fetched through the identified ladder; docs/sources.md carries the hosts",
       attribution: null,
     },
     notes: [
-      "THE CLASS THAT ALREADY CONFORMS, and the model for the rest: it is append-only, content-addressed, and an unchanged hash for the same (subject, url) appends nothing while a changed one appends a new snapshot beside the old. FETCH, ATTRIBUTE, HASH, REUSE and DETECT CHANGE are all answerable from the store itself.",
+      "IMMUTABLE FIRST-SEED/HISTORICAL EVIDENCE ONLY. Current append-only versions, validation receipts, refusals, exact changes, and the Reader pointer live in the canonical civic-data plane.",
     ],
   },
 ];

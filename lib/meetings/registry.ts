@@ -8,19 +8,18 @@ import type { Meeting, MeetingQuery, MeetingSource } from "../sources/types.ts";
  * The one place that knows which adapter is serving meetings.
  *
  * Everything above this line — the query cascade, the API route, the map —
- * works against normalized Meeting records and cannot tell a fixture from a
- * live response from a committed file.
+ * works against normalized Meeting records and cannot tell a test fixture
+ * from a diagnostic live response from a canonical promoted projection.
  *
- * **The active source is the snapshot** as of 2026-08-13: production must not
- * fan out to vendor portals per request (`lib/meetings/snapshot.ts` has the
- * two reasons), so the app reads the committed file the ingest refreshes.
+ * **The active production source is the canonical projection:** production
+ * must not fan out to vendor portals per request, so the app composes the
+ * proof-valid source/body pointers promoted by the standing runner.
  *
- * `WTP_MEETING_SOURCE` overrides:
- *   `snapshot`  — the committed file (the default)
- *   `composite` — the live fan-out, for local development against the real
- *                 vendors. Never the production path.
- *   `mock`      — fixtures; pinned by the cascade and zip-coverage tests so
- *                 the suite never touches the network.
+ * `WTP_MEETING_SOURCE` is a non-production diagnostic seam. Production
+ * accepts only `snapshot`, whose implementation reads the canonical promoted
+ * source/body pointers. `composite` may exercise live adapters locally and
+ * `mock` is pinned by deterministic tests; neither can become a Reader
+ * fallback through configuration.
  */
 
 export interface ResolvedMeetingSource {
@@ -48,6 +47,9 @@ export function getMeetingSource(): ResolvedMeetingSource {
   // Read per call rather than at module load, so a test can pin the mock
   // before its first query regardless of import order.
   const name = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
+  if (process.env.NODE_ENV === "production" && name !== "snapshot") {
+    throw new Error(`PRODUCTION_MEETING_SOURCE_MUST_BE_CANONICAL:${name}`);
+  }
 
   let source = resolved.get(name);
   if (!source) {

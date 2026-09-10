@@ -16,6 +16,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -424,13 +425,14 @@ export function makeCivicPlusSource(
     // lib/meetings/carry-forward.ts exists to prevent.
     publishedLookbackDays: null,
 
-    async fetch(): Promise<CivicPlusRaw[]> {
+    async fetch(query?: MeetingQuery): Promise<CivicPlusRaw[]> {
       const collected: CivicPlusRaw[] = [];
       // Serialized across bodies, same as every adapter here.
       for (const wiring of wiringRows) {
         const { text } = await politeGetText(wiring.config.icalUrl, {
           fetchImpl,
           accept: "text/calendar",
+          signal: query?.signal,
         });
         // M59: one extra GET, only where a row wires an archive.
         let agendaCenter: string | undefined;
@@ -438,6 +440,7 @@ export function makeCivicPlusSource(
           const archive = await politeGetText(wiring.config.agendaCenterUrl, {
             fetchImpl,
             accept: "text/html",
+            signal: query?.signal,
           });
           agendaCenter = archive.text;
         }

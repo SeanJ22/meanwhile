@@ -10,6 +10,7 @@
  */
 import {
   REVIEW_DECISIONS,
+  isOwnerReleaseReviewRecord,
   type RaisedStateChoice,
   type ReviewDecision,
   type SoftwareReleaseReviewRecord,
@@ -122,7 +123,8 @@ export interface ModelInput {
 }
 
 export function buildReviewModel(input: ModelInput): ReviewModel {
-  const { reading, production, rows, store } = input;
+  const { reading, production, store } = input;
+  const rows = input.rows.filter(isOwnerReleaseReviewRecord);
   const manifest = reading.kind === "OBSERVED" ? reading.manifest : null;
   const liveSha = manifest?.sha ?? null;
   const exposed = manifest?.sections ?? null;

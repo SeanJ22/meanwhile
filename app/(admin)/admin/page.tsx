@@ -62,6 +62,7 @@ import {
   readDigests,
   readFleetSafety,
   readHeartbeat,
+  readMapTilerUsageDigests,
   readSnapshot,
   type ReadOutcome,
 } from "@/lib/control-plane/admin-data.ts";
@@ -88,7 +89,12 @@ import {
   type OwnerSnapshot,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
-import { maptilerSectionNumbers, projectPanel } from "@/lib/control-plane/maptiler/usage.ts";
+import {
+  maptilerHistoryNumbers,
+  maptilerSectionNumbers,
+  projectMapTilerAttemptHistory,
+  projectPanel,
+} from "@/lib/control-plane/maptiler/usage.ts";
 import {
   MAPTILER_USAGE_FORMAT_VERSION,
   type MapTilerUsageSnapshot,
@@ -105,6 +111,7 @@ import { GapNote, LevelLegend, QueueForm, Said, When, agoText } from "../console
 import { LiveRefresh } from "../live-refresh.tsx";
 import { RevealTarget } from "../reveal.tsx";
 import { NeedsYouLine } from "../status-ui.tsx";
+import { LatestDigestStatus } from "../digest-status.tsx";
 import { DeployFleet } from "./deploy-fleet.tsx";
 import { DecisionQueue, type PriorityGroupView, type WaitingCardView } from "./decisions.tsx";
 import { CostSection } from "./sections/cost.tsx";
@@ -225,10 +232,11 @@ export default async function AdminPage() {
    * the runner, the obligations and the decision queue behind it. It streams in
    * its own component now (`sections/fleet.tsx`), which audits its own numbers.
    */
-  const [snapshotOut, heartbeatOut, digestsOut, decisionsOut, cacheOut, intentsOut, fleetSafetyOut] = await Promise.all([
+  const [snapshotOut, heartbeatOut, digestsOut, maptilerDigestsOut, decisionsOut, cacheOut, intentsOut, fleetSafetyOut] = await Promise.all([
     readSnapshot(opened.repos),
     readHeartbeat(opened.repos),
     readDigests(opened.repos),
+    readMapTilerUsageDigests(opened.repos),
     readDecisions(opened.repos),
     readCacheObservation(opened.repos),
     readResearchIntents(opened.repos),
@@ -237,6 +245,9 @@ export default async function AdminPage() {
 
   const snapshot: OwnerSnapshot | null = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
   const nowIso = new Date().toISOString();
+  const maptilerHistory = maptilerDigestsOut.kind === "HELD"
+    ? projectMapTilerAttemptHistory(maptilerDigestsOut.value, nowIso)
+    : null;
   const intentLog = intentsOut.kind === "HELD" ? intentsOut.value : [];
   const decisions = decisionsOut.kind === "HELD" ? decisionsOut.value : [];
   const candidateNames = snapshot?.candidateNames;
@@ -349,8 +360,9 @@ export default async function AdminPage() {
    * numbers outside `auditRenderedNumbers` is a parallel version of a rule the
    * console already has.
    */
-  const maptilerPanel = snapshot ? projectPanel({ snapshot: snapshot.maptiler ?? notConnectedMapTiler() }) : null;
-  if (maptilerPanel) numbers.push(...maptilerSectionNumbers(maptilerPanel));
+  const maptilerPanel = projectPanel({ snapshot: snapshot?.maptiler ?? notConnectedMapTiler() });
+  numbers.push(...maptilerSectionNumbers(maptilerPanel));
+  if (maptilerHistory) numbers.push(...maptilerHistoryNumbers(maptilerHistory));
 
   const numberAudit = auditRenderedNumbers(numbers);
 
@@ -358,11 +370,17 @@ export default async function AdminPage() {
   claims.push({ label: "decision cards by kind", stated: cards.length, rendered: waiting.length + decided.filter((d) => d.card !== null).length });
   claims.push({ label: "decided", stated: decided.length, rendered: decided.length });
   claims.push({ label: "fix queue", stated: queue.items.length, rendered: queue.items.length });
-  if (maptilerPanel) {
-    /* The panel states a per-key breakdown and renders one row each; the count
-     * the headline implies and the rows beneath it must be the same number. */
-    claims.push({ label: "map provider keys", stated: maptilerPanel.byKey.length, rendered: maptilerPanel.byKey.length });
-    claims.push({ label: "map provider services", stated: maptilerPanel.byService.length, rendered: maptilerPanel.byService.length });
+  /* The panel states a per-key breakdown and renders one row each; the count
+   * the headline implies and the rows beneath it must be the same number. */
+  claims.push({ label: "map provider keys", stated: maptilerPanel.byKey.length, rendered: maptilerPanel.byKey.length });
+  claims.push({ label: "map provider services", stated: maptilerPanel.byService.length, rendered: maptilerPanel.byService.length });
+  if (maptilerHistory) {
+    const thirtyDays = maptilerHistory.windows.find((window) => window.id === "30d");
+    claims.push({
+      label: "map provider exact 30-day attempts",
+      stated: thirtyDays?.attempts ?? 0,
+      rendered: maptilerHistory.attempts.length,
+    });
   }
   claims.push({ label: "deployments", stated: deployments.length, rendered: deployments.length });
   if (digestsOut.kind === "HELD") {
@@ -581,7 +599,11 @@ export default async function AdminPage() {
       )}
 
       {/* 6b — THE MAP PROVIDER'S BILL (MAPQ-6) */}
-      {maptilerPanel && <MapTilerSection panel={maptilerPanel} />}
+      <MapTilerSection
+        panel={maptilerPanel}
+        history={maptilerHistory}
+        historyGap={outcomeNote(maptilerDigestsOut)}
+      />
 
       {/* 7 — READER SUITE BY ZIP */}
       <h2 id="reader-suite">Can a reader get a right answer, ZIP by ZIP?</h2>
@@ -633,15 +655,7 @@ export default async function AdminPage() {
           <NeedsYouLine needs={{ needed: false }} />
           {outcomeNote(digestsOut) && <p className="note">{outcomeNote(digestsOut)}</p>}
           {digestsOut.kind === "HELD" && digestsOut.value.length > 0 && (
-            <p className="plain">
-              Last health report <When iso={digestsOut.value[0].writtenAt} /> — nothing in it needs you.
-            </p>
-          )}
-          {digestsOut.kind === "HELD" && digestsOut.value.length > 0 && (
-            <details className="status-detail">
-              <summary>Technical details — the report the runner wrote</summary>
-              <pre className="digest">{digestsOut.value[0].lines.map((l) => plainText(l)).join("\n")}</pre>
-            </details>
+            <LatestDigestStatus digest={digestsOut.value[0]} />
           )}
         </>
       )}
@@ -655,4 +669,3 @@ export default async function AdminPage() {
     </main>
   );
 }
-

@@ -33,6 +33,12 @@ export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {
   meetings: Meeting[];
+  /** Canonical public-comment rules hydrated by the server data plane. */
+  commentAccess?: readonly import("../registry/comment-access.ts").CommentAccess[];
+  /** Canonical direct-owner service routing, including explicit owed cells. */
+  everydayRouting?: import("../routing/everyday.ts").EverydayRoutingProjection | null;
+  everydayRoutingDataState?: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID";
+  everydayRoutingDataDetail?: string | null;
   /** Route readback of exact canonical body/listing identity, before UI filters. */
   listingIdentity?: MeetingListingIdentityReadback;
   tier: CoverageTier;

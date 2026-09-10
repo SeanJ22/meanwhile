@@ -260,7 +260,22 @@ test("BAL-2: the state's tool is reached through the pill, not offered beside it
     /<PollingLookupFallback links=\{pollingLookupFallbacks\(/,
     "the fallback left the contract — a jurisdiction we do not hold now reaches nothing",
   );
-  assert.deepEqual(pollingLookupFallbacks("failed"), [...POLLING_PLACE_LINKS]);
+  assert.deepEqual(
+    pollingLookupFallbacks("failed"),
+    [],
+    "a failed canonical request must not reopen the tracked first seed",
+  );
+  assert.deepEqual(
+    pollingLookupFallbacks("answered", {
+      match: true,
+      point: null,
+      outsideCoverage: true,
+      jurisdictions: [],
+      pollingPlaceLinks: POLLING_PLACE_LINKS,
+    }),
+    [...POLLING_PLACE_LINKS],
+    "the API-returned canonical projection still supplies the held authority routes",
+  );
   assert.deepEqual(pollingLookupFallbacks("idle"), []);
   assert.match(
     where,

@@ -6,6 +6,11 @@ import { readerSourceFingerprint, readerNestedFieldInventory, readerClosureExecu
 import { readerExecutionAuthorityLiveProblems } from "../lib/holdings/reader-execution-authority.ts";
 import { createNeonReaderAuthoritySql } from "./reader-execution-authority-evidence.mts";
 import { activePortraitInventory } from "../lib/holdings/reader-census.ts";
+import {
+  freshReaderClosureReceipt,
+  readerCensusOutputPaths,
+} from "./lib/reader-census-output-contract.ts";
+import { readerProofSources } from "./lib/reader-proof-sources.ts";
 
 const args = process.argv.slice(2);
 const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
@@ -42,6 +47,7 @@ if (receiptToValidate) {
 const packPath = option("--pack");
 if (packPath) { console.log(JSON.stringify(packReaderEvidence(root, packPath), null, 2)); process.exit(0); }
 const output = option("--output") ?? "docs/evidence/reader-last-mile-current.json";
+const sideOutputs = readerCensusOutputPaths(args, output);
 const proofPath = option("--proof");
 const proofs = proofPath ? JSON.parse(readReaderEvidence(root, proofPath).toString("utf8")) as ReaderDeliveryProof[] : [];
 let census = buildReaderCensus(root);
@@ -59,7 +65,8 @@ if (args.includes("--project") || projectionPath) {
   census = applyReaderApplicability(census, projection);
   const path = output.replace(/\.json$/, "-projection.json");
   if (!args.includes("--check") && !projectionPath) writeFileSync(join(root, path), `${JSON.stringify(projection, null, 2)}\n`);
-  if (!args.includes("--check")) writeFileSync(join(root,"docs/evidence/reader-last-mile-active-portraits.json"),`${JSON.stringify({holdingsDigest:census.holdingsDigest,records:activePortraitInventory(census,projection)},null,2)}\n`);
+  if (!args.includes("--check")) writeFileSync(join(root,sideOutputs.activePortraits),`${JSON.stringify({holdingsDigest:census.holdingsDigest,records:activePortraitInventory(census,projection)},null,2)}\n`);
+  if (sideOutputs.proofSources) writeFileSync(join(root, sideOutputs.proofSources), `${JSON.stringify(readerProofSources(root, census), null, 2)}\n`);
   console.log(JSON.stringify({ projection: path, counts: projection.counts, failureCount: projection.failures.length, firstFailures: projection.failures.slice(0, 20) }, null, 2));
   if (args.includes("--projection-closure")) problems.push(...projection.failures);
 }
@@ -83,10 +90,10 @@ if (executedEvidencePaths) {
 const buildReceiptPath = option("--build-receipt");
 if (buildReceiptPath) {
   const evidence = readerBundleEvidence(root, census, buildReceiptPath, option("--portrait-proof"));
-  const evidencePath = "docs/evidence/reader-last-mile-bundle.json";
+  const evidencePath = sideOutputs.bundle;
   const bytes = `${JSON.stringify(evidence, null, 2)}\n`;
   writeFileSync(join(root, evidencePath), bytes);
-  writeFileSync(join(root, "docs/evidence/reader-last-mile-bundle-descriptor.json"), `${JSON.stringify({ evidencePath, evidenceSha256: sha256(bytes), exactHead: evidence.exactHead, holdingPaths: evidence.holdings.map((holding) => holding.path) }, null, 2)}\n`);
+  writeFileSync(join(root, sideOutputs.bundleDescriptor), `${JSON.stringify({ evidencePath, evidenceSha256: sha256(bytes), exactHead: evidence.exactHead, holdingPaths: evidence.holdings.map((holding) => holding.path) }, null, 2)}\n`);
   problems.push(...evidence.failures);
   console.log(JSON.stringify({ bundleEvidence: evidencePath, holdings: evidence.holdings.length, failures: evidence.failures }, null, 2));
 }
@@ -114,7 +121,7 @@ for (const proof of proofs) {
 if (args.includes("--render-components")) {
   const rendered = await renderCanonicalReaderComponents(root, census);
   floored("reader component cases passing", "every applicable canonical payload assigned to the component harness", rendered.cases.length, rendered.cases.filter((entry) => entry.failures.length === 0).length);
-  const path = output.replace(/\.json$/, "-components.json");
+  const path = sideOutputs.renderedComponents;
   writeFileSync(join(root, path), `${JSON.stringify(rendered, null, 2)}\n`);
   problems.push(...rendered.failures);
   console.log(JSON.stringify({ componentEvidence: path, cases: rendered.cases.length, failureCount: rendered.failures.length, firstFailures: rendered.failures.slice(0, 20) }, null, 2));
@@ -168,7 +175,7 @@ if (args.includes("--closure") && problems.length === 0) {
   // composition, then retain the exact reviewed-image manifest as durable proof.
   // The separately hashed authority artifact contains sanitized environment,
   // read-only, import and pointer-set identities; no credential enters Git.
-  const receipt: ReaderClosureReceipt = { formatVersion: 1, censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes: closureEvidenceHashes, executionAuthority: closureAuthority };
+  const receipt: ReaderClosureReceipt = freshReaderClosureReceipt({ censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes: closureEvidenceHashes, ...(closureAuthority ? { executionAuthority: closureAuthority } : {}) });
   writeFileSync(join(root, output.replace(/\.json$/, "-receipt.json")), `${JSON.stringify(receipt,null,2)}\n`);
 }
 console.log(JSON.stringify({ output, denominator: census.denominator, delivery: Object.fromEntries([...new Set(census.rows.map((r) => r.deliveryState))].map((state) => [state, census.rows.filter((r) => r.deliveryState === state).length])), stagedAutonomous: census.autonomous.length, closureObligations: censusClosureFailures(census).length, problemCount: problems.length, firstProblems: problems.slice(0, 20) }, null, 2));

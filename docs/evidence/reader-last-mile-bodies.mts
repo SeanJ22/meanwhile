@@ -1,7 +1,50 @@
 import assert from "node:assert/strict";
 import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  readReaderEvidence,
+  type ReaderCensus,
+} from "../../lib/holdings/reader-census.ts";
 import { bodyRenderProof } from "../../scripts/lib/reader-body-render-proof.ts";
-const result = await bodyRenderProof();
-writeFileSync("docs/evidence/reader-last-mile-bodies.json", JSON.stringify(result, null, 2) + "\n");
-console.log(JSON.stringify({ cases: result.cases.length, failures: result.failures.length, firstFailures: result.failures.slice(0, 10), unsupported: result.unsupported }, null, 2));
-assert.equal(result.failures.length, 0);
+
+const DEFAULT_CENSUS = "docs/evidence/reader-last-mile-current.json";
+const DEFAULT_OUTPUT = "docs/evidence/reader-last-mile-bodies.json";
+
+function configuredPath(
+  environment: Readonly<Record<string, string | undefined>>,
+  name: string,
+  fallback: string,
+): string {
+  if (!(name in environment)) return fallback;
+  const value = environment[name]?.trim();
+  assert.ok(value, `${name} is present but empty`);
+  return value;
+}
+
+export function readerBodyEvidencePaths(
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): { readonly census: string; readonly output: string } {
+  return {
+    census: configuredPath(environment, "READER_FINAL_PREPARED_CENSUS", DEFAULT_CENSUS),
+    output: configuredPath(environment, "READER_PROOF_OUTPUT", DEFAULT_OUTPUT),
+  };
+}
+
+export async function generateReaderBodyEvidence(
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): Promise<void> {
+  const paths = readerBodyEvidencePaths(environment);
+  const prepared = JSON.parse(
+    readReaderEvidence(process.cwd(), paths.census).toString("utf8"),
+  ) as ReaderCensus;
+  const result = await bodyRenderProof(process.cwd(), prepared);
+  writeFileSync(paths.output, JSON.stringify(result, null, 2) + "\n");
+  console.log(JSON.stringify({ cases: result.cases.length, failures: result.failures.length, firstFailures: result.failures.slice(0, 10), unsupported: result.unsupported }, null, 2));
+  assert.equal(result.failures.length, 0);
+}
+
+const main = typeof process.argv[1] === "string" &&
+  resolve(process.argv[1]).toLowerCase() === resolve(fileURLToPath(import.meta.url)).toLowerCase();
+
+if (main) await generateReaderBodyEvidence();

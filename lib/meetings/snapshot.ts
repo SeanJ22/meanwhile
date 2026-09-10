@@ -351,7 +351,10 @@ export function reconcileCounts(snap: MeetingsSnapshot): void {
   }
 }
 
-export function validateSnapshot(value: unknown): asserts value is MeetingsSnapshot {
+export function validateSnapshot(
+  value: unknown,
+  options: { readonly allowAllSourcesFailedForDurableTransfer?: boolean } = {},
+): asserts value is MeetingsSnapshot {
   const snap = value as MeetingsSnapshot;
   if (!snap || typeof snap !== "object") throw new Error("snapshot is not an object");
   if (snap.formatVersion !== 1) {
@@ -397,9 +400,16 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
     // reconcileCounts requires every such row to carry that exact reason.
   }
   if (!snap.sources.some((s) => s.ok)) {
-    throw new Error(
-      "every source failed — refusing to write a snapshot that would blank the map; keep the previous one",
-    );
+    const exactCarriedLkg = options.allowAllSourcesFailedForDurableTransfer === true &&
+      Array.isArray(snap.meetings) && snap.meetings.length > 0 &&
+      snap.counts?.fresh === 0 &&
+      snap.counts.carried === snap.counts.total &&
+      snap.counts.total === snap.meetings.length;
+    if (!exactCarriedLkg) {
+      throw new Error(
+        "every source failed — refusing any shape except an explicit nonempty all-carried durable LKG",
+      );
+    }
   }
   if (!Array.isArray(snap.meetings)) throw new Error("meetings must be an array");
   const sourceNames = new Set(snap.sources.map((s) => s.source));
@@ -623,7 +633,13 @@ function validateMeetingPartitionProjection(
   if (result.kind !== "PROMOTED") return result;
   try {
     if (!validatedProjectionValues.has(result.value)) {
-      validateSnapshot(result.value);
+      // A durable partition may consist entirely of explicitly carried rows
+      // from one failed route. The write door still refuses a failed live
+      // acquisition; the Reader must nevertheless serve that already-proved
+      // LKG instead of mistaking its honest outage envelope for blank data.
+      validateSnapshot(result.value, {
+        allowAllSourcesFailedForDurableTransfer: true,
+      });
       validatedProjectionValues.add(result.value);
     }
     if (result.value.sources.length !== 1 || result.value.sources[0]?.source !== partition.meetingSource) {
@@ -773,7 +789,9 @@ export async function readMeetingsProjection(
       meetings: collapsed.rows,
       agendaDocuments: retainedDocuments,
     };
-    validateSnapshot(value);
+    validateSnapshot(value, {
+      allowAllSourcesFailedForDurableTransfer: true,
+    });
     return {
       kind: "PROMOTED",
       value,

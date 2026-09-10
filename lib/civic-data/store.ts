@@ -73,6 +73,16 @@ export interface PdcV2LegacyMeetingsRetirementInput {
    * in `expected` remains stable across both executions.
    */
   readonly observedLegacyPayload: unknown | null;
+  /** Exact prewrite authority identity; null only on a proved post-retirement replay. */
+  readonly observedLegacyVersionId: string | null;
+  /** Exact mutable pointer witness captured before any replacement write. */
+  readonly observedLegacyPointerSha256: string | null;
+  /** Exact immutable candidate row admitted before any replacement write. */
+  readonly observedLegacyCandidateRecord: CandidateVersionRecord | null;
+  readonly observedLegacyCandidateRecordSha256: string | null;
+  /** Exact pre-retirement history admitted before any replacement write. */
+  readonly observedLegacyEvents: readonly CandidateEvent[] | null;
+  readonly observedLegacyHistorySha256: string | null;
   readonly replacementPointers: readonly {
     readonly scope: string;
     readonly versionId: string;
@@ -274,6 +284,8 @@ const MAX_PROMOTION_CLOCK_SKEW_MS = 5 * 60 * 1_000;
 const PDC_V2_LEGACY_MEETINGS_KEY = "MEETING:supported-bodies";
 const PDC_V2_LEGACY_MEETINGS_SOURCE_ID = "meetings-public-bodies";
 const PDC_V2_LEGACY_MEETINGS_SCOPE = "supported-bodies";
+const PDC_V2_MEETING_REPLACEMENT_PARTITION_COUNT = 83;
+const PDC_V2_MEETING_ABSENT_PARTITION_COUNT = 41;
 const PDC_V2_CONTRACT_MIGRATION_CREATED_AT = 1788981808213;
 const SHA256_HEX = /^[a-f0-9]{64}$/;
 const GIT_SHA_HEX = /^[a-f0-9]{40}$/;
@@ -374,6 +386,25 @@ interface PdcV2LegacyMeetingsRetirementEvidence
   readonly legacyRecordClass: "MEETING";
   readonly legacyScope: typeof PDC_V2_LEGACY_MEETINGS_SCOPE;
   readonly legacyVersionId: string;
+  /** Exact deleted mutable pointer, including its promotedAt clock. */
+  readonly legacyPointerSha256: string;
+  /** Exact retained immutable candidate row at the destructive boundary. */
+  readonly legacyCandidateRecordSha256: string;
+  /** Exact retained history before this terminal retirement event. */
+  readonly legacyHistorySha256: string;
+  readonly legacyHistoryEventCount: number;
+  readonly legacyHistoryLastSequence: number;
+  /**
+   * Canonical digest of every full replacement pointer, candidate row, and
+   * pre-retirement event list. The reduced replacementPointerSha256 remains
+   * the public transfer-plan witness; this is the durable replay witness.
+   */
+  readonly replacementFullPointerSetSha256: string;
+  readonly replacementCandidateRecordSetSha256: string;
+  /** Exact per-authority history prefixes admitted at aggregate retirement. */
+  readonly replacementHistoryWitnesses: readonly PdcV2ReplacementHistoryWitness[];
+  readonly replacementHistorySetSha256: string;
+  readonly replacementAuthoritySha256: string;
   readonly retiredAt: string;
 }
 
@@ -397,10 +428,29 @@ function assertPdcV2LegacyMeetingsRetirementInput(
     input.expected.replacementPointerSha256 !== replacementPointerSha256 ||
     input.expected.replacementPartitionCount !== input.replacementPointers.length ||
     input.expected.absentPartitionCount !== allScopes.length - input.replacementPointers.length ||
-    input.expected.replacementPartitionCount <= 0 ||
-    input.expected.absentPartitionCount < 0 ||
+    input.expected.replacementPartitionCount !== PDC_V2_MEETING_REPLACEMENT_PARTITION_COUNT ||
+    input.expected.absentPartitionCount !== PDC_V2_MEETING_ABSENT_PARTITION_COUNT ||
     input.expected.meetingRowCount <= 0 ||
     input.expected.agendaDocumentRowCount < 0 ||
+    (input.observedLegacyPayload === null
+      ? input.observedLegacyVersionId !== null ||
+        input.observedLegacyPointerSha256 !== null ||
+        input.observedLegacyCandidateRecord !== null ||
+        input.observedLegacyCandidateRecordSha256 !== null ||
+        input.observedLegacyEvents !== null ||
+        input.observedLegacyHistorySha256 !== null
+      : !input.observedLegacyVersionId ||
+        !SHA256_HEX.test(input.observedLegacyPointerSha256 ?? "") ||
+        input.observedLegacyCandidateRecord === null ||
+        !SHA256_HEX.test(input.observedLegacyCandidateRecordSha256 ?? "") ||
+        input.observedLegacyEvents === null ||
+        !SHA256_HEX.test(input.observedLegacyHistorySha256 ?? "") ||
+        createHash("sha256")
+          .update(canonicalCivicDataJson(input.observedLegacyCandidateRecord))
+          .digest("hex") !== input.observedLegacyCandidateRecordSha256 ||
+        createHash("sha256")
+          .update(canonicalCivicDataJson(input.observedLegacyEvents))
+          .digest("hex") !== input.observedLegacyHistorySha256) ||
     new Set(replacementScopes).size !== replacementScopes.length ||
     new Set(replacementVersions).size !== replacementVersions.length ||
     new Set(allScopes).size !== allScopes.length ||
@@ -429,7 +479,16 @@ function assertPdcV2LegacyMeetingsRetirementInput(
 function pdcV2LegacyMeetingsRetirementDetail(
   input: PdcV2LegacyMeetingsRetirementInput,
   legacyVersionId: string,
+  replacementAuthorityWitness: PdcV2ReplacementAuthorityWitness,
 ): string {
+  const legacyEvents = input.observedLegacyEvents;
+  if (
+    !SHA256_HEX.test(input.observedLegacyPointerSha256 ?? "") ||
+    !SHA256_HEX.test(input.observedLegacyCandidateRecordSha256 ?? "") ||
+    !SHA256_HEX.test(input.observedLegacyHistorySha256 ?? "") ||
+    !SHA256_HEX.test(replacementAuthorityWitness.replacementAuthoritySha256) ||
+    legacyEvents === null || legacyEvents.length < 4
+  ) throw new Error("PDC_V2_LEGACY_MEETINGS_RETIREMENT_INPUT_INVALID");
   const evidence: PdcV2LegacyMeetingsRetirementEvidence = {
     kind: "LEGACY_MEETINGS_AGGREGATE_RETIRED",
     legacyKey: PDC_V2_LEGACY_MEETINGS_KEY,
@@ -437,6 +496,12 @@ function pdcV2LegacyMeetingsRetirementDetail(
     legacyRecordClass: "MEETING",
     legacyScope: PDC_V2_LEGACY_MEETINGS_SCOPE,
     legacyVersionId,
+    legacyPointerSha256: input.observedLegacyPointerSha256!,
+    legacyCandidateRecordSha256: input.observedLegacyCandidateRecordSha256!,
+    legacyHistorySha256: input.observedLegacyHistorySha256!,
+    legacyHistoryEventCount: legacyEvents.length,
+    legacyHistoryLastSequence: legacyEvents.at(-1)?.sequence ?? 0,
+    ...replacementAuthorityWitness,
     retiredAt: input.retiredAt,
     ...input.expected,
   };
@@ -455,7 +520,12 @@ function parsePdcV2LegacyMeetingsRetirementDetail(
     const value = parsed as Partial<PdcV2LegacyMeetingsRetirementEvidence>;
     const expectedKeys = [
       "kind", "legacyKey", "legacySourceId", "legacyRecordClass", "legacyScope",
-      "legacyVersionId", "retiredAt", "contractVersion", "frozenBaseSha",
+      "legacyVersionId", "legacyPointerSha256", "legacyCandidateRecordSha256",
+      "legacyHistorySha256", "legacyHistoryEventCount", "legacyHistoryLastSequence",
+      "replacementFullPointerSetSha256", "replacementCandidateRecordSetSha256",
+      "replacementHistoryWitnesses", "replacementHistorySetSha256",
+      "replacementAuthoritySha256", "retiredAt",
+      "contractVersion", "frozenBaseSha",
       "importerCodeSha", "legacyMeetingFactSha256", "replacementPointerSha256",
       "replacementPartitionCount", "absentPartitionCount", "meetingRowCount",
       "agendaDocumentRowCount",
@@ -468,6 +538,17 @@ function parsePdcV2LegacyMeetingsRetirementDetail(
       value.legacyRecordClass !== "MEETING" ||
       value.legacyScope !== PDC_V2_LEGACY_MEETINGS_SCOPE ||
       typeof value.legacyVersionId !== "string" || !value.legacyVersionId ||
+      typeof value.legacyPointerSha256 !== "string" || !SHA256_HEX.test(value.legacyPointerSha256) ||
+      typeof value.legacyCandidateRecordSha256 !== "string" || !SHA256_HEX.test(value.legacyCandidateRecordSha256) ||
+      typeof value.legacyHistorySha256 !== "string" || !SHA256_HEX.test(value.legacyHistorySha256) ||
+      !Number.isInteger(value.legacyHistoryEventCount) || value.legacyHistoryEventCount! < 4 ||
+      !Number.isInteger(value.legacyHistoryLastSequence) ||
+      value.legacyHistoryLastSequence !== value.legacyHistoryEventCount ||
+      typeof value.replacementFullPointerSetSha256 !== "string" || !SHA256_HEX.test(value.replacementFullPointerSetSha256) ||
+      typeof value.replacementCandidateRecordSetSha256 !== "string" || !SHA256_HEX.test(value.replacementCandidateRecordSetSha256) ||
+      !pdcV2ReplacementHistoryWitnessesValid(value.replacementHistoryWitnesses) ||
+      typeof value.replacementHistorySetSha256 !== "string" || !SHA256_HEX.test(value.replacementHistorySetSha256) ||
+      typeof value.replacementAuthoritySha256 !== "string" || !SHA256_HEX.test(value.replacementAuthoritySha256) ||
       typeof value.retiredAt !== "string" ||
       !Number.isFinite(Date.parse(value.retiredAt)) ||
       new Date(Date.parse(value.retiredAt)).toISOString() !== value.retiredAt ||
@@ -647,7 +728,7 @@ function pdcV2LegacyMeetingsReplacementEvidenceIssue(
         receipt.versionId !== candidate.id ||
         receipt.pointerKey !== pointer.key ||
         Date.parse(receipt.observedAt) !== Date.parse(events[index + 4]!.at) ||
-        Date.parse(receipt.observedAt) > Date.parse(input.retiredAt)
+        !Number.isFinite(Date.parse(receipt.observedAt))
       ) ||
       readerReceipts.at(-1)?.status !== "PASS"
     ) {
@@ -655,6 +736,239 @@ function pdcV2LegacyMeetingsReplacementEvidenceIssue(
     }
   }
   return null;
+}
+
+/**
+ * Bind replay to the complete replacement authorities which the destructive
+ * transaction proved, not merely their projected scope/version/payload list.
+ */
+interface PdcV2ReplacementHistoryWitness {
+  readonly scope: string;
+  readonly versionId: string;
+  readonly historySha256: string;
+  readonly historyEventCount: number;
+  readonly historyLastSequence: number;
+}
+
+function pdcV2ReplacementHistoryWitnessesValid(
+  value: unknown,
+): value is readonly PdcV2ReplacementHistoryWitness[] {
+  if (!Array.isArray(value) || value.length !== PDC_V2_MEETING_REPLACEMENT_PARTITION_COUNT) {
+    return false;
+  }
+  const exactKeys = [
+    "scope",
+    "versionId",
+    "historySha256",
+    "historyEventCount",
+    "historyLastSequence",
+  ].sort().join("\n");
+  const scopes: string[] = [];
+  const versions: string[] = [];
+  for (const item of value) {
+    if (item === null || typeof item !== "object" || Array.isArray(item)) return false;
+    const row = item as Partial<PdcV2ReplacementHistoryWitness>;
+    if (
+      Object.keys(row).sort().join("\n") !== exactKeys ||
+      typeof row.scope !== "string" || !row.scope ||
+      typeof row.versionId !== "string" || !row.versionId ||
+      typeof row.historySha256 !== "string" || !SHA256_HEX.test(row.historySha256) ||
+      !Number.isInteger(row.historyEventCount) || row.historyEventCount! < 5 ||
+      !Number.isInteger(row.historyLastSequence) ||
+      row.historyLastSequence !== row.historyEventCount
+    ) return false;
+    scopes.push(row.scope);
+    versions.push(row.versionId);
+  }
+  return new Set(scopes).size === scopes.length &&
+    new Set(versions).size === versions.length &&
+    canonicalCivicDataJson(scopes) === canonicalCivicDataJson([...scopes].sort());
+}
+
+interface PdcV2ReplacementAuthorityWitness {
+  readonly replacementFullPointerSetSha256: string;
+  readonly replacementCandidateRecordSetSha256: string;
+  readonly replacementHistoryWitnesses: readonly PdcV2ReplacementHistoryWitness[];
+  readonly replacementHistorySetSha256: string;
+  readonly replacementAuthoritySha256: string;
+}
+
+function pdcV2LegacyMeetingsReplacementHistoryWitnessRows(
+  input: PdcV2LegacyMeetingsRetirementInput,
+  histories: ReadonlyMap<string, readonly CandidateEvent[]>,
+  admittedPrefixes?: readonly PdcV2ReplacementHistoryWitness[],
+  admittedRetiredAt?: string,
+): readonly PdcV2ReplacementHistoryWitness[] {
+  if (admittedPrefixes !== undefined) {
+    if (
+      admittedRetiredAt === undefined ||
+      isoTime(admittedRetiredAt) !== admittedRetiredAt ||
+      !pdcV2ReplacementHistoryWitnessesValid(admittedPrefixes) ||
+      canonicalCivicDataJson(admittedPrefixes.map(({ scope, versionId }) => ({ scope, versionId }))) !==
+        canonicalCivicDataJson(input.replacementPointers.map(({ scope, versionId }) => ({ scope, versionId })))
+    ) {
+      throw new Error(
+        "PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:" +
+        "replacement retirement history manifest does not match the exact pointer denominator",
+      );
+    }
+  }
+  return input.replacementPointers.map(({ scope, versionId }, index) => {
+    const events = histories.get(versionId);
+    if (!events) {
+      throw new Error(
+        `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+        `replacement ${scope}/${versionId} has no durable history witness`,
+      );
+    }
+    const admitted = admittedPrefixes?.[index];
+    const contract = MEETING_PARTITION_CONTRACTS.find((candidate) => candidate.scope === scope);
+    const exactEvents = admitted
+      ? [...events].slice(0, admitted.historyEventCount)
+      : [...events];
+    if (contract === undefined) {
+      throw new Error(
+        `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+        `replacement history has no registered meeting contract:${scope}:${versionId}`,
+      );
+    }
+    const witness: PdcV2ReplacementHistoryWitness = {
+      scope,
+      versionId,
+      historySha256: createHash("sha256")
+        .update(canonicalCivicDataJson(exactEvents))
+        .digest("hex"),
+      historyEventCount: exactEvents.length,
+      historyLastSequence: exactEvents.at(-1)?.sequence ?? 0,
+    };
+    if (admitted) {
+      if (canonicalCivicDataJson(witness) !== canonicalCivicDataJson(admitted)) {
+        throw new Error(
+          `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+          `replacement durable history prefix differs from retirement receipt:${scope}:${versionId}`,
+        );
+      }
+      for (const [suffixIndex, event] of [...events]
+        .slice(admitted.historyEventCount)
+        .entries()) {
+        const reader = parseReaderProjectionReadback(event.detail);
+        if (
+          event.candidateId !== versionId ||
+          event.sequence !== admitted.historyLastSequence + suffixIndex + 1 ||
+          event.state !== "PROMOTED" ||
+          reader?.status !== "PASS" ||
+          reader.contractVersion !== 2 ||
+          reader.contractId !== contract.id ||
+          reader.sourceId !== PDC_V2_LEGACY_MEETINGS_SOURCE_ID ||
+          reader.recordClass !== "MEETING" ||
+          reader.scope !== scope ||
+          reader.projectionId !== contract.readerProjection?.id ||
+          reader.versionId !== versionId ||
+          reader.pointerKey !== projectionKey("MEETING", scope) ||
+          reader.verifierCodeSha !== input.expected.importerCodeSha ||
+          Date.parse(reader.observedAt) !== Date.parse(event.at) ||
+          Date.parse(event.at) < Date.parse(admittedRetiredAt!) ||
+          Date.parse(event.at) > Date.now() + MAX_PROMOTION_CLOCK_SKEW_MS
+        ) {
+          throw new Error(
+            `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+            `replacement post-retirement history is not an exact importer Reader PASS:${scope}:${versionId}`,
+          );
+        }
+      }
+    }
+    return witness;
+  });
+}
+
+function pdcV2LegacyMeetingsInitialReplacementHistoryBoundaryIssue(
+  input: PdcV2LegacyMeetingsRetirementInput,
+  histories: ReadonlyMap<string, readonly CandidateEvent[]>,
+): string | null {
+  for (const { scope, versionId } of input.replacementPointers) {
+    const events = histories.get(versionId);
+    if (!events || events.some(({ at }) => Date.parse(at) > Date.parse(input.retiredAt))) {
+      return `replacement history crosses the admitted retirement boundary:${scope}:${versionId}`;
+    }
+  }
+  return null;
+}
+
+function pdcV2LegacyMeetingsReplacementAuthorityWitness(
+  input: PdcV2LegacyMeetingsRetirementInput,
+  pointers: readonly PromotedProjection[],
+  candidates: readonly CandidateVersionReadback[],
+  histories: ReadonlyMap<string, readonly CandidateEvent[]>,
+  admittedHistoryPrefixes?: readonly PdcV2ReplacementHistoryWitness[],
+  admittedRetiredAt?: string,
+): PdcV2ReplacementAuthorityWitness {
+  const pointerByScope = new Map(pointers.map((pointer) => [pointer.scope, pointer] as const));
+  const candidateById = new Map(
+    candidates.map(({ candidateId, record }) => [candidateId, record] as const),
+  );
+  const authorities = input.replacementPointers.map(({ scope, versionId }) => {
+    const pointer = pointerByScope.get(scope);
+    const candidateRecord = candidateById.get(versionId);
+    const events = histories.get(versionId);
+    if (!pointer || !candidateRecord || !events) {
+      throw new Error(
+        `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+        `replacement ${scope}/${versionId} has no complete durable witness`,
+      );
+    }
+    const exactEvents = [...events];
+    return {
+      scope,
+      versionId,
+      pointerSha256: createHash("sha256")
+        .update(canonicalCivicDataJson(pointer))
+        .digest("hex"),
+      candidateRecordSha256: createHash("sha256")
+        .update(canonicalCivicDataJson(candidateRecord))
+        .digest("hex"),
+      historySha256: createHash("sha256")
+        .update(canonicalCivicDataJson(exactEvents))
+        .digest("hex"),
+      historyEventCount: exactEvents.length,
+      historyLastSequence: exactEvents.at(-1)?.sequence ?? 0,
+    };
+  });
+  const replacementFullPointerSetSha256 = createHash("sha256")
+    .update(canonicalCivicDataJson(authorities.map(({ scope, versionId, pointerSha256 }) => ({
+      scope,
+      versionId,
+      pointerSha256,
+    }))))
+    .digest("hex");
+  const replacementCandidateRecordSetSha256 = createHash("sha256")
+    .update(canonicalCivicDataJson(authorities.map(({
+      scope,
+      versionId,
+      candidateRecordSha256,
+    }) => ({ scope, versionId, candidateRecordSha256 }))))
+    .digest("hex");
+  const replacementHistoryWitnesses = pdcV2LegacyMeetingsReplacementHistoryWitnessRows(
+    input,
+    histories,
+    admittedHistoryPrefixes,
+    admittedRetiredAt,
+  );
+  const replacementHistorySetSha256 = createHash("sha256")
+    .update(canonicalCivicDataJson(replacementHistoryWitnesses))
+    .digest("hex");
+  return {
+    replacementFullPointerSetSha256,
+    replacementCandidateRecordSetSha256,
+    replacementHistoryWitnesses,
+    replacementHistorySetSha256,
+    replacementAuthoritySha256: createHash("sha256")
+      .update(canonicalCivicDataJson({
+        replacementFullPointerSetSha256,
+        replacementCandidateRecordSetSha256,
+        replacementHistorySetSha256,
+      }))
+      .digest("hex"),
+  };
 }
 
 function pdcV2LegacyMeetingsCandidateIssue(
@@ -673,6 +987,7 @@ function pdcV2LegacyMeetingsCandidateIssue(
     candidate.sourceId !== PDC_V2_LEGACY_MEETINGS_SOURCE_ID ||
     candidate.recordClass !== "MEETING" ||
     candidate.scope !== PDC_V2_LEGACY_MEETINGS_SCOPE ||
+    candidate.bootstrapImport !== undefined ||
     record.state !== "PROMOTED" ||
     !record.acquisitionSucceeded ||
     !candidate.retrieval.succeeded ||
@@ -697,6 +1012,21 @@ function pdcV2LegacyMeetingsCandidateIssue(
   if (pointer !== null) {
     if (
       input.observedLegacyPayload === null ||
+      input.observedLegacyVersionId !== legacyVersionId ||
+      input.observedLegacyPointerSha256 !== createHash("sha256")
+        .update(canonicalCivicDataJson(pointer))
+        .digest("hex") ||
+      input.observedLegacyCandidateRecord === null ||
+      input.observedLegacyCandidateRecordSha256 !== createHash("sha256")
+        .update(canonicalCivicDataJson(record))
+        .digest("hex") ||
+      canonicalCivicDataJson(input.observedLegacyCandidateRecord) !==
+        canonicalCivicDataJson(record) ||
+      input.observedLegacyEvents === null ||
+      input.observedLegacyHistorySha256 !== createHash("sha256")
+        .update(canonicalCivicDataJson(events))
+        .digest("hex") ||
+      canonicalCivicDataJson(input.observedLegacyEvents) !== canonicalCivicDataJson(events) ||
       pointer.key !== PDC_V2_LEGACY_MEETINGS_KEY ||
       pointer.sourceId !== candidate.sourceId ||
       pointer.recordClass !== candidate.recordClass ||
@@ -707,8 +1037,12 @@ function pdcV2LegacyMeetingsCandidateIssue(
       canonicalCivicDataJson(pointer.payload) !== canonicalCivicDataJson(candidate.readModel) ||
       canonicalCivicDataJson(pointer.payload) !== canonicalCivicDataJson(input.observedLegacyPayload)
     ) return "live legacy pointer is not the exact retained candidate";
-  } else if (input.observedLegacyPayload !== null) {
-    return "a post-retirement replay supplied a live legacy payload";
+  } else if (
+    input.observedLegacyPayload !== null ||
+    input.observedLegacyCandidateRecord !== null ||
+    input.observedLegacyEvents !== null
+  ) {
+    return "a post-retirement replay supplied live legacy authority evidence";
   }
 
   if (events.length < 4 + (retirementEvent === null ? 0 : 1)) {
@@ -769,6 +1103,35 @@ function pdcV2LegacyMeetingsCandidateIssue(
       events.at(-1)?.detail !== retirementEvent.detail
     ))
   ) return "retained legacy candidate retirement event is not unique and latest";
+  if (retirementEvent !== null) {
+    const evidence = pdcV2LegacyMeetingsRetirementMatches(retirementEvent, input.expected);
+    const preRetirementEvents = events.slice(0, -1);
+    const reconstructedPointer: PromotedProjection = {
+      key: PDC_V2_LEGACY_MEETINGS_KEY,
+      sourceId: PDC_V2_LEGACY_MEETINGS_SOURCE_ID,
+      recordClass: "MEETING",
+      scope: PDC_V2_LEGACY_MEETINGS_SCOPE,
+      versionId: legacyVersionId,
+      lastKnownGoodVersionId: legacyVersionId,
+      promotedAt: firstPromoted!.at,
+      payload: candidate.readModel,
+      receipt,
+    };
+    if (
+      evidence === null ||
+      evidence.legacyPointerSha256 !== createHash("sha256")
+        .update(canonicalCivicDataJson(reconstructedPointer))
+        .digest("hex") ||
+      evidence.legacyCandidateRecordSha256 !== createHash("sha256")
+        .update(canonicalCivicDataJson(record))
+        .digest("hex") ||
+      evidence.legacyHistorySha256 !== createHash("sha256")
+        .update(canonicalCivicDataJson(preRetirementEvents))
+        .digest("hex") ||
+      evidence.legacyHistoryEventCount !== preRetirementEvents.length ||
+      evidence.legacyHistoryLastSequence !== (preRetirementEvents.at(-1)?.sequence ?? 0)
+    ) return "retained legacy authority differs from the exact pre-retirement witness";
+  }
   return null;
 }
 
@@ -1085,18 +1448,29 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     input: PdcV2LegacyMeetingsRetirementInput,
   ): Promise<PdcV2LegacyMeetingsRetirementResult> {
     assertPdcV2LegacyMeetingsRetirementInput(input);
-    const permanentPointers = [...this.promotions.values()].filter((pointer) =>
+    const permanentPointers = [...this.promotions.values()].flatMap((pointer) =>
       pointer.recordClass === "MEETING" && pointer.scope !== PDC_V2_LEGACY_MEETINGS_SCOPE
+        ? [structuredClone(pointer)]
+        : []
     );
     const replacementCandidates = input.replacementPointers.flatMap(({ versionId }) => {
       const record = this.candidates.get(versionId);
-      return record ? [{ candidateId: versionId, record }] : [];
+      return record ? [{ candidateId: versionId, record: structuredClone(record) }] : [];
     });
     const replacementHistories = new Map(
       input.replacementPointers.map(({ versionId }) => [
         versionId,
-        this.history.get(versionId) ?? [],
+        structuredClone(this.history.get(versionId) ?? []),
       ] as const),
+    );
+    // Capture the exact durable rows before any proof parser touches the
+    // readback. The subsequent proof and atomic SQL predicates validate this
+    // same pre-read witness; they are not allowed to redefine it.
+    const replacementAuthorityWitness = pdcV2LegacyMeetingsReplacementAuthorityWitness(
+      input,
+      permanentPointers,
+      replacementCandidates,
+      replacementHistories,
     );
     const replacementIssue = pdcV2LegacyMeetingsReplacementEvidenceIssue(
       input,
@@ -1129,6 +1503,28 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         );
       }
       const [{ event, evidence }] = matchingPrefixEvents;
+      const replayReplacementAuthorityWitness = pdcV2LegacyMeetingsReplacementAuthorityWitness(
+        input,
+        permanentPointers,
+        replacementCandidates,
+        replacementHistories,
+        evidence.replacementHistoryWitnesses,
+        evidence.retiredAt,
+      );
+      const replacementWitnessMismatch = ([
+        "replacementFullPointerSetSha256",
+        "replacementCandidateRecordSetSha256",
+        "replacementHistorySetSha256",
+        "replacementAuthoritySha256",
+      ] as const).find((field) => evidence[field] !== replayReplacementAuthorityWitness[field]);
+      if (replacementWitnessMismatch) {
+        throw new Error(
+          `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+          `replacement durable authority witness differs from retirement receipt:` +
+          `${replacementWitnessMismatch}:${evidence[replacementWitnessMismatch]}:` +
+          replayReplacementAuthorityWitness[replacementWitnessMismatch],
+        );
+      }
       const legacyRecord = this.candidates.get(evidence.legacyVersionId);
       const legacyIssue = pdcV2LegacyMeetingsCandidateIssue(
         input,
@@ -1160,10 +1556,23 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     if (legacyIssue !== null) {
       throw new Error(`PDC_V2_LEGACY_MEETINGS_PAYLOAD_CHANGED_BEFORE_RETIREMENT:${legacyIssue}`);
     }
+    const replacementBoundaryIssue = pdcV2LegacyMeetingsInitialReplacementHistoryBoundaryIssue(
+      input,
+      replacementHistories,
+    );
+    if (replacementBoundaryIssue !== null) {
+      throw new Error(
+        `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:${replacementBoundaryIssue}`,
+      );
+    }
     if (prefixEvents.length !== 0) {
       throw new Error(`PDC_V2_LEGACY_MEETINGS_RETIREMENT_PREFIX_COLLISION:${prefixEvents.length}`);
     }
-    const detail = pdcV2LegacyMeetingsRetirementDetail(input, pointer.versionId);
+    const detail = pdcV2LegacyMeetingsRetirementDetail(
+      input,
+      pointer.versionId,
+      replacementAuthorityWitness,
+    );
     const { history, event } = this.nextEvent(pointer.versionId, "PROMOTED", input.retiredAt, detail);
     history.push(structuredClone(event));
     this.history.set(pointer.versionId, history);
@@ -1696,6 +2105,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     for (const events of replacementHistories.values()) {
       events.sort((left, right) => left.sequence - right.sequence);
     }
+    const replacementAuthorityWitness = pdcV2LegacyMeetingsReplacementAuthorityWitness(
+      input,
+      permanentPointers,
+      replacementCandidates,
+      replacementHistories,
+    );
     const replacementIssue = pdcV2LegacyMeetingsReplacementEvidenceIssue(
       input,
       permanentPointers,
@@ -1709,9 +2124,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const replacementRecordById = new Map(
       replacementCandidates.map(({ candidateId, record }) => [candidateId, record] as const),
     );
+    const replacementPointerByScope = new Map(
+      permanentPointers.map((pointer) => [pointer.scope, pointer] as const),
+    );
     const replacementJson = JSON.stringify(input.replacementPointers.map((pointer) => {
       const record = replacementRecordById.get(pointer.versionId);
-      if (!record) {
+      const fullPointer = replacementPointerByScope.get(pointer.scope);
+      if (!record || !fullPointer) {
         // The in-memory proof above has already established this invariant.
         // Keep the serialized transaction witness total and fail closed if a
         // future refactor ever separates the two checks.
@@ -1722,6 +2141,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       return {
         ...pointer,
+        pointer: fullPointer,
         record,
         events: replacementHistories.get(pointer.versionId) ?? [],
       };
@@ -1737,6 +2157,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
        and replacement."source_id" = ${PDC_V2_LEGACY_MEETINGS_SOURCE_ID}
        and replacement."current_version_id" = expected->>'versionId'
        and replacement."last_known_good_version_id" = expected->>'versionId'
+       and replacement."promoted_at" = (expected#>>'{pointer,promotedAt}')::timestamptz
        and replacement."payload" = expected->'payload'
        and replacement."validation_receipt" = expected->'receipt'
        and replacement."promoted_at" <= ${input.retiredAt}::timestamptz
@@ -1997,6 +2418,28 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         );
       }
       const [{ event, evidence }] = matches;
+      const replayReplacementAuthorityWitness = pdcV2LegacyMeetingsReplacementAuthorityWitness(
+        input,
+        permanentPointers,
+        replacementCandidates,
+        replacementHistories,
+        evidence.replacementHistoryWitnesses,
+        evidence.retiredAt,
+      );
+      const replacementWitnessMismatch = ([
+        "replacementFullPointerSetSha256",
+        "replacementCandidateRecordSetSha256",
+        "replacementHistorySetSha256",
+        "replacementAuthoritySha256",
+      ] as const).find((field) => evidence[field] !== replayReplacementAuthorityWitness[field]);
+      if (replacementWitnessMismatch) {
+        throw new Error(
+          `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:` +
+          `replacement durable authority witness differs from retirement receipt:` +
+          `${replacementWitnessMismatch}:${evidence[replacementWitnessMismatch]}:` +
+          replayReplacementAuthorityWitness[replacementWitnessMismatch],
+        );
+      }
       const legacy = await legacyCandidateEvidence(evidence.legacyVersionId);
       const legacyIssue = pdcV2LegacyMeetingsCandidateIssue(
         input,
@@ -2073,6 +2516,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (legacy.record === null) {
       throw new Error("PDC_V2_LEGACY_MEETINGS_CANDIDATE_MISSING:retained row missing");
     }
+    const replacementBoundaryIssue = pdcV2LegacyMeetingsInitialReplacementHistoryBoundaryIssue(
+      input,
+      replacementHistories,
+    );
+    if (replacementBoundaryIssue !== null) {
+      throw new Error(
+        `PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:${replacementBoundaryIssue}`,
+      );
+    }
     const existingRetirementRows = await retirementRows();
     if (existingRetirementRows.totalPrefixRows !== 0) {
       throw new Error(
@@ -2081,23 +2533,32 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       );
     }
 
-    const detail = pdcV2LegacyMeetingsRetirementDetail(input, pointerRow.currentVersionId);
+    const detail = pdcV2LegacyMeetingsRetirementDetail(
+      input,
+      pointerRow.currentVersionId,
+      replacementAuthorityWitness,
+    );
+    const admittedLegacyRecord = input.observedLegacyCandidateRecord;
+    const admittedLegacyEvents = input.observedLegacyEvents;
+    if (admittedLegacyRecord === null || admittedLegacyEvents === null) {
+      throw new Error("PDC_V2_LEGACY_MEETINGS_ADMITTED_AUTHORITY_MISSING");
+    }
     const preRetirementLegacyProof = retainedLegacyProof(
       pointerRow.currentVersionId,
-      legacy.record,
-      legacy.events,
+      admittedLegacyRecord,
+      admittedLegacyEvents,
     );
     const expectedRetirementEvent: CandidateEvent = {
       candidateId: pointerRow.currentVersionId,
-      sequence: legacy.events.length + 1,
+      sequence: admittedLegacyEvents.length + 1,
       state: "PROMOTED",
       at: input.retiredAt,
       detail,
     };
     const postRetirementLegacyProof = retainedLegacyProof(
       pointerRow.currentVersionId,
-      legacy.record,
-      [...legacy.events, expectedRetirementEvent],
+      admittedLegacyRecord,
+      [...admittedLegacyEvents, expectedRetirementEvent],
     );
     const observedLegacyPayloadJson = JSON.stringify(input.observedLegacyPayload);
     const observedLegacyReceiptJson = JSON.stringify(pointerRow.validationReceipt);
@@ -2108,6 +2569,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       and ${civicDataPromotions.scope} = ${PDC_V2_LEGACY_MEETINGS_SCOPE}
       and ${civicDataPromotions.currentVersionId} = ${pointerRow.currentVersionId}
       and ${civicDataPromotions.lastKnownGoodVersionId} = ${pointerRow.currentVersionId}
+      and ${civicDataPromotions.promotedAt} = ${pointerRow.promotedAt}::timestamptz
       and ${civicDataPromotions.payload} = ${observedLegacyPayloadJson}::jsonb
       and ${civicDataPromotions.validationReceipt} = ${observedLegacyReceiptJson}::jsonb
     `;

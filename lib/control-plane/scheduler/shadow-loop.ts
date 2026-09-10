@@ -423,26 +423,11 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const deferForBudget = (row: ScheduledObligation): void => {
     deferred.push({
       obligationId: row.obligation.id,
-      /*
-       * ADM-51 — NAME THE LIMITER, AND DO NOT CALL A CLOCK A BUDGET.
-       *
-       * This sentence used to begin "the cycle's dispatch budget was spent",
-       * with no leading code. Two consequences, both of which reached the
-       * owner: the shadow loop's code extractor found no SCREAMING_SNAKE
-       * prefix and fell back to CYCLE_DEFERRED, whose dictionary entry rendered
-       * as "Budget reached"; and the prose itself said "budget" about what this
-       * check actually is — `now() >= deadlineMs`, a wall clock measured in
-       * minutes. So the owner read "Budget reached" beside a spend table of
-       * $0.00 on every row, and no money had been spent because no money was
-       * ever involved.
-       *
-       * It names itself now, so it leaves the residual bucket entirely.
-       */
       why:
-        `CYCLE_TIME_EXHAUSTED: the cycle's time for starting new work ran out at ` +
-        `${new Date(input.budget!.deadlineMs).toISOString()} before this item was reached. It keeps its ` +
-        "next-due and a later cycle starts it — a cycle that ends on its own clock leaves recoverable " +
-        "state; one killed mid-write by its supervisor does not",
+        `the cycle's dispatch budget was spent at ${new Date(input.budget!.deadlineMs).toISOString()} ` +
+        "before this item was reached. It keeps its next-due and is dispatched by a later cycle — " +
+        "a cycle that ends on its own budget leaves recoverable state; one killed mid-write by its " +
+        "supervisor does not",
     });
   };
 

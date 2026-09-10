@@ -27,6 +27,23 @@ interface ReaderSurfaceWitnessComposition {
 const witnessKey = (witness: Pick<ReaderSurfaceClassWitness, "surface" | "component">) =>
   `${witness.surface}#${witness.component}`;
 
+const DEFAULT_BALLOT_EVIDENCE = "docs/evidence/reader-last-mile-ballot.json";
+
+export function readerRootBallotEvidencePath(
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): string {
+  const path = "READER_BALLOT_EVIDENCE" in environment
+    ? environment.READER_BALLOT_EVIDENCE?.trim()
+    : DEFAULT_BALLOT_EVIDENCE;
+  assert.ok(path, "READER_BALLOT_EVIDENCE is present but empty");
+  assert.match(
+    path,
+    /^docs\/evidence\/reader-last-mile-[a-z0-9-]+\.json$/,
+    "READER_BALLOT_EVIDENCE must stay inside the named Reader evidence namespace",
+  );
+  return path;
+}
+
 /**
  * Join the independently executed leaf witnesses without granting the join any
  * evidentiary authority of its own. Every referenced artifact and screenshot
@@ -86,7 +103,10 @@ export function composeReaderSurfaceWitnesses(
   });
 }
 
-export function generateReaderRootAndSurfaceWitnesses(root = process.cwd()): {
+export function generateReaderRootAndSurfaceWitnesses(
+  root = process.cwd(),
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): {
   readonly rootWitnesses: number;
   readonly surfaceWitnesses: number;
   readonly exactHead: string;
@@ -101,7 +121,9 @@ export function generateReaderRootAndSurfaceWitnesses(root = process.cwd()): {
     ["positions", "ballot", "components/officials/positions-section.tsx"],
     ["civic", "civic-routing", "components/ask/ask-box.tsx"],
   ] as const) {
-    const evidencePath = `docs/evidence/reader-last-mile-${name}.json`;
+    const evidencePath = name === "ballot"
+      ? readerRootBallotEvidencePath(environment)
+      : `docs/evidence/reader-last-mile-${name}.json`;
     const bytes = readReaderEvidence(root, evidencePath);
     const data = JSON.parse(bytes.toString()) as {
       exactHead: string;

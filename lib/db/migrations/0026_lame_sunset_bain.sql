@@ -287,10 +287,34 @@ BEGIN
       IF jsonb_typeof(repeated_evidence) IS DISTINCT FROM 'object'
          OR (repeated_evidence - ARRAY[
            'kind','legacyKey','legacySourceId','legacyRecordClass','legacyScope','legacyVersionId',
+           'legacyPointerSha256','legacyCandidateRecordSha256','legacyHistorySha256',
+           'legacyHistoryEventCount','legacyHistoryLastSequence',
+           'replacementFullPointerSetSha256','replacementCandidateRecordSetSha256',
+           'replacementHistoryWitnesses','replacementHistorySetSha256','replacementAuthoritySha256',
            'retiredAt','contractVersion','frozenBaseSha','importerCodeSha','legacyMeetingFactSha256',
            'replacementPointerSha256','replacementPartitionCount','absentPartitionCount',
            'meetingRowCount','agendaDocumentRowCount'
          ]) IS DISTINCT FROM '{}'::jsonb
+         OR EXISTS (
+           SELECT 1 FROM jsonb_each(repeated_evidence) scalar
+           WHERE scalar."key" = ANY(ARRAY[
+             'kind','legacyKey','legacySourceId','legacyRecordClass','legacyScope','legacyVersionId',
+             'legacyPointerSha256','legacyCandidateRecordSha256','legacyHistorySha256',
+             'replacementFullPointerSetSha256','replacementCandidateRecordSetSha256',
+             'replacementHistorySetSha256','replacementAuthoritySha256','retiredAt','frozenBaseSha',
+             'importerCodeSha','legacyMeetingFactSha256','replacementPointerSha256'
+           ])
+             AND jsonb_typeof(scalar."value") IS DISTINCT FROM 'string'
+         )
+         OR EXISTS (
+           SELECT 1 FROM jsonb_each(repeated_evidence) scalar
+           WHERE scalar."key" = ANY(ARRAY[
+             'contractVersion','legacyHistoryEventCount','legacyHistoryLastSequence',
+             'replacementPartitionCount','absentPartitionCount','meetingRowCount',
+             'agendaDocumentRowCount'
+           ])
+             AND jsonb_typeof(scalar."value") IS DISTINCT FROM 'number'
+         )
          OR repeated_evidence->>'kind' IS DISTINCT FROM 'LEGACY_MEETINGS_AGGREGATE_RETIRED'
          OR repeated_evidence->>'legacyKey' IS DISTINCT FROM 'MEETING:supported-bodies'
          OR repeated_evidence->>'legacySourceId' IS DISTINCT FROM 'meetings-public-bodies'
@@ -298,9 +322,78 @@ BEGIN
          OR repeated_evidence->>'legacyScope' IS DISTINCT FROM 'supported-bodies'
          OR repeated_evidence->>'legacyVersionId' IS DISTINCT FROM repeated_event."candidate_id"
          OR repeated_evidence->'contractVersion' IS DISTINCT FROM '1'::jsonb
+         OR coalesce(repeated_evidence->>'retiredAt', '') !~
+              '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$'
          OR coalesce(repeated_evidence->>'frozenBaseSha', '') !~ '^[0-9a-f]{40}$'
          OR coalesce(repeated_evidence->>'importerCodeSha', '') !~ '^[0-9a-f]{40}$'
          OR coalesce(repeated_evidence->>'legacyMeetingFactSha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'legacyPointerSha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'legacyCandidateRecordSha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'legacyHistorySha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'replacementFullPointerSetSha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'replacementCandidateRecordSetSha256', '') !~ '^[0-9a-f]{64}$'
+         OR jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') IS DISTINCT FROM 'array'
+         OR jsonb_array_length(CASE
+           WHEN jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') = 'array'
+             THEN repeated_evidence->'replacementHistoryWitnesses'
+           ELSE '[]'::jsonb
+         END) <> 83
+         OR EXISTS (
+           SELECT 1
+           FROM jsonb_array_elements(
+             CASE WHEN jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') = 'array'
+               THEN repeated_evidence->'replacementHistoryWitnesses' ELSE '[]'::jsonb END
+           ) WITH ORDINALITY AS replacement_history(witness, ordinal)
+           WHERE jsonb_typeof(witness) IS DISTINCT FROM 'object'
+              OR (witness - ARRAY[
+                'scope','versionId','historySha256','historyEventCount','historyLastSequence'
+              ]) IS DISTINCT FROM '{}'::jsonb
+              OR jsonb_typeof(witness->'scope') IS DISTINCT FROM 'string'
+              OR jsonb_typeof(witness->'versionId') IS DISTINCT FROM 'string'
+              OR jsonb_typeof(witness->'historySha256') IS DISTINCT FROM 'string'
+              OR jsonb_typeof(witness->'historyEventCount') IS DISTINCT FROM 'number'
+              OR jsonb_typeof(witness->'historyLastSequence') IS DISTINCT FROM 'number'
+              OR coalesce(witness->>'scope', '') = ''
+              OR coalesce(witness->>'versionId', '') = ''
+              OR coalesce(witness->>'historySha256', '') !~ '^[0-9a-f]{64}$'
+              OR coalesce(witness->>'historyEventCount', '') !~ '^([5-9]|[1-9][0-9]+)$'
+              OR coalesce(witness->>'historyLastSequence', '') !~ '^([5-9]|[1-9][0-9]+)$'
+              OR (witness->>'historyEventCount')::integer IS DISTINCT FROM
+                   (witness->>'historyLastSequence')::integer
+         )
+         OR (
+           SELECT count(DISTINCT witness->>'scope')
+           FROM jsonb_array_elements(
+             CASE WHEN jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') = 'array'
+               THEN repeated_evidence->'replacementHistoryWitnesses' ELSE '[]'::jsonb END
+           ) witness
+         ) <> 83
+         OR (
+           SELECT count(DISTINCT witness->>'versionId')
+           FROM jsonb_array_elements(
+             CASE WHEN jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') = 'array'
+               THEN repeated_evidence->'replacementHistoryWitnesses' ELSE '[]'::jsonb END
+           ) witness
+         ) <> 83
+         OR EXISTS (
+           SELECT 1
+           FROM jsonb_array_elements(
+             CASE WHEN jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') = 'array'
+               THEN repeated_evidence->'replacementHistoryWitnesses' ELSE '[]'::jsonb END
+           ) WITH ORDINALITY AS current_history(witness, ordinal)
+           JOIN jsonb_array_elements(
+             CASE WHEN jsonb_typeof(repeated_evidence->'replacementHistoryWitnesses') = 'array'
+               THEN repeated_evidence->'replacementHistoryWitnesses' ELSE '[]'::jsonb END
+           ) WITH ORDINALITY AS prior_history(prior_witness, prior_ordinal)
+             ON prior_ordinal = ordinal - 1
+           WHERE (prior_witness->>'scope') COLLATE "C" >= (witness->>'scope') COLLATE "C"
+         )
+         OR coalesce(repeated_evidence->>'replacementHistorySetSha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'replacementAuthoritySha256', '') !~ '^[0-9a-f]{64}$'
+         OR coalesce(repeated_evidence->>'legacyHistoryEventCount', '') !~ '^([4-9]|[1-9][0-9]+)$'
+         OR coalesce(repeated_evidence->>'legacyHistoryLastSequence', '') !~ '^([4-9]|[1-9][0-9]+)$'
+         OR (repeated_evidence->>'legacyHistoryEventCount')::integer IS DISTINCT FROM
+              (repeated_evidence->>'legacyHistoryLastSequence')::integer
          OR coalesce(repeated_evidence->>'replacementPointerSha256', '') !~ '^[0-9a-f]{64}$'
          OR coalesce(repeated_evidence->>'replacementPartitionCount', '') !~ '^[1-9][0-9]*$'
          OR coalesce(repeated_evidence->>'absentPartitionCount', '') !~ '^(0|[1-9][0-9]*)$'
@@ -326,6 +419,18 @@ BEGIN
              AND permanent."record_class" = 'MEETING'
              AND permanent."scope" <> 'supported-bodies'
          )
+         OR (
+           SELECT count(*)
+           FROM jsonb_array_elements(repeated_evidence->'replacementHistoryWitnesses') witness
+           JOIN "civic_data_promotions" permanent
+             ON permanent."key" = 'MEETING:' || (witness->>'scope')
+            AND permanent."source_id" = 'meetings-public-bodies'
+            AND permanent."record_class" = 'MEETING'
+            AND permanent."scope" = witness->>'scope'
+            AND permanent."scope" <> 'supported-bodies'
+            AND permanent."current_version_id" = witness->>'versionId'
+            AND permanent."last_known_good_version_id" = witness->>'versionId'
+         ) <> 83
          OR EXISTS (
            SELECT 1 FROM "civic_data_promotions" obsolete
            WHERE obsolete."key" = 'MEETING:supported-bodies'

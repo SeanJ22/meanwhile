@@ -6,11 +6,13 @@ import {
   civicRecordsFor,
 } from "./changes.ts";
 import { parseValidationReceipt } from "./receipt.ts";
+import { canonicalAgendaDocument } from "../meetings/agenda-documents.ts";
 import type {
   CandidateVersionRecord,
   PromotedProjection,
   RoutineCandidate,
   TrustedLkgFixtureEvidence,
+  TrustedLkgImportEvidence,
   TrustedLkgTransferEvidence,
 } from "./types.ts";
 
@@ -137,30 +139,37 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
   ) return "the import evidence version, source-through, or import time does not match the candidate";
   if (!Number.isFinite(Date.parse(evidence.importedAt))) return "the trusted-LKG import time is not an exact readable instant";
   if (candidate.temporal.staleAtRetrieval !== true) {
-    return "a frozen LKG import must be marked stale until a live source-authenticated attempt supersedes it";
+    return "a trusted LKG transfer must be marked stale until a live source-authenticated attempt supersedes it";
   }
   if (evidence.frozenBaseSha !== PDC_V2_FROZEN_BASE_SHA) return "the import evidence does not name the frozen PDC-v2 base";
   if (!GIT_SHA.test(evidence.importerCodeSha)) return "the importer code identity is not an exact Git SHA";
-  if (!Array.isArray(evidence.fixtures) || evidence.fixtures.length === 0) return "the import evidence names no immutable fixture bytes";
-  const fixturePaths = evidence.fixtures.map((fixture) => fixture.path);
-  if (fixturePaths.some((path) => !validFixturePath(path))) return "an import fixture path is absolute, non-canonical, or escapes the repository";
-  if (new Set(fixturePaths).size !== fixturePaths.length) return "an import fixture path is duplicated";
-  if (canonicalCivicDataJson(fixturePaths) !== canonicalCivicDataJson([...fixturePaths].sort())) return "the import fixture manifest is not path-sorted";
-  if (evidence.fixtures.some((fixture) => !SHA256.test(fixture.sha256) || !Number.isSafeInteger(fixture.bytes) || fixture.bytes <= 0)) {
-    return "an import fixture lacks an exact SHA-256 or positive byte count";
+  const legacyPartitionIssue = evidence.legacyMeetingsPartition
+    ? trustedLkgLegacyMeetingsPartitionEvidenceIssue(candidate, evidence)
+    : null;
+  if (legacyPartitionIssue !== null) return legacyPartitionIssue;
+  if (!evidence.legacyMeetingsPartition) {
+    if (!Array.isArray(evidence.fixtures) || evidence.fixtures.length === 0) return "the import evidence names no immutable fixture bytes";
+    const fixturePaths = evidence.fixtures.map((fixture) => fixture.path);
+    if (fixturePaths.some((path) => !validFixturePath(path))) return "an import fixture path is absolute, non-canonical, or escapes the repository";
+    if (new Set(fixturePaths).size !== fixturePaths.length) return "an import fixture path is duplicated";
+    if (canonicalCivicDataJson(fixturePaths) !== canonicalCivicDataJson([...fixturePaths].sort())) return "the import fixture manifest is not path-sorted";
+    if (evidence.fixtures.some((fixture) => !SHA256.test(fixture.sha256) || !Number.isSafeInteger(fixture.bytes) || fixture.bytes <= 0)) {
+      return "an import fixture lacks an exact SHA-256 or positive byte count";
+    }
+    if (!SHA256.test(evidence.fixtureSetSha256) || trustedLkgFixtureSetSha256(evidence.fixtures) !== evidence.fixtureSetSha256) {
+      return "the fixture-set digest does not match the exact path/hash/byte manifest";
+    }
   }
-  if (!SHA256.test(evidence.fixtureSetSha256) || trustedLkgFixtureSetSha256(evidence.fixtures) !== evidence.fixtureSetSha256) {
-    return "the fixture-set digest does not match the exact path/hash/byte manifest";
-  }
+  const expectedRawHash = evidence.legacyMeetingsPartition?.legacyPointerSha256 ?? evidence.fixtureSetSha256;
   if (
     candidate.retrieval.succeeded !== true ||
     candidate.retrieval.requestedUrl !== trustedLkgImportUrl(evidence.contractId) ||
     candidate.retrieval.finalUrl !== null ||
     candidate.retrieval.httpStatus !== null ||
-    candidate.retrieval.rawHash !== evidence.fixtureSetSha256 ||
+    candidate.retrieval.rawHash !== expectedRawHash ||
     candidate.retrieval.manualSourceReceipt !== undefined ||
     candidate.retrieval.failureDetail !== undefined
-  ) return "the retrieval envelope does not identify only the immutable import manifest";
+  ) return "the retrieval envelope does not identify only the immutable transfer authority";
   const normalizedPayloadSha256 = sha256(canonicalCivicDataJson(candidate.normalizedPayload));
   const readModelSha256 = sha256(canonicalCivicDataJson(candidate.readModel));
   if (
@@ -176,7 +185,7 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
     return "the import evidence does not bind the exact Reader projection";
   }
   if (canonicalCivicDataJson(candidate.normalizedPayload) !== canonicalCivicDataJson(candidate.readModel)) {
-    return "the trusted import normalized payload and Reader projection are not the same exact frozen LKG";
+    return "the trusted import normalized payload and Reader projection are not the same exact transferred LKG";
   }
   const records = candidate.civicRecords;
   const excludedFacts = candidate.excludedFacts ?? [];
@@ -186,7 +195,7 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
     candidate.normalization.inputRecords !== records.length + excludedFacts.length ||
     candidate.normalization.outputRecords !== records.length ||
     candidate.normalization.droppedRecords !== excludedFacts.length
-  ) return "the import does not exactly disposition every frozen input as a promoted civic-record member or an explicit held fact";
+  ) return "the import does not exactly disposition every transferred input as a promoted civic-record member or an explicit held fact";
   const heldKeys = excludedFacts.map((fact) => fact.key);
   if (
     excludedFacts.some((fact) => !nonempty(fact.code) || !nonempty(fact.detail) || !Object.hasOwn(fact, "record")) ||
@@ -221,13 +230,13 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
     candidate.horizon.declaredTotal !== null ||
     candidate.horizon.paginationComplete !== false ||
     candidate.horizon.claimsComplete !== false
-  ) return "a frozen trusted import must make no publisher-universe completeness claim";
+  ) return "a trusted transfer must make no publisher-universe completeness claim";
   if (
     candidate.absence.claimsAbsence !== false ||
     candidate.absence.basis !== "NONE" ||
     candidate.absence.exactSubject !== null ||
     candidate.absence.exactHorizon !== null
-  ) return "a frozen trusted import must make no civic-fact absence claim";
+  ) return "a trusted transfer must make no civic-fact absence claim";
   if (
     !SHA256.test(evidence.candidateEnvelopeSha256) ||
     evidence.candidateEnvelopeSha256 !== trustedLkgCandidateEnvelopeSha256(candidate)
@@ -239,6 +248,133 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
     canonicalCivicDataJson(evidence.validatorIds) !== canonicalCivicDataJson(validatorIds)
   ) return "the import validator ids do not exactly name the parser, source projection, and Reader checks";
   if (candidate.id !== trustedLkgCandidateId(evidence)) return "the candidate id is not content-addressed to the complete import evidence";
+  return null;
+}
+
+function trustedLkgLegacyMeetingsPartitionEvidenceIssue(
+  candidate: RoutineCandidate,
+  evidence: TrustedLkgImportEvidence,
+): string | null {
+  const origin = evidence.legacyMeetingsPartition;
+  if (!origin) return null;
+  if (
+    origin.contractVersion !== 1 ||
+    origin.kind !== "DURABLE_LEGACY_MEETINGS_PARTITION" ||
+    origin.legacyKey !== "MEETING:supported-bodies" ||
+    origin.legacySourceId !== "meetings-public-bodies" ||
+    origin.legacyRecordClass !== "MEETING" ||
+    origin.legacyScope !== "supported-bodies" ||
+    candidate.sourceId !== origin.legacySourceId ||
+    candidate.recordClass !== "MEETING" ||
+    candidate.scope === origin.legacyScope
+  ) return "the durable legacy-meetings partition origin has an invalid authority identity";
+  if (
+    !nonempty(origin.legacyVersionId) ||
+    origin.legacyVersionId === candidate.id ||
+    !nonempty(origin.partitionSourceName) ||
+    !nonempty(origin.partitionBodyId)
+  ) return "the durable legacy-meetings partition origin lacks a distinct predecessor or partition identity";
+  const legacyPromotedAt = Date.parse(origin.legacyPromotedAt);
+  if (
+    !Number.isFinite(legacyPromotedAt) ||
+    new Date(legacyPromotedAt).toISOString() !== origin.legacyPromotedAt ||
+    legacyPromotedAt > Date.parse(evidence.importedAt)
+  ) return "the durable legacy-meetings predecessor promotion clock is invalid";
+  const hashes = [
+    origin.legacyPointerSha256,
+    origin.legacyCandidateRecordSha256,
+    origin.legacyCandidateSha256,
+    origin.legacyReceiptSha256,
+    origin.legacyPayloadSha256,
+    origin.legacyReadModelSha256,
+    origin.legacyNormalizedPayloadSha256,
+    origin.legacyHistorySha256,
+    origin.legacyMeetingFactSha256,
+    origin.partitionFactSha256,
+  ];
+  if (hashes.some((value) => !SHA256.test(value))) {
+    return "the durable legacy-meetings partition origin lacks an exact SHA-256 witness";
+  }
+  if (
+    origin.legacyPayloadSha256 !== origin.legacyReadModelSha256 ||
+    origin.legacyPayloadSha256 !== origin.legacyNormalizedPayloadSha256
+  ) return "the durable legacy-meetings predecessor payload projections disagree";
+  if (
+    !Number.isSafeInteger(origin.legacyHistoryEventCount) || origin.legacyHistoryEventCount < 4 ||
+    !Number.isSafeInteger(origin.legacyHistoryLastSequence) ||
+    origin.legacyHistoryLastSequence !== origin.legacyHistoryEventCount ||
+    !Number.isSafeInteger(origin.legacyMeetingRowCount) || origin.legacyMeetingRowCount <= 0 ||
+    !Number.isSafeInteger(origin.legacyAgendaDocumentRowCount) || origin.legacyAgendaDocumentRowCount < 0 ||
+    !Number.isSafeInteger(origin.partitionMeetingRowCount) || origin.partitionMeetingRowCount <= 0 ||
+    !Number.isSafeInteger(origin.partitionAgendaDocumentRowCount) || origin.partitionAgendaDocumentRowCount < 0 ||
+    origin.partitionMeetingRowCount > origin.legacyMeetingRowCount ||
+    origin.partitionAgendaDocumentRowCount > origin.legacyAgendaDocumentRowCount
+  ) return "the durable legacy-meetings transfer carries invalid aggregate or partition counts";
+  const snapshot = candidate.readModel as {
+    readonly meetings?: unknown;
+    readonly agendaDocuments?: unknown;
+  };
+  if (
+    !Array.isArray(snapshot?.meetings) ||
+    !Array.isArray(snapshot?.agendaDocuments) ||
+    snapshot.meetings.length !== origin.partitionMeetingRowCount ||
+    snapshot.agendaDocuments.length !== origin.partitionAgendaDocumentRowCount
+  ) return "the durable legacy-meetings partition counts do not match its Reader projection";
+  const meetings = (snapshot.meetings as Array<Readonly<Record<string, unknown>>>).map((row) => {
+    if (
+      row === null || typeof row !== "object" || Array.isArray(row) ||
+      typeof row.id !== "string" || !row.id ||
+      row.bodyId !== origin.partitionBodyId ||
+      !row.id.startsWith(`${origin.partitionSourceName}:`)
+    ) return null;
+    return row;
+  });
+  if (meetings.some((row) => row === null)) {
+    return "the durable legacy-meetings partition contains a row from another source or body";
+  }
+  const meetingIds = new Set(meetings.map((row) => row!.id as string));
+  const agendaDocuments = (snapshot.agendaDocuments as Array<Readonly<Record<string, unknown>>>).map((row) => {
+    if (
+      row === null || typeof row !== "object" || Array.isArray(row) ||
+      typeof row.id !== "string" || !row.id ||
+      typeof row.meetingId !== "string" || !meetingIds.has(row.meetingId)
+    ) return null;
+    try {
+      return canonicalAgendaDocument(
+        row as unknown as Parameters<typeof canonicalAgendaDocument>[0],
+      );
+    } catch {
+      return null;
+    }
+  });
+  if (agendaDocuments.some((row) => row === null)) {
+    return "the durable legacy-meetings partition contains an invalid or foreign agenda document";
+  }
+  const canonicalMeetings = meetings
+    .map((row) => row!)
+    .sort((left, right) =>
+      (left.id as string).localeCompare(right.id as string) ||
+      canonicalCivicDataJson(left).localeCompare(canonicalCivicDataJson(right))
+    );
+  const canonicalDocuments = agendaDocuments
+    .map((row) => row!)
+    .sort((left, right) =>
+      left.id.localeCompare(right.id) ||
+      canonicalCivicDataJson(left).localeCompare(canonicalCivicDataJson(right))
+    );
+  if (
+    new Set(canonicalMeetings.map(({ id }) => id)).size !== canonicalMeetings.length ||
+    new Set(canonicalDocuments.map(({ id }) => id)).size !== canonicalDocuments.length ||
+    sha256(canonicalCivicDataJson({
+      meetings: canonicalMeetings,
+      agendaDocuments: canonicalDocuments,
+    })) !== origin.partitionFactSha256
+  ) return "the durable legacy-meetings partition fact digest is invalid";
+  if (
+    !Array.isArray(evidence.fixtures) ||
+    evidence.fixtures.length !== 0 ||
+    evidence.fixtureSetSha256 !== trustedLkgFixtureSetSha256([])
+  ) return "a durable legacy-meetings partition must not claim frozen fixture bytes";
   return null;
 }
 

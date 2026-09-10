@@ -51,6 +51,22 @@ const FIREWALLS = [
     "legacy aggregate retirement is one exact historical exception",
     /PDC_V2_LEGACY_MEETINGS_AGGREGATE_RETIREMENT[\s\S]*replacementPartitionCount[\s\S]*absentPartitionCount[\s\S]*<> 124[\s\S]*unique terminal authority-transfer receipt/,
   ],
+  [
+    "legacy retirement receipt scalars keep their exact JSON types",
+    /jsonb_each\(repeated_evidence\) scalar[\s\S]*legacyPointerSha256[\s\S]*jsonb_typeof\(scalar\."value"\) IS DISTINCT FROM 'string'[\s\S]*legacyHistoryEventCount[\s\S]*jsonb_typeof\(scalar\."value"\) IS DISTINCT FROM 'number'/,
+  ],
+  [
+    "legacy retirement clock is canonical millisecond UTC",
+    /repeated_evidence->>'retiredAt'[\s\S]*\[0-9\]\{3\}Z\$/,
+  ],
+  [
+    "replacement history manifest has typed scalar members",
+    /jsonb_typeof\(witness->'scope'\) IS DISTINCT FROM 'string'[\s\S]*jsonb_typeof\(witness->'historyLastSequence'\) IS DISTINCT FROM 'number'/,
+  ],
+  [
+    "replacement history manifest names every current permanent authority",
+    /jsonb_array_elements\(repeated_evidence->'replacementHistoryWitnesses'\) witness[\s\S]*JOIN "civic_data_promotions" permanent[\s\S]*permanent\."current_version_id" = witness->>'versionId'[\s\S]*permanent\."last_known_good_version_id" = witness->>'versionId'[\s\S]*\) <> 83/,
+  ],
   ["event state without matching candidate", /CREATE CONSTRAINT TRIGGER civic_data_candidate_events_match_candidate/],
   ["promotion deletion, identity rewrite, or backdate", /CREATE TRIGGER civic_data_promotions_no_delete_or_rewrite/],
   ["promotion not bound to exact candidate proof", /CREATE CONSTRAINT TRIGGER civic_data_promotions_exact_candidate_proof/],
@@ -181,6 +197,11 @@ test("PDC 0026 database triggers preserve legal state order, immutable evidence,
     "preexisting repeated PROMOTED history must satisfy the same typed rule plus the one exact PDC retirement exception",
   );
   assert.match(migration, /replacementPartitionCount'\)::integer \+[\s\S]*absentPartitionCount'\)::integer <> 124/);
+  assert.match(
+    migration,
+    /legacyHistoryEventCount', ''\) !~ '\^\(\[4-9\]\|\[1-9\]\[0-9\]\+\)\$'/,
+    "the retained legacy witness must include FETCHED through PROMOTED",
+  );
   assert.match(migration, /NEW\."at" IS DISTINCT FROM receipt_at/);
   assert.match(migration, /NEW\."at" > clock_timestamp\(\) \+ interval '5 minutes'/);
   assert.doesNotMatch(

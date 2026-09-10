@@ -1256,6 +1256,79 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(writesBeforePreflightFailure, 0, "every existing authority is proved before the first write");
 
+    const legacyNormalizationStore = new CountingMemoryRoutineDataStore();
+    const legacyNormalizationId = await seedLegacyMeetingsAggregate(legacyNormalizationStore, plan);
+    const legacyNormalizationInternal = legacyNormalizationStore as unknown as {
+      candidates: Map<string, CandidateVersionRecord>;
+    };
+    const legacyNormalizationRow = structuredClone(
+      legacyNormalizationInternal.candidates.get(legacyNormalizationId)!,
+    );
+    const {
+      normalizedPayloadHash: legacyNormalizedPayloadHash,
+      ...prePayloadHashNormalization
+    } = legacyNormalizationRow.candidate.normalization;
+    assert.match(legacyNormalizedPayloadHash ?? "", /^[a-f0-9]{64}$/);
+    legacyNormalizationInternal.candidates.set(legacyNormalizationId, {
+      ...legacyNormalizationRow,
+      candidate: {
+        ...legacyNormalizationRow.candidate,
+        normalization: prePayloadHashNormalization,
+      },
+    });
+    legacyNormalizationStore.createCalls = 0;
+    const legacyNormalizationImport = await executePdcV2PermanentCutoverImportPlan(
+      legacyNormalizationStore,
+      plan,
+      CONTRACT_MIGRATION_SQL,
+    );
+    assert.equal(legacyNormalizationImport.promoted, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates);
+    assert.equal(
+      await legacyNormalizationStore.readPromotion("MEETING", "supported-bodies"),
+      null,
+      "the exact pre-field legacy aggregate can be proved and retired without weakening permanent candidates",
+    );
+
+    const forgedLegacyNormalizationStore = new CountingMemoryRoutineDataStore();
+    const forgedLegacyNormalizationId = await seedLegacyMeetingsAggregate(forgedLegacyNormalizationStore, plan);
+    const forgedLegacyNormalizationInternal = forgedLegacyNormalizationStore as unknown as {
+      candidates: Map<string, CandidateVersionRecord>;
+    };
+    const forgedLegacyNormalizationRow = structuredClone(
+      forgedLegacyNormalizationInternal.candidates.get(forgedLegacyNormalizationId)!,
+    );
+    const {
+      normalizedPayloadHash: forgedPayloadHash,
+      ...forgedPrePayloadHashNormalization
+    } = forgedLegacyNormalizationRow.candidate.normalization;
+    assert.match(forgedPayloadHash ?? "", /^[a-f0-9]{64}$/);
+    forgedLegacyNormalizationInternal.candidates.set(forgedLegacyNormalizationId, {
+      ...forgedLegacyNormalizationRow,
+      candidate: {
+        ...forgedLegacyNormalizationRow.candidate,
+        normalization: forgedPrePayloadHashNormalization,
+        normalizedPayload: {
+          ...(forgedLegacyNormalizationRow.candidate.normalizedPayload as MeetingsSnapshot),
+          meetings: [],
+        },
+      },
+    });
+    forgedLegacyNormalizationStore.createCalls = 0;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(
+        forgedLegacyNormalizationStore,
+        plan,
+        CONTRACT_MIGRATION_SQL,
+      ),
+      /TRUSTED_LKG_LEGACY_MEETINGS_PROOF_INVALID:the candidate normalized evidence does not match its durable payload hash/,
+      "a missing historical field cannot excuse changed normalized facts",
+    );
+    assert.equal(
+      forgedLegacyNormalizationStore.createCalls,
+      0,
+      "the forged old-schema legacy row refuses before the first import write",
+    );
+
     const truncatedTerminalPlan = { ...plan, candidates: plan.candidates.slice(1) };
     assert.match(pdcV2PermanentCutoverPlanIssue(truncatedTerminalPlan) ?? "", /denominator/);
     const truncatedStore = new CountingMemoryRoutineDataStore();

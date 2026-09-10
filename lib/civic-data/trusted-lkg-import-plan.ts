@@ -1867,6 +1867,59 @@ function trustedLkgTargets(plan: PdcV2TrustedLkgImportPlan): readonly PdcV2Trust
 const PDC_V2_LEGACY_MEETINGS_SCOPE = "supported-bodies";
 const PDC_V2_LEGACY_MEETINGS_SOURCE_ID = "meetings-public-bodies";
 
+function pdcV2LegacyMeetingsPromotionProofIssue(
+  pointer: import("./types.ts").PromotedProjection<MeetingsSnapshot>,
+  row: CandidateVersionRecord,
+): string | null {
+  const issue = promotionProofIssue(
+    "MEETING",
+    PDC_V2_LEGACY_MEETINGS_SCOPE,
+    pointer,
+    row,
+  );
+  if (issue !== "the candidate normalized evidence does not match its durable payload hash") {
+    return issue;
+  }
+
+  const candidate = row.candidate;
+  const normalization = candidate.normalization;
+  if (
+    normalization.normalizedPayloadHash !== undefined ||
+    !SHA256.test(normalization.normalizedHash ?? "") ||
+    normalization.parserVersion !== "meetings-composite/2" ||
+    normalization.schemaVersion !== "MeetingsSnapshot:1" ||
+    candidate.sourceId !== PDC_V2_LEGACY_MEETINGS_SOURCE_ID ||
+    candidate.recordClass !== "MEETING" ||
+    candidate.scope !== PDC_V2_LEGACY_MEETINGS_SCOPE ||
+    candidate.bootstrapImport !== undefined
+  ) return issue;
+
+  /*
+   * The one legacy aggregate currently serving production predates the
+   * normalizedPayloadHash field. It still carries one normalizedHash that was
+   * computed over both its identical Reader projection and normalized payload.
+   * Re-run the complete modern promotion proof with only that omitted field
+   * reconstructed from the declared hash. Any payload/read-model drift, bad
+   * receipt, pointer mismatch, or different omission still fails. This narrow
+   * compatibility path is deleted with this one-time import plan at commit B.
+   */
+  return promotionProofIssue(
+    "MEETING",
+    PDC_V2_LEGACY_MEETINGS_SCOPE,
+    pointer,
+    {
+      ...row,
+      candidate: {
+        ...candidate,
+        normalization: {
+          ...normalization,
+          normalizedPayloadHash: normalization.normalizedHash,
+        },
+      },
+    },
+  );
+}
+
 function canonicalMeetingFactSha256(snapshot: MeetingsSnapshot): string {
   validateSnapshot(snapshot);
   return pdcV2CanonicalMeetingFactEvidence([snapshot]).sha256;
@@ -1996,12 +2049,7 @@ async function preflightPdcV2LegacyMeetingsAuthority(
   if (!candidate) {
     throw new Error(`TRUSTED_LKG_LEGACY_MEETINGS_CANDIDATE_MISSING:${pointer.versionId}`);
   }
-  const proofIssue = promotionProofIssue(
-    "MEETING",
-    PDC_V2_LEGACY_MEETINGS_SCOPE,
-    pointer,
-    candidate,
-  );
+  const proofIssue = pdcV2LegacyMeetingsPromotionProofIssue(pointer, candidate);
   if (proofIssue !== null) {
     throw new Error(`TRUSTED_LKG_LEGACY_MEETINGS_PROOF_INVALID:${proofIssue}`);
   }

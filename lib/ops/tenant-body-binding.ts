@@ -23,11 +23,9 @@
  * belongs in `lib/ops/`, whatever it is about.**
  *
  * Nothing about the rule changed in the move. The imports below still reach the
- * three serving tenant tables; only this module's own address did.
+ * production membership boundary; only this module's own address did.
  */
 
-import { LEGISTAR_CLIENTS } from "../sources/legistar/client-registry.ts";
-import { INSITE_TENANTS } from "../sources/legistar-insite/tenant-registry.ts";
 import { SOURCE_WIRING } from "../registry/source-wiring.ts";
 
 /**
@@ -46,33 +44,18 @@ import { SOURCE_WIRING } from "../registry/source-wiring.ts";
  * ## Why the existing check could not catch it
  *
  * `tests/source-adapters.test.ts` already asserts that every `SOURCE_WIRING`
- * row names a real registry body. That is the right rule applied to the wrong
- * denominator: it audits the shared wiring table, and **two adapters do not
- * read the shared wiring table at all.**
+ * row names a real registry body. The historical defect was that two adapters
+ * carried their own membership tables outside that denominator.
  *
- * `lib/sources/composite/wiring.ts` builds most adapters as `make(rows)` —
- * they serve exactly the bodies the wiring rows hand them, so auditing the
- * rows audits them. But it builds two with no arguments:
- *
- * ```
- * make: () => legistarReporting                   // reads LEGISTAR_CLIENTS
- * make: () => makeLegistarInSiteSource()          // reads INSITE_TENANTS
- * ```
- *
- * Both predate `SOURCE_WIRING` and keep their own tables. The capability is
- * switched on by `wiringForTypes(["LEGISTAR"]).length === 0` being false —
- * which one row satisfies for the whole type — and after that the adapter's
- * own table decides which governments the product publishes. A row added to
- * either table is a government added to the product, with nothing in between.
+ * Both adapters now receive exact SOURCE_WIRING rows. Their exported
+ * client/tenant arrays are compatibility projections of those rows and cannot
+ * add a government or production contract.
  *
  * ## What this checks, and the denominator it checks it over
  *
- * The denominator is `SERVING_TENANT_TABLES`: **every table anywhere in the
- * repo that can put a body id into a served meeting**, the shared one and the
- * adapter-owned ones alike. `tests/tenant-body-binding.test.ts` sweeps
- * `lib/sources/` for hardcoded body-id literals and fails if a table appears
- * that is not listed here, so the guard cannot quietly go stale the way the
- * wiring-only check did.
+ * The denominator is SOURCE_WIRING: the only table that can put a body id into
+ * a served meeting. `tests/tenant-body-binding.test.ts` sweeps `lib/sources/`
+ * so an adapter-owned list cannot quietly return.
  *
  * For each tenant in that denominator, four things, in the order a failure is
  * most likely to be informative:
@@ -99,7 +82,7 @@ import { SOURCE_WIRING } from "../registry/source-wiring.ts";
  * than left as an omission — see the report on this repair.
  */
 
-/** A table that can put a body id into a meeting the product serves. */
+/** Legacy names remain only so synthetic regression faults can name the retired shapes. */
 export type TenantTableName =
   | "SOURCE_WIRING"
   | "LEGISTAR_CLIENTS"
@@ -166,11 +149,8 @@ function configHandle(config: Record<string, string>): string | undefined {
 }
 
 /**
- * Every serving tenant table, flattened.
- *
- * **Adding an adapter that keeps its own tenant list means adding a row
- * here.** The sweep in `tests/tenant-body-binding.test.ts` is what makes that
- * an obligation rather than a hope.
+ * Every serving tenant, flattened from the single production membership
+ * authority. Adapter-owned tenant lists are forbidden rather than registered.
  */
 export function servingTenants(): ServingTenant[] {
   const rows: ServingTenant[] = [];
@@ -186,32 +166,6 @@ export function servingTenants(): ServingTenant[] {
       bodyId: row.bodyId,
       ocdId: row.ocdId,
       jurisdiction: row.jurisdiction,
-    });
-  }
-
-  // Legistar's WebAPI clients. Built as `() => legistarReporting`, so these
-  // rows reach production without passing through SOURCE_WIRING.
-  for (const client of LEGISTAR_CLIENTS) {
-    rows.push({
-      table: "LEGISTAR_CLIENTS",
-      modulePath: "lib/sources/legistar/client-registry.ts",
-      tenant: client.slug,
-      bodyId: client.bodyId,
-      ocdId: client.ocdId,
-      jurisdiction: client.jurisdiction,
-    });
-  }
-
-  // The InSite portal tenants. Built as `() => makeLegistarInSiteSource()`,
-  // same story — and the table Mesa arrived through.
-  for (const tenant of INSITE_TENANTS) {
-    rows.push({
-      table: "INSITE_TENANTS",
-      modulePath: "lib/sources/legistar-insite/tenant-registry.ts",
-      tenant: tenant.slug,
-      bodyId: tenant.bodyId,
-      ocdId: tenant.ocdId,
-      jurisdiction: tenant.jurisdiction,
     });
   }
 

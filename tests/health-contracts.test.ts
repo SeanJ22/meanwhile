@@ -221,7 +221,7 @@ test("the rollup refuses readings out of order rather than mislabelling them", (
 
 test("SEEDED: a nonzero corpus with zero evaluated instances cannot produce READER GREEN", () => {
   /*
-   * THE EXACT DEFECT. `pnpm pilot:health` passed `activeInstances: 0,
+   * THE EXACT DEFECT. The retired tracked-health reporter passed `activeInstances: 0,
    * evaluatedGreen: 0` as literals with a nonempty corpus. The red branch
    * tests `evaluatedGreen < activeInstances`, which is `0 < 0`, which is
    * false — so the contract fell through every refusal and returned GREEN

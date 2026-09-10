@@ -18,7 +18,6 @@ import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { relativeAge } from "@/lib/meetings/freshness";
 import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
-import { officePhoneForBody } from "@/lib/meetings/office-phone";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor, type JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
@@ -123,7 +122,7 @@ export function MeetingPopup({
     (link) => !(concluded && link.rung === "VENUE_MAP"),
   );
   const minutes = concluded ? minutesSummaryForMeeting(meeting.id) : null;
-  const officePhone = concluded ? officePhoneForBody(body?.bodyId ?? null) : null;
+  const officePhone = concluded ? body?.readerRoster?.officePhone ?? null : null;
 
   return (
     <PopupCard

@@ -23,12 +23,10 @@
  * **Every one of those tests is correct and none of them is loosened.** They
  * caught real corruption, which is what they are for.
  *
- * **AND THE ATOMIC WRITER IS NOT ON ITS OWN A FIX.** This is the part worth
- * writing down: while the profile grants one path of five, making the write
- * transactional changes nothing — the transaction cannot COMMIT. The profile
- * had to be resolved path-by-path first (`lib/ops/push-allowlist.ts`,
- * `TRACKER_VIEW_GRANTS`), and this is the half that stops the next divergence
- * from being silent.
+ * **AND THE ATOMIC WRITER IS NOT ON ITS OWN A FIX.** The former workflow kept
+ * only one path of five. Terminal PDC deletes that workflow and its direct-main
+ * push stack. Engineering tracker changes now carry their store and generated
+ * views through one ordinary software pull request.
  *
  * ## What this module is
  *
@@ -150,8 +148,8 @@ export function reconciliationReport(failures: readonly ReconciliationFailure[])
     ...failures.flatMap((f) => [`    [${f.check}]`, `      ${f.detail}`]),
     "",
     "  The store, its ledger and its generated views are written in ONE call and must land in ONE",
-    "  commit. If this is a workflow, check that its profile in lib/ops/push-allowlist.ts grants",
-    "  every path the call writes — granting the store alone is what put `main` red on 2026-08-26.",
+    "  software pull request. No workflow or direct-main writer may transport tracker runtime state;",
+    "  recreating that path is what terminal PDC explicitly prevents.",
     "",
   ].join("\n");
 }

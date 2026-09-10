@@ -45,6 +45,7 @@ import {
   sweepExpiredLeases,
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { compareReaderImpact } from "../lib/control-plane/research-metrics.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import {
   beginAttemptFor,
@@ -600,4 +601,68 @@ test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", a
   assert.equal(cycle.dispatched.length, 1);
   assert.equal(cycle.deferred.length, 2);
   assert.match(cycle.deferred[0].why, /stated ceiling/);
+});
+
+test("NH328: canonical reader-impact priority reaches the Scout pool before an older band-2 row", async () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-cycle-reader-priority-"));
+  const repos = await createFileRepositories(root);
+  const oldestUniverse = obligation({
+    id: "band-2-oldest",
+    subjectId: "az:2026:statewide",
+    lastWorkedAt: new Date(NOW_MS - 30 * 24 * 3_600_000).toISOString(),
+  });
+  const readerPriority = obligation({
+    id: "band-1-reader-impact",
+    subjectId: "az:2026:reader-surface",
+    readerImpactAt: new Date(NOW_MS + 24 * 3_600_000).toISOString(),
+    lastWorkedAt: new Date(NOW_MS - 10 * 24 * 3_600_000).toISOString(),
+  });
+
+  /* Positive control: dueNow alone puts the much older universe row first. */
+  assert.deepEqual(
+    dueNow(scheduleAll([oldestUniverse, readerPriority], NOW_MS), NOW_MS).map((row) => row.obligation.id),
+    [oldestUniverse.id, readerPriority.id],
+  );
+
+  const inputs = { pilotZips: [] as readonly string[] };
+  const providerFor = (id: string): string => id === oldestUniverse.id ? "candidate-enrichment" : "meetings";
+  const orderable = (row: { readonly obligation: FreshnessObligation; readonly nextDueAt: string }) => ({
+    id: row.obligation.id,
+    subjectId: row.obligation.subjectId,
+    readerImpactAt: row.obligation.readerImpactAt,
+    providerId: providerFor(row.obligation.id),
+    nextDueAt: row.nextDueAt,
+  });
+  const admissions: string[] = [];
+  const cycle = await runCycle({
+    repos,
+    obligations: [oldestUniverse, readerPriority],
+    debts: [],
+    routeTaskFor: () => null,
+    maturity: () => "UNGRADUATED",
+    executor: { lane: "DETERMINISTIC", run: simulates },
+    holder: "reader-priority-worker",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    reader: READER_GREEN,
+    truth: TRUTH_GREEN,
+    research: {
+      decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "ungraduated fixture", disagreement: null }),
+      compareModelRows: (left, right) => compareReaderImpact(orderable(left), orderable(right), inputs),
+      admitScout: (row) => {
+        admissions.push(row.obligation.id);
+        return admissions.length === 1
+          ? { admit: true }
+          : { admit: false, code: "CYCLE_MAX", why: "the one-slot fixture ceiling is spent" };
+      },
+      modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => ({ ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "fixture" }) },
+      maxConcurrentScouts: 1,
+      scoutLeaseTtlMs: 60_000,
+      scoutWallMs: 1_000,
+    },
+  });
+
+  assert.deepEqual(admissions, [readerPriority.id, oldestUniverse.id]);
+  assert.deepEqual(cycle.dispatched.map((row) => row.obligationId), [readerPriority.id]);
+  assert.equal(cycle.lanes?.model.deferredBy.CYCLE_MAX, 1);
 });

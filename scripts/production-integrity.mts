@@ -10,8 +10,9 @@
  * This is the trigger half of NH273. It asks the schema shipping gate for its
  * POST-DEPLOY reading — the moment where both migration phases are owed, and
  * therefore the one that fails on an unapplied CONTRACT migration that the
- * pre-deploy reading deliberately allows — and writes the answer into durable,
- * machine-readable state that the release-freeze gate reads.
+ * pre-deploy reading deliberately allows — and appends the answer to the
+ * existing canonical software-release outcome log that Admin and the
+ * release-freeze gate both read.
  *
  * IT RUNS THE EXISTING GATE RATHER THAN RE-ASKING PRODUCTION ITSELF. That is
  * deliberate and it is the whole reason this script is short. A second
@@ -19,8 +20,9 @@
  * would be a second verdict, free to disagree with the one branch protection
  * already trusts, and `tests/migration-shipping-invariant.test.ts` holds the
  * set of files permitted to query `drizzle.__drizzle_migrations` closed to four
- * for exactly that reason. This script contacts no database. It spawns the
- * gate, reads its exit code, and records what it said.
+ * for exactly that reason. This script never queries the serving database
+ * itself. It spawns the gate, reads its exit code, and only then opens the
+ * separate control-plane store to append the exact outcome receipt.
  *
  * WHAT IT DOES NOT DO, and will not be extended to do: roll anything back. The
  * owner's decision on 2026-08-28 is that a red reading marks state DEGRADED,
@@ -30,13 +32,14 @@
  *
  *   --sha=<commit>   the application-bearing commit the reading is ABOUT.
  *                    Defaults to origin/main's tip.
- *   --write          persist the reading. Without it, the reading is printed
- *                    and nothing is written, so the script is safe to explore.
- *   --record=<path>  write somewhere other than the production record.
- *                    THE DEFAULT IS UNCHANGED and is the only path any existing
- *                    caller reaches; the flag exists so a SECOND observer —
- *                    `scripts/staging-observer.mts` — can take a reading through
- *                    this one gate and record it in its own file. The
+ *   --write          persist the reading to the canonical control-plane log.
+ *                    Without it, the reading is printed and nothing is written.
+ *   --record=<path>  fixture-only compatibility for the one explicit staging
+ *                    record path. The retired production JSON path and every
+ *                    other path are refused before the gate runs. The flag
+ *                    exists so `scripts/staging-observer.mts` can take a
+ *                    reading through this one gate and record staging evidence
+ *                    in its own non-production file. The
  *                    alternative was a second implementation of "does the
  *                    database hold the migrations this commit ships", which is
  *                    a second verdict free to disagree with the one branch
@@ -62,9 +65,19 @@ import {
   type FailureClass,
   type IntegrityRecord,
 } from "../lib/ops/production-integrity.ts";
+import {
+  CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR,
+  appendProductionIntegrity,
+  readLatestProductionIntegrity,
+} from "../lib/ops/production-integrity-data-plane.ts";
+import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-export const RECORD_PATH = join(ROOT, "data", "ops", "production-integrity.json");
+/** Historical path retained only so every attempted write to it can be refused. */
+export const RETIRED_PRODUCTION_RECORD_PATH = join(ROOT, "data", "ops", "production-integrity.json");
+/** The sole explicit file target, used only by the non-production staging observer. */
+export const STAGING_INTEGRITY_RECORD_PATH = join(ROOT, "data", "ops", "staging-integrity.json");
 
 function arg(name: string): string | undefined {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -86,8 +99,8 @@ export function git(...args: string[]): string | null {
   return r.stdout.trim();
 }
 
-/** Read the durable record, or the honest never-checked one. */
-export function readRecord(path: string = RECORD_PATH): IntegrityRecord {
+/** Read an explicitly named non-production fixture, or the honest never-checked one. */
+export function readRecord(path: string): IntegrityRecord {
   if (!existsSync(path)) return NEVER_CHECKED;
   try {
     const parsed = JSON.parse(readFileSync(path, "utf8")) as IntegrityRecord;
@@ -107,7 +120,12 @@ export function readRecord(path: string = RECORD_PATH): IntegrityRecord {
   }
 }
 
-export function writeRecord(record: IntegrityRecord, path: string = RECORD_PATH): void {
+export function writeRecord(record: IntegrityRecord, path: string): void {
+  if (resolve(path).toLowerCase() !== resolve(STAGING_INTEGRITY_RECORD_PATH).toLowerCase()) {
+    throw new Error(
+      `TRACKED_PRODUCTION_INTEGRITY_WRITE_RETIRED: --record may name only ${STAGING_INTEGRITY_RECORD_PATH}`,
+    );
+  }
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, `${JSON.stringify(record, null, 2)}\n`, "utf8");
 }
@@ -159,16 +177,23 @@ function detailFrom(output: string): string {
   return scope ?? "The gate produced no summary line.";
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const write = process.argv.includes("--write");
   /*
-   * The DEFAULT is the production record and nothing about it moved. `--record=`
-   * is resolved against the repository root so a relative path cannot depend on
-   * the caller's working directory — a reading landing in a different file
-   * depending on where it was invoked from would be worse than no flag at all.
+   * The default is the durable control-plane log. `--record=` is a deliberately
+   * narrow compatibility seam for the exact staging fixture only; it cannot be
+   * redirected to the retired tracked production record or to another path.
    */
   const recordArg = arg("record");
-  const recordPath = recordArg ? resolve(ROOT, recordArg) : RECORD_PATH;
+  const recordPath = recordArg ? resolve(ROOT, recordArg) : null;
+  if (recordPath !== null && recordPath.toLowerCase() !== resolve(STAGING_INTEGRITY_RECORD_PATH).toLowerCase()) {
+    console.error(
+      `REFUSED — --record is fixture-only and may name only ${STAGING_INTEGRITY_RECORD_PATH}.\n` +
+        "The production integrity authority is the canonical control-plane log; tracked runtime JSON is retired.",
+    );
+    process.exitCode = 2;
+    return;
+  }
   const deployedSha = arg("sha") ?? git("rev-parse", "origin/main") ?? git("rev-parse", "HEAD");
   const mainSha = git("rev-parse", "origin/main");
   const observedAt = new Date().toISOString();
@@ -208,8 +233,40 @@ function main(): void {
   console.log(`         ${assessment.reason}`);
 
   if (write) {
-    writeRecord(record, recordPath);
-    console.log(`\nrecorded: ${recordPath}`);
+    try {
+      if (recordPath !== null) {
+        writeRecord(record, recordPath);
+        console.log(`\nrecorded staging fixture: ${recordPath}`);
+      } else {
+        const connection = process.env[CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR]?.trim() ?? "";
+        if (connection === "") {
+          throw new Error(`${CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR} is not set`);
+        }
+        const repos = await createPgRepositories(connection, observedAt, { skipBootstrap: true });
+        assertDurableRepositories(repos, "post-deploy production-integrity outcome");
+        const receipt = await appendProductionIntegrity(repos.softwareReleaseReviews, record, {
+          runId: process.env.WTP_RUN_ID ?? null,
+          actor: "post-deploy-observer",
+        });
+        const readback = await readLatestProductionIntegrity(repos.softwareReleaseReviews);
+        if (readback.kind !== "HELD" || readback.receipt.id !== receipt.id) {
+          throw new Error(
+            `POST_DEPLOY_INTEGRITY_READBACK_FAILED: appended ${receipt.id}, latest is ` +
+              `${readback.kind === "HELD" ? readback.receipt.id : readback.kind}`,
+          );
+        }
+        console.log(`\nrecorded durable receipt: ${receipt.id}`);
+        console.log("read back in Admin: /admin/release-review");
+      }
+    } catch (error) {
+      console.error(
+        `\nCOULD NOT RECORD — the canonical software-release outcome log refused or could not be reached ` +
+          `(${error instanceof Error ? error.message : String(error)}).`,
+      );
+      console.error("The reading is not durable, so it cannot clear or establish the release-freeze state.");
+      process.exitCode = 2;
+      return;
+    }
     if (observed === "REFUSED") {
       console.log(
         "\nPRODUCTION INTEGRITY IS NOW DEGRADED. The next production-changing release is frozen\n" +
@@ -221,9 +278,9 @@ function main(): void {
     console.log("\n(--write not given; nothing was recorded)");
   }
 
-  process.exit(exit);
+  process.exitCode = exit;
 }
 
 if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, "/")}` || process.argv[1]?.endsWith("production-integrity.mts")) {
-  main();
+  await main();
 }

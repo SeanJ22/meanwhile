@@ -256,6 +256,10 @@ const CONTENT_FILES = new Set(
     // guard protects against — onboarding a state and silently producing no
     // jurisdiction registry for it — is caught at generation time instead.
     "scripts/enumerate-jurisdictions.mts",
+    // PDC V2: one official roster and roll-call authority record per covered
+    // state. URLs, chamber floors and publisher ids are content facts; the
+    // runtime registry separately proves every covered state has both rows.
+    "lib/state-rollcalls/authority.ts",
   ],
 );
 

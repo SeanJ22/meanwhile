@@ -3,6 +3,10 @@ import { execFileSync } from "node:child_process";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { seatHolderById } from "../lib/registry/server.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";

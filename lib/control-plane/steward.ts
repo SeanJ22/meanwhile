@@ -82,7 +82,12 @@ import {
   type Measured,
   type RenderedNumber,
 } from "./owner-surface.ts";
-import type { SoftwareReleaseReviewRecord } from "./software-release-review.ts";
+import {
+  isOwnerReleaseReviewRecord,
+  type ProductionIntegrityLogRecord,
+  type SoftwareReleaseReviewRecord,
+} from "./software-release-review.ts";
+import { productionIntegrityHistory } from "../ops/production-integrity-data-plane.ts";
 import { sameCommit } from "../ops/production-integrity.ts";
 import { REQUIRED_CONTEXTS } from "../ops/required-checks.ts";
 
@@ -578,6 +583,7 @@ function lifecycleOf(input: {
   readonly rawMainSha: string | null;
   readonly executableSha: string | null;
   readonly haveIdentity: boolean;
+  readonly integrity: ProductionIntegrityLogRecord | null;
 }): LifecycleStage[] {
   const onMain = sameCommit(input.sha, input.rawMainSha) || sameCommit(input.sha, input.executableSha);
   const live = sameCommit(input.sha, input.deployedSha);
@@ -620,8 +626,13 @@ function lifecycleOf(input: {
     {
       key: "VERIFIED_ON_PRODUCTION",
       label: "Checked on production",
-      state: "CANNOT_TELL",
-      says: "A post-deploy check runs after every deploy and its reading is committed to the repository, but it is not published anywhere this page can read. Publishing that reading to the control plane would fill this.",
+      state: input.integrity === null ? "CANNOT_TELL" : "REACHED",
+      says:
+        input.integrity === null
+          ? "The canonical control plane software-release log holds no post-deploy reading for this exact commit."
+          : `The durable post-deploy reading reported ${input.integrity.productionIntegrity.observed}` +
+            `${input.integrity.productionIntegrity.failureClass ? ` (${input.integrity.productionIntegrity.failureClass})` : ""} ` +
+            `at ${input.integrity.createdAt}: ${input.integrity.productionIntegrity.detail}`,
     },
   ];
 }
@@ -717,7 +728,9 @@ function verdictSentence(id: CodeIdentity | null): string {
  * sentence a broken read would otherwise be indistinguishable from.
  */
 export function buildStewardModel(input: StewardInput): StewardReadModel {
-  const rows = input.reviewRows ?? [];
+  const allRows = input.reviewRows ?? [];
+  const rows = allRows.filter(isOwnerReleaseReviewRecord);
+  const integrityRows = productionIntegrityHistory(allRows);
   const readable = input.reviewRows !== null;
   const order = readable ? candidatesInOrder(rows) : [];
   const rawMainSha = input.codeIdentity?.rawMainSha ?? null;
@@ -737,6 +750,8 @@ export function buildStewardModel(input: StewardInput): StewardReadModel {
       rawMainSha,
       executableSha,
       haveIdentity: input.codeIdentity !== null,
+      integrity:
+        integrityRows.find((row) => sameCommit(row.productionIntegrity.deployedSha, sha)) ?? null,
     });
     const onMain = sameCommit(sha, rawMainSha) || sameCommit(sha, executableSha);
     const live = sameCommit(sha, input.deployedSha);

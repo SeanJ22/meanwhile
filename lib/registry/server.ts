@@ -11,27 +11,47 @@ import {
   type PhotoIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
-import { ROSTER_FILES } from "../coverage/artifacts.ts";
+import { mayReadRetiredPluralRoster, officeholderIdentityMayEnterReader, officeholderRosterFiles } from "../officials/roster-authority.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
-import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { BODY_ROSTERS, rosterHoldersForBody, rosterMemberReaderDisposition } from "./body-rosters.ts";
+import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
+import { membersOfBody } from "./body-membership.ts";
+import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
+import { federalDirectoryReadState, getFederalOfficeholderSet, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
-import { promotedReadModel } from "../civic-data/read-model.ts";
-import type { PromotedCensusGeography } from "../civic-data/candidate-builders.ts";
 
-import { summarizeCoverage, type CoverageSummary } from "./coverage.ts";
+import {
+  stateLegislatorCoverageAuthority,
+  summarizeCoverage,
+  type CoverageSummary,
+  type StateLegislatorCoverageAuthority,
+} from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
+import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
+import { curatedReaderReadState, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
+import {
+  heldOfficialStateLegislators,
+  heldOfficialStateLegislatorsFromRead,
+  readOfficialStateLegislatorsProjection,
+} from "../state-rollcalls/legislators.ts";
+import {
+  officialStateLegislatorTargetByState,
+  officialStateVoteScopeForOfficeholderId,
+  type OfficialStateVoteScope,
+} from "../state-rollcalls/authority.ts";
 
 /**
  * Server-side access to the registry and the geometry it resolves against.
  *
- * The committed boundary files and registry are bootstrap last-known-good
- * values. A validated Census promotion replaces geometry and division identity
- * together from the operational store; source retrieval never runs on a Reader
- * request, and a missing store leaves the bootstrap projection intact.
+ * The committed boundary files are the explicitly reviewed, immutable Census/
+ * GIS source vintage classified by PDC as STATIC_VERSIONED_REFERENCE. Mutable
+ * registry bindings are preloaded separately from their canonical data-plane
+ * pointer. There is no second runtime geometry authority and no store-error
+ * fallback that can silently switch between two competing geometries.
  *
  * **This does not scale, and it is not meant to.** 1.9 MB of GeoJSON parsed into
  * server memory is fine for three counties and untenable for the 90,837 local
@@ -51,15 +71,22 @@ interface Loaded {
   officialsById: Map<string, SeatHolder>;
 }
 
+interface RegistryLoaded {
+  features: GeoFeature[];
+  divisionsById: Map<string, Division>;
+  registry: Registry;
+}
+
 /**
- * The generated officeholder rosters, by scope.
+ * The officeholder rosters permitted to answer a Reader, by scope.
  *
- * The federal roster plus one file per state, named by FIPS. Derived from the
- * coverage manifest since AUD-06 (g18) — it was a hand-kept list, and "adding
- * a state is adding a file and a line here" was true of thirteen other files
- * too, which is exactly the omission the manifest exists to make impossible.
+ * Production admits the federal roster only. The old state files are
+ * Plural/OpenStates intermediary projections, retained as historical research
+ * and explicit node:test fixtures but never as a production fallback. State
+ * legislators remain visibly unrecorded until an official-publisher promotion
+ * is wired to this projection.
  */
-const ROSTERS = ROSTER_FILES;
+const ROSTERS = officeholderRosterFiles();
 
 export class RegistryHoldingReadError extends Error {
   readonly code = "REGISTRY_HOLDING_UNAVAILABLE";
@@ -71,10 +98,12 @@ export class RegistryHoldingReadError extends Error {
   }
 }
 
-let cache: Promise<Loaded> | null = null;
+let cache: { readonly authorityKey: string; readonly value: Promise<Loaded> } | null = null;
+let registryCache: { readonly authorityKey: string; readonly value: Promise<RegistryLoaded> } | null = null;
 
-async function load(): Promise<Loaded> {
+async function loadRegistry(): Promise<RegistryLoaded> {
   const root = process.cwd();
+  const runtimeRegistry = getRegistryRuntimeReadModel();
   const stateCodes = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
 
   /*
@@ -132,20 +161,19 @@ async function load(): Promise<Loaded> {
     features.push(...(parsed.features as GeoFeature[]));
   }
 
-  let registry = JSON.parse(
-    await readFile(join(root, "lib", "registry", "registry.json"), "utf8"),
-  ) as Registry;
+  const registry: Registry = runtimeRegistry.registry;
 
-  /*
-   * The committed files are the bootstrap LKG only. Once a validated Census
-   * geography version exists, both polygon and division identity switch to
-   * its one atomic projection; a partial candidate can never reach this read.
-   */
-  const promotedGeography = await promotedReadModel<PromotedCensusGeography>("CENSUS_GEOGRAPHY", "reader-resolver");
-  if (promotedGeography) {
-    features.splice(0, features.length, ...promotedGeography.payload.features);
-    registry = { ...registry, divisions: [...promotedGeography.payload.divisions] };
-  }
+  return {
+    features,
+    divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
+    registry,
+  };
+}
+
+async function load(base: RegistryLoaded): Promise<Loaded> {
+  const root = process.cwd();
+  const runtimeRegistry = getRegistryRuntimeReadModel();
+  const { features, divisionsById, registry } = base;
 
   // A required roster failure is an OURS loading failure, never an empty roster.
   // Do not cache a partial registry as if those officials were not held.
@@ -155,13 +183,9 @@ async function load(): Promise<Loaded> {
     const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
     if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
     try {
-      sets.push(
-        JSON.parse(
-          await (name === "officeholders-us.json"
-            ? readFile(join(root, "lib", "registry", "officeholders-us.json"), "utf8")
-            : readFile(join(root, "data", "states", state!, "officials", name), "utf8")),
-        ) as OfficeholderSet,
-      );
+      sets.push(name === "officeholders-us.json"
+        ? getFederalOfficeholderSet()
+        : JSON.parse(await readFile(join(root, "data", "states", state!, "officials", name), "utf8")) as OfficeholderSet);
     } catch (error) {
       throw new RegistryHoldingReadError(name === "officeholders-us.json"
         ? "lib/registry/officeholders-us.json"
@@ -173,12 +197,7 @@ async function load(): Promise<Loaded> {
   // from our origin. Missing or unreadable degrades to initials everywhere.
   const photos: PhotoIndex = new Map();
   try {
-    const manifest = JSON.parse(
-      await readFile(
-        join(root, "lib", "registry", "official-photos.json"),
-        "utf8",
-      ),
-    ) as {
+    const manifest = runtimeRegistry.officialPhotos as {
       photos: {
         officeholderId: string;
         name: string;
@@ -188,6 +207,7 @@ async function load(): Promise<Loaded> {
     };
     const names = new Map<string, string>();
     for (const photo of manifest.photos) {
+      if (!officeholderIdentityMayEnterReader(photo.officeholderId)) continue;
       // Unknown license is not clearable — such a photo never ships (D20).
       if (!photo.license) continue;
       photos.set(photo.officeholderId, photo.url);
@@ -234,32 +254,96 @@ async function load(): Promise<Loaded> {
   }
 
   const officialsById = indexByOfficeholderId(sets, photos);
-  for (const holder of statewideExecutivesFor(STATEWIDE_EXECUTIVES.map((executive) => executive.stateOcdId))) {
+  for (const holder of statewideExecutivesFor(currentStatewideExecutives().map((executive) => executive.stateOcdId))) {
     officialsById.set(holder.id, holder);
   }
-  for (const roster of BODY_ROSTERS) for (const holder of rosterHoldersForBody(roster.bodyId)) {
+  for (const roster of currentBodyRosters()) for (const holder of rosterHoldersForBody(roster.bodyId)) {
     if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
   }
   return {
     features,
     territory,
-    divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
+    divisionsById,
     registry,
     officials: indexByDivision(sets, photos),
     officialsById,
   };
 }
 
-function loaded(): Promise<Loaded> {
-  // Cache the promise, not the result: two concurrent requests during a cold
-  // start would otherwise both parse 1.9 MB of GeoJSON.
-  cache ??= load().catch((error) => {
-    // A failed load must not poison the cache — the next request should retry
-    // rather than inherit the failure for the life of the process.
-    cache = null;
+export interface RegistryAuthorityReaders {
+  readonly registry: () => Promise<void>;
+  readonly federal: () => Promise<void>;
+}
+
+/** Geometry/division reads never acquire the unrelated federal roster. */
+export async function settleRegistryAuthorityReads(
+  scope: "REGISTRY" | "OFFICIALS",
+  readers: RegistryAuthorityReaders = {
+    registry: async () => { await refreshRegistryRuntimeFromPromoted(); },
+    federal: async () => { await refreshFederalDirectoryFromPromoted(); },
+  },
+): Promise<void> {
+  await readers.registry();
+  if (scope === "OFFICIALS") await readers.federal();
+}
+
+async function currentRegistryAuthorityKey(): Promise<string> {
+  await settleRegistryAuthorityReads("REGISTRY");
+  const registry = registryRuntimeReadState();
+  return `registry:${registry.kind}:${registry.metadata.versionId ?? "none"}`;
+}
+
+async function currentAuthorityKey(registryKey: string): Promise<string> {
+  await settleRegistryAuthorityReads("OFFICIALS", {
+    registry: async () => undefined,
+    federal: async () => { await refreshFederalDirectoryFromPromoted(); },
+  });
+  let campaign = "TEST_FIRST_SEED";
+  if (process.env.NODE_ENV === "production") {
+    try {
+      await refreshCampaignSitesFromPromoted();
+      const state = curatedReaderReadState("campaign-sites");
+      campaign = `${state.kind}:${state.metadata.versionId ?? "none"}`;
+    } catch {
+      // Campaign URLs are an optional, separately promoted projection. A
+      // store failure withholds those URLs but cannot make the registry,
+      // representation, or roster authority unavailable.
+      campaign = "UNAVAILABLE";
+    }
+  }
+  const federal = federalDirectoryReadState();
+  return [
+    `federal:${federal.kind}:${federal.metadata.versionId ?? "none"}`,
+    registryKey,
+    `campaign:${campaign}`,
+  ].join("|");
+}
+
+async function registryLoaded(): Promise<RegistryLoaded> {
+  const authorityKey = await currentRegistryAuthorityKey();
+  if (registryCache?.authorityKey === authorityKey) return registryCache.value;
+  const value = loadRegistry().catch((error) => {
+    if (registryCache?.value === value) registryCache = null;
     throw error;
   });
-  return cache;
+  registryCache = { authorityKey, value };
+  return value;
+}
+
+async function loaded(): Promise<Loaded> {
+  const base = await registryLoaded();
+  const registryKey = registryCache!.authorityKey;
+  const authorityKey = await currentAuthorityKey(registryKey);
+  if (cache?.authorityKey === authorityKey) return cache.value;
+  // Cache the materialization only for the exact promoted versions. Pointer
+  // refresh uses the shared 30-second civic-data TTL; a new GOOD version gets
+  // a new key and reaches a warm Reader without a process restart.
+  const value = load(base).catch((error) => {
+    if (cache?.value === value) cache = null;
+    throw error;
+  });
+  cache = { authorityKey, value };
+  return value;
 }
 
 /**
@@ -287,7 +371,7 @@ function loaded(): Promise<Loaded> {
  * renders, which reads as a broken pill rather than as a narrow allowlist.
  */
 export async function knownBodySubjectIds(): Promise<Set<string>> {
-  const { registry, divisionsById } = await loaded();
+  const { registry, divisionsById } = await registryLoaded();
   const out = new Set<string>(registry.bodies.map((b) => b.id));
   for (const ocdId of divisionsById.keys()) out.add(ocdId);
   return out;
@@ -295,7 +379,7 @@ export async function knownBodySubjectIds(): Promise<Set<string>> {
 
 /** The divisions containing a point, from the committed geometry. */
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
-  const { features, divisionsById } = await loaded();
+  const { features, divisionsById } = await registryLoaded();
   return resolveDivisionsAt([lng, lat], features, divisionsById);
 }
 
@@ -321,7 +405,7 @@ export async function divisionsAt(lat: number, lng: number): Promise<Division[]>
  * a government this product asserts exists on the strength of nothing.
  */
 export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Division[]> {
-  const { divisionsById } = await loaded();
+  const { divisionsById } = await registryLoaded();
   const out: Division[] = [];
   for (const id of ocdIds) {
     const division = divisionsById.get(id);
@@ -337,9 +421,30 @@ export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Divi
  * returns null — no link rather than a wrong one.
  */
 export async function seatHolderById(id: string): Promise<SeatHolder | null> {
-  const rosterIdentity = rosterMemberReaderDisposition(id);
+  // The publisher namespace establishes the one permitted state authority
+  // before any data-plane store is opened. A state identity never causes a
+  // federal/registry read and can never fall through to the retired Plural
+  // roster or a name join.
+  const officialStateScope = officialStateVoteScopeForOfficeholderId(id);
+  if (officialStateScope) {
+    const held = await heldOfficialStateLegislators(officialStateScope);
+    return held?.seats.find((holder) => holder.id === id) ?? null;
+  }
+  await registryLoaded();
+  const rosterIdentity = currentRosterMemberReaderDisposition(id);
   if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return null;
-  return (await loaded()).officialsById.get(rosterIdentity?.canonicalId ?? id) ?? null;
+  const canonicalId = rosterIdentity?.canonicalId ?? id;
+  if (!canonicalId.startsWith("congress:") && !mayReadRetiredPluralRoster()) {
+    const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
+      .find((holder) => holder.id === canonicalId);
+    if (statewide) return statewide;
+    for (const roster of currentBodyRosters()) {
+      const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);
+      if (holder) return holder;
+    }
+    return null;
+  }
+  return (await loaded()).officialsById.get(canonicalId) ?? null;
 }
 
 /** Exact named-person answers only; this list asserts no relationship to a reader's location. */
@@ -406,6 +511,30 @@ export async function chamberForOfficeholder(
 export async function seatHoldersForDivision(
   ocdId: string,
 ): Promise<SeatHolder[]> {
+  const officialStateScope = officialStateLegislatorScopeForDivision(ocdId);
+  if (officialStateScope) {
+    try {
+      const held = await heldOfficialStateLegislators(officialStateScope);
+      if (held) {
+        const ids = new Set(held.divisions.filter((row) => row.ocdId === ocdId).map((row) => row.officeholderId));
+        return held.seats.filter((holder) => ids.has(holder.id)).sort((a, b) => a.name.localeCompare(b.name));
+      }
+      if (!mayReadRetiredPluralRoster()) return [];
+    } catch (error) {
+      // The old state snapshots remain deterministic test evidence only. A
+      // production Reader must surface a canonical-store outage; Node's
+      // explicit test runner may continue through the already-loaded fixture
+      // so legacy UI contracts can be exercised without inventing a database.
+      if (!mayReadRetiredPluralRoster() || !(error instanceof CivicDataStoreUnavailableError)) throw error;
+    }
+  }
+  if (!federalDirectoryAppliesToDivision(ocdId) && !mayReadRetiredPluralRoster()) {
+    // Production's federal directory has no rows for local or state-legislative
+    // divisions. Confirm the canonical registry pointer, then return its honest
+    // no-federal-row result without letting a federal outage take that scope down.
+    await registryLoaded();
+    return [];
+  }
   const { officials } = await loaded();
   /*
    * **The statewide executives, and ONLY on the state division itself.**
@@ -429,6 +558,70 @@ export async function seatHoldersForDivision(
    */
   const statewide = stateOcdIdFrom(ocdId) === ocdId ? statewideExecutivesFor([ocdId]) : [];
   return [...holdersFor(officials, ocdId), ...statewide];
+}
+
+/** Exact divisions to which the production federal roster can contribute. */
+export function federalDirectoryAppliesToDivision(ocdId: string): boolean {
+  return ocdId === "ocd-division/country:us"
+    || /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)
+    || /\/cd:[^/]+$/.test(ocdId);
+}
+
+export type CoverageStateLegislatorReader = (
+  scope: OfficialStateVoteScope,
+) => ReturnType<typeof readOfficialStateLegislatorsProjection>;
+
+/**
+ * Settle each exact official state-roster authority without erasing its read
+ * disposition. In particular, an empty canonical pointer and an unavailable
+ * store both yield no names, but remain different facts on CoverageSummary.
+ */
+export async function settleCoverageStateLegislators(
+  exactDivisions: readonly Division[],
+  officials: OfficeholderIndex,
+  reader: CoverageStateLegislatorReader = readOfficialStateLegislatorsProjection,
+): Promise<{
+  readonly officials: OfficeholderIndex;
+  readonly authorities: StateLegislatorCoverageAuthority[];
+}> {
+  const nextOfficials: OfficeholderIndex = new Map(
+    [...officials].map(([division, holders]) => [division, [...holders]]),
+  );
+  const scopes = [...new Set(exactDivisions
+    .map((division) => officialStateLegislatorScopeForDivision(division.ocdId))
+    .filter((scope): scope is OfficialStateVoteScope => scope !== null))];
+  const authorities: StateLegislatorCoverageAuthority[] = [];
+
+  // Per-scope settlement is deliberate. No aggregate read can turn one
+  // state's missing or unavailable pointer into another state's disposition.
+  for (const scope of scopes) {
+    const read = await reader(scope);
+    authorities.push(stateLegislatorCoverageAuthority(scope, read));
+    if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") continue;
+
+    const held = heldOfficialStateLegislatorsFromRead(scope, read);
+    const byId = new Map(held.seats.map((holder) => [holder.id, holder]));
+    for (const link of held.divisions) {
+      const holder = byId.get(link.officeholderId);
+      if (!holder) continue;
+      const existing = nextOfficials.get(link.ocdId) ?? [];
+      if (!existing.some((row) => row.id === holder.id)) {
+        nextOfficials.set(
+          link.ocdId,
+          [...existing, holder].sort((a, b) => a.name.localeCompare(b.name)),
+        );
+      }
+    }
+  }
+
+  return { officials: nextOfficials, authorities };
+}
+
+/** Exact permanent roster scope implied by one state-legislative division. */
+function officialStateLegislatorScopeForDivision(ocdId: string): OfficialStateVoteScope | null {
+  const match = /^ocd-division\/country:us\/state:([a-z]{2})\/sld[lu]:[^/]+$/.exec(ocdId);
+  if (!match) return null;
+  return officialStateLegislatorTargetByState(match[1]!)?.jurisdiction ?? null;
 }
 
 /**
@@ -466,6 +659,12 @@ export async function seatHoldersForOffice(
 ): Promise<SeatHolder[]> {
   const office = officeIdentity(officeTitle);
   if (office === null) return [];
+  if (office !== "us_senator" && office !== "us_representative"
+    && /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId)
+    && !mayReadRetiredPluralRoster()) {
+    await registryLoaded();
+    return statewideExecutivesFor([ocdId]).filter((holder) => officeIdentity(holder.officeTitle) === office);
+  }
   const holders = await seatHoldersForDivision(ocdId);
   return holders.filter((h) => officeIdentity(h.officeTitle) === office);
 }
@@ -490,14 +689,31 @@ export async function coverageAt(
   resolvedDivisions?: Division[],
 ): Promise<CoverageSummary> {
   const { features, divisionsById, registry, officials, territory } = await loaded();
-  return summarizeCoverage(
+  const exactDivisions = resolvedDivisions ?? resolveDivisionsAt([lng, lat], features, divisionsById);
+  const stateLegislators = await settleCoverageStateLegislators(exactDivisions, officials);
+  const coverage = summarizeCoverage(
     [lng, lat],
     features,
     divisionsById,
     registry.bodies,
     meetingCount,
-    officials,
-    resolvedDivisions,
+    stateLegislators.officials,
+    exactDivisions,
     territory,
+    stateLegislators.authorities,
   );
+  return {
+    ...coverage,
+    bodies: coverage.bodies.map((body) => {
+      const gap = rosterGapForBody(body.bodyId);
+      return {
+        ...body,
+        readerRoster: {
+          members: membersOfBody(body.bodyId).members,
+          gaps: gap === null ? [] : [gap],
+          officePhone: officePhoneForBody(body.bodyId),
+        },
+      };
+    }),
+  };
 }

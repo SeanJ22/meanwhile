@@ -10,10 +10,12 @@
  * owner's own words: *"make sure decisions are flowing somewhere and I'm not
  * just marking them independently in the site and nothing happens to it."*
  *
- * This is the unattended form of that step, and the standing runner runs it
- * after every cycle, BEFORE it republishes the console (`CONSOLE_PUBLISHERS`
- * in `scripts/pilot-runner.mts`), so the republished cards already exclude
- * the rows he closed. Three legs, in order, each its own child process:
+ * This is now an engineering sync, deliberately outside the standing runtime.
+ * The owner's intent is already canonical and durable in the control plane;
+ * applying it to tracked project files belongs in a clean software worktree.
+ * Running this from the production checkout would dirty the exact detached
+ * runtime and block its next release handoff. Three legs, in order, each its
+ * own child process:
  *
  * ```
  *   1  owner:decisions:pull        the control plane's decision log →
@@ -32,20 +34,17 @@
  *
  * It does not import the owner's workbook (`--only=dashboard`), it does not
  * commit, and it does not push. The tracker stores and their generated views
- * change in the runner's checkout, exactly as `data/method/candidates.json`
- * already does; the next session that integrates the main checkout commits
- * them (RULING 266's single door). A leg that fails is PRINTED with its exit
+ * change in the engineering checkout; the session that owns that checkout
+ * commits them through RULING 266's single door. A leg that fails is PRINTED with its exit
  * and last stderr line and stops the legs after it — a canonicalize over a
  * move that did not happen would record closes that do not exist — but it
- * never throws into the runner: a sync one cycle late is a defect the next
- * cycle repairs.
+ * never alters the canonical owner intent if the engineering sync fails.
  *
  * ## Idempotent by construction
  *
  * A pull merges by intent id; the applier refuses an intent a row's `Closed by`
  * already names; the canonicalizer skips an intent whose `#resolved` twin is
- * in the log. Running this every cycle with nothing new decided writes nothing
- * new anywhere.
+ * in the log. Re-running with nothing new decided writes nothing new anywhere.
  *
  * `--dry-run` runs the pull and prints what the applier WOULD do (the move
  * script's own plan output), moving nothing.

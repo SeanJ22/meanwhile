@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   doublePrecision,
+  foreignKey,
   index,
   integer,
   jsonb,
@@ -798,8 +799,9 @@ export const feedbackContact = pgTable(
  *   foreign key. It records how OFTEN an anonymous device wrote — never
  *   what, never where, never who.
  * - Expires on its own schedule: rows untouched for 48 hours are purged by
- *   the daily tripwire run (scripts/intake-tripwire.mts). It appears in no
- *   export and no aggregate.
+ *   the standing intake-runtime child (`scripts/intake-tripwire.mts`). Its
+ *   result is a durable operations receipt; no GitHub cron or Git report is
+ *   involved. It appears in no export and no aggregate.
  */
 export const intakeLimiter = pgTable("intake_limiter", {
   /** sha256("intake-limiter:" + raw key) — see header; joins nothing. */
@@ -1392,8 +1394,86 @@ export const civicDataCandidates = pgTable(
     failureDetail: text("failure_detail"),
   },
   (table) => [
+    uniqueIndex("civic_data_candidates_identity_idx").on(
+      table.id,
+      table.sourceId,
+      table.recordClass,
+      table.scope,
+    ),
     index("civic_data_candidates_projection_idx").on(table.recordClass, table.scope, table.retrievedAt),
     index("civic_data_candidates_source_idx").on(table.sourceId, table.retrievedAt),
+    check(
+      "civic_data_candidates_state_known",
+      sql`${table.state} IN ('FETCHED', 'SOURCE_BLOCKED', 'NORMALIZED', 'PARSE_INVALID', 'IDENTITY_UNRESOLVED', 'TEMPORAL_INVALID', 'SEMANTIC_INVALID', 'HORIZON_UNRESOLVED', 'DEPENDENT_CONSUMER_INVALID', 'CANNOT_TELL', 'VALIDATED', 'PROMOTED')`,
+    ),
+    check(
+      "civic_data_candidates_promotion_fields_coherent",
+      sql`(
+        ${table.state} = 'PROMOTED'
+        AND ${table.promotedVersionId} IS NOT DISTINCT FROM ${table.id}
+        AND ${table.lastKnownGoodVersionId} IS NOT DISTINCT FROM ${table.id}
+      ) OR (
+        ${table.state} <> 'PROMOTED'
+        AND ${table.promotedVersionId} IS NULL
+      )`,
+    ),
+    check(
+      "civic_data_candidates_envelope_identity_coherent",
+      sql`
+        jsonb_typeof(${table.candidate}) IS NOT DISTINCT FROM 'object'
+        AND (${table.candidate}->>'id') IS NOT DISTINCT FROM ${table.id}
+        AND (${table.candidate}->>'sourceId') IS NOT DISTINCT FROM ${table.sourceId}
+        AND (${table.candidate}->>'recordClass') IS NOT DISTINCT FROM ${table.recordClass}
+        AND (${table.candidate}->>'scope') IS NOT DISTINCT FROM ${table.scope}
+        AND ((${table.candidate}#>>'{retrieval,retrievedAt}')::timestamptz) IS NOT DISTINCT FROM ${table.retrievedAt}
+        AND (${table.candidate}#>>'{temporal,sourceThrough}') IS NOT DISTINCT FROM ${table.sourceThrough}
+        AND (${table.candidate}#>>'{normalization,parserVersion}') IS NOT DISTINCT FROM ${table.parserVersion}
+        AND (${table.candidate}#>'{retrieval,succeeded}') IS NOT DISTINCT FROM to_jsonb(${table.acquisitionSucceeded})
+        AND (${table.candidate}#>>'{retrieval,rawHash}') IS NOT DISTINCT FROM ${table.rawHash}
+        AND (${table.candidate}#>>'{normalization,normalizedHash}') IS NOT DISTINCT FROM ${table.normalizedHash}
+        AND (${table.candidate}->'identities') IS NOT DISTINCT FROM ${table.identity}
+      `,
+    ),
+    check(
+      "civic_data_candidates_disposition_receipt_coherent",
+      sql`(
+        ${table.state} IN ('FETCHED', 'NORMALIZED')
+        AND ${table.validationReceipt} IS NULL
+        AND ${table.failureCode} IS NULL
+        AND ${table.failureDetail} IS NULL
+      ) OR (
+        ${table.state} IN ('VALIDATED', 'PROMOTED')
+        AND jsonb_typeof(${table.validationReceipt}) IS NOT DISTINCT FROM 'object'
+        AND (${table.validationReceipt}->'contractVersion') IS NOT DISTINCT FROM '2'::jsonb
+        AND (${table.validationReceipt}->>'decision') IS NOT DISTINCT FROM 'GOOD'
+        AND (${table.validationReceipt}->>'candidateId') IS NOT DISTINCT FROM ${table.id}
+        AND (${table.validationReceipt}->>'sourceId') IS NOT DISTINCT FROM ${table.sourceId}
+        AND (${table.validationReceipt}->>'recordClass') IS NOT DISTINCT FROM ${table.recordClass}
+        AND (${table.validationReceipt}->>'scope') IS NOT DISTINCT FROM ${table.scope}
+        AND (((${table.validationReceipt}->>'validatedAt')::timestamptz >= ${table.retrievedAt}) IS TRUE)
+        AND ${table.failureCode} IS NULL
+        AND ${table.failureDetail} IS NULL
+      ) OR (
+        ${table.state} IN ('SOURCE_BLOCKED', 'PARSE_INVALID', 'IDENTITY_UNRESOLVED', 'TEMPORAL_INVALID', 'SEMANTIC_INVALID', 'HORIZON_UNRESOLVED', 'DEPENDENT_CONSUMER_INVALID', 'CANNOT_TELL')
+        AND jsonb_typeof(${table.validationReceipt}) IS NOT DISTINCT FROM 'object'
+        AND (${table.validationReceipt}->'contractVersion') IS NOT DISTINCT FROM '2'::jsonb
+        AND ((${table.validationReceipt}->>'decision') IN ('FAIL', 'CANNOT_TELL')) IS TRUE
+        AND (${table.validationReceipt}->>'candidateId') IS NOT DISTINCT FROM ${table.id}
+        AND (${table.validationReceipt}->>'sourceId') IS NOT DISTINCT FROM ${table.sourceId}
+        AND (${table.validationReceipt}->>'recordClass') IS NOT DISTINCT FROM ${table.recordClass}
+        AND (${table.validationReceipt}->>'scope') IS NOT DISTINCT FROM ${table.scope}
+        AND ((length(btrim(${table.failureCode})) > 0) IS TRUE)
+        AND ((length(btrim(${table.failureDetail})) > 0) IS TRUE)
+        AND jsonb_typeof(jsonb_path_query_first(${table.validationReceipt}, '$.checks[*] ? (@.verdict != "PASS")')) IS NOT DISTINCT FROM 'object'
+        AND (jsonb_path_query_first(${table.validationReceipt}, '$.checks[*] ? (@.verdict != "PASS")')->>'code') IS NOT DISTINCT FROM ${table.failureCode}
+        AND (jsonb_path_query_first(${table.validationReceipt}, '$.checks[*] ? (@.verdict != "PASS")')->>'detail') IS NOT DISTINCT FROM ${table.failureDetail}
+      )`,
+    ),
+    foreignKey({
+      name: "civic_data_candidates_lkg_candidate_fk",
+      columns: [table.lastKnownGoodVersionId, table.sourceId, table.recordClass, table.scope],
+      foreignColumns: [table.id, table.sourceId, table.recordClass, table.scope],
+    }).onDelete("restrict").onUpdate("restrict"),
   ],
 );
 
@@ -1402,7 +1482,9 @@ export const civicDataCandidateEvents = pgTable(
   "civic_data_candidate_events",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    candidateId: text("candidate_id").notNull(),
+    candidateId: text("candidate_id")
+      .notNull()
+      .references(() => civicDataCandidates.id, { onDelete: "restrict", onUpdate: "restrict" }),
     sequence: integer("sequence").notNull(),
     state: text("state").notNull(),
     at: timestamp("at", { withTimezone: true, mode: "string" }).notNull(),
@@ -1410,6 +1492,12 @@ export const civicDataCandidateEvents = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_candidate_events_sequence_idx").on(table.candidateId, table.sequence),
+    check("civic_data_candidate_events_positive_sequence", sql`${table.sequence} > 0`),
+    check(
+      "civic_data_candidate_events_state_known",
+      sql`${table.state} IN ('FETCHED', 'SOURCE_BLOCKED', 'NORMALIZED', 'PARSE_INVALID', 'IDENTITY_UNRESOLVED', 'TEMPORAL_INVALID', 'SEMANTIC_INVALID', 'HORIZON_UNRESOLVED', 'DEPENDENT_CONSUMER_INVALID', 'CANNOT_TELL', 'VALIDATED', 'PROMOTED')`,
+    ),
+    check("civic_data_candidate_events_detail_nonempty", sql`length(btrim(${table.detail})) > 0`),
   ],
 );
 
@@ -1433,5 +1521,46 @@ export const civicDataPromotions = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),
+    check(
+      "civic_data_promotions_key_coherent",
+      sql`${table.key} = ${table.recordClass} || ':' || ${table.scope}`,
+    ),
+    check(
+      "civic_data_promotions_lkg_is_current",
+      sql`${table.currentVersionId} = ${table.lastKnownGoodVersionId}`,
+    ),
+    check(
+      "civic_data_promotions_receipt_identity_coherent",
+      sql`
+        jsonb_typeof(${table.validationReceipt}) IS NOT DISTINCT FROM 'object'
+        AND (${table.validationReceipt}->>'decision') IS NOT DISTINCT FROM 'GOOD'
+        AND (${table.validationReceipt}->>'candidateId') IS NOT DISTINCT FROM ${table.currentVersionId}
+        AND (${table.validationReceipt}->>'sourceId') IS NOT DISTINCT FROM ${table.sourceId}
+        AND (${table.validationReceipt}->>'recordClass') IS NOT DISTINCT FROM ${table.recordClass}
+        AND (${table.validationReceipt}->>'scope') IS NOT DISTINCT FROM ${table.scope}
+        AND (${table.validationReceipt}->'contractVersion') IS NOT DISTINCT FROM '2'::jsonb
+        AND ((((${table.validationReceipt}->>'validatedAt')::timestamptz <= ${table.promotedAt})) IS TRUE)
+      `,
+    ),
+    foreignKey({
+      name: "civic_data_promotions_current_candidate_fk",
+      columns: [table.currentVersionId, table.sourceId, table.recordClass, table.scope],
+      foreignColumns: [
+        civicDataCandidates.id,
+        civicDataCandidates.sourceId,
+        civicDataCandidates.recordClass,
+        civicDataCandidates.scope,
+      ],
+    }).onDelete("restrict").onUpdate("restrict"),
+    foreignKey({
+      name: "civic_data_promotions_lkg_candidate_fk",
+      columns: [table.lastKnownGoodVersionId, table.sourceId, table.recordClass, table.scope],
+      foreignColumns: [
+        civicDataCandidates.id,
+        civicDataCandidates.sourceId,
+        civicDataCandidates.recordClass,
+        civicDataCandidates.scope,
+      ],
+    }).onDelete("restrict").onUpdate("restrict"),
   ],
 );

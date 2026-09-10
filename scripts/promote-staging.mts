@@ -49,11 +49,10 @@
  *     however verified the head is. This script therefore proposes the merge —
  *     it opens (or identifies) a pull request from the staging branch to
  *     `main` and reports what must go green — and the platform merges it.
- *   - **The one bypass actor is a DeployKey in `exempt` mode**, and it exists
- *     for the scheduled data pushers. It is NOT used here and must never be:
- *     routing a code merge around the checks the ruleset requires would defeat
- *     the whole gate, and would do it by way of a credential granted for
- *     something else entirely.
+ *   - **The bypass list is empty and write-enabled deploy keys are forbidden.**
+ *     Routine data and operational outcomes never write Git, so no runtime
+ *     credential can route this software merge (or anything else) around the
+ *     checks the ruleset requires.
  *   - `strict: true` means the head must be up to date with `main` before the
  *     checks count. That is a real-world counterpart to this gate's
  *     `NOT_FAST_FORWARD` refusal and is NOT a reason to drop it: a gate whose
@@ -208,10 +207,8 @@ function resolveRef(stated: string | undefined, candidates: readonly string[]): 
  *
  * IT DOES NOT MERGE, AND IT DOES NOT PUSH. The `pull_request` rule on the
  * ruleset means a direct `git push origin staging:main` is refused however
- * verified the head is, and the one bypass actor is a deploy key granted for
- * scheduled data pushes. Using it here would route a code merge around the
- * three checks the ruleset requires — the gate would refuse nothing, by
- * design, with a credential issued for something else.
+ * verified the head is. The bypass list is empty, and terminal PDC forbids a
+ * write-enabled deploy key or runtime pusher from recreating another route.
  *
  * So the last mile is deliberately the platform's: this establishes that the
  * head deserves to be proposed, and the ruleset decides whether it merges.
@@ -348,7 +345,7 @@ function main(): void {
     console.log("`--execute` and WTP_PROMOTION_ARMED=1. RULING 233 is not yet operative:");
     console.log("staging-first begins the session AFTER Session C closes, and Session C ships");
     console.log("through its one planned RULING 1 merge. Even armed, this opens a pull request —");
-    console.log("the ruleset on `main` requires one, and the deploy-key bypass is never used here.");
+    console.log("the ruleset on `main` requires one; its bypass list is empty.");
     process.exitCode = verdict.eligible ? 0 : couldNotTell ? 2 : 1;
     return;
   }

@@ -1,5 +1,4 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
 
 /**
  * Hunted-and-verified links for ballot candidates (session 2026-08-16, 2b).
@@ -59,25 +58,15 @@ export interface RecordedHunt {
   attemptedAt: string;
 }
 
-interface CandidateLinksFile {
-  curatedAt: string;
-  note: string;
-  links: Record<string, CandidateLinks>;
-  hunts: RecordedHunt[];
+export interface CandidateLinksFile {
+  readonly curatedAt: string;
+  readonly note: string;
+  readonly links: Readonly<Record<string, CandidateLinks>>;
+  readonly hunts: readonly RecordedHunt[];
 }
 
-let cache: CandidateLinksFile | null = null;
-
 function load(): CandidateLinksFile {
-  if (!cache) {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "ballot", "candidate-links-2026.json"),
-        "utf8",
-      ),
-    ) as CandidateLinksFile;
-  }
-  return cache;
+  return currentCandidateProfilesProjection().links;
 }
 
 export function linksForCandidacy(candidacyId: string): CandidateLinks | null {

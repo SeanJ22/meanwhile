@@ -4,6 +4,9 @@ import { meetingsAskProof } from "../scripts/lib/reader-ask-meetings-proof.ts";
 import { meetingDateInQuestion } from "../lib/ask/meeting-date.ts";
 import { selectSitting } from "../lib/ask/select.ts";
 import { meetingOutcomeEvidenceFor } from "../lib/ask/meeting-outcomes.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("all held meetings and outcome sittings survive real dated Ask routes with exact record counts and provenance", async () => {
   const proof = await meetingsAskProof();

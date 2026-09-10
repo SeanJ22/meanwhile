@@ -37,10 +37,10 @@ key nothing reads leaves no trace in the code.
 | 5 | `WTP_DB_ROLE` | `lib/db/write-guard.ts`, `/api/build` | **WIRED** | 2026-08-23 |
 | 6 | `WTP_PRODUCTION_DATABASE_URL_WRITE` | `lib/db/write-handle.ts`, `pnpm db:apply` | **WIRED** | 2026-08-23 |
 | 7 | `WTP_PRODUCTION_DATABASE_URL_READONLY` | `scripts/walk-all.mts`, the census scripts | **WIRED** | 2026-08-23 |
-| 8 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` | **WIRED** | 2026-08-23 |
-| 9 | `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` | **WIRED** | 2026-08-23 |
+| 8 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts` | **WIRED** | 2026-09-08 |
+| 9 | `FEC_API_KEY` | `scripts/fetch-fec.mts` through the standing routine civic-data runner | **WIRED** — canonical `fec-funding` production-data contract; no GitHub refresh workflow | 2026-08-23 |
 | 10 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | **WIRED** | 2026-08-23 |
-| 11 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` | **WIRED** | 2026-08-23 |
+| 11 | `LEGISCAN_API_KEY` | no production caller; `lib/sources/legiscan/` retains a historical-evidence parser only | **INTENTIONALLY NOT SPENT** — official legislative publishers own current production acquisition | 2026-08-23 |
 | 12 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | **WIRED** | 2026-08-23 |
 | 13 | `CENSUS_API_KEY` | `lib/sources/census-acs-population/index.ts`, `pnpm acs:population` | **WIRED** — ACS 5-Year B01003 population and its published margin of error, by ZCTA and state, committed under `data/reference/acs5_2024_b01003_*` (ADM-23; re-acquired at the 2024 release for ADM-41) | 2026-09-06 |
 | 14 | `LDA_API_KEY` | **nothing** | **NOT IN USE** — row `SRC02` (`PB12` is the client) | 2026-08-23 |
@@ -70,10 +70,10 @@ was accurate. What it could not tell anyone is whether the credentials work.
 
 | Key | Read by | Called 2026-08-22 | What it returned | Owed fields closed | Last walked |
 |---|---|---|---|---:|---|
-| `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` — **WIRED** | HTTP 200 | **18 sitting members** across NJ and NH, each with the chamber's own portrait URL, its attribution, and a specific verified page on congress.gov | **36** | 2026-08-22 |
-| `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` — **WIRED** | HTTP 200 | **77 federal candidates**; their committee records carry treasurer name, street, city, zip and designated-agent phone | **22** | 2026-08-22 |
+| `CONGRESS_API_KEY` | `scripts/fetch-votes.mts` — **WIRED** | HTTP 200 | Official bill titles for the bounded recent-roll projection; the durable receipt redacts the credential-bearing query | **bounded roll window** | 2026-09-08 |
+| `FEC_API_KEY` | `scripts/fetch-fec.mts` through the standing runner's canonical `fec-funding` contract — **WIRED** | HTTP 200 | **77 federal candidates**; their committee records carry treasurer name, street, city, zip and designated-agent phone | **22** | 2026-08-22 |
 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` — **WIRED** | not needed | The **committed BULK file** `data/reference/openstates_legislators.csv` holds 7,976 state legislators with official emails; **61** of them serve these two zips. No API call, no quota spent. | **61** | 2026-08-22 |
-| `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` — **WIRED**, daily | not re-walked | Bills and roll calls. Closes no Kelly field about a person; it is a positions source. | 0 | 2026-08-22 |
+| `LEGISCAN_API_KEY` | no production caller — **INTENTIONALLY NOT SPENT**; official legislative publishers replaced the former licensed refresh path | not re-walked | Historical bills-and-roll-calls research only. Closes no Kelly field about a person; it is not a production freshness authority. | 0 | 2026-08-22 |
 | `DATA_GOV_API_KEY` | **nothing** — `SRC03` | HTTP 200 | **42 govinfo collections.** The `CDIR` collection is the Congressional Directory and carries member offices, phones and staff — a real contact route, and the reason this key is worth keeping. | 0 | 2026-08-22 |
 | `CENSUS_API_KEY` | `lib/sources/census-acs-population/index.ts` — **WIRED** 2026-09-05 | **HTTP 200 with real data** (2026-09-05) | **THE KEY WORKS NOW.** On 2026-08-22 the host redirected to `invalid_key.html` (`X-DataWebAPI-KeyError: 1`); re-measured 2026-09-05 the same key answers `["ZCTA5 85701","5169","85701"]`, and one keyed call each returned every ZCTA (33,772) and every state (52) for ACS 5-Year B01003. RE-ACQUIRED 2026-09-06 at the **2024** release (ADM-41 / §9A.19): `/data/2024/acs/acs5` answers 200 and `/data/2025/acs/acs5` answers **404**, so 2024 is the newest 5-Year vintage published for the ZCTA geography, and the request now also carries `B01003_001M`, the Bureau’s own 90% margin of error, so a small-area estimate is never rendered as a count. A keyless call is still a 302 to `missing_key.html`. `api.census.gov/robots.txt` answers a WAF "Request Rejected" page (HTTP 200, HTML), so the robots read is CANNOT_TELL and the API's own terms of service (a key, and a citation) govern the route. Closes no Kelly field about a person; it is the readiness panel’s population source (ADM-23). | 0 | 2026-09-06 |
 | `LDA_API_KEY` | **nothing** — `SRC02` | HTTP 200 | The API answers, and it closes **nothing** at either zip. Stated plainly rather than softened: the LDA database is FEDERAL lobbying only — registrants, clients, and the House and Senate offices they lobby. It has no county, municipal or school-district layer. Where it would earn its place is a later who-is-lobbying-my-delegation surface, which is not a hunt question. | 0 | 2026-08-22 |
@@ -174,7 +174,7 @@ parse as data*, never *did the call succeed*.
 
 ### Congress.gov — federal bills, members, House roll calls
 - **Last walked:** 2026-08-20
-- **Status:** WIRED. `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts`,
+- **Status:** WIRED. `scripts/fetch-votes.mts`,
   `lib/sources/congress/`.
 - **Auth:** `CONGRESS_API_KEY`. **Not** `DATA_GOV_API_KEY` — api.data.gov issues
   one key that fronts several agency APIs, which makes the assumption
@@ -189,16 +189,20 @@ parse as data*, never *did the call succeed*.
   LegiScan attribution, because the chambers' XML is not LegiScan's data.
 
 ### unitedstates/congress-legislators — the federal directory
-- **Last walked:** 2026-08-23 — read by `corepack pnpm congress:corpus`, which
-  performed the clone. (RULING 107: a freshness date is written only by the code
-  path that performed the read.)
-- **Status:** WIRED as a source of record for what it covers.
-  `data/congress-legislators/`, SHA-pinned.
+- **Last walked:** 2026-09-07 by the SHA-pinned five-file acquisition.
+- **Status:** WIRED as an attributed directory authority for what it covers.
+  `corepack pnpm congress:fetch` is an explicit-owner, no-clock acquisition
+  which must promote a fully validated candidate to the permanent civic-data
+  store. It records the exact commit, all five source hashes, validation,
+  changes and the resulting GOOD pointer; a failed or thin acquisition is a
+  durable refused attempt and leaves LKG live. The tracked
+  `data/congress-legislators/` and federal officeholder holdings are first-seed
+  and test evidence only, never the production mutable authority.
 - **Tier:** A (RULING 84) — one fetch answers for all 537 sitting members.
-- **Access method:** `git clone --filter=blob:none --no-checkout` over
-  `github.com`, read at a pinned commit through `lib/hunt/github-corpus.ts`.
-  **This is the road that works where the HTTP one does not** — see the note
-  under `unitedstates/images` below, which is the same finding.
+- **Access method:** the five required YAML files are fetched serially from
+  `raw.githubusercontent.com` at the adopted commit SHA. Each response is
+  content-hashed and checked against its file-specific floor before the
+  source-set candidate can promote.
 - **Auth:** none.
 - **Licence:** **CC0 1.0 Universal**, confirmed 2026-08-23 by reading the
   repository's own `LICENSE` file at commit
@@ -209,10 +213,12 @@ parse as data*, never *did the call succeed*.
   **stated 537, extracted 537, MATCHED.**
 
 ### unitedstates/images — the GPO pictorial-directory portraits
-- **Last walked:** 2026-08-23 — read by `corepack pnpm congress:corpus`, which
-  performed the clone.
-- **Status:** WIRED for portraits. `scripts/fetch-official-photos.mts` writes
-  `lib/registry/official-photos.json`.
+- **Last walked:** 2026-08-23 by the recorded SHA-pinned corpus walk.
+- **Status:** AVAILABLE for owner-reviewed registry-runtime portrait bindings.
+  Production bindings are promoted with their exact licensed source receipts
+  through `corepack pnpm registry:promote -- --package=<reviewed-package>`.
+  The former tracked portrait writer is deleted;
+  `lib/registry/official-photos.json` is first-seed/test evidence only.
 - **Tier:** A — one clone enumerates every portrait the corpus holds.
 - **Access method — AND THE FINDING THAT MATTERS:** the fetcher's original and
   only route was `https://unitedstates.github.io/images/…`, a **GitHub Pages**
@@ -242,10 +248,32 @@ parse as data*, never *did the call succeed*.
   committed**, because RULING 20 keeps portrait bytes out of git and the
   content-addressed store is `R57`.
 
+### Reviewed registry runtime bindings — bodies, rosters, executives, and candidacy identity
+- **Status:** WIRED as an explicit-owner, no-clock production data-plane
+  contract. `corepack pnpm registry:promote -- --package=<reviewed-package>`
+  validates the exact body/division, body-person/contact, roster disposition,
+  statewide officeholder, officeholder/candidacy, and licensed-photo records
+  against the package's acquired-byte receipt before moving the one GOOD
+  pointer. A malformed or incompletely receipted successor is held atomically
+  and the prior projection remains live.
+- **Reader boundary:** registry, directory, representation, map, ballot, Ask,
+  and campaign-money identity read that promoted projection. They never reopen
+  tracked JSON after a store failure. The tracked registry/roster/photo files
+  and `lib/registry/fixtures/official-candidacies-first-seed.json` are explicit
+  first-seed/test evidence only.
+- **Identity boundary:** live officeholder/candidacy outcomes and exact roster
+  aliases belong to the promoted projection. The separately retained
+  `official-person-candidacy-links-v1.json` is labeled non-authoritative,
+  versioned same-person review evidence for the first seed; no production
+  Reader imports it and the old tracked bridge writer/path is deleted.
+
 ### LegiScan — state bills and roll calls
 - **Last walked:** 2026-08-20
-- **Status:** WIRED. `scripts/fetch-legiscan.mts`, weekly Sunday refresh,
-  `dataset_hash`-gated so an unchanged dataset is never re-downloaded.
+- **Status:** **INTENTIONALLY NOT SPENT for production.** The former
+  `scripts/fetch-legiscan.mts` / GitHub refresh authority is deleted. The
+  retained `lib/sources/legiscan/` parser may inspect already-held historical
+  evidence only; official legislative publishers own current acquisition and
+  promotion, and no production contract calls LegiScan.
 - **Auth:** `LEGISCAN_API_KEY`.
 - **Licence obligation — LAW, not a note: CC BY 4.0 requires attribution
   wherever the data appears.** `LEGISCAN_ATTRIBUTION` is one object, sent with
@@ -261,8 +289,10 @@ parse as data*, never *did the call succeed*.
 
 ### OpenFEC — federal contributions and independent expenditures
 - **Last walked:** 2026-08-20
-- **Status:** WIRED for committee TOTALS only. `scripts/fetch-fec.mts`,
-  `refresh-fec-snapshot.yml`.
+- **Status:** WIRED for committee TOTALS only. The standing runner invokes
+  `scripts/fetch-fec.mts --promote` through the canonical weekly `fec-funding`
+  production-data contract; its durable events own cadence, health and LKG.
+  There is no GitHub refresh workflow or tracked mutable production writer.
 - **Auth:** `FEC_API_KEY`.
 - **Licence obligation — and it is a legal question, not a licence:** the FEC
   places a **sale-or-use restriction on contributor data**, and in-kind
@@ -290,9 +320,15 @@ parse as data*, never *did the call succeed*.
 - **Licence:** US federal government work. Public domain.
 
 ### CISA `.gov` registry (cisagov/dotgov-data)
-- **Last walked:** 2026-08-23 — `raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv` answered HTTP 200 at 1.41 MB with the `Domain name` header present as a control string
-- **Status:** WIRED. `data/dotgov/snapshot.json`, SHA-pinned,
-  `pnpm dotgov:fetch`.
+- **Last walked:** 2026-08-23 — the historical walk of
+  `raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv`
+  answered HTTP 200 at 1.41 MB with the `Domain name` header present as a
+  control string.
+- **Status:** WIRED through the standing runner's monthly canonical `dotgov`
+  contract. `scripts/fetch-dotgov.mts --promote` first resolves the publisher's
+  current commit and then reads the CSV at that exact SHA; durable data-plane
+  receipts, the GOOD pointer and LKG own live state. The tracked
+  `data/dotgov/snapshot.json` is bundled first-bootstrap evidence only.
 - **Auth:** none.
 - **Licence:** US federal government work.
 - It is **a rung, never a denominator** — see `docs/zip-playbook.md`.
@@ -429,7 +465,7 @@ last-walked date under RULING 96.)*
 | **Pima County campaign finance — `ecf-api.easyvoteapp.com`** | **WALKED — and the 401 that closed this record for a whole session was never about the caller** | **900 contribution rows and 584 distribution rows**, e.g. *Citizens of Vail for Education* (Vail, 85641) receiving \$5,000 from Concord General Contracting on 2025-12-17 | `robots.txt` HTTP 404 → `NO_ROBOTS`. **The story, because it is the doctrine working.** `documents/getdocumentfiling/{id}` answers **401** to every client — bare curl, a browser UA, Origin and Referer, and the trailing-slash form the SPA actually calls. A prior session correctly recorded that as *a wall on a route, not a statement about the filing*, and stopped there. Enumerating all **59 API routes out of the SPA bundle** instead of retrying the known one (RULING 207) found `/advancedsearch/contributions/{customerId}`, which answers **500** rather than 401 — and the ASP.NET stack trace names `ContributionsSearch → CurrentUserOrWebSiteUserAsync → GetSubdomain(url)` throwing on a null URI. **The API has its own anonymous website-user path and only needed the tenant subdomain, which it reads from the `Origin` header.** With `Origin` set it answers **HTTP 200 at 1,090,303 bytes**. No credential, no login, no bypass — the identical request the county's own public app makes. **900 is not a cap:** partitioning against the server reproduced it exactly (2025: 502 = 502, 2026: 368 = 368), and a truncated result cannot partition consistently. **Limits that travel with the data:** every filing is a `_Redacted` public copy; all rows are `DocumentType: CCFR`, so there is NO independent-expenditure row and its absence is OURS rather than a claim that no outside money was spent; as-filed dates are preserved unrepaired (years `0006` and `2926` exist); committee name variants are NOT merged, because a name match is not agreement; and neither this portal nor the state register publishes committee-to-measure linkage, which is never inferred from a committee's name | A | 2026-08-29 |
 | **AZ Citizens Clean Elections — `azcleanelections.gov`** | **REACHABLE, not yet wired** | Plain fetch, HTTP 200 | Arizona public records | A | 2026-08-24 |
 | **FEC Combined Federal/State Disclosure Directory** | **WIRED** (committed since 2026-08-22) | `data/reference/fec_combined_federal_state_disclosure_directory.csv` | **United States government work — public domain.** No attribution obligation, no terms to accept | A | 2026-08-24 |
-| **FEC API — `api.open.fec.gov`** | **WALKED UNDER AN ISSUED KEY — and its robots.txt disallows the whole API to anonymous crawlers** | `/v1/*` with `FEC_API_KEY`; committed at `data/fec/fec-2026.json` | **`User-agent: * → Disallow: /v1/*`**, read 2026-08-29. Recorded rather than acted on, because the two are different channels and the stronger one governs: an ISSUED API KEY is the FEC granting this application named access to that exact path, which robots.txt cannot speak to — it addresses anonymous crawlers, and we are not one. **So the standing keyed route is NOT overturned by this row.** What the row does forbid is treating the disallow as absent: no unkeyed fetch of `api.open.fec.gov`, and no expansion into new endpoints on a session's own judgement. Anything past committee totals — Schedule B, Schedule E, independent expenditures — remains gated behind the PB10/D23 counsel review already recorded here, and that gate is why the product currently answers an IE question with a NAMED GAP whose owner is THE_LAW rather than with silence | Federal | 2026-08-29 |
+| **FEC API — `api.open.fec.gov`** | **WALKED UNDER AN ISSUED KEY — and its robots.txt disallows the whole API to anonymous crawlers** | `/v1/*` with `FEC_API_KEY`; the standing runner promotes through canonical contract `fec-funding`. `data/fec/fec-2026.json` is a bundled first-bootstrap fixture, not mutable production authority. | **`User-agent: * → Disallow: /v1/*`**, read 2026-08-29. Recorded rather than acted on, because the two are different channels and the stronger one governs: an ISSUED API KEY is the FEC granting this application named access to that exact path, which robots.txt cannot speak to — it addresses anonymous crawlers, and we are not one. **So the standing keyed route is NOT overturned by this row.** What the row does forbid is treating the disallow as absent: no unkeyed fetch of `api.open.fec.gov`, and no expansion into new endpoints on a session's own judgement. Anything past committee totals — Schedule B, Schedule E, independent expenditures — remains gated behind the PB10/D23 counsel review already recorded here, and that gate is why the product currently answers an IE question with a NAMED GAP whose owner is THE_LAW rather than with silence | Federal | 2026-08-29 |
 | **FollowTheMoney.org / OpenSecrets** | **RESTRICTED — DO NOT USE** | — | **CC BY-NC-SA. The non-commercial clause bars this product**, which sells anonymized aggregates | — | 2026-08-24 |
 | **CFI `stateLinks` — `cfinst.org/state/stateLinks.aspx`** | **DEAD** | — | — | — | 2026-08-24 |
 | **CFI law database — `cfinst.github.io`** | **REACHABLE, not wired** | GitHub Pages, HTTP 200 | **GPL-3.0**, quoted below | B | 2026-08-24 |

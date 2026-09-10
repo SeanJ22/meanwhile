@@ -1,4 +1,8 @@
 import type { Tier } from "../ocd/tiers.ts";
+import type {
+  CivicDataReadMetadata,
+  CivicDataReadResult,
+} from "../civic-data/read-model.ts";
 import {
   holdersFor,
   senatorsFor,
@@ -9,6 +13,7 @@ import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import type { BodyTerritoryFile } from "./body-territory.ts";
+import type { RosterReaderGap } from "./body-rosters.ts";
 import type {
   Body,
   BodyClass,
@@ -16,6 +21,7 @@ import type {
   Division,
   DivisionType,
 } from "./types.ts";
+import { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * What we can honestly say about who governs a point, and how much of it we
@@ -51,6 +57,46 @@ import type {
  * `UNMAPPED`       — no bodies known here at all.
  */
 export type CoverageState = "MEETINGS" | "NONE_SCHEDULED" | "NO_SOURCE" | "UNMAPPED";
+
+/**
+ * The canonical current-person authority observed for one exact state scope.
+ *
+ * This deliberately carries no roster payload. The people already ride on
+ * `seats`; this is the authority disposition that prevents an empty people
+ * array from making two materially different statements look identical:
+ * `NOT_RECORDED` means the store answered and has no pointer, while
+ * `STORE_UNREACHABLE` means the Reader could not establish that fact.
+ */
+export interface StateLegislatorCoverageAuthority {
+  readonly scope: string;
+  readonly kind: CivicDataReadResult<unknown>["kind"];
+  readonly metadata: CivicDataReadMetadata;
+  readonly code: Extract<
+    CivicDataReadResult<unknown>,
+    { readonly kind: "STORE_UNREACHABLE" }
+  >["code"] | null;
+  readonly detail: string | null;
+}
+
+/** Strip a roster read to the authority facts safe and useful on coverage. */
+export function stateLegislatorCoverageAuthority(
+  scope: string,
+  read: CivicDataReadResult<unknown>,
+): StateLegislatorCoverageAuthority {
+  return {
+    scope,
+    kind: read.kind,
+    metadata: read.metadata,
+    code: read.kind === "STORE_UNREACHABLE" ? read.code : null,
+    detail: "detail" in read ? read.detail : null,
+  };
+}
+
+/** Reader-facing distinction for the two empty-roster failure domains. */
+export {
+  stateLegislatorCoverageGapText,
+  WIRED_STATUSES,
+} from "./coverage-client.ts";
 
 /**
  * A body covering the point.
@@ -135,6 +181,23 @@ export interface CoveredBody {
    * is unsettled is which one is the reader's. See `lib/geo/zip-certainty.ts`.
    */
   couldGovern?: boolean;
+  /**
+   * Body-scoped people and completeness gaps projected at the server Reader
+   * boundary. Client components consume these bytes; they never import the
+   * canonical roster/runtime graph to reconstruct them in the browser.
+   *
+   * Optional only for pure historical fixtures that construct CoveredBody by
+   * hand. `coverageAt` always supplies the projection for production reads.
+   */
+  readerRoster?: {
+    members: SeatHolder[];
+    gaps: RosterReaderGap[];
+    officePhone: {
+      phone: string;
+      sourceUrl: string;
+      sourceOrg: string;
+    } | null;
+  };
 }
 
 /**
@@ -167,6 +230,13 @@ export interface CoverageSummary {
   state: CoverageState;
   bodies: CoveredBody[];
   seats: Seat[];
+  /**
+   * One entry per official state-legislator scope implicated by `seats`.
+   * Empty means no state-legislative division was resolved, not that a store
+   * read failed. Non-healthy entries keep absence and unavailability named for
+   * both the map and owner-facing diagnostics.
+   */
+  stateLegislatorAuthorities: StateLegislatorCoverageAuthority[];
   /**
    * **Every division whose boundary CONTAINS this point** — the governing
    * set (2026-08-15).
@@ -254,10 +324,6 @@ export interface CoverageSummary {
  * server's, and it has to ask the SAME question this file asks. Two copies of
  * "what counts as wired" is how the counts drifted in the first place.
  */
-export const WIRED_STATUSES: ReadonlySet<CoverageStatus> = new Set<CoverageStatus>([
-  "LIVE",
-  "MANUAL",
-]);
 const WIRED = WIRED_STATUSES;
 
 const SEAT_TYPES: ReadonlySet<DivisionType> = new Set<DivisionType>([
@@ -311,6 +377,8 @@ export function summarizeCoverage(
   resolvedDivisions?: Division[],
   /** Committed body-territory polygons for governments with no division (NH233). */
   territory?: BodyTerritoryFile | null,
+  /** Exact per-scope state-roster read dispositions settled by the caller. */
+  stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(
     point,
@@ -409,6 +477,7 @@ export function summarizeCoverage(
     state,
     bodies: covered,
     seats,
+    stateLegislatorAuthorities,
     // The governing set — every division containing the point, in the order
     // `divisionsAt` returned them. Carried whole rather than as a count so
     // the door can list what the number counts (the stated-N rule).

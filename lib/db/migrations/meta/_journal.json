@@ -183,6 +183,13 @@
       "when": 1788819929630,
       "tag": "0025_typical_fixer",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1788981808213,
+      "tag": "0026_lame_sunset_bain",
+      "breakpoints": true
     }
   ]
 }

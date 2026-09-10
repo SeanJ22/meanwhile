@@ -1,5 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await Promise.all([
+  initializeFederalVoteFirstSeed(),
+  installRegistryRuntimeFirstSeeds(),
+]);
 import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 
@@ -411,7 +418,11 @@ test("RED CONTROL: nothing in the Hobbs reply is an action the corpus does not h
       assert.equal(profile.value, held[field], "contact must be the native held field, never a generated substitute");
       assert.equal(record.canonicalSubjectId, profile.holdingKey);
       const pointer = profile.holdingKey.replaceAll("~", "~0").replaceAll("/", "~1");
-      assert.equal(profile.holdingPath, `data/ballot/candidate-cards-2026.json#/cards/${pointer}/${field}`);
+      assert.equal(
+        profile.holdingPath,
+        `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#/cards/${pointer}/${field}`,
+        "the Reader receipt must identify the promoted candidate-profile authority, never its retired tracked seed",
+      );
       assert.ok(profile.provenanceLimitation && record.text.includes(profile.provenanceLimitation), "missing contact provenance is disclosed with the actual field");
       continue;
     }
@@ -841,14 +852,26 @@ test("ASK-06 (a): a reader asking about their sitting representative gets his ro
   }
 });
 
-test("ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never silence", async () => {
+test("ASK-06 (b): a candidate without a permanent voting-office identity gets a NAMED gap, never silence", async () => {
   /*
-   * Warren Petersen is the Attorney General candidate, he IS on the roster as
-   * a State Senator, and the store holds ZERO positions for him. The person
-   * resolves, the office resolves, and the store is empty — which is a fact
-   * about US and has to read as one.
+   * The retired Plural roster used to make a second Warren Petersen entity in
+   * node:test and to attach that intermediary identity to this candidacy. PDC
+   * deliberately refuses that bridge: until the permanent official-state
+   * roster establishes an exact publisher identity, the candidate still
+   * resolves and the missing relationship is stated as OURS. The focused
+   * canonical ballot id disambiguates the test-only research fixture without
+   * making that fixture authoritative.
    */
-  const body = await ask("How has Warren Petersen voted?", { ocdIds: [AZ, PIMA] });
+  const body = await ask("How has Warren Petersen voted?", {
+    ocdIds: [AZ, PIMA],
+    surface: "BALLOT",
+    activeSubjects: [{
+      id: "ballot-az-pima:attorney-general|Warren Petersen",
+      name: "Warren Petersen",
+      kind: "PERSON",
+      focused: true,
+    }],
+  });
 
   assert.equal(body.subject?.name, "Warren Petersen");
   assert.equal(
@@ -856,35 +879,36 @@ test("ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never
     0,
   );
 
-  const gap = (body.gaps ?? []).find((g) => /roll call/i.test(g.statement));
-  assert.ok(gap, "an empty vote store must produce a sentence, not silence");
-  assert.equal(gap.whose, "OURS", "the legislature published; we have not recorded");
-  assert.match(gap.statement, /We hold Warren Petersen as State Senator\./);
-  assert.match(gap.statement, /None of the \d+ roll calls we have recorded/);
+  const gap = (body.gaps ?? []).find((g) => /canonical voting-office identity/i.test(g.statement));
+  assert.ok(gap, "an unproved permanent identity must produce a sentence, not silence");
+  assert.equal(gap.whose, "OURS");
+  assert.match(gap.statement, /Warren Petersen/);
+  assert.match(gap.statement, /no other person's voting record has been attached/i);
   assert.doesNotMatch(gap.statement, /did not vote|has not voted|no votes cast/i);
 });
 
-test("ASK-06 (c): the committed person bridge preserves the held Senate office beside a House candidacy", async () => {
-  // The previous name-only join correctly refused this variant. The committed
-  // person relationship now resolves it; it does not change which office cast
-  // the votes. The unbridged name-only helper must continue to refuse.
+test("ASK-06 (c): a retired intermediary bridge cannot attach Senate votes beside a House candidacy", async () => {
+  // The frozen bridge related this candidacy to a Plural/OpenStates id. PDC
+  // classifies that whole state corpus as research-only, so neither its person
+  // id nor its twelve LegiScan positions may enter the permanent Reader. The
+  // positive source-namespaced official-state path is proved independently in
+  // state-rollcall-permanent-boundary.test.ts.
   const body = await ask("How has Sally Ann Gonzales voted?", {
     ocdIds: [AZ, PIMA, SLDL20],
   });
 
   assert.equal(body.subject?.name, "Sally Ann Gonzales", "the person still resolves");
   const votes = (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE");
-  assert.equal(votes.length, 12);
-  assert.ok(votes.every((vote) => vote.id.startsWith("plural:3c965e03-1e51-4f10-a037-4fb2f35292c5#")));
-  assert.ok(votes.every((vote) => /Sally Gonzales, State Senator: voted/.test(vote.text)));
-  assert.ok(votes.every((vote) => !/State Representative: voted/.test(vote.text)));
-  const { voteEvidenceFor } = await import("../lib/ask/votes.ts");
-  assert.equal(voteEvidenceFor("Sally Ann Gonzales", { withinStates: ["AZ"] }).identity.kind, "NAME_FORM_UNCONFIRMED");
-  const senator = voteEvidenceFor("display name is not used", { officeholderId: "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5" });
-  assert.equal(senator.identity.kind, "JOINED");
+  assert.equal(votes.length, 0);
+  assert.ok((body.gaps ?? []).some((gap) =>
+    gap.whose === "OURS" &&
+    /canonical voting-office identity for Sally Ann Gonzales/i.test(gap.statement) &&
+    /no other person's voting record has been attached/i.test(gap.statement)
+  ));
+  const { officeholderIdentityMayEnterReader } = await import("../lib/officials/roster-authority.ts");
   assert.equal(
-    senator.denominators.rollCallVotesRecorded,
-    12,
-    "only the committed identity can carry these held votes into the candidate answer",
+    officeholderIdentityMayEnterReader("plural:3c965e03-1e51-4f10-a037-4fb2f35292c5", null, "production"),
+    false,
+    "the node:test fixture exception must not become a production Reader door",
   );
 });

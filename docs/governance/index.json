@@ -1,13 +1,13 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "c39d7e12f3f5b868",
+  "snapshot": "411dbe6d8f729e54",
   "counts": {
-    "records": 318,
-    "current": 49,
-    "law": 36,
+    "records": 325,
+    "current": 50,
+    "law": 37,
     "decisions": 13,
-    "historical": 269
+    "historical": 275
   },
   "records": [
     {
@@ -6437,7 +6437,7 @@
       ],
       "title": "RULING 265 — secrets and the owner's identity",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-09-03",
@@ -6567,7 +6567,7 @@
       ],
       "title": "RULING 267 — a gate is real, or it is not a gate",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-03",
@@ -6652,7 +6652,7 @@
       ],
       "title": "RULING 268 — the single nightly door, and the three contracts behind it",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-03",
@@ -7381,7 +7381,7 @@
       ],
       "title": "RULING 278 — workflow cost follows the canonical shipping classification",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-05",
@@ -7428,7 +7428,7 @@
       ],
       "title": "RULING 280 — runtime freshness is a local control plane of typed stages, and GitHub Actions is CI rather than the runtime loop",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-07",
@@ -7460,7 +7460,7 @@
       ],
       "title": "RULING 281 — one logical change is one shipping transaction, and the subject of a certification is a tree",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-07",
@@ -7482,6 +7482,324 @@
       ],
       "uncertain": [],
       "sourceRef": "lib/control-plane/shipping/"
+    },
+    {
+      "id": "R-0282",
+      "aliases": [
+        "RULING 282",
+        "R282",
+        "R-282"
+      ],
+      "title": "RULING 282 — the standing runner and production data plane are the sole routine civic-data door",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-08",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "reader.health_contract",
+          "value": "answerability-suite-with-typed-diagnostics"
+        },
+        {
+          "key": "truth.control_standard",
+          "value": "permanent-unannounced-control-set"
+        },
+        {
+          "key": "refresh.cadence",
+          "value": "derived-from-reader-impact-and-change-rate"
+        },
+        {
+          "key": "health.pilot_rollup",
+          "value": "three-contracts-one-rollup"
+        },
+        {
+          "key": "freshness.clock_authority",
+          "value": "runtime-scheduler-derived-due"
+        },
+        {
+          "key": "activation.standing_level",
+          "value": "level-1-research"
+        },
+        {
+          "key": "reader_truth.change_door",
+          "value": "standing-runner-production-data-plane"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0268"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "CODEX_PERMANENT_CIVIC_DATA_PLANE_CUTOVER_V2.md — PDC-2"
+    },
+    {
+      "id": "R-0283",
+      "aliases": [
+        "RULING 283",
+        "R283",
+        "R-283"
+      ],
+      "title": "RULING 283 — routine freshness is a permanent local data plane, not a Git shipping transaction",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-08",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0280"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0282"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0269"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0278"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "CODEX_PERMANENT_CIVIC_DATA_PLANE_CUTOVER_V2.md — PDC-2"
+    },
+    {
+      "id": "R-0284",
+      "aliases": [
+        "RULING 284",
+        "R284",
+        "R-284"
+      ],
+      "title": "RULING 284 — GitHub Actions certifies software; the permanent data plane owns mutable runtime truth",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-08",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "github_actions.role",
+          "value": "software-ci-only"
+        },
+        {
+          "key": "routine_runtime.canonical_store",
+          "value": "production-data-plane"
+        },
+        {
+          "key": "routine_runtime.git_writers",
+          "value": "zero"
+        },
+        {
+          "key": "pr.draft_certification",
+          "value": "cheap-deterministic-structural"
+        },
+        {
+          "key": "pr.ready_certification",
+          "value": "full-normal"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_clause",
+          "target": "R-0265",
+          "changed": "scheduled routine pushers no longer authenticate with a deploy key and the retired direct-main push implementation is deleted",
+          "survives": "credential values remain barred from transcripts, logs, reports, commits, fixtures, screenshots and evidence; rotation, owner-copy-before-install, scoped reporting and owner-only Admin authentication remain in force"
+        },
+        {
+          "kind": "supersedes_clause",
+          "target": "R-0267",
+          "changed": "the scheduled-pusher path allowlist, shared push door and deploy-key authentication clause is retired because routine data and operations never write Git",
+          "survives": "all fail-closed evidence rules, exact gate reporting, live branch-protection verification, migration immutability, production-integrity freshness, and POSIX path requirements remain in force"
+        },
+        {
+          "kind": "supersedes_clause",
+          "target": "R-0281",
+          "changed": "routine bot observations, intake reports, refresh reports and operational health may not use exact-file cheap Git commits as their permanent transport or authority; their writers, clocks and dispatchable backup paths are deleted after data-plane transfer",
+          "survives": "one logical software change remains one shipping transaction; exact-tree certification reuse, named invalidations, the one-full-certification budget, fail-closed required contexts and owner-wait accounting remain in force"
+        },
+        {
+          "kind": "supersedes_clause",
+          "target": "R-0278",
+          "changed": "a draft pull request receives the cheap deterministic and structural PR tier, while ready_for_review, a ready opening and every ready synchronize event receive full normal certification; the former exact-file cheap privilege for routine mutable runtime reports has no writer to serve",
+          "survives": "one canonical classifier still decides cost; unknown, mixed and software-bearing changes fail closed to FULL; exact-head and required-check semantics remain; push, main, release and merge certification behavior is unchanged"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0282"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0283"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author PDC amendments — permanent architecture and Git/Actions operational feedback loop, 2026-09-08"
+    },
+    {
+      "id": "R-0285",
+      "aliases": [
+        "RULING 285",
+        "R285",
+        "R-285"
+      ],
+      "title": "RULING 285 — terminal software CI has no runtime path-cost classifier",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-08",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0278"
+        },
+        {
+          "kind": "supersedes_clause",
+          "target": "R-0284",
+          "changed": "the terminal architecture does not preserve a canonical CHEAP/FULL changed-path classifier or an OPS_ONLY artifact class after routine runtime Git writers are deleted",
+          "survives": "draft pull requests receive deterministic structural certification; ready pull requests and ordinary pushes receive full normal certification; exact-tree reuse, exact-head checks, release freeze, required contexts and fail-closed behavior remain in force"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0279"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0281"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0282"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0283"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author PDC amendments — terminal permanent architecture, draft PR CI cost, operational feedback loop, and failure-domain isolation, 2026-09-08"
+    },
+    {
+      "id": "R-0286",
+      "aliases": [
+        "RULING 286",
+        "R286",
+        "R-286"
+      ],
+      "title": "RULING 286 — credential custody and owner identity survive without a runtime Git pusher",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-09-09",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "session.credential_custody",
+          "value": "owner-copy-before-install"
+        },
+        {
+          "key": "admin.identity",
+          "value": "google-owner-only"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0265"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0284"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author PDC amendments — permanent architecture and operational feedback-loop closure, 2026-09-09"
+    },
+    {
+      "id": "R-0287",
+      "aliases": [
+        "RULING 287",
+        "R287",
+        "R-287"
+      ],
+      "title": "RULING 287 — software gates remain real without runtime Git bypasses",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-09",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "schema.migration_mutability",
+          "value": "immutable-append-only"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0267"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0284"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0285"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author PDC amendments — permanent architecture and unchanged software certification, 2026-09-09"
+    },
+    {
+      "id": "R-0288",
+      "aliases": [
+        "RULING 288",
+        "R288",
+        "R-288"
+      ],
+      "title": "RULING 288 — one software transaction and exact-tree proof survive without runtime bookkeeping commits",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-09",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0281"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0284"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0285"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0287"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author PDC amendments — draft PR cost and permanent runtime/software boundary, 2026-09-09"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

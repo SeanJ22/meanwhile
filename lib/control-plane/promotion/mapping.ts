@@ -12,13 +12,9 @@
  * Idempotent: item and record ids are derived, so a re-map is a no-op.
  */
 
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-
-import { readCandidateStore } from "../../method/candidate.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
-import { CANDIDATE_STORE } from "../scheduler/scout-candidates.ts";
+import { readMethodCandidateStore } from "../scheduler/scout-candidates.ts";
 import {
   appendTransition,
   confirmationFromArtifacts,
@@ -42,7 +38,7 @@ export interface MappingReport {
 
 export async function mapEvidenceIntoPipeline(
   repos: ControlPlaneRepositories,
-  root: string,
+  _root: string,
   now: string,
 ): Promise<MappingReport> {
   const results = await repos.scoutResults.readAll();
@@ -59,27 +55,22 @@ export async function mapEvidenceIntoPipeline(
   const scoutedOffers = results.flatMap(scoutedFromScoutResult);
   const eligibleResults = results.filter((r) => scoutedFromScoutResult(r).length > 0).length;
 
-  const candidatePath = join(root, ...CANDIDATE_STORE);
   const byLifecycle: Record<string, number> = {};
   let storeRead = false;
   let storeNote: string | null = null;
   let candidateTotal = 0;
   const resultsByAttempt = new Map<string, ScoutResult>(results.map((r) => [r.attemptId, r]));
-  if (existsSync(candidatePath)) {
-    try {
-      const store = readCandidateStore(candidatePath);
-      storeRead = true;
-      candidateTotal = store.candidates.length;
-      for (const c of store.candidates) {
-        byLifecycle[c.lifecycle] = (byLifecycle[c.lifecycle] ?? 0) + 1;
-        const offered = scoutedFromMethodCandidate(c, resultsByAttempt);
-        if (offered !== null) scoutedOffers.push(offered);
-      }
-    } catch (error) {
-      storeNote = `the candidate store could not be read: ${error instanceof Error ? error.message : String(error)}`;
+  try {
+    const store = await readMethodCandidateStore(repos);
+    storeRead = true;
+    candidateTotal = store.candidates.length;
+    for (const c of store.candidates) {
+      byLifecycle[c.lifecycle] = (byLifecycle[c.lifecycle] ?? 0) + 1;
+      const offered = scoutedFromMethodCandidate(c, resultsByAttempt);
+      if (offered !== null) scoutedOffers.push(offered);
     }
-  } else {
-    storeNote = `no candidate store at ${candidatePath}`;
+  } catch (error) {
+    storeNote = `the canonical candidate store could not be read: ${error instanceof Error ? error.message : String(error)}`;
   }
   const eligibleCandidates = scoutedOffers.filter((o) => o.source.kind === "METHOD_CANDIDATE").length;
 

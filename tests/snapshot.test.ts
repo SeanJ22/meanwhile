@@ -9,10 +9,10 @@ import {
   reconcileCounts,
   snapshotCounts,
   validateSnapshot,
-  writeSnapshot,
   type MeetingsSnapshot,
   type SnapshotSourceReport,
 } from "../lib/meetings/snapshot.ts";
+import { writeMeetingsFixture } from "./helpers/write-meetings-fixture.ts";
 import { makeSnapshotSource } from "../lib/sources/snapshot/index.ts";
 import type { Meeting, NormalizeDropCounts } from "../lib/sources/types.ts";
 
@@ -196,7 +196,7 @@ test("an agenda document citing a meeting outside the snapshot is refused", () =
 test("write then read round-trips, and the reader validates what it reads", () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-snapshot-"));
   const snap = validSnapshot();
-  const path = writeSnapshot(snap, root);
+  const path = writeMeetingsFixture(snap, root);
   assert.ok(existsSync(path), "write reported a path that does not exist");
 
   const read = readSnapshot(root);
@@ -204,6 +204,13 @@ test("write then read round-trips, and the reader validates what it reads", () =
   assert.equal(read.generatedAt, snap.generatedAt);
   assert.equal(read.meetings.length, 1);
   assert.equal(read.sources.length, 1);
+});
+
+test("the test-only snapshot writer refuses the repository bootstrap path", () => {
+  assert.throws(
+    () => writeMeetingsFixture(validSnapshot(), process.cwd()),
+    /refuses the repository meetings bootstrap/,
+  );
 });
 
 test("readSnapshot returns null when no file exists — a fresh clone, not an error", () => {
@@ -376,7 +383,7 @@ test("a partially-refused snapshot survives write-then-read with its marks intac
   // path it takes — validate, write, read back, validate again — on the shape
   // that was failing.
   const root = mkdtempSync(join(tmpdir(), "wtp-carried-"));
-  const path = writeSnapshot(partiallyRefusedSnapshot(), root);
+  const path = writeMeetingsFixture(partiallyRefusedSnapshot(), root);
   assert.ok(existsSync(path));
 
   const read = readSnapshot(root);

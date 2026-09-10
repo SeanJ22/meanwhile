@@ -50,8 +50,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "@/lib/registry/body-rosters";
-import { membersOfBody } from "@/lib/registry/body-membership";
+import { projectedBodyRoster, projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
 import {
   noteStateFor,
   representationForDivision,
@@ -1084,6 +1083,11 @@ function MapEntryInner() {
   const data = useMemo<ShellData>(
     () => ({
       allMeetings: current?.meetings ?? [],
+      commentAccess: current?.commentAccess ?? [],
+      // The projection is global and canonical, so retain its last response
+      // only during an in-flight map refresh. A completed unavailable read
+      // still arrives as `current` with null and is withheld fail-closed.
+      everydayRouting: (current ?? shown)?.everydayRouting ?? null,
       meetings,
       listingIdentity: pinned?.listingIdentity,
       venues,
@@ -1117,7 +1121,7 @@ function MapEntryInner() {
       zipPartial: current?.partialOcdIds ? new Set(current.partialOcdIds) : null,
       basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
     }),
-    [current, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view],
+    [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view],
   );
 
   /*
@@ -2240,6 +2244,7 @@ function MapEntryInner() {
                 )
               }
               representation={districtRepresentation.holders}
+              rosterGaps={districtRepresentation.rosterGaps ?? []}
               representationNoteState={noteStateFor(districtRepresentation.status)}
               /* WGH-15: the reader own area, so this card can say how their home
                  stands relative to the district they tapped. READ-ONLY -- everything
@@ -2298,9 +2303,7 @@ function MapEntryInner() {
               // Sunnyside case working (that board HAS its own roster, keyed
               // by body id, and a body id does not care which point was
               // searched) without the claim.
-              representation={
-                membersOfBody(bodyForMeeting(popupMeeting)?.bodyId ?? null).members
-              }
+              representation={[...projectedBodyRoster(bodyForMeeting(popupMeeting)).members]}
               onClose={() => setPopupMeeting(null)}
               onExpand={() =>
                 openLarge({
@@ -2520,7 +2523,7 @@ function meetingSubject(
    * meeting body's members, whoever actually sits on it. A meeting popup is a
    * reader-facing surface like any other, so it obeys the same rule.
    */
-  const roster = membersOfBody(body?.bodyId ?? null).members;
+  const roster = [...projectedBodyRoster(body).members];
   return {
     // What it is FIRST (3, tightened 3a 2026-08-16): the jurisdiction-
     // qualified body and sitting are the headline ("Vail Unified School
@@ -2597,7 +2600,7 @@ function meetingSubject(
     // Tier-3 (5a): the curated roster where one exists; the honest absence
     // where none does.
     representation: roster,
-    rosterGaps: [rosterGapForBody(body?.bodyId ?? null)].filter((gap) => gap !== null),
+    rosterGaps: [...projectedBodyRoster(body).gaps],
     representationNote:
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
     meetings: [meeting],
@@ -2639,8 +2642,7 @@ function bodySubject(
    * names, through a recorded and cited authority; a body whose membership is
    * unsourced renders the named gap. See lib/registry/body-membership.ts.
    */
-  const composition = membersOfBody(body.bodyId);
-  const roster = composition.members;
+  const roster = [...projectedBodyRoster(body).members];
   /*
    * **THIS BODY'S SITTINGS, NOT THIS DIVISION'S** (2026-08-27, Red Control 4).
    *
@@ -2722,7 +2724,7 @@ function bodySubject(
         : []),
     ],
     representation: seated,
-    rosterGaps: [rosterGapForBody(body.bodyId)].filter((gap) => gap !== null),
+    rosterGaps: [...projectedBodyRoster(body).gaps],
     /*
      * GOV-1 (2026-08-29): this read, unconditionally, "We know this body governs
      * here because its division exists." That is an inference from the
@@ -3036,7 +3038,7 @@ function districtSubject(
     divisionOcdId: district.ocdId,
     representedByOfficeTitle: officeTitleForDivision(district.ocdId),
     representation: roster,
-    rosterGaps: resolved?.rosterGaps ?? rosterGapsForDivision(district.ocdId),
+    rosterGaps: resolved?.rosterGaps ?? projectedRosterGapsForDivision(coverage, district.ocdId),
     representationNote: representationNoteFor(
       district.tier,
       resolved ? noteStateFor(resolved.status) : "gap",

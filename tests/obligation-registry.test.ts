@@ -41,7 +41,6 @@ import {
   type ObligationProvider,
   type RouteDescriptor,
 } from "../lib/control-plane/scheduler/registry.ts";
-import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
 import {
   campaignFinanceProvider,
   readDescriptorFiles,
@@ -50,6 +49,7 @@ import {
   readTrackerHandoff,
   trackerIntakeProvider,
 } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
+import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { checkYield, routeExecutor, type OpenOne } from "../lib/control-plane/scheduler/route-executor.ts";
 import {
   NORMALIZERS,
@@ -62,14 +62,27 @@ import {
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
-import { syncObligations } from "../lib/control-plane/scheduler/durable.ts";
+import {
+  retireObligationsByPrefix,
+  syncObligations,
+} from "../lib/control-plane/scheduler/durable.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { FreshnessObligation, ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
+import {
+  installOperationalReferenceBundle,
+  operationalReferenceBundle,
+} from "../lib/civic-data/operational-references.ts";
 
 const ROOT = process.cwd();
 const NOW = "2026-08-31T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
+
+installOperationalReferenceBundle(operationalReferenceBundle({
+  az: JSON.parse(readFileSync(join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
+  nh: JSON.parse(readFileSync(join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
+  nj: JSON.parse(readFileSync(join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
+}));
 
 function tmp(): string {
   return mkdtempSync(join(tmpdir(), "wtp-registry-"));
@@ -83,14 +96,14 @@ function scheduled(obligation: FreshnessObligation): ScheduledObligation {
 
 /* ------------------------------------------------------------ the registry */
 
-test("the registry carries TWO LIVE PROVIDERS and neither is meetings-only", () => {
-  const pass = buildRegistry([meetingsProvider(), campaignFinanceProvider()], {
+test("the standing research registry is not a parallel tracked-meetings authority", () => {
+  const pass = buildRegistry([campaignFinanceProvider(), trackerIntakeProvider()], {
     root: ROOT,
     nowIso: NOW,
   });
 
   const ids = pass.byProvider.map((p) => p.providerId);
-  assert.deepEqual([...ids].sort(), ["campaign-finance", "meetings"]);
+  assert.deepEqual([...ids].sort(), ["campaign-finance", "tracker-intake"]);
 
   const finance = pass.byProvider.find((p) => p.providerId === "campaign-finance");
   assert.ok(finance, "the campaign-finance provider must be reported");
@@ -101,8 +114,41 @@ test("the registry carries TWO LIVE PROVIDERS and neither is meetings-only", () 
   );
   assert.equal(finance.readFailure, null);
 
-  const nonMeeting = pass.units.filter((u) => u.providerId !== "meetings");
-  assert.ok(nonMeeting.length > 0, "at least one scheduled unit must not be a meeting");
+  assert.equal(
+    pass.units.some((unit) => unit.obligation.id.startsWith("freshness:meetings:")),
+    false,
+    "the superseded tracked-snapshot clock must not enter the standing registry",
+  );
+  assert.equal(
+    pass.units.some((unit) => unit.record.subjectId === "ballot-az-pima:us-house-6"),
+    false,
+    "the permanent FEC contract owns federal acquisition; the research registry may not add a second clock",
+  );
+
+  const local = buildRegistry([localJurisdictionsProvider()], { root: ROOT, nowIso: NOW });
+  assert.ok(local.units.length > 0, "the local filing/custodian research registry still has a real non-meeting denominator");
+  assert.equal(
+    local.units.some((unit) => unit.record.routes.some((route) => /meeting/i.test(route.routeId)) || /meeting/i.test(unit.record.recordClass)),
+    false,
+    "tracked jurisdiction meeting inventory must never produce a second standing meeting acquisition clock",
+  );
+
+  const standing = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
+  const denominator = readFileSync(join(ROOT, "scripts", "scout-denominator.mts"), "utf8");
+  assert.doesNotMatch(standing, /meetingsProvider\s*\(/);
+  assert.doesNotMatch(denominator, /meetingsProvider\s*\(/);
+  assert.match(standing, /retireObligationsByPrefix\s*\(/);
+  assert.match(standing, /freshness:campaign-finance:ballot-az-pima:us-house-6#/);
+  assert.equal(
+    existsSync(join(ROOT, "lib", "control-plane", "scheduler", "providers", "meetings.ts")),
+    false,
+    "the old executable provider must be deleted, not left callable as a backup",
+  );
+  assert.equal(
+    existsSync(join(ROOT, "lib", "control-plane", "scheduler", "providers", "promoted-facts.ts")),
+    false,
+    "the per-fact meeting/agenda acquisition provider must be deleted, not retained as a callable fallback",
+  );
 });
 
 test("a record's route PORTFOLIO becomes several scheduled units, not one", () => {
@@ -120,15 +166,39 @@ test("a record's route PORTFOLIO becomes several scheduled units, not one", () =
   assert.equal(obligationIds.size, az.length, "each unit must carry its OWN durable obligation id");
 });
 
-test("meetings obligation ids are UNCHANGED, so no durable row is orphaned", () => {
-  const pass = buildRegistry([meetingsProvider()], { root: ROOT, nowIso: NOW });
-  for (const unit of pass.units) {
-    assert.ok(
-      unit.obligation.id.startsWith("freshness:meetings:"),
-      `${unit.obligation.id} must keep the id shape the control plane already holds; renaming it ` +
-        "would reset every stored next-due, occurrence count and debt row",
-    );
-  }
+test("PDC retires every durable tracked-meetings clock without deleting its history", async () => {
+  const repos = createMemoryRepositories();
+  const id = "freshness:meetings:ocd-division/country:us/state:az/place:tucson#governing";
+  const legacy: FreshnessObligation = {
+    id,
+    recordClass: "meetings",
+    subjectId: "ocd-division/country:us/state:az/place:tucson#governing",
+    routeId: "City of Tucson Clerk",
+    active: true,
+    readerImpactAt: null,
+    observedChangeRateHours: null,
+    lastWorkedAt: "2026-08-30T12:00:00.000Z",
+  };
+  await syncObligations(repos, [legacy], NOW);
+  const before = await repos.obligations.mustRead(id);
+  await repos.obligations.compareAndSet(
+    id,
+    before.revision,
+    { ...before.value, nextDueAt: "2026-09-01T13:00:00.000Z", occurrenceCount: 4 },
+    NOW,
+  );
+
+  const reason = "PDC authority transferred to the production civic-data contract";
+  const first = await retireObligationsByPrefix(repos, ["freshness:meetings:"], NOW, reason);
+  assert.deepEqual(first.retired, [id]);
+  const retired = (await repos.obligations.mustRead(id)).value;
+  assert.equal(retired.active, false);
+  assert.equal(retired.nextDueAt, null, "a retired row has no runnable clock");
+  assert.equal(retired.occurrenceCount, 4, "historical runtime evidence is retained");
+  assert.equal(retired.retirementReason, reason);
+
+  const second = await retireObligationsByPrefix(repos, ["freshness:meetings:"], NOW, reason);
+  assert.deepEqual(second, { retired: [], alreadyRetired: [id] }, "retirement is idempotent");
 });
 
 test("two providers claiming one obligation id is REFUSED, never reconciled", () => {

@@ -26,7 +26,7 @@ import { MeetingListingNotice } from "./meeting-listing-notice";
 import { tierForMeeting } from "@/lib/state/derive";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { Venue } from "@/lib/meetings/venues";
-import { commentAccessFor } from "@/lib/registry/comment-access";
+import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
@@ -457,7 +457,12 @@ export function HowToBeHeard({
   bodyName: string;
   bodyId?: string | null;
 }) {
-  const access = commentAccessFor(ocdId, bodyName, bodyId);
+  const access = projectedCommentAccessFor(
+    ocdId,
+    bodyName,
+    bodyId,
+    useShellData().commentAccess ?? [],
+  );
   if (!access) return null;
 
   if (access.commentPeriod === "UNKNOWN") {

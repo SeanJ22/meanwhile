@@ -526,7 +526,8 @@ test("F21: the ballot page renders the polling-place pointer exactly once, in th
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
   assert.ok(page.includes("pollingPlaceLinkFor"), "the ballot page never asks for it");
 
-  const occurrences = page.split("pollingPlaceLinkFor(set.election.state)").length - 1;
+  const pointerCall = "pollingPlaceLinkFor(set.election.state, pollingPlaceLinks)";
+  const occurrences = page.split(pointerCall).length - 1;
   assert.equal(
     occurrences,
     1,
@@ -535,8 +536,8 @@ test("F21: the ballot page renders the polling-place pointer exactly once, in th
 
   // Location, not just count. The dates header is the block that also
   // resolves the registration deadline and early-voting steps.
-  const header = page.indexOf("const reg = registrationLinkFor(set.election.state);");
-  const pointer = page.indexOf("pollingPlaceLinkFor(set.election.state)");
+  const header = page.indexOf("const reg = registrationLinkFor(set.election.state, registrationLinks);");
+  const pointer = page.indexOf(pointerCall);
   assert.ok(header >= 0 && pointer > header, "the pointer left the dates header");
   /*
    * **AZ-4 and AZ-5 (2026-08-23) — the checker box this used to point at is
@@ -607,7 +608,7 @@ test("AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it 
   const { join } = await import("node:path");
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
 
-  const resolves = page.split("registrationLinkFor(set.election.state)").length - 1;
+  const resolves = page.split("registrationLinkFor(set.election.state, registrationLinks)").length - 1;
   assert.equal(
     resolves,
     1,

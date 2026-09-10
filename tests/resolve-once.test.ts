@@ -11,6 +11,9 @@ import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 /**
  * AUD-04 — the governing geography is resolved ONCE per request (2026-08-18).

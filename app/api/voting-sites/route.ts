@@ -5,7 +5,12 @@ import {
   parseCensusPoint,
 } from "@/lib/geo/census-geocoder";
 import { divisionsAt } from "@/lib/registry/server";
-import { loadVotingSites } from "@/lib/ballot/voting-sites-server";
+import {
+  loadVotingSites,
+  readVotingSitesProjection,
+} from "@/lib/ballot/voting-sites-server";
+import { currentPollingPlaceLinks } from "@/lib/ballot/polling-place-links";
+import { refreshBallotNavigationFromPromoted } from "@/lib/civic-data/curated-reader-read-model";
 import {
   modelSentence,
   narrowingFor,
@@ -100,30 +105,58 @@ async function geocode(address: string) {
   }
 }
 
-const empty = (status = 200) =>
+type BallotNavigationDataState = "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
+
+const empty = (
+  pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks>,
+  ballotNavigationDataState: BallotNavigationDataState,
+  status = 200,
+) =>
   Response.json(
-    { match: false, point: null, jurisdictions: [], outsideCoverage: false },
+    { match: false, point: null, jurisdictions: [], outsideCoverage: false, pollingPlaceLinks, ballotNavigationDataState },
     { status, headers: NO_STORE },
   );
 
 export async function POST(request: Request) {
+  let pollingPlaceLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
+  let ballotNavigationDataState: BallotNavigationDataState = "FIRST_SEED";
+  try {
+    if (process.env.NODE_ENV === "production") {
+      await refreshBallotNavigationFromPromoted();
+      ballotNavigationDataState = "PROMOTED";
+    }
+    pollingPlaceLinks = currentPollingPlaceLinks();
+  } catch {
+    // Official handoff links are independent of the voting-site projection.
+    // Withhold only this family and continue the in-app site lookup.
+    ballotNavigationDataState = "STORE_UNREACHABLE";
+  }
   let address: string;
   try {
     const body = (await request.json()) as { address?: unknown };
     address = typeof body.address === "string" ? body.address.trim() : "";
   } catch {
-    return empty(400);
+    return empty(pollingPlaceLinks, ballotNavigationDataState, 400);
   }
   // A validity check, never behind a flag: closed shape and a length cap.
-  if (address.length < 3 || address.length > MAX_ADDRESS_CHARS) return empty(400);
+  if (address.length < 3 || address.length > MAX_ADDRESS_CHARS) return empty(pollingPlaceLinks, ballotNavigationDataState, 400);
 
   const point = await geocode(address);
-  if (!point) return empty();
+  if (!point) return empty(pollingPlaceLinks, ballotNavigationDataState);
 
   const divisions = await divisionsAt(point.lat, point.lng);
   const covering = new Set(divisions.map((d) => d.ocdId));
 
-  const file = loadVotingSites();
+  let file: ReturnType<typeof loadVotingSites>;
+  try {
+    await readVotingSitesProjection();
+    file = loadVotingSites();
+  } catch {
+    return Response.json(
+      { error: "voting-site data unavailable" },
+      { status: 503, headers: NO_STORE },
+    );
+  }
   const hits = file.jurisdictions.filter((j) => covering.has(j.ocdId));
 
   /*
@@ -151,6 +184,8 @@ export async function POST(request: Request) {
     point,
     jurisdictions: hits.map(project),
     outsideCoverage: hits.length === 0,
+    pollingPlaceLinks,
+    ballotNavigationDataState,
   };
   return Response.json(answer, { headers: NO_STORE });
 }

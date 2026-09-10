@@ -44,6 +44,31 @@ export const UPCOMING_HORIZON_DAYS = 120;
 export const CONCLUDED_LOOKBACK_DAYS = 90;
 
 /**
+ * Versioned authority for the only incomplete-horizon meeting removal rule.
+ * Evidence must name this exact contract and its bounds must be recomputed
+ * from the candidate retrieval instant; caller-supplied dates are never an
+ * independent removal authority.
+ */
+export const MEETING_READER_SERVING_WINDOW_CONTRACT =
+  "MEETING_READER_SERVING_WINDOW_V1" as const;
+
+export interface MeetingReaderServingWindow {
+  readonly contract: typeof MEETING_READER_SERVING_WINDOW_CONTRACT;
+  readonly lowerBound: string;
+  readonly upperBound: string;
+}
+
+export function meetingReaderServingWindowAt(anchor: string): MeetingReaderServingWindow | null {
+  const instant = Date.parse(anchor);
+  if (!Number.isFinite(instant)) return null;
+  return {
+    contract: MEETING_READER_SERVING_WINDOW_CONTRACT,
+    lowerBound: new Date(instant - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
+    upperBound: new Date(instant + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
+  };
+}
+
+/**
  * Which rung of the cascade produced the result.
  *
  * `exact`     — upcoming meetings inside the radius we first asked for.

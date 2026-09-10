@@ -8,8 +8,9 @@
  * `PROPOSED -> VALIDATED -> ADMITTED | REJECTED` — and this module drives only
  * its first two steps. A Scout PROPOSES; the prospective store is VALIDATED
  * against the canonical validators; the record lands in
- * `data/method/candidates.json` as VALIDATED or REJECTED with the exact
- * issues. **Nothing here calls `markAdmitted` or `writeMethodStore`.**
+ * `cp_method_candidates/live` as VALIDATED or REJECTED with the exact issues
+ * in the canonical control-plane aggregate. **Nothing here calls
+ * `markAdmitted` or `writeMethodStore`.**
  * Admission is graduation, and graduation is a session's act under the
  * existing method:learn path with independent repetition — the Scout may
  * never promote its own proposal.
@@ -39,17 +40,18 @@ import {
   markRejected,
   markValidated,
   proposeCandidate,
-  readCandidateStore,
   readMethodStore,
-  writeCandidateStore,
+  type CandidateStore,
   type CandidateLifecycle,
   type MethodCandidate,
 } from "../../method/candidate.ts";
+import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories } from "../repository/types.ts";
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
 import type { WorkArtifact } from "./dispatch.ts";
 import type { ScoutCandidate, ScoutResult } from "./scout-result.ts";
 
-export const CANDIDATE_STORE = ["data", "method", "candidates.json"] as const;
+/** One authoritative lifecycle aggregate in the standing production plane. */
+export const METHOD_CANDIDATE_STORE_ID = "live" as const;
 export const METHOD_STORE = ["data", "method", "knowledge.json"] as const;
 
 export interface ProposedCandidate {
@@ -141,21 +143,26 @@ function modelClaimsOf(c: ScoutCandidate): MethodCandidate["modelClaims"] {
  * Propose and VALIDATE every openable candidate on a result. Writes the
  * candidate store; never the method store. Idempotent by derived candidate id.
  */
-export function proposeScoutCandidates(input: {
+export async function proposeScoutCandidates(input: {
+  readonly repos: ControlPlaneRepositories;
   readonly root: string;
   readonly result: ScoutResult;
   readonly artifacts: readonly WorkArtifact[];
   readonly stamp: string;
-}): ProposalReport {
-  const candidatePath = join(input.root, ...CANDIDATE_STORE);
+}): Promise<ProposalReport> {
   const methodPath = join(input.root, ...METHOD_STORE);
   const knowledge = readMethodStore(methodPath);
-  let store = readCandidateStore(candidatePath);
-  const proposed: ProposedCandidate[] = [];
-  const notProposed: { routeId: string; why: string }[] = [];
-  let wrote = false;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const current = await input.repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+    if (current === null) {
+      throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED: refusing to treat an absent canonical store as an empty candidate population");
+    }
+    let store: CandidateStore = current.value;
+    const proposed: ProposedCandidate[] = [];
+    const notProposed: { routeId: string; why: string }[] = [];
+    let wrote = false;
 
-  for (const c of input.result.candidates) {
+    for (const c of input.result.candidates) {
     const opened = input.artifacts.filter((a) => a.canonicalUrl === c.url);
     if (opened.length === 0) {
       notProposed.push({ routeId: c.routeId, why: "the candidate URL was not opened in this Attempt, so no outcome exists to learn" });
@@ -229,16 +236,35 @@ export function proposeScoutCandidates(input: {
       store = r.store;
       proposed.push({ routeId: c.routeId, candidateId: r.candidate.id, lifecycle: r.candidate.lifecycle, issues: [r.candidate.rejection?.reason ?? "malformed"], already: false });
     }
-  }
+    }
 
-  if (wrote) writeCandidateStore(candidatePath, store, input.stamp);
-  return { proposed, notProposed, counts: candidateCounts(store), storeVersionObserved: knowledge.version };
+    const report = { proposed, notProposed, counts: candidateCounts(store), storeVersionObserved: knowledge.version };
+    if (!wrote) return report;
+    try {
+      await input.repos.methodCandidates.compareAndSet(METHOD_CANDIDATE_STORE_ID, current.revision, store, input.stamp);
+      return report;
+    } catch (error) {
+      if (!(error instanceof ConcurrentModification) && !(error instanceof IdentityCollision)) throw error;
+      if (attempt === 3) throw error;
+    }
+  }
+  throw new Error("METHOD_CANDIDATE_CAS_RETRY_EXHAUSTED");
 }
 
-/** The counts the research state reports, or null when the store is unreadable. */
-export function candidateStoreCounts(root: string): Record<CandidateLifecycle, number> | null {
+/** The one canonical store; absence is not an empty candidate population. */
+export async function readMethodCandidateStore(repos: ControlPlaneRepositories): Promise<CandidateStore> {
+  const current = await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+  if (current === null) throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED");
+  if (current.value.storeVersion !== 1 || !Array.isArray(current.value.candidates)) {
+    throw new Error("METHOD_CANDIDATE_STORE_UNREADABLE");
+  }
+  return current.value;
+}
+
+/** The counts the research state reports, or null when authority is absent/unreadable. */
+export async function candidateStoreCounts(repos: ControlPlaneRepositories): Promise<Record<CandidateLifecycle, number> | null> {
   try {
-    return candidateCounts(readCandidateStore(join(root, ...CANDIDATE_STORE)));
+    return candidateCounts(await readMethodCandidateStore(repos));
   } catch {
     return null;
   }

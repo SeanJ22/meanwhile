@@ -3,6 +3,9 @@ import { test } from "node:test";
 import { actionText, executiveActionStore } from "../lib/officials/executive-actions.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("all42 held official actions reach map and canonical ballot projection with Ask parity", () => {
   const held = executiveActionStore()!.actions;

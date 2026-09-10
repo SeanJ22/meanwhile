@@ -17,7 +17,12 @@ import { formatMiles } from "@/lib/map/format";
 
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
-import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
+import {
+  type CoverageSummary,
+  type CoveredBody,
+  type Seat,
+} from "@/lib/registry/coverage";
+import { stateLegislatorCoverageGapText } from "@/lib/registry/coverage-client";
 import { deriveWhoGoverns } from "@/lib/registry/who-governs";
 import {
   homeSubject,
@@ -27,7 +32,7 @@ import {
 } from "@/lib/state/resolved-location";
 import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
-import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
+import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import {
   hasRepresentation,
   leadKind,
@@ -555,6 +560,7 @@ function CoverageBody({
     senators,
     seatCounts,
     statewideExecutives,
+    stateLegislatorAuthorities = [],
   } = coverage;
 
   /*
@@ -654,6 +660,10 @@ function CoverageBody({
   );
   const stateSeats = statePanel.yours;
   const federalSeats = federalPanel.yours;
+  const stateLegislatorGaps = stateLegislatorAuthorities.flatMap((authority) => {
+    const text = stateLegislatorCoverageGapText(authority);
+    return text === null ? [] : [{ authority, text }];
+  });
 
   /*
    * The reader's device-local narrowing (M26): where they picked their
@@ -1146,7 +1156,7 @@ function CoverageBody({
               matter exactly as much as a mayor would. Same pattern anywhere
               the expected office doesn't exist. */}
           {shown.flatMap((body) => {
-            const board = rosterHoldersForBody(body.bodyId).filter((holder) =>
+            const board = projectedBodyRoster(body).members.filter((holder) =>
               /select\s?board/i.test(holder.officeTitle),
             );
             if (board.length === 0) return [];
@@ -1502,6 +1512,19 @@ function CoverageBody({
         </>
       )}
 
+      {stateLegislatorGaps.map(({ authority, text }) => (
+        <p
+          key={`state-legislator-authority:${authority.scope}`}
+          data-state-legislator-authority={authority.kind}
+          data-state-legislator-scope={authority.scope}
+          className={`mt-2.5 text-[0.6875rem] leading-relaxed ${
+            authority.kind === "STORE_UNREACHABLE" ? "text-signal" : "text-voice"
+          }`}
+        >
+          {text}
+        </p>
+      ))}
+
       {(bodies.some(
         (b) =>
           b.name === null &&
@@ -1544,7 +1567,7 @@ function CoverageBody({
           {counts.withoutSource > 0 && seatCounts.named < seatCounts.total && " "}
           {seatCounts.named < seatCounts.total && (
             <>
-              {seatCounts.named > 0
+              {seatCounts.named > 0 && stateLegislatorGaps.length === 0
                 ? "State legislators aren't sourced yet either."
                 : ""}
             </>

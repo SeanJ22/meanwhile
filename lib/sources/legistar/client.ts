@@ -22,6 +22,7 @@
  * silently re-tune a tenant's rate limit.
  */
 import { sourceUserAgent } from "../http.ts";
+import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
 const API_ROOT = "https://webapi.legistar.com/v1";
 
@@ -41,8 +42,6 @@ const MAX_PAGES = 100;
 const REQUEST_SPACING_MS = 350;
 
 const MAX_RETRIES = 4;
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class LegistarError extends Error {
   // Written out rather than declared as constructor parameter properties: node
@@ -112,7 +111,9 @@ async function getJson<T>(path: string, options: RequestOptions): Promise<T> {
     lastStatus = response.status;
 
     if (response.ok) {
-      return (await response.json()) as T;
+      const body = (await response.json()) as T;
+      options.signal?.throwIfAborted();
+      return body;
     }
 
     const retryable = response.status === 429 || response.status >= 500;
@@ -132,7 +133,7 @@ async function getJson<T>(path: string, options: RequestOptions): Promise<T> {
       ? retryAfter * 1000
       : REQUEST_SPACING_MS * 2 ** attempt;
 
-    await sleep(waitMs);
+    await sourceAcquisitionSleep(waitMs, options.signal);
   }
 
   throw new LegistarError(
@@ -206,7 +207,7 @@ async function pageById<T>(
         path,
       );
     }
-    await sleep(REQUEST_SPACING_MS);
+    await sourceAcquisitionSleep(REQUEST_SPACING_MS, options.signal);
   }
 
   return collected;

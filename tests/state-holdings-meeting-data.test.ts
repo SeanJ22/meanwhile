@@ -7,6 +7,7 @@ import test from "node:test";
 import ts from "typescript";
 
 import { NOTICE_SUMMARIES, noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
+import { requiredVenueEntries } from "../lib/meetings/venue-cache.ts";
 import { findClient, findVenue } from "../lib/sources/legistar/client-registry.ts";
 import { findTenant, findTenantVenue } from "../lib/sources/legistar-insite/tenant-registry.ts";
 
@@ -101,7 +102,7 @@ for (const entry of cases) {
   });
 }
 
-test("meeting consumers read held rows and retain version and venue matching", () => {
+test("meeting consumers use the canonical venue test seam and retain version and venue matching", () => {
   assert.equal(NOTICE_SUMMARIES.length, 1);
   const notice = NOTICE_SUMMARIES[0];
   assert.strictEqual(noticeSummaryFor(notice.meetingId, notice.contentHash), notice);
@@ -111,8 +112,20 @@ test("meeting consumers read held rows and retain version and venue matching", (
   assert.ok(pima && mesa);
   assert.equal(pima.venues.length, 2);
   assert.equal(mesa.venues.length, 1);
-  assert.strictEqual(findTenant("pima")?.venues, pima.venues, "Pima InSite must derive the held Legistar venues");
-  for (const venue of pima.venues) assert.strictEqual(findVenue(pima, venue.match.toUpperCase()), venue);
-  assert.strictEqual(findTenantVenue(mesa, "COUNCIL CHAMBERS"), mesa.venues[0]);
+  assert.deepEqual(findTenant("pima")?.venues, pima.venues, "Pima InSite must derive the canonical Legistar venue projection");
+  for (const venue of pima.venues) assert.deepEqual(findVenue(pima, venue.match.toUpperCase()), venue);
+  assert.deepEqual(findTenantVenue(mesa, "COUNCIL CHAMBERS"), mesa.venues[0]);
   assert.equal(findTenantVenue(mesa, "unrecorded room"), undefined);
+});
+
+test("a missing canonical Legistar venue scope fails closed", () => {
+  assert.throws(
+    () => requiredVenueEntries(
+      "legistar",
+      "ocd-division/country:us/state:az/county:pima",
+      null,
+      [],
+    ),
+    /VENUE_RESOLUTIONS_MISSING:legistar:ocd-division\/country:us\/state:az\/county:pima/,
+  );
 });

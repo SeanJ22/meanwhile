@@ -1,0 +1,961 @@
+import { createHash } from "node:crypto";
+
+import type { BallotSet } from "../ballot/types.ts";
+import type { CandidateCardData } from "../ballot/candidate-cards.ts";
+import type { CandidateLinks, RecordedHunt } from "../ballot/candidate-sites.ts";
+import type { GeneralLineup } from "../ballot/general-lineup.ts";
+import type { AnalysesFile } from "../ballot/analyses.ts";
+import type { CandidateCorpus } from "../candidates/corpus.ts";
+import type { StatementCorpus } from "../corpus/types.ts";
+import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
+import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
+import {
+  everydayRoutingProjectionFromRecords,
+  everydayRoutingProjectionProblems,
+  type EverydayRoutingProjection,
+  type EverydayRoutingRecord,
+} from "../routing/everyday.ts";
+import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { requiredManualProductionContract } from "./manual-contracts.ts";
+import {
+  directPositiveSourceUrls,
+  reconcileSourceScopedMembers,
+  type SourceScopedHeldFact,
+  type SourceScopedMember,
+} from "./manual-source-isolation.ts";
+import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts";
+import { manualSourceReceiptStructureIssue, sourceAuthority } from "./source-authority.ts";
+import type {
+  CivicRecordMember,
+  IdentityEvidence,
+  ManualSourceSetReceipt,
+  RoutineCandidate,
+} from "./types.ts";
+import { sourceProjectionEvidence } from "./types.ts";
+
+export const MANUAL_PROJECTION_CONTRACT_IDS = [
+  "az-sos-ballot",
+  "nh-curated-ballot",
+  "candidate-profiles",
+  "candidate-corpus",
+  "officeholder-statements",
+  "comment-access",
+  "ballot-navigation",
+  "campaign-sites",
+  "venue-resolutions",
+  "everyday-routing",
+] as const;
+export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)[number];
+
+export type MeasureAnalysesProjection = AnalysesFile;
+
+export interface AzBallotProjection {
+  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
+  readonly generalLineup: GeneralLineup;
+  readonly measureAnalyses: MeasureAnalysesProjection;
+  readonly candidateFilings: unknown;
+  readonly identityRegistry: AzIdentityRegistry;
+  readonly lineupReconciliation: LineupReconciliation;
+}
+
+export interface NhBallotProjection {
+  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
+}
+
+export interface CandidateProfilesProjection {
+  readonly cards: {
+    readonly curatedAt: string;
+    readonly note: string;
+    readonly cards: Readonly<Record<string, CandidateCardData>>;
+    readonly hunts: readonly { readonly key: string; readonly name: string; readonly note: string; readonly attemptedAt: string }[];
+  };
+  readonly links: {
+    readonly curatedAt: string;
+    readonly note: string;
+    readonly links: Readonly<Record<string, CandidateLinks>>;
+    readonly hunts: readonly RecordedHunt[];
+  };
+}
+
+export interface CuratedReaderProjection {
+  readonly kind: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing";
+  /** Stable exact members. Each family has its own contract, pointer, and LKG. */
+  readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
+  /** Present on denominator-governed Reader families such as everyday routing. */
+  readonly formatVersion?: number;
+  readonly denominator?: Readonly<Record<string, number>>;
+}
+
+export type ManualProjectionPayload =
+  | AzBallotProjection
+  | NhBallotProjection
+  | CandidateProfilesProjection
+  | CandidateCorpus
+  | StatementCorpus
+  | CuratedReaderProjection;
+
+export interface ManualProjectionPackage {
+  readonly contractId: ManualProjectionContractId;
+  readonly version: string;
+  readonly sourceThrough: string;
+  readonly sourceReceipt: ManualSourceSetReceipt;
+  readonly payload: ManualProjectionPayload;
+}
+
+export interface ManualProjectionPrior {
+  readonly versionId: string;
+  readonly payload: ManualProjectionPayload;
+  readonly sourceReceipt: ManualSourceSetReceipt;
+}
+
+export interface ManualProjectionCandidateOptions {
+  readonly prior?: ManualProjectionPrior | null;
+}
+
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
+}
+const SHA256_PATTERN = /^[a-f0-9]{64}$/;
+
+function object(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function rows(value: unknown, key: string): readonly Record<string, unknown>[] {
+  const held = object(value)?.[key];
+  return Array.isArray(held)
+    ? held.map(object).filter((row): row is Record<string, unknown> => row !== null)
+    : [];
+}
+
+function string(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function jurisdictionForCandidateKey(key: string): string {
+  if (key.startsWith("ballot-az-") || key.startsWith("az-")) return "US-AZ";
+  if (key.startsWith("ballot-nh-") || key.startsWith("nh-")) return "US-NH";
+  if (key.startsWith("ballot-nj-") || key.startsWith("nj-")) return "US-NJ";
+  return "UNRESOLVED";
+}
+
+function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetReceipt): string[] {
+  const receipted = new Set(receipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
+  const missing = [...directPositiveSourceUrls(payload)].filter((url) => !receipted.has(url)).sort();
+  return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
+}
+
+function duplicateProblems(values: readonly string[], noun: string): string[] {
+  const seen = new Set<string>();
+  const duplicates = values.filter((value) => !value || seen.has(value) || !seen.add(value));
+  return duplicates.length ? [`${noun} identifiers are empty or duplicated.`] : [];
+}
+
+interface BuiltProjection {
+  readonly payload: ManualProjectionPayload;
+  readonly records: readonly CivicRecordMember[];
+  readonly identities: readonly IdentityEvidence[];
+  readonly missingRequiredFields: readonly string[];
+  readonly violations: readonly string[];
+  readonly schemaVersion: string;
+  readonly consumerChecks: readonly { readonly consumer: string; readonly passed: boolean; readonly detail: string }[];
+  readonly factKind: string;
+}
+
+const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
+  "candidate-profiles",
+  "candidate-corpus",
+  "officeholder-statements",
+  "comment-access",
+  "ballot-navigation",
+  "campaign-sites",
+  "venue-resolutions",
+  "everyday-routing",
+]);
+
+interface IsolatedManualProjection {
+  readonly payload: ManualProjectionPayload;
+  readonly sourceReceipt: ManualSourceSetReceipt;
+  readonly excludedFacts: readonly SourceScopedHeldFact[];
+  readonly supportedCurrentSources: number;
+  readonly rejectedCurrentMembers: number;
+  readonly acceptedCurrentMembers: number;
+}
+
+function curatedRecordIssue(
+  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing",
+  row: Record<string, unknown>,
+): string | null {
+  if (!string(row.id)) return `A ${contractId} row has no stable id.`;
+  if (contractId === "everyday-routing") {
+    const contact = object(row.contact);
+    const kind = string(row.kind);
+    if (kind === "CONTACT") {
+      const zips = Array.isArray(contact?.zips) ? contact.zips : [];
+      return !string(row.topicId) || !/^\d{5}$/.test(string(row.zip)) ||
+          string(contact?.topicId) !== string(row.topicId) ||
+          zips.length !== 1 || zips[0] !== row.zip ||
+          string(contact?.verification) !== "PAGE_FETCHED" ||
+          !/^https:\/\//.test(string(contact?.sourceUrl)) ||
+          !Number.isFinite(Date.parse(string(contact?.collectedAt))) ||
+          !(string(contact?.phone) || string(contact?.email) || string(contact?.requestUrl))
+        ? `${string(row.id)} lacks its exact topic/ZIP, verified official source, or usable contact channel.`
+        : null;
+    }
+    return kind !== "CONTACT_OWED" || string(row.disposition) !== "UNKNOWN" ||
+        string(row.holdingStatus) !== "CONTACT_OWED" || !string(row.reason).trim() ||
+        !/^https:\/\//.test(string(row.evidenceSourceUrl)) ||
+        !Number.isFinite(Date.parse(string(row.reviewedAt)))
+      ? `${string(row.id)} is not an explicit UNKNOWN/CONTACT_OWED source-hunt obligation.`
+      : null;
+  }
+  if (contractId === "comment-access") {
+    return !string(row.bodyId) ||
+        !/^https:\/\//.test(string(row.sourceUrl)) ||
+        !Number.isFinite(Date.parse(string(row.collectedAt))) ||
+        !["YES", "NO", "UNKNOWN"].includes(string(row.commentPeriod))
+      ? `${string(row.id)} lacks its exact body, source, collection time, or rule verdict.`
+      : null;
+  }
+  if (contractId === "ballot-navigation") {
+    const value = object(row.value);
+    return !["POLLING_PLACE_LINK", "REGISTRATION_LINK"].includes(string(row.kind)) ||
+        !/^[A-Z]{2}$/.test(string(value?.state)) ||
+        !/^https:\/\//.test(string(value?.url)) ||
+        !Number.isFinite(Date.parse(string(value?.verifiedAt)))
+      ? `${string(row.id)} lacks its exact kind, state, HTTPS route, or verification date.`
+      : null;
+  }
+  if (contractId === "campaign-sites") {
+    const site = object(row.site);
+    return !officeholderIdentityMayEnterReader(string(row.officeholderId), null) ||
+        !/^https:\/\//.test(string(site?.url)) ||
+        !string(site?.verification) ||
+        !Number.isFinite(Date.parse(string(site?.attemptedAt)))
+      ? `${string(row.id)} lacks an eligible exact identity, verified HTTPS site, or attempt date.`
+      : null;
+  }
+  const bodyOcdId = row.bodyOcdId;
+  return !string(row.sourceId) ||
+      !string(row.match) ||
+      !string(row.name) ||
+      !(typeof bodyOcdId === "string" || bodyOcdId === null) ||
+      (bodyOcdId === null && !string(row.tenant)) ||
+      !Number.isFinite(row.lat) ||
+      !Number.isFinite(row.lng) ||
+      Number(row.lat) < -90 || Number(row.lat) > 90 ||
+      Number(row.lng) < -180 || Number(row.lng) > 180 ||
+      !/^https:\/\//.test(string(row.addressSourceUrl)) ||
+      !/^https:\/\//.test(string(row.coordinateSourceUrl)) ||
+      !Number.isFinite(Date.parse(string(row.verifiedAt)))
+    ? `${string(row.id)} lacks its exact source/body/raw-location key, cited address/coordinates, or review time.`
+    : null;
+}
+
+function profileMembers(payload: ManualProjectionPayload): readonly SourceScopedMember[] {
+  const held = object(payload);
+  const cards = object(object(held?.cards)?.cards) ?? {};
+  const links = object(object(held?.links)?.links) ?? {};
+  return [
+    ...Object.entries(cards).map(([key, record]) => ({ key: `profile:${key}:card`, record })),
+    ...Object.entries(links).map(([key, record]) => ({ key: `profile:${key}:links`, record })),
+  ];
+}
+
+function corpusMembers(payload: ManualProjectionPayload): readonly SourceScopedMember[] {
+  return rows(payload, "documents").map((record) => ({ key: `document:${string(record.id)}`, record }));
+}
+
+function statementMembers(payload: ManualProjectionPayload): readonly SourceScopedMember[] {
+  return rows(payload, "snapshots").map((record) => ({ key: `statement:${string(record.id)}`, record }));
+}
+
+function curatedMembers(payload: ManualProjectionPayload): readonly SourceScopedMember<Record<string, unknown>>[] {
+  return rows(payload, "records").map((record) => ({ key: string(record.id), record }));
+}
+
+function sourceScopedMembers(
+  contractId: ManualProjectionContractId,
+  payload: ManualProjectionPayload,
+): readonly SourceScopedMember[] {
+  if (contractId === "candidate-profiles") return profileMembers(payload);
+  if (contractId === "candidate-corpus") return corpusMembers(payload);
+  if (contractId === "officeholder-statements") return statementMembers(payload);
+  if (contractId === "comment-access" || contractId === "ballot-navigation" ||
+      contractId === "campaign-sites" || contractId === "venue-resolutions" ||
+      contractId === "everyday-routing") {
+    return curatedMembers(payload);
+  }
+  return [];
+}
+
+function sourceScopedMemberIssue(
+  contractId: ManualProjectionContractId,
+  member: SourceScopedMember,
+  receipt: ManualSourceSetReceipt,
+): string | null {
+  if (contractId === "candidate-profiles") {
+    const candidateKey = member.key.replace(/^profile:/, "").replace(/:(?:card|links)$/, "");
+    if (jurisdictionForCandidateKey(candidateKey) === "UNRESOLVED") {
+      return `${member.key} has no supported exact jurisdiction prefix.`;
+    }
+    return object(member.record) === null ? `${member.key} is not a profile object.` : null;
+  }
+  if (contractId === "candidate-corpus") {
+    const row = object(member.record);
+    if (!row) return `${member.key} is not a candidate publication object.`;
+    const id = string(row.id);
+    const candidateKey = string(row.candidateKey);
+    const documentUrl = string(row.documentUrl);
+    const contentHash = string(row.contentHash);
+    const retrievedAt = string(row.retrievedAt);
+    const extraction = string(row.extraction);
+    const extractionShapeValid = extraction === "html"
+      ? Boolean(string(row.text).trim())
+      : extraction === "failed" && row.text === null && Boolean(string(row.extractionNote).trim());
+    const normalizedTextHashValid = extraction !== "html" || sha256(string(row.text)) === contentHash;
+    if (!id || !candidateKey || id !== `${candidateKey}@${contentHash}` ||
+        !["CAMPAIGN_SITE", "OFFICIAL_SITE"].includes(string(row.sourceClass)) ||
+        !["HUNTED_AND_VERIFIED", "STATED_IN_FILING"].includes(string(row.basis)) ||
+        !/^https:\/\//.test(documentUrl) || !SHA256_PATTERN.test(contentHash) ||
+        !Number.isFinite(Date.parse(retrievedAt)) || !string(row.contentType) || !extractionShapeValid ||
+        !normalizedTextHashValid) {
+      return `${member.key} lacks its exact content-addressed id, candidate/source class, HTTPS document, normalized-text hash, retrieval time, content type, or truthful extraction outcome.`;
+    }
+    if (jurisdictionForCandidateKey(candidateKey) === "UNRESOLVED") {
+      return `${member.key} has no supported exact candidate jurisdiction.`;
+    }
+    if (!receipt.sources.some((source) =>
+      (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED" &&
+      source.finalUrl === documentUrl &&
+      source.rawHash === contentHash &&
+      source.retrievedAt === retrievedAt
+    )) {
+      return `${member.key} is not bound to supported exact bytes and retrieval time for ${documentUrl}.`;
+    }
+    return null;
+  }
+  if (contractId === "officeholder-statements") {
+    const row = object(member.record);
+    if (!row) return `${member.key} is not a statement snapshot object.`;
+    const id = string(row.id);
+    const subjectId = string(row.subjectId);
+    const url = string(row.url);
+    const contentHash = string(row.contentHash);
+    const retrievedAt = string(row.retrievedAt);
+    const extraction = string(row.extraction);
+    if (!id || !officeholderIdentityMayEnterReader(subjectId, null) || !/^https:\/\//.test(url) ||
+        !SHA256_PATTERN.test(contentHash) || !Number.isFinite(Date.parse(retrievedAt)) || !Number.isInteger(row.httpStatus) ||
+        !["CAMPAIGN_SITE", "OFFICIAL_PAGE"].includes(string(row.kind)) ||
+        !(extraction === "failed" || (extraction === "ok" && string(row.text).trim())) ||
+        id !== `${subjectId}|${url}|${contentHash}`) {
+      return `${member.key} lacks a valid identity, exact primary-publication version, or extraction outcome.`;
+    }
+    if (!receipt.sources.some((source) =>
+      (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED" &&
+      source.finalUrl === url &&
+      source.rawHash === contentHash &&
+      source.retrievedAt === retrievedAt &&
+      source.httpStatus === row.httpStatus
+    )) {
+      return `${member.key} is not bound to supported exact bytes and retrieval time for ${url}.`;
+    }
+    return null;
+  }
+  if (contractId === "comment-access" || contractId === "ballot-navigation" ||
+      contractId === "campaign-sites" || contractId === "venue-resolutions" ||
+      contractId === "everyday-routing") {
+    const row = object(member.record);
+    return row ? curatedRecordIssue(contractId, row) : `${member.key} is not a curated Reader record.`;
+  }
+  return null;
+}
+
+function uniqueRows(current: unknown, prior: unknown): readonly unknown[] {
+  const byValue = new Map<string, unknown>();
+  for (const row of [...(Array.isArray(prior) ? prior : []), ...(Array.isArray(current) ? current : [])]) {
+    byValue.set(canonicalCivicDataJson(row), row);
+  }
+  return [...byValue.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([, row]) => row);
+}
+
+function rebuildSourceScopedPayload(
+  contractId: ManualProjectionContractId,
+  currentPayload: ManualProjectionPayload,
+  priorPayload: ManualProjectionPayload | null,
+  members: readonly SourceScopedMember[],
+): ManualProjectionPayload {
+  const current = object(currentPayload) ?? {};
+  const prior = object(priorPayload) ?? {};
+  if (contractId === "candidate-profiles") {
+    const currentCards = object(current.cards) ?? {};
+    const currentLinks = object(current.links) ?? {};
+    const priorCards = object(prior.cards) ?? {};
+    const priorLinks = object(prior.links) ?? {};
+    const cards: Record<string, unknown> = {};
+    const links: Record<string, unknown> = {};
+    for (const member of members) {
+      const card = /^profile:(.+):card$/.exec(member.key);
+      const link = /^profile:(.+):links$/.exec(member.key);
+      if (card) cards[card[1]!] = member.record;
+      if (link) links[link[1]!] = member.record;
+    }
+    return {
+      cards: {
+        curatedAt: string(currentCards.curatedAt) || string(priorCards.curatedAt),
+        note: string(currentCards.note) || string(priorCards.note),
+        cards,
+        hunts: uniqueRows(currentCards.hunts, priorCards.hunts),
+      },
+      links: {
+        curatedAt: string(currentLinks.curatedAt) || string(priorLinks.curatedAt),
+        note: string(currentLinks.note) || string(priorLinks.note),
+        links,
+        hunts: uniqueRows(currentLinks.hunts, priorLinks.hunts),
+      },
+    } as CandidateProfilesProjection;
+  }
+  if (contractId === "candidate-corpus") {
+    return {
+      formatVersion: 1,
+      fetchedAt: string(current.fetchedAt) || string(prior.fetchedAt),
+      attempted: Number.isInteger(current.attempted) ? Number(current.attempted) : Number(prior.attempted) || 0,
+      documents: members.map((member) => member.record),
+      failures: uniqueRows(current.failures, prior.failures),
+    } as CandidateCorpus;
+  }
+  if (contractId === "officeholder-statements") {
+    return { snapshots: members.map((member) => member.record) } as StatementCorpus;
+  }
+  if (contractId === "everyday-routing") {
+    return everydayRoutingProjectionFromRecords(
+      members.map((member) => member.record as EverydayRoutingRecord),
+    );
+  }
+  return {
+    kind: string(current.kind) || contractId,
+    records: members.map((member) => member.record),
+  } as CuratedReaderProjection;
+}
+
+function sourceScopedProjection(
+  input: ManualProjectionPackage,
+  prior: ManualProjectionPrior | null,
+): IsolatedManualProjection {
+  const currentMembers = sourceScopedMembers(input.contractId, input.payload);
+  const reconciled = reconcileSourceScopedMembers({
+    current: currentMembers,
+    currentReceipt: input.sourceReceipt,
+    prior: prior ? {
+      members: sourceScopedMembers(input.contractId, prior.payload),
+      sourceReceipt: prior.sourceReceipt,
+    } : null,
+    memberIssue: (member) => sourceScopedMemberIssue(input.contractId, member, input.sourceReceipt),
+  });
+  let selectedMembers = reconciled.members;
+  let excludedFacts = reconciled.excludedFacts;
+  if (input.contractId === "everyday-routing" && prior) {
+    const currentByKey = new Map(currentMembers.map((member) => [member.key, member]));
+    const provenContactCells = new Set(
+      reconciled.members.flatMap((member) => {
+        const current = currentByKey.get(member.key);
+        const row = current?.record === member.record ? object(member.record) : null;
+        return row?.kind === "CONTACT" ? [`${string(row.topicId)}|${string(row.zip)}`] : [];
+      }),
+    );
+    const resolvedOwed = reconciled.members.filter((member) => {
+      if (currentByKey.has(member.key)) return false;
+      const row = object(member.record);
+      return row?.kind === "CONTACT_OWED" &&
+        provenContactCells.has(`${string(row.topicId)}|${string(row.zip)}`);
+    });
+    if (resolvedOwed.length > 0) {
+      const resolvedKeys = new Set(resolvedOwed.map((member) => member.key));
+      selectedMembers = reconciled.members.filter((member) => !resolvedKeys.has(member.key));
+      excludedFacts = [
+        ...reconciled.excludedFacts.filter((fact) => !resolvedKeys.has(fact.key)),
+        ...resolvedOwed.map((member) => ({
+          key: member.key,
+          code: "CONTACT_OWED_RESOLVED_BY_SUPPORTED_CONTACT",
+          detail: `${member.key} was replaced only because a current source-scoped verified contact now covers the same exact topic/ZIP cell.`,
+          record: member.record,
+        })),
+      ];
+    }
+  }
+  return {
+    payload: rebuildSourceScopedPayload(input.contractId, input.payload, prior?.payload ?? null, selectedMembers),
+    sourceReceipt: reconciled.promotionReceipt,
+    excludedFacts: [
+      ...input.sourceReceipt.sources
+        .filter((source) => source.reviewOutcome === "BLOCKED")
+        .map((source) => ({
+          key: `source:${source.requestedUrl}`,
+          code: "MANUAL_SOURCE_BLOCKED",
+          detail: `${source.requestedUrl} was blocked and could not authorize any current member: ${source.failureDetail}.`,
+          record: source,
+        })),
+      ...excludedFacts,
+    ],
+    supportedCurrentSources: reconciled.supportedCurrentSources,
+    rejectedCurrentMembers: reconciled.rejectedCurrentMembers,
+    acceptedCurrentMembers: reconciled.acceptedCurrentMembers,
+  };
+}
+
+/**
+ * Read the exact current GOOD package used as the source-scoped merge base.
+ * An unreachable/corrupt pointer is never treated as an empty set: without a
+ * proven base, omission could erase LKG and the owner promotion must stop.
+ */
+export async function readManualProjectionPrior(
+  contractId: ManualProjectionContractId,
+  store: CivicDataReadStore,
+  now: string,
+): Promise<ManualProjectionPrior | null> {
+  const contract = requiredManualProductionContract(contractId);
+  const read = await readPromotedCivicData<ManualProjectionPayload>(contract.recordClass, contract.scope, {
+    store,
+    now,
+    bypassCache: true,
+  });
+  if (read.kind === "NOT_RECORDED") return null;
+  if (read.kind !== "PROMOTED") {
+    const code = read.kind === "STORE_UNREACHABLE" ? read.code : "BOOTSTRAP_NOT_PERMITTED";
+    throw new Error(`MANUAL_PROMOTION_BASE_UNAVAILABLE:${contractId}:${code}:${read.detail}`);
+  }
+  const candidate = await store.readCandidate(read.projection.versionId);
+  const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
+  const issue = manualSourceReceiptStructureIssue(sourceReceipt);
+  if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
+    throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
+  }
+  return {
+    versionId: read.projection.versionId,
+    payload: read.value,
+    sourceReceipt,
+  };
+}
+
+function ballotProjection(
+  contractId: "az-sos-ballot" | "nh-curated-ballot",
+  payload: ManualProjectionPayload,
+): BuiltProjection {
+  const held = object(payload);
+  const ballot = object(held?.ballot);
+  const contests = rows(ballot, "contests");
+  const candidacies = rows(ballot, "candidacies");
+  const contestIds = contests.map((row) => string(row.id));
+  const candidacyIds = candidacies.map((row) => string(row.id));
+  const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
+  const records: CivicRecordMember[] = [
+    ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
+    ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
+  ];
+  const identities: IdentityEvidence[] = [
+    ...contests.map((row) => ({
+      subjectId: string(row.id),
+      jurisdiction,
+      identifiers: { contest_id: string(row.id) },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+    })),
+    ...candidacies.map((row) => ({
+      subjectId: string(row.id),
+      jurisdiction,
+      identifiers: { candidacy_id: string(row.id), contest_id: string(row.contestId) },
+      matchBasis: "EXACT_SCOPED_ID" as const,
+      ambiguous: false,
+    })),
+  ];
+  const violations = [
+    ...duplicateProblems(contestIds, "Contest"),
+    ...duplicateProblems(candidacyIds, "Candidacy"),
+    ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))
+      ? ["A candidacy names no exact retained contest."]
+      : []),
+  ];
+  if (contractId === "az-sos-ballot") {
+    const lineup = object(held?.generalLineup);
+    const analyses = object(held?.measureAnalyses);
+    const identity = object(held?.identityRegistry);
+    const reconciliation = object(held?.lineupReconciliation);
+    const identityCandidates = rows(identity, "candidates");
+    const identityIds = identityCandidates.map((row) => string(row.identityId));
+    const reconciliationRows = rows(reconciliation, "rows");
+    records.push(
+      ...identityCandidates.map((record) => ({ key: `identity:${string(record.identityId)}`, record })),
+      ...reconciliationRows.map((record) => ({ key: `lineup:${string(record.cardKey)}`, record })),
+    );
+    identities.push(
+      ...identityCandidates.map((row) => ({
+        subjectId: string(row.identityId),
+        jurisdiction,
+        identifiers: { identity_id: string(row.identityId) },
+        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
+        ambiguous: false,
+      })),
+      ...reconciliationRows.map((row) => ({
+        subjectId: string(row.cardKey),
+        jurisdiction,
+        identifiers: { candidacy_id: string(row.canonicalCandidacyId), contest_id: string(row.contestId) },
+        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
+        ambiguous: string(row.outcome) === "AMBIGUOUS",
+      })),
+    );
+    violations.push(
+      ...duplicateProblems(identityIds, "Arizona identity"),
+      ...(rows(lineup, "contests").length === 0 ? ["The Arizona package has no certified-lineup records."] : []),
+      ...(rows(analyses, "analyses").length === 0 ? ["The Arizona package has no retained measure-analysis records."] : []),
+      ...(identityCandidates.length === 0 ? ["The Arizona package has no exact candidate identity registry."] : []),
+      ...(reconciliationRows.length === 0 ? ["The Arizona package has no exact certified-lineup reconciliation."] : []),
+      ...(object(held?.candidateFilings) === null ? ["The Arizona package has no Secretary of State filing corpus."] : []),
+    );
+  }
+  return {
+    payload,
+    records,
+    identities,
+    missingRequiredFields: contests.length && candidacies.length ? [] : ["ballot.contests/candidacies"],
+    violations,
+    schemaVersion: `${contractId}:1`,
+    consumerChecks: [
+      { consumer: "/ballot and /api/ballot/scope", passed: contests.length > 0 && candidacies.length > 0, detail: `${contests.length} contests and ${candidacies.length} candidacies.` },
+      { consumer: "Ask ballot inventory", passed: candidacies.every((row) => contestIds.includes(string(row.contestId))), detail: "Every candidacy resolves to one retained contest." },
+    ],
+    factKind: contractId === "az-sos-ballot" ? "reviewed Arizona ballot, filing, analysis, and identity projection" : "reviewed New Hampshire ballot candidacy projection",
+  };
+}
+
+function profileProjection(payload: ManualProjectionPayload): BuiltProjection {
+  const held = object(payload);
+  const cards = object(object(held?.cards)?.cards) ?? {};
+  const links = object(object(held?.links)?.links) ?? {};
+  const keys = [...new Set([...Object.keys(cards), ...Object.keys(links)])].sort();
+  const records = keys.map((key) => ({ key: `profile:${key}`, record: { card: cards[key] ?? null, links: links[key] ?? null } }));
+  const identities = keys.map((key) => ({
+    subjectId: key,
+    jurisdiction: jurisdictionForCandidateKey(key),
+    identifiers: { candidate_key: key },
+    matchBasis: "EXACT_SCOPED_ID" as const,
+    ambiguous: false,
+  }));
+  return {
+    payload,
+    records,
+    identities,
+    missingRequiredFields: keys.length > 0 ? [] : ["cards.cards/links.links"],
+    violations: identities.some((identity) => identity.jurisdiction === "UNRESOLVED")
+      ? ["A candidate profile key has no supported exact jurisdiction prefix."]
+      : [],
+    schemaVersion: "candidate-profiles:1",
+    consumerChecks: [
+      { consumer: "/ballot candidate cards", passed: keys.length > 0, detail: `${Object.keys(cards).length} candidate card records; independently held link-only members do not invalidate them.` },
+      { consumer: "Ask candidate profile evidence", passed: keys.length > 0, detail: `${Object.keys(links).length} verified candidate link records; independently held card-only members do not invalidate them.` },
+    ],
+    factKind: "owner-reviewed candidate biography, contact, and verified-link projection",
+  };
+}
+
+function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt): BuiltProjection {
+  const held = object(payload);
+  const documents = rows(held, "documents");
+  const documentIds = documents.map((row) => string(row.id));
+  const records = documents.map((record) => ({ key: `document:${string(record.id)}`, record }));
+  const identities = documents.map((row) => ({
+    subjectId: string(row.candidateKey),
+    jurisdiction: jurisdictionForCandidateKey(string(row.candidateKey)),
+    identifiers: { document_id: string(row.id), candidate_key: string(row.candidateKey) },
+    matchBasis: "EXACT_SCOPED_ID" as const,
+    ambiguous: false,
+  }));
+  const complete = documents.every((row) => receipt.sources.some((source) =>
+    source.finalUrl === string(row.documentUrl) &&
+    source.rawHash === string(row.contentHash) &&
+    source.retrievedAt === string(row.retrievedAt)
+  ));
+  return {
+    payload,
+    records,
+    identities,
+    missingRequiredFields: documents.length > 0 && complete && documents.every((row) => row.id && row.candidateKey && row.documentUrl && row.contentHash && row.retrievedAt)
+      ? []
+      : ["documents.id/candidateKey/documentUrl/contentHash/retrievedAt"],
+    violations: [
+      ...duplicateProblems(documentIds, "Candidate document"),
+      ...(identities.some((identity) => identity.jurisdiction === "UNRESOLVED") ? ["A candidate publication has no supported exact jurisdiction prefix."] : []),
+    ],
+    schemaVersion: `candidate-corpus:${string(held?.formatVersion) || "1"}`,
+    consumerChecks: [
+      { consumer: "/api/positions and Ask corpus search", passed: documents.length > 0, detail: `${documents.length} exact candidate publication versions.` },
+      { consumer: "/ballot positions", passed: documents.every((row) => typeof row.extraction === "string"), detail: "Every document states its extraction outcome." },
+    ],
+    factKind: "owner-reviewed candidate-controlled and official publication versions",
+  };
+}
+
+function officeholderStatementProjection(
+  payload: ManualProjectionPayload,
+  receipt: ManualSourceSetReceipt,
+): BuiltProjection {
+  const held = object(payload);
+  const snapshots = rows(held, "snapshots");
+  const ids = snapshots.map((row) => string(row.id));
+  const identities = snapshots.map((row) => ({
+    subjectId: string(row.subjectId),
+    jurisdiction: "US",
+    identifiers: {
+      officeholder_id: string(row.subjectId),
+      snapshot_id: string(row.id),
+    },
+    matchBasis: "EXACT_SCOPED_ID" as const,
+    ambiguous: false,
+  }));
+  const complete = snapshots.every((row) => {
+    const id = string(row.id);
+    const subjectId = string(row.subjectId);
+    const url = string(row.url);
+    const contentHash = string(row.contentHash);
+    const retrievedAt = string(row.retrievedAt);
+    const extraction = string(row.extraction);
+    return Boolean(
+      id && subjectId && /^https:\/\//.test(url) && SHA256_PATTERN.test(contentHash) &&
+      Number.isFinite(Date.parse(retrievedAt)) && Number.isInteger(row.httpStatus) &&
+      (row.kind === "CAMPAIGN_SITE" || row.kind === "OFFICIAL_PAGE") &&
+      (extraction === "failed" || (extraction === "ok" && string(row.text).trim())) &&
+      id === `${subjectId}|${url}|${contentHash}` &&
+      receipt.sources.some((source) =>
+        source.finalUrl === url && source.rawHash === contentHash && source.retrievedAt === retrievedAt
+      )
+    );
+  });
+  return {
+    payload,
+    records: snapshots.map((record) => ({ key: `statement:${string(record.id)}`, record })),
+    identities,
+    missingRequiredFields: snapshots.length > 0 && complete
+      ? []
+      : ["snapshots.id/subjectId/url/contentHash/retrievedAt/httpStatus/extraction"],
+    violations: [
+      ...duplicateProblems(ids, "Officeholder statement snapshot"),
+      ...(identities.some((identity) => !officeholderIdentityMayEnterReader(identity.subjectId, null))
+        ? ["A statement is keyed only to a retired intermediary officeholder identity."]
+        : []),
+    ],
+    schemaVersion: "officeholder-statements:1",
+    consumerChecks: [
+      {
+        consumer: "/api/positions and Ask statement search",
+        passed: snapshots.length > 0 && complete,
+        detail: `${snapshots.length} append-only primary-publication snapshot(s).`,
+      },
+      {
+        consumer: "production officeholder identity boundary",
+        passed: identities.every((identity) => officeholderIdentityMayEnterReader(identity.subjectId, null)),
+        detail: "No retired intermediary-only identity can enter the Reader projection.",
+      },
+    ],
+    factKind: "owner-reviewed officeholder-controlled and official primary-publication snapshots",
+  };
+}
+
+function curatedReaderProjection(
+  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing",
+  payload: ManualProjectionPayload,
+  sourceReceipt: ManualSourceSetReceipt,
+): BuiltProjection {
+  const held = object(payload);
+  const records = rows(held, "records");
+  const ids = records.map((row) => string(row.id));
+  const shapeProblems: string[] = [];
+  if (held?.kind !== contractId) shapeProblems.push(`The projection kind does not match ${contractId}.`);
+
+  const referenceSources = sourceReceipt.sources.filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
+  if (referenceSources.length > 0 && contractId !== "venue-resolutions") {
+    shapeProblems.push(`REFERENCE_PUBLISHER evidence cannot authorize ${contractId} records.`);
+  } else if (contractId === "venue-resolutions") {
+    const coordinateUrls = new Set(records.map((row) => string(row.coordinateSourceUrl)).filter(Boolean));
+    for (const source of referenceSources) {
+      if (!coordinateUrls.has(source.requestedUrl) && !coordinateUrls.has(source.finalUrl)) {
+        shapeProblems.push(`REFERENCE_PUBLISHER evidence may support only a cited venue coordinateSourceUrl: ${source.finalUrl}.`);
+      }
+    }
+  }
+
+  for (const row of records) {
+    const issue = curatedRecordIssue(contractId, row);
+    if (issue) shapeProblems.push(issue);
+  }
+  if (contractId === "everyday-routing") {
+    shapeProblems.push(...everydayRoutingProjectionProblems(payload as EverydayRoutingProjection));
+  }
+
+  const identities = records.map((row) => {
+    const value = object(row.value);
+    const subjectId = contractId === "comment-access"
+      ? string(row.bodyId)
+      : contractId === "campaign-sites"
+        ? string(row.officeholderId)
+        : contractId === "venue-resolutions"
+          ? `${string(row.sourceId)}:${string(row.bodyOcdId) || string(row.tenant)}:${string(row.match)}`
+          : contractId === "everyday-routing"
+            ? `${string(row.topicId)}|${string(row.zip)}`
+          : `${string(value?.state)}:${string(row.kind)}`;
+    const identifiers: Record<string, string> = contractId === "everyday-routing"
+      ? { record_id: string(row.id), topic_id: string(row.topicId), zip: string(row.zip) }
+      : { record_id: string(row.id) };
+    return {
+      subjectId,
+      jurisdiction: contractId === "ballot-navigation" ? `US-${string(value?.state)}` : "US",
+      identifiers,
+      matchBasis: "EXACT_SCOPED_ID" as const,
+      ambiguous: false,
+    };
+  });
+  return {
+    payload,
+    records: records.map((record) => ({ key: string(record.id), record })),
+    identities,
+    missingRequiredFields: records.length > 0 ? [] : ["records"],
+    violations: [...duplicateProblems(ids, "Curated Reader record"), ...shapeProblems],
+    schemaVersion: `curated-reader-records:${contractId}:2`,
+    consumerChecks: [{
+      consumer: contractId === "comment-access"
+        ? "meeting/map/Ask public-comment projection"
+        : contractId === "ballot-navigation"
+          ? "ballot and where-to-vote official navigation"
+          : contractId === "campaign-sites"
+            ? "directory/map/ballot campaign-site binding"
+            : contractId === "venue-resolutions"
+              ? "meeting acquisition venue-resolution dependency"
+              : "meetings preload/Ask/Admin everyday-service routing",
+      passed: records.length > 0 && shapeProblems.length === 0,
+      detail: `${records.length} exact ${contractId} record(s); this check has no software-suite or other-source input.`,
+    }],
+    factKind: `owner-reviewed ${contractId} Reader records`,
+  };
+}
+
+export function manualProjectionCandidate(
+  input: ManualProjectionPackage,
+  options: ManualProjectionCandidateOptions = {},
+): RoutineCandidate {
+  if (!MANUAL_PROJECTION_CONTRACT_IDS.includes(input.contractId)) {
+    throw new Error(`MANUAL_PROJECTION_CONTRACT_UNSUPPORTED:${input.contractId}`);
+  }
+  const sourceReceiptIssue = manualSourceReceiptStructureIssue(input.sourceReceipt);
+  if (sourceReceiptIssue) {
+    throw new Error(`MANUAL_SOURCE_RECEIPT_MALFORMED:${sourceReceiptIssue.code}:${sourceReceiptIssue.detail}`);
+  }
+  const contract = requiredManualProductionContract(input.contractId);
+  const sourceContract = sourceAuthority(contract.sourceId);
+  const sourcePolicy = sourceContract?.manualReceiptPromotion;
+  if (!sourceContract || !sourceContract.recordClasses.includes(contract.recordClass) || !sourcePolicy) {
+    throw new Error(`MANUAL_SOURCE_RECEIPT_BINDING_INVALID:${contract.sourceId}:${contract.recordClass}`);
+  }
+  const unauthorizedSource = input.sourceReceipt.sources.find((source) =>
+    !sourcePolicy.allowedSourceClasses.includes(source.sourceClass)
+  );
+  if (unauthorizedSource) {
+    throw new Error(`MANUAL_SOURCE_RECEIPT_CLASS_NOT_AUTHORIZED:${contract.sourceId}:${unauthorizedSource.sourceClass}`);
+  }
+  const isolated = SOURCE_ISOLATED_MANUAL_CONTRACTS.has(input.contractId)
+    ? sourceScopedProjection(input, options.prior ?? null)
+    : null;
+  const payload = isolated?.payload ?? input.payload;
+  const promotionReceipt = isolated?.sourceReceipt ?? input.sourceReceipt;
+  // Ballot packages deliberately remain atomic: candidacies reference exact
+  // contests, and Arizona additionally cross-checks filings, certified lineup,
+  // identity registry, and reconciliation rows. Splitting those members would
+  // permit a cross-record proof assembled from incompatible source versions.
+  const built = input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
+    ? ballotProjection(input.contractId, payload)
+    : input.contractId === "candidate-profiles"
+      ? profileProjection(payload)
+      : input.contractId === "candidate-corpus"
+        ? corpusProjection(payload, promotionReceipt)
+        : input.contractId === "officeholder-statements"
+          ? officeholderStatementProjection(payload, promotionReceipt)
+          : curatedReaderProjection(input.contractId, payload, promotionReceipt);
+  const sources = [...input.sourceReceipt.sources].sort((left, right) =>
+    `${left.finalUrl}\n${left.rawHash}`.localeCompare(`${right.finalUrl}\n${right.rawHash}`)
+  );
+  const attemptHash = sha256(sources.map((source) =>
+    `${source.requestedUrl}\n${source.finalUrl}\n${source.httpStatus}\n${source.rawHash}\n${source.reviewOutcome ?? "SUPPORTED"}\n${source.failureDetail ?? ""}`
+  ).join("\n"));
+  const normalizedHash = sha256(canonicalCivicDataJson(built.payload));
+  const reviewedAt = input.sourceReceipt.reviewedAt;
+  const primary = promotionReceipt.sources[0];
+  const blockedSources = input.sourceReceipt.sources.filter((source) => source.reviewOutcome === "BLOCKED");
+  const acquired = isolated
+    ? isolated.supportedCurrentSources > 0 && Boolean(primary)
+    : Boolean(primary) && blockedSources.length === 0;
+  const violations = [
+    ...receiptCoverageProblems(built.payload, promotionReceipt),
+    ...built.violations,
+    ...(isolated && isolated.supportedCurrentSources > 0 && isolated.acceptedCurrentMembers === 0
+      ? ["The current review supplied no valid member-scoped fact; retained LKG alone cannot turn a failed package into a successful refresh."]
+      : []),
+  ];
+  const civicRecords = civicRecordsFor(contract.recordClass, built.payload);
+  const droppedRecords = isolated?.rejectedCurrentMembers ?? 0;
+  return {
+    // Contract/record-class identity is part of the version id. Candidate
+    // profiles and publications deliberately share a source and scope, and
+    // must never collide merely because one review covered the same bytes.
+    id: `${contract.sourceId}:${sha256(`${contract.id}\n${contract.recordClass}\n${contract.scope}\n${attemptHash}\n${normalizedHash}\n${reviewedAt}`).slice(0, 32)}`,
+    sourceId: contract.sourceId,
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    retrieval: {
+      succeeded: acquired,
+      requestedUrl: acquired ? primary!.requestedUrl : "",
+      finalUrl: acquired ? primary!.finalUrl : null,
+      httpStatus: acquired ? primary!.httpStatus : (blockedSources[0]?.httpStatus ?? null),
+      retrievedAt: reviewedAt,
+      rawHash: acquired ? attemptHash : null,
+      failureDetail: acquired
+        ? undefined
+        : blockedSources.length > 0
+          ? `The reviewed source set is blocked at ${blockedSources.length} exact source(s): ${blockedSources.map((source) => `${source.requestedUrl} (${source.failureDetail})`).join("; ")}`
+          : "The reviewed manual source set is empty; no source bytes were acquired.",
+      manualSourceReceipt: promotionReceipt,
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: contract.parserNormalizerVersion,
+      schemaVersion: built.schemaVersion,
+      normalizedHash,
+      normalizedPayloadHash: normalizedHash,
+      inputRecords: civicRecords.length + droppedRecords,
+      outputRecords: civicRecords.length,
+      droppedRecords,
+      missingRequiredFields: built.missingRequiredFields,
+    },
+    identities: built.identities,
+    temporal: {
+      version: input.version,
+      expectedVersion: input.version,
+      sourceThrough: input.sourceThrough,
+      staleAtRetrieval: false,
+    },
+    semantics: { factKind: built.factKind, violations },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "exact records represented by the explicitly owner-reviewed source set; no wider universe claim",
+      returnedRecords: civicRecords.length,
+      declaredTotal: null,
+      paginationComplete: false,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
+    dependentChecks: built.consumerChecks,
+    normalizedPayload: built.payload,
+    readModel: built.payload,
+    civicRecords,
+    excludedFacts: isolated?.excludedFacts ?? [],
+  };
+}

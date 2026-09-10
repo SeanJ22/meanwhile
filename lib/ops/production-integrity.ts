@@ -104,8 +104,8 @@ export const FAILURE_CLASSES = [
 export type FailureClass = (typeof FAILURE_CLASSES)[number];
 
 /**
- * The durable record. This is what is committed to
- * `data/ops/production-integrity.json` and what the freeze gate reads.
+ * The durable record appended to the production control plane's existing
+ * software-release outcome log and read by both Admin and the freeze gate.
  *
  * `deployedSha` is the application-bearing commit the reading was taken
  * against. It is the field that makes staleness detectable: without it, a green
@@ -147,7 +147,7 @@ export const NEVER_CHECKED: IntegrityRecord = {
 /**
  * Are these two strings the same commit?
  *
- * **PREFIX-TOLERANT, AND THAT IS NOT A CONVENIENCE.** The committed record has
+ * **PREFIX-TOLERANT, AND THAT IS NOT A CONVENIENCE.** Historical records have
  * carried an ABBREVIATED sha since 2026-08-28 (`"71325247"`), and
  * `GET /api/build` returns the full forty characters. Strict equality would
  * therefore have reported PRODUCTION_MOVED for a commit that had not moved at
@@ -258,14 +258,12 @@ export function assessIntegrity(
 /**
  * THE MAXIMUM AGE A HEALTHY READING MAY CARRY, and the reason for the number.
  *
- * Twenty-four hours is one full cycle of this repository's own daily
- * orchestrated run (`lib/ops/refresh-cadence.ts`, RULING 124) — the fastest
- * independent thing that touches production at all. It is also the MEASURED
- * width of the window the 2026-08-28 schema drift hid in: migrations 0021 and
- * 0022 deployed against a schema that stood at 20, and the only thing that ever
- * asked was the daily tripwire, the next morning. A healthy reading older than
- * one cycle has had an entire deploy window to stop being true with nothing
- * looking.
+ * Twenty-four hours is the deliberately conservative maximum between software
+ * release-integrity observations. It is also the MEASURED width of the window
+ * the 2026-08-28 schema drift hid in: migrations 0021 and 0022 deployed against
+ * a schema that stood at 20, and the then-daily tripwire did not ask until the
+ * next morning. The legacy refresh cadence and tripwire clocks are retired;
+ * routine civic-data cadence is unrelated to this software-release reading.
  *
  * It is an EXPLICIT PARAMETER of the observation and nothing else. There is no
  * environment variable, no flag, and no skip: an escape hatch on this bound
@@ -278,14 +276,10 @@ export const MAX_READING_AGE_HOURS = 24;
  * WHETHER TWO COMMITS CARRY THE SAME APPLICATION — NH289.
  *
  * The served COMMIT and the application-bearing RELEASE are different
- * identities, and conflating them froze a release on 2026-08-30: the
- * post-deploy observer commits `data/ops/production-integrity.json` — a path
- * `deploy-paths.ts` itself classifies as non-shipping — and when Netlify
- * builds that commit (it rides the accumulated diff whenever it lands while
- * the app-bearing build is still in flight), production starts REPORTING the
- * observer's sha while SERVING the measured release's application, byte for
- * byte. `sameCommit` then says moved, and the next production-changing PR is
- * frozen over a difference no reader can see.
+ * identities, and conflating them froze a release on 2026-08-30. The retired
+ * observer Git writer exposed the case, but any later human-authored
+ * non-shipping descendant can still make production report a newer commit
+ * while serving the measured release's application byte for byte.
  *
  * This type is the caller's PROOF about that difference, and it is evidence,
  * not leniency:
@@ -625,8 +619,8 @@ export function evaluateReleaseFreeze(input: {
       "Take a post-deploy reading against the commit production actually serves:\n" +
       `  pnpm integrity:check --sha=<the sha GET ${PUBLIC_SITE_ORIGIN}/api/build returns> --write\n` +
       "or let the observer do it — `.github/workflows/post-deploy-integrity.yml` runs\n" +
-      "`pnpm exec tsx scripts/post-deploy-observer.mts` on every push to main and records the\n" +
-      "reading itself. There is no skip flag and no environment override for this bound.";
+      "`pnpm exec tsx scripts/post-deploy-observer.mts` on every push to main and appends the\n" +
+      "reading to the canonical software-release log. There is no skip flag and no environment override for this bound.";
 
     if (observation === null) {
       return {

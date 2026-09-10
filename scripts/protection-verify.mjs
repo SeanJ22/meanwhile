@@ -90,16 +90,10 @@ function read() {
   }
 
   /*
-   * THE DEPLOY KEYS, BECAUSE THE BYPASS IS GRANTED TO THE CATEGORY.
-   * (2026-08-26, RULING 165.)
-   *
-   * `bypass_actors` names `DeployKey` with `actor_id: null` — there is no way
-   * to grant it to ONE key. Every write-enabled deploy key on this repository
-   * therefore holds the bypass, so the count belongs in the protection reading
-   * and not in a separate report somebody remembers to run.
-   *
-   * `null` when unread, which is NOT an empty list: a count nobody could read
-   * must never be judged as one.
+   * Terminal PDC requires zero write-enabled deploy keys. Read this endpoint
+   * as part of the same judgement so deleting the ruleset bypass while leaving
+   * a dormant direct-write credential cannot be reported as complete.
+   * `null` when unread is not an earned zero.
    */
   const keysRes = api(`repos/${REPO}/keys`);
   let deployKeys = null;

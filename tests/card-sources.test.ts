@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import {
   BOUNDARY_PROVENANCE,

@@ -175,7 +175,7 @@ export interface MethodCandidate {
     readonly permission: string | null;
     readonly recordClass: string | null;
   };
-  /** Set by `scripts/scout-candidates-rederive.mts` when the proposal's provenance was rewritten from the record. */
+  /** Historical seed evidence that the proposal provenance was re-derived from its durable artifact record. */
   readonly provenanceRederived?: {
     readonly at: string;
     readonly rule: string;

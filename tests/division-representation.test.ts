@@ -1,6 +1,9 @@
 import { rosterPath, stateDomainFiles } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
 import { representationForDivision } from "../lib/registry/representation.ts";
@@ -203,6 +206,7 @@ test("the route answers by path, and distinct divisions get distinct answers", a
     label: null,
     divisionType: null,
     tier: null,
+    holderStatus: "HOLDING_UNAVAILABLE",
     holders: [],
   });
 

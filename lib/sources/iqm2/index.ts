@@ -19,6 +19,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -261,7 +262,7 @@ export function makeIqm2Source(
   return {
     name: SOURCE_NAME,
 
-    async fetch(): Promise<Iqm2Raw[]> {
+    async fetch(query?: MeetingQuery): Promise<Iqm2Raw[]> {
       const now = Date.now();
       const from = usDate(new Date(now - WINDOW_BACK_DAYS * 86_400_000));
       const to = usDate(new Date(now + WINDOW_FORWARD_DAYS * 86_400_000));
@@ -269,7 +270,10 @@ export function makeIqm2Source(
       const collected: Iqm2Raw[] = [];
       for (const wiring of wiringRows) {
         const url = `${wiring.config.base}/Citizens/Calendar.aspx?From=${from}&To=${to}`;
-        const { text } = await politeGetText(url, { fetchImpl });
+        const { text } = await politeGetText(url, {
+          fetchImpl,
+          signal: query?.signal,
+        });
         collected.push({
           wiring,
           html: text,

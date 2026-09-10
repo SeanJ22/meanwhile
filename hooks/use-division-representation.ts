@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
-import { rosterGapsForDivision, type RosterReaderGap } from "@/lib/registry/body-rosters";
+import type { RosterReaderGap } from "@/lib/registry/body-rosters";
+import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
 
 /**
  * **Who represents a division the reader is not standing in** (M112,
@@ -102,7 +103,7 @@ export function useDivisionRepresentation(
     // every render and the identity would restart the fetch forever.
   }, [ocdId, localCount]);
 
-  if (localCount > 0) return { holders: local, status: "resolved", rosterGaps: rosterGapsForDivision(ocdId) };
+  if (localCount > 0) return { holders: local, status: "resolved", rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) };
   // No division to ask about is an honest empty for a caller, not a pending
   // question.
   if (!ocdId) return { holders: [], status: "unsourced" };

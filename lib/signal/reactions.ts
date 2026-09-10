@@ -77,7 +77,7 @@ export const FUNDING_REACTION_TYPES: ReactionTargetType[] = [
  * on a contested race the answer would mean something different, and mixing
  * the two meanings into one bucket is the sort of quiet corruption the
  * incumbent/challenger split exists to prevent. `getSingleCandidateTargetIds()`
- * derives the permitted set from the committed ballot data, so a contest
+ * derives the permitted set from the canonical promoted ballot data, so a contest
  * stops qualifying the moment a second candidate files.
  */
 /**

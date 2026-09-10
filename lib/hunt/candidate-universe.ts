@@ -36,13 +36,10 @@
  * ## THE DERIVATION RE-DERIVES; IT DOES NOT HARDCODE
  *
  * `deriveCandidateUniverse` is given ballot documents and enrichment stores as
- * VALUES. `scripts/candidate-universe.mts` finds them by globbing
- * `data/ballot/<state>-*.json` for any document carrying a `candidacies` array,
- * so a statewide identity registry that lands under a new filename is picked up
- * without an edit here. That is deliberate: this lane's denominator is the
- * largest one derivable from committed sources TODAY, and it must grow the
- * moment a larger committed source exists rather than when somebody remembers
- * to change a constant.
+ * VALUES. Production supplies those values from the proof-validated promoted
+ * ballot/profile/candidate-publication projections. Historical hunt artifacts
+ * may still exercise this pure function in tests, but cannot feed the standing
+ * scheduler or a Reader.
  *
  * ## Absence is never asserted
  *
@@ -162,7 +159,7 @@ export interface BallotDocument {
     readonly id: string;
     readonly ocdId: string;
     readonly title: string;
-    readonly provenance?: { readonly sourceUrl?: string; readonly sourceOrg?: string };
+    readonly provenance?: { readonly sourceUrl?: string | null; readonly sourceOrg?: string | null };
   }[];
   readonly candidacies: readonly {
     readonly id: string;
@@ -171,7 +168,7 @@ export interface BallotDocument {
     readonly givenName: string;
     readonly partyLabel?: string | null;
     readonly websiteUrl?: string | null;
-    readonly provenance?: { readonly sourceUrl?: string; readonly sourceOrg?: string };
+    readonly provenance?: { readonly sourceUrl?: string | null; readonly sourceOrg?: string | null };
   }[];
 }
 
@@ -351,16 +348,16 @@ export function deriveCandidateUniverse(input: {
     generatedBy: input.generatedBy,
     generatedOn: input.generatedOn,
     _note: [
-      "GENERATED ARTIFACT — never hand-edited (RULING 92). Regenerate with `pnpm candidates:universe`.",
+      "DERIVED VIEW — production derives this in memory from proof-validated canonical projections.",
       "",
       "RULING 229: this is the ACQUISITION DENOMINATOR for candidate enrichment in this state. It is",
       "keyed to the STATE and the OFFICE, never to a ZIP, a county or a pilot ballot. `pilotIds` keeps",
       "the join to the certified ballots this identity was seen on, so a reader projection is a JOIN and",
       "never a rename.",
       "",
-      "IT IS THE LARGEST DENOMINATOR DERIVABLE FROM COMMITTED SOURCES TODAY, and it is not the state's",
-      "candidate universe. `derivedFrom` names every document it was built from. A candidate absent from",
-      "all of them is absent from THIS FILE — never absent from the ballot.",
+      "IT IS THE LARGEST DENOMINATOR DERIVABLE FROM THE PROMOTED AUTHORITIES, and it is not the state's",
+      "candidate universe. `derivedFrom` names every canonical projection represented. A candidate absent",
+      "from all of them is absent from THIS VIEW — never absent from the ballot.",
       "",
       "FOUND / SEARCHED_NO_RESULT / UNWORKED are three different facts. A field nobody looked for is",
       "UNWORKED. A field searched and not found carries the date it was searched. Neither is ever a",

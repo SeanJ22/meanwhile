@@ -1,5 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
+import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 
 /**
  * One person, one photo (item 6b, 2026-08-15, the author's finding).
@@ -34,8 +34,10 @@ import { join } from "node:path";
  * Commons photographer's credit — a false statement about provenance, which
  * is worse than the duplicate it fixed.
  *
- * Server-side: reads the committed photo files. Both ballot surfaces
- * resolve through `lib/ballot/candidate-cards.ts`, which calls this.
+ * Server-side: reads the already-loaded canonical registry-runtime
+ * projection. Both ballot surfaces resolve through
+ * `lib/ballot/candidate-cards.ts`, which calls this. Tracked modules are
+ * first-seed inputs only; this production resolver never reparses them.
  */
 
 export interface PersonPhoto {
@@ -82,14 +84,11 @@ let index: Map<string, PersonPhoto> | null = null;
 function buildIndex(): Map<string, PersonPhoto> {
   const best = new Map<string, { key: string; photo: PersonPhoto }>();
 
-  const generated = JSON.parse(
-    readFileSync(
-      join(process.cwd(), "lib", "registry", "official-photos.json"),
-      "utf8",
-    ),
-  ) as { photos: OfficialPhotoRow[] };
+  const runtime = getRegistryRuntimeReadModel();
+  const generated = runtime.officialPhotos as { photos: OfficialPhotoRow[] };
 
   for (const row of generated.photos) {
+    if (!officeholderIdentityMayEnterReader(row.officeholderId)) continue;
     const key = personKey(row.name);
     if (!key) continue;
     const existing = best.get(key);
@@ -104,30 +103,22 @@ function buildIndex(): Map<string, PersonPhoto> {
     });
   }
 
-  // The statewide executives carry their portraits inline rather than in the
-  // generated file — Hobbs is one of them, which is half of why the clash
-  // was invisible to every existing check.
-  const statewide = readFileSync(
-    join(process.cwd(), "lib", "officials", "statewide-executives.ts"),
-    "utf8",
-  );
-  for (const block of statewide.split(/\n    \{\n/)) {
-    const name = /name:\s*"([^"]+)"/.exec(block);
-    const url = /photoUrl:\s*"([^"]+)"/.exec(block);
-    const org = /sourceOrg:\s*"([^"]+)"/.exec(block);
-    const id = /id:\s*"([^"]+)"/.exec(block);
-    if (!name || !url) continue;
-    const key = personKey(name[1]);
+  // Some statewide executives carry portraits on their canonical holder row
+  // rather than the photo manifest. Read those typed rows from the same
+  // promoted registry projection; never parse the retired tracked seed.
+  for (const row of runtime.statewideExecutives) {
+    if (!row.holder.photoUrl) continue;
+    const key = personKey(row.holder.name);
     if (!key) continue;
-    const holderId = id?.[1] ?? key;
+    const holderId = row.holder.id;
     const existing = best.get(key);
     if (existing && !beats(holderId, existing.key)) continue;
     best.set(key, {
       key: holderId,
       photo: {
-        url: url[1],
-        source: org
-          ? `Official portrait published by the ${org[1]}`
+        url: row.holder.photoUrl,
+        source: row.sourceOrg
+          ? `Official portrait published by the ${row.sourceOrg}`
           : "Official portrait published by the office",
       },
     });

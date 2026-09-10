@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";

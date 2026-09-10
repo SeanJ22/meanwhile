@@ -57,6 +57,33 @@ export interface AgendaDocument {
   verifiedAt: string | null;
 }
 
+/**
+ * PostgreSQL JSONB cannot represent U+0000, and binary Office documents are
+ * not Reader text. Older tracked snapshots accidentally decoded a DOCX ZIP as
+ * UTF-8 and retained the resulting `PK\u0003\u0004...` byte soup in `text`.
+ * Preserve the immutable URL/hash receipt while making the failed extraction
+ * explicit; never silently scrub binary bytes into apparently readable prose.
+ */
+export function canonicalAgendaDocument(document: AgendaDocument): AgendaDocument {
+  if (
+    document.text === null ||
+    (
+      document.extraction !== "failed" &&
+      !document.text.includes("\u0000") &&
+      !/^(?:PK\u0003\u0004|%PDF-)/.test(document.text)
+    )
+  ) {
+    return document;
+  }
+  return {
+    ...document,
+    text: null,
+    extraction: "failed",
+    extractionNote:
+      "Non-text or binary document bytes were retained by URL and SHA-256, but were never promoted as Reader text.",
+  };
+}
+
 export class AgendaDocumentStore {
   private byMeeting = new Map<string, AgendaDocument[]>();
 
@@ -257,8 +284,21 @@ export async function retrieveAgendaDocument(
       const text = await extractPdfText(bytes);
       return { ...base, text, extraction: "pdf", extractionNote: null };
     }
-    const text = extractHtmlText(new TextDecoder().decode(bytes));
-    return { ...base, text, extraction: "html", extractionNote: null };
+    const decoded = new TextDecoder().decode(bytes);
+    const looksLikeText =
+      contentType.toLowerCase().startsWith("text/") ||
+      /(?:html|xhtml|xml|json)/i.test(contentType) ||
+      /^\s*</.test(decoded);
+    if (!looksLikeText || decoded.includes("\u0000") || /^(?:PK\u0003\u0004|%PDF-)/.test(decoded)) {
+      return canonicalAgendaDocument({
+        ...base,
+        text: decoded,
+        extraction: "failed",
+        extractionNote: null,
+      });
+    }
+    const text = extractHtmlText(decoded);
+    return canonicalAgendaDocument({ ...base, text, extraction: "html", extractionNote: null });
   } catch (error) {
     return {
       ...base,

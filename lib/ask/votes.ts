@@ -4,10 +4,18 @@ import { join } from "node:path";
 
 import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
 import { COVERED, rosterFile } from "../coverage/artifacts.ts";
+import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
+import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { formatDateLong } from "../text/format-date.ts";
-import { getStateVotesSnapshot } from "../sources/legiscan/snapshot.ts";
+import {
+  getStateVotesSnapshot,
+  type OfficialStateVoteScope,
+} from "../sources/legiscan/snapshot.ts";
 import { stateRollPublisher } from "../sources/legiscan/types.ts";
 import type { StateRollCall, StateVotesSnapshot } from "../sources/legiscan/types.ts";
+import {
+  officialStateVoteScopeForOfficeholderId,
+} from "../state-rollcalls/authority.ts";
 import { getVotesSnapshot } from "../votes/snapshot.ts";
 import type { RollCallVote, VotesSnapshot } from "../votes/types.ts";
 
@@ -20,7 +28,7 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  * ## The record class did not exist
  *
  * Canonical roll-call records have been committed in this repository for
- * weeks — `data/votes/votes-snapshot.json` holds 40 federal roll calls and
+ * weeks — the promoted federal projection holds the bounded roll-call window and
  * 10,674 recorded positions across the then-current 537-member snapshot; `data/votes/state-votes-snapshot.json`
  * holds 72 Arizona, New Hampshire and New Jersey roll calls and 1,560
  * positions across 130 members — and **the grounded Ask engine could not reach
@@ -113,7 +121,7 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 /* -------------------------------------------------------------------------- */
 
 /**
- * The committed rosters, and which vote store each one's people vote in.
+ * The registered roster authorities, and which vote store each one's people vote in.
  *
  * **DERIVED FROM THE COVERAGE MANIFEST, never typed out.** The first cut of
  * this listed each covered state's FIPS code against its postal code by hand
@@ -125,15 +133,22 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  * fourth state's legislators reach Ask because of this line rather than
  * because somebody remembered this file.
  *
- * The federal roster is appended separately because it is not a covered STATE
- * — it is national, it is keyed on `congress:` ids, and its members carry
- * their own `state` on the row.
+ * The federal roster is the promoted FEDERAL_DIRECTORY authority because it
+ * is not a covered STATE — it is national, keyed on `congress:` ids, and its
+ * members carry their own `state` on the row. Retired state files can enter
+ * only through the explicit node:test fixture gate.
  */
-const ROSTER_SCOPES: Readonly<Record<string, { file: string; state: string | null }>> = {
-  us: { file: "officeholders-us.json", state: null },
-  ...Object.fromEntries(
-    COVERED.map((s) => [s.fips, { file: rosterFile(s), state: s.usps }]),
-  ),
+type VoteRosterAuthority =
+  | { readonly kind: "FEDERAL_DIRECTORY"; readonly state: null }
+  | { readonly kind: "RETIRED_STATE_TEST_FIXTURE"; readonly file: string; readonly state: string };
+
+const ROSTER_SCOPES: Readonly<Record<string, VoteRosterAuthority>> = {
+  us: { kind: "FEDERAL_DIRECTORY", state: null },
+  ...(mayReadRetiredPluralRoster()
+    ? Object.fromEntries(
+        COVERED.map((s) => [s.fips, { kind: "RETIRED_STATE_TEST_FIXTURE" as const, file: rosterFile(s), state: s.usps }]),
+      )
+    : {}),
 };
 
 interface RosterRow {
@@ -173,20 +188,21 @@ export interface VoteSubjectSeat {
   retrievedAt: string | null;
 }
 
-let rosterCache: VoteSubjectSeat[] | null = null;
+let rosterCache: { readonly federal: RosterSet; readonly rows: VoteSubjectSeat[] } | null = null;
 
 function loadRoster(): VoteSubjectSeat[] {
-  if (rosterCache) return rosterCache;
+  const federal = getFederalOfficeholderSet() as RosterSet;
+  if (rosterCache?.federal === federal) return rosterCache.rows;
   const out: VoteSubjectSeat[] = [];
-  for (const [scope, { file, state }] of Object.entries(ROSTER_SCOPES)) {
+  for (const [scope, authority] of Object.entries(ROSTER_SCOPES)) {
+    const state = authority.state;
     let set: RosterSet | null = null;
     try {
-      set = JSON.parse(
-        (stateForRosterFile(file) === null
-          ? readFileSync(join(process.cwd(), "lib", "registry", "officeholders-us.json"), "utf8")
-          : readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(file)!, "officials", file), "utf8")),
-      ) as RosterSet;
-    } catch {
+      set = authority.kind === "FEDERAL_DIRECTORY"
+        ? federal
+        : JSON.parse(readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(authority.file)!, "officials", authority.file), "utf8")) as RosterSet;
+    } catch (error) {
+      if (authority.kind === "FEDERAL_DIRECTORY") throw error;
       /* A committed file that will not read is a real state. It contributes
          nothing and the caller reports an honest gap — never a 500, and never
          a claim that the person cast no votes. */
@@ -214,11 +230,11 @@ function loadRoster(): VoteSubjectSeat[] {
       });
     }
   }
-  rosterCache = out;
+  rosterCache = { federal, rows: out };
   return out;
 }
 
-/** Test seam. The rosters are committed files read once per process. */
+/** Test seam. Production federal rows are rematerialized when the GOOD pointer changes. */
 export function resetVoteRosterCache(): void {
   rosterCache = null;
 }
@@ -288,7 +304,44 @@ export type VoteIdentity =
    */
   | { kind: "NAME_FORM_UNCONFIRMED"; sharedSurnames: number }
   /** More than one roster row carries this exact name. Nothing is chosen. */
-  | { kind: "AMBIGUOUS_NAME"; count: number };
+  | { kind: "AMBIGUOUS_NAME"; count: number }
+  /** The exact state authority was identified, but its holding could not be read. */
+  | { kind: "HOLDING_UNAVAILABLE"; scope: OfficialStateVoteScope };
+
+function officialStateVoteSeat(
+  personName: string,
+  officeholderId: string,
+  scope: OfficialStateVoteScope,
+): VoteIdentity {
+  const state = scope.slice(-2);
+  const snapshot = stateSnapshot(state);
+  if (!snapshot) return { kind: "HOLDING_UNAVAILABLE", scope };
+  const position = snapshot.positions.find((row) => row.officeholderId === officeholderId);
+  if (!position) return { kind: "NO_ROSTER_ROW" };
+  const roll = snapshot.rollCalls.find((row) => row.id === position.rollCallId);
+  if (!roll) return { kind: "HOLDING_UNAVAILABLE", scope };
+  const chamber = roll.chamber ?? null;
+  const officeTitle = chamber === "Senate"
+    ? "State Senator"
+    : chamber === "Assembly"
+      ? "Assemblymember"
+      : "State Representative";
+  return {
+    kind: "JOINED",
+    seat: {
+      officeholderId,
+      name: personName,
+      officeTitle,
+      rosterScope: scope,
+      state,
+      chamber,
+      ocdIds: [],
+      sourceUrl: roll.rollCallUrl,
+      sourceOrg: stateRollPublisher(roll),
+      retrievedAt: roll.retrievedAt,
+    },
+  };
+}
 
 /**
  * Resolve a person to the seat whose voting record is theirs.
@@ -304,6 +357,8 @@ export function resolveVoteIdentity(
   options: { withinStates?: readonly string[]; officeholderId?: string } = {},
 ): VoteIdentity {
   if (options.officeholderId) {
+    const stateScope = officialStateVoteScopeForOfficeholderId(options.officeholderId);
+    if (stateScope) return officialStateVoteSeat(personName, options.officeholderId, stateScope);
     const seat = loadRoster().find((row) => row.officeholderId === options.officeholderId);
     return seat ? { kind: "JOINED", seat } : { kind: "NO_ROSTER_ROW" };
   }
@@ -353,9 +408,11 @@ function federalSnapshot(): VotesSnapshot | null {
   }
 }
 
-function stateSnapshot(): StateVotesSnapshot | null {
+function stateSnapshot(state: string | null): StateVotesSnapshot | null {
+  const scope = state ? `US-${state}` : null;
+  if (scope !== "US-AZ" && scope !== "US-NH" && scope !== "US-NJ") return null;
   try {
-    return getStateVotesSnapshot();
+    return getStateVotesSnapshot(scope as OfficialStateVoteScope);
   } catch {
     return null;
   }
@@ -445,6 +502,14 @@ export function voteEvidenceFor(
     return { identity, records, gaps, denominators };
   }
 
+  if (identity.kind === "HOLDING_UNAVAILABLE") {
+    gaps.push({
+      whose: "OURS",
+      statement: `We identified ${personName}'s ${identity.scope} voting-record authority, but could not read its current proof-validated holding just now, so no votes are shown.`,
+    });
+    return { identity, records, gaps, denominators };
+  }
+
   if (identity.kind === "NAME_FORM_UNCONFIRMED") {
     /*
      * **THE ADVERSARIAL CASE, ANSWERED HONESTLY AND NOT RESOLVED.**
@@ -528,7 +593,7 @@ export function voteEvidenceFor(
   }
 
   /* ── A STATE LEGISLATURE ── */
-  const snapshot = stateSnapshot();
+  const snapshot = stateSnapshot(seat.state);
   if (!snapshot) {
     gaps.push({
       whose: "OURS",

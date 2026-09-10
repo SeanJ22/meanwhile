@@ -12,13 +12,17 @@
  *     RULING 125 a walk runs against a LOCAL production build, so that check
  *     asks `DATABASE_URL` — the DEVELOPMENT branch — and says so in its own
  *     detail line. It is not a production check and it does not claim to be.
- *   - `scripts/check-schema-state.mts` — `pnpm db:check`, on a clock, in
- *     `intake-tripwire.yml`. This is the one that reads production.
- *   - `scripts/db-shipping-gate.mts` — the merge gate, added the same day.
+ *   - `scripts/check-schema-state.mts` — the explicit `pnpm db:check`
+ *     diagnostic. Its former GitHub clock in `intake-tripwire.yml` was retired
+ *     by PDC V2.
+ *   - `scripts/db-shipping-gate.mts` — the software merge/push gate, added the
+ *     same day and also reused by automatic post-deploy integrity.
  *
  * **What was missing was never detection. It was PLACEMENT.** Nothing in the
- * merge or deploy path consulted any of them: the walk is a standing regression
- * net a session runs by hand, and the tripwire runs the morning after.
+ * merge or deploy path consulted any of them at the time: the walk was a
+ * standing regression net a session ran by hand, and the retired tripwire ran
+ * the morning after. The shipping and post-deploy gates now own those software
+ * lifecycle placements.
  *
  * ## So this is the query, once
  *
@@ -36,6 +40,16 @@
  */
 
 import { neon } from "@neondatabase/serverless";
+import { sql } from "drizzle-orm";
+
+/** Shared read-only expression for an exact absent migration receipt. */
+export function migrationReceiptAbsentExpression(expectedWhen: number) {
+  return sql<boolean>`(
+    select count(*) = 0
+    from drizzle.__drizzle_migrations
+    where created_at = ${expectedWhen}
+  )`;
+}
 
 /** What a database says it has applied, or why that could not be established. */
 export type AppliedMigrations =
@@ -75,6 +89,45 @@ export type AppliedMigrations =
       /** The database's own words. Never a count, never an empty list. */
       readonly why: string;
     };
+
+export type AppliedMigrationReceiptCensus = {
+  /** Every physical journal row at the expected `created_at`, including rows with an unusable hash. */
+  readonly rowCount: number;
+  /** Usable hash-bearing rows at that same `created_at`. */
+  readonly hashes: readonly string[];
+};
+
+/**
+ * Count one migration receipt without letting a malformed hash disappear from
+ * the physical-row cardinality proof. `readAppliedMigrationWhen` deliberately
+ * omits unusable hashes from `appliedHashes`; `appliedWhen` still carries those
+ * rows, so an exact receipt must consult both views.
+ */
+export function appliedMigrationReceiptCensus(
+  read: AppliedMigrations,
+  expectedWhen: number,
+): AppliedMigrationReceiptCensus | null {
+  if (!read.ok) return null;
+  return {
+    rowCount: read.appliedWhen.filter((when) => when === expectedWhen).length,
+    hashes: read.appliedHashes
+      .filter((row) => row.when === expectedWhen)
+      .map((row) => row.hash),
+  };
+}
+
+/** One physical journal row, carrying exactly the committed raw-byte hash. */
+export function hasExactAppliedMigrationReceipt(
+  read: AppliedMigrations,
+  expectedWhen: number,
+  expectedSha256: string,
+): boolean {
+  const census = appliedMigrationReceiptCensus(read, expectedWhen);
+  return census !== null
+    && census.rowCount === 1
+    && census.hashes.length === 1
+    && census.hashes[0] === expectedSha256;
+}
 
 /**
  * Read `drizzle.__drizzle_migrations` from one database.

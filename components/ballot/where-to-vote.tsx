@@ -22,10 +22,10 @@ import { VotingSitesPanel } from "@/components/map/voting-sites-panel";
  *
  * This is the part that makes it a defect rather than a preference. On 07866
  * the ballot page handed the reader off to New Jersey's polling-place search
- * tool, while `data/voting-sites.json` holds **six voting locations for
- * Rockaway Township**, retrieved, sourced and dated. The reader was being
+ * tool, while the canonical voting-site projection holds **six voting
+ * locations for Rockaway Township**, retrieved, sourced and dated. The reader was being
  * sent away from an answer we already had. Across the covered jurisdictions
- * the file holds 44 jurisdictions and 292 sites.
+ * the projection holds 44 jurisdictions and 292 sites.
  *
  * ## What converges, and where the shared path is
  *

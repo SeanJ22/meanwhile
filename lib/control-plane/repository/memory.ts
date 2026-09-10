@@ -45,6 +45,7 @@ import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
+import type { CandidateStore } from "../../method/candidate.ts";
 import { budgetRepositoryFrom, jsonCopy } from "./shared.ts";
 import {
   ConcurrentModification,
@@ -238,6 +239,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
     /* Level 1 — Research (schema v4). */
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
+    methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),

@@ -43,7 +43,6 @@
  */
 
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 
 import {
   evidenceRecordsFor,
@@ -65,6 +64,17 @@ import type {
   OutcomeSnapshot,
   PersistedSittingOutcomes,
 } from "./types.ts";
+import {
+  civicDataReadNotInitialized,
+  mayUseTestFixture,
+  promotedVersionOrThrow,
+  readPromotedCivicData,
+  readPromotedOrBootstrap,
+  type CivicDataBootstrap,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "./data-plane.ts";
 
 /** Where the committed store lives, relative to the repo root. */
 export const OUTCOME_SNAPSHOT_PATH = ["data", "states", "az", "outcomes", "legistar-outcomes.json"];
@@ -76,8 +86,11 @@ const EMPTY: OutcomeSnapshot = {
   sittings: [],
 };
 
-let cache: OutcomeSnapshot | null = null;
-let cacheRoot: string | null = null;
+let outcomeReadState: CivicDataReadResult<OutcomeSnapshot> = civicDataReadNotInitialized(
+  PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+  PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+  "The Pima Legistar outcome pointer has not been read for this process.",
+);
 
 /**
  * The committed store, read once per process.
@@ -120,36 +133,104 @@ let injected: OutcomeSnapshot | null = null;
  */
 export function useOutcomeSnapshotForTests(snapshot: OutcomeSnapshot | null): void {
   injected = snapshot;
-  cache = null;
-  cacheRoot = null;
+  outcomeReadState = civicDataReadNotInitialized(
+    PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+    PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+    "The Pima Legistar outcome pointer has not been read for this process.",
+  );
 }
 
-export function getOutcomeSnapshot(): OutcomeSnapshot {
-  if (injected !== null) return injected;
-  if (cache !== null) return cache;
+function testSeed(): OutcomeSnapshot | null {
+  if (!mayUseTestFixture()) return null;
   try {
-    cache = JSON.parse(
+    return JSON.parse(
       readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8"),
     ) as OutcomeSnapshot;
   } catch {
-    cache = EMPTY;
+    return null;
   }
-  cacheRoot = "";
-  return cache;
+}
+
+function outcomeTestBootstrap(): CivicDataBootstrap<OutcomeSnapshot> {
+  const value = testSeed();
+  if (!value) throw new Error("PIMA_LEGISTAR_OUTCOME_TEST_SEED_MISSING");
+  return {
+    value,
+    sourceId: PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId,
+    version: value.generatedAt,
+    versionId: `test-seed:pima-legistar-outcomes:${value.generatedAt}`,
+    sourceThrough: value.generatedAt,
+    retrievedAt: value.generatedAt,
+    detail: "Node test fixture selected only inside the explicit test process.",
+  };
+}
+
+function validateOutcomeProjection(value: OutcomeSnapshot, version: string): void {
+  if (!Array.isArray(value.sittings) || !Array.isArray(value.tenants)) {
+    throw new Error(`Pima Legistar outcome projection ${version} is malformed.`);
+  }
+  if (value.sittings.some((sitting) => sitting.slug !== "pima" || sitting.meetingId !== `legistar:pima:${sitting.eventId}`)) {
+    throw new Error(`Pima Legistar outcome projection ${version} crosses its tenant or meeting-id scope.`);
+  }
+}
+
+/** Read the exact GOOD pointer. A database error never reopens tracked state. */
+export async function readOutcomeProjection(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<OutcomeSnapshot>> {
+  outcomeReadState = mayUseTestFixture()
+    ? await readPromotedOrBootstrap<OutcomeSnapshot>({
+        ...options,
+        recordClass: PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+        scope: PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+        bootstrap: outcomeTestBootstrap,
+        allowUnconfiguredBootstrap: true,
+      })
+    : await readPromotedCivicData<OutcomeSnapshot>(
+        PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+        PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+        options,
+      );
+  if (outcomeReadState.kind === "PROMOTED" || outcomeReadState.kind === "BOOTSTRAP") {
+    validateOutcomeProjection(outcomeReadState.value, outcomeReadState.metadata.versionId ?? "unknown");
+  }
+  return outcomeReadState;
+}
+
+export async function refreshOutcomeSnapshotFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  return promotedVersionOrThrow(await readOutcomeProjection(options));
+}
+
+export const outcomeProjectionReadState = (): CivicDataReadResult<OutcomeSnapshot> => outcomeReadState;
+
+export function getOutcomeSnapshot(): OutcomeSnapshot {
+  if (injected !== null) return injected;
+  if (outcomeReadState.kind === "PROMOTED" || outcomeReadState.kind === "BOOTSTRAP") return outcomeReadState.value;
+  return outcomeReadState.kind === "STORE_UNREACHABLE" && outcomeReadState.code === "READ_NOT_INITIALIZED"
+    ? testSeed() ?? EMPTY
+    : EMPTY;
 }
 
 /** Drop the process cache. For tests and for a run that has just written. */
 export function resetOutcomeSnapshotCache(): void {
-  cache = null;
-  cacheRoot = null;
+  outcomeReadState = civicDataReadNotInitialized(
+    PIMA_LEGISTAR_OUTCOMES_CONTRACT.recordClass,
+    PIMA_LEGISTAR_OUTCOMES_CONTRACT.scope,
+    "The Pima Legistar outcome pointer has not been read for this process.",
+  );
 }
 
 /** Did a real file back the current snapshot, or is this the empty store? */
-export function loadedFrom(): "FILE" | "EMPTY_STORE" {
+export function loadedFrom(): "DATA_PLANE" | "TEST_FIXTURE" | "EMPTY_STORE" {
+  if (injected !== null) return injected.sittings.length === 0 && injected.generatedAt === "UNKNOWN" ? "EMPTY_STORE" : "TEST_FIXTURE";
+  if (outcomeReadState.kind === "PROMOTED") return "DATA_PLANE";
+  if (outcomeReadState.kind === "BOOTSTRAP") return "TEST_FIXTURE";
   const snapshot = getOutcomeSnapshot();
   return snapshot.sittings.length === 0 && snapshot.generatedAt === "UNKNOWN"
     ? "EMPTY_STORE"
-    : "FILE";
+    : "TEST_FIXTURE";
 }
 
 /**

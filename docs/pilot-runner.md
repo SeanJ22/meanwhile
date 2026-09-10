@@ -3,15 +3,19 @@
 *(Session C, PART G2, 2026-08-31. Operative code: `scripts/pilot-runner.mts`,
 `scripts/pilot-task.ps1`, `scripts/freshness-shadow.mts`.)*
 
-A long-lived process that runs the freshness scheduler's cycle on an interval,
-forever, with **no operator choosing what to work**. It registers every
-obligation provider, lets the scheduler decide what is due, dispatches it,
-records the full lifecycle, runs RULING 224's promotion tail to a STAGED state,
-and writes one digest per cycle where the owner reads it.
+A long-lived standing host process with two explicit failure domains:
 
-**Promotion stays OFF.** Nothing this process does changes what a reader is
-told. `runCycle` has no parameter that could, and the promotion tail writes only
-under `data/control-plane/staging/`.
+1. the research scheduler registers its obligation providers, dispatches due
+   research, records the lifecycle, and writes only ignored staging diagnostics;
+2. the typed routine civic-data registry independently considers each source's
+   durable cadence, then validates and atomically promotes GOOD source-scoped
+   candidates in the production data plane.
+
+**Research promotion stays OFF.** `runCycle` cannot change Reader truth and its
+promotion tail writes only under `.runtime/control-plane/staging/`. Routine
+civic-data promotion is a separate child with per-source candidates, receipts,
+retry clocks and LKG pointers. Neither path writes tracked runtime truth, and a
+research pause/failure/circuit cannot suppress the routine-data tick.
 
 ---
 
@@ -49,14 +53,13 @@ pnpm pilot:disable     stop it AND stop it coming back at logon
 pnpm pilot:uninstall   remove every mechanism and stop the process
 ```
 
-Run it in the foreground instead, for one cycle or a few:
-
-```bash
-pnpm pilot:run --cycles=1              one cycle, then exit
-pnpm pilot:run --cycles=3 --interval=8 three cycles, eight minutes apart
-pnpm pilot:run                          until Ctrl+C, hourly
-pnpm pilot:run --provider=file          against the file store instead of Postgres
-```
+There is no package-visible foreground production runner. The stable Scheduled
+Task (or its mutually exclusive Startup fallback) is the only production
+entrypoint. It validates a clean detached installed checkout on `origin/main`,
+loads the one absolute private environment file, mints the standing-parent
+authority, and starts the runner with release handoff enabled. A developer can
+still invoke the script with `--provider=file` for an ignored local proof; that
+path has no production authority or store.
 
 ## What the owner's dashboard does to the runner (9.4.26)
 
@@ -64,14 +67,17 @@ Three things the control centre at `/admin` can now say to the runner, each a
 durable intent the runner reads once a minute and answers with its own
 HONORED record — never a direct edit of anything:
 
-- **Pause / resume the runner** (`PAUSE_RUNNER`, `RESUME_RUNNER`). A recorded
+- **Pause / resume research** (`PAUSE_RUNNER`, `RESUME_RUNNER`). A recorded
   pause is what tells the dashboard's Runner line "Paused by you — reason"
-  from a red "Silent — no pause recorded". While it stands the runner idles:
-  no cycle, no nightly window, a heartbeat every thirty minutes carrying the
-  pause. `pnpm pilot:stop` and `pnpm pilot:disable` record the pause
+  from a red "Silent — no pause recorded". While it stands, no research cycle
+  or nightly research window starts and a heartbeat every thirty minutes
+  carries the pause; routine civic data and intake observations continue on
+  their independent standing tick. `pnpm pilot:stop` and `pnpm pilot:disable`
+  stop the host process itself and record the pause
   themselves and `pnpm pilot:start` records the resume, best effort, so a
-  stop from the shell is visible on the page too. A reason typed by hand:
-  `pnpm pilot:pause-note --action=PAUSE_RUNNER --note="usage was heavy"`.
+  stop from the shell is visible on the page too. Ad-hoc production pause-note
+  writers are not exposed; the owner uses Admin or the validated host-control
+  commands above.
 - **Deploy fleet** (`DISPATCH`). The owner's words — "deep dive on Illinois",
   "Pima County campaign finance" — are parsed into state codes and terms; the
   next cycle puts every REGISTERED unit that matches first in both lanes and
@@ -79,10 +85,16 @@ HONORED record — never a direct edit of anything:
   registry. A state nothing is registered for is honored with a sentence
   saying so by name, and enumerating it is the owner's scope decision.
 - **The console republishes itself.** After every cycle, success or failure,
-  the runner runs `pnpm owner:publish` and `pnpm readiness:publish`, so the
-  pilot-health snapshot and the readiness snapshots are never older than the
-  last cycle while the runner is on. Nothing else schedules them: a stale
-  console is a stopped runner.
+  the admitted standing parent launches the owner-snapshot and readiness
+  children with a freshly rotated console-publisher capability. Those children
+  have no direct package production door. The snapshots are never older than
+  the last cycle while the runner is on; nothing else schedules them.
+
+Owner-triggered source promotion commands in `package.json` are non-writing
+wrappers. They resolve the live task, revalidate the exact installed checkout
+and running process, prove that SHA is currently deployed and fully certified,
+then delegate exactly one registered source contract. An engineering checkout
+cannot open a production writer merely by loading `.env.local`.
 
 ---
 
@@ -135,10 +147,11 @@ Phoenix operational night. There is no paid-provider or model substitution.
 429, transient 5xx and network instability receive no implicit retry here; the
 existing bounded caller behavior applies, then the named work remains owed.
 If Neon itself hard-refuses, a minimal host-local emergency latch exists only
-because the unavailable database cannot persist its own circuit; it prevents
-the very next query and every hourly process from probing again until the
-operational night ends. It does not become a budget ledger or alternate
-control plane.
+because the unavailable database cannot persist its own research circuit; it
+prevents the research cycle from probing again until the operational night
+ends. It does not become a budget ledger, a civic-data freshness clock, or an
+alternate control plane. The independent routine child reports its own store
+outcome and never relabels that infrastructure condition as a publisher failure.
 
 Saturday 18:00 through Sunday 06:00 America/Phoenix is a **SCHEDULED BLACKOUT**.
 The process may heartbeat, publish Admin state, and perform zero-cost local
@@ -152,23 +165,23 @@ byte ceilings. Public retrieval uses the bounded streaming HTTP seams instead.
 
 ## How it survives a reboot
 
-**As of 2026-09-01 the Windows Scheduled Task "WeThePeople Pilot Runner" IS
-installed** — the owner ran `pnpm pilot:install` from an elevated PowerShell.
-At logon, restart every 5 minutes up to 999 times, one instance, no execution
-time limit. `pnpm pilot:status` reads it back. The section below records the
-wall the unelevated install hit and the per-user startup entry it fell back to;
-both mechanisms may be present on this host, and which survives is the owner's
-decision (tracker, Needs Sean).
+The permanent entrypoint is the Windows Scheduled Task **WeThePeople Pilot
+Runner**. It starts at logon and has a five-minute repetition trigger;
+`MultipleInstances IgnoreNew` makes that trigger a no-op while the one runner
+is alive and the relaunch door after a crash. `pnpm pilot:status` reads the
+live task rather than trusting what an installer requested.
 
-**The mechanism an UNELEVATED install lands is a per-user STARTUP ENTRY:**
+An unelevated installation may use this per-user Startup entry only as a
+fallback when no active Scheduled Task exists:
 
 ```
 C:\Users\seanj\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\wtp-pilot-runner.cmd
 ```
 
-Windows runs it at every interactive logon, which includes every logon after a
-reboot. It needs no elevation, it is one file, and deleting the file removes the
-mechanism. `pnpm pilot:install` writes it; `pnpm pilot:uninstall` removes it.
+Windows runs it at interactive logon. It cannot relaunch a crashed runner.
+The installer removes it after a Scheduled Task is proven live, and refuses to
+create it beside an active task; two independent logon clocks are never an
+accepted end state.
 
 **The better mechanism is a Scheduled Task, and this host refuses to register
 one.** `Register-ScheduledTask` and `schtasks /Create` both answer **Access is
@@ -189,11 +202,39 @@ entry cannot match:
 | last result queryable | `pnpm pilot:status` | process presence only |
 | needs elevation to install | **yes, on this host** | no |
 
-To get the better one, run this from an **elevated** PowerShell:
+After a software release is fully certified and deployed, prepare a dedicated
+clean checkout detached at that exact deployed SHA. Then run this from an
+**elevated** PowerShell (paths shown are examples; the SHA must be full):
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install `
+  -RepoPath "C:\Users\seanj\dev\wtp-production-runtime" `
+  -EnvFile "C:\absolute\private\production.env" `
+  -ExpectedDeployedSha "0123456789abcdef0123456789abcdef01234567"
 ```
+
+Before registration, `scripts/pilot-runtime-config.mjs` refuses a relative
+path, a non-root repository path, a dirty or branch-attached checkout, a HEAD
+different from the supplied SHA, a SHA not present on `origin/main`, or an
+environment file tracked by Git. It never opens the environment file. The task
+stores only its absolute path, and the parent process passes the already-loaded
+environment to every child.
+
+The SHA is intentionally an installation-time proof only. The registered task
+calls a stable launcher with the repository path, environment-file path, and
+interval—no immutable SHA—so later releases do not require another elevated
+install. Before any source admission at startup, and again at each quiescent
+cycle boundary, the runner compares its loaded SHA with production's canonical
+`/api/build` SHA. It will move the dedicated checkout only when the target is a
+full commit on `origin/main`, all branch-protection contexts are green for that
+exact commit, and the existing canonical post-deploy integrity receipt is HELD
+for that same commit. It drains every independent runtime lane, rechecks the
+evidence, detaches the checkout at the exact target, completes a frozen install,
+and exits. The existing five-minute trigger relaunches through the stable
+launcher, which repeats boundary validation and the frozen install before Node
+can admit work. Any missing, stale, red, or unreadable evidence closes source
+admission and appends a supervisor failure to Admin's existing outcome log; it
+does not commit, push, deploy, or alter a source candidate/LKG.
 
 ## Relaunch after a kill
 
@@ -222,16 +263,13 @@ TWO triggers and keeps the settings (`IgnoreNew`, `RestartCount 999`,
 | Once, repeating every 5 minutes for 3650 days | with `MultipleInstances IgnoreNew`, a firing while the runner lives is a no-op; a firing after a death relaunches it within five minutes |
 
 Registration still needs elevation. The unelevated attempt on 2026-09-01
-answered `Access is denied.` (exit 1), rewrote the per-user startup entry, and
-left the running task and its pid untouched. The owner runs this ONCE from an
-**elevated** PowerShell in `C:\Users\seanj\dev\we-the-people`:
+answered `Access is denied.` (exit 1). The explicit command above is the
+post-deploy handoff; the mutable development checkout is never a runtime target.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install
-```
-
-`install` prints which triggers LANDED, read back from the live task rather
-than from what it asked for.
+`install` prints which triggers and action LANDED, read back from the live task
+rather than inferred from what it asked for. A stale active task whose action
+does not exactly match the validated Node executable, checkout, environment
+path, and deployed SHA is refused; no Startup competitor is installed.
 
 **Trigger presence is derived, never flagged.** Three actions read the live
 task (`Get-ScheduledTask` -> `Triggers` -> `Repetition`) through one shared
@@ -240,18 +278,20 @@ derivation:
 ```
 -Action status            lists every trigger; says RELAUNCH TRIGGER IS PRESENT / ABSENT
 -Action verify-triggers   read-only JSON {taskPresent, state, triggers, relaunchTriggerPresent,
-                          lastRunTime, lastTaskResult, runningPids}; exit 0 present, 1 absent
+                          executable, workingDirectory, arguments, lastRunTime,
+                          lastTaskResult, runningPids}; exit 0 only for one active
+                          crash-relaunching entrypoint
 -Action prove-relaunch    THE ACCEPTANCE MEASUREMENT: records the running pid, kills it,
                           polls every 15 s for up to 8 min for a NEW pid, writes
-                          data/ops/runner-relaunch-proof.json and prints it;
+                          ignored `.runtime/ops/runner-relaunch-proof.json` and prints it;
                           exit 0 on RELAUNCHED, 1 on NOT_RELAUNCHED
 ```
 
 `prove-relaunch` REFUSES (exit 2) while the relaunch trigger is absent, because
-killing the runner then leaves nothing to bring it back. It has not been run;
-no proof record exists yet. The sequence once the owner has run the elevated
-install: `verify-triggers` (expect exit 0), then `prove-relaunch`, then commit
-the record. Neither new action has a `pnpm` alias yet; use the
+killing the runner then leaves nothing to bring it back. The sequence once the
+owner has run the elevated install is `verify-triggers` (expect exit 0), then
+`prove-relaunch`. The proof is host-local diagnostic evidence and never a Git
+commit or live operational authority. Use the
 `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action <name>`
 form.
 
@@ -309,7 +349,7 @@ research_state      id level-1 — lane on/off with reason, the credential
 research_intents    PAUSE / RESUME / RUN_CYCLE_NOW from /admin/research, and the
                     HONORED record the cycle appends beside each
 runner_heartbeat    written at the end of every cycle
-data/method/candidates.json   route candidates PROPOSED and VALIDATED; never admitted here
+cp_method_candidates/live    route candidates PROPOSED and VALIDATED; never admitted here
 ```
 
 `admin.meanwhileusa.com/admin/research` DERIVES ACTIVE / DEGRADED / INACTIVE
@@ -358,14 +398,20 @@ spending a model to guess at a shape.
 ## What it runs, exactly
 
 ```
-node --env-file=.env.local --experimental-strip-types scripts/pilot-runner.mts --interval=60
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/pilot-runtime-launch.ps1 `
+  -RepoPath "C:\Users\seanj\dev\wtp-production-runtime" `
+  -EnvFile "C:\absolute\private\production.env" `
+  -IntervalMinutes 60
 ```
 
-with the repository as its working directory. `--env-file` is how
-`WTP_CONTROL_PLANE_DATABASE_URL` reaches the process. The file is gitignored,
-only its PATH is written anywhere, and **no value of any environment variable
-appears in the task, the startup entry, the digest, the log, a row, a commit or
-a fixture.**
+with the clean detached runtime repository as its working directory. The
+launcher revalidates the current detached `origin/main` commit, runs
+`pnpm install --frozen-lockfile`, and starts the parent with
+`--release-handoff`. The absolute environment file is loaded once by the parent. Every bounded child
+receives `process.env` and carries no `--env-file` argument, so changing cwd or
+changing a neighboring checkout cannot silently select different credentials.
+Only the path is stored; **no value of any environment variable appears in the
+task, startup entry, digest, log, row, commit, or fixture.**
 
 Each cycle spawns `scripts/freshness-shadow.mts` as a child process with a
 twenty-minute ceiling, reads the run record that child wrote, and builds the
@@ -377,11 +423,11 @@ disagree about what a cycle did.
 ## Where the state lives
 
 ```
-data/control-plane/staging/manifest.json      THE STAGED STATE — every entry, dated
-data/control-plane/staging/*.staged.json      the promotion-ready snapshots
-data/health/freshness-shadow-runs/*.json      one record per cycle
-data/health/autonomous-advancement/*.json     the unattended-advancement evidence
-data/control-plane/vault/                     retrieved bytes, content-addressed (GITIGNORED)
+.runtime/control-plane/staging/manifest.json  disposable research staging — every entry, dated
+.runtime/control-plane/staging/*.staged.json  disposable research snapshots
+.runtime/freshness-shadow-runs/*.json         host diagnostics; canonical outcome is in the control-plane store
+.runtime/autonomous-advancement/*.json        host diagnostics
+.runtime/control-plane/vault/                 retrieved research bytes, content-addressed
 ```
 
 The vault is gitignored because it is a store rather than repository content —

@@ -1,0 +1,66 @@
+/**
+ * Explicit owner-only promotion for reviewed manual civic-data packages.
+ *
+ * The package must live outside this repository. Tracked JSON is immutable
+ * bootstrap/test evidence, never the mutable input to this production door.
+ * This command writes only the canonical candidate/event/promotion plane.
+ */
+import { readFileSync } from "node:fs";
+import { isAbsolute, relative, resolve } from "node:path";
+
+import {
+  MANUAL_PROJECTION_CONTRACT_IDS,
+  manualProjectionCandidate,
+  readManualProjectionPrior,
+  type ManualProjectionContractId,
+  type ManualProjectionPackage,
+} from "../lib/civic-data/manual-projections.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { assignment } from "./cli-args.mts";
+
+const contractId = assignment(process.argv, "contract") as ManualProjectionContractId | null;
+const packageArgument = assignment(process.argv, "package");
+if (!contractId || !MANUAL_PROJECTION_CONTRACT_IDS.includes(contractId) || !packageArgument) {
+  throw new Error(
+    `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${MANUAL_PROJECTION_CONTRACT_IDS.join("|")} --package=<absolute path outside repository>`,
+  );
+}
+
+const root = resolve(process.cwd());
+const packagePath = resolve(packageArgument);
+const fromRoot = relative(root, packagePath);
+if (fromRoot === "" || (!fromRoot.startsWith("..") && !isAbsolute(fromRoot))) {
+  throw new Error("MANUAL_PROMOTION_PACKAGE_MUST_BE_OUTSIDE_REPOSITORY");
+}
+
+const input = JSON.parse(readFileSync(packagePath, "utf8")) as ManualProjectionPackage;
+if (input.contractId !== contractId) {
+  throw new Error(`MANUAL_PROMOTION_CONTRACT_MISMATCH:${contractId}:${input.contractId}`);
+}
+
+prepareProductionCivicDataWrite();
+
+const store = new PostgresRoutineDataStore();
+const prior = await readManualProjectionPrior(contractId, store, input.sourceReceipt.reviewedAt);
+const candidate = manualProjectionCandidate(input, { prior });
+const outcome = await processRegisteredManualCandidate(
+  store,
+  contractId,
+  candidate,
+  input.sourceReceipt.reviewedAt,
+  prior?.versionId ?? null,
+);
+
+console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({
+  contractId,
+  candidateId: candidate.id,
+  state: outcome.candidate.state,
+  decision: outcome.candidate.receipt?.decision ?? null,
+  promotedVersion: outcome.promoted?.versionId ?? null,
+  lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+  structuralReleaseContract: ZERO_RELEASE_EVENTS,
+}));
+if (!outcome.promoted) process.exitCode = 2;

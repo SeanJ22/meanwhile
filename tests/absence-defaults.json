@@ -69,6 +69,51 @@
       "file": "app/(admin)/admin/deploy-fleet.tsx",
       "text": "Working out what this would do…",
       "reason": "Not an absence. It is the in-flight state of the preview request — the panel is open and the answer has not arrived — and it is replaced by the preview or by the named reason the preview could not be built. A pending read says it is pending; it never stands in for one that failed."
+    },
+    {
+      "file": "app/(admin)/admin/sources/routine-data-panel.tsx",
+      "text": "terminal failure",
+      "reason": "Not an inferred source disposition. This renders only for an ExactRefusedRecord whose verdict is null, which the projection emits solely from a candidate terminal state carrying a durable failure code or detail. The same row says that the candidate terminal state, rather than a validation receipt, proves it."
+    },
+    {
+      "file": "app/(admin)/admin/feedback/page.tsx",
+      "text": "The intake-runtime reading is unavailable, and this page did not carry a reason.",
+      "reason": "Names an internal owner-surface gap without claiming that the production store is empty, healthy, or unreachable. It can render only when the observation and its independently derived gap detail are both absent, and deliberately refuses the former default's unsupported claim that no receipt exists."
+    },
+    {
+      "file": "app/(admin)/admin/feedback/page.tsx",
+      "text": "not read",
+      "reason": "Names nullable fields inside a structured intake-runtime observation as unread rather than converting them to zero. The observation's outcome and exact flags remain visible, while missing write-alarm or limiter counts license no numeric or health claim. The same reviewed label appears for both count families."
+    },
+    {
+      "file": "app/(admin)/admin/feedback/page.tsx",
+      "text": "The append-only intake observation could not be read safely.",
+      "reason": "This branch is reached only after the durable row has the expected intake-runtime outcome kind and its contract-level issue check passes, but strict parsing of the embedded observation still returns null. It reports that precise local parse gap and makes no claim about intake health or source activity."
+    },
+    {
+      "file": "app/(admin)/admin/release-review/page.tsx",
+      "text": "not recorded",
+      "reason": "Labels a null field on an existing durable post-deploy integrity receipt, never an absent receipt or an inferred deployment result. It is used for the deployed commit and gate exit independently so neither missing field is filled with success, failure, or a guessed value."
+    },
+    {
+      "file": "app/(admin)/admin/release-review/page.tsx",
+      "text": "no SHA",
+      "reason": "Labels the absent deployedSha field on an existing append-only production-integrity history row. The receipt's recorded outcome, time, detail, and identity still render, but null is not converted into a guessed commit and cannot certify an exact head."
+    },
+    {
+      "file": "app/(admin)/admin/research/page.tsx",
+      "text": "not readable",
+      "reason": "Labels only the aggregateRevision field returned as null by the method-candidate authority projection. The adjacent fail-closed authority state, exact status code, and detail distinguish absence, refusal, and store failure; this text supplies no revision and makes no authority claim."
+    },
+    {
+      "file": "app/(admin)/admin/sections/maptiler.tsx",
+      "text": "The comparison is unknown, not zero.",
+      "reason": "The provider reading is present but the independently measured actor comparison is absent. This default explicitly withholds a robot-request count and refuses to turn the missing comparison into zero, so it is a named OURS measurement gap rather than a claim about provider usage."
+    },
+    {
+      "file": "app/(admin)/admin/sections/maptiler.tsx",
+      "text": "The append-only map-provider history is unavailable, and this panel did not carry a reason.",
+      "reason": "Names an internal owner-surface gap only when both the projected history and the read outcome detail are absent. It deliberately avoids the former unsupported claim that the canonical history contains no attempts, and makes no assertion about provider activity, LKG, or store reachability."
     }
   ]
 }

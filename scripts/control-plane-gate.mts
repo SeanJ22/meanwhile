@@ -104,8 +104,9 @@ if (!verdict.configured) {
    *
    * It used to read "RULING 220's cutover proof ... has not been performed",
    * which was true while no control-plane database existed. It is now false:
-   * `pnpm control-plane:proof` performed all seven conditions against the live
-   * Postgres lane and recorded them. A gate that goes on asserting an
+   * The retired cutover-only proof performed all seven conditions against the
+   * live Postgres lane and recorded them before its destructive executable was
+   * deleted. A gate that goes on asserting an
    * out-of-date fact about our own evidence is doing the same thing this
    * repository refuses everywhere else.
    *

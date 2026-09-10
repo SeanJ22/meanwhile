@@ -2,7 +2,7 @@ import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { BALLOT_SOURCES } from "../ballot/registry.ts";
+import { ballotSourcesForDivisions } from "../ballot/registry.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import { getGeneralLineup } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
@@ -10,8 +10,11 @@ import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
+import { mayReadRetiredPluralRoster } from "../officials/roster-authority.ts";
+import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
-import { allSeatHolders, seatHoldersForDivision } from "../registry/server.ts";
+import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
+import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
@@ -24,7 +27,17 @@ import type { AskNominee } from "./ballot-inventory.ts";
  * This adds subjects to an answer, never representatives to a geography.
  */
 export async function namedOfficeholders(question: string, explicitIds: readonly string[]): Promise<SeatHolder[]> {
-  const held = await allSeatHolders();
+  const targetedStateHolders: SeatHolder[] = [];
+  for (const id of new Set(explicitIds)) {
+    // Resolve an explicit state-publisher identity against that one authority
+    // before the broad federal/local directory is opened.
+    if (!officialStateVoteScopeForOfficeholderId(id)) continue;
+    const holder = await seatHolderById(id);
+    if (holder) targetedStateHolders.push(holder);
+  }
+  const heldById = new Map((await allSeatHolders()).map((holder) => [holder.id, holder]));
+  for (const holder of targetedStateHolders) heldById.set(holder.id, holder);
+  const held = [...heldById.values()];
   const binding = bindNamedEntity(question, held.map((seat) => ({
     id: seat.id, name: seat.name, nameClass: "person" as const, divisionType: "person",
   })));
@@ -40,11 +53,22 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
   for (const bodyId of bodyIds) {
     for (const seat of membersOfBody(bodyId).members) seats.set(seat.id, seat);
   }
-  const results = await Promise.allSettled([...new Set(ocdIds)].map(seatHoldersForDivision));
-  for (const result of results) if (result.status === "fulfilled") {
-    for (const seat of result.value) seats.set(seat.id, seat);
+  let loaderFailures = 0;
+  for (const ocdId of new Set(ocdIds)) {
+    try {
+      const held = await seatHoldersForDivision(ocdId);
+      for (const seat of held) seats.set(seat.id, seat);
+      if (!mayReadRetiredPluralRoster() && /\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
+        loaderFailures += 1;
+      }
+    } catch {
+      loaderFailures += 1;
+    }
   }
-  return { seats: [...seats.values()], loaderFailures: results.filter((result) => result.status === "rejected").length };
+  return {
+    seats: [...seats.values()],
+    loaderFailures,
+  };
 }
 
 /**
@@ -55,7 +79,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
  * from. Split out for two reasons that are both about not duplicating truth:
  *
  * 1. **The ballot is loaded exactly the way `/ballot` loads it** — the same
- *    `BALLOT_SOURCES` registry, the same `contestsForDivisions` filter, the
+ *    canonical ballot registry, the same `contestsForDivisions` filter, the
  *    same committed files. Ask does not hold a copy of ballot truth and cannot
  *    drift from the page that renders it.
  * 2. **A route file that also holds loaders is a route file nothing can test
@@ -106,19 +130,16 @@ const EMPTY: BallotForDivisions = {
 /**
  * The reader's own ballot, matched to their divisions.
  *
- * The loop is `/ballot`'s: ask each source, take the first that matches
- * anything. A source whose contests touch none of these divisions contributes
- * nothing, which is what makes looping all three safe for a reader near a state
- * line.
+ * The loop is `/ballot`'s: first select only authorities named by the resolved
+ * state divisions, then take the first that matches anything. An unavailable
+ * authority in a different state is outside this Reader's failure domain.
  */
 export async function loadBallotForDivisions(
   ocdIds: readonly string[],
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
-  const states = new Set(ocdIds.flatMap((id) => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1] ?? []));
   const loaderFailures: string[] = [];
-  for (const { state, source } of BALLOT_SOURCES) {
-    if (!states.has(state)) continue;
+  for (const { state, source } of ballotSourcesForDivisions(ocdIds)) {
     try {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);
@@ -207,6 +228,11 @@ export function readerRepresentatives(ocdIds: readonly string[]): {
   sourceOrg: string | null;
   collectedAt: string | null;
 }[] {
+  // The tracked state rosters are recorded Plural/OpenStates research
+  // fixtures, not production authority. In production the existing Ask
+  // holding-failure path names the missing canonical officeholder projection;
+  // only node:test may exercise the historical rows.
+  if (!mayReadRetiredPluralRoster()) return [];
   const wanted = new Set(ocdIds.filter((id) => /\/(sldu|sldl):/.test(id)));
   if (wanted.size === 0) return [];
 
@@ -271,12 +297,11 @@ function readRoster(name: string): RosterFile | null {
   if (rosterCache.has(name)) return rosterCache.get(name) ?? null;
   let parsed: RosterFile | null = null;
   try {
-    parsed = JSON.parse(
-      (stateForRosterFile(name) === null
-          ? readFileSync(join(process.cwd(), "lib", "registry", "officeholders-us.json"), "utf8")
-          : readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(name)!, "officials", name), "utf8")),
-    ) as RosterFile;
-  } catch {
+    parsed = stateForRosterFile(name) === null
+      ? getFederalOfficeholderSet() as RosterFile
+      : JSON.parse(readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(name)!, "officials", name), "utf8")) as RosterFile;
+  } catch (error) {
+    if (stateForRosterFile(name) === null) throw error;
     parsed = null;
   }
   rosterCache.set(name, parsed);

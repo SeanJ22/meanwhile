@@ -240,7 +240,7 @@ async function appendIntent(
  * A readback here is a FRESH READ of what the control plane currently holds for
  * a named subject, taken now and recorded with what it said. It is not a
  * re-derivation from source: the deployed console has no repository, no git and
- * no filesystem, so it cannot re-run `pnpm owner:publish` or a code-identity
+ * no filesystem, so it cannot re-run the standing publisher or a code-identity
  * readback, and it does not claim to.
  */
 const READBACK_SUBJECTS: Readonly<Record<string, { readonly name: string; readonly readBackAt: string }>> = {

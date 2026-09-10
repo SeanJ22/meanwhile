@@ -181,8 +181,8 @@ const METRICS: ResearchMetrics = {
     stages: [
       { stage: "SCOUTED", count: 22, source: "distinct obligations with a non-refused Scout result in repos.scoutResults" },
       { stage: "CONFIRMED", count: 0, source: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here (none recorded for CONFIRMED)" },
-      { stage: "VALIDATED", count: 7, source: "data/method/candidates.json lifecycle counts" },
-      { stage: "ADMITTED", count: 0, source: "data/method/candidates.json lifecycle counts" },
+      { stage: "VALIDATED", count: 7, source: "cp_method_candidates/live lifecycle counts" },
+      { stage: "ADMITTED", count: 0, source: "cp_method_candidates/live lifecycle counts" },
       { stage: "DETERMINISTIC_REPLAYS", count: 0, source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read" },
     ],
     pipelineSource: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here",

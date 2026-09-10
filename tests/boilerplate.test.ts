@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
@@ -242,14 +242,9 @@ test("a document with no extractorVersion is treated as version 1", () => {
   assert.equal(current[0].id, "k@fresh");
 });
 
-test("the collector strips chrome before extracting, and says which extractor it is", () => {
-  const source = readFileSync(
-    join(process.cwd(), "scripts", "fetch-candidate-corpus.mts"),
-    "utf8",
+test("the legacy Git collector cannot bypass permanent manual data-plane admission", () => {
+  assert.equal(
+    existsSync(join(process.cwd(), "scripts", "fetch-candidate-corpus.mts")),
+    false,
   );
-  assert.match(source, /extractHtmlText\(stripChromeHtml\(rawHtml\)\)/);
-  assert.match(source, /const EXTRACTOR_VERSION = \d+;/);
-  assert.match(source, /extractorVersion: EXTRACTOR_VERSION/);
-  // A re-extraction must not be counted as a campaign revising its position.
-  assert.match(source, /reextracted \+= 1;/);
 });

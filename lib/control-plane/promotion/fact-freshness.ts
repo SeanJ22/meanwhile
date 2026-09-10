@@ -1,27 +1,20 @@
 /**
- * **FRESHNESS OF A FACT CLASS, READ FROM THE SCHEDULER IT ALREADY HAS.**
+ * **FRESHNESS OF A LEGACY FACT PROJECTION AFTER PDC AUTHORITY TRANSFER.**
  * (Fleet Promotion Readiness, PRDY-5, 2026-09-06.)
  *
  * ## What was missing (ACT-5)
  *
- * The scheduler carried 78 `meetings` obligations — one per body in the
- * committed snapshot — and a `local-jurisdictions` route obligation per
- * subject. Neither is the freshness of a meeting-time or an agenda FACT: the
- * first is the Reader's own corpus refreshing itself, the second is a route
- * that may be an upstream dependency. A fact bridged from the worker fleet had
- * no obligation of its own, so nothing could say when it was last acquired,
- * when it is next due, or that it had gone stale.
+ * The worker pipeline once installed one `meeting-times` and one `agendas`
+ * acquisition clock per body. Those clocks opened the same official feeds as
+ * the permanent meetings source, so PDC retired them as a dual authority.
  *
  * ## The obligation, and where it lives
  *
- * One obligation per (record class, canonical body): `freshness:meeting-times:<bodyId>`
- * and `freshness:agendas:<bodyId>`, provided to the canonical registry by
- * `providers/promoted-facts.ts` and enumerated from the pipeline's own
- * FLEET_EXTRACTION records — the durable evidence, not a file the runner keeps
- * beside it. The route is the feed the facts were acquired from. Cadence,
- * next-due, occurrences, debt and backoff are the scheduler's existing ones
- * (`obligation.ts`, `debt.ts`, `durable.ts`); this module derives nothing of
- * its own but the STALE threshold.
+ * The old ids remain useful only to identify and retire historical rows. This
+ * module may project immutable FLEET_EXTRACTION evidence, but it never opens a
+ * source, derives a second cadence, or treats a legacy row as current. Until a
+ * caller injects freshness from the permanent meetings receipt, the projection
+ * is `NOT_SCHEDULED` and blocks approval fail-closed.
  *
  * ## The reading
  *
@@ -42,12 +35,17 @@
  */
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { StandingObligation } from "../scheduler/durable.ts";
-import { DEFAULT_CADENCE_HOURS, scheduleObligation } from "../scheduler/obligation.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type {
+  RoutineContractObservation,
+  RoutineObservabilityRead,
+} from "../../civic-data/observability.ts";
+import {
+  MEETING_PARTITION_CONTRACTS,
+  meetingPartitionForRow,
+} from "../../civic-data/meeting-partitions.ts";
 import { isMeetingFactClass, type MeetingFactClass } from "./meeting-facts.ts";
 import type { PipelineItemState } from "./types.ts";
-
-export const PROMOTED_FACTS_PROVIDER_ID = "promoted-facts";
 
 /** A fact is stale once this many derived cadences have passed since its last successful acquisition. */
 export const FACT_FRESHNESS_STALE_CYCLES = 2;
@@ -56,7 +54,7 @@ export function factObligationId(recordClass: MeetingFactClass, subjectId: strin
   return `freshness:${recordClass}:${subjectId}`;
 }
 
-/** One (record class, body) the pipeline holds facts for, as the provider enumerates it. */
+/** One (record class, body) represented in immutable pipeline evidence. */
 export interface FactSubject {
   readonly recordClass: MeetingFactClass;
   readonly subjectId: string;
@@ -90,7 +88,7 @@ export function factSubjectsFromStates(states: readonly PipelineItemState[], now
   return [...bySubject.keys()].sort().map((key) => bySubject.get(key)!);
 }
 
-export type FactFreshnessState = "FRESH" | "DUE" | "STALE" | "SOURCE_FAILING" | "NOT_SCHEDULED" | "NEVER_ACQUIRED";
+export type FactFreshnessState = "FRESH" | "DUE" | "STALE" | "SOURCE_FAILING" | "UNKNOWN" | "NOT_SCHEDULED" | "NEVER_ACQUIRED";
 
 export interface FactFreshnessReading {
   readonly recordClass: MeetingFactClass;
@@ -113,6 +111,221 @@ export interface FactFreshnessReading {
   readonly sourceFailureWithoutFalseEmpty: boolean;
 }
 
+export type PermanentMeetingsContractReceipt = Pick<
+  RoutineContractObservation,
+  | "contractId"
+  | "sourceId"
+  | "recordClass"
+  | "scope"
+  | "currentState"
+  | "canonicalPromotion"
+  | "readerVisible"
+  | "cadence"
+  | "lkg"
+>;
+
+export type PermanentMeetingsReceipt =
+  | { readonly kind: "HELD"; readonly value: readonly PermanentMeetingsContractReceipt[] }
+  | { readonly kind: "UNAVAILABLE"; readonly detail: string };
+
+export function permanentMeetingsReceiptId(contractId: string, scope: string): string {
+  return `routine-civic-data:${contractId}/MEETING/${scope}`;
+}
+
+/**
+ * Select every permanent source/body authority from the same canonical
+ * observability read Admin consumes. Exact identity, membership, and
+ * uniqueness are part of the receipt: an aggregate or similarly named row may
+ * not silently become an authority.
+ */
+export function permanentMeetingsReceipt(
+  read: RoutineObservabilityRead,
+): PermanentMeetingsReceipt {
+  if (read.kind !== "HELD") {
+    return {
+      kind: "UNAVAILABLE",
+      detail: `the canonical routine-data projection is ${read.kind}: ${read.detail}`,
+    };
+  }
+  const expected = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
+  const matches = read.value.contracts.filter((row) => expected.has(row.contractId));
+  const ids = new Set(matches.map((row) => row.contractId));
+  const malformed = matches.find((row) => {
+    const partition = expected.get(row.contractId)!;
+    return row.sourceId !== partition.sourceId || row.recordClass !== partition.recordClass || row.scope !== partition.scope;
+  });
+  if (malformed || matches.length !== expected.size || ids.size !== expected.size) {
+    return {
+      kind: "UNAVAILABLE",
+      detail:
+        `the canonical projection held ${ids.size}/${expected.size} exact source/body meetings contract rows` +
+        (malformed ? `; ${malformed.contractId} did not match its registered identity` : ""),
+    };
+  }
+  return { kind: "HELD", value: matches };
+}
+
+type PermanentMeetingsFreshnessInput = {
+  readonly recordClass: MeetingFactClass;
+  readonly subjectId: string;
+  readonly meetingSource?: string | null;
+  readonly lastSuccessfulAcquisitionAt?: string | null;
+};
+
+function unavailablePermanentReading(
+  input: PermanentMeetingsFreshnessInput,
+  detail: string,
+  obligationId = `meeting-partition-unresolved:${input.subjectId}`,
+): FactFreshnessReading {
+  return {
+    recordClass: input.recordClass,
+    subjectId: input.subjectId,
+    obligationId,
+    state: "UNKNOWN",
+    hold: true,
+    reason: `permanent meetings receipt unavailable: ${detail}`,
+    obligation: null,
+    cadenceHours: null,
+    cadenceBasis: null,
+    lastSuccessfulAcquisitionAt: null,
+    nextDueAt: null,
+    staleAfter: null,
+    debt: null,
+    retryAt: null,
+    sourceFailureWithoutFalseEmpty: false,
+  };
+}
+
+/**
+ * Project one legacy immutable meeting fact against the permanent meetings
+ * receipt. This never schedules or opens a source. It can only consume the
+ * canonical candidate/event/promotion projection already used by Admin.
+ */
+export function factFreshnessFromPermanentMeetings(
+  receipt: PermanentMeetingsReceipt,
+  input: PermanentMeetingsFreshnessInput,
+): FactFreshnessReading {
+  if (receipt.kind === "UNAVAILABLE") return unavailablePermanentReading(input, receipt.detail);
+  if (!input.meetingSource) {
+    return unavailablePermanentReading(input, "immutable fact evidence does not name its source partition");
+  }
+  let partition;
+  try {
+    partition = meetingPartitionForRow(input.meetingSource, input.subjectId);
+  } catch {
+    return unavailablePermanentReading(
+      input,
+      `no registered source/body partition exists for ${input.meetingSource}/${input.subjectId}`,
+    );
+  }
+  const obligationId = permanentMeetingsReceiptId(partition.id, partition.scope);
+  const rows = receipt.value.filter((candidate) => candidate.contractId === partition.id);
+  if (rows.length !== 1) {
+    return unavailablePermanentReading(
+      input,
+      `the canonical projection held ${rows.length} exact rows for ${partition.id}; one is required`,
+      obligationId,
+    );
+  }
+  const row = rows[0]!;
+  if (row.canonicalPromotion.kind !== "MEASURED") {
+    return unavailablePermanentReading(input, `canonical promotion is ${row.canonicalPromotion.kind}: ${row.canonicalPromotion.detail}`, obligationId);
+  }
+  if (row.readerVisible.kind !== "MEASURED") {
+    return unavailablePermanentReading(input, `Reader projection is ${row.readerVisible.kind}: ${row.readerVisible.detail}`, obligationId);
+  }
+  if (row.readerVisible.value.versionId !== row.canonicalPromotion.value.versionId) {
+    return unavailablePermanentReading(input, "canonical promotion and Reader projection name different versions", obligationId);
+  }
+  if (row.currentState.kind !== "MEASURED") {
+    return unavailablePermanentReading(input, `latest attempt state is ${row.currentState.kind}: ${row.currentState.detail}`, obligationId);
+  }
+  if (row.cadence.nextDue.kind !== "MEASURED") {
+    return unavailablePermanentReading(input, `next-due receipt is ${row.cadence.nextDue.kind}: ${row.cadence.nextDue.detail}`, obligationId);
+  }
+  const promotedAt = row.canonicalPromotion.value.promotedAt;
+  const promotedMs = Date.parse(promotedAt);
+  const nextDueAt = row.cadence.nextDue.value;
+  if (!Number.isFinite(promotedMs) || !Number.isFinite(Date.parse(nextDueAt)) || !(row.cadence.activeEveryMs > 0)) {
+    return unavailablePermanentReading(input, "the canonical promotion, cadence, or next-due timestamp is unreadable", obligationId);
+  }
+  const sourceFailing = row.currentState.value !== "PROMOTED";
+  if (sourceFailing && (row.lkg.kind !== "MEASURED" || !row.lkg.value.currentlyServing)) {
+    const detail = row.lkg.kind === "MEASURED"
+      ? "the latest attempt did not promote and the receipt does not prove LKG is serving"
+      : `the latest attempt did not promote and LKG is ${row.lkg.kind}: ${row.lkg.detail}`;
+    return unavailablePermanentReading(input, detail, obligationId);
+  }
+  const factAt = input.lastSuccessfulAcquisitionAt ?? null;
+  const factMs = factAt === null ? Number.NaN : Date.parse(factAt);
+  const cadenceHours = row.cadence.activeEveryMs / 3_600_000;
+  const staleAfter = new Date(promotedMs + FACT_FRESHNESS_STALE_CYCLES * row.cadence.activeEveryMs).toISOString();
+  const base = {
+    recordClass: input.recordClass,
+    subjectId: input.subjectId,
+    obligationId,
+    obligation: null,
+    cadenceHours,
+    cadenceBasis: `permanent source/body meetings contract ${partition.id}: ${row.cadence.description}`,
+    lastSuccessfulAcquisitionAt: promotedAt,
+    nextDueAt,
+    staleAfter,
+    debt: null,
+    retryAt: sourceFailing ? nextDueAt : null,
+    sourceFailureWithoutFalseEmpty: sourceFailing,
+  };
+  if (!Number.isFinite(factMs)) {
+    return {
+      ...base,
+      state: "NEVER_ACQUIRED",
+      hold: true,
+      reason: "the immutable fact projection carries no readable acquisition time; the permanent receipt cannot make that fact current",
+    };
+  }
+  if (factMs < promotedMs) {
+    return {
+      ...base,
+      state: "STALE",
+      hold: true,
+      reason:
+        `the fact evidence at ${factAt} predates canonical Reader version ` +
+        `${row.canonicalPromotion.value.versionId} promoted ${promotedAt}; no old fact is refreshed by association`,
+    };
+  }
+  if (row.cadence.freshness === "UNKNOWN") {
+    return { ...base, state: "UNKNOWN", hold: true, reason: row.cadence.freshnessDetail };
+  }
+  if (row.cadence.freshness === "STALE") {
+    return { ...base, state: "STALE", hold: true, reason: row.cadence.freshnessDetail };
+  }
+  if (row.cadence.freshness === "MANUAL") {
+    return {
+      ...base,
+      state: "UNKNOWN",
+      hold: true,
+      reason: "a manually invoked contract cannot satisfy this standing meetings-fact freshness obligation",
+    };
+  }
+  if (sourceFailing) {
+    return {
+      ...base,
+      state: "SOURCE_FAILING",
+      hold: false,
+      reason:
+        `the latest attempt is ${row.currentState.value}; canonical version ${row.canonicalPromotion.value.versionId} ` +
+        `remains Reader-visible as LKG and retry is due ${nextDueAt}`,
+    };
+  }
+  return {
+    ...base,
+    state: row.cadence.freshness,
+    hold: false,
+    reason:
+      `canonical version ${row.canonicalPromotion.value.versionId} is Reader-visible; ` +
+      `${row.cadence.freshnessDetail}`,
+  };
+}
+
 /**
  * Read one fact class's freshness for one body. The last successful
  * acquisition is the FACT's evidence (the newest immutable artifact that
@@ -121,38 +334,27 @@ export interface FactFreshnessReading {
  */
 export async function readFactFreshness(
   repos: ControlPlaneRepositories,
-  input: { readonly recordClass: MeetingFactClass; readonly subjectId: string; readonly now: string; readonly lastSuccessfulAcquisitionAt?: string | null },
+  input: PermanentMeetingsFreshnessInput & { readonly now: string },
 ): Promise<FactFreshnessReading> {
+  void repos;
   const obligationId = factObligationId(input.recordClass, input.subjectId);
-  const row = await repos.obligations.read(obligationId);
-  const obligation = row?.value ?? null;
-  const debt = (await repos.debts.read(obligationId))?.value ?? null;
-  const lastSuccess = input.lastSuccessfulAcquisitionAt ?? obligation?.lastWorkedAt ?? null;
-  const base = { recordClass: input.recordClass, subjectId: input.subjectId, obligationId, obligation, debt, retryAt: debt?.retryAt ?? null, sourceFailureWithoutFalseEmpty: debt !== null, lastSuccessfulAcquisitionAt: lastSuccess };
-  if (obligation === null) {
-    return { ...base, state: "NOT_SCHEDULED", hold: true, cadenceHours: null, cadenceBasis: null, nextDueAt: null, staleAfter: null,
-      reason: `no governed obligation ${obligationId} exists yet; the scheduler registers it from the pipeline's fact records on its next cycle, and until then the fact class has no freshness` };
-  }
-  if (lastSuccess === null) {
-    return { ...base, state: "NEVER_ACQUIRED", hold: true, cadenceHours: null, cadenceBasis: null, nextDueAt: obligation.nextDueAt, staleAfter: null,
-      reason: `obligation ${obligationId} records no successful acquisition; a fact with no acquisition on record has no freshness` };
-  }
-  const scheduled = scheduleObligation({ ...obligation, lastWorkedAt: lastSuccess }, Date.parse(input.now));
-  const cadenceHours = "cadenceHours" in scheduled ? scheduled.cadenceHours : DEFAULT_CADENCE_HOURS;
-  const cadenceBasis = "cadenceHours" in scheduled ? scheduled.basis : scheduled.reason;
-  const nextDueAt = obligation.nextDueAt ?? ("nextDueAt" in scheduled ? scheduled.nextDueAt : null);
-  const staleAfter = new Date(Date.parse(lastSuccess) + cadenceHours * FACT_FRESHNESS_STALE_CYCLES * 3_600_000).toISOString();
-  const shared = { ...base, cadenceHours, cadenceBasis, nextDueAt, staleAfter };
-  if (input.now > staleAfter) {
-    return { ...shared, state: "STALE", hold: true,
-      reason: `the last successful acquisition ${lastSuccess} is older than ${FACT_FRESHNESS_STALE_CYCLES} cadences of ${cadenceHours.toFixed(2)}h (stale after ${staleAfter}); the fact holds and nothing is emptied` };
-  }
-  if (debt !== null) {
-    return { ...shared, state: "SOURCE_FAILING", hold: false,
-      reason: `the route carries ${debt.cause} debt since ${debt.firstFailedAt} (${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}); the facts acquired ${lastSuccess} stand within threshold and no absence is produced` };
-  }
-  if (nextDueAt !== null && input.now >= nextDueAt) {
-    return { ...shared, state: "DUE", hold: false, reason: `owed since ${nextDueAt} and within the stale threshold ${staleAfter}; owed is not stale` };
-  }
-  return { ...shared, state: "FRESH", hold: false, reason: `acquired ${lastSuccess}; next due ${nextDueAt ?? "not yet recorded"}; stale after ${staleAfter}` };
+  return {
+    recordClass: input.recordClass,
+    subjectId: input.subjectId,
+    obligationId,
+    state: "NOT_SCHEDULED",
+    hold: true,
+    reason:
+      `legacy per-fact acquisition clock ${obligationId} is retired by PDC; the permanent ` +
+      "source/body meeting-partition receipt must be injected before this evidence projection can make a freshness claim",
+    obligation: null,
+    cadenceHours: null,
+    cadenceBasis: null,
+    lastSuccessfulAcquisitionAt: input.lastSuccessfulAcquisitionAt ?? null,
+    nextDueAt: null,
+    staleAfter: null,
+    debt: null,
+    retryAt: null,
+    sourceFailureWithoutFalseEmpty: false,
+  };
 }

@@ -150,12 +150,9 @@ test("change detection is reported honestly, and one class already has it", () =
 
 /** The modules that WRITE a canonical product-serving store. */
 const SERVING_WRITERS = [
-  "scripts/build-registry.ts",
-  "scripts/build-officeholders.ts",
   "scripts/ingest.ts",
-  "scripts/adjudicate-leads.mts",
-  "scripts/census-gap-walk.mts",
-  "lib/registry/promoted-bodies.ts",
+  "scripts/fetch-congress-legislators.mts",
+  "scripts/promote-registry-runtime.mts",
 ];
 
 test("NH243: no module that WRITES a serving store sources from the local corpus", () => {
@@ -227,8 +224,12 @@ test("NH243 CONTROL: the boundary guard can see an import, so its silence is a m
     assert.ok(existsSync(join(ROOT, f)), `${f} is registered as a serving writer and is not present`);
   }
   assert.ok(
-    SERVING_WRITERS.includes("scripts/build-registry.ts"),
-    "the registry generator is the canonical serving writer and must be covered",
+    SERVING_WRITERS.includes("scripts/promote-registry-runtime.mts"),
+    "the registry promotion adapter is the canonical serving writer and must be covered",
+  );
+  assert.ok(
+    !SERVING_WRITERS.includes("scripts/build-registry.ts"),
+    "the explicit fixture builder must not be classified as a canonical serving writer",
   );
   assert.ok(
     !SERVING_WRITERS.includes("scripts/fetch-corpus.mts"),

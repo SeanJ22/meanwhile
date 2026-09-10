@@ -26,6 +26,7 @@ import {
   readSections,
   readStore,
   sectionOrder,
+  writeStore,
 } from "../scripts/tracker-core.mjs";
 import { buildWorkbook, readWorkbook, zip } from "../scripts/xlsx.mjs";
 import { revertsProtectedFile } from "../scripts/guard-protected-files.mjs";
@@ -59,6 +60,15 @@ const trackerSnapshot = withTreeLock("read the tracker stores, ledger and views 
 }));
 const { sections, working, resolved } = trackerSnapshot;
 const all = [...working, ...resolved];
+
+test("tracker serialization preserves multiline evidence without trailing-whitespace failures", () => {
+  const serialized = writeStore([{
+    ID: "PLANTED",
+    "What this is": "first historical line \nsecond historical line\t\nthird historical line",
+  }]);
+  assert.doesNotMatch(serialized, /[ \t]+$/m);
+  assert.match(serialized, /first historical line\nsecond historical line\nthird historical line/);
+});
 
 /* ========================================================================== */
 /* The shape of the two stores                                                */

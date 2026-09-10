@@ -1,6 +1,16 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  CivicDataStoreUnavailableError,
+  civicDataReadNotInitialized,
+  readPromotedOrBootstrap,
+  type CivicDataBootstrap,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../../civic-data/read-model.ts";
+import { requiredRoutineContract, routineFreshnessMs } from "../../civic-data/contracts.ts";
+
 import type {
   BallotAbsence,
   BallotSet,
@@ -15,19 +25,21 @@ import type {
 /**
  * The Morris County ballot source — S2, tracker D08's first implementation.
  *
- * `fetch()` reads a committed curated file, exactly as the meetings snapshot
- * pattern prescribes (§0a): curation is an adapter, not a literal. The file
- * was transcribed by hand from the county clerk's filed-candidate PDFs —
- * column-aligned PDFs are the only form the county publishes — and every
- * record carries the PDF it was read from. A licensed national feed (D08)
- * replaces this directory, not the shape.
+ * `fetch()` reads the one promoted BALLOT_FILING projection. The bundled
+ * clerk transcription is an explicit first-seed/test bootstrap only: a store
+ * error can never be reported as a current read from that file. A licensed
+ * national feed (D08) replaces the registered adapter, not this Reader shape.
  */
 
 const SOURCE_NAME = "ballot-nj-morris";
 const FILE = join("data", "states", "nj", "ballot", "nj-morris-2026.json");
+const CONTACTS_FILE = join("data", "states", "nj", "ballot", "nj-morris-2026-contacts.json");
+const NJ_CONTRACT = requiredRoutineContract("nj-morris-filing");
+const SCOPE = NJ_CONTRACT.scope;
 
-interface RawFile {
+export interface RawFile {
   formatVersion: number;
+  curatedAt?: string;
   election: Election;
   contests: Contest[];
   candidacies: Candidacy[];
@@ -35,6 +47,31 @@ interface RawFile {
   absences: BallotAbsence[];
   removals?: CandidacyRemoval[];
 }
+
+export interface NjMorrisContactDocument {
+  readonly generatedAt: string;
+  readonly route: string;
+  readonly note: string;
+  readonly contacts: readonly {
+    readonly candidacyId: string;
+    readonly email?: string | null;
+    readonly filedAddress?: string | null;
+    readonly sourceUrl: string;
+    readonly sourceOrg: string;
+    readonly collectedAt: string;
+  }[];
+}
+
+export interface NjMorrisReadModel {
+  readonly ballot: RawFile;
+  readonly contacts: NjMorrisContactDocument;
+}
+
+let readState: CivicDataReadResult<NjMorrisReadModel> = civicDataReadNotInitialized(
+  "BALLOT_FILING",
+  SCOPE,
+  "The Morris County filing canonical pointer has not been read for this process.",
+);
 
 /** The count invariant at the source boundary. */
 export function validateBallotFile(value: unknown): asserts value is RawFile {
@@ -47,6 +84,8 @@ export function validateBallotFile(value: unknown): asserts value is RawFile {
   }
   const contestIds = new Set(raw.contests.map((c) => c.id));
   if (contestIds.size !== raw.contests.length) throw new Error("duplicate contest ids");
+  const candidacyIds = new Set((raw.candidacies ?? []).map((candidate) => candidate.id));
+  if (candidacyIds.size !== (raw.candidacies ?? []).length) throw new Error("duplicate candidacy ids");
   for (const c of raw.contests) {
     if (!c.ocdId?.startsWith("ocd-division/")) throw new Error(`${c.id}: bad ocdId`);
     if (!c.divisionVintage) throw new Error(`${c.id}: missing division vintage`);
@@ -91,19 +130,87 @@ export function validateBallotFile(value: unknown): asserts value is RawFile {
   }
 }
 
+function validateReadModel(value: NjMorrisReadModel, versionId: string): void {
+  validateBallotFile(value.ballot);
+  if (!value.contacts || !Array.isArray(value.contacts.contacts)) {
+    throw new Error(`Morris filing projection ${versionId} carries no contact document.`);
+  }
+  const current = new Set(value.ballot.candidacies.map((candidate) => candidate.id));
+  const contactIds = value.contacts.contacts.map((contact) => contact.candidacyId);
+  if (new Set(contactIds).size !== contactIds.length || contactIds.some((id) => !current.has(id))) {
+    throw new Error(`Morris filing projection ${versionId} carries duplicate or non-current contact identities.`);
+  }
+}
+
+function bootstrap(): CivicDataBootstrap<NjMorrisReadModel> {
+  const ballot = JSON.parse(readFileSync(join(process.cwd(), FILE), "utf8")) as RawFile;
+  const contacts = JSON.parse(readFileSync(join(process.cwd(), CONTACTS_FILE), "utf8")) as NjMorrisContactDocument;
+  validateReadModel({ ballot, contacts }, "bundled bootstrap");
+  const sourceThrough = ballot.curatedAt ?? contacts.generatedAt;
+  return {
+    value: { ballot, contacts },
+    sourceId: NJ_CONTRACT.sourceId,
+    version: ballot.election.date,
+    versionId: `bootstrap:nj-morris-filing:${sourceThrough}`,
+    sourceThrough,
+    retrievedAt: /^\d{4}-\d{2}-\d{2}$/.test(sourceThrough) ? `${sourceThrough}T00:00:00.000Z` : null,
+    detail: "Bundled Morris filing bootstrap selected only because the canonical store answered with no promoted pointer.",
+  };
+}
+
+/** Typed ballot/contact read outcome; a store failure never opens a bundled file. */
+export async function readNjMorrisFiling(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<NjMorrisReadModel>> {
+  const now = options.now ?? new Date().toISOString();
+  const result = await readPromotedOrBootstrap({
+    ...options,
+    now,
+    recordClass: "BALLOT_FILING",
+    scope: SCOPE,
+    maxAgeMs: options.maxAgeMs ?? routineFreshnessMs(NJ_CONTRACT.id, now),
+    bootstrap,
+    allowUnconfiguredBootstrap: process.env.NODE_ENV !== "production",
+  });
+  readState = result;
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
+    validateReadModel(result.value, result.metadata.versionId ?? result.kind);
+  }
+  return result;
+}
+
+export function njMorrisFilingReadState(): CivicDataReadResult<NjMorrisReadModel> {
+  return readState;
+}
+
+/** Synchronous projection only after the request path performed the typed read. */
+export function currentNjMorrisReadModel(): NjMorrisReadModel {
+  if (readState.kind === "PROMOTED" || readState.kind === "BOOTSTRAP") return readState.value;
+  throw new Error(`Morris filing projection is ${readState.kind}; fetch the registered ballot source first.`);
+}
+
 export const ballotNjMorrisSource: BallotSource = {
   name: SOURCE_NAME,
 
   async fetch(): Promise<unknown[]> {
-    const parsed: unknown = JSON.parse(
-      readFileSync(join(process.cwd(), FILE), "utf8"),
-    );
-    return [parsed];
+    const result = await readNjMorrisFiling();
+    if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
+    if (result.kind === "NOT_RECORDED") {
+      throw new Error("The Morris filing store answered without a canonical projection or bootstrap.");
+    }
+    return [result.value.ballot];
   },
 
   normalize(raw: unknown[]): BallotSet {
     const [file] = raw;
     validateBallotFile(file);
+    const freshnessNote = readState.kind === "BOOTSTRAP"
+      ? "This Morris County ballot is using the bundled first-bootstrap projection because no canonical production version is recorded."
+      : readState.kind === "PROMOTED" && readState.metadata.stale === "STALE"
+        ? `This Morris County ballot is serving its last known good version, which is stale${readState.metadata.sourceThrough ? ` (source through ${readState.metadata.sourceThrough})` : ""}.`
+        : readState.kind === "PROMOTED" && readState.metadata.stale === "UNKNOWN"
+          ? "The freshness of the canonical Morris County ballot could not be established."
+          : null;
     return {
       election: file.election,
       contests: file.contests,
@@ -111,11 +218,12 @@ export const ballotNjMorrisSource: BallotSource = {
       measures: file.measures,
       absences: file.absences,
       removals: file.removals ?? [],
+      ...(freshnessNote ? { coverageNotes: [freshnessNote] } : {}),
     };
   },
 
   async upsert(set: BallotSet) {
-    // Nothing persists ballots yet; the page reads the normalized set.
+    // Compatibility shape only. Persistence is the registered atomic promotion.
     return { inserted: 0, updated: set.contests.length };
   },
 };

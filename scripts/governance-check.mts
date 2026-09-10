@@ -57,8 +57,12 @@ if (process.env.WTP_GOVERNANCE_SKIP_REGEN !== "1") {
       if (existsSync(src)) cpSync(src, join(scratch, dir), { recursive: true });
     }
     cpSync(join(ROOT, "CLAUDE.md"), join(scratch, "CLAUDE.md"));
+    // CI and the repository runtime are pinned to Node 24, whose native type
+    // stripping is sufficient for this compiler.  Keeping the isolated
+    // regeneration dependency-free also avoids turning a package-runner or
+    // user-profile lookup failure into a false stale-governance verdict.
     execFileSync(process.execPath, [
-      join(ROOT, "node_modules", "tsx", "dist", "cli.mjs"),
+      "--experimental-strip-types",
       join(scratch, "scripts", "governance-compile.mts"),
     ], { cwd: scratch, stdio: "pipe" });
     for (const p of GENERATED) {

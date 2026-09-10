@@ -18,8 +18,17 @@ import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts
 import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
 import { advanceHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import {
+  installOperationalReferenceBundle,
+  operationalReferenceBundle,
+} from "../lib/civic-data/operational-references.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
+installOperationalReferenceBundle(operationalReferenceBundle({
+  az: JSON.parse(readFileSync(path.join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
+  nh: JSON.parse(readFileSync(path.join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
+  nj: JSON.parse(readFileSync(path.join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
+}));
 const SUBJECT = "az:city:city-of-avondale";
 const START = "2026-09-03T04:00:00.000Z";
 const API = "https://avondaleaz.api.civicclerk.com/v1/Events";

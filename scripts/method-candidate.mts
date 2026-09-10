@@ -1,6 +1,6 @@
 /**
- * `pnpm method:candidates` — what has been offered to project knowledge, and
- * what became of it. (2026-08-29.)
+ * `pnpm method:candidates` — what the canonical control-plane lifecycle has
+ * offered to project knowledge, and what became of it. (2026-08-29; PDC.)
  *
  * A rejected candidate is durable evidence, and evidence nobody can read is
  * evidence nobody has. This is the read surface: counts by lifecycle against the
@@ -10,26 +10,35 @@
  * It writes nothing. There is no flag that makes it write.
  */
 
-import { join } from "node:path";
-
 import {
   CANDIDATE_LIFECYCLE_STATES,
   candidateCounts,
-  readCandidateStore,
   rejectedCandidates,
 } from "../lib/method/candidate.ts";
+import {
+  CONTROL_PLANE_URL_VAR,
+  controlPlaneUrlFromEnv,
+  createPgRepositories,
+} from "../lib/control-plane/repository/pg-store.ts";
+import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
+import { readMethodCandidateAuthorityStatus } from "../lib/control-plane/method-candidate-authority.ts";
+import { METHOD_CANDIDATE_STORE_ID } from "../lib/control-plane/scheduler/scout-candidates.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
-import { flag } from "./cli-args.mts";
 
-const ROOT = process.cwd();
-const argv = process.argv.slice(2);
-const STORE = flag(argv, "store") ?? join(ROOT, "data", "method", "candidates.json");
-
-const store = readCandidateStore(STORE);
+const url = controlPlaneUrlFromEnv();
+if (url === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not set; refusing a tracked-file fallback.`);
+const repos = await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true });
+assertDurableRepositories(repos, "method-candidate readback");
+const current = await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID);
+if (current === null) throw new Error("METHOD_CANDIDATE_STORE_NOT_SEEDED: absence is not an empty candidate population");
+const store = current.value;
+const authority = await readMethodCandidateAuthorityStatus(repos);
 const counts = candidateCounts(store);
 const total = store.candidates.length;
 
-console.log(`candidate corpus         ${STORE}`);
+console.log(`candidate authority      cp_method_candidates/${METHOD_CANDIDATE_STORE_ID}`);
+console.log(`authority adoption       ${authority.state} — ${authority.code}`);
+console.log(`aggregate revision       ${current.revision}`);
 console.log(`last updated             ${store.updatedOn ?? "(never)"}`);
 console.log(`candidates recorded      ${total}`);
 for (const state of CANDIDATE_LIFECYCLE_STATES) {

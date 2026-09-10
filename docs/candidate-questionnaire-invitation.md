@@ -4,9 +4,11 @@
 this file has been sent to anybody. It is a reviewable artifact, and the send is
 a separate act by a person.*
 
-The generated list is `data/questionnaire/invitations-nj-morris-2026.json` —
-**272 rows, one per candidacy, every row carrying `invitedOn: null` and
-`remindedOn: []`** because nothing has gone out.
+The unsent plan is now derived on demand from the canonical promoted Morris
+County filing with `pnpm questionnaire:invitations`. It is not committed as a
+second mutable civic-data snapshot. The report proves complete-population and
+same-contest symmetry and still sends nothing; only a separately authorized
+delivery path may persist `invitedOn` or `remindedOn` in the operational store.
 
 ---
 

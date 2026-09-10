@@ -149,23 +149,12 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * alternative to it, and a blocker a machine can decide does not get to take
    * the human route.
    */
-  /*
-   * **NH305 joined on 2026-09-01 as the first predicate over a row that is
-   * still OPEN.** The runner's relaunch trigger needs an elevated install the
-   * machine cannot perform; the predicate reads the proof record the elevated
-   * `prove-relaunch` writes, and until then it HOLDS by name. That is the
-   * other half of RULING 227 working as written — a blocker a machine can
-   * check is re-checked on every generation and the row moves the moment the
-   * proof lands. So an OPEN predicated row must NOT answer RESOLVED_BY_EVIDENCE
-   * here (if it did, the row should already have moved), and a RESOLVED one
-   * must still read its evidence and answer RESOLVED_BY_EVIDENCE.
-   */
   /* NH306 (2026-09-02) is the second OPEN predicated row: two credentials await rotation. */
   /*
-   * **NH305 RESOLVED on 2026-09-02 by its own predicate** — the owner ran the
-   * elevated install, prove-relaunch measured a relaunch in 274 s, and the
-   * committed proof moved the row. It now sits with the resolved set and must
-   * keep reading its evidence. **NH310 joined the same day as the third OPEN
+   * NH305's historical committed proof remains engineering evidence, but PDC
+   * removed it from the executable predicate registry: live supervision now
+   * comes from the host-local measurement persisted into the canonical runtime
+   * state. **NH310 joined the same day as the third OPEN
    * predicated row:** the Google client variables are absent from the
    * provider (read back by name), and the predicate reads the login readback's
    * `googleConfigured` field — CANNOT_TELL while the readback predates the
@@ -173,7 +162,19 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * deployed host reports the client configured.
    */
   // WF01 now reads the owner's explicit, scoped approval receipt, like OWN03.
-  assert.equal(PREDICATES.length, 9);
+  assert.equal(PREDICATES.length, 6);
+  for (const retired of ["NH272", "NH281", "NH305"]) {
+    assert.equal(
+      PREDICATES.filter((p) => p.rowId === retired).length,
+      0,
+      `${retired} restores retired tracked operational state as executable live evidence`,
+    );
+  }
+  assert.doesNotMatch(
+    readFileSync(join(ROOT, "lib/tracker/registry.mjs"), "utf8"),
+    /data\/ops\/production-integrity\.json/,
+    "the live tracker registry reads the retired Git-backed production status record",
+  );
   assert.equal(PREDICATES.filter(p => p.rowId === "WF01").length, 1);
   const openIds = new Set(openRows.map((r) => String(r.ID ?? "").trim()));
   for (const p of PREDICATES as unknown as RegistryEntry[]) {

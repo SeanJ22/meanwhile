@@ -65,9 +65,7 @@ export type ProofSource =
   /** Named check identities in the standing walk (`docs/walk-checks.txt`). */
   | { readonly kind: "WALK"; readonly checkIdentities: readonly string[] }
   /** Named reader-question instances, proven by a canonical reader-suite run. */
-  | { readonly kind: "READER_SUITE"; readonly instanceIds: readonly string[] }
-  /** A post-deploy observer reading of production. */
-  | { readonly kind: "OBSERVER"; readonly claim: string };
+  | { readonly kind: "READER_SUITE"; readonly instanceIds: readonly string[] };
 
 export interface CapabilityEntry {
   /** Stable id, so a row survives rewording and the ledger stays diffable. */
@@ -223,14 +221,6 @@ export const CAPABILITY_REGISTRY: readonly CapabilityEntry[] = [
     provenBy: {"kind":"SUITE","testFiles":["tests/fixture-provenance.test.ts"]},
     evidence:
       "tests/fixture-provenance.test.ts (committed check; reproducible by `pnpm test`)",
-  },
-  {
-    id: "schema-applied",
-    capability:
-      "The production database schema is applied and current: the shipping invariant holds at post-deploy, with every committed migration applied.",
-    provenBy: {"kind":"OBSERVER","claim":"production-integrity"},
-    evidence:
-      "data/ops/production-integrity.json (committed by the observer)",
   },
   {
     id: "officeholder-surfaces",

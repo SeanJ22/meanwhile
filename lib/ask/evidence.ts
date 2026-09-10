@@ -86,8 +86,8 @@ export interface EvidenceRecord {
      * the chamber's own roll-call page as the source. Never a tally we
      * computed, never a characterisation, never a rate, and never a position
      * inferred from party, district or anything else: the record exists
-     * because `data/votes/*.json` holds a row keyed on a STABLE officeholder
-     * identifier, or it does not exist at all. `lib/ask/votes.ts` is the only
+     * because the promoted federal/state projection holds a row keyed on a
+     * STABLE officeholder identifier, or it does not exist at all. `lib/ask/votes.ts` is the only
      * thing that mints these, and the identity rule that gates it is the whole
      * of that module's doc block.
      */
@@ -117,7 +117,7 @@ export interface EvidenceRecord {
      * **HOW ONE NAMED MEMBER VOTED ON ONE MEETING ITEM.** (2026-08-29.)
      *
      * Deliberately NOT `ROLL_CALL_VOTE`, which is minted only by
-     * `lib/ask/votes.ts` off `data/votes/*.json` — a legislator's position on a
+     * `lib/ask/votes.ts` off the promoted vote projections — a legislator's position on a
      * chamber's question, keyed on a stable officeholder identifier. This is a
      * local body's per-item roll call read off the publisher's own vote table,
      * and the two have different sources, different identity rules and

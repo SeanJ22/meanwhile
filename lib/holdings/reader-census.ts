@@ -601,7 +601,7 @@ export interface ReaderClosureExecutionAuthorityEvidence {
     /** Exact durable controller receipt archived with the authority artifact. */
     readonly receiptPath: string;
     readonly receiptSha256: string;
-    /** Complete controller result and exact 95-row disposition membership. */
+    /** Complete controller result and exact final-authority disposition membership. */
     readonly resultSha256: string;
     readonly dispositionSetSha256: string;
     readonly canonicalPointerSetSha256: string;

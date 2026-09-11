@@ -30,6 +30,7 @@ import {
 import { sourceProjectionEvidence, VALIDATION_CHECKS, type CandidateVersionRecord, type PromotedProjection, type RoutineCandidate, type TrustedLkgImportEvidence } from "../lib/civic-data/types.ts";
 import {
   buildReaderExecutionAuthorityEvidence,
+  admitReaderExecutionAuthorityArchivedSupport,
   canonicalReaderAuthorityJson,
   PDC_NEON_PROJECT_ID,
   PDC_PRODUCTION_BRANCH_ID,
@@ -66,7 +67,7 @@ const PRODUCTION_CONNECTION =
 const PLAN_CANDIDATE_COUNT = 95;
 const BASELINE_REGISTERED_PROMOTION_COUNT = 16;
 const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT;
-const REGISTERED_CONTRACT_COUNT = 155;
+const REGISTERED_CONTRACT_COUNT = 157;
 
 type Row = Record<string, unknown>;
 type FixtureDisposition = {
@@ -985,6 +986,35 @@ test("production authority binds the pinned standing branch and no clone claim",
   );
 });
 
+test("production authority rejects registered Reader denominator near misses", async () => {
+  const pointers = pointerRows();
+  for (const registeredContractCount of [156, 158]) {
+    const receipt = JSON.parse(productionReceipt(pointers).toString("utf8")) as Record<string, unknown>;
+    receipt.preImportAuthority = {
+      ...(receipt.preImportAuthority as Record<string, unknown>),
+      registeredContractKeys: registeredContractCount,
+    };
+    receipt.postImport = {
+      ...(receipt.postImport as Record<string, unknown>),
+      registeredContractCount,
+    };
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({
+        phase: "PRODUCTION",
+        exactHead: PRODUCTION_PROOF_HEAD,
+        connection: PRODUCTION_CONNECTION,
+        providerMetadataPath: "docs/evidence/reader-last-mile-production-provider-metadata.json",
+        providerMetadataBytes: productionProviderMetadata(),
+        importReceiptPath: "docs/evidence/reader-last-mile-production-import-receipt.json",
+        importReceiptBytes: Buffer.from(JSON.stringify(receipt)),
+        sql: fakeTransport({ pointers }),
+      })),
+      /import\/retirement\/post-import receipt shape differs/,
+      `${registeredContractCount} must not pass as the exact 157-contract registry`,
+    );
+  }
+});
+
 test("production replay accepts 111 already-proven authorities without relabeling their durable bootstrap", async () => {
   const pointers = pointerRows();
   const replayDispositions = dispositionSet(pointers).map((entry, index) => ({
@@ -1020,6 +1050,15 @@ test("production replay accepts 111 already-proven authorities without relabelin
     ),
     [],
   );
+  const admitted = admitReaderExecutionAuthorityArchivedSupport(
+    evidence,
+    productionProviderMetadata(),
+    receipt,
+  );
+  assert.equal(admitted.importerCodeSha, HEAD);
+  assert.equal(admitted.dispositionSet.length, FINAL_AUTHORITY_COUNT);
+  assert.equal(admitted.zeroMeetingPartitionsRefused, 41);
+  assert.equal(admitted.dispositionSetSha256, evidence.import.dispositionSetSha256);
 
   const drift = JSON.parse(receipt.toString("utf8")) as Record<string, unknown>;
   drift.preImportAuthority = {

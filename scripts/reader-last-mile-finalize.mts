@@ -28,8 +28,13 @@ import {
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { finalizeReaderSources } from "./lib/reader-source-finalization.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "./lib/reader-proof-runtime.ts";
 
 const root = process.cwd();
+await prepareReaderProofRuntime();
 const codeHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
 const invalidationPath = "docs/evidence/reader-last-mile-final-invalidation.json";
 const componentPath = "docs/evidence/reader-last-mile-final-delta-components.json";
@@ -97,7 +102,11 @@ if (process.argv.includes("--renew-holdings")) {
 
 if (process.argv.includes("--prepare")) {
   const baseCensus = buildReaderCensus(root);
-  const projection = await projectCanonicalReaderRecords(root, baseCensus);
+  const projection = await projectCanonicalReaderRecords(
+    root,
+    baseCensus,
+    requiredPreparedReaderProofMeetingsAuthority(),
+  );
   const prepared = applyReaderApplicability(baseCensus, projection);
   writeFileSync(preparedCensusPath, `${JSON.stringify(prepared)}\n`);
   writeFileSync(proofSourcesPath, `${JSON.stringify(readerProofSources(root, prepared), null, 2)}\n`);

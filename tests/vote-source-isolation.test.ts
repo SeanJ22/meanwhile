@@ -13,9 +13,11 @@ import {
   getStateVotesSnapshot,
   OFFICIAL_STATE_VOTE_SCOPES,
   officialStateVoteProjectionIssue,
+  readAvailableOfficialStateVotes,
   type OfficialStateVoteScope,
 } from "../lib/sources/legiscan/snapshot.ts";
 import type { StateVotesSnapshot } from "../lib/sources/legiscan/types.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { MemberKeyVotes } from "../lib/votes/key-votes-reader.ts";
 import { officialStateLegislatorTargetByScope } from "../lib/state-rollcalls/authority.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
@@ -140,6 +142,58 @@ function stateReaders(input: {
     },
   };
 }
+
+function stateReadResult(
+  scope: OfficialStateVoteScope,
+  kind: "PROMOTED" | "NOT_RECORDED" | "STORE_UNREACHABLE",
+): CivicDataReadResult<StateVotesSnapshot> {
+  const metadata = {
+    recordClass: "STATE_ROLL_CALL" as const,
+    scope,
+    sourceId: kind === "PROMOTED" ? STATE_SOURCE[scope] : null,
+    version: kind === "PROMOTED" ? `${scope}:version` : null,
+    versionId: kind === "PROMOTED" ? `${scope}:good` : null,
+    lastKnownGoodVersionId: null,
+    sourceThrough: null,
+    retrievedAt: null,
+    promotedAt: null,
+    stale: "UNKNOWN" as const,
+    staleAt: null,
+  };
+  if (kind === "PROMOTED") return {
+    kind,
+    value: stateSnapshot(scope, `${STATE_SOURCE[scope]}:${scope.slice(-2)}-member-1`),
+    metadata,
+    projection: {} as never,
+  };
+  if (kind === "NOT_RECORDED") return { kind, value: null, metadata, detail: `${scope} has no pointer` };
+  return { kind, value: null, metadata, code: "STORE_READ_FAILED", detail: `${scope} store failed` };
+}
+
+test("official state proof enumeration keeps NOT_RECORDED explicit without borrowing the retired aggregate", async () => {
+  const calls: OfficialStateVoteScope[] = [];
+  const result = await readAvailableOfficialStateVotes({}, async (scope) => {
+    calls.push(scope);
+    return stateReadResult(scope, scope === "US-AZ" ? "NOT_RECORDED" : "PROMOTED");
+  });
+  assert.deepEqual(calls, OFFICIAL_STATE_VOTE_SCOPES);
+  assert.deepEqual(result.promoted.map(({ scope }) => scope), ["US-NH", "US-NJ"]);
+  assert.deepEqual(result.readbacks, [
+    { scope: "US-AZ", kind: "NOT_RECORDED", versionId: null },
+    { scope: "US-NH", kind: "PROMOTED", versionId: "US-NH:good" },
+    { scope: "US-NJ", kind: "PROMOTED", versionId: "US-NJ:good" },
+  ]);
+});
+
+test("official state proof enumeration fails closed on an unreadable canonical store", async () => {
+  await assert.rejects(
+    readAvailableOfficialStateVotes({}, async (scope) => stateReadResult(
+      scope,
+      scope === "US-NH" ? "STORE_UNREACHABLE" : "NOT_RECORDED",
+    )),
+    /Official state-roll read for US-NH is STORE_UNREACHABLE/,
+  );
+});
 
 test("a New Hampshire member opens only the exact New Hampshire authority", async () => {
   const member = "nh-general-court:NH-member-1";

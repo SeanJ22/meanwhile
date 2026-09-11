@@ -13,8 +13,15 @@ import type { SnapshotStatus } from "../lib/meetings/freshness.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { formatMeetingDate } from "../lib/map/format.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import type { Meeting } from "../lib/sources/types.ts";
+import {
+  readMeetingsProjection,
+  requireReaderProofMeetingsProjection,
+} from "../lib/meetings/snapshot.ts";
 import { freshnessDisclosureProblems } from "./lib/reader-freshness-disclosure.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "./lib/reader-proof-runtime.ts";
 
 const root = process.cwd();
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
@@ -25,11 +32,15 @@ const ballotEvidencePath = process.env.READER_BALLOT_EVIDENCE ?? "docs/evidence/
 const proofSourcesPath = process.env.READER_PROOF_SOURCES;
 const refreshBaseline = process.argv.includes("--refresh-baseline");
 assert.ok(proofSourcesPath, "The frozen final census source fingerprint is required");
+await prepareReaderProofRuntime();
 const screenshotsDir = join(root, "screenshots", "reader-last-mile", "final");
 mkdirSync(screenshotsDir, { recursive: true });
 const exactHead = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const buildId = readFileSync(".next/BUILD_ID", "utf8").trim();
-const snapshot = JSON.parse(readFileSync("data/meetings-snapshot.json", "utf8")) as { meetings: Meeting[] };
+const snapshot = requireReaderProofMeetingsProjection(
+  await readMeetingsProjection({ bypassCache: true }),
+  requiredPreparedReaderProofMeetingsAuthority(),
+);
 const results: Record<string, unknown>[] = [];
 const screenshots: { path: string; sha256: string }[] = [];
 const hashBytes = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");

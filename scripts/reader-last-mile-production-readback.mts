@@ -12,11 +12,13 @@ import { launchGuarded } from "./browser.mts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { campaignMoneyApiAnswer, campaignMoneyForTarget } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
+import { prepareReaderProductionReadbackRuntime } from "./lib/reader-proof-runtime.ts";
 
 const expectedCommit = process.env.READER_DEPLOYED_COMMIT ?? "";
 assert.match(expectedCommit, /^[a-f0-9]{40}$/, "Set READER_DEPLOYED_COMMIT to the provider-confirmed merged commit");
 const base = (process.env.READER_READBACK_BASE ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 assert.ok(base === PUBLIC_SITE_ORIGIN || ["localhost", "127.0.0.1"].includes(new URL(base).hostname), "Only the canonical public origin or a local rehearsal is allowed");
+await prepareReaderProductionReadbackRuntime(expectedCommit);
 const execution = base === PUBLIC_SITE_ORIGIN ? "EXPLICITLY_AUTHORIZED_PRODUCTION_READBACK" : "LOCAL_REHEARSAL";
 const out = resolve(process.cwd(), "..", "reader-production-readback", `${expectedCommit}-${Date.now()}`);
 mkdirSync(out, { recursive: true });

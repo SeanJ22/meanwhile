@@ -193,6 +193,60 @@ export function stateMoneySources(): string[] {
   );
 }
 
+export interface StateMoneyProofInventory {
+  readonly targetKeys: readonly string[];
+  readonly readbacks: readonly {
+    readonly state: StateCampaignFinanceJurisdiction;
+    readonly kind: "PROMOTED";
+    readonly recordClass: "STATE_CAMPAIGN_FINANCE";
+    readonly scope: string;
+    readonly sourceId: string;
+    readonly versionId: string;
+  }[];
+}
+
+/**
+ * Documentary proof inventory from the exact promoted state authorities.
+ * Unlike `stateMoneySources`, this never exposes or seeds tracked fixtures.
+ */
+export function stateMoneyProofInventory(): StateMoneyProofInventory {
+  const targetKeys: string[] = [];
+  const readbacks: StateMoneyProofInventory["readbacks"][number][] = [];
+  const states = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).sort();
+  for (const state of states) {
+    const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
+    const result = readStates.get(state);
+    if (result?.kind !== "PROMOTED") {
+      throw new Error(
+        `${state} state campaign-finance Reader proof authority is ${result?.kind ?? "READ_NOT_INITIALIZED"}; ` +
+        "call refreshStateMoneyFromPromoted before building proof inventory.",
+      );
+    }
+    if (
+      result.metadata.recordClass !== "STATE_CAMPAIGN_FINANCE" ||
+      result.metadata.scope !== contract.scope ||
+      result.metadata.sourceId !== contract.sourceId
+    ) {
+      throw new Error(`${state} state campaign-finance Reader proof authority identity does not match its registered contract.`);
+    }
+    const versionId = result.metadata.versionId;
+    if (!versionId) throw new Error(`${state} state campaign-finance Reader proof authority has no promoted version.`);
+    const snapshot = cache.get(state);
+    if (!snapshot) throw new Error(`${state} state campaign-finance promoted Reader proof cache is unavailable.`);
+    validateSnapshot(snapshot, state, versionId);
+    targetKeys.push(...snapshot.records.flatMap((record) => record.targetKeys));
+    readbacks.push({
+      state,
+      kind: "PROMOTED",
+      recordClass: "STATE_CAMPAIGN_FINANCE",
+      scope: contract.scope,
+      sourceId: contract.sourceId,
+      versionId,
+    });
+  }
+  return { targetKeys: [...new Set(targetKeys)].sort(), readbacks };
+}
+
 function snapshotForTarget(targetKey: string): StateMoneySnapshot | null {
   ensureTestFixtures();
   const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;

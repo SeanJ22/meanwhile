@@ -10,6 +10,7 @@ import {
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 
 function interior(feature: GeoFeature): { lat: number; lng: number } {
   const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
@@ -65,6 +66,7 @@ export async function proveVotingSites() {
 }
 
 if (process.argv[1]?.endsWith("reader-last-mile-voting-sites.mts")) {
+  await prepareReaderProofRuntime();
   const result = await proveVotingSites();
   const proof = { ...result, exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), sourceHashes: Object.fromEntries(["app/api/voting-sites/route.ts", "lib/ballot/voting-sites-server.ts", "lib/ballot/voting-sites-data-plane.ts"].map(path => [path, createHash("sha256").update(readFileSync(path)).digest("hex")])) };
   writeFileSync("docs/evidence/reader-last-mile-voting-sites.json", JSON.stringify(proof, null, 2) + "\n");

@@ -2,21 +2,23 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { MINUTES_SUMMARIES } from "../../lib/meetings/minutes-summaries.ts";
-import { COMMENT_ACCESS } from "../../lib/registry/comment-access.ts";
+import type { CommentAccess } from "../../lib/registry/comment-access.ts";
 import { NOTICE_SUMMARIES } from "../../lib/meetings/notice-summary.ts";
-import { readSnapshot } from "../../lib/meetings/snapshot.ts";
+import type { MeetingsSnapshot } from "../../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import { localDate } from "../../lib/ask/meeting-time.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 import type { EvidenceRecord, EvidencePack } from "../../lib/ask/evidence.ts";
 
-export async function meetingKnowledgeAskProof() {
+export async function meetingKnowledgeAskProof(options: {
+  readonly snapshot: MeetingsSnapshot;
+  readonly commentAccess: readonly CommentAccess[];
+}) {
   delete process.env.ANTHROPIC_API_KEY;
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
   const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
-  const snapshot = readSnapshot();
-  if (!snapshot) throw new Error("Required canonical meeting identities unavailable");
+  const snapshot = options.snapshot;
   type Expected = Pick<EvidenceRecord, "id" | "kind" | "bodyId" | "text" | "sourceUrl" | "retrievedAt"> & Partial<Pick<EvidenceRecord, "sourceOrg" | "occurredAt" | "accessRule" | "noticeSummary">>;
   async function prove(family: string, nativeId: string, bodyId: string, ocdId: string | null, question: string, kind: EvidenceRecord["kind"], expected: Expected[]) {
     const identity = canonicalBodyIdentity(bodyId);
@@ -46,7 +48,7 @@ export async function meetingKnowledgeAskProof() {
     if (!meeting?.bodyId) throw new Error(`No canonical meeting/body identity for minutes ${summary.meetingId}`);
     proofs.push(await prove("minutes-summaries", summary.meetingId, meeting.bodyId, meeting.ocdId, `What happened at this body's meeting on ${localDate(meeting)}?`, "MEETING_MINUTES_SUMMARY", [{ kind: "MEETING_MINUTES_SUMMARY", id: `${summary.meetingId}#minutes-summary`, bodyId: meeting.bodyId, text: `Meanwhile's plain-language summary of the source record: ${summary.summary}`, occurredAt: meeting.startsAt, sourceUrl: summary.minutesUrl, sourceOrg: summary.sourceOrg, retrievedAt: summary.readAt }]));
   }
-  for (const access of COMMENT_ACCESS) {
+  for (const access of options.commentAccess) {
     const bodyName = canonicalBodyIdentity(access.bodyId)?.name;
     if (!bodyName) throw new Error(`No canonical comment-access body: ${access.bodyId}`);
     const fields = ["commentPeriodDetail", "timeLimit", "signup", "writtenComment", "attend"] as const;
@@ -55,6 +57,6 @@ export async function meetingKnowledgeAskProof() {
     for (const field of fields) if (access[field]) expected.push({ kind: "PUBLIC_COMMENT_ACCESS", id: `${access.bodyId}#comment-access:${field}`, bodyId: access.bodyId, text: access[field], sourceUrl: access.sourceUrl, retrievedAt: access.collectedAt, accessRule: { field, value: access[field], standingRule: true } });
     proofs.push(await prove("comment-access", access.bodyId, access.bodyId, access.ocdId, "How can I speak, submit written comments, sign up, or attend this body's meetings?", "PUBLIC_COMMENT_ACCESS", expected));
   }
-  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/meeting-knowledge.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/registry/comment-access.ts", "lib/meetings/minutes-summaries.ts", "lib/meetings/notice-summary.ts", "data/states/az/meetings/notice-summaries.json", "data/meetings-snapshot.json"];
-  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", modelDisabled: true, sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), noticeDenominator: NOTICE_SUMMARIES.length, summaryDenominator: MINUTES_SUMMARIES.length, accessDenominator: COMMENT_ACCESS.length, proofs };
+  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/meeting-knowledge.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/registry/comment-access.ts", "lib/meetings/minutes-summaries.ts", "lib/meetings/notice-summary.ts", "lib/meetings/snapshot.ts", "lib/civic-data/meeting-partitions.ts", "data/states/az/meetings/notice-summaries.json"];
+  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", modelDisabled: true, sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), noticeDenominator: NOTICE_SUMMARIES.length, summaryDenominator: MINUTES_SUMMARIES.length, accessDenominator: options.commentAccess.length, proofs };
 }

@@ -7,6 +7,11 @@ const GIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
 
 export const READER_READBACK_EVIDENCE_KIND = "TYPED_READER_READ_MODEL" as const;
 
+/** Stable evidence identity for a registered operational projection with no public Reader surface. */
+export function sourceScopedReaderReadbackProjectionId(contractId: string): string {
+  return `source-scoped:${contractId}`;
+}
+
 /**
  * Durable result from executing the contract-specific typed read model used
  * by Reader against the exact promoted version. A pointer read or a declared

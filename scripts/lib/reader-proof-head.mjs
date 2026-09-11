@@ -10,7 +10,11 @@ const AUTHORITY_RELATIONS = [
 const PINNED_PROJECT_ID = "tiny-hill-13996172";
 const PINNED_PRODUCTION_BRANCH_ID = "br-delicate-lab-ax02xuo5";
 const PDC_V2_FROZEN_BASE_SHA = "fc67e8cd34c489590c403f7b4a0d6008fa755296";
-const PDC_V2_IMPORT_DISPOSITION_COUNT = 95;
+const PDC_V2_PLANNED_CANDIDATE_COUNT = 95;
+const PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT = 16;
+const PDC_V2_FINAL_PROMOTION_COUNT =
+  PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT + PDC_V2_PLANNED_CANDIDATE_COUNT;
+const PDC_V2_REGISTERED_CONTRACT_COUNT = 155;
 const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
 const PROJECT_ID = /^[a-z][a-z0-9-]{2,79}$/;
 const BRANCH_ID = /^br-[a-z0-9-]{3,100}$/;
@@ -259,7 +263,8 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
     new Set(pointers.changedKeyMembership).size !== pointers.changedKeyMembership.length ||
     canonicalJson(pointers.changedKeyMembership) !== canonicalJson([...pointers.changedKeyMembership].sort()) ||
     !safeInteger(before.count) || !EXACT_SHA256.test(String(before.sha256)) || !safeInteger(after.count, 1) ||
-    !EXACT_SHA256.test(String(after.sha256)) || afterCounts.promotions !== String(after.count) ||
+    !EXACT_SHA256.test(String(after.sha256)) ||
+    beforeCounts.promotions !== String(before.count) || afterCounts.promotions !== String(after.count) ||
     pointers.currentPointerSha256 !== after.sha256
   ) throw new Error("Reader rehearsal pointer readback schema is not exact.");
 
@@ -296,13 +301,24 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
   if (!classCounts || !exactKeys(classCounts, Object.keys(expectedClassCounts)) || canonicalJson(classCounts) !== canonicalJson(expectedClassCounts)) {
     throw new Error("Reader rehearsal import disposition classes differ from the exact denominator.");
   }
+  const absentPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
+  const existingDispositions = counts.reattested + counts.skipped;
+  const retiredLegacyPointers = retirement.disposition === "RETIRED" ? 1 : 0;
   if (
-    counts.total !== PDC_V2_IMPORT_DISPOSITION_COUNT ||
-    plan.candidateCount !== counts.total ||
+    plan.candidateCount !== PDC_V2_PLANNED_CANDIDATE_COUNT ||
     plan.meetingPartitionsWithoutLkg !== imported.zeroMeetingPartitionsRefused ||
-    Number(plan.meetingPartitionsWithLkg) + Number(plan.manualContracts) !== counts.total
+    Number(plan.meetingPartitionsWithLkg) + Number(plan.manualContracts) !== Number(plan.candidateCount) ||
+    Number(before.count) < retiredLegacyPointers ||
+    existingDispositions !== Number(before.count) - retiredLegacyPointers ||
+    existingDispositions < PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT ||
+    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT ||
+    Number(after.count) !== Number(before.count) - retiredLegacyPointers + absentPromotions ||
+    Number(after.count) !== PDC_V2_FINAL_PROMOTION_COUNT ||
+    counts.total !== Number(after.count) ||
+    pointers.changedKeyMembership.length !== counts.promoted + retiredLegacyPointers ||
+    pointers.changedKeyMembership.includes("MEETING:supported-bodies") !== (retiredLegacyPointers === 1)
   ) {
-    throw new Error("Reader rehearsal plan denominator differs from its durable import dispositions.");
+    throw new Error("Reader rehearsal plan/pointer transition differs from its exact durable import dispositions.");
   }
   return {
     importerCodeSha: exactHead,
@@ -358,10 +374,18 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
     !admission || !exactKeys(admission, ["protocol", "nonceSha256", "parentPid", "readyRequests", "liveRecensusAtReady", "receiptTtlMs"]) ||
     admission.protocol !== 1 || !EXACT_SHA256.test(String(admission.nonceSha256)) || !safeInteger(admission.parentPid, 1) ||
     admission.readyRequests !== 1 || admission.liveRecensusAtReady !== true || !safeInteger(admission.receiptTtlMs, 1) ||
-    !preImport || !exactKeys(preImport, ["initialCensus", "liveRecensusAtReady", "exact0026PreflightWithProspectiveSuccessors", "registeredContractKeys", "canonicalPromotionCount", "registeredCurrentPromotionCount", "obsoleteAggregatePointers", "durableRetirementReceipt", "prospectiveReattestationCount"]) ||
+    !preImport || !exactKeys(preImport, [
+      "initialCensus", "liveRecensusAtReady", "exact0026PreflightWithProspectiveSuccessors",
+      "registeredContractKeys", "canonicalPromotionCount", "registeredCurrentPromotionCount",
+      "obsoleteAggregatePointers", "durableRetirementReceipt", "liveLegacyVersionId",
+      "liveLegacyPointerSha256", "liveLegacyCandidateRecordSha256", "liveLegacyHistorySha256",
+      "liveLegacyHistoryEventCount", "liveLegacyMeetingFactSha256", "liveLegacyMeetingRowCount",
+      "liveLegacyAgendaDocumentRowCount", "prospectiveReattestationCount",
+    ]) ||
     preImport.initialCensus !== "PASS" || preImport.liveRecensusAtReady !== "PASS" || preImport.exact0026PreflightWithProspectiveSuccessors !== "PASS" ||
-    !["registeredContractKeys", "canonicalPromotionCount", "registeredCurrentPromotionCount", "obsoleteAggregatePointers", "prospectiveReattestationCount"].every((field) => safeInteger(preImport[field])) ||
-    ![null, "PASS"].includes(preImport.durableRetirementReceipt)
+    !["registeredContractKeys", "canonicalPromotionCount", "registeredCurrentPromotionCount", "obsoleteAggregatePointers", "liveLegacyHistoryEventCount", "liveLegacyMeetingRowCount", "liveLegacyAgendaDocumentRowCount", "prospectiveReattestationCount"].every((field) => safeInteger(preImport[field])) ||
+    typeof preImport.liveLegacyVersionId !== "string" || !preImport.liveLegacyVersionId ||
+    !["liveLegacyPointerSha256", "liveLegacyCandidateRecordSha256", "liveLegacyHistorySha256", "liveLegacyMeetingFactSha256"].every((field) => EXACT_SHA256.test(String(preImport[field])))
   ) throw new Error("Reader production prewrite/live-recensus authority is not terminally green.");
   if (
     !github || !exactKeys(github, ["legacyWorkflowDefinitionsDisabled", "nonterminalLegacyRuns", "bypassActors", "enabledWriteDeployKeys", "legacyRuntimeSecrets"]) ||
@@ -370,20 +394,32 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
     host.obsoleteScheduledTasks !== 0 || host.startupLaunchers !== 0 || host.oldProcessTreeMembers !== 0
   ) throw new Error("Reader production authority transfer did not retain zero legacy GitHub/host writers.");
   if (
-    !imported || !exactKeys(imported, ["promoted", "reattestedExisting", "skippedExisting", "dispositions", "dispositionSet", "dispositionSetSha256", "resultSha256", "zeroMeetingPartitionsRefused", "retirementDisposition", "durableRetirementReceiptExact", "legacyMeetingFactSha256", "replacementPointerSha256"]) ||
+    !imported || !exactKeys(imported, [
+      "promoted", "reattestedExisting", "skippedExisting", "dispositions", "dispositionSet",
+      "dispositionSetSha256", "zeroMeetingPartitionsRefused", "retirementDisposition",
+      "durableRetirementReceiptExact", "legacyMeetingFactSha256", "replacementPointerSha256",
+      "legacyPointerSha256", "legacyCandidateRecordSha256", "legacyHistorySha256",
+      "legacyHistoryEventCount", "replacementFullPointerSetSha256",
+      "replacementCandidateRecordSetSha256", "replacementHistorySetSha256",
+      "replacementAuthoritySha256", "resultSha256",
+    ]) ||
     !EXACT_SHA256.test(String(imported.dispositionSetSha256)) || !EXACT_SHA256.test(String(imported.resultSha256)) ||
     imported.zeroMeetingPartitionsRefused !== PDC_V2_ZERO_LKG_MEETING_PARTITIONS ||
-    !EXACT_SHA256.test(String(imported.legacyMeetingFactSha256)) || !EXACT_SHA256.test(String(imported.replacementPointerSha256)) ||
+    !["legacyMeetingFactSha256", "replacementPointerSha256", "legacyPointerSha256", "legacyCandidateRecordSha256", "legacyHistorySha256", "replacementFullPointerSetSha256", "replacementCandidateRecordSetSha256", "replacementHistorySetSha256", "replacementAuthoritySha256"].every((field) => EXACT_SHA256.test(String(imported[field]))) ||
+    !safeInteger(imported.legacyHistoryEventCount, 1) ||
     !["RETIRED", "ALREADY_RETIRED_PROVEN"].includes(imported.retirementDisposition) || imported.durableRetirementReceiptExact !== true ||
     !postImport || !exactKeys(postImport, ["exact0026Preflight", "schema", "promotionCount", "expectedPromotionCount", "registeredContractCount", "obsoleteAggregatePointers", "unregisteredPromotions"]) ||
     postImport.exact0026Preflight !== "PASS" || postImport.schema !== "pre-0026" ||
     !["promotionCount", "expectedPromotionCount", "registeredContractCount", "obsoleteAggregatePointers", "unregisteredPromotions"].every((field) => safeInteger(postImport[field])) ||
-    postImport.promotionCount !== postImport.expectedPromotionCount || postImport.promotionCount !== postImport.registeredContractCount ||
+    postImport.promotionCount !== postImport.expectedPromotionCount ||
+    postImport.registeredContractCount !== preImport.registeredContractKeys ||
+    postImport.registeredContractCount !== PDC_V2_REGISTERED_CONTRACT_COUNT ||
+    postImport.promotionCount > postImport.registeredContractCount ||
     postImport.obsoleteAggregatePointers !== 0 || postImport.unregisteredPromotions !== 0
   ) throw new Error("Reader production import/retirement/post-import receipt shape differs.");
   const dispositions = exactDispositionSet(imported.dispositionSet, imported.dispositionSetSha256);
   const counts = dispositionCounts(dispositions);
-  if (counts.total !== PDC_V2_IMPORT_DISPOSITION_COUNT || canonicalJson(counts) !== canonicalJson({
+  if (canonicalJson(counts) !== canonicalJson({
     promoted: imported.promoted,
     reattested: imported.reattestedExisting,
     skipped: imported.skippedExisting,
@@ -392,6 +428,30 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
   if (postImport.promotionCount <= 0 || postImport.promotionCount !== counts.total) {
     throw new Error("Reader production authority-transfer receipt has no exact promotion denominator.");
   }
+  const absentPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
+  const existingDispositions = counts.reattested + counts.skipped;
+  const retiredLegacyPointers = imported.retirementDisposition === "RETIRED" ? 1 : 0;
+  const expectedRetirementProof = retiredLegacyPointers === 1 ? "NOT_APPLICABLE_POINTER_PRESENT" : "PASS";
+  const replacementAuthoritySha256 = hash(canonicalJson({
+    replacementFullPointerSetSha256: imported.replacementFullPointerSetSha256,
+    replacementCandidateRecordSetSha256: imported.replacementCandidateRecordSetSha256,
+    replacementHistorySetSha256: imported.replacementHistorySetSha256,
+  }));
+  if (
+    preImport.obsoleteAggregatePointers !== retiredLegacyPointers ||
+    preImport.durableRetirementReceipt !== expectedRetirementProof ||
+    preImport.canonicalPromotionCount !== preImport.registeredCurrentPromotionCount + retiredLegacyPointers ||
+    existingDispositions !== preImport.registeredCurrentPromotionCount ||
+    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT ||
+    postImport.promotionCount !== preImport.registeredCurrentPromotionCount + absentPromotions ||
+    postImport.promotionCount !== PDC_V2_FINAL_PROMOTION_COUNT ||
+    imported.legacyPointerSha256 !== preImport.liveLegacyPointerSha256 ||
+    imported.legacyCandidateRecordSha256 !== preImport.liveLegacyCandidateRecordSha256 ||
+    imported.legacyHistorySha256 !== preImport.liveLegacyHistorySha256 ||
+    imported.legacyHistoryEventCount !== preImport.liveLegacyHistoryEventCount ||
+    imported.legacyMeetingFactSha256 !== preImport.liveLegacyMeetingFactSha256 ||
+    imported.replacementAuthoritySha256 !== replacementAuthoritySha256
+  ) throw new Error("Reader production authority transition differs from its exact pre/import/post evidence.");
   return {
     importerCodeSha: String(receipt.importSha),
     expectedPointerSha256: null,

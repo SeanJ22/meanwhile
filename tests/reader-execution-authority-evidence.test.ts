@@ -33,6 +33,7 @@ import {
   canonicalReaderAuthorityJson,
   PDC_NEON_PROJECT_ID,
   PDC_PRODUCTION_BRANCH_ID,
+  readerExecutionAuthorityArchivedSupportProblems,
   readerExecutionAuthorityLiveProblems,
   type BuildReaderAuthorityOptions,
   type ReaderAuthoritySql,
@@ -62,6 +63,10 @@ const PRODUCTION_ENDPOINT_ID = "ep-reader-production-123";
 const PRODUCTION_ENDPOINT_HOST = `${PRODUCTION_ENDPOINT_ID}.neon.tech`;
 const PRODUCTION_CONNECTION =
   `postgresql://readonly_pdc:test-only-password@${PRODUCTION_ENDPOINT_HOST}/wtp`;
+const PLAN_CANDIDATE_COUNT = 95;
+const BASELINE_REGISTERED_PROMOTION_COUNT = 16;
+const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT;
+const REGISTERED_CONTRACT_COUNT = 155;
 
 type Row = Record<string, unknown>;
 type FixtureDisposition = {
@@ -126,12 +131,17 @@ function validationReceiptFor(candidate: RoutineCandidate, sourceCode: string) {
   };
 }
 
-function pointerRows(count = 95): Row[] {
+function pointerRows(count = FINAL_AUTHORITY_COUNT): Row[] {
   return Array.from({ length: count }, (_, index) => {
     const suffix = String(index + 1).padStart(3, "0");
     const candidate = fixtureCandidate(suffix);
     const candidateId = candidate.id;
-    const validationReceipt = validationReceiptFor(candidate, "TRUSTED_LKG_IMPORT_PROVENANCE_VALID");
+    const validationReceipt = validationReceiptFor(
+      candidate,
+      index < BASELINE_REGISTERED_PROMOTION_COUNT
+        ? "SOURCE_PRIMARY_AUTHENTICATED"
+        : "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+    );
     return {
       key: `${candidate.recordClass}:${candidate.scope}`,
       source_id: candidate.sourceId,
@@ -147,16 +157,18 @@ function pointerRows(count = 95): Row[] {
 }
 
 function dispositionSet(pointers: readonly Row[]): FixtureDisposition[] {
-  return pointers.map((pointer) => ({
+  return pointers.map((pointer, index): FixtureDisposition => ({
     contractId: `contract-${String(pointer.scope).split(":").at(-1)!}`,
     candidateId: String(pointer.current_version_id),
-    disposition: "PROMOTED_ABSENT_POINTER" as const,
+    disposition: index < BASELINE_REGISTERED_PROMOTION_COUNT
+      ? "SKIPPED_EXISTING_PROVEN_AUTHORITY"
+      : "PROMOTED_ABSENT_POINTER",
     versionId: String(pointer.current_version_id),
     readerReadback: "PASS" as const,
   })).sort((left, right) => left.contractId.localeCompare(right.contractId));
 }
 
-function fixtureCandidate(suffix: string): RoutineCandidate {
+function fixtureCandidate(suffix: string, importerCodeSha = HEAD): RoutineCandidate {
   const contractId = `contract-${suffix}`;
   const sourceId = "curated-reader-primary-sources";
   const recordClass = "CURATED_READER_RECORD" as const;
@@ -247,7 +259,7 @@ function fixtureCandidate(suffix: string): RoutineCandidate {
     sourceThrough: partial.temporal.sourceThrough,
     importedAt: NOW,
     frozenBaseSha: PDC_V2_FROZEN_BASE_SHA,
-    importerCodeSha: HEAD,
+    importerCodeSha,
     fixtureSetSha256,
     fixtures,
     normalizedPayloadSha256: projectionSha256,
@@ -278,9 +290,12 @@ function normalizedPointers(pointers: readonly Row[]) {
 }
 
 function candidateRows(pointers: readonly Row[], overrides: Record<string, unknown> = {}): Row[] {
-  return pointers.map((pointer) => {
+  return pointers.map((pointer, index) => {
     const suffix = String(pointer.scope).split(":").at(-1)!;
-    const candidate = fixtureCandidate(suffix);
+    const importedCandidate = fixtureCandidate(suffix);
+    const candidate = index < BASELINE_REGISTERED_PROMOTION_COUNT
+      ? (({ bootstrapImport: _bootstrapImport, ...sourceNative }) => sourceNative)(importedCandidate)
+      : importedCandidate;
     const candidateId = candidate.id;
     return {
       pointer_key: pointer.key,
@@ -365,6 +380,17 @@ function rehearsalReceipt(
   const reattested = Number(dispositionCounts.REATTESTED_EXISTING_AUTHORITY ?? 0);
   const skipped = Number(dispositionCounts.SKIPPED_EXISTING_PROVEN_AUTHORITY ?? 0);
   const promoted = exactDispositions.length - skipped;
+  const existing = reattested + skipped;
+  const changedKeysByVersion = new Map(
+    pointers.map((pointer) => [String(pointer.current_version_id), String(pointer.key)] as const),
+  );
+  const changedKeyMembership = [
+    ...exactDispositions
+      .filter(({ disposition }) => disposition !== "SKIPPED_EXISTING_PROVEN_AUTHORITY")
+      .map(({ versionId }) => changedKeysByVersion.get(versionId)!)
+      .filter(Boolean),
+    "MEETING:supported-bodies",
+  ].sort();
   const unsigned = {
     schemaVersion: 1,
     result: "PDC_V2_REHEARSAL_IMPORT_PASS",
@@ -420,8 +446,8 @@ function rehearsalReceipt(
       contractVersion: 1,
       frozenBaseSha: FROZEN,
       importerCodeSha: HEAD,
-      candidateCount: pointers.length,
-      meetingPartitionsWithLkg: pointers.length - 12,
+      candidateCount: PLAN_CANDIDATE_COUNT,
+      meetingPartitionsWithLkg: 83,
       meetingPartitionsWithoutLkg: 41,
       meetingRows: 619,
       agendaDocumentRows: 196,
@@ -451,7 +477,15 @@ function rehearsalReceipt(
       resultSha256: SHA256,
     },
     pointers: {
-      before: { count: 1, sha256: SHA256, rowCounts: { candidates: "1", events: "4", promotions: "1" } },
+      before: {
+        count: existing + 1,
+        sha256: SHA256,
+        rowCounts: {
+          candidates: String(existing + 1),
+          events: String((existing + 1) * 4),
+          promotions: String(existing + 1),
+        },
+      },
       after: {
         count: pointers.length,
         sha256: pointerSha,
@@ -461,7 +495,7 @@ function rehearsalReceipt(
           promotions: String(pointers.length),
         },
       },
-      changedKeyMembership: pointers.map((pointer) => pointer.key),
+      changedKeyMembership,
       currentPointerSha256: pointerSha,
     },
     productionMutations: 0,
@@ -475,8 +509,31 @@ function rehearsalReceipt(
   }));
 }
 
-function productionReceipt(pointers: readonly Row[]): Buffer {
-  const dispositions = dispositionSet(pointers);
+function productionReceipt(
+  pointers: readonly Row[],
+  overrides: Record<string, unknown> = {},
+  dispositions = dispositionSet(pointers),
+  retirementDisposition: "RETIRED" | "ALREADY_RETIRED_PROVEN" = "RETIRED",
+): Buffer {
+  const promoted = dispositions.filter(({ disposition }) => disposition !== "SKIPPED_EXISTING_PROVEN_AUTHORITY").length;
+  const reattested = dispositions.filter(({ disposition }) => disposition === "REATTESTED_EXISTING_AUTHORITY").length;
+  const skipped = dispositions.filter(({ disposition }) => disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY").length;
+  const absentPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
+  const existingDispositions = reattested + skipped;
+  const retiredLegacyPointers = retirementDisposition === "RETIRED" ? 1 : 0;
+  const legacyPointerSha256 = "1".repeat(64);
+  const legacyCandidateRecordSha256 = "2".repeat(64);
+  const legacyHistorySha256 = "3".repeat(64);
+  const legacyMeetingFactSha256 = "4".repeat(64);
+  const replacementPointerSha256 = "5".repeat(64);
+  const replacementFullPointerSetSha256 = "6".repeat(64);
+  const replacementCandidateRecordSetSha256 = "7".repeat(64);
+  const replacementHistorySetSha256 = "8".repeat(64);
+  const replacementAuthoritySha256 = sha256(canonicalReaderAuthorityJson({
+    replacementFullPointerSetSha256,
+    replacementCandidateRecordSetSha256,
+    replacementHistorySetSha256,
+  }));
   return Buffer.from(JSON.stringify({
     schemaVersion: 1,
     result: "PDC_AUTHORITY_TRANSFER_COMPLETE_B_ADMISSION_READY",
@@ -535,12 +592,20 @@ function productionReceipt(pointers: readonly Row[]): Buffer {
       initialCensus: "PASS",
       liveRecensusAtReady: "PASS",
       exact0026PreflightWithProspectiveSuccessors: "PASS",
-      registeredContractKeys: 100,
-      canonicalPromotionCount: 1,
-      registeredCurrentPromotionCount: 1,
-      obsoleteAggregatePointers: 1,
-      durableRetirementReceipt: null,
-      prospectiveReattestationCount: 0,
+      registeredContractKeys: REGISTERED_CONTRACT_COUNT,
+      canonicalPromotionCount: existingDispositions + retiredLegacyPointers,
+      registeredCurrentPromotionCount: existingDispositions,
+      obsoleteAggregatePointers: retiredLegacyPointers,
+      durableRetirementReceipt: retiredLegacyPointers === 1 ? "NOT_APPLICABLE_POINTER_PRESENT" : "PASS",
+      liveLegacyVersionId: "cv-legacy",
+      liveLegacyPointerSha256: legacyPointerSha256,
+      liveLegacyCandidateRecordSha256: legacyCandidateRecordSha256,
+      liveLegacyHistorySha256: legacyHistorySha256,
+      liveLegacyHistoryEventCount: 4,
+      liveLegacyMeetingFactSha256: legacyMeetingFactSha256,
+      liveLegacyMeetingRowCount: 626,
+      liveLegacyAgendaDocumentRowCount: 199,
+      prospectiveReattestationCount: reattested,
     },
     github: {
       legacyWorkflowDefinitionsDisabled: 8,
@@ -551,29 +616,38 @@ function productionReceipt(pointers: readonly Row[]): Buffer {
     },
     host: { obsoleteScheduledTasks: 0, startupLaunchers: 0, oldProcessTreeMembers: 0 },
     import: {
-      promoted: pointers.length,
-      reattestedExisting: 0,
-      skippedExisting: 0,
+      promoted,
+      reattestedExisting: reattested,
+      skippedExisting: skipped,
       dispositions: pointers.length,
       dispositionSet: dispositions,
       dispositionSetSha256: sha256(canonicalReaderAuthorityJson(dispositions)),
       resultSha256: SHA256,
       zeroMeetingPartitionsRefused: 41,
-      retirementDisposition: "RETIRED",
+      retirementDisposition,
       durableRetirementReceiptExact: true,
-      legacyMeetingFactSha256: SHA256,
-      replacementPointerSha256: SHA256,
+      legacyMeetingFactSha256,
+      replacementPointerSha256,
+      legacyPointerSha256,
+      legacyCandidateRecordSha256,
+      legacyHistorySha256,
+      legacyHistoryEventCount: 4,
+      replacementFullPointerSetSha256,
+      replacementCandidateRecordSetSha256,
+      replacementHistorySetSha256,
+      replacementAuthoritySha256,
     },
     postImport: {
       exact0026Preflight: "PASS",
       schema: "pre-0026",
-      promotionCount: pointers.length,
-      expectedPromotionCount: pointers.length,
-      registeredContractCount: pointers.length,
+      promotionCount: existingDispositions + absentPromotions,
+      expectedPromotionCount: existingDispositions + absentPromotions,
+      registeredContractCount: REGISTERED_CONTRACT_COUNT,
       obsoleteAggregatePointers: 0,
       unregisteredPromotions: 0,
     },
     commitBAdmissionReady: true,
+    ...overrides,
   }));
 }
 
@@ -694,7 +768,7 @@ test("the fake transport produces only sanitized, hash-bound rehearsal authority
   assert.equal(evidence.phase, "REHEARSAL");
   assert.equal(evidence.exactHead, HEAD);
   assert.equal(evidence.import.importerCodeSha, HEAD);
-  assert.equal(evidence.import.canonicalPointerCount, 95);
+  assert.equal(evidence.import.canonicalPointerCount, FINAL_AUTHORITY_COUNT);
   assert.equal(evidence.readOnly.attemptedWriteRefused, true);
   assert.equal(sql.queries.length, 5, "identity, privilege probe, pointers, durable candidates, and events are read");
   assert.match(sql.queries[0]!, /rolsuper[\s\S]*rolcreaterole[\s\S]*rolcreatedb[\s\S]*rolreplication[\s\S]*rolbypassrls/);
@@ -710,9 +784,11 @@ test("the fake transport produces only sanitized, hash-bound rehearsal authority
   assert.equal(serialized.includes(ENDPOINT_HOST), false);
   assert.match(evidence.store.providerMetadataSha256, /^[0-9a-f]{64}$/);
   assert.match(evidence.import.receiptSha256, /^[0-9a-f]{64}$/);
-  assert.equal(evidence.import.durableImport.candidateCount, 95);
-  assert.equal(evidence.import.durableImport.currentPointerLinkCount, 95);
-  assert.equal(evidence.import.durableImport.terminalPromotedEventCount, 95);
+  assert.equal(evidence.import.durableImport.candidateCount, FINAL_AUTHORITY_COUNT);
+  assert.equal(evidence.import.durableImport.currentPointerLinkCount, FINAL_AUTHORITY_COUNT);
+  assert.equal(evidence.import.durableImport.promotedDispositionCount, PLAN_CANDIDATE_COUNT);
+  assert.equal(evidence.import.durableImport.skippedDispositionCount, BASELINE_REGISTERED_PROMOTION_COUNT);
+  assert.equal(evidence.import.durableImport.terminalPromotedEventCount, FINAL_AUTHORITY_COUNT);
 });
 
 test("production authority binds the pinned standing branch and no clone claim", async () => {
@@ -734,8 +810,144 @@ test("production authority binds the pinned standing branch and no clone claim",
   assert.notEqual(evidence.exactHead, evidence.import.importerCodeSha, "production proof cannot be generated while temporary importer A is still HEAD");
   assert.equal(evidence.store.authority, "STANDING_PRODUCTION");
   assert.equal(evidence.clone, null);
-  assert.equal(evidence.import.durableImport.promotedDispositionCount, pointers.length);
+  assert.equal(evidence.import.durableImport.promotedDispositionCount, PLAN_CANDIDATE_COUNT);
   assert.doesNotMatch(canonicalReaderAuthorityJson(evidence), /reader-production-123/);
+
+  const collapsedRegistry = JSON.parse(productionReceipt(pointers).toString("utf8")) as Record<string, unknown>;
+  collapsedRegistry.preImportAuthority = {
+    ...(collapsedRegistry.preImportAuthority as Record<string, unknown>),
+    registeredContractKeys: FINAL_AUTHORITY_COUNT,
+  };
+  collapsedRegistry.postImport = {
+    ...(collapsedRegistry.postImport as Record<string, unknown>),
+    registeredContractCount: FINAL_AUTHORITY_COUNT,
+  };
+  await assert.rejects(
+    buildReaderExecutionAuthorityEvidence(options({
+      phase: "PRODUCTION",
+      exactHead: PRODUCTION_PROOF_HEAD,
+      connection: PRODUCTION_CONNECTION,
+      providerMetadataPath: "docs/evidence/reader-last-mile-production-provider-metadata.json",
+      providerMetadataBytes: productionProviderMetadata(),
+      importReceiptPath: "docs/evidence/reader-last-mile-production-import-receipt.json",
+      importReceiptBytes: Buffer.from(JSON.stringify(collapsedRegistry)),
+      sql: fakeTransport({ pointers }),
+    })),
+    /import\/retirement\/post-import receipt shape differs/,
+  );
+});
+
+test("production replay accepts 111 already-proven authorities without relabeling their durable bootstrap", async () => {
+  const pointers = pointerRows();
+  const replayDispositions = dispositionSet(pointers).map((entry, index) => ({
+    ...entry,
+    candidateId: `planned-replay-candidate-${String(index + 1).padStart(3, "0")}`,
+    disposition: "SKIPPED_EXISTING_PROVEN_AUTHORITY" as const,
+  })).sort((left, right) => left.contractId.localeCompare(right.contractId));
+  const receipt = productionReceipt(
+    pointers,
+    {},
+    replayDispositions,
+    "ALREADY_RETIRED_PROVEN",
+  );
+  const evidence = await buildReaderExecutionAuthorityEvidence(options({
+    phase: "PRODUCTION",
+    exactHead: PRODUCTION_PROOF_HEAD,
+    connection: PRODUCTION_CONNECTION,
+    providerMetadataPath: "docs/evidence/reader-last-mile-production-provider-metadata.json",
+    providerMetadataBytes: productionProviderMetadata(),
+    importReceiptPath: "docs/evidence/reader-last-mile-production-import-receipt.json",
+    importReceiptBytes: receipt,
+    sql: fakeTransport({ pointers }),
+  }));
+
+  assert.equal(evidence.import.durableImport.promotedDispositionCount, 0);
+  assert.equal(evidence.import.durableImport.reattestedDispositionCount, 0);
+  assert.equal(evidence.import.durableImport.skippedDispositionCount, FINAL_AUTHORITY_COUNT);
+  assert.deepEqual(
+    readerExecutionAuthorityArchivedSupportProblems(
+      evidence,
+      productionProviderMetadata(),
+      receipt,
+    ),
+    [],
+  );
+
+  const drift = JSON.parse(receipt.toString("utf8")) as Record<string, unknown>;
+  drift.preImportAuthority = {
+    ...(drift.preImportAuthority as Record<string, unknown>),
+    registeredCurrentPromotionCount: FINAL_AUTHORITY_COUNT - 1,
+  };
+  await assert.rejects(
+    buildReaderExecutionAuthorityEvidence(options({
+      phase: "PRODUCTION",
+      exactHead: PRODUCTION_PROOF_HEAD,
+      connection: PRODUCTION_CONNECTION,
+      providerMetadataPath: "docs/evidence/reader-last-mile-production-provider-metadata.json",
+      providerMetadataBytes: productionProviderMetadata(),
+      importReceiptPath: "docs/evidence/reader-last-mile-production-import-receipt.json",
+      importReceiptBytes: Buffer.from(JSON.stringify(drift)),
+      sql: fakeTransport({ pointers }),
+    })),
+    /transition differs/,
+  );
+
+  const foreignCandidate = fixtureCandidate("017", "c".repeat(40));
+  const foreignValidationReceipt = validationReceiptFor(
+    foreignCandidate,
+    "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+  );
+  const foreignPointers = pointerRows();
+  foreignPointers[16] = {
+    key: `${foreignCandidate.recordClass}:${foreignCandidate.scope}`,
+    source_id: foreignCandidate.sourceId,
+    record_class: foreignCandidate.recordClass,
+    scope: foreignCandidate.scope,
+    current_version_id: foreignCandidate.id,
+    last_known_good_version_id: foreignCandidate.id,
+    promoted_at: NOW,
+    payload: foreignCandidate.readModel,
+    validation_receipt: foreignValidationReceipt,
+  };
+  const foreignCandidates = candidateRows(foreignPointers);
+  foreignCandidates[16] = {
+    ...foreignCandidates[16],
+    current_version_id: foreignCandidate.id,
+    last_known_good_version_id: foreignCandidate.id,
+    candidate_id: foreignCandidate.id,
+    promoted_version_id: foreignCandidate.id,
+    candidate_lkg_version_id: foreignCandidate.id,
+    candidate: foreignCandidate,
+    validation_receipt: foreignValidationReceipt,
+    pointer_validation_receipt: foreignValidationReceipt,
+  };
+  const foreignReplayDispositions = dispositionSet(foreignPointers).map((entry, index) => ({
+    ...entry,
+    candidateId: `planned-replay-candidate-${String(index + 1).padStart(3, "0")}`,
+    disposition: "SKIPPED_EXISTING_PROVEN_AUTHORITY" as const,
+  })).sort((left, right) => left.contractId.localeCompare(right.contractId));
+  await assert.rejects(
+    buildReaderExecutionAuthorityEvidence(options({
+      phase: "PRODUCTION",
+      exactHead: PRODUCTION_PROOF_HEAD,
+      connection: PRODUCTION_CONNECTION,
+      providerMetadataPath: "docs/evidence/reader-last-mile-production-provider-metadata.json",
+      providerMetadataBytes: productionProviderMetadata(),
+      importReceiptPath: "docs/evidence/reader-last-mile-production-import-receipt.json",
+      importReceiptBytes: productionReceipt(
+        foreignPointers,
+        {},
+        foreignReplayDispositions,
+        "ALREADY_RETIRED_PROVEN",
+      ),
+      sql: fakeTransport({
+        pointers: foreignPointers,
+        candidates: foreignCandidates,
+        events: eventRows(foreignPointers),
+      }),
+    })),
+    /not bound to the exact durable bootstrap/,
+  );
 });
 
 test("missing, forged, stale, extra, and secret-bearing provider metadata fail closed", async (t) => {
@@ -797,6 +1009,133 @@ test("forged receipts and pointer sets cannot become authority evidence", async 
         })),
       })),
       /forbidden secret-bearing field/,
+    );
+  });
+  await t.test("the 95-row frozen plan cannot be relabeled as the 111-row authority set", async () => {
+    const plan = receipt.plan as Record<string, unknown>;
+    const unsigned: Record<string, unknown> = {
+      ...receipt,
+      plan: { ...plan, candidateCount: FINAL_AUTHORITY_COUNT, meetingPartitionsWithLkg: 99 },
+    };
+    delete unsigned.receiptSha256;
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({
+        importReceiptBytes: Buffer.from(canonicalReaderAuthorityJson({
+          ...unsigned,
+          receiptSha256: sha256(canonicalReaderAuthorityJson(unsigned)),
+        })),
+      })),
+      /plan\/pointer transition differs/,
+    );
+  });
+  await t.test("the superseded coherent 95-disposition model cannot redefine final authority", async () => {
+    const plannedOnly = ((receipt.import as Record<string, unknown>).dispositionSet as FixtureDisposition[])
+      .filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER");
+    const pointerBlock = receipt.pointers as Record<string, unknown>;
+    const before = pointerBlock.before as Record<string, unknown>;
+    const after = pointerBlock.after as Record<string, unknown>;
+    const imported = receipt.import as Record<string, unknown>;
+    const unsigned: Record<string, unknown> = {
+      ...receipt,
+      import: {
+        ...imported,
+        promoted: PLAN_CANDIDATE_COUNT,
+        reattestedExisting: 0,
+        skippedExisting: 0,
+        dispositionCount: PLAN_CANDIDATE_COUNT,
+        dispositionCounts: { PROMOTED_ABSENT_POINTER: PLAN_CANDIDATE_COUNT },
+        dispositionSet: plannedOnly,
+        dispositionSetSha256: sha256(canonicalReaderAuthorityJson(plannedOnly)),
+      },
+      pointers: {
+        ...pointerBlock,
+        before: {
+          ...before,
+          count: 1,
+          rowCounts: { candidates: "1", events: "4", promotions: "1" },
+        },
+        after: {
+          ...after,
+          count: PLAN_CANDIDATE_COUNT,
+          rowCounts: {
+            candidates: String(PLAN_CANDIDATE_COUNT),
+            events: String(PLAN_CANDIDATE_COUNT * 5),
+            promotions: String(PLAN_CANDIDATE_COUNT),
+          },
+        },
+        changedKeyMembership: [
+          ...Array.from({ length: PLAN_CANDIDATE_COUNT }, (_, index) =>
+            `CURATED_READER_RECORD:US:legacy-model:${String(index + 1).padStart(3, "0")}`),
+          "MEETING:supported-bodies",
+        ].sort(),
+      },
+    };
+    delete unsigned.receiptSha256;
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({
+        importReceiptBytes: Buffer.from(canonicalReaderAuthorityJson({
+          ...unsigned,
+          receiptSha256: sha256(canonicalReaderAuthorityJson(unsigned)),
+        })),
+      })),
+      /plan\/pointer transition differs/,
+    );
+  });
+  await t.test("before/after pointer arithmetic cannot drift with intact disposition hashes", async () => {
+    const pointerBlock = receipt.pointers as Record<string, unknown>;
+    const before = pointerBlock.before as Record<string, unknown>;
+    const unsigned: Record<string, unknown> = {
+      ...receipt,
+      pointers: {
+        ...pointerBlock,
+        before: {
+          ...before,
+          count: BASELINE_REGISTERED_PROMOTION_COUNT + 2,
+          rowCounts: {
+            candidates: String(BASELINE_REGISTERED_PROMOTION_COUNT + 2),
+            events: String((BASELINE_REGISTERED_PROMOTION_COUNT + 2) * 4),
+            promotions: String(BASELINE_REGISTERED_PROMOTION_COUNT + 2),
+          },
+        },
+      },
+    };
+    delete unsigned.receiptSha256;
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({
+        importReceiptBytes: Buffer.from(canonicalReaderAuthorityJson({
+          ...unsigned,
+          receiptSha256: sha256(canonicalReaderAuthorityJson(unsigned)),
+        })),
+      })),
+      /plan\/pointer transition differs/,
+    );
+  });
+  await t.test("before pointer count cannot contradict its controller promotion row count", async () => {
+    const pointerBlock = receipt.pointers as Record<string, unknown>;
+    const before = pointerBlock.before as Record<string, unknown>;
+    const beforeRowCounts = before.rowCounts as Record<string, unknown>;
+    const unsigned: Record<string, unknown> = {
+      ...receipt,
+      pointers: {
+        ...pointerBlock,
+        before: {
+          ...before,
+          rowCounts: {
+            ...beforeRowCounts,
+            promotions: String(Number(before.count) - 1),
+          },
+        },
+      },
+    };
+    delete unsigned.receiptSha256;
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({
+        importReceiptBytes: Buffer.from(canonicalReaderAuthorityJson({
+          ...unsigned,
+          receiptSha256: sha256(canonicalReaderAuthorityJson(unsigned)),
+        })),
+      })),
+      /pointer readback schema is not exact/,
     );
   });
   await t.test("receipt pointer digest differs from live rows", async () => {
@@ -929,9 +1268,10 @@ test("forged durable candidate and event receipts fail independently of pointer 
   const pointers = pointerRows();
   await t.test("bootstrap importer SHA differs", async () => {
     const candidates = candidateRows(pointers);
-    const candidate = candidates[0]!.candidate as Record<string, unknown>;
-    candidates[0] = {
-      ...candidates[0],
+    const importedIndex = BASELINE_REGISTERED_PROMOTION_COUNT;
+    const candidate = candidates[importedIndex]!.candidate as Record<string, unknown>;
+    candidates[importedIndex] = {
+      ...candidates[importedIndex],
       candidate: {
         ...candidate,
         bootstrapImport: {
@@ -1116,8 +1456,8 @@ test("a source-native skipped pointer needs promotion/readback proof but no boot
     sql: fakeTransport({ pointers, candidates, events: eventRows(pointers) }),
   }));
 
-  assert.equal(evidence.import.durableImport.skippedDispositionCount, 1);
-  assert.equal(evidence.import.durableImport.promotedDispositionCount, pointers.length - 1);
+  assert.equal(evidence.import.durableImport.skippedDispositionCount, BASELINE_REGISTERED_PROMOTION_COUNT);
+  assert.equal(evidence.import.durableImport.promotedDispositionCount, PLAN_CANDIDATE_COUNT);
 });
 
 test("the terminal comparator re-reads live authority and emits no driver secret", async () => {

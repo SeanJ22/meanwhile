@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { isDeepStrictEqual } from "node:util";
-import { readSnapshot } from "../../lib/meetings/snapshot.ts";
+import type { MeetingsSnapshot } from "../../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import { snapshotEntities, titleCaseName } from "../../lib/ask/inventory.ts";
 import { localDate } from "../../lib/ask/meeting-time.ts";
@@ -17,12 +17,14 @@ import { meetingListingIdentity } from "../../lib/meetings/listing-identity.ts";
 type Expected = Pick<EvidenceRecord, "id" | "kind" | "bodyId" | "sourceUrl" | "sourceOrg" | "retrievedAt"> & Partial<Pick<EvidenceRecord, "text" | "occurredAt" | "meetingId" | "documentId" | "agendaDocument">>;
 const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 
-export async function meetingsAskProof(progress: (message: string) => void = () => {}) {
+export async function meetingsAskProof(
+  options: { readonly snapshot: MeetingsSnapshot },
+  progress: (message: string) => void = () => {},
+) {
   delete process.env.ANTHROPIC_API_KEY;
   process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
-  const snapshot = readSnapshot();
-  if (!snapshot) throw new Error("Canonical meetings snapshot unavailable");
+  const snapshot = options.snapshot;
   const groups = new Map<string, Meeting[]>();
   const unbound: { meetingId: string; reason: string }[] = [];
   for (const meeting of snapshot.meetings) {
@@ -53,7 +55,7 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       (!kinds.includes("MEETING_MEMBER_VOTE") || payload.denominators.personVoteRowsInPack === actual.filter((record) => record.kind === "MEETING_MEMBER_VOTE").length);
     const pack: EvidencePack = { question, subject: payload.subject, records: payload.records, gaps: payload.gaps, denominators: payload.denominators, intent: "PAST_MEETING", temporal: { kind: "DATE", localDate: requestedDate }, today: new Date().toISOString().slice(0, 10) };
     const synthesisReceivesEveryRecord = JSON.stringify((JSON.parse(synthesisContextPayload(pack)) as { records: EvidenceRecord[] }).records) === JSON.stringify(payload.records);
-    const expectedListingIdentity = meetingListingIdentity(snapshot!.meetings.filter(meeting => group.some(row => row.id === meeting.id)), canonicalBodyIdentity);
+    const expectedListingIdentity = meetingListingIdentity(snapshot.meetings.filter(meeting => group.some(row => row.id === meeting.id)), canonicalBodyIdentity);
     const listingIdentityAgrees = expectedListingIdentity.groups.every(expectedGroup =>
       payload.meetingListingIdentity?.groups.some(actualGroup => JSON.stringify(actualGroup) === JSON.stringify(expectedGroup)) &&
       payload.gaps.some(gap => gap.whose === "OURS" && gap.statement === expectedGroup.reason) &&
@@ -121,6 +123,6 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       proofs.push(await prove("meeting-outcomes", group, `${kind === "MEETING_MEMBER_VOTE" ? "How did this body's members vote" : kind === "MEETING_ACTION" ? "What did this body decide" : "What was on this body's agenda"} on ${date}?`, [kind], expected, date, kind === "AGENDA_ITEM"));
     }
   }
-  const paths = ["scripts/lib/reader-ask-meetings-proof.ts", "app/api/ask/grounded/route.ts", "lib/ask/inventory.ts", "lib/routing/named-entity.ts", "lib/ask/select.ts", "lib/ask/meeting-date.ts", "lib/ask/meeting-time.ts", "lib/ask/meeting-outcomes.ts", "lib/ask/meeting-knowledge.ts", "lib/meetings/listing-identity.ts", "lib/ask/agenda-publication.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/synthesize.ts", "lib/meetings/snapshot.ts", "lib/outcomes/store.ts", "lib/outcomes/data-plane.ts", "lib/civic-data/read-model.ts", "data/meetings-snapshot.json"];
+  const paths = ["scripts/lib/reader-ask-meetings-proof.ts", "app/api/ask/grounded/route.ts", "lib/ask/inventory.ts", "lib/routing/named-entity.ts", "lib/ask/select.ts", "lib/ask/meeting-date.ts", "lib/ask/meeting-time.ts", "lib/ask/meeting-outcomes.ts", "lib/ask/meeting-knowledge.ts", "lib/meetings/listing-identity.ts", "lib/ask/agenda-publication.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/synthesize.ts", "lib/meetings/snapshot.ts", "lib/civic-data/meeting-partitions.ts", "lib/outcomes/store.ts", "lib/outcomes/data-plane.ts", "lib/civic-data/read-model.ts"];
   return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact source-handler bytes; the real clock is unchanged, and this is not deployed-build proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, meetingDenominator: snapshot.meetings.length, documentDenominator: documents.length, outcomeSittingDenominator: outcomes.sittings.length, unbound, documentDispositions, proofs };
 }

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { writeFileSync } from "node:fs";
 import { keyVotesAskProof } from "../../scripts/lib/reader-ask-key-votes-proof.ts";
+import { prepareReaderProofRuntime } from "../../scripts/lib/reader-proof-runtime.ts";
+await prepareReaderProofRuntime();
 const result = await keyVotesAskProof();
 const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-key-votes-ask.json";
 writeFileSync(outputPath, JSON.stringify(result, null, 2) + "\n");

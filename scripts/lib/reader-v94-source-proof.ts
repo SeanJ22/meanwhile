@@ -11,7 +11,10 @@ import { readReaderEvidence, readerSourceFingerprint, sourceRenewalCaseProblems,
 import type { EvidenceRecord } from "../../lib/ask/evidence.ts";
 import type { BodyConfirmation } from "../../lib/ask/body-confirmation.ts";
 import { readAskAnswer, type AskAnswerPayload } from "../../lib/ask/answer.ts";
-import { readSnapshot } from "../../lib/meetings/snapshot.ts";
+import {
+  readSnapshot,
+  type ReaderProofMeetingsExpectedAuthority,
+} from "../../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity, type CanonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
 import type { AgendaDocument } from "../../lib/meetings/agenda-documents.ts";
@@ -22,6 +25,7 @@ import { classifyAgendaPublication } from "../../lib/ask/agenda-publication.ts";
  * census, acquisition, model, worker or production-control-plane operation. */
 export async function executeV94ReaderSourceProof(options: {
   root: string; exactHead: string; output: string; preparedCensusPath: string; visualPath: string;
+  meetingAuthority: ReaderProofMeetingsExpectedAuthority;
 }) {
   const { root, exactHead } = options;
   const census = JSON.parse(readFileSync(options.preparedCensusPath, "utf8")) as ReaderCensus;
@@ -78,7 +82,7 @@ export async function executeV94ReaderSourceProof(options: {
     seen.add(key); return true;
   });
   assert.ok(selected.length);
-  const bodies = await bodyRenderProof(root, { ...census, records: selected });
+  const bodies = await bodyRenderProof(root, { ...census, records: selected }, options.meetingAuthority);
   assert.deepEqual(bodies.failures, []); assert.deepEqual(bodies.unsupported, []);
   const cases: ReaderComponentCase[] = [...bodies.cases];
   const { AskAnswerRecords } = await import("../../components/ask/answer-records.tsx");

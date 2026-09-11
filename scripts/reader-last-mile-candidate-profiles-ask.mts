@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { writeFileSync } from "node:fs";
 import { candidateProfileAskProof } from "./lib/reader-ask-candidate-profile-proof.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
 import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 
+await prepareReaderProofRuntime();
 const result = await candidateProfileAskProof();
 const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-candidate-profiles-ask.json";
 const nativeFields = Object.values(allCandidateCards().cards).flatMap(card => [card.bio, card.email, card.phone, card.filedAddress]).filter(Boolean).length

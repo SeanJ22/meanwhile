@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { buildReaderCensus } from "../../lib/holdings/reader-census.ts";
 import { unifiedCorpus } from "../../lib/corpus/unified.ts";
 import { positionsFor } from "../../lib/candidates/positions.ts";
+import { prepareReaderProofRuntime } from "../../scripts/lib/reader-proof-runtime.ts";
 
 const DEFAULT_OUTPUT = "docs/evidence/reader-last-mile-candidate-corpus-map.json";
 
@@ -17,9 +18,10 @@ export function readerCandidateCorpusMapOutput(
   return output;
 }
 
-export function generateReaderCandidateCorpusMap(
+export async function generateReaderCandidateCorpusMap(
   environment: Readonly<Record<string, string | undefined>> = process.env,
-): void {
+): Promise<void> {
+  await prepareReaderProofRuntime();
   const census = buildReaderCensus(process.cwd());
   const corpus = unifiedCorpus();
   const records = census.records.filter(record => record.family === "candidate-corpus" && record.eligibility.state === "READER_ELIGIBLE").map(record => {
@@ -34,4 +36,4 @@ export function generateReaderCandidateCorpusMap(
 const main = typeof process.argv[1] === "string" &&
   resolve(process.argv[1]).toLowerCase() === resolve(fileURLToPath(import.meta.url)).toLowerCase();
 
-if (main) generateReaderCandidateCorpusMap();
+if (main) await generateReaderCandidateCorpusMap();

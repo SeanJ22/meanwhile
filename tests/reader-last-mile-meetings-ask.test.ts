@@ -4,12 +4,15 @@ import { meetingsAskProof } from "../scripts/lib/reader-ask-meetings-proof.ts";
 import { meetingDateInQuestion } from "../lib/ask/meeting-date.ts";
 import { selectSitting } from "../lib/ask/select.ts";
 import { meetingOutcomeEvidenceFor } from "../lib/ask/meeting-outcomes.ts";
+import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 await installRegistryRuntimeFirstSeeds();
 
 test("all held meetings and outcome sittings survive real dated Ask routes with exact record counts and provenance", async () => {
-  const proof = await meetingsAskProof();
+  const snapshot = readSnapshot();
+  assert.ok(snapshot);
+  const proof = await meetingsAskProof({ snapshot });
   assert.equal(proof.unbound.length, 0);
   assert.deepEqual(proof.proofs.filter((row) => row.status !== "PROVEN").map((row) => ({ request: row.request, missing: row.missing, unexpected: row.unexpected })), []);
   const meetings = new Set(proof.proofs.filter((row) => row.family === "meetings-and-agendas").flatMap((row) => row.returnedRecords.filter((record) => record.kind === "MEETING").map((record) => record.id)));

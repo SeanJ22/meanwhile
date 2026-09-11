@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
 import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
@@ -28,6 +29,7 @@ const planOutputPath = process.env.READER_BALLOT_PLAN_OUTPUT ?? "docs/evidence/r
 const proofSourcesPath = process.env.READER_PROOF_SOURCES;
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
 const requestedStates = process.env.READER_BALLOT_STATES?.split(",").map((state) => state.trim()).filter(Boolean);
+await prepareReaderProofRuntime();
 const sets = await Promise.all(BALLOT_SOURCES.filter(({ state }) => !requestedStates?.length || requestedStates.includes(state)).map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
 const zipIndex = JSON.parse(readFileSync("data/derived/zip-division-ids.json", "utf8")) as { zips: Record<string, string[]> };
 type BallotPlan = { zip: string; state: typeof sets[number]["state"]; set: typeof sets[number]["set"] } & ReturnType<typeof contestsForDivisions>;

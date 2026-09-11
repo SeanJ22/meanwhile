@@ -367,7 +367,7 @@ export function createImmutableEvidenceFile(
 }
 
 export interface NeonReaderAuthorityTransport {
-  query(statement: string): Promise<Row[]>;
+  query(statement: string, parameters?: readonly unknown[]): Promise<Row[]>;
   transaction(
     build: (transaction: { query(statement: string): unknown }) => readonly unknown[],
     options: { readonly readOnly: true },
@@ -378,7 +378,7 @@ export function readerAuthoritySqlFromNeon(
   sql: NeonReaderAuthorityTransport,
 ): ReaderAuthoritySql {
   return {
-    query: async (statement) => await sql.query(statement),
+    query: async (statement, parameters = []) => await sql.query(statement, parameters),
     readOnlyTransaction: async (statements) => {
       const results = await sql.transaction(
         (transaction) => statements.map((statement) => transaction.query(statement)),

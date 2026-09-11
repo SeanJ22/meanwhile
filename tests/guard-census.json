@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 624,
-    "named": 6481,
+    "named": 6498,
     "dynamic": 27
   },
   "files": {
@@ -6033,8 +6033,10 @@
     "tests/pdc-v2-trusted-lkg-importer.test.ts": {
       "names": [
         "exact fc67 fixtures deterministically build and seed only the 95 absent trusted-LKG pointers",
+        "frozen module evaluation cannot change the process working directory",
         "the Postgres retirement lock binds the exact pre-read replacement promotion clock",
         "the browser-safe venue content key is an exact UTF-16 encoding",
+        "the exact frozen module closure is cwd-neutral and cleanup-safe",
         "the exact venue identity is browser-safe across every alias-aware Next client reachability path",
         "the importer consumes one fresh parent-bound quiescence lease before opening writes",
         "the temporary importer CLI requires its exact explicit production invocation"
@@ -6709,6 +6711,8 @@
     },
     "tests/reader-execution-authority-evidence.test.ts": {
       "names": [
+        "Neon Date values preserve exact millisecond authority hashes across transport paging",
+        "Reader authority keyset cursors fail closed when a transport does not advance",
         "a source-native skipped pointer needs promotion/readback proof but no bootstrap envelope",
         "authority output is atomic, exclusive, and identical support recovery is bounded",
         "diagnostics redact URL and credential material",
@@ -6717,6 +6721,7 @@
         "missing, forged, stale, extra, and secret-bearing provider metadata fail closed",
         "phase relabeling cannot turn a rehearsal child into production evidence",
         "production authority binds the pinned standing branch and no clone claim",
+        "production replay accepts 111 already-proven authorities without relabeling their durable bootstrap",
         "re-attested authority binds the exact predecessor row, receipt, pointer, and contiguous events",
         "the CLI surface never accepts a database URL and derives phase-specific paths",
         "the Neon adapter submits the write probe only as an explicit read-only transaction",
@@ -7046,10 +7051,12 @@
         "a fresh Reader receipt rejects applicable rows proved at mixed heads",
         "an inherited Reader receipt keeps the invalidation report as its proof-head authority but legacy authority is exact-byte bounded",
         "archived controller support binds exact result and disposition membership digests",
+        "archived support keeps the 95-plan, 111-authority, and 155-registry denominators distinct",
         "archived support rejects recursive schema additions and secret-bearing keys regardless of value type",
         "fresh Reader history re-parses exact archived provider and controller support instead of trusting matching hashes",
         "fresh Reader history requires a hash-bound execution authority at the exact proved head",
         "production Reader history accepts only controller import commit A bound beneath distinct authority commit B",
+        "production Reader history accepts the exact all-111-skipped retirement replay",
         "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone"
       ],
       "dynamic": 0
@@ -7314,9 +7321,11 @@
     "tests/registry-runtime-data-plane.test.ts": {
       "names": [
         "both Reader projections reject cross-source proof and never bootstrap on store failure",
+        "federal civic member ordering is independent of source-map insertion order",
         "federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer",
         "manual contracts have no clock and retired tracked writers cannot be invoked",
         "one blocked registry publisher holds only its dependent members while an unrelated roster update promotes",
+        "registry civic member ordering is independent of JSONB object-key order",
         "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live"
       ],
       "dynamic": 0
@@ -8839,13 +8848,21 @@
     },
     "tests/trusted-lkg-reattestation.test.ts": {
       "names": [
+        "NH bridge replay repairs an interrupted typed Reader receipt without another successor",
         "a date-only legacy GOOD receipt is re-attested instead of being misclassified as 0026-ready",
         "a pointer race leaves the predecessor live and the successor durably refused",
         "batch Reader proof rejects duplicate predecessor rows instead of selecting one",
+        "dotgov re-attestation durably records its source-scoped projection proof and replay is idempotent",
+        "legacy Congress JSONB member ordering receives one exact canonical integrity successor",
         "legacy durable LKG receives an exact no-data-change integrity successor and is immediately due",
+        "ordinary source authority fails closed when a re-attestation predecessor is missing or changed",
         "permanent Reader proof fails closed without the exact predecessor row",
         "re-attestation refuses pointer tamper, legacy-digest tamper, and cross-contract laundering",
-        "replay repairs a missing typed Reader receipt after pointer promotion without rewriting authority"
+        "replay repairs a missing typed Reader receipt after pointer promotion without rewriting authority",
+        "the NH bridge CAS race keeps /2 live and durably refuses the unadmitted successor",
+        "the NH bridge refuses every near-miss legacy shape and cannot be relabeled onto another contract",
+        "the exact frozen NH /2 LKG receives one stale import-only /3 successor and fresh /3 authority supersedes it",
+        "the import-only NH bridge end-to-end refuses a healthy roll candidate without moving its LKG or a sibling source"
       ],
       "dynamic": 0
     },

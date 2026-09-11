@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
+  dotGovCandidate,
   fecFundingCandidate,
   nhMembersCandidate,
   normalizedHash,
@@ -22,7 +23,10 @@ import {
   processRegisteredRoutineCandidate,
   processRoutineCandidate,
 } from "../lib/civic-data/promotion.ts";
-import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
+import {
+  parseReaderProjectionReadback,
+  READER_PROJECTION_READBACK_PREFIX,
+} from "../lib/civic-data/reader-readback.ts";
 import {
   readPromotedCivicData,
   readPromotedCivicDataBatch,
@@ -149,6 +153,37 @@ async function seededLegacyStore<T extends MemoryRoutineDataStore>(store: T): Pr
   readonly pointer: PromotedProjection;
 }> {
   const legacy = legacyCandidate();
+  const seeded = await processRoutineCandidate(store, legacy, RETRIEVED);
+  assert.equal(seeded.candidate.state, "PROMOTED");
+  const predecessor = await store.readCandidate(legacy.id);
+  const pointer = await store.readPromotion(legacy.recordClass, legacy.scope);
+  assert.ok(predecessor);
+  assert.ok(pointer);
+  return { store, predecessor, pointer };
+}
+
+function legacyDotGovCandidate(): RoutineCandidate {
+  const rawText = readFileSync(
+    new URL("../data/dotgov/snapshot.json", import.meta.url),
+    "utf8",
+  );
+  const snapshot = JSON.parse(rawText) as Parameters<typeof dotGovCandidate>[0]["snapshot"];
+  const current = dotGovCandidate({
+    snapshot,
+    rawText,
+    finalUrl: snapshot.source.url,
+    retrievedAt: RETRIEVED,
+  });
+  const { normalizedPayloadHash: _missingPermanentDigest, ...normalization } = current.normalization;
+  return JSON.parse(JSON.stringify({ ...current, normalization })) as RoutineCandidate;
+}
+
+async function seededLegacyDotGovStore<T extends MemoryRoutineDataStore>(store: T): Promise<{
+  readonly store: T;
+  readonly predecessor: CandidateVersionRecord;
+  readonly pointer: PromotedProjection;
+}> {
+  const legacy = legacyDotGovCandidate();
   const seeded = await processRoutineCandidate(store, legacy, RETRIEVED);
   assert.equal(seeded.candidate.state, "PROMOTED");
   const predecessor = await store.readCandidate(legacy.id);
@@ -1484,6 +1519,68 @@ test("replay repairs a missing typed Reader receipt after pointer promotion with
   const readbacks = (await store.events(promotedBeforeReplay.versionId))
     .filter(({ detail }) => detail.startsWith(READER_PROJECTION_READBACK_PREFIX));
   assert.equal(readbacks.length, 1);
+});
+
+test("dotgov re-attestation durably records its source-scoped projection proof and replay is idempotent", async () => {
+  const store = new InterruptedReattestationReadbackStore();
+  const { predecessor } = await seededLegacyDotGovStore(store);
+  await assert.rejects(
+    executePdcV2TrustedLkgImportPlan(store, emptyPlan()),
+    /SIMULATED_REATTESTATION_READBACK_INTERRUPTION/,
+  );
+  const promotedBeforeReplay = await store.readPromotion(
+    "DOTGOV_REFERENCE",
+    "US:current-full:election-domains",
+  );
+  assert.ok(promotedBeforeReplay);
+  assert.notEqual(promotedBeforeReplay.versionId, predecessor.candidate.id);
+  assert.equal(
+    (await store.events(promotedBeforeReplay.versionId))
+      .filter(({ detail }) => detail.startsWith(READER_PROJECTION_READBACK_PREFIX)).length,
+    0,
+  );
+
+  const replay = await executePdcV2TrustedLkgImportPlan(store, emptyPlan());
+  assert.equal(replay.promoted, 0);
+  assert.equal(replay.reattestedExisting, 0);
+  assert.equal(replay.skippedExisting, 1);
+  assert.equal(replay.dispositions[0]?.contractId, "dotgov");
+  assert.equal(replay.dispositions[0]?.readerReadback, "PASS");
+  assert.equal(
+    (await store.readPromotion("DOTGOV_REFERENCE", "US:current-full:election-domains"))?.versionId,
+    promotedBeforeReplay.versionId,
+    "source-scoped receipt repair must not create another authority version",
+  );
+  const readbacks = (await store.events(promotedBeforeReplay.versionId))
+    .map(({ detail }) => parseReaderProjectionReadback(detail))
+    .filter((receipt) => receipt !== null);
+  assert.equal(readbacks.length, 1);
+  assert.deepEqual(readbacks[0], {
+    contractVersion: 2,
+    kind: "READER_PROJECTION_READBACK",
+    contractId: "dotgov",
+    sourceId: "cisa-dotgov-registry",
+    recordClass: "DOTGOV_REFERENCE",
+    scope: "US:current-full:election-domains",
+    projectionId: "source-scoped:dotgov",
+    versionId: promotedBeforeReplay.versionId,
+    pointerKey: "DOTGOV_REFERENCE:US:current-full:election-domains",
+    observedAt: CUTOVER,
+    evidenceKind: "TYPED_READER_READ_MODEL",
+    verifierId: "lib/civic-data/candidate-integrity.ts#dotGovProjectionVerification",
+    verifierCodeSha: IMPORTER_SHA,
+    status: "PASS",
+    detail: "The source-scoped CISA projection contains 693 structurally valid election-domain rows.",
+  });
+
+  const secondReplay = await executePdcV2TrustedLkgImportPlan(store, emptyPlan());
+  assert.equal(secondReplay.skippedExisting, 1);
+  assert.equal(
+    (await store.events(promotedBeforeReplay.versionId))
+      .filter(({ detail }) => detail.startsWith(READER_PROJECTION_READBACK_PREFIX)).length,
+    1,
+    "an exact-code source-scoped PASS receipt is idempotent",
+  );
 });
 
 test("permanent Reader proof fails closed without the exact predecessor row", async () => {

@@ -4,9 +4,11 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
-import { applyReaderApplicability, classifyReaderEligibility, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
+import { applyReaderApplicability, buildReaderCensus, classifyReaderEligibility, compareFrozenBodyRosterAuthority, compareFrozenBodyRosterAuthorityUniverse, compareFrozenOfficeholderStatementAuthority, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyForTarget, resetStateMoneyCache } from "../lib/funding/state-snapshot.ts";
+import { currentOfficeholderStatements } from "../lib/corpus/data-plane.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../lib/registry/body-rosters.ts";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { proveVotingSites } from "../scripts/reader-last-mile-voting-sites.mts";
@@ -308,6 +310,146 @@ test("eligibility negative controls keep extraction and acquisition separate fro
   // Even a forged completion/promotion string cannot bypass the normalized
   // reader snapshot boundary by dropping newly acquired bytes beside it.
   assert.equal(classifyReaderEligibility({ ...staged, promotion: "PROMOTED", validator: "PASS", audit: "PASS", externalAuthority: "VERIFIED" }).state, "STAGED_NOT_ELIGIBLE");
+});
+
+test("the frozen Reader census retains retired authorities as withheld evidence without restoring their production identities", () => {
+  const census = buildReaderCensus(process.cwd());
+  assert.deepEqual(census.failures.filter((failure) => /OFFICEHOLDER_STATEMENT|BODY_ROSTER_AUTHORITY/.test(failure)), []);
+  const recordsAt = (path: string) => census.records.filter((record) => record.holdingPath === path);
+  const withheldAt = (path: string) => recordsAt(path).filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE");
+
+  const retiredRolls = recordsAt("data/votes/state-votes-snapshot.json");
+  assert.equal(retiredRolls.length, 1_632);
+  assert.equal(withheldAt("data/votes/state-votes-snapshot.json").length, 1_632);
+  assert.ok(retiredRolls.every((record) => record.eligibility.reason.includes("legiscan-state-rollcalls is RESEARCH_ONLY")));
+
+  const retiredRosters = census.records.filter((record) =>
+    /^data\/states\/(?:az|nh|nj)\/officials\/officeholders-\d{2}\.json$/.test(record.holdingPath)
+  );
+  assert.equal(retiredRosters.length, 620);
+  assert.equal(retiredRosters.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE").length, 620);
+  assert.ok(retiredRosters.every((record) => record.eligibility.reason.includes("plural-bulk-roster is RESEARCH_ONLY")));
+
+  const statements = recordsAt("data/corpus/statements.json");
+  assert.equal(statements.length, 32);
+  const eligibleStatements = statements.filter((record) => record.eligibility.state === "READER_ELIGIBLE");
+  const heldStatements = statements.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE");
+  assert.equal(eligibleStatements.length, 29);
+  assert.equal(heldStatements.length, 3);
+  assert.ok(eligibleStatements.every((record) => record.canonicalIdentity.every((id) => !id.startsWith("plural:"))));
+  assert.equal(eligibleStatements.filter((record) => record.canonicalIdentity.some((id) => id.startsWith("ballot-"))).length, 10);
+  assert.ok(heldStatements.every((record) => record.canonicalIdentity.some((id) => id.startsWith("plural:"))));
+
+  const campaignSites = recordsAt("lib/officials/campaign-sites.ts");
+  assert.equal(campaignSites.length, 12);
+  assert.equal(campaignSites.filter((record) => record.eligibility.state === "READER_ELIGIBLE").length, 9);
+  assert.equal(campaignSites.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE").length, 3);
+
+  const source = readFileSync(new URL("../lib/holdings/reader-census.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /getStateVotesSnapshot\(/);
+  assert.match(source, /record\.eligibility\.state === "READER_ELIGIBLE" && \["votes", "positions", "rollCalls"\]/);
+});
+
+test("promoted officeholder-statement drift fails without redefining the frozen 29/3 denominator", () => {
+  const root = process.cwd();
+  const baseline = structuredClone(currentOfficeholderStatements());
+  const complete = compareFrozenOfficeholderStatementAuthority(root, baseline);
+  assert.equal(complete.frozenEligibleSnapshotIds.length, 29);
+  assert.equal(complete.frozenUnresolvedSnapshotIds.length, 3);
+  assert.deepEqual(complete.failures, []);
+
+  const omitted = compareFrozenOfficeholderStatementAuthority(root, {
+    snapshots: baseline.snapshots.slice(1),
+  });
+  assert.equal(omitted.frozenEligibleSnapshotIds.length, 29, "promoted omission cannot shrink eligibility");
+  assert.equal(omitted.frozenUnresolvedSnapshotIds.length, 3);
+  assert.ok(omitted.failures.some((failure) => failure === `OFFICEHOLDER_STATEMENT_AUTHORITY_MISSING:${baseline.snapshots[0]!.id}`));
+
+  const changedSnapshots = structuredClone(baseline.snapshots);
+  changedSnapshots[0] = { ...changedSnapshots[0]!, subjectName: `${changedSnapshots[0]!.subjectName} drift` };
+  const changed = compareFrozenOfficeholderStatementAuthority(root, { snapshots: changedSnapshots });
+  assert.equal(changed.frozenEligibleSnapshotIds.length, 29, "promoted payload drift cannot shrink eligibility");
+  assert.ok(changed.failures.some((failure) => failure === `OFFICEHOLDER_STATEMENT_AUTHORITY_PAYLOAD_MISMATCH:${baseline.snapshots[0]!.id}`));
+
+  const extraUrl = "https://records.example.gov/officeholder-statement";
+  const extraHash = "f".repeat(64);
+  const extra = {
+    ...structuredClone(baseline.snapshots[0]!),
+    id: `${baseline.snapshots[0]!.subjectId}|${extraUrl}|${extraHash}`,
+    url: extraUrl,
+    contentHash: extraHash,
+  };
+  const unexpected = compareFrozenOfficeholderStatementAuthority(root, {
+    snapshots: [...baseline.snapshots, extra],
+  });
+  assert.equal(unexpected.frozenEligibleSnapshotIds.length, 29, "an unexpected promoted row cannot enlarge eligibility");
+  assert.ok(unexpected.failures.some((failure) => failure === `OFFICEHOLDER_STATEMENT_AUTHORITY_UNEXPECTED:${extra.id}`));
+});
+
+test("promoted roster member and disposition drift fails without shrinking the frozen child denominator", () => {
+  const frozen = structuredClone(currentBodyRosters()[0]!);
+  const dispositions = frozen.members.map((member) => currentRosterMemberReaderDisposition(member.id)!);
+  assert.ok(frozen.members.length > 1);
+  assert.ok(dispositions.every(Boolean));
+  const complete = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], structuredClone(dispositions));
+  assert.deepEqual(complete.failures, []);
+  assert.equal(complete.childDispositions.length, frozen.members.length);
+
+  const first = frozen.members[0]!;
+  const withoutMember = compareFrozenBodyRosterAuthority(
+    frozen,
+    [{ ...structuredClone(frozen), members: structuredClone(frozen.members.slice(1)) }],
+    structuredClone(dispositions),
+  );
+  assert.equal(withoutMember.childDispositions.length, frozen.members.length);
+  assert.ok(withoutMember.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_MEMBER_MISSING:${frozen.bodyId}:${first.id}`));
+  assert.equal(withoutMember.childDispositions[0]!.state, "AUTHORITY_MISMATCH");
+
+  const changedMembers = structuredClone(frozen.members);
+  changedMembers[0] = { ...changedMembers[0]!, name: `${changedMembers[0]!.name} drift` };
+  const changedMember = compareFrozenBodyRosterAuthority(frozen, [{ ...structuredClone(frozen), members: changedMembers }], structuredClone(dispositions));
+  assert.ok(changedMember.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_MEMBER_PAYLOAD_MISMATCH:${frozen.bodyId}:${first.id}`));
+  assert.equal(changedMember.childDispositions.length, frozen.members.length);
+
+  const unexpectedMemberId = `${first.id.split("#")[0]}#unexpected`;
+  const unexpectedMember = compareFrozenBodyRosterAuthority(
+    frozen,
+    [{ ...structuredClone(frozen), members: [...structuredClone(frozen.members), { ...structuredClone(first), id: unexpectedMemberId, name: "Unexpected member" }] }],
+    structuredClone(dispositions),
+  );
+  assert.ok(unexpectedMember.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_MEMBER_UNEXPECTED:${frozen.bodyId}:${unexpectedMemberId}`));
+  assert.equal(unexpectedMember.childDispositions.length, frozen.members.length);
+
+  const withoutDisposition = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], structuredClone(dispositions.slice(1)));
+  assert.ok(withoutDisposition.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_MISSING:${frozen.bodyId}:${first.id}`));
+  assert.equal(withoutDisposition.childDispositions.length, frozen.members.length);
+  assert.equal(withoutDisposition.childDispositions[0]!.state, "AUTHORITY_MISMATCH");
+
+  const changedDispositions = structuredClone(dispositions);
+  changedDispositions[0] = { ...changedDispositions[0]!, state: "IDENTITY_UNRESOLVED", canonicalId: null };
+  const changedDisposition = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], changedDispositions);
+  assert.ok(changedDisposition.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_PAYLOAD_MISMATCH:${frozen.bodyId}:${first.id}`));
+  assert.equal(changedDisposition.childDispositions.length, frozen.members.length);
+
+  const unexpectedDisposition = {
+    sourceId: unexpectedMemberId,
+    canonicalId: null,
+    state: "IDENTITY_UNRESOLVED" as const,
+    reason: "A valid but unexpected promoted disposition must not enlarge the frozen denominator.",
+  };
+  const extraDisposition = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], [...structuredClone(dispositions), unexpectedDisposition]);
+  assert.ok(extraDisposition.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_UNEXPECTED:${frozen.bodyId}:${unexpectedMemberId}`));
+  assert.equal(extraDisposition.childDispositions.length, frozen.members.length);
+
+  const globallyUnexpectedDisposition = {
+    ...unexpectedDisposition,
+    sourceId: "roster:wholly-unexpected#0",
+  };
+  assert.ok(compareFrozenBodyRosterAuthorityUniverse(
+    [frozen],
+    [structuredClone(frozen)],
+    [...structuredClone(dispositions), globallyUnexpectedDisposition],
+  ).some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_UNEXPECTED:${globallyUnexpectedDisposition.sourceId}`));
 });
 
 test("the actual reader graph cannot consume autonomous staging merely because an artifact exists", (t) => {

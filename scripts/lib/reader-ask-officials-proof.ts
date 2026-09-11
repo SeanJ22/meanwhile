@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { allSeatHolders } from "../../lib/registry/server.ts";
-import { BODY_ROSTERS, rosterGapForBody } from "../../lib/registry/body-rosters.ts";
+import { currentBodyRosters, rosterGapForBody } from "../../lib/registry/body-rosters.ts";
 import { officeholderEvidence } from "../../lib/ask/officeholder.ts";
 import { contactForOfficeholder } from "../../lib/ask/contacts.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
@@ -16,6 +16,7 @@ export async function officialsAskProof(progress: (message: string) => void = ()
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
   const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
   const holders = await allSeatHolders();
+  const bodyRosters = currentBodyRosters();
   const proofs = [];
   for (const holder of holders) {
     const expected = officeholderEvidence(holder);
@@ -27,7 +28,7 @@ export async function officialsAskProof(progress: (message: string) => void = ()
     const payload = JSON.parse(raw) as AskAnswerPayload;
     const records = payload.records.filter((record) => record.kind === "OFFICEHOLDER");
     const rosterGapRecords = payload.records.filter((record) => record.kind === "ROSTER_IDENTITY_GAP");
-    const expectedRosterGap = BODY_ROSTERS.filter((roster) => roster.members.some((member) => member.id === holder.id)).map((roster) => rosterGapForBody(roster.bodyId)).find((gap) => gap !== null) ?? null;
+    const expectedRosterGap = bodyRosters.filter((roster) => roster.members.some((member) => member.id === holder.id)).map((roster) => rosterGapForBody(roster.bodyId)).find((gap) => gap !== null) ?? null;
     const rosterGapAgrees = expectedRosterGap ? rosterGapRecords.length === 1 && JSON.stringify(rosterGapRecords[0].rosterGap) === JSON.stringify(expectedRosterGap) && payload.gaps.some((gap) => gap.whose === "OURS" && gap.statement === expectedRosterGap.statement) : rosterGapRecords.length === 0;
     const actual = records.find((record) => record.canonicalSubjectId === holder.id);
     const missing = !actual || Object.entries(expected).some(([key, value]) => JSON.stringify(actual[key as keyof EvidenceRecord]) !== JSON.stringify(value)) ? [expected] : [];

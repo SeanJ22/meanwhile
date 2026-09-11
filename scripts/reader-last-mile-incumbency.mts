@@ -2,10 +2,11 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { readerIncumbencyProof } from "./lib/reader-incumbency-proof.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 
-await refreshRegistryRuntimeFromPromoted();
+await prepareReaderProofRuntime();
 const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 const proof = await readerIncumbencyProof();
 floored("committed ballot officeholder relations", "held resolved person/candidacy bridges reached by the current ballot", bridge.rows.filter(row => row.status === "RESOLVED").length, proof.committedRelations);

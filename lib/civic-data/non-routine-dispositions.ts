@@ -222,6 +222,29 @@ export const NON_ROUTINE_DISPOSITIONS: readonly NonRoutineDispositionContract[] 
   },
 ];
 
+function trackedPathPatternMatches(pattern: string, path: string): boolean {
+  const [included, excluded] = pattern.split(" except ", 2);
+  const matches = (candidate: string) => {
+    const doubleStar = "__PDC_DOUBLE_STAR__";
+    const expression = candidate
+      .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+      .replaceAll("**", doubleStar)
+      .replaceAll("*", "[^/]*")
+      .replaceAll(doubleStar, ".*");
+    return new RegExp(`^${expression}$`).test(path);
+  };
+  return matches(included) && (!excluded || !matches(excluded));
+}
+
+/** Exact governing disposition for a tracked path, including reviewed globs. */
+export function nonRoutineDispositionForTrackedPath(
+  path: string,
+): NonRoutineDispositionContract | null {
+  return NON_ROUTINE_DISPOSITIONS.find((disposition) =>
+    disposition.trackedPaths.some((pattern) => trackedPathPatternMatches(pattern, path))
+  ) ?? null;
+}
+
 export interface RoutineInventoryBinding {
   readonly inventorySourceId: string;
   readonly contractIds: readonly string[];

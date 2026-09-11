@@ -894,6 +894,136 @@ export function requireMeetingsProjection(
   throw new Error(result.detail);
 }
 
+export interface ReaderProofMeetingPartitionAuthority {
+  readonly contractId: string;
+  readonly kind: "PROMOTED" | "NOT_RECORDED";
+  readonly versionId: string | null;
+}
+
+export interface ReaderProofMeetingsExpectedAuthority {
+  /** Exact counts already validated against the phase import receipt. */
+  readonly meetingPartitionsWithLkg: number;
+  readonly meetingPartitionsWithoutLkg: number;
+  /** Exact imported membership and promoted version identities. */
+  readonly partitions: readonly ReaderProofMeetingPartitionAuthority[];
+}
+
+function readerProofExpectedMeetingAuthority(
+  expected: ReaderProofMeetingsExpectedAuthority | undefined,
+): ReadonlyMap<string, ReaderProofMeetingPartitionAuthority> {
+  if (!expected) {
+    throw new Error("Meeting Reader proof expected phase-import authority was not provided.");
+  }
+  const registered = new Set(MEETING_PARTITION_CONTRACTS.map(({ id }) => id));
+  const ids = expected.partitions.map(({ contractId }) => contractId);
+  if (
+    ids.length !== registered.size ||
+    new Set(ids).size !== ids.length ||
+    ids.some((id) => !registered.has(id))
+  ) {
+    throw new Error("Meeting Reader proof expected authority has a missing, duplicate, or unexpected partition.");
+  }
+  if (
+    !Number.isSafeInteger(expected.meetingPartitionsWithLkg) ||
+    expected.meetingPartitionsWithLkg < 0 ||
+    !Number.isSafeInteger(expected.meetingPartitionsWithoutLkg) ||
+    expected.meetingPartitionsWithoutLkg < 0 ||
+    expected.meetingPartitionsWithLkg + expected.meetingPartitionsWithoutLkg !== registered.size
+  ) {
+    throw new Error("Meeting Reader proof expected authority counts do not cover the registered partition denominator.");
+  }
+  let promoted = 0;
+  let notRecorded = 0;
+  for (const partition of expected.partitions) {
+    if (partition.kind === "PROMOTED") {
+      promoted += 1;
+      if (!partition.versionId) {
+        throw new Error(`${partition.contractId} expected promoted meeting partition has no version identity.`);
+      }
+      continue;
+    }
+    if (partition.kind === "NOT_RECORDED") {
+      notRecorded += 1;
+      if (partition.versionId !== null) {
+        throw new Error(`${partition.contractId} expected NOT_RECORDED meeting partition names a version.`);
+      }
+      continue;
+    }
+    throw new Error(`${partition.contractId} expected meeting partition has an invalid disposition.`);
+  }
+  if (
+    promoted !== expected.meetingPartitionsWithLkg ||
+    notRecorded !== expected.meetingPartitionsWithoutLkg
+  ) {
+    throw new Error("Meeting Reader proof expected authority counts differ from its exact membership.");
+  }
+  return new Map(expected.partitions.map((partition) => [partition.contractId, partition]));
+}
+
+/**
+ * Documentary Reader proof requires a complete authority readback, including
+ * every intentional no-LKG partition. A partially unreadable authority cannot
+ * be hidden by the aggregate's normal source-isolation behavior. The expected
+ * membership is supplied independently from the already-validated phase
+ * import receipt; the projection under test may never authorize itself.
+ */
+export function requireReaderProofMeetingsProjection(
+  result: MeetingsProjectionReadResult,
+  expectedAuthority: ReaderProofMeetingsExpectedAuthority,
+): MeetingsSnapshot {
+  const expectedById = readerProofExpectedMeetingAuthority(expectedAuthority);
+  if (result.kind !== "PROMOTED") {
+    throw new Error(`Meeting Reader proof authority is ${result.kind}: ${result.detail}`);
+  }
+  const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
+  const actual = result.partitions.map(({ contractId }) => contractId);
+  if (
+    actual.length !== registered.size ||
+    new Set(actual).size !== actual.length ||
+    actual.some((id) => !registered.has(id))
+  ) {
+    throw new Error("Meeting Reader proof authority has a missing, duplicate, or unexpected partition readback.");
+  }
+  let promoted = 0;
+  let notRecorded = 0;
+  for (const partition of result.partitions) {
+    const contract = registered.get(partition.contractId)!;
+    if (
+      partition.source !== contract.meetingSource ||
+      partition.bodyId !== contract.bodyId ||
+      partition.scope !== contract.scope
+    ) {
+      throw new Error(`${partition.contractId} meeting partition readback identity differs from its registered contract.`);
+    }
+    if (partition.kind === "PROMOTED") {
+      promoted += 1;
+      if (!partition.versionId) throw new Error(`${partition.contractId} promoted meeting partition has no version identity.`);
+    } else if (partition.kind === "NOT_RECORDED") {
+      notRecorded += 1;
+      if (partition.versionId !== null) throw new Error(`${partition.contractId} NOT_RECORDED meeting partition names a version.`);
+    } else {
+      throw new Error(`${partition.contractId} meeting partition is ${partition.kind}: ${partition.detail ?? "no detail"}`);
+    }
+    const expected = expectedById.get(partition.contractId)!;
+    if (partition.kind !== expected.kind) {
+      throw new Error(
+        `${partition.contractId} meeting partition disposition differs from phase import authority: ` +
+          `expected ${expected.kind}, got ${partition.kind}.`,
+      );
+    }
+    if (partition.versionId !== expected.versionId) {
+      throw new Error(`${partition.contractId} meeting partition version differs from phase import authority.`);
+    }
+  }
+  if (
+    promoted !== expectedAuthority!.meetingPartitionsWithLkg ||
+    notRecorded !== expectedAuthority!.meetingPartitionsWithoutLkg
+  ) {
+    throw new Error("Meeting Reader proof authority counts differ from the exact phase import denominator.");
+  }
+  return result.value;
+}
+
 /**
  * What the whole snapshot holds that the run behind it did not retrieve (hotfix-0817).
  *

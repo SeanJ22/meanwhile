@@ -2,9 +2,8 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { BALLOT_SOURCES } from "../../lib/ballot/registry.ts";
-import { stateMoneyForTarget, stateMoneySources } from "../../lib/funding/state-snapshot.ts";
+import { stateMoneyForTarget, stateMoneyProofInventory } from "../../lib/funding/state-snapshot.ts";
 import { stateMoneyRecordsForDisplay } from "../../lib/funding/state-money-reader.ts";
-import type { StateMoneySnapshot } from "../../lib/funding/state-money.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
 import type { EvidencePack, EvidenceRecord } from "../../lib/ask/evidence.ts";
@@ -17,8 +16,8 @@ const hash = (bytes: string | Buffer) => createHash("sha256").update(bytes).dige
 const sets = await Promise.all(BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
 const candidates = new Map(sets.flatMap((set) => set.candidacies).map((row) => [row.id, row]));
 const contests = new Map(sets.flatMap((set) => set.contests).map((row) => [row.id, row]));
-const paths = stateMoneySources().map((file) => `data/states/${/^state-money-([a-z]{2})-/.exec(file)![1]}/funding/${file}`);
-const targets = [...new Set(paths.flatMap((path) => (JSON.parse(readFileSync(path, "utf8")) as StateMoneySnapshot).records.flatMap((record) => record.targetKeys)))];
+const stateMoneyAuthority = stateMoneyProofInventory();
+const targets = stateMoneyAuthority.targetKeys;
 const proofs = [];
 const dispositions = [];
 for (const target of targets) {
@@ -51,7 +50,7 @@ for (const target of targets) {
   const synthesisReceivesEveryRecord = JSON.stringify((JSON.parse(synthesisContextPayload(pack)) as { records: EvidenceRecord[] }).records) === JSON.stringify(payload.records);
   proofs.push({ target, executionLevel: "REAL_ROUTE_HANDLER", request, httpStatus: response.status, mode: payload.mode, resolvedSubject: payload.subject, expectedRecordIds: expectedIds, expectedFinance: expected, returnedRecords: finance, returnedRecordIds: finance.map((record) => record.id), gaps: payload.gaps, denominators: payload.denominators, payloadSha256: hash(text), countAgrees, synthesisReceivesEveryRecord, actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, modelAnswer: payload.answer, missing, unexpected, status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && !missing.length && !unexpected.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" });
 }
-const sourcePaths = ["app/api/ask/grounded/route.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/ballot-inventory.ts", "lib/ask/campaign-money.ts", "lib/ask/synthesize.ts", "lib/funding/state-money-reader.ts", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", ...paths];
-const result = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact current source/holding bytes; deployed bundle proof is separate.", sourceHashes: sourcePaths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, targetDenominator: targets.length, proofs, dispositions };
+const sourcePaths = ["app/api/ask/grounded/route.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/ballot-inventory.ts", "lib/ask/campaign-money.ts", "lib/ask/synthesize.ts", "lib/funding/state-money-reader.ts", "lib/funding/campaign-money.ts", "lib/funding/state-snapshot.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts"];
+const result = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact current source bytes and promoted state-authority version readbacks; deployed bundle proof is separate.", sourceHashes: sourcePaths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), stateMoneyAuthorityReadbacks: stateMoneyAuthority.readbacks, modelDisabled: true, targetDenominator: targets.length, proofs, dispositions };
 return result;
 }

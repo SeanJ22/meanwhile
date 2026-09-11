@@ -9,13 +9,12 @@ import { divisionsAt, seatHoldersForDivision } from "../lib/registry/server.ts";
 import { representationForDivision } from "../lib/registry/representation.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
-import { getStateVotesSnapshot, OFFICIAL_STATE_VOTE_SCOPES } from "../lib/sources/legiscan/snapshot.ts";
+import { readAvailableOfficialStateVotes } from "../lib/sources/legiscan/snapshot.ts";
 import { getOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import { campaignMoneyApiAnswer } from "../lib/funding/campaign-money.ts";
-import { stateMoneySources } from "../lib/funding/state-snapshot.ts";
-import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
+import { stateMoneyProofInventory } from "../lib/funding/state-snapshot.ts";
+import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import {
   prlProfileForSubject,
   readPrlProjection,
@@ -24,33 +23,38 @@ import type { PrlSnapshot } from "../lib/sources/prl/types.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, searchTerms } from "../lib/corpus/positions.ts";
 import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { executiveActionStore } from "../lib/officials/executive-actions.ts";
-import { PRODUCTION_OFFICEHOLDER_ROSTER_FILES } from "../lib/officials/roster-authority.ts";
-import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
-import { BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
-import type { OfficeholderSet } from "../lib/officials/types.ts";
+import { rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
+import { getFederalDirectoryReadModel } from "../lib/officials/federal-directory-read-model.ts";
 import { directoryFor } from "../lib/officials/directory.ts";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-routes.json";
+const proofSourcesPath = process.env.READER_PROOF_SOURCES;
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/,
   "Local production proof only; production readback is a separate bounded walk.");
 const head = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const buildId = readFileSync(".next/BUILD_ID", "utf8").trim();
 const evidence: unknown[] = [];
-const [fundingVersion, federalProjection, prlProjection] = await Promise.all([
-  refreshFundingFromPromoted(),
+await prepareReaderProofRuntime();
+const [federalProjection, prlProjection] = await Promise.all([
   readFederalRollCallsProjection(),
   readPrlProjection(),
-  refreshRegistryRuntimeFromPromoted(),
 ]);
-void fundingVersion;
-if (federalProjection.kind !== "PROMOTED" && federalProjection.kind !== "BOOTSTRAP") throw new Error(federalProjection.detail);
+if (federalProjection.kind !== "PROMOTED") throw new Error(federalProjection.detail);
 if (prlProjection.kind !== "PROMOTED") throw new Error(prlProjection.detail);
-const { registry, officialCandidacies: officialBridge } = getRegistryRuntimeReadModel();
+const {
+  registry,
+  bodyRosters,
+  rosterReaderDispositions,
+  statewideExecutives,
+  officialCandidacies: officialBridge,
+} = getRegistryRuntimeReadModel();
+const federalDirectory = getFederalDirectoryReadModel();
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 async function get(path: string): Promise<Record<string, unknown>> {
   const response = await fetch(`${base}${path}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-routes" } });
@@ -88,26 +92,21 @@ for (const zip of ["85701", "85641", "07866", "03255"]) {
     evidence.push(await representation(division, zip));
   }
 }
-const rosterDivisions = PRODUCTION_OFFICEHOLDER_ROSTER_FILES.flatMap((name) => {
-  const path = `lib/registry/${name}`;
-  return (JSON.parse(readFileSync(path, "utf8")) as OfficeholderSet).divisions.map((division) => division.ocdId);
-});
+const rosterDivisions = federalDirectory.roster.divisions.map((division) => division.ocdId);
 const allDivisions = [...new Set([
   ...registry.divisions.map((division) => division.ocdId),
   ...rosterDivisions,
-  ...STATEWIDE_EXECUTIVES.map((executive) => executive.stateOcdId),
-  ...BODY_ROSTERS.filter((roster) => /#(?:governing|board)$/.test(roster.bodyId)).map((roster) => roster.bodyId.split("#")[0]).filter((id) => id.startsWith("ocd-division/")),
+  ...statewideExecutives.map((executive) => executive.stateOcdId),
+  ...bodyRosters.filter((roster) => /#(?:governing|board)$/.test(roster.bodyId)).map((roster) => roster.bodyId.split("#")[0]).filter((id) => id.startsWith("ocd-division/")),
 ])];
 const remainingDivisions = allDivisions.filter((id) => !provedDivisions.has(id)).sort();
 floored("representation division controls", "canonical registry divisions", remainingDivisions.length, remainingDivisions.length);
 await each(remainingDivisions, (division) => representation(division));
+const stateMoneyAuthority = stateMoneyProofInventory();
 const moneyTargets = [...new Set([
-  ...stateMoneySources().flatMap((file) => {
-    const match = /^state-money-([a-z]{2})-\d{4}\.json$/.exec(file); assert.ok(match);
-    return (JSON.parse(readFileSync(`data/states/${match[1]}/funding/${file}`, "utf8")) as StateMoneySnapshot).records.flatMap((record) => record.targetKeys);
-  }),
+  ...stateMoneyAuthority.targetKeys,
   ...officialBridge.rows.filter((row) => row.status === "RESOLVED").map((row) => row.holder.id),
-  ...ROSTER_READER_DISPOSITIONS.filter((row) => row.state !== "READER_ELIGIBLE").map((row) => row.sourceId),
+  ...rosterReaderDispositions.filter((row) => row.state !== "READER_ELIGIBLE").map((row) => row.sourceId),
   ...getFundingSnapshot().candidates.flatMap((row) => row.targetKeys),
   ...getFundingSnapshot().absences.map((row) => row.targetKey),
 ])].sort();
@@ -118,12 +117,13 @@ await each(moneyTargets, async (target) => {
   return { surface: "funding/state-money", target, payload: actual, payloadSha256: hash(actual) };
 });
 const federal = getVotesSnapshot();
-const stateSnapshots = OFFICIAL_STATE_VOTE_SCOPES.map((scope) => getStateVotesSnapshot(scope));
+const stateAuthority = await readAvailableOfficialStateVotes({ bypassCache: true });
+const stateSnapshots = stateAuthority.promoted.map(({ snapshot }) => snapshot);
 const state = {
   rollCalls: stateSnapshots.flatMap((snapshot) => snapshot.rollCalls),
   positions: stateSnapshots.flatMap((snapshot) => snapshot.positions),
 };
-const memberDirectory = JSON.parse(readFileSync("data/congress-legislators/directory.json", "utf8")) as { byMember: Record<string, unknown> };
+const memberDirectory = federalDirectory.directory;
 const memberIds = [...new Set([...federal.positions.map((position) => position.officeholderId), ...state.positions.map((position) => position.officeholderId), ...Object.keys(memberDirectory.byMember).map((id) => `congress:${id}`)])].sort();
 floored("vote member controls", "both canonical position snapshots", memberIds.length, memberIds.length);
 for (const member of memberIds) {
@@ -205,6 +205,6 @@ await each([...positionQueries.values()], async ({ subject, topic, expectedRecor
   return { surface: "positions", subject, topic, expectedRecordIds, returnedRecordIds: [...new Set(passages.map((passage) => passage.snapshotId))], statedCount: actual.totalMatches, returnedCount: passages.length, payload: actual, payloadSha256: hash(actual) };
 });
 evidence.push({ surface: "positions", dispositions: positionDispositions });
-const output = { exactHead: head, buildId, base, sourceHashes: readerProofSources(), execution: "HTTP requests to the integrated local Next production server, compared to canonical committed selectors. No model or acquired autonomous evidence supplies answers.", records: evidence };
+const output = { exactHead: head, buildId, base, sourceHashes: proofSourcesPath ? JSON.parse(readFileSync(proofSourcesPath, "utf8")) : readerProofSources(), authorityReadbacks: { stateMoney: stateMoneyAuthority.readbacks, officialStateVotes: stateAuthority.readbacks }, execution: "HTTP requests to the integrated local Next production server, compared to canonical committed selectors. No model or acquired autonomous evidence supplies answers.", records: evidence };
 writeFileSync(outputPath, JSON.stringify(output, null, 2) + "\n");
 console.log(JSON.stringify({ exactHead: head, buildId, controls: evidence.length, representationDivisions: provedDivisions.size, moneyTargets: moneyTargets.length, voteMembers: memberIds.length, outcomeSittings: getOutcomeSnapshot().sittings.length, prlProfiles: profiles.profiles.length, positionQueries: positionQueries.size, positionDispositions: positionDispositions.length }));

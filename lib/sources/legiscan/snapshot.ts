@@ -163,6 +163,58 @@ export async function readOfficialStateVotesProjection(
   return result;
 }
 
+export interface AvailableOfficialStateVotes {
+  readonly promoted: readonly {
+    readonly scope: OfficialStateVoteScope;
+    readonly versionId: string;
+    readonly snapshot: StateVotesSnapshot;
+  }[];
+  readonly readbacks: readonly {
+    readonly scope: OfficialStateVoteScope;
+    readonly kind: "PROMOTED" | "NOT_RECORDED";
+    readonly versionId: string | null;
+  }[];
+}
+
+/**
+ * Enumerate official state-roll authorities without reopening the retired
+ * LegiScan aggregate. An answered-but-empty canonical scope is an explicit
+ * current absence; an unreadable store or invalid promoted projection is a
+ * failed proof run, never an excuse to select research bytes.
+ */
+export async function readAvailableOfficialStateVotes(
+  options: PromotedCivicDataReadOptions = {},
+  read: (
+    scope: OfficialStateVoteScope,
+    options: PromotedCivicDataReadOptions,
+  ) => Promise<CivicDataReadResult<StateVotesSnapshot>> = readOfficialStateVotesProjection,
+): Promise<AvailableOfficialStateVotes> {
+  const results = await Promise.all(
+    OFFICIAL_STATE_VOTE_SCOPES.map(async (scope) => ({
+      scope,
+      result: await read(scope, options),
+    })),
+  );
+  const promoted: AvailableOfficialStateVotes["promoted"][number][] = [];
+  const readbacks: AvailableOfficialStateVotes["readbacks"][number][] = [];
+  for (const { scope, result } of results) {
+    if (result.kind === "PROMOTED") {
+      if (!result.metadata.versionId) {
+        throw new Error(`Official state-roll pointer for ${scope} has no version identity.`);
+      }
+      promoted.push({ scope, versionId: result.metadata.versionId, snapshot: result.value });
+      readbacks.push({ scope, kind: "PROMOTED", versionId: result.metadata.versionId });
+      continue;
+    }
+    if (result.kind === "NOT_RECORDED") {
+      readbacks.push({ scope, kind: "NOT_RECORDED", versionId: null });
+      continue;
+    }
+    throw new Error(`Official state-roll read for ${scope} is ${result.kind}: ${result.detail}`);
+  }
+  return { promoted, readbacks };
+}
+
 function researchFixture(scope: OfficialStateVoteScope): StateVotesSnapshot {
   const fixture = JSON.parse(
     readFileSync(join(process.cwd(), "data", "votes", "state-votes-snapshot.json"), "utf8"),

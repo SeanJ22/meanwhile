@@ -1,6 +1,6 @@
 /** Real reader gestures against the local production build; no React state injection. */
 import assert from "node:assert/strict";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Locator, Page } from "playwright";
 import { launchGuarded } from "./browser.mts";
@@ -14,10 +14,13 @@ import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt, coverageAt, seatHolderById } from "../lib/registry/server.ts";
-import { BODY_ROSTERS, rosterHoldersForBody, rosterGapForBody } from "../lib/registry/body-rosters.ts";
-import type { Meeting } from "../lib/sources/types.ts";
+import { currentBodyRosters, rosterHoldersForBody, rosterGapForBody } from "../lib/registry/body-rosters.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
+import {
+  readMeetingsProjection,
+  requireReaderProofMeetingsProjection,
+} from "../lib/meetings/snapshot.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import type { AgendaPublicationReading } from "../lib/ask/agenda-publication.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
@@ -31,6 +34,10 @@ import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, type PositionAnswer } from "../lib/corpus/positions.ts";
 import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
 import { getGeneralLineup } from "../lib/ballot/general-lineup.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "./lib/reader-proof-runtime.ts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
@@ -46,9 +53,13 @@ const pilots = [
 ];
 const results: Record<string, unknown>[] = [];
 const screenshots: string[] = [];
+await prepareReaderProofRuntime();
 const federalProjection = await readFederalRollCallsProjection();
 if (federalProjection.kind !== "PROMOTED" && federalProjection.kind !== "BOOTSTRAP") throw new Error(federalProjection.detail);
-const heldMeetings = (JSON.parse(readFileSync(join(process.cwd(), "data/meetings-snapshot.json"), "utf8")) as { meetings: Meeting[] }).meetings;
+const heldMeetings = requireReaderProofMeetingsProjection(
+  await readMeetingsProjection({ bypassCache: true }),
+  requiredPreparedReaderProofMeetingsAuthority(),
+).meetings;
 const browser = await launchGuarded({ label: "reader-last-mile-render" });
 
 async function capture(page: Page, label: string, focus?: Locator) {
@@ -201,7 +212,7 @@ async function inspectMoney(modal: Locator, expectedKey: string, raised: string,
   return { section, text, canonicalTargets: await record.getAttribute("data-state-money-targets"), renderedRecords: Number(await record.getAttribute("data-state-money-record-count")) };
 }
 async function termNoteWitness(page: Page, label: string) {
-  const holder = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId)).find(row => row.id === "roster:vail#supt");
+  const holder = currentBodyRosters().flatMap(roster => rosterHoldersForBody(roster.bodyId)).find(row => row.id === "roster:vail#supt");
   assert.ok(holder?.termNote, "The exact Vail superintendent appointment note is held");
   const modal = await openOfficial(page, holder.name);
   const note = modal.locator(`[data-official-term-note="${holder.id}"]`);
@@ -234,7 +245,7 @@ async function candidateHolderWitness(page: Page, modal: Locator, officialId: st
 }
 async function incompleteRosterWitness(viewport: { width: number; height: number }, theme: string, label: string) {
   const bodyId = "ocd-division/country:us/state:nj/county:morris/place:pequannock_township#governing";
-  const roster = BODY_ROSTERS.find(row => row.bodyId === bodyId);
+  const roster = currentBodyRosters().find(row => row.bodyId === bodyId);
   const gap = rosterGapForBody(bodyId);
   assert.ok(roster && gap, "The partial verified Pequannock roster and its source denominator are held");
   const holders = rosterHoldersForBody(bodyId);
@@ -618,10 +629,14 @@ async function votingWitness(page: Page, label: string) {
 async function votingFallbackWitness(page: Page, label: string, kind: "outside-coverage" | "assigned-unresolved") {
   const { panel, gestures } = await openVotingPanel(page);
   // Public municipal buildings only. The NJ address is held in the meetings
-  // snapshot; Phoenix City Hall is the city clerk's published public address.
+  // projection; Phoenix City Hall is the city clerk's published public address.
   const addresses = kind === "outside-coverage" ? ["200 W Washington Street, Phoenix, AZ 85003"]
     : ["65 Mount Hope Rd, Rockaway, NJ 07866", "65 Mount Hope Road, Rockaway Township, NJ 07866"];
-  const addressSource = kind === "outside-coverage" ? "https://www.phoenix.gov/administration/departments/cityclerk/contact-us.html" : "data/meetings-snapshot.json";
+  const promotedAddressSource = heldMeetings.find((meeting) =>
+    addresses.includes(meeting.location?.address ?? "")
+  )?.provenance.sourceUrl;
+  if (kind === "assigned-unresolved") assert.ok(promotedAddressSource, "The promoted meeting projection must source the NJ address fixture.");
+  const addressSource = kind === "outside-coverage" ? "https://www.phoenix.gov/administration/departments/cityclerk/contact-us.html" : promotedAddressSource!;
   const attempts: { address: string; answer: VotingSitesAnswer }[] = [];
   for (const address of addresses) {
     await panel.getByLabel("Your street address").fill(address);

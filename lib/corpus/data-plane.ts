@@ -17,6 +17,7 @@ import {
   transferFrozenStatementIdentities,
   validateStatementIdentityFirstSeedEvidence,
   type StatementIdentityFirstSeedEvidence,
+  type TrustedLkgStatementIdentityTransfer,
 } from "./statement-identity-transfer.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
@@ -49,15 +50,26 @@ function validate(value: StatementCorpus, version: string): void {
   }
 }
 
-function bundledBootstrap(): CivicDataBootstrap<StatementCorpus> {
+/**
+ * Reproduce the exact reviewed first-seed identity transfer. Documentary
+ * census uses the same immutable bridge to relate the frozen source rows to
+ * their permanent promoted ids; it must never infer that relation by name.
+ */
+export function frozenStatementIdentityTransfer(
+  root: string = process.cwd(),
+): TrustedLkgStatementIdentityTransfer {
   const recorded = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "corpus", "statements.json"), "utf8"),
+    readFileSync(join(root, "data", "corpus", "statements.json"), "utf8"),
   ) as StatementCorpus;
   const bridge = JSON.parse(
-    readFileSync(join(process.cwd(), "lib", "corpus", "fixtures", "statement-identity-first-seed-v1.json"), "utf8"),
+    readFileSync(join(root, "lib", "corpus", "fixtures", "statement-identity-first-seed-v1.json"), "utf8"),
   ) as StatementIdentityFirstSeedEvidence;
   validateStatementIdentityFirstSeedEvidence(bridge);
-  const transfer = transferFrozenStatementIdentities(recorded, bridge);
+  return transferFrozenStatementIdentities(recorded, bridge);
+}
+
+function bundledBootstrap(): CivicDataBootstrap<StatementCorpus> {
+  const transfer = frozenStatementIdentityTransfer();
   const value = transfer.corpus;
   const sourceThrough = value.snapshots.map((snapshot) => snapshot.retrievedAt).sort().at(-1) ?? "";
   validate(value, "bundled bootstrap");

@@ -14,17 +14,32 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import ts from "typescript";
 import { DATASET_FAMILIES, READER_SURFACES, type ReaderSurfaceId } from "./datasets.ts";
 import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type ManifestContext } from "./manifest.ts";
+import { nonRoutineDispositionForTrackedPath } from "../civic-data/non-routine-dispositions.ts";
+import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { photoMayRender } from "../photos/review.ts";
+import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import { type StateMoneyRecord } from "../funding/state-money.ts";
 import { currentExtraction, type CandidateDocument } from "../candidates/corpus.ts";
-import { readOfficeholderStatementsProjection } from "../corpus/data-plane.ts";
+import {
+  currentOfficeholderStatements,
+  frozenStatementIdentityTransfer,
+  readOfficeholderStatementsProjection,
+} from "../corpus/data-plane.ts";
 import { projectAutonomousActivity, type AutonomousActivitySnapshot, type AutonomousObligationActivity } from "../control-plane/workers/activity.ts";
 import { localFinanceEvidenceFor } from "../ask/local-finance.ts";
 import { checkReaderTraces } from "./reader-trace.ts";
 import { MEASURE_PROVISIONS, provisionsForContest } from "../ballot/measure-provisions.ts";
-import { rosterMemberReaderDisposition, rosterGapForBody } from "../registry/body-rosters.ts";
+import {
+  currentBodyRosters,
+  projectReaderRoster,
+  rosterGapForBody,
+  type BodyRoster,
+  type RosterReaderDisposition,
+} from "../registry/body-rosters.ts";
+import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import { agendaDocumentRepresentation, classifyAgendaPublication } from "../ask/agenda-publication.ts";
 import type { AgendaDocumentLike } from "../routing/agenda-search.ts";
+import type { ReaderProofMeetingsExpectedAuthority } from "../meetings/snapshot.ts";
 import {
   PDC_NEON_PROJECT_ID,
   PDC_PRODUCTION_BRANCH_ID,
@@ -208,7 +223,189 @@ export interface ReaderCensus {
   readonly currentBallotHolderIds?: readonly string[];
 }
 
+export interface FrozenOfficeholderStatementAuthorityComparison {
+  readonly frozenEligibleSnapshotIds: readonly string[];
+  readonly frozenUnresolvedSnapshotIds: readonly string[];
+  readonly failures: readonly string[];
+}
+
+/**
+ * The frozen import population defines eligibility. The promoted projection is
+ * required to reproduce that population byte-for-byte; it cannot redefine the
+ * denominator by omitting or replacing a still-valid frozen record.
+ */
+export function compareFrozenOfficeholderStatementAuthority(
+  root: string,
+  current = currentOfficeholderStatements(),
+): FrozenOfficeholderStatementAuthorityComparison {
+  const transfer = frozenStatementIdentityTransfer(root);
+  const expected = new Map(transfer.corpus.snapshots.map((snapshot) => [snapshot.id, snapshot]));
+  const actual = new Map(current.snapshots.map((snapshot) => [snapshot.id, snapshot]));
+  const failures: string[] = [];
+
+  if (expected.size !== 29 || transfer.excludedFacts.length !== 3) {
+    failures.push(
+      `OFFICEHOLDER_STATEMENT_FROZEN_DENOMINATOR_MISMATCH: expected 29 eligible and 3 unresolved; found ${expected.size} eligible and ${transfer.excludedFacts.length} unresolved`,
+    );
+  }
+  for (const [id, snapshot] of expected) {
+    const promoted = actual.get(id);
+    if (!promoted) failures.push(`OFFICEHOLDER_STATEMENT_AUTHORITY_MISSING:${id}`);
+    else if (canonicalCivicDataJson(promoted) !== canonicalCivicDataJson(snapshot)) {
+      failures.push(`OFFICEHOLDER_STATEMENT_AUTHORITY_PAYLOAD_MISMATCH:${id}`);
+    }
+  }
+  for (const id of actual.keys()) {
+    if (!expected.has(id)) failures.push(`OFFICEHOLDER_STATEMENT_AUTHORITY_UNEXPECTED:${id}`);
+  }
+
+  return {
+    frozenEligibleSnapshotIds: [...expected.keys()].sort(),
+    frozenUnresolvedSnapshotIds: transfer.excludedFacts.map((fact) => fact.record.id).sort(),
+    failures: unique(failures),
+  };
+}
+
+type CensusRosterChildDisposition = NonNullable<CensusRecord["childDispositions"]>[number];
+
+function canonicalReaderAuthorityJson(value: unknown): string {
+  const withoutManifestMetadata = (entry: unknown): unknown => Array.isArray(entry)
+    ? entry.map(withoutManifestMetadata)
+    : entry && typeof entry === "object"
+      ? Object.fromEntries(Object.entries(entry).filter(([key]) => !key.startsWith("_manifest")).map(([key, child]) => [key, withoutManifestMetadata(child)]))
+      : entry;
+  return canonicalCivicDataJson(withoutManifestMetadata(value));
+}
+
+export interface FrozenBodyRosterAuthorityComparison {
+  readonly childDispositions: readonly CensusRosterChildDisposition[];
+  readonly failures: readonly string[];
+}
+
+/**
+ * Recompute the reviewed disposition for every member in the frozen census
+ * input, then compare that complete set with the initialized promoted runtime.
+ * A synthetic mismatch row retains the frozen child in the denominator while
+ * the named failure prevents projection or closure.
+ */
+export function compareFrozenBodyRosterAuthority(
+  frozenRoster: BodyRoster,
+  promotedRosters: readonly BodyRoster[],
+  promotedDispositions: readonly RosterReaderDisposition[],
+): FrozenBodyRosterAuthorityComparison {
+  const expected = projectReaderRoster(frozenRoster);
+  const bodyId = frozenRoster.bodyId;
+  const failures: string[] = [];
+  const currentRosterMatches = promotedRosters.filter((roster) => roster.bodyId === bodyId);
+  const currentRoster = currentRosterMatches.length === 1 ? currentRosterMatches[0]! : null;
+  if (currentRosterMatches.length !== 1) {
+    failures.push(`BODY_ROSTER_AUTHORITY_ROSTER_COUNT_MISMATCH:${bodyId}:expected=1:actual=${currentRosterMatches.length}`);
+  }
+
+  const expectedMemberIds = new Set(expected.roster.members.map((member) => member.id));
+  const currentMembers = currentRoster?.members ?? [];
+  const currentMemberIds = currentMembers.map((member) => member.id);
+  const currentMemberById = new Map(currentMembers.map((member) => [member.id, member]));
+  if (new Set(currentMemberIds).size !== currentMemberIds.length) {
+    failures.push(`BODY_ROSTER_AUTHORITY_MEMBER_DUPLICATE:${bodyId}`);
+  }
+  for (const member of expected.roster.members) {
+    const promoted = currentMemberById.get(member.id);
+    if (!promoted) failures.push(`BODY_ROSTER_AUTHORITY_MEMBER_MISSING:${bodyId}:${member.id}`);
+    else if (canonicalReaderAuthorityJson(promoted) !== canonicalReaderAuthorityJson(member)) {
+      failures.push(`BODY_ROSTER_AUTHORITY_MEMBER_PAYLOAD_MISMATCH:${bodyId}:${member.id}`);
+    }
+  }
+  for (const member of currentMembers) {
+    if (!expectedMemberIds.has(member.id)) failures.push(`BODY_ROSTER_AUTHORITY_MEMBER_UNEXPECTED:${bodyId}:${member.id}`);
+  }
+  if (currentRoster && canonicalReaderAuthorityJson({ ...currentRoster, members: [] }) !== canonicalReaderAuthorityJson({ ...expected.roster, members: [] })) {
+    failures.push(`BODY_ROSTER_AUTHORITY_CONTAINER_PAYLOAD_MISMATCH:${bodyId}`);
+  }
+
+  const expectedDispositionById = new Map(expected.dispositions.map((row) => [row.sourceId, row]));
+  const sourcePrefixes = new Set(expected.dispositions.map((row) => row.sourceId.split("#")[0]));
+  const relevantPromotedDispositions = promotedDispositions.filter((row) =>
+    expectedDispositionById.has(row.sourceId)
+    || (row.canonicalId !== null && expectedMemberIds.has(row.canonicalId))
+    || sourcePrefixes.has(row.sourceId.split("#")[0]),
+  );
+  const promotedDispositionById = new Map<string, RosterReaderDisposition>();
+  for (const disposition of relevantPromotedDispositions) {
+    if (promotedDispositionById.has(disposition.sourceId)) {
+      failures.push(`BODY_ROSTER_AUTHORITY_DISPOSITION_DUPLICATE:${bodyId}:${disposition.sourceId}`);
+    } else promotedDispositionById.set(disposition.sourceId, disposition);
+  }
+  for (const disposition of relevantPromotedDispositions) {
+    if (!expectedDispositionById.has(disposition.sourceId)) {
+      failures.push(`BODY_ROSTER_AUTHORITY_DISPOSITION_UNEXPECTED:${bodyId}:${disposition.sourceId}`);
+    }
+  }
+
+  const childDispositions = expected.dispositions.map((expectedDisposition): CensusRosterChildDisposition => {
+    const promoted = promotedDispositionById.get(expectedDisposition.sourceId);
+    const member = expectedDisposition.state === "READER_ELIGIBLE" && expectedDisposition.canonicalId
+      ? currentMemberById.get(expectedDisposition.canonicalId)
+      : null;
+    const expectedMember = expectedDisposition.state === "READER_ELIGIBLE" && expectedDisposition.canonicalId
+      ? expected.roster.members.find((entry) => entry.id === expectedDisposition.canonicalId)
+      : null;
+    const dispositionMatches = promoted
+      && canonicalReaderAuthorityJson(promoted) === canonicalReaderAuthorityJson(expectedDisposition);
+    const memberMatches = expectedDisposition.state !== "READER_ELIGIBLE"
+      || Boolean(member && expectedMember && canonicalReaderAuthorityJson(member) === canonicalReaderAuthorityJson(expectedMember));
+    if (!promoted) failures.push(`BODY_ROSTER_AUTHORITY_DISPOSITION_MISSING:${bodyId}:${expectedDisposition.sourceId}`);
+    else if (!dispositionMatches) failures.push(`BODY_ROSTER_AUTHORITY_DISPOSITION_PAYLOAD_MISMATCH:${bodyId}:${expectedDisposition.sourceId}`);
+    if (dispositionMatches && memberMatches) return promoted;
+    return {
+      sourceId: expectedDisposition.sourceId,
+      canonicalId: null,
+      state: "AUTHORITY_MISMATCH",
+      reason: `The promoted registry runtime does not exactly reproduce this frozen ${bodyId} member and disposition; closure is forbidden without changing the frozen denominator.`,
+    };
+  });
+
+  return { childDispositions, failures: unique(failures) };
+}
+
+/** Whole-authority control: no promoted roster or disposition may sit outside the frozen census input. */
+export function compareFrozenBodyRosterAuthorityUniverse(
+  frozenRosters: readonly BodyRoster[],
+  promotedRosters: readonly BodyRoster[],
+  promotedDispositions: readonly RosterReaderDisposition[],
+): readonly string[] {
+  const frozenByBodyId = new Map<string, BodyRoster>();
+  for (const roster of frozenRosters) {
+    const prior = frozenByBodyId.get(roster.bodyId);
+    if (!prior) frozenByBodyId.set(roster.bodyId, roster);
+    else if (canonicalReaderAuthorityJson(projectReaderRoster(prior)) !== canonicalReaderAuthorityJson(projectReaderRoster(roster))) {
+      throw new Error(`BODY_ROSTER_FROZEN_INPUT_CONFLICT:${roster.bodyId}`);
+    }
+  }
+  const expectedDispositionIds = new Set(
+    [...frozenByBodyId.values()].flatMap((roster) => projectReaderRoster(roster).dispositions.map((row) => row.sourceId)),
+  );
+  const failures = [...frozenByBodyId.values()].flatMap((roster) =>
+    compareFrozenBodyRosterAuthority(roster, promotedRosters, promotedDispositions).failures,
+  );
+  for (const roster of promotedRosters) {
+    if (!frozenByBodyId.has(roster.bodyId)) failures.push(`BODY_ROSTER_AUTHORITY_ROSTER_UNEXPECTED:${roster.bodyId}`);
+  }
+  for (const disposition of promotedDispositions) {
+    if (!expectedDispositionIds.has(disposition.sourceId)) {
+      failures.push(`BODY_ROSTER_AUTHORITY_DISPOSITION_UNEXPECTED:${disposition.sourceId}`);
+    }
+  }
+  return unique(failures);
+}
+
 const acquisitionFamilies = new Set(["candidate-acquisitions", "campaign-finance-corpus"]);
+// These retired holdings remain counted and dispositioned as evidence, but
+// deliberately create no Reader surface edge or production identity.
+const readerInventoryOnlyFamilies = new Set(["state-officeholders"]);
+function entersReaderInventory(family: (typeof DATASET_FAMILIES)[number]): boolean {
+  return family.surfaces.length > 0 || readerInventoryOnlyFamilies.has(family.id);
+}
 const metadataPaths = new Set(["data/derived/gap-ledger.json", "data/derived/zip-coverage-tiers-runtime.json", "data/derived/zip-coverage-tiers.json"]);
 const keysByFamily: Readonly<Record<string, readonly string[]>> = {
   ballot: ["contests", "candidacies", "measures", "absences", "removals", "cards", "links", "analyses", "contacts"],
@@ -242,6 +439,20 @@ function readerDatasets(context: ManifestContext): Dataset[] {
   const provisionBytes = readFileSync(join(context.root,provisionPath));
   const provisions: Dataset[] = context.datasets.some((dataset)=>dataset.path===provisionPath) ? [] : [{ path: provisionPath, family: "measure-summaries", domain: "ballot", states: ["az"], value: { recordUnit: "measure provisions", records: MEASURE_PROVISIONS }, bytes: provisionBytes.length, sha256: sha256(provisionBytes), rowsByState: new Map([["az",MEASURE_PROVISIONS.length]]), totalRows: MEASURE_PROVISIONS.length, unit: "measure provisions" }];
   return [...context.datasets, ...portraitAssets, ...provisions];
+}
+
+function currentReaderHoldingsIdentity(root: string): {
+  readonly holdingsDigest: string;
+  readonly registrySha256: string;
+} {
+  const families = DATASET_FAMILIES.filter(entersReaderInventory);
+  const holdings = readerDatasets(loadManifestContext(root))
+    .filter((dataset) => families.some((family) => family.id === dataset.family))
+    .map((dataset) => [dataset.path, dataset.sha256] as const);
+  return {
+    holdingsDigest: sha256(JSON.stringify(holdings)),
+    registrySha256: sha256(readFileSync(join(root, "lib/holdings/datasets.ts"))),
+  };
 }
 function entriesAt(value: unknown, pointer: string, unit: string): RawRecord[] {
   if (Array.isArray(value)) return value.map((entry, index) => ({ value: object(entry), pointer: `${pointer}/${index}`, unit }));
@@ -285,6 +496,26 @@ function extractRecords(dataset: Dataset): RawRecord[] {
   return [{ value, pointer: "", unit: dataset.unit }];
 }
 
+/**
+ * Preserve the frozen file pointer while applying only the exact, reviewed
+ * statement identity transfer. Every downstream projector therefore sees
+ * the permanent promoted id/subject rather than reviving a retired id.
+ */
+function readerRecordsForDataset(root: string, dataset: Dataset): RawRecord[] {
+  const records = extractRecords(dataset);
+  if (dataset.family !== "statement-corpus") return records;
+  const transfer = frozenStatementIdentityTransfer(root);
+  const rekeyed = new Map(transfer.rekeyed.map(({ fromSnapshotId, toSnapshotId }) => [fromSnapshotId, toSnapshotId]));
+  const promoted = new Map(transfer.corpus.snapshots.map((snapshot) => [snapshot.id, snapshot]));
+  return records.map((raw) => {
+    const promotedId = rekeyed.get(string(raw.value.id));
+    if (!promotedId) return raw;
+    const snapshot = promoted.get(promotedId);
+    if (!snapshot) throw new Error(`Reviewed statement transfer target is absent: ${promotedId}`);
+    return { ...raw, value: snapshot as unknown as ObjectRow };
+  });
+}
+
 const identityKeys = ["id", "identityId", "canonicalCandidacyId", "canonicalContestId", "candidateKey", "candidacyId", "contestId", "subjectId", "officeholderId", "bodyId", "ocdId", "stateOcdId", "divisionOcdId", "meetingId", "rollCallId", "voteId", "bioguideId", "formKey", "classKey", "topic", "url", "targetKey", "fecCandidateId", "committeeId"];
 function identities(raw: RawRecord): string[] {
   const values = identityKeys.flatMap((key) => typeof raw.value[key] === "string" ? [string(raw.value[key])] : []);
@@ -309,9 +540,30 @@ function recordStates(dataset: Dataset, raw: RawRecord): string[] {
   return unique(tagged);
 }
 
-function eligibility(dataset: Dataset, raw: RawRecord, currentDocuments: ReadonlySet<string>): EligibilityDecision {
+function eligibility(
+  dataset: Dataset,
+  raw: RawRecord,
+  currentDocuments: ReadonlySet<string>,
+  frozenEligibleStatements: ReadonlySet<string>,
+): EligibilityDecision {
   const row = raw.value;
   const facts: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: acquisitionFamilies.has(dataset.family) ? "ACQUISITION_INPUT" : metadataPaths.has(dataset.path) ? "OPERATIONAL_METADATA" : "CANONICAL_READER_RECORD", identity: "RESOLVED" };
+  const disposition = nonRoutineDispositionForTrackedPath(dataset.path);
+  const forbiddenReaderDisposition = disposition?.execution.readerUse === "FORBIDDEN"
+    ? disposition
+    : null;
+  if (forbiddenReaderDisposition) {
+    return {
+      state: "NOT_READER_ELIGIBLE",
+      reason: `${forbiddenReaderDisposition.sourceId} is ${forbiddenReaderDisposition.disposition}; its tracked bytes remain inventoried research/test evidence and production Reader use is forbidden. ${forbiddenReaderDisposition.reason}`,
+    };
+  }
+  if (dataset.family === "campaign-sites" && !officeholderIdentityMayEnterReader(string(row.id), null)) {
+    return {
+      state: "NOT_READER_ELIGIBLE",
+      reason: "The frozen campaign-site row is keyed only to a retired Plural/OpenStates intermediary identity. It remains held evidence, but it is absent from the exact promoted campaign-site projection and cannot enter a production Reader through name matching.",
+    };
+  }
   if (dataset.family === "local-finance") {
     if (row._censusLocalFinanceSelected) return { state: "READER_ELIGIBLE", reason: "The existing canonical localFinanceEvidenceFor selector returned this exact sourced native ID through the committed office-to-body bridge. This is body finance; it does not assign a committee to a person." };
     if (["expectedFilingPeriodsAz2026PacParty", "filingsIndexed", "committeeRegisterStateFtp"].includes(string(row._censusLocalFinanceUnit))) return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: "Filing-index, reporting-period or alternate register input supports acquisition accounting; it is not a linked filed money answer or a claim that a filing body was acquired." };
@@ -334,7 +586,12 @@ function eligibility(dataset: Dataset, raw: RawRecord, currentDocuments: Readonl
     if (!currentDocuments.has(string(row.id))) return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: "Historical extraction superseded by currentExtraction for this candidate and source URL." };
     if (row.extraction !== "html" || !row.text) return { state: "NOT_READER_ELIGIBLE", reason: `Source artifact acquired but candidate text extraction is ${string(row.extraction) || "not recorded"}; no position may be generated to fill it.` };
   }
-  if (dataset.family === "statement-corpus" && (row.extraction !== "ok" || !row.text)) return { state: "NOT_READER_ELIGIBLE", reason: `Statement text extraction is ${string(row.extraction) || "not recorded"}; acquired bytes are not readable sourced words.` };
+  if (dataset.family === "statement-corpus") {
+    if (!frozenEligibleStatements.has(string(row.id))) return { state: "NOT_READER_ELIGIBLE", reason: "The frozen statement remains held evidence, but its retired intermediary person identity has no exact reviewed permanent identity transfer. No name match or Plural/OpenStates identity may restore it to the Reader." };
+    // A promoted failed extraction is still a truthful Reader fact: positions
+    // and Ask count it as held-but-unreadable. It cannot become a quotation,
+    // which the projection/applicability layer records separately.
+  }
   if (dataset.family === "identity" && row.outcome && row.outcome !== "RECONCILED") return { state: "IDENTITY_UNRESOLVED", reason: `Canonical reconciliation outcome=${string(row.outcome)}; identity candidates must not be guessed.` };
   if (dataset.family === "meetings" && raw.unit === "agendaDocuments") {
     if (row.extraction === "failed" || agendaDocumentRepresentation(row as unknown as AgendaDocumentLike) === "UNREADABLE") return { state: "NOT_READER_ELIGIBLE", reason: "The canonical agenda representation classifier found no readable document text. A successful extraction label cannot promote binary document bytes. The raw artifact remains held; the linked meeting, source URL and explicit OURS readability gap remain independently reader eligible." };
@@ -1476,7 +1733,7 @@ export function validateReaderClosureReceipt(
   } else if (!isKnownLegacyReaderClosureReceipt(root, options.receiptPath, receipt)) {
     failures.push("Fresh Reader closure requires exact execution-authority evidence");
   }
-  const current = buildReaderCensus(root);
+  const current = currentReaderHoldingsIdentity(root);
   if (current.holdingsDigest !== receipt.holdingsDigest) failures.push("Canonical holding inventory changed after closure proof");
   if (current.registrySha256 !== receipt.registrySha256) failures.push("Declared dataset/surface registry changed after closure proof");
   failures.push(...datasetSurfaceCoverageProblems(root));
@@ -1602,23 +1859,41 @@ function autonomousRows(root: string): { source: ReaderCensus["autonomousSource"
 export function buildReaderCensus(root: string, proofs: readonly ReaderDeliveryProof[] = []): ReaderCensus {
   const context = loadManifestContext(root);
   const families = DATASET_FAMILIES.filter((family) => family.surfaces.length);
-  const applicable = readerDatasets(context).filter((dataset) => families.some((family) => family.id === dataset.family));
+  const inventoryFamilies = DATASET_FAMILIES.filter(entersReaderInventory);
+  const applicable = readerDatasets(context).filter((dataset) => inventoryFamilies.some((family) => family.id === dataset.family));
+  const statementAuthority = compareFrozenOfficeholderStatementAuthority(root);
+  const frozenEligibleStatementIds = new Set(statementAuthority.frozenEligibleSnapshotIds);
+  const promotedRosters = currentBodyRosters();
+  const promotedRosterDispositions = getRegistryRuntimeReadModel().rosterReaderDispositions;
+  const frozenBodyRosters = applicable
+    .filter((dataset) => dataset.family === "body-rosters")
+    .flatMap((dataset) => readerRecordsForDataset(root, dataset).map((raw) => raw.value as unknown as BodyRoster));
   const records: CensusRecord[] = [];
   const holdings: CensusHolding[] = [];
+  const failures: string[] = [
+    ...statementAuthority.failures,
+    ...compareFrozenBodyRosterAuthorityUniverse(frozenBodyRosters, promotedRosters, promotedRosterDispositions),
+  ];
   const importCache = new Map<string, ImportReachability>();
   for (const dataset of applicable) {
     const docs = dataset.family === "candidate-corpus" ? currentExtraction(object(dataset.value).documents as CandidateDocument[]).map((d) => d.id) : [];
-    const extracted = extractRecords(dataset).map((raw): CensusRecord => ({ auditId: `${dataset.path}#${raw.pointer}`, holdingPath: dataset.path, pointer: raw.pointer, family: dataset.family, states: recordStates(dataset, raw), canonicalIdentity: identities(raw), unit: raw.unit, eligibility: eligibility(dataset, raw, new Set(docs)),
-      ...(dataset.family==="body-rosters"?{childDispositions:(Array.isArray(raw.value.members)?raw.value.members:[]).map((member)=>rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child))}:{}),
+    const extracted = readerRecordsForDataset(root, dataset).map((raw): CensusRecord => {
+      const auditId = `${dataset.path}#${raw.pointer}`;
+      const rosterAuthority = dataset.family === "body-rosters"
+        ? compareFrozenBodyRosterAuthority(raw.value as unknown as BodyRoster, promotedRosters, promotedRosterDispositions)
+        : null;
+      if (rosterAuthority) failures.push(...rosterAuthority.failures.map((failure) => `${auditId}:${failure}`));
+      return { auditId, holdingPath: dataset.path, pointer: raw.pointer, family: dataset.family, states: recordStates(dataset, raw), canonicalIdentity: identities(raw), unit: raw.unit, eligibility: eligibility(dataset, raw, new Set(docs), frozenEligibleStatementIds),
+      ...(rosterAuthority?{childDispositions:rosterAuthority.childDispositions}:{}),
       ...(dataset.family==="body-rosters"?{additionalComponents:[
-        ...((Array.isArray(raw.value.members)?raw.value.members:[]).some((member)=>object(member).termNote&&rosterMemberReaderDisposition(string(object(member).id))?.state==="READER_ELIGIBLE")?["components/officials/official-term-note.tsx"]:[]),
+        ...((Array.isArray(raw.value.members)?raw.value.members:[]).some((member)=>object(member).termNote&&rosterAuthority?.childDispositions.find((child)=>child.sourceId===string(object(member).id))?.state==="READER_ELIGIBLE")?["components/officials/official-term-note.tsx"]:[]),
         ...(rosterGapForBody(string(raw.value.bodyId))?["components/officials/roster-completeness-gap.tsx"]:[]),
-      ]}:{}) }));
+      ]}:{}) };
+    });
     records.push(...extracted);
     holdings.push({ path: dataset.path, sha256: dataset.sha256, family: dataset.family, recordCount: extracted.length, units: counts(extracted.map((r) => r.unit)), readerEligibleCount: extracted.filter((r) => r.eligibility.state === "READER_ELIGIBLE").length, withheldCount: extracted.filter((r) => r.eligibility.state !== "READER_ELIGIBLE").length });
   }
   const rows: CensusRow[] = [];
-  const failures: string[] = [];
   for (const family of families) {
     const familyRecords = records.filter((record) => record.family === family.id);
     const states = unique(["az", "nh", "nj", ...familyRecords.flatMap((record) => record.states.length ? record.states : ["national-unattributed"])]);
@@ -1657,15 +1932,21 @@ export function buildReaderCensus(root: string, proofs: readonly ReaderDeliveryP
 /** Exhaustive nested-field denominator, retaining source paths instead of sampling values. */
 export function readerNestedFieldInventory(root: string, census: ReaderCensus) {
   const eligible = new Set(census.records.filter((record)=>record.eligibility.state==="READER_ELIGIBLE").map((record)=>record.auditId));
+  const censusRecords = new Map(census.records.map((record)=>[record.auditId,record]));
   const byField = new Map<string,{family:string;unit:string;field:string;heldValues:number;eligibleValues:number;withheldValues:number;sourcePaths:Set<string>}>();
   const families = new Set(census.rows.map((row)=>row.datasetFamily));
-  for (const dataset of readerDatasets(loadManifestContext(root)).filter((dataset)=>families.has(dataset.family))) for (const record of extractRecords(dataset)) {
+  for (const dataset of readerDatasets(loadManifestContext(root)).filter((dataset)=>families.has(dataset.family))) for (const record of readerRecordsForDataset(root, dataset)) {
     const auditId = `${dataset.path}#${record.pointer}`;
     const walk = (value:unknown,path:string,readerEligible=eligible.has(auditId)) => {
       if (value===null || value===undefined || value==="") return;
       if (Array.isArray(value)) { value.forEach((entry)=>walk(entry,`${path}[]`,readerEligible)); return; }
       if (typeof value==="object") {
-        const child = dataset.family === "body-rosters" && path === "members[]" ? rosterMemberReaderDisposition(string(object(value).id)) : null;
+        const child = dataset.family === "body-rosters" && path === "members[]"
+          ? censusRecords.get(auditId)?.childDispositions?.find((entry)=>entry.sourceId===string(object(value).id))
+          : null;
+        if (dataset.family === "body-rosters" && path === "members[]" && !child) {
+          throw new Error(`BODY_ROSTER_CENSUS_CHILD_DISPOSITION_MISSING:${auditId}:${string(object(value).id)}`);
+        }
         const childEligible = child ? child.state === "READER_ELIGIBLE" : readerEligible;
         Object.entries(object(value)).filter(([key])=>!key.startsWith("_manifest")&&!key.startsWith("_census")).forEach(([key,entry])=>{
           // Source dictionary keys are identities, not different field schemas.
@@ -1806,17 +2087,21 @@ export function applyReaderApplicability(census: ReaderCensus, projection: Reade
  * actually executed. Supporting source records do not become display rows, and
  * this report never changes DELIVERY_UNPROVEN to RENDERED by itself.
  */
-export async function projectCanonicalReaderRecords(root: string, census: ReaderCensus): Promise<ReaderProjectionReport> {
+export async function projectCanonicalReaderRecords(
+  root: string,
+  census: ReaderCensus,
+  meetingAuthority: ReaderProofMeetingsExpectedAuthority,
+): Promise<ReaderProjectionReport> {
   const context = loadManifestContext(root);
-  const sourceRows = new Map<string, { dataset: Dataset; raw: RawRecord }>(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}`, { dataset, raw }] as const)));
-  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, stateVotes, prl, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries, keyProjection] = await Promise.all([
+  const sourceRows = new Map<string, { dataset: Dataset; raw: RawRecord }>(readerDatasets(context).flatMap((dataset) => readerRecordsForDataset(root, dataset).map((raw) => [`${dataset.path}#${raw.pointer}`, { dataset, raw }] as const)));
+  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, prl, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries, keyProjection, everydayDataPlane] = await Promise.all([
     import("../registry/server.ts"), import("../ballot/registry.ts"), import("../meetings/snapshot.ts"), import("../corpus/unified.ts"),
     import("../funding/state-snapshot.ts"), import("../funding/snapshot.ts"), import("../registry/body-rosters.ts"), import("../registry/body-membership.ts"),
     import("../area/facts.ts"), import("../ballot/election-dates.ts"), import("../ballot/polling-place-links.ts"), import("../ballot/registration-links.ts"),
     import("../ballot/measure-summary.ts"), import("../meetings/notice-summary.ts"), import("../meetings/minutes-summaries.ts"), import("../meetings/venue-cache.ts"),
     import("../registry/comment-access.ts"), import("../identity/az-2026.ts"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"),
-    import("../ballot/general-lineup.ts"), import("../ballot/analyses.ts"), import("../votes/snapshot.ts"), import("../sources/legiscan/snapshot.ts"),
-    import("../sources/prl/snapshot.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"), import("../votes/key-votes-projection.ts"),
+    import("../ballot/general-lineup.ts"), import("../ballot/analyses.ts"), import("../votes/snapshot.ts"),
+    import("../sources/prl/snapshot.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"), import("../votes/key-votes-projection.ts"), import("../routing/everyday-data-plane.ts"),
   ]);
   await Promise.all([
     federal.refreshFundingFromPromoted(),
@@ -1866,8 +2151,10 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const allBodies = await registry.knownBodySubjectIds();
   const scopedDivisionIds = unique([...allBodies, ...[...sourceRows.values()].filter(({ raw }) => raw.unit === "divisions" && raw.value.officeholderId).map(({ raw }) => string(raw.value.ocdId)), ...[...sourceRows.values()].filter(({ dataset }) => dataset.family === "statewide-executives").map(({ raw }) => string(raw.value.stateOcdId))]);
   const scopedOfficialIds = new Set((await Promise.all(scopedDivisionIds.map((id) => registry.seatHoldersForDivision(id)))).flat().map((holder) => holder.id));
-  const snapshot = meetings.readSnapshot(root);
-  if (!snapshot) throw new Error("reader census: the canonical meeting loader failed; zero is not a holding count");
+  const snapshot = meetings.requireReaderProofMeetingsProjection(
+    await meetings.readMeetingsProjection({ bypassCache: true }),
+    meetingAuthority,
+  );
   const [{ meetingListingIdentity, listingMultiplicityForSource }, { canonicalBodyIdentity }] = await Promise.all([import("../meetings/listing-identity.ts"), import("../ask/body-identity.ts")]);
   const listingIdentity = meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity);
   const { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } = await import("../meetings/constants.ts");
@@ -1875,25 +2162,24 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const currentMeetingWindow = (meeting: { startsAt: string }) => Date.parse(meeting.startsAt) >= asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000 && Date.parse(meeting.startsAt) <= asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
   const corpusById = new Map(corpus.unifiedCorpus().snapshots.map((row) => [row.id, row]));
   const federalVotes = votes.getVotesSnapshot();
-  const legislativeVotes = stateVotes.OFFICIAL_STATE_VOTE_SCOPES.map((scope) =>
-    stateVotes.getStateVotesSnapshot(scope)
-  );
   const allVoteRecords = [
     ...federalVotes.votes,
     ...federalVotes.positions,
-    ...legislativeVotes.flatMap((snapshot) => snapshot.rollCalls),
-    ...legislativeVotes.flatMap((snapshot) => snapshot.positions),
   ];
   const voteIdentity = (row: ObjectRow) => [row.id, row.officeholderId, row.voteId ?? row.rollCallId].filter(Boolean).join("|");
   const voteRecords = new Map(allVoteRecords.map((row) => [voteIdentity(object(row)), row]));
   const voting = votingSites.loadVotingSites();
-  const bodyRosterHolders = new Map(rosters.BODY_ROSTERS.flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
+  const bodyRosterHolders = new Map(rosters.currentBodyRosters().flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
+  const promotedRosterDispositions = getRegistryRuntimeReadModel().rosterReaderDispositions;
   const records: ReaderRecordProjection[] = [];
   const failures: string[] = [...ballotHolderObligationFailures(ballotHolderObligations), ...ballotQualificationFailures(ballotQualificationObligations)];
   const clean = (row: unknown): unknown => Array.isArray(row) ? row.map(clean) : row && typeof row === "object" ? Object.fromEntries(Object.entries(row).filter(([k]) => !k.startsWith("_manifest")).map(([k, v]) => [k, clean(v)])) : row;
   for (const record of census.records) {
     const input = sourceRows.get(record.auditId);
     const raw = input?.raw.value ?? {};
+    const rosterAuthority = record.family === "body-rosters"
+      ? compareFrozenBodyRosterAuthority(raw as unknown as BodyRoster, rosters.currentBodyRosters(), promotedRosterDispositions)
+      : null;
     let status: ReaderRecordProjection["status"] = "PROJECTION_UNPROVEN";
     let selector = "No reviewed semantic selector adapter";
     let reason = "This row remains an explicit projection obligation; file existence and module reachability do not close it.";
@@ -1931,8 +2217,19 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
       }
       case "candidate-corpus": case "statement-corpus": {
         const snapshot = corpusById.get(string(raw.id));
-        setResult("unifiedCorpus", snapshot);
-        if (snapshot?.text) {
+        const exactSnapshot = record.family !== "statement-corpus"
+          || !snapshot
+          || canonicalCivicDataJson(snapshot) === canonicalCivicDataJson(raw);
+        setResult("unifiedCorpus", exactSnapshot ? snapshot : null);
+        if (record.family === "statement-corpus" && snapshot && !exactSnapshot) {
+          selector = "unifiedCorpus exact OFFICEHOLDER_STATEMENT authority";
+          reason = `OFFICEHOLDER_STATEMENT_AUTHORITY_PAYLOAD_MISMATCH:${string(raw.id)}`;
+        }
+        if (record.family === "statement-corpus" && snapshot && exactSnapshot && (snapshot.extraction !== "ok" || !snapshot.text)) {
+          status = "INTENTIONALLY_OUT_OF_SCOPE";
+          selector = "unifiedCorpus → readerPositionsFor held-but-unreadable denominator";
+          reason = "This exact promoted source observation records an unreadable extraction. Reader positions and Ask count it in their truthful held-but-unreadable denominator, but no source words exist to quote or render as a position.";
+        } else if (snapshot?.text && exactSnapshot) {
           const { positionsFor, searchTerms, PASSAGE_MAX_CHARS } = await import("../corpus/positions.ts");
           const answer = positionsFor(snapshot.subjectId, searchTerms(snapshot.text).join(" "), { ...corpus.unifiedCorpus(), snapshots: [snapshot] });
           if (!answer.passages.length) {
@@ -2070,7 +2367,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
       }
       case "everyday-routing": {
         if (raw.holdingStatus === "CONTACT_OWED") { status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "everydayContactsFor"; reason = "An explicit contact miss is operational attribution, not a held service contact or a publisher absence."; }
-        else setResult("everydayContactsFor", (raw.zips as string[] ?? []).flatMap((zip) => everyday.everydayContactsFor(string(raw.topicId), zip)).filter((r) => r.sourceUrl === raw.sourceUrl).slice(0, 1));
+        else setResult("everydayContactsFor", (raw.zips as string[] ?? []).flatMap((zip) => everyday.everydayContactsFor(string(raw.topicId), zip, everydayDataPlane.currentEverydayRoutingProjection())).filter((r) => r.sourceUrl === raw.sourceUrl).slice(0, 1));
         break;
       }
       case "sourced-definitions": {
@@ -2101,6 +2398,12 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
         break;
       }
     }
+    if (record.eligibility.state === "READER_ELIGIBLE" && rosterAuthority?.failures.length) {
+      status = "BROKEN_PROJECTION";
+      selector = "projectReaderRoster frozen denominator → promoted registry runtime";
+      returned = [];
+      reason = rosterAuthority.failures.join("; ");
+    }
     const returnedIds = unique(returned.flatMap((row) => identities({ value: object(row), pointer: "", unit: "returned" })));
     const finalStatus = status as ReaderRecordProjection["status"];
     const surfaceDispositions: NonNullable<ReaderRecordProjection["surfaceDispositions"]> = {};
@@ -2114,7 +2417,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
       if(subjectOfficialId&&!currentBallotHolderIds.has(subjectOfficialId)) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current CandidateDetails canonical recordHolder IDs",reason:`This official-specific record belongs to ${subjectOfficialId}, which is not a recordHolder for a current ballot card. It remains held for the declared official/API/Ask question; no current candidate or identity pairing is manufactured.`};
       if(subjectOfficialId&&["prl","congress"].includes(record.family)&&!scopedOfficialIds.has(subjectOfficialId)) surfaceDispositions.map={status:"IDENTITY_UNRESOLVED",selector:"canonical scoped division membership / exact official ID",reason:`The source profile identifies ${subjectOfficialId}, but no verified geographic division relationship exposes that official on the current map. Exact identity is preserved; it cannot be attached to another division or person.`};
       if(record.family==="votes"&&["votes","rollCalls"].includes(record.unit)) {
-        const id=string(raw.id);const positions=[...federalVotes.positions,...legislativeVotes.flatMap((snapshot)=>snapshot.positions)].filter((position)=>string(object(position).voteId??object(position).rollCallId)===id);
+        const id=string(raw.id);const positions=federalVotes.positions.filter((position)=>string(object(position).voteId??object(position).rollCallId)===id);
         if(!positions.some((position)=>currentBallotHolderIds.has(position.officeholderId))) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current CandidateDetails recordHolder IDs → canonical recorded positions",reason:`No current ballot card's exact official has a held position on vote ${id}. The vote remains on its full votes/Ask endpoints and applicable official records; it cannot be attributed to an unrelated candidate.`};
       }
       if(["state-officeholders","statewide-executives","campaign-sites"].includes(record.family)||record.family==="registry"&&record.unit==="officeholders") {
@@ -2167,7 +2470,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
       }
     }
     if (finalStatus === "BROKEN_PROJECTION" || finalStatus === "PROJECTION_UNPROVEN") failures.push(`${record.auditId}: ${selector}: ${reason}`);
-    const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)) : undefined;
+    const childDispositions = rosterAuthority?.childDispositions;
     records.push({ auditId: record.auditId, family: record.family, status: finalStatus, selector, canonicalIdentities: record.canonicalIdentity, returnedIdentities: returnedIds, returnedCount: returned.length, payloadSha256: returned.length ? sha256(JSON.stringify(clean(returned))) : null, reason, ...(Object.keys(surfaceDispositions).length ? { surfaceDispositions } : {}), ...(childDispositions?.length ? { childDispositions } : {}) });
   }
   return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), meetingListingIdentity: listingIdentity, currentBallotHolderIds:unique([...currentBallotHolderIds]), ballotHolderObligations, ballotQualificationObligations, rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures. Current ballot holder scope also includes independently expected committed same-office/division relations; a failed incumbent join cannot erase its own obligation.", records, counts: counts(records.map((r) => r.status)), failures };
@@ -2239,7 +2542,7 @@ export function readerProofInventory(root: string, census: ReaderCensus, routeEv
 /** Reconcile known actual route/browser instruments by native record identity. */
 export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, evidencePaths: readonly string[], bundle?: NonNullable<ReaderDeliveryProof["deployedBundle"]>): { proofs: ReaderDeliveryProof[]; failures: string[] } {
   const context = loadManifestContext(root);
-  const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
+  const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => readerRecordsForDataset(root, dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
   const clean = (value: unknown): unknown => Array.isArray(value) ? value.map(clean) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).filter(([key]) => !key.startsWith("_manifest")).map(([key, value]) => [key, clean(value)])) : value;
   const proofs: ReaderDeliveryProof[] = [];
   const failures: string[] = [];
@@ -2474,7 +2777,9 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
           if(required.every((field)=>observations.has(`access-field:${raw.bodyId}:${field}:${raw[field]}`))) {key=`comment-access:${raw.bodyId}`;observations.set(key,[string(raw.bodyId)]);}
         }
         else if (row.datasetFamily === "body-rosters" && row.readerSurface === "ask") {
-          const members=unique((Array.isArray(raw.members)?raw.members:[]).map((member)=>rosterMemberReaderDisposition(string(object(member).id))).flatMap((child)=>child?.state==="READER_ELIGIBLE"&&child.canonicalId?[child.canonicalId]:[]));
+          const rosterAuthority=compareFrozenBodyRosterAuthority(raw as unknown as BodyRoster,currentBodyRosters(),getRegistryRuntimeReadModel().rosterReaderDispositions);
+          if(rosterAuthority.failures.length){failures.push(`${evidencePath}:${auditId}:${rosterAuthority.failures.join("; ")}`);continue;}
+          const members=unique(rosterAuthority.childDispositions.flatMap((child)=>child.state==="READER_ELIGIBLE"&&child.canonicalId?[child.canonicalId]:[]));
           if(members.length&&members.every((id)=>observations.has(`official:${id}`))&&(!rosterGapForBody(string(raw.bodyId))||observations.has(`roster-gap:${raw.bodyId}`))) {key=`roster:${raw.bodyId}`;observations.set(key,[string(raw.bodyId)]);}
         }
         else if (row.datasetFamily === "meetings") key = source.unit === "meetings" ? `meeting:${raw.id}` : `document:${raw.id}`;
@@ -2692,7 +2997,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   const [{ meetingListingIdentity, listingMultiplicityForSource }, { canonicalBodyIdentity }] = await Promise.all([import("../meetings/listing-identity.ts"), import("../ask/body-identity.ts")]);
   const listingIdentity = meetingListingIdentity([...normalizedMeetings.values()], canonicalBodyIdentity);
   const context = loadManifestContext(root);
-  const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
+  const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => readerRecordsForDataset(root, dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
   const registryDivisionsById = new Map<string, ObjectRow>();
   for (const record of census.records) {
     if (record.holdingPath !== "lib/registry/registry.json" || record.unit !== "divisions") continue;
@@ -2718,7 +3023,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   const [{ RecentVoteRecords }, voteRoute, { FundingDisplay, FundingAbsence }, federalDisplay] = await Promise.all([import("../../components/map/popup/official-popup.tsx"), import("../../app/api/votes/route.ts"), import("../../components/funding/funding-section.tsx"), import("../funding/display.ts")]);
   type ActualVote = import("../../components/map/popup/official-popup.tsx").MemberRollCall;
   type ActualAttribution = import("../../components/map/popup/official-popup.tsx").VoteAttribution;
-  const actualVoteMembers = unique(census.records.filter((record) => record.family === "votes").map((record) => string(sourceRows.get(record.auditId)?.value.officeholderId)).filter(Boolean));
+  const actualVoteMembers = unique(census.records.filter((record) => record.family === "votes" && record.eligibility.state === "READER_ELIGIBLE").map((record) => string(sourceRows.get(record.auditId)?.value.officeholderId)).filter(Boolean));
   const voteByMember = new Map<string, { member: string; vote: ActualVote; attribution: ActualAttribution | null }>();
   const voteById = new Map<string, { member: string; vote: ActualVote; attribution: ActualAttribution | null }>();
   for (const member of actualVoteMembers) {
@@ -2865,7 +3170,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       if (!selected) throw new Error(`Held bill summary unavailable ${record.auditId}`);
       const markup = renderToStaticMarkup(createElement(BillPlainSummary, { billUrl: url, summary: selected, pending: false }));
       add(record, "components/map/popup/official-popup.tsx", "summaryForBill → BillPlainSummary", selected, [url], markup, [selected.summary], [], { summaries: { expected: 1, actual: [...markup.matchAll(/<details\b/g)].length } });
-    } else if (record.family === "votes" && ["votes", "positions", "rollCalls"].includes(record.unit)) {
+    } else if (record.family === "votes" && record.eligibility.state === "READER_ELIGIBLE" && ["votes", "positions", "rollCalls"].includes(record.unit)) {
       const selected = raw.officeholderId ? voteByMember.get(`${raw.officeholderId}#${raw.voteId ?? raw.rollCallId}`) : voteById.get(string(raw.id));
       if (!selected || raw.officeholderId && selected.vote.position !== raw.position) throw new Error(`Actual member-vote payload lost or changed ${record.auditId}`);
       const markup = renderToStaticMarkup(createElement(RecentVoteRecords, { votes: [selected.vote], attribution: selected.attribution, failed: false, reactionContext: null }));
@@ -2983,12 +3288,16 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       add(record, "components/officials/public-statements-profile.tsx", "prlProfileForSubject → PublicStatementsProfileContent", selected, [selected.subjectId], markup,
         [...selected.categories.map((category) => category.sentence), selected.attribution.citation, selected.attribution.url, selected.attribution.licence], [],
         { categories: { expected: selected.categories.length, actual: selected.categories.filter((category) => markup.includes(htmlText(category.sentence))).length } });
-    } else if (["state-officeholders", "statewide-executives", "campaign-sites", "body-rosters"].includes(record.family) || record.family === "registry" && record.unit === "officeholders" || record.family === "congress" && record.unit === "members") {
+    } else if (record.eligibility.state === "READER_ELIGIBLE" && (["state-officeholders", "statewide-executives", "campaign-sites", "body-rosters"].includes(record.family) || record.family === "registry" && record.unit === "officeholders" || record.family === "congress" && record.unit === "members")) {
       const id = record.family === "congress" ? `congress:${string(raw.bioguide)}` : string(raw.id);
+      const rosterAuthority = record.family === "body-rosters"
+        ? compareFrozenBodyRosterAuthority(raw as unknown as BodyRoster, rosters.currentBodyRosters(), getRegistryRuntimeReadModel().rosterReaderDispositions)
+        : null;
+      if (rosterAuthority?.failures.length) throw new Error(`${record.auditId}:${rosterAuthority.failures.join("; ")}`);
       const holders = record.family === "body-rosters" ? rosters.rosterHoldersForBody(string(raw.bodyId)) : [await registry.seatHolderById(id)].filter((holder): holder is NonNullable<typeof holder> => Boolean(holder));
       if (!holders.length) throw new Error(`SSR could not resolve official ${record.auditId}`);
       const roster = record.family === "body-rosters" ? rosters.rosterForBody(string(raw.bodyId)) : null;
-      const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)).map((child)=>({id:child.sourceId,status:child.state,reason:child.reason})) : undefined;
+      const childDispositions = rosterAuthority?.childDispositions.map((child)=>({id:child.sourceId,status:child.state,reason:child.reason}));
       const actualIds = roster ? [roster.bodyId] : holders.map((holder) => holder.id);
       const payload = roster ? { bodyId: roster.bodyId, holders } : holders;
       const [tenure, { readerOfficeTitle }] = await Promise.all([import("../officials/tenure.ts"),import("../officials/reader-office-title.ts")]);

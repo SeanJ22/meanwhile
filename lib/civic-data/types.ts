@@ -407,6 +407,13 @@ export interface TrustedLkgReattestationEvidence {
   readonly authorization: "PDC_V2_FROZEN_LKG_CUTOVER";
   readonly purpose: "RE_ATTEST_EXISTING_DURABLE_LKG_TO_PERMANENT_INTEGRITY_CONTRACT";
   readonly sourceAuthenticated: false;
+  /**
+   * The sole allowed structural bridge.  Legacy nh-members `/2` bound its
+   * normalized extraction rather than its smaller Reader projection and did
+   * not carry the import-only stable identities required by `/3`.  Absence
+   * means the ordinary byte-for-byte re-attestation contract still applies.
+   */
+  readonly contractUpgrade?: "NH_MEMBERS_V2_TO_V3";
   readonly contractId: string;
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;

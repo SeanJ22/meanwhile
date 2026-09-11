@@ -10,29 +10,19 @@ import { positionsFor, searchTerms, type PositionAnswer } from "../lib/corpus/po
 import { reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { PRODUCTION_OFFICEHOLDER_ROSTER_FILES } from "../lib/officials/roster-authority.ts";
+import { configuredReaderProofPath } from "../lib/holdings/reader-proof-environment.ts";
 import { rosterPath } from "../lib/holdings/runtime-paths.ts";
-
-function configuredPath(
-  environment: Readonly<Record<string, string | undefined>>,
-  name: string,
-  fallback: string,
-): string {
-  if (!(name in environment)) return fallback;
-  const value = environment[name]?.trim();
-  assert.ok(value, `${name} is present but empty`);
-  return value;
-}
 
 export function readerPositionEvidencePaths(
   environment: Readonly<Record<string, string | undefined>> = process.env,
 ): { readonly candidateCorpusMap: string; readonly ballotPlan: string } {
   return {
-    candidateCorpusMap: configuredPath(
+    candidateCorpusMap: configuredReaderProofPath(
       environment,
       "READER_CANDIDATE_CORPUS_MAP",
       "docs/evidence/reader-last-mile-candidate-corpus-map.json",
     ),
-    ballotPlan: configuredPath(
+    ballotPlan: configuredReaderProofPath(
       environment,
       "READER_BALLOT_PLAN",
       "docs/evidence/reader-last-mile-ballot-plan.json",

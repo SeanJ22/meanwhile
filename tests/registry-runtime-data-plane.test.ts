@@ -108,6 +108,28 @@ test("federal roster/directory promotes once and failed acquisition preserves it
   assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
 });
 
+test("federal civic member ordering is independent of source-map insertion order", async () => {
+  const projection = await federalSeed();
+  const reordered = structuredClone(projection);
+  reordered.directory.byMember = Object.fromEntries(
+    Object.entries(reordered.directory.byMember).reverse(),
+  );
+  reordered.directory.committees = Object.fromEntries(
+    Object.entries(reordered.directory.committees).reverse(),
+  );
+  const acquisitions = federalAcquisitions(projection.sourceSha, "stable-order");
+  const original = federalDirectoryCandidate({ acquisitions, retrievedAt: T0, projection });
+  const roundTripped = federalDirectoryCandidate({
+    acquisitions,
+    retrievedAt: T0,
+    projection: reordered,
+  });
+  assert.equal(roundTripped.normalization.normalizedHash, original.normalization.normalizedHash);
+  assert.deepEqual(roundTripped.civicRecords, original.civicRecords);
+  const keys = original.civicRecords?.map(({ key }) => key) ?? [];
+  assert.deepEqual(keys, [...keys].sort((left, right) => left.localeCompare(right)));
+});
+
 test("registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live", async () => {
   const store = new MemoryRoutineDataStore();
   const firstPackage = await registryPackage(T0, "first");

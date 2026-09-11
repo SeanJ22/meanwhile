@@ -377,15 +377,9 @@ class FrozenTree {
 
   async module<T extends Record<string, unknown>>(path: string): Promise<T> {
     this.captureModuleClosure(path);
-    const priorCwd = process.cwd();
     const url = pathToFileURL(this.absolute(path));
     url.searchParams.set("pdc-v2-frozen-sha", sha256(this.bytes(path)));
-    try {
-      process.chdir(this.root);
-      return await import(url.href) as T;
-    } finally {
-      process.chdir(priorCwd);
-    }
+    return await import(url.href) as T;
   }
 
   async capture<T>(build: () => Promise<T> | T): Promise<{ readonly value: T; readonly fixtures: readonly TrustedLkgFixtureEvidence[] }> {

@@ -155,7 +155,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         }),
         ...Object.entries(byMember).map(([key, record]) => ({ key: `directory:${key}`, record })),
         ...Object.entries(committees).map(([key, record]) => ({ key: `committee:${key}`, record })),
-      ];
+      ].sort((left, right) => left.key.localeCompare(right.key));
     }
     case "REGISTRY_RUNTIME_BINDING": {
       const registry = object(root.registry) ?? {};

@@ -11,6 +11,7 @@ import {
   type ReaderComponentCase,
 } from "../../lib/holdings/reader-census.ts";
 import { READER_SURFACES } from "../../lib/holdings/datasets.ts";
+import { configuredReaderProofPath } from "../../lib/holdings/reader-proof-environment.ts";
 
 const DEFAULT_CENSUS = "docs/evidence/reader-last-mile-current.json";
 const DEFAULT_COMPONENTS = [
@@ -18,17 +19,6 @@ const DEFAULT_COMPONENTS = [
   "docs/evidence/reader-last-mile-bodies.json",
 ] as const;
 const DEFAULT_OUTPUT = "docs/evidence/reader-last-mile-witness-requirements.json";
-
-function configuredPath(
-  environment: Readonly<Record<string, string | undefined>>,
-  name: string,
-  fallback: string,
-): string {
-  if (!(name in environment)) return fallback;
-  const value = environment[name]?.trim();
-  assert.ok(value, `${name} is present but empty`);
-  return value;
-}
 
 export function readerWitnessRequirementPaths(
   environment: Readonly<Record<string, string | undefined>> = process.env,
@@ -45,9 +35,9 @@ export function readerWitnessRequirementPaths(
   assert.ok(components.every(Boolean), "READER_COMPONENT_EVIDENCE contains an empty component artifact");
   assert.equal(new Set(components).size, components.length, "READER_COMPONENT_EVIDENCE repeats a component artifact");
   return {
-    census: configuredPath(environment, "READER_FINAL_PREPARED_CENSUS", DEFAULT_CENSUS),
+    census: configuredReaderProofPath(environment, "READER_FINAL_PREPARED_CENSUS", DEFAULT_CENSUS),
     components,
-    output: configuredPath(environment, "READER_WITNESS_REQUIREMENTS_OUTPUT", DEFAULT_OUTPUT),
+    output: configuredReaderProofPath(environment, "READER_WITNESS_REQUIREMENTS_OUTPUT", DEFAULT_OUTPUT),
   };
 }
 

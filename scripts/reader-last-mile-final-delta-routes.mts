@@ -3,13 +3,12 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { campaignMoneyApiAnswer, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
-import { stateMoneySources } from "../lib/funding/state-snapshot.ts";
-import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
-import { ROSTER_READER_DISPOSITIONS } from "../lib/registry/body-rosters.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { stateMoneyProofInventory } from "../lib/funding/state-snapshot.ts";
+import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { getOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
@@ -20,8 +19,9 @@ const exactHead = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" 
 const buildId = readFileSync(".next/BUILD_ID", "utf8").trim();
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const records: unknown[] = [];
-await Promise.all([refreshFundingFromPromoted(), refreshRegistryRuntimeFromPromoted()]);
-const officialBridge = getRegistryRuntimeReadModel().officialCandidacies;
+await prepareReaderProofRuntime();
+const registryRuntime = getRegistryRuntimeReadModel();
+const officialBridge = registryRuntime.officialCandidacies;
 
 async function get(path: string): Promise<Record<string, unknown>> {
   const response = await fetch(`${base}${path}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-final-delta" } });
@@ -29,15 +29,13 @@ async function get(path: string): Promise<Record<string, unknown>> {
   return await response.json() as Record<string, unknown>;
 }
 
-const stateTargets = stateMoneySources().flatMap((file) => {
-  const match = /^state-money-([a-z]{2})-\d{4}\.json$/.exec(file); assert.ok(match);
-  return (JSON.parse(readFileSync(`data/states/${match[1]}/funding/${file}`, "utf8")) as StateMoneySnapshot).records.flatMap((record) => record.targetKeys);
-});
+const stateMoneyAuthority = stateMoneyProofInventory();
+const stateTargets = stateMoneyAuthority.targetKeys;
 const funding = getFundingSnapshot();
 const moneyTargets = [...new Set([
   ...stateTargets,
   ...officialBridge.rows.filter((row) => row.status === "RESOLVED").map((row) => row.holder.id),
-  ...ROSTER_READER_DISPOSITIONS.filter((row) => row.state !== "READER_ELIGIBLE").map((row) => row.sourceId),
+  ...registryRuntime.rosterReaderDispositions.filter((row) => row.state !== "READER_ELIGIBLE").map((row) => row.sourceId),
   ...funding.candidates.flatMap((row) => row.targetKeys),
   ...funding.absences.map((row) => row.targetKey),
   "ballot-az-pima:governor|Katie Hobbs",
@@ -85,6 +83,7 @@ const output = {
   buildId,
   base,
   sourceHashes: JSON.parse(readFileSync(proofSourcesPath, "utf8")),
+  stateMoneyAuthorityReadbacks: stateMoneyAuthority.readbacks,
   execution: "Only the post-checkpoint funding and outcomes HTTP seams were re-executed against the frozen local production build and compared with canonical selectors.",
   denominator: { moneyTargets: moneyTargets.length, outcomeSittings: getOutcomeSnapshot().sittings.length },
   negativeIdentity: { hobbsCandidacy, officialTarget: "statewide:az/governor", ballotTarget: "ballot-az-pima:governor|Katie Hobbs", officialResolution: hobbsOfficial.data.resolution, ballotResolution: hobbsCard.data.resolution, unresolvedTarget: "unresolved:Katie Hobbs", opponentTarget, result: "PASS" },

@@ -36,8 +36,9 @@ const PDC_V2_PLANNED_CANDIDATE_COUNT = 95;
 const PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT = 16;
 const PDC_V2_FINAL_PROMOTION_COUNT =
   PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT + PDC_V2_PLANNED_CANDIDATE_COUNT;
-const PDC_V2_REGISTERED_CONTRACT_COUNT = 155;
-const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
+// Exact production registry: 10 routine + 124 meeting + 23 manual contracts.
+const PDC_V2_REGISTERED_CONTRACT_COUNT = 157;
+export const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
 
 type Row = Record<string, unknown>;
 const row = (value: unknown): Row | null =>
@@ -138,7 +139,7 @@ function exactIso(value: unknown): value is string {
     new Date(Date.parse(value)).toISOString() === value;
 }
 
-type ImportDisposition = {
+export type ImportDisposition = {
   readonly contractId: string;
   readonly candidateId: string;
   readonly disposition:
@@ -250,6 +251,7 @@ function validateImportReceipt(
   dispositions: { promoted: number; reattested: number; skipped: number; total: number };
   dispositionSet: readonly ImportDisposition[];
   dispositionSetSha256: string;
+  zeroMeetingPartitionsRefused: number;
   resultSha256: string;
 } {
   if (phase === "REHEARSAL") {
@@ -410,6 +412,7 @@ function validateImportReceipt(
       dispositions,
       dispositionSet,
       dispositionSetSha256: String(imported.dispositionSetSha256),
+      zeroMeetingPartitionsRefused: Number(imported.zeroMeetingPartitionsRefused),
       resultSha256: String(imported.resultSha256),
     };
   }
@@ -556,7 +559,66 @@ function validateImportReceipt(
     dispositions,
     dispositionSet,
     dispositionSetSha256: String(imported.dispositionSetSha256),
+    zeroMeetingPartitionsRefused: Number(imported.zeroMeetingPartitionsRefused),
     resultSha256: String(imported.resultSha256),
+  };
+}
+
+export interface ReaderExecutionAuthorityArchivedSupportAdmission {
+  readonly importerCodeSha: string;
+  readonly dispositionSet: readonly ImportDisposition[];
+  readonly zeroMeetingPartitionsRefused: number;
+  readonly dispositionSetSha256: string;
+}
+
+/**
+ * Admit the immutable provider/import support bytes and return only the
+ * already-authenticated import membership needed by documentary proof. The
+ * caller never derives expected authority from the live projection it is
+ * checking.
+ */
+export function admitReaderExecutionAuthorityArchivedSupport(
+  evidence: ReaderClosureExecutionAuthorityEvidence,
+  providerMetadataBytes: Buffer,
+  importReceiptBytes: Buffer,
+): ReaderExecutionAuthorityArchivedSupportAdmission {
+  const metadataObject = parseJson(providerMetadataBytes, "Reader provider metadata");
+  const endpointHost = String(metadataObject.endpointHost ?? "");
+  const connection = new URL(`postgresql://readonly_archived:placeholder@${endpointHost}/archived`);
+  const observedAt = Date.parse(String(metadataObject.observedAt ?? ""));
+  const metadata = validateProviderMetadata(metadataObject, evidence.phase, connection, observedAt);
+  const imported = validateImportReceipt(
+    parseJson(importReceiptBytes, "Reader import receipt"),
+    importReceiptBytes,
+    providerMetadataBytes,
+    evidence.phase,
+    evidence.exactHead,
+    metadata,
+  );
+  if (evidence.store.providerMetadataSha256 !== digest(providerMetadataBytes)) throw new Error("Reader execution authority provider metadata bytes changed");
+  if (evidence.import.receiptSha256 !== digest(importReceiptBytes)) throw new Error("Reader execution authority import receipt bytes changed");
+  if (evidence.store.projectIdentitySha256 !== readerAuthorityIdentityHash("project", metadata.projectId)) throw new Error("Reader execution authority provider project identity differs");
+  if (evidence.store.branchIdentitySha256 !== readerAuthorityIdentityHash("branch", metadata.branchId)) throw new Error("Reader execution authority provider branch identity differs");
+  if (evidence.store.endpointIdentitySha256 !== readerAuthorityIdentityHash("endpoint", canonicalNeonEndpointHost(connection))) throw new Error("Reader execution authority provider endpoint identity differs");
+  if (evidence.import.importerCodeSha !== imported.importerCodeSha) throw new Error("Reader execution authority importer differs from its archived controller receipt");
+  if (evidence.import.resultSha256 !== imported.resultSha256) throw new Error("Reader execution authority result digest differs from its archived controller receipt");
+  if (evidence.import.dispositionSetSha256 !== imported.dispositionSetSha256) throw new Error("Reader execution authority disposition membership digest differs from its archived controller receipt");
+  if (evidence.import.canonicalPointerCount !== imported.expectedPointerCount) throw new Error("Reader execution authority pointer count differs from its archived controller receipt");
+  if (imported.expectedPointerSha256 !== null && evidence.import.canonicalPointerSetSha256 !== imported.expectedPointerSha256) {
+    throw new Error("Reader execution authority pointer digest differs from its archived rehearsal receipt");
+  }
+  const durable = evidence.import.durableImport;
+  if (
+    durable.promotedDispositionCount !== imported.dispositions.promoted ||
+    durable.reattestedDispositionCount !== imported.dispositions.reattested ||
+    durable.skippedDispositionCount !== imported.dispositions.skipped ||
+    durable.candidateCount !== imported.dispositions.total
+  ) throw new Error("Reader execution authority live disposition denominator differs from its archived controller receipt");
+  return {
+    importerCodeSha: imported.importerCodeSha,
+    dispositionSet: imported.dispositionSet,
+    zeroMeetingPartitionsRefused: imported.zeroMeetingPartitionsRefused,
+    dispositionSetSha256: imported.dispositionSetSha256,
   };
 }
 
@@ -571,38 +633,8 @@ export function readerExecutionAuthorityArchivedSupportProblems(
   importReceiptBytes: Buffer,
 ): string[] {
   try {
-    const metadataObject = parseJson(providerMetadataBytes, "Reader provider metadata");
-    const endpointHost = String(metadataObject.endpointHost ?? "");
-    const connection = new URL(`postgresql://readonly_archived:placeholder@${endpointHost}/archived`);
-    const observedAt = Date.parse(String(metadataObject.observedAt ?? ""));
-    const metadata = validateProviderMetadata(metadataObject, evidence.phase, connection, observedAt);
-    const imported = validateImportReceipt(
-      parseJson(importReceiptBytes, "Reader import receipt"),
-      importReceiptBytes,
-      providerMetadataBytes,
-      evidence.phase,
-      evidence.exactHead,
-      metadata,
-    );
-    const failures: string[] = [];
-    if (evidence.store.providerMetadataSha256 !== digest(providerMetadataBytes)) failures.push("Reader execution authority provider metadata bytes changed");
-    if (evidence.import.receiptSha256 !== digest(importReceiptBytes)) failures.push("Reader execution authority import receipt bytes changed");
-    if (evidence.store.projectIdentitySha256 !== readerAuthorityIdentityHash("project", metadata.projectId)) failures.push("Reader execution authority provider project identity differs");
-    if (evidence.store.branchIdentitySha256 !== readerAuthorityIdentityHash("branch", metadata.branchId)) failures.push("Reader execution authority provider branch identity differs");
-    if (evidence.store.endpointIdentitySha256 !== readerAuthorityIdentityHash("endpoint", canonicalNeonEndpointHost(connection))) failures.push("Reader execution authority provider endpoint identity differs");
-    if (evidence.import.importerCodeSha !== imported.importerCodeSha) failures.push("Reader execution authority importer differs from its archived controller receipt");
-    if (evidence.import.resultSha256 !== imported.resultSha256) failures.push("Reader execution authority result digest differs from its archived controller receipt");
-    if (evidence.import.dispositionSetSha256 !== imported.dispositionSetSha256) failures.push("Reader execution authority disposition membership digest differs from its archived controller receipt");
-    if (evidence.import.canonicalPointerCount !== imported.expectedPointerCount) failures.push("Reader execution authority pointer count differs from its archived controller receipt");
-    if (imported.expectedPointerSha256 !== null && evidence.import.canonicalPointerSetSha256 !== imported.expectedPointerSha256) failures.push("Reader execution authority pointer digest differs from its archived rehearsal receipt");
-    const durable = evidence.import.durableImport;
-    if (
-      durable.promotedDispositionCount !== imported.dispositions.promoted ||
-      durable.reattestedDispositionCount !== imported.dispositions.reattested ||
-      durable.skippedDispositionCount !== imported.dispositions.skipped ||
-      durable.candidateCount !== imported.dispositions.total
-    ) failures.push("Reader execution authority live disposition denominator differs from its archived controller receipt");
-    return failures;
+    admitReaderExecutionAuthorityArchivedSupport(evidence, providerMetadataBytes, importReceiptBytes);
+    return [];
   } catch (error) {
     return [error instanceof Error ? error.message : "Reader authority archived support evidence is invalid"];
   }

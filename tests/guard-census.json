@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 624,
-    "named": 6498,
+    "files": 625,
+    "named": 6518,
     "dynamic": 27
   },
   "files": {
@@ -1923,6 +1923,7 @@
         "AZ, NH, and NJ finance candidates bind exact source/class/scope and promote with record-level receipts",
         "Pima filing index and transactions promote together; a capped successor preserves LKG",
         "a bad state candidate and a failed source attempt preserve the prior GOOD pointer",
+        "documentary state-money proof inventory binds every promoted authority and fails closed otherwise",
         "finance contracts are owner-only and executable paths cannot write tracked runtime truth",
         "one invalid state projection cannot suppress or erase another state's Reader",
         "state Reader follows promoted pointers and never selects a tracked fixture after store failure"
@@ -3361,6 +3362,7 @@
         "a store failure cannot reopen the tracked seed in production",
         "one blocked official source retains only its LKG while an unrelated contact advances",
         "record identities are canonical and cannot create a second authority for one fact",
+        "the documentary civic proof enumerates the exact promoted routing authority",
         "the manual import candidate promotes and the strict read model returns the canonical projection",
         "the meeting server preload carries the full projection to the Reader shell",
         "the tracked first import accounts for all 36 cells, 26 exact contact sources, and six honest obligations"
@@ -6721,6 +6723,7 @@
         "missing, forged, stale, extra, and secret-bearing provider metadata fail closed",
         "phase relabeling cannot turn a rehearsal child into production evidence",
         "production authority binds the pinned standing branch and no clone claim",
+        "production authority rejects registered Reader denominator near misses",
         "production replay accepts 111 already-proven authorities without relabeling their durable bootstrap",
         "re-attested authority binds the exact predecessor row, receipt, pointer, and contiguous events",
         "the CLI surface never accepts a database URL and derives phase-specific paths",
@@ -6879,12 +6882,15 @@
         "fresh Reader closure admission requires authority while inherited historical receipts retain compatibility",
         "graph control crosses actual API fetches and fails when the reader import is removed",
         "legacy execution-authority compatibility is pinned to exact pre-seam path and bytes",
+        "promoted officeholder-statement drift fails without redefining the frozen 29/3 denominator",
+        "promoted roster member and disposition drift fails without shrinking the frozen child denominator",
         "reader readback counts missing rows and refuses wrong-candidate identities, false counts, and unchecked evidence",
         "receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",
         "render instrument rejects a vanished eligible fact, an inherited identity and a false row count",
         "source fingerprint follows a directory index and imported reader CSS as files",
         "the actual reader graph cannot consume autonomous staging merely because an artifact exists",
-        "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt"
+        "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt",
+        "the frozen Reader census retains retired authorities as withheld evidence without restoring their production identities"
       ],
       "dynamic": 0
     },
@@ -6926,6 +6932,7 @@
     },
     "tests/reader-last-mile-meeting-knowledge-ask.test.ts": {
       "names": [
+        "documentary meeting-knowledge proof receives comment-access authority explicitly",
         "every held minutes summary and public-comment rule survives real Ask with exact source fields",
         "minutes paraphrases never attach to another body or supply a member roll call",
         "missing or unreadable summary identity holdings stay explicit OURS gaps",
@@ -7051,13 +7058,29 @@
         "a fresh Reader receipt rejects applicable rows proved at mixed heads",
         "an inherited Reader receipt keeps the invalidation report as its proof-head authority but legacy authority is exact-byte bounded",
         "archived controller support binds exact result and disposition membership digests",
-        "archived support keeps the 95-plan, 111-authority, and 155-registry denominators distinct",
+        "archived production support rejects registered Reader denominator near misses",
+        "archived support keeps the 95-plan, 111-authority, and 157-registry denominators distinct",
         "archived support rejects recursive schema additions and secret-bearing keys regardless of value type",
         "fresh Reader history re-parses exact archived provider and controller support instead of trusting matching hashes",
         "fresh Reader history requires a hash-bound execution authority at the exact proved head",
         "production Reader history accepts only controller import commit A bound beneath distinct authority commit B",
         "production Reader history accepts the exact all-111-skipped retirement replay",
         "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-proof-runtime.test.ts": {
+      "names": [
+        "Reader proof authority binds the actual read-only connection without exposing it",
+        "Reader proof authority permits a descendant only for an unchanged validated production merge",
+        "deployed Reader runtime closure admits documentary-only descendants and rejects source drift",
+        "documentary Reader meeting authority fails closed before explicit phase admission",
+        "documentary Reader proof initializes every required promoted authority exactly once",
+        "documentary Reader proof rejects an absent or failed required authority",
+        "exact documentary producers do not reopen reviewed first-seed or stale proof artifacts",
+        "meeting proof derives the exact 83/41 authority from admitted import membership",
+        "meeting proof identity binds all promoted and intentional no-LKG partitions independent of readback order",
+        "meeting proof identity rejects incomplete, ambiguous, or unreadable partition authority"
       ],
       "dynamic": 0
     },
@@ -9002,6 +9025,8 @@
         "an exact Arizona id absent from its held projection is a scoped no-record result",
         "an official empty member result cannot be mislabeled as legacy LegiScan evidence",
         "key-vote failure cannot erase independently held roll-call supporting facts",
+        "official state proof enumeration fails closed on an unreadable canonical store",
+        "official state proof enumeration keeps NOT_RECORDED explicit without borrowing the retired aggregate",
         "party-label failure cannot erase an independently held key-vote projection",
         "the permanent state-vote Reader has no retired aggregate-scope probe"
       ],

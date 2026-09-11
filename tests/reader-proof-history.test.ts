@@ -18,7 +18,7 @@ const PRODUCTION_ENDPOINT_ID = "ep-reader-production-123";
 const PLAN_CANDIDATE_COUNT = 95;
 const BASELINE_REGISTERED_PROMOTION_COUNT = 16;
 const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT;
-const REGISTERED_CONTRACT_COUNT = 155;
+const REGISTERED_CONTRACT_COUNT = 157;
 
 const sha256 = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
 function canonicalValue(value: unknown): unknown {
@@ -579,7 +579,7 @@ test("archived controller support binds exact result and disposition membership 
   );
 });
 
-test("archived support keeps the 95-plan, 111-authority, and 155-registry denominators distinct", () => {
+test("archived support keeps the 95-plan, 111-authority, and 157-registry denominators distinct", () => {
   const rehearsalBuilt = authorityArtifact("REHEARSAL");
   const rehearsalPath = "docs/evidence/reader-last-mile-rehearsal-import-receipt.json";
   const rehearsal = JSON.parse(rehearsalBuilt.support[rehearsalPath].toString("utf8"));
@@ -650,6 +650,38 @@ test("archived support keeps the 95-plan, 111-authority, and 155-registry denomi
     ),
     /import\/retirement\/post-import receipt shape differs/,
   );
+});
+
+test("archived production support rejects registered Reader denominator near misses", () => {
+  const productionPath = "docs/evidence/reader-last-mile-production-import-receipt.json";
+  for (const registeredContractCount of [156, 158]) {
+    const built = authorityArtifact("PRODUCTION");
+    const receipt = JSON.parse(built.support[productionPath].toString("utf8"));
+    receipt.preImportAuthority = {
+      ...receipt.preImportAuthority,
+      registeredContractKeys: registeredContractCount,
+    };
+    receipt.postImport = {
+      ...receipt.postImport,
+      registeredContractCount,
+    };
+    const forged = replaceSupport(
+      built,
+      "PRODUCTION",
+      "import",
+      Buffer.from(JSON.stringify(receipt)),
+    );
+    const closure = authorityReceiptFromBuilt("PRODUCTION", forged);
+    assert.throws(
+      () => readerProofAuthority(
+        closure.receipt,
+        evidence({ ...closure.support, [closure.receipt.executionAuthority.evidencePath]: closure.artifact }),
+        HEAD_B,
+        { requiredPhase: "PRODUCTION" },
+      ),
+      /import\/retirement\/post-import receipt shape differs/,
+    );
+  }
 });
 
 test("production Reader history accepts only controller import commit A bound beneath distinct authority commit B", () => {

@@ -12,6 +12,7 @@ import { floored } from "../lib/ops/denominator-floor.ts";
 import { PRODUCTION_OFFICEHOLDER_ROSTER_FILES } from "../lib/officials/roster-authority.ts";
 import { configuredReaderProofPath } from "../lib/holdings/reader-proof-environment.ts";
 import { rosterPath } from "../lib/holdings/runtime-paths.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 
 export function readerPositionEvidencePaths(
   environment: Readonly<Record<string, string | undefined>> = process.env,
@@ -35,6 +36,7 @@ export async function generateReaderPositionEvidence(
 ): Promise<void> {
 const base = environment.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
+await prepareReaderProofRuntime();
 const paths = readerPositionEvidencePaths(environment);
 const inventory = JSON.parse(readFileSync(paths.candidateCorpusMap, "utf8")) as { records: { auditId: string; snapshotId: string; subjectId: string }[] };
 const plan = JSON.parse(readFileSync(paths.ballotPlan, "utf8")) as { chosen: { zip: string }[] };

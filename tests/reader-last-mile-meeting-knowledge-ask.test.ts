@@ -1,19 +1,31 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { meetingKnowledgeAskProof } from "../scripts/lib/reader-ask-meeting-knowledge-proof.ts";
 import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
+import { COMMENT_ACCESS } from "../lib/registry/comment-access.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 await installRegistryRuntimeFirstSeeds();
 
 test("every held minutes summary and public-comment rule survives real Ask with exact source fields", async () => {
-  const result = await meetingKnowledgeAskProof();
+  const snapshot = readSnapshot();
+  assert.ok(snapshot);
+  const result = await meetingKnowledgeAskProof({ snapshot, commentAccess: COMMENT_ACCESS });
   assert.equal(result.summaryDenominator, 2);
   assert.equal(result.noticeDenominator, 1);
   assert.equal(result.accessDenominator, 18);
   assert.deepEqual(result.proofs.filter((proof) => proof.status !== "PROVEN").map((proof) => ({ nativeId: proof.nativeId, missing: proof.missing, unexpected: proof.unexpected })), []);
+});
+
+test("documentary meeting-knowledge proof receives comment-access authority explicitly", () => {
+  const helper = readFileSync(new URL("../scripts/lib/reader-ask-meeting-knowledge-proof.ts", import.meta.url), "utf8");
+  const entrypoint = readFileSync(new URL("../docs/evidence/reader-last-mile-meeting-knowledge-ask.mts", import.meta.url), "utf8");
+  assert.doesNotMatch(helper, /import\s*\{[^}]*\bCOMMENT_ACCESS\b/);
+  assert.match(helper, /for \(const access of options\.commentAccess\)/);
+  assert.match(entrypoint, /commentAccess: currentCommentAccess\(\)/);
 });
 
 test("notice summaries require the current exact content hash and cannot answer an outcome question", () => {

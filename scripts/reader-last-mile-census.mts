@@ -11,6 +11,10 @@ import {
   readerCensusOutputPaths,
 } from "./lib/reader-census-output-contract.ts";
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "./lib/reader-proof-runtime.ts";
 
 const args = process.argv.slice(2);
 const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
@@ -46,6 +50,8 @@ if (receiptToValidate) {
 }
 const packPath = option("--pack");
 if (packPath) { console.log(JSON.stringify(packReaderEvidence(root, packPath), null, 2)); process.exit(0); }
+await prepareReaderProofRuntime();
+const meetingAuthority = requiredPreparedReaderProofMeetingsAuthority();
 const output = option("--output") ?? "docs/evidence/reader-last-mile-current.json";
 const sideOutputs = readerCensusOutputPaths(args, output);
 const proofPath = option("--proof");
@@ -61,7 +67,7 @@ floored("reader-eligible records", "canonical records in datasets declaring read
 const problems = [...census.failures];
 const projectionPath = option("--projection");
 if (args.includes("--project") || projectionPath) {
-  const projection = projectionPath ? JSON.parse(readReaderEvidence(root, projectionPath).toString("utf8")) as ReaderProjectionReport : await projectCanonicalReaderRecords(root, census);
+  const projection = projectionPath ? JSON.parse(readReaderEvidence(root, projectionPath).toString("utf8")) as ReaderProjectionReport : await projectCanonicalReaderRecords(root, census, meetingAuthority);
   census = applyReaderApplicability(census, projection);
   const path = output.replace(/\.json$/, "-projection.json");
   if (!args.includes("--check") && !projectionPath) writeFileSync(join(root, path), `${JSON.stringify(projection, null, 2)}\n`);
@@ -145,10 +151,13 @@ let closureEvidenceHashes: readonly ReaderSourceHash[] = [];
 if (args.includes("--closure")) {
   problems.push(...censusClosureFailures(census));
   const authorityEvidencePath = option("--authority-evidence");
+  const preparedAuthorityEvidencePath = process.env.READER_EXECUTION_AUTHORITY_EVIDENCE?.trim();
   const witnessManifest = option("--component-witnesses");
   let authoritySupportPaths: readonly string[] = [];
   if (!authorityEvidencePath) {
     problems.push("Fresh Reader closure requires --authority-evidence");
+  } else if (authorityEvidencePath !== preparedAuthorityEvidencePath) {
+    problems.push("Reader closure authority path differs from the authority used to prepare meeting proof");
   } else {
     try {
       const admission = readerClosureExecutionAuthorityAdmission(root, authorityEvidencePath);

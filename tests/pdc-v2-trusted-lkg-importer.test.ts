@@ -2763,6 +2763,32 @@ function assertManualReaderMemberCoverage(plan: PdcV2TrustedLkgImportPlan): void
       registry.rosterReaderDispositions.length + registry.statewideExecutives.length +
       registry.officialCandidacies.rows.length + registry.officialPhotos.photos.length + Object.keys(registry.rosterPhotos).length,
   );
+  const jsonbReorderedRegistry = structuredClone(registry);
+  jsonbReorderedRegistry.rosterPhotos = Object.fromEntries(
+    Object.entries(jsonbReorderedRegistry.rosterPhotos).reverse(),
+  );
+  assert.deepEqual(
+    civicRecordsFor("REGISTRY_RUNTIME_BINDING", jsonbReorderedRegistry),
+    members("registry-runtime-bindings"),
+    "the frozen registry candidate retains exact member order after JSONB object-key reordering",
+  );
+
+  const candidateProfiles = required("candidate-profiles").readModel as {
+    cards: { cards: Readonly<Record<string, unknown>>; hunts: readonly unknown[] };
+    links: { links: Readonly<Record<string, unknown>>; hunts: readonly unknown[] };
+  };
+  const jsonbReorderedCandidateProfiles = structuredClone(candidateProfiles);
+  jsonbReorderedCandidateProfiles.cards.cards = Object.fromEntries(
+    Object.entries(jsonbReorderedCandidateProfiles.cards.cards).reverse(),
+  );
+  jsonbReorderedCandidateProfiles.links.links = Object.fromEntries(
+    Object.entries(jsonbReorderedCandidateProfiles.links.links).reverse(),
+  );
+  assert.deepEqual(
+    civicRecordsFor("CANDIDATE_PROFILE", jsonbReorderedCandidateProfiles),
+    members("candidate-profiles"),
+    "the frozen candidate-profile candidate retains exact member order after JSONB object-key reordering",
+  );
 
   const rolls = required("congress-rollcalls").readModel as {
     snapshot: {

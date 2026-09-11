@@ -55,7 +55,7 @@ const HEAD = "a".repeat(40);
 const PRODUCTION_PROOF_HEAD = "e".repeat(40);
 const FROZEN = "fc67e8cd34c489590c403f7b4a0d6008fa755296";
 const SHA256 = "b".repeat(64);
-const NOW = "2026-09-10T12:00:00.000Z";
+const NOW = "2026-09-10T12:00:00.123Z";
 const ENDPOINT_ID = "ep-reader-rehearsal-123";
 const ENDPOINT_HOST = `${ENDPOINT_ID}.neon.tech`;
 const CONNECTION = `postgresql://readonly_pdc:test-only-password@${ENDPOINT_HOST}/wtp`;
@@ -660,22 +660,30 @@ interface FakeOptions {
   readonly privilegeProbeErrorCode?: string;
   readonly admitWrite?: boolean;
   readonly writeErrorCode?: string;
+  readonly repeatPointerCursor?: boolean;
+  readonly repeatCandidateCursor?: boolean;
+  readonly repeatEventCursor?: boolean;
+  readonly eventPageSize?: number;
 }
 
 function fakeTransport(options: FakeOptions = {}): ReaderAuthoritySql & {
   readonly queries: string[];
+  readonly queryParameters: readonly unknown[][];
   readonly transactionBatches: string[][];
 } {
   const pointers = options.pointers ?? pointerRows();
   const candidates = options.candidates ?? candidateRows(pointers);
   const events = options.events ?? eventRows(pointers);
   const queries: string[] = [];
+  const queryParameters: unknown[][] = [];
   const transactionBatches: string[][] = [];
   return {
     queries,
+    queryParameters,
     transactionBatches,
-    query: async (statement) => {
+    query: async (statement, parameters = []) => {
       queries.push(statement);
+      queryParameters.push([...parameters]);
       if (statement.startsWith("explain delete")) {
         if (options.admitPrivilegeProbe) return [];
         throw Object.assign(new Error("permission denied"), {
@@ -727,9 +735,65 @@ function fakeTransport(options: FakeOptions = {}): ReaderAuthoritySql & {
           ...options.identity,
         }];
       }
-      if (statement.includes("from public.civic_data_candidate_events")) return events;
-      if (statement.includes("join public.civic_data_candidates")) return candidates;
-      if (statement.includes("from public.civic_data_promotions")) return pointers;
+      if (statement.includes("select key, source_id")) {
+        assert.match(statement, /\blimit\s+1\s*$/);
+        const cursor = parameters[0];
+        if (options.repeatPointerCursor && cursor !== null) return pointers.slice(0, 1);
+        const index = cursor === null
+          ? 0
+          : pointers.findIndex(({ key }) => String(key) > String(cursor));
+        return index < 0 ? [] : pointers.slice(index, index + 1);
+      }
+      if (statement.includes("select p.key as pointer_key")) {
+        assert.match(statement, /\blimit\s+1\s*$/);
+        const cursor = parameters[0];
+        if (options.repeatCandidateCursor && cursor !== null) return candidates.slice(0, 1);
+        const index = cursor === null
+          ? 0
+          : candidates.findIndex(({ pointer_key }) => String(pointer_key) > String(cursor));
+        return index < 0 ? [] : candidates.slice(index, index + 1);
+      }
+      if (statement.includes("from public.civic_data_candidates") && statement.includes("where id = $1::text")) {
+        const predecessorId = String(parameters[0]);
+        const source = candidates.find((candidateRow) =>
+          (candidateRow.candidate as Record<string, unknown> | undefined)?.bootstrapImport &&
+          ((candidateRow.candidate as Record<string, unknown>).bootstrapImport as Record<string, unknown>)
+            .predecessorVersionId === predecessorId
+        );
+        return source ? [{
+          id: predecessorId,
+          state: source.predecessor_state,
+          acquisition_succeeded: source.predecessor_acquisition_succeeded,
+          promoted_version_id: source.predecessor_promoted_version_id,
+          last_known_good_version_id: source.predecessor_lkg_version_id,
+          failure_code: source.predecessor_failure_code,
+          failure_detail: source.predecessor_failure_detail,
+          candidate: source.predecessor_candidate,
+          validation_receipt: source.predecessor_validation_receipt,
+        }] : [];
+      }
+      if (statement.includes("from public.civic_data_candidate_events")) {
+        assert.match(statement, /\blimit\s+32\s*$/);
+        const pageSize = options.eventPageSize ?? 32;
+        assert.ok(Number.isSafeInteger(pageSize) && pageSize > 0 && pageSize <= 32);
+        const admittedIds = new Set(parameters[0] as string[]);
+        const cursorId = parameters[1] as string | null;
+        const cursorSequence = parameters[2] as number | null;
+        const admitted = events
+          .filter(({ candidate_id }) => admittedIds.has(String(candidate_id)))
+          .toSorted((left, right) =>
+            String(left.candidate_id).localeCompare(String(right.candidate_id)) ||
+            Number(left.sequence) - Number(right.sequence)
+          );
+        if (options.repeatEventCursor && cursorId !== null) return admitted.slice(0, 1);
+        const index = cursorId === null
+          ? 0
+          : admitted.findIndex(({ candidate_id, sequence }) =>
+              String(candidate_id) > cursorId ||
+              (String(candidate_id) === cursorId && Number(sequence) > Number(cursorSequence))
+            );
+        return index < 0 ? [] : admitted.slice(index, index + pageSize);
+      }
       throw new Error(`Unexpected fake SQL: ${statement}`);
     },
     readOnlyTransaction: async (statements) => {
@@ -770,7 +834,18 @@ test("the fake transport produces only sanitized, hash-bound rehearsal authority
   assert.equal(evidence.import.importerCodeSha, HEAD);
   assert.equal(evidence.import.canonicalPointerCount, FINAL_AUTHORITY_COUNT);
   assert.equal(evidence.readOnly.attemptedWriteRefused, true);
-  assert.equal(sql.queries.length, 5, "identity, privilege probe, pointers, durable candidates, and events are read");
+  const pointerQueries = sql.queries.filter((statement) => statement.includes("select key, source_id"));
+  const candidateQueries = sql.queries.filter((statement) =>
+    statement.includes("select p.key as pointer_key")
+  );
+  const eventQueries = sql.queries.filter((statement) =>
+    statement.includes("from public.civic_data_candidate_events")
+  );
+  assert.equal(pointerQueries.length, FINAL_AUTHORITY_COUNT + 1, "one pointer per response plus EOF");
+  assert.equal(candidateQueries.length, FINAL_AUTHORITY_COUNT + 1, "one candidate per response plus EOF");
+  assert.equal(eventQueries.length, Math.ceil(eventRows(pointerRows()).length / 32) + 1);
+  assert.equal(candidateQueries.every((statement) => !statement.includes("pointer_payload")), true);
+  assert.equal(candidateQueries.every((statement) => !statement.includes("predecessor.candidate")), true);
   assert.match(sql.queries[0]!, /rolsuper[\s\S]*rolcreaterole[\s\S]*rolcreatedb[\s\S]*rolreplication[\s\S]*rolbypassrls/);
   assert.match(sql.queries[0]!, /pg_has_role\(current_user, member_role\.oid, 'MEMBER'\)/);
   assert.doesNotMatch(sql.queries[0]!, /pg_has_role\(current_user, member_role\.oid, 'USAGE'\)/);
@@ -788,6 +863,79 @@ test("the fake transport produces only sanitized, hash-bound rehearsal authority
   assert.equal(evidence.import.durableImport.currentPointerLinkCount, FINAL_AUTHORITY_COUNT);
   assert.equal(evidence.import.durableImport.promotedDispositionCount, PLAN_CANDIDATE_COUNT);
   assert.equal(evidence.import.durableImport.skippedDispositionCount, BASELINE_REGISTERED_PROMOTION_COUNT);
+  assert.equal(evidence.import.durableImport.terminalPromotedEventCount, FINAL_AUTHORITY_COUNT);
+  assert.equal(
+    evidence.import.canonicalPointerSetSha256,
+    sha256(canonicalReaderAuthorityJson(normalizedPointers(pointerRows()))),
+    "transport page boundaries do not alter the canonical full pointer-set hash",
+  );
+});
+
+test("Reader authority keyset cursors fail closed when a transport does not advance", async (t) => {
+  await t.test("pointer cursor repeats", async () => {
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ repeatPointerCursor: true }) })),
+      /pointer cursor did not advance/,
+    );
+  });
+  await t.test("candidate cursor repeats", async () => {
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ repeatCandidateCursor: true }) })),
+      /candidate cursor did not advance/,
+    );
+  });
+  await t.test("event cursor repeats", async () => {
+    await assert.rejects(
+      buildReaderExecutionAuthorityEvidence(options({ sql: fakeTransport({ repeatEventCursor: true }) })),
+      /event cursor did not advance/,
+    );
+  });
+});
+
+test("Neon Date values preserve exact millisecond authority hashes across transport paging", async () => {
+  const receiptPointers = pointerRows();
+  const baseline = await buildReaderExecutionAuthorityEvidence(options({
+    importReceiptBytes: rehearsalReceipt(receiptPointers),
+    sql: fakeTransport({
+      pointers: receiptPointers,
+      candidates: candidateRows(receiptPointers),
+      events: eventRows(receiptPointers),
+      eventPageSize: 7,
+    }),
+  }));
+  const pointers = receiptPointers.map((pointer) => ({
+    ...pointer,
+    promoted_at: new Date(String(pointer.promoted_at)),
+  }));
+  const candidates = candidateRows(receiptPointers).map((candidate) => ({
+    ...candidate,
+    pointer_promoted_at: new Date(String(candidate.pointer_promoted_at)),
+  }));
+  const events = eventRows(receiptPointers).map((event) => ({
+    ...event,
+    at: new Date(String(event.at)),
+  }));
+  const evidence = await buildReaderExecutionAuthorityEvidence(options({
+    importReceiptBytes: rehearsalReceipt(receiptPointers),
+    sql: fakeTransport({ pointers, candidates, events }),
+  }));
+  assert.equal(
+    evidence.import.canonicalPointerSetSha256,
+    sha256(canonicalReaderAuthorityJson(normalizedPointers(receiptPointers))),
+  );
+  assert.deepEqual({
+    pointer: evidence.import.canonicalPointerSetSha256,
+    candidate: evidence.import.durableImport.candidateSetSha256,
+    events: evidence.import.durableImport.eventSetSha256,
+    predecessors: evidence.import.durableImport.predecessorEventSetSha256,
+    authority: sha256(canonicalReaderAuthorityJson(evidence)),
+  }, {
+    pointer: baseline.import.canonicalPointerSetSha256,
+    candidate: baseline.import.durableImport.candidateSetSha256,
+    events: baseline.import.durableImport.eventSetSha256,
+    predecessors: baseline.import.durableImport.predecessorEventSetSha256,
+    authority: sha256(canonicalReaderAuthorityJson(baseline)),
+  }, "transport value types and event page boundaries preserve every full-set authority hash");
   assert.equal(evidence.import.durableImport.terminalPromotedEventCount, FINAL_AUTHORITY_COUNT);
 });
 
@@ -1408,9 +1556,24 @@ test("re-attested authority binds the exact predecessor row, receipt, pointer, a
     importReceiptBytes: rehearsalReceipt(pointers, {}, providerMetadata(), dispositions),
     sql: fakeTransport({ pointers, candidates, events }),
   }));
+  const narrowEventPages = await buildReaderExecutionAuthorityEvidence(options({
+    importReceiptBytes: rehearsalReceipt(pointers, {}, providerMetadata(), dispositions),
+    sql: fakeTransport({ pointers, candidates, events, eventPageSize: 7 }),
+  }));
   assert.equal(evidence.import.durableImport.reattestedDispositionCount, 1);
   assert.equal(evidence.import.durableImport.predecessorCandidateCount, 1);
   assert.equal(evidence.import.durableImport.predecessorEventCount, 4);
+  assert.deepEqual({
+    candidates: evidence.import.durableImport.candidateSetSha256,
+    events: evidence.import.durableImport.eventSetSha256,
+    predecessorEvents: evidence.import.durableImport.predecessorEventSetSha256,
+    authority: sha256(canonicalReaderAuthorityJson(evidence)),
+  }, {
+    candidates: narrowEventPages.import.durableImport.candidateSetSha256,
+    events: narrowEventPages.import.durableImport.eventSetSha256,
+    predecessorEvents: narrowEventPages.import.durableImport.predecessorEventSetSha256,
+    authority: sha256(canonicalReaderAuthorityJson(narrowEventPages)),
+  }, "re-attestation authority hashes are invariant across event page boundaries");
 
   const brokenEvents = events.map((event) => event.candidate_id === predecessor.candidate.id && event.sequence === 2
     ? { ...event, sequence: 7 }
@@ -1530,8 +1693,8 @@ test("the CLI surface never accepts a database URL and derives phase-specific pa
 test("the Neon adapter submits the write probe only as an explicit read-only transaction", async () => {
   const observations: unknown[] = [];
   const adapter = readerAuthoritySqlFromNeon({
-    query: async (statement) => {
-      observations.push({ kind: "query", statement });
+    query: async (statement, parameters = []) => {
+      observations.push({ kind: "query", statement, parameters });
       return [{ ok: true }];
     },
     transaction: async (build, transactionOptions) => {
@@ -1543,13 +1706,13 @@ test("the Neon adapter submits the write probe only as an explicit read-only tra
     },
   });
 
-  assert.deepEqual(await adapter.query("select 1 as ok"), [{ ok: true }]);
+  assert.deepEqual(await adapter.query("select $1::int as ok", [1]), [{ ok: true }]);
   assert.deepEqual(
     await adapter.readOnlyTransaction(["delete from public.civic_data_promotions where false"]),
     [[]],
   );
   assert.deepEqual(observations, [
-    { kind: "query", statement: "select 1 as ok" },
+    { kind: "query", statement: "select $1::int as ok", parameters: [1] },
     {
       kind: "transaction",
       queued: [{ statement: "delete from public.civic_data_promotions where false" }],

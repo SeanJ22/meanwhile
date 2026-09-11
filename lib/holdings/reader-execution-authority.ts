@@ -87,7 +87,7 @@ export interface ReaderAuthorityProviderMetadata {
 }
 
 export interface ReaderAuthoritySql {
-  query(statement: string): Promise<Row[]>;
+  query(statement: string, parameters?: readonly unknown[]): Promise<Row[]>;
   /** The adapter must execute this prepared batch as an explicit READ ONLY transaction. */
   readOnlyTransaction(statements: readonly string[]): Promise<readonly Row[][]>;
 }
@@ -610,6 +610,12 @@ export function readerExecutionAuthorityArchivedSupportProblems(
 
 function boolean(value: unknown): boolean { return value === true || value === "true" || value === "t"; }
 
+function databaseTimestamp(value: unknown): string {
+  const parsed = value instanceof Date ? value : new Date(String(value));
+  if (!Number.isFinite(parsed.getTime())) throw new Error("Reader authority database timestamp is invalid");
+  return parsed.toISOString();
+}
+
 function exactValidationReceipt(value: unknown): ReturnType<typeof parseValidationReceipt> {
   const parsed = parseValidationReceipt(value);
   const receipt = row(value);
@@ -810,12 +816,29 @@ async function readAuthorityDatabase(
   }
   if (!refused) throw new Error("Reader authority principal admitted a write statement");
 
-  const pointers = await sql.query(`
-    select key, source_id, record_class, scope, current_version_id,
-           last_known_good_version_id, promoted_at, payload, validation_receipt
-      from public.civic_data_promotions
-     order by key
-  `);
+  const pointers: Row[] = [];
+  let pointerCursor: string | null = null;
+  for (;;) {
+    const page = await sql.query(`
+      select key, source_id, record_class, scope, current_version_id,
+             last_known_good_version_id, promoted_at, payload, validation_receipt
+        from public.civic_data_promotions
+       where ($1::text is null or key > $1::text)
+       order by key
+       limit 1
+    `, [pointerCursor]);
+    if (page.length === 0) break;
+    if (page.length !== 1) throw new Error("Reader authority pointer page cardinality differs");
+    const nextCursor = String(page[0]!.key);
+    if (!nextCursor || (pointerCursor !== null && nextCursor <= pointerCursor)) {
+      throw new Error("Reader authority pointer cursor did not advance");
+    }
+    pointers.push(page[0]!);
+    pointerCursor = nextCursor;
+    if (pointers.length > expectedImport.expectedPointerCount) {
+      throw new Error("Reader authority pointer set exceeds its controller receipt");
+    }
+  }
   const normalized = pointers.map((pointer) => ({
     key: String(pointer.key),
     sourceId: String(pointer.source_id),
@@ -823,7 +846,7 @@ async function readAuthorityDatabase(
     scope: String(pointer.scope),
     currentVersionId: String(pointer.current_version_id),
     lastKnownGoodVersionId: String(pointer.last_known_good_version_id),
-    promotedAt: new Date(String(pointer.promoted_at)).toISOString(),
+    promotedAt: databaseTimestamp(pointer.promoted_at),
     payload: pointer.payload,
     validationReceipt: pointer.validation_receipt,
   }));
@@ -835,65 +858,119 @@ async function readAuthorityDatabase(
   // immutable candidate envelopes and append-only transition receipts actually
   // reached this store. Read every current pointer's exact candidate and event
   // history, then bind the resulting sets into the authority artifact.
-  const candidates = await sql.query(`
-    select p.key as pointer_key, p.current_version_id, p.last_known_good_version_id,
-           c.id as candidate_id, c.source_id, c.record_class, c.scope, c.state,
-           p.promoted_at as pointer_promoted_at, p.payload as pointer_payload,
-           p.validation_receipt as pointer_validation_receipt,
-           c.acquisition_succeeded, c.promoted_version_id,
-           c.last_known_good_version_id as candidate_lkg_version_id,
-           c.failure_code, c.failure_detail, c.candidate, c.validation_receipt,
-           predecessor.state as predecessor_state,
-           predecessor.acquisition_succeeded as predecessor_acquisition_succeeded,
-           predecessor.promoted_version_id as predecessor_promoted_version_id,
-           predecessor.last_known_good_version_id as predecessor_lkg_version_id,
-           predecessor.failure_code as predecessor_failure_code,
-           predecessor.failure_detail as predecessor_failure_detail,
-           predecessor.candidate as predecessor_candidate,
-           predecessor.validation_receipt as predecessor_validation_receipt
-      from public.civic_data_promotions p
-      join public.civic_data_candidates c on c.id = p.current_version_id
-      left join public.civic_data_candidates predecessor
-        on predecessor.id = c.candidate #>> '{bootstrapImport,predecessorVersionId}'
-     order by p.key
-  `);
+  const candidates: Row[] = [];
+  let candidateCursor: string | null = null;
+  // Candidate envelopes contain the immutable source payload needed for the
+  // independent Reader proof. The complete frozen set is intentionally larger
+  // than Neon's 64 MiB HTTP response ceiling, so fetch one ordered envelope per
+  // response while preserving the same complete-set validation and hashes.
+  for (;;) {
+    const page = await sql.query(`
+      select p.key as pointer_key, p.current_version_id, p.last_known_good_version_id,
+             c.id as candidate_id, c.source_id, c.record_class, c.scope, c.state,
+             p.promoted_at as pointer_promoted_at,
+             c.acquisition_succeeded, c.promoted_version_id,
+             c.last_known_good_version_id as candidate_lkg_version_id,
+             c.failure_code, c.failure_detail, c.candidate, c.validation_receipt
+        from public.civic_data_promotions p
+        join public.civic_data_candidates c on c.id = p.current_version_id
+       where ($1::text is null or p.key > $1::text)
+       order by p.key
+       limit 1
+    `, [candidateCursor]);
+    if (page.length === 0) break;
+    if (page.length !== 1) throw new Error("Reader authority durable candidate page cardinality differs");
+    const nextCursor = String(page[0]!.pointer_key);
+    if (!nextCursor || (candidateCursor !== null && nextCursor <= candidateCursor)) {
+      throw new Error("Reader authority durable candidate cursor did not advance");
+    }
+    candidates.push(page[0]!);
+    candidateCursor = nextCursor;
+    if (candidates.length > normalized.length) {
+      throw new Error("Reader authority durable candidate set exceeds its pointer set");
+    }
+  }
   if (candidates.length !== normalized.length) {
     throw new Error("Reader authority current pointers do not have one durable candidate each");
   }
-  const events = await sql.query(`
-    select e.candidate_id, e.sequence, e.state, e.at, e.detail
-      from public.civic_data_candidate_events e
-     where e.candidate_id in (
-       select p.current_version_id from public.civic_data_promotions p
-       union
-       select c.candidate #>> '{bootstrapImport,predecessorVersionId}'
-         from public.civic_data_promotions p
-         join public.civic_data_candidates c on c.id = p.current_version_id
-        where c.candidate #>> '{bootstrapImport,kind}' = 'TRUSTED_LKG_REATTESTATION'
-     )
-     order by e.candidate_id, e.sequence
-  `);
+
+  const predecessorIds = [...new Set(candidates.flatMap((candidateRow) => {
+    const predecessorVersionId = row(row(candidateRow.candidate)?.bootstrapImport)?.predecessorVersionId;
+    return typeof predecessorVersionId === "string" && predecessorVersionId ? [predecessorVersionId] : [];
+  }))].sort();
+  const predecessors = new Map<string, Row>();
+  for (const predecessorId of predecessorIds) {
+    const predecessorRows = await sql.query(`
+      select id, state, acquisition_succeeded, promoted_version_id,
+             last_known_good_version_id, failure_code, failure_detail,
+             candidate, validation_receipt
+        from public.civic_data_candidates
+       where id = $1::text
+    `, [predecessorId]);
+    if (predecessorRows.length !== 1 || String(predecessorRows[0]!.id) !== predecessorId) {
+      throw new Error("Reader authority predecessor candidate cardinality differs");
+    }
+    predecessors.set(predecessorId, predecessorRows[0]!);
+  }
+
+  const eventCandidateIds = [...new Set([
+    ...candidates.map(({ candidate_id }) => String(candidate_id)),
+    ...predecessorIds,
+  ])].sort();
+  const events: Row[] = [];
+  let eventCursorId: string | null = null;
+  let eventCursorSequence: number | null = null;
+  for (;;) {
+    const page = await sql.query(`
+      select e.candidate_id, e.sequence, e.state, e.at, e.detail
+        from public.civic_data_candidate_events e
+       where e.candidate_id = any($1::text[])
+         and ($2::text is null or (e.candidate_id, e.sequence) > ($2::text, $3::integer))
+       order by e.candidate_id, e.sequence
+       limit 32
+    `, [eventCandidateIds, eventCursorId, eventCursorSequence]);
+    if (page.length === 0) break;
+    if (page.length > 32) throw new Error("Reader authority event page cardinality differs");
+    for (const event of page) {
+      const candidateId = String(event.candidate_id);
+      const sequence = Number(event.sequence);
+      if (
+        !candidateId || !Number.isSafeInteger(sequence) || sequence <= 0 ||
+        (eventCursorId !== null && (
+          candidateId < eventCursorId ||
+          (candidateId === eventCursorId && sequence <= Number(eventCursorSequence))
+        ))
+      ) throw new Error("Reader authority event cursor did not advance");
+      events.push(event);
+      eventCursorId = candidateId;
+      eventCursorSequence = sequence;
+    }
+  }
   const normalizedEvents = events.map((event) => ({
     candidateId: String(event.candidate_id),
     sequence: Number(event.sequence),
     state: String(event.state),
-    at: new Date(String(event.at)).toISOString(),
+    at: databaseTimestamp(event.at),
     detail: String(event.detail),
   }));
   const durableCandidates = candidates.flatMap((candidateRow) => {
     const candidate = row(candidateRow.candidate);
     const transfer = row(candidate?.bootstrapImport);
     const validationReceipt = exactValidationReceipt(candidateRow.validation_receipt);
-    const predecessorCandidate = row(candidateRow.predecessor_candidate);
+    const predecessorVersionId = row(transfer)?.predecessorVersionId;
+    const predecessorRow = typeof predecessorVersionId === "string"
+      ? predecessors.get(predecessorVersionId)
+      : undefined;
+    const predecessorCandidate = row(predecessorRow?.candidate);
     const predecessor = predecessorCandidate === null ? null : {
       candidate: predecessorCandidate as unknown as RoutineCandidate,
-      state: candidateRow.predecessor_state,
-      acquisitionSucceeded: boolean(candidateRow.predecessor_acquisition_succeeded),
-      receipt: candidateRow.predecessor_validation_receipt,
-      promotedVersion: candidateRow.predecessor_promoted_version_id,
-      lastKnownGoodVersion: candidateRow.predecessor_lkg_version_id,
-      failureCode: candidateRow.predecessor_failure_code,
-      failureDetail: candidateRow.predecessor_failure_detail,
+      state: predecessorRow?.state,
+      acquisitionSucceeded: boolean(predecessorRow?.acquisition_succeeded),
+      receipt: predecessorRow?.validation_receipt,
+      promotedVersion: predecessorRow?.promoted_version_id,
+      lastKnownGoodVersion: predecessorRow?.last_known_good_version_id,
+      failureCode: predecessorRow?.failure_code,
+      failureDetail: predecessorRow?.failure_detail,
     } as CandidateVersionRecord;
     const currentRecord = candidate === null ? null : {
       candidate: candidate as unknown as RoutineCandidate,
@@ -905,16 +982,18 @@ async function readAuthorityDatabase(
       failureCode: candidateRow.failure_code,
       failureDetail: candidateRow.failure_detail,
     } as CandidateVersionRecord;
+    const normalizedPointer = normalized.find(({ key }) => key === candidateRow.pointer_key);
+    if (!normalizedPointer) throw new Error("Reader authority durable candidate pointer is absent");
     const pointer = {
-      key: String(candidateRow.pointer_key),
-      sourceId: String(candidateRow.source_id),
-      recordClass: String(candidateRow.record_class),
-      scope: String(candidateRow.scope),
-      versionId: String(candidateRow.current_version_id),
-      lastKnownGoodVersionId: String(candidateRow.last_known_good_version_id),
-      promotedAt: new Date(String(candidateRow.pointer_promoted_at)).toISOString(),
-      payload: candidateRow.pointer_payload,
-      receipt: candidateRow.pointer_validation_receipt,
+      key: normalizedPointer.key,
+      sourceId: normalizedPointer.sourceId,
+      recordClass: normalizedPointer.recordClass,
+      scope: normalizedPointer.scope,
+      versionId: normalizedPointer.currentVersionId,
+      lastKnownGoodVersionId: normalizedPointer.lastKnownGoodVersionId,
+      promotedAt: normalizedPointer.promotedAt,
+      payload: normalizedPointer.payload,
+      receipt: normalizedPointer.validationReceipt,
     } as PromotedProjection;
     const history = normalizedEvents.filter((event) => event.candidateId === candidateRow.candidate_id);
     const predecessorHistory = predecessorCandidate === null
@@ -964,53 +1043,84 @@ async function readAuthorityDatabase(
             ? "a skipped imported authority is not bound to the exact durable bootstrap"
             : null
           : "the live authority is absent from the controller disposition membership";
+    const linkageIssue = !candidate || !currentRecord
+      ? "the durable current candidate is missing"
+      : candidateRow.pointer_key !== `${String(candidateRow.record_class)}:${String(candidateRow.scope)}`
+        ? "the pointer key differs from its record class and scope"
+        : candidateRow.current_version_id !== candidateRow.candidate_id ||
+            candidateRow.current_version_id !== normalizedPointer.currentVersionId
+          ? "the pointer does not name the durable current candidate"
+          : candidateRow.last_known_good_version_id !== candidateRow.candidate_id ||
+              candidateRow.last_known_good_version_id !== normalizedPointer.lastKnownGoodVersionId
+            ? "the pointer last-known-good version differs from the durable current candidate"
+            : databaseTimestamp(candidateRow.pointer_promoted_at) !== normalizedPointer.promotedAt
+              ? "the paged candidate pointer timestamp differs from the canonical pointer"
+              : candidateRow.promoted_version_id !== candidateRow.candidate_id ||
+                  candidateRow.candidate_lkg_version_id !== candidateRow.candidate_id
+                ? "the durable candidate promotion or last-known-good version differs"
+                : candidateRow.state !== "PROMOTED" || !boolean(candidateRow.acquisition_succeeded) ||
+                    candidateRow.failure_code !== null || candidateRow.failure_detail !== null
+                  ? "the durable candidate is not a successful promoted row"
+                  : !validationReceipt || validationReceipt.decision !== "GOOD"
+                    ? "the durable candidate lacks an exact GOOD receipt"
+                    : validationReceipt.candidateId !== candidateRow.candidate_id ||
+                        validationReceipt.sourceId !== candidateRow.source_id ||
+                        validationReceipt.recordClass !== candidateRow.record_class ||
+                        validationReceipt.scope !== candidateRow.scope
+                      ? "the GOOD receipt does not identify the durable candidate"
+                      : candidate.id !== candidateRow.candidate_id || candidate.sourceId !== candidateRow.source_id ||
+                          candidate.recordClass !== candidateRow.record_class || candidate.scope !== candidateRow.scope
+                        ? "the candidate envelope identity differs from its durable row"
+                        : history.length === 0 || history.some((event, index) => event.sequence !== index + 1)
+                          ? "the current candidate event history is empty or non-contiguous"
+                          : history.at(-1)?.state !== "PROMOTED"
+                            ? "the current candidate event history is not terminally promoted"
+                            : latestReaderReceipt?.status !== "PASS"
+                              ? "the current candidate lacks a passing Reader readback event"
+                              : latestReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
+                                ? "the Reader readback verifier differs from the importer code"
+                                : latestReaderReceipt.versionId !== candidateRow.candidate_id ||
+                                    latestReaderReceipt.pointerKey !== candidateRow.pointer_key ||
+                                    latestReaderReceipt.sourceId !== candidateRow.source_id ||
+                                    latestReaderReceipt.recordClass !== candidateRow.record_class ||
+                                    latestReaderReceipt.scope !== candidateRow.scope ||
+                                    !latestReaderReceipt.contractId
+                                  ? "the Reader readback identity differs from the durable pointer"
+                                  : importedHere && (
+                                      transfer?.contractId !== latestReaderReceipt.contractId ||
+                                      transfer.sourceId !== candidateRow.source_id ||
+                                      transfer.recordClass !== candidateRow.record_class ||
+                                      transfer.scope !== candidateRow.scope
+                                    )
+                                    ? "the durable bootstrap identity differs from the Reader readback"
+                                    : null;
+    const predecessorIssue = transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
+      ? null
+      : exactValidationReceipt(predecessorRow?.validation_receipt) === null
+        ? "the re-attestation predecessor lacks an exact GOOD receipt"
+        : predecessorHistory.length === 0 || predecessorHistory.some((event, index) => event.sequence !== index + 1)
+          ? "the re-attestation predecessor history is empty or non-contiguous"
+          : predecessorHistory.at(-1)?.state !== "PROMOTED"
+            ? "the re-attestation predecessor history is not terminally promoted"
+            : !predecessorHistory.some((event) =>
+                event.state === "VALIDATED" &&
+                event.at === databaseTimestamp(row(predecessorRow?.validation_receipt)?.validatedAt)
+              )
+              ? "the predecessor validation receipt has no matching durable event"
+              : !predecessorHistory.some((event) =>
+                  event.state === "PROMOTED" && event.at === String(transfer.predecessorPromotedAt ?? "")
+                )
+                ? "the predecessor promotion time has no matching durable event"
+                : null;
     if (
-      !candidate || dispositionIssue !== null ||
+      !candidate || latestReaderReceipt === null || dispositionIssue !== null ||
       !currentRecord || promotionIssue !== null ||
       importIssue !== null ||
-      candidateRow.pointer_key !== `${String(candidateRow.record_class)}:${String(candidateRow.scope)}` ||
-      candidateRow.current_version_id !== candidateRow.candidate_id ||
-      candidateRow.last_known_good_version_id !== candidateRow.candidate_id ||
-      candidateRow.promoted_version_id !== candidateRow.candidate_id ||
-      candidateRow.candidate_lkg_version_id !== candidateRow.candidate_id ||
-      candidateRow.state !== "PROMOTED" ||
-      !boolean(candidateRow.acquisition_succeeded) || candidateRow.failure_code !== null ||
-      candidateRow.failure_detail !== null || !validationReceipt || validationReceipt.decision !== "GOOD" ||
-      validationReceipt.candidateId !== candidateRow.candidate_id ||
-      validationReceipt.sourceId !== candidateRow.source_id ||
-      validationReceipt.recordClass !== candidateRow.record_class || validationReceipt.scope !== candidateRow.scope ||
-      candidate.id !== candidateRow.candidate_id || candidate.sourceId !== candidateRow.source_id ||
-      candidate.recordClass !== candidateRow.record_class || candidate.scope !== candidateRow.scope ||
-      history.length === 0 || history.some((event, index) => event.sequence !== index + 1) ||
-      history.at(-1)?.state !== "PROMOTED" || latestReaderReceipt?.status !== "PASS" ||
-      latestReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha ||
-      latestReaderReceipt.versionId !== candidateRow.candidate_id ||
-      latestReaderReceipt.pointerKey !== candidateRow.pointer_key ||
-      latestReaderReceipt.sourceId !== candidateRow.source_id ||
-      latestReaderReceipt.recordClass !== candidateRow.record_class ||
-      latestReaderReceipt.scope !== candidateRow.scope ||
-      !latestReaderReceipt.contractId ||
-      (importedHere && (
-        transfer?.contractId !== latestReaderReceipt.contractId ||
-        transfer.sourceId !== candidateRow.source_id || transfer.recordClass !== candidateRow.record_class ||
-        transfer.scope !== candidateRow.scope
-      )) ||
-      (transfer?.kind === "TRUSTED_LKG_REATTESTATION" && (
-        exactValidationReceipt(candidateRow.predecessor_validation_receipt) === null ||
-        predecessorHistory.length === 0 ||
-        predecessorHistory.some((event, index) => event.sequence !== index + 1) ||
-        predecessorHistory.at(-1)?.state !== "PROMOTED" ||
-        !predecessorHistory.some((event) =>
-          event.state === "VALIDATED" &&
-          event.at === String(row(candidateRow.predecessor_validation_receipt)?.validatedAt ?? "")
-        ) ||
-        !predecessorHistory.some((event) =>
-          event.state === "PROMOTED" && event.at === String(transfer.predecessorPromotedAt ?? "")
-        )
-      ))
+      linkageIssue !== null || predecessorIssue !== null
     ) {
       throw new Error(
-        `Reader authority current pointer lacks coherent durable PDC import evidence: ${promotionIssue ?? importIssue ?? dispositionIssue ?? "candidate/pointer/event linkage differs"}`,
+        `Reader authority current pointer ${String(candidateRow.pointer_key)} lacks coherent durable PDC import evidence: ` +
+        `${promotionIssue ?? importIssue ?? dispositionIssue ?? linkageIssue ?? predecessorIssue ?? "candidate/pointer/event linkage differs"}`,
       );
     }
     return [{
@@ -1056,7 +1166,10 @@ async function readAuthorityDatabase(
     total: durableCandidates.length,
   };
   if (canonicalReaderAuthorityJson(observedDispositions) !== canonicalReaderAuthorityJson(expectedImport.dispositions)) {
-    throw new Error("Reader authority durable import disposition set differs from its controller receipt");
+    throw new Error(
+      "Reader authority durable import disposition set differs from its controller receipt: " +
+      `${canonicalReaderAuthorityJson(observedDispositions)} != ${canonicalReaderAuthorityJson(expectedImport.dispositions)}`,
+    );
   }
   const observedServingDispositions = durableCandidates.map(({ contractId, disposition, currentVersionId, readerReadback }) => ({
     contractId,

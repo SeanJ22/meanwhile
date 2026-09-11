@@ -31,7 +31,10 @@ import {
   type RuntimeAuthorityEnvelope,
 } from "./runtime-authority.ts";
 import { CIVIC_DATA_PROMOTION_OPERATION } from "./production-write.ts";
-import { parseReaderProjectionReadback } from "./reader-readback.ts";
+import {
+  parseReaderProjectionReadback,
+  sourceScopedReaderReadbackProjectionId,
+} from "./reader-readback.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 
 export function projectionKey(recordClass: RoutineRecordClass, scope: string): string {
@@ -156,7 +159,8 @@ function registeredMutationContract(candidate: RoutineCandidate): RegisteredMuta
     .map((contract) => ({
       id: contract.id,
       kind: "routine" as const,
-      readerProjectionId: contract.readerProjection?.id ?? null,
+      readerProjectionId: contract.readerProjection?.id ??
+        sourceScopedReaderReadbackProjectionId(contract.id),
     }));
   const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS
     .filter((contract) =>

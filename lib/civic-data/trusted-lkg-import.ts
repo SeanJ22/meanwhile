@@ -5,10 +5,19 @@ import {
   canonicalCivicDataJson,
   civicRecordsFor,
 } from "./changes.ts";
+import {
+  NH_MEMBER_CHAMBER_FLOORS,
+  trustedNhMembersImportIdentityEvidence,
+  trustedNhMembersImportReadModel,
+  type NhMemberReadModel,
+} from "./candidate-builders.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { canonicalAgendaDocument } from "../meetings/agenda-documents.ts";
+import type { MembersExtraction } from "../../scripts/nh-gencourt-members.mts";
 import type {
   CandidateVersionRecord,
+  IdentityEvidence,
+  NormalizationEvidence,
   PromotedProjection,
   RoutineCandidate,
   TrustedLkgFixtureEvidence,
@@ -20,6 +29,8 @@ export const PDC_V2_FROZEN_BASE_SHA = "fc67e8cd34c489590c403f7b4a0d6008fa755296"
 export const TRUSTED_LKG_IMPORT_AUTHORIZATION = "PDC_V2_FROZEN_LKG_CUTOVER" as const;
 export const TRUSTED_LKG_IMPORT_PURPOSE = "PRESERVE_EXISTING_READER_LKG_DURING_AUTHORITY_TRANSFER" as const;
 export const TRUSTED_LKG_REATTESTATION_PURPOSE = "RE_ATTEST_EXISTING_DURABLE_LKG_TO_PERMANENT_INTEGRITY_CONTRACT" as const;
+export const NH_MEMBERS_V2_TO_V3_REATTESTATION = "NH_MEMBERS_V2_TO_V3" as const;
+export const NH_MEMBERS_V2_TO_V3_SCHEMA = "NhMemberReadModel:1:trusted-v2-to-v3-import" as const;
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const GIT_SHA = /^[a-f0-9]{40}$/;
@@ -386,6 +397,249 @@ function canonicallyEqual(left: unknown, right: unknown): boolean {
   }
 }
 
+interface NhMembersV2ToV3BridgeParts {
+  readonly readModel: NhMemberReadModel;
+  readonly identities: readonly IdentityEvidence[];
+  readonly normalization: NormalizationEvidence;
+}
+
+function jsonObject(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function exactObjectKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  return canonicallyEqual(Object.keys(value).sort(), [...expected].sort());
+}
+
+const LEGACY_NH_MEMBER_KEYS = [
+  "chamber",
+  "familyName",
+  "givenName",
+  "middleName",
+  "seatNo",
+  "county",
+  "district",
+  "electedStatus",
+  "party",
+  "title",
+  "phone",
+  "email",
+  "town",
+  "committees",
+] as const;
+
+function legacyNhMemberShape(value: unknown): boolean {
+  const row = jsonObject(value);
+  if (!row || !exactObjectKeys(row, LEGACY_NH_MEMBER_KEYS)) return false;
+  const nullableText = ["middleName", "party", "title", "phone", "email", "town"];
+  return ["chamber", "familyName", "givenName", "seatNo", "county", "district"]
+    .every((key) => typeof row[key] === "string") &&
+    nullableText.every((key) => row[key] === null || typeof row[key] === "string") &&
+    ["INCUMBENT", "NEW", "FORMER", "UNSTATED"].includes(String(row.electedStatus)) &&
+    Array.isArray(row.committees) && row.committees.every((item) => typeof item === "string");
+}
+
+function legacyNhMembersV2Payload(value: unknown): MembersExtraction | null {
+  const root = jsonObject(value);
+  if (!root || !exactObjectKeys(root, ["members", "counts", "byStatus", "byChamber"])) return null;
+  if (!Array.isArray(root.members) || !root.members.every(legacyNhMemberShape)) return null;
+  const members = root.members as unknown as MembersExtraction["members"];
+  const counts = jsonObject(root.counts);
+  const byStatus = jsonObject(root.byStatus);
+  const byChamber = jsonObject(root.byChamber);
+  if (!counts || !byStatus || !byChamber) return null;
+  const expectedByStatus = { INCUMBENT: 0, NEW: 0, FORMER: 0, UNSTATED: 0 };
+  const expectedByChamber: Record<string, number> = {};
+  for (const member of members) {
+    expectedByStatus[member.electedStatus] += 1;
+    expectedByChamber[member.chamber] = (expectedByChamber[member.chamber] ?? 0) + 1;
+  }
+  const produced = members.length;
+  const dropped = counts.dropped;
+  if (!Number.isInteger(dropped) || (dropped as number) < 0) return null;
+  const expected: MembersExtraction = {
+    members,
+    counts: {
+      logicalInput: produced + (dropped as number),
+      produced,
+      dropped: dropped as number,
+      statedTotal: null,
+      verdict: "COULD_NOT_ASSERT",
+    },
+    byStatus: expectedByStatus,
+    byChamber: expectedByChamber,
+  };
+  return canonicallyEqual(root, expected) ? expected : null;
+}
+
+function legacyNhMembersV2Identities(
+  members: MembersExtraction["members"],
+  term: string,
+): readonly IdentityEvidence[] {
+  return members.map((member) => {
+    const officialComposite =
+      `${member.chamber}:${member.seatNo}:${member.district}:${member.email ?? "no-email"}`;
+    return {
+      subjectId: `nh-general-court:${sha256(officialComposite).slice(0, 20)}`,
+      jurisdiction: "US-NH",
+      identifiers: {
+        seatNo: member.seatNo,
+        chamber: member.chamber,
+        district: member.district,
+        ...(member.email ? { officialEmail: member.email } : {}),
+      },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+      chamber: member.chamber,
+      office: member.title ?? (member.chamber === "S" ? "Senator" : "Representative"),
+      term,
+      district: member.district,
+    };
+  });
+}
+
+/**
+ * Recognize exactly the durable `/2` NH contract emitted by the frozen
+ * software tree and derive its one truthful import-only `/3` projection.  A
+ * null result is a hard refusal, never a generic parser-version exemption.
+ * This is deliberately contract-shape/content bound rather than pinned to one
+ * observed roster digest: the legacy runner remains production authority until
+ * the bounded transfer and may lawfully promote a newer GOOD `/2` LKG first.
+ * Every admitted row must still prove its own exact legacy payload, Reader
+ * projection, identities, hashes, receipt, pointer, and permanent chamber
+ * floors before the one content-addressed successor can be constructed.
+ */
+export function trustedLkgNhMembersV2ToV3BridgeParts(
+  predecessor: CandidateVersionRecord,
+): NhMembersV2ToV3BridgeParts | null {
+  const prior = predecessor.candidate;
+  const normalization = jsonObject(prior.normalization);
+  if (
+    !normalization ||
+    !exactObjectKeys(normalization, [
+      "succeeded",
+      "parserVersion",
+      "schemaVersion",
+      "normalizedHash",
+      "inputRecords",
+      "outputRecords",
+      "droppedRecords",
+      "missingRequiredFields",
+    ]) ||
+    prior.sourceId !== "nh-general-court" ||
+    prior.recordClass !== "STATE_LEGISLATOR" ||
+    prior.scope !== "US-NH" ||
+    prior.normalization.succeeded !== true ||
+    prior.normalization.parserVersion !== "nh-general-court/2" ||
+    prior.normalization.schemaVersion !== `Members.txt:${prior.temporal.version}` ||
+    prior.normalization.normalizedPayloadHash !== undefined ||
+    prior.normalization.missingRequiredFields.length !== 0 ||
+    prior.normalization.failureDetail !== undefined ||
+    prior.temporal.version !== "2025-2026" ||
+    prior.bootstrapImport !== undefined
+  ) return null;
+
+  const payload = legacyNhMembersV2Payload(prior.normalizedPayload);
+  if (!payload) return null;
+  const currentByChamber = payload.members
+    .filter((member) => member.electedStatus === "INCUMBENT" || member.electedStatus === "NEW")
+    .reduce<Record<string, number>>((counts, member) => {
+      counts[member.chamber] = (counts[member.chamber] ?? 0) + 1;
+      return counts;
+    }, {});
+  if (
+    (currentByChamber.H ?? 0) < NH_MEMBER_CHAMBER_FLOORS.H ||
+    (currentByChamber.S ?? 0) < NH_MEMBER_CHAMBER_FLOORS.S
+  ) return null;
+  const payloadHash = durableSha256(payload);
+  const legacyReadModel: NhMemberReadModel = {
+    formatVersion: 1,
+    jurisdiction: "US-NH",
+    term: prior.temporal.version,
+    members: payload.members.filter((member) =>
+      member.electedStatus === "INCUMBENT" || member.electedStatus === "NEW"
+    ),
+    // Deliberately omitted below when comparing with the `/2` shape.
+    identities: [],
+  };
+  const { identities: _notInV2, ...exactLegacyReadModel } = legacyReadModel;
+  const legacyReadModelHash = durableSha256(exactLegacyReadModel);
+  if (
+    payloadHash === null ||
+    legacyReadModelHash === null ||
+    prior.normalization.normalizedHash !== payloadHash ||
+    prior.normalization.normalizedHash === legacyReadModelHash ||
+    !canonicallyEqual(prior.readModel, exactLegacyReadModel) ||
+    !canonicallyEqual(
+      prior.identities,
+      legacyNhMembersV2Identities(payload.members, prior.temporal.version),
+    ) ||
+    prior.normalization.inputRecords !== payload.counts.logicalInput ||
+    prior.normalization.outputRecords !== payload.counts.produced ||
+    prior.normalization.droppedRecords !== payload.counts.dropped
+  ) return null;
+
+  let readModel: NhMemberReadModel;
+  let identities: readonly IdentityEvidence[];
+  try {
+    readModel = trustedNhMembersImportReadModel(payload.members, prior.temporal.version);
+    identities = trustedNhMembersImportIdentityEvidence(payload.members, prior.temporal.version);
+  } catch {
+    return null;
+  }
+  return {
+    readModel,
+    identities,
+    normalization: {
+      ...prior.normalization,
+      parserVersion: "nh-general-court/3",
+      schemaVersion: NH_MEMBERS_V2_TO_V3_SCHEMA,
+      normalizedHash: trustedLkgEvidenceSha256(readModel),
+      normalizedPayloadHash: payloadHash,
+    },
+  };
+}
+
+function nhMembersV2ToV3CopyIssue(
+  candidate: RoutineCandidate,
+  predecessor: CandidateVersionRecord,
+): string | null {
+  const expected = trustedLkgNhMembersV2ToV3BridgeParts(predecessor);
+  if (!expected) return "the predecessor is not the exact frozen-software nh-members /2 contract";
+  if (!canonicallyEqual(candidate.readModel, expected.readModel)) {
+    return "the NH /2 to /3 successor is not the exact deterministic import Reader projection";
+  }
+  if (!canonicallyEqual(candidate.identities, expected.identities)) {
+    return "the NH /2 to /3 successor is not the exact deterministic import identity projection";
+  }
+  if (!canonicallyEqual(candidate.normalization, expected.normalization)) {
+    return "the NH /2 to /3 successor does not carry the exact permanent normalization contract";
+  }
+  const copied: readonly [string, unknown, unknown][] = [
+    ["retrieval", candidate.retrieval, predecessor.candidate.retrieval],
+    ["semantics", candidate.semantics, predecessor.candidate.semantics],
+    ["horizon", candidate.horizon, predecessor.candidate.horizon],
+    ["absence", candidate.absence, predecessor.candidate.absence],
+    ["dependent checks", candidate.dependentChecks, predecessor.candidate.dependentChecks],
+    ["normalized payload", candidate.normalizedPayload, predecessor.candidate.normalizedPayload],
+    ["removal evidence", candidate.removalEvidence ?? [], predecessor.candidate.removalEvidence ?? []],
+    ["excluded facts", candidate.excludedFacts ?? [], predecessor.candidate.excludedFacts ?? []],
+  ];
+  const changed = copied.find(([, successor, previous]) => !canonicallyEqual(successor, previous));
+  if (changed) return `the NH /2 to /3 successor changes predecessor ${changed[0]}`;
+  if (
+    candidate.temporal.version !== predecessor.candidate.temporal.version ||
+    candidate.temporal.sourceThrough !== predecessor.candidate.temporal.sourceThrough ||
+    candidate.temporal.expectedVersion !== predecessor.candidate.temporal.expectedVersion ||
+    candidate.temporal.staleAtRetrieval !== true
+  ) {
+    return "the NH /2 to /3 successor changes predecessor source time/version facts or claims fresh acquisition";
+  }
+  return null;
+}
+
 function reattestationCopyIssue(
   candidate: RoutineCandidate,
   predecessor: CandidateVersionRecord,
@@ -455,6 +709,14 @@ export function trustedLkgReattestationEvidenceIssue(
     evidence.purpose !== TRUSTED_LKG_REATTESTATION_PURPOSE ||
     evidence.sourceAuthenticated !== false
   ) return "the re-attestation evidence is not the authorized PDC-v2 integrity transfer";
+  if (
+    evidence.contractUpgrade !== undefined &&
+    evidence.contractUpgrade !== NH_MEMBERS_V2_TO_V3_REATTESTATION
+  ) return "the re-attestation names an unsupported contract upgrade";
+  const nhV2ToV3 = evidence.contractUpgrade === NH_MEMBERS_V2_TO_V3_REATTESTATION;
+  if (nhV2ToV3 && evidence.contractId !== "nh-members") {
+    return "the NH /2 to /3 contract upgrade is attached to another contract";
+  }
   if (!nonempty(evidence.contractId)) return "the re-attestation evidence has no exact contract id";
   if (
     evidence.sourceId !== candidate.sourceId ||
@@ -562,9 +824,19 @@ export function trustedLkgReattestationEvidenceIssue(
   if (
     predecessor.candidate.sourceId !== candidate.sourceId ||
     predecessor.candidate.recordClass !== candidate.recordClass ||
-    predecessor.candidate.scope !== candidate.scope ||
+    predecessor.candidate.scope !== candidate.scope
+  ) return "the predecessor and successor do not share one exact registered source contract";
+  if (
+    !nhV2ToV3 &&
     predecessor.candidate.normalization.parserVersion !== candidate.normalization.parserVersion
   ) return "the predecessor and successor do not share one exact registered source contract";
+  if (
+    nhV2ToV3 &&
+    (
+      predecessor.candidate.normalization.parserVersion !== "nh-general-court/2" ||
+      candidate.normalization.parserVersion !== "nh-general-court/3"
+    )
+  ) return "the NH contract upgrade is not the exact /2 to /3 transition";
   if (predecessor.candidate.bootstrapImport !== undefined) {
     return "a trusted transfer may not be recursively re-attested";
   }
@@ -598,7 +870,9 @@ export function trustedLkgReattestationEvidenceIssue(
     predecessor.candidate.civicRecords !== undefined &&
     !canonicallyEqual(predecessor.candidate.civicRecords, predecessorDerivedRecords)
   ) return "the predecessor carries civic members which conflict with its exact Reader projection";
-  const copyIssue = reattestationCopyIssue(candidate, predecessor);
+  const copyIssue = nhV2ToV3
+    ? nhMembersV2ToV3CopyIssue(candidate, predecessor)
+    : reattestationCopyIssue(candidate, predecessor);
   if (copyIssue !== null) return copyIssue;
   if (
     evidence.predecessorCandidateRecordSha256 !== durableSha256(predecessor) ||

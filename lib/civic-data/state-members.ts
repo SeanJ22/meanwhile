@@ -3,8 +3,7 @@ import { join } from "node:path";
 
 import {
   expectedNhMembersTerm,
-  nhMemberOfficeholderId,
-  nhMemberOfficialPersonId,
+  trustedNhMembersImportReadModel,
   type NhMemberReadModel,
 } from "./candidate-builders.ts";
 import {
@@ -49,21 +48,10 @@ function nhMembersBootstrap(): CivicDataBootstrap<NhMemberReadModel> {
     readFileSync(join(process.cwd(), "data/states/nh/hunt/nh-gencourt-members.json"), "utf8"),
   ) as TrackedNhMembers;
   const sourceThrough = corpus.source.collectedAt;
-  const value: NhMemberReadModel = {
-    formatVersion: 1,
-    jurisdiction: "US-NH",
-    term: expectedNhMembersTerm(sourceThrough),
-    members: corpus.members.filter((member) => member.electedStatus === "INCUMBENT" || member.electedStatus === "NEW"),
-    identities: corpus.members
-      .filter((member) => member.electedStatus === "INCUMBENT" || member.electedStatus === "NEW")
-      .map((member) => ({
-        officeholderId: nhMemberOfficeholderId(member),
-        officialPersonId: nhMemberOfficialPersonId(member),
-        chamber: member.chamber,
-        district: member.district,
-        seatNo: member.seatNo,
-      })),
-  };
+  const value = trustedNhMembersImportReadModel(
+    corpus.members,
+    expectedNhMembersTerm(sourceThrough),
+  );
   return {
     value,
     sourceId: NH_CONTRACT.sourceId,

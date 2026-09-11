@@ -13,7 +13,12 @@ import {
   type OfficialStateRollCallSourceId,
   type OfficialStateVoteScope,
 } from "../state-rollcalls/authority.ts";
-import { sourceProjectionEvidence, type RoutineCandidate, type RoutineRecordClass } from "./types.ts";
+import {
+  sourceProjectionEvidence,
+  type IdentityEvidence,
+  type RoutineCandidate,
+  type RoutineRecordClass,
+} from "./types.ts";
 
 export function sha256(value: string | Uint8Array): string {
   return createHash("sha256").update(value).digest("hex");
@@ -220,7 +225,7 @@ const NH_MEMBERS_SUPPORTED_UNTIL = Date.parse("2026-12-01T00:00:00.000Z");
 // floor deliberately below that published shape so vacancies do not block a
 // run, while a truncated response containing merely one row per chamber can
 // never replace the canonical roster.
-const NH_MEMBER_CHAMBER_FLOORS = { H: 350, S: 20 } as const;
+export const NH_MEMBER_CHAMBER_FLOORS = { H: 350, S: 20 } as const;
 
 /**
  * Members.txt does not expose a term field. Stop the current parser before the
@@ -254,6 +259,77 @@ export function nhMemberOfficialPersonId(member: MembersExtraction["members"][nu
 
 export function nhMemberOfficeholderId(member: MembersExtraction["members"][number]): string {
   return officialStateOfficeholderId("nh-general-court", nhMemberOfficialPersonId(member));
+}
+
+/**
+ * The tracked/bootstrap identity projection is deliberately distinct from a
+ * live `/3` publisher crosswalk.  It gives an exact legacy LKG stable internal
+ * identities without claiming that its synthetic ids are General Court
+ * PersonID values.  Only the explicit bootstrap/import paths may call it.
+ */
+export function trustedNhMembersImportReadModel(
+  members: MembersExtraction["members"],
+  term: string,
+): NhMemberReadModel {
+  const current = members.filter((member) =>
+    member.electedStatus === "INCUMBENT" || member.electedStatus === "NEW"
+  );
+  const identities = current.map((member) => ({
+    officeholderId: nhMemberOfficeholderId(member),
+    officialPersonId: nhMemberOfficialPersonId(member),
+    chamber: member.chamber,
+    district: member.district,
+    seatNo: member.seatNo,
+  }));
+  const unique = (values: readonly string[]) => new Set(values).size === values.length;
+  if (
+    !unique(identities.map(({ officeholderId }) => officeholderId)) ||
+    !unique(identities.map(({ officialPersonId }) => officialPersonId)) ||
+    !unique(identities.map(({ chamber, seatNo, district }) => `${chamber}\u0000${seatNo}\u0000${district}`))
+  ) {
+    throw new Error("NH_TRUSTED_IMPORT_IDENTITY_NOT_ONE_TO_ONE");
+  }
+  return {
+    formatVersion: 1,
+    jurisdiction: "US-NH",
+    term,
+    members: current,
+    identities,
+  };
+}
+
+/** Candidate-envelope identities matching trustedNhMembersImportReadModel. */
+export function trustedNhMembersImportIdentityEvidence(
+  members: MembersExtraction["members"],
+  term: string,
+): readonly IdentityEvidence[] {
+  const readModel = trustedNhMembersImportReadModel(members, term);
+  return readModel.members.map((member, index) => {
+    const identity = readModel.identities[index];
+    if (
+      !identity ||
+      identity.chamber !== member.chamber ||
+      identity.seatNo !== member.seatNo ||
+      identity.district !== member.district
+    ) throw new Error("NH_TRUSTED_IMPORT_IDENTITY_MEMBER_MISMATCH");
+    return {
+      subjectId: identity.officeholderId,
+      jurisdiction: "US-NH",
+      identifiers: {
+        seatNo: member.seatNo,
+        officialPersonId: identity.officialPersonId,
+        chamber: member.chamber,
+        district: member.district,
+        ...(member.email ? { officialEmail: member.email } : {}),
+      },
+      matchBasis: "EXACT_SCOPED_ID" as const,
+      ambiguous: false,
+      chamber: member.chamber,
+      office: member.title ?? (member.chamber === "S" ? "Senator" : "Representative"),
+      term,
+      district: member.district,
+    };
+  });
 }
 
 /**

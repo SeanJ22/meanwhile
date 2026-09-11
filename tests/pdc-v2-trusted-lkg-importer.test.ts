@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
+import { rm } from "node:fs/promises";
 import { join, posix } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
+import { pathToFileURL } from "node:url";
 
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import {
@@ -179,6 +181,7 @@ function git(root: string, ...args: string[]): string {
 async function withFrozenBase(
   work: (frozenRoot: string, repositoryRoot: string) => Promise<void>,
 ): Promise<void> {
+  const callerCwd = process.cwd();
   const repositoryRoot = git(process.cwd(), "rev-parse", "--show-toplevel");
   const temporaryRoot = mkdtempSync(join(tmpdir(), "wtp-pdc-v2-frozen-"));
   const frozenRoot = join(temporaryRoot, "fc67");
@@ -190,14 +193,50 @@ async function withFrozenBase(
       windowsHide: true,
     });
     await work(frozenRoot, repositoryRoot);
+    assert.equal(
+      process.cwd().toLowerCase(),
+      callerCwd.toLowerCase(),
+      "the frozen importer must restore its caller's working directory",
+    );
   } finally {
-    // Windows can briefly retain a checkout handle after the detached clone's
-    // imported modules finish evaluating. Retry the exact test-owned temp
-    // root rather than turning a successful authority proof into cleanup
-    // flake or leaving the frozen clone behind.
-    rmSync(temporaryRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    process.chdir(callerCwd);
+    // Yield between bounded Windows retries so loader handles can close before
+    // the exact test-owned detached clone is removed.
+    await rm(temporaryRoot, { recursive: true, force: true, maxRetries: 15, retryDelay: 250 });
   }
 }
+
+test("frozen module evaluation cannot change the process working directory", () => {
+  const repositoryRoot = git(process.cwd(), "rev-parse", "--show-toplevel");
+  const source = readFileSync(
+    join(repositoryRoot, "lib", "civic-data", "trusted-lkg-import-plan.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(source, /\bprocess\.chdir\s*\(/);
+});
+
+test("the exact frozen module closure is cwd-neutral and cleanup-safe", async () => {
+  const callerCwd = process.cwd();
+  await withFrozenBase(async (frozenRoot) => {
+    const roots = [
+      "lib/registry/body-rosters.ts",
+      "lib/officials/statewide-executives.ts",
+      "lib/registry/comment-access.ts",
+      "lib/ballot/polling-place-links.ts",
+      "lib/ballot/registration-links.ts",
+      "lib/officials/campaign-sites.ts",
+      "lib/meetings/venue-cache.ts",
+      "lib/routing/everyday.ts",
+    ] as const;
+    for (const path of roots) {
+      const url = pathToFileURL(join(frozenRoot, ...path.split("/")));
+      url.searchParams.set("pdc-v2-cleanup-proof", path);
+      await import(url.href);
+      assert.equal(process.cwd().toLowerCase(), callerCwd.toLowerCase(), path);
+    }
+  });
+  assert.equal(process.cwd().toLowerCase(), callerCwd.toLowerCase());
+});
 
 class CountingMemoryRoutineDataStore extends MemoryRoutineDataStore {
   createCalls = 0;
@@ -986,8 +1025,10 @@ test("the browser-safe venue content key is an exact UTF-16 encoding", () => {
   assert.notEqual(exactVenueMatchContentKey("\ud800"), exactVenueMatchContentKey("�"));
 });
 
+// This deliberately performs three complete frozen builds plus the full import;
+// historical isolated runs take 10-16 minutes, so retain a bounded 20-minute ceiling.
 test("exact fc67 fixtures deterministically build and seed only the 95 absent trusted-LKG pointers", {
-  timeout: 300_000,
+  timeout: 1_200_000,
 }, async () => {
   await withFrozenBase(async (frozenRoot, repositoryRoot) => {
     const frozenFacts = inspectTrustedLkgRepository(frozenRoot);

@@ -6,28 +6,18 @@ import {
   readReaderEvidence,
   type ReaderCensus,
 } from "../../lib/holdings/reader-census.ts";
+import { configuredReaderProofPath } from "../../lib/holdings/reader-proof-environment.ts";
 import { bodyRenderProof } from "../../scripts/lib/reader-body-render-proof.ts";
 
 const DEFAULT_CENSUS = "docs/evidence/reader-last-mile-current.json";
 const DEFAULT_OUTPUT = "docs/evidence/reader-last-mile-bodies.json";
 
-function configuredPath(
-  environment: Readonly<Record<string, string | undefined>>,
-  name: string,
-  fallback: string,
-): string {
-  if (!(name in environment)) return fallback;
-  const value = environment[name]?.trim();
-  assert.ok(value, `${name} is present but empty`);
-  return value;
-}
-
 export function readerBodyEvidencePaths(
   environment: Readonly<Record<string, string | undefined>> = process.env,
 ): { readonly census: string; readonly output: string } {
   return {
-    census: configuredPath(environment, "READER_FINAL_PREPARED_CENSUS", DEFAULT_CENSUS),
-    output: configuredPath(environment, "READER_PROOF_OUTPUT", DEFAULT_OUTPUT),
+    census: configuredReaderProofPath(environment, "READER_FINAL_PREPARED_CENSUS", DEFAULT_CENSUS),
+    output: configuredReaderProofPath(environment, "READER_PROOF_OUTPUT", DEFAULT_OUTPUT),
   };
 }
 

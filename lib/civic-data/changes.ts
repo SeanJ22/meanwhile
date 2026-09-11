@@ -182,7 +182,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           return { key: `official-candidacy:${textKey(holder, ["id"]) || `row-${index}`}`, record };
         }),
         ...Object.entries(rosterPhotos).map(([key, record]) => ({ key: `roster-photo:${key}`, record })),
-      ];
+      ].sort((left, right) => left.key.localeCompare(right.key));
     }
     case "VOTING_SITE":
       return array(root.jurisdictions).flatMap((record, index) => {
@@ -261,7 +261,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...Object.entries(links).map(([key, record]) => ({ key: `links:${key}`, record })),
         ...keyedObservations("card-hunt", cardHunts, ["key", "name"]),
         ...keyedObservations("link-hunt", linkHunts, ["key", "name"]),
-      ];
+      ].sort((left, right) => left.key.localeCompare(right.key));
     }
     case "CANDIDATE_PUBLICATION":
       return [

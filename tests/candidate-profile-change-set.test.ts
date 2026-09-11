@@ -19,13 +19,25 @@ test("candidate-profile hunt observations have unique, order-independent exact m
   const payload = trackedProfiles();
   const forward = civicRecordsFor("CANDIDATE_PROFILE", payload);
   const reordered = civicRecordsFor("CANDIDATE_PROFILE", {
-    cards: { ...payload.cards, hunts: [...payload.cards.hunts].reverse() },
-    links: { ...payload.links, hunts: [...payload.links.hunts].reverse() },
+    cards: {
+      ...payload.cards,
+      cards: Object.fromEntries(Object.entries(payload.cards.cards).reverse()),
+      hunts: [...payload.cards.hunts].reverse(),
+    },
+    links: {
+      ...payload.links,
+      links: Object.fromEntries(Object.entries(payload.links.links).reverse()),
+      hunts: [...payload.links.hunts].reverse(),
+    },
   });
 
   assert.ok(forward.length > 500, "the real first seed exercises the repeated observation history");
   assert.equal(new Set(forward.map((member) => member.key)).size, forward.length);
-  assert.deepEqual(reordered.map((member) => member.key), forward.map((member) => member.key));
+  assert.deepEqual(reordered, forward);
+  assert.deepEqual(
+    forward.map(({ key }) => key),
+    forward.map(({ key }) => key).sort((left, right) => left.localeCompare(right)),
+  );
 });
 
 test("an exact duplicate hunt remains two members and yields one exact removal", () => {

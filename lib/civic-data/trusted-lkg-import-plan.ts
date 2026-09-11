@@ -90,8 +90,13 @@ import {
   verifyRoutineReaderProjection,
 } from "./reader-verification.ts";
 import {
+  normalizeReaderCodeSha,
   parseReaderProjectionReadback,
   READER_PROJECTION_READBACK_PREFIX,
+  READER_READBACK_EVIDENCE_KIND,
+  serializeReaderProjectionReadback,
+  sourceScopedReaderReadbackProjectionId,
+  type ReaderProjectionReadbackReceipt,
 } from "./reader-readback.ts";
 import {
   pdcV2CanonicalMeetingFactEvidence,
@@ -2574,7 +2579,7 @@ async function ensureDurableTrustedReaderReadback(
   now: string,
   importerCodeSha: string,
 ): Promise<void> {
-  if (contract.readerProjection === null) return;
+  const projectionId = contract.readerProjection?.id ?? sourceScopedReaderReadbackProjectionId(contract.id);
   const marked = (await store.events(expectedVersionId))
     .filter((event) => event.detail.startsWith(READER_PROJECTION_READBACK_PREFIX))
     .sort((left, right) => Date.parse(right.at) - Date.parse(left.at) || right.sequence - left.sequence);
@@ -2585,7 +2590,7 @@ async function ensureDurableTrustedReaderReadback(
     latest.sourceId === contract.sourceId &&
     latest.recordClass === contract.recordClass &&
     latest.scope === contract.scope &&
-    latest.projectionId === contract.readerProjection.id &&
+    latest.projectionId === projectionId &&
     latest.versionId === expectedVersionId &&
     latest.pointerKey === projectionKey(contract.recordClass, contract.scope) &&
     latest.verifierCodeSha === importerCodeSha
@@ -2604,13 +2609,56 @@ async function ensureDurableTrustedReaderReadback(
     now,
     pointer.promotedAt,
   );
-  const receipt = await recordRoutineReaderProjectionReadback(
-    store,
-    contract,
-    pointer,
-    observedAt,
-    importerCodeSha,
-  );
+  let receipt: ReaderProjectionReadbackReceipt | null;
+  if (contract.readerProjection === null) {
+    const candidate = await store.readCandidate(expectedVersionId);
+    if (!candidate) {
+      throw new Error(`TRUSTED_LKG_READBACK_REPAIR_CANDIDATE_MISSING:${contract.id}:${expectedVersionId}`);
+    }
+    const predecessor = candidate.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
+      ? await store.readCandidate(candidate.candidate.bootstrapImport.predecessorVersionId)
+      : null;
+    const verification = await verifySourceScopedCandidateProjection(
+      contract,
+      candidate.candidate,
+      observedAt,
+      predecessor,
+    );
+    const verifierCodeSha = normalizeReaderCodeSha(importerCodeSha);
+    receipt = {
+      contractVersion: 2,
+      kind: "READER_PROJECTION_READBACK",
+      contractId: contract.id,
+      sourceId: contract.sourceId,
+      recordClass: contract.recordClass,
+      scope: contract.scope,
+      projectionId,
+      versionId: expectedVersionId,
+      pointerKey: pointer.key,
+      observedAt,
+      evidenceKind: READER_READBACK_EVIDENCE_KIND,
+      verifierId: verification.verifierId,
+      verifierCodeSha,
+      status: verifierCodeSha === null ? "FAIL" : verification.status,
+      detail: verifierCodeSha === null
+        ? `The source-scoped projection result cannot be certified because its executing code commit was not resolvable. ${verification.detail}`
+        : verification.detail,
+    };
+    await store.appendEvidence(
+      expectedVersionId,
+      "PROMOTED",
+      observedAt,
+      serializeReaderProjectionReadback(receipt),
+    );
+  } else {
+    receipt = await recordRoutineReaderProjectionReadback(
+      store,
+      contract,
+      pointer,
+      observedAt,
+      importerCodeSha,
+    );
+  }
   if (receipt?.status !== "PASS" || receipt.versionId !== expectedVersionId) {
     throw new Error(
       `TRUSTED_LKG_READBACK_REPAIR_FAILED:${contract.id}:` +
@@ -2829,6 +2877,13 @@ export async function executePdcV2TrustedLkgImportPlan(
         target.contract,
         candidate.id,
         plan.importedAt,
+      );
+      await ensureDurableTrustedReaderReadback(
+        store,
+        target.contract,
+        candidate.id,
+        plan.importedAt,
+        plan.importerCodeSha,
       );
       dispositions.push({
         contractId: target.contractId,

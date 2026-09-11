@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -127,6 +128,21 @@ test("federal civic member ordering is independent of source-map insertion order
   assert.equal(roundTripped.normalization.normalizedHash, original.normalization.normalizedHash);
   assert.deepEqual(roundTripped.civicRecords, original.civicRecords);
   const keys = original.civicRecords?.map(({ key }) => key) ?? [];
+  assert.deepEqual(keys, [...keys].sort((left, right) => left.localeCompare(right)));
+});
+
+test("registry civic member ordering is independent of JSONB object-key order", async () => {
+  const sourcePackage = await registryPackage(T0, "stable-registry-order");
+  const candidate = registryRuntimeCandidate(sourcePackage);
+  const original = candidate.readModel as RegistryRuntimeReadModel;
+  const roundTripped: RegistryRuntimeReadModel = {
+    ...structuredClone(original),
+    rosterPhotos: Object.fromEntries(Object.entries(original.rosterPhotos).reverse()),
+  };
+  const originalRecords = civicRecordsFor("REGISTRY_RUNTIME_BINDING", original);
+  const roundTrippedRecords = civicRecordsFor("REGISTRY_RUNTIME_BINDING", roundTripped);
+  assert.deepEqual(roundTrippedRecords, originalRecords);
+  const keys = originalRecords.map(({ key }) => key);
   assert.deepEqual(keys, [...keys].sort((left, right) => left.localeCompare(right)));
 });
 

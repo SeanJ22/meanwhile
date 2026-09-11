@@ -331,6 +331,10 @@ export async function processRoutineCandidate(
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
   const lkg = current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
+  const lkgReattestationPredecessor =
+    lkg?.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
+      ? await store.readCandidate(lkg.candidate.bootstrapImport.predecessorVersionId)
+      : null;
   const declaredBase = preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
     ? await store.readCandidate(expectedBaseVersionId)
     : null;
@@ -349,7 +353,13 @@ export async function processRoutineCandidate(
     ? null
     : lkg === null
       ? "The canonical pointer's last-known-good candidate row is missing."
-      : promotionProofIssue(inputCandidate.recordClass, inputCandidate.scope, current, lkg);
+      : promotionProofIssue(
+          inputCandidate.recordClass,
+          inputCandidate.scope,
+          current,
+          lkg,
+          lkgReattestationPredecessor,
+        );
   const candidate: RoutineCandidate = {
     ...inputCandidate,
     changeSet: candidateChangeSet(

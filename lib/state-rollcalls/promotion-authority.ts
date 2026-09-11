@@ -47,6 +47,12 @@ export async function officialStateRollIdentityAuthorityIssue(
   const pointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
   if (!pointer) return `No canonical ${target.contractId} pointer exists for the member join.`;
   if (pointer.sourceId !== target.sourceId) return `The canonical roster pointer is owned by ${pointer.sourceId}, not ${target.sourceId}.`;
+  if (
+    target.contractId === "nh-members" &&
+    !(pointer.payload as Partial<NhMemberReadModel>).officialIdentityAuthority
+  ) {
+    return "The canonical NH roster is an import-only identity projection, not a source-authenticated official PersonID authority.";
+  }
   if (pointer.versionId !== cited.versionId || pointer.lastKnownGoodVersionId !== cited.versionId) {
     return `The roll candidate cites roster ${cited.versionId}, but canonical pointer/LKG is ${pointer.versionId}/${pointer.lastKnownGoodVersionId}.`;
   }

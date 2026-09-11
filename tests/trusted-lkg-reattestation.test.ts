@@ -9,13 +9,16 @@ import {
   officialStateRollCallsCandidate,
   sha256,
 } from "../lib/civic-data/candidate-builders.ts";
+import { civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import {
   buildPdcV2TrustedLkgReattestationCandidate,
   executePdcV2TrustedLkgImportPlan,
   type PdcV2TrustedLkgImportPlan,
 } from "../lib/civic-data/trusted-lkg-import-plan.ts";
 import {
+  processRegisteredManualCandidate,
   processRegisteredRoutineCandidate,
   processRoutineCandidate,
 } from "../lib/civic-data/promotion.ts";
@@ -41,6 +44,7 @@ import { PDC_V2_FROZEN_BASE_SHA } from "../lib/civic-data/trusted-lkg-import.ts"
 import {
   NH_MEMBERS_V2_TO_V3_REATTESTATION,
   trustedLkgCandidateId,
+  trustedLkgEvidenceSha256,
   trustedLkgImportEvidenceIssue,
 } from "../lib/civic-data/trusted-lkg-import.ts";
 import type {
@@ -55,6 +59,14 @@ import type {
   ValidationReceipt,
 } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
+import {
+  federalDirectoryCandidate,
+  type FederalDirectoryAcquisition,
+} from "../lib/officials/federal-directory-data-plane.ts";
+import {
+  federalDirectoryFirstSeed,
+  readFederalDirectoryProjection,
+} from "../lib/officials/federal-directory-read-model.ts";
 
 const RETRIEVED = "2026-09-08T00:00:00.000Z";
 const LEGACY_VALIDATED = "2026-09-08T00:01:00.000Z";
@@ -325,13 +337,17 @@ function goodLegacyReceipt(candidate: RoutineCandidate): ValidationReceipt {
   };
 }
 
-function legacyNhAuthority(
-  candidate: RoutineCandidate = legacyNhCandidate(),
-): {
+type LegacyAuthority = {
   readonly predecessor: CandidateVersionRecord;
   readonly pointer: PromotedProjection;
   readonly history: readonly CandidateEvent[];
-} {
+};
+
+function legacyAuthorityFixture(
+  candidate: RoutineCandidate,
+  pointerKey: string,
+  details: readonly [string, string, string, string],
+): LegacyAuthority {
   const receipt = goodLegacyReceipt(candidate);
   const predecessor: CandidateVersionRecord = {
     candidate,
@@ -344,7 +360,7 @@ function legacyNhAuthority(
     failureDetail: null,
   };
   const pointer: PromotedProjection = {
-    key: "STATE_LEGISLATOR:US-NH",
+    key: pointerKey,
     sourceId: candidate.sourceId,
     recordClass: candidate.recordClass,
     scope: candidate.scope,
@@ -355,16 +371,29 @@ function legacyNhAuthority(
     receipt,
   };
   const history: CandidateEvent[] = [
-    { candidateId: candidate.id, sequence: 1, state: "FETCHED", at: RETRIEVED, detail: "Legacy source bytes acquired." },
-    { candidateId: candidate.id, sequence: 2, state: "NORMALIZED", at: LEGACY_VALIDATED, detail: "Legacy /2 payload normalized." },
-    { candidateId: candidate.id, sequence: 3, state: "VALIDATED", at: LEGACY_VALIDATED, detail: "Legacy GOOD receipt recorded." },
-    { candidateId: candidate.id, sequence: 4, state: "PROMOTED", at: LEGACY_PROMOTED, detail: "Legacy pointer promoted." },
+    { candidateId: candidate.id, sequence: 1, state: "FETCHED", at: RETRIEVED, detail: details[0] },
+    { candidateId: candidate.id, sequence: 2, state: "NORMALIZED", at: LEGACY_VALIDATED, detail: details[1] },
+    { candidateId: candidate.id, sequence: 3, state: "VALIDATED", at: LEGACY_VALIDATED, detail: details[2] },
+    { candidateId: candidate.id, sequence: 4, state: "PROMOTED", at: LEGACY_PROMOTED, detail: details[3] },
   ];
-  return JSON.parse(JSON.stringify({ predecessor, pointer, history })) as {
-    readonly predecessor: CandidateVersionRecord;
-    readonly pointer: PromotedProjection;
-    readonly history: readonly CandidateEvent[];
-  };
+  assert.equal(pointer.versionId, predecessor.candidate.id);
+  assert.deepEqual(history.map(({ sequence }) => sequence), [1, 2, 3, 4]);
+  return { predecessor, pointer, history };
+}
+
+function legacyNhAuthority(
+  candidate: RoutineCandidate = legacyNhCandidate(),
+): LegacyAuthority {
+  return JSON.parse(JSON.stringify(legacyAuthorityFixture(
+    candidate,
+    "STATE_LEGISLATOR:US-NH",
+    [
+      "Legacy source bytes acquired.",
+      "Legacy /2 payload normalized.",
+      "Legacy GOOD receipt recorded.",
+      "Legacy pointer promoted.",
+    ],
+  ))) as LegacyAuthority;
 }
 
 type MemoryInternals = {
@@ -387,6 +416,226 @@ function seedLegacyNhStore<T extends MemoryRoutineDataStore>(
   internals.promotions.set(authority.pointer.key, structuredClone(authority.pointer));
   return store;
 }
+
+function legacyCongressAuthority(): LegacyAuthority {
+  const projection = federalDirectoryFirstSeed().value;
+  const acquisitions: FederalDirectoryAcquisition[] = [
+    "legislators-current",
+    "legislators-social-media",
+    "legislators-district-offices",
+    "committees-current",
+    "committee-membership-current",
+  ].map((name) => {
+    const url = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${projection.sourceSha}/${name}.yaml`;
+    return { requestedUrl: url, finalUrl: url, httpStatus: 200, body: `legacy:${name}` };
+  });
+  const current = federalDirectoryCandidate({
+    acquisitions,
+    retrievedAt: RETRIEVED,
+    projection,
+  });
+  const { normalizedPayloadHash: _missingPermanentDigest, ...normalization } = current.normalization;
+  const canonicalRecords = civicRecordsFor("FEDERAL_DIRECTORY", current.readModel);
+  // Reproduce the exact pre-fix concatenation: the two array-backed sections
+  // retained order, while the two object-backed sections depended on object
+  // insertion order and therefore changed after a Postgres JSONB round trip.
+  const historicRecords = [
+    ...projection.roster.officeholders.map((record) => ({
+      key: `officeholder:${record.id}`,
+      record,
+    })),
+    ...projection.roster.divisions.map((record) => ({
+      key: `division:${record.officeholderId}:${record.ocdId}`,
+      record,
+    })),
+    ...Object.entries(projection.directory.byMember).map(([key, record]) => ({
+      key: `directory:${key}`,
+      record,
+    })),
+    ...Object.entries(projection.directory.committees).map(([key, record]) => ({
+      key: `committee:${key}`,
+      record,
+    })),
+  ];
+  assert.equal(historicRecords.length, canonicalRecords.length);
+  const candidate = JSON.parse(JSON.stringify({
+    ...current,
+    normalization,
+    civicRecords: historicRecords,
+  })) as RoutineCandidate;
+  assert.notDeepEqual(candidate.civicRecords, canonicalRecords);
+  return legacyAuthorityFixture(
+    candidate,
+    `${candidate.recordClass}:${candidate.scope}`,
+    [
+      "Legacy Congress source set acquired.",
+      "Legacy Congress projection normalized.",
+      "Legacy Congress GOOD receipt recorded.",
+      "Legacy Congress pointer promoted.",
+    ],
+  );
+}
+
+test("legacy Congress JSONB member ordering receives one exact canonical integrity successor", async () => {
+  const authority = legacyCongressAuthority();
+  const before = structuredClone(authority.predecessor);
+  const store = new MemoryRoutineDataStore();
+  const internals = memoryInternals(store);
+  internals.candidates.set(before.candidate.id, structuredClone(before));
+  internals.history.set(before.candidate.id, [...structuredClone(authority.history)]);
+  internals.promotions.set(authority.pointer.key, structuredClone(authority.pointer));
+
+  let prospectiveReattestationPredecessorIds: readonly string[] | undefined;
+  const result = await executePdcV2TrustedLkgImportPlan(store, emptyPlan(), {
+    beforeFirstWrite: async (predecessorIds) => {
+      prospectiveReattestationPredecessorIds = [...predecessorIds];
+    },
+  });
+  assert.deepEqual(prospectiveReattestationPredecessorIds, [before.candidate.id]);
+  const disposition = result.dispositions.find(({ contractId }) =>
+    contractId === "congress-bulk-roster"
+  );
+  assert.equal(disposition?.disposition, "REATTESTED_EXISTING_AUTHORITY");
+  const pointer = await store.readPromotion("FEDERAL_DIRECTORY", "US:current-congress-directory");
+  assert.ok(pointer);
+  assert.notEqual(pointer.versionId, before.candidate.id);
+  const successor = await store.readCandidate(pointer.versionId);
+  assert.ok(successor);
+  assert.equal(result.reattestedExisting, 1);
+  assert.equal(successor.candidate.temporal.staleAtRetrieval, true);
+  assert.equal(successor.candidate.changeSet?.outcome, "UNCHANGED");
+  assert.equal(successor.candidate.bootstrapImport?.sourceAuthenticated, false);
+  assert.deepEqual(
+    successor.candidate.civicRecords,
+    civicRecordsFor("FEDERAL_DIRECTORY", successor.candidate.readModel),
+  );
+  assert.equal(trustedLkgImportEvidenceIssue(successor.candidate, before), null);
+  assert.deepEqual(await store.readCandidate(before.candidate.id), before);
+  const read = await readFederalDirectoryProjection({ store, now: CUTOVER, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.metadata.versionId, successor.candidate.id);
+  const exactPointer = structuredClone(pointer);
+  const exactSuccessor = structuredClone(successor);
+  const replay = await executePdcV2TrustedLkgImportPlan(store, emptyPlan());
+  assert.equal(replay.reattestedExisting, 0);
+  assert.equal(replay.skippedExisting, 1);
+  assert.deepEqual(
+    await store.readPromotion("FEDERAL_DIRECTORY", "US:current-congress-directory"),
+    exactPointer,
+  );
+  assert.deepEqual(await store.readCandidate(successor.candidate.id), exactSuccessor);
+
+  const contract = requiredManualProductionContract("congress-bulk-roster");
+  const build = (candidateAuthority: typeof authority) =>
+    buildPdcV2TrustedLkgReattestationCandidate({
+      contract,
+      pointer: candidateAuthority.pointer,
+      predecessor: candidateAuthority.predecessor,
+      reattestedAt: CUTOVER,
+      importerCodeSha: IMPORTER_SHA,
+    });
+  const exactOrder = structuredClone(authority);
+  (exactOrder.predecessor.candidate as { civicRecords?: unknown }).civicRecords =
+    civicRecordsFor("FEDERAL_DIRECTORY", exactOrder.predecessor.candidate.readModel);
+  assert.doesNotThrow(() => build(exactOrder), "exact order remains the ordinary control");
+
+  type MutableMember = { key?: string; record?: unknown };
+  const refusals: readonly [string, (candidate: RoutineCandidate) => void][] = [
+    ["changed member", (candidate) => {
+      const members = candidate.civicRecords as MutableMember[];
+      members[0] = { ...members[0]!, record: { planted: "content mismatch" } };
+    }],
+    ["removed member", (candidate) => {
+      (candidate.civicRecords as MutableMember[]).pop();
+    }],
+    ["extra member", (candidate) => {
+      (candidate.civicRecords as MutableMember[]).push({ key: "planted:extra", record: null });
+    }],
+    ["duplicate key", (candidate) => {
+      const members = candidate.civicRecords as MutableMember[];
+      members.push(structuredClone(members[0]!));
+    }],
+    ["malformed member", (candidate) => {
+      const members = candidate.civicRecords as MutableMember[];
+      delete members[0]!.record;
+    }],
+    ["present payload digest", (candidate) => {
+      (candidate.normalization as { normalizedPayloadHash?: string }).normalizedPayloadHash =
+        trustedLkgEvidenceSha256(candidate.normalizedPayload);
+    }],
+    ["incorrect payload digest", (candidate) => {
+      (candidate.normalization as { normalizedPayloadHash?: string }).normalizedPayloadHash =
+        "f".repeat(64);
+    }],
+    ["legacy hash binds payload instead of Reader", (candidate) => {
+      (candidate.normalization as { normalizedHash?: string }).normalizedHash =
+        trustedLkgEvidenceSha256(candidate.normalizedPayload);
+    }],
+    ["wrong parser", (candidate) => {
+      (candidate.normalization as { parserVersion: string }).parserVersion = "congress-directory/2-near";
+    }],
+    ["wrong source", (candidate) => {
+      (candidate as { sourceId: string }).sourceId = "registry-reviewed-bindings";
+    }],
+    ["wrong class", (candidate) => {
+      (candidate as { recordClass: string }).recordClass = "REGISTRY_RUNTIME_BINDING";
+    }],
+    ["wrong scope", (candidate) => {
+      (candidate as { scope: string }).scope = "US:wrong-directory";
+    }],
+  ];
+  for (const [label, mutate] of refusals) {
+    const changed = structuredClone(authority);
+    mutate(changed.predecessor.candidate);
+    assert.throws(
+      () => build(changed),
+      /TRUSTED_LKG_REATTESTATION_(?:CONTRACT_MISMATCH|INVALID):congress-bulk-roster/,
+      label,
+    );
+  }
+
+  const relabeled = structuredClone(successor.candidate) as RoutineCandidate & {
+    bootstrapImport: NonNullable<RoutineCandidate["bootstrapImport"]>;
+  };
+  assert.equal(relabeled.bootstrapImport.kind, "TRUSTED_LKG_REATTESTATION");
+  (relabeled.bootstrapImport as { contractId: string }).contractId = "registry-runtime-bindings";
+  (relabeled as { id: string }).id = trustedLkgCandidateId(relabeled.bootstrapImport);
+  assert.match(
+    trustedLkgImportEvidenceIssue(relabeled, before) ?? "",
+    /predecessor carries civic members which conflict with its exact Reader projection/,
+    "the order-only bridge cannot be relabeled onto another contract",
+  );
+
+  const freshProjection = federalDirectoryFirstSeed().value;
+  const freshAcquisitions: FederalDirectoryAcquisition[] = [
+    "legislators-current",
+    "legislators-social-media",
+    "legislators-district-offices",
+    "committees-current",
+    "committee-membership-current",
+  ].map((name) => {
+    const url = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${freshProjection.sourceSha}/${name}.yaml`;
+    return { requestedUrl: url, finalUrl: url, httpStatus: 200, body: `fresh:${name}` };
+  });
+  const fresh = federalDirectoryCandidate({
+    acquisitions: freshAcquisitions,
+    retrievedAt: LIVE_RETRIEVED,
+    projection: freshProjection,
+  });
+  const freshOutcome = await processRegisteredManualCandidate(
+    store,
+    "congress-bulk-roster",
+    fresh,
+    LIVE_RETRIEVED,
+  );
+  assert.equal(freshOutcome.candidate.state, "PROMOTED");
+  assert.equal(freshOutcome.readerReadback?.status, "PASS");
+  assert.equal(
+    (await store.readPromotion("FEDERAL_DIRECTORY", "US:current-congress-directory"))?.versionId,
+    fresh.id,
+    "a later source-authenticated candidate replaces the integrity bridge normally",
+  );
+});
 
 function liveNhCandidate(extraction: MembersExtraction = nhExtraction()): RoutineCandidate {
   const current = extraction.members.filter(({ electedStatus }) =>

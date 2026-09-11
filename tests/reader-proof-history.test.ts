@@ -15,7 +15,10 @@ const PRODUCTION_BRANCH_ID = "br-delicate-lab-ax02xuo5";
 const REHEARSAL_BRANCH_ID = "br-reader-rehearsal-123";
 const REHEARSAL_ENDPOINT_ID = "ep-reader-rehearsal-123";
 const PRODUCTION_ENDPOINT_ID = "ep-reader-production-123";
-const IMPORT_COUNT = 95;
+const PLAN_CANDIDATE_COUNT = 95;
+const BASELINE_REGISTERED_PROMOTION_COUNT = 16;
+const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT;
+const REGISTERED_CONTRACT_COUNT = 155;
 
 const sha256 = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
 function canonicalValue(value: unknown): unknown {
@@ -35,16 +38,27 @@ function evidence(entries: Record<string, unknown>) {
 }
 
 function importDispositionSet() {
-  return Array.from({ length: IMPORT_COUNT }, (_, index) => {
+  const planned = Array.from({ length: PLAN_CANDIDATE_COUNT }, (_, index) => {
     const suffix = String(index + 1).padStart(3, "0");
     return {
-      contractId: `contract-${suffix}`,
-      candidateId: `candidate-${suffix}`,
+      contractId: `planned-contract-${suffix}`,
+      candidateId: `planned-candidate-${suffix}`,
       disposition: "PROMOTED_ABSENT_POINTER",
-      versionId: `candidate-${suffix}`,
+      versionId: `planned-candidate-${suffix}`,
       readerReadback: "PASS",
     };
   });
+  const existing = Array.from({ length: BASELINE_REGISTERED_PROMOTION_COUNT }, (_, index) => {
+    const suffix = String(index + 1).padStart(3, "0");
+    return {
+      contractId: `baseline-contract-${suffix}`,
+      candidateId: `baseline-successor-${suffix}`,
+      disposition: "REATTESTED_EXISTING_AUTHORITY",
+      versionId: `baseline-successor-${suffix}`,
+      readerReadback: "PASS",
+    };
+  });
+  return [...existing, ...planned].sort((left, right) => left.contractId.localeCompare(right.contractId));
 }
 
 function providerMetadata(phase: "REHEARSAL" | "PRODUCTION", overrides: Record<string, unknown> = {}) {
@@ -124,7 +138,7 @@ function rehearsalImportReceipt(metadataBytes: Buffer, overrides: Record<string,
       contractVersion: 1,
       frozenBaseSha: FROZEN,
       importerCodeSha: HEAD_A,
-      candidateCount: IMPORT_COUNT,
+      candidateCount: PLAN_CANDIDATE_COUNT,
       meetingPartitionsWithLkg: 83,
       meetingPartitionsWithoutLkg: 41,
       meetingRows: 619,
@@ -137,12 +151,15 @@ function rehearsalImportReceipt(metadataBytes: Buffer, overrides: Record<string,
       frozenBaseSha: FROZEN,
       importerCodeSha: HEAD_A,
       importedAt: NOW,
-      promoted: IMPORT_COUNT,
-      reattestedExisting: 0,
+      promoted: FINAL_AUTHORITY_COUNT,
+      reattestedExisting: BASELINE_REGISTERED_PROMOTION_COUNT,
       skippedExisting: 0,
       zeroMeetingPartitionsRefused: 41,
-      dispositionCount: IMPORT_COUNT,
-      dispositionCounts: { PROMOTED_ABSENT_POINTER: IMPORT_COUNT },
+      dispositionCount: FINAL_AUTHORITY_COUNT,
+      dispositionCounts: {
+        PROMOTED_ABSENT_POINTER: PLAN_CANDIDATE_COUNT,
+        REATTESTED_EXISTING_AUTHORITY: BASELINE_REGISTERED_PROMOTION_COUNT,
+      },
       dispositionSet: dispositions,
       dispositionSetSha256: sha256(canonicalJson(dispositions)),
       legacyMeetingsAggregateRetirement: {
@@ -155,9 +172,12 @@ function rehearsalImportReceipt(metadataBytes: Buffer, overrides: Record<string,
       resultSha256: sha256("rehearsal-result"),
     },
     pointers: {
-      before: { count: 1, sha256: SHA256, rowCounts: { candidates: "1", events: "4", promotions: "1" } },
-      after: { count: IMPORT_COUNT, sha256: pointerSha, rowCounts: { candidates: String(IMPORT_COUNT), events: String(IMPORT_COUNT * 5), promotions: String(IMPORT_COUNT) } },
-      changedKeyMembership: Array.from({ length: IMPORT_COUNT }, (_, index) => `CURATED_READER_RECORD:US:fixture:${String(index + 1).padStart(3, "0")}`),
+      before: { count: BASELINE_REGISTERED_PROMOTION_COUNT + 1, sha256: SHA256, rowCounts: { candidates: "17", events: "84", promotions: "17" } },
+      after: { count: FINAL_AUTHORITY_COUNT, sha256: pointerSha, rowCounts: { candidates: String(FINAL_AUTHORITY_COUNT), events: String(FINAL_AUTHORITY_COUNT * 5), promotions: String(FINAL_AUTHORITY_COUNT) } },
+      changedKeyMembership: [
+        ...Array.from({ length: FINAL_AUTHORITY_COUNT }, (_, index) => `CURATED_READER_RECORD:US:fixture:${String(index + 1).padStart(3, "0")}`),
+        "MEETING:supported-bodies",
+      ].sort(),
       currentPointerSha256: pointerSha,
     },
     productionMutations: 0,
@@ -186,6 +206,19 @@ function preservedPullRequest(number: 302 | 303) {
 
 function productionImportReceipt(overrides: Record<string, unknown> = {}) {
   const dispositions = importDispositionSet();
+  const legacyPointerSha256 = "1".repeat(64);
+  const legacyCandidateRecordSha256 = "2".repeat(64);
+  const legacyHistorySha256 = "3".repeat(64);
+  const legacyMeetingFactSha256 = "4".repeat(64);
+  const replacementPointerSha256 = "5".repeat(64);
+  const replacementFullPointerSetSha256 = "6".repeat(64);
+  const replacementCandidateRecordSetSha256 = "7".repeat(64);
+  const replacementHistorySetSha256 = "8".repeat(64);
+  const replacementAuthoritySha256 = sha256(canonicalJson({
+    replacementFullPointerSetSha256,
+    replacementCandidateRecordSetSha256,
+    replacementHistorySetSha256,
+  }));
   return Buffer.from(JSON.stringify({
     schemaVersion: 1,
     result: "PDC_AUTHORITY_TRANSFER_COMPLETE_B_ADMISSION_READY",
@@ -210,35 +243,51 @@ function productionImportReceipt(overrides: Record<string, unknown> = {}) {
       initialCensus: "PASS",
       liveRecensusAtReady: "PASS",
       exact0026PreflightWithProspectiveSuccessors: "PASS",
-      registeredContractKeys: IMPORT_COUNT,
-      canonicalPromotionCount: IMPORT_COUNT,
-      registeredCurrentPromotionCount: IMPORT_COUNT,
-      obsoleteAggregatePointers: 0,
-      durableRetirementReceipt: null,
-      prospectiveReattestationCount: 0,
+      registeredContractKeys: REGISTERED_CONTRACT_COUNT,
+      canonicalPromotionCount: BASELINE_REGISTERED_PROMOTION_COUNT + 1,
+      registeredCurrentPromotionCount: BASELINE_REGISTERED_PROMOTION_COUNT,
+      obsoleteAggregatePointers: 1,
+      durableRetirementReceipt: "NOT_APPLICABLE_POINTER_PRESENT",
+      liveLegacyVersionId: "cv-legacy",
+      liveLegacyPointerSha256: legacyPointerSha256,
+      liveLegacyCandidateRecordSha256: legacyCandidateRecordSha256,
+      liveLegacyHistorySha256: legacyHistorySha256,
+      liveLegacyHistoryEventCount: 4,
+      liveLegacyMeetingFactSha256: legacyMeetingFactSha256,
+      liveLegacyMeetingRowCount: 626,
+      liveLegacyAgendaDocumentRowCount: 199,
+      prospectiveReattestationCount: 1,
     },
     github: { legacyWorkflowDefinitionsDisabled: 8, nonterminalLegacyRuns: 0, bypassActors: 0, enabledWriteDeployKeys: 0, legacyRuntimeSecrets: 0 },
     host: { obsoleteScheduledTasks: 0, startupLaunchers: 0, oldProcessTreeMembers: 0 },
     import: {
-      promoted: IMPORT_COUNT,
-      reattestedExisting: 0,
+      promoted: FINAL_AUTHORITY_COUNT,
+      reattestedExisting: BASELINE_REGISTERED_PROMOTION_COUNT,
       skippedExisting: 0,
-      dispositions: IMPORT_COUNT,
+      dispositions: FINAL_AUTHORITY_COUNT,
       dispositionSet: dispositions,
       dispositionSetSha256: sha256(canonicalJson(dispositions)),
       resultSha256: sha256("production-result"),
       zeroMeetingPartitionsRefused: 41,
       retirementDisposition: "RETIRED",
       durableRetirementReceiptExact: true,
-      legacyMeetingFactSha256: SHA256,
-      replacementPointerSha256: SHA256,
+      legacyMeetingFactSha256,
+      replacementPointerSha256,
+      legacyPointerSha256,
+      legacyCandidateRecordSha256,
+      legacyHistorySha256,
+      legacyHistoryEventCount: 4,
+      replacementFullPointerSetSha256,
+      replacementCandidateRecordSetSha256,
+      replacementHistorySetSha256,
+      replacementAuthoritySha256,
     },
     postImport: {
       exact0026Preflight: "PASS",
       schema: "pre-0026",
-      promotionCount: IMPORT_COUNT,
-      expectedPromotionCount: IMPORT_COUNT,
-      registeredContractCount: IMPORT_COUNT,
+      promotionCount: FINAL_AUTHORITY_COUNT,
+      expectedPromotionCount: FINAL_AUTHORITY_COUNT,
+      registeredContractCount: REGISTERED_CONTRACT_COUNT,
       obsoleteAggregatePointers: 0,
       unregisteredPromotions: 0,
     },
@@ -293,21 +342,21 @@ function authorityArtifact(phase: "REHEARSAL" | "PRODUCTION") {
         resultSha256: parsedReceipt.import.resultSha256,
         dispositionSetSha256: sha256(canonicalJson(dispositionSet)),
         canonicalPointerSetSha256: phase === "REHEARSAL" ? parsedReceipt.pointers.currentPointerSha256 : sha256("exact-production-pointer-set"),
-        canonicalPointerCount: IMPORT_COUNT,
+        canonicalPointerCount: FINAL_AUTHORITY_COUNT,
         durableImport: {
           authorization: "PDC_V2_FROZEN_LKG_CUTOVER",
-          candidateCount: IMPORT_COUNT,
-          currentPointerLinkCount: IMPORT_COUNT,
-          promotedDispositionCount: IMPORT_COUNT,
-          reattestedDispositionCount: 0,
+          candidateCount: FINAL_AUTHORITY_COUNT,
+          currentPointerLinkCount: FINAL_AUTHORITY_COUNT,
+          promotedDispositionCount: FINAL_AUTHORITY_COUNT,
+          reattestedDispositionCount: BASELINE_REGISTERED_PROMOTION_COUNT,
           skippedDispositionCount: 0,
           candidateSetSha256: sha256("candidate-set"),
-          eventCandidateCount: IMPORT_COUNT,
-          eventCount: IMPORT_COUNT * 5,
-          terminalPromotedEventCount: IMPORT_COUNT,
+          eventCandidateCount: FINAL_AUTHORITY_COUNT,
+          eventCount: FINAL_AUTHORITY_COUNT * 5,
+          terminalPromotedEventCount: FINAL_AUTHORITY_COUNT,
           eventSetSha256: sha256("event-set"),
-          predecessorCandidateCount: 0,
-          predecessorEventCount: 0,
+          predecessorCandidateCount: BASELINE_REGISTERED_PROMOTION_COUNT,
+          predecessorEventCount: BASELINE_REGISTERED_PROMOTION_COUNT * 5,
           predecessorEventSetSha256: sha256("predecessor-event-set"),
           importerCodeShas: [HEAD_A],
         },
@@ -376,7 +425,7 @@ test("an inherited Reader receipt keeps the invalidation report as its proof-hea
 
   assert.equal(readerProofHead(receipt, read), HEAD_A);
   assert.throws(() => readerProofAuthority(receipt, read, HEAD_A), /fields differ from the exact schema/);
-  const legacyPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
+  const legacyPath = "docs/evidence/reader-last-mile-closure-receipt.json";
   const legacyBytes = readFileSync(legacyPath);
   const legacyReceipt = JSON.parse(legacyBytes.toString("utf8"));
   assert.deepEqual(readerProofAuthority(legacyReceipt, read, HEAD_A, { receiptPath: legacyPath, receiptBytes: legacyBytes }), { phase: "LEGACY_INHERITED", importerCodeSha: null });
@@ -530,6 +579,79 @@ test("archived controller support binds exact result and disposition membership 
   );
 });
 
+test("archived support keeps the 95-plan, 111-authority, and 155-registry denominators distinct", () => {
+  const rehearsalBuilt = authorityArtifact("REHEARSAL");
+  const rehearsalPath = "docs/evidence/reader-last-mile-rehearsal-import-receipt.json";
+  const rehearsal = JSON.parse(rehearsalBuilt.support[rehearsalPath].toString("utf8"));
+  rehearsal.plan = { ...rehearsal.plan, candidateCount: FINAL_AUTHORITY_COUNT, meetingPartitionsWithLkg: 99 };
+  delete rehearsal.receiptSha256;
+  rehearsal.receiptSha256 = sha256(canonicalJson(rehearsal));
+  const forgedRehearsal = replaceSupport(
+    rehearsalBuilt,
+    "REHEARSAL",
+    "import",
+    Buffer.from(canonicalJson(rehearsal)),
+  );
+  const rehearsalClosure = authorityReceiptFromBuilt("REHEARSAL", forgedRehearsal);
+  assert.throws(
+    () => readerProofAuthority(
+      rehearsalClosure.receipt,
+      evidence({ ...rehearsalClosure.support, [rehearsalClosure.receipt.executionAuthority.evidencePath]: rehearsalClosure.artifact }),
+      HEAD_A,
+    ),
+    /plan\/pointer transition differs/,
+  );
+
+  const beforeCountBuilt = authorityArtifact("REHEARSAL");
+  const beforeCountReceipt = JSON.parse(beforeCountBuilt.support[rehearsalPath].toString("utf8"));
+  beforeCountReceipt.pointers.before.rowCounts.promotions = String(BASELINE_REGISTERED_PROMOTION_COUNT);
+  delete beforeCountReceipt.receiptSha256;
+  beforeCountReceipt.receiptSha256 = sha256(canonicalJson(beforeCountReceipt));
+  const forgedBeforeCount = replaceSupport(
+    beforeCountBuilt,
+    "REHEARSAL",
+    "import",
+    Buffer.from(canonicalJson(beforeCountReceipt)),
+  );
+  const beforeCountClosure = authorityReceiptFromBuilt("REHEARSAL", forgedBeforeCount);
+  assert.throws(
+    () => readerProofAuthority(
+      beforeCountClosure.receipt,
+      evidence({ ...beforeCountClosure.support, [beforeCountClosure.receipt.executionAuthority.evidencePath]: beforeCountClosure.artifact }),
+      HEAD_A,
+    ),
+    /pointer readback schema (?:differs|is not exact)/,
+  );
+
+  const productionBuilt = authorityArtifact("PRODUCTION");
+  const productionPath = "docs/evidence/reader-last-mile-production-import-receipt.json";
+  const production = JSON.parse(productionBuilt.support[productionPath].toString("utf8"));
+  production.preImportAuthority = {
+    ...production.preImportAuthority,
+    registeredContractKeys: FINAL_AUTHORITY_COUNT,
+  };
+  production.postImport = {
+    ...production.postImport,
+    registeredContractCount: FINAL_AUTHORITY_COUNT,
+  };
+  const forgedProduction = replaceSupport(
+    productionBuilt,
+    "PRODUCTION",
+    "import",
+    Buffer.from(JSON.stringify(production)),
+  );
+  const productionClosure = authorityReceiptFromBuilt("PRODUCTION", forgedProduction);
+  assert.throws(
+    () => readerProofAuthority(
+      productionClosure.receipt,
+      evidence({ ...productionClosure.support, [productionClosure.receipt.executionAuthority.evidencePath]: productionClosure.artifact }),
+      HEAD_B,
+      { requiredPhase: "PRODUCTION" },
+    ),
+    /import\/retirement\/post-import receipt shape differs/,
+  );
+});
+
 test("production Reader history accepts only controller import commit A bound beneath distinct authority commit B", () => {
   const production = authorityReceipt("PRODUCTION");
   const read = evidence({ ...production.support, [production.receipt.executionAuthority.evidencePath]: production.artifact });
@@ -544,6 +666,56 @@ test("production Reader history accepts only controller import commit A bound be
   assert.throws(
     () => readerProofAuthority(sameCommit.receipt, evidence({ ...sameCommit.support, [sameCommit.receipt.executionAuthority.evidencePath]: sameCommit.artifact }), HEAD_A, { requiredPhase: "PRODUCTION" }),
     /generated before the importer was deleted|distinct importer A \/ authority B/,
+  );
+});
+
+test("production Reader history accepts the exact all-111-skipped retirement replay", () => {
+  const built = authorityArtifact("PRODUCTION");
+  const importPath = "docs/evidence/reader-last-mile-production-import-receipt.json";
+  const receipt = JSON.parse(built.support[importPath].toString("utf8"));
+  const replayDispositions = receipt.import.dispositionSet.map((entry: Record<string, unknown>) => ({
+    ...entry,
+    disposition: "SKIPPED_EXISTING_PROVEN_AUTHORITY",
+  }));
+  const replayDispositionSha256 = sha256(canonicalJson(replayDispositions));
+  receipt.preImportAuthority = {
+    ...receipt.preImportAuthority,
+    canonicalPromotionCount: FINAL_AUTHORITY_COUNT,
+    registeredCurrentPromotionCount: FINAL_AUTHORITY_COUNT,
+    obsoleteAggregatePointers: 0,
+    durableRetirementReceipt: "PASS",
+    prospectiveReattestationCount: 0,
+  };
+  receipt.import = {
+    ...receipt.import,
+    promoted: 0,
+    reattestedExisting: 0,
+    skippedExisting: FINAL_AUTHORITY_COUNT,
+    dispositionSet: replayDispositions,
+    dispositionSetSha256: replayDispositionSha256,
+    retirementDisposition: "ALREADY_RETIRED_PROVEN",
+  };
+  built.artifact.import.dispositionSetSha256 = replayDispositionSha256;
+  built.artifact.import.durableImport.promotedDispositionCount = 0;
+  built.artifact.import.durableImport.reattestedDispositionCount = 0;
+  built.artifact.import.durableImport.skippedDispositionCount = FINAL_AUTHORITY_COUNT;
+  built.artifact.import.durableImport.predecessorCandidateCount = 0;
+  built.artifact.import.durableImport.predecessorEventCount = 0;
+  const replayBuilt = replaceSupport(
+    built,
+    "PRODUCTION",
+    "import",
+    Buffer.from(JSON.stringify(receipt)),
+  );
+  const replay = authorityReceiptFromBuilt("PRODUCTION", replayBuilt);
+  assert.deepEqual(
+    readerProofAuthority(
+      replay.receipt,
+      evidence({ ...replay.support, [replay.receipt.executionAuthority.evidencePath]: replay.artifact }),
+      HEAD_B,
+      { requiredPhase: "PRODUCTION" },
+    ),
+    { phase: "PRODUCTION", importerCodeSha: HEAD_A },
   );
 });
 

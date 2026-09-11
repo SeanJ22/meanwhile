@@ -110,8 +110,10 @@ import {
   trustedLkgFixtureSetSha256,
   trustedLkgImportEvidenceIssue,
   trustedLkgImportUrl,
+  NH_MEMBERS_V2_TO_V3_REATTESTATION,
   trustedLkgPredecessorPointerSha256,
   trustedLkgPredecessorRecordSha256,
+  trustedLkgNhMembersV2ToV3BridgeParts,
   TRUSTED_LKG_REATTESTATION_PURPOSE,
   trustedLkgValidatorIds,
 } from "./trusted-lkg-import.ts";
@@ -1862,19 +1864,31 @@ export function buildPdcV2TrustedLkgReattestationCandidate(input: {
   if (
     prior.sourceId !== contract.sourceId ||
     prior.recordClass !== contract.recordClass ||
-    prior.scope !== contract.scope ||
-    prior.normalization.parserVersion !== contract.parserNormalizerVersion
+    prior.scope !== contract.scope
   ) throw new Error(`TRUSTED_LKG_REATTESTATION_CONTRACT_MISMATCH:${contract.id}`);
-  const readModelSha256 = trustedLkgEvidenceSha256(prior.readModel);
+  const nhV2ToV3 = prior.normalization.parserVersion === contract.parserNormalizerVersion
+    ? null
+    : contract.id === "nh-members"
+      ? trustedLkgNhMembersV2ToV3BridgeParts(predecessor)
+      : null;
+  if (
+    prior.normalization.parserVersion !== contract.parserNormalizerVersion &&
+    nhV2ToV3 === null
+  ) throw new Error(`TRUSTED_LKG_REATTESTATION_CONTRACT_MISMATCH:${contract.id}`);
+  const readModel = nhV2ToV3?.readModel ?? prior.readModel;
+  const identities = nhV2ToV3?.identities ?? prior.identities;
+  const predecessorReadModelSha256 = trustedLkgEvidenceSha256(prior.readModel);
+  const readModelSha256 = trustedLkgEvidenceSha256(readModel);
   const normalizedPayloadSha256 = trustedLkgEvidenceSha256(prior.normalizedPayload);
   const base: RoutineCandidate = {
     ...prior,
     id: "",
-    normalization: {
+    normalization: nhV2ToV3?.normalization ?? {
       ...prior.normalization,
       normalizedHash: readModelSha256,
       normalizedPayloadHash: normalizedPayloadSha256,
     },
+    identities,
     temporal: {
       ...prior.temporal,
       // Re-attestation preserves service; it is not a new publisher read.
@@ -1885,9 +1899,10 @@ export function buildPdcV2TrustedLkgReattestationCandidate(input: {
       contract.recordClass,
       contract.scope,
     ),
-    civicRecords: civicRecordsFor(contract.recordClass, prior.readModel),
+    civicRecords: civicRecordsFor(contract.recordClass, readModel),
     changeSet: undefined,
     bootstrapImport: undefined,
+    readModel,
   };
   const evidence: TrustedLkgReattestationEvidence = {
     contractVersion: 1,
@@ -1895,11 +1910,12 @@ export function buildPdcV2TrustedLkgReattestationCandidate(input: {
     authorization: TRUSTED_LKG_IMPORT_AUTHORIZATION,
     purpose: TRUSTED_LKG_REATTESTATION_PURPOSE,
     sourceAuthenticated: false,
+    ...(nhV2ToV3 ? { contractUpgrade: NH_MEMBERS_V2_TO_V3_REATTESTATION } : {}),
     contractId: contract.id,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
     scope: contract.scope,
-    parserVersion: contract.parserNormalizerVersion,
+    parserVersion: base.normalization.parserVersion,
     sourceVersion: prior.temporal.version,
     sourceThrough: prior.temporal.sourceThrough,
     sourceRetrievedAt: prior.retrieval.retrievedAt,
@@ -1912,7 +1928,7 @@ export function buildPdcV2TrustedLkgReattestationCandidate(input: {
     predecessorCandidateSha256: trustedLkgEvidenceSha256(prior),
     predecessorReceiptSha256: trustedLkgEvidenceSha256(predecessor.receipt),
     predecessorPayloadSha256: trustedLkgEvidenceSha256(pointer.payload),
-    predecessorReadModelSha256: readModelSha256,
+    predecessorReadModelSha256,
     predecessorNormalizedPayloadSha256: normalizedPayloadSha256,
     predecessorLegacyNormalizedHash: prior.normalization.normalizedHash ?? "",
     normalizedPayloadSha256,

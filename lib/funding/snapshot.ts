@@ -47,10 +47,19 @@ function validateFundingSnapshot(payload: FundingSnapshot, versionId: string): v
 }
 
 function fundingBootstrap(): CivicDataBootstrap<FundingSnapshot> {
-  const value = JSON.parse(
+  const tracked = JSON.parse(
     readFileSync(join(process.cwd(), "data", "fec", "fec-2026.json"), "utf8"),
   ) as FundingSnapshot;
-  validateFundingSnapshot(value, "bundled bootstrap");
+  validateFundingSnapshot(tracked, "bundled bootstrap");
+  const heldAbsenceCount = tracked.absences.length;
+  const value: FundingSnapshot = {
+    ...tracked,
+    // The promoted FEC contract deliberately makes no absence claim: the
+    // frozen rows lack the bounded authoritative horizon and completed
+    // pagination required to prove one. Keep them in the historical file,
+    // but never let a local bootstrap revive them as Reader authority.
+    absences: [],
+  };
   const sourceThrough = value.candidates
     .map((candidate) => candidate.totals.coverageEndDate ?? "")
     .sort()
@@ -63,7 +72,9 @@ function fundingBootstrap(): CivicDataBootstrap<FundingSnapshot> {
     sourceThrough,
     retrievedAt: value.fetchedAt,
     staleAtRetrieval: false,
-    detail: "Bundled FEC bootstrap selected only because the canonical store answered with no promoted pointer.",
+    detail:
+      `Bundled FEC bootstrap selected only because the canonical store answered with no promoted pointer; ` +
+      `${heldAbsenceCount} frozen absence rows are withheld because this projection does not claim their authority.`,
   };
 }
 

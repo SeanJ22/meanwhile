@@ -16,6 +16,7 @@ import {
   inspectTrustedLkgRepository,
   PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS,
   PDC_V2_TRUSTED_LKG_MANUAL_CONTRACT_IDS,
+  pdcV2UnionPimaOutcomeSnapshots,
   pdcV2PermanentCutoverPlanIssue,
   trustedLkgFrozenRepositoryIssue,
   trustedLkgImporterRepositoryIssue,
@@ -28,6 +29,7 @@ import {
 } from "../lib/civic-data/meeting-partitions.ts";
 import {
   processRegisteredMeetingPartitionCandidate,
+  processRegisteredManualCandidate,
   processRoutineCandidate,
 } from "../lib/civic-data/promotion.ts";
 import {
@@ -63,6 +65,8 @@ import { canonicalAgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { exactVenueMatchContentKey } from "../lib/meetings/venue-record-identity.ts";
 import { validateSnapshot, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { officeholderIdentityMayEnterReader } from "../lib/officials/roster-authority.ts";
+import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import type { SourceSnapshot } from "../lib/corpus/types.ts";
 import { readOfficeholderStatementsProjection } from "../lib/corpus/data-plane.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
@@ -90,7 +94,7 @@ function firstSeedEvidence(candidate: RoutineCandidate): TrustedLkgImportEvidenc
   return evidence;
 }
 
-/** Every Reader-serving collection in the twelve imported manual authorities. */
+/** Every Reader-serving collection in the thirteen imported manual authorities. */
 const AUDITED_MANUAL_READER_COLLECTION_PATHS = [
   "registry-runtime-bindings:registry.divisions",
   "registry-runtime-bindings:registry.bodies",
@@ -117,6 +121,10 @@ const AUDITED_MANUAL_READER_COLLECTION_PATHS = [
   "officeholder-statements:snapshots",
   "az-official-actions:actions",
   "az-official-actions:legislative.openRoutes",
+  "pima-legistar-outcomes:sittings",
+  "pima-legistar-outcomes:sittings.agenda",
+  "pima-legistar-outcomes:sittings.outcomes",
+  "pima-legistar-outcomes:sittings.rollCalls",
   "comment-access:records",
   "ballot-navigation:records",
   "campaign-sites:records",
@@ -163,6 +171,9 @@ const AUDITED_NON_CIVIC_METADATA_PATHS = [
   "candidate-profiles:links.note",
   "candidate-corpus:formatVersion",
   "candidate-corpus:fetchedAt",
+  "pima-legistar-outcomes:generatedOn",
+  "pima-legistar-outcomes:generatedAt",
+  "pima-legistar-outcomes:tenants",
   "comment-access/ballot-navigation/campaign-sites/venue-resolutions/everyday-routing:kind",
   "everyday-routing:formatVersion/derived-denominator",
 ] as const;
@@ -1027,7 +1038,7 @@ test("the browser-safe venue content key is an exact UTF-16 encoding", () => {
 
 // This deliberately performs three complete frozen builds plus the full import;
 // historical isolated runs take 10-16 minutes, so retain a bounded 20-minute ceiling.
-test("exact fc67 fixtures deterministically build and seed only the 95 absent trusted-LKG pointers", {
+test("exact fc67 fixtures deterministically build and seed the 96 planned trusted-LKG candidates", {
   timeout: 1_200_000,
 }, async () => {
   await withFrozenBase(async (frozenRoot, repositoryRoot) => {
@@ -1468,6 +1479,163 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     assert.equal(legacyDocx.text, null);
     assert.equal(legacyDocx.extraction, "failed");
     assert.equal(legacyDocx.contentHash, "00bd2a7b0db7c8323c84768dbc3a1d09b3cb96ff8382540634d0fac9e1e2e616");
+
+    const outcomeTarget = plan.candidates.find(({ contractId }) =>
+      contractId === "pima-legistar-outcomes"
+    );
+    assert.ok(outcomeTarget, "the frozen twenty-row Pima outcome candidate is planned");
+    const frozenOutcomes = structuredClone(outcomeTarget.candidate.readModel) as OutcomeSnapshot;
+    assert.equal(frozenOutcomes.sittings.length, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.pimaOutcomeSittings);
+    const durableOnly = {
+      ...structuredClone(frozenOutcomes.sittings.at(-1)!),
+      meetingId: "legistar:pima:999999",
+      eventId: 999999,
+      startsAt: "2026-09-08T18:00:00.000Z",
+    };
+    const durableOutcomes: OutcomeSnapshot = {
+      generatedOn: "durable-pima-outcomes-test",
+      generatedAt: "2026-09-09T10:58:00.000Z",
+      tenants: ["pima"],
+      sittings: [structuredClone(frozenOutcomes.sittings[0]!), durableOnly],
+    };
+    const directUnion = pdcV2UnionPimaOutcomeSnapshots(frozenOutcomes, durableOutcomes);
+    assert.deepEqual(
+      { generatedOn: directUnion.generatedOn, generatedAt: directUnion.generatedAt },
+      { generatedOn: durableOutcomes.generatedOn, generatedAt: durableOutcomes.generatedAt },
+      "the newer durable header survives the bounded union",
+    );
+    assert.equal(directUnion.sittings.length, frozenOutcomes.sittings.length + 1);
+    assert.deepEqual(
+      directUnion.sittings.find(({ meetingId }) => meetingId === durableOnly.meetingId),
+      durableOnly,
+      "a nonconflicting newer durable sitting survives byte-semantically",
+    );
+    const conflictingOutcomes: OutcomeSnapshot = {
+      ...durableOutcomes,
+      sittings: [{
+        ...structuredClone(frozenOutcomes.sittings[0]!),
+        bodyName: `${frozenOutcomes.sittings[0]!.bodyName} conflicting rewrite`,
+      }],
+    };
+    assert.throws(
+      () => pdcV2UnionPimaOutcomeSnapshots(frozenOutcomes, conflictingOutcomes),
+      /TRUSTED_LKG_PIMA_OUTCOME_SAME_ID_CONFLICT/,
+      "the same meeting id may never choose between conflicting whole-sitting payloads",
+    );
+
+    const acquisition = [{
+      source: "pima-legistar-outcomes",
+      requestedUrl: "https://webapi.legistar.com/v1/pima/events?$top=1000",
+      finalUrl: "https://webapi.legistar.com/v1/pima/events?$top=1000",
+      httpStatus: 200,
+      rawHash: "b".repeat(64),
+      byteCount: 123,
+    }] as const;
+    const durableCandidate = pimaLegistarOutcomesCandidate({
+      snapshot: durableOutcomes,
+      acquisitions: acquisition,
+      retrievedAt: "2026-09-09T10:59:00.000Z",
+      sourceThrough: "2026-09-09T10:58:00.000Z",
+    });
+    const outcomeUnionStore = new CountingMemoryRoutineDataStore();
+    const durablePromotion = await processRegisteredManualCandidate(
+      outcomeUnionStore,
+      "pima-legistar-outcomes",
+      durableCandidate,
+      "2026-09-09T11:00:00.000Z",
+      null,
+    );
+    assert.equal(durablePromotion.candidate.state, "PROMOTED");
+    outcomeUnionStore.createCalls = 0;
+    const unionImport = await executePdcV2TrustedLkgImportPlan(
+      outcomeUnionStore,
+      { ...plan, candidates: [outcomeTarget] },
+    );
+    assert.deepEqual(unionImport.dispositions.map(({ contractId, disposition }) => ({
+      contractId,
+      disposition,
+    })), [{
+      contractId: "pima-legistar-outcomes",
+      disposition: "PROMOTED_FROZEN_LKG_UNION",
+    }]);
+    assert.equal(outcomeUnionStore.createCalls, 1, "the union writes one successor and no intermediate re-attestation");
+    const unionPointer = await outcomeUnionStore.readPromotion<OutcomeSnapshot>(
+      "MEETING_OUTCOME",
+      "US-AZ:county:pima:legistar-outcomes",
+    );
+    assert.ok(unionPointer);
+    assert.deepEqual(unionPointer.payload, directUnion);
+    assert.equal(
+      unionPointer.payload.sittings.filter(({ meetingId }) => meetingId === frozenOutcomes.sittings[0]!.meetingId).length,
+      1,
+      "an identical overlapping sitting is deduplicated strictly by meeting id",
+    );
+    const liveOnly = {
+      ...structuredClone(durableOnly),
+      meetingId: "legistar:pima:1000000",
+      eventId: 1000000,
+      startsAt: "2026-09-09T12:01:00.000Z",
+    };
+    const liveSuccessor = pimaLegistarOutcomesCandidate({
+      snapshot: {
+        ...structuredClone(unionPointer.payload),
+        generatedOn: "live-pima-outcomes-test",
+        generatedAt: "2026-09-09T12:01:00.000Z",
+        sittings: [...unionPointer.payload.sittings, liveOnly],
+      },
+      acquisitions: acquisition,
+      retrievedAt: "2026-09-09T12:02:00.000Z",
+      sourceThrough: "2026-09-09T12:01:00.000Z",
+    });
+    const livePromotion = await processRegisteredManualCandidate(
+      outcomeUnionStore,
+      "pima-legistar-outcomes",
+      liveSuccessor,
+      "2026-09-09T12:03:00.000Z",
+      unionPointer.versionId,
+    );
+    assert.equal(livePromotion.candidate.state, "PROMOTED");
+    assert.equal(livePromotion.readerReadback?.status, "PASS");
+    assert.equal(
+      (await outcomeUnionStore.readPromotion<OutcomeSnapshot>(
+        "MEETING_OUTCOME",
+        "US-AZ:county:pima:legistar-outcomes",
+      ))?.payload.sittings.some(({ meetingId }) => meetingId === liveOnly.meetingId),
+      true,
+      "a later live-source promotion can prove the union LKG and append its own nonconflicting sitting",
+    );
+    releaseMemoryRoutineDataStore(outcomeUnionStore);
+
+    const conflictingCandidate = pimaLegistarOutcomesCandidate({
+      snapshot: conflictingOutcomes,
+      acquisitions: acquisition,
+      retrievedAt: "2026-09-09T10:59:00.000Z",
+      sourceThrough: "2026-09-09T10:58:00.000Z",
+    });
+    const outcomeConflictStore = new CountingMemoryRoutineDataStore();
+    const conflictPromotion = await processRegisteredManualCandidate(
+      outcomeConflictStore,
+      "pima-legistar-outcomes",
+      conflictingCandidate,
+      "2026-09-09T11:00:00.000Z",
+      null,
+    );
+    assert.equal(conflictPromotion.candidate.state, "PROMOTED");
+    outcomeConflictStore.createCalls = 0;
+    await assert.rejects(
+      executePdcV2TrustedLkgImportPlan(
+        outcomeConflictStore,
+        { ...plan, candidates: [outcomeTarget] },
+      ),
+      /TRUSTED_LKG_PIMA_OUTCOME_SAME_ID_CONFLICT/,
+    );
+    assert.equal(outcomeConflictStore.createCalls, 0, "a same-id conflict aborts before any import write");
+    assert.equal(
+      (await outcomeConflictStore.readPromotion("MEETING_OUTCOME", "US-AZ:county:pima:legistar-outcomes"))?.versionId,
+      conflictingCandidate.id,
+      "the conflicting durable authority remains untouched",
+    );
+    releaseMemoryRoutineDataStore(outcomeConflictStore);
 
     const sourceTarget = plan.candidates[0]!;
     const sourcePointer = {
@@ -2722,9 +2890,9 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
 });
 
 function assertManualReaderMemberCoverage(plan: PdcV2TrustedLkgImportPlan): void {
-  assert.equal(AUDITED_MANUAL_READER_COLLECTION_PATHS.length, 30);
+  assert.equal(AUDITED_MANUAL_READER_COLLECTION_PATHS.length, 34);
   assert.equal(AUDITED_MANUAL_READER_SCALAR_PATHS.length, 12);
-  assert.equal(AUDITED_NON_CIVIC_METADATA_PATHS.length, 23);
+  assert.equal(AUDITED_NON_CIVIC_METADATA_PATHS.length, 26);
 
   const required = (contractId: string): RoutineCandidate => {
     const candidate = plan.candidates.find((row) => row.contractId === contractId)?.candidate;
@@ -2877,6 +3045,28 @@ function assertManualReaderMemberCoverage(plan: PdcV2TrustedLkgImportPlan): void
   assert.deepEqual(member("az-official-actions", "projection:denominator:legislative"), actions.legislative);
   assert.ok(actions.legislative && Array.isArray(actions.legislative.openRoutes));
   assert.equal(members("az-official-actions").length, actions.actions.length + 4);
+
+  const outcomes = required("pima-legistar-outcomes").readModel as OutcomeSnapshot;
+  assert.equal(outcomes.sittings.length, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.pimaOutcomeSittings);
+  assert.deepEqual(outcomes.tenants, ["pima"]);
+  assert.equal(prefixCount("pima-legistar-outcomes", "sitting:"), outcomes.sittings.length);
+  assert.equal(
+    prefixCount("pima-legistar-outcomes", "agenda:"),
+    outcomes.sittings.reduce((sum, sitting) => sum + sitting.agenda.length, 0),
+  );
+  assert.equal(
+    prefixCount("pima-legistar-outcomes", "outcome:"),
+    outcomes.sittings.reduce((sum, sitting) => sum + sitting.outcomes.length, 0),
+  );
+  assert.equal(
+    prefixCount("pima-legistar-outcomes", "roll-call:"),
+    outcomes.sittings.reduce((sum, sitting) => sum + sitting.rollCalls.length, 0),
+  );
+  assert.equal(
+    members("pima-legistar-outcomes").length,
+    outcomes.sittings.reduce((sum, sitting) =>
+      sum + 1 + sitting.agenda.length + sitting.outcomes.length + sitting.rollCalls.length, 0),
+  );
 
   for (const contractId of ["comment-access", "ballot-navigation", "campaign-sites", "venue-resolutions", "everyday-routing"] as const) {
     const payload = required(contractId).readModel as { records: readonly unknown[] };

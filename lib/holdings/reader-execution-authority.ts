@@ -32,10 +32,12 @@ const BRANCH_ID = /^br-[a-z0-9-]{3,100}$/;
 const ENDPOINT_ID = /^ep-[a-z0-9-]{3,100}$/;
 const METADATA_MAX_AGE_MS = 6 * 60 * 60 * 1_000;
 const FUTURE_SKEW_MS = 5 * 60 * 1_000;
-const PDC_V2_PLANNED_CANDIDATE_COUNT = 95;
+const PDC_V2_PLANNED_CANDIDATE_COUNT = 96;
+const PDC_V2_PLANNED_EXISTING_UNION_COUNT = 1;
 const PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT = 16;
 const PDC_V2_FINAL_PROMOTION_COUNT =
-  PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT + PDC_V2_PLANNED_CANDIDATE_COUNT;
+  PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT + PDC_V2_PLANNED_CANDIDATE_COUNT -
+  PDC_V2_PLANNED_EXISTING_UNION_COUNT;
 // Exact production registry: 10 routine + 124 meeting + 23 manual contracts.
 const PDC_V2_REGISTERED_CONTRACT_COUNT = 157;
 export const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
@@ -43,6 +45,20 @@ export const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
 type Row = Record<string, unknown>;
 const row = (value: unknown): Row | null =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? value as Row : null;
+function trustedTransferPredecessor(transfer: Row | null): { versionId: string; promotedAt: string } | null {
+  if (transfer?.kind === "TRUSTED_LKG_REATTESTATION") {
+    return typeof transfer.predecessorVersionId === "string" && transfer.predecessorVersionId &&
+      typeof transfer.predecessorPromotedAt === "string" && transfer.predecessorPromotedAt
+      ? { versionId: transfer.predecessorVersionId, promotedAt: transfer.predecessorPromotedAt }
+      : null;
+  }
+  if (transfer?.kind !== "TRUSTED_LKG_IMPORT") return null;
+  const union = row(transfer.pimaOutcomeUnion);
+  return typeof union?.predecessorVersionId === "string" && union.predecessorVersionId &&
+    typeof union.predecessorPromotedAt === "string" && union.predecessorPromotedAt
+    ? { versionId: union.predecessorVersionId, promotedAt: union.predecessorPromotedAt }
+    : null;
+}
 const exactKeys = (value: Row, expected: readonly string[]) =>
   JSON.stringify(Object.keys(value).sort()) === JSON.stringify([...expected].sort());
 const digest = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
@@ -144,6 +160,7 @@ export type ImportDisposition = {
   readonly candidateId: string;
   readonly disposition:
     | "PROMOTED_ABSENT_POINTER"
+    | "PROMOTED_FROZEN_LKG_UNION"
     | "REATTESTED_EXISTING_AUTHORITY"
     | "SKIPPED_EXISTING_PROVEN_AUTHORITY";
   readonly versionId: string;
@@ -165,7 +182,7 @@ function exactImportDispositionSet(
       typeof disposition.contractId !== "string" || !disposition.contractId ||
       typeof disposition.candidateId !== "string" || !disposition.candidateId ||
       typeof disposition.versionId !== "string" || !disposition.versionId ||
-      !["PROMOTED_ABSENT_POINTER", "REATTESTED_EXISTING_AUTHORITY", "SKIPPED_EXISTING_PROVEN_AUTHORITY"].includes(String(disposition.disposition)) ||
+      !["PROMOTED_ABSENT_POINTER", "PROMOTED_FROZEN_LKG_UNION", "REATTESTED_EXISTING_AUTHORITY", "SKIPPED_EXISTING_PROVEN_AUTHORITY"].includes(String(disposition.disposition)) ||
       disposition.readerReadback !== "PASS"
     ) throw new Error("Reader import receipt disposition membership shape is not exact");
     if (
@@ -252,6 +269,11 @@ function validateImportReceipt(
   dispositionSet: readonly ImportDisposition[];
   dispositionSetSha256: string;
   zeroMeetingPartitionsRefused: number;
+  legacyMeetingsAggregate: {
+    factSha256: string;
+    meetingRowCount: number;
+    agendaDocumentRowCount: number;
+  };
   resultSha256: string;
 } {
   if (phase === "REHEARSAL") {
@@ -368,11 +390,11 @@ function validateImportReceipt(
       dispositionSet.length !== dispositions.total
     ) throw new Error("Reader rehearsal import receipt disposition denominator is invalid");
     const dispositionCounts = row(imported.dispositionCounts);
-    const allowedDispositionKeys = ["PROMOTED_ABSENT_POINTER", "REATTESTED_EXISTING_AUTHORITY", "SKIPPED_EXISTING_PROVEN_AUTHORITY"];
+    const allowedDispositionKeys = ["PROMOTED_ABSENT_POINTER", "PROMOTED_FROZEN_LKG_UNION", "REATTESTED_EXISTING_AUTHORITY", "SKIPPED_EXISTING_PROVEN_AUTHORITY"];
     if (
       !dispositionCounts || Object.keys(dispositionCounts).some((key) => !allowedDispositionKeys.includes(key)) ||
       Object.values(dispositionCounts).some((value) => !Number.isSafeInteger(value) || Number(value) <= 0) ||
-      Number(dispositionCounts.PROMOTED_ABSENT_POINTER ?? 0) + Number(dispositionCounts.REATTESTED_EXISTING_AUTHORITY ?? 0) !== dispositions.promoted ||
+      Number(dispositionCounts.PROMOTED_ABSENT_POINTER ?? 0) + Number(dispositionCounts.PROMOTED_FROZEN_LKG_UNION ?? 0) + Number(dispositionCounts.REATTESTED_EXISTING_AUTHORITY ?? 0) !== dispositions.promoted ||
       Number(dispositionCounts.REATTESTED_EXISTING_AUTHORITY ?? 0) !== dispositions.reattested ||
       Number(dispositionCounts.SKIPPED_EXISTING_PROVEN_AUTHORITY ?? 0) !== dispositions.skipped
     ) throw new Error("Reader rehearsal import disposition classes differ from the exact denominator");
@@ -386,19 +408,22 @@ function validateImportReceipt(
       throw new Error("Reader rehearsal disposition counts differ from their exact membership");
     }
     const absentPromotions = Number(dispositionCounts.PROMOTED_ABSENT_POINTER ?? 0);
-    const existingDispositions = dispositions.reattested + dispositions.skipped;
+    const unionPromotions = Number(dispositionCounts.PROMOTED_FROZEN_LKG_UNION ?? 0);
+    const existingDispositions = dispositions.reattested + unionPromotions + dispositions.skipped;
     const retiredLegacyPointers = retirement.disposition === "RETIRED" ? 1 : 0;
     const beforePointerCount = Number(before?.count);
     const changedKeyCount = (pointers?.changedKeyMembership as unknown[]).length;
     if (
       !["candidateCount", "meetingPartitionsWithLkg", "meetingPartitionsWithoutLkg", "meetingRows", "agendaDocumentRows", "manualContracts"].every((field) => Number.isSafeInteger(plan[field]) && Number(plan[field]) >= 0) ||
+      Number(plan.meetingRows) <= 0 || Number(plan.agendaDocumentRows) <= 0 ||
       plan.candidateCount !== PDC_V2_PLANNED_CANDIDATE_COUNT ||
       plan.meetingPartitionsWithoutLkg !== imported.zeroMeetingPartitionsRefused ||
       Number(plan.meetingPartitionsWithLkg) + Number(plan.manualContracts) !== Number(plan.candidateCount) ||
+      unionPromotions !== PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
       beforePointerCount < retiredLegacyPointers ||
       existingDispositions !== beforePointerCount - retiredLegacyPointers ||
       existingDispositions < PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT ||
-      absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT ||
+      absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT - PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
       count !== beforePointerCount - retiredLegacyPointers + absentPromotions ||
       count !== PDC_V2_FINAL_PROMOTION_COUNT ||
       dispositions.total !== count ||
@@ -413,6 +438,11 @@ function validateImportReceipt(
       dispositionSet,
       dispositionSetSha256: String(imported.dispositionSetSha256),
       zeroMeetingPartitionsRefused: Number(imported.zeroMeetingPartitionsRefused),
+      legacyMeetingsAggregate: {
+        factSha256: String(retirement.legacyMeetingFactSha256),
+        meetingRowCount: Number(plan.meetingRows),
+        agendaDocumentRowCount: Number(plan.agendaDocumentRows),
+      },
       resultSha256: String(imported.resultSha256),
     };
   }
@@ -465,6 +495,7 @@ function validateImportReceipt(
     ]) ||
     preImport.initialCensus !== "PASS" || preImport.liveRecensusAtReady !== "PASS" || preImport.exact0026PreflightWithProspectiveSuccessors !== "PASS" ||
     !["registeredContractKeys", "canonicalPromotionCount", "registeredCurrentPromotionCount", "obsoleteAggregatePointers", "liveLegacyHistoryEventCount", "liveLegacyMeetingRowCount", "liveLegacyAgendaDocumentRowCount", "prospectiveReattestationCount"].every((field) => Number.isSafeInteger(preImport[field]) && Number(preImport[field]) >= 0) ||
+    Number(preImport.liveLegacyMeetingRowCount) <= 0 || Number(preImport.liveLegacyAgendaDocumentRowCount) <= 0 ||
     typeof preImport.liveLegacyVersionId !== "string" || !preImport.liveLegacyVersionId ||
     !["liveLegacyPointerSha256", "liveLegacyCandidateRecordSha256", "liveLegacyHistorySha256", "liveLegacyMeetingFactSha256"].every((field) => SHA256.test(String(preImport[field])))
   ) throw new Error("Reader production prewrite/live-recensus authority is not terminally green");
@@ -528,7 +559,8 @@ function validateImportReceipt(
     throw new Error("Reader production disposition counts differ from their exact membership");
   }
   const absentPromotions = dispositionSet.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
-  const existingDispositions = dispositions.reattested + dispositions.skipped;
+  const unionPromotions = dispositionSet.filter(({ disposition }) => disposition === "PROMOTED_FROZEN_LKG_UNION").length;
+  const existingDispositions = dispositions.reattested + unionPromotions + dispositions.skipped;
   const retiredLegacyPointers = imported.retirementDisposition === "RETIRED" ? 1 : 0;
   const expectedRetirementProof = retiredLegacyPointers === 1 ? "NOT_APPLICABLE_POINTER_PRESENT" : "PASS";
   const replacementAuthoritySha256 = digest(canonicalReaderAuthorityJson({
@@ -540,8 +572,9 @@ function validateImportReceipt(
     preImport.obsoleteAggregatePointers !== retiredLegacyPointers ||
     preImport.durableRetirementReceipt !== expectedRetirementProof ||
     Number(preImport.canonicalPromotionCount) !== Number(preImport.registeredCurrentPromotionCount) + retiredLegacyPointers ||
+    unionPromotions > PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
     existingDispositions !== Number(preImport.registeredCurrentPromotionCount) ||
-    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT ||
+    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT - PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
     count !== Number(preImport.registeredCurrentPromotionCount) + absentPromotions ||
     count !== PDC_V2_FINAL_PROMOTION_COUNT ||
     dispositions.total !== count ||
@@ -560,6 +593,11 @@ function validateImportReceipt(
     dispositionSet,
     dispositionSetSha256: String(imported.dispositionSetSha256),
     zeroMeetingPartitionsRefused: Number(imported.zeroMeetingPartitionsRefused),
+    legacyMeetingsAggregate: {
+      factSha256: String(preImport.liveLegacyMeetingFactSha256),
+      meetingRowCount: Number(preImport.liveLegacyMeetingRowCount),
+      agendaDocumentRowCount: Number(preImport.liveLegacyAgendaDocumentRowCount),
+    },
     resultSha256: String(imported.resultSha256),
   };
 }
@@ -569,6 +607,11 @@ export interface ReaderExecutionAuthorityArchivedSupportAdmission {
   readonly dispositionSet: readonly ImportDisposition[];
   readonly zeroMeetingPartitionsRefused: number;
   readonly dispositionSetSha256: string;
+  readonly legacyMeetingsAggregate: {
+    readonly factSha256: string;
+    readonly meetingRowCount: number;
+    readonly agendaDocumentRowCount: number;
+  };
 }
 
 /**
@@ -619,6 +662,7 @@ export function admitReaderExecutionAuthorityArchivedSupport(
     dispositionSet: imported.dispositionSet,
     zeroMeetingPartitionsRefused: imported.zeroMeetingPartitionsRefused,
     dispositionSetSha256: imported.dispositionSetSha256,
+    legacyMeetingsAggregate: imported.legacyMeetingsAggregate,
   };
 }
 
@@ -927,8 +971,9 @@ async function readAuthorityDatabase(
   }
 
   const predecessorIds = [...new Set(candidates.flatMap((candidateRow) => {
-    const predecessorVersionId = row(row(candidateRow.candidate)?.bootstrapImport)?.predecessorVersionId;
-    return typeof predecessorVersionId === "string" && predecessorVersionId ? [predecessorVersionId] : [];
+    const transfer = row(row(candidateRow.candidate)?.bootstrapImport);
+    const predecessor = trustedTransferPredecessor(transfer);
+    return predecessor ? [predecessor.versionId] : [];
   }))].sort();
   const predecessors = new Map<string, Row>();
   for (const predecessorId of predecessorIds) {
@@ -988,10 +1033,10 @@ async function readAuthorityDatabase(
   const durableCandidates = candidates.flatMap((candidateRow) => {
     const candidate = row(candidateRow.candidate);
     const transfer = row(candidate?.bootstrapImport);
+    const transferPredecessor = trustedTransferPredecessor(transfer);
     const validationReceipt = exactValidationReceipt(candidateRow.validation_receipt);
-    const predecessorVersionId = row(transfer)?.predecessorVersionId;
-    const predecessorRow = typeof predecessorVersionId === "string"
-      ? predecessors.get(predecessorVersionId)
+    const predecessorRow = transferPredecessor
+      ? predecessors.get(transferPredecessor.versionId)
       : undefined;
     const predecessorCandidate = row(predecessorRow?.candidate);
     const predecessor = predecessorCandidate === null ? null : {
@@ -1063,6 +1108,10 @@ async function readAuthorityDatabase(
       ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT"
         ? "an absent-pointer disposition lacks its exact durable import bootstrap"
         : null
+      : disposition === "PROMOTED_FROZEN_LKG_UNION"
+        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT" || !row(transfer.pimaOutcomeUnion)
+          ? "a frozen-LKG union disposition lacks its exact durable predecessor-bound import bootstrap"
+          : null
       : disposition === "REATTESTED_EXISTING_AUTHORITY"
         ? !importedHere || transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
           ? "a re-attestation disposition lacks its exact durable re-attestation bootstrap"
@@ -1126,21 +1175,21 @@ async function readAuthorityDatabase(
                                     )
                                     ? "the durable bootstrap identity differs from the Reader readback"
                                     : null;
-    const predecessorIssue = transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
+    const predecessorIssue = transferPredecessor === null
       ? null
       : exactValidationReceipt(predecessorRow?.validation_receipt) === null
-        ? "the re-attestation predecessor lacks an exact GOOD receipt"
+        ? "the trusted-transfer predecessor lacks an exact GOOD receipt"
         : predecessorHistory.length === 0 || predecessorHistory.some((event, index) => event.sequence !== index + 1)
-          ? "the re-attestation predecessor history is empty or non-contiguous"
+          ? "the trusted-transfer predecessor history is empty or non-contiguous"
           : predecessorHistory.at(-1)?.state !== "PROMOTED"
-            ? "the re-attestation predecessor history is not terminally promoted"
+            ? "the trusted-transfer predecessor history is not terminally promoted"
             : !predecessorHistory.some((event) =>
                 event.state === "VALIDATED" &&
                 event.at === databaseTimestamp(row(predecessorRow?.validation_receipt)?.validatedAt)
               )
               ? "the predecessor validation receipt has no matching durable event"
               : !predecessorHistory.some((event) =>
-                  event.state === "PROMOTED" && event.at === String(transfer.predecessorPromotedAt ?? "")
+                  event.state === "PROMOTED" && event.at === transferPredecessor.promotedAt
                 )
                 ? "the predecessor promotion time has no matching durable event"
                 : null;
@@ -1184,11 +1233,11 @@ async function readAuthorityDatabase(
   const durableCandidateIds = new Set(durableCandidates.map(({ candidateId }) => candidateId));
   const durableEvents = normalizedEvents.filter(({ candidateId }) => durableCandidateIds.has(candidateId));
   const durablePredecessorIds = new Set(durableCandidates.flatMap(({ disposition, candidateId }) => {
-    if (disposition !== "REATTESTED_EXISTING_AUTHORITY") return [];
+    if (!["REATTESTED_EXISTING_AUTHORITY", "PROMOTED_FROZEN_LKG_UNION"].includes(disposition)) return [];
     const candidateRow = candidates.find((row) => row.candidate_id === candidateId);
-    const predecessorId = row(candidateRow?.candidate)?.bootstrapImport;
-    const predecessorVersionId = row(predecessorId)?.predecessorVersionId;
-    return typeof predecessorVersionId === "string" ? [predecessorVersionId] : [];
+    const transfer = row(row(candidateRow?.candidate)?.bootstrapImport);
+    const predecessor = trustedTransferPredecessor(transfer);
+    return predecessor ? [predecessor.versionId] : [];
   }));
   const durablePredecessorEvents = normalizedEvents.filter(({ candidateId }) => durablePredecessorIds.has(candidateId));
   const observedDispositions = {

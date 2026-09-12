@@ -521,7 +521,12 @@ export const COMMENT_ACCESS: CommentAccess[] = [
 ];
 
 export function currentCommentAccess(): readonly CommentAccess[] {
-  return currentCuratedReaderRecords("comment-access", COMMENT_ACCESS);
+  const seed = COMMENT_ACCESS.map((value) => ({
+    id: `comment-access:${value.bodyId}`,
+    ...value,
+  }));
+  return currentCuratedReaderRecords("comment-access", seed)
+    .map(({ id: _id, ...value }) => value as unknown as CommentAccess);
 }
 
 /**

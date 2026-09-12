@@ -88,7 +88,10 @@ function candidateReadOnlyStore(
 ): RoutineDataStore {
   const provedCandidate: RoutineCandidate = candidate.changeSet
     ? candidate
-    : { ...candidate, changeSet: candidateChangeSet(candidate, null) };
+    : {
+        ...candidate,
+        changeSet: candidateChangeSet(candidate, predecessor?.candidate.readModel ?? null),
+      };
   const receipt = preflightReceipt(provedCandidate, observedAt);
   const projection: PromotedProjection = {
     key: projectionKey(candidate.recordClass, candidate.scope),

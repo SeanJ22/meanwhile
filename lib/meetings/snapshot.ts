@@ -904,6 +904,12 @@ export interface ReaderProofMeetingsExpectedAuthority {
   /** Exact counts already validated against the phase import receipt. */
   readonly meetingPartitionsWithLkg: number;
   readonly meetingPartitionsWithoutLkg: number;
+  /** Exact legacy aggregate facts authenticated by the phase import receipt. */
+  readonly legacyMeetingsAggregate: {
+    readonly factSha256: string;
+    readonly meetingRowCount: number;
+    readonly agendaDocumentRowCount: number;
+  };
   /** Exact imported membership and promoted version identities. */
   readonly partitions: readonly ReaderProofMeetingPartitionAuthority[];
 }
@@ -913,6 +919,16 @@ function readerProofExpectedMeetingAuthority(
 ): ReadonlyMap<string, ReaderProofMeetingPartitionAuthority> {
   if (!expected) {
     throw new Error("Meeting Reader proof expected phase-import authority was not provided.");
+  }
+  if (
+    !expected.legacyMeetingsAggregate ||
+    !/^[a-f0-9]{64}$/.test(expected.legacyMeetingsAggregate.factSha256) ||
+    !Number.isSafeInteger(expected.legacyMeetingsAggregate.meetingRowCount) ||
+    expected.legacyMeetingsAggregate.meetingRowCount <= 0 ||
+    !Number.isSafeInteger(expected.legacyMeetingsAggregate.agendaDocumentRowCount) ||
+    expected.legacyMeetingsAggregate.agendaDocumentRowCount <= 0
+  ) {
+    throw new Error("Meeting Reader proof expected legacy aggregate authority is invalid.");
   }
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map(({ id }) => id));
   const ids = expected.partitions.map(({ contractId }) => contractId);

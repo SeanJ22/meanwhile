@@ -15,9 +15,12 @@ const PRODUCTION_BRANCH_ID = "br-delicate-lab-ax02xuo5";
 const REHEARSAL_BRANCH_ID = "br-reader-rehearsal-123";
 const REHEARSAL_ENDPOINT_ID = "ep-reader-rehearsal-123";
 const PRODUCTION_ENDPOINT_ID = "ep-reader-production-123";
-const PLAN_CANDIDATE_COUNT = 95;
+const PLAN_CANDIDATE_COUNT = 96;
+const PLANNED_EXISTING_UNION_COUNT = 1;
 const BASELINE_REGISTERED_PROMOTION_COUNT = 16;
-const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT;
+const BASELINE_REATTESTED_PROMOTION_COUNT = BASELINE_REGISTERED_PROMOTION_COUNT - PLANNED_EXISTING_UNION_COUNT;
+const PLANNED_ABSENT_PROMOTION_COUNT = PLAN_CANDIDATE_COUNT - PLANNED_EXISTING_UNION_COUNT;
+const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT - PLANNED_EXISTING_UNION_COUNT;
 const REGISTERED_CONTRACT_COUNT = 157;
 
 const sha256 = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
@@ -43,12 +46,12 @@ function importDispositionSet() {
     return {
       contractId: `planned-contract-${suffix}`,
       candidateId: `planned-candidate-${suffix}`,
-      disposition: "PROMOTED_ABSENT_POINTER",
+      disposition: index === 0 ? "PROMOTED_FROZEN_LKG_UNION" : "PROMOTED_ABSENT_POINTER",
       versionId: `planned-candidate-${suffix}`,
       readerReadback: "PASS",
     };
   });
-  const existing = Array.from({ length: BASELINE_REGISTERED_PROMOTION_COUNT }, (_, index) => {
+  const existing = Array.from({ length: BASELINE_REATTESTED_PROMOTION_COUNT }, (_, index) => {
     const suffix = String(index + 1).padStart(3, "0");
     return {
       contractId: `baseline-contract-${suffix}`,
@@ -143,7 +146,7 @@ function rehearsalImportReceipt(metadataBytes: Buffer, overrides: Record<string,
       meetingPartitionsWithoutLkg: 41,
       meetingRows: 619,
       agendaDocumentRows: 196,
-      manualContracts: 12,
+      manualContracts: 13,
       planSha256: SHA256,
     },
     import: {
@@ -152,13 +155,14 @@ function rehearsalImportReceipt(metadataBytes: Buffer, overrides: Record<string,
       importerCodeSha: HEAD_A,
       importedAt: NOW,
       promoted: FINAL_AUTHORITY_COUNT,
-      reattestedExisting: BASELINE_REGISTERED_PROMOTION_COUNT,
+      reattestedExisting: BASELINE_REATTESTED_PROMOTION_COUNT,
       skippedExisting: 0,
       zeroMeetingPartitionsRefused: 41,
       dispositionCount: FINAL_AUTHORITY_COUNT,
       dispositionCounts: {
-        PROMOTED_ABSENT_POINTER: PLAN_CANDIDATE_COUNT,
-        REATTESTED_EXISTING_AUTHORITY: BASELINE_REGISTERED_PROMOTION_COUNT,
+        PROMOTED_ABSENT_POINTER: PLANNED_ABSENT_PROMOTION_COUNT,
+        PROMOTED_FROZEN_LKG_UNION: PLANNED_EXISTING_UNION_COUNT,
+        REATTESTED_EXISTING_AUTHORITY: BASELINE_REATTESTED_PROMOTION_COUNT,
       },
       dispositionSet: dispositions,
       dispositionSetSha256: sha256(canonicalJson(dispositions)),
@@ -262,7 +266,7 @@ function productionImportReceipt(overrides: Record<string, unknown> = {}) {
     host: { obsoleteScheduledTasks: 0, startupLaunchers: 0, oldProcessTreeMembers: 0 },
     import: {
       promoted: FINAL_AUTHORITY_COUNT,
-      reattestedExisting: BASELINE_REGISTERED_PROMOTION_COUNT,
+      reattestedExisting: BASELINE_REATTESTED_PROMOTION_COUNT,
       skippedExisting: 0,
       dispositions: FINAL_AUTHORITY_COUNT,
       dispositionSet: dispositions,
@@ -348,7 +352,7 @@ function authorityArtifact(phase: "REHEARSAL" | "PRODUCTION") {
           candidateCount: FINAL_AUTHORITY_COUNT,
           currentPointerLinkCount: FINAL_AUTHORITY_COUNT,
           promotedDispositionCount: FINAL_AUTHORITY_COUNT,
-          reattestedDispositionCount: BASELINE_REGISTERED_PROMOTION_COUNT,
+          reattestedDispositionCount: BASELINE_REATTESTED_PROMOTION_COUNT,
           skippedDispositionCount: 0,
           candidateSetSha256: sha256("candidate-set"),
           eventCandidateCount: FINAL_AUTHORITY_COUNT,
@@ -579,7 +583,7 @@ test("archived controller support binds exact result and disposition membership 
   );
 });
 
-test("archived support keeps the 95-plan, 111-authority, and 157-registry denominators distinct", () => {
+test("archived support keeps the 96-plan, 111-authority, and 157-registry denominators distinct", () => {
   const rehearsalBuilt = authorityArtifact("REHEARSAL");
   const rehearsalPath = "docs/evidence/reader-last-mile-rehearsal-import-receipt.json";
   const rehearsal = JSON.parse(rehearsalBuilt.support[rehearsalPath].toString("utf8"));
@@ -649,6 +653,42 @@ test("archived support keeps the 95-plan, 111-authority, and 157-registry denomi
       { requiredPhase: "PRODUCTION" },
     ),
     /import\/retirement\/post-import receipt shape differs/,
+  );
+});
+
+test("archived rehearsal support requires the one planned existing-authority union overlap", () => {
+  const built = authorityArtifact("REHEARSAL");
+  const importPath = "docs/evidence/reader-last-mile-rehearsal-import-receipt.json";
+  const receipt = JSON.parse(built.support[importPath].toString("utf8"));
+  const union = receipt.import.dispositionSet.find((entry: Record<string, unknown>) =>
+    entry.disposition === "PROMOTED_FROZEN_LKG_UNION"
+  );
+  assert.ok(union);
+  union.disposition = "REATTESTED_EXISTING_AUTHORITY";
+  receipt.import.reattestedExisting = BASELINE_REGISTERED_PROMOTION_COUNT;
+  receipt.import.dispositionCounts = {
+    PROMOTED_ABSENT_POINTER: PLANNED_ABSENT_PROMOTION_COUNT,
+    REATTESTED_EXISTING_AUTHORITY: BASELINE_REGISTERED_PROMOTION_COUNT,
+  };
+  receipt.import.dispositionSetSha256 = sha256(canonicalJson(receipt.import.dispositionSet));
+  delete receipt.receiptSha256;
+  receipt.receiptSha256 = sha256(canonicalJson(receipt));
+  built.artifact.import.dispositionSetSha256 = receipt.import.dispositionSetSha256;
+  built.artifact.import.durableImport.reattestedDispositionCount = BASELINE_REGISTERED_PROMOTION_COUNT;
+  const forged = replaceSupport(
+    built,
+    "REHEARSAL",
+    "import",
+    Buffer.from(canonicalJson(receipt)),
+  );
+  const closure = authorityReceiptFromBuilt("REHEARSAL", forged);
+  assert.throws(
+    () => readerProofAuthority(
+      closure.receipt,
+      evidence({ ...closure.support, [closure.receipt.executionAuthority.evidencePath]: closure.artifact }),
+      HEAD_A,
+    ),
+    /plan\/pointer transition differs/,
   );
 });
 

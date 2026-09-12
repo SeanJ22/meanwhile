@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 625,
-    "named": 6518,
+    "files": 626,
+    "named": 6525,
     "dynamic": 27
   },
   "files": {
@@ -2970,6 +2970,7 @@
       "names": [
         "Admin projects the four manual authorities without inventing a clock",
         "a bad curated family is held against its own LKG and cannot affect another family",
+        "comment-access drops the control-plane transport id at the Reader boundary",
         "curated Reader evidence is source-scoped and never names software certification",
         "each mutable curated Reader family promotes and reads from its own canonical pointer",
         "reference-publisher evidence is confined to venue coordinates",
@@ -3709,6 +3710,12 @@
         "RULING 107: the declaration is what separates a reading path from a restamp",
         "RULING 107: the sweep sees a stamp broken across two lines",
         "RULING 107: the wider class of stamp sites only shrinks"
+      ],
+      "dynamic": 0
+    },
+    "tests/funding-bootstrap-absence-safety.test.ts": {
+      "names": [
+        "FEC bootstrap preserves the candidate LKG without reviving unproven frozen absences"
       ],
       "dynamic": 0
     },
@@ -6034,7 +6041,7 @@
     },
     "tests/pdc-v2-trusted-lkg-importer.test.ts": {
       "names": [
-        "exact fc67 fixtures deterministically build and seed only the 95 absent trusted-LKG pointers",
+        "exact fc67 fixtures deterministically build and seed the 96 planned trusted-LKG candidates",
         "frozen module evaluation cannot change the process working directory",
         "the Postgres retirement lock binds the exact pre-read replacement promotion clock",
         "the browser-safe venue content key is an exact UTF-16 encoding",
@@ -6723,6 +6730,7 @@
         "missing, forged, stale, extra, and secret-bearing provider metadata fail closed",
         "phase relabeling cannot turn a rehearsal child into production evidence",
         "production authority binds the pinned standing branch and no clone claim",
+        "production authority refuses a zero live legacy meetings census before import",
         "production authority rejects registered Reader denominator near misses",
         "production replay accepts 111 already-proven authorities without relabeling their durable bootstrap",
         "re-attested authority binds the exact predecessor row, receipt, pointer, and contiguous events",
@@ -6867,8 +6875,10 @@
     },
     "tests/reader-last-mile-census.test.ts": {
       "names": [
+        "Reader authority canonicalization ignores transport metadata and JSON key order only",
         "Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production",
         "applicability keeps source inputs distinct without erasing direct reader obligations",
+        "ballot absence supersession permits only a unique later verification of the exact same fact",
         "ballot scope cannot hide an eligible incumbent when the consumer join returns null",
         "committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens",
         "committed proof fingerprint rejects a vanished loader or changed holding, without requiring the same documentary HEAD",
@@ -6888,6 +6898,7 @@
         "receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",
         "render instrument rejects a vanished eligible fact, an inherited identity and a false row count",
         "source fingerprint follows a directory index and imported reader CSS as files",
+        "state-money supersession requires one later non-weakening authority for the exact identity",
         "the actual reader graph cannot consume autonomous staging merely because an artifact exists",
         "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt",
         "the frozen Reader census retains retired authorities as withheld evidence without restoring their production identities"
@@ -7059,7 +7070,8 @@
         "an inherited Reader receipt keeps the invalidation report as its proof-head authority but legacy authority is exact-byte bounded",
         "archived controller support binds exact result and disposition membership digests",
         "archived production support rejects registered Reader denominator near misses",
-        "archived support keeps the 95-plan, 111-authority, and 157-registry denominators distinct",
+        "archived rehearsal support requires the one planned existing-authority union overlap",
+        "archived support keeps the 96-plan, 111-authority, and 157-registry denominators distinct",
         "archived support rejects recursive schema additions and secret-bearing keys regardless of value type",
         "fresh Reader history re-parses exact archived provider and controller support instead of trusting matching hashes",
         "fresh Reader history requires a hash-bound execution authority at the exact proved head",

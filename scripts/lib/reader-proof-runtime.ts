@@ -20,6 +20,7 @@ import {
 } from "../../lib/civic-data/manual-read-models.ts";
 import { refreshOfficeholderStatementsFromPromoted } from "../../lib/corpus/data-plane.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
+import { pdcV2CanonicalMeetingFactEvidence } from "../../lib/civic-data/store.ts";
 import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
   type StateCampaignFinanceJurisdiction,
@@ -110,6 +111,14 @@ export function readerProofMeetingPartitionIdentity(
 ): string {
   requireReaderProofMeetingsProjection(result, expectedAuthority);
   if (result.kind !== "PROMOTED") throw new Error("Unreachable meeting Reader proof state.");
+  const actualLegacyMeetingsAggregate = pdcV2CanonicalMeetingFactEvidence([result.value]);
+  if (
+    actualLegacyMeetingsAggregate.sha256 !== expectedAuthority.legacyMeetingsAggregate.factSha256 ||
+    actualLegacyMeetingsAggregate.meetingRowCount !== expectedAuthority.legacyMeetingsAggregate.meetingRowCount ||
+    actualLegacyMeetingsAggregate.agendaDocumentRowCount !== expectedAuthority.legacyMeetingsAggregate.agendaDocumentRowCount
+  ) {
+    throw new Error("Meeting Reader proof legacy aggregate facts differ from phase import authority.");
+  }
   const identity = result.partitions
     .map(({ contractId, kind, versionId }) => `${contractId}|${kind}|${versionId ?? ""}`)
     .sort()
@@ -147,6 +156,7 @@ export function readerProofMeetingsAuthorityFromImport(
   return {
     meetingPartitionsWithLkg: promotedRows.length,
     meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused,
+    legacyMeetingsAggregate: admission.legacyMeetingsAggregate,
     partitions,
   };
 }
@@ -385,6 +395,12 @@ function loadReaderProofMeetingsExpectedAuthorityFor(
       readReaderEvidence(root, rehearsalEvidence.supportPaths[1]!),
     );
     const rehearsalExpected = readerProofMeetingsAuthorityFromImport(rehearsalSupport);
+    if (
+      JSON.stringify(expected.legacyMeetingsAggregate) !==
+      JSON.stringify(rehearsalExpected.legacyMeetingsAggregate)
+    ) {
+      throw new Error("Reader production meeting aggregate differs from documentary rehearsal A.");
+    }
     if (JSON.stringify(promotedMeetingIds(expected)) !== JSON.stringify(promotedMeetingIds(rehearsalExpected))) {
       throw new Error("Reader production meeting membership differs from documentary rehearsal A.");
     }

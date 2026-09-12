@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
-import { applyReaderApplicability, buildReaderCensus, classifyReaderEligibility, compareFrozenBodyRosterAuthority, compareFrozenBodyRosterAuthorityUniverse, compareFrozenOfficeholderStatementAuthority, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
+import { applyReaderApplicability, ballotAbsenceAuthorityRelation, buildReaderCensus, canonicalReaderAuthorityJson, classifyReaderEligibility, compareFrozenBodyRosterAuthority, compareFrozenBodyRosterAuthorityUniverse, compareFrozenOfficeholderStatementAuthority, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, stateMoneyAuthorityRelation, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyForTarget, resetStateMoneyCache } from "../lib/funding/state-snapshot.ts";
 import { currentOfficeholderStatements } from "../lib/corpus/data-plane.ts";
@@ -345,6 +345,17 @@ test("the frozen Reader census retains retired authorities as withheld evidence 
   assert.equal(campaignSites.filter((record) => record.eligibility.state === "READER_ELIGIBLE").length, 9);
   assert.equal(campaignSites.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE").length, 3);
 
+  const federalAbsences = recordsAt("data/fec/fec-2026.json").filter((record) => record.unit === "absences");
+  assert.equal(federalAbsences.length, 14);
+  assert.ok(federalAbsences.every((record) => record.eligibility.state === "NOT_READER_ELIGIBLE"));
+  assert.ok(federalAbsences.every((record) => record.eligibility.reason.includes("completed pagination")));
+
+  const venues = recordsAt("lib/meetings/venue-cache.ts");
+  const unstampedVenueFixtures = venues.filter((record) => record.eligibility.reason.includes("historical adoption/node:test fixture"));
+  assert.equal(venues.length, 69);
+  assert.equal(unstampedVenueFixtures.length, 3);
+  assert.ok(unstampedVenueFixtures.every((record) => record.eligibility.state === "NOT_READER_ELIGIBLE"));
+
   const source = readFileSync(new URL("../lib/holdings/reader-census.ts", import.meta.url), "utf8");
   assert.doesNotMatch(source, /getStateVotesSnapshot\(/);
   assert.match(source, /record\.eligibility\.state === "READER_ELIGIBLE" && \["votes", "positions", "rollCalls"\]/);
@@ -542,6 +553,87 @@ test("current normalized state-money records survive the canonical exact-key sel
   assert.equal(superseded, 94, "54 source observations are superseded by same-candidacy filings and 40 duplicate sourced absences consolidate; none is lost at a loader");
   assert.deepEqual(stateMoneyForTarget("unresolved:Katie Hobbs"), [], "a familiar name without a committed target identity never resolves");
   assert.deepEqual(stateMoneyForTarget("ballot-az-pima:governor:invented-person"), []);
+});
+
+test("Reader authority canonicalization ignores transport metadata and JSON key order only", () => {
+  assert.equal(
+    canonicalReaderAuthorityJson({ z: 1, nested: { b: 2, a: 1 }, _manifestStateCodes: ["az"] }),
+    canonicalReaderAuthorityJson({ nested: { a: 1, b: 2 }, z: 1 }),
+  );
+  assert.notEqual(
+    canonicalReaderAuthorityJson({ nested: { a: 1 }, claim: "held fact" }),
+    canonicalReaderAuthorityJson({ nested: { a: 1 }, claim: "changed fact" }),
+  );
+});
+
+test("state-money supersession requires one later non-weakening authority for the exact identity", () => {
+  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/az/funding/state-money-az-2026.json"), "utf8")) as { records: StateMoneyRecord[] };
+  const frozen = structuredClone(snapshot.records.find((record) => record.filingState === "FILED")!);
+  const successor: StateMoneyRecord = {
+    ...structuredClone(frozen),
+    checkedAt: "2026-09-08",
+    totals: { ...frozen.totals, receipts: (frozen.totals.receipts ?? 0) + 1 },
+    provenance: { ...frozen.provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  };
+
+  assert.equal(stateMoneyAuthorityRelation(frozen, [structuredClone(frozen)], "2026-09-08").kind, "EXACT");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [successor], "2026-09-08").kind, "MONOTONIC_SUCCESSOR");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, agency: `${successor.agency} drift` }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, targetKeys: ["ballot-az-pima:other-person"] }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, targetKeys: [...successor.targetKeys, "ballot-az-pima:other-person"] }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, committeeId: "different-committee" }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, checkedAt: "2026-08-31" }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, checkedAt: "2026-09-09", provenance: { ...successor.provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, provenance: { ...successor.provenance, collectedAt: "2026-08-31" } }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, filingState: "NO_REPORTS_ON_FILE" }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...structuredClone(frozen), totals: { ...frozen.totals, receipts: (frozen.totals.receipts ?? 0) + 1 } }], "2026-09-08").kind, "MISSING", "changed bytes at the same observation time are not a later authority");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [successor], "2026-08-31").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [
+    successor,
+    { ...structuredClone(successor), checkedAt: "2026-09-09", totals: { ...successor.totals, receipts: (successor.totals.receipts ?? 0) + 1 }, provenance: { ...successor.provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } },
+  ], "2026-09-09").kind, "MISSING", "two different plausible successors cannot be selected by guesswork");
+
+  const frozenAbsence = structuredClone(snapshot.records.find((record) => record.filingState === "NO_REPORTS_ON_FILE" && record.committeeId === null)!);
+  const registeredSuccessor: StateMoneyRecord = {
+    ...structuredClone(frozenAbsence),
+    committeeId: "102250",
+    registeredName: "Miceli for Governor",
+    filingState: "REGISTERED_NO_ACTIVITY_REPORTED",
+    match: {
+      ...frozenAbsence.match,
+      registeredName: "Miceli for Governor",
+      officeAsFiled: frozenAbsence.officeSought,
+      electionYearAsFiled: frozenAbsence.electionYear,
+      allThreeAgree: true,
+      note: "exact target, office, cycle and registered committee verified",
+    },
+    checkedAt: "2026-09-08",
+    provenance: { ...frozenAbsence.provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  };
+  assert.equal(
+    stateMoneyAuthorityRelation(frozenAbsence, [registeredSuccessor], "2026-09-08").kind,
+    "MONOTONIC_SUCCESSOR",
+    "the observed exact-target absence-to-registered transition remains admissible",
+  );
+});
+
+test("ballot absence supersession permits only a unique later verification of the exact same fact", () => {
+  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/nj/ballot/nj-morris-2026.json"), "utf8")) as { absences: Record<string, unknown>[] };
+  const frozen = structuredClone(snapshot.absences[0]!);
+  const provenance = frozen.provenance as Record<string, unknown>;
+  const successor = {
+    ...structuredClone(frozen),
+    provenance: { ...provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  };
+
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [structuredClone(frozen)]).kind, "EXACT");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [successor]).kind, "MONOTONIC_SUCCESSOR");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, statement: `${String(frozen.statement)} drift` }]).kind, "MISSING");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, provenance: { ...provenance, collectedAt: "2026-08-31", verifiedAt: "2026-08-31" } }]).kind, "MISSING");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [
+    successor,
+    { ...structuredClone(successor), provenance: { ...provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } },
+  ]).kind, "MISSING", "two later observations cannot be resolved by array order");
 });
 
 test("committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens", () => {

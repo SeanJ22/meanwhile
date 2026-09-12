@@ -358,6 +358,35 @@ export interface TrustedLkgLegacyMeetingsPartitionEvidence {
 }
 
 /**
+ * Exact predecessor witness for the one PDC-v2 manual import whose frozen LKG
+ * must be unioned with an already-serving permanent pointer.  The frozen
+ * twenty-sitting payload and the durable predecessor are both append-only
+ * authorities: neither may silently overwrite a same-id sitting from the
+ * other, and every non-conflicting sitting from both must survive.
+ */
+export interface TrustedLkgPimaOutcomeUnionEvidence {
+  readonly contractVersion: 1;
+  readonly kind: "DURABLE_PIMA_OUTCOME_UNION";
+  readonly predecessorVersionId: string;
+  readonly predecessorPromotedAt: string;
+  readonly predecessorPointerSha256: string;
+  readonly predecessorCandidateRecordSha256: string;
+  readonly predecessorCandidateSha256: string;
+  readonly predecessorReceiptSha256: string;
+  readonly predecessorReadModelSha256: string;
+  readonly frozenGeneratedOn: string;
+  readonly frozenGeneratedAt: string;
+  readonly frozenSittings: readonly {
+    readonly meetingId: string;
+    readonly sha256: string;
+  }[];
+  readonly predecessorSittingCount: number;
+  readonly unionSittingCount: number;
+  /** Digest of the immutable fixture manifest plus the exact predecessor pointer. */
+  readonly unionAuthoritySha256: string;
+}
+
+/**
  * Explicit provenance for the one-time PDC-v2 transfer of an already-serving
  * tracked LKG into the permanent store. This is not a publisher acquisition
  * and must never be rendered or counted as one.
@@ -387,6 +416,8 @@ export interface TrustedLkgImportEvidence {
    * deliberately empty and this witness is the complete transfer provenance.
    */
   readonly legacyMeetingsPartition?: TrustedLkgLegacyMeetingsPartitionEvidence;
+  /** Present only for the bounded frozen-Pima-outcomes + durable-LKG union. */
+  readonly pimaOutcomeUnion?: TrustedLkgPimaOutcomeUnionEvidence;
   /** Bind the exact normalized and Reader projections to this import receipt. */
   readonly normalizedPayloadSha256: string;
   readonly readModelSha256: string;

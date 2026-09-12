@@ -280,9 +280,11 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
   ) throw new Error("Reader rehearsal nested importer receipt differs from exact code/frozen authority.");
   const retirement = plainObject(imported.legacyMeetingsAggregateRetirement);
   if (
-    !retirement || !exactKeys(retirement, ["disposition", "legacyVersionId", "retiredAt", "legacyMeetingFactSha256", "replacementPointerSha256"]) ||
+    !retirement || !exactKeys(retirement, ["disposition", "legacyVersionId", "retiredAt", "legacyMeetingFactSha256", "replacementPointerSha256", "meetingRowCount", "agendaDocumentRowCount"]) ||
     !["RETIRED", "ALREADY_RETIRED_PROVEN"].includes(retirement.disposition) || typeof retirement.legacyVersionId !== "string" || !retirement.legacyVersionId ||
     !exactIso(retirement.retiredAt) || !EXACT_SHA256.test(String(retirement.legacyMeetingFactSha256)) || !EXACT_SHA256.test(String(retirement.replacementPointerSha256)) ||
+    !Number.isSafeInteger(retirement.meetingRowCount) || Number(retirement.meetingRowCount) <= 0 ||
+    !Number.isSafeInteger(retirement.agendaDocumentRowCount) || Number(retirement.agendaDocumentRowCount) <= 0 ||
     receipt.productionMutations !== 0 || receipt.gitMutations !== 0 || receipt.deploymentMutations !== 0
   ) throw new Error("Reader rehearsal retirement/mutation evidence is not exact.");
   const dispositions = exactDispositionSet(imported.dispositionSet, imported.dispositionSetSha256);

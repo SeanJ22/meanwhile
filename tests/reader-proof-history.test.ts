@@ -172,6 +172,10 @@ function rehearsalImportReceipt(metadataBytes: Buffer, overrides: Record<string,
         retiredAt: NOW,
         legacyMeetingFactSha256: SHA256,
         replacementPointerSha256: SHA256,
+        // Reader-visible (collapsed) counts of the retired aggregate; these pair
+        // with legacyMeetingFactSha256 and may be below the frozen plan.meetingRows.
+        meetingRowCount: 605,
+        agendaDocumentRowCount: 187,
       },
       resultSha256: sha256("rehearsal-result"),
     },

@@ -364,10 +364,12 @@ function validateImportReceipt(
     ) throw new Error("Reader rehearsal nested importer receipt differs from exact code/frozen authority");
     const retirement = row(imported.legacyMeetingsAggregateRetirement);
     if (
-      !retirement || !exactKeys(retirement, ["disposition", "legacyVersionId", "retiredAt", "legacyMeetingFactSha256", "replacementPointerSha256"]) ||
+      !retirement || !exactKeys(retirement, ["disposition", "legacyVersionId", "retiredAt", "legacyMeetingFactSha256", "replacementPointerSha256", "meetingRowCount", "agendaDocumentRowCount"]) ||
       !["RETIRED", "ALREADY_RETIRED_PROVEN"].includes(String(retirement.disposition)) ||
       typeof retirement.legacyVersionId !== "string" || !retirement.legacyVersionId || !exactIso(retirement.retiredAt) ||
       !SHA256.test(String(retirement.legacyMeetingFactSha256)) || !SHA256.test(String(retirement.replacementPointerSha256)) ||
+      !Number.isSafeInteger(retirement.meetingRowCount) || Number(retirement.meetingRowCount) <= 0 ||
+      !Number.isSafeInteger(retirement.agendaDocumentRowCount) || Number(retirement.agendaDocumentRowCount) <= 0 ||
       receipt.productionMutations !== 0 || receipt.gitMutations !== 0 || receipt.deploymentMutations !== 0
     ) throw new Error("Reader rehearsal retirement/mutation evidence is not exact");
     const dispositionSet = exactImportDispositionSet(imported.dispositionSet, imported.dispositionSetSha256);
@@ -439,9 +441,15 @@ function validateImportReceipt(
       dispositionSetSha256: String(imported.dispositionSetSha256),
       zeroMeetingPartitionsRefused: Number(imported.zeroMeetingPartitionsRefused),
       legacyMeetingsAggregate: {
+        // The retired aggregate's identity is reader-visible (collapsed): its
+        // factSha256 is retirement.legacyMeetingFactSha256, so its counts must
+        // be the matching retirement counts, NOT plan.meetingRows/agendaDocumentRows
+        // (the frozen fc67 lineage denominator, a pre-collapse representation).
+        // This mirrors the PRODUCTION branch, which pairs
+        // liveLegacyMeetingFactSha256 with liveLegacyMeetingRowCount.
         factSha256: String(retirement.legacyMeetingFactSha256),
-        meetingRowCount: Number(plan.meetingRows),
-        agendaDocumentRowCount: Number(plan.agendaDocumentRows),
+        meetingRowCount: Number(retirement.meetingRowCount),
+        agendaDocumentRowCount: Number(retirement.agendaDocumentRowCount),
       },
       resultSha256: String(imported.resultSha256),
     };

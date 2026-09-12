@@ -759,6 +759,8 @@ function rehearsalReceipt(
         retiredAt: NOW,
         legacyMeetingFactSha256: SHA256,
         replacementPointerSha256: SHA256,
+        meetingRowCount: 619,
+        agendaDocumentRowCount: 196,
       },
       resultSha256: SHA256,
     },

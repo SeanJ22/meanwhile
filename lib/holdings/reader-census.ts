@@ -3489,7 +3489,10 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const bodyId = typeof raw.bodyId === "string" ? raw.bodyId : null;
       const selected = commentAccess.commentAccessFor(ocdId, bodyName, bodyId);
       if (!selected) throw new Error(`SSR could not resolve comment access ${record.auditId}`);
-      const markup = renderToStaticMarkup(createElement(HowToBeHeard, { ocdId, bodyName, bodyId }));
+      // HowToBeHeard reads useShellData().commentAccess (added in the PDC data-plane
+      // change), so it must render inside a DataProvider carrying the current
+      // comment-access list — otherwise useShellData throws outside the provider.
+      const markup = renderToStaticMarkup(createElement(DataProvider, { value: { ...emptyShellData, commentAccess: commentAccess.currentCommentAccess() }, children: createElement(HowToBeHeard, { ocdId, bodyName, bodyId }) }));
       add(record, "components/map/meeting-panel.tsx", "commentAccessFor → HowToBeHeard", selected, [bodyId ?? ocdId ?? selected.sourceUrl], markup,
         [selected.sourceUrl, ...(selected.commentPeriod === "UNKNOWN" ? ["We don't know this body's public-comment rules yet"] : [selected.commentPeriodDetail, selected.timeLimit, selected.signup, selected.writtenComment, selected.attend])].filter((value): value is string => Boolean(value)));
     } else if ((record.family === "meetings" && record.unit === "meetings" || record.family === "minutes-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
@@ -3515,7 +3518,14 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
         [...selected.agenda.map((row) => row.title), ...selected.actions.flatMap((row) => [row.action, row.provenance.endpoint]), ...selected.rollCalls.flatMap((row) => row.votes.flatMap((vote) => [vote.personName, vote.value]))].filter((value): value is string => Boolean(value)), [],
         { agenda: { expected: selected.counts.agenda, actual: occurrences(markup, "data-agenda-record") }, actions: { expected: selected.counts.actions, actual: occurrences(markup, "data-action-record") }, rollCalls: { expected: selected.counts.rollCalls, actual: occurrences(markup, "data-roll-call-record") }, votes: { expected: selected.counts.votes, actual: occurrences(markup, "data-recorded-vote") } });
       const mismatch = meetingReader.meetingReaderRecords(sitting.meetingId, "unresolved:other-body");
-      if (renderToStaticMarkup(createElement(MeetingRecords, { records: mismatch })) !== "") throw new Error(`Unresolved body rendered under ${record.auditId}`);
+      const mismatchMarkup = renderToStaticMarkup(createElement(MeetingRecords, { records: mismatch }));
+      // A wrong-body probe must never FABRICATE outcome records under a body that
+      // did not meet. The PDC data-plane change (abaa4f48) made MeetingRecords emit
+      // an honest "records unavailable for this body" status note for
+      // IDENTITY_UNRESOLVED (the app's disclose-absence principle); that note
+      // carries no records and is permitted. Any actual record container or
+      // agenda/action/roll-call/vote row IS a fabrication and must stay absent.
+      if (/data-meeting-records=|data-agenda-record|data-action-record|data-roll-call-record|data-recorded-vote/.test(mismatchMarkup)) throw new Error(`Unresolved body rendered outcome records under ${record.auditId}`);
     } else if (record.family === "area-facts") {
       const selected = area.areaFactsForState(string(raw.state))?.facts.find((fact) => fact.topic === raw.topic);
       if (!selected) throw new Error(`SSR could not resolve ${record.auditId}`);

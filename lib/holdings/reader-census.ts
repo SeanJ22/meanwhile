@@ -1683,7 +1683,26 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
     }
     rows.push({ rowId: row.id, disposition, acceptance, reason, baselineStructuralSha256, currentStructuralSha256, holdings: holdingRows });
   }
-  for (const row of baseline.rows) if (!current.rows.some((currentRow) => currentRow.id === row.id)) failures.push(`${row.id}: baseline reader row disappeared`);
+  for (const row of baseline.rows) {
+    if (current.rows.some((currentRow) => currentRow.id === row.id)) continue;
+    // A baseline row absent from the current census is a hard failure UNLESS it
+    // belongs to a family the current governing DATASET_FAMILIES has retired to
+    // inventory-only (zero Reader surfaces). That retirement is a committed,
+    // reviewed contract change (e.g. the state-officeholders intermediary, whose
+    // reader content is carried by the active statewide-executives family), so
+    // its former per-surface baseline rows cannot and must not reappear. This
+    // exception is armed only under a complete current-head re-proof; any other
+    // disappearance — including a family that still declares surfaces — still
+    // fails closed.
+    const family = (row as { datasetFamily?: string }).datasetFamily ?? String(row.id).split(":")[0];
+    const currentFamily = DATASET_FAMILIES.find((candidate) => candidate.id === family);
+    const governedInventoryOnlyRetirement = options.fullReproof === true
+      && readerInventoryOnlyFamilies.has(family)
+      && currentFamily !== undefined
+      && currentFamily.surfaces.length === 0;
+    if (governedInventoryOnlyRetirement) continue;
+    failures.push(`${row.id}: baseline reader row disappeared`);
+  }
   const changedReaderSources = changedReaderSourcePaths.flatMap((path) => {
     const before = baselineSources.get(path) ?? null, after = currentSources.get(path) ?? null;
     if (before === after) return [];

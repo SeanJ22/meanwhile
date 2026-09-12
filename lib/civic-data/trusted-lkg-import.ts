@@ -128,7 +128,10 @@ export function isTrustedLkgImportCandidate(candidate: unknown): candidate is Ro
  * ancestry, file bytes, and empty destination pointer before calling the
  * ordinary atomic promotion door.
  */
-function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string | null {
+function trustedLkgFirstSeedEvidenceIssue(
+  candidate: RoutineCandidate,
+  predecessor: CandidateVersionRecord | null,
+): string | null {
   const evidence = candidate.bootstrapImport;
   if (!evidence || evidence.kind !== "TRUSTED_LKG_IMPORT") return "the candidate has no trusted-LKG first-seed evidence";
   if (evidence.contractVersion !== 1 || evidence.kind !== "TRUSTED_LKG_IMPORT") return "the import evidence contract is unsupported";
@@ -158,6 +161,10 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
     ? trustedLkgLegacyMeetingsPartitionEvidenceIssue(candidate, evidence)
     : null;
   if (legacyPartitionIssue !== null) return legacyPartitionIssue;
+  const outcomeUnionIssue = evidence.pimaOutcomeUnion
+    ? trustedLkgPimaOutcomeUnionEvidenceIssue(candidate, evidence, predecessor)
+    : null;
+  if (outcomeUnionIssue !== null) return outcomeUnionIssue;
   if (!evidence.legacyMeetingsPartition) {
     if (!Array.isArray(evidence.fixtures) || evidence.fixtures.length === 0) return "the import evidence names no immutable fixture bytes";
     const fixturePaths = evidence.fixtures.map((fixture) => fixture.path);
@@ -171,7 +178,8 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
       return "the fixture-set digest does not match the exact path/hash/byte manifest";
     }
   }
-  const expectedRawHash = evidence.legacyMeetingsPartition?.legacyPointerSha256 ?? evidence.fixtureSetSha256;
+  const expectedRawHash = evidence.legacyMeetingsPartition?.legacyPointerSha256 ??
+    evidence.pimaOutcomeUnion?.unionAuthoritySha256 ?? evidence.fixtureSetSha256;
   if (
     candidate.retrieval.succeeded !== true ||
     candidate.retrieval.requestedUrl !== trustedLkgImportUrl(evidence.contractId) ||
@@ -219,21 +227,29 @@ function trustedLkgFirstSeedEvidenceIssue(candidate: RoutineCandidate): string |
     return "the import civic-record members do not exactly equal the members derived from its bound Reader projection";
   }
   const changeSet = candidate.changeSet;
+  const expectedBase = evidence.pimaOutcomeUnion ? predecessor?.candidate.readModel ?? null : null;
+  const expectedFirstPointerChangeSet = candidateChangeSet({
+    ...candidate,
+    civicRecords: projectedRecords,
+  }, expectedBase);
   if (
     !changeSet ||
     changeSet.outcome !== "CHANGED" ||
-    changeSet.added.length !== records.length ||
+    changeSet.added.length === 0 ||
     changeSet.changed.length !== 0 ||
     changeSet.removed.length !== 0 ||
     changeSet.held.length !== excludedFacts.length ||
     (candidate.removalEvidence?.length ?? 0) !== 0
-  ) return "the import change set is not an additive first pointer with exact held members and zero removals";
-  const expectedFirstPointerChangeSet = candidateChangeSet({
-    ...candidate,
-    civicRecords: projectedRecords,
-  }, null);
+  ) return evidence.pimaOutcomeUnion
+    ? "the outcome union change set is not a strict additive successor with zero rewrites or removals"
+    : "the import change set is not an additive first pointer with exact held members and zero removals";
+  if (!evidence.pimaOutcomeUnion && changeSet.added.length !== records.length) {
+    return "the import change set is not an additive first pointer with exact held members and zero removals";
+  }
   if (canonicalCivicDataJson(changeSet) !== canonicalCivicDataJson(expectedFirstPointerChangeSet)) {
-    return "the import change set does not exactly equal the first-pointer delta derived from its bound Reader projection";
+    return evidence.pimaOutcomeUnion
+      ? "the outcome union change set differs from the exact predecessor-to-union delta"
+      : "the import change set does not exactly equal the first-pointer delta derived from its bound Reader projection";
   }
   if (
     candidate.horizon.kind !== "OPEN_FACT_SET" ||
@@ -386,6 +402,181 @@ function trustedLkgLegacyMeetingsPartitionEvidenceIssue(
     evidence.fixtures.length !== 0 ||
     evidence.fixtureSetSha256 !== trustedLkgFixtureSetSha256([])
   ) return "a durable legacy-meetings partition must not claim frozen fixture bytes";
+  return null;
+}
+
+function trustedLkgPimaOutcomeUnionEvidenceIssue(
+  candidate: RoutineCandidate,
+  evidence: TrustedLkgImportEvidence,
+  predecessor: CandidateVersionRecord | null,
+): string | null {
+  const origin = evidence.pimaOutcomeUnion;
+  if (!origin) return null;
+  if (
+    evidence.legacyMeetingsPartition !== undefined ||
+    origin.contractVersion !== 1 ||
+    origin.kind !== "DURABLE_PIMA_OUTCOME_UNION" ||
+    evidence.contractId !== "pima-legistar-outcomes" ||
+    candidate.sourceId !== "pima-legistar-outcomes" ||
+    candidate.recordClass !== "MEETING_OUTCOME" ||
+    candidate.scope !== "US-AZ:county:pima:legistar-outcomes"
+  ) return "the Pima outcome union has an invalid registered authority identity";
+  if (!nonempty(origin.predecessorVersionId) || origin.predecessorVersionId === candidate.id) {
+    return "the Pima outcome union lacks a distinct predecessor identity";
+  }
+  const predecessorPromotedAt = Date.parse(origin.predecessorPromotedAt);
+  const frozenGeneratedAt = Date.parse(origin.frozenGeneratedAt);
+  if (
+    !Number.isFinite(predecessorPromotedAt) ||
+    new Date(predecessorPromotedAt).toISOString() !== origin.predecessorPromotedAt ||
+    predecessorPromotedAt > Date.parse(evidence.importedAt) ||
+    !Number.isFinite(frozenGeneratedAt) ||
+    !nonempty(origin.frozenGeneratedOn)
+  ) return "the Pima outcome union carries an invalid predecessor or frozen snapshot clock";
+  const hashes = [
+    origin.predecessorPointerSha256,
+    origin.predecessorCandidateRecordSha256,
+    origin.predecessorCandidateSha256,
+    origin.predecessorReceiptSha256,
+    origin.predecessorReadModelSha256,
+    origin.unionAuthoritySha256,
+  ];
+  if (hashes.some((value) => !SHA256.test(value))) {
+    return "the Pima outcome union lacks an exact predecessor or authority SHA-256";
+  }
+  if (
+    !Array.isArray(origin.frozenSittings) ||
+    origin.frozenSittings.length !== 20 ||
+    origin.frozenSittings.some(({ meetingId, sha256: digest }) =>
+      !/^legistar:pima:[^:]+$/.test(meetingId) || !SHA256.test(digest)
+    ) ||
+    new Set(origin.frozenSittings.map(({ meetingId }) => meetingId)).size !== origin.frozenSittings.length ||
+    !canonicallyEqual(
+      origin.frozenSittings.map(({ meetingId }) => meetingId),
+      [...origin.frozenSittings.map(({ meetingId }) => meetingId)].sort(),
+    ) ||
+    !Number.isSafeInteger(origin.predecessorSittingCount) || origin.predecessorSittingCount <= 0 ||
+    !Number.isSafeInteger(origin.unionSittingCount) || origin.unionSittingCount < origin.frozenSittings.length
+  ) return "the Pima outcome union sitting denominator or frozen witness set is invalid";
+  if (predecessor === null || predecessor.candidate.id !== origin.predecessorVersionId) {
+    return "the exact immutable Pima outcome predecessor candidate row is unavailable";
+  }
+  const prior = predecessor.candidate;
+  const predecessorReceipt = parseValidationReceipt(predecessor.receipt);
+  if (
+    predecessor.state !== "PROMOTED" ||
+    predecessor.acquisitionSucceeded !== true ||
+    predecessor.promotedVersion !== prior.id ||
+    predecessor.lastKnownGoodVersion !== prior.id ||
+    !predecessorReceipt || predecessorReceipt.decision !== "GOOD" ||
+    predecessorReceipt.candidateId !== prior.id ||
+    prior.sourceId !== candidate.sourceId ||
+    prior.recordClass !== candidate.recordClass ||
+    prior.scope !== candidate.scope ||
+    prior.normalization.parserVersion !== candidate.normalization.parserVersion
+  ) return "the Pima outcome predecessor is not an exact GOOD authority for the same registered contract";
+  const priorReadModelSha256 = durableSha256(prior.readModel);
+  const priorNormalizedPayloadSha256 = durableSha256(prior.normalizedPayload);
+  if (
+    priorReadModelSha256 === null || priorNormalizedPayloadSha256 === null ||
+    !SHA256.test(prior.normalization.normalizedHash ?? "") ||
+    ![priorReadModelSha256, priorNormalizedPayloadSha256].includes(prior.normalization.normalizedHash ?? "") ||
+    (prior.normalization.normalizedPayloadHash !== undefined &&
+      prior.normalization.normalizedPayloadHash !== priorNormalizedPayloadSha256)
+  ) return "the Pima outcome predecessor payload is not bound by its durable normalization evidence";
+  const priorDerivedRecords = civicRecordsFor(prior.recordClass, prior.readModel);
+  if (prior.civicRecords !== undefined && !canonicallyEqual(prior.civicRecords, priorDerivedRecords)) {
+    return "the Pima outcome predecessor civic members conflict with its exact Reader projection";
+  }
+  if (
+    origin.predecessorCandidateRecordSha256 !== durableSha256(predecessor) ||
+    origin.predecessorCandidateSha256 !== durableSha256(prior) ||
+    origin.predecessorReceiptSha256 !== durableSha256(predecessor.receipt) ||
+    origin.predecessorReadModelSha256 !== priorReadModelSha256
+  ) return "the Pima outcome predecessor row, receipt, or Reader projection differs from its captured witness";
+  const reconstructedPointer: PromotedProjection = {
+    key: `${candidate.recordClass}:${candidate.scope}`,
+    sourceId: prior.sourceId,
+    recordClass: prior.recordClass,
+    scope: prior.scope,
+    versionId: prior.id,
+    lastKnownGoodVersionId: prior.id,
+    promotedAt: origin.predecessorPromotedAt,
+    payload: prior.readModel,
+    receipt: predecessorReceipt,
+  };
+  if (origin.predecessorPointerSha256 !== durableSha256(reconstructedPointer)) {
+    return "the exact Pima outcome predecessor pointer cannot be reconstructed";
+  }
+  const root = jsonObject(candidate.readModel);
+  const priorRoot = jsonObject(prior.readModel);
+  if (
+    !root || !priorRoot ||
+    root.generatedOn === undefined || typeof root.generatedOn !== "string" ||
+    typeof root.generatedAt !== "string" ||
+    !Array.isArray(root.tenants) || !canonicallyEqual(root.tenants, ["pima"]) ||
+    !Array.isArray(root.sittings) || !Array.isArray(priorRoot.sittings) ||
+    typeof priorRoot.generatedOn !== "string" || typeof priorRoot.generatedAt !== "string"
+  ) return "the Pima outcome union or predecessor snapshot shape is invalid";
+  const unionById = new Map<string, Record<string, unknown>>();
+  for (const value of root.sittings) {
+    const sitting = jsonObject(value);
+    const meetingId = sitting?.meetingId;
+    if (
+      !sitting || typeof meetingId !== "string" || !/^legistar:pima:[^:]+$/.test(meetingId) ||
+      sitting.slug !== "pima" || unionById.has(meetingId)
+    ) return "the Pima outcome union contains an invalid or duplicate sitting identity";
+    unionById.set(meetingId, sitting);
+  }
+  const priorById = new Map<string, Record<string, unknown>>();
+  for (const value of priorRoot.sittings) {
+    const sitting = jsonObject(value);
+    const meetingId = sitting?.meetingId;
+    if (
+      !sitting || typeof meetingId !== "string" || !/^legistar:pima:[^:]+$/.test(meetingId) ||
+      sitting.slug !== "pima" || priorById.has(meetingId)
+    ) return "the Pima outcome predecessor contains an invalid or duplicate sitting identity";
+    priorById.set(meetingId, sitting);
+  }
+  if (priorById.size !== origin.predecessorSittingCount || unionById.size !== origin.unionSittingCount) {
+    return "the Pima outcome union counts differ from the candidate and predecessor snapshots";
+  }
+  for (const [meetingId, sitting] of priorById) {
+    const unionSitting = unionById.get(meetingId);
+    if (!unionSitting || !canonicallyEqual(unionSitting, sitting)) {
+      return `the Pima outcome union rewrites or removes durable predecessor ${meetingId}`;
+    }
+  }
+  const frozenIds = new Set<string>();
+  for (const witness of origin.frozenSittings) {
+    const sitting = unionById.get(witness.meetingId);
+    if (!sitting || durableSha256(sitting) !== witness.sha256) {
+      return `the Pima outcome union omits or changes frozen sitting ${witness.meetingId}`;
+    }
+    frozenIds.add(witness.meetingId);
+  }
+  const exactUnionIds = new Set([...priorById.keys(), ...frozenIds]);
+  if (exactUnionIds.size !== unionById.size || [...unionById.keys()].some((id) => !exactUnionIds.has(id))) {
+    return "the Pima outcome union contains a sitting outside its two exact authorities";
+  }
+  const priorAt = Date.parse(priorRoot.generatedAt);
+  if (!Number.isFinite(priorAt)) return "the Pima outcome predecessor generated-at clock is invalid";
+  const newest = priorAt >= frozenGeneratedAt
+    ? { generatedOn: priorRoot.generatedOn, generatedAt: priorRoot.generatedAt }
+    : { generatedOn: origin.frozenGeneratedOn, generatedAt: origin.frozenGeneratedAt };
+  if (root.generatedOn !== newest.generatedOn || root.generatedAt !== newest.generatedAt) {
+    return "the Pima outcome union does not retain the newest exact snapshot header";
+  }
+  const expectedAuthoritySha256 = sha256(canonicalCivicDataJson({
+    fixtureSetSha256: evidence.fixtureSetSha256,
+    predecessorPointerSha256: origin.predecessorPointerSha256,
+    frozenGeneratedOn: origin.frozenGeneratedOn,
+    frozenGeneratedAt: origin.frozenGeneratedAt,
+    frozenSittings: origin.frozenSittings,
+  }));
+  if (origin.unionAuthoritySha256 !== expectedAuthoritySha256) {
+    return "the Pima outcome union authority digest differs from its frozen and durable inputs";
+  }
   return null;
 }
 
@@ -979,5 +1170,5 @@ export function trustedLkgImportEvidenceIssue(
 ): string | null {
   return candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
     ? trustedLkgReattestationEvidenceIssue(candidate, predecessor)
-    : trustedLkgFirstSeedEvidenceIssue(candidate);
+    : trustedLkgFirstSeedEvidenceIssue(candidate, predecessor);
 }

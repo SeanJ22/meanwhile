@@ -10,10 +10,12 @@ const AUTHORITY_RELATIONS = [
 const PINNED_PROJECT_ID = "tiny-hill-13996172";
 const PINNED_PRODUCTION_BRANCH_ID = "br-delicate-lab-ax02xuo5";
 const PDC_V2_FROZEN_BASE_SHA = "fc67e8cd34c489590c403f7b4a0d6008fa755296";
-const PDC_V2_PLANNED_CANDIDATE_COUNT = 95;
+const PDC_V2_PLANNED_CANDIDATE_COUNT = 96;
+const PDC_V2_PLANNED_EXISTING_UNION_COUNT = 1;
 const PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT = 16;
 const PDC_V2_FINAL_PROMOTION_COUNT =
-  PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT + PDC_V2_PLANNED_CANDIDATE_COUNT;
+  PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT + PDC_V2_PLANNED_CANDIDATE_COUNT -
+  PDC_V2_PLANNED_EXISTING_UNION_COUNT;
 // Exact production registry: 10 routine + 124 meeting + 23 manual contracts.
 const PDC_V2_REGISTERED_CONTRACT_COUNT = 157;
 const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
@@ -152,7 +154,7 @@ function exactDispositionSet(value, declaredSha256) {
       typeof disposition.contractId !== "string" || !disposition.contractId ||
       typeof disposition.candidateId !== "string" || !disposition.candidateId ||
       typeof disposition.versionId !== "string" || !disposition.versionId ||
-      !["PROMOTED_ABSENT_POINTER", "REATTESTED_EXISTING_AUTHORITY", "SKIPPED_EXISTING_PROVEN_AUTHORITY"].includes(disposition.disposition) ||
+      !["PROMOTED_ABSENT_POINTER", "PROMOTED_FROZEN_LKG_UNION", "REATTESTED_EXISTING_AUTHORITY", "SKIPPED_EXISTING_PROVEN_AUTHORITY"].includes(disposition.disposition) ||
       disposition.readerReadback !== "PASS"
     ) throw new Error("Reader import receipt disposition membership shape is not exact.");
     if (disposition.disposition !== "SKIPPED_EXISTING_PROVEN_AUTHORITY" && disposition.candidateId !== disposition.versionId) {
@@ -248,7 +250,8 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
     !plan || !exactKeys(plan, ["contractVersion", "frozenBaseSha", "importerCodeSha", "candidateCount", "meetingPartitionsWithLkg", "meetingPartitionsWithoutLkg", "meetingRows", "agendaDocumentRows", "manualContracts", "planSha256"]) ||
     plan.contractVersion !== 1 || plan.frozenBaseSha !== PDC_V2_FROZEN_BASE_SHA || plan.importerCodeSha !== exactHead ||
     !EXACT_SHA256.test(String(plan.planSha256)) ||
-    !["candidateCount", "meetingPartitionsWithLkg", "meetingPartitionsWithoutLkg", "meetingRows", "agendaDocumentRows", "manualContracts"].every((field) => safeInteger(plan[field]))
+    !["candidateCount", "meetingPartitionsWithLkg", "meetingPartitionsWithoutLkg", "meetingRows", "agendaDocumentRows", "manualContracts"].every((field) => safeInteger(plan[field])) ||
+    Number(plan.meetingRows) <= 0 || Number(plan.agendaDocumentRows) <= 0
   ) throw new Error("Reader rehearsal plan schema differs from the frozen authority.");
 
   const before = plainObject(pointers?.before);
@@ -296,6 +299,7 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
   const classCounts = plainObject(imported.dispositionCounts);
   const expectedClassCounts = Object.fromEntries([
     ["PROMOTED_ABSENT_POINTER", dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length],
+    ["PROMOTED_FROZEN_LKG_UNION", dispositions.filter(({ disposition }) => disposition === "PROMOTED_FROZEN_LKG_UNION").length],
     ["REATTESTED_EXISTING_AUTHORITY", counts.reattested],
     ["SKIPPED_EXISTING_PROVEN_AUTHORITY", counts.skipped],
   ].filter(([, count]) => count > 0));
@@ -303,16 +307,18 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
     throw new Error("Reader rehearsal import disposition classes differ from the exact denominator.");
   }
   const absentPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
-  const existingDispositions = counts.reattested + counts.skipped;
+  const unionPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_FROZEN_LKG_UNION").length;
+  const existingDispositions = counts.reattested + unionPromotions + counts.skipped;
   const retiredLegacyPointers = retirement.disposition === "RETIRED" ? 1 : 0;
   if (
     plan.candidateCount !== PDC_V2_PLANNED_CANDIDATE_COUNT ||
     plan.meetingPartitionsWithoutLkg !== imported.zeroMeetingPartitionsRefused ||
     Number(plan.meetingPartitionsWithLkg) + Number(plan.manualContracts) !== Number(plan.candidateCount) ||
+    unionPromotions !== PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
     Number(before.count) < retiredLegacyPointers ||
     existingDispositions !== Number(before.count) - retiredLegacyPointers ||
     existingDispositions < PDC_V2_BASELINE_REGISTERED_PROMOTION_COUNT ||
-    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT ||
+    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT - PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
     Number(after.count) !== Number(before.count) - retiredLegacyPointers + absentPromotions ||
     Number(after.count) !== PDC_V2_FINAL_PROMOTION_COUNT ||
     counts.total !== Number(after.count) ||
@@ -326,6 +332,7 @@ function validateRehearsalReceipt(receipt, receiptBytes, metadataBytes, metadata
     expectedPointerSha256: String(pointers.currentPointerSha256),
     expectedPointerCount: Number(after.count),
     counts,
+    predecessorDispositionCount: counts.reattested + unionPromotions,
     dispositionSetSha256: String(imported.dispositionSetSha256),
     resultSha256: String(imported.resultSha256),
   };
@@ -385,6 +392,7 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
     ]) ||
     preImport.initialCensus !== "PASS" || preImport.liveRecensusAtReady !== "PASS" || preImport.exact0026PreflightWithProspectiveSuccessors !== "PASS" ||
     !["registeredContractKeys", "canonicalPromotionCount", "registeredCurrentPromotionCount", "obsoleteAggregatePointers", "liveLegacyHistoryEventCount", "liveLegacyMeetingRowCount", "liveLegacyAgendaDocumentRowCount", "prospectiveReattestationCount"].every((field) => safeInteger(preImport[field])) ||
+    Number(preImport.liveLegacyMeetingRowCount) <= 0 || Number(preImport.liveLegacyAgendaDocumentRowCount) <= 0 ||
     typeof preImport.liveLegacyVersionId !== "string" || !preImport.liveLegacyVersionId ||
     !["liveLegacyPointerSha256", "liveLegacyCandidateRecordSha256", "liveLegacyHistorySha256", "liveLegacyMeetingFactSha256"].every((field) => EXACT_SHA256.test(String(preImport[field])))
   ) throw new Error("Reader production prewrite/live-recensus authority is not terminally green.");
@@ -430,7 +438,8 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
     throw new Error("Reader production authority-transfer receipt has no exact promotion denominator.");
   }
   const absentPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
-  const existingDispositions = counts.reattested + counts.skipped;
+  const unionPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_FROZEN_LKG_UNION").length;
+  const existingDispositions = counts.reattested + unionPromotions + counts.skipped;
   const retiredLegacyPointers = imported.retirementDisposition === "RETIRED" ? 1 : 0;
   const expectedRetirementProof = retiredLegacyPointers === 1 ? "NOT_APPLICABLE_POINTER_PRESENT" : "PASS";
   const replacementAuthoritySha256 = hash(canonicalJson({
@@ -442,8 +451,9 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
     preImport.obsoleteAggregatePointers !== retiredLegacyPointers ||
     preImport.durableRetirementReceipt !== expectedRetirementProof ||
     preImport.canonicalPromotionCount !== preImport.registeredCurrentPromotionCount + retiredLegacyPointers ||
+    unionPromotions > PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
     existingDispositions !== preImport.registeredCurrentPromotionCount ||
-    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT ||
+    absentPromotions > PDC_V2_PLANNED_CANDIDATE_COUNT - PDC_V2_PLANNED_EXISTING_UNION_COUNT ||
     postImport.promotionCount !== preImport.registeredCurrentPromotionCount + absentPromotions ||
     postImport.promotionCount !== PDC_V2_FINAL_PROMOTION_COUNT ||
     imported.legacyPointerSha256 !== preImport.liveLegacyPointerSha256 ||
@@ -458,6 +468,7 @@ function validateProductionReceipt(receipt, receiptBytes, exactHead) {
     expectedPointerSha256: null,
     expectedPointerCount: Number(postImport.promotionCount),
     counts,
+    predecessorDispositionCount: counts.reattested + unionPromotions,
     dispositionSetSha256: String(imported.dispositionSetSha256),
     resultSha256: String(imported.resultSha256),
   };
@@ -493,6 +504,7 @@ function validateArchivedSupport(evidence, providerBytes, importBytes) {
     evidence.clone?.sourceSnapshotSha256 !== hash(importBytes) ||
     evidence.clone?.controlPlaneReceiptSha256 !== hash(providerBytes)
   )) throw new Error("Reader rehearsal clone hashes differ from its exact archived support bytes.");
+  return imported;
 }
 
 function isKnownLegacyReceipt(receipt, options) {
@@ -681,6 +693,7 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
     if (entries.length !== 1) throw new Error(`Reader execution authority ${label} is not included exactly once in the closure evidence manifest.`);
     assign(support);
   }
+  const archivedSupport = validateArchivedSupport(evidence, providerMetadataBytes, importReceiptBytes);
   const durable = imported.durableImport;
   if (!exactKeys(durable, ["authorization", "candidateCount", "currentPointerLinkCount", "promotedDispositionCount", "reattestedDispositionCount", "skippedDispositionCount", "candidateSetSha256", "eventCandidateCount", "eventCount", "terminalPromotedEventCount", "eventSetSha256", "predecessorCandidateCount", "predecessorEventCount", "predecessorEventSetSha256", "importerCodeShas"])) {
     throw new Error("Reader execution authority durable import fields differ from the exact schema.");
@@ -694,7 +707,7 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
     durable.terminalPromotedEventCount !== durable.candidateCount || durable.eventCount < durable.candidateCount ||
     durable.promotedDispositionCount + durable.skippedDispositionCount !== durable.candidateCount ||
     durable.reattestedDispositionCount > durable.promotedDispositionCount ||
-    !Number.isSafeInteger(durable.predecessorCandidateCount) || durable.predecessorCandidateCount !== durable.reattestedDispositionCount ||
+    !Number.isSafeInteger(durable.predecessorCandidateCount) || durable.predecessorCandidateCount !== archivedSupport.predecessorDispositionCount ||
     !Number.isSafeInteger(durable.predecessorEventCount) || durable.predecessorEventCount < durable.predecessorCandidateCount ||
     !Array.isArray(durable.importerCodeShas) || durable.importerCodeShas.length !== 1 || durable.importerCodeShas[0] !== imported.importerCodeSha
   ) throw new Error("Reader execution authority durable import has no exact pointer/event/disposition linkage.");
@@ -711,6 +724,5 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
   } else if (store.authority !== "STANDING_PRODUCTION" || evidence.clone !== null) {
     throw new Error("PRODUCTION Reader authority is not the standing production store.");
   }
-  validateArchivedSupport(evidence, providerMetadataBytes, importReceiptBytes);
   return { phase: reference.phase, importerCodeSha: imported.importerCodeSha };
 }

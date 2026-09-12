@@ -251,7 +251,7 @@ export function compareFrozenOfficeholderStatementAuthority(
   for (const [id, snapshot] of expected) {
     const promoted = actual.get(id);
     if (!promoted) failures.push(`OFFICEHOLDER_STATEMENT_AUTHORITY_MISSING:${id}`);
-    else if (canonicalCivicDataJson(promoted) !== canonicalCivicDataJson(snapshot)) {
+    else if (canonicalReaderAuthorityJson(promoted) !== canonicalReaderAuthorityJson(snapshot)) {
       failures.push(`OFFICEHOLDER_STATEMENT_AUTHORITY_PAYLOAD_MISMATCH:${id}`);
     }
   }
@@ -268,13 +268,145 @@ export function compareFrozenOfficeholderStatementAuthority(
 
 type CensusRosterChildDisposition = NonNullable<CensusRecord["childDispositions"]>[number];
 
-function canonicalReaderAuthorityJson(value: unknown): string {
+export function canonicalReaderAuthorityJson(value: unknown): string {
   const withoutManifestMetadata = (entry: unknown): unknown => Array.isArray(entry)
     ? entry.map(withoutManifestMetadata)
     : entry && typeof entry === "object"
       ? Object.fromEntries(Object.entries(entry).filter(([key]) => !key.startsWith("_manifest")).map(([key, child]) => [key, withoutManifestMetadata(child)]))
       : entry;
   return canonicalCivicDataJson(withoutManifestMetadata(value));
+}
+
+function parsedAuthorityTime(value: unknown): number | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+export type ReaderAuthorityRelation<T> =
+  | { readonly kind: "EXACT"; readonly record: T }
+  | { readonly kind: "MONOTONIC_SUCCESSOR"; readonly record: T }
+  | { readonly kind: "MISSING"; readonly record: null };
+
+function uniqueCanonicalRecords<T>(records: readonly T[]): T[] {
+  return [...new Map(records.map((record) => [canonicalReaderAuthorityJson(record), record])).values()];
+}
+
+const STATE_MONEY_PRECEDENCE: Readonly<Record<StateMoneyRecord["filingState"], number>> = {
+  ROUTE_UNREAD: 0,
+  LEAD: 0,
+  OURS_GAP: 1,
+  NO_REPORTS_ON_FILE: 2,
+  REGISTERED_NO_ACTIVITY_REPORTED: 3,
+  FILED: 4,
+};
+
+/**
+ * Compare a frozen state-money observation with the exact promoted authority.
+ * A later source read may supersede an old observation, but only across the
+ * same typed jurisdiction/target/committee identity and never by weakening a
+ * filing state. The one legitimate absence-to-committee transition is allowed
+ * only for the same complete target-key set.
+ */
+export function stateMoneyAuthorityRelation(
+  frozen: StateMoneyRecord,
+  currentRecords: readonly StateMoneyRecord[],
+  sourceThrough: string | null,
+): ReaderAuthorityRelation<StateMoneyRecord> {
+  const current = uniqueCanonicalRecords(currentRecords);
+  const exact = current.filter((record) =>
+    canonicalReaderAuthorityJson(record) === canonicalReaderAuthorityJson(frozen)
+  );
+  if (exact.length === 1) return { kind: "EXACT", record: exact[0]! };
+  if (exact.length > 1) return { kind: "MISSING", record: null };
+
+  const frozenCheckedAt = parsedAuthorityTime(frozen.checkedAt);
+  const frozenCollectedAt = parsedAuthorityTime(frozen.provenance?.collectedAt);
+  const frozenVerifiedAt = parsedAuthorityTime(frozen.provenance?.verifiedAt);
+  const authorityThrough = parsedAuthorityTime(sourceThrough);
+  if (
+    frozenCheckedAt === null ||
+    frozenCollectedAt === null ||
+    frozenVerifiedAt === null ||
+    authorityThrough === null ||
+    authorityThrough < frozenCheckedAt
+  ) return { kind: "MISSING", record: null };
+
+  const successors = current.filter((record) => {
+    const checkedAt = parsedAuthorityTime(record.checkedAt);
+    const collectedAt = parsedAuthorityTime(record.provenance?.collectedAt);
+    const verifiedAt = parsedAuthorityTime(record.provenance?.verifiedAt);
+    const frozenTargets = unique(frozen.targetKeys);
+    const currentTargets = unique(record.targetKeys);
+    const sameTargets = frozenTargets.length > 0 &&
+      canonicalReaderAuthorityJson(frozenTargets) === canonicalReaderAuthorityJson(currentTargets);
+    const sameCommittee = frozen.committeeId !== null
+      ? record.committeeId === frozen.committeeId
+      : record.committeeId === null || (
+        frozen.filingState === "NO_REPORTS_ON_FILE" &&
+        record.committeeId !== null &&
+        STATE_MONEY_PRECEDENCE[record.filingState] > STATE_MONEY_PRECEDENCE[frozen.filingState]
+      );
+    return isRenderable(record) &&
+      record.dataClass === frozen.dataClass &&
+      record.jurisdiction === frozen.jurisdiction &&
+      record.agency === frozen.agency &&
+      record.electionYear === frozen.electionYear &&
+      sameTargets &&
+      sameCommittee &&
+      STATE_MONEY_PRECEDENCE[record.filingState] >= STATE_MONEY_PRECEDENCE[frozen.filingState] &&
+      checkedAt !== null && checkedAt >= frozenCheckedAt && checkedAt <= authorityThrough &&
+      collectedAt !== null && collectedAt >= frozenCollectedAt && collectedAt <= authorityThrough &&
+      verifiedAt !== null && verifiedAt >= frozenVerifiedAt &&
+      (checkedAt > frozenCheckedAt || collectedAt > frozenCollectedAt || verifiedAt > frozenVerifiedAt);
+  });
+  return successors.length === 1
+    ? { kind: "MONOTONIC_SUCCESSOR", record: successors[0]! }
+    : { kind: "MISSING", record: null };
+}
+
+function ballotAbsenceWithoutObservationStamps(value: ObjectRow): ObjectRow {
+  const copy = structuredClone(value);
+  const provenance = object(copy.provenance);
+  if (Object.keys(provenance).length) {
+    delete provenance.collectedAt;
+    delete provenance.verifiedAt;
+    copy.provenance = provenance;
+  }
+  return copy;
+}
+
+/** A later verification may supersede only the exact same ballot-absence fact. */
+export function ballotAbsenceAuthorityRelation(
+  frozen: ObjectRow,
+  currentRows: readonly ObjectRow[],
+): ReaderAuthorityRelation<ObjectRow> {
+  const current = uniqueCanonicalRecords(currentRows);
+  const exact = current.filter((record) =>
+    canonicalReaderAuthorityJson(record) === canonicalReaderAuthorityJson(frozen)
+  );
+  if (exact.length === 1) return { kind: "EXACT", record: exact[0]! };
+  if (exact.length > 1) return { kind: "MISSING", record: null };
+
+  const frozenProvenance = object(frozen.provenance);
+  const frozenCollectedAt = parsedAuthorityTime(frozenProvenance.collectedAt);
+  const frozenVerifiedAt = parsedAuthorityTime(frozenProvenance.verifiedAt);
+  if (frozenCollectedAt === null || frozenVerifiedAt === null) {
+    return { kind: "MISSING", record: null };
+  }
+  const frozenFact = canonicalReaderAuthorityJson(ballotAbsenceWithoutObservationStamps(frozen));
+  const successors = current.filter((record) => {
+    if (canonicalReaderAuthorityJson(ballotAbsenceWithoutObservationStamps(record)) !== frozenFact) return false;
+    const provenance = object(record.provenance);
+    const collectedAt = parsedAuthorityTime(provenance.collectedAt);
+    const verifiedAt = parsedAuthorityTime(provenance.verifiedAt);
+    return collectedAt !== null && verifiedAt !== null &&
+      collectedAt >= frozenCollectedAt && verifiedAt >= frozenVerifiedAt &&
+      (collectedAt > frozenCollectedAt || verifiedAt > frozenVerifiedAt);
+  });
+  return successors.length === 1
+    ? { kind: "MONOTONIC_SUCCESSOR", record: successors[0]! }
+    : { kind: "MISSING", record: null };
 }
 
 export interface FrozenBodyRosterAuthorityComparison {
@@ -556,6 +688,22 @@ function eligibility(
     return {
       state: "NOT_READER_ELIGIBLE",
       reason: `${forbiddenReaderDisposition.sourceId} is ${forbiddenReaderDisposition.disposition}; its tracked bytes remain inventoried research/test evidence and production Reader use is forbidden. ${forbiddenReaderDisposition.reason}`,
+    };
+  }
+  if (dataset.path === "data/fec/fec-2026.json" && raw.unit === "absences") {
+    return {
+      state: "NOT_READER_ELIGIBLE",
+      reason: "The frozen FEC absence row remains held evidence, but it lacks the bounded office/state/district/cycle horizon and completed pagination needed for a production absence claim. The promoted FEC contract intentionally publishes candidates only; no bootstrap or Reader proof may revive this absence.",
+    };
+  }
+  if (
+    dataset.family === "venue-records" &&
+    dataset.path === "lib/meetings/venue-cache.ts" &&
+    parsedAuthorityTime(row.verifiedAt) === null
+  ) {
+    return {
+      state: "NOT_READER_ELIGIBLE",
+      reason: "This unstamped venue-cache row is a historical adoption/node:test fixture. The permanent venue-resolutions contract requires a finite verifiedAt before a venue may enter Reader authority.",
     };
   }
   if (dataset.family === "campaign-sites" && !officeholderIdentityMayEnterReader(string(row.id), null)) {
@@ -2155,6 +2303,17 @@ export async function projectCanonicalReaderRecords(
     await meetings.readMeetingsProjection({ bypassCache: true }),
     meetingAuthority,
   );
+  const { pdcV2CanonicalMeetingFactEvidence } = await import("../civic-data/store.ts");
+  const currentLegacyMeetingFacts = pdcV2CanonicalMeetingFactEvidence([snapshot]);
+  if (
+    currentLegacyMeetingFacts.sha256 !== meetingAuthority.legacyMeetingsAggregate.factSha256 ||
+    currentLegacyMeetingFacts.meetingRowCount !== meetingAuthority.legacyMeetingsAggregate.meetingRowCount ||
+    currentLegacyMeetingFacts.agendaDocumentRowCount !== meetingAuthority.legacyMeetingsAggregate.agendaDocumentRowCount
+  ) {
+    throw new Error(
+      `READER_MEETING_AGGREGATE_AUTHORITY_MISMATCH: expected ${meetingAuthority.legacyMeetingsAggregate.factSha256}/${meetingAuthority.legacyMeetingsAggregate.meetingRowCount}/${meetingAuthority.legacyMeetingsAggregate.agendaDocumentRowCount}; found ${currentLegacyMeetingFacts.sha256}/${currentLegacyMeetingFacts.meetingRowCount}/${currentLegacyMeetingFacts.agendaDocumentRowCount}`,
+    );
+  }
   const [{ meetingListingIdentity, listingMultiplicityForSource }, { canonicalBodyIdentity }] = await Promise.all([import("../meetings/listing-identity.ts"), import("../ask/body-identity.ts")]);
   const listingIdentity = meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity);
   const { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } = await import("../meetings/constants.ts");
@@ -2193,13 +2352,26 @@ export async function projectCanonicalReaderRecords(
       status = "WITHHELD"; selector = "classifyReaderEligibility"; reason = record.eligibility.reason;
     } else switch (record.family) {
       case "state-money": {
-        const matches = (raw.targetKeys as string[]).flatMap((key) => finance.stateMoneyForTarget(key)).filter((row) => JSON.stringify(clean(row)) === JSON.stringify(clean(raw)));
+        const authorityRows = uniqueCanonicalRecords((raw.targetKeys as string[]).flatMap((key) => finance.stateMoneyForTarget(key)));
+        const authority = stateMoneyAuthorityRelation(
+          raw as unknown as StateMoneyRecord,
+          authorityRows,
+          finance.stateMoneyReadState((raw as unknown as StateMoneyRecord).jurisdiction).metadata.sourceThrough,
+        );
         const selected = (raw.targetKeys as string[]).map((targetKey) => ({ targetKey, records: stateMoneyRecordsForDisplay(finance.stateMoneyForTarget(targetKey)) }));
-        const displayed = selected.flatMap((answer) => answer.records).filter((row) => JSON.stringify(clean(row)) === JSON.stringify(clean(raw)));
+        const displayed = uniqueCanonicalRecords(selected.flatMap((answer) => answer.records)).filter((row) => canonicalReaderAuthorityJson(row) === canonicalReaderAuthorityJson(raw));
+        const displayedAuthority = authority.record === null ? [] : uniqueCanonicalRecords(selected.flatMap((answer) => answer.records)).filter((row) => canonicalReaderAuthorityJson(row) === canonicalReaderAuthorityJson(authority.record));
         setResult("stateMoneyForTarget → stateMoneyRecordsForDisplay", displayed.slice(0, 1), "The exact normalized committee/candidacy record, values and provenance survive the canonical reader answer selector. OURS_GAP carries its sentence, never unresolved figures.");
-        if (matches.length && !displayed.length && selected.every((answer) => answer.records.length)) {
+        if (authority.kind === "MONOTONIC_SUCCESSOR" && displayedAuthority.length === 1) {
+          status = "PROJECTED";
+          selector = "stateMoneyForTarget → strict same-identity monotonic successor";
+          returned = [authority.record];
+          reason = `The exact promoted ${authority.record.jurisdiction} authority re-observed this same typed target${authority.record.committeeId ? ` and committee ${authority.record.committeeId}` : ""} at ${authority.record.checkedAt}, no earlier than the frozen ${string(raw.checkedAt)} observation, without weakening filing precedence. The frozen observation remains held lineage evidence; the Reader receives the newer source-authority answer.`;
+        } else if (authority.kind !== "MISSING" && !displayedAuthority.length && selected.every((answer) => answer.records.length)) {
           status = "INTENTIONALLY_OUT_OF_SCOPE";
-          reason = `Eligible source observation ${string(raw.filingState)} is represented by the current same-candidacy answer's canonical filing precedence or duplicate sourced-absence consolidation: ${selected.map((answer) => `${answer.targetKey} → ${answer.records.map((row) => `${row.filingState} committee ${row.committeeId ?? "none"}`).join(", ")}`).join("; ")}. The original observation remains held; the reader receives stronger filed evidence where held and one sourced absence where the same absence repeats.`;
+          selector = "stateMoneyForTarget → stateMoneyRecordsForDisplay canonical precedence";
+          returned = authority.record ? [authority.record] : [];
+          reason = `Eligible source observation ${string(raw.filingState)}${authority.kind === "MONOTONIC_SUCCESSOR" ? ` has the strict later same-identity authority observed ${authority.record.checkedAt}, but that authority` : ""} is represented by the current same-candidacy answer's canonical filing precedence or duplicate sourced-absence consolidation: ${selected.map((answer) => `${answer.targetKey} → ${answer.records.map((row) => `${row.filingState} committee ${row.committeeId ?? "none"}`).join(", ")}`).join("; ")}. The original observation remains held; the reader receives stronger filed evidence where held and one sourced absence where the same absence repeats.`;
         }
         break;
       }
@@ -2219,7 +2391,7 @@ export async function projectCanonicalReaderRecords(
         const snapshot = corpusById.get(string(raw.id));
         const exactSnapshot = record.family !== "statement-corpus"
           || !snapshot
-          || canonicalCivicDataJson(snapshot) === canonicalCivicDataJson(raw);
+          || canonicalReaderAuthorityJson(snapshot) === canonicalReaderAuthorityJson(raw);
         setResult("unifiedCorpus", exactSnapshot ? snapshot : null);
         if (record.family === "statement-corpus" && snapshot && !exactSnapshot) {
           selector = "unifiedCorpus exact OFFICEHOLDER_STATEMENT authority";
@@ -2242,9 +2414,18 @@ export async function projectCanonicalReaderRecords(
       }
       case "meetings": {
         const group = record.unit === "meetings" ? listingMultiplicityForSource(listingIdentity, string(raw.id)) : null;
-        setResult("readSnapshot", record.unit === "agendaDocuments" ? snapshot.agendaDocuments?.find((row) => row.id === raw.id) : snapshot.meetings.find((row) => row.id === raw.id), group
+        const selected = record.unit === "agendaDocuments"
+          ? snapshot.agendaDocuments?.find((row) => row.id === raw.id)
+          : snapshot.meetings.find((row) => row.id === raw.id);
+        setResult("readSnapshot", selected, group
           ? `The exact source calendar listing remains reader eligible. ${group.reason} Native source IDs are ${group.sourceIds.join(", ")}; uniqueMeetingCount is null. Each native record and its own document/outcome relationship stays separate.`
           : "Existing canonical selector returned the held record by its stable identity.");
+        if (!selected) {
+          status = "INTENTIONALLY_OUT_OF_SCOPE";
+          selector = "receipt-bound live legacy meetings aggregate → split canonical meeting partitions";
+          returned = [];
+          reason = `This frozen ${record.unit === "agendaDocuments" ? "agenda-document" : "meeting"} row is absent from the exact live legacy aggregate admitted for transfer. The import receipt binds that complete pre-transfer aggregate to fact hash ${currentLegacyMeetingFacts.sha256} with ${currentLegacyMeetingFacts.meetingRowCount} meetings and ${currentLegacyMeetingFacts.agendaDocumentRowCount} agenda documents; arbitrary omission, count drift, or membership substitution fails before this disposition. The frozen row remains lineage evidence, while the Reader receives the later exact durable LKG that the controlled import partitions without rewriting.`;
+        }
         break;
       }
       case "body-rosters": setResult("rosterForBody", rosters.rosterForBody(string(raw.bodyId))); break;
@@ -2281,7 +2462,7 @@ export async function projectCanonicalReaderRecords(
         // Extra bodyId argument remains harmless against the old selector and
         // becomes the stable join when the class-wide repair is installed.
         const lookup = comments.commentAccessFor as (ocdId: string | null, bodyName?: string, bodyId?: string | null) => unknown;
-        setResult("commentAccessFor", names.map((name) => lookup(raw.ocdId as string | null, name, raw.bodyId as string | null)).find((row) => row && JSON.stringify(clean(row)) === JSON.stringify(clean(raw)))); break;
+        setResult("commentAccessFor", names.map((name) => lookup(raw.ocdId as string | null, name, raw.bodyId as string | null)).find((row) => row && canonicalReaderAuthorityJson(row) === canonicalReaderAuthorityJson(raw))); break;
       }
       case "identity": {
         if (record.unit === "rows") setResult("lineupRowForCard", identity.lineupRowForCard(string(raw.cardKey)));
@@ -2306,7 +2487,17 @@ export async function projectCanonicalReaderRecords(
           if (record.unit === "candidacies" && currentLineup && !bridge?.rows.some((r) => r.canonicalCandidacyId === raw.id)) {
             status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "lineupForContest / azLineupReconciliation"; reason = "Historical primary candidacy is not in this contest's certified current general-election lineup. Its source remains held; it cannot be presented as a current nominee.";
           } else setResult("BALLOT_SOURCES.fetch / normalize", ballotById.get(string(raw.id)));
-        } else if (record.unit === "absences") setResult("BALLOT_SOURCES.fetch / normalize", ballotRows.find((row) => JSON.stringify(clean(row)) === JSON.stringify(clean(raw))));
+        } else if (record.unit === "absences") {
+          const relation = ballotAbsenceAuthorityRelation(raw, ballotRows.map(object));
+          setResult("BALLOT_SOURCES.fetch / normalize", relation.record);
+          if (relation.kind === "MONOTONIC_SUCCESSOR") {
+            status = "PROJECTED";
+            selector = "BALLOT_SOURCES.fetch / normalize → strict same-fact monotonic successor";
+            returned = [relation.record];
+            const provenance = object(relation.record.provenance);
+            reason = `The promoted ballot authority re-verified the exact same division/vintage/statement/source absence at ${string(provenance.verifiedAt)}, no earlier than the frozen observation. The frozen observation remains held lineage evidence; the Reader receives the later source verification.`;
+          }
+        }
         break;
       }
       case "votes": {
@@ -2361,7 +2552,7 @@ export async function projectCanonicalReaderRecords(
           const directory = await import("../officials/directory.ts");
           const key = input?.raw.identityKey ?? id;
           const selected = directory.directoryFor(key.startsWith("congress:") ? key : `congress:${key}`);
-          setResult("directoryFor", selected && JSON.stringify(selected.entry) === JSON.stringify(clean(raw)) ? { id: key, ...selected } : null, "Exact Bioguide directory entry, district-office contacts, committee memberships and their source survive the runtime directory selector. These are additional held directory facts, not additional people.");
+          setResult("directoryFor", selected && canonicalReaderAuthorityJson(selected.entry) === canonicalReaderAuthorityJson(raw) ? { id: key, ...selected } : null, "Exact Bioguide directory entry, district-office contacts, committee memberships and their source survive the runtime directory selector. These are additional held directory facts, not additional people.");
         } else support("federal directory metadata", "Directory metadata supports exact per-member entries; actual member directory facts are separately projected and rendered.");
         break;
       }
@@ -2998,6 +3189,9 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   const listingIdentity = meetingListingIdentity([...normalizedMeetings.values()], canonicalBodyIdentity);
   const context = loadManifestContext(root);
   const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => readerRecordsForDataset(root, dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
+  const applicableReaderRecords = new Set(
+    census.rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds),
+  );
   const registryDivisionsById = new Map<string, ObjectRow>();
   for (const record of census.records) {
     if (record.holdingPath !== "lib/registry/registry.json" || record.unit !== "divisions") continue;
@@ -3108,6 +3302,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
         [jurisdiction.name, jurisdiction.modelSentence, jurisdiction.narrowing.sentence, jurisdiction.election, jurisdiction.sourceOrg, jurisdiction.sourceUrl, jurisdiction.collectedAt, jurisdiction.refusalLine, jurisdiction.refusal?.wall, ...(jurisdiction.refusal?.rungs ?? []).flatMap((rung) => [rung.what, rung.result, rung.attemptedAt]), ...jurisdiction.sites.flatMap((site) => [site.name, site.address, site.room, site.serves, votingSiteDisplay.directionsUrl(site)])].filter((value): value is string => Boolean(value)), [],
         { jurisdictions: { expected: 1, actual: occurrences(markup, "data-voting-jurisdiction") }, sites: { expected: jurisdiction.sites.length, actual: occurrences(markup, "data-voting-site") } });
     } else if ((record.family === "meetings" && record.unit === "agendaDocuments" || record.family === "notice-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
+      if (record.family === "meetings" && !applicableReaderRecords.has(record.auditId)) continue;
       const meetingId = string(raw.meetingId);
       const answer = await agendaFor(meetingId);
       const latest = answer.documents[0];
@@ -3120,7 +3315,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const portal = answer.publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
       add(record, "components/map/popup/agenda-section.tsx", "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor", answer, record.family === "notice-summaries" ? [meetingId] : [latest.id, meetingId], markup,
         (portal ? [answer.publication?.gap?.statement, latest.documentUrl, latest.sourceOrg] : [text, latest.documentUrl, latest.sourceOrg, summary?.summary]).filter((value): value is string => Boolean(value)), portal ? [text, "On the docket"].filter((value): value is string => Boolean(value)) : [], { versions: { expected: answer.documents.length, actual: answer.documentCount } }, portal ? [{ id: latest.id, status: "ACQUIRED_IS_PUBLICATION_INDEX", reason: "This acquired publisher index or application shell is not a single meeting's agenda. The canonical acquisition gap and source portal link are the reader answer; index text, script text and docket claims remain withheld." }] : undefined);
-    } else if (record.family === "federal-finance" && record.unit !== "secondHop") {
+    } else if (record.family === "federal-finance" && record.unit !== "secondHop" && record.eligibility.state === "READER_ELIGIBLE") {
       const target = record.unit === "absences" ? string(raw.targetKey) : (raw.targetKeys as string[])[0];
       const selected = federalDisplay.fundingAnswerForTarget(target);
       if (selected.kind === "none") throw new Error(`Eligible FEC record unavailable ${record.auditId}`);
@@ -3182,22 +3377,29 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const markup = renderToStaticMarkup(createElement(PollingLookupFallback, { links: [selected] }));
       add(record, "components/ballot/polling-lookup-fallback.tsx", "pollingPlaceLinkFor → PollingLookupFallback", selected, [selected.url], markup, [selected.url, selected.sourceOrg, selected.note], [], { stateLookups: { expected: 1, actual: occurrences(markup, "data-polling-lookup-state") } });
     } else if (record.family === "state-money") {
+      if (!applicableReaderRecords.has(record.auditId)) continue;
       const holding = raw as unknown as StateMoneyRecord;
       const eligible = isRenderable(holding);
-      const selected = eligible ? holding.targetKeys.flatMap((key) => finance.stateMoneyForTarget(key)).find((row) => row.committeeId === holding.committeeId && row.registeredName === holding.registeredName && row.filingState === holding.filingState && row.checkedAt === holding.checkedAt) : holding;
+      const authorityRows = eligible
+        ? uniqueCanonicalRecords(holding.targetKeys.flatMap((key) => finance.stateMoneyForTarget(key)))
+        : [];
+      const authority = eligible
+        ? stateMoneyAuthorityRelation(holding, authorityRows, finance.stateMoneyReadState(holding.jurisdiction).metadata.sourceThrough)
+        : { kind: "EXACT" as const, record: holding };
+      const selected = authority.record;
       if (!selected) throw new Error(`SSR could not resolve ${record.auditId}`);
       const markup = renderToStaticMarkup(createElement(StateMoneySection, { records: [selected] }));
       const expected: string[] = [];
       const forbidden: string[] = [];
       if (eligible) {
-        if (holding.filingState === "FILED") {
+        if (selected.filingState === "FILED") {
           expected.push(selected.registeredName, selected.agency);
           for (const value of [selected.totals.receipts, selected.totals.expenditures, selected.totals.cashOnHand]) if (value !== null) expected.push(`$${Math.round(value).toLocaleString("en-US")}`);
-        } else if (holding.filingState === "OURS_GAP") {
+        } else if (selected.filingState === "OURS_GAP") {
           expected.push(selected.ourGap?.whatIsMissing ?? "The agency holds a record we could not confirm belongs to this candidacy.");
           forbidden.push("$", selected.registeredName);
         } else {
-          expected.push(selected.agency, holding.filingState === "NO_REPORTS_ON_FILE" ? "No reports on file with the" : "Registered committee.");
+          expected.push(selected.agency, selected.filingState === "NO_REPORTS_ON_FILE" ? "No reports on file with the" : "Registered committee.");
           forbidden.push("$0");
         }
         if (selected.filingsUrl) expected.push(selected.filingsUrl);
@@ -3245,6 +3447,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       add(record, "components/map/meeting-panel.tsx", "commentAccessFor → HowToBeHeard", selected, [bodyId ?? ocdId ?? selected.sourceUrl], markup,
         [selected.sourceUrl, ...(selected.commentPeriod === "UNKNOWN" ? ["We don't know this body's public-comment rules yet"] : [selected.commentPeriodDetail, selected.timeLimit, selected.signup, selected.writtenComment, selected.attend])].filter((value): value is string => Boolean(value)));
     } else if ((record.family === "meetings" && record.unit === "meetings" || record.family === "minutes-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
+      if (record.family === "meetings" && !applicableReaderRecords.has(record.auditId)) continue;
       const selected = normalizedMeetings.get(string(record.family === "minutes-summaries" ? raw.meetingId : raw.id));
       if (!selected) throw new Error(`SSR could not normalize ${record.auditId}`);
       const representation = memberships.membersOfBody(selected.bodyId ?? null).members;

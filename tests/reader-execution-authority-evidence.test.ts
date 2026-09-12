@@ -16,18 +16,25 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
-import { buildPdcV2TrustedLkgReattestationCandidate } from "../lib/civic-data/trusted-lkg-import-plan.ts";
+import {
+  buildPdcV2TrustedLkgReattestationCandidate,
+  pdcV2UnionPimaOutcomeSnapshots,
+} from "../lib/civic-data/trusted-lkg-import-plan.ts";
 import {
   PDC_V2_FROZEN_BASE_SHA,
   TRUSTED_LKG_IMPORT_AUTHORIZATION,
   TRUSTED_LKG_IMPORT_PURPOSE,
   trustedLkgCandidateEnvelopeSha256,
   trustedLkgCandidateId,
+  trustedLkgEvidenceSha256,
   trustedLkgFixtureSetSha256,
+  trustedLkgImportEvidenceIssue,
   trustedLkgImportUrl,
+  trustedLkgPredecessorPointerSha256,
+  trustedLkgPredecessorRecordSha256,
   trustedLkgValidatorIds,
 } from "../lib/civic-data/trusted-lkg-import.ts";
-import { sourceProjectionEvidence, VALIDATION_CHECKS, type CandidateVersionRecord, type PromotedProjection, type RoutineCandidate, type TrustedLkgImportEvidence } from "../lib/civic-data/types.ts";
+import { sourceProjectionEvidence, VALIDATION_CHECKS, type CandidateVersionRecord, type PromotedProjection, type RoutineCandidate, type TrustedLkgImportEvidence, type TrustedLkgPimaOutcomeUnionEvidence } from "../lib/civic-data/types.ts";
 import {
   buildReaderExecutionAuthorityEvidence,
   admitReaderExecutionAuthorityArchivedSupport,
@@ -39,6 +46,8 @@ import {
   type BuildReaderAuthorityOptions,
   type ReaderAuthoritySql,
 } from "../lib/holdings/reader-execution-authority.ts";
+import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import {
   createImmutableEvidenceFile,
   parseReaderAuthorityGeneratorArguments,
@@ -64,16 +73,22 @@ const PRODUCTION_ENDPOINT_ID = "ep-reader-production-123";
 const PRODUCTION_ENDPOINT_HOST = `${PRODUCTION_ENDPOINT_ID}.neon.tech`;
 const PRODUCTION_CONNECTION =
   `postgresql://readonly_pdc:test-only-password@${PRODUCTION_ENDPOINT_HOST}/wtp`;
-const PLAN_CANDIDATE_COUNT = 95;
+const PLAN_CANDIDATE_COUNT = 96;
+const PLANNED_EXISTING_UNION_COUNT = 1;
 const BASELINE_REGISTERED_PROMOTION_COUNT = 16;
-const FINAL_AUTHORITY_COUNT = PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT;
+const SKIPPED_EXISTING_PROMOTION_COUNT =
+  BASELINE_REGISTERED_PROMOTION_COUNT - PLANNED_EXISTING_UNION_COUNT;
+const ABSENT_PROMOTION_COUNT = PLAN_CANDIDATE_COUNT - PLANNED_EXISTING_UNION_COUNT;
+const FINAL_AUTHORITY_COUNT =
+  PLAN_CANDIDATE_COUNT + BASELINE_REGISTERED_PROMOTION_COUNT - PLANNED_EXISTING_UNION_COUNT;
 const REGISTERED_CONTRACT_COUNT = 157;
+const PIMA_OUTCOME_FIXTURE_PATH = "data/states/az/outcomes/legistar-outcomes.json";
 
 type Row = Record<string, unknown>;
 type FixtureDisposition = {
   contractId: string;
   candidateId: string;
-  disposition: "PROMOTED_ABSENT_POINTER" | "REATTESTED_EXISTING_AUTHORITY" | "SKIPPED_EXISTING_PROVEN_AUTHORITY";
+  disposition: "PROMOTED_ABSENT_POINTER" | "PROMOTED_FROZEN_LKG_UNION" | "REATTESTED_EXISTING_AUTHORITY" | "SKIPPED_EXISTING_PROVEN_AUTHORITY";
   versionId: string;
   readerReadback: "PASS";
 };
@@ -132,14 +147,223 @@ function validationReceiptFor(candidate: RoutineCandidate, sourceCode: string) {
   };
 }
 
+interface PimaOutcomeUnionFixture {
+  readonly candidate: RoutineCandidate;
+  readonly predecessor: CandidateVersionRecord;
+  readonly predecessorPointer: PromotedProjection;
+  readonly predecessorEvents: readonly Row[];
+}
+
+let cachedPimaOutcomeUnionFixture: PimaOutcomeUnionFixture | null = null;
+
+function pimaOutcomeUnionFixture(): PimaOutcomeUnionFixture {
+  if (cachedPimaOutcomeUnionFixture !== null) return cachedPimaOutcomeUnionFixture;
+  const fixtureBytes = readFileSync(PIMA_OUTCOME_FIXTURE_PATH);
+  const frozen = JSON.parse(fixtureBytes.toString("utf8")) as OutcomeSnapshot;
+  assert.equal(frozen.sittings.length, 20, "the tracked frozen Pima authority remains exactly twenty sittings");
+  const predecessorSnapshot: OutcomeSnapshot = {
+    generatedOn: frozen.generatedOn,
+    generatedAt: frozen.generatedAt,
+    tenants: ["pima"],
+    sittings: [structuredClone(frozen.sittings[0]!)],
+  };
+  const predecessorBase = pimaLegistarOutcomesCandidate({
+    snapshot: predecessorSnapshot,
+    acquisitions: [{
+      source: "pima",
+      requestedUrl: "https://webapi.legistar.com/v1/pima/events",
+      finalUrl: "https://webapi.legistar.com/v1/pima/events",
+      httpStatus: 200,
+      rawHash: sha256(canonicalCivicDataJson(predecessorSnapshot)),
+      byteCount: Buffer.byteLength(canonicalCivicDataJson(predecessorSnapshot)),
+    }],
+    retrievedAt: NOW,
+    sourceThrough: frozen.generatedAt,
+  });
+  const predecessorCandidate = JSON.parse(JSON.stringify({
+    ...predecessorBase,
+    changeSet: candidateChangeSet(predecessorBase, null),
+  })) as RoutineCandidate;
+  const predecessorReceipt = validationReceiptFor(
+    predecessorCandidate,
+    "SOURCE_PRIMARY_AUTHENTICATED",
+  );
+  const predecessor: CandidateVersionRecord = {
+    candidate: predecessorCandidate,
+    state: "PROMOTED",
+    acquisitionSucceeded: true,
+    receipt: predecessorReceipt,
+    promotedVersion: predecessorCandidate.id,
+    lastKnownGoodVersion: predecessorCandidate.id,
+    failureCode: null,
+    failureDetail: null,
+  };
+  const predecessorPointer: PromotedProjection = {
+    key: `${predecessorCandidate.recordClass}:${predecessorCandidate.scope}`,
+    sourceId: predecessorCandidate.sourceId,
+    recordClass: predecessorCandidate.recordClass,
+    scope: predecessorCandidate.scope,
+    versionId: predecessorCandidate.id,
+    lastKnownGoodVersionId: predecessorCandidate.id,
+    promotedAt: NOW,
+    payload: predecessorCandidate.readModel,
+    receipt: predecessorReceipt,
+  };
+  const union = pdcV2UnionPimaOutcomeSnapshots(frozen, predecessorSnapshot);
+  const fixtures = [{
+    path: PIMA_OUTCOME_FIXTURE_PATH,
+    sha256: sha256(fixtureBytes),
+    bytes: fixtureBytes.byteLength,
+  }];
+  const fixtureSetSha256 = trustedLkgFixtureSetSha256(fixtures);
+  const predecessorPointerSha256 = trustedLkgPredecessorPointerSha256(predecessorPointer);
+  const frozenSittings = [...frozen.sittings]
+    .sort((left, right) => left.meetingId.localeCompare(right.meetingId))
+    .map((sitting) => ({
+      meetingId: sitting.meetingId,
+      sha256: trustedLkgEvidenceSha256(sitting),
+    }));
+  const origin: TrustedLkgPimaOutcomeUnionEvidence = {
+    contractVersion: 1,
+    kind: "DURABLE_PIMA_OUTCOME_UNION",
+    predecessorVersionId: predecessorCandidate.id,
+    predecessorPromotedAt: NOW,
+    predecessorPointerSha256,
+    predecessorCandidateRecordSha256: trustedLkgPredecessorRecordSha256(predecessor),
+    predecessorCandidateSha256: trustedLkgEvidenceSha256(predecessorCandidate),
+    predecessorReceiptSha256: trustedLkgEvidenceSha256(predecessorReceipt),
+    predecessorReadModelSha256: trustedLkgEvidenceSha256(predecessorCandidate.readModel),
+    frozenGeneratedOn: frozen.generatedOn,
+    frozenGeneratedAt: frozen.generatedAt,
+    frozenSittings,
+    predecessorSittingCount: predecessorSnapshot.sittings.length,
+    unionSittingCount: union.sittings.length,
+    unionAuthoritySha256: trustedLkgEvidenceSha256({
+      fixtureSetSha256,
+      predecessorPointerSha256,
+      frozenGeneratedOn: frozen.generatedOn,
+      frozenGeneratedAt: frozen.generatedAt,
+      frozenSittings,
+    }),
+  };
+  const base = pimaLegistarOutcomesCandidate({
+    snapshot: union,
+    acquisitions: [{
+      source: "pima",
+      requestedUrl: "https://webapi.legistar.com/v1/pima/events",
+      finalUrl: "https://webapi.legistar.com/v1/pima/events",
+      httpStatus: 200,
+      rawHash: origin.unionAuthoritySha256,
+      byteCount: fixtureBytes.byteLength,
+    }],
+    retrievedAt: NOW,
+    sourceThrough: frozen.generatedAt,
+  });
+  const readModel = structuredClone(base.readModel);
+  const civicRecords = civicRecordsFor(base.recordClass, readModel);
+  const projectionSha256 = trustedLkgEvidenceSha256(readModel);
+  const partial: RoutineCandidate = {
+    ...base,
+    id: "pending-trusted-lkg-content-address",
+    retrieval: {
+      succeeded: true,
+      requestedUrl: trustedLkgImportUrl("pima-legistar-outcomes"),
+      finalUrl: null,
+      httpStatus: null,
+      retrievedAt: NOW,
+      rawHash: origin.unionAuthoritySha256,
+    },
+    normalization: {
+      ...base.normalization,
+      succeeded: true,
+      normalizedHash: projectionSha256,
+      normalizedPayloadHash: projectionSha256,
+      inputRecords: civicRecords.length,
+      outputRecords: civicRecords.length,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+      failureDetail: undefined,
+    },
+    temporal: {
+      ...base.temporal,
+      expectedVersion: base.temporal.version,
+      staleAtRetrieval: true,
+    },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "Exact frozen Pima outcome LKG unioned with one exact durable predecessor; this transfer makes no new publisher-universe claim.",
+      returnedRecords: civicRecords.length,
+      declaredTotal: null,
+      paginationComplete: false,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    normalizedPayload: readModel,
+    readModel,
+    civicRecords,
+    changeSet: undefined,
+    removalEvidence: undefined,
+    excludedFacts: [],
+    bootstrapImport: undefined,
+  };
+  const evidence: TrustedLkgImportEvidence = {
+    contractVersion: 1,
+    kind: "TRUSTED_LKG_IMPORT",
+    authorization: TRUSTED_LKG_IMPORT_AUTHORIZATION,
+    purpose: TRUSTED_LKG_IMPORT_PURPOSE,
+    sourceAuthenticated: false,
+    contractId: "pima-legistar-outcomes",
+    sourceId: partial.sourceId,
+    recordClass: partial.recordClass,
+    scope: partial.scope,
+    parserVersion: partial.normalization.parserVersion,
+    sourceVersion: partial.temporal.version,
+    sourceThrough: partial.temporal.sourceThrough,
+    importedAt: NOW,
+    frozenBaseSha: PDC_V2_FROZEN_BASE_SHA,
+    importerCodeSha: HEAD,
+    fixtureSetSha256,
+    fixtures,
+    pimaOutcomeUnion: origin,
+    normalizedPayloadSha256: projectionSha256,
+    readModelSha256: projectionSha256,
+    candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(partial),
+    validatorIds: trustedLkgValidatorIds(partial),
+  };
+  const withEvidence: RoutineCandidate = {
+    ...partial,
+    id: trustedLkgCandidateId(evidence),
+    bootstrapImport: evidence,
+  };
+  const candidate: RoutineCandidate = {
+    ...withEvidence,
+    changeSet: candidateChangeSet(withEvidence, predecessorCandidate.readModel),
+  };
+  assert.equal(
+    trustedLkgImportEvidenceIssue(candidate, predecessor),
+    null,
+    "the default Reader authority fixture carries an exact durable Pima union",
+  );
+  const predecessorEvents = ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"].map((state, index) => ({
+    candidate_id: predecessorCandidate.id,
+    sequence: index + 1,
+    state,
+    at: NOW,
+    detail: `${state} Pima predecessor receipt`,
+  }));
+  cachedPimaOutcomeUnionFixture = { candidate, predecessor, predecessorPointer, predecessorEvents };
+  return cachedPimaOutcomeUnionFixture;
+}
+
 function pointerRows(count = FINAL_AUTHORITY_COUNT): Row[] {
-  return Array.from({ length: count }, (_, index) => {
+  const genericCount = count === FINAL_AUTHORITY_COUNT ? count - PLANNED_EXISTING_UNION_COUNT : count;
+  const genericPointers = Array.from({ length: genericCount }, (_, index) => {
     const suffix = String(index + 1).padStart(3, "0");
     const candidate = fixtureCandidate(suffix);
     const candidateId = candidate.id;
     const validationReceipt = validationReceiptFor(
       candidate,
-      index < BASELINE_REGISTERED_PROMOTION_COUNT
+      index < SKIPPED_EXISTING_PROMOTION_COUNT
         ? "SOURCE_PRIMARY_AUTHENTICATED"
         : "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
     );
@@ -155,15 +379,36 @@ function pointerRows(count = FINAL_AUTHORITY_COUNT): Row[] {
       validation_receipt: validationReceipt,
     };
   });
+  if (count !== FINAL_AUTHORITY_COUNT) return genericPointers;
+  const { candidate } = pimaOutcomeUnionFixture();
+  const validationReceipt = validationReceiptFor(
+    candidate,
+    "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+  );
+  return [...genericPointers, {
+    key: `${candidate.recordClass}:${candidate.scope}`,
+    source_id: candidate.sourceId,
+    record_class: candidate.recordClass,
+    scope: candidate.scope,
+    current_version_id: candidate.id,
+    last_known_good_version_id: candidate.id,
+    promoted_at: NOW,
+    payload: candidate.readModel,
+    validation_receipt: validationReceipt,
+  }].sort((left, right) => String(left.key).localeCompare(String(right.key)));
 }
 
 function dispositionSet(pointers: readonly Row[]): FixtureDisposition[] {
   return pointers.map((pointer, index): FixtureDisposition => ({
-    contractId: `contract-${String(pointer.scope).split(":").at(-1)!}`,
+    contractId: pointer.record_class === "MEETING_OUTCOME"
+      ? "pima-legistar-outcomes"
+      : `contract-${String(pointer.scope).split(":").at(-1)!}`,
     candidateId: String(pointer.current_version_id),
-    disposition: index < BASELINE_REGISTERED_PROMOTION_COUNT
-      ? "SKIPPED_EXISTING_PROVEN_AUTHORITY"
-      : "PROMOTED_ABSENT_POINTER",
+    disposition: pointer.record_class === "MEETING_OUTCOME"
+      ? "PROMOTED_FROZEN_LKG_UNION"
+      : index < SKIPPED_EXISTING_PROMOTION_COUNT
+        ? "SKIPPED_EXISTING_PROVEN_AUTHORITY"
+        : "PROMOTED_ABSENT_POINTER",
     versionId: String(pointer.current_version_id),
     readerReadback: "PASS" as const,
   })).sort((left, right) => left.contractId.localeCompare(right.contractId));
@@ -292,9 +537,41 @@ function normalizedPointers(pointers: readonly Row[]) {
 
 function candidateRows(pointers: readonly Row[], overrides: Record<string, unknown> = {}): Row[] {
   return pointers.map((pointer, index) => {
+    if (pointer.record_class === "MEETING_OUTCOME") {
+      const { candidate, predecessor } = pimaOutcomeUnionFixture();
+      return {
+        pointer_key: pointer.key,
+        current_version_id: candidate.id,
+        last_known_good_version_id: candidate.id,
+        candidate_id: candidate.id,
+        source_id: pointer.source_id,
+        record_class: pointer.record_class,
+        scope: pointer.scope,
+        state: "PROMOTED",
+        acquisition_succeeded: true,
+        promoted_version_id: candidate.id,
+        candidate_lkg_version_id: candidate.id,
+        pointer_promoted_at: NOW,
+        pointer_payload: pointer.payload,
+        pointer_validation_receipt: pointer.validation_receipt,
+        candidate,
+        validation_receipt: pointer.validation_receipt,
+        failure_code: null,
+        failure_detail: null,
+        predecessor_state: predecessor.state,
+        predecessor_acquisition_succeeded: predecessor.acquisitionSucceeded,
+        predecessor_promoted_version_id: predecessor.promotedVersion,
+        predecessor_lkg_version_id: predecessor.lastKnownGoodVersion,
+        predecessor_failure_code: predecessor.failureCode,
+        predecessor_failure_detail: predecessor.failureDetail,
+        predecessor_candidate: predecessor.candidate,
+        predecessor_validation_receipt: predecessor.receipt,
+        ...overrides,
+      };
+    }
     const suffix = String(pointer.scope).split(":").at(-1)!;
     const importedCandidate = fixtureCandidate(suffix);
-    const candidate = index < BASELINE_REGISTERED_PROMOTION_COUNT
+    const candidate = index < SKIPPED_EXISTING_PROMOTION_COUNT
       ? (({ bootstrapImport: _bootstrapImport, ...sourceNative }) => sourceNative)(importedCandidate)
       : importedCandidate;
     const candidateId = candidate.id;
@@ -331,7 +608,7 @@ function candidateRows(pointers: readonly Row[], overrides: Record<string, unkno
 }
 
 function eventRows(pointers: readonly Row[]): Row[] {
-  return pointers.flatMap((pointer) => ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]
+  const currentEvents = pointers.flatMap((pointer) => ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]
     .map((state, index) => ({
       candidate_id: pointer.current_version_id,
       sequence: index + 1,
@@ -346,7 +623,9 @@ function eventRows(pointers: readonly Row[]): Row[] {
       detail: "READER_PROJECTION_READBACK_V2 " + JSON.stringify({
         contractVersion: 2,
         kind: "READER_PROJECTION_READBACK",
-        contractId: `contract-${String(pointer.scope).split(":").at(-1)!}`,
+        contractId: pointer.record_class === "MEETING_OUTCOME"
+          ? "pima-legistar-outcomes"
+          : `contract-${String(pointer.scope).split(":").at(-1)!}`,
         sourceId: pointer.source_id,
         recordClass: pointer.record_class,
         scope: pointer.scope,
@@ -361,6 +640,10 @@ function eventRows(pointers: readonly Row[]): Row[] {
         detail: "The typed Reader returned the exact promoted fixture version.",
       }),
     }));
+  const predecessorEvents = pointers.some(({ record_class }) => record_class === "MEETING_OUTCOME")
+    ? pimaOutcomeUnionFixture().predecessorEvents
+    : [];
+  return [...currentEvents, ...predecessorEvents];
 }
 
 function rehearsalReceipt(
@@ -372,6 +655,7 @@ function rehearsalReceipt(
   const pointerSha = sha256(canonicalReaderAuthorityJson(normalizedPointers(pointers)));
   const dispositionCounts = Object.fromEntries([
     "PROMOTED_ABSENT_POINTER",
+    "PROMOTED_FROZEN_LKG_UNION",
     "REATTESTED_EXISTING_AUTHORITY",
     "SKIPPED_EXISTING_PROVEN_AUTHORITY",
   ].flatMap((disposition) => {
@@ -379,9 +663,10 @@ function rehearsalReceipt(
     return count > 0 ? [[disposition, count]] : [];
   }));
   const reattested = Number(dispositionCounts.REATTESTED_EXISTING_AUTHORITY ?? 0);
+  const unionPromotions = Number(dispositionCounts.PROMOTED_FROZEN_LKG_UNION ?? 0);
   const skipped = Number(dispositionCounts.SKIPPED_EXISTING_PROVEN_AUTHORITY ?? 0);
   const promoted = exactDispositions.length - skipped;
-  const existing = reattested + skipped;
+  const existing = reattested + unionPromotions + skipped;
   const changedKeysByVersion = new Map(
     pointers.map((pointer) => [String(pointer.current_version_id), String(pointer.key)] as const),
   );
@@ -452,7 +737,7 @@ function rehearsalReceipt(
       meetingPartitionsWithoutLkg: 41,
       meetingRows: 619,
       agendaDocumentRows: 196,
-      manualContracts: 12,
+      manualContracts: 13,
       planSha256: SHA256,
     },
     import: {
@@ -518,9 +803,10 @@ function productionReceipt(
 ): Buffer {
   const promoted = dispositions.filter(({ disposition }) => disposition !== "SKIPPED_EXISTING_PROVEN_AUTHORITY").length;
   const reattested = dispositions.filter(({ disposition }) => disposition === "REATTESTED_EXISTING_AUTHORITY").length;
+  const unionPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_FROZEN_LKG_UNION").length;
   const skipped = dispositions.filter(({ disposition }) => disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY").length;
   const absentPromotions = dispositions.filter(({ disposition }) => disposition === "PROMOTED_ABSENT_POINTER").length;
-  const existingDispositions = reattested + skipped;
+  const existingDispositions = reattested + unionPromotions + skipped;
   const retiredLegacyPointers = retirementDisposition === "RETIRED" ? 1 : 0;
   const legacyPointerSha256 = "1".repeat(64);
   const legacyCandidateRecordSha256 = "2".repeat(64);
@@ -756,11 +1042,13 @@ function fakeTransport(options: FakeOptions = {}): ReaderAuthoritySql & {
       }
       if (statement.includes("from public.civic_data_candidates") && statement.includes("where id = $1::text")) {
         const predecessorId = String(parameters[0]);
-        const source = candidates.find((candidateRow) =>
-          (candidateRow.candidate as Record<string, unknown> | undefined)?.bootstrapImport &&
-          ((candidateRow.candidate as Record<string, unknown>).bootstrapImport as Record<string, unknown>)
-            .predecessorVersionId === predecessorId
-        );
+        const source = candidates.find((candidateRow) => {
+          const transfer = (candidateRow.candidate as Record<string, unknown> | undefined)
+            ?.bootstrapImport as Record<string, unknown> | undefined;
+          const outcomeUnion = transfer?.pimaOutcomeUnion as Record<string, unknown> | undefined;
+          return transfer?.predecessorVersionId === predecessorId ||
+            outcomeUnion?.predecessorVersionId === predecessorId;
+        });
         return source ? [{
           id: predecessorId,
           state: source.predecessor_state,
@@ -828,7 +1116,8 @@ function options(overrides: Partial<BuildReaderAuthorityOptions> = {}): BuildRea
 
 test("the fake transport produces only sanitized, hash-bound rehearsal authority", async () => {
   const sql = fakeTransport();
-  const evidence = await buildReaderExecutionAuthorityEvidence(options({ sql }));
+  const rehearsalOptions = options({ sql });
+  const evidence = await buildReaderExecutionAuthorityEvidence(rehearsalOptions);
 
   assert.equal(evidence.phase, "REHEARSAL");
   assert.equal(evidence.exactHead, HEAD);
@@ -863,13 +1152,25 @@ test("the fake transport produces only sanitized, hash-bound rehearsal authority
   assert.equal(evidence.import.durableImport.candidateCount, FINAL_AUTHORITY_COUNT);
   assert.equal(evidence.import.durableImport.currentPointerLinkCount, FINAL_AUTHORITY_COUNT);
   assert.equal(evidence.import.durableImport.promotedDispositionCount, PLAN_CANDIDATE_COUNT);
-  assert.equal(evidence.import.durableImport.skippedDispositionCount, BASELINE_REGISTERED_PROMOTION_COUNT);
+  assert.equal(evidence.import.durableImport.skippedDispositionCount, SKIPPED_EXISTING_PROMOTION_COUNT);
+  assert.equal(evidence.import.durableImport.predecessorCandidateCount, PLANNED_EXISTING_UNION_COUNT);
+  assert.equal(evidence.import.durableImport.predecessorEventCount, 4);
   assert.equal(evidence.import.durableImport.terminalPromotedEventCount, FINAL_AUTHORITY_COUNT);
   assert.equal(
     evidence.import.canonicalPointerSetSha256,
     sha256(canonicalReaderAuthorityJson(normalizedPointers(pointerRows()))),
     "transport page boundaries do not alter the canonical full pointer-set hash",
   );
+  const admitted = admitReaderExecutionAuthorityArchivedSupport(
+    evidence,
+    rehearsalOptions.providerMetadataBytes,
+    rehearsalOptions.importReceiptBytes,
+  );
+  assert.deepEqual(admitted.legacyMeetingsAggregate, {
+    factSha256: SHA256,
+    meetingRowCount: 619,
+    agendaDocumentRowCount: 196,
+  });
 });
 
 test("Reader authority keyset cursors fail closed when a transport does not advance", async (t) => {
@@ -1015,6 +1316,32 @@ test("production authority rejects registered Reader denominator near misses", a
   }
 });
 
+test("production authority refuses a zero live legacy meetings census before import", async (t) => {
+  const pointers = pointerRows();
+  for (const field of ["liveLegacyMeetingRowCount", "liveLegacyAgendaDocumentRowCount"] as const) {
+    await t.test(field, async () => {
+      const receipt = JSON.parse(productionReceipt(pointers).toString("utf8")) as Record<string, unknown>;
+      receipt.preImportAuthority = {
+        ...(receipt.preImportAuthority as Record<string, unknown>),
+        [field]: 0,
+      };
+      await assert.rejects(
+        buildReaderExecutionAuthorityEvidence(options({
+          phase: "PRODUCTION",
+          exactHead: PRODUCTION_PROOF_HEAD,
+          connection: PRODUCTION_CONNECTION,
+          providerMetadataPath: "docs/evidence/reader-last-mile-production-provider-metadata.json",
+          providerMetadataBytes: productionProviderMetadata(),
+          importReceiptPath: "docs/evidence/reader-last-mile-production-import-receipt.json",
+          importReceiptBytes: Buffer.from(JSON.stringify(receipt)),
+          sql: fakeTransport({ pointers }),
+        })),
+        /prewrite\/live-recensus authority is not terminally green/,
+      );
+    });
+  }
+});
+
 test("production replay accepts 111 already-proven authorities without relabeling their durable bootstrap", async () => {
   const pointers = pointerRows();
   const replayDispositions = dispositionSet(pointers).map((entry, index) => ({
@@ -1059,6 +1386,11 @@ test("production replay accepts 111 already-proven authorities without relabelin
   assert.equal(admitted.dispositionSet.length, FINAL_AUTHORITY_COUNT);
   assert.equal(admitted.zeroMeetingPartitionsRefused, 41);
   assert.equal(admitted.dispositionSetSha256, evidence.import.dispositionSetSha256);
+  assert.deepEqual(admitted.legacyMeetingsAggregate, {
+    factSha256: "4".repeat(64),
+    meetingRowCount: 626,
+    agendaDocumentRowCount: 199,
+  });
 
   const drift = JSON.parse(receipt.toString("utf8")) as Record<string, unknown>;
   drift.preImportAuthority = {
@@ -1198,7 +1530,23 @@ test("forged receipts and pointer sets cannot become authority evidence", async 
       /forbidden secret-bearing field/,
     );
   });
-  await t.test("the 95-row frozen plan cannot be relabeled as the 111-row authority set", async () => {
+  for (const field of ["meetingRows", "agendaDocumentRows"] as const) {
+    await t.test(`the rehearsal plan refuses zero ${field}`, async () => {
+      const unsigned = structuredClone(receipt);
+      (unsigned.plan as Record<string, unknown>)[field] = 0;
+      delete unsigned.receiptSha256;
+      await assert.rejects(
+        buildReaderExecutionAuthorityEvidence(options({
+          importReceiptBytes: Buffer.from(canonicalReaderAuthorityJson({
+            ...unsigned,
+            receiptSha256: sha256(canonicalReaderAuthorityJson(unsigned)),
+          })),
+        })),
+        /plan\/pointer transition differs/,
+      );
+    });
+  }
+  await t.test("the 96-row frozen plan cannot be relabeled as the 111-row authority set", async () => {
     const plan = receipt.plan as Record<string, unknown>;
     const unsigned: Record<string, unknown> = {
       ...receipt,
@@ -1226,11 +1574,11 @@ test("forged receipts and pointer sets cannot become authority evidence", async 
       ...receipt,
       import: {
         ...imported,
-        promoted: PLAN_CANDIDATE_COUNT,
+        promoted: ABSENT_PROMOTION_COUNT,
         reattestedExisting: 0,
         skippedExisting: 0,
-        dispositionCount: PLAN_CANDIDATE_COUNT,
-        dispositionCounts: { PROMOTED_ABSENT_POINTER: PLAN_CANDIDATE_COUNT },
+        dispositionCount: ABSENT_PROMOTION_COUNT,
+        dispositionCounts: { PROMOTED_ABSENT_POINTER: ABSENT_PROMOTION_COUNT },
         dispositionSet: plannedOnly,
         dispositionSetSha256: sha256(canonicalReaderAuthorityJson(plannedOnly)),
       },
@@ -1243,15 +1591,15 @@ test("forged receipts and pointer sets cannot become authority evidence", async 
         },
         after: {
           ...after,
-          count: PLAN_CANDIDATE_COUNT,
+          count: ABSENT_PROMOTION_COUNT,
           rowCounts: {
-            candidates: String(PLAN_CANDIDATE_COUNT),
-            events: String(PLAN_CANDIDATE_COUNT * 5),
-            promotions: String(PLAN_CANDIDATE_COUNT),
+            candidates: String(ABSENT_PROMOTION_COUNT),
+            events: String(ABSENT_PROMOTION_COUNT * 5),
+            promotions: String(ABSENT_PROMOTION_COUNT),
           },
         },
         changedKeyMembership: [
-          ...Array.from({ length: PLAN_CANDIDATE_COUNT }, (_, index) =>
+          ...Array.from({ length: ABSENT_PROMOTION_COUNT }, (_, index) =>
             `CURATED_READER_RECORD:US:legacy-model:${String(index + 1).padStart(3, "0")}`),
           "MEETING:supported-bodies",
         ].sort(),
@@ -1455,7 +1803,7 @@ test("forged durable candidate and event receipts fail independently of pointer 
   const pointers = pointerRows();
   await t.test("bootstrap importer SHA differs", async () => {
     const candidates = candidateRows(pointers);
-    const importedIndex = BASELINE_REGISTERED_PROMOTION_COUNT;
+    const importedIndex = SKIPPED_EXISTING_PROMOTION_COUNT;
     const candidate = candidates[importedIndex]!.candidate as Record<string, unknown>;
     candidates[importedIndex] = {
       ...candidates[importedIndex],
@@ -1600,8 +1948,8 @@ test("re-attested authority binds the exact predecessor row, receipt, pointer, a
     sql: fakeTransport({ pointers, candidates, events, eventPageSize: 7 }),
   }));
   assert.equal(evidence.import.durableImport.reattestedDispositionCount, 1);
-  assert.equal(evidence.import.durableImport.predecessorCandidateCount, 1);
-  assert.equal(evidence.import.durableImport.predecessorEventCount, 4);
+  assert.equal(evidence.import.durableImport.predecessorCandidateCount, 2);
+  assert.equal(evidence.import.durableImport.predecessorEventCount, 8);
   assert.deepEqual({
     candidates: evidence.import.durableImport.candidateSetSha256,
     events: evidence.import.durableImport.eventSetSha256,
@@ -1658,7 +2006,7 @@ test("a source-native skipped pointer needs promotion/readback proof but no boot
     sql: fakeTransport({ pointers, candidates, events: eventRows(pointers) }),
   }));
 
-  assert.equal(evidence.import.durableImport.skippedDispositionCount, BASELINE_REGISTERED_PROMOTION_COUNT);
+  assert.equal(evidence.import.durableImport.skippedDispositionCount, SKIPPED_EXISTING_PROMOTION_COUNT);
   assert.equal(evidence.import.durableImport.promotedDispositionCount, PLAN_CANDIDATE_COUNT);
 });
 

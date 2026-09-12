@@ -42,7 +42,12 @@ import {
 import { hydrateFederalKeyVoteBootstrapV1 } from "../votes/key-vote-selection-v1.ts";
 import type { BillSummariesFile } from "../votes/bill-summaries.ts";
 import type { VotesSnapshot } from "../votes/types.ts";
-import { azOfficialActionsCandidate } from "../outcomes/data-plane.ts";
+import {
+  azOfficialActionsCandidate,
+  pimaLegistarOutcomesCandidate,
+} from "../outcomes/data-plane.ts";
+import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../outcomes/types.ts";
+import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
 import {
   candidateChangeSet,
   canonicalCivicDataJson,
@@ -134,6 +139,7 @@ import {
   type TrustedLkgFixtureEvidence,
   type TrustedLkgImportEvidence,
   type TrustedLkgLegacyMeetingsPartitionEvidence,
+  type TrustedLkgPimaOutcomeUnionEvidence,
   type TrustedLkgReattestationEvidence,
 } from "./types.ts";
 import { validateRoutineCandidate } from "./validate.ts";
@@ -162,6 +168,7 @@ export const PDC_V2_TRUSTED_LKG_MANUAL_CONTRACT_IDS = [
   "candidate-corpus",
   "officeholder-statements",
   "az-official-actions",
+  "pima-legistar-outcomes",
   "comment-access",
   "ballot-navigation",
   "campaign-sites",
@@ -174,8 +181,10 @@ export const PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS = {
   meetingPartitionsWithoutLkg: 41,
   meetingRows: 619,
   meetingAgendaDocumentRows: 196,
-  manualContracts: 12,
-  totalCandidates: 95,
+  manualContracts: 13,
+  totalCandidates: 96,
+  plannedExistingUnionContracts: 1,
+  pimaOutcomeSittings: 20,
   everydayRoutingTopics: 9,
   everydayRoutingZips: 4,
   everydayRoutingCells: 36,
@@ -459,7 +468,12 @@ function trustedCandidate(
   importedAt: string,
   importerCodeSha: string,
   legacyMeetingsPartition?: TrustedLkgLegacyMeetingsPartitionEvidence,
+  pimaOutcomeUnion?: TrustedLkgPimaOutcomeUnionEvidence,
+  predecessor?: CandidateVersionRecord,
 ): RoutineCandidate {
+  if ((pimaOutcomeUnion === undefined) !== (predecessor === undefined)) {
+    throw new Error(`TRUSTED_LKG_PIMA_OUTCOME_UNION_PREDECESSOR_MISSING:${contractId}`);
+  }
   assertBuilderCandidate(base, contractId, legacyMeetingsPartition !== undefined);
   const readModel = structuredClone(base.readModel);
   const civicRecords = civicRecordsFor(base.recordClass, readModel);
@@ -486,7 +500,8 @@ function trustedCandidate(
       finalUrl: null,
       httpStatus: null,
       retrievedAt: importedAt,
-      rawHash: legacyMeetingsPartition?.legacyPointerSha256 ?? fixtureSetSha256,
+      rawHash: legacyMeetingsPartition?.legacyPointerSha256 ??
+        pimaOutcomeUnion?.unionAuthoritySha256 ?? fixtureSetSha256,
     },
     normalization: {
       ...base.normalization,
@@ -516,6 +531,8 @@ function trustedCandidate(
       kind: "OPEN_FACT_SET",
       query: legacyMeetingsPartition
         ? "Exact durable legacy aggregate partition; this split makes no new publisher-universe claim."
+        : pimaOutcomeUnion
+          ? "Exact frozen Pima outcome LKG unioned with one exact durable predecessor; this transfer makes no new publisher-universe claim."
         : "Exact frozen-base LKG members only; this non-source-authenticated transfer makes no current publisher-universe claim.",
       returnedRecords: civicRecords.length,
       declaredTotal: null,
@@ -553,6 +570,7 @@ function trustedCandidate(
     fixtureSetSha256,
     fixtures,
     ...(legacyMeetingsPartition ? { legacyMeetingsPartition } : {}),
+    ...(pimaOutcomeUnion ? { pimaOutcomeUnion } : {}),
     normalizedPayloadSha256,
     readModelSha256: sha256(canonicalCivicDataJson(readModel)),
     candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(partial),
@@ -563,10 +581,13 @@ function trustedCandidate(
     id: trustedLkgCandidateId(evidence),
     bootstrapImport: evidence,
   };
-  const preflight = { ...candidate, changeSet: candidateChangeSet(candidate, null) };
-  const evidenceIssue = trustedLkgImportEvidenceIssue(preflight);
+  const preflight = {
+    ...candidate,
+    changeSet: candidateChangeSet(candidate, predecessor?.candidate.readModel ?? null),
+  };
+  const evidenceIssue = trustedLkgImportEvidenceIssue(preflight, predecessor ?? null);
   if (evidenceIssue !== null) throw new Error(`TRUSTED_LKG_EVIDENCE_INVALID:${contractId}:${evidenceIssue}`);
-  const validation = validateRoutineCandidate(preflight, null, importedAt);
+  const validation = validateRoutineCandidate(preflight, predecessor ?? null, importedAt);
   if (validation.state !== "VALIDATED" || validation.receipt.decision !== "GOOD") {
     const failed = validation.receipt.checks.find((check) => check.verdict !== "PASS");
     throw new Error(`TRUSTED_LKG_PREFLIGHT_FAILED:${contractId}:${failed?.code ?? validation.state}:${failed?.detail ?? "unknown"}`);
@@ -1123,6 +1144,188 @@ async function actionsSeed(
   };
 }
 
+const PDC_V2_PIMA_OUTCOME_FIXTURE_PATH = "data/states/az/outcomes/legistar-outcomes.json";
+
+function assertPimaOutcomeSnapshot(snapshot: OutcomeSnapshot, label: string): void {
+  if (
+    !Number.isFinite(Date.parse(snapshot.generatedAt)) ||
+    snapshot.tenants.length !== 1 || snapshot.tenants[0] !== "pima" ||
+    snapshot.sittings.length === 0 ||
+    snapshot.sittings.some((sitting) =>
+      sitting.slug !== "pima" ||
+      sitting.meetingId !== `legistar:pima:${sitting.eventId}` ||
+      sitting.extraction !== "RETRIEVED" ||
+      sitting.voteRequestFailures.length > 0
+    ) ||
+    new Set(snapshot.sittings.map(({ meetingId }) => meetingId)).size !== snapshot.sittings.length
+  ) throw new Error(`TRUSTED_LKG_PIMA_OUTCOME_SNAPSHOT_INVALID:${label}`);
+}
+
+async function outcomesSeed(
+  tree: FrozenTree,
+  importedAt: string,
+): Promise<{ readonly candidate: RoutineCandidate; readonly fixtures: readonly TrustedLkgFixtureEvidence[] }> {
+  const captured = await tree.capture(() => {
+    const bytes = tree.bytes(PDC_V2_PIMA_OUTCOME_FIXTURE_PATH);
+    const snapshot = JSON.parse(bytes.toString("utf8")) as OutcomeSnapshot;
+    assertPimaOutcomeSnapshot(snapshot, "FROZEN");
+    if (snapshot.sittings.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.pimaOutcomeSittings) {
+      throw new Error(`TRUSTED_LKG_PIMA_OUTCOME_DENOMINATOR_MISMATCH:${snapshot.sittings.length}`);
+    }
+    return { bytes, snapshot };
+  });
+  const sourceThrough = exactInstant(latestInstant(captured.value.snapshot));
+  const url = "https://webapi.legistar.com/v1/pima/events";
+  const acquisitions: readonly SourceAcquisitionEvidence[] = [{
+    source: "pima",
+    requestedUrl: url,
+    finalUrl: url,
+    httpStatus: 200,
+    rawHash: sha256(captured.value.bytes),
+    byteCount: captured.value.bytes.byteLength,
+  }];
+  return {
+    fixtures: captured.fixtures,
+    candidate: pimaLegistarOutcomesCandidate({
+      snapshot: captured.value.snapshot,
+      acquisitions,
+      retrievedAt: importedAt,
+      sourceThrough,
+    }),
+  };
+}
+
+function pimaOutcomeSittingSha256(sitting: PersistedSittingOutcomes): string {
+  return sha256(canonicalCivicDataJson(sitting));
+}
+
+/**
+ * Preserve both exact authorities. A duplicate id is accepted only when its
+ * complete sitting payload is byte-semantically identical; an apparent newer
+ * value may never overwrite a different frozen fact during this one-time move.
+ */
+export function pdcV2UnionPimaOutcomeSnapshots(
+  frozen: OutcomeSnapshot,
+  predecessor: OutcomeSnapshot,
+): OutcomeSnapshot {
+  assertPimaOutcomeSnapshot(frozen, "FROZEN_UNION_INPUT");
+  assertPimaOutcomeSnapshot(predecessor, "DURABLE_UNION_INPUT");
+  const byId = new Map<string, PersistedSittingOutcomes>();
+  for (const sitting of frozen.sittings) byId.set(sitting.meetingId, structuredClone(sitting));
+  for (const sitting of predecessor.sittings) {
+    const held = byId.get(sitting.meetingId);
+    if (held && canonicalCivicDataJson(held) !== canonicalCivicDataJson(sitting)) {
+      throw new Error(`TRUSTED_LKG_PIMA_OUTCOME_SAME_ID_CONFLICT:${sitting.meetingId}`);
+    }
+    if (!held) byId.set(sitting.meetingId, structuredClone(sitting));
+  }
+  const newest = Date.parse(predecessor.generatedAt) >= Date.parse(frozen.generatedAt)
+    ? predecessor
+    : frozen;
+  return {
+    generatedOn: newest.generatedOn,
+    generatedAt: newest.generatedAt,
+    tenants: ["pima"],
+    sittings: [...byId.values()].sort((left, right) => left.meetingId.localeCompare(right.meetingId)),
+  };
+}
+
+function pimaOutcomeUnionEvidence(
+  frozen: OutcomeSnapshot,
+  union: OutcomeSnapshot,
+  fixtures: readonly TrustedLkgFixtureEvidence[],
+  pointer: PromotedProjection<OutcomeSnapshot>,
+  predecessor: CandidateVersionRecord,
+): TrustedLkgPimaOutcomeUnionEvidence {
+  const frozenSittings = [...frozen.sittings]
+    .sort((left, right) => left.meetingId.localeCompare(right.meetingId))
+    .map((sitting) => ({ meetingId: sitting.meetingId, sha256: pimaOutcomeSittingSha256(sitting) }));
+  const predecessorPointerSha256 = trustedLkgPredecessorPointerSha256(pointer);
+  return {
+    contractVersion: 1,
+    kind: "DURABLE_PIMA_OUTCOME_UNION",
+    predecessorVersionId: predecessor.candidate.id,
+    predecessorPromotedAt: pointer.promotedAt,
+    predecessorPointerSha256,
+    predecessorCandidateRecordSha256: trustedLkgPredecessorRecordSha256(predecessor),
+    predecessorCandidateSha256: trustedLkgEvidenceSha256(predecessor.candidate),
+    predecessorReceiptSha256: trustedLkgEvidenceSha256(predecessor.receipt),
+    predecessorReadModelSha256: trustedLkgEvidenceSha256(predecessor.candidate.readModel),
+    frozenGeneratedOn: frozen.generatedOn,
+    frozenGeneratedAt: frozen.generatedAt,
+    frozenSittings,
+    predecessorSittingCount: (predecessor.candidate.readModel as OutcomeSnapshot).sittings.length,
+    unionSittingCount: union.sittings.length,
+    unionAuthoritySha256: sha256(canonicalCivicDataJson({
+      fixtureSetSha256: trustedLkgFixtureSetSha256(fixtures),
+      predecessorPointerSha256,
+      frozenGeneratedOn: frozen.generatedOn,
+      frozenGeneratedAt: frozen.generatedAt,
+      frozenSittings,
+    })),
+  };
+}
+
+function pdcV2PimaOutcomeUnionCandidate(
+  planned: PdcV2TrustedLkgPlannedCandidate,
+  pointer: PromotedProjection<OutcomeSnapshot>,
+  predecessor: CandidateVersionRecord,
+  importedAt: string,
+  importerCodeSha: string,
+): RoutineCandidate {
+  if (
+    planned.contractId !== "pima-legistar-outcomes" ||
+    planned.door !== "MANUAL" ||
+    predecessor.candidate.id !== pointer.versionId ||
+    canonicalCivicDataJson(pointer.payload) !== canonicalCivicDataJson(predecessor.candidate.readModel)
+  ) throw new Error("TRUSTED_LKG_PIMA_OUTCOME_UNION_ORIGIN_INVALID");
+  const frozenEvidence = planned.candidate.bootstrapImport;
+  if (
+    !frozenEvidence || frozenEvidence.kind !== "TRUSTED_LKG_IMPORT" ||
+    frozenEvidence.pimaOutcomeUnion !== undefined ||
+    frozenEvidence.fixtures.length !== 1 ||
+    frozenEvidence.fixtures[0]?.path !== PDC_V2_PIMA_OUTCOME_FIXTURE_PATH
+  ) throw new Error("TRUSTED_LKG_PIMA_OUTCOME_FROZEN_EVIDENCE_INVALID");
+  const frozen = structuredClone(planned.candidate.readModel) as OutcomeSnapshot;
+  assertPimaOutcomeSnapshot(frozen, "PLANNED_FROZEN");
+  if (frozen.sittings.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.pimaOutcomeSittings) {
+    throw new Error(`TRUSTED_LKG_PIMA_OUTCOME_DENOMINATOR_MISMATCH:${frozen.sittings.length}`);
+  }
+  const durable = structuredClone(pointer.payload);
+  const union = pdcV2UnionPimaOutcomeSnapshots(frozen, durable);
+  const origin = pimaOutcomeUnionEvidence(
+    frozen,
+    union,
+    frozenEvidence.fixtures,
+    pointer,
+    predecessor,
+  );
+  const url = "https://webapi.legistar.com/v1/pima/events";
+  const base = pimaLegistarOutcomesCandidate({
+    snapshot: union,
+    acquisitions: [{
+      source: "pima",
+      requestedUrl: url,
+      finalUrl: url,
+      httpStatus: 200,
+      rawHash: origin.unionAuthoritySha256,
+      byteCount: frozenEvidence.fixtures.reduce((sum, fixture) => sum + fixture.bytes, 0),
+    }],
+    retrievedAt: importedAt,
+    sourceThrough: exactInstant(latestInstant(union)),
+  });
+  return trustedCandidate(
+    planned.contractId,
+    base,
+    frozenEvidence.fixtures,
+    importedAt,
+    importerCodeSha,
+    undefined,
+    origin,
+    predecessor,
+  );
+}
+
 async function curatedSeed(
   tree: FrozenTree,
   contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions",
@@ -1334,6 +1537,7 @@ async function manualSeed(
     case "candidate-corpus": return corpusSeed(tree, importedAt);
     case "officeholder-statements": return statementsSeed(tree, importedAt);
     case "az-official-actions": return actionsSeed(tree, importedAt);
+    case "pima-legistar-outcomes": return outcomesSeed(tree, importedAt);
     case "comment-access":
     case "ballot-navigation":
     case "campaign-sites":
@@ -1343,7 +1547,7 @@ async function manualSeed(
 }
 
 /**
- * Build and validate all 95 candidates in memory. This function has no
+ * Build and validate all 96 candidates in memory. This function has no
  * database, network, Git-write, deployment, or tracked-file side effect.
  */
 export async function buildPdcV2TrustedLkgImportPlan(
@@ -1477,6 +1681,7 @@ export interface PdcV2TrustedLkgImportDisposition {
   readonly candidateId: string;
   readonly disposition:
     | "PROMOTED_ABSENT_POINTER"
+    | "PROMOTED_FROZEN_LKG_UNION"
     | "REATTESTED_EXISTING_AUTHORITY"
     | "SKIPPED_EXISTING_PROVEN_AUTHORITY";
   readonly versionId: string;
@@ -1654,6 +1859,18 @@ export function pdcV2PermanentCutoverPlanIssue(
     } else if (planned.contractId === "everyday-routing") {
       const issue = everydayFrozenTransferIssue(candidate.readModel as EverydayRoutingProjection);
       if (issue !== null) return `planned everyday routing payload differs from the frozen denominator: ${issue}`;
+    } else if (planned.contractId === "pima-legistar-outcomes") {
+      const snapshot = candidate.readModel as OutcomeSnapshot;
+      try {
+        assertPimaOutcomeSnapshot(snapshot, "PERMANENT_PLAN");
+      } catch {
+        return "planned Pima outcome payload is invalid";
+      }
+      if (
+        snapshot.sittings.length !== expected.pimaOutcomeSittings ||
+        candidate.bootstrapImport?.kind !== "TRUSTED_LKG_IMPORT" ||
+        candidate.bootstrapImport.pimaOutcomeUnion !== undefined
+      ) return "planned Pima outcome payload differs from the frozen denominator";
     }
   }
   if (meetingRows !== plan.meetingRows || agendaDocumentRows !== plan.agendaDocumentRows) {
@@ -1801,9 +2018,15 @@ async function proveRegisteredContractVersion(
       `${row.candidate.sourceId}:${contract.sourceId}`,
     );
   }
-  const predecessor = row.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-    ? await store.readCandidate(row.candidate.bootstrapImport.predecessorVersionId)
-    : null;
+  const transferEvidence = row.candidate.bootstrapImport;
+  const predecessorVersionId = transferEvidence?.kind === "TRUSTED_LKG_REATTESTATION"
+    ? transferEvidence.predecessorVersionId
+    : transferEvidence?.kind === "TRUSTED_LKG_IMPORT"
+      ? transferEvidence.pimaOutcomeUnion?.predecessorVersionId ?? null
+      : null;
+  const predecessor = predecessorVersionId === null
+    ? null
+    : await store.readCandidate(predecessorVersionId);
   const issue = promotionProofIssue(contract.recordClass, contract.scope, pointer, row, predecessor);
   if (issue !== null) throw new Error(`TRUSTED_LKG_PROMOTION_PROOF_INVALID:${contract.id}:${issue}`);
   const historyIssue = durablePointerHistoryIssue(
@@ -2615,9 +2838,15 @@ async function ensureDurableTrustedReaderReadback(
     if (!candidate) {
       throw new Error(`TRUSTED_LKG_READBACK_REPAIR_CANDIDATE_MISSING:${contract.id}:${expectedVersionId}`);
     }
-    const predecessor = candidate.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-      ? await store.readCandidate(candidate.candidate.bootstrapImport.predecessorVersionId)
-      : null;
+    const transferEvidence = candidate.candidate.bootstrapImport;
+    const predecessorVersionId = transferEvidence?.kind === "TRUSTED_LKG_REATTESTATION"
+      ? transferEvidence.predecessorVersionId
+      : transferEvidence?.kind === "TRUSTED_LKG_IMPORT"
+        ? transferEvidence.pimaOutcomeUnion?.predecessorVersionId ?? null
+        : null;
+    const predecessor = predecessorVersionId === null
+      ? null
+      : await store.readCandidate(predecessorVersionId);
     const verification = await verifySourceScopedCandidateProjection(
       contract,
       candidate.candidate,
@@ -2689,7 +2918,7 @@ export async function executePdcV2TrustedLkgImportPlan(
   const existing = new Map<string, {
     readonly versionId: string;
     readonly target: PdcV2TrustedLkgTarget;
-    readonly disposition: "PROVEN" | "REATTEST";
+    readonly disposition: "PROVEN" | "REATTEST" | "UNION";
     readonly candidate: RoutineCandidate | null;
   }>();
   for (const target of targets) {
@@ -2710,6 +2939,53 @@ export async function executePdcV2TrustedLkgImportPlan(
         `TRUSTED_LKG_EXISTING_CANDIDATE_SOURCE_MISMATCH:${target.contractId}:` +
         `${predecessor.candidate.sourceId}:${target.contract.sourceId}`,
       );
+    }
+    if (target.contractId === "pima-legistar-outcomes" && target.planned) {
+      try {
+        await proveRegisteredContractVersion(
+          store,
+          target.contract,
+          pointer.versionId,
+          plan.importedAt,
+        );
+      } catch (strictError) {
+        // A pre-PDC pointer may lack only the modern integrity envelope. Prove
+        // that the exact immutable row is re-attestable, but let the union
+        // successor perform both repairs in one CAS/promotion.
+        try {
+          await reattestationPreflight(store, target, pointer, predecessor, plan);
+        } catch (error) {
+          throw new Error(
+            `TRUSTED_LKG_EXISTING_AUTHORITY_NOT_UNIONABLE:${target.contractId}:` +
+            `${error instanceof Error ? error.message : String(error)}:` +
+            `STRICT_PROOF=${strictError instanceof Error ? strictError.message : String(strictError)}`,
+          );
+        }
+      }
+      const frozen = target.planned.candidate.readModel as OutcomeSnapshot;
+      const union = pdcV2UnionPimaOutcomeSnapshots(frozen, pointer.payload as OutcomeSnapshot);
+      if (canonicalCivicDataJson(union) === canonicalCivicDataJson(pointer.payload)) {
+        existing.set(target.contractId, {
+          versionId: pointer.versionId,
+          target,
+          disposition: "PROVEN",
+          candidate: null,
+        });
+      } else {
+        existing.set(target.contractId, {
+          versionId: pointer.versionId,
+          target,
+          disposition: "UNION",
+          candidate: pdcV2PimaOutcomeUnionCandidate(
+            target.planned,
+            pointer as PromotedProjection<OutcomeSnapshot>,
+            predecessor,
+            plan.importedAt,
+            plan.importerCodeSha,
+          ),
+        });
+      }
+      continue;
     }
     const plannedImport = target.planned?.candidate.bootstrapImport;
     const existingImport = predecessor.candidate.bootstrapImport;
@@ -2782,7 +3058,7 @@ export async function executePdcV2TrustedLkgImportPlan(
 
   await options.beforeFirstWrite?.(
     [...existing.values()]
-      .filter(({ disposition }) => disposition === "REATTEST")
+      .filter(({ disposition }) => disposition === "REATTEST" || disposition === "UNION")
       .map(({ versionId }) => versionId)
       .sort(),
   );
@@ -2791,6 +3067,66 @@ export async function executePdcV2TrustedLkgImportPlan(
   for (const target of targets) {
     const existingAuthority = existing.get(target.contractId);
     if (existingAuthority) {
+      if (existingAuthority.disposition === "UNION") {
+        const candidate = existingAuthority.candidate;
+        const origin = candidate?.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT"
+          ? candidate.bootstrapImport.pimaOutcomeUnion
+          : null;
+        if (!candidate || !origin) {
+          throw new Error(`TRUSTED_LKG_PIMA_OUTCOME_UNION_CANDIDATE_MISSING:${target.contractId}`);
+        }
+        const observed = await store.readPromotion(target.contract.recordClass, target.contract.scope);
+        if (
+          !observed || observed.versionId !== existingAuthority.versionId ||
+          trustedLkgPredecessorPointerSha256(observed) !== origin.predecessorPointerSha256
+        ) {
+          throw new Error(
+            `TRUSTED_LKG_PIMA_OUTCOME_UNION_BASE_CHANGED:${target.contractId}:` +
+            `${existingAuthority.versionId}:${observed?.versionId ?? "ABSENT"}`,
+          );
+        }
+        const outcome = await processRegisteredManualCandidate(
+          store,
+          "pima-legistar-outcomes",
+          candidate,
+          plan.importedAt,
+          existingAuthority.versionId,
+        );
+        if (!outcome.promoted || outcome.candidate.state !== "PROMOTED") {
+          throw new Error(
+            `TRUSTED_LKG_PIMA_OUTCOME_UNION_PROMOTION_REFUSED:` +
+            `${outcome.candidate.failureCode ?? outcome.candidate.state}:` +
+            `${outcome.candidate.failureDetail ?? "no detail"}`,
+          );
+        }
+        if (outcome.readerReadback?.status !== "PASS") {
+          throw new Error(
+            `TRUSTED_LKG_PIMA_OUTCOME_UNION_READER_READBACK_FAILED:` +
+            `${outcome.readerReadback?.detail ?? "missing receipt"}`,
+          );
+        }
+        await proveRegisteredContractVersion(
+          store,
+          target.contract,
+          candidate.id,
+          plan.importedAt,
+        );
+        await ensureDurableTrustedReaderReadback(
+          store,
+          target.contract,
+          candidate.id,
+          plan.importedAt,
+          plan.importerCodeSha,
+        );
+        dispositions.push({
+          contractId: target.contractId,
+          candidateId: candidate.id,
+          disposition: "PROMOTED_FROZEN_LKG_UNION",
+          versionId: outcome.promoted.versionId,
+          readerReadback: "PASS",
+        });
+        continue;
+      }
       if (existingAuthority.disposition === "PROVEN") {
         // Reprove immediately before recording the skip so a concurrent
         // pointer move cannot make this receipt describe a stale observation.
@@ -2934,7 +3270,9 @@ export async function executePdcV2TrustedLkgImportPlan(
     });
   }
   const promoted = dispositions.filter(({ disposition }) =>
-    disposition === "PROMOTED_ABSENT_POINTER" || disposition === "REATTESTED_EXISTING_AUTHORITY"
+    disposition === "PROMOTED_ABSENT_POINTER" ||
+    disposition === "PROMOTED_FROZEN_LKG_UNION" ||
+    disposition === "REATTESTED_EXISTING_AUTHORITY"
   ).length;
   const reattestedExisting = dispositions.filter(({ disposition }) =>
     disposition === "REATTESTED_EXISTING_AUTHORITY"

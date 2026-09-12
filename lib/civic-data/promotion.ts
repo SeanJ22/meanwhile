@@ -24,6 +24,14 @@ import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/prom
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
 const TRUSTED_LKG_REGISTERED_DOOR = Symbol("TRUSTED_LKG_REGISTERED_DOOR");
 
+function trustedLkgPredecessorVersionId(candidate: RoutineCandidate): string | null {
+  const evidence = candidate.bootstrapImport;
+  if (evidence?.kind === "TRUSTED_LKG_REATTESTATION") return evidence.predecessorVersionId;
+  return evidence?.kind === "TRUSTED_LKG_IMPORT"
+    ? evidence.pimaOutcomeUnion?.predecessorVersionId ?? null
+    : null;
+}
+
 function sourceProjectionObservedAt(store: RoutineDataStore, requested: string): string {
   return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
 }
@@ -173,8 +181,8 @@ export async function processRegisteredRoutineCandidate(
     contract,
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
-    boundedCandidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-      ? await store.readCandidate(boundedCandidate.bootstrapImport.predecessorVersionId)
+    trustedLkgPredecessorVersionId(boundedCandidate) !== null
+      ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
   return appendTypedReaderProjectionReadback(
@@ -211,8 +219,8 @@ export async function processRegisteredMeetingPartitionCandidate(
     contract,
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
-    boundedCandidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-      ? await store.readCandidate(boundedCandidate.bootstrapImport.predecessorVersionId)
+    trustedLkgPredecessorVersionId(boundedCandidate) !== null
+      ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
   return appendTypedReaderProjectionReadback(
@@ -275,8 +283,8 @@ export async function processRegisteredManualCandidate(
     contract,
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
-    boundedCandidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-      ? await store.readCandidate(boundedCandidate.bootstrapImport.predecessorVersionId)
+    trustedLkgPredecessorVersionId(boundedCandidate) !== null
+      ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
   return appendTypedReaderProjectionReadback(
@@ -331,10 +339,12 @@ export async function processRoutineCandidate(
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
   const lkg = current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
-  const lkgReattestationPredecessor =
-    lkg?.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-      ? await store.readCandidate(lkg.candidate.bootstrapImport.predecessorVersionId)
-      : null;
+  const lkgPredecessorVersionId = lkg === null
+    ? null
+    : trustedLkgPredecessorVersionId(lkg.candidate);
+  const lkgTransferPredecessor = lkgPredecessorVersionId === null
+    ? null
+    : await store.readCandidate(lkgPredecessorVersionId);
   const declaredBase = preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
     ? await store.readCandidate(expectedBaseVersionId)
     : null;
@@ -358,7 +368,7 @@ export async function processRoutineCandidate(
           inputCandidate.scope,
           current,
           lkg,
-          lkgReattestationPredecessor,
+          lkgTransferPredecessor,
         );
   const candidate: RoutineCandidate = {
     ...inputCandidate,
@@ -368,8 +378,9 @@ export async function processRoutineCandidate(
     ),
   };
   const initialState: CandidateState = candidate.retrieval.succeeded ? "FETCHED" : "SOURCE_BLOCKED";
-  const reattestingExactLkg = candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION" &&
-    lkg?.candidate.id === candidate.bootstrapImport.predecessorVersionId;
+  const trustedPredecessorVersionId = trustedLkgPredecessorVersionId(candidate);
+  const continuingExactLkg = trustedPredecessorVersionId !== null &&
+    lkg?.candidate.id === trustedPredecessorVersionId;
   // A trusted first-pointer candidate is evaluated against the empty base it
   // actually names. If a pointer appeared after its scan, the later CAS branch
   // records that race; feeding the new pointer into validation would instead
@@ -377,7 +388,7 @@ export async function processRoutineCandidate(
   // and make the durable receipt disagree with the real disposition.
   const validationLkg = preloadedBaseChanged
     ? exactDeclaredBase
-    : reattestingExactLkg || lkgProofIssue === null ? lkg : null;
+    : continuingExactLkg || lkgProofIssue === null ? lkg : null;
   const validated = validateRoutineCandidate(
     candidate,
     validationLkg,
@@ -436,7 +447,7 @@ export async function processRoutineCandidate(
     const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  if (current !== null && lkgProofIssue !== null && !reattestingExactLkg) {
+  if (current !== null && lkgProofIssue !== null && !continuingExactLkg) {
     const code = lkg === null ? "LKG_CANDIDATE_MISSING" : "LKG_PROMOTION_PROOF_INVALID";
     const detail = `The existing canonical pointer is not a valid last-known-good proof (${lkgProofIssue}); promotion is held until the durable chain is repaired.`;
     const receipt = invalidLkgReceipt(validated.receipt, code, detail);

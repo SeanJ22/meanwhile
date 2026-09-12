@@ -10,6 +10,7 @@ import {
   deployedReaderRuntimeTreeUnchanged,
   loadReaderProofMeetingsExpectedAuthority,
   normalDocumentaryMergeOverAuthority,
+  readerProofMeetingPartitionIdentity,
   requireReaderProofAuthorityHeadBinding,
   requireReaderProofAuthorityReadConnection,
   readerProofMeetingsAuthorityFromImport,
@@ -25,6 +26,7 @@ import {
   type ReaderClosureExecutionAuthorityEvidence,
 } from "../lib/holdings/reader-census.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { pdcV2CanonicalMeetingFactEvidence } from "../lib/civic-data/store.ts";
 import {
   readSnapshot,
   requireReaderProofMeetingsProjection,
@@ -267,6 +269,7 @@ type MeetingReadback = Extract<MeetingProofInput, { kind: "PROMOTED" }>["partiti
 function frozenMeetingAuthority(): ReaderProofMeetingsExpectedAuthority {
   const frozen = readSnapshot();
   assert.ok(frozen, "the bundled frozen trusted-LKG meetings snapshot is present");
+  const aggregate = pdcV2CanonicalMeetingFactEvidence([frozen]);
   const partitions = MEETING_PARTITION_CONTRACTS.map((partition) => {
     const promoted = frozen.meetings.some((meeting) =>
       meeting.bodyId === partition.bodyId && meeting.id.startsWith(`${partition.meetingSource}:`)
@@ -280,6 +283,11 @@ function frozenMeetingAuthority(): ReaderProofMeetingsExpectedAuthority {
   return {
     meetingPartitionsWithLkg: partitions.filter(({ kind }) => kind === "PROMOTED").length,
     meetingPartitionsWithoutLkg: partitions.filter(({ kind }) => kind === "NOT_RECORDED").length,
+    legacyMeetingsAggregate: {
+      factSha256: aggregate.sha256,
+      meetingRowCount: aggregate.meetingRowCount,
+      agendaDocumentRowCount: aggregate.agendaDocumentRowCount,
+    },
     partitions,
   };
 }
@@ -299,6 +307,7 @@ function frozenImportAdmission(): ReaderExecutionAuthorityArchivedSupportAdmissi
     dispositionSet,
     zeroMeetingPartitionsRefused: 41,
     dispositionSetSha256: "b".repeat(64),
+    legacyMeetingsAggregate: frozenMeetingAuthority().legacyMeetingsAggregate,
   };
 }
 
@@ -355,10 +364,11 @@ function meetingProofInput(
       detail: expected.kind === "PROMOTED" ? null : "No frozen LKG pointer was imported.",
     };
   }),
+  value = readSnapshot()!,
 ): MeetingProofInput {
   return {
     kind: "PROMOTED",
-    value: {} as never,
+    value,
     metadata: {} as never,
     partitions,
     detail: "83/124 proof-valid source/body partitions composed",
@@ -376,6 +386,7 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
   assert.equal(expected.meetingPartitionsWithLkg, 83);
   assert.equal(expected.meetingPartitionsWithoutLkg, 41);
   assert.equal(requireReaderProofMeetingsProjection(input, expected), input.value);
+  const identity = readerProofMeetingPartitionIdentity(input, expected);
   const reversed = meetingProofInput([...input.partitions].reverse());
   assert.equal(reversed.kind, "PROMOTED");
   if (reversed.kind !== "PROMOTED") return;
@@ -386,6 +397,7 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
     ),
     reversed.value,
   );
+  assert.equal(readerProofMeetingPartitionIdentity(reversed, expected), identity);
 });
 
 test("meeting proof identity rejects incomplete, ambiguous, or unreadable partition authority", () => {
@@ -433,6 +445,68 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
   assert.throws(
     () => requireReaderProofMeetingsProjection(meetingProofInput(swapped), expected),
     /disposition differs from phase import authority/,
+  );
+
+  const omittedMeeting = {
+    ...input.value,
+    meetings: input.value.meetings.slice(1),
+  };
+  assert.throws(
+    () => readerProofMeetingPartitionIdentity(
+      meetingProofInput(input.partitions, omittedMeeting),
+      expected,
+    ),
+    /legacy aggregate facts differ from phase import authority/,
+  );
+  assert.throws(
+    () => readerProofMeetingPartitionIdentity(input, {
+      ...expected,
+      legacyMeetingsAggregate: {
+        ...expected.legacyMeetingsAggregate,
+        factSha256: "c".repeat(64),
+      },
+    }),
+    /legacy aggregate facts differ from phase import authority/,
+  );
+  assert.throws(
+    () => readerProofMeetingPartitionIdentity(input, {
+      ...expected,
+      legacyMeetingsAggregate: {
+        ...expected.legacyMeetingsAggregate,
+        meetingRowCount: expected.legacyMeetingsAggregate.meetingRowCount + 1,
+      },
+    }),
+    /legacy aggregate facts differ from phase import authority/,
+  );
+  assert.throws(
+    () => readerProofMeetingPartitionIdentity(input, {
+      ...expected,
+      legacyMeetingsAggregate: {
+        ...expected.legacyMeetingsAggregate,
+        agendaDocumentRowCount: expected.legacyMeetingsAggregate.agendaDocumentRowCount + 1,
+      },
+    }),
+    /legacy aggregate facts differ from phase import authority/,
+  );
+  assert.throws(
+    () => readerProofMeetingPartitionIdentity(input, {
+      ...expected,
+      legacyMeetingsAggregate: {
+        ...expected.legacyMeetingsAggregate,
+        meetingRowCount: 0,
+      },
+    }),
+    /expected legacy aggregate authority is invalid/,
+  );
+  assert.throws(
+    () => readerProofMeetingPartitionIdentity(input, {
+      ...expected,
+      legacyMeetingsAggregate: {
+        ...expected.legacyMeetingsAggregate,
+        agendaDocumentRowCount: 0,
+      },
+    }),
+    /expected legacy aggregate authority is invalid/,
   );
 });
 

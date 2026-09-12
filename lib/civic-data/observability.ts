@@ -811,19 +811,21 @@ function pointerProof(
     }
     if (envelope && isTrustedLkgImportCandidate(envelope)) {
       const transferEvidence = envelope.bootstrapImport;
-      if (transferEvidence.kind === "TRUSTED_LKG_REATTESTATION") {
-        const predecessorVersionId = transferEvidence.predecessorVersionId;
+      const predecessorVersionId = transferEvidence.kind === "TRUSTED_LKG_REATTESTATION"
+        ? transferEvidence.predecessorVersionId
+        : transferEvidence.pimaOutcomeUnion?.predecessorVersionId ?? null;
+      if (predecessorVersionId !== null) {
         const predecessorRows = candidates.filter(({ id }) =>
           id === predecessorVersionId
         );
         if (predecessorRows.length !== 1) {
           reasons.push(
-            `re-attestation names ${predecessorRows.length} exact predecessor candidate rows`,
+            `trusted transfer names ${predecessorRows.length} exact predecessor candidate rows`,
           );
         } else {
           predecessorRecord = candidateVersionRecord(predecessorRows[0]!);
           if (predecessorRecord === null) {
-            reasons.push("the re-attestation predecessor row is malformed");
+            reasons.push("the trusted-transfer predecessor row is malformed");
           }
         }
       }

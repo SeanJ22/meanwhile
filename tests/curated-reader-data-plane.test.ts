@@ -15,6 +15,7 @@ import { projectRoutineDataObservability } from "../lib/civic-data/observability
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceClass, ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
+import { COMMENT_ACCESS, currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
@@ -153,6 +154,27 @@ test("each mutable curated Reader family promotes and reads from its own canonic
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
   }
+});
+
+test("comment-access drops the control-plane transport id at the Reader boundary", async () => {
+  const store = new MemoryRoutineDataStore();
+  const candidate = manualProjectionCandidate(packageFor("comment-access"));
+  const outcome = await processRegisteredManualCandidate(store, "comment-access", candidate, T0);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  await readCuratedReaderProjection("comment-access", { store, bypassCache: true, now: T0 });
+
+  const records = currentCommentAccess();
+  assert.equal(records.length, 1);
+  assert.deepEqual(records[0], payloadFor("comment-access", T0).records[0] && {
+    bodyId: "body:test",
+    commentPeriod: "YES",
+    commentPeriodDetail: "The body publishes one comment period.",
+    sourceUrl: URLS["comment-access"][0],
+    collectedAt: T0,
+    verifiedAt: T0,
+  });
+  assert.equal("id" in (records[0] as unknown as Record<string, unknown>), false);
+  assert.ok(COMMENT_ACCESS.every((record) => !("id" in (record as unknown as Record<string, unknown>))));
 });
 
 test("a bad curated family is held against its own LKG and cannot affect another family", async () => {

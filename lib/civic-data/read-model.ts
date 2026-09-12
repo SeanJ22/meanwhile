@@ -24,6 +24,14 @@ import {
 const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
 
+function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null): string | null {
+  const evidence = candidate?.candidate.bootstrapImport;
+  if (evidence?.kind === "TRUSTED_LKG_REATTESTATION") return evidence.predecessorVersionId;
+  return evidence?.kind === "TRUSTED_LKG_IMPORT"
+    ? evidence.pimaOutcomeUnion?.predecessorVersionId ?? null
+    : null;
+}
+
 function durableProjectionHash(value: unknown): string | null {
   try {
     const encoded = JSON.stringify(value);
@@ -265,8 +273,9 @@ export async function readPromotedCivicData<T>(
     }
     observedProjection = projection;
     const candidate = await store.readCandidate(projection.versionId);
-    const predecessor = candidate?.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-      ? await store.readCandidate(candidate.candidate.bootstrapImport.predecessorVersionId)
+    const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
+    const predecessor = predecessorVersionId !== null
+      ? await store.readCandidate(predecessorVersionId)
       : null;
     const result = resultFromPromotionProof(
       recordClass,
@@ -399,11 +408,10 @@ export async function readPromotedCivicDataBatch<T>(
     for (const candidate of candidates) {
       candidatesById.set(candidate.candidateId, [...(candidatesById.get(candidate.candidateId) ?? []), candidate.record]);
     }
-    const predecessorIds = [...new Set(candidates.flatMap(({ record }) =>
-      record.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-        ? [record.candidate.bootstrapImport.predecessorVersionId]
-        : []
-    ))];
+    const predecessorIds = [...new Set(candidates.flatMap(({ record }) => {
+      const predecessorVersionId = trustedLkgPredecessorVersionId(record);
+      return predecessorVersionId === null ? [] : [predecessorVersionId];
+    }))];
     let predecessorRows: readonly CandidateVersionReadback[] = [];
     if (predecessorIds.length > 0) {
       try {
@@ -466,18 +474,19 @@ export async function readPromotedCivicDataBatch<T>(
         continue;
       }
       const candidate = candidateRows[0] ?? null;
-      const requiredPredecessorRows = candidate?.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION"
-        ? predecessorsById.get(candidate.candidate.bootstrapImport.predecessorVersionId) ?? []
+      const requiredPredecessorVersionId = trustedLkgPredecessorVersionId(candidate);
+      const requiredPredecessorRows = requiredPredecessorVersionId !== null
+        ? predecessorsById.get(requiredPredecessorVersionId) ?? []
         : [];
       if (
-        candidate?.candidate.bootstrapImport?.kind === "TRUSTED_LKG_REATTESTATION" &&
+        requiredPredecessorVersionId !== null &&
         requiredPredecessorRows.length > 1
       ) {
         results.set(scope, promotionProofInvalidResult(
           recordClass,
           scope,
           projection,
-          "the batch read returned more than one immutable predecessor row for the current re-attestation",
+          "the batch read returned more than one immutable predecessor row for the current trusted transfer",
         ));
         continue;
       }

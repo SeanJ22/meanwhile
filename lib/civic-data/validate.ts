@@ -234,15 +234,23 @@ export function validateRoutineCandidate(
 
   if (candidate.bootstrapImport) {
     const reattestation = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION";
+    const outcomeUnionPredecessorId = candidate.bootstrapImport.kind === "TRUSTED_LKG_IMPORT"
+      ? candidate.bootstrapImport.pimaOutcomeUnion?.predecessorVersionId ?? null
+      : null;
+    const exactPredecessorId = reattestation
+      ? candidate.bootstrapImport.predecessorVersionId
+      : outcomeUnionPredecessorId;
     const issue = trustedLkgImportEvidenceIssue(candidate, lastKnownGood);
-    if (reattestation && lastKnownGood?.candidate.id !== candidate.bootstrapImport.predecessorVersionId) {
+    if (exactPredecessorId !== null && lastKnownGood?.candidate.id !== exactPredecessorId) {
       checks.push(result(
         "SOURCE_AUTHENTICITY",
         "FAIL",
-        "TRUSTED_LKG_REATTESTATION_REQUIRES_EXACT_LKG",
-        `Re-attestation names ${candidate.bootstrapImport.predecessorVersionId}, but the exact durable LKG is ${lastKnownGood?.candidate.id ?? "absent"}.`,
+        reattestation
+          ? "TRUSTED_LKG_REATTESTATION_REQUIRES_EXACT_LKG"
+          : "TRUSTED_LKG_PIMA_OUTCOME_UNION_REQUIRES_EXACT_LKG",
+        `${reattestation ? "Re-attestation" : "Pima outcome union"} names ${exactPredecessorId}, but the exact durable LKG is ${lastKnownGood?.candidate.id ?? "absent"}.`,
       ));
-    } else if (!reattestation && lastKnownGood !== null) {
+    } else if (!reattestation && outcomeUnionPredecessorId === null && lastKnownGood !== null) {
       checks.push(result(
         "SOURCE_AUTHENTICITY",
         "FAIL",

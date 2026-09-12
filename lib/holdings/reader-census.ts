@@ -1399,6 +1399,14 @@ export interface ReaderProofInvalidationReport {
   readonly rows: readonly ReaderProofInvalidationRow[];
   readonly counts: Readonly<Record<ReaderProofDisposition, number>>;
   readonly failures: readonly string[];
+  /** Explicit conservative full re-proof. No reader row is inherited; every
+   * applicable reader row carries a fresh current-head delivery proof. Any
+   * changed reader source or holding is therefore covered by complete
+   * current-head re-rendering rather than a per-source impact classification,
+   * so shared styles, runtime/config dependencies and other effects that import
+   * reachability cannot bound are all re-proved. Fails closed: a single row
+   * without a complete current-head proof (or any inherited row) is rejected. */
+  readonly fullReproof?: boolean;
   /** Executed presentation renewal over an unchanged, previously closed census.
    * The historical row proofs and their original execution heads are retained. */
   readonly sourceRevalidation?: {
@@ -1623,7 +1631,7 @@ function copyInheritedReaderDelivery(current: CensusRow, baseline: CensusRow, re
 /** Carry only unchanged, already-proved rows across the frozen last-mile delta.
  * Any changed row outside the declared family boundary stays unproved and is a
  * hard failure; this is deliberately more conservative than HEAD equality. */
-export function inheritReaderProofs(root: string, current: ReaderCensus, options: { baselineCensusPath: string; baselineReceiptPath: string; reportPath: string; currentReaderHead: string; onlyChangedDependencies?: boolean }): { census: ReaderCensus; report: ReaderProofInvalidationReport } {
+export function inheritReaderProofs(root: string, current: ReaderCensus, options: { baselineCensusPath: string; baselineReceiptPath: string; reportPath: string; currentReaderHead: string; onlyChangedDependencies?: boolean; fullReproof?: boolean }): { census: ReaderCensus; report: ReaderProofInvalidationReport } {
   const baselineReceiptBytes = readReaderEvidence(root, options.baselineReceiptPath);
   const baselineReceipt = JSON.parse(baselineReceiptBytes.toString("utf8")) as ReaderClosureReceipt;
   const baselineCensusBytes = readReaderEvidence(root, options.baselineCensusPath);
@@ -1658,6 +1666,9 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
       reason = "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.";
     } else if (invalidation && declaredDependencyChanged) {
       disposition = "INVALIDATED"; acceptance = invalidation.acceptance; reason = invalidation.reason;
+    } else if (options.fullReproof) {
+      disposition = "INVALIDATED"; acceptance = "VF-FULL";
+      reason = "Conservative full re-proof: this reader row is re-rendered at the current head; no inheritance relies on any changed dependency.";
     } else {
       const provedCheckpointMatches = options.onlyChangedDependencies ? Boolean(baselineRow?.provedHead) : baselineRow?.provedHead === READER_LAST_MILE_BASE_HEAD;
       if (!baselineRow || !structuralMatches || !holdingsMatch || baselineRow.deliveryState !== "RENDERED" || !provedCheckpointMatches) {
@@ -1677,16 +1688,17 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
     const before = baselineSources.get(path) ?? null, after = currentSources.get(path) ?? null;
     if (before === after) return [];
     const impact = readerSourceImpact(path);
-    if (!impact) { failures.push(`Reader dependency changed outside the frozen invalidation boundary: ${path}`); return [{ path, baselineSha256: before, currentSha256: after, acceptance: "UNCLASSIFIED", reason: "No LM-F1..LM-F10 dependency mapping." }]; }
-    return [{ path, baselineSha256: before, currentSha256: after, ...impact }];
+    if (impact) return [{ path, baselineSha256: before, currentSha256: after, ...impact }];
+    if (options.fullReproof) return [{ path, baselineSha256: before, currentSha256: after, acceptance: "VF-FULL", reason: "Covered by complete current-head re-render of every applicable reader row (import reachability is not relied on to bound its effect)." }];
+    failures.push(`Reader dependency changed outside the frozen invalidation boundary: ${path}`); return [{ path, baselineSha256: before, currentSha256: after, acceptance: "UNCLASSIFIED", reason: "No LM-F1..LM-F10 dependency mapping." }];
   });
   const changedHoldings = unique([...baselineHoldings.keys(), ...currentHoldings.keys()]).flatMap((path) => {
     const before = baselineHoldings.get(path), after = currentHoldings.get(path);
     if (before?.sha256 === after?.sha256) return [];
     const family = after?.family ?? before?.family ?? "unknown";
     const invalidation = readerLastMileInvalidatedFamilies.get(family);
-    if (!invalidation) failures.push(`Canonical reader holding changed outside the frozen invalidation boundary: ${path}`);
-    return [{ path, family, baselineSha256: before?.sha256 ?? null, currentSha256: after?.sha256 ?? null, acceptance: invalidation?.acceptance ?? "UNCLASSIFIED" }];
+    if (!invalidation && !options.fullReproof) failures.push(`Canonical reader holding changed outside the frozen invalidation boundary: ${path}`);
+    return [{ path, family, baselineSha256: before?.sha256 ?? null, currentSha256: after?.sha256 ?? null, acceptance: invalidation?.acceptance ?? (options.fullReproof ? "VF-FULL" : "UNCLASSIFIED") }];
   });
   const acceptances: ReaderProofInvalidationReport["acceptances"] = [
     { id: "LM-F1", disposition: "INHERITED", dependencies: ["74f748c proof package for d9dc2010", "unchanged row structure", "unchanged row holding hashes"], proof: "Every carried row is checked independently; a changed or missing dependency becomes an unclassified hard failure." },
@@ -1699,6 +1711,7 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
     { id: "LM-F8", disposition: "INVALIDATED", dependencies: ["meeting/calendar snapshot", "listing identity", "agenda routes", "meeting Ask", "failed-refresh UI"], proof: "Targeted Newbury, meeting, agenda, Ask and rendered component proofs." },
     { id: "LM-F9", disposition: "INVALIDATED", dependencies: ["final proof package"], proof: "Only hash-bound final delta artifacts are added; interrupted outputs were restored first." },
     { id: "LM-F10", disposition: "INVALIDATED", dependencies: ["frozen code head", "final gates/build/census/CI/deploy"], proof: "Exact-source receipt plus final PR-head CI and bounded production reader readback." },
+    ...(options.fullReproof ? [{ id: "VF-FULL", disposition: "INVALIDATED" as const, dependencies: ["complete current-head reader re-render", "fresh current-head execution authority"], proof: "Every applicable reader row carries a fresh current-head delivery proof and no row is inherited, so any changed reader source or holding is covered by complete re-rendering rather than a per-source impact classification." }] : []),
   ];
   const counts = Object.fromEntries((["INHERITED", "INVALIDATED", "RECOMPUTED"] as const).map((disposition) => [disposition, rows.filter((row) => row.disposition === disposition).length])) as Record<ReaderProofDisposition, number>;
   const report: ReaderProofInvalidationReport = {
@@ -1707,6 +1720,7 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
     baselineCensusSha256: sha256(baselineCensusBytes), currentReaderHead: options.currentReaderHead, reportPath: options.reportPath,
     rule: "The denominator is frozen at LM-F1..LM-F10. A direct eligible row is inherited only when its complete structural projection and every holding byte are unchanged; declared shared-family deltas require current proofs. No unclassified change may close.",
     acceptances, changedReaderSources, changedHoldings, rows, counts, failures: unique(failures),
+    ...(options.fullReproof ? { fullReproof: true as const } : {}),
   };
   return { census: { ...current, rows: current.rows.map((row) => inheritedRows.get(row.id) ?? row), failures: unique([...current.failures, ...failures]) }, report };
 }
@@ -1770,7 +1784,20 @@ export function readerProofInheritanceProblems(root: string, census: ReaderCensu
   const currentSources = new Map(readerSourceFingerprint(root).map((source) => [source.path, source.sha256]));
   const changed = unique([...baselineSources.keys(), ...currentSources.keys()]).filter((path) => (baselineSources.get(path) ?? null) !== (currentSources.get(path) ?? null));
   if (JSON.stringify(changed) !== JSON.stringify(report.changedReaderSources.map((source) => source.path).sort())) failures.push("Reader dependency delta differs from the frozen invalidation report");
-  for (const source of report.changedReaderSources) if ((currentSources.get(source.path) ?? null) !== source.currentSha256 || (!readerSourceImpact(source.path) && !renewedSources.has(source.path))) failures.push(`Reader dependency is unbound or unclassified: ${source.path}`);
+  const fullReproof = report.fullReproof === true;
+  for (const source of report.changedReaderSources) if ((currentSources.get(source.path) ?? null) !== source.currentSha256 || (!readerSourceImpact(source.path) && !renewedSources.has(source.path) && !(fullReproof && source.acceptance === "VF-FULL"))) failures.push(`Reader dependency is unbound or unclassified: ${source.path}`);
+  if (fullReproof) {
+    // Fail closed: a full re-proof inherits nothing and re-proves every applicable
+    // reader row at the exact current head. A single inherited row, or any applicable
+    // row whose delivery is missing, stale, wrong-head or incomplete, is rejected.
+    for (const reportRow of report.rows) if (reportRow.disposition === "INHERITED") failures.push(`${reportRow.rowId}: full re-proof must not inherit any reader row`);
+    for (const row of census.rows) {
+      const applicable = (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length;
+      if (applicable && (row.provedHead !== report.currentReaderHead || row.deliveryState !== "RENDERED" || row.falseNegativeCount !== 0 || row.falsePositiveCount !== 0)) {
+        failures.push(`${row.id}: full re-proof requires a complete current-head delivery proof`);
+      }
+    }
+  }
   return unique(failures);
 }
 

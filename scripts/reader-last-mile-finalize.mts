@@ -126,12 +126,14 @@ if (process.argv.includes("--revalidate-source")) {
   }), null, 2));
   process.exit(0);
 }
+const fullReproof = process.argv.includes("--full-reproof");
 const inherited = inheritReaderProofs(root, census, {
   baselineCensusPath,
   baselineReceiptPath,
   reportPath: invalidationPath,
   currentReaderHead: codeHead,
   onlyChangedDependencies: archivedBaselineCensusPath !== null,
+  fullReproof,
 });
 census = inherited.census;
 const inheritanceReport = archivedBaselineCensusPath

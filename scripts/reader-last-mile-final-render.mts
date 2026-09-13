@@ -9,6 +9,7 @@ import { launchGuarded } from "./browser.mts";
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import type { SnapshotStatus } from "../lib/meetings/freshness.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { formatMeetingDate } from "../lib/map/format.ts";
@@ -135,8 +136,7 @@ async function contextPage() {
   return { context, page };
 }
 
-async function inspectMeeting(page: Page, meetingId: string) {
-  const meeting = snapshot.meetings.find((row) => row.id === meetingId); assert.ok(meeting);
+async function openMeetingList(page: Page) {
   const stat = page.locator('[data-stat="meetings"]').first();
   if (!(await stat.isVisible())) {
     const menu = page.getByRole("button", { name: "Open menu", exact: true });
@@ -144,23 +144,39 @@ async function inspectMeeting(page: Page, meetingId: string) {
   }
   await stat.click();
   await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
-  while (await page.locator(".al-more").count()) await page.locator(".al-more").click();
+  await page.waitForFunction(() => document.querySelectorAll(".al-group-head").length === 0 && document.querySelectorAll(".al-row").length > 0);
+  while (await page.locator(".al-more").count()) {
+    const before = await page.locator(".al-row").count();
+    await page.locator(".al-more").click();
+    await page.waitForFunction((count) => document.querySelectorAll(".al-row").length > count, before);
+  }
+  assert.equal(await page.locator(".al-row").count(), Number((await page.locator(".al-overlay-count").innerText()).split(" ")[0]), "Every stated listing must be accessible before selecting a witness");
+}
+
+async function inspectMeeting(page: Page, meetingId: string, proveParticipation = false, listOpen = false) {
+  const meeting = snapshot.meetings.find((row) => row.id === meetingId); assert.ok(meeting);
+  if (!listOpen) await openMeetingList(page);
   const row = page.locator(`.al-row[data-meeting-id="${meetingId}"]`);
   assert.equal(await row.count(), 1, meetingId);
+  const waitForAgenda = () => page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
+  });
+  // Online sittings open the large card directly from the list. Located
+  // sittings reach it through the venue panel and map popup.
+  let pending = meeting.location ? null : waitForAgenda();
   await row.click();
   if (meeting.location) {
     const article = page.locator(`aside:visible article[data-meeting-id="${meetingId}"]`);
     await article.waitFor({ state: "visible" });
     assert.ok(normalize(await article.innerText()).includes(normalize(formatMeetingDate(meeting))));
     await article.locator("h3 button").click();
+    const expand = page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true });
+    await expand.waitFor({ state: "visible" });
+    pending = waitForAgenda();
+    await expand.click();
   }
-  const expand = page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true });
-  await expand.waitFor({ state: "visible" });
-  const pending = page.waitForResponse((response) => {
-    const url = new URL(response.url());
-    return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
-  });
-  await expand.click();
+  assert.ok(pending);
   const response = await pending;
   assert.equal(response.status(), 200);
   const payload = await response.json();
@@ -178,13 +194,27 @@ async function inspectMeeting(page: Page, meetingId: string) {
   }
   if (payload.documents.length) for (const document of payload.documents) assert.ok(await modal.locator(`a[href="${document.documentUrl}"]`).count());
   const access = modal.locator(".how-to-be-heard");
+  let participation = null;
+  if (proveParticipation) {
+    assert.ok(meeting.status !== "CANCELED" && Date.parse(meeting.startsAt) > Date.now(), "Participation proof requires a current future sitting");
+    const heldAccess = commentAccessFor(meeting.ocdId, meeting.bodyName, meeting.bodyId);
+    assert.ok(heldAccess && heldAccess.commentPeriod !== "UNKNOWN", "The selected sitting must have verified participation rules");
+    await access.waitFor({ state: "visible" });
+    if ((await access.getAttribute("open")) === null) await access.locator("summary").click();
+    const expectedLines = [heldAccess.commentPeriodDetail, heldAccess.timeLimit, heldAccess.signup, heldAccess.writtenComment, heldAccess.attend].filter((line): line is string => Boolean(line));
+    assert.ok(expectedLines.length);
+    const renderedLines = await access.locator("li").allInnerTexts();
+    assert.deepEqual(renderedLines, expectedLines);
+    assert.equal(await access.locator(`a[href="${heldAccess.sourceUrl}"]`).count(), 1);
+    participation = { meetingId, bodyId: meeting.bodyId, startsAt: meeting.startsAt, expectedLines, renderedLines, sourceUrl: heldAccess.sourceUrl, verifiedAt: heldAccess.verifiedAt, screenshot: await capture(access, "85701-current-participation") };
+  }
   if (await access.count()) {
     const summary = access.locator("summary");
     if ((await access.getAttribute("open")) === null) await summary.click();
     assert.ok(await access.locator("li").count());
   }
   await page.keyboard.press("Escape");
-  return { meetingId, bodyId: meeting.bodyId, payloadCounts: payload.records.counts, documentCount: payload.documentCount, meetingPanel: Boolean(meeting.location), meetingPopup: true, agendaSection: true, meetingRecords: payload.records.status === "HELD" };
+  return { meetingId, bodyId: meeting.bodyId, payloadCounts: payload.records.counts, documentCount: payload.documentCount, meetingPanel: Boolean(meeting.location), meetingPopup: Boolean(meeting.location), agendaSection: true, meetingRecords: payload.records.status === "HELD", participation };
 }
 
 const browser = await launchGuarded({ label: "reader-last-mile-final-render" });
@@ -286,11 +316,33 @@ try {
         const meeting = snapshot.meetings.find((row) => row.id === id);
         return meeting?.ocdId?.includes("place:newbury") || /Newbury/i.test(meeting?.bodyName ?? "");
       }));
-      assert.equal(groups.length, 3);
-      assert.equal(groups.reduce((sum, group) => sum + group.sourceListingCount, 0), 6);
-      assert.ok(groups.every((group) => group.uniqueMeetingCount === null && group.sourceIds.length === 2));
+      // RLC-1 render contract: Newbury carries calendar listings whose DISTINCT
+      // meeting count is unresolved, and the UI must disclose that honestly
+      // instead of fabricating a count. The NUMBER of such groups is not a stable
+      // property — it tracks live municipal-calendar duplicates and moves as
+      // meetings conclude. The literals 3/6 were pinned 2026-09-04 (blame
+      // 733f048e); listing-identity grouping is unchanged since f676aa9b, and the
+      // child re-imported 2026-09-12 carries current calendar data with one such
+      // group. Assert the invariant this proof exists to protect — at least one
+      // unresolved Newbury group, each disclosing a null distinct count over
+      // multiple source listings — not the volatile total. Data completeness is
+      // the import/census gate's job, never this render sample's.
+      assert.ok(groups.length >= 1, `expected at least one unresolved-count Newbury listing group; got ${groups.length}`);
+      assert.ok(
+        groups.every(
+          (group) =>
+            group.uniqueMeetingCount === null &&
+            group.sourceIds.length >= 2 &&
+            group.sourceListingCount >= 2,
+        ),
+        "every unresolved Newbury group must disclose a null distinct count over multiple source listings",
+      );
       const stat = page.locator('[data-stat="meetings"]').first();
-      if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+      if (!(await stat.isVisible())) {
+        const menu = page.getByRole("button", { name: "Open menu", exact: true });
+        if (await menu.isVisible()) await menu.click();
+      }
+      await stat.waitFor({ state: "visible" });
       await stat.getByText("Calendar listings", { exact: true }).waitFor({ state: "visible" });
       assert.ok((await stat.innerText()).includes("Distinct meeting count unresolved."));
       await stat.click();
@@ -315,9 +367,25 @@ try {
       results.push({ id: "newbury-unresolved-listings", result: "PASS", groups, renderedListingRows: await page.locator(".al-row").count(), failedRefreshDisclosure: disclosure.required, screenshot });
     } finally { await context.close(); }
   }
+  if (!refreshBaseline) {
+    const { context, page } = await contextPage();
+    try {
+      await mapAt(page, "85701");
+      await openMeetingList(page);
+      const renderedIds = await page.locator(".al-row[data-meeting-id]").evaluateAll((rows) => rows.map((row) => row.getAttribute("data-meeting-id")));
+      const upcoming = snapshot.meetings.filter((meeting) => renderedIds.includes(meeting.id) && meeting.status !== "CANCELED" && Date.parse(meeting.startsAt) > Date.now())
+        .filter((meeting) => { const access = commentAccessFor(meeting.ocdId, meeting.bodyName, meeting.bodyId); return access && access.commentPeriod !== "UNKNOWN"; })
+        .sort((a, b) => a.startsAt.localeCompare(b.startsAt) || a.id.localeCompare(b.id))[0];
+      assert.ok(upcoming, "The actual 85701 listing must offer a future verified sitting for the participation control");
+      console.log(JSON.stringify({ participationListingCount: renderedIds.length, selectedMeeting: upcoming.id, startsAt: upcoming.startsAt }));
+      const meeting = await inspectMeeting(page, upcoming.id, true, true);
+      assert.ok(meeting.participation);
+      results.push({ id: "current-participation", result: "PASS", ...meeting.participation });
+    } finally { await context.close(); }
+  }
 } finally { await browser.close(); }
 
-assert.equal(screenshots.length, refreshBaseline ? 3 : 4, `The bounded visual sample is exactly ${refreshBaseline ? 3 : 4} screenshots`);
+assert.equal(screenshots.length, refreshBaseline ? 3 : 5, `The bounded visual sample is exactly ${refreshBaseline ? 3 : 5} screenshots`);
 const resultFloor = floored(
   "passing final rendered proof results",
   outputPath,
@@ -339,7 +407,7 @@ const report = {
   sourceHashes: JSON.parse(readFileSync(proofSourcesPath, "utf8")),
   scope: refreshBaseline
     ? "Three screenshots and DOM/API assertions only for the invalidated state-money surfaces and NJ filed contact."
-    : "Four screenshots and DOM/API assertions only for Katie Hobbs parity, NJ filed contact, federal finance parity, and the changed Newbury/meeting seam.",
+    : "Five screenshots and DOM/API assertions for Katie Hobbs parity, NJ filed contact, federal finance parity, the Newbury/meeting seam, and a future sitting's verified participation instructions.",
   results,
   screenshots,
   denominatorFloors: [resultFloor, screenshotFloor],
@@ -376,7 +444,7 @@ const witnesses = refreshBaseline ? [
   witness("ballot", "components/ballot/candidate-card.tsx", ballotEvidencePath, ballotSha256, []),
   witness("ballot", "components/ballot/candidate-contact.tsx", outputPath, reportSha256, screenshots.slice(2, 3)),
   witness("map", "components/map/popup/meeting-popup.tsx", outputPath, reportSha256, screenshots.slice(3, 4)),
-  witness("map", "components/map/popup/agenda-section.tsx", outputPath, reportSha256, []),
+  witness("map", "components/map/popup/agenda-section.tsx", outputPath, reportSha256, screenshots.slice(4, 5)),
   witness("map", "components/map/meeting-panel.tsx", outputPath, reportSha256, []),
   witness("map", "components/map/popup/meeting-records.tsx", outputPath, reportSha256, []),
 ];

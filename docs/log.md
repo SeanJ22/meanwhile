@@ -25,7 +25,9 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
-## pdc-v2-final-p-legacy-retirement · 2026-09-11
+## pdc-v2-final-p-legacy-retirement-nonhunt · 2026-09-11
+
+PDC V2 software, proof, and legacy-retirement preparation. The preserved pdc-v2-final-p-legacy-retirement session attribution now explicitly carries the nonhunt marker; its 56 rows retain their existing text, evidence, dates and resolution states. This classification claims no civic-source acquisition or production cutover completion.
 
 **What it finished.** 56 row(s).
 

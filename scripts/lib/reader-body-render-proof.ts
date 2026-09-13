@@ -23,6 +23,7 @@ import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import { groupByVenue } from "../../lib/meetings/venues.ts";
 import { membersOfBody } from "../../lib/registry/body-membership.ts";
 import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-rosters.ts";
+import { projectedBodyRoster } from "../../lib/registry/body-roster-client.ts";
 import { jurisdictionClaim, representationNoteForClaim } from "../../lib/meetings/jurisdiction-badge.ts";
 import { TIER_LABEL } from "../../lib/ocd/tiers.ts";
 import { districtCardSources } from "../../lib/officials/card-sources.ts";
@@ -90,7 +91,7 @@ export async function bodyRenderProof(
   if (nodes.length !== names.length) throw new Error("Canonical body selector functions changed; review the proof adapter.");
   const extracted = nodes.map((node) => node.getText(ast)).join("\n");
   const javascript = ts.transpileModule(extracted, { compilerOptions: { jsx: ts.JsxEmit.React, jsxFactory: "createElement", target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-  const dependencies = { createElement, membersOfBody, rosterGapForBody, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
+  const dependencies = { createElement, membersOfBody, rosterGapForBody, projectedBodyRoster, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
   const bodySubject = new Function(...Object.keys(dependencies), `${javascript}\nreturn bodySubject;`)(...Object.values(dependencies)) as (body: CoveredBody, meetings: Meeting[]) => ModalSubject;
   const census = preparedCensus;
   const registryAuthority = registryRuntimeReadState();

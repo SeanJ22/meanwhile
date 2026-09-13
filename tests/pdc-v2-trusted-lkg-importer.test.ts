@@ -63,7 +63,8 @@ import {
 } from "../lib/meetings/venue-cache.ts";
 import { canonicalAgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { exactVenueMatchContentKey } from "../lib/meetings/venue-record-identity.ts";
-import { validateSnapshot, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { readMeetingsProjection, validateSnapshot, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { officeholderIdentityMayEnterReader } from "../lib/officials/roster-authority.ts";
 import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
@@ -2690,6 +2691,8 @@ test("exact fc67 fixtures deterministically build and seed the 96 planned truste
     // orphaned evidence, and retire the aggregate exactly once.
     const terminalInterruptedStore = new InterruptAfterCreateStore();
     await seedLegacyMeetingsAggregate(terminalInterruptedStore, plan);
+    const legacyReaderBeforeInterruption = await readPromotedCivicData<MeetingsSnapshot>("MEETING", "supported-bodies", { store: terminalInterruptedStore, now: IMPORTED_AT, bypassCache: true });
+    assert.equal(legacyReaderBeforeInterruption.kind, "PROMOTED");
     terminalInterruptedStore.createCalls = 0;
     terminalInterruptedStore.terminalOrder.length = 0;
     await assert.rejects(
@@ -2722,6 +2725,16 @@ test("exact fc67 fixtures deterministically build and seed the 96 planned truste
       firstCompletedRow.candidate.bootstrapImport.legacyMeetingsPartition,
       "the interrupted pointer is the exact current-legacy overlay, not the stale frozen candidate",
     );
+    const legacyReaderAfterInterruption = await readPromotedCivicData<MeetingsSnapshot>("MEETING", "supported-bodies", { store: terminalInterruptedStore, now: IMPORTED_AT, bypassCache: true });
+    assert.equal(legacyReaderAfterInterruption.kind, "PROMOTED", "the still-deployed legacy Reader authority remains readable after a partial import");
+    assert.deepEqual(legacyReaderAfterInterruption.value, legacyReaderBeforeInterruption.value, "partial completion preserves every legacy LKG meeting and document, not merely its pointer");
+    const partitionReaderAfterInterruption = await readMeetingsProjection({ store: terminalInterruptedStore, now: IMPORTED_AT, bypassCache: true, allowUnconfiguredBootstrap: false });
+    assert.equal(partitionReaderAfterInterruption.kind, "PROMOTED", "the completed partition is readable through the actual replacement Reader adapter");
+    if (partitionReaderAfterInterruption.kind === "PROMOTED") {
+      assert.deepEqual(partitionReaderAfterInterruption.value.meetings.map(({ id }) => id).sort(), (firstCompletedRow.candidate.readModel as MeetingsSnapshot).meetings.map(({ id }) => id).sort());
+      assert.ok(["UNKNOWN", "STALE"].includes(partitionReaderAfterInterruption.metadata.stale), "an interrupted import cannot masquerade as a complete current replacement; stale LKG remains stale");
+      assert.ok(partitionReaderAfterInterruption.partitions.some(({ kind }) => kind !== "PROMOTED"), "missing partitions remain visible in the actual Reader result");
+    }
     const mixedCompletion = await executePdcV2PermanentCutoverImportPlan(
       terminalInterruptedStore,
       laterPlan,

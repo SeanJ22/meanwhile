@@ -31,7 +31,7 @@ test("official voting lookup fallback preserves unavailable versus resolved juri
 });
 
 test("every held official lookup renders its actual URL, authority, access note and verification date", () => {
-  const output = execFileSync(process.execPath, ["-r", ".\\.scratch\\node-os-userinfo-shim.cjs", "--import", "tsx", "--input-type=module", "-e", `
+  const output = execFileSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { PollingLookupFallback } from './components/ballot/polling-lookup-fallback.tsx';

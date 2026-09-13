@@ -85,6 +85,20 @@ export function load(url, context, nextLoad) {
     });
     return { format: "module", shortCircuit: true, source: compiled.outputText };
   }
+  /*
+   * JSON the bundler imports by default but Node's ESM loader refuses without
+   * an explicit `with { type: "json" }` attribute (Node 24). Next and tsx both
+   * resolve a bare `import data from "x.json"` to the parsed value as the
+   * default export; the reader body-render proof reaches one such import
+   * (data/derived/school-district-dependency.json via lib/officials/school-
+   * dependency.ts). Return the same default export so the certified test loader
+   * matches the bundler rather than diverging from it. JSON exposes only a
+   * default binding either way, so this cannot mask a named-import mistake.
+   */
+  if (url.endsWith(".json")) {
+    const json = readFileSync(fileURLToPath(url), "utf8");
+    return { format: "module", shortCircuit: true, source: `export default ${json};` };
+  }
   if (!url.endsWith(".module.css")) return nextLoad(url, context);
   const css = readFileSync(fileURLToPath(url), "utf8");
   const classKeys = [...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map(match => match[1]);

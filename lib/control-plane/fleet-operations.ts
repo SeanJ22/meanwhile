@@ -3,6 +3,7 @@ import { isExpired } from "./attempt.ts";
 import { sumMetric, type MeasuredTotal } from "./cost.ts";
 import { latestDecisionFor } from "./decision-log.ts";
 import { projectFleetDelivery, type FleetDeliveryReport, type FleetReceiptReadback } from "./fleet-delivery.ts";
+import type { FleetReceiptStore, FleetReceiptLoadReport } from "./fleet-receipt-store.ts";
 import { PULSE_STALE_MS } from "./live-pulse.ts";
 import { decisionCardKind, type OwnerDecisionCard, type OwnerSnapshot } from "./owner-surface.ts";
 import { deriveItemState, stageCounts } from "./promotion/pipeline.ts";
@@ -16,12 +17,14 @@ import { scoutTaskAdmission, type ScoutTaskAdmission } from "./workers/scout-sch
 
 export const FLEET_OPERATIONS_VERSION = "fleet-operations/v1";
 export const FLEET_OPERATIONS_EXTENSION_VERSION = "fleet-operations/extensions/1";
+export type FleetReceiptLoading = ReadOutcome<Omit<FleetReceiptLoadReport, "receipts">>;
 
 /** Trusted internal inputs only; the HTTP route never accepts receipt paths or caller proof. */
 export interface FleetDeliveryEvidence {
   readonly windows: ReadOutcome<readonly WindowRunRecord[]>;
   readonly receipts?: readonly PromotionReceipt[];
   readonly readbacks?: readonly FleetReceiptReadback[];
+  readonly receiptLoading?: FleetReceiptLoading;
 }
 
 export interface FleetTaskOperation {
@@ -76,6 +79,7 @@ export interface FleetOperationsReport {
   readonly observedAt: string;
   readonly deliveryFreshness: "FRESH" | "STALE" | "UNKNOWN";
   readonly operations: ReadOutcome<readonly FleetOperation[]>;
+  readonly receiptLoading: FleetReceiptLoading;
   /** Existing ZIP reader-instrument output, unchanged; it is not the ZIP completion denominator. */
   readonly coverageGaps: ReadOutcome<{ readonly publishedAt: string; readonly zipRows: OwnerSnapshot["zipRows"] }>;
   /** Existing machine-blocker and acknowledgement cards are excluded from owner decisions. */
@@ -143,7 +147,7 @@ export function projectFleetOperation(activity: AutonomousObligationActivity, ob
       ? { kind: "NOT_RECORDED", detail: "Delivery window evidence was not supplied to this projection." }
       : deliveryEvidence.windows.kind !== "HELD" ? deliveryEvidence.windows
       : { kind: "HELD", value: projectFleetDelivery({ activity, windows: deliveryEvidence.windows.value,
-        receipts: deliveryEvidence.receipts, readbacks: deliveryEvidence.readbacks }) };
+        receipts: deliveryEvidence.receipts, readbacks: deliveryEvidence.readbacks, receiptLoading: deliveryEvidence.receiptLoading }) };
   } catch (error) { delivery = unreachable("fleet delivery projection", error); }
   return { workItemId: activity.workItem.id, subject: activity.workItem.subject,
     path: activity.workItem.autonomousPlan ? "AUTONOMOUS_PLAN" : activity.facts.routeTasks.some(t => t.workerTask) ? "REGISTERED_WORKER_TASKS" : "OTHER_REGISTERED_WORK",
@@ -161,7 +165,8 @@ export function projectFleetOperation(activity: AutonomousObligationActivity, ob
 
 /** Read service for Admin's authenticated server. Caller opens repos; no connection/env lookup or side effect here. */
 export async function readFleetOperations(repos: ControlPlaneRepositories, input: { readonly observedAt: string;
-  readonly deliveryEvidence?: Omit<FleetDeliveryEvidence, "windows"> }): Promise<FleetOperationsReport> {
+  readonly deliveryEvidence?: Omit<FleetDeliveryEvidence, "windows" | "receiptLoading">;
+  readonly receiptStore?: FleetReceiptStore }): Promise<FleetOperationsReport> {
   if (!Number.isFinite(Date.parse(input.observedAt))) throw new Error("FLEET_OPERATIONS_CLOCK_INVALID");
   const [activities, snapshot, decisions, windows] = await Promise.all([
     readAutonomousActivity(repos, undefined, input).then(value => ({ kind: "HELD" as const, value }))
@@ -170,11 +175,23 @@ export async function readFleetOperations(repos: ControlPlaneRepositories, input
     repos.windowRuns.readAll().then(value => ({ kind: "HELD" as const, value }))
       .catch(error => unreachable<readonly WindowRunRecord[]>("fleet delivery windows", error)),
   ]);
+  let receiptLoading: FleetReceiptLoading = { kind: "NOT_RECORDED", detail: "No trusted receipt store was supplied to this read." };
+  let receipts = input.deliveryEvidence?.receipts;
+  if (input.receiptStore) {
+    // A supplied store owns receipt availability; injected/old receipts cannot hide its failure.
+    receipts = [];
+    if (windows.kind !== "HELD") receiptLoading = windows;
+    else try {
+      const { receipts: loaded, ...loading } = await input.receiptStore.read(windows.value, input.observedAt);
+      receipts = loaded;
+      receiptLoading = { kind: "HELD", value: loading };
+    } catch (error) { receiptLoading = unreachable("fleet receipt store", error); }
+  }
   let operations: FleetOperationsReport["operations"];
   try {
     operations = activities.kind !== "HELD" ? activities
       : { kind: "HELD", value: activities.value.map(activity => projectFleetOperation(activity, input.observedAt,
-        { ...input.deliveryEvidence, windows })) };
+        { ...input.deliveryEvidence, receipts, windows, ...(input.receiptStore ? { receiptLoading } : {}) })) };
   } catch (error) { operations = unreachable("fleet activity projection", error); }
   const coverageGaps: FleetOperationsReport["coverageGaps"] = snapshot.kind === "HELD"
     ? { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, zipRows: snapshot.value.zipRows } } : snapshot;
@@ -182,10 +199,11 @@ export async function readFleetOperations(repos: ControlPlaneRepositories, input
     : { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, cards: snapshot.value.decisionCards.filter(card =>
       decisionCardKind(card) === "DECISION" && card.verifiability === "NOT_MACHINE_VERIFIABLE" && card.whyNoMachineCanDecide.trim() &&
       latestDecisionFor(decisions.value, card.rowId) === null) } };
-  const fullyRead = ![operations, coverageGaps, ownerDecisions, windows].some(value => value.kind === "STORE_UNREACHABLE") &&
+  const fullyRead = ![operations, coverageGaps, ownerDecisions, windows, receiptLoading].some(value => value.kind === "STORE_UNREACHABLE") &&
+    !(receiptLoading.kind === "HELD" && (receiptLoading.value.truncated > 0 || receiptLoading.value.entries.some(entry => entry.state !== "LOADED"))) &&
     !(operations.kind === "HELD" && operations.value.some(row => row.publication.delivery.kind === "STORE_UNREACHABLE"));
   return { formatVersion: FLEET_OPERATIONS_VERSION, extensionVersion: FLEET_OPERATIONS_EXTENSION_VERSION, observedAt: input.observedAt,
-    deliveryFreshness: fleetReadFreshness(fullyRead ? input.observedAt : null, input.observedAt), operations, coverageGaps, ownerDecisions };
+    deliveryFreshness: fleetReadFreshness(fullyRead ? input.observedAt : null, input.observedAt), operations, receiptLoading, coverageGaps, ownerDecisions };
 }
 
 /** Delivery freshness only, using Admin's existing pulse tolerance; never certifies source data. */

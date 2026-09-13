@@ -10,6 +10,8 @@ import type { PromotionReceipt } from "./promotion/promoter.ts";
 import { projectFactToReader, readerRendering, type ReaderRendering } from "./promotion/reader-projection.ts";
 import type { PipelineStage, WindowRunRecord } from "./promotion/types.ts";
 import type { AutonomousObligationActivity } from "./workers/activity.ts";
+import type { ReadOutcome } from "./admin-data.ts";
+import type { FleetReceiptLoadEntry, FleetReceiptLoadReport } from "./fleet-receipt-store.ts";
 
 export const FLEET_DELIVERY_VERSION = "fleet-delivery/v1";
 
@@ -53,6 +55,8 @@ export interface FleetDeliveryItem {
     readonly readbackObservedAt: string | null; readonly readbackScope: "LOCAL_SNAPSHOT" | null;
     readonly refusal: string | null; readonly gaps: readonly string[] }[];
   readonly status: "HELD" | "SHADOW_READBACK_VERIFIED" | "READER_MATERIALIZED_UNPROVEN" | "UNKNOWN";
+  /** Includes unresolved batch loads where per-item binding cannot yet be established. */
+  readonly receiptLoads: readonly FleetReceiptLoadEntry[];
   readonly gaps: readonly string[];
 }
 
@@ -64,7 +68,8 @@ export interface FleetDeliveryReport {
 
 /** Canonical per-item joins only. Window batch counts never prove an item's receipt or delivery. */
 export function projectFleetDelivery(input: { readonly activity: AutonomousObligationActivity; readonly windows: readonly WindowRunRecord[];
-  readonly receipts?: readonly PromotionReceipt[]; readonly readbacks?: readonly FleetReceiptReadback[] }): FleetDeliveryReport {
+  readonly receipts?: readonly PromotionReceipt[]; readonly readbacks?: readonly FleetReceiptReadback[];
+  readonly receiptLoading?: ReadOutcome<Omit<FleetReceiptLoadReport, "receipts">> }): FleetDeliveryReport {
   const { activity } = input;
   const states = [...new Set(activity.facts.promotion.map(record => record.itemId))].sort()
     .map(id => deriveItemState(id, activity.facts.promotion.filter(record => record.itemId === id)));
@@ -129,7 +134,18 @@ export function projectFleetDelivery(input: { readonly activity: AutonomousOblig
     if (!receipts.length) gaps.push(input.receipts === undefined ? "FULL_ITEM_RECEIPTS_NOT_PROVIDED" : "NO_IDENTITY_BOUND_ITEM_RECEIPT");
     const latest = receipts.at(-1);
     gaps.push(...(latest?.gaps ?? []));
-    const status: FleetDeliveryItem["status"] = latest?.materialized && latest.gaps.length === 0
+    const receiptLoads = input.receiptLoading?.kind === "HELD" ? input.receiptLoading.value.entries.filter(entry =>
+      receipts.some(receipt => receipt.receiptId === entry.receiptId) ||
+      (entry.state !== "LOADED" && windowDecisions.some(window => window.windowId === entry.windowId))) : [];
+    const loadUnproven = receiptLoads.some(entry => entry.state !== "LOADED") ||
+      (input.receiptLoading?.kind === "HELD" && input.receiptLoading.value.truncated > 0) ||
+      (input.receiptLoading !== undefined && input.receiptLoading.kind !== "HELD");
+    if (input.receiptLoading?.kind === "HELD" && input.receiptLoading.value.truncated > 0) gaps.push("RECEIPT_LOADING_TRUNCATED");
+    for (const entry of receiptLoads.filter(entry => entry.state !== "LOADED")) {
+      gaps.push(`RECEIPT_LOAD_${entry.state}:${entry.receiptId}`, ...entry.gaps);
+    }
+    if (input.receiptLoading && input.receiptLoading.kind !== "HELD") gaps.push(`RECEIPT_LOADING_${input.receiptLoading.kind}`);
+    const status: FleetDeliveryItem["status"] = !loadUnproven && latest?.materialized && latest.gaps.length === 0
       ? latest.target === "SHADOW" ? "SHADOW_READBACK_VERIFIED" : "READER_MATERIALIZED_UNPROVEN"
       : latest?.refusal || windowDecisions.at(-1)?.verdict === "REFUSE_WOULD" || !approval ? "HELD" : "UNKNOWN";
     gaps.push(latest?.target === "SHADOW" ? "SHADOW_DOES_NOT_PROVE_SERVED_READER" : "SERVED_READER_PROOF_NOT_OBSERVED");
@@ -138,7 +154,7 @@ export function projectFleetDelivery(input: { readonly activity: AutonomousOblig
         factKey: source?.factKey ?? null, sourceKey: source?.sourceKey ?? null, workItemId: source?.workItemId ?? null },
       recordedStage: state.stage, approvalRecordId: approval?.recordId ?? null,
       pipelineRefusalReasons: state.refused?.reasons.map(reason => `${reason.code}: ${reason.detail}`) ?? [],
-      windowDecisions, receipts, status, gaps: [...new Set(gaps)] };
+      windowDecisions, receipts, receiptLoads, status, gaps: [...new Set(gaps)] };
   });
   return { version: FLEET_DELIVERY_VERSION, receiptAvailability: input.receipts === undefined ? "NOT_PROVIDED" : "PROVIDED", items };
 }

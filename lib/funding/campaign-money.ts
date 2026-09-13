@@ -56,7 +56,11 @@ function bridgeIndex() {
   indexedBridge = { source, byHolder, byCandidacy };
   return indexedBridge;
 }
-const emptyState = (): CardMoney => ({ records: [], resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: null });
+const emptyState = (federal = false): CardMoney => ({
+  records: [],
+  resolution: federal ? "FEDERAL_NOT_APPLICABLE" : "DIRECT_CANDIDACY_KEY",
+  resolvedTargetKey: null,
+});
 
 /** A reusable office/roster slot must never give its successor the predecessor's money. */
 export function officialFinanceIdentityMatches(row: BridgeRow, current: { id: string; name: string; officeTitle: string; divisions: readonly string[] } | null): boolean {
@@ -166,7 +170,7 @@ export function campaignMoneyForTarget(
   // is no runtime name search and no fallback to another candidate.
   const state = readState
     ? stateMoneyForCard(targetKey, contestId ?? targetKey.split("|")[0])
-    : emptyState();
+    : emptyState(direct.federal);
   return { requestedTargetKey: targetKey, federal, state, officialIdentity: "NOT_OFFICIAL" };
 }
 

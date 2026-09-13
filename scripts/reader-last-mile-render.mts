@@ -1,4 +1,9 @@
-/** Real reader gestures against the local production build; no React state injection. */
+/**
+ * Real reader gestures against the local production build; no React state injection.
+ * @freshness-reads-here The response listener timestamps the HTTP response it
+ * actually receives. This diagnostic observation is never a source-data date;
+ * a body-read failure stays recorded alongside that response, not as a successful read.
+ */
 import assert from "node:assert/strict";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";

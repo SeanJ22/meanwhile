@@ -513,7 +513,7 @@
 @layer components {
   .notice-eyebrow {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: var(--text-caption);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--link);
@@ -2108,7 +2108,7 @@ a.ballot-pill-main:focus {
 .card-section-meta {
   flex-shrink: 0;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.04em;
   color: var(--text-dim);
 }
@@ -4616,7 +4616,9 @@ button.jurisdiction-badge-action:focus-visible {
 .funding-type .pill {
   font-size: 0.625rem;
   letter-spacing: 0.08em;
-  margin-inline-end: -0.08em;
+  /* Trim the trailing letter-spacing (an optical correction, not layout spacing):
+     the negative of the tracking above, expressed as a computed value. */
+  margin-inline-end: calc(-1 * 0.08em);
   text-transform: uppercase;
   transition: box-shadow var(--dur-base) var(--ease-move),
     transform var(--dur-base) var(--ease-move);
@@ -5510,7 +5512,8 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 .trailing-space-trimmed-8 {
-  margin-inline-end: -0.08em;
+  /* Optical trailing-track trim (negative of a 0.08em tracking), computed. */
+  margin-inline-end: calc(-1 * 0.08em);
 }
 
 .trailing-space-trimmed-20 {

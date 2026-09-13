@@ -8,6 +8,7 @@ import { createHash } from "node:crypto";
 import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } from "../lib/holdings/registry-seed-proof.ts";
 import { candidateProfileCensusHoldingPath, canonicalReaderAuthorityJson, civicContactObserved } from "../lib/holdings/reader-census.ts";
 import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
+import { directFundingTargetPlan } from "../app/api/funding/[target]/route.ts";
 import { telHref } from "../lib/officials/phone-numbers.ts";
 import { validateFullReproofComponentEvidence, validateFullReproofWitnesses, validateListingWitnessReadback } from "../scripts/lib/reader-full-reproof.ts";
 
@@ -88,6 +89,45 @@ test("ballot keeps freshness for a federal none answer and leaves a current none
   assert.equal(await component(props), null);
   envelope.dataMetadata.stale = "UNKNOWN";
   assert.match(renderToStaticMarkup(await component(props)), /freshness could not be established/);
+});
+
+test("state ballot funding discloses the exact held state's freshness and preserves its records", () => {
+  const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "stateCandidateFunding");
+  assert.ok(fn);
+  const make = new Function("React", "directFundingTargetPlan", "stateMoneyReadState", "fundingFreshnessNote", "StateMoneySection", compile(`${fn.getText()}; return stateCandidateFunding;`));
+  const reads: string[] = [];
+  const states = new Map([
+    ["AZ", { kind: "PROMOTED", metadata: { stale: "STALE", sourceThrough: "2026-09-08" } }],
+    ["NJ", { kind: "PROMOTED", metadata: { stale: "STALE", sourceThrough: "2026-09-07" } }],
+    ["NH", { kind: "PROMOTED", metadata: { stale: "UNKNOWN", sourceThrough: null } }],
+  ]);
+  const records = [{ held: "exact candidate filing" }];
+  const render = make(React, directFundingTargetPlan, (state: string) => { reads.push(state); return states.get(state); }, fundingFreshnessNote, (props: { records: typeof records }) => {
+    assert.equal(props.records, records, "disclosure must not replace or rematch held records");
+    return React.createElement("span", null, props.records[0].held);
+  });
+  for (const [target, state, expected] of [
+    ["ballot-az-pima:governor|Katie Hobbs", "AZ", "source through 2026-09-08"],
+    ["ballot-nj-morris:commissioner:person", "NJ", "source through 2026-09-07"],
+    ["ballot-nh-merrimack:representative:person", "NH", "freshness could not be established"],
+  ]) {
+    const markup = renderToStaticMarkup(render(target, records));
+    assert.equal(reads.at(-1), state);
+    assert.ok(markup.includes(expected));
+    assert.equal((markup.match(/funding-data-freshness/g) ?? []).length, 1);
+    assert.ok(markup.includes(records[0].held));
+  }
+  assert.ok(nodes("app/ballot/page.tsx").some((node) => ts.isCallExpression(node) && node.expression.getText() === "stateCandidateFunding" && node.arguments[0]?.getText() === "targetKey" && node.arguments[1]?.getText() === "stateMoney"), "the actual battlecard money slot must use the disclosure");
+});
+
+test("an empty state funding selection retains stale disclosure but leaves current empty slots empty", () => {
+  const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "stateCandidateFunding")!;
+  const read = { kind: "PROMOTED", metadata: { stale: "STALE", sourceThrough: "2026-09-08" } };
+  const make = new Function("React", "directFundingTargetPlan", "stateMoneyReadState", "fundingFreshnessNote", "StateMoneySection", compile(`${fn.getText()}; return stateCandidateFunding;`));
+  const render = make(React, directFundingTargetPlan, () => read, fundingFreshnessNote, (props: { records: unknown[] }) => { assert.equal(props.records.length, 0); return null; });
+  assert.match(renderToStaticMarkup(render("ballot-az-pima:governor:person", [])), /source through 2026-09-08/);
+  read.metadata.stale = "CURRENT";
+  assert.equal(render("ballot-az-pima:governor:person", []), null);
 });
 
 test("split ZIP contacts require every covered ZIP and the exact contact facts and source", () => {

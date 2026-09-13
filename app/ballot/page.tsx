@@ -84,10 +84,10 @@ import {
   type FundingAnswer,
 } from "@/lib/funding/display";
 import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
-import { refreshStateMoneyProjectionFromPromoted } from "@/lib/funding/state-snapshot";
+import { refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { fundingFreshnessNote } from "@/lib/funding/freshness";
-import { settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
+import { directFundingTargetPlan, settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
 import {
@@ -402,6 +402,26 @@ async function CandidateFunding({
   );
 }
 
+
+/** State records and their disclosure use the same already-loaded authority. */
+function stateCandidateFunding(
+  targetKey: string,
+  records: ReturnType<typeof stateMoneyForCard>["records"],
+) {
+  const state = directFundingTargetPlan(targetKey).state;
+  const read = state === null ? null : stateMoneyReadState(state);
+  const freshness = read?.kind === "PROMOTED"
+    ? fundingFreshnessNote({ holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: read.metadata })
+    : null;
+  // Return the slot itself synchronously: an empty component element would
+  // prevent the battlecard's named gap from rendering. No new per-card read
+  // is needed; the page has already checked this state's preload outcome.
+  if (records.length === 0 && !freshness) return null;
+  return <>
+    {freshness && <p className="funding-data-freshness">{freshness}</p>}
+    <StateMoneySection records={records} bare />
+  </>;
+}
 
 /**
  * **ONE BATTLECARD BUILDER FOR EVERY PERSON ON THE BALLOT.**
@@ -725,9 +745,7 @@ async function BallotBattlecard({
           <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} />
         ) : stateMoneyUnavailable ? (
           unavailableHolding("state campaign-finance")
-        ) : stateMoney.length > 0 ? (
-          <StateMoneySection records={stateMoney} bare />
-        ) : null,
+        ) : stateCandidateFunding(targetKey, stateMoney),
         /* BC-3: the record, in the card. Not `columns` — the two-column form
            builds its own top-level sections, which would compete with the
            seven this card owns. */

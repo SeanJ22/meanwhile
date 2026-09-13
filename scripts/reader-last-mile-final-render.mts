@@ -8,6 +8,8 @@ import type { Locator, Page } from "playwright";
 import { launchGuarded } from "./browser.mts";
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
+import { fundingFreshnessNote } from "../lib/funding/freshness.ts";
+import { settleFundingHoldingAnswer } from "../app/api/funding/[target]/route.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import type { SnapshotStatus } from "../lib/meetings/freshness.ts";
@@ -110,6 +112,16 @@ async function inspectStateMoney(modal: Locator, target: string) {
   const section = await openSection(modal, "Campaign money");
   const record = section.locator("[data-state-money-targets]");
   await record.waitFor({ state: "visible", timeout: 20_000 });
+  const settled = await settleFundingHoldingAnswer(target);
+  assert.equal(settled.kind, "ANSWER", `${target}: canonical funding authority must settle before display proof`);
+  if (settled.kind !== "ANSWER") throw new Error(`${target}: funding authority unavailable`);
+  const freshness = fundingFreshnessNote(settled);
+  const disclosure = section.locator(".funding-data-freshness");
+  assert.equal(await disclosure.count(), freshness === null ? 0 : 1, `${target}: missing or duplicate funding freshness disclosure`);
+  if (freshness !== null) {
+    await disclosure.waitFor({ state: "visible" });
+    assert.equal(normalize(await disclosure.innerText()), normalize(freshness), `${target}: funding freshness differs from its actual holding`);
+  }
   assert.equal(Number(await record.getAttribute("data-state-money-record-count")), eligible.length);
   const text = normalize(await record.innerText());
   for (const row of eligible) {
@@ -122,7 +134,7 @@ async function inspectStateMoney(modal: Locator, target: string) {
     assert.ok(row.filingsUrl);
     assert.equal(await record.locator(`a[href="${row.filingsUrl}"]`).count(), 1, `${target}: public filing link`);
   }
-  return { section, text, records: eligible };
+  return { section, text, records: eligible, freshness };
 }
 
 async function contextPage() {
@@ -243,8 +255,9 @@ try {
       assert.equal(campaignMoneyForTarget(ballotTarget).state.resolvedTargetKey, candidacyId);
       const ballotMoney = await inspectStateMoney(candidate, ballotTarget);
       assert.equal(ballotMoney.text, mapMoney.text);
+      assert.equal(ballotMoney.freshness, mapMoney.freshness, "State funding freshness must agree on map and ballot");
       const ballotShot = await capture(ballotMoney.section, "85701-hobbs-ballot-money");
-      results.push({ id: "hobbs-parity-and-pima-activity", result: "PASS", officialId, ballotTarget, candidacyId, mapMoney: mapMoney.records, ballotMoney: ballotMoney.records, mapText: mapMoney.text, ballotText: ballotMoney.text, meetings, screenshots: [mapShot, ballotShot] });
+      results.push({ id: "hobbs-parity-and-pima-activity", result: "PASS", officialId, ballotTarget, candidacyId, mapMoney: mapMoney.records, ballotMoney: ballotMoney.records, mapText: mapMoney.text, ballotText: ballotMoney.text, mapFreshness: mapMoney.freshness, ballotFreshness: ballotMoney.freshness, meetings, screenshots: [mapShot, ballotShot] });
     } finally { await context.close(); }
   }
   if (!refreshBaseline) {

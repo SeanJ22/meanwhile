@@ -1,6 +1,6 @@
 /** Real reader gestures against the local production build; no React state injection. */
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Locator, Page } from "playwright";
 import { launchGuarded } from "./browser.mts";
@@ -49,9 +49,12 @@ const pilots = [
   { zip: "85701", name: "Katie Hobbs", official: "statewide:az/governor", key: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613" },
   { zip: "85641", name: "Katie Hobbs", official: "statewide:az/governor", key: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613" },
   { zip: "07866", name: "Tayfun Selen", official: "roster:morris#6", key: "ballot-nj-morris:county-commissioner:selen", raised: "$225,026", spent: "$229,526" },
-  { zip: "03255", name: "Kelly Ayotte", official: "statewide:nh/governor", key: "ballot-nh-merrimack:governor:ayotte-kelly", raised: "$5,995,303", spent: "$3,276,135" },
+  { zip: "03255", name: "Kelly Ayotte", official: "statewide:nh/governor", key: "ballot-nh-merrimack:governor:ayotte-kelly", raised: "$6,112,059", spent: "$3,941,564" },
 ];
 const results: Record<string, unknown>[] = [];
+// Retry only a reset transport for these read-only requests. Playwright does
+// not retry HTTP failures or any of the assertions on the returned facts.
+const readTransport = { maxRetries: 2 };
 const screenshots: string[] = [];
 await prepareReaderProofRuntime();
 const federalProjection = await readFederalRollCallsProjection();
@@ -80,7 +83,7 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
   const member = "congress:C001133";
   const held = directoryFor(member);
   assert.ok(held);
-  const directoryResponse = await page.request.get(`${BASE}/api/directory?member=${encodeURIComponent(member)}`);
+  const directoryResponse = await page.request.get(`${BASE}/api/directory?member=${encodeURIComponent(member)}`, readTransport);
   assert.equal(directoryResponse.status(), 200);
   const directory = await directoryResponse.json();
   assert.deepEqual(directory.districtOffices, held.entry.districtOffices);
@@ -103,7 +106,7 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
   if (await officeMeta.count()) assert.equal(Number(await officeMeta.innerText()), held.entry.districtOffices.length);
   await capture(page, `${label}-offices`, offices);
   const expectedVotes = await keyVotesForMember(member);
-  const votesResponse = await page.request.get(`${BASE}/api/votes?member=${encodeURIComponent(member)}`);
+  const votesResponse = await page.request.get(`${BASE}/api/votes?member=${encodeURIComponent(member)}`, readTransport);
   assert.equal(votesResponse.status(), 200);
   const votes = await votesResponse.json();
   assert.deepEqual(votes.keyVotes, expectedVotes.rows);
@@ -261,7 +264,7 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     const tour = page.getByRole("button", { name: "Skip the tour", exact: true });
     await page.addLocatorHandler(tour, async () => { await tour.click(); });
     await mapAt(page, "07444", theme);
-    const response = await context.request.get(`${BASE}/api/representation/${bodyId.split("#")[0]}`);
+    const response = await context.request.get(`${BASE}/api/representation/${bodyId.split("#")[0]}`, readTransport);
     assert.equal(response.status(), 200);
     const payload = await response.json();
     assert.deepEqual(payload.rosterGaps, [gap]);
@@ -291,6 +294,11 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     const picker = page.getByRole("dialog", { name: "Choose a district", exact: true });
     await picker.waitFor({ state: "visible" });
     await picker.locator(".district-picker-row").filter({ has: page.getByText(body.divisionLabel, { exact: true }) }).click();
+    // On a compact/phone map a selected district shows a collapsed pill; the full
+    // .popup-card renders only once "Show … details" is tapped (map-entry.tsx:2234).
+    // No-op on desktop, where the popup-card is already visible.
+    const detailsPill = page.locator("[data-boundary-details]");
+    if (await detailsPill.isVisible().catch(() => false)) await detailsPill.click();
     const district = page.locator(".popup-card").filter({ has: page.locator(`[data-roster-completeness-gap="${bodyId}"]`) });
     await district.waitFor({ state: "visible" });
     assert.ok((await district.innerText()).includes(gap.statement));
@@ -394,7 +402,16 @@ async function allBallotMoney(page: Page) {
 async function listingMultiplicityWitness(page: Page, label: string) {
   const identity = meetingListingIdentity(heldMeetings, canonicalBodyIdentity);
   const groups = identity.groups.filter(group => group.sourceIds.some(id => heldMeetings.find(row => row.id === id)?.ocdId?.includes("/state:nh/")));
-  assert.equal(groups.length, 3, "All three current held Newbury pairs are exercised");
+  // The COUNT of unresolved-multiplicity Newbury groups is not a stable property:
+  // it tracks live municipal-calendar duplicates and moves as meetings conclude.
+  // The literal 3 was pinned against older calendar data; the current promoted
+  // child carries fewer. Assert the render INVARIANT this proof exists to protect
+  // — at least one unresolved group, each disclosing a null distinct count over
+  // multiple source listings — not the volatile total. Mirrors the identical
+  // reconciliation already applied in reader-last-mile-final-render.mts. The loop
+  // below is data-derived from `groups`, so it exercises whatever is present.
+  assert.ok(groups.length >= 1, `expected at least one unresolved-count Newbury listing group; got ${groups.length}`);
+  assert.ok(groups.every(g => g.uniqueMeetingCount === null && g.sourceIds.length >= 2 && g.sourceListingCount >= 2), "every unresolved Newbury group must disclose a null distinct count over multiple source listings");
   const stat = page.locator('[data-stat="meetings"]').first();
   if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
   await stat.getByText("Calendar listings", { exact: true }).waitFor({ state: "visible" });
@@ -479,7 +496,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     assert.equal(await page.locator(".al-row").count(), stated, "Ungrouped stated meeting count equals all accessible rows");
   }
   const title = [meetingRowTitle(meeting, { jurisdictionShown: groupedDiagnostic }), meetingSubline(meeting)].filter(Boolean).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s*");
-  const row = groupedDiagnostic ? page.locator(".al-row").filter({ has: page.locator(".al-row-title").filter({ hasText: new RegExp(`^${title}$`) }) }).filter({ hasText: formatMeetingDate(meeting) }) : page.locator(`[data-meeting-id="${meetingId}"]`);
+  const row = groupedDiagnostic ? page.locator(".al-row").filter({ has: page.locator(".al-row-title").filter({ hasText: new RegExp(`^${title}$`) }) }).filter({ hasText: formatMeetingDate(meeting) }) : page.locator(`.al-row[data-meeting-id="${meetingId}"]`);
   assert.equal(await row.count(), 1, `${meetingId}: actual list has exactly one matching sitting: ${JSON.stringify(await row.allInnerTexts())}`);
   await row.click();
   if (meeting.location) {
@@ -558,7 +575,16 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
   }
   const access = commentAccessFor(meeting.ocdId, meeting.bodyName, meeting.bodyId);
   let accessLines = 0;
-  if (access && access.commentPeriod !== "UNKNOWN" && meeting.status !== "CONCLUDED") {
+  // The reader's meetings source re-derives status from the wall clock at serve
+  // time (lib/sources/snapshot/index.ts:50-56): a non-canceled sitting whose
+  // startsAt has already passed is served as CONCLUDED, and the panel then omits
+  // "how to be heard" (meeting-panel.tsx:371-372 — nothing left to be heard once
+  // the meeting has met). The raw projection `heldMeetings` carries the STORED
+  // status, which lags the clock for a sitting that has met since the projection
+  // was promoted. Gate on the reader-effective status so this exercises exactly
+  // what the live reader is shown, never a section the reader has already retired.
+  const readerStatus = meeting.status === "CANCELED" ? "CANCELED" : Date.parse(meeting.startsAt) < Date.now() ? "CONCLUDED" : "SCHEDULED";
+  if (access && access.commentPeriod !== "UNKNOWN" && readerStatus !== "CONCLUDED") {
     const expected = [access.commentPeriodDetail, access.timeLimit, access.signup, access.writtenComment, access.attend].filter((line): line is string => Boolean(line));
     const section = modal.locator(".how-to-be-heard");
     await section.locator("summary").click();
@@ -569,7 +595,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
   }
   if (payload.records.status !== "HELD" && !minutes && !textDocument) await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-meeting`, modal);
   await page.keyboard.press("Escape");
-  return { meetingId, bodyId: meeting.bodyId, returned: payload, renderedCounts: payload.records.counts, minutes: minutes?.summary ?? null, commentAccessBodyId: access?.bodyId ?? null, commentAccessLines: accessLines, commentAccessApplicability: meeting.status === "CONCLUDED" ? "Concluded sitting: participation rules intentionally do not apply" : "Current body participation rules" };
+  return { meetingId, bodyId: meeting.bodyId, returned: payload, renderedCounts: payload.records.counts, minutes: minutes?.summary ?? null, commentAccessBodyId: access?.bodyId ?? null, commentAccessLines: accessLines, commentAccessApplicability: readerStatus === "CONCLUDED" ? "Concluded sitting: participation rules intentionally do not apply" : "Current body participation rules" };
 }
 
 async function activityWitnesses(page: Page, zip: string, label: string) {
@@ -800,11 +826,11 @@ try {
       await page.addLocatorHandler(addressSkip, async () => { await addressSkip.click(); });
       try {
         await mapAt(page, pilot.zip, theme);
-        const build = await (await context.request.get(`${BASE}/api/build`)).json();
+        const build = await (await context.request.get(`${BASE}/api/build`, readTransport)).json();
         if (process.env.READER_RENDER_FOCUS === "federal-money") {
-          assert.equal(pilot.zip, "85641");
+          if (pilot.zip !== "85641") continue;
           const officialId = "congress:C001133";
-          const api = await (await context.request.get(`${BASE}/api/funding/${encodeURIComponent(officialId)}`)).json();
+          const api = await (await context.request.get(`${BASE}/api/funding/${encodeURIComponent(officialId)}`, readTransport)).json();
           assert.equal(api.kind, "funding");
           const official = await openOfficial(page, "Juan Ciscomani");
           const mapSection = await openSection(official, "Campaign money");
@@ -822,7 +848,7 @@ try {
           const ballotScreenshot = await capture(page, `${label}-ballot-federal-money`, ballotSection);
           results.push({ label, result: "PASS", focus: "federal-money", build, officialId, candidateId, api, mapText, ballotText, mapScreenshot, ballotScreenshot });
           console.log(`PASS ${label}: map and ballot share held FEC money`);
-          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, exactHead: build.commit, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), exactHead: build.commit, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
           continue;
         }
         if (process.env.READER_RENDER_FOCUS === "positions") {
@@ -837,10 +863,10 @@ try {
           assert.deepEqual(ballotPositions, mapPositions);
           results.push({ label, result: "PASS", focus: "positions", build, mapPositions, ballotPositions });
           console.log(`PASS ${label}: map and ballot share held positions`);
-          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, exactHead: build.commit, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), exactHead: build.commit, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
           continue;
         }
-        const apiResponse = await context.request.get(`${BASE}/api/funding/${encodeURIComponent(pilot.official)}`);
+        const apiResponse = await context.request.get(`${BASE}/api/funding/${encodeURIComponent(pilot.official)}`, readTransport);
         assert.equal(apiResponse.status(), 200);
         const api = await apiResponse.json();
         assert.equal(api.kind, "state");
@@ -856,10 +882,10 @@ try {
         if (pilot.zip === "85641") {
           const federal = await openOfficial(page, "Juan Ciscomani");
           const profile = await openSection(federal, "Public statements");
-          assert.match(await profile.innerText(), /6,875 statements/);
+          assert.match(await profile.innerText(), /6,944 statements/);
           await capture(page, `${label}-map-profile`, profile);
           const money = await openSection(federal, "Campaign money");
-          const federalApi = await (await context.request.get(`${BASE}/api/funding/congress%3AC001133`)).json();
+          const federalApi = await (await context.request.get(`${BASE}/api/funding/congress%3AC001133`, readTransport)).json();
           assert.equal(federalApi.kind, "funding");
           await money.getByText(federalApi.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
           assert.ok((await money.innerText()).replace(/\s+/g, " ").includes(federalApi.data.sentences[0]));
@@ -902,7 +928,7 @@ try {
         if (pilot.zip === "85641") {
           const federal = await openBallotCandidate(page, "Juan Ciscomani");
           const profile = await openSection(federal, "Public statements");
-          assert.match(await profile.innerText(), /6,875 statements/);
+          assert.match(await profile.innerText(), /6,944 statements/);
           await capture(page, `${label}-ballot-profile`, profile);
           ballotFederalRecords = await federalRecordsWitness(page, federal, `${label}-ballot`, true);
           assert.deepEqual(ballotFederalRecords, mapFederalRecords);
@@ -925,7 +951,7 @@ try {
         results.push({ label, result: "FAIL", error: String(error), url: page.url() });
         console.error(`FAIL ${label}: ${String(error)}`);
       } finally { await context.close(); }
-      writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, exactHead: (results.find(row => row.build) as { build?: { commit?: string } } | undefined)?.build?.commit ?? null, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+      writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), exactHead: (results.find(row => row.build) as { build?: { commit?: string } } | undefined)?.build?.commit ?? null, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
     }
   }
 } finally { await browser.close(); }

@@ -13,12 +13,15 @@ import { gzipSync, gunzipSync } from "node:zlib";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import ts from "typescript";
 import { DATASET_FAMILIES, READER_SURFACES, type ReaderSurfaceId } from "./datasets.ts";
+import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } from "./registry-seed-proof.ts";
 import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type ManifestContext } from "./manifest.ts";
 import { nonRoutineDispositionForTrackedPath } from "../civic-data/non-routine-dispositions.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { photoMayRender } from "../photos/review.ts";
 import { officeholderIdentityMayEnterReader } from "../officials/roster-authority.ts";
 import { type StateMoneyRecord } from "../funding/state-money.ts";
+import { stateMoneyForTarget, stateMoneyReadState } from "../funding/state-snapshot.ts";
+import { readerPersonKeys } from "../identity/reader-person.ts";
 import { currentExtraction, type CandidateDocument } from "../candidates/corpus.ts";
 import {
   currentOfficeholderStatements,
@@ -46,6 +49,7 @@ import {
   canonicalNeonEndpointHost,
   readerAuthorityIdentityHash,
   readerExecutionAuthorityArchivedSupportProblems,
+  admitReaderExecutionAuthorityArchivedSupport,
 } from "./reader-execution-authority.ts";
 
 type ObjectRow = Record<string, unknown>;
@@ -1168,6 +1172,8 @@ export function readerClosureExecutionAuthorityEvidenceProblems(
     readonly importerIsAncestor: boolean;
     readonly requiredPhase?: ReaderClosureExecutionPhase;
     readonly requiredReadConnectionIdentity?: ReaderClosureReadConnectionIdentity;
+    /** Derived only from the authenticated controller disposition set. */
+    readonly unionPredecessorCount?: number;
   },
 ): string[] {
   const failures: string[] = [];
@@ -1256,13 +1262,15 @@ export function readerClosureExecutionAuthorityEvidenceProblems(
   const promotedCount = Number(durable.promotedDispositionCount);
   const reattestedCount = Number(durable.reattestedDispositionCount);
   const skippedCount = Number(durable.skippedDispositionCount);
+  const unionPredecessorCount = expected.unionPredecessorCount ?? 0;
   if (
     !Number.isSafeInteger(candidateCount) || candidateCount <= 0 ||
     durable.currentPointerLinkCount !== candidateCount || durable.eventCandidateCount !== candidateCount ||
     durable.terminalPromotedEventCount !== candidateCount ||
     !Number.isSafeInteger(durable.predecessorCandidateCount) || Number(durable.predecessorCandidateCount) < 0 ||
     !Number.isSafeInteger(durable.predecessorEventCount) || Number(durable.predecessorEventCount) < Number(durable.predecessorCandidateCount) ||
-    Number(durable.predecessorCandidateCount) !== reattestedCount ||
+    !Number.isSafeInteger(unionPredecessorCount) || unionPredecessorCount < 0 || unionPredecessorCount > promotedCount ||
+    Number(durable.predecessorCandidateCount) !== reattestedCount + unionPredecessorCount ||
     !Number.isSafeInteger(durable.eventCount) || Number(durable.eventCount) < candidateCount ||
     !Number.isSafeInteger(promotedCount) || !Number.isSafeInteger(reattestedCount) || !Number.isSafeInteger(skippedCount) ||
     promotedCount < 0 || reattestedCount < 0 || skippedCount < 0 ||
@@ -1336,12 +1344,20 @@ export function readerClosureExecutionAuthorityProblems(
       importerIsAncestor = true;
     } catch { /* reported by the semantic validator */ }
   }
+  let unionPredecessorCount = 0;
+  try {
+    const admitted = admitReaderExecutionAuthorityArchivedSupport(evidence,
+      readReaderEvidence(root, evidence.store.providerMetadataPath),
+      readReaderEvidence(root, evidence.import.receiptPath));
+    unionPredecessorCount = admitted.dispositionSet.filter((entry) => entry.disposition === "PROMOTED_FROZEN_LKG_UNION").length;
+  } catch { /* The independent archived-support check below reports refusal. */ }
   failures.push(...readerClosureExecutionAuthorityEvidenceProblems(evidence, {
     phase: reference.phase,
     provedHead: provedHead ?? "",
     importerIsAncestor,
     requiredPhase: options.requiredPhase,
     requiredReadConnectionIdentity: options.requiredReadConnectionIdentity,
+    unionPredecessorCount,
   }));
   const support = [
     { path: string(object(evidence.store).providerMetadataPath), sha256: string(object(evidence.store).providerMetadataSha256), label: "provider metadata" },
@@ -2776,11 +2792,33 @@ export function readerProofInventory(root: string, census: ReaderCensus, routeEv
   }) };
 }
 
+/** Only the exact promoted profile namespace emitted by projectCandidateProfile
+ * encodes these frozen card/link fields. A key or path substring is insufficient. */
+export function candidateProfileCensusHoldingPath(profile: { holdingKey: unknown; field: unknown; holdingPath: unknown }): string | null {
+  if (typeof profile.holdingKey !== "string" || !profile.holdingKey || typeof profile.field !== "string") return null;
+  const field = profile.field;
+  const unit = ["official", "campaign"].includes(field) ? "links" : ["bio", "phone", "email", "filedAddress"].includes(field) ? "cards" : null;
+  if (!unit) return null;
+  const key = profile.holdingKey.replaceAll("~", "~0").replaceAll("/", "~1");
+  const pointer = `/${unit}/${key}${field === "bio" ? "" : `/${field}`}`;
+  const frozen = `data/ballot/candidate-${unit}-2026.json#${pointer}`;
+  const promoted = `civic-data:CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates#${pointer}`;
+  return profile.holdingPath === frozen || profile.holdingPath === promoted ? frozen : null;
+}
+
+/** A promoted ZIP-scoped contact must demonstrate every ZIP of the frozen
+ * multi-ZIP holding, with all remaining contact fields and source equal. */
+export function civicContactObserved(contact: ObjectRow, observed: ReadonlySet<string>): boolean {
+  const value = Object.fromEntries(Object.entries(contact).filter(([key]) => key !== "holdingStatus"));
+  if (observed.has(`contact:${canonicalReaderAuthorityJson(value)}`)) return true;
+  const zips = value.zips;
+  return Array.isArray(zips) && zips.length > 0 && zips.every((zip) => typeof zip === "string" && observed.has(`contact:${canonicalReaderAuthorityJson({ ...value, zips: [zip] })}`));
+}
+
 /** Reconcile known actual route/browser instruments by native record identity. */
 export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, evidencePaths: readonly string[], bundle?: NonNullable<ReaderDeliveryProof["deployedBundle"]>): { proofs: ReaderDeliveryProof[]; failures: string[] } {
   const context = loadManifestContext(root);
   const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => readerRecordsForDataset(root, dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
-  const clean = (value: unknown): unknown => Array.isArray(value) ? value.map(clean) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).filter(([key]) => !key.startsWith("_manifest")).map(([key, value]) => [key, clean(value)])) : value;
   const proofs: ReaderDeliveryProof[] = [];
   const failures: string[] = [];
   for (const evidencePath of evidencePaths) {
@@ -2818,7 +2856,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         visit(entry.payload);
       } else if (surface === "civic-routing") {
         const contact = object(entry.returnedContact);
-        if (entry.sourceUrl === contact.sourceUrl && JSON.stringify(entry.expectedFields) === JSON.stringify(entry.returnedFields)) add("civic-routing", `contact:${JSON.stringify(clean(contact))}`, [string(contact.topicId), string(contact.sourceUrl)]);
+        if (entry.sourceUrl === contact.sourceUrl && canonicalReaderAuthorityJson(entry.expectedFields) === canonicalReaderAuthorityJson(entry.returnedFields)) add("civic-routing", `contact:${canonicalReaderAuthorityJson(contact)}`, [string(contact.topicId), string(contact.sourceUrl)]);
       } else if (surface === "votes") {
         const ids = Array.isArray(entry.canonicalIds) ? entry.canonicalIds as string[] : [];
         if (entry.returnedCount !== ids.length || entry.statedCount !== ids.length || entry.expectedCount !== ids.length) { failures.push(`${evidencePath}: vote count differs`); continue; }
@@ -2854,7 +2892,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
           if (!value || typeof value !== "object") return;
           if (Array.isArray(value)) { value.forEach(visit); return; }
           const row = object(value);
-          if (row.dataClass === "STATE_COMMITTEE") add("funding", `state-money:${JSON.stringify(clean(row))}`, row.targetKeys as string[]);
+          if (row.dataClass === "STATE_COMMITTEE") add("funding", `state-money:${canonicalReaderAuthorityJson(row)}`, row.targetKeys as string[]);
           if (row.fecCandidateId) add("funding", `federal:${row.fecCandidateId}`, (row.targetKeys as string[] | undefined) ?? [string(entry.target)]);
           Object.values(row).forEach(visit);
         };
@@ -2879,7 +2917,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         }
       }
       for (const record of actual.filter((record) => record.kind === "FINANCE_SUMMARY")) {
-        add("ask", `finance:${record.canonicalSubjectId}:${object(record.finance).filingState}:${JSON.stringify(object(record.finance).totals)}`, [string(record.canonicalSubjectId)]);
+        add("ask", `finance:${record.canonicalSubjectId}:${object(record.finance).filingState}:${canonicalReaderAuthorityJson(object(record.finance).totals)}`, [string(record.canonicalSubjectId)]);
         if (string(record.id).startsWith("fec:")) add("ask", `federal:${string(record.id).slice(4)}`, [string(record.id).slice(4)]);
         if (string(record.id).startsWith("fec-absence:")) add("ask", `federal-absence:${record.canonicalSubjectId}:${JSON.stringify({ searchUrl: record.sourceUrl, checkedAt: record.retrievedAt })}`, [string(record.canonicalSubjectId)]);
       }
@@ -2900,7 +2938,8 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         }
         if (["CANDIDATE_BIO", "CANDIDATE_LINK", "CANDIDATE_CONTACT"].includes(string(record.kind))) {
           const profile = object(record.candidateProfile);
-          if (profile.holdingPath && profile.holdingKey) add("ask", `profile-field:${profile.holdingPath}:${profile.field}:${profile.value}`, [string(profile.holdingKey)]);
+          const holdingPath = candidateProfileCensusHoldingPath({ holdingPath: profile.holdingPath, holdingKey: profile.holdingKey, field: profile.field });
+          if (holdingPath) add("ask", `profile-field:${holdingPath}:${profile.field}:${profile.value}`, [string(profile.holdingKey)]);
         }
         if (record.kind === "MEASURE_ANALYSIS") add("ask", `analysis:${string(record.id).replace(/#analysis$/, "")}`, [string(record.id).replace(/#analysis$/, "")]);
         if (record.kind === "BALLOT_ABSENCE") {
@@ -2936,7 +2975,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
       }
       for (const finance of (Array.isArray(entry.expectedFinance) ? entry.expectedFinance : []).map(object).filter((record) => record.filingState === "OURS_GAP")) {
         const gaps = (Array.isArray(entry.gaps) ? entry.gaps : []).map(object);
-        if (object(entry.denominators).financeIdentityUnresolved === 1 && gaps.some((gap) => gap.whose === "OURS" && gap.statement === object(finance.ourGap).whatIsMissing)) add("ask", `finance:${entry.target}:OURS_GAP:${JSON.stringify(finance.totals)}`, [string(entry.target)]);
+        if (object(entry.denominators).financeIdentityUnresolved === 1 && gaps.some((gap) => gap.whose === "OURS" && gap.statement === object(finance.ourGap).whatIsMissing)) add("ask", `finance:${entry.target}:OURS_GAP:${canonicalReaderAuthorityJson(finance.totals)}`, [string(entry.target)]);
       }
     }
     for (const entry of (Array.isArray(evidence.proofs) ? evidence.proofs : []).map(object)) if (entry.snapshotId && entry.auditId && entry.renderedTextSha256) {
@@ -2971,7 +3010,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
       const nav = object(row.navigation);
       for (const field of ["dates", "registration"]) if (nav[field]) {
         const value = object(nav[field]);
-        add("ballot", `navigation:${field}:${JSON.stringify(clean(value))}`, field === "dates" ? [string(value.state), string(value.sourceUrl)] : [string(value.url)]);
+        add("ballot", `navigation:${field}:${canonicalReaderAuthorityJson(value)}`, field === "dates" ? [string(value.state), string(value.sourceUrl)] : [string(value.url)]);
       }
     }
     for (const row of census.rows) {
@@ -2983,14 +3022,26 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         const source = sourceRows.get(auditId)!;
         const raw = source.value;
         let key = "";
-        if (row.datasetFamily === "state-money") key = row.readerSurface === "ask" ? `finance:${(raw.targetKeys as string[])[0]}:${raw.filingState}:${JSON.stringify(raw.totals)}` : `state-money:${JSON.stringify(clean(raw))}`;
+        if (row.datasetFamily === "state-money") {
+          const holding = raw as unknown as StateMoneyRecord;
+          const authority = stateMoneyAuthorityRelation(holding, holding.targetKeys.flatMap(stateMoneyForTarget), stateMoneyReadState(holding.jurisdiction).metadata.sourceThrough);
+          if (!authority.record) { failures.push(`${evidencePath}:${auditId}: no unique exact or admitted later state-money authority`); continue; }
+          // The same strict successor relation already governs projection and
+          // component delivery. Observe its actual current values, never the
+          // old totals and never merely a coincident target/committee ID.
+          const current = authority.record;
+          key = row.readerSurface === "ask" ? `finance:${current.targetKeys[0]}:${current.filingState}:${canonicalReaderAuthorityJson(current.totals)}` : `state-money:${canonicalReaderAuthorityJson(current)}`;
+        }
         else if (row.datasetFamily === "federal-finance") {
           if (source.unit === "absences") {
             const prefix = `federal-absence:${raw.targetKey}:`;
             key = [...observations.keys()].find((entry) => entry.startsWith(prefix) && (() => { const answer = object(JSON.parse(entry.slice(prefix.length))); return answer.searchUrl === raw.searchUrl && answer.checkedAt === raw.checkedAt; })()) ?? "";
           } else key = `federal:${raw.fecCandidateId}`;
         }
-        else if (row.datasetFamily === "everyday-routing") key = `contact:${JSON.stringify(clean(Object.fromEntries(Object.entries(raw).filter(([key])=>key!=="holdingStatus"))))}`;
+        else if (row.datasetFamily === "everyday-routing" && civicContactObserved(raw, new Set(observations.keys()))) {
+          key = `contact:${canonicalReaderAuthorityJson(Object.fromEntries(Object.entries(raw).filter(([key])=>key!=="holdingStatus")))}`;
+          observations.set(key, [string(raw.topicId), string(raw.sourceUrl)]);
+        }
         else if (row.datasetFamily === "portraits") key = `portrait:${raw.url}`;
         else if (["candidate-corpus", "statement-corpus"].includes(row.datasetFamily)) key = `document:${raw.id}`;
         else if (row.datasetFamily === "votes") {
@@ -3026,11 +3077,18 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         else if (row.datasetFamily === "congress" && source.unit === "members") key = `official:congress:${raw.bioguide}`;
         else if (row.datasetFamily === "registry" && source.unit === "divisions" && raw.officeholderId) key = `membership:${raw.ocdId}#${raw.officeholderId}`;
         else if (row.datasetFamily === "measure-summaries") key = source.unit === "measure provisions" ? `provision:${raw.id}` : `measure-summary:${raw.contestId}`;
-        else if (row.datasetFamily === "ballot-navigation") key = `navigation:${auditId.includes("election-dates") ? "dates" : "registration"}:${JSON.stringify(clean(raw))}`;
+        else if (row.datasetFamily === "ballot-navigation") key = `navigation:${auditId.includes("election-dates") ? "dates" : "registration"}:${canonicalReaderAuthorityJson(raw)}`;
         else if (row.datasetFamily === "ballot") {
           if (row.readerSurface === "ask" && ["cards", "links"].includes(source.unit)) {
             const fields = source.unit === "cards" ? ["bio", "phone", "email", "filedAddress"].filter((field)=>raw[field]).map((field)=>({field,value:string(raw[field]),path:field === "bio" ? auditId : `${auditId}/${field}`})) : ["official","campaign"].filter((field)=>object(raw[field]).url).map((field)=>({field,value:string(object(raw[field]).url),path:`${auditId}/${field}`}));
-            if (fields.length && fields.every(({field,value,path})=>observations.has(`profile-field:${path}:${field}:${value}`))) { key = `profile:${auditId}`; observations.set(key,[source.identityKey!]); }
+            const identity = readerPersonKeys(source.identityKey!);
+            const verifiedKeys = identity.status === "IDENTITY_UNRESOLVED" ? [] : identity.keys;
+            const fieldObserved = ({ field, value, path }: { field: string; value: string; path: string }) => observations.has(`profile-field:${path}:${field}:${value}`) || verifiedKeys.some((alias) => {
+              const pointer = alias.replaceAll("~", "~0").replaceAll("/", "~1");
+              const aliasPath = `${source.unit === "cards" ? "data/ballot/candidate-cards-2026.json#/cards/" : "data/ballot/candidate-links-2026.json#/links/"}${pointer}${field === "bio" ? "" : `/${field}`}`;
+              return observations.get(`profile-field:${aliasPath}:${field}:${value}`)?.every((id) => verifiedKeys.includes(id));
+            });
+            if (fields.length && fields.every(fieldObserved)) { key = `profile:${auditId}`; observations.set(key,[source.identityKey!]); }
           } else if (source.unit === "contacts") key = `candidate-contact:${raw.candidacyId}`;
           else if (Array.isArray(raw.nominees) && raw.contestId && raw.nominees.map(object).every((nominee) => observations.has(`card-key:${raw.contestId}|${nominee.name}`))) { key = `lineup:${raw.contestId}`; observations.set(key, [string(raw.contestId)]); }
           else key = source.unit === "absences" ? `absence:${raw.ocdId}` : source.unit === "analyses" ? `analysis:${source.identityKey ?? raw.contestId}` : `${({ contests: "contest", candidacies: "candidacy", measures: "measure", removals: "removal" } as Record<string, string>)[source.unit]}:${raw.id}`;
@@ -3071,6 +3129,24 @@ export function readerBundleEvidence(root: string, census: ReaderCensus, buildRe
   // measured image bytes; every applicable current image is matched below.
   const applicable = new Set(census.rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds).map((id) => id.slice(0, id.indexOf("#"))));
   const holdings: { path: string; sha256: string; mechanism: "NFT_FILESYSTEM" | "COMPILED_STATIC_IMPORT" | "PUBLIC_ASSET_HTTP"; evidence: unknown }[] = [];
+  // abaa4f48/NH232 moved curated registry identities from a runtime static import
+  // (source-wiring.ts) into the committed first-seed lib/registry/registry.json,
+  // which build-registry.ts refuses to overwrite ("first-seed evidence"). Such a
+  // build-time registry seed is delivered THROUGH that first seed, so read it once
+  // — but only when the deployed build actually traces it — to verify the bake.
+  const registrySeedHolding = census.holdings.find((holding) => holding.path === REGISTRY_FIRST_SEED);
+  const registryFirstSeedBuf = traced.has(REGISTRY_FIRST_SEED) && existsSync(join(root, REGISTRY_FIRST_SEED))
+    ? readFileSync(join(root, REGISTRY_FIRST_SEED))
+    : null;
+  // Byte-bind the parsed seed to the DELIVERED artifact/version: it must be
+  // traced into the deployed build (above) AND its bytes must equal the exact
+  // sha the census recorded for this holding. Without that binding, a rescued
+  // holding would be verified against an arbitrary local file rather than the
+  // registry the reader actually serves.
+  const registrySeedBound = registryFirstSeedBuf !== null
+    && registrySeedHolding !== undefined
+    && registrySeedHolding.sha256 === sha256(registryFirstSeedBuf);
+  const applicableRecords = new Set(census.rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds));
   for (const holding of census.holdings.filter((holding) => applicable.has(holding.path))) {
     const files = traced.get(holding.path);
     if (files?.length) { holdings.push({ path: holding.path, sha256: holding.sha256, mechanism: "NFT_FILESYSTEM", evidence: files }); continue; }
@@ -3079,6 +3155,16 @@ export function readerBundleEvidence(root: string, census: ReaderCensus, buildRe
     const sourcePath = READER_SURFACES.map((surface) => importReachability(root, surface.path, holding.path)).find((path) => path.reached);
     if (sourcePath?.reached && /\.(ts|tsx|json)$/.test(holding.path)) {
       holdings.push({ path: holding.path, sha256: holding.sha256, mechanism: "COMPILED_STATIC_IMPORT", evidence: { sourcePath: sourcePath.path, sourceHashes: sourcePath.path.filter((path) => existsSync(join(root, path))).map((path) => ({ path, sha256: sha256(readFileSync(join(root, path))) })), qualification: "This statically imported data is compiled into the matching build, rather than copied as a runtime filesystem holding. Actual record execution is separately required by the delivery proof." } });
+    } else if (registrySeedBound && holding.path === CURATED_BODY_SEED && holding.family === "curated-body-identities") {
+      const dataset = readerDatasets(loadManifestContext(root)).find((candidate) => candidate.path === holding.path);
+      const records = dataset ? readerRecordsForDataset(root, dataset).map((raw) => ({ auditId: `${holding.path}#${raw.pointer}`, value: raw.value })).filter((record) => applicableRecords.has(record.auditId)) : [];
+      const problems = curatedRegistrySeedProblems({ holdingPath: holding.path, family: holding.family, artifactPath: REGISTRY_FIRST_SEED, artifactBytes: registryFirstSeedBuf!, artifactSha256: registrySeedHolding!.sha256, artifactTraced: true, records });
+      if (sha256(readFileSync(join(root, holding.path))) !== holding.sha256) problems.push("Curated source differs from its census holding");
+      const expectedIds = census.records.filter((record) => record.holdingPath === holding.path && applicableRecords.has(record.auditId)).map((record) => record.auditId).sort();
+      if (JSON.stringify(records.map((record) => record.auditId).sort()) !== JSON.stringify(expectedIds)) problems.push("Curated source records do not match the applicable census denominator");
+      if (problems.length === 0) {
+        holdings.push({ path: holding.path, sha256: holding.sha256, mechanism: "COMPILED_STATIC_IMPORT", evidence: { bakedInto: REGISTRY_FIRST_SEED, bakedIntoSha256: registrySeedHolding!.sha256, recordsVerified: records.map(({ auditId, value }) => ({ auditId, id: value.id })), qualification: "Each applicable curated body matches exactly one body in the traced, byte-bound registry first seed, with every held field and provenance value equal. Actual record execution remains a separate delivery obligation." } });
+      } else failures.push(...problems.map((problem) => `${holding.path}: ${problem}`));
     } else failures.push(`${holding.path}: no actual NFT copy, static reader import, or same-build verified public asset response`);
   }
   return { exactHead: receipt.exactHead, buildId: receipt.buildId, buildReceiptPath, buildReceiptSha256: sha256(receiptBytes), holdingsDigest: census.holdingsDigest, trace, holdings, failures };

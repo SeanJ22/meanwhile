@@ -115,6 +115,11 @@ test("a label is never invented — an office with no published city says so", (
 test("the href strips to digits; the displayed number keeps its formatting", () => {
   assert.equal(telHref("(603) 647-7500"), "tel:6036477500");
   assert.equal(telHref("+1 202-224-2841"), "tel:+12022242841");
+  for (const phone of ["973-627-2000 ext 228", "973-627-2000 ext. 228", "973-627-2000 extension 228", "973-627-2000 x228", "9736272000;ext=228"]) {
+    assert.equal(telHref(phone), "tel:9736272000;ext=228", phone);
+  }
+  assert.equal(telHref("+1 (973) 627-2000 ext 0228"), "tel:+19736272000;ext=0228");
+  assert.equal(telHref("311"), "tel:311");
   // The choice itself is untouched — the render puts this on the face.
   const choices = phoneChoicesFor({ phone: "(603) 647-7500" });
   assert.equal(choices[0].phone, "(603) 647-7500");

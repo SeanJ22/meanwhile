@@ -47,7 +47,17 @@ for (let start = 0; start < moneyTargets.length; start += 8) {
   records.push(...await Promise.all(batch.map(async (target) => {
     const expected = campaignMoneyApiAnswer(target);
     const actual = await get(`/api/funding/${encodeURIComponent(target)}`);
-    assert.deepEqual(actual, JSON.parse(JSON.stringify(expected)), target);
+    // Strip the shared availability envelope the funding route wraps around the
+    // canonical answer (dataState/dataMetadata/holdingStatus/unavailableAuthorities),
+    // exactly as tests/reader-last-mile-funding-route.test.ts does, and hold the
+    // source-linked answer to exact equality. dataMetadata carries per-import
+    // provenance (promotedAt/stale) and is never pinned here.
+    const { dataState, dataMetadata, holdingStatus, unavailableAuthorities, ...answer } = actual;
+    assert.deepEqual(answer, JSON.parse(JSON.stringify(expected)), target);
+    assert.ok(holdingStatus === "HELD" || holdingStatus === "PARTIAL", `${target}: funding holdingStatus ${holdingStatus}`);
+    assert.ok(Array.isArray(unavailableAuthorities), `${target}: funding unavailableAuthorities`);
+    assert.ok(["PROMOTED", "BOOTSTRAP", "PARTIAL"].includes(dataState as string), `${target}: funding dataState ${dataState}`);
+    assert.ok(dataMetadata === null || typeof dataMetadata === "object", `${target}: funding dataMetadata`);
     return { surface: "funding/state-money", target, payload: actual, payloadSha256: hash(actual) };
   })));
 }

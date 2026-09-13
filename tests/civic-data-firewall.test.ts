@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
@@ -1135,6 +1136,55 @@ test("federal directory and registry runtime truth cannot return to tracked read
   assert.ok(codes.includes("TRACKED_OFFICIAL_CANDIDACY_AUTHORITY"));
   assert.ok(codes.includes("REGISTRY_IDENTITY_FIXTURE_AUTHORITY_INVALID"));
   assert.ok(codes.includes("REGISTRY_RUNTIME_FINANCE_BRIDGE_GATE_MISSING"));
+});
+
+test("registry seed recognition requires an actual import or filesystem read", () => {
+  const files = minimalFiles();
+  const proofPath = "lib/holdings/registry-seed-proof.ts";
+  files[proofPath] = readFileSync(new URL(`../${proofPath}`, import.meta.url), "utf8");
+  files["lib/ask/documented-seed.ts"] = 'import { createHash } from "node:crypto"; const path = "lib/registry/registry.json"; export const digest = createHash("sha256");';
+  files["lib/ask/unrelated-seed.ts"] = 'readFileSync("lib/registry/unrelated-registry.json", "utf8");';
+  for (const path of ["lib/ask/server-sources.ts", "lib/tracker/registry.mjs"]) {
+    files[path] = readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  }
+  assert.deepEqual(audit(files).filter(({ code }) => code === "REGISTRY_RUNTIME_TRACKED_READER"), []);
+
+  const readers = [
+    'import held from "../registry/registry.json" with { type: "json" };',
+    'export { default } from "../registry/registry.json";',
+    'import "../registry/registry.json";',
+    'const held = await import("../registry/registry.json");',
+    'const held = require("../registry/registry.json");',
+    'readFileSync("lib/registry/registry.json", "utf8");',
+    'import { readFile as load } from "node:fs/promises"; const path = "lib/registry/registry.json"; await load(path, "utf8");',
+    'import * as fs from "node:fs"; const path = "lib/registry/registry.json"; fs.readFileSync(path);',
+    'const { readFileSync: load } = require("node:fs"); load("lib/registry/registry.json");',
+    'const path = "lib/registry/registry.json"; const alias = path; readFileSync(alias);',
+    'readFileSync(join(ROOT, "lib", "registry", "registry.json"));',
+  ];
+  for (const source of readers) {
+    files["lib/ask/reopened-registry.ts"] = source;
+    assert.deepEqual(audit(files).filter(({ code }) => code === "REGISTRY_RUNTIME_TRACKED_READER").map(({ path }) => path), ["lib/ask/reopened-registry.ts"], source);
+  }
+});
+
+test("comment access gate accepts mapped canonical records and rejects seed fallbacks", () => {
+  const files = minimalFiles();
+  const path = "lib/registry/comment-access.ts";
+  const source = readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  files[path] = source;
+  const findings = () => audit(files).filter((finding) => finding.path === path && finding.code === "CURATED_READER_PRODUCTION_GATE_MISSING");
+  assert.deepEqual(findings(), []);
+  for (const replacement of [
+    source.replace('currentCuratedReaderRecords("comment-access", seed)', "seed"),
+    source.replace('currentCuratedReaderRecords("comment-access", seed)', "COMMENT_ACCESS"),
+    source.replace("const seed = COMMENT_ACCESS.map", "const seed = UNRELATED.map"),
+    source.replace("records = [];", "records = COMMENT_ACCESS;"),
+  ]) {
+    assert.notEqual(replacement, source);
+    files[path] = replacement;
+    assert.equal(findings().length, 1);
+  }
 });
 
 test("mutable curated Reader facts cannot reopen tracked fallbacks or Git writers", () => {

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 626,
-    "named": 6525,
+    "files": 627,
+    "named": 6536,
     "dynamic": 27
   },
   "files": {
@@ -2205,6 +2205,7 @@
         "civic-data firewall refuses release calls, repository writers, duplicate authority, and unclassified rows",
         "civic-data firewall refuses the exact scheduled bot-commit architecture",
         "civic-data firewall requires both surviving federal-vote commands to promote",
+        "comment access gate accepts mapped canonical records and rejects seed fallbacks",
         "deleted schedule-audit and Git-refresh bridge/revert implementations cannot return or hide behind a rename",
         "every explicit production data command must prepare its own sanctioned write context",
         "federal directory and registry runtime truth cannot return to tracked readers or writers",
@@ -2217,6 +2218,7 @@
         "registered data commands cannot hide Git or deploy machinery in imported helpers",
         "registered data commands cannot hide any Node filesystem mutation in imported helpers",
         "registered data-command closure follows package aliases and literal local child-script edges",
+        "registry seed recognition requires an actual import or filesystem read",
         "reported four-path operational commits stay FULL and their routine writer is forbidden",
         "retired Arizona filing and ACS adapters cannot regain callable tracked-file writers",
         "routine data and runtime-ops workflows cannot regain a cron, contents write, or Git commit path",
@@ -6025,6 +6027,19 @@
       ],
       "dynamic": 0
     },
+    "tests/pdc-reader-remaining-repairs.test.ts": {
+      "names": [
+        "ballot keeps freshness for a federal none answer and leaves a current none answer empty",
+        "candidate profile route proof recognizes only the exact field, key and demonstrated authority encoding",
+        "contactless grounded bodies retain the routed topic and correctly attributed reachable contact",
+        "full component and body evidence requires current source bindings and actual cases",
+        "full reproof refuses missing, stale, incomplete and wrong-build surface evidence",
+        "listing witnesses bind the complete current group set rather than a historical literal",
+        "registry seed proof binds exact curated records and rejects identity coincidence or wrong artifacts",
+        "split ZIP contacts require every covered ZIP and the exact contact facts and source"
+      ],
+      "dynamic": 0
+    },
     "tests/pdc-terminal-contract.test.ts": {
       "names": [
         "the 673f1dd root cause is bound to the live commit and classifier evidence",
@@ -6876,6 +6891,7 @@
     "tests/reader-last-mile-census.test.ts": {
       "names": [
         "Reader authority canonicalization ignores transport metadata and JSON key order only",
+        "Reader authority counts a union predecessor only with authenticated disposition context",
         "Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production",
         "applicability keeps source inputs distinct without erasing direct reader obligations",
         "ballot absence supersession permits only a unique later verification of the exact same fact",

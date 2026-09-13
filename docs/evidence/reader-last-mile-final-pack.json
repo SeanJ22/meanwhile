@@ -1,102 +1,132 @@
 {
   "formatVersion": 1,
-  "rule": "Original bytes and hashes preserved; gzip modification time zero. Existing baseline is untouched.",
+  "rule": "Only the explicitly enumerated fresh proof set is packaged. Original bytes and hashes are preserved with zero gzip modification time; no closure receipt is inherited or rewritten.",
   "files": [
     {
-      "path": "docs/evidence/reader-last-mile-current.json.gz",
-      "originalSha256": "76643d0a65290de9d2a7df3dbbdb5fbb726a5695b45c71ffcce304d46065bc4d",
-      "bytes": 119921004,
-      "packedBytes": 4100397
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-current-projection.json.gz",
-      "originalSha256": "3ed171080041372aadc3d1a0336cb5a4f62e17974950b51c20e1990c366b360d",
-      "bytes": 46353506,
-      "packedBytes": 1792390
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-current-components.json.gz",
-      "originalSha256": "ee0a67840e060b4def8515d1a1d82bf18aede377948dab6347856d8f02ed2ac5",
-      "bytes": 91827890,
-      "packedBytes": 3363669
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-closure.json.gz",
-      "originalSha256": "d819955bfe4aa9603d697a5cea10b144be0f96e18aa2b6403a5a25335984979c",
-      "bytes": 137503788,
-      "packedBytes": 4977170
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-closure-route-proof-composition.json.gz",
-      "originalSha256": "b82d17cdf50b9fba9a1780c7c0a529567b88a5f4617250cff0cfb7977a79a72b",
-      "bytes": 15515053,
-      "packedBytes": 1498214
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-closure-component-proof-composition.json.gz",
-      "originalSha256": "153d3a04584f32a058bb2eaba10e3d08b525bbe2e3faec8dcec9e9dd0fa1a258",
-      "bytes": 34932181,
-      "packedBytes": 2017093
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-qualification-check.json.gz",
-      "originalSha256": "e2ee8b1bddcf42945c7f11ce4413387828326e1d35d1170a161036a76709729e",
-      "bytes": 119921004,
-      "packedBytes": 4100398
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-qualification-check-projection.json.gz",
-      "originalSha256": "ee462aafb48c981e080db024840c00e46c034f951adb386b3d13ba80fa4f7c33",
-      "bytes": 46353506,
-      "packedBytes": 1792389
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-ask-composed.json.gz",
-      "originalSha256": "c993ccc6c2a2611b7d26b3b66daa8afc6873973dbf4e10c2797969ecdbdab218",
-      "bytes": 124054374,
-      "packedBytes": 4309211
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-routes.json.gz",
-      "originalSha256": "1ff4f53e86ea0dfea395a5418033a9e02251863b2f41d1eb959c44453c2532b3",
-      "bytes": 43569695,
-      "packedBytes": 4306496
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-key-votes-ask.json.gz",
-      "originalSha256": "4d8b056c1eb7d0059efe40a33dc0c27bed574d8741ba102d3e639dbb54d0f6e8",
-      "bytes": 34100979,
-      "packedBytes": 4373047
-    },
-    {
       "path": "docs/evidence/reader-last-mile-bodies.json.gz",
-      "originalSha256": "48011fad8ed8b6c1d7b470119fc14d9b9e40d4585c8c9733aeffeb5c8d1b9218",
-      "bytes": 27593409,
-      "packedBytes": 941426
+      "originalSha256": "54b2abac4cd6981b66d6c06bc936f576641c4037346ba98faae141c55069abca",
+      "bytes": 27267784,
+      "packedBytes": 915541
     },
     {
-      "path": "docs/evidence/reader-last-mile-ask-exhaustive.json.gz",
-      "originalSha256": "05dffa637a227867f5b883e0884988837871dc54fa06c623f9221c78da9d97ba",
-      "bytes": 14738134,
-      "packedBytes": 654126
+      "path": "docs/evidence/reader-last-mile-final-agenda.json.gz",
+      "originalSha256": "d42ba942e020d3394a3450cfe02a808a39b0da3135a252e9b97c45b034a80815",
+      "bytes": 1506006,
+      "packedBytes": 239737
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-ask-exhaustive.json.gz",
+      "originalSha256": "240a102d89cb856f583c1b0fe0410c70c87a0c1722132ae7552364d0b9be23c3",
+      "bytes": 13867217,
+      "packedBytes": 631471
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-ballot-ask.json.gz",
+      "originalSha256": "deadf7da87570e256bdc30f8845e14b21f73eea867c0fb459ac36a68ab984e3e",
+      "bytes": 3876419,
+      "packedBytes": 162955
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-ballot.json.gz",
+      "originalSha256": "08b7c1204231c29346a60f9221f1008b37c0c0a685f799ad888638b97043d438",
+      "bytes": 690767,
+      "packedBytes": 124403
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-build-receipt.json.gz",
+      "originalSha256": "99ec661bbb70839779578bd955fc4309ca6e2ddd705304be33127b4aa123c011",
+      "bytes": 275229,
+      "packedBytes": 87338
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-bundle.json.gz",
+      "originalSha256": "f65a1ac1e253abff714b94577eb229a1f220f3950aa13c73c1f1644143c04e34",
+      "bytes": 733993,
+      "packedBytes": 55891
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json.gz",
+      "originalSha256": "d692a4ed38f6b22c367bd57a607ca7f374656c9df78c7aaf77ee7a63911a2c3a",
+      "bytes": 1149431,
+      "packedBytes": 56490
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-closure.json.gz",
+      "originalSha256": "3acef2c8b727bdf4381f7d4527559d74197b45a1c8d0d77341fb2fafceec2119",
+      "bytes": 130281600,
+      "packedBytes": 4502754
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-delta-components.json.gz",
+      "originalSha256": "1cc915620d73d24714d80ba2643dc353babd0dfa671e271da0695ea1300e01e6",
+      "bytes": 96417357,
+      "packedBytes": 3489404
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-delta-routes.json.gz",
+      "originalSha256": "6b271d7a544bed1c4e63e3e2e56c3295faf0c2cee5253a1828c32223a5fffbbc",
+      "bytes": 2490727,
+      "packedBytes": 204240
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-federal-money-ask.json.gz",
+      "originalSha256": "a35f28fa818cf9c107df69cd9f404cc02c10f6723f30a7ca48f66aea00663dfe",
+      "bytes": 134362,
+      "packedBytes": 8589
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-key-votes-ask.json.gz",
+      "originalSha256": "3806cdcff3ccbc0b7258db3cf9d2a368cb1ac620abb98c17ca87f5db41460486",
+      "bytes": 33583056,
+      "packedBytes": 4298659
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json.gz",
+      "originalSha256": "cbd0efd9bc210464e92ea53762c67f589c8ae0af6c1fdabfd652a14fcc59f902",
+      "bytes": 203867,
+      "packedBytes": 13149
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-meeting-routes.json.gz",
+      "originalSha256": "0073fcb418a2d30ad8a564182c6774355b365944bf531492832db63317aac929",
+      "bytes": 1264647,
+      "packedBytes": 80715
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-meetings-ask.json.gz",
+      "originalSha256": "296b71a2fc5925d67f9c6c1b39d2e7d536650afa91e5dcbe1c55088e1ae6087d",
+      "bytes": 10552796,
+      "packedBytes": 726799
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-money-ask.json.gz",
+      "originalSha256": "4b5c7f87cff088c1210b5b8f61e3ec56ddc32d9f51a43680e2e16df7761d2be1",
+      "bytes": 2112816,
+      "packedBytes": 83850
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-portraits.json.gz",
+      "originalSha256": "3d8a69fb549883e4bcaa7b186c40ae9e9952aa50069ccf92b0fdd6a0426a1866",
+      "bytes": 355884,
+      "packedBytes": 38756
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-render.json.gz",
+      "originalSha256": "c4ed7f503670a21f8a28ecbe1afd8a510a052f1681ba77f8c9cc0bc37e75f2f6",
+      "bytes": 316315,
+      "packedBytes": 93854
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-routes.json.gz",
+      "originalSha256": "2644a9e12e5e6a76df81cd3636523cfeb53d3f4fe2db954a0abe1866aa67bff3",
+      "bytes": 43263049,
+      "packedBytes": 4250395
     },
     {
       "path": "docs/evidence/reader-last-mile-surface-witnesses.json.gz",
-      "originalSha256": "44286cafd048e3c82c9108937ef272c1a43d7f88c9ba56fdb84dcda4046dd283",
-      "bytes": 40826,
-      "packedBytes": 5020
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-root-image-review-d9dc.json.gz",
-      "originalSha256": "9fee6bebb328cda1fc8b1a3f40c80f99b8c6814b99aa33e56a3cc2c1a927bd7c",
-      "bytes": 14222,
-      "packedBytes": 1788
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-finance-image-review-d9dc2010.json.gz",
-      "originalSha256": "1d6a03d072853945c872d082b709c3ae0a456c9f5926710e89cbe6d6ce43795e",
-      "bytes": 41587,
-      "packedBytes": 7473
+      "originalSha256": "27a2d5ea4051927748ebaac29b0de35f8f63641ff7e85b4a562c486a905289fc",
+      "bytes": 43153,
+      "packedBytes": 5795
     }
   ]
 }

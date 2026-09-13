@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "source": "NEON_API_BRANCH_READBACK",
+  "observedAt": "2026-09-13T11:26:40.000Z",
+  "projectId": "tiny-hill-13996172",
+  "branchId": "br-spring-cell-ax5xxc6b",
+  "branchName": "pdc-v2-rehearsal-2ec82dce-codex",
+  "parentBranchId": "br-delicate-lab-ax02xuo5",
+  "defaultBranchId": "br-delicate-lab-ax02xuo5",
+  "endpointId": "ep-holy-tree-axe7014o",
+  "endpointHost": "ep-holy-tree-axe7014o.c-4.us-east-2.aws.neon.tech"
+}

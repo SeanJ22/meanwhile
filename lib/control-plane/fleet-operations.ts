@@ -1,3 +1,4 @@
+import { readFleetReceiptSnapshot } from "./fleet-receipt-snapshot.ts";
 import { readDecisions, readSnapshot, unreachable, type ReadOutcome } from "./admin-data.ts";
 import { isExpired } from "./attempt.ts";
 import { sumMetric, type MeasuredTotal } from "./cost.ts";
@@ -80,6 +81,10 @@ export interface FleetOperationsReport {
   readonly deliveryFreshness: "FRESH" | "STALE" | "UNKNOWN";
   readonly operations: ReadOutcome<readonly FleetOperation[]>;
   readonly receiptLoading: FleetReceiptLoading;
+  /** Receipt provenance only. Permanent-authority adapters remain separate and unconnected. */
+  readonly receiptSource?: { readonly kind: "OWNER_SNAPSHOT" | "INJECTED_STORE"; readonly observedAt: string | null;
+    readonly authority: "HISTORICAL_PROMOTER_1"; readonly freshness: "FRESH" | "STALE" | "UNKNOWN";
+    readonly permanentAuthority: "NOT_CONNECTED" };
   /** Existing ZIP reader-instrument output, unchanged; it is not the ZIP completion denominator. */
   readonly coverageGaps: ReadOutcome<{ readonly publishedAt: string; readonly zipRows: OwnerSnapshot["zipRows"] }>;
   /** Existing machine-blocker and acknowledgement cards are excluded from owner decisions. */
@@ -177,6 +182,12 @@ export async function readFleetOperations(repos: ControlPlaneRepositories, input
   ]);
   let receiptLoading: FleetReceiptLoading = { kind: "NOT_RECORDED", detail: "No trusted receipt store was supplied to this read." };
   let receipts = input.deliveryEvidence?.receipts;
+  const stored = snapshot.kind === "HELD" ? readFleetReceiptSnapshot(snapshot.value.fleetReceipts, input.observedAt)
+    : { observedAt: null, freshness: "UNKNOWN" as const, loading: snapshot };
+  const receiptSource: NonNullable<FleetOperationsReport["receiptSource"]> = {
+    kind: input.receiptStore ? "INJECTED_STORE" : "OWNER_SNAPSHOT",
+    observedAt: input.receiptStore ? input.observedAt : stored.observedAt,
+    authority: "HISTORICAL_PROMOTER_1", freshness: input.receiptStore ? "UNKNOWN" : stored.freshness, permanentAuthority: "NOT_CONNECTED" };
   if (input.receiptStore) {
     // A supplied store owns receipt availability; injected/old receipts cannot hide its failure.
     receipts = [];
@@ -187,11 +198,22 @@ export async function readFleetOperations(repos: ControlPlaneRepositories, input
       receiptLoading = { kind: "HELD", value: loading };
     } catch (error) { receiptLoading = unreachable("fleet receipt store", error); }
   }
+  else {
+    const { loading } = stored;
+    if (loading.kind === "HELD") {
+      const { receipts: loaded, ...metadata } = loading.value;
+      receipts = loaded; receiptLoading = { kind: "HELD", value: metadata };
+    } else {
+      receiptLoading = loading;
+      // Explicit fixture evidence remains supported only when no snapshot extension exists.
+      if (snapshot.kind === "STORE_UNREACHABLE" || (snapshot.kind === "HELD" && snapshot.value.fleetReceipts != null)) receipts = [];
+    }
+  }
   let operations: FleetOperationsReport["operations"];
   try {
     operations = activities.kind !== "HELD" ? activities
       : { kind: "HELD", value: activities.value.map(activity => projectFleetOperation(activity, input.observedAt,
-        { ...input.deliveryEvidence, receipts, windows, ...(input.receiptStore ? { receiptLoading } : {}) })) };
+        { ...input.deliveryEvidence, receipts, windows, ...((input.receiptStore || snapshot.kind === "STORE_UNREACHABLE" || (snapshot.kind === "HELD" && snapshot.value.fleetReceipts != null)) ? { receiptLoading } : {}) })) };
   } catch (error) { operations = unreachable("fleet activity projection", error); }
   const coverageGaps: FleetOperationsReport["coverageGaps"] = snapshot.kind === "HELD"
     ? { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, zipRows: snapshot.value.zipRows } } : snapshot;
@@ -199,11 +221,14 @@ export async function readFleetOperations(repos: ControlPlaneRepositories, input
     : { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, cards: snapshot.value.decisionCards.filter(card =>
       decisionCardKind(card) === "DECISION" && card.verifiability === "NOT_MACHINE_VERIFIABLE" && card.whyNoMachineCanDecide.trim() &&
       latestDecisionFor(decisions.value, card.rowId) === null) } };
-  const fullyRead = ![operations, coverageGaps, ownerDecisions, windows, receiptLoading].some(value => value.kind === "STORE_UNREACHABLE") &&
-    !(receiptLoading.kind === "HELD" && (receiptLoading.value.truncated > 0 || receiptLoading.value.entries.some(entry => entry.state !== "LOADED"))) &&
+  const readsAvailable = ![operations, coverageGaps, ownerDecisions, windows, receiptLoading].some(value => value.kind === "STORE_UNREACHABLE") &&
     !(operations.kind === "HELD" && operations.value.some(row => row.publication.delivery.kind === "STORE_UNREACHABLE"));
+  const fullyRead = readsAvailable &&
+    !(receiptLoading.kind === "HELD" && (receiptLoading.value.truncated > 0 || receiptLoading.value.entries.some(entry => entry.state !== "LOADED")));
   return { formatVersion: FLEET_OPERATIONS_VERSION, extensionVersion: FLEET_OPERATIONS_EXTENSION_VERSION, observedAt: input.observedAt,
-    deliveryFreshness: fleetReadFreshness(fullyRead ? input.observedAt : null, input.observedAt), operations, receiptLoading, coverageGaps, ownerDecisions };
+    deliveryFreshness: !fullyRead ? (readsAvailable && stored.freshness === "STALE" && !input.receiptStore ? "STALE" : "UNKNOWN")
+      : input.receiptStore ? "FRESH" : stored.freshness, operations, receiptLoading,
+    receiptSource: input.receiptStore ? { ...receiptSource, freshness: fullyRead ? "FRESH" : "UNKNOWN" } : receiptSource, coverageGaps, ownerDecisions };
 }
 
 /** Delivery freshness only, using Admin's existing pulse tolerance; never certifies source data. */

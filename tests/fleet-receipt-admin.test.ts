@@ -6,6 +6,9 @@ import { basename, dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE, signSession } from "../lib/control-plane/admin-auth.ts";
+import { SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
+import { withFleetReceiptSnapshot } from "../lib/control-plane/fleet-receipt-publisher.ts";
+import { gap, type OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { readFleetReceiptReadback } from "../lib/control-plane/fleet-delivery.ts";
 import { readFleetOperations, type FleetOperationsReport } from "../lib/control-plane/fleet-operations.ts";
 import { handleFleetOperationsRequest } from "../lib/control-plane/fleet-operations-http.ts";
@@ -109,9 +112,26 @@ test("real promoter receipts reach the authenticated Admin consumer through the 
     const issuedAt = Math.floor(Date.parse(h.now()) / 1000);
     const signed = await signSession({ sid: "adm_receipt_fixture", iat: issuedAt, exp: issuedAt + 3600, via: "google" }, SESSION_KEY);
     const cookie = `${ADMIN_SESSION_COOKIE}=${signed}`;
-    const http = () => handleFleetOperationsRequest(request(ADMIN_ORIGIN, cookie), { open: async () => ({ ok: true, repos }), receiptStore: store, now: h.now });
+    const http = async () => {
+      const at = h.now(), nothing = gap<never>("OURS", "Not measured in this receipt fixture");
+      const base: OwnerSnapshot = { formatVersion: 1, publishedAt: at, publishedFromSha: null, publisher: "offline-fixture",
+        pilotGreen: null, contracts: [], decisionCards: [], obligationsByState: [], obligationsByProvider: [], freshnessDebtRows: nothing,
+        incidents: [], costByRole: [], costByModel: [], cacheHitRateByCaller: [], deterministicShare: nothing, costPerVerifiedRecord: nothing,
+        intakeFolder: nothing, intakeItemsFound: nothing, intakeItemsProcessed: nothing, intakeUnidentifiable: nothing, zipRows: nothing };
+      const previous = await repos.ownerSnapshots.read(SNAPSHOT_ID);
+      const snapshot = await withFleetReceiptSnapshot(base, { store, readWindows: repos.windowRuns.readAll, previous: previous?.value.fleetReceipts });
+      // Actual existing aggregate, one revision per publication. No extra ledger, runner or live database.
+      if (previous) await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, previous.revision, snapshot, at);
+      else await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, at);
+      const response = await handleFleetOperationsRequest(request(ADMIN_ORIGIN, cookie), { open: async () => ({ ok: true, repos }), now: h.now });
+      const projected = await response.clone().json() as FleetOperationsReport;
+      assert.equal(projected.receiptSource?.kind, "OWNER_SNAPSHOT");
+      assert.equal(projected.receiptSource?.authority, "HISTORICAL_PROMOTER_1");
+      assert.equal(projected.receiptSource?.permanentAuthority, "NOT_CONNECTED");
+      return response;
+    };
 
-    await t.test("real receipt loader supplies exact promotion identity to the successful authenticated HTTP response", async () => {
+    await t.test("runner receipt loader → owner snapshot → authenticated HTTP supplies exact historical identity without an HTTP filesystem store", async () => {
       const response = await http();
       assert.equal(response.status, 200);
       assert.match(response.headers.get("cache-control")!, /no-store/);

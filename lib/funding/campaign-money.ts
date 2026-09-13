@@ -7,6 +7,7 @@ import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import type { OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
+import { directFundingTargetPlan } from "./target-authorities.ts";
 
 export type OfficialFinanceIdentity = "NOT_OFFICIAL" | "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED";
 export interface CampaignMoney {
@@ -129,9 +130,12 @@ export function campaignMoneyForTarget(
   contestId?: string,
   selection: CampaignMoneyReadSelection = {},
 ): CampaignMoney {
-  const readFederal = selection.federal !== false;
-  const readState = selection.state !== false;
-  const readIdentity = selection.identity !== false;
+  const direct = directFundingTargetPlan(targetKey);
+  // A source-namespaced candidacy already identifies its finance authority.
+  // Opening FEC or the officeholder bridge first would let an unrelated read
+  // failure erase that candidacy's independently verified state records.
+  // Officeholder slots still require the current person/candidacy bridge.
+  const readIdentity = selection.identity ?? (direct.contestId === null);
   const roster = readIdentity ? currentRosterMemberReaderDisposition(targetKey) : null;
   if (roster?.state === "IDENTITY_UNRESOLVED") return {
     requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
@@ -141,6 +145,13 @@ export function campaignMoneyForTarget(
   if (official && (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED")) return {
     requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
   };
+  const plan = official?.candidacy ? directFundingTargetPlan(official.candidacy.candidacyId) : direct;
+  const readFederal = selection.federal ?? (official
+    ? official.holder.authority === "FEDERAL_DIRECTORY" || plan.federal
+    : direct.contestId === null || direct.federal);
+  const readState = selection.state ?? (official
+    ? plan.state !== null
+    : direct.contestId === null || direct.state !== null);
   const federal = readFederal ? fundingAnswerForTarget(targetKey) : { kind: "none" } as const;
   if (official) {
     if (official.status !== "RESOLVED" || !official.candidacy) {

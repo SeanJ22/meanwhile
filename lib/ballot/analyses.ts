@@ -34,6 +34,8 @@ export function getMeasureAnalyses(): AnalysesFile | null {
 }
 
 export function analysisForContest(contestId: string): MeasureAnalysis | null {
+  // Arizona's Legislative Council cannot supply another state's analysis.
+  if (!contestId.startsWith("ballot-az-")) return null;
   return (
     getMeasureAnalyses()?.analyses.find((a) => a.contestId === contestId) ?? null
   );

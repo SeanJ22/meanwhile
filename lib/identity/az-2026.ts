@@ -74,6 +74,7 @@ function index(): Map<string, LineupReconciliationRow> {
  * `false` here and must keep working exactly as they did.
  */
 export function lineupBridgeCovers(contestId: string): boolean {
+  if (!contestId.startsWith("ballot-az-")) return false;
   if (!coveredContests) {
     const bridge = azLineupReconciliation();
     coveredContests = new Set((bridge?.rows ?? []).map((r) => r.contestId));
@@ -83,6 +84,7 @@ export function lineupBridgeCovers(contestId: string): boolean {
 
 /** The precomputed row for one nominee card, or `null` if there is none. */
 export function lineupRowForCard(cardKey: string): LineupReconciliationRow | null {
+  if (!cardKey.startsWith("ballot-az-")) return null;
   return index().get(cardKey) ?? null;
 }
 
@@ -95,7 +97,7 @@ export function lineupRowForCard(cardKey: string): LineupReconciliationRow | nul
  * the reason, for the artifact and for the reader's sentence.
  */
 export function reconciledCandidacyIdForCard(cardKey: string): string | null {
-  const row = index().get(cardKey);
+  const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "RECONCILED") return null;
   return row.canonicalCandidacyId;
 }

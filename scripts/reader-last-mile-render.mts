@@ -43,7 +43,7 @@ const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
 const PROVISIONAL = process.env.READER_RENDER_PHASE === "provisional";
 const OUT = join(process.cwd(), "screenshots", "reader-last-mile", ...(PROVISIONAL ? ["provisional"] : []));
-const REPORT = join(process.cwd(), "docs", "evidence", process.env.READER_RENDER_FOCUS === "federal-money" ? "reader-last-mile-render-federal-money.json" : PROVISIONAL ? "reader-last-mile-render-provisional.json" : "reader-last-mile-render.json");
+const REPORT = process.env.READER_PROOF_OUTPUT ?? join(process.cwd(), "docs", "evidence", process.env.READER_RENDER_FOCUS === "federal-money" ? "reader-last-mile-render-federal-money.json" : PROVISIONAL ? "reader-last-mile-render-provisional.json" : "reader-last-mile-render.json");
 mkdirSync(OUT, { recursive: true });
 const pilots = [
   { zip: "85701", name: "Katie Hobbs", official: "statewide:az/governor", key: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613" },
@@ -819,6 +819,20 @@ try {
       if (process.env.READER_RENDER_CASE && !new RegExp(process.env.READER_RENDER_CASE).test(label)) continue;
       const context = await browser.context({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce", deviceScaleFactor: 1 });
       const page = await context.newPage();
+      const failureResponses: Record<string, unknown>[] = [];
+      const responseReads: Promise<void>[] = [];
+      page.on("response", response => {
+        const path = new URL(response.url()).pathname;
+        if (!["/api/ask/grounded", "/api/voting-sites"].includes(path)) return;
+        responseReads.push((async () => {
+          const observedAt = new Date().toISOString();
+          try {
+            failureResponses.push({ observedAt, path, status: response.status(), payload: await response.json() });
+          } catch (error) {
+            failureResponses.push({ observedAt, path, status: response.status(), bodyReadError: error instanceof Error ? error.name : "unknown" });
+          }
+        })());
+      });
       page.setDefaultTimeout(20_000);
       const tourSkip = page.getByRole("button", { name: "Skip the tour", exact: true });
       await page.addLocatorHandler(tourSkip, async () => { await tourSkip.click(); });
@@ -947,8 +961,9 @@ try {
         results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, ballotScope, meetings, listingMultiplicity, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
+        await Promise.allSettled(responseReads);
         await capture(page, `${label}-failure`).catch(() => {});
-        results.push({ label, result: "FAIL", error: String(error), url: page.url() });
+        results.push({ label, result: "FAIL", error: String(error), stack: error instanceof Error ? error.stack : null, url: page.url(), failureResponses });
         console.error(`FAIL ${label}: ${String(error)}`);
       } finally { await context.close(); }
       writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), exactHead: (results.find(row => row.build) as { build?: { commit?: string } } | undefined)?.build?.commit ?? null, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");

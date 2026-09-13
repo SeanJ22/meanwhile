@@ -43,6 +43,9 @@ export function getGeneralLineup(): GeneralLineup | null {
 }
 
 export function lineupForContest(contestId: string): LineupContest | null {
+  // This canvass is an Arizona authority. Other states do not depend on its
+  // availability, while an AZ lookup must still expose an unreadable holding.
+  if (!contestId.startsWith("ballot-az-")) return null;
   return (
     getGeneralLineup()?.contests.find((c) => c.contestId === contestId) ?? null
   );

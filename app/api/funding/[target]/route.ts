@@ -1,13 +1,11 @@
+import { directFundingTargetPlan, stateFromContest, FEDERAL_CONTEST, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 import { campaignMoneyApiAnswer, type CampaignMoneyApiAnswer } from "@/lib/funding/campaign-money";
 import { readFundingSnapshot } from "@/lib/funding/snapshot";
 import {
   refreshStateMoneyProjectionFromPromoted,
   stateMoneyForTarget,
 } from "@/lib/funding/state-snapshot";
-import {
-  STATE_CAMPAIGN_FINANCE_SOURCES,
-  type StateCampaignFinanceJurisdiction,
-} from "@/lib/funding/data-plane";
+import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import {
@@ -15,6 +13,8 @@ import {
   refreshRegistryRuntimeFromPromoted,
 } from "@/lib/registry/runtime-read-model";
 import { mayUseTestFixture, type CivicDataReadMetadata } from "@/lib/civic-data/read-model";
+
+export { directFundingTargetPlan, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 
 /**
  * GET /api/funding/<app-side id> — the funding answer for one exact target.
@@ -25,13 +25,6 @@ import { mayUseTestFixture, type CivicDataReadMetadata } from "@/lib/civic-data/
  */
 
 export const runtime = "nodejs";
-
-export interface FundingTargetPlan {
-  readonly contestId: string | null;
-  readonly federal: boolean;
-  readonly state: StateCampaignFinanceJurisdiction | null;
-  readonly azIdentity: boolean;
-}
 
 export interface FundingHoldingReaders {
   readonly identityPlan: (target: string) => Promise<FundingTargetPlan>;
@@ -55,33 +48,6 @@ export type FundingHoldingSettlement =
       readonly dataMetadata: CivicDataReadMetadata | null;
     }
   | { readonly kind: "HOLDING_UNAVAILABLE"; readonly unavailableAuthorities: string[] };
-
-const FEDERAL_CONTEST = /:(?:us-house(?:-[^:|]+)?|us-senate|president)(?=[:|]|$)/;
-
-function contestIdFromBallotTarget(target: string): string | null {
-  if (!target.startsWith("ballot-")) return null;
-  if (target.includes("|")) return target.split("|", 1)[0]!;
-  const last = target.lastIndexOf(":");
-  return last > 0 ? target.slice(0, last) : null;
-}
-
-function stateFromContest(contestId: string | null): StateCampaignFinanceJurisdiction | null {
-  if (!contestId || FEDERAL_CONTEST.test(contestId)) return null;
-  const code = /^ballot-([a-z]{2})-/.exec(contestId)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
-  return code && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, code) ? code : null;
-}
-
-/** Authority plan that is safe even when the person-identity store is down. */
-export function directFundingTargetPlan(target: string): FundingTargetPlan {
-  const contestId = contestIdFromBallotTarget(target);
-  const state = stateFromContest(contestId);
-  return {
-    contestId,
-    federal: target.startsWith("congress:") || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
-    state,
-    azIdentity: state === "AZ",
-  };
-}
 
 async function currentFundingTargetPlan(target: string): Promise<FundingTargetPlan> {
   await refreshRegistryRuntimeFromPromoted();

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
-  "runDate": "2026-09-12",
-  "startedAt": "2026-09-12T12:50:10.246Z",
-  "finishedAt": "2026-09-12T13:25:24.010Z",
+  "runDate": "2026-09-13",
+  "startedAt": "2026-09-13T13:47:39.126Z",
+  "finishedAt": "2026-09-13T14:23:16.944Z",
   "mode": "CADENCE",
   "exitCode": 0,
   "sources": [
@@ -22,11 +22,11 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-13",
+      "nextDueAt": "2026-09-14",
       "observations": [
         {
           "path": "data/meetings-snapshot.json",
-          "observedAt": "2026-09-12T12:51:10.112Z",
+          "observedAt": "2026-09-13T13:48:21.631Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -40,7 +40,7 @@
             "counts",
             "sources"
           ],
-          "factsSha256": "0d4de6b0e3b1e04b6cddbc1de98c749c8903338c2acf06f7aa454a13468d5fcc"
+          "factsSha256": "b69d62c09c74ea6481e696f124bf21541c2e15eaed289b64fe045398150252b3"
         }
       ]
     },
@@ -63,11 +63,11 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-13",
+      "nextDueAt": "2026-09-14",
       "observations": [
         {
           "path": "data/states/nj/ballot/nj-morris-2026.json",
-          "observedAt": "2026-09-12T12:51:14.015Z",
+          "observedAt": "2026-09-13T13:48:24.662Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -76,11 +76,11 @@
             "curatedAt"
           ],
           "ignoredTopLevel": [],
-          "factsSha256": "ab535154a4aad0b64ef9bf5c57269ceb48bbc6c4e3ba3c3adbb98f2cb20581ac"
+          "factsSha256": "6e6a649d02747d8c09e676b612ee169585ffbe7d4524539d4fab0c763f9f43ac"
         },
         {
           "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-          "observedAt": "2026-09-12T12:51:14.023Z",
+          "observedAt": "2026-09-13T13:48:24.670Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -98,7 +98,7 @@
       "due": false,
       "ran": false,
       "outcome": "NOT_DUE",
-      "reason": "monthly, not due on 2026-09-12 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "reason": "monthly, not due on 2026-09-13 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "dotgov:fetch"
       ],
@@ -114,16 +114,16 @@
     }
   ],
   "catchUp": {
-    "lastLanded": "docs/refresh-run.md, run date 2026-09-11",
+    "lastLanded": "docs/refresh-run.md, run date 2026-09-12",
     "days": [
-      "2026-09-12"
+      "2026-09-13"
     ],
     "cap": 8,
     "off": false
   },
   "gate": {
     "verdict": "REFUSED",
-    "ranAt": "2026-09-12T13:15:13.120Z",
+    "ranAt": "2026-09-13T14:12:52.136Z",
     "failingFiles": [
       "tests/ask-exact-body-identity.test.ts",
       "tests/ask-grounded-route.test.ts",
@@ -174,8 +174,8 @@
   },
   "renewal": {
     "verdict": "RENEWED",
-    "ranAt": "2026-09-12T12:54:40.025Z",
-    "exactHead": "6d8c0b01fc6b27e116869e9fae7632eaec9d4bf7",
+    "ranAt": "2026-09-13T13:51:47.571Z",
+    "exactHead": "713e4e06f9fba7319c14d8af90f12ac1a38e3e8f",
     "changedHoldings": [
       "data/meetings-snapshot.json",
       "data/states/nj/ballot/nj-morris-2026.json"
@@ -185,25 +185,25 @@
       {
         "name": "regenerate stale PURE dependents",
         "ok": true,
-        "secs": 83,
+        "secs": 84,
         "detail": "0 regenerated"
       },
       {
         "name": "exact-head production build",
         "ok": true,
-        "secs": 71,
+        "secs": 73,
         "detail": "build log recorded"
       },
       {
         "name": "serve the build on localhost",
         "ok": true,
         "secs": 1,
-        "detail": "serving 6d8c0b01"
+        "detail": "serving 713e4e06"
       },
       {
         "name": "prepare the census",
         "ok": true,
-        "secs": 71,
+        "secs": 73,
         "detail": null
       },
       {
@@ -227,7 +227,7 @@
       {
         "name": "exhaustive routes",
         "ok": true,
-        "secs": 48,
+        "secs": 49,
         "detail": null
       },
       {
@@ -251,7 +251,7 @@
       {
         "name": "ballot",
         "ok": true,
-        "secs": 32,
+        "secs": 34,
         "detail": null
       },
       {
@@ -311,7 +311,7 @@
       {
         "name": "finalize --renew-holdings",
         "ok": true,
-        "secs": 93,
+        "secs": 94,
         "detail": null
       },
       {
@@ -324,7 +324,7 @@
         "name": "validate the renewed receipt",
         "ok": true,
         "secs": 41,
-        "detail": "holdings digest 53796f81, 463 sources bound"
+        "detail": "holdings digest a5ab9cae, 463 sources bound"
       }
     ],
     "refusedSources": [],

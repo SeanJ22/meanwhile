@@ -301,8 +301,11 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .op-badge[data-op="stale"] { border-color: var(--ce-hairline); color: var(--ce-muted); }
 /* unpublished / blocked / device-local → the same outline, DASHED. */
 .admin .op-badge[data-op="blocked"] { border-style: dashed; border-color: var(--ce-hairline); color: var(--ce-muted); }
-/* exporting / active → outline in the ONE interactive accent (active, not a status hue). */
-.admin .op-badge[data-op="exporting"] { border-color: var(--ce-lumen); color: var(--ce-lumen); }
+/* exporting / active → the awaiting OUTLINE shape, set apart from stale by a
+   full-WEIGHT foreground ink (ADMIN-PARITY §4: a shape/weight/mono numeral, never
+   a new hue). It does not repurpose the interactive accent (--ce-lumen/--link) or
+   any semantic colour. */
+.admin .op-badge[data-op="exporting"] { border-color: var(--ce-hairline); color: var(--ce-fg); font-weight: 700; }
 /* the two allowed status tokens: did not happen, and finished. */
 .admin .op-badge[data-op="did-not-happen"] { border-color: color-mix(in srgb, var(--canceled, #e17055) 60%, transparent); color: var(--canceled, #e17055); }
 .admin .op-badge[data-op="finished"] { border-color: color-mix(in srgb, var(--concluded, #6fa8a5) 60%, transparent); color: var(--concluded, #6fa8a5); }

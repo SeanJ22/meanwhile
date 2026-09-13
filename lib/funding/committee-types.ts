@@ -192,6 +192,21 @@ export function committeeTypeLabelById(id: string): CommitteeTypeLabel | null {
   return BY_ID.get(id) ?? null;
 }
 
+/**
+ * The label as it renders ON A PILL — a tag, not a sentence, so the leading
+ * article is dropped ("SUPER PAC", not "a super PAC"; the pill CSS uppercases).
+ *
+ * A SEPARATE reader over the same `label`, never a mutation of it: `label` stays
+ * the lowercase sentence fragment used inline in prose (plainContributorLabel and
+ * the concentration bands complete "…identifies this contributor as ___"), and
+ * nothing about the FEC classification, the id, or any API changes. Only a
+ * leading "a "/"an " is removed; "another candidate's…" is left intact, because
+ * it carries no article. (Design handoff 2026-09-13, consequence 1.)
+ */
+export function committeePillLabel(label: CommitteeTypeLabel): string {
+  return label.label.replace(/^an? /, "");
+}
+
 /** ORG_TP → the connected-organization label id. */
 const ORGANIZATION_TYPE: Readonly<Record<string, string>> = {
   C: "pac-corporation",

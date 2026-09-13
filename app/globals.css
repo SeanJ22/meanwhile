@@ -1796,9 +1796,23 @@ label:has(> input[type="checkbox"]) {
   display: inline-flex;
   align-items: stretch;
   border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-app-card);
   overflow: hidden;
   white-space: nowrap;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
+}
+
+/* One object (design handoff 2026-09-13): hovering EITHER half rings and lifts
+   the PAIR — the halves never ring individually. The container clips overflow,
+   so a half cannot draw its own outer ring; the ring lives here. */
+.ballot-pill:hover {
+  box-shadow: 0 0 0 1px var(--ring), 0 0 14px var(--link-glow), var(--shadow-app-card);
+  transform: translateY(-1px);
+}
+.ballot-pill:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-base);
 }
 
 /* M139 (2026-08-18) — the two halves carry the pill's own curve — docs/globals-css-notes.md#m139-2026-08-18-the-two-halves-carry-the-pill-s-own-curve-33 */
@@ -1817,8 +1831,12 @@ label:has(> input[type="checkbox"]) {
   border-radius: var(--radius-pill) 0 0 var(--radius-pill);
 }
 
-.ballot-pill-main:hover {
-  filter: brightness(1.06);
+/* The action half stays FLAT --action and does not brighten on its own — the
+   pair's ring is the hover signal now. Ink pinned against base.css's a:hover. */
+a.ballot-pill-main,
+a.ballot-pill-main:hover,
+a.ballot-pill-main:focus {
+  color: var(--action-on);
 }
 
 .ballot-pill-soon {
@@ -1831,12 +1849,20 @@ label:has(> input[type="checkbox"]) {
 }
 
 .ballot-pill-zip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 11px 13px;
-  background: var(--panel);
-  border: 1px solid var(--signal);
+  border: 0;
+  /* Lumen lit surface (design handoff 2026-09-13): the pressable ZIP half is a
+     neutral control — lit from below, hairline rim. The pair's ring on hover
+     comes from .ballot-pill, so this half never draws its own outer ring. */
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
@@ -1849,11 +1875,37 @@ label:has(> input[type="checkbox"]) {
   /* 44px thumb target at phone width — the padding above already clears it,
      stated here so a later type change cannot quietly shrink it. */
   min-height: 44px;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen);
 }
 
-.ballot-pill-zip:hover,
+/* Inset horizon so the two halves never read as one continuous line. */
+.ballot-pill-zip::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  bottom: 0;
+  width: 60%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent);
+  opacity: 0.22;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+
+/* On PAIR hover, or while the switcher is open, the zip rim strengthens and its
+   horizon lights to the ring colour. */
+.ballot-pill:hover .ballot-pill-zip,
 .ballot-pill-zip[aria-expanded="true"] {
-  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong);
+}
+.ballot-pill:hover .ballot-pill-zip::after,
+.ballot-pill-zip[aria-expanded="true"]::after {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ring), transparent);
+}
+.ballot-pill-zip:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
 }
 
 /* Ask: the same weight as the ballot pill but the QUIET treatment, because
@@ -2306,28 +2358,77 @@ label:has(> input[type="checkbox"]) {
 }
 
 .contact-pill {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   gap: 7px;
   min-height: 44px;
   padding: 0 14px;
+  border: 0;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--panel-border);
-  background: var(--panel-bg);
+  /* Lumen control material (design handoff 2026-09-13): lit from below, a
+     hairline rim, a horizon at the base. "Lumen lights what you can press."
+     Replaces the flat --panel-bg fill + --link border-recolour on hover. */
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
   font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
-  transition: border-color var(--dur-fast) var(--ease-move),
-    color var(--dur-fast) var(--ease-move);
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
 }
 
-.contact-pill:hover,
+.contact-pill::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent);
+  opacity: 0.22;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+
+/* Hover is a ring around the WHOLE pill, not a border/label recolour — the
+   label stays put, so the pill still reads as one object and spends no
+   semantic colour (the cyan that used to sit beside party red / tier teal). */
+.contact-pill:hover {
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 1px var(--ring), 0 0 14px var(--link-glow);
+  transform: translateY(-1px);
+}
+
+.contact-pill:hover::after {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ring), transparent);
+}
+
+.contact-pill:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-base);
+}
+
+/* Focus is independent of hover: it stays the --link outline, never the ring
+   (tests/focus-visible). An <a>.contact-pill inheriting base.css's a:hover
+   colour is pinned so the label does not flip to the foreground ink. */
 .contact-pill:focus-visible {
-  border-color: var(--link);
-  color: var(--link);
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.contact-pill,
+.contact-pill:hover,
+.contact-pill:focus {
+  color: var(--text);
 }
 
 /* The compact form for the small popup. Still above the tap floor: a 40px
@@ -2558,10 +2659,15 @@ label:has(> input[type="checkbox"]) {
   margin-right: 6px;
   padding: 0 10px;
   border-radius: 20px;
-  font-family: var(--font-mono);
+  /* Sans, not mono (design handoff 2026-09-13): mono is for numerals and
+     technical strings; "Concluded" is a label, and the sans uppercase label
+     register now matches the jurisdiction badges. The mark, the word and the
+     spoken qualifier all stay. */
+  font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  margin-inline-end: -0.08em;
   text-transform: uppercase;
   vertical-align: 1px;
   color: var(--bg);
@@ -3443,14 +3549,25 @@ button.jurisdiction-badge-action {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
-  transition: color var(--dur-fast) var(--ease-move),
-    border-color var(--dur-fast) var(--ease-move);
+  transition: color var(--dur-base) var(--ease-move),
+    border-color var(--dur-base) var(--ease-move),
+    box-shadow var(--dur-base) var(--ease-move);
 }
 
-button.jurisdiction-badge-action:hover,
+/* COULD_GOVERN is the one actionable badge, so it is the one that takes the
+   ring on hover (design handoff 2026-09-13); the other three are settled facts
+   and stay flat. At rest this still matches its three siblings exactly. */
+button.jurisdiction-badge-action:hover {
+  color: var(--link);
+  border-color: var(--ring);
+  box-shadow: 0 0 0 1px var(--ring), 0 0 12px var(--link-glow);
+  text-decoration-style: solid;
+}
+
+/* Focus stays the --link outline, independent of the hover ring. */
 button.jurisdiction-badge-action:focus-visible {
-  color: var(--text);
-  border-color: var(--text);
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
   text-decoration-style: solid;
 }
 
@@ -4371,7 +4488,52 @@ button.jurisdiction-badge-action:focus-visible {
   .funding-type > summary::after {
     transition: none;
   }
+  .funding-type > summary:hover .pill {
+    transform: none;
+  }
 }
+
+/* FUNDING PILL — the hybrid (design handoff 2026-09-13). A funding-type pill
+   states a category AND presses, so the flat family fill is left UNTOUCHED and
+   the interaction ring sits OUTSIDE it, in the family's own saturated ink — not
+   the generic cyan, because a cyan ring on an amber pill is a recolour by the
+   back door. Register: uppercase label with the trailing-space trim; the label
+   itself drops its leading article upstream (pillLabel in committee-types.ts).
+   The chevron already rotates 90° via .funding-type[open] > summary::after. */
+.funding-type .pill {
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  margin-inline-end: -0.08em;
+  text-transform: uppercase;
+  transition: box-shadow var(--dur-base) var(--ease-move),
+    transform var(--dur-base) var(--ease-move);
+}
+.funding-type > summary:hover .pill {
+  transform: translateY(-1px);
+}
+/* Focus stays visible on the summary's own pill, in the family's ink. */
+.funding-type > summary:focus-visible {
+  outline: none;
+}
+.funding-type > summary:focus-visible .pill {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+/* Expanded holds a steady 1px ring; hover adds the family glow. The ring value
+   is the family's own -text token — the one already contrast-checked against
+   that family's fill. */
+.funding-type[open] > summary .pill--teal { box-shadow: 0 0 0 1px var(--pill-teal-text); }
+.funding-type[open] > summary .pill--cyan { box-shadow: 0 0 0 1px var(--pill-cyan-text); }
+.funding-type[open] > summary .pill--amber { box-shadow: 0 0 0 1px var(--pill-amber-text); }
+.funding-type[open] > summary .pill--gold { box-shadow: 0 0 0 1px var(--pill-gold-text); }
+.funding-type[open] > summary .pill--slate { box-shadow: 0 0 0 1px var(--pill-slate-text); }
+.funding-type[open] > summary .pill--stone { box-shadow: 0 0 0 1px var(--pill-stone-text); }
+.funding-type > summary:hover .pill--teal { box-shadow: 0 0 0 1px var(--pill-teal-text), 0 0 12px color-mix(in srgb, var(--pill-teal-text) 45%, transparent); }
+.funding-type > summary:hover .pill--cyan { box-shadow: 0 0 0 1px var(--pill-cyan-text), 0 0 12px color-mix(in srgb, var(--pill-cyan-text) 45%, transparent); }
+.funding-type > summary:hover .pill--amber { box-shadow: 0 0 0 1px var(--pill-amber-text), 0 0 12px color-mix(in srgb, var(--pill-amber-text) 45%, transparent); }
+.funding-type > summary:hover .pill--gold { box-shadow: 0 0 0 1px var(--pill-gold-text), 0 0 12px color-mix(in srgb, var(--pill-gold-text) 45%, transparent); }
+.funding-type > summary:hover .pill--slate { box-shadow: 0 0 0 1px var(--pill-slate-text), 0 0 12px color-mix(in srgb, var(--pill-slate-text) 45%, transparent); }
+.funding-type > summary:hover .pill--stone { box-shadow: 0 0 0 1px var(--pill-stone-text), 0 0 12px color-mix(in srgb, var(--pill-stone-text) 45%, transparent); }
 
 /* The hamburger — thumb-sized, above the map, below the overlays. Rendered
    whenever the sidebar is effectively hidden, at any width (2f). */

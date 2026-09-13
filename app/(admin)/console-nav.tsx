@@ -23,6 +23,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export type ConsoleView =
@@ -163,7 +164,14 @@ export function ConsoleNav(props: {
         </span>
       )}
 
-      <span className="console-nav-brand">Control centre</span>
+      {/* Admin parity (design handoff 2026-09-13): the admin shell consumes the
+          same Logo lockup as the reader shell — "Meanwhile" is never inline
+          display text in Admin either, and --mark stays scoped to the Logo.
+          "Control centre" stays as the surface-context caption beside it. */}
+      <span className="console-nav-brand">
+        <Logo variant="wordmark" size={18} />
+        <span className="console-nav-context">Control centre</span>
+      </span>
       <ThemeToggle className="shrink-0" />
     </nav>
   );

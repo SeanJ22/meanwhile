@@ -547,7 +547,9 @@ body:has(main.admin) { background: #1b1c22; }
 /* The keyboard user is told where they landed; the mouse user is not shouted at. */
 .admin .reveal-target:focus-visible { outline: 2px solid var(--ce-lumen); outline-offset: .5rem; border-radius: .25rem; }
 /* .console-nav label and select are in the recipe layer with the other controls. */
-.console-nav-brand { margin-left: auto; align-self: center; font-size: .75rem; color: var(--ce-muted); }
+.console-nav-brand { margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: .5rem; }
+/* The surface-context caption beside the Logo lockup (design handoff 2026-09-13). */
+.console-nav-context { font-size: .75rem; color: var(--ce-muted); }
 .console-nav .icon-btn { align-self: center; }
 .console-nav-pending { align-self: center; font-size: .8rem; color: var(--ce-lumen); }
 .console-nav[aria-busy="true"] select { opacity: .7; }

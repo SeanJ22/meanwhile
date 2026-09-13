@@ -11,7 +11,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { readFleetOperations } from "../lib/control-plane/fleet-operations.ts";
+import {
+  FLEET_OPERATIONS_EXTENSION_VERSION,
+  FLEET_OPERATIONS_VERSION,
+  readFleetOperations,
+} from "../lib/control-plane/fleet-operations.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
@@ -24,6 +28,7 @@ import {
   deliverySummary,
   EMPTY_CONSUMER_STATE,
   extensionCapability,
+  isKnownVersion,
   nextActionDisplay,
   scoutPrerequisite,
   spendingDisplay,
@@ -128,4 +133,15 @@ test("an unknown format version is refused rather than mis-rendered", async () =
   const future = applyRefresh(good, { status: "REPORT", report: { ...report, formatVersion: "fleet-operations/v2" as typeof report.formatVersion } });
   assert.equal(future.unknownVersion, true);
   assert.equal(future.shown, good.shown, "the prior good report is retained when the version is unknown");
+});
+
+test("the client-safe version mirror in the consumer cannot drift from the contract", () => {
+  // The consumer holds a client-safe COPY of these two strings so the browser
+  // bundle never imports the server read-service (which reaches node:fs). This
+  // asserts the copy still equals the contract's own exports — through the
+  // consumer's public helpers, which are what actually use the mirror.
+  assert.equal(isKnownVersion(FLEET_OPERATIONS_VERSION), true, "consumer version mirror matches the contract");
+  assert.equal(isKnownVersion("fleet-operations/v0"), false);
+  const withExt = { extensionVersion: FLEET_OPERATIONS_EXTENSION_VERSION } as unknown as Parameters<typeof extensionCapability>[0];
+  assert.equal(extensionCapability(withExt), "PRESENT", "consumer extension-version mirror matches the contract");
 });

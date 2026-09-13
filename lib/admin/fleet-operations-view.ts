@@ -7,15 +7,28 @@
  * renders these results.
  */
 
-import {
-  FLEET_OPERATIONS_EXTENSION_VERSION,
-  FLEET_OPERATIONS_VERSION,
-  type FleetOperation,
-  type FleetOperationsReport,
-  type FleetTaskOperation,
+import type {
+  FleetOperation,
+  FleetOperationsReport,
+  FleetTaskOperation,
 } from "@/lib/control-plane/fleet-operations";
 import type { FleetDeliveryItem } from "@/lib/control-plane/fleet-delivery";
 import type { ScoutTaskAdmission } from "@/lib/control-plane/workers/scout-scheduling";
+
+/**
+ * Client-safe MIRROR of the two contract version strings this consumer compares
+ * against. This module renders in the browser (the Admin panel is a client
+ * component), and importing the RUNTIME exports from `fleet-operations.ts` would
+ * drag its server read-service graph (`admin-data` → `pg-store` → `node:fs`) into
+ * the client bundle — which fails the build with "the chunking context does not
+ * support external modules (request: node:fs)". The TYPE imports above are erased
+ * at compile time and are safe; these two strings are the only runtime values the
+ * client needs. `tests/fleet-operations-consumer.test.ts` drives the real service
+ * — whose reports carry the contract's own version strings — through this module,
+ * so any drift between this mirror and the contract fails a test immediately.
+ */
+const FLEET_OPERATIONS_VERSION = "fleet-operations/v1";
+const FLEET_OPERATIONS_EXTENSION_VERSION = "fleet-operations/extensions/1";
 
 /** What one on-demand fetch of the endpoint yielded. */
 export type FleetFetch =

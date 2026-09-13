@@ -104,6 +104,15 @@ function authorityEvidence(phase: "REHEARSAL" | "PRODUCTION"): ReaderClosureExec
   };
 }
 
+test("Reader authority counts a union predecessor only with authenticated disposition context", () => {
+  const evidence = authorityEvidence("REHEARSAL");
+  const withUnion = { ...evidence, import: { ...evidence.import, durableImport: { ...evidence.import.durableImport, predecessorCandidateCount: 8 } } };
+  const expected = { phase: "REHEARSAL" as const, provedHead: authorityHead, importerIsAncestor: true };
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems(withUnion, expected).some((failure) => failure.includes("denominator")));
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(withUnion, { ...expected, unionPredecessorCount: 1 }), []);
+  for (const count of [-1, 2, 0.5]) assert.ok(readerClosureExecutionAuthorityEvidenceProblems(withUnion, { ...expected, unionPredecessorCount: count }).some((failure) => failure.includes("denominator")));
+});
+
 test("Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production", () => {
   const rehearsal = authorityEvidence("REHEARSAL");
   assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(rehearsal, {

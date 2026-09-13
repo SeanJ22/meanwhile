@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import type { CampaignMoneyApiResponse } from "@/lib/funding/campaign-money";
+import { fundingFreshnessNote } from "@/lib/funding/freshness";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
@@ -71,15 +72,10 @@ function FundingBlockInner({
 
   if (loadFailed) return <StateFundingNote note="We couldn’t load our campaign-finance records just now." />;
   if (!answer) return null;
-  const freshness = answer.holdingStatus === "PARTIAL"
-    ? `Some independent campaign-finance holdings are unavailable (${(answer.unavailableAuthorities ?? []).join(", ")}). The records below remain source-linked; they are not a complete cross-authority answer.`
-    : answer.dataState === "BOOTSTRAP"
-    ? "Campaign-finance records are using the bundled bootstrap because no canonical production version is recorded."
-    : answer.dataMetadata?.stale === "STALE"
-      ? `Campaign-finance records are serving the last known good version; its source data is stale${answer.dataMetadata.sourceThrough ? ` (source through ${answer.dataMetadata.sourceThrough})` : ""}.`
-      : answer.dataMetadata?.stale === "UNKNOWN"
-        ? "Campaign-finance record freshness could not be established."
-        : null;
+  // The disclosure sentence is computed by the one shared helper so the map
+  // popup and the ballot battlecard render byte-identical text for the same
+  // holding (the render proof asserts map === ballot funding text).
+  const freshness = fundingFreshnessNote(answer);
   let content: React.ReactNode = null;
   if (answer.kind === "combined") content = <>
     {answer.federal.kind === "funding"

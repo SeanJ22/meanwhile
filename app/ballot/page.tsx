@@ -86,6 +86,8 @@ import {
 import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
 import { refreshStateMoneyProjectionFromPromoted } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
+import { fundingFreshnessNote } from "@/lib/funding/freshness";
+import { settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
 import {
@@ -345,7 +347,7 @@ async function IncumbentName({
 /** D34: the funding answer under one candidate — totals with the reaction
  *  control, an earned absence, or nothing when the snapshot has no record
  *  either way. */
-function CandidateFunding({
+async function CandidateFunding({
   targetKey,
   context,
   available,
@@ -361,16 +363,41 @@ function CandidateFunding({
   } catch {
     return unavailableHolding("federal campaign-finance");
   }
-  if (answer.kind === "none") return null;
+  /*
+   * FRESHNESS PARITY (#6). The map official popup discloses campaign-finance
+   * staleness / holding state in one sentence above the very same records
+   * (funding-block.tsx). This surface used to render `fundingAnswerForTarget`
+   * — the source-linked CORE answer — and drop the availability envelope, so
+   * a stale or bootstrap FEC holding was disclosed on the map and silently
+   * under-reported here. `assert.equal(ballotText, mapText)` in
+   * reader-last-mile-render.mts is exactly this defect.
+   *
+   * The note is derived from the SAME settlement the /api/funding route uses
+   * and the SAME shared helper the map renders, so the two surfaces cannot
+   * drift, and it shows the ACTUAL source-through/status values rather than a
+   * fixed date. It renders as a sibling above the section — mirroring the
+   * map's structure — so the framed ballot leaf differs only by its own FEC
+   * eyebrow. A settlement failure only drops the note; the source-linked
+   * records below are unaffected.
+   */
+  let freshness: string | null = null;
+  try {
+    const settled = await settleFundingHoldingAnswer(targetKey);
+    if (settled.kind === "ANSWER") freshness = fundingFreshnessNote(settled);
+  } catch {
+    freshness = null;
+  }
+  if (answer.kind === "none" && !freshness) return null;
   // Item 12: the wrapper carries the marker `pnpm measure:ballot` counts, so
   // "the section moved" is a measured claim rather than a described one.
   return (
     <div data-candidate-funding>
+      {freshness && <p className="funding-data-freshness">{freshness}</p>}
       {answer.kind === "absence" ? (
         <FundingAbsence data={answer.data} />
-      ) : (
+      ) : answer.kind === "funding" ? (
         <FundingDisplay data={answer.data} context={context} />
-      )}
+      ) : null}
     </div>
   );
 }

@@ -18,6 +18,7 @@ import { resolveZip } from "../lib/geo/zcta.ts";
 import type { CoverageSummary } from "../lib/registry/coverage.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
+import { telHref } from "../lib/officials/phone-numbers.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
@@ -146,7 +147,17 @@ try {
       await box.press("Enter");
       const actualResponse = await answered;
       assert.equal(actualResponse.status(), 200);
+      const grounded = await actualResponse.json();
       await panel.getByText(topic.label, { exact: true }).waitFor({ state: "visible" });
+      if (zip === "07866" && topicId === "property-taxes") {
+        assert.ok(grounded.subject, "The Rockaway regression must exercise a bound grounded subject");
+        assert.equal(grounded.contacts?.length ?? 0, 0, "The Rockaway regression must exercise the contactless grounded path");
+        const preserved = panel.locator("[data-ask-preserved-contact]");
+        await preserved.getByText(topic.label, { exact: true }).waitFor({ state: "visible" });
+        await preserved.locator('a[href="tel:9736272000;ext=228"]').waitFor({ state: "visible" });
+        assert.equal(await preserved.locator('a[href="tel:9736272000228"]').count(), 0, "The extension must not corrupt the dialable number");
+        assert.ok(!(await preserved.innerText()).includes(grounded.subject.name), "The routed tax collector must retain its own body attribution");
+      }
       assert.equal(await panel.locator('[data-ask-grounded-state="NOTHING_HELD"]').count(), 0, "The held civic answer must not be contradicted by an empty engine's absence sentence.");
       const text = normalize(await panel.innerText());
       for (const contact of expected) {
@@ -156,7 +167,7 @@ try {
         assert.notEqual(canonicalRecordIndex, undefined, `${promotedRecord.id}: promoted record index`);
         const expectedFields = [contact.body, contact.service, contact.phone, contact.email, contact.note, `This was sourced from ${contact.sourceOrg}.`].filter((field): field is string => Boolean(field));
         for (const field of expectedFields) assert.ok(text.includes(normalize(field)), `${zip}/${topicId}: ${field}`);
-        for (const href of [contact.phone && `tel:${contact.phone.replace(/[^\d+]/g, "")}`, contact.email && `mailto:${contact.email}`, contact.requestUrl].filter(Boolean)) {
+        for (const href of [contact.phone && telHref(contact.phone), contact.email && `mailto:${contact.email}`, contact.requestUrl].filter(Boolean)) {
           assert.ok(await panel.locator(`a[href="${href}"]`).count(), `${zip}/${topicId}: ${href}`);
         }
         encountered.add(promotedRecord.id);
@@ -213,5 +224,5 @@ try {
 } finally { await browser.close(); }
 assert.equal(encountered.size, everydayRouting.denominator.contactRecords);
 assert.equal(encounteredOwed.size, everydayRouting.denominator.unknownContactOwedCells);
-const sourcePaths = ["lib/routing/everyday.ts", "lib/routing/everyday-data-plane.ts", "lib/routing/topics.ts", "lib/routing/ask.ts", "components/ask/ask-box.tsx", "components/shell/pill-cluster.tsx", "app/globals.css"];
+const sourcePaths = ["lib/routing/everyday.ts", "lib/routing/everyday-data-plane.ts", "lib/routing/topics.ts", "lib/routing/ask.ts", "lib/officials/phone-numbers.ts", "components/ask/ask-box.tsx", "components/shell/pill-cluster.tsx", "app/globals.css"];
 writeFileSync("docs/evidence/reader-last-mile-civic.json", JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: Object.fromEntries(sourcePaths.map(path => [path, hash(readFileSync(path, "utf8"))])), everydayRoutingAuthority: { kind: everydayRoutingRead.kind, recordClass: everydayRoutingRead.metadata.recordClass, scope: everydayRoutingRead.metadata.scope, sourceId: everydayRoutingRead.metadata.sourceId, version: everydayRoutingRead.metadata.version, versionId: everydayRoutingRead.metadata.versionId, sourceThrough: everydayRoutingRead.metadata.sourceThrough, projectionSha256: hash(JSON.stringify(everydayRouting)), denominator: everydayRouting.denominator }, expectedCount: everydayRouting.denominator.contactRecords, renderedCount: encountered.size, expectedDispositionCount: everydayRouting.denominator.unknownContactOwedCells, recordedDispositionCount: encounteredOwed.size, records, layoutProofs, screenshots }, null, 2) + "\n");

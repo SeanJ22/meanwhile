@@ -36,14 +36,17 @@ export interface OfficePhone {
 }
 
 /**
- * `tel:` needs digits and a leading `+`; everything else is presentation.
+ * Keep an explicitly published extension separate from the subscriber number
+ * using RFC 3966's `ext` parameter; concatenating it dials a different number.
  *
  * The DISPLAYED number keeps its published formatting — parentheses, dashes,
  * dots, all of it. A number we reformatted is a number we typed rather than
  * one they published, and this product's whole claim is the difference.
  */
 export function telHref(phone: string): string {
-  return `tel:${phone.replace(/[^\d+]/g, "")}`;
+  const extension = /\s*(?:ext(?:ension)?\.?\s*|x\s*|;ext=)(\d+)\s*$/i.exec(phone);
+  const number = extension ? phone.slice(0, extension.index) : phone;
+  return `tel:${number.replace(/[^\d+]/g, "")}${extension ? `;ext=${extension[1]}` : ""}`;
 }
 
 /**

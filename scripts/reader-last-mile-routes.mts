@@ -5,8 +5,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
-import { divisionsAt, seatHoldersForDivision } from "../lib/registry/server.ts";
-import { representationForDivision } from "../lib/registry/representation.ts";
+import { divisionsAt } from "../lib/registry/server.ts";
+import { GET as divisionRepresentationRoute } from "../app/api/representation/[...division]/route.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
 import { readAvailableOfficialStateVotes } from "../lib/sources/legiscan/snapshot.ts";
@@ -24,9 +24,8 @@ import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, searchTerms } from "../lib/corpus/positions.ts";
 import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
 import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
-import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { executiveActionStore } from "../lib/officials/executive-actions.ts";
-import { rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
+import { settleOfficialActionHoldingAnswer } from "../app/api/official-actions/[subject]/route.ts";
 import { getFederalDirectoryReadModel } from "../lib/officials/federal-directory-read-model.ts";
 import { directoryFor } from "../lib/officials/directory.ts";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
@@ -69,13 +68,19 @@ async function each<T>(values: T[], fn: (value: T) => Promise<unknown>) {
 }
 const provedDivisions = new Set<string>();
 async function representation(division: string, zip?: string) {
-  const seats = await seatHoldersForDivision(division);
-  const expected = seats.length ? seats : representationForDivision(null, division);
+  // Resolve the division through its owning route, using this proof process's
+  // admitted held projection. Compare the complete result with the HTTP boundary;
+  // proof code must not grow a separate body/roster join.
+  const expectedResponse = await divisionRepresentationRoute(new Request(`${base}/api/representation/${division}`), {
+    params: Promise.resolve({ division: division.split("/") }),
+  });
+  assert.equal(expectedResponse.status, 200, `${division}: local held division route`);
+  const expectedPayload = await expectedResponse.json();
+  const expected = rows(expectedPayload.holders);
   const result = await get(`/api/representation/${division}`);
   const actual = rows(result.holders);
   assert.equal(result.ocdId, division);
-  assert.deepEqual(actual, JSON.parse(JSON.stringify(expected)), division);
-  assert.deepEqual(result.rosterGaps, rosterGapsForDivision(division), `${division}: sourced roster completeness`);
+  assert.deepEqual(result, expectedPayload, `${division}: complete held division facts, holders and roster gaps`);
   provedDivisions.add(division);
   return { zip, surface: "representation", division, expectedIds: expected.map((row) => row.id), returnedIds: actual.map((row) => row.id), returnedCount: actual.length, payload: result, payloadSha256: hash(result) };
 }
@@ -113,7 +118,19 @@ const moneyTargets = [...new Set([
 await each(moneyTargets, async (target) => {
   const expected = campaignMoneyApiAnswer(target);
   const actual = await get(`/api/funding/${encodeURIComponent(target)}`);
-  assert.deepEqual(actual, JSON.parse(JSON.stringify(expected)), target);
+  // The funding route wraps the canonical answer in the shared availability
+  // envelope (dataState/dataMetadata/holdingStatus/unavailableAuthorities) — the
+  // same contract tests/reader-last-mile-funding-route.test.ts asserts and the
+  // /api/votes surface below already checks. Hold the source-linked answer to
+  // exact equality after stripping that envelope, then check the envelope is
+  // well-formed. dataMetadata carries per-import provenance (promotedAt/stale)
+  // and is deliberately never pinned here.
+  const { dataState, dataMetadata, holdingStatus, unavailableAuthorities, ...answer } = actual;
+  assert.deepEqual(answer, JSON.parse(JSON.stringify(expected)), target);
+  assert.ok(holdingStatus === "HELD" || holdingStatus === "PARTIAL", `${target}: funding holdingStatus ${holdingStatus}`);
+  assert.ok(Array.isArray(unavailableAuthorities), `${target}: funding unavailableAuthorities`);
+  assert.ok(["PROMOTED", "BOOTSTRAP", "PARTIAL"].includes(dataState as string), `${target}: funding dataState ${dataState}`);
+  assert.ok(dataMetadata === null || typeof dataMetadata === "object", `${target}: funding dataMetadata`);
   return { surface: "funding/state-money", target, payload: actual, payloadSha256: hash(actual) };
 });
 const federal = getVotesSnapshot();
@@ -163,7 +180,16 @@ await each(Object.keys(memberDirectory.byMember).sort(), async (bioguide) => {
 const actionOfficials = new Set((executiveActionStore()?.actions ?? []).map((row) => row.officeholderId));
 const actionTargets = [...new Set([...actionOfficials, ...officialBridge.rows.filter((row) => actionOfficials.has(row.holder.id) && row.status === "RESOLVED").flatMap((row) => row.candidacy ? [row.candidacy.candidacyId] : []), "ballot-az-pima:governor|Katie Hobbs", "congress:K000377", "statewide:nh/governor", "unresolved:Katie Hobbs"])];
 await each(actionTargets, async (subject) => {
-  const expected = officialActionsForTarget(subject);
+  // The /api/official-actions route gates NON-AZ subjects to NO_APPLICABLE_OFFICIAL —
+  // executive actions are an AZ-scoped authority and the route never opens the action
+  // store for a non-AZ office (tests/official-action-source-isolation.test.ts pins
+  // non-AZ -> NO_APPLICABLE_OFFICIAL with the resolver never called). Compute expected
+  // through the route's OWN settlement so the proof asserts that contract; for an
+  // AZ-applicable subject the settlement's answer IS officialActionsForTarget(subject),
+  // so the AZ record assertions stay exactly as strong.
+  const settled = await settleOfficialActionHoldingAnswer(subject);
+  assert.ok(settled.kind === "ANSWER", subject);
+  const expected = settled.answer;
   const actual = await get(`/api/official-actions/${encodeURIComponent(subject)}`);
   assert.deepEqual(actual, expected, subject);
   assert.equal(actual.count, rows(actual.records).length);
@@ -199,7 +225,15 @@ for (const snapshot of corpus.snapshots) {
 await each([...positionQueries.values()], async ({ subject, topic, expectedRecordIds }) => {
   const expected = readerPositionsFor(subject, topic, corpus);
   const actual = await get(`/api/positions/${encodeURIComponent(subject)}/${encodeURIComponent(topic)}`);
-  assert.deepEqual(actual, { ...expected, totalMatches: expected.passages.length }, `${subject}/${topic}`);
+  // The positions route wraps the answer in the shared availability envelope
+  // (holdingStatus/unavailableAuthorities) alongside the stated-N totalMatches —
+  // the typed PositionHoldingSettlement contract. Strip the availability envelope,
+  // hold the source-linked answer (with its own totalMatches) to exact equality,
+  // then check the envelope is well-formed.
+  const { holdingStatus, unavailableAuthorities, ...answer } = actual;
+  assert.deepEqual(answer, { ...expected, totalMatches: expected.passages.length }, `${subject}/${topic}`);
+  assert.ok(holdingStatus === "HELD" || holdingStatus === "PARTIAL", `${subject}/${topic}: positions holdingStatus ${holdingStatus}`);
+  assert.ok(Array.isArray(unavailableAuthorities), `${subject}/${topic}: positions unavailableAuthorities`);
   const passages = rows(actual.passages);
   for (const id of expectedRecordIds) assert.ok(passages.some((passage) => passage.snapshotId === id), id);
   return { surface: "positions", subject, topic, expectedRecordIds, returnedRecordIds: [...new Set(passages.map((passage) => passage.snapshotId))], statedCount: actual.totalMatches, returnedCount: passages.length, payload: actual, payloadSha256: hash(actual) };

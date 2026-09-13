@@ -7,6 +7,8 @@ import {
   censusClosureFailures,
   composeCanonicalRouteProofs,
   composeReaderComponentProofs,
+  componentRequirements,
+  importReachability,
   inheritReaderProofs,
   packReaderEvidence,
   projectCanonicalReaderRecords,
@@ -28,6 +30,8 @@ import {
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { finalizeReaderSources } from "./lib/reader-source-finalization.ts";
+import { validateFullReproofComponentEvidence, validateFullReproofWitnesses } from "./lib/reader-full-reproof.ts";
+import { READER_SURFACES } from "../lib/holdings/datasets.ts";
 import {
   prepareReaderProofRuntime,
   requiredPreparedReaderProofMeetingsAuthority,
@@ -38,7 +42,15 @@ await prepareReaderProofRuntime();
 const codeHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
 const invalidationPath = "docs/evidence/reader-last-mile-final-invalidation.json";
 const componentPath = "docs/evidence/reader-last-mile-final-delta-components.json";
-const witnessPath = "docs/evidence/reader-last-mile-final-delta-witnesses.json";
+const fullReproof = process.argv.includes("--full-reproof");
+// Full reproof binds the FULL surface-witness set (the committed baseline closure
+// receipt binds this same path), not the delta sampler's subset, so every applicable
+// component surface has an in-situ witness. Overridable for symmetry with census.mts.
+const witnessPath = process.env.READER_SURFACE_WITNESSES ?? (fullReproof
+  ? "docs/evidence/reader-last-mile-surface-witnesses.json"
+  : "docs/evidence/reader-last-mile-final-delta-witnesses.json");
+const componentBodiesPath = "docs/evidence/reader-last-mile-bodies.json";
+const componentPaths = fullReproof ? [componentPath, componentBodiesPath] : [componentPath];
 const bundlePath = "docs/evidence/reader-last-mile-final-bundle.json";
 const buildReceiptPath = "docs/evidence/reader-last-mile-final-build-receipt.json";
 const portraitProofPath = "docs/evidence/reader-last-mile-final-portraits.json";
@@ -61,6 +73,13 @@ const routePaths = [
   "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json",
   "docs/evidence/reader-last-mile-final-money-ask.json",
   "docs/evidence/reader-last-mile-final-federal-money-ask.json",
+  ...(fullReproof ? [
+    "docs/evidence/reader-last-mile-ask-route-proof.json",
+    "docs/evidence/reader-last-mile-officials-ask.json",
+    "docs/evidence/reader-last-mile-civic.json",
+    "docs/evidence/reader-last-mile-voting-sites.json",
+    "docs/evidence/reader-last-mile-positions.json",
+  ] : []),
 ];
 const preparedCensusPath = process.env.READER_FINAL_PREPARED_CENSUS ?? "../reader-last-mile-final-prepared-census.json";
 const proofSourcesPath = process.env.READER_PROOF_SOURCES ?? "../reader-last-mile-final-proof-sources.json";
@@ -126,7 +145,6 @@ if (process.argv.includes("--revalidate-source")) {
   }), null, 2));
   process.exit(0);
 }
-const fullReproof = process.argv.includes("--full-reproof");
 const inherited = inheritReaderProofs(root, census, {
   baselineCensusPath,
   baselineReceiptPath,
@@ -163,7 +181,23 @@ const deployedBundle: NonNullable<ReaderDeliveryProof["deployedBundle"]> = {
 const routeComposition = composeCanonicalRouteProofs(root, census, routePaths, deployedBundle);
 assert.deepEqual(routeComposition.failures, [], "An invalidated route proof is stale or inconsistent");
 const witnesses = JSON.parse(readReaderEvidence(root, witnessPath).toString("utf8")) as ReaderSurfaceClassWitness[];
-const componentComposition = composeReaderComponentProofs(root, census, componentPath, witnesses, deployedBundle);
+if (fullReproof) {
+  const recordsById = new Map(census.records.map((record) => [record.auditId, record]));
+  const requirements = census.rows.flatMap((row) => {
+    const surface = READER_SURFACES.find((surface) => surface.id === row.readerSurface)!;
+    return [...new Set((row.applicableEligibleRecordIds ?? row.eligibleRecordIds).flatMap((id) => componentRequirements(recordsById.get(id)!)))].map((component) => ({ surface: row.readerSurface, component, importReach: importReachability(root, surface.path, component).reached }));
+  });
+  validateFullReproofWitnesses({ exactHead: codeHead, buildId: bundleEvidence.buildId, witnesses, requirements, readEvidence: (path) => readReaderEvidence(root, path) });
+}
+// Compose component delivery over BOTH finalize's in-process render (final-delta-components)
+// AND the body render proof (bodies.json), which supplies the entity-modal cases
+// renderCanonicalReaderComponents does not emit (curated-body-identities, sourced-definitions,
+// body-compositions) — mirroring scripts/reader-last-mile-census.mts's component composition.
+const componentParts = componentPaths.map((path) => {
+  if (fullReproof) validateFullReproofComponentEvidence(JSON.parse(readReaderEvidence(root, path).toString("utf8")), codeHead, census.holdingsDigest);
+  return composeReaderComponentProofs(root, census, path, witnesses, deployedBundle);
+});
+const componentComposition = { proofs: componentParts.flatMap((part) => part.proofs), uncovered: componentParts.flatMap((part) => part.uncovered), failures: componentParts.flatMap((part) => part.failures) };
 assert.deepEqual(componentComposition.failures, [], "An invalidated component proof is stale or inconsistent");
 
 const proofs = [...routeComposition.proofs, ...componentComposition.proofs].filter((proof) => invalidatedRows.has(proof.rowId));
@@ -212,6 +246,7 @@ const evidencePaths = [...new Set([
   ...census.rows.flatMap((row) => row.evidencePaths),
   invalidationPath,
   witnessPath,
+  ...componentPaths,
   bundlePath,
   buildReceiptPath,
   portraitProofPath,

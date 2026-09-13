@@ -10,7 +10,7 @@ import { projectAutonomousActivity, readAutonomousActivity } from "../lib/contro
 import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { autonomousHarness, FIXTURE_NOW } from "./helpers/autonomous-fleet.ts";
 import { gap, type OwnerDecisionCard, type OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
-import type { ScoutedRecord } from "../lib/control-plane/promotion/types.ts";
+import type { ScoutedRecord, WindowRunRecord } from "../lib/control-plane/promotion/types.ts";
 import { DECISION_LOG_KEY, SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
 
 test("read service distinguishes empty, unavailable and unrecorded without writing", async () => {
@@ -135,4 +135,69 @@ test("delivery freshness reuses pulse tolerance and never treats missing or futu
   assert.equal(fleetReadFreshness(null, FIXTURE_NOW), "UNKNOWN");
   assert.equal(fleetReadFreshness("invalid", FIXTURE_NOW), "UNKNOWN");
   assert.equal(fleetReadFreshness(FIXTURE_NOW, "2020-01-01"), "UNKNOWN");
+});
+
+test("delivery reads windows once and isolates their failure from held activity", async () => {
+  const h = await autonomousHarness();
+  const other = createWorkItem({ project: "fleet-report-controls", subject: "fixture:second", obligation: "Inspect fixture", why: "Read count", now: h.now() });
+  await registerWorkItem(h.repos, other, h.now());
+  let windowReads = 0;
+  const repos = { ...h.repos, windowRuns: { ...h.repos.windowRuns, readAll: async () => {
+    windowReads += 1;
+    return h.repos.windowRuns.readAll();
+  } } };
+  const report = await readFleetOperations(repos, { observedAt: h.now() });
+  assert.equal(windowReads, 1, "One shared window read for all work items");
+  assert.equal(report.formatVersion, "fleet-operations/v1");
+  assert.equal(report.extensionVersion, "fleet-operations/extensions/1");
+  assert.equal(report.operations.kind, "HELD");
+  if (report.operations.kind !== "HELD") throw new Error("missing activity");
+  assert.equal(report.operations.value.length, 2);
+  for (const row of report.operations.value) {
+    assert.equal(row.publication.delivery.kind, "HELD");
+    if (row.publication.delivery.kind === "HELD") assert.equal(row.publication.delivery.value.receiptAvailability, "NOT_PROVIDED");
+  }
+  const failed = await readFleetOperations({ ...repos, windowRuns: { ...repos.windowRuns,
+    readAll: async () => { throw new Error("fixture-secret-location"); } } }, { observedAt: h.now() });
+  assert.equal(failed.operations.kind, "HELD");
+  if (failed.operations.kind !== "HELD") throw new Error("lost independent activity");
+  assert.equal(failed.operations.value.length, 2);
+  assert.ok(failed.operations.value.every(row => row.publication.delivery.kind === "STORE_UNREACHABLE"));
+  assert.equal(failed.deliveryFreshness, "UNKNOWN");
+  assert.ok(!JSON.stringify(failed).includes("fixture-secret-location"));
+});
+
+test("projection failures retain typed unavailable outcomes and independent sections", async () => {
+  const h = await autonomousHarness();
+  const next = await nextAutonomousOperation(h.runtime, h.item.id);
+  assert.ok(next.task?.workerTask);
+  const activity = (await readAutonomousActivity(h.repos, undefined, { observedAt: h.now() }))[0];
+  // Corrupted historical control, never persisted or used for execution.
+  const seed = (await h.repos.attempts.list())[0];
+  const malformed = { ...seed, value: { ...seed.value, routeTaskId: next.task.id,
+    outcome: "CRASHED" as const, endedAt: "invalid-history-clock" } };
+  assert.throws(() => projectFleetOperation({ ...activity, facts: { ...activity.facts,
+    attempts: [malformed.value] } }, h.now()), /WORKER_RETRY_HISTORY_INVALID/);
+  const report = await readFleetOperations({ ...h.repos, attempts: { ...h.repos.attempts,
+    list: async () => [malformed] } }, { observedAt: h.now() });
+  assert.equal(report.operations.kind, "STORE_UNREACHABLE");
+  assert.equal(report.coverageGaps.kind, "NOT_RECORDED");
+  assert.equal(report.deliveryFreshness, "UNKNOWN");
+
+  // Invalid old window schema must not erase otherwise readable activity.
+  const brokenWindow = { windowId: "fixture-invalid-window" } as WindowRunRecord;
+  const scouted: ScoutedRecord = {
+    formatVersion: 1, recordId: "fixture-scouted", itemId: "fixture-item", at: h.now(),
+    actor: { role: "SCOUT", lane: "DETERMINISTIC", instance: "fixture" }, stage: "SCOUTED",
+    source: { kind: "SCOUT_RESULT", attemptId: seed.id, obligationId: h.item.id,
+      outcome: "EVIDENCE_FOUND", routeId: "fixture-route" }, recordClass: "OFFICIAL_ROSTER",
+    subjectId: h.item.subject, canonicalUrl: null, artifactIds: [], scoutAttemptId: seed.id, summary: "Malformed window control"
+  };
+  await h.repos.promotionPipeline.append(scouted.itemId, scouted.recordId, scouted, scouted.at);
+  const windowReport = await readFleetOperations({ ...h.repos, windowRuns: { ...h.repos.windowRuns,
+    readAll: async () => [brokenWindow] } }, { observedAt: h.now() });
+  assert.equal(windowReport.operations.kind, "HELD");
+  if (windowReport.operations.kind !== "HELD") throw new Error("lost activity");
+  assert.equal(windowReport.operations.value[0].publication.delivery.kind, "STORE_UNREACHABLE");
+  assert.equal(windowReport.deliveryFreshness, "UNKNOWN");
 });

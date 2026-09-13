@@ -9,6 +9,7 @@ import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../sched
 import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
+import { autonomousScoutHistory, scoutTransientDenial } from "./scout-scheduling.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
@@ -109,14 +110,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       target:plan.seedUrls.join(" "),inherited:false,now});
     const prior = await repos.routeTasks.read(created.id);
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
-    const family=new Set((await repos.routeTasks.list()).filter(row=>row.value.workItemId===item.id &&
-      (row.value.routeId===baseRouteId || row.value.routeId.startsWith(`${baseRouteId}:continue:`))).map(row=>row.id));
-    const history=attempts.filter(attempt=>family.has(attempt.routeTaskId)).sort((a,b)=>a.startedAt.localeCompare(b.startedAt)||a.id.localeCompare(b.id));
-    let debt:FreshnessDebt|null=null;
-    for(const attempt of history) {
-      // Completion of a bounded search is not completion of the still-unknown source obligation.
-      if(attempt.endedAt) debt=recordFailure(debt,{obligationId:created.id,cause:attempt.outcome==="COMPLETED"?"EXTRACTION_FAILED":attempt.abortReason?.includes("COST_CEILING")?"RATE_LIMITED":"TRANSPORT_FAILED",detail:attempt.abortReason??"Scout completed without an accepted grounded source route",target:created.target,dueAt:task.createdAt,now:attempt.endedAt});
-    }
+    const {history,debt}=autonomousScoutHistory(task,(await repos.routeTasks.list()).map(row=>row.value),attempts);
     const scoutHistory=(await repos.scoutResults.readAll()).filter(result=>result.workItemId===item.id).sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt)||a.attemptId.localeCompare(b.attemptId));
     let latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
@@ -130,9 +124,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     }
     if(task.state==="POLICY_DENIED" && latest?.outcome==="DENIED_BY_POLICY" && task.policyDenial && debt && Date.parse(debt.retryAt)<=Date.parse(now)) {
-      const reason=latest.abortReason??"";
+      const deniedCondition=scoutTransientDenial(latest.abortReason);
       const spend=researchSpendInWindow(await repos.costs.readAll(),now);
-      const conditionChanged=reason.includes("SCOUT_MODEL_TRANSPORT_UNAVAILABLE")?Boolean(runtime.scoutFor):reason.includes("SCOUT_COST_CEILING")&&ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits;
+      const conditionChanged=deniedCondition==="TRANSPORT"?Boolean(runtime.scoutFor):deniedCondition==="COST"&&ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits;
       if(conditionChanged) {
         const row=await repos.routeTasks.mustRead(task.id); const {policyDenial,...rest}=row.value;
         task=(await repos.routeTasks.compareAndSet(task.id,row.revision,{...rest,state:"RECLAIMABLE",policyReauthorizations:[...(task.policyReauthorizations??[]),{at:now,denial:policyDenial!,reason:"The named Scout transport or rolling-cost condition changed; current policy will be checked again."}]},now)).value;

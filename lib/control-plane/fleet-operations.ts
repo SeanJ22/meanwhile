@@ -2,16 +2,27 @@ import { readDecisions, readSnapshot, unreachable, type ReadOutcome } from "./ad
 import { isExpired } from "./attempt.ts";
 import { sumMetric, type MeasuredTotal } from "./cost.ts";
 import { latestDecisionFor } from "./decision-log.ts";
+import { projectFleetDelivery, type FleetDeliveryReport, type FleetReceiptReadback } from "./fleet-delivery.ts";
 import { PULSE_STALE_MS } from "./live-pulse.ts";
 import { decisionCardKind, type OwnerDecisionCard, type OwnerSnapshot } from "./owner-surface.ts";
 import { deriveItemState, stageCounts } from "./promotion/pipeline.ts";
-import type { PipelineItemState, VerificationCheck } from "./promotion/types.ts";
+import type { PipelineItemState, VerificationCheck, WindowRunRecord } from "./promotion/types.ts";
+import type { PromotionReceipt } from "./promotion/promoter.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { RouteTask } from "./route-task.ts";
 import { readAutonomousActivity, type AutonomousActivityEvent, type AutonomousObligationActivity } from "./workers/activity.ts";
 import { workerTaskAdmission, type WorkerTaskAdmission } from "./workers/scheduling.ts";
+import { scoutTaskAdmission, type ScoutTaskAdmission } from "./workers/scout-scheduling.ts";
 
 export const FLEET_OPERATIONS_VERSION = "fleet-operations/v1";
+export const FLEET_OPERATIONS_EXTENSION_VERSION = "fleet-operations/extensions/1";
+
+/** Trusted internal inputs only; the HTTP route never accepts receipt paths or caller proof. */
+export interface FleetDeliveryEvidence {
+  readonly windows: ReadOutcome<readonly WindowRunRecord[]>;
+  readonly receipts?: readonly PromotionReceipt[];
+  readonly readbacks?: readonly FleetReceiptReadback[];
+}
 
 export interface FleetTaskOperation {
   readonly taskId: string;
@@ -19,6 +30,8 @@ export interface FleetTaskOperation {
   readonly state: RouteTask["state"];
   /** Only worker computations use workerTaskAdmission; Scout admission has a different policy. */
   readonly admission: WorkerTaskAdmission | null;
+  /** Additive v1 extension: only persisted autonomous Scout families are joined. */
+  readonly scoutAdmission: ScoutTaskAdmission | null;
   readonly blocker: string | null;
   readonly nextAutomaticAction: "LEASE_RECONCILIATION" | "ADMISSION_CHECK" | "POLICY_RECHECK" | "WAIT_FOR_BACKOFF" | "UNKNOWN" | "NONE_FOR_THIS_TASK";
   readonly retryAt: string | null;
@@ -42,6 +55,7 @@ export interface FleetOperation {
     readonly evidenceGaps: readonly string[];
   };
   readonly publication: {
+    /** Served-reader proof remains unknown; inspect delivery for the narrower joined evidence. */
     readonly status: "UNKNOWN";
     readonly reason: "PER_RECORD_PROMOTION_AND_SERVED_READER_PROOF_NOT_JOINED";
     readonly recordedStages: readonly { readonly recordId: string; readonly itemId: string; readonly stage: string; readonly at: string }[];
@@ -50,12 +64,14 @@ export interface FleetOperation {
       readonly pendingChecks: readonly VerificationCheck[];
     })[];
     readonly recordedItemStageCounts: ReturnType<typeof stageCounts>;
+    readonly delivery: ReadOutcome<FleetDeliveryReport>;
   };
   readonly spending: { readonly usd: MeasuredTotal; readonly costEntryCount: number; readonly attemptsWithoutCostEntry: readonly string[] };
 }
 
 export interface FleetOperationsReport {
   readonly formatVersion: typeof FLEET_OPERATIONS_VERSION;
+  readonly extensionVersion: typeof FLEET_OPERATIONS_EXTENSION_VERSION;
   /** Query observation time supplied by the caller. Not an atomic historical snapshot or a source freshness clock. */
   readonly observedAt: string;
   readonly deliveryFreshness: "FRESH" | "STALE" | "UNKNOWN";
@@ -71,20 +87,26 @@ function taskOperation(task: RouteTask, activity: AutonomousObligationActivity, 
   const active = leases.some(l => !isExpired(l, observedAt));
   const lease = active ? "ACTIVE" : leases.length ? "EXPIRED" : "NOT_RECORDED";
   const admission = task.workerTask ? workerTaskAdmission(task, activity.facts.attempts, observedAt) : null;
-  const inFlight = task.state === "CLAIMED" || admission?.state === "IN_FLIGHT";
+  const scoutAdmission = scoutTaskAdmission(task, activity.facts.routeTasks, activity.facts.attempts, observedAt);
+  const inFlight = task.state === "CLAIMED" || admission?.state === "IN_FLIGHT" || scoutAdmission?.state === "IN_FLIGHT";
   let nextAutomaticAction: FleetTaskOperation["nextAutomaticAction"] = "UNKNOWN";
   if (inFlight) nextAutomaticAction = "LEASE_RECONCILIATION";
+  else if (scoutAdmission?.state === "BACKOFF") nextAutomaticAction = "WAIT_FOR_BACKOFF";
+  else if (scoutAdmission?.state === "POLICY_RECHECK") nextAutomaticAction = "POLICY_RECHECK";
+  else if (scoutAdmission?.state === "TIMING_ELIGIBLE" || scoutAdmission?.state === "CONTINUATION_CANDIDATE") nextAutomaticAction = "ADMISSION_CHECK";
   else if (admission?.state === "BACKOFF") nextAutomaticAction = "WAIT_FOR_BACKOFF";
   else if (admission?.state === "DUE") nextAutomaticAction = admission.requiresPolicyRecheck ? "POLICY_RECHECK" : "ADMISSION_CHECK";
   else if (task.state === "RESULT_RECORDED" || task.state === "DISPOSED") nextAutomaticAction = "NONE_FOR_THIS_TASK";
   return { taskId: task.id, path: task.workerTask ? "WORKER_COMPUTATION" : "ROUTE_DISPOSITION", state: task.state,
-    admission, lease, nextAutomaticAction, retryAt: admission?.retryAt ?? null,
+    admission, scoutAdmission, lease, nextAutomaticAction, retryAt: admission?.retryAt ?? scoutAdmission?.retryAt ?? null,
     blocker: inFlight ? active ? "LIVE_LEASE_PREVENTS_DUPLICATE_EXECUTION" : "LEASE_RECONCILIATION_REQUIRED"
-      : admission && !admission.due && admission.state !== "TERMINAL" ? admission.reason : task.policyDenial?.requiredChange ?? null };
+      : admission && !admission.due && admission.state !== "TERMINAL" ? admission.reason
+      : scoutAdmission && ["BACKOFF", "POLICY_DENIED", "POLICY_RECHECK"].includes(scoutAdmission.state) ? scoutAdmission.reason
+      : task.policyDenial?.requiredChange ?? null };
 }
 
 /** Pure projection of the existing attributed activity read. No ledger writes or scheduler invocation. */
-export function projectFleetOperation(activity: AutonomousObligationActivity, observedAt: string): FleetOperation {
+export function projectFleetOperation(activity: AutonomousObligationActivity, observedAt: string, deliveryEvidence?: FleetDeliveryEvidence): FleetOperation {
   if (!Number.isFinite(Date.parse(observedAt))) throw new Error("FLEET_OPERATIONS_CLOCK_INVALID");
   const committed = new Set(activity.timeline.filter(e => e.kind === "WORKER_RESULT").map(e => e.id));
   const acquisitions = activity.facts.workers.filter(r => committed.has(r.id) && r.result.role === "ACQUIRER" &&
@@ -115,6 +137,14 @@ export function projectFleetOperation(activity: AutonomousObligationActivity, ob
   const recordedItems = pipelineStates.map(state => ({ itemId: state.itemId, stage: state.stage, refused: state.refused, refusals: state.refusals,
     pendingChecks: state.byStage.VERIFIED?.checks.filter(c => c.result !== "PASS") ?? [] }));
   const costed = new Set(activity.facts.costs.map(c => c.attemptId));
+  let delivery: ReadOutcome<FleetDeliveryReport>;
+  try {
+    delivery = !deliveryEvidence
+      ? { kind: "NOT_RECORDED", detail: "Delivery window evidence was not supplied to this projection." }
+      : deliveryEvidence.windows.kind !== "HELD" ? deliveryEvidence.windows
+      : { kind: "HELD", value: projectFleetDelivery({ activity, windows: deliveryEvidence.windows.value,
+        receipts: deliveryEvidence.receipts, readbacks: deliveryEvidence.readbacks }) };
+  } catch (error) { delivery = unreachable("fleet delivery projection", error); }
   return { workItemId: activity.workItem.id, subject: activity.workItem.subject,
     path: activity.workItem.autonomousPlan ? "AUTONOMOUS_PLAN" : activity.facts.routeTasks.some(t => t.workerTask) ? "REGISTERED_WORKER_TASKS" : "OTHER_REGISTERED_WORK",
     stage: activity.workItem.state, lastProgress: progress.at(-1) ?? null, lastActivity: activity.timeline.at(-1) ?? null,
@@ -124,27 +154,37 @@ export function projectFleetOperation(activity: AutonomousObligationActivity, ob
       latestAcquisition: latest ? { resultId: latest.id, at: latest.endedAt, verdict: latest.result.verdict } : null, evidenceGaps: activity.evidenceGaps },
     publication: { status: "UNKNOWN", reason: "PER_RECORD_PROMOTION_AND_SERVED_READER_PROOF_NOT_JOINED",
       recordedStages: activity.facts.promotion.map(p => ({ recordId: p.recordId, itemId: p.itemId, stage: p.stage, at: p.at })), recordedItems,
-      recordedItemStageCounts: stageCounts(pipelineStates) },
+      recordedItemStageCounts: stageCounts(pipelineStates), delivery },
     spending: { usd: sumMetric(activity.facts.costs, "usd"), costEntryCount: activity.facts.costs.length,
       attemptsWithoutCostEntry: activity.facts.attempts.filter(a => !costed.has(a.id)).map(a => a.id).sort() } };
 }
 
 /** Read service for Admin's authenticated server. Caller opens repos; no connection/env lookup or side effect here. */
-export async function readFleetOperations(repos: ControlPlaneRepositories, input: { readonly observedAt: string }): Promise<FleetOperationsReport> {
+export async function readFleetOperations(repos: ControlPlaneRepositories, input: { readonly observedAt: string;
+  readonly deliveryEvidence?: Omit<FleetDeliveryEvidence, "windows"> }): Promise<FleetOperationsReport> {
   if (!Number.isFinite(Date.parse(input.observedAt))) throw new Error("FLEET_OPERATIONS_CLOCK_INVALID");
-  const [operations, snapshot, decisions] = await Promise.all([
-    readAutonomousActivity(repos, undefined, input).then(activities => ({ kind: "HELD" as const, value: activities.map(a => projectFleetOperation(a, input.observedAt)) }))
-      .catch(error => unreachable<readonly FleetOperation[]>("fleet activity", error)),
+  const [activities, snapshot, decisions, windows] = await Promise.all([
+    readAutonomousActivity(repos, undefined, input).then(value => ({ kind: "HELD" as const, value }))
+      .catch(error => unreachable<readonly AutonomousObligationActivity[]>("fleet activity", error)),
     readSnapshot(repos), readDecisions(repos),
+    repos.windowRuns.readAll().then(value => ({ kind: "HELD" as const, value }))
+      .catch(error => unreachable<readonly WindowRunRecord[]>("fleet delivery windows", error)),
   ]);
+  let operations: FleetOperationsReport["operations"];
+  try {
+    operations = activities.kind !== "HELD" ? activities
+      : { kind: "HELD", value: activities.value.map(activity => projectFleetOperation(activity, input.observedAt,
+        { ...input.deliveryEvidence, windows })) };
+  } catch (error) { operations = unreachable("fleet activity projection", error); }
   const coverageGaps: FleetOperationsReport["coverageGaps"] = snapshot.kind === "HELD"
     ? { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, zipRows: snapshot.value.zipRows } } : snapshot;
   const ownerDecisions: FleetOperationsReport["ownerDecisions"] = snapshot.kind !== "HELD" ? snapshot : decisions.kind !== "HELD" ? decisions
     : { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, cards: snapshot.value.decisionCards.filter(card =>
       decisionCardKind(card) === "DECISION" && card.verifiability === "NOT_MACHINE_VERIFIABLE" && card.whyNoMachineCanDecide.trim() &&
       latestDecisionFor(decisions.value, card.rowId) === null) } };
-  const fullyRead = ![operations, coverageGaps, ownerDecisions].some(value => value.kind === "STORE_UNREACHABLE");
-  return { formatVersion: FLEET_OPERATIONS_VERSION, observedAt: input.observedAt,
+  const fullyRead = ![operations, coverageGaps, ownerDecisions, windows].some(value => value.kind === "STORE_UNREACHABLE") &&
+    !(operations.kind === "HELD" && operations.value.some(row => row.publication.delivery.kind === "STORE_UNREACHABLE"));
+  return { formatVersion: FLEET_OPERATIONS_VERSION, extensionVersion: FLEET_OPERATIONS_EXTENSION_VERSION, observedAt: input.observedAt,
     deliveryFreshness: fleetReadFreshness(fullyRead ? input.observedAt : null, input.observedAt), operations, coverageGaps, ownerDecisions };
 }
 

@@ -287,7 +287,7 @@ export function CandidateBattlecard({
           they are siblings in one column, so it is shared by construction
           rather than by a number typed twice.
         */
-        className="battlecard-cta"
+        className="battlecard-cta w-full"
       >
         View Battlecard
       </button>

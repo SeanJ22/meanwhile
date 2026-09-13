@@ -56,9 +56,12 @@ test("the small popup renders identity only — no role line, no chips, no in-se
 
 test("the party pill stays — it is banned from the list, not from the card", () => {
   // The pill is rendered unconditionally by the identity header, so
-  // identityOnly must not reach it.
+  // identityOnly must not reach it. (Design handoff 2026-09-13: the party FILL
+  // now reads through partyFillVar — the deep non-themed brand colour — split
+  // out from partyColorVar, which stays the plain-text reader. The assertion is
+  // unchanged: party renders as the filled IdentityChip.)
   assert.ok(
-    /holder\.partyLabel && \(\s*<IdentityChip fill=\{partyColorVar\(holder\.partyLabel\)\}>/.test(
+    /holder\.partyLabel && \(\s*<IdentityChip fill=\{partyFillVar\(holder\.partyLabel\)\}>/.test(
       IDENTITY,
     ),
     "the party must render as the filled identity chip on both card sizes",

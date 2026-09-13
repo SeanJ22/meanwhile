@@ -2442,10 +2442,20 @@ a.ballot-pill-main:focus {
   outline: 2px solid color-mix(in srgb, var(--battlecard-green) 72%, black);
   outline-offset: 2px;
 }
+/* Reduced motion drops every Lumen transition and every hover transform on the
+   new controls, via transition:none and transform:none — never a raw duration,
+   which the motion-token sweep exists to catch in a reader-facing rule. */
 @media (prefers-reduced-motion: reduce) {
+  .contact-pill,
+  .ballot-pill,
+  .ballot-pill-zip,
+  .card-section-header,
   .battlecard-cta {
-    transition-duration: 1ms;
+    transition: none;
   }
+  .contact-pill:hover,
+  .ballot-pill:hover,
+  .card-section-header:hover,
   .battlecard-cta:hover {
     transform: none;
   }
@@ -4633,14 +4643,8 @@ button.jurisdiction-badge-action:focus-visible {
 .funding-type > summary:hover .pill {
   transform: translateY(-1px);
 }
-/* Focus stays visible on the summary's own pill, in the family's ink. */
-.funding-type > summary:focus-visible {
-  outline: none;
-}
-.funding-type > summary:focus-visible .pill {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
+/* Focus: the summary keeps the app's global :focus-visible ring (never
+   suppressed here — tests/focus-visible), so keyboard focus is always visible. */
 /* Expanded holds a steady 1px ring; hover adds the family glow. The ring value
    is the family's own -text token — the one already contrast-checked against
    that family's fill. */

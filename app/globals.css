@@ -4800,6 +4800,8 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 .account-modal {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -4810,6 +4812,39 @@ main[data-sidebar="closed"] .map-top-row {
   border-radius: var(--radius);
   box-shadow: var(--shadow-popup);
   overflow: hidden;
+}
+
+/* TierCard MODAL tier ring (design handoff 2026-09-13). The battlecard modal
+   wears the contest's REAL level of government, derived from the contest OCD id
+   via tierForOcdId — never guessed. data-tier is set only when the tier is
+   known; an unknown tier stays the neutral card above (no false claim). The
+   ring replaces the neutral border with a 1px inset at 62% + a 1px halo at 22%,
+   and lights a 2px tier horizon at the base. */
+/* The tier accent per level, read through the Tailwind bridge aliases
+   (--color-local/state/national == the tier accents) so the tier ring is a
+   genuine tier-semantic use without reading the amber-guarded --accent-local
+   directly (amber-remnant.test). */
+.account-modal[data-tier="local"] { --tier-ring: var(--color-local); }
+.account-modal[data-tier="state"] { --tier-ring: var(--color-state); }
+.account-modal[data-tier="national"] { --tier-ring: var(--color-national); }
+.account-modal[data-tier] {
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tier-ring) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tier-ring) 22%, transparent),
+    var(--shadow-popup);
+}
+.account-modal[data-tier]::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 2px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--tier-ring), transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tier-ring) 50%, transparent);
 }
 
 /* F01 2.5 (2026-08-19, the author): "those need to be fully in view at all — docs/globals-css-notes.md#f01-2-5-2026-08-19-the-author-those-need-to-be-fully-in-view-at-all-91 */

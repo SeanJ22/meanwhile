@@ -1824,13 +1824,16 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   for (const [path, source] of Object.entries(tree.files)) {
     if (!/^(?:app|components|lib)\//.test(path) || REGISTRY_RUNTIME_SEED_ALLOWLIST.has(path)) continue;
     const executable = stripExecutableComments(source);
-    const readCalls = filesystemReadCalls(executable);
+    const readCalls = [
+      ...filesystemReadCalls(executable),
+      ...matchingExecutableCalls(executable, maskStringLiterals(executable), /\b(?:import|require)\s*\(/g),
+    ];
     const seed = REGISTRY_RUNTIME_FIRST_SEEDS.find((name) => {
       const escaped = escapeRegExp(name);
       // A module specifier must itself name the seed. An unrelated Node import
       // followed by an artifact-path constant is not a tracked-file read.
-      const specifier = `["'][^"'\\r\\n]*(?<![A-Za-z0-9_-])${escaped}["']`;
-      const importsSeed = new RegExp(`(?:\\bfrom\\s*|\\bimport\\s*|\\b(?:import|require)\\s*\\(\\s*)${specifier}`).test(executable);
+      const specifier = `["'][^"'\\r\\n]*(?<![A-Za-z0-9_-])${escaped}(?:[?#][^"'\\r\\n]*)?["']`;
+      const importsSeed = new RegExp(`(?:\\bfrom\\s*|\\bimport\\s*)${specifier}`).test(executable);
       // Follow seed-path aliases into actual read arguments. A seed name in
       // explanatory text or an exclusion condition does not authorize a read.
       const target = new RegExp(`(?<![A-Za-z0-9_-])${escaped}(?![A-Za-z0-9_.-])`);

@@ -50,13 +50,9 @@
 import { ConsoleNav } from "@/app/(admin)/console-nav";
 import { FleetOperationsPanel } from "@/components/admin/fleet-operations-panel";
 import { openControlPlane } from "@/lib/control-plane/admin-data";
-import { readFleetOperations } from "@/lib/control-plane/fleet-operations";
+import { createFleetReceiptStore } from "@/lib/control-plane/fleet-receipt-store";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
-import {
-  applyRefresh,
-  EMPTY_CONSUMER_STATE,
-  type FleetConsumerState,
-} from "@/lib/admin/fleet-operations-view";
+import { readFleetSeedState } from "@/lib/admin/fleet-seed";
 
 // The live admin surfaces are never cached — the same route-segment config every
 // sibling admin page uses. This fleet console must not be prerendered into a
@@ -69,27 +65,20 @@ export const metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-/**
- * The first read, taken at navigation time and folded through the consumer's own
- * projection so it is indistinguishable from a client refresh. A missing control
- * plane is a stated fact, never an empty success.
- */
-async function readSeedState(): Promise<FleetConsumerState> {
-  const observedAt = new Date().toISOString();
-  const opened = await openControlPlane();
-  if (!opened.ok) {
-    return applyRefresh(EMPTY_CONSUMER_STATE, {
-      status: "CONTROL_PLANE_UNAVAILABLE",
-      observedAt,
-      detail: opened.detail,
-    });
-  }
-  const report = await readFleetOperations(opened.repos, { observedAt });
-  return applyRefresh(EMPTY_CONSUMER_STATE, { status: "REPORT", report });
-}
+// A long-lived, server-side receipt store for THIS server's own READER root —
+// the identical trusted store the GET route supplies (app/api/admin/fleet/
+// operations/route.ts). A runner-local SHADOW path in a window record never
+// grants filesystem access. Module-level so its retain-on-failure cache persists
+// across page loads, exactly as the endpoint's does. The store lives on the
+// server; the client panel only ever receives the projected report metadata.
+const receiptStore = createFleetReceiptStore({ targets: [{ kind: "READER", root: process.cwd() }] });
 
 export default async function FleetOperationsPage() {
-  const initialState = await readSeedState();
+  const initialState = await readFleetSeedState({
+    open: openControlPlane,
+    receiptStore,
+    now: () => new Date().toISOString(),
+  });
   return (
     <main className="admin console-page">
       <ConsoleNav view="fleet" currentState={null} states={US_STATES} />

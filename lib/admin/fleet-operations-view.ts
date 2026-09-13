@@ -10,9 +10,13 @@
 import type {
   FleetOperation,
   FleetOperationsReport,
+  FleetReceiptLoading,
   FleetTaskOperation,
 } from "@/lib/control-plane/fleet-operations";
 import type { FleetDeliveryItem } from "@/lib/control-plane/fleet-delivery";
+// TYPE-ONLY: fleet-receipt-store.ts is a server module (node:fs). The type is
+// erased at compile time, so the client bundle never pulls the loader.
+import type { FleetReceiptLoadEntry } from "@/lib/control-plane/fleet-receipt-store";
 import type { ScoutTaskAdmission } from "@/lib/control-plane/workers/scout-scheduling";
 
 /**
@@ -183,4 +187,59 @@ export function deliverySummary(
   const v = delivery.value;
   const receipts = v.receiptAvailability === "PROVIDED" ? "full receipts supplied (still not certified publication)" : "full receipts NOT provided by the endpoint";
   return { kind: delivery.kind, text: `delivery v1: ${v.items.length} item(s); ${receipts}` };
+}
+
+// ── v1.2 receipt loading (fleet-receipt-loading/v1, additive on fleet-operations/v1) ──
+// A trusted server-side loader reads the promoter's retained receipt files. The
+// report carries only load METADATA (identity + state + gaps), never file
+// contents. LOADED means a valid file was read and bound to its window summary —
+// it is NOT promotion, verification, or served publication; a failed refresh
+// RETAINS the last validated receipt as historical evidence with its ORIGINAL
+// last-successful-read time, never restamped or re-verified; a truncated load is
+// an evidence gap, never a complete history.
+
+export const RECEIPT_NOTES = {
+  loadedNotProof: "LOADED = a valid receipt file was read and bound to its window summary — not promotion, not verification, and never served publication.",
+  retained: "A RETAINED receipt is the last validated one kept after a failed refresh; it is historical evidence, keeps its original read time, and is never current proof.",
+  truncated: "Bounded loading omitted references; a truncated load is an evidence gap, never a complete receipt history.",
+  notRecorded: "No trusted receipt store was supplied to this read; receipts, if any, came from the internal-evidence path rather than the loader.",
+} as const;
+
+/** One receipt LOAD entry, said plainly, never upgrading load state to proof. */
+export function receiptLoadEntryLabel(entry: FleetReceiptLoadEntry): { readonly state: FleetReceiptLoadEntry["state"]; readonly text: string } {
+  const map: Record<FleetReceiptLoadEntry["state"], string> = {
+    LOADED: "loaded — valid file bound to its summary (not verified, not served)",
+    RETAINED: `retained historical receipt — NOT current proof${entry.lastSuccessfulReadAt ? ` (last read ${entry.lastSuccessfulReadAt})` : ""}`,
+    MISSING: "file missing — no receipt read this time",
+    INVALID: "invalid — rejected before use, held history not replaced",
+    UNAVAILABLE: "unreadable this time",
+    LIMIT_REACHED: "omitted — receipt-count limit reached (evidence gap)",
+  };
+  const gaps = entry.gaps.length ? ` · ${entry.gaps.join(", ")}` : "";
+  return { state: entry.state, text: `${entry.target} receipt ${entry.receiptId}: ${map[entry.state]}${gaps}` };
+}
+
+/** Top-level receipt-loading outcome, summarized. `unresolved` is true whenever
+ *  anything short of a clean full load happened (store error, truncation, or any
+ *  non-LOADED entry) — the same condition the producer uses to hold delivery
+ *  freshness at UNKNOWN. */
+export function receiptLoadingSummary(loading: FleetReceiptLoading): {
+  readonly available: boolean;
+  readonly unresolved: boolean;
+  readonly text: string;
+  readonly caveat: string | null;
+} {
+  if (loading.kind === "NOT_RECORDED") return { available: false, unresolved: false, text: RECEIPT_NOTES.notRecorded, caveat: null };
+  if (loading.kind === "STORE_UNREACHABLE") return { available: false, unresolved: true, text: `Receipt store unreadable — ${loading.detail}`, caveat: null };
+  const { entries, truncated, limits } = loading.value;
+  const counts = entries.reduce<Record<FleetReceiptLoadEntry["state"], number>>((acc, e) => { acc[e.state] += 1; return acc; },
+    { LOADED: 0, RETAINED: 0, MISSING: 0, INVALID: 0, UNAVAILABLE: 0, LIMIT_REACHED: 0 });
+  const parts = (Object.entries(counts) as [FleetReceiptLoadEntry["state"], number][])
+    .filter(([, n]) => n > 0).map(([state, n]) => `${n} ${state.toLowerCase().replace("_", " ")}`);
+  const unresolved = truncated > 0 || entries.some((e) => e.state !== "LOADED");
+  const truncNote = truncated > 0 ? ` · ${truncated} reference(s) omitted (${RECEIPT_NOTES.truncated})` : "";
+  const text = entries.length === 0
+    ? `No receipt references in the read windows (loader active, limits ${limits.maximumReceipts} files / ${limits.maxReceiptBytes} bytes).${truncNote}`
+    : `${entries.length} receipt reference(s): ${parts.join(", ")}${truncNote}`;
+  return { available: true, unresolved, text, caveat: RECEIPT_NOTES.loadedNotProof };
 }

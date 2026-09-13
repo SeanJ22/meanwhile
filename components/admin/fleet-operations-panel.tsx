@@ -30,6 +30,8 @@ import {
   NOTES,
   nextActionDisplay,
   progressSummary,
+  receiptLoadEntryLabel,
+  receiptLoadingSummary,
   scoutPrerequisite,
   spendingDisplay,
 } from "@/lib/admin/fleet-operations-view";
@@ -83,6 +85,13 @@ function DeliveryBlock({ delivery }: { delivery: FleetOperation["publication"]["
             <li key={i} className="note">
               {deliveryItemStatusLabel(it).text}
               {it.gaps.length > 0 && ` · gaps: ${it.gaps.join(", ")}`}
+              {it.receiptLoads.length > 0 && (
+                <ul style={{ margin: ".15rem 0 0", paddingLeft: "1rem" }}>
+                  {it.receiptLoads.map((load, j) => (
+                    <li key={j} className="note">{receiptLoadEntryLabel(load).text}</li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -153,6 +162,27 @@ function OperationCard({ op }: { op: FleetOperation }) {
   );
 }
 
+function ReceiptLoadingBlock({ loading }: { loading?: FleetOperationsReport["receiptLoading"] }) {
+  // An older producer (pre-v1.2) omits the field entirely; render nothing then.
+  if (!loading) return null;
+  const s = receiptLoadingSummary(loading);
+  const op = !s.available ? (loading.kind === "STORE_UNREACHABLE" ? "blocked" : "stale") : s.unresolved ? "stale" : "finished";
+  const entries = loading.kind === "HELD" ? loading.value.entries : [];
+  return (
+    <div className="note" data-receipt-loading>
+      <span className="op-badge" data-op={op}>receipt loading</span> {s.text}
+      {s.caveat && <><br />{s.caveat}</>}
+      {entries.length > 0 && (
+        <ul style={{ margin: ".2rem 0 0", paddingLeft: "1rem" }}>
+          {entries.slice(0, 6).map((e, i) => (
+            <li key={i} className="note">{receiptLoadEntryLabel(e).text}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
   const report = state.shown;
   return (
@@ -175,6 +205,8 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
             )}
             <span className="note">Read at {report.observedAt}. {NOTES.delivery}</span>
           </p>
+
+          <ReceiptLoadingBlock loading={report.receiptLoading} />
 
           <h2>Is useful work advancing?</h2>
           <Outcome label="Operations" outcome={report.operations}>

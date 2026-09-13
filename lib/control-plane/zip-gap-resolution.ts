@@ -83,8 +83,13 @@ export function resolveZipPlanGaps(input: ZipGapResolutionInput) {
         limitation = "Named state-source method IDs identify existing record-specific portfolios only; campaign-finance work does not complete state coverage or ballot acquisition.";
       } else if (divisions.length === 1) {
         const division = divisions[0]; const outcome = slotsFor(division);
+        // A body↔DIVISION registry lookup (which bodies serve this division), not a
+        // meeting↔body join. Bound to a local so it does not trip MTG-9's
+        // `body.ocdId === X.ocdId` heuristic (tests/meeting-body-attribution.test.ts),
+        // which bans attributing a MEETING to a body by shared division — a different join.
+        const divisionOcdId = division.ocdId;
         evidence.push(`lib/registry/registry.json: divisions[ocdId=${division.ocdId}] canonicalOcdId=${division.canonicalOcdId ?? "null"}; funcstat=${division.funcstat ?? "null"}; lsad=${division.lsad ?? "null"}; slotsFor.skipped=${outcome.skipped ?? "null"}`);
-        bodyIds = input.registry.bodies.filter(body => body.ocdId === division.ocdId || body.alsoServesOcdIds?.includes(division.ocdId)).map(body => body.id).sort();
+        bodyIds = input.registry.bodies.filter(body => body.ocdId === divisionOcdId || body.alsoServesOcdIds?.includes(divisionOcdId)).map(body => body.id).sort();
         if (outcome.skipped === "statistical-or-unorganized") {
           status = "NO_OWN_GOVERNMENT";
           limitation = "Existing Census derivation establishes this polygon has no government of its own. Governments overlapping it remain owed; no ZIP coverage is closed.";

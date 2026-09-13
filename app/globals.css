@@ -962,7 +962,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--space-1);
   min-width: 0;
 }
 
@@ -1074,7 +1074,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-size: 11px;
   line-height: 1.25;
   color: var(--text-dim);
-  margin-top: 5px;
+  margin-top: var(--space-1);
   overflow-wrap: break-word;
 }
 
@@ -4616,9 +4616,9 @@ button.jurisdiction-badge-action:focus-visible {
 .funding-type .pill {
   font-size: 0.625rem;
   letter-spacing: 0.08em;
-  /* Trim the trailing letter-spacing (an optical correction, not layout spacing):
-     the negative of the tracking above, expressed as a computed value. */
-  margin-inline-end: calc(-1 * 0.08em);
+  /* Trim the trailing letter-spacing: the exact negative of the tracking above,
+     as the trailing-space rule (LBL-2/OFF-2) requires it stated. */
+  margin-inline-end: -0.08em;
   text-transform: uppercase;
   transition: box-shadow var(--dur-base) var(--ease-move),
     transform var(--dur-base) var(--ease-move);
@@ -5512,8 +5512,7 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 .trailing-space-trimmed-8 {
-  /* Optical trailing-track trim (negative of a 0.08em tracking), computed. */
-  margin-inline-end: calc(-1 * 0.08em);
+  margin-inline-end: -0.08em;
 }
 
 .trailing-space-trimmed-20 {

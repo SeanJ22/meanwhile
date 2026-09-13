@@ -9,6 +9,16 @@
   ],
   "groups": [
     {
+      "id": "exact:tests/fleet-operations-page.test.ts#request,tests/fleet-operations-route.test.ts#request,tests/fleet-receipt-admin.test.ts#request",
+      "disposition": "OWED",
+      "reason": "A one-line NextRequest test-fixture builder — request(origin, cookie) → new NextRequest(...) — repeated across the three fleet Admin tests (page, route, receipt-admin). Trivial and test-local; consolidation into a shared tests/helpers builder is owed. It is fixture code, never shipped."
+    },
+    {
+      "id": "shape:tests/zip-acquisition-plan.test.ts#latest,tests/zip-gap-resolution.test.ts#latest",
+      "disposition": "OWED",
+      "reason": "A latest-of-array test helper shared in shape by the two ZIP planning tests; the second arrived with the v1.2 fleet cherry-pick. Trivial and test-local; consolidation is owed. Fixture code, never shipped."
+    },
+    {
       "id": "exact:lib/ballot/dated-events.ts#phoenixToday,scripts/doc-dates.mjs#today",
       "disposition": "ALLOWED",
       "reason": "A .mjs helper run under plain node cannot import TypeScript, and scripts/tracker.mjs, scripts/handoff.mjs and the pre-commit hook all run without tsx. Consolidating would either break the hook or move the date rule into a module the hook cannot read. Both bodies compute the Phoenix day identically and tests/doc-dates.test.ts pins the rule itself."

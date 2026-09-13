@@ -9,13 +9,30 @@ export const runtime = "nodejs";
 /**
  * On-demand detail read. The existing /api/admin/live remains the polling path.
  *
- * The trusted READER receipt store is NOT mounted here yet: importing
- * `createFleetReceiptStore` pulls the promoter's filesystem module graph into this
- * served bundle and over-traces it (Turbopack traces ~2300 files, incl. tests/ and
- * data/ops), which `pnpm build`'s check-build-output refuses. `receiptLoading` is
- * therefore NOT_RECORDED on the live endpoint until the receipt store is made
- * trace-safe (extract its promoter constants to a leaf module) — see the handoff
- * doc. The UI and its loading behavior are exercised with an injected store in
+ * The trusted READER receipt store is deliberately NOT mounted in this served
+ * bundle, and the reason is now MEASURED rather than assumed. Fleet's `e1140c78`
+ * isolated the historical receipt contract into a zero-import leaf, which shrank
+ * the store's IMPORT closure (esbuild 44 → 3 inputs). Mounting the store here was
+ * then rebuilt and verified to STILL refuse `pnpm build`: the store reads
+ * `open(join(process.cwd(), ...RECEIPTS_DIR, "<receiptId>.json"))` at request
+ * time, and that runtime filesystem read — resolvable base `process.cwd()`, an
+ * unbounded runtime-named receipt file — is the R23 over-trace shape. Measured on
+ * the mounted build: Turbopack traced 2214 repo files into this route (ceiling
+ * 230), including data/control-plane, tests/fixtures and docs/evidence, failing
+ * BOTH check-build-output and deploy-paths. The leaf does not change that (the
+ * trace is driven by the fs read, not the import graph), and the two sanctioned
+ * fixes — a static literal-path map (lib/sources/ballot-curated) and
+ * `outputFileTracingIncludes` — both need a finite, build-time-known file set,
+ * which runner-populated receipts are not.
+ *
+ * So `receiptLoading` is NOT_RECORDED on this live endpoint. Making a served
+ * surface report it is a remaining integration dependency: adapt the read to a
+ * trace-safe shape, or have the runner write receipt-loading STATUS to the
+ * control plane and read it here like every other admin surface — see the handoff
+ * doc. The dependency injection seam is kept (handleFleetOperationsRequest takes
+ * an OPTIONAL receiptStore), so initial load and Refresh stay equivalent — both
+ * read without a store today — and the receipt-loading UI, retained timestamps and
+ * failure states are exercised with an INJECTED store over a temporary root in
  * tests/fleet-operations-page.test.ts and tests/fleet-receipt-admin.test.ts.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {

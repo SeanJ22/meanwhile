@@ -4,15 +4,98 @@ Reviewable record of the design/UI + admin-parity + fleet-operations work. No
 secrets. Base `main @ 713e4e06`.
 
 - **Design branch:** `design/lumen-meanwhile-20260913 @ 3f9a96a6` — the Reader + Admin design layer.
-- **Integration branch:** `integration/lumen-fleet-20260913`, **code HEAD `c3333616`** — the design
-  branch **plus** the cherry-picked fleet commits (v1 → v1.1 → v1.2 receipts), the Admin consumer +
-  extension handling, the committed authenticated `/admin/fleet` route, the receipt-loading UI, the
-  client-bundle fix, the 7:1 party-chip candidate, the full-suite gate repairs (ADM-21, rhythm,
-  absence-defaults, label-tracking, duplicate-census, meeting-body-attribution), and the receipt-store
-  unmount that clears the production build (§7A/§11). **`c3333616` is the exact code HEAD every
-  verification below ran against**; the only commits on top of it are this doc's own, which change no
-  code.
+- **Integration branch:** `integration/lumen-fleet-20260913`, atop **`0938a37d`** (Fleet's
+  historical-receipt-leaf `e1140c78`, cherry-picked `-x`) — the design branch **plus** the
+  cherry-picked fleet commits (v1 → v1.1 → v1.2 receipts → the receipt-contract leaf), the Admin
+  consumer + extension handling, the committed authenticated `/admin/fleet` route, the receipt-loading
+  UI, the client-bundle fix, the 7:1 party-chip candidate, and the full-suite gate repairs (ADM-21,
+  rhythm, absence-defaults, label-tracking, duplicate-census, meeting-body-attribution). The served
+  `/admin/fleet` page + endpoint keep the receipt store **UNMOUNTED** (an OPTIONAL-store seam), which
+  clears the production build (§7A/§11). **Read the Phase-5 Update immediately below first** — it
+  supersedes the earlier "why unmounted" text: the receipt leaf is now incorporated, remounting was
+  MEASURED to still refuse the build (a runtime-fs over-trace, not the import graph), and the build is
+  kept green.
 - No push / merge / deploy / production write / live dispatch; PDC untouched.
+
+## Update — 2026-09-13 (Phase 5): Fleet's receipt leaf incorporated; remount measured; build kept green
+
+**New combined HEAD.** `integration/lumen-fleet-20260913` atop **`0938a37d`** — Fleet's
+historical-receipt-leaf commit **`e1140c78`** (`lib/control-plane/promotion/historical-receipt.ts`, a
+zero-import `promoter/1` contract leaf) cherry-picked `-x` from the read-only fleet clone. The served
+`/admin/fleet` page and `GET /api/admin/fleet/operations` route carry corrected non-mount-rationale
+comments (the commit this doc lands in); their **executable code is unchanged from `0938a37d`'s
+unmounted-optional form** (`git diff` on those two files vs `0938a37d` is comment-only). Only this new
+delta was incorporated; the earlier fleet series was not re-applied.
+
+**What the leaf changed, and what it did not.** `fleet-receipt-store.ts` now imports the frozen receipt
+contract from the leaf, not `promotion/promoter.ts`; the leaf has zero imports (verified) and survives
+independently of the producer. Fleet's own esbuild measure records the store's *import* closure
+shrinking 44 → 3 inputs. That is an import-closure measurement, **not** a Next.js build/trace result.
+
+**The remount was attempted on BOTH entry points and MEASURED to still refuse the build.** Mounting
+`createFleetReceiptStore({ targets: [{ kind: "READER", root: process.cwd() }] })` at module scope in
+the page and the route, then `rm -rf .next && pnpm build` (harnesses excluded), **REFUSED** at
+`check-build-output`: the `/admin/fleet` app trace was **2214 repo files** (ceiling 230). A census of
+that manifest shows the trace rooted at the PROJECT ROOT — `data/control-plane` 1187, `data/states`
+208, `data/ops` 191, `data/health` 123, `public/states` 123, `docs/evidence` 118, `tests/fixtures` 42
+— which independently fails `deploy-paths` too. That spread is **dispositive that the cause is not the
+import graph**: an import over-trace is `lib/` + `node_modules` and could never reach `data/`,
+`docs/evidence`, `public/` or `tests/fixtures`. It is the store's request-time filesystem read
+`open(join(process.cwd(), ...RECEIPTS_DIR, "<receiptId>.json"))` — resolvable base `process.cwd()`, an
+unbounded runtime-named receipt file — the **R23 over-trace shape**. Fleet's leaf (import closure) is
+orthogonal to Turbopack's runtime-fs tracing, exactly the "esbuild measurements do not replace this
+verification" gap the assignment named.
+
+**Neither sanctioned trace fix applies.** `check-build-output`'s own failure text names two: the static
+literal-path map (`lib/sources/ballot-curated/index.ts`) and `outputFileTracingIncludes`. Both require
+a **finite, build-time-known** file set ("adding a state means adding a line here"). Receipt filenames
+are unbounded runtime ids over a **runner-populated** directory that is not a build-time asset, so no
+literal map or Includes list can enumerate them; a project-wide `outputFileTracingExcludes` would only
+MASK the over-trace, which the constitution forbids ("moving a number to make a red check green").
+
+**Decision (author, this session): keep the build green; do not mount the fs store in served bundles.**
+Both entry points keep the identical OPTIONAL-store seam — `readFleetSeedState({open, receiptStore?,
+now})` for first paint and `handleFleetOperationsRequest(req, {open, receiptStore?, now})` for Refresh
+— so initial-load ↔ Refresh parity is preserved and both read WITHOUT a store today → `receiptLoading`
+**NOT_RECORDED** live, as before. **Do both entry points actually mount the store? NO** — by measured
+necessity, not oversight: mounting refuses the build.
+
+**Remaining integration dependencies (three, all explicit):**
+1. **Served-bundle receipt loading (the decisive one).** The trusted store cannot be mounted in a
+   served serverless bundle without over-tracing. Resolution is Fleet/architecture-owned: adapt the
+   runtime-fs read to a trace-safe shape, OR — matching how every other admin surface works — have the
+   runner own the fs store and write receipt-loading STATUS to the control plane, read by the served
+   page via `openControlPlane`. (The deployed web function has no receipts directory and no DSN anyway;
+   the fs store genuinely runs in the runner/test contexts — 73/73 fleet tests.)
+2. **`WindowRunRecord.promotionReceipts` (PDC removes it).** The loader still derives its `Summary`
+   from this member and delivery joins it. PDC's removal needs an authorized historical window/receipt
+   selector; the member is not restored as a claim about permanent output.
+3. **Permanent receipt authority (PDC).** Historical `promoter/1` files are NOT PDC's
+   `ValidationReceipt.contractVersion: 2` records. Final selectors, source/class/scope and version/LKG
+   bindings, retained-history location and the supported Admin read path are PDC inputs. **Historical
+   loading is NOT current PDC delivery or served-publication proof.**
+
+**PDC combination disposition (per assignment).** When PDC deletes `promotion/promoter.ts`, keep the
+deletion; DISCARD this delta's compatibility edit to that deleted file; retain the leaf and the direct
+historical-consumer imports; never restore the producer to satisfy a modify/delete conflict.
+
+**Verification at this HEAD** (isolated clone, outside OneDrive; preview harnesses kept OUTSIDE the
+build = a real git checkout, which has no git-ignored harness; no push / merge / deploy / PDC change):
+- `rm -rf .next && pnpm build` → **GREEN**. `build-output · 440 repo files traced · tests/ traced 0 ·
+  credential shapes 0`; budget 1a largest app trace **228 < 230** (`api/ask/grounded`; the fleet
+  page/route are back to normal cardinality); budget 1b 927 < 1050; `reader-trace-check → failures:
+  []`; TypeScript finished clean in-build.
+- `tests/deploy-paths.test.ts` → **12/12**, including the real trace-manifest sweep "no file under a
+  non-shipping prefix is traced into the deploy."
+- All 13 `tests/fleet-*.test.ts` → **73/73, 0 fail**: retain-timestamp-on-failed-refresh, the named
+  failure states (INVALID / MISSING / UNAVAILABLE / RETAINED / LIMIT_REACHED), the actual-page
+  composition + Refresh through the real guarded handler (`tests/fleet-operations-page.test.ts`), and
+  Fleet's leaf import-boundary control (the archive loader reads and retains with the producer and its
+  data physically absent).
+
+The store-mount over-trace and the harness `deploy-paths` artifact (§11) are DISTINCT: the former is a
+served mount this session declined on measured evidence; the latter is a git-ignored dev harness. With
+harnesses excluded — which is what a committed checkout is — build and deploy-paths both pass.
 
 ### Fleet commits incorporated, by SHA
 
@@ -25,6 +108,7 @@ secrets. Base `main @ 713e4e06`.
 | — | `80ea40ae` | Keep the server read-service out of the client bundle (the `node:fs` fix) |
 | `d685fc4a` | `eda1fd6c` | Load retained fleet receipts + resolve held ZIP identities (**v1.2 receipt loading**) |
 | — | `87835016` | Admin fleet UI renders v1.2 receipt loading + the actual-page test (§7A) |
+| `e1140c78` | `0938a37d` | Isolate the historical `promoter/1` receipt contract into a **zero-import leaf** (`promotion/historical-receipt.ts`); the store imports the leaf, not `promoter.ts` (Phase-5 Update) |
 
 The producer contract files are **byte-identical** to their fleet source at each step (verified by
 `diff`): the five v1.1 files against `9bd72b26`, and the three v1.2-modified files
@@ -32,8 +116,9 @@ The producer contract files are **byte-identical** to their fleet source at each
 cherry-pick of `d685fc4a`. The receipt/loader/store/HTTP-handler and the ZIP-gap-resolution modules
 are Fleet's, incorporated as-is; the UI, the page's server store wiring, and this local integration
 are ours. **v1.2 stays the wire envelope `fleet-operations/v1` with additive fields** — "v1.2" is the
-compatibility-document label, not a new format version. A still-newer fleet commit does not exist as
-of this HEAD; `d685fc4a` is the current fleet tip.
+compatibility-document label, not a new format version. **`e1140c78` (the receipt-contract leaf, atop
+`d685fc4a`) is the current fleet tip**, incorporated here as `0938a37d`; no still-newer fleet commit
+exists as of this HEAD.
 
 ## 1. Token reconciliation (globals.css)
 
@@ -221,7 +306,7 @@ harness. `app/(admin)/admin/fleet/page.tsx` is now the committed, operator-reach
   strings as a client-safe mirror in the consumer, pinned to the contract by a drift test. The
   production build now compiles cleanly with `/admin/fleet` present as a dynamic route.
 
-### 7A. Receipt loading: integrated + proven, store not mounted live yet (`87835016`, `c3333616`)
+### 7A. Receipt loading: integrated + proven, store not mounted in served bundles (`87835016` → `0938a37d`; see the Phase-5 Update)
 
 The page's server read is `lib/admin/fleet-seed.ts::readFleetSeedState({open, receiptStore?, now})`
 (server-only), which calls `readFleetOperations(repos, {observedAt, receiptStore})` and folds the
@@ -230,15 +315,22 @@ it is the trusted READER store for `process.cwd()` (a runner-local SHADOW path n
 access); the store lives on the server, and the client panel only ever receives projected metadata
 (`receiptLoading` omits the private receipt bodies).
 
-**The store is NOT mounted on the served page or route today — and that is a corrected, honest state,
-not a passing build I claimed too early.** Mounting `createFleetReceiptStore` value-imports
-`promoter.ts`, which drags the promoter's filesystem module graph into the served bundle;
-`pnpm build`'s `check-build-output` then REFUSES it for over-tracing (~2311 files incl. `tests/` and
-`data/ops`, 10× the 230 ceiling — the R23 shape). So the served page + route omit the store,
-`receiptLoading` is **NOT_RECORDED** live, and first paint and Refresh stay **equivalent** (both read
-without a store). Making the store trace-safe (extract its promoter constants to a leaf module so it
-stops pulling the fs graph) is the Fleet-owned prerequisite to mounting it — flagged in §11. The
-receipt LOADING behavior itself is fully exercised with an INJECTED store (below).
+**The store is NOT mounted on the served page or route — a state now CONFIRMED BY MEASUREMENT with
+Fleet's leaf present, superseding this doc's earlier "import graph" explanation.** Fleet's `e1140c78`
+leaf removed the promoter graph from the store's import closure (esbuild 44 → 3), yet remounting the
+store on both entry points and rebuilding STILL REFUSED `check-build-output` — the `/admin/fleet` app
+trace was **2214 repo files** (ceiling 230), rooted at the project root (`data/control-plane` 1187,
+`data/states`, `data/ops`, `data/health`, `public/`, `docs/evidence` 118, `tests/fixtures` 42). The
+over-trace is therefore **not the import graph** (which could never reach `data/`, `docs/evidence`,
+`public/` or `tests/fixtures`) but the store's request-time filesystem read
+`open(join(process.cwd(), ...RECEIPTS_DIR, "<receiptId>.json"))` — the R23 over-trace shape (resolvable
+base `process.cwd()`, unbounded runtime-named file). The two sanctioned trace fixes both need a finite
+build-time file set, which runner-populated receipts are not (Phase-5 Update). So the served page +
+route keep the OPTIONAL-store seam and omit the store, `receiptLoading` is **NOT_RECORDED** live, and
+first paint and Refresh stay **equivalent** (both read without a store). Making a served surface report
+receipt loading is a remaining integration dependency — adapt the read, or read receipt-loading STATUS
+from the control plane like every other admin surface (Phase-5 Update §deps). The receipt LOADING
+behavior itself is fully exercised with an INJECTED store (below).
 
 **Actual-page evidence (`tests/fleet-operations-page.test.ts`).** Guard tests and preview screenshots
 do not establish the page path, so this drives the page's exact composition: `readFleetSeedState` over
@@ -254,13 +346,16 @@ No filesystem root or session key leaks into the markup.
 Scoped to the fleet/PDC owners (not this assignment):
 - **Publication truth:** v1 `publication.status` is UNKNOWN; a future per-record promotion +
   served-reader-proof join must carry item/result/artifact identity. Consumer already renders UNKNOWN.
-- **Full receipts (v1.2): UI incorporated + proven; live store mount is Fleet-blocked (§7A, §11).**
-  Fleet `d685fc4a` (retained-receipt store + ZIP-gap resolution) is cherry-picked and the UI renders
-  its loading states. The trusted READER store is **not mounted** on the served page/route yet,
-  because mounting it over-traces the bundle and the production build refuses it — Fleet must make the
-  receipt store trace-safe (leaf-extract its promoter constants) first. `receiptLoading` is
-  NOT_RECORDED live until then. And `publication.status` stays UNKNOWN without served-reader proof,
-  which waits for the later authorized handoff regardless.
+- **Full receipts (v1.2): UI incorporated + proven; leaf landed; a served mount still refuses the
+  build (§7A, §11, Phase-5 Update).** Fleet `d685fc4a` (retained-receipt store + ZIP-gap resolution)
+  and the leaf `e1140c78` are cherry-picked, and the UI renders the loading states. The leaf shrank the
+  import closure but did NOT make a served mount trace-safe — remounting was measured to over-trace
+  (2214 files) via the store's runtime `process.cwd()` filesystem read, not the import graph. So the
+  trusted READER store stays **unmounted** on the served page/route and `receiptLoading` is
+  NOT_RECORDED live. The remaining fix is Fleet/architecture-owned: adapt the runtime-fs read to a
+  trace-safe shape, or have the runner write receipt-loading STATUS to the control plane for the served
+  page to read. And `publication.status` stays UNKNOWN without served-reader proof, which waits for the
+  later authorized handoff regardless.
 - **Runner liveness:** the report is work-item operations, not runner heartbeat; "is the runner
   connected" stays the existing cheap `/api/admin/live` pulse. Consumer keeps them separate.
 - **Live verification:** actual admission/recovery/cost-attribution/served-output proof requires the
@@ -279,8 +374,11 @@ The four categories are kept distinct on purpose; none is dressed as another.
 
 ## 10. Verification & reproduction
 
-All run in the isolated clone (outside OneDrive) at integration **code HEAD `c3333616`**, from the
-clone root (for `node_modules` resolution). No production credentials; no shared CI.
+All run in the isolated clone (outside OneDrive) from the clone root (for `node_modules` resolution).
+No production credentials; no shared CI. The commands below were first established at code HEAD
+`c3333616`; **Phase 5 re-ran build + deploy-paths + the fleet suite at `0938a37d`** (leaf incorporated,
+store unmounted, harnesses excluded) with the same green results — build `440` files / `0` non-shipping
+/ `0` tests, `deploy-paths` 12/12, all 13 `tests/fleet-*.test.ts` 73/73 (Phase-5 Update).
 
 ```bash
 npx tsc --noEmit                       # clean
@@ -323,7 +421,7 @@ loosened and no baseline count raised.
 
 | Gate | Cause, demonstrated | Fix |
 | --- | --- | --- |
-| `pnpm build` / `check-build-output` | Mounting `createFleetReceiptStore` in the served page + route value-imports `promoter.ts`, dragging its filesystem graph in; Turbopack over-traced (~2311 files incl. `tests/` + `data/ops`, 10× the ceiling — R23). Builds 2–3 (no store) traced 448/0 and passed; 4–6 (store mounted) all REFUSED. | Unmounted the fs store from the served bundles (`receiptStore` now optional; page/route omit it). Build traces 448/0 and PASSES; the store is Fleet's to make trace-safe before it can mount (flagged below) (`c3333616`). |
+| `pnpm build` / `check-build-output` | Mounting `createFleetReceiptStore` in the served page + route over-traces (~2311 files then, 2214 with the leaf, incl. `tests/fixtures` + `data/ops` + `data/control-plane`, ~10× the 230 ceiling — R23). **Phase 5 refined the cause:** with Fleet's leaf present (import closure 44→3) the mount STILL refused, and a manifest census proved the trace is rooted at the project root — so the driver is the store's runtime `open(join(process.cwd(), …, "<receiptId>.json"))` read, NOT the import graph. | Keep the fs store UNMOUNTED in served bundles (`receiptStore` optional; page/route omit it). Build traces 440/0 and PASSES. Neither sanctioned trace fix fits unbounded runtime-named receipts, so a served mount is a remaining Fleet/architecture dependency — adapt the read, or read status from the control plane (§7A, Phase-5 Update) (`c3333616` → `0938a37d`). |
 | `ADM-21` | Parity bridge rewrote signal 1 to `color-mix(--ce-panel)` and levels to `var(--accent-*, hex)`; assertions pinned pre-parity literals, and "globals has no lumen" is obsolete (the reader carries the Lumen material by design). | Assertions repaired to verify the same signals in the approved shared language (`00a5d553`). |
 | `rhythm-tokens` fontSize | Two off-scale font-size occurrences added (existing values). | Two value-identical `0.6875rem` literals → `var(--text-caption)`; baseline unchanged; zero visual change (`00a5d553`). |
 | `rhythm-tokens` spacing | Two off-scale spacing occurrences added — `-0.08em` trims that `label-tracking` MANDATES as literals, so they cannot be tokenized or removed. | Held at baseline by snapping two grandfathered near-scale values (`.scope-row` gap 3px, `.stat-card .label` margin-top 5px → `var(--space-1)`) — the ratchet's sanctioned shrink, 1px, no count raised (`ea4419e7`). |
@@ -339,18 +437,21 @@ loosened and no baseline count raised.
 | NH206 snapshot shedding · Vail agenda RED CONTROLs ×3 · per-member vote denominators · Pima outcome questions ×3 · committed reader-graph match (9) | The SAME tests fail on `main @ 713e4e06` under the same command — date/data-fixture reader tests, unrelated to design or fleet. Pre-existing; out of scope. |
 | `deploy-paths` "no non-shipping file traced" (1) | **A local git-ignored-harness artifact, not a committed-code defect.** The only served-path `readFileSync` of a `docs/` file is the git-EXCLUDED `/lumen-admin-preview` harness reading `docs/evidence/fleet-zip-queue.example.json`; the committed `/admin/fleet` page only names it in a comment. Verified: a clean-checkout-equivalent build with both git-ignored harnesses removed traces **440 files / 0 non-shipping / 0 tests**, and deploy-paths (12/12) + check-build-output both PASS. So a real (git) checkout, which has no harness, passes. |
 
-**Live receipt loading — assigned to Fleet (2026-09-13 integration handoff §3).** It is NOT_RECORDED
-today because the fs store cannot mount without over-tracing the build (§7A). The handoff assigns the
-bounded backend fix to the fleet session: make historical receipt parsing independent of the
-executable promoter graph — extract the immutable receipt contract + pure summary logic
-(`RECEIPTS_DIR`, `receiptSummary`, `PROMOTION_REFUSALS`, `PROMOTER_VERSION`) into a dependency-light
-leaf. Two constraints carry into that work: (1) **parity** — when the leaf lands, the store must be
-remounted on BOTH entry points (`fleet-seed.ts` for first paint and `fleet-operations-http.ts` for
-Refresh), preserving retain-timestamp-on-failed-refresh; (2) **the leaf must survive PDC's retirement**
-of `promoter.ts` and `WindowRunRecord.promotionReceipts` — historical receipt loading (`promoter/1`
-files) stays DISTINCT from PDC's permanent receipt authority (`ValidationReceipt.contractVersion: 2`),
-and retired code is never restored to satisfy imports. The receipt UI + all its loading states are
-already proven with an injected store (§7A, §9).
+**Live receipt loading — leaf landed, served mount still blocked (2026-09-13 integration handoff §3;
+Phase-5 Update).** The bounded backend fix assigned to Fleet is DONE: `e1140c78` extracted the
+immutable receipt contract + pure summary logic into the dependency-light leaf
+`promotion/historical-receipt.ts` (zero imports; store imports the leaf, not `promoter.ts`), cherry-
+picked here as `0938a37d`. But remounting on BOTH entry points was then MEASURED to still refuse the
+build (2214 files; census-proven runtime-fs over-trace, not the import graph — §7A). So `receiptLoading`
+stays NOT_RECORDED live and the served mount is deferred to a further Fleet/architecture fix (trace-safe
+read, or control-plane status). Two constraints still carry: (1) **parity** — the OPTIONAL-store seam
+is kept on both entry points (`fleet-seed.ts` first paint, `fleet-operations-http.ts` Refresh), so a
+future mount preserves retain-timestamp-on-failed-refresh; (2) **the leaf must survive PDC's
+retirement** of `promoter.ts` and `WindowRunRecord.promotionReceipts` — historical `promoter/1` loading
+stays DISTINCT from PDC's permanent receipt authority (`ValidationReceipt.contractVersion: 2`), the
+producer is never restored to satisfy imports, and when combining with PDC the compatibility edit to
+the deleted `promoter.ts` is discarded while the leaf and direct consumer imports are retained. The
+receipt UI + all its loading states are proven with an injected store (§7A, §9).
 
 Net: **8 gates fixed at source + the production build restored to green**; the 9 remaining test
 failures are **all inherited** from `main`; the one non-inherited suite failure (`deploy-paths`) is a
@@ -380,9 +481,13 @@ combined head + delta to one integration owner, who reconciles it onto the compl
 
 Accounted-for deltas and downstream dependencies (owned by Fleet or the integration owner, not this
 work):
-- **Receipt leaf (Fleet, handoff §3):** the backend fix to make historical receipt loading
-  promoter-graph-independent, so the store can remount (§11). When it lands, remount BOTH entry points
-  with initial-load/Refresh parity and retain-timestamp semantics preserved.
+- **Receipt leaf (Fleet, handoff §3) — LANDED (`e1140c78` → `0938a37d`), but a served mount still
+  over-traces.** The leaf made historical receipt loading promoter-graph-independent (import closure
+  44→3), yet remounting the store on the served page/route was measured to still refuse the build via
+  its runtime `process.cwd()` filesystem read (§7A, Phase-5 Update). The remaining fix is a trace-safe
+  read shape or a control-plane receipt-loading STATUS the served surface reads; the OPTIONAL-store
+  seam is already in place on both entry points so a future mount preserves initial-load/Refresh parity
+  and retain-timestamp semantics.
 - **PDC retirement (integration owner, post-PDC):** PDC deletes `promoter.ts` and
   `WindowRunRecord.promotionReceipts`, and moves to a permanent receipt authority
   (`ValidationReceipt.contractVersion: 2`). The fleet receipt loader must be adapted to the final PDC

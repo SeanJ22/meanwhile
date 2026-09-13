@@ -65,13 +65,20 @@ export const metadata = {
 };
 
 export default async function FleetOperationsPage() {
-  // The trusted READER receipt store is NOT mounted here yet — same reason as the
-  // GET route (app/api/admin/fleet/operations/route.ts): importing
-  // createFleetReceiptStore pulls the promoter's filesystem graph into this served
-  // bundle and over-traces it past check-build-output. `receiptLoading` is
-  // NOT_RECORDED live until the store is made trace-safe; the receipt UI is proven
-  // with an injected store in tests/fleet-operations-page.test.ts. First paint and
-  // endpoint Refresh remain equivalent — both read without a store today.
+  // The trusted READER receipt store is NOT mounted here — same MEASURED reason as
+  // the GET route (app/api/admin/fleet/operations/route.ts). Fleet's `e1140c78`
+  // leaf shrank the store's import closure (esbuild 44 → 3), but mounting it in
+  // this served bundle was rebuilt and verified to STILL refuse check-build-output:
+  // the store's request-time `open(join(process.cwd(), ...RECEIPTS_DIR, id))` read
+  // is the R23 over-trace shape (2214 repo files traced, ceiling 230; tests/ and
+  // docs/evidence pulled in). The leaf does not change that, and the sanctioned
+  // trace fixes need a finite build-time file set that runner-populated receipts
+  // are not. `readFleetSeedState` keeps its OPTIONAL receiptStore seam, so first
+  // paint and endpoint Refresh stay equivalent — both read without a store today,
+  // yielding NOT_RECORDED receipt loading. The receipt UI, retained timestamps and
+  // failure states are proven with an injected store in
+  // tests/fleet-operations-page.test.ts. Reporting it on a served surface is a
+  // remaining integration dependency (see the handoff doc).
   const initialState = await readFleetSeedState({
     open: openControlPlane,
     now: () => new Date().toISOString(),

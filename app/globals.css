@@ -30,6 +30,9 @@
      app is one of these five, which is what makes them read as one system. */
   --radius: 10px;
   --radius-sm: 6px;
+  /* Card-corner alias for the ported Lumen surfaces (== --radius, the card
+     corner). Keeps the design-handoff CSS readable without a second value. */
+  --radius-card: var(--radius);
   --radius-lg: 16px;
   --radius-pill: 999px;
   --radius-circle: 50%;
@@ -142,8 +145,12 @@
   --party-none: #9aa0ab;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.5);
+  /* Lumen × Meanwhile (2026-09-13): enriched to the shipped popup-card / modal
+     depth (was 0 10px 40px rgba(0,0,0,.5)); read only within globals.css. */
+  --shadow-popup: 0 18px 40px -16px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* App-card elevation for the ballot pill and other lit controls. */
+  --shadow-app-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 20px -10px rgba(0, 0, 0, 0.6);
 
   /* The design pass (2026-08-15) — the committed system. DESIGN.md is — docs/globals-css-notes.md#the-design-pass-2026-08-15-the-committed-system-design-md-is-6 */
   --voice: #a4b1c9;
@@ -152,8 +159,15 @@
   /* THE BROWN DIES (item 6, 2026-08-16). The author: "I hate this brown — docs/globals-css-notes.md#the-brown-dies-item-6-2026-08-16-the-author-i-hate-this-brown-8 */
   --link: #4fc9e8;
   --label: #a9adb9;
-  --action: #4fc9e8;
+  /* Lumen × Meanwhile (2026-09-13): toned from #4fc9e8 (which equalled --link),
+     too hot as a large dark-mode fill. Dark ink on #43b4d1 = 7.81:1, over the
+     7:1 sun bar; #38a3bf and below drop under it. Light theme keeps #0a4f61. */
+  --action: #43b4d1;
   --action-on: #0f1117;
+  /* The hover ring and its glow, for a pressed neutral control (Lumen material).
+     Kept distinct from --link so the FOCUS outline stays --link, not the ring. */
+  --ring: #4fc9e8;
+  --link-glow: rgba(79, 201, 232, 0.38);
 
   /* Text ON a filled PARTY chip (item 3). The party colours are tuned as
      TEXT colours, so in dark they are light and the chip's text is the page
@@ -220,6 +234,24 @@
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── LUMEN MATERIAL (Lumen × Meanwhile design handoff, 2026-09-13) ─────────
+     "Lumen lights what you can press; it never enters a fill that states a
+     fact." The lit surface, hairline rim and horizon for pressable NEUTRAL
+     controls and cards. The themed leaves are re-declared under
+     [data-theme="light"] because var() inside a custom-property resolves at the
+     scope where the DECLARATION lives, not where it is used. */
+  --lumen-peak: color-mix(in srgb, var(--panel) 82%, white);
+  --lumen-floor: var(--panel);
+  --lumen-rim: rgba(255, 255, 255, 0.1);
+  --lumen-rim-strong: rgba(255, 255, 255, 0.16);
+  --lumen-horizon: white;
+  /* Surfaces move on Lumen's slower clock; everything else keeps 120/200/320. */
+  --dur-lumen: 1s;
+  --ease-lumen: cubic-bezier(0.15, 0.83, 0.66, 1);
+  /* The Ask pearl fills with the meeting-online purple; aliased so the two can
+     diverge later without a hunt (--online also means "no room to attend"). */
+  --ask: var(--online);
 }
 
 [data-theme="light"] {
@@ -275,8 +307,9 @@
   --district-line: #5a7280;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.18);
+  --shadow-popup: 0 18px 40px -16px rgba(20, 22, 28, 0.28), 0 2px 6px rgba(20, 22, 28, 0.10);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-app-card: 0 1px 2px rgba(20, 22, 28, 0.05), 0 8px 20px -10px rgba(20, 22, 28, 0.2);
 
   /* The design-pass tokens, light theme. Same roles as dark — docs/globals-css-notes.md#the-design-pass-tokens-light-theme-same-roles-as-dark-14 */
   --voice: #3f4f68;
@@ -287,6 +320,19 @@
   --label: #494e5b;
   --action: #0a4f61;
   --action-on: #fdfaf4;
+  /* Lumen × Meanwhile (2026-09-13). #4fc9e8 on the light page is 1.73:1
+     (invisible); #17809e = 4.05:1, over the 3:1 graphics floor. */
+  --ring: #17809e;
+  --link-glow: rgba(23, 128, 158, 0.30);
+  /* Lumen material, re-declared (var() resolves at the declaration scope). */
+  --lumen-peak: var(--panel);
+  --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
+  --lumen-rim: rgba(0, 0, 0, 0.08);
+  --lumen-rim-strong: rgba(0, 0, 0, 0.14);
+  /* Was color-mix(--online 60%) — a purple line; --online means "online-only".
+     Now the interactive cyan, so both themes speak one language. */
+  --lumen-horizon: var(--ring);
+  --ask: var(--online);
 
   /* Light party colours are DEEP, so the filled chip's text is near-white —
      the inversion of the dark theme, same as the tier fills. */

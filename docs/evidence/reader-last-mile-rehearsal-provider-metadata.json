@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "source": "NEON_API_BRANCH_READBACK",
+  "observedAt": "2026-09-13T06:48:35.000Z",
+  "projectId": "tiny-hill-13996172",
+  "branchId": "br-fragrant-hall-ax27rafi",
+  "branchName": "pdc-v2-rehearsal-6e075818-codex",
+  "parentBranchId": "br-delicate-lab-ax02xuo5",
+  "defaultBranchId": "br-delicate-lab-ax02xuo5",
+  "endpointId": "ep-misty-sun-axddg6p7",
+  "endpointHost": "ep-misty-sun-axddg6p7.c-4.us-east-2.aws.neon.tech"
+}
+

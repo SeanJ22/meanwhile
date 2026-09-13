@@ -8,10 +8,9 @@
         "body-rosters",
         "statewide-executives",
         "registry",
-        "state-officeholders",
         "portraits"
       ],
-      "recordObligations": 1382,
+      "recordObligations": 1161,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity",
         "canonical person/card portrait → IdentityPortrait"
@@ -25,10 +24,9 @@
         "body-rosters",
         "statewide-executives",
         "campaign-sites",
-        "registry",
-        "state-officeholders"
+        "registry"
       ],
-      "recordObligations": 732,
+      "recordObligations": 601,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
       ],
@@ -51,10 +49,9 @@
       "component": "components/officials/person-identity.tsx",
       "families": [
         "body-rosters",
-        "statewide-executives",
-        "state-officeholders"
+        "statewide-executives"
       ],
-      "recordObligations": 679,
+      "recordObligations": 59,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity"
       ],
@@ -65,10 +62,9 @@
       "component": "components/officials/contact-pills.tsx",
       "families": [
         "body-rosters",
-        "statewide-executives",
-        "state-officeholders"
+        "statewide-executives"
       ],
-      "recordObligations": 679,
+      "recordObligations": 59,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
       ],
@@ -116,10 +112,9 @@
       "families": [
         "statewide-executives",
         "registry",
-        "state-officeholders",
         "portraits"
       ],
-      "recordObligations": 1337,
+      "recordObligations": 1116,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity",
         "canonical person/card portrait → IdentityPortrait"
@@ -132,10 +127,9 @@
       "families": [
         "statewide-executives",
         "campaign-sites",
-        "registry",
-        "state-officeholders"
+        "registry"
       ],
-      "recordObligations": 687,
+      "recordObligations": 556,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
       ],
@@ -147,10 +141,9 @@
       "families": [
         "statewide-executives",
         "registry",
-        "state-officeholders",
         "portraits"
       ],
-      "recordObligations": 40,
+      "recordObligations": 26,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity",
         "canonical person/card portrait → IdentityPortrait"
@@ -163,10 +156,9 @@
       "families": [
         "statewide-executives",
         "campaign-sites",
-        "registry",
-        "state-officeholders"
+        "registry"
       ],
-      "recordObligations": 27,
+      "recordObligations": 18,
       "selectorClasses": [
         "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
       ],
@@ -183,6 +175,7 @@
       ],
       "recordObligations": 3002,
       "selectorClasses": [
+        "canonical registry body and exact division join → EntityModal",
         "exact map-entry bodySubject AST → actual EntityModal header and private DefinitionBlock/Representation leaves (collapsed children rendered independently)",
         "canonical definitionsForBody selected on exact current body → actual DefinitionBlock"
       ],
@@ -243,9 +236,9 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 578,
+      "recordObligations": 547,
       "selectorClasses": [
-        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
       "importReach": true
     },
@@ -256,9 +249,9 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 626,
+      "recordObligations": 598,
       "selectorClasses": [
-        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
       "importReach": false
     },
@@ -269,7 +262,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 128,
+      "recordObligations": 113,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -282,7 +275,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 155,
+      "recordObligations": 146,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -318,7 +311,7 @@
       "families": [
         "state-money"
       ],
-      "recordObligations": 52,
+      "recordObligations": 41,
       "selectorClasses": [
         "stateMoneyForTarget → StateMoneySection"
       ],
@@ -404,9 +397,9 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 576,
+      "recordObligations": 545,
       "selectorClasses": [
-        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
       "importReach": false
     },
@@ -416,7 +409,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 154,
+      "recordObligations": 145,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -428,7 +421,7 @@
       "families": [
         "federal-finance"
       ],
-      "recordObligations": 38,
+      "recordObligations": 24,
       "selectorClasses": [
         "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
       ],
@@ -440,7 +433,7 @@
       "families": [
         "federal-finance"
       ],
-      "recordObligations": 32,
+      "recordObligations": 18,
       "selectorClasses": [
         "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
       ],
@@ -464,7 +457,7 @@
       "families": [
         "federal-finance"
       ],
-      "recordObligations": 38,
+      "recordObligations": 24,
       "selectorClasses": [
         "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
       ],
@@ -476,7 +469,7 @@
       "families": [
         "congress"
       ],
-      "recordObligations": 531,
+      "recordObligations": 533,
       "selectorClasses": [
         "actual GET /api/directory → DirectoryRecordsContent"
       ],
@@ -502,6 +495,7 @@
       ],
       "recordObligations": 2267,
       "selectorClasses": [
+        "canonical registry division → DistrictPopup",
         "canonical registry division → seatHoldersForDivision → actual DistrictPopup"
       ],
       "importReach": true
@@ -512,73 +506,47 @@
       "families": [
         "registry"
       ],
-      "recordObligations": 531,
+      "recordObligations": 533,
       "selectorClasses": [],
       "importReach": false
     },
     {
       "surface": "votes",
-      "component": "components/map/popup/official-popup.tsx",
+      "component": "components/officials/key-votes-section.tsx",
       "families": [
         "votes"
       ],
-      "recordObligations": 12346,
+      "recordObligations": 90,
       "selectorClasses": [
-        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
       ],
       "importReach": false
-    },
-    {
-      "surface": "ballot",
-      "component": "components/map/popup/official-popup.tsx",
-      "families": [
-        "votes"
-      ],
-      "recordObligations": 291,
-      "selectorClasses": [
-        "summaryForBill → BillPlainSummary",
-        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
-      ],
-      "importReach": true
-    },
-    {
-      "surface": "ask",
-      "component": "components/map/popup/official-popup.tsx",
-      "families": [
-        "votes"
-      ],
-      "recordObligations": 12357,
-      "selectorClasses": [
-        "summaryForBill → BillPlainSummary",
-        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
-      ],
-      "importReach": false
-    },
-    {
-      "surface": "map",
-      "component": "components/map/popup/official-popup.tsx",
-      "families": [
-        "votes"
-      ],
-      "recordObligations": 12357,
-      "selectorClasses": [
-        "summaryForBill → BillPlainSummary",
-        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
-      ],
-      "importReach": true
     },
     {
       "surface": "votes",
-      "component": "components/officials/key-votes-section.tsx",
+      "component": "components/map/popup/official-popup.tsx",
       "families": [
         "votes"
       ],
-      "recordObligations": 91,
+      "recordObligations": 10676,
       "selectorClasses": [
-        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
-        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
       ],
       "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 169,
+      "selectorClasses": [
+        "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": true
     },
     {
       "surface": "ballot",
@@ -586,7 +554,7 @@
       "families": [
         "votes"
       ],
-      "recordObligations": 91,
+      "recordObligations": 90,
       "selectorClasses": [
         "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
         "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
@@ -595,11 +563,24 @@
     },
     {
       "surface": "ask",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 10685,
+      "selectorClasses": [
+        "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ask",
       "component": "components/officials/key-votes-section.tsx",
       "families": [
         "votes"
       ],
-      "recordObligations": 91,
+      "recordObligations": 90,
       "selectorClasses": [
         "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
         "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
@@ -608,11 +589,24 @@
     },
     {
       "surface": "map",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 10685,
+      "selectorClasses": [
+        "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
       "component": "components/officials/key-votes-section.tsx",
       "families": [
         "votes"
       ],
-      "recordObligations": 91,
+      "recordObligations": 90,
       "selectorClasses": [
         "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
         "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"

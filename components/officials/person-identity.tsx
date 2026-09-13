@@ -3,7 +3,7 @@
 import { personInitials } from "@/lib/officials/person-name";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { partyColorVar } from "@/lib/officials/party-color";
+import { partyFillVar } from "@/lib/officials/party-color";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 
 /**
@@ -162,7 +162,7 @@ export function PersonIdentity({
             the card's body carries which kind of nothing it is.
           */}
           {holder.partyLabel && (
-            <IdentityChip fill={partyColorVar(holder.partyLabel)}>
+            <IdentityChip fill={partyFillVar(holder.partyLabel)}>
               {holder.partyLabel}
             </IdentityChip>
           )}

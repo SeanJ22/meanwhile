@@ -4,10 +4,11 @@ Reviewable record of the design/UI + admin-parity + fleet-operations work. No
 secrets. Base `main @ 713e4e06`.
 
 - **Design branch:** `design/lumen-meanwhile-20260913 @ 3f9a96a6` — the Reader + Admin design layer.
-- **Integration branch:** `integration/lumen-fleet-20260913 @ 80ea40ae` — the design branch **plus**
-  the cherry-picked fleet commits, the Admin consumer + v1.1 extension handling, the committed
-  authenticated `/admin/fleet` route, and the client-bundle fix (§7). **This is the exact HEAD every
-  verification below ran against** (this doc is committed on top of it).
+- **Integration branch:** `integration/lumen-fleet-20260913`, **code HEAD `b25d692a`** — the design
+  branch **plus** the cherry-picked fleet commits, the Admin consumer + v1.1 extension handling, the
+  committed authenticated `/admin/fleet` route, and the client-bundle fix (§7). **`b25d692a` is the
+  exact code HEAD every verification below ran against**; the only commits on top of it are this doc's
+  own, which change no code.
 - No push / merge / deploy / production write / live dispatch; PDC untouched.
 
 ### Fleet commits incorporated, by SHA

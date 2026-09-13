@@ -287,7 +287,7 @@ export function CandidateBattlecard({
           they are siblings in one column, so it is shared by construction
           rather than by a number typed twice.
         */
-        className="mt-2 w-full cursor-pointer rounded-md border border-[var(--battlecard-green)] bg-[var(--battlecard-green)] px-3 py-2 text-center text-[0.8125rem] font-semibold text-[var(--battlecard-on-green)] transition-colors hover:border-[var(--battlecard-green-hover)] hover:bg-[var(--battlecard-green-hover)]"
+        className="battlecard-cta"
       >
         View Battlecard
       </button>

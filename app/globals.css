@@ -2041,25 +2041,59 @@ a.ballot-pill-main:focus {
 }
 
 .card-section-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   min-height: 44px;
   padding: 0 14px;
-  border: 1px solid color-mix(in srgb, var(--link) 45%, var(--panel-border));
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
+  border: 0;
+  border-radius: var(--radius-sm);
+  /* Lumen control material (design handoff 2026-09-13): a disclosure row is a
+     control, so it is lit from below with a hairline rim and a horizon that
+     lights while the row is open. Was a flat --link-tinted pill. */
+  background-color: var(--surface);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--surface) 84%, white) 0%, var(--surface) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
   cursor: pointer;
   text-align: left;
-  transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move);
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
 }
 
-.card-section-header:hover,
-.card-section[data-open] > .card-section-header {
-  border-color: var(--link);
-  background: color-mix(in srgb, var(--link) 14%, var(--panel-bg));
+.card-section-header::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent);
+  opacity: 0.22;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+
+.card-section-header:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 1px var(--ring), 0 0 14px var(--link-glow);
+}
+
+/* Hover OR open lights the horizon to full cyan — the row stays lit while its
+   content is showing. */
+.card-section-header:hover::after,
+.card-section[data-open] > .card-section-header::after {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ring), transparent);
+}
+
+.card-section-header:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
 }
 
 .card-section-title {
@@ -2327,6 +2361,75 @@ a.ballot-pill-main:focus {
   height: 28px;
   padding: 0 13px;
   font-size: 0.8125rem;
+}
+
+/* BATTLECARD CTA (design handoff 2026-09-13). The one loud action on a candidate
+   — "View Battlecard" — in the reader's own battlecard green, wearing the Lumen
+   material. The hover ring is a DARKER green than the fill so the edge reads as a
+   rim; the glow stays the bright green and widens (a dark ring alone would make
+   the button recede on a dark panel). This green is scoped to the reader's
+   battlecard — Admin actions are neutral Lumen controls, never this. Replaces a
+   flat fill whose hover referenced an undefined --battlecard-green-hover. */
+.battlecard-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 8px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--battlecard-green);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--battlecard-green) 84%, white) 0%, var(--battlecard-green) 66%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, white 22%, transparent);
+  color: var(--battlecard-on-green);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
+}
+.battlecard-cta::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--battlecard-on-green) 55%, transparent), transparent);
+  opacity: 0.35;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+.battlecard-cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, white 34%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--battlecard-green) 72%, black),
+    0 0 20px color-mix(in srgb, var(--battlecard-green) 55%, transparent);
+}
+.battlecard-cta:hover::after {
+  opacity: 0.8;
+}
+.battlecard-cta:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-base);
+}
+.battlecard-cta:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--battlecard-green) 72%, black);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .battlecard-cta {
+    transition-duration: 1ms;
+  }
+  .battlecard-cta:hover {
+    transform: none;
+  }
 }
 
 .id-office {

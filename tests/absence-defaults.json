@@ -6,6 +6,11 @@
       "reason": "Not a claim about data. `why` is a REJECTION CLASS from middleware and this is the prompt shown when there is no rejection to explain — the owner simply arrived at the login. It asserts nothing about any record."
     },
     {
+      "file": "components/admin/fleet-operations-panel.tsx",
+      "text": "network error",
+      "reason": "Not an absence-to-assertion about any record. This is the ADMIN-only fallback detail when the fleet Refresh fetch THROWS with no Error.message (a transport failure reaching /api/admin/fleet/operations), surfaced to the operator as \"Could not reach the operations report (network error).\" It asserts nothing about civic data, a named entity, or completeness — it describes the console's own failure to reach its endpoint, which the operator must see; the reader render-neutrality rule (never announce our own failure) governs reader surfaces, not the owner's control centre."
+    },
+    {
       "file": "components/ballot/candidate-card.tsx",
       "text": "official site",
       "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."

@@ -1,25 +1,23 @@
 {
-  "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
-  "buildId": "LjmqRhnryhXrC6Sq33cmp",
+  "exactHead": "6e0758183f06cf98a903441d17bbb49d5305dd14",
+  "buildId": "Mf9DrncyrVqjseriGz2W_",
   "sourceHashes": {
     "data/candidates/corpus-2026.json": "6aa106eabc191a3eddbcfd721d301fcbe094454a1a207c0aa11d06ee07bf638d",
     "data/corpus/statements.json": "01e27fd3179e311aa207d0c51f2bf26172d9baa989ee466338ce0cffd5e50b61",
     "data/states/az/identity/az-2026-candidate-registry.json": "3453038781d661d5f9c901e729a0c445cb1253157a03d13d1cc9fe503dc4fdde",
     "data/states/az/identity/az-2026-certified-lineup-reconciliation.json": "39b1cd2953b6d45d5d32bb58457c7662c41b5d66fe27757b68657986cc678f0d",
-    "lib/funding/official-candidacies.json": "2b4d587b5c391d71df4dfe54dde4ec7bc55d0f37386973aa6dad7540a348fc2d",
-    "lib/funding/campaign-money.ts": "738007775e5f59e525a6d8323dc0147c8a4fca4bb8bc55db79b6679b395964a2",
-    "lib/identity/reader-person.ts": "3f64747d77584057bf7c7c84cd3e908effdef07b9ea95c427adbfc47f3376b57",
-    "lib/identity/az-2026.ts": "48465348e523f87c9dafacadcdb0fa8e1bce115ead2ff2678d60d9d6cd1d21bd",
-    "lib/corpus/unified.ts": "298fd0550f0c9c88c1c6c817eda41dc6c39370181edb082b5a07c63fce9d73f0",
+    "lib/funding/campaign-money.ts": "542cb6f5a4825acdb65b507b760e34aed78734610c5d9a83d23eac1a410bc17b",
+    "lib/registry/runtime-data-plane.ts": "c091adb71d4f86a43df32d8ee865dca2d85f53953ad4a61ab3b075b212e6df87",
+    "lib/registry/runtime-read-model.ts": "1f8f3a4d9e52288978a0bf259a42c82f4e424efa67ce26afe1270f2756075532",
+    "lib/identity/reader-person.ts": "e6e3ce856884b353aabb6bd2911efe441688e5f91e202687310558cdf5a73b13",
+    "lib/identity/az-2026.ts": "e897f1807cf852086d9a6c0c31a89b682ad4006622ab78e99b4269c4dbbe7a49",
+    "lib/corpus/unified.ts": "c13590b0deee7bc342693c8f128146754f600dc5ff4a644e08cedf7883572ad8",
     "lib/corpus/positions.ts": "d7107262397f28760901252b79122d387dee24cc1408a52b85b1c160b1ef3112",
-    "lib/corpus/reader-positions.ts": "76269ac001db5e43b342c55acb5953aaa2885557a1c779f39cd8681ba3f78aef",
-    "app/api/positions/[subject]/[topic]/route.ts": "af1eefb421272e44f645c32022fc7e59020cea0c706571ad8437eb6f3233f8bd",
-    "components/officials/positions-section.tsx": "d282eed730ba20b2ae6b6dd2b6f36b03d34614cabfbe59900a6f99d183c12e5a",
+    "lib/corpus/reader-positions.ts": "7fdbd494e16c938241333cdbdabadac7f43c9db810920a1e3053c3816bfd27b5",
+    "app/api/positions/[subject]/[topic]/route.ts": "e9eb3c8b34236d4fe916738383a6a78c610b2c7d71a88fc5291dfb2f209421c5",
+    "components/officials/positions-section.tsx": "ded4503e71ea6a96395a9cf55ba5dd46778159cf2256aec556eb5aa3691d3547",
     "components/ballot/candidate-battlecard.tsx": "b2ab0d7f2f945c95887616c190a6a8c7e4f7b29e9f7884258b071427f0fbf993",
-    "lib/registry/officeholders-us.json": "556db59e8277eeb0cb7d41e1ddb5e4977eae2078d19503dcaf27a3acde645d1f",
-    "data/states/az/officials/officeholders-04.json": "c5ddfba752b66453a28c08945e45a7aa772588a472ff99c11ed196377bcdef9c",
-    "data/states/nh/officials/officeholders-33.json": "8afc9f047f35b00aad3a46e670608603c5843992b050afb236d47aa7fe132e15",
-    "data/states/nj/officials/officeholders-34.json": "23c0594144762cadb597ecef29e129d433c99efc0a811b7e32007d791d833fcf"
+    "lib/registry/officeholders-us.json": "f0d392ab8f2de9af390c69612cded1ff3d723bda2804c1bbb89eef5086df2423"
   },
   "execution": "Actual candidate battlecard gestures, typed source-grounded query, real positions HTTP route, every returned quotation/citation/count inspected in rendered DOM.",
   "expectedCount": 49,
@@ -446,9 +444,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://kellyfornh.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 3
       },
-      "payloadSha256": "074f5bdcc88c60dd8cac78808360cbe8801a437a52a10b901c02dd5e7813c42f",
+      "payloadSha256": "b29ef615074a3e8a735a9343f5e141816f2a9fda1b5e9c4b3c76970b1fa126a1",
       "renderedTextSha256": "99eef3fe08ef783b137f285ba029417ff11393693c799f2363fe6588a4f626a1"
     },
     {
@@ -978,9 +978,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://www.cindewarmington.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 6
       },
-      "payloadSha256": "b1f8b24d5df98dd2fa84026e851a9057b42e057c4ad2471894da7ff651a262f7",
+      "payloadSha256": "9ef9a701d484b1a31725562e5bdb5c0ef7ea4ecf6a0b859487171d89a1678007",
       "renderedTextSha256": "bb1a62c90fc8cdd6104e0455d54291bb1a4616e07a20730a4c888e8729ec3a98"
     },
     {
@@ -1390,9 +1392,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://scottbrown.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "f6792dd88a16a252d733d73fc7a6e0a096b26a65c0f82d6a2d07232588cf92b2",
+      "payloadSha256": "df2fd5f7d6d2b3d3ccccefbaaa08c48f00f5517ebfbac5da1f328fe49f204020",
       "renderedTextSha256": "9ab66afd8d0c08ad09e1ba6bc8de728891b42d4b05434ad52a41731724706464"
     },
     {
@@ -1890,9 +1894,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://chrispappas.org",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "d5756b27c2cec1437e28ed34e3a1eefe926de64e975b41ea0dd3958d48965dfc",
+      "payloadSha256": "557fb554854949e3a7e41739d8255a54e540e51589dec619ee3669cce01673d6",
       "renderedTextSha256": "0441f8cb4e70b813f7d7ad4049f4bb98295b9d404d048bb2f8063c885b1cc017"
     },
     {
@@ -2376,9 +2382,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://chrispappas.org",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "825d13ddb728db5f8f72cc3fe49928fc2ae90dbddbf7489a83fa1062ba71c4cb",
+      "payloadSha256": "b4c8cf83ff97f22fcf8c907d3f75994c4b716a329fa47056b3448b8cd01e7b26",
       "renderedTextSha256": "cf96dbfa6d0167088c9f558b540573db62022c710b993f2b6d5d27ecbf6d3a43"
     },
     {
@@ -2844,9 +2852,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.sununusenator.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 6
       },
-      "payloadSha256": "b11c7fe7a362b247a7b198d0bdb74a3095fa2d802644fcb0bfc6e050b17ca89d",
+      "payloadSha256": "1c2f23ec50aed235ab5fa04e93ad1f6e1447c6e1569ade44579296997239f440",
       "renderedTextSha256": "30de100dc5162026e1951ba8ddadeda687d4c00a125b95b872c35373cc385517"
     },
     {
@@ -3345,9 +3355,11 @@
           "presentButUnquotable": 4
         },
         "theirPage": "https://maggiefornh.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 4
       },
-      "payloadSha256": "405bc9d35d1e09153410c7ac58a8cd2327dcaf99938f9fb976ae6e1b792c1428",
+      "payloadSha256": "298bcbc6c85f78a2c45145c0defdc32cfa7cf03306c9e4c82e512215419e9135",
       "renderedTextSha256": "17352770e0a64831e814e092e42bcd377aebca42a3fbdcb4e053e58967c30dff"
     },
     {
@@ -3846,9 +3858,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://maggiefornh.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 4
       },
-      "payloadSha256": "a8c73d12ddb6b0b1035ad231476d71fb6ebb3d5d831d634bb4f6d2422b033c90",
+      "payloadSha256": "825870a1654072f5caa15195872a86b22c16e9d277fa1a30a22cb95941f9a27b",
       "renderedTextSha256": "fe2608047a814fb91f662eda29abe3887ed6c06cca6a5be1d68ca8d6ade46ede"
     },
     {
@@ -4258,9 +4272,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.lilytangwilliams.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "a930fbb05c9262bebd05ece8adf904f3337328705a441602911ee7e435e3261c",
+      "payloadSha256": "f87f70b99cdf825858c31e59a601fc4d8f348e6ea290c0e13934e8967698f751",
       "renderedTextSha256": "1fd402430333a3ff1b85e8b0c9a935f0eeb8c6ed14ef624be5af5baa852a8c04"
     },
     {
@@ -4647,8 +4663,7 @@
           }
         ],
         "canonicalSubjectKeys": [
-          "ballot-nh-merrimack:us-house-2:beauchemin-paige",
-          "plural:2fe799f4-a099-4667-ac0d-1bce40a08e3d"
+          "ballot-nh-merrimack:us-house-2:beauchemin-paige"
         ],
         "searched": {
           "pages": 1,
@@ -4657,9 +4672,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://gc.nh.gov/house/members/member.aspx?pid=11100",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "826f40e91256a29f01e768c24226779f6265d6199b1467fcf5322d52508e320a",
+      "payloadSha256": "00b248fdf9409d2e3bb93893d639058639a10cc598a0fa700db1350744bc0e00",
       "renderedTextSha256": "e92e132bc9692a4a48f28f47fb25cfb7e49fba3291a582683d698dac35abc313"
     },
     {
@@ -5055,9 +5072,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.rebeccafornh.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "bd2b6a20860f0d06d5f3df177b775bd259cba7f6ab66d55d7fa179e42aca9d08",
+      "payloadSha256": "788a7bd13be3748587dbb3dc61c419b9646eb3abba3632d5fcb95b7036ab234a",
       "renderedTextSha256": "fb87c7005ef85f7b1ca8e4a5a6659b214b7012c0245467d12b3f92752b915c80"
     },
     {
@@ -5662,8 +5681,7 @@
           }
         ],
         "canonicalSubjectKeys": [
-          "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-          "plural:f1292af8-a209-4ff7-87b5-086acddcc10e"
+          "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-"
         ],
         "searched": {
           "pages": 2,
@@ -5672,9 +5690,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://gregforrep.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "2e4664ea173e6b1645f3c29d97f8aec8552aa417b5e69eaf793cd0fd89454f63",
+      "payloadSha256": "4f80fb1e28f0f2be67c0d015d6b64d3318145573e276220aa97a8d5663ff3ba8",
       "renderedTextSha256": "98617d24d307e88565b0a60027c9f5cbe4e51cfb5e60e4bda78a2797095e0f15"
     },
     {
@@ -6070,9 +6090,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.karenliothill.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "65d3eac8094e1b268e1164475386531e47d4d44388d831286dde016876be240c",
+      "payloadSha256": "d8a00cf90e60046ac0b89cb4b198e09995de33c26e24d63daf9cad3abb9d3e99",
       "renderedTextSha256": "4083f0100be21d179b33342578a86dbc11a25f7c90d8802aa349d1656d359b1f"
     },
     {
@@ -6497,9 +6519,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://corybooker.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 3
       },
-      "payloadSha256": "c6c2453212bfce7b0771bc944661e74a6f9f638dc79cc8899e6ede702494332a",
+      "payloadSha256": "0a3c11727ba09ef980b24005d1be3cfd9201fdbfad39e366f328953a01bec2d4",
       "renderedTextSha256": "d628b874de5b28714e96dd9fda6e7e8b6099f3efa3d0c45e206d7d66502e876a"
     },
     {
@@ -6895,9 +6919,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://veronicaforsenate.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "c7de958f5682e9fa47366668d00b05b9b51c62aa850132cc2f6617d1578abb6e",
+      "payloadSha256": "437e9bed079d445b5dd1dff6ebd33afcf66a2a88a01824a9011a67ed72e707ac",
       "renderedTextSha256": "82d739cdfdfd9a0f7900ab89ec6a5c7a41df3eab93ec90d742007820a50e0d59"
     },
     {
@@ -7451,9 +7477,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://jerseyjustin4senate.org",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "16e12575533d41f9d361f03238a3934c4a9b22fbef85a098b639794384a11b4b",
+      "payloadSha256": "46605e5458043914a1928368fc8f8143b309e83537cb174c46669ceb8b496667",
       "renderedTextSha256": "6e297e179890f4c2b42b2dfcb8790539314026ccd8f11e3c216e2f95f1e21af9"
     },
     {
@@ -8012,9 +8040,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.joehathawayforcongress.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 12
       },
-      "payloadSha256": "80ea68a58d85a42e5f7092609477cd98b633888b717e66d9ef3fbc9761dba3d6",
+      "payloadSha256": "55f20f78eb155e7889cdbf4a142694cac5d8a57b3aadbd96b384bd4fb51691b9",
       "renderedTextSha256": "add56d9da30eeaf3bd76a1245d695a33c140b9ceb61d93be3fa01189f2f5fb60"
     },
     {
@@ -8480,9 +8510,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://www.analiliafornj.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "fe27ec8feece6f28809f836f56e4a31f37d103e36f39f46987263ba0fb47cfab",
+      "payloadSha256": "cfce875ed185ed3e9ae3aea659e0c5ffd7b96a5a3c29273050f48c600d8b5777",
       "renderedTextSha256": "c6228c6bf38eca481ad60e30486cf4e7188633560d6d04f3808b1b66b3ffcca8"
     },
     {
@@ -8962,9 +8994,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.analiliafornj.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "c403ec0bdc790b3fc81f1279f07aaf81fc17b9560c7bd980a48830dc4b4b063b",
+      "payloadSha256": "a457ef443ffd710d38784b37b822bb6ec1ac40fe860c0958a1a0f8c0fb3ed42e",
       "renderedTextSha256": "f56666569a8fd50e7b16f564afddbaaf076f807997487878c61ebe32971d3941"
     },
     {
@@ -9493,9 +9527,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.selenformorriscounty.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "3cbf717943b2b621ea06677eba0756e6199bce203721c999660a27b424a24f34",
+      "payloadSha256": "532a4509f87323e141a628398c95b2c1155f7de819b7adabf4f7c4a397f040d2",
       "renderedTextSha256": "6caf0edd608596e7331c3e062f10da2dfd5b57e0aa59a824d1053fa2ceda6976"
     },
     {
@@ -9968,9 +10004,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.selenformorriscounty.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "5354b902674804f6f8aed4773bae9eda907805f4ae79da7a42a4ba540a3582f7",
+      "payloadSha256": "f8e14a68619d53386a285ffb57e1cc9c64ba7c1c68370cd47777fe09a8c71beb",
       "renderedTextSha256": "401fc1c65ba8fdfa4df20e249fe6b8cf072b8979d515132c0ec80a5cf7ef8c3d"
     },
     {
@@ -10577,9 +10615,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://katiehobbs.org",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 11
       },
-      "payloadSha256": "270181f75bd9dd05cdc0fe39750541a2fcd3b5b92102b4d985deacd254d0715b",
+      "payloadSha256": "825b4e9a74de9d75845cc2129f484d1274868e140a95a9e86fce2732610fadd2",
       "renderedTextSha256": "c62ff44807ee898e09d6ce3b1ab898ea1c054c4f36e6e0bbec81cb2abe152653"
     },
     {
@@ -11102,9 +11142,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://katiehobbs.org",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "f3cf8f240163c91487cc0a3bde6aec42e94502302bf40d4ef45fbeb5cff07db6",
+      "payloadSha256": "2464d407eddd769369bbca6f523c04edeb0b305f89e0b40b65409863eb5c7bfd",
       "renderedTextSha256": "5627711683d9c60f99eaa4077276e23fa9ed489e3bf50325ce71be155fba8dcf"
     },
     {
@@ -11618,9 +11660,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://biggsforarizona.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "848232f9546ffdb1dd600bef81f0e2e720a487a901dd1e7592bc54e569b85d0d",
+      "payloadSha256": "7a9c88fb8f1b474db8654c97d84cea22cafb9c92ebf7b74176ef7db969f07b93",
       "renderedTextSha256": "d00f508b405d7e2184d4adb1a391bf15018767325a72bb13e388b25b0f3a0556"
     },
     {
@@ -12134,9 +12178,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://biggsforarizona.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "32c5fb53bf8e25a12a6e69e567885a1a9fb74418aa79beaed37ac4b016f234ae",
+      "payloadSha256": "e1088295908196a2914c07397a3f5a4de903fb83945b6136b96438761d8c6e20",
       "renderedTextSha256": "25017a20e1174bd721a5972b462ef67b7b9a2965a9a69971c9e3c947de798946"
     },
     {
@@ -12803,9 +12849,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://teriann4azgov.org",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 15
       },
-      "payloadSha256": "12209b9aeb956b7379ee718ede57f995418abc22084f34d75f516bd97df5051f",
+      "payloadSha256": "5a303621d67c479db222613bb0627d60de266961ef2b69b46e68432739bb927f",
       "renderedTextSha256": "3bfdf8f9feb557d3f6bf04a2778efbcd01d87b1320221e0e2628bd927c078d9c"
     },
     {
@@ -13263,9 +13311,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.adrianfontes.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "8ed313ff8f9f6abf331d03cd22f732dea7d1c16a4549ecf39b758e0249ce24eb",
+      "payloadSha256": "d0ebb13220a98e8393f41e4cbf53bf547f4c1305e1b474900a48eed53d0fb547",
       "renderedTextSha256": "626cc8f2544d922b9fd184e8f4e99481cf11bcb70b1b4eadfae8a150201c5817"
     },
     {
@@ -13751,9 +13801,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.adrianfontes.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 3
       },
-      "payloadSha256": "fc2b3a71719eb4f62db901d0838abdd7b1f9c02b8276719ccf1ce86bf156660a",
+      "payloadSha256": "020d92c143444f36094e2b65703a4904cc57c7ea81529b5b372066fbbdd29999",
       "renderedTextSha256": "4af6916bce17e79de005d8ea24fa8a08c1b23a774a97b49ce47bd69a7f4902f2"
     },
     {
@@ -14150,9 +14202,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.alexforaz.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "e418527cf2cb08f839dfd5f2e64bd5a098e240b26757fffad620f58b8ee0bdda",
+      "payloadSha256": "4dbe86333260eb47bcde60574eb0dc7cbc9a8c6a011f9db8009b81378a6e952f",
       "renderedTextSha256": "354f325f188680eb384a68114fa62e66b9f07e5179da74ae22e04a0c8560dc33"
     },
     {
@@ -14619,9 +14673,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://www.krismayes.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "ff9af997e5d0cfe751c84b85faf1ee45c739e0081cf016fda5b9bc1aaf825997",
+      "payloadSha256": "b1852cc5129cc3dcccb66f605663ec79a01c6c29b0bece57c636173619d9db93",
       "renderedTextSha256": "a6904df5dc352b5fd86d819a7cc5b08a29888bc97287655be87ca0367b36e26e"
     },
     {
@@ -15088,9 +15144,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.krismayes.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "3578e15cc818cbee69ed68a9ea322da6da1e2d5b7e9d84e3ccfc5812639574b6",
+      "payloadSha256": "981d7820c2cfb9480e5f963a6585dfebc085f4e75e19e03b000fc903766dbdc4",
       "renderedTextSha256": "c259a221ca0eb0f9e0c9c07b899586053b28654fa7543f4c42c8c5726281b611"
     },
     {
@@ -15487,8 +15545,7 @@
         ],
         "canonicalSubjectKeys": [
           "ballot-az-pima:attorney-general:petersen-warren",
-          "ballot-az-pima:attorney-general|Warren Petersen",
-          "plural:66e496a4-a407-4af1-add3-ef6899b89807"
+          "ballot-az-pima:attorney-general|Warren Petersen"
         ],
         "searched": {
           "pages": 1,
@@ -15497,9 +15554,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1966",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "0773245cf0a7b97f421a13a091da4dd61beeac4b736edd6daaf1ba3668309719",
+      "payloadSha256": "acd2c13df7dfd7cf652e995094a4a450867b9099c93198423579f5338f629c9f",
       "renderedTextSha256": "feb3f436f36b83f3bbfe4d699dc69a075459b431502e9302776518ed30bdf7c6"
     },
     {
@@ -15910,9 +15969,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://mansourforarizona.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "8c8183d21fecb4a572b5cb51e1156d5a23835f10cd8e0b11645768ca0a8e098b",
+      "payloadSha256": "9f98d19992744e8ec1a60bf613b16597e2b8676b67224243dd9854de8b6c49d2",
       "renderedTextSha256": "111f9eacf1710ae264e5cdb63123318968d834e4ce33736089235c5cf9b55f50"
     },
     {
@@ -16416,9 +16477,11 @@
           "presentButUnquotable": 2
         },
         "theirPage": "https://nortonforaz.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 8
       },
-      "payloadSha256": "6e328ba1f1209eb63e3688490658a933f52bc281b96d8ad3973bd89fec65b248",
+      "payloadSha256": "5fddbdb346cc9f18079722768d869516c6ecc1b889f333ff8bc7a9b0fd2ed6a5",
       "renderedTextSha256": "bfd22acfccfe2d0bfbc57fbfc3584205275a88e0e3cf704746b49a1d9659e5d8"
     },
     {
@@ -16831,9 +16894,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.drruizforarizona.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "f3774bb6b590c5812799be6cb7766250ce7cb0cc893f023945155654574dc9bc",
+      "payloadSha256": "2e79bd4f8fbbe51d381b686a385839200d9928222cbebab6bffa38e7a660784f",
       "renderedTextSha256": "b5a3e0aa3cda27689024be1745ed68a5e676eda4db4978344d49889780d91cca"
     },
     {
@@ -17321,9 +17386,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.kimberlyyee.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "1778c9a1badadcecc91127c63175619f81b0587ec45b768c23ed7d87d9179fd2",
+      "payloadSha256": "080b5434bdb2cb5edd5cffe19841186e7dc30e10c890843a957de13ce5ff27ba",
       "renderedTextSha256": "e72a8ae46d9ec8ba742b546bfe513f74ae2f4a898312a6452fbef7a975f90b9f"
     },
     {
@@ -17853,9 +17920,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.kimberlyyee.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 5
       },
-      "payloadSha256": "d5f8bff18a28267678f94e7082dd8fdd9332dd419cb96ae7611cb75dfd8ce4a3",
+      "payloadSha256": "88715c15168454c01dcb029060f730b49d507683a27e3f711e7934c826c327f4",
       "renderedTextSha256": "d23f8f26f5b3935891a91d313adab371877368da0c33b5506e3d129a021c6ae5"
     },
     {
@@ -18283,9 +18352,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://lespresmyk.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "4b80458b75d12f66704dd337b22e2195f730ff9b46c5b4aff76cc5b4ec523092",
+      "payloadSha256": "4cffddb910a23c1a13d8436f737ebacfb1192199f5b9ef1878695ac2fc36d041",
       "renderedTextSha256": "e0652f71f6e33911a4e330f78df6c31f14ee487e7118f2a89bb6f29f706e6778"
     },
     {
@@ -18729,9 +18800,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://juanciscomani.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 3
       },
-      "payloadSha256": "1930ba3a684db53abf27c92d05b35f7d6b2bdf9c993d3b847389cc9fe048c44d",
+      "payloadSha256": "c7f3a8a221b9012136481e893d2eff52a97f5ae4639d8f87a53d1faa9883e51d",
       "renderedTextSha256": "37b56cda9c8f1d8798d289aaf004f6ec5d8ffca520d08e689008b57523dfe85a"
     },
     {
@@ -19255,9 +19328,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.joannamendoza.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 7
       },
-      "payloadSha256": "79d74ffde5e9a4793cc6d14e0bde89e6910903b81ee90e63e567015a08724cf3",
+      "payloadSha256": "ff48169ee1a8e0558aaa99856746d0f3640df1183bf014785c2808a2d4e7af24",
       "renderedTextSha256": "703379392afd00883e8b1051b7d0f08354a29f9ea9b6c89d4df3e3a4a44d75d2"
     },
     {
@@ -19692,9 +19767,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://theswingvote.wixsite.com/unity",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "8e1a55deeeb9728d00a4e709a5afc13c3630328844d5295d32193414314f4a72",
+      "payloadSha256": "375f1385b2f1583786f6d4cb060fb581f886e3d8c0b02f719b81e1202049fefa",
       "renderedTextSha256": "548fecff857b32ed884062673a711319cfbf02f5939de1a06c087765e017e0a8"
     },
     {
@@ -20090,9 +20167,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.rwkarp.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "a5b0072da201c37699554b2c4fb9fbc729bd9dfa9d3c318e9e66aa0295a5629e",
+      "payloadSha256": "fe19d866cd978ffec74287542fd9d15f94569ee643a45a3726ecfcb6b1547d69",
       "renderedTextSha256": "6d3e72bbe9e81884984bd5c8f51e0d82119fbed19d7b4b27e36221ce4cc438d9"
     },
     {
@@ -20512,8 +20591,7 @@
         ],
         "canonicalSubjectKeys": [
           "ballot-az-pima:state-house-19:diaz-lupe",
-          "ballot-az-pima:state-house-19|Lupe Diaz",
-          "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5"
+          "ballot-az-pima:state-house-19|Lupe Diaz"
         ],
         "searched": {
           "pages": 2,
@@ -20522,9 +20600,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2100",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "2ebc6c7e2e82132d05c6c51398b8c837eb79fb05be51b474429bae7a4cbd70cb",
+      "payloadSha256": "79805e34ad143624b8a1cbfc97200d4a634cc0b14911c99c4582e1aaf22c5f92",
       "renderedTextSha256": "111dcfec7b9803069196074ccb3ae0262eb88fa3e0c9a594fff994d791e79a42"
     },
     {
@@ -20999,9 +21079,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://aswallowforaz.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 1
       },
-      "payloadSha256": "76f385d663d05320e495fca985cd4c0c0fc00c32b5352d89c072dca444554b9d",
+      "payloadSha256": "7804742b508493420adee3772e3369c09b74ceb6c0c4c957f704864a47261e98",
       "renderedTextSha256": "9f6dffc2ccd8a4bb581d13cc41f512d89b0ead50156d7529e7d628fe15f5b1ab"
     },
     {
@@ -21473,9 +21555,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.adelitaforcongress.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "0384aa2834cb54fb25fd0458efe1e69d28fa037bb106fe117c40e194dce0437c",
+      "payloadSha256": "1445a99b415209ddb3ff50faaf821704ca34b7661895066b67ecac1efd31d81b",
       "renderedTextSha256": "bcaf171311a3e7675442994ddf230c0235021fc2ba60cf71418c32e5c45e964e"
     },
     {
@@ -21947,9 +22031,11 @@
           "presentButUnquotable": 1
         },
         "theirPage": "https://www.adelitaforcongress.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "393dbc3c0171014f38494843e1893cc26667dd711471a9a10dfb9d927f7f0cd0",
+      "payloadSha256": "726a5a995368228ebd39ba742ca42fa11d7200afb53db54c0e3b209ddb665c70",
       "renderedTextSha256": "1ea1a51ce760e9a41be189f39b4b63257bcd0122452c7f37521ad10b28c54e82"
     },
     {
@@ -22378,9 +22464,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://butierezforcongress.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "c98196198a688df90320de4a3cbb95f1fc1195fb9bc20889fd7c41376ea93ec9",
+      "payloadSha256": "ad957962e21f485ddc164b13a9e87d99d1ed31aecc9f4f6d5e077a84f0a82c48",
       "renderedTextSha256": "7012bf4e3b6f0dd8683107b22eb6ac8b655069f1cb080f214ad291a54c1f9d85"
     },
     {
@@ -22772,7 +22860,7 @@
       "topic": "most",
       "returnedRecordIds": [
         "ballot-az-pima:state-senate-20|Alma Hernandez@9bb951bea7187cd09862790c0016f86bd471e05a0627016e7d4bb4c851207f2b",
-        "plural:6dba6afa-b274-4273-b8c6-270d27214eee|https://www.azleg.gov/house-member/?legislature=55&legislator=2033|9694cf8d6215d19704f90141171ddf4a1970a42f996bf061a0456083096b9541"
+        "ballot-az-pima:state-senate-20:hernandez-alma|https://www.azleg.gov/house-member/?legislature=55&legislator=2033|9694cf8d6215d19704f90141171ddf4a1970a42f996bf061a0456083096b9541"
       ],
       "statedCount": 2,
       "renderedCount": 2,
@@ -22794,7 +22882,7 @@
             "canonicalSubjectId": "ballot-az-pima:state-senate-20|Alma Hernandez"
           },
           {
-            "snapshotId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee|https://www.azleg.gov/house-member/?legislature=55&legislator=2033|9694cf8d6215d19704f90141171ddf4a1970a42f996bf061a0456083096b9541",
+            "snapshotId": "ballot-az-pima:state-senate-20:hernandez-alma|https://www.azleg.gov/house-member/?legislature=55&legislator=2033|9694cf8d6215d19704f90141171ddf4a1970a42f996bf061a0456083096b9541",
             "url": "https://www.azleg.gov/house-member/?legislature=55&legislator=2033",
             "kind": "OFFICIAL_PAGE",
             "title": "House Member",
@@ -22804,13 +22892,12 @@
               "most"
             ],
             "changedSince": null,
-            "canonicalSubjectId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee"
+            "canonicalSubjectId": "ballot-az-pima:state-senate-20:hernandez-alma"
           }
         ],
         "canonicalSubjectKeys": [
           "ballot-az-pima:state-senate-20:hernandez-alma",
-          "ballot-az-pima:state-senate-20|Alma Hernandez",
-          "plural:6dba6afa-b274-4273-b8c6-270d27214eee"
+          "ballot-az-pima:state-senate-20|Alma Hernandez"
         ],
         "searched": {
           "pages": 2,
@@ -22819,9 +22906,11 @@
           "presentButUnquotable": 0
         },
         "theirPage": "https://www.azleg.gov/house-member/?legislature=55&legislator=2033",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "2611cb3c610cc88696221ac81a80eebb12180f68f8ff594601fc1aa7255f1a60",
+      "payloadSha256": "58194a1c32d1259f920bc6a0ea93b52d814e8272b316635168a80ede14bedb20",
       "renderedTextSha256": "6a944757d98fabee503a8a584cd71324e5df3578eb2eae0e846483dade199122"
     },
     {
@@ -23204,7 +23293,7 @@
       "topic": "represent",
       "returnedRecordIds": [
         "ballot-az-pima:state-house-20|Betty Villegas@5470bfbc3f4cb7a3186e52da8811d1febb41bdd68ac3b5aabb83be781bb2fae1",
-        "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2|https://bettyvillegasaz.com|50f58d8e9d0212f49fbeea68a80dbb0f425bbcfa07bd71512664495916f613d4"
+        "ballot-az-pima:state-house-20:villegas-betty|https://bettyvillegasaz.com|50f58d8e9d0212f49fbeea68a80dbb0f425bbcfa07bd71512664495916f613d4"
       ],
       "statedCount": 2,
       "renderedCount": 2,
@@ -23226,7 +23315,7 @@
             "canonicalSubjectId": "ballot-az-pima:state-house-20|Betty Villegas"
           },
           {
-            "snapshotId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2|https://bettyvillegasaz.com|50f58d8e9d0212f49fbeea68a80dbb0f425bbcfa07bd71512664495916f613d4",
+            "snapshotId": "ballot-az-pima:state-house-20:villegas-betty|https://bettyvillegasaz.com|50f58d8e9d0212f49fbeea68a80dbb0f425bbcfa07bd71512664495916f613d4",
             "url": "https://bettyvillegasaz.com",
             "kind": "CAMPAIGN_SITE",
             "title": "Betty Villegas | LD 20 legislator",
@@ -23236,13 +23325,12 @@
               "represent"
             ],
             "changedSince": null,
-            "canonicalSubjectId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2"
+            "canonicalSubjectId": "ballot-az-pima:state-house-20:villegas-betty"
           }
         ],
         "canonicalSubjectKeys": [
           "ballot-az-pima:state-house-20:villegas-betty",
-          "ballot-az-pima:state-house-20|Betty Villegas",
-          "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2"
+          "ballot-az-pima:state-house-20|Betty Villegas"
         ],
         "searched": {
           "pages": 2,
@@ -23250,10 +23338,12 @@
           "unreadable": 2,
           "presentButUnquotable": 0
         },
-        "theirPage": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2274",
+        "theirPage": "https://bettyvillegasaz.com",
+        "holdingStatus": "HELD",
+        "unavailableAuthorities": [],
         "totalMatches": 2
       },
-      "payloadSha256": "6e16aef2da7aec7ee4c19ae4871aa2c5416c9ab94d2db7e09558b96b8f6bdbd1",
+      "payloadSha256": "aedfb5d5c7e008755ec292df378be9b0bab401caad74ef8fc1b8e3220f5f5ef2",
       "renderedTextSha256": "729ed0f68bfb0232c022c8d29839923dafcd4f9bd1edd14914930540682ad1b1"
     }
   ],

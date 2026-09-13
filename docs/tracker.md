@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-09-12 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-13 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **461 open**, 488 resolved.
+- **465 open**, 488 resolved.
 - **79 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -25,7 +25,7 @@ and when. Nothing is ever deleted.
   - Data infrastructure — **3**
   - Product / UI — **3**
   - Constitution & rules — **1**
-  - Repo & ops — **16** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Repo & ops — **17** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - Decided by Sean — act on it — **0**
 
 **1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
@@ -952,7 +952,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**89 open · 99 resolved.**
+**93 open · 99 resolved.**
 
 ### P1
 
@@ -1124,6 +1124,20 @@ Do not act on a cause read from another run's record. Re-emit or locate the corr
 OPERATIONAL INCIDENT (RULING 218): engineering work, never a Needs-Owner escalation by itself.
 
 [job-watch:refresh-outcome:34694727326]
+
+**JOB82** — The newest scheduled refresh is red on GitHub, but its canonical execution record does not reconcile with this run, so WHY it failed is NOT stated from mismatched evidence (R3, RULING 243).
+
+PROVENANCE_MISMATCH — causal diagnosis suppressed.
+  execution record: SeanJ22/meanwhile run 34760799370 attempt 1
+  the following provenance fields did not reconcile with the observed run:
+    - survivorCommitSha: record says "eca9f1d75d16dfda29c68f12381e1affb982379c", observed "no such commit in the repository"
+  The workflow may still be reported red from GitHub, but WHY it failed is not explained from evidence bound to a different execution.
+
+Do not act on a cause read from another run's record. Re-emit or locate the correct execution result for run 34760799370, or read the run log directly.
+
+OPERATIONAL INCIDENT (RULING 218): engineering work, never a Needs-Owner escalation by itself.
+
+[job-watch:refresh-outcome:34760799370]
 
 **NH170** — Three separate defects, all reproduced before they were touched, all fixed in final-pass-0825 — this row exists so the FOURTH is not lost. (1) legistar's composite wrapper re-branded the adapter's result through a second accountedNormalize call without countedButProduced, so every online meeting was counted once as produced and once as dropped; against the recorded Pima fixture the adapter reports CONSERVED 18 of 18 and the wrapper threw '4 more dispositions than records'. (2) nj-filing ran nj:filing:check BEFORE nj:ballot --write, and the check exits non-zero on STALE — so the staleness gate stopped the only command that could clear the staleness, and curatedAt froze on 2026-08-23. (3) The orchestrator's own header states a three-valued exit vocabulary and calls exit 2 'commit the survivors, THEN go red', and runCommand asked status === 0 — so the ingest's 'PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: 451 rows from 10 of 11 sources' was read exactly like a total failure and the workflow printed 'nothing usable was written'. WHAT IS STILL OWED: the daily refresh has not been verified end-to-end since the fixes. It runs at 09:11 UTC. Read the next run and confirm all three paths behave — and if legistar conserves and nj-filing rebuilds and a partial commits, close this.
 
@@ -1638,6 +1652,42 @@ THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflow
 OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
 
 [job-watch:dispatch-delay:refresh-daily.yml@2026-09-12T09:11:00.000Z]
+
+**JOB83** — AUDITED SLOT: 2026-09-13T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-09-13T18:19:43.006Z. Run 34763248875 was created 237.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 276 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (276 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-09-13T18:19:43.006Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:intake-tripwire.yml@2026-09-13T10:41:00.000Z]
+
+**JOB84** — AUDITED SLOT: 2026-09-13T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-09-13T18:19:43.006Z. Run 34774244090 was created 159 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded 
+
+ENVELOPE USED: envelope 276 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (276 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-09-13T18:19:43.006Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:job-watch.yml@2026-09-13T15:40:00.000Z]
+
+**JOB85** — AUDITED SLOT: 2026-09-13T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-09-13T18:19:43.006Z. Run 34760799370 was created 276 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_FAILED — failed at: (steps were not read). No log text was read, so a push rejection cannot be ruled out — this is "not shown to be a push rejection", not "shown not to be one". 
+
+ENVELOPE USED: envelope 276 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (276 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-09-13T18:19:43.006Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:refresh-daily.yml@2026-09-13T09:11:00.000Z]
 
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
 

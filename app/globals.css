@@ -138,28 +138,11 @@
   --district-line: #5f7a8a;
 
   /* Party affiliation colors (3a, 2026-08-19) — display only, applied to — docs/globals-css-notes.md#party-affiliation-colors-3a-2026-08-19-display-only-applied-to-5 */
-  /* @proposed (design handoff 2026-09-13): party FILLS are now NON-THEMED — one
-     blue and one red in both themes — because a party colour a reader recognises
-     must not shift when the lights change, and cream ink (--party-on) clears
-     4.5:1 on these deep fills in both themes (the former dark-theme light-tint
-     fill + page-ground ink was the pairing that did not generalise). The FILLS
-     are consumed ONLY by the IdentityChip party variant (partyFillVar → the
-     inline --chip-fill). Party-as-TEXT keeps its themed values (--party-text-*,
-     below), so every ballot/popup party WORD renders exactly as before. */
-  --party-democratic: #2457b8;
-  --party-republican: #b3362a;
-  --party-green: #1e7a3c;
-  --party-independent: #6b3fa0;
-  --party-none: #6a7079;
-  /* Party as PLAIN TEXT (the ballot view, popup party lines) — themed, light in
-     dark so a word stays legible. These are the app's FORMER --party-* values,
-     verbatim, so party text is unchanged by the fill proposal above. Read via
-     partyColorVar; never used as a chip fill. */
-  --party-text-democratic: #7da7f0;
-  --party-text-republican: #f0857c;
-  --party-text-green: #6fcf8f;
-  --party-text-independent: #b48ae0;
-  --party-text-none: #9aa0ab;
+  --party-democratic: #7da7f0;
+  --party-republican: #f0857c;
+  --party-green: #6fcf8f;
+  --party-independent: #b48ae0;
+  --party-none: #9aa0ab;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
   /* Lumen × Meanwhile (2026-09-13): enriched to the shipped popup-card / modal
@@ -186,10 +169,10 @@
   --ring: #4fc9e8;
   --link-glow: rgba(79, 201, 232, 0.38);
 
-  /* Text ON a filled PARTY chip. @proposed (2026-09-13): the fills are now the
-     deep non-themed blue/red, so the ink is cream in BOTH themes (was the page
-     ground #0f1117, which paired with the former dark light-tint fill). */
-  --party-on: #fdfaf4;
+  /* Text ON a filled PARTY chip (item 3). The party colours are tuned as
+     TEXT colours, so in dark they are light and the chip's text is the page
+     ground. Same inversion the tier fills already use. */
+  --party-on: #0f1117;
 
   /* VOTE AND REACTION PILLS (item 5) — docs/globals-css-notes.md#vote-and-reaction-pills-item-5-9 */
   --vote-yes: #1c7d4c;
@@ -304,13 +287,11 @@
   --tier-fill-state: #1cc3a2;
   --tier-fill-national: #90afe4;
   --tier-fill-on: #14161c;
-  /* Party FILLS are non-themed now (declared once in :root); the light theme
-     carries only the party-as-TEXT tokens — deep, so a word reads on paper. */
-  --party-text-democratic: #2457b8;
-  --party-text-republican: #b3362a;
-  --party-text-green: #1e7a3c;
-  --party-text-independent: #6b3fa0;
-  --party-text-none: #6a7079;
+  --party-democratic: #2457b8;
+  --party-republican: #b3362a;
+  --party-green: #1e7a3c;
+  --party-independent: #6b3fa0;
+  --party-none: #6a7079;
 
   /* MTG-14 (2026-08-28): #4a8481 measured 3.81:1 against --bg, BELOW the AA
      bar, and it was shipping — the meeting status tokens had never been in the

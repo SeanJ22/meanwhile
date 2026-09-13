@@ -1,7 +1,7 @@
 import { constants } from "node:fs";
 import { lstat, open, realpath } from "node:fs/promises";
 import { dirname, isAbsolute, join, parse, relative, resolve, sep } from "node:path";
-import { PROMOTER_VERSION, PROMOTION_REFUSALS, RECEIPTS_DIR, receiptSummary, type PromotionReceipt, type PromotionTarget } from "./promotion/promoter.ts";
+import { RECEIPTS_DIR, receiptSummary, isHistoricalPromotionReceipt, isHistoricalReceiptTimestamp, type PromotionReceipt, type PromotionTarget } from "./promotion/historical-receipt.ts";
 import type { WindowRunRecord } from "./promotion/types.ts";
 import { canonicalJson } from "./repository/types.ts";
 
@@ -26,44 +26,6 @@ export interface FleetReceiptStore {
   read(windows: readonly WindowRunRecord[], observedAt: string): Promise<FleetReceiptLoadReport>;
 }
 type Summary = NonNullable<WindowRunRecord["promotionReceipts"]>[number];
-type JsonObject = Record<string, unknown>;
-const object = (value: unknown): value is JsonObject => value !== null && typeof value === "object" && !Array.isArray(value);
-const string = (value: unknown): value is string => typeof value === "string";
-const strings = (value: unknown): value is string[] => Array.isArray(value) && value.every(string);
-const nullableString = (value: unknown) => value === null || string(value);
-const timestamp = (value: unknown): value is string => string(value) && Number.isFinite(Date.parse(value));
-const nullableTimestamp = (value: unknown) => value === null || timestamp(value);
-const integer = (value: unknown) => typeof value === "number" && Number.isSafeInteger(value);
-const nullableCount = (value: unknown) => value === null || (integer(value) && (value as number) >= 0);
-const hash = (value: unknown) => value === null || (string(value) && /^[a-f0-9]{64}$/.test(value));
-const boolean = (value: unknown) => typeof value === "boolean";
-const oneOf = (value: unknown, values: readonly string[]) => string(value) && values.includes(value);
-
-/** Shape validation only. Failed/refused/reversed receipts remain reportable evidence, never upgraded. */
-function isReceipt(value: unknown): value is PromotionReceipt {
-  if (!object(value)) return false;
-  const r = value, a = r.authority, b = r.before, after = r.after;
-  if (r.formatVersion !== 1 || r.version !== PROMOTER_VERSION || !string(r.receiptId) || !timestamp(r.at) || !nullableString(r.windowId) ||
-    !object(r.target) || !oneOf(r.target.kind, ["READER", "SHADOW"]) || !string(r.target.root) || !object(a) ||
-    !boolean(a.enabled) || !strings(a.openRecordClasses) || !oneOf(a.basis, ["LIVE_ACTIVATION_GATE", "SHADOW_CANARY_AS_IF"]) || !string(a.reason) ||
-    !Array.isArray(r.items) || !r.items.every(item => object(item) && [item.itemId, item.recordClass, item.factKey, item.meetingId].every(string) &&
-      oneOf(item.change, ["ADD", "REPLACE", "UNCHANGED"]) && strings(item.changedFields)) ||
-    !Array.isArray(r.refused) || !r.refused.every(item => object(item) && [item.itemId, item.recordClass, item.detail].every(string) && oneOf(item.code, PROMOTION_REFUSALS)) ||
-    !object(b) || !string(b.path) || !boolean(b.existed) || !hash(b.sha256) || !nullableString(b.copy) ||
-    !object(after) || !hash(after.sha256) || !nullableCount(after.meetings) || !boolean(after.written) || !nullableString(r.receiptPath) || !strings(r.lines)) return false;
-  const v = r.verification;
-  if (v !== null && (!object(v) || !string(v.instrument) || !(v.exitCode === null || integer(v.exitCode)) ||
-    !(v.passed === null || boolean(v.passed)) || !string(v.detail))) return false;
-  const g = r.regression;
-  if (g !== null && (!object(g) || !oneOf(g.action, ["NONE", "REVERT_AND_INCIDENT", "INCIDENT_WITHOUT_REVERT"]) || !string(g.reason))) return false;
-  const reversal = r.reversal;
-  if (reversal !== null && (!object(reversal) || !boolean(reversal.executed) || !nullableTimestamp(reversal.at) ||
-    !hash(reversal.restoredSha256) || !(reversal.matchesBefore === null || boolean(reversal.matchesBefore)) || !string(reversal.detail))) return false;
-  const incident = r.incident;
-  return incident === null || (object(incident) && incident.formatVersion === 1 && [incident.incidentId, incident.windowId, incident.code, incident.detail].every(string) &&
-    oneOf(incident.stage, ["LEGACY_REFRESH", "PIPELINE_EVALUATION", "POST_PROMOTION_VERIFICATION", "DIGEST", "LOCK", "PROMOTION"]) && timestamp(incident.openedAt) && strings(incident.missedScope));
-}
-
 function pathEqual(a: string, b: string): boolean {
   const left = resolve(a), right = resolve(b);
   return process.platform === "win32" ? left.toLowerCase() === right.toLowerCase() : left === right;
@@ -134,7 +96,7 @@ export function createFleetReceiptStore(input: { readonly targets: readonly Prom
   const cache = new Map<string, { receipt: PromotionReceipt; at: string; readSequence: number }>();
   let readSequence = 0;
   return { async read(windows, observedAt) {
-    if (!timestamp(observedAt)) throw new Error("FLEET_RECEIPT_CLOCK_INVALID");
+    if (!isHistoricalReceiptTimestamp(observedAt)) throw new Error("FLEET_RECEIPT_CLOCK_INVALID");
     const thisRead = ++readSequence;
     const candidates = new Map<string, { windowId: string; summary: Summary; conflict: boolean }>();
     let additionalSkippedReferences = 0;
@@ -169,7 +131,7 @@ export function createFleetReceiptStore(input: { readonly targets: readonly Prom
             const body = await readBoundedFile(target.root, path, maxReceiptBytes);
             let decoded: unknown;
             try { decoded = JSON.parse(body.toString("utf8")); } catch { throw new InvalidReceipt("RECEIPT_JSON_INVALID"); }
-            if (!isReceipt(decoded)) throw new InvalidReceipt("RECEIPT_SCHEMA_INVALID");
+            if (!isHistoricalPromotionReceipt(decoded)) throw new InvalidReceipt("RECEIPT_SCHEMA_INVALID");
             validateBinding(decoded, summary, windowId, target, path, observedAt);
             if (loaded) throw new InvalidReceipt("RECEIPT_MULTIPLE_CONFIGURED_ROOT_MATCHES");
             loaded = decoded;

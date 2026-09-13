@@ -6,7 +6,7 @@ import { canonicalJson } from "./repository/types.ts";
 import { deriveItemState } from "./promotion/pipeline.ts";
 import type { FactItem } from "./promotion/fact-chain.ts";
 import { isMeetingFactClass } from "./promotion/meeting-facts.ts";
-import type { PromotionReceipt } from "./promotion/promoter.ts";
+import type { PromotionReceipt } from "./promotion/historical-receipt.ts";
 import { projectFactToReader, readerRendering, type ReaderRendering } from "./promotion/reader-projection.ts";
 import type { PipelineStage, WindowRunRecord } from "./promotion/types.ts";
 import type { AutonomousObligationActivity } from "./workers/activity.ts";

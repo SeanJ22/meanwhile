@@ -8,7 +8,7 @@ import { PULSE_STALE_MS } from "./live-pulse.ts";
 import { decisionCardKind, type OwnerDecisionCard, type OwnerSnapshot } from "./owner-surface.ts";
 import { deriveItemState, stageCounts } from "./promotion/pipeline.ts";
 import type { PipelineItemState, VerificationCheck, WindowRunRecord } from "./promotion/types.ts";
-import type { PromotionReceipt } from "./promotion/promoter.ts";
+import type { PromotionReceipt } from "./promotion/historical-receipt.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { RouteTask } from "./route-task.ts";
 import { readAutonomousActivity, type AutonomousActivityEvent, type AutonomousObligationActivity } from "./workers/activity.ts";

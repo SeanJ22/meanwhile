@@ -46,19 +46,15 @@ import { formatMeetingTime } from "../../map/format.ts";
 import { readSnapshot, validateSnapshot, writeSnapshot } from "../../meetings/snapshot.ts";
 import { fingerprint } from "../ids.ts";
 import { isMeetingFactClass, type MeetingFact } from "./meeting-facts.ts";
-import { projectionLines, proposeSnapshot, type ReaderChangeKind } from "./reader-projection.ts";
+import { projectionLines, proposeSnapshot } from "./reader-projection.ts";
 import type { ActivationGateReading, ItemVerdict, WindowIncident } from "./types.ts";
-import { decideRegression, openIncident, type RegressionAction, type VerificationVerdict } from "./window.ts";
+import { decideRegression, openIncident, type VerificationVerdict } from "./window.ts";
 
-export const PROMOTER_VERSION = "promoter/1";
-export const RECEIPTS_DIR = ["data", "health", "promotion-receipts"] as const;
-
-export interface PromotionAuthority {
-  readonly enabled: boolean;
-  readonly openRecordClasses: readonly string[];
-  readonly basis: "LIVE_ACTIVATION_GATE" | "SHADOW_CANARY_AS_IF";
-  readonly reason: string;
-}
+// Compatibility surface while this legacy producer exists. Retire these exports with the producer;
+// historical readers import the independent leaf directly and must never restore this writer.
+export { PROMOTER_VERSION, RECEIPTS_DIR, PROMOTION_REFUSALS, receiptSummary } from "./historical-receipt.ts";
+export type { PromotionAuthority, PromotionTarget, PromotionRefusalCode, PromotionRefusal, PromotionReceipt } from "./historical-receipt.ts";
+import { PROMOTER_VERSION, RECEIPTS_DIR, type PromotionAuthority, type PromotionRefusalCode, type PromotionRefusal, type PromotionReceipt, type PromotionTarget } from "./historical-receipt.ts";
 
 /** The live gate as the promoter reads it. OFF today, and OFF is what this returns. */
 export function liveAuthority(gate: Pick<ActivationGateReading, "promotionEnabled" | "openRecordClasses" | "reason">): PromotionAuthority {
@@ -68,50 +64,6 @@ export function liveAuthority(gate: Pick<ActivationGateReading, "promotionEnable
 /** An as-if authority for the shadow canary. It can never drive the READER target. */
 export function shadowAuthority(openRecordClasses: readonly string[], reason: string): PromotionAuthority {
   return { enabled: true, openRecordClasses, basis: "SHADOW_CANARY_AS_IF", reason };
-}
-
-export type PromotionTarget = { readonly kind: "SHADOW"; readonly root: string } | { readonly kind: "READER"; readonly root: string };
-
-export const PROMOTION_REFUSALS = [
-  "PROMOTION_OFF",
-  "SHADOW_AUTHORITY_CANNOT_TARGET_READER",
-  "NOT_PROMOTE_WOULD",
-  "RECORD_CLASS_CLOSED",
-  "RECORD_CLASS_NOT_A_MEETING_FACT",
-  "FACT_NOT_LOADED",
-  "FACT_HELD",
-  /** An agenda for a sitting the Reader does not serve and this batch does not promote the time of. */
-  "AGENDA_WITHOUT_SITTING",
-  "NO_CURRENT_SNAPSHOT",
-  "PROJECTION_INVALID",
-] as const;
-export type PromotionRefusalCode = (typeof PROMOTION_REFUSALS)[number];
-
-export interface PromotionRefusal {
-  readonly itemId: string;
-  readonly recordClass: string;
-  readonly code: PromotionRefusalCode;
-  readonly detail: string;
-}
-
-export interface PromotionReceipt {
-  readonly formatVersion: 1;
-  readonly version: typeof PROMOTER_VERSION;
-  readonly receiptId: string;
-  readonly at: string;
-  readonly windowId: string | null;
-  readonly target: PromotionTarget;
-  readonly authority: PromotionAuthority;
-  readonly items: readonly { readonly itemId: string; readonly recordClass: string; readonly factKey: string; readonly meetingId: string; readonly change: ReaderChangeKind; readonly changedFields: readonly string[] }[];
-  readonly refused: readonly PromotionRefusal[];
-  readonly before: { readonly path: string; readonly existed: boolean; readonly sha256: string | null; readonly copy: string | null };
-  readonly after: { readonly sha256: string | null; readonly meetings: number | null; readonly written: boolean };
-  readonly verification: VerificationVerdict | null;
-  readonly regression: { readonly action: RegressionAction; readonly reason: string } | null;
-  readonly reversal: { readonly executed: boolean; readonly at: string | null; readonly restoredSha256: string | null; readonly matchesBefore: boolean | null; readonly detail: string } | null;
-  readonly incident: WindowIncident | null;
-  readonly receiptPath: string | null;
-  readonly lines: readonly string[];
 }
 
 export interface PromoteInput {
@@ -300,10 +252,4 @@ export function verifyMaterialization(receipt: PromotionReceipt): VerificationVe
   } catch (error) {
     return { instrument, exitCode: 1, passed: false, detail: `the readback refused: ${error instanceof Error ? error.message : String(error)}` };
   }
-}
-
-/** The window record's summary of one receipt. */
-export function receiptSummary(receipt: PromotionReceipt): { receiptId: string; target: "SHADOW" | "READER"; promoted: number; refused: number; reverted: boolean; incidentId: string | null; path: string | null } {
-  return { receiptId: receipt.receiptId, target: receipt.target.kind, promoted: receipt.items.length, refused: receipt.refused.length,
-    reverted: receipt.reversal?.executed === true && receipt.reversal.matchesBefore === true, incidentId: receipt.incident?.incidentId ?? null, path: receipt.receiptPath };
 }

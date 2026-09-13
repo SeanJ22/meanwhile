@@ -20,10 +20,15 @@ import { FIXTURE_NOW } from "./helpers/autonomous-fleet.ts";
 import {
   anySectionUnavailable,
   applyRefresh,
+  deliveryItemStatusLabel,
+  deliverySummary,
   EMPTY_CONSUMER_STATE,
+  extensionCapability,
   nextActionDisplay,
+  scoutPrerequisite,
   spendingDisplay,
 } from "../lib/admin/fleet-operations-view.ts";
+import type { FleetDeliveryItem } from "../lib/control-plane/fleet-delivery.ts";
 
 test("the consumer folds a real empty report and matches the version", async () => {
   const repos = createMemoryRepositories();
@@ -82,6 +87,38 @@ test("a store-unreachable section is surfaced even though other sections are hel
   // A report whose operations are unreachable is still a REPORT the consumer shows,
   // with the section marked unavailable rather than empty.
   assert.equal(state.shown?.operations.kind, "STORE_UNREACHABLE");
+});
+
+test("the v1.1 extension capability is PRESENT from this producer, UNAVAILABLE when omitted", async () => {
+  const repos = createMemoryRepositories();
+  const report = await readFleetOperations(repos, { observedAt: FIXTURE_NOW });
+  assert.equal(extensionCapability(report), "PRESENT");
+  // An older producer omits extensionVersion → unavailable capability, not empty.
+  const older = { ...report, extensionVersion: undefined as unknown as typeof report.extensionVersion };
+  assert.equal(extensionCapability(older), "UNAVAILABLE");
+});
+
+test("a shadow readback is never labelled served, and HTTP delivery discloses receipts-not-provided", () => {
+  const item = { status: "SHADOW_READBACK_VERIFIED", gaps: ["SHADOW_DOES_NOT_PROVE_SERVED_READER"] } as unknown as FleetDeliveryItem;
+  const label = deliveryItemStatusLabel(item);
+  assert.equal(label.served, false);
+  assert.match(label.text, /not served/i);
+  const held = deliverySummary({ kind: "HELD", value: { version: "fleet-delivery/v1", receiptAvailability: "NOT_PROVIDED", items: [item] } });
+  assert.match(held.text, /not provided/i);
+  // A window-store failure is surfaced, not shown as empty.
+  const broken = deliverySummary({ kind: "STORE_UNREACHABLE", detail: "window store down" });
+  assert.match(broken.text, /unreadable/i);
+});
+
+test("a Scout admission reads as a prerequisite with a boundary, never a dispatch", () => {
+  const line = scoutPrerequisite({
+    kind: "AUTONOMOUS_SCOUT", familyRouteId: "f", familyTaskIds: [], attemptIds: [], latestAttemptId: null,
+    state: "BACKOFF", retryAt: "2026-09-13T19:00:00.000Z", debt: null, nextTaskId: null,
+    requiresPolicyRecheck: false, selection: "COORDINATOR_REEVALUATION_REQUIRED", reason: "offline denied attempt",
+  });
+  assert.match(line, /prerequisite/i);
+  assert.match(line, /not a dispatch/i);
+  assert.match(line, /coordinator re-evaluation/i);
 });
 
 test("an unknown format version is refused rather than mis-rendered", async () => {

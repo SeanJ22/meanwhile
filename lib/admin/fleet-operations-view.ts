@@ -8,11 +8,14 @@
  */
 
 import {
+  FLEET_OPERATIONS_EXTENSION_VERSION,
   FLEET_OPERATIONS_VERSION,
   type FleetOperation,
   type FleetOperationsReport,
   type FleetTaskOperation,
 } from "@/lib/control-plane/fleet-operations";
+import type { FleetDeliveryItem } from "@/lib/control-plane/fleet-delivery";
+import type { ScoutTaskAdmission } from "@/lib/control-plane/workers/scout-scheduling";
 
 /** What one on-demand fetch of the endpoint yielded. */
 export type FleetFetch =
@@ -116,4 +119,55 @@ export const NOTES = {
   delivery: "Delivery freshness is only whether this report was read recently — not whether the civic data is fresh.",
   coverage: "Reader-instrument ZIP gaps, at the snapshot's own publish time. Not the ZIP-completion denominator.",
   acquisition: "Last successful acquisition held. Acquisition is not verification, permission for a new fetch, or current freshness.",
+  extensionUnavailable: "This producer does not supply the operational extension — an unavailable capability, not an empty result.",
+  deliveryLocal: "Delivery details join LOCAL evidence (windows, shadow readbacks). They narrow, but never replace, the conservative UNKNOWN served-publication status.",
+  receiptsNotProvided: "Full item receipts are not supplied by the HTTP endpoint; a shadow readback is not certified served publication.",
 } as const;
+
+// ── v1.1 extension (fleet-operations/extensions/1) ─────────────────────────────
+// All additive. A report from an older producer omits these; the consumer treats
+// a missing extension as an UNAVAILABLE CAPABILITY, never an empty success.
+
+export function extensionCapability(report: FleetOperationsReport): "PRESENT" | "UNAVAILABLE" {
+  return report.extensionVersion === FLEET_OPERATIONS_EXTENSION_VERSION ? "PRESENT" : "UNAVAILABLE";
+}
+
+/** The Scout family's next PREREQUISITE — never a dispatch time. Selection always
+ *  requires coordinator re-evaluation; a retryAt is a boundary, not a run. */
+export function scoutPrerequisite(scout: ScoutTaskAdmission): string {
+  const state: Record<ScoutTaskAdmission["state"], string> = {
+    TIMING_ELIGIBLE: "timing-eligible — admission may be evaluated",
+    BACKOFF: "waiting out a backoff window",
+    IN_FLIGHT: "in flight — lease reconciliation",
+    POLICY_RECHECK: "a policy recheck (named transport/cost condition must change)",
+    POLICY_DENIED: "policy denied — no automatic recovery",
+    CONTINUATION_CANDIDATE: "continuation candidate — still needs unresolved source work",
+    CONTINUED: "already continued in an existing child",
+    UNKNOWN: "unknown from this read",
+  };
+  const suffix = scout.retryAt ? ` · earliest retry ${scout.retryAt} (a boundary, not a dispatch)` : "";
+  return `Scout: ${state[scout.state]} — a prerequisite; selection still requires coordinator re-evaluation${suffix}`;
+}
+
+/** Local delivery evidence is never served proof. */
+export function deliveryItemStatusLabel(item: FleetDeliveryItem): { readonly text: string; readonly served: false } {
+  const map: Record<FleetDeliveryItem["status"], string> = {
+    HELD: "held (established refusal or missing approval)",
+    SHADOW_READBACK_VERIFIED: "shadow readback verified locally — NOT served to a reader",
+    READER_MATERIALIZED_UNPROVEN: "reader-materialized, served proof still missing",
+    UNKNOWN: "unknown",
+  };
+  return { text: map[item.status], served: false };
+}
+
+/** Summarize the publication.delivery ReadOutcome without ever upgrading local
+ *  evidence to served publication. */
+export function deliverySummary(
+  delivery: FleetOperation["publication"]["delivery"],
+): { readonly kind: string; readonly text: string } {
+  if (delivery.kind === "STORE_UNREACHABLE") return { kind: delivery.kind, text: `window store unreadable — ${delivery.detail}` };
+  if (delivery.kind === "NOT_RECORDED") return { kind: delivery.kind, text: `no joined window evidence — ${delivery.detail}` };
+  const v = delivery.value;
+  const receipts = v.receiptAvailability === "PROVIDED" ? "full receipts supplied (still not certified publication)" : "full receipts NOT provided by the endpoint";
+  return { kind: delivery.kind, text: `delivery v1: ${v.items.length} item(s); ${receipts}` };
+}

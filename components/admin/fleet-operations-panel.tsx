@@ -21,11 +21,15 @@ import { useCallback, useState } from "react";
 import type { FleetOperation, FleetOperationsReport } from "@/lib/control-plane/fleet-operations";
 import {
   applyRefresh,
+  deliveryItemStatusLabel,
+  deliverySummary,
+  extensionCapability,
   type FleetConsumerState,
   type FleetFetch,
   NOTES,
   nextActionDisplay,
   progressSummary,
+  scoutPrerequisite,
   spendingDisplay,
 } from "@/lib/admin/fleet-operations-view";
 
@@ -65,6 +69,30 @@ function Outcome({ label, outcome, children }: { label: string; outcome: { kind:
   return <>{children}</>;
 }
 
+function DeliveryBlock({ delivery }: { delivery: FleetOperation["publication"]["delivery"] }) {
+  // Older producer (no extension) omits delivery entirely.
+  if (!delivery) return null;
+  const d = deliverySummary(delivery);
+  return (
+    <div className="note">
+      <span className="op-badge" data-op="stale">delivery</span> {d.text}. {NOTES.deliveryLocal}
+      {delivery.kind === "HELD" && delivery.value.items.length > 0 && (
+        <ul style={{ margin: ".2rem 0 0", paddingLeft: "1rem" }}>
+          {delivery.value.items.slice(0, 4).map((it, i) => (
+            <li key={i} className="note">
+              {deliveryItemStatusLabel(it).text}
+              {it.gaps.length > 0 && ` · gaps: ${it.gaps.join(", ")}`}
+            </li>
+          ))}
+        </ul>
+      )}
+      {delivery.kind === "HELD" && delivery.value.receiptAvailability === "NOT_PROVIDED" && (
+        <span> {NOTES.receiptsNotProvided}</span>
+      )}
+    </div>
+  );
+}
+
 function OperationCard({ op }: { op: FleetOperation }) {
   const spend = spendingDisplay(op.spending);
   const prog = progressSummary(op);
@@ -95,9 +123,10 @@ function OperationCard({ op }: { op: FleetOperation }) {
         <p className="note"><span className="op-badge" data-op="blocked">evidence gaps</span> {op.sourceHealth.evidenceGaps.length} named, unproven/expired — never counted as success.</p>
       )}
 
-      {/* Publication is UNKNOWN in v1. */}
+      {/* Publication is UNKNOWN (conservative served result); delivery narrows it locally. */}
       <p className="note"><span className="op-badge" data-op="stale">publication unknown</span> {NOTES.publication}
         {op.publication.recordedStages.length > 0 && ` (${op.publication.recordedStages.length} recorded stage(s), for drill-down only)`}</p>
+      <DeliveryBlock delivery={op.publication.delivery} />
 
       {/* Spending — unknown/incomplete is never $0. */}
       <p className="note">
@@ -114,6 +143,7 @@ function OperationCard({ op }: { op: FleetOperation }) {
               {t.blocker && <> · <span className="op-badge" data-op="blocked">{t.blocker.replaceAll("_", " ").toLowerCase()}</span></>}
               <br />
               {nextActionDisplay(t)}
+              {t.scoutAdmission && <><br />{scoutPrerequisite(t.scoutAdmission)}</>}
             </li>
           ))}
         </ul>
@@ -139,6 +169,9 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
         <>
           <p className="plain" style={{ display: "flex", gap: ".5rem", alignItems: "center", flexWrap: "wrap" }}>
             <DeliveryBadge freshness={report.deliveryFreshness} />
+            {extensionCapability(report) === "UNAVAILABLE" && (
+              <span className="op-badge" data-op="blocked" title={NOTES.extensionUnavailable}>extension unavailable</span>
+            )}
             <span className="note">Read at {report.observedAt}. {NOTES.delivery}</span>
           </p>
 

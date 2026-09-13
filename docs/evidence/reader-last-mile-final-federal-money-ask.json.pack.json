@@ -3,8 +3,8 @@
   "encoding": "gzip",
   "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
   "path": "docs/evidence/reader-last-mile-final-federal-money-ask.json.gz",
-  "originalSha256": "9adf74720b8685697cbe93756d4fc2914af3ffcfbe0f8be9265185c28bb9ecaa",
-  "bytes": 195492,
-  "packedBytes": 11360,
-  "packedSha256": "bd334dbe3e4cda144768d97cb1aad38b7443aaa39f974624164a82c72f695a74"
+  "originalSha256": "2d49f41168bde5386aa78648d8b89449b2ab3d939ff2bd16d6b6de71d4d1bcc3",
+  "bytes": 134362,
+  "packedBytes": 8589,
+  "packedSha256": "15e5748fd6824f731f40f5fa54ff50d15137040d806dad0f2ade0a9c427bcf60"
 }

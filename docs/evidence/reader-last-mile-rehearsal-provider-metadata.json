@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "source": "NEON_API_BRANCH_READBACK",
+  "observedAt": "2026-09-13T12:42:02.000Z",
+  "projectId": "tiny-hill-13996172",
+  "branchId": "br-red-silence-ax8nlzbm",
+  "branchName": "pdc-v2-rehearsal-802c2ccf-codex",
+  "parentBranchId": "br-delicate-lab-ax02xuo5",
+  "defaultBranchId": "br-delicate-lab-ax02xuo5",
+  "endpointId": "ep-plain-mouse-axnfe8r7",
+  "endpointHost": "ep-plain-mouse-axnfe8r7.c-4.us-east-2.aws.neon.tech"
+}

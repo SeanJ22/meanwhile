@@ -634,7 +634,7 @@ function filesystemReadCalls(source: string): readonly string[] {
   return [...new Set(calls)];
 }
 
-function trackedRuntimePathBindings(source: string): ReadonlySet<string> {
+function trackedRuntimePathBindings(source: string, target = TRACKED_RUNTIME_MUTABLE_TARGET): ReadonlySet<string> {
   const bindings = new Set<string>();
   const executable = stripExecutableComments(source);
   const assignments = [...executable.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*([^;\r\n]+)/g)];
@@ -644,7 +644,7 @@ function trackedRuntimePathBindings(source: string): ReadonlySet<string> {
     for (const match of assignments) {
       const local = match[1]!;
       const value = match[2] ?? "";
-      const carriesTrackedPath = TRACKED_RUNTIME_MUTABLE_TARGET.test(joinedPathLiterals(value));
+      const carriesTrackedPath = target.test(joinedPathLiterals(value));
       const aliasesTrackedPath = [...bindings].some((binding) =>
         new RegExp(String.raw`\b${escapeRegExp(binding)}\b`).test(value));
       if ((carriesTrackedPath || aliasesTrackedPath) && !bindings.has(local)) {
@@ -1035,7 +1035,10 @@ const CURATED_READER_READER_GATES = [
       /mayUseTestFixture\(\)/,
     ],
   },
-  { path: "lib/registry/comment-access.ts", required: [/currentCuratedReaderRecords\("comment-access",\s*COMMENT_ACCESS\)/, /records = \[\]/] },
+  { path: "lib/registry/comment-access.ts", required: [
+    /const seed = COMMENT_ACCESS\.map\(\(value\) => \(\{\s*id: `comment-access:\$\{value\.bodyId\}`,\s*\.\.\.value,?\s*\}\)\);\s*return currentCuratedReaderRecords\("comment-access",\s*seed\)/,
+    /records = \[\]/,
+  ] },
   { path: "lib/ballot/polling-place-links.ts", required: [/currentCuratedReaderRecords\("ballot-navigation",\s*seed\)/] },
   { path: "lib/ballot/registration-links.ts", required: [/currentCuratedReaderRecords\("ballot-navigation",\s*seed\)/] },
   { path: "lib/officials/campaign-sites.ts", required: [/currentCuratedReaderRecords\("campaign-sites",\s*seed\)/, /records = \{\}/] },
@@ -1820,10 +1823,21 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   // database error never reopens these files.
   for (const [path, source] of Object.entries(tree.files)) {
     if (!/^(?:app|components|lib)\//.test(path) || REGISTRY_RUNTIME_SEED_ALLOWLIST.has(path)) continue;
-    const executable = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    const executable = stripExecutableComments(source);
+    const readCalls = filesystemReadCalls(executable);
     const seed = REGISTRY_RUNTIME_FIRST_SEEDS.find((name) => {
-      const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      return new RegExp(`(?:readFile(?:Sync)?|from\\s*["']|import\\s*\\()[\\s\\S]{0,400}${escaped}`).test(executable);
+      const escaped = escapeRegExp(name);
+      // A module specifier must itself name the seed. An unrelated Node import
+      // followed by an artifact-path constant is not a tracked-file read.
+      const specifier = `["'][^"'\\r\\n]*(?<![A-Za-z0-9_-])${escaped}["']`;
+      const importsSeed = new RegExp(`(?:\\bfrom\\s*|\\bimport\\s*|\\b(?:import|require)\\s*\\(\\s*)${specifier}`).test(executable);
+      // Follow seed-path aliases into actual read arguments. A seed name in
+      // explanatory text or an exclusion condition does not authorize a read.
+      const target = new RegExp(`(?<![A-Za-z0-9_-])${escaped}(?![A-Za-z0-9_.-])`);
+      const bindings = trackedRuntimePathBindings(executable, target);
+      const readsSeed = readCalls.some((call) => target.test(joinedPathLiterals(call))
+        || [...bindings].some((binding) => new RegExp(`\\b${escapeRegExp(binding)}\\b`).test(maskStringLiterals(call))));
+      return importsSeed || readsSeed;
     });
     if (seed) add("REGISTRY_RUNTIME_TRACKED_READER", path, `${seed} is first-seed/test evidence and may not be opened by a production path.`);
   }

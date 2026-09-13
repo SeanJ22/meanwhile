@@ -23,6 +23,7 @@ import {
   applyRefresh,
   deliveryItemStatusLabel,
   deliverySummary,
+  EMPTY_CONSUMER_STATE,
   extensionCapability,
   type FleetConsumerState,
   type FleetFetch,
@@ -158,7 +159,7 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
     <section data-fleet-operations>
       {state.lastError && (
         <div className="refusal" style={{ marginBottom: ".75rem" }}>
-          <strong>Refresh failed.</strong> {state.lastError}
+          <strong>{report ? "Refresh failed." : "Could not read the operations report."}</strong> {state.lastError}
           {report && ` Showing the last successful read from ${report.observedAt} (unchanged).`}
         </div>
       )}
@@ -206,7 +207,13 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
 }
 
 export function FleetOperationsPanel({ initialState }: { initialState?: FleetConsumerState }) {
-  const [state, setState] = useState<FleetConsumerState>(initialState ?? { shown: null, lastError: null, unknownVersion: false });
+  // The committed route (app/(admin)/admin/fleet/page.tsx) is a server component
+  // that reads the control plane once and passes that first read in as
+  // initialState — the same on-demand read the endpoint performs, taken at
+  // navigation time, never the 8s pulse. Refresh then re-reads on demand through
+  // GET /api/admin/fleet/operations. With no seed the panel simply shows nothing
+  // until Refresh; it never fetches from an effect.
+  const [state, setState] = useState<FleetConsumerState>(initialState ?? EMPTY_CONSUMER_STATE);
   const [busy, setBusy] = useState(false);
   const refresh = useCallback(() => {
     setBusy(true);

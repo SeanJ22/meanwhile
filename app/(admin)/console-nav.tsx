@@ -31,6 +31,7 @@ export type ConsoleView =
   | "readiness"
   | "research"
   | "release-review"
+  | "fleet"
   | "steward"
   | "sources"
   | "reader"
@@ -47,6 +48,8 @@ function pathFor(view: ConsoleView, state: string): string {
       return "/admin/research";
     case "release-review":
       return "/admin/release-review";
+    case "fleet":
+      return "/admin/fleet";
     case "steward":
       return "/admin/steward";
     case "sources":
@@ -69,6 +72,7 @@ const VIEW_LABEL: Record<ConsoleView, string> = {
   readiness: "State readiness",
   research: "Research detail",
   "release-review": "Software release review",
+  fleet: "Fleet operations",
   steward: "Shipping and integration",
   sources: "Sources and APIs",
   reader: "What readers are doing",
@@ -137,6 +141,7 @@ export function ConsoleNav(props: {
           <option value="readiness">{VIEW_LABEL.readiness}</option>
           <option value="research">{VIEW_LABEL.research}</option>
           <option value="release-review">{VIEW_LABEL["release-review"]}</option>
+          <option value="fleet">{VIEW_LABEL.fleet}</option>
         </select>
       </label>
 

@@ -1144,6 +1144,7 @@ test("registry seed recognition requires an actual import or filesystem read", (
   files[proofPath] = readFileSync(new URL(`../${proofPath}`, import.meta.url), "utf8");
   files["lib/ask/documented-seed.ts"] = 'import { createHash } from "node:crypto"; const path = "lib/registry/registry.json"; export const digest = createHash("sha256");';
   files["lib/ask/unrelated-seed.ts"] = 'readFileSync("lib/registry/unrelated-registry.json", "utf8");';
+  files["lib/ask/unrelated-import.ts"] = 'const path = "lib/registry/registry.json"; const crypto = await import("node:crypto"); const note = "import(path)";';
   for (const path of ["lib/ask/server-sources.ts", "lib/tracker/registry.mjs"]) {
     files[path] = readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
   }
@@ -1151,10 +1152,17 @@ test("registry seed recognition requires an actual import or filesystem read", (
 
   const readers = [
     'import held from "../registry/registry.json" with { type: "json" };',
+    'import held from "../registry/registry.json?raw";',
+    'export { default } from "../registry/registry.json#held";',
     'export { default } from "../registry/registry.json";',
     'import "../registry/registry.json";',
     'const held = await import("../registry/registry.json");',
+    'const held = await import(`../registry/registry.json`);',
+    'const held = await import("../registry/registry.json?raw#held");',
+    'const path = "../registry/registry.json"; const alias = path; const held = await import(alias);',
     'const held = require("../registry/registry.json");',
+    'const held = require(`../registry/registry.json`);',
+    'const path = "../registry/registry.json"; const held = require(path);',
     'readFileSync("lib/registry/registry.json", "utf8");',
     'import { readFile as load } from "node:fs/promises"; const path = "lib/registry/registry.json"; await load(path, "utf8");',
     'import * as fs from "node:fs"; const path = "lib/registry/registry.json"; fs.readFileSync(path);',

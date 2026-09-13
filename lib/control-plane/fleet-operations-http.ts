@@ -7,10 +7,16 @@ import { guardAdminRequest } from "./gateway/admin-guard.ts";
 
 const headers = { "cache-control": "no-store, no-cache, must-revalidate" };
 
-/** The real Admin boundary, with server-owned resources injectable for isolated compatibility checks. */
+/** The real Admin boundary, with server-owned resources injectable for isolated compatibility checks.
+ *
+ * `receiptStore` is OPTIONAL: when absent, the read runs without a trusted receipt
+ * store and `receiptLoading` is NOT_RECORDED. The served route currently omits it
+ * because mounting `createFleetReceiptStore` in a Next server bundle drags the
+ * promoter's filesystem graph in and over-traces the bundle (see the receipt
+ * store's own note); tests still inject a real store to exercise loading. */
 export async function handleFleetOperationsRequest(request: NextRequest, dependencies: {
   readonly open: typeof openControlPlane;
-  readonly receiptStore: FleetReceiptStore;
+  readonly receiptStore?: FleetReceiptStore;
   readonly now: () => string;
 }): Promise<NextResponse> {
   const observedAt = dependencies.now();

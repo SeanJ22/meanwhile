@@ -27,7 +27,10 @@ import {
 
 export async function readFleetSeedState(deps: {
   readonly open: typeof openControlPlane;
-  readonly receiptStore: FleetReceiptStore;
+  /** Optional: when absent, receiptLoading is NOT_RECORDED (no trusted store).
+   *  The served page omits it today because mounting the store over-traces the
+   *  bundle; tests inject a real store to exercise loading and rendering. */
+  readonly receiptStore?: FleetReceiptStore;
   readonly now: () => string;
 }): Promise<FleetConsumerState> {
   const observedAt = deps.now();

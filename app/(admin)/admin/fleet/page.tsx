@@ -50,7 +50,6 @@
 import { ConsoleNav } from "@/app/(admin)/console-nav";
 import { FleetOperationsPanel } from "@/components/admin/fleet-operations-panel";
 import { openControlPlane } from "@/lib/control-plane/admin-data";
-import { createFleetReceiptStore } from "@/lib/control-plane/fleet-receipt-store";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { readFleetSeedState } from "@/lib/admin/fleet-seed";
 
@@ -65,18 +64,16 @@ export const metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-// A long-lived, server-side receipt store for THIS server's own READER root —
-// the identical trusted store the GET route supplies (app/api/admin/fleet/
-// operations/route.ts). A runner-local SHADOW path in a window record never
-// grants filesystem access. Module-level so its retain-on-failure cache persists
-// across page loads, exactly as the endpoint's does. The store lives on the
-// server; the client panel only ever receives the projected report metadata.
-const receiptStore = createFleetReceiptStore({ targets: [{ kind: "READER", root: process.cwd() }] });
-
 export default async function FleetOperationsPage() {
+  // The trusted READER receipt store is NOT mounted here yet — same reason as the
+  // GET route (app/api/admin/fleet/operations/route.ts): importing
+  // createFleetReceiptStore pulls the promoter's filesystem graph into this served
+  // bundle and over-traces it past check-build-output. `receiptLoading` is
+  // NOT_RECORDED live until the store is made trace-safe; the receipt UI is proven
+  // with an injected store in tests/fleet-operations-page.test.ts. First paint and
+  // endpoint Refresh remain equivalent — both read without a store today.
   const initialState = await readFleetSeedState({
     open: openControlPlane,
-    receiptStore,
     now: () => new Date().toISOString(),
   });
   return (

@@ -115,18 +115,32 @@ const PAIRS: { text: string; on: string[]; note: string }[] = [
   { text: "--danger", on: ["--bg", "--panel"], note: "failures" },
 ];
 
+/**
+ * A FACT stated on a fill, held to the SUN bar, not AA.
+ *
+ * The party IdentityChip fills in its assigned colour and writes the party over
+ * that fill. Unlike `--action` (a pressable control) it is a NONINTERACTIVE
+ * FACT (`.id-chip`, docs/DESIGN.md: "an identity fact — party, state, chamber,
+ * standing"), and its label is 12–13px at weight 600 — normal-size text, not the
+ * large-and-bold target WCAG's 4.5:1-as-AAA is calibrated for. So the label
+ * against its fill is held to the same 7:1 every other reader-facing fact clears,
+ * for every filed party in both themes.
+ */
+const FACT_FILLS: { text: string; on: string; note: string }[] = [
+  { text: "--party-on", on: "--party-democratic", note: "party chip (a stated fact)" },
+  { text: "--party-on", on: "--party-republican", note: "party chip (a stated fact)" },
+  { text: "--party-on", on: "--party-green", note: "party chip (a stated fact)" },
+  { text: "--party-on", on: "--party-independent", note: "party chip (a stated fact)" },
+  { text: "--party-on", on: "--party-none", note: "party chip (a stated fact)" },
+];
+
 /** Filled controls: the text colour sits ON the accent, not on the page. */
 const FILLED: { text: string; on: string; note: string }[] = [
   { text: "--action-on", on: "--action", note: "the primary filled action" },
-  // Item 3 (2026-08-16): the party chip FILLS in its assigned colour, so the
-  // chip's text sits on the party colour rather than on the page. Every
-  // filed party, both themes — a chip that is unreadable for one party and
-  // fine for the others is a defect with a partisan shape.
-  { text: "--party-on", on: "--party-democratic", note: "filled party chip" },
-  { text: "--party-on", on: "--party-republican", note: "filled party chip" },
-  { text: "--party-on", on: "--party-green", note: "filled party chip" },
-  { text: "--party-on", on: "--party-independent", note: "filled party chip" },
-  { text: "--party-on", on: "--party-none", note: "filled party chip" },
+  // The party chip moved OUT of FILLED to FACT_FILLS (below) at the 7:1 sun bar:
+  // it is a noninteractive identity FACT (.id-chip, docs/DESIGN.md), not a
+  // pressable control, and its label is 12–13px/600 — normal text, not the
+  // large, bold target the 4.5:1 AA exception is for. AA is not sufficient here.
   // Item 5: the vote and reaction pills.
   { text: "--vote-text", on: "--vote-yes", note: "Voted yes" },
   { text: "--vote-text", on: "--vote-no", note: "Voted no" },
@@ -222,6 +236,18 @@ for (const [themeName, tokens] of [
     // for it, and stating that here is what keeps it from drifting to "we
     // just lowered the bar for the thing that failed".
     check(`${pair.text} on ${pair.on}`, ratio(fg, bg), AA);
+  }
+  for (const pair of FACT_FILLS) {
+    const fg = tokens.get(pair.text);
+    const bg = tokens.get(pair.on);
+    if (!fg || !bg) {
+      rows.push(`  ??   ${pair.text} on ${pair.on} — not defined in ${themeName}`);
+      failures += 1;
+      continue;
+    }
+    // A stated FACT on a fill, held to the sun bar (see FACT_FILLS above): the
+    // label is normal-size text, so AA is not sufficient — 7:1, both themes.
+    check(`${pair.text} on ${pair.on}`, ratio(fg, bg), SUN);
   }
 }
 

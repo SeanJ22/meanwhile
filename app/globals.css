@@ -141,7 +141,7 @@
   --party-democratic: #7da7f0;
   --party-republican: #f0857c;
   --party-green: #6fcf8f;
-  --party-independent: #b48ae0;
+  --party-independent: #b78ee1;
   --party-none: #9aa0ab;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -287,11 +287,11 @@
   --tier-fill-state: #1cc3a2;
   --tier-fill-national: #90afe4;
   --tier-fill-on: #14161c;
-  --party-democratic: #2457b8;
-  --party-republican: #b3362a;
-  --party-green: #1e7a3c;
+  --party-democratic: #1f4ca1;
+  --party-republican: #932c22;
+  --party-green: #175c2d;
   --party-independent: #6b3fa0;
-  --party-none: #6a7079;
+  --party-none: #4d5158;
 
   /* MTG-14 (2026-08-28): #4a8481 measured 3.81:1 against --bg, BELOW the AA
      bar, and it was shipping — the meeting status tokens had never been in the

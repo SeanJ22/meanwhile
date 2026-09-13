@@ -74,7 +74,7 @@ export const metadata = {
  * projection so it is indistinguishable from a client refresh. A missing control
  * plane is a stated fact, never an empty success.
  */
-async function readInitialState(): Promise<FleetConsumerState> {
+async function readSeedState(): Promise<FleetConsumerState> {
   const observedAt = new Date().toISOString();
   const opened = await openControlPlane();
   if (!opened.ok) {
@@ -89,7 +89,7 @@ async function readInitialState(): Promise<FleetConsumerState> {
 }
 
 export default async function FleetOperationsPage() {
-  const initialState = await readInitialState();
+  const initialState = await readSeedState();
   return (
     <main className="admin console-page">
       <ConsoleNav view="fleet" currentState={null} states={US_STATES} />

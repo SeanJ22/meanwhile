@@ -7,7 +7,7 @@ import { registerRouteTask } from "../repository/coordinator.ts";
 import { dispatchOne, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { fingerprint } from "../ids.ts";
-import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
+import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
@@ -184,8 +184,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   }
   for (const acquisition of acquisitions) {
     const common = {workItemId:item.id,contract:plan.contract,now};
-    const acquired = records.find(r=>r.result.role==="ACQUIRER" && r.result.source.id===acquisition.route.id && r.result.source.url===acquisition.route.url);
-    if (!acquired) { const next = await taskFor({...common,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition}); if(next)return next; continue; }
+    // A failed refresh does not erase the last trustworthy capture. The source
+    // loop above keeps its freshness/recovery obligation unresolved separately.
+    const acquired = records.find(r=>r.result.role==="ACQUIRER" && r.result.verdict==="ACQUIRED" && r.result.source.id===acquisition.route.id && r.result.source.url===acquisition.route.url);
+    if (!acquired) { const next = await taskFor({...common,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition}); if(next)return next; unresolved=true; continue; }
     if (acquired.result.role !== "ACQUIRER") continue;
     for (const artifact of acquired.result.artifacts.filter(a=>a.completeness==="COMPLETE")) {
       // Supporting/authority captures have their own instructions; never parse a diagnostic page as the primary class.
@@ -247,21 +249,31 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
-  const ids=(await runtime.repos.workItems.list()).filter(i=>i.value.autonomousPlan).map(i=>i.id);
+  const items=(await runtime.repos.workItems.list()).filter(i=>i.value.autonomousPlan);
+  // Repository id order is stable, not fair. Reconstruct service order from
+  // canonical Attempts each cycle; no cursor or parallel task ledger is needed.
+  const lastServed=new Map<string,string>();
+  for (const {value:attempt} of await runtime.repos.attempts.list()) {
+    if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
+  }
+  const ids=items.sort((a,b)=>(lastServed.get(a.id)??"").localeCompare(lastServed.get(b.id)??"") ||
+    a.value.createdAt.localeCompare(b.value.createdAt) || a.id.localeCompare(b.id)).map(i=>i.id);
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[];
   const maximum=Math.min(options.maximum??3,20); const concurrency=Math.min(options.concurrency??2,2);
   const maxScoutDispatches=Math.min(options.maxScoutDispatches??RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,RESEARCH_BOUNDS.maxScoutDispatchesPerCycle);
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
+  const minimumDispatchWallMs=Math.min(WORKER_MAX_WALL_MS,RESEARCH_BOUNDS.perDispatch.maxWallMs);
+  const hasDispatchTime=()=>Date.now()+minimumDispatchWallMs<=(options.deadlineMs??Infinity);
   let cursor=0; let admitted=0; let scoutsAdmitted=0;
   await Promise.all(Array.from({length:concurrency},async()=>{
-    while(cursor<ids.length && admitted<maximum && Date.now()<(options.deadlineMs??Infinity)) {
+    while(cursor<ids.length && admitted<maximum && hasDispatchTime()) {
       const id=ids[cursor++];
       try {
       const d=await nextAutonomousOperation(runtime,id); decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
-      const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:120_000;
+      const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:WORKER_MAX_WALL_MS;
       if(Date.now()+wall>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); continue; }
       if(d.action==="SCOUT"&&scoutsAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); continue; }
       if (d.action==="WORKER") {
@@ -297,6 +309,8 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       }
     }
   }));
-  for (const id of ids.slice(cursor)) deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`});
+  for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
+    ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
+    : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
   return {recovery,decisions,dispatches,scoutsAdmitted,deferred};
 }

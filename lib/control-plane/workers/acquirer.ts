@@ -60,6 +60,7 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
   const artifactIds = new Set<string>();
   const walk: EvidenceWalkStep[] = [];
   const blockers: ResearchBlocker[] = [];
+  const recoveredCacheFindings: AcquirerResult["findings"][number][] = [];
   let requests = 0;
   let bytesFetched = 0;
   let permission: PermissionState = route.permission;
@@ -73,7 +74,7 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
   };
   const result = (verdict: AcquirerResult["verdict"]): AcquirerResult => {
     const r: AcquirerResult = { role: "ACQUIRER", attemptId: input.attemptId, verdict, source: route, sourceGrounding, artifacts,
-      artifactIds: [...artifactIds], findings: blockers.map(b => ({ code: b.code, detail: b.description, severity: "BLOCKING" })),
+      artifactIds: [...artifactIds], findings: [...recoveredCacheFindings, ...blockers.map(b => ({ code: b.code, detail: b.description, severity: "BLOCKING" as const }))],
       blockers, walk, walkState: { state: "OPEN", nextRouteIds: [...new Set([...(verdict === "ACQUIRED" ? [] : [route.id]), ...route.nextRouteIds])] },
       requestCount: requests, bytesFetched };
     assertResearchResult(r, "ACQUIRER", input.attemptId);
@@ -140,14 +141,20 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
       const acquired = accept(await runtime.readVault(cached.artifactId), true, false);
       if (acquired.completeness !== "COMPLETE") continue;
       artifacts.push(acquired); artifactIds.add(acquired.artifactId);
+      // One invalid cache candidate does not disqualify a separately verified
+      // held capture. Keep its diagnosis, but it no longer blocks acquisition.
+      for (const failure of blockers.splice(0)) recoveredCacheFindings.push({ code: failure.code,
+        detail: `${failure.description} Another supplied immutable capture passed the full identity check.`, severity: "WARNING" });
       addStep("immutable-vault-reuse", "Current immutable evidence was rehashed from the vault; no request was needed.", "WALKED_AND_FOUND", [acquired.artifactId], "NOT_ATTEMPTED", 1);
       return result("ACQUIRED");
     } catch {
-      block("EVIDENCE_IDENTITY_MISMATCH", "A declared current immutable artifact failed its vault identity/provenance check.", false);
+      block("EVIDENCE_IDENTITY_MISMATCH", `Declared current immutable artifact ${cached.artifactId} failed its vault identity/provenance check.`, false);
       addStep("immutable-vault-reuse", "Cache integrity check failed; evidence was not used.", "BLOCKED", [...artifactIds], "NOT_ATTEMPTED");
-      return result("BLOCKED");
     }
   }
+  // Exhausting the supplied alternatives preserves the existing fail-closed
+  // boundary: an integrity failure does not authorize another network fetch.
+  if (blockers.length) return result("BLOCKED");
   if (permission === "DISALLOWED" || permission === "CANNOT_TELL") {
     block(permission === "DISALLOWED" ? "PERMISSION_DENIED" : "PERMISSION_UNKNOWN", "The current route permission does not permit source retrieval.", permission === "CANNOT_TELL");
     addStep("permission", `Current permission ${permission}; no request sent.`, "BLOCKED", [...artifactIds], "NOT_ATTEMPTED");

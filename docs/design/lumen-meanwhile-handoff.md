@@ -12,11 +12,88 @@ secrets. Base `main @ 713e4e06`.
   rhythm, absence-defaults, label-tracking, duplicate-census, meeting-body-attribution). The served
   `/admin/fleet` page + endpoint keep the receipt store **UNMOUNTED** (an OPTIONAL-store seam), which
   clears the production build (§7A/§11); receipt loading now reaches the served surface through Fleet's
-  owner-snapshot transport instead. **Read the Phase-6 Update immediately below first** — it is the
-  newest state (Fleet's `e174e219` owner-snapshot transport incorporated at `1d16c640`, combined build +
-  page/Refresh parity verified); the Phase-5 Update below it explains why the filesystem store stays
-  unmounted.
+  owner-snapshot transport instead. **Read the Phase-7 Update immediately below first** — it is the
+  newest state (the Meanwhile system-map design implemented as native Admin components: a Target
+  Operating Model surface at `/admin/system-map` and the Fleet Operations Map presentation on
+  `/admin/fleet`). Phase 6 below it incorporated Fleet's `e174e219` owner-snapshot transport; Phase 5
+  explains why the filesystem store stays unmounted.
 - No push / merge / deploy / production write / live dispatch; PDC untouched.
+
+## Update — 2026-09-13 (Phase 7): the Meanwhile system-map design implemented as native Admin components
+
+**What this is.** The attached "Meanwhile autonomous system diagram" design — its **Target Operating
+Model** and **Admin Fleet Operations Map** canvases — implemented as native Admin components on the
+existing shell (nav, shared tokens, auth). Both interactive canvases were inspected in a browser with
+JavaScript enabled (served locally), clicked through, and their exact models + interaction logic
+extracted; the components reproduce those interactions. The older Autonomous System Map and Admin
+Handoff were treated as dated context; the seed deck is kept OUT of the application.
+
+**Target Operating Model — `/admin/system-map` (new nav view; ○ Static).**
+`components/admin/system-map.tsx` + `lib/admin/system-map-model.ts` (20 nodes, 5 rings, 2 journeys, 4
+layers, `NOT_SHOWN` overlay boundary — content verbatim from the canvas). Reproduced interactions,
+verified live: select any node → its detail (purpose / inputs / outputs / dependencies / when-it-fails /
+next action / connected-to links); focus a layer (others dim to 0.24; re-click resets); highlight any of
+five feedback rings (stations numbered in travel order, everything else dimmed); two illustrative
+journeys + architecture-only; and a code-name visibility toggle. Real buttons, `aria-pressed` /
+`aria-expanded`, keyboard-activated; single column below 860px. It reads NOTHING and authorises no
+backend change — a "TARGET OPERATING MODEL — NOT LIVE" banner and a "not shown here — belongs to the
+Fleet overlay" section keep target architecture distinct from measured status.
+
+**Admin Fleet Operations Map — `/admin/fleet` (replaces the panel presentation; ƒ Dynamic).**
+`components/admin/fleet-operations-map.tsx` + `lib/admin/fleet-map-meta.ts`, driven by the REAL
+`FleetOperationsReport` through the existing `readFleetSeedState` seed and `GET
+/api/admin/fleet/operations` Refresh — reusing the owner-snapshot receipt transport. **No second
+dashboard, no second backend, no filesystem-store remount.** Reproduced interactions, verified live:
+four status lanes DERIVED from each work item's own task states (`fleetItemLane`, precedence
+recovering → failing → progressing → waiting) with tap-to-filter; expandable work items (first open by
+default); an Operations ↔ Field-mapping-for-Claude-Code view switch (field-mapping shows each lane's
+contract derivation and each panel's contract field); and a code-name visibility toggle.
+
+**Misleading implications corrected while preserving the design.** A live lease is stated as activity,
+not proven progress (page copy + the lane rule). Publication stays `UNKNOWN`; served-reader proof,
+throughput and reader-demand have **NO PRODUCER** — each renders an honest empty statement, never a
+placeholder chart. Spending shows the measured subtotal and the unmeasured remainder apart and never
+prints a bare `$0` total. Retained receipts keep their original successful-read time and are never shown
+as current proof; the permanent receipt authority is `NOT_CONNECTED`. Unlike the design's hand-made
+fixture, this reads REAL data, so it carries no "illustrative fixture" label and says
+`CONTROL_PLANE_UNAVAILABLE` when the plane cannot be read rather than filling measurements in. Target
+capabilities and code-name labels describe intent; they do not imply the current contracts establish
+them.
+
+**Scope discipline.** No new scheduler, worker, publication or telemetry capability was built because
+the target map depicts one. Panels with no producer are named, not faked. The shared on-demand read
+`fetchFleetOperations` was consolidated into `lib/admin/fleet-operations-view.ts` so the panel and the
+map share one fetch shape (RULING 103); its transport fallback moved out of the render-file
+absence-defaults sweep with it, so that baseline entry was removed (the baseline only shrinks). PDC's
+active workspace was not touched — the check for its completion handoff (below) was read-only.
+
+**Combined verification at this HEAD** (isolated clone; preview harnesses excluded = a real checkout;
+no push / merge / deploy / PDC change):
+- `npx tsc --noEmit` clean; targeted ESLint on the changed files clean (0); `pnpm contrast` exits 0.
+- Design gates pass: `label-tracking` (inline `letterSpacing` is outside its `tracking-[…]` sweep and no
+  label clips), `absence-defaults`, `duplicate-implementations` (the `fetchFleetOperations` duplicate is
+  eliminated, not recorded), plus `rhythm-tokens` / `meeting-body-attribution` (globals.css untouched).
+- Component tests: `tests/system-map.test.ts` (renders the whole model, labelled not-live) and
+  `tests/fleet-operations-map.test.ts` (lane derivation across all four lanes + precedence; the real
+  producer report rendered as lanes, work items and honestly-labelled panels) — pass, alongside the
+  existing fleet consumer/page/receipt tests.
+- `rm -rf .next && pnpm build` → **GREEN**: `/admin/system-map` prerenders ○ Static, `/admin/fleet`
+  stays ƒ Dynamic; `build-output · 439 repo files traced · tests/ traced 0`; largest app trace **228 <
+  230** (neither new surface over-traces — the map reads the DB snapshot, the system map reads nothing);
+  reader-trace `failures: []`.
+- `tests/deploy-paths.test.ts` → **12/12**.
+- Browser interactions verified on the running dev server for both native surfaces (select/detail,
+  related-link, layer focus+reset, ring numbering, journeys, code toggle for the model; lane filter,
+  expand, view switch, code toggle for the map).
+
+**Remaining dependencies on PDC's final handoff (unchanged from Phase 6).** The system map is
+illustrative and depends on nothing. The Fleet map's live panels populate only when the control plane +
+owner snapshot are available; the exact PDC-owned blockers stay: served-reader proof has no producer
+(publication `UNKNOWN`); the permanent receipt authority is `NOT_CONNECTED` until the authorized
+`.runtime/PDC_V2_CODEX_COMPLETION_HANDOFF.md` (checked read-only, still not present); the historical
+window/receipt selector (`WindowRunRecord.promotionReceipts` removal), publisher mounting of
+`withFleetReceiptSnapshot`, and served-operation verification remain PDC-handoff inputs. No throughput
+or reader-demand producer exists, by design.
 
 ## Update — 2026-09-13 (Phase 6): Fleet's owner-snapshot receipt transport incorporated; combined build + page/Refresh parity verified
 

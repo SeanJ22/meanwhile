@@ -25,8 +25,8 @@ import {
   deliverySummary,
   EMPTY_CONSUMER_STATE,
   extensionCapability,
+  fetchFleetOperations,
   type FleetConsumerState,
-  type FleetFetch,
   NOTES,
   nextActionDisplay,
   progressSummary,
@@ -36,27 +36,6 @@ import {
   scoutPrerequisite,
   spendingDisplay,
 } from "@/lib/admin/fleet-operations-view";
-
-async function fetchFleetOperations(): Promise<FleetFetch> {
-  try {
-    const res = await fetch("/api/admin/fleet/operations", { headers: { accept: "application/json" }, cache: "no-store" });
-    const body = (await res.json().catch(() => null)) as
-      | (FleetOperationsReport & { error?: undefined })
-      | { formatVersion?: string; observedAt?: string; error?: { code?: string; detail?: string } }
-      | { says?: string }
-      | null;
-    if (body && "error" in body && body.error?.code === "CONTROL_PLANE_UNAVAILABLE") {
-      return { status: "CONTROL_PLANE_UNAVAILABLE", observedAt: body.observedAt ?? "", detail: body.error.detail ?? "" };
-    }
-    if (body && "formatVersion" in body && body.formatVersion && "operations" in body) {
-      return { status: "REPORT", report: body as FleetOperationsReport };
-    }
-    const says = body && "says" in body ? body.says : undefined;
-    return { status: "TRANSPORT_ERROR", detail: says ?? `HTTP ${res.status}` };
-  } catch (error) {
-    return { status: "TRANSPORT_ERROR", detail: (error as Error)?.message ?? "network error" };
-  }
-}
 
 function DeliveryBadge({ freshness }: { freshness: FleetOperationsReport["deliveryFreshness"] }) {
   const op = freshness === "FRESH" ? "fresh" : freshness === "STALE" ? "stale" : "blocked";

@@ -74,6 +74,36 @@ export function applyRefresh(prev: FleetConsumerState, incoming: FleetFetch): Fl
   return { shown: prev.shown, lastError: detail, unknownVersion: prev.unknownVersion };
 }
 
+/**
+ * The one on-demand read of the authenticated endpoint, shared by every client
+ * presentation of the fleet report (the panel and the operations map) so a single
+ * fetch shape cannot drift between them (RULING 103). Client-safe: it uses the
+ * global `fetch` and returns a typed `FleetFetch` the consumer folds; it imports no
+ * server module. `?? "network error"` is the admin-only transport detail when the
+ * fetch throws with no Error.message — it describes the console's own failure to
+ * reach its endpoint, never a claim about civic data.
+ */
+export async function fetchFleetOperations(): Promise<FleetFetch> {
+  try {
+    const res = await fetch("/api/admin/fleet/operations", { headers: { accept: "application/json" }, cache: "no-store" });
+    const body = (await res.json().catch(() => null)) as
+      | (FleetOperationsReport & { error?: undefined })
+      | { formatVersion?: string; observedAt?: string; error?: { code?: string; detail?: string } }
+      | { says?: string }
+      | null;
+    if (body && "error" in body && body.error?.code === "CONTROL_PLANE_UNAVAILABLE") {
+      return { status: "CONTROL_PLANE_UNAVAILABLE", observedAt: body.observedAt ?? "", detail: body.error.detail ?? "" };
+    }
+    if (body && "formatVersion" in body && body.formatVersion && "operations" in body) {
+      return { status: "REPORT", report: body as FleetOperationsReport };
+    }
+    const says = body && "says" in body ? body.says : undefined;
+    return { status: "TRANSPORT_ERROR", detail: says ?? `HTTP ${res.status}` };
+  } catch (error) {
+    return { status: "TRANSPORT_ERROR", detail: (error as Error)?.message ?? "network error" };
+  }
+}
+
 export type SectionState = "HELD" | "NOT_RECORDED" | "STORE_UNREACHABLE";
 
 /** HTTP 200 never means every section was measured — each section carries its own outcome. */
@@ -242,6 +272,55 @@ export function receiptLoadingSummary(loading: FleetReceiptLoading): {
     ? `No receipt references in the read windows (loader active, limits ${limits.maximumReceipts} files / ${limits.maxReceiptBytes} bytes).${truncNote}`
     : `${entries.length} receipt reference(s): ${parts.join(", ")}${truncNote}`;
   return { available: true, unresolved, text, caveat: RECEIPT_NOTES.loadedNotProof };
+}
+
+// ── Fleet operations MAP overlay (the operational surface, design 2026-09-13) ──
+// The map lays the SAME report out as status lanes + expandable work items + panels.
+// Every lane is DERIVED from the work item's own task states — never a stored flag —
+// and each derivation is stated so the field-mapping view can show it. A live lease
+// means activity, not proven progress; unavailable measurements stay unavailable.
+
+export type FleetLane = "progressing" | "waiting" | "failing" | "recovering";
+
+export interface FleetLaneMeta {
+  readonly id: FleetLane;
+  readonly label: string;
+  readonly color: string;
+  readonly blurb: string;
+  /** How this lane is computed from the contract — shown in the field-mapping view. */
+  readonly derivation: string;
+}
+
+/** The four operational lanes, with the exact colours and derivations from the design. */
+export const FLEET_LANES: readonly FleetLaneMeta[] = [
+  { id: "progressing", label: "Progressing", color: "#4FC9E8",
+    blurb: "A lease is live, or a result was committed inside the last cycle.",
+    derivation: "DERIVED — a task is CLAIMED or its admission is IN_FLIGHT, or its next action is LEASE_RECONCILIATION with an unexpired lease. A live lease means activity, not proven progress." },
+  { id: "waiting", label: "Waiting", color: "#FFB000",
+    blurb: "Due, or held by backoff, a policy recheck, or a decision that is yours.",
+    derivation: "DERIVED — admission DUE or BACKOFF, a Scout timing/policy recheck, or a work-item owner decision. The residual lane when nothing is in flight, failing or recovering." },
+  { id: "failing", label: "Failing", color: "#C2554A",
+    blurb: "A refusal is on the record and the obligation is still owed.",
+    derivation: "DERIVED — a task carries a blocker that is not a lease reason. The refusal is named and the obligation stays owed; nothing is retried blindly." },
+  { id: "recovering", label: "Recovering", color: "#B57BFF",
+    blurb: "A lease expired holding work. The sweep re-admits it and the retry resumes from the vault.",
+    derivation: "DERIVED — a lease is EXPIRED with next action LEASE_RECONCILIATION. Recovery resumes from the preserved capture, not from the beginning." },
+] as const;
+
+export const fleetLaneMeta = (lane: FleetLane): FleetLaneMeta => FLEET_LANES.find((l) => l.id === lane)!;
+
+/**
+ * Which lane a work item is in, derived from its own tasks in strict precedence:
+ * recovering (an expired lease is the most specific state) → failing (a named
+ * blocker) → progressing (something in flight) → waiting (the residual). One lane
+ * per item; the lane counts in the header are the envelope, not a per-item tally.
+ */
+export function fleetItemLane(op: FleetOperation): FleetLane {
+  const tasks = op.tasks;
+  if (tasks.some((t) => t.lease === "EXPIRED" && t.nextAutomaticAction === "LEASE_RECONCILIATION")) return "recovering";
+  if (tasks.some((t) => t.blocker !== null && t.lease !== "ACTIVE")) return "failing";
+  if (tasks.some((t) => t.state === "CLAIMED" || t.admission?.state === "IN_FLIGHT" || (t.nextAutomaticAction === "LEASE_RECONCILIATION" && t.lease === "ACTIVE"))) return "progressing";
+  return "waiting";
 }
 
 /**

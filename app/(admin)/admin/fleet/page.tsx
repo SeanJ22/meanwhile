@@ -48,7 +48,7 @@
  */
 
 import { ConsoleNav } from "@/app/(admin)/console-nav";
-import { FleetOperationsPanel } from "@/components/admin/fleet-operations-panel";
+import { FleetOperationsMap } from "@/components/admin/fleet-operations-map";
 import { openControlPlane } from "@/lib/control-plane/admin-data";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { readFleetSeedState } from "@/lib/admin/fleet-seed";
@@ -86,11 +86,12 @@ export default async function FleetOperationsPage() {
 
       <h1>Fleet operations</h1>
       <p className="note">
-        On-demand read of the fleet operations report (fleet-operations/v1, extensions/1). The first
-        read is taken server-side because you navigated here; Refresh re-reads on demand through the
-        authenticated endpoint. Neither is the heartbeat.
+        On-demand read of the fleet operations report. The first read is taken server-side because you
+        navigated here; Refresh re-reads on demand through the authenticated endpoint. Neither is the
+        heartbeat. Lanes are derived from each work item&rsquo;s task states; a live lease means activity,
+        not proven progress.
       </p>
-      <FleetOperationsPanel initialState={initialState} />
+      <FleetOperationsMap initialState={initialState} />
 
       <h2>ZIP preparation</h2>
       <p className="note">

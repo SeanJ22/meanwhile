@@ -816,6 +816,8 @@ jobs:
       - name: Test
         if: success() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 60
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm test
 
       - name: Schema shipping gate (only when the schema contract moved)

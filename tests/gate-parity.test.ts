@@ -336,5 +336,6 @@ test("PDC hosted setup fetches the exact frozen bridge before the unchanged full
   assert.ok(fixture.run.trim().endsWith('git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"'));
   assert.equal(full.run, "corepack pnpm test");
   assert.equal(full["timeout-minutes"], 60);
+  assert.deepEqual(full.env, { NODE_OPTIONS: "--max-old-space-size=4096" });
   assert.equal(gates["timeout-minutes"], 75);
 });

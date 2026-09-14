@@ -2,9 +2,12 @@
    44px Ask pill. Reference: Uiverse / marcelodolza, pretty-goose-7 (MIT).
    The rounded form, two curved highlights, five shadow layers and press
    remain. No label replacement or text mask: the existing words stay legible.
-   This module is attached ONLY at the collapsed-sidebar map placement. */
-.pearl[data-ask-pill="map"] {
-  --ask-pearl-lavender: var(--online);
+   Design handoff 2026-09-13: the Pearl is Ask's treatment at EVERY placement
+   (was map-only), so the selector no longer filters on the placement value. */
+.pearl[data-ask-pill] {
+  /* --ask aliases --online (the meeting "online only" purple) so the Ask pearl
+     and the meeting status can diverge later without a hunt. */
+  --ask-pearl-lavender: var(--ask);
   --ask-pearl-ink: var(--bg);
   --ask-pearl-soft-highlight: rgba(255, 255, 255, 0.07);
   --dur-pearl-highlight: 300ms;
@@ -32,8 +35,8 @@
     box-shadow var(--dur-base) var(--ease-pearl);
 }
 
-.pearl[data-ask-pill="map"]::before,
-.pearl[data-ask-pill="map"]::after {
+.pearl[data-ask-pill]::before,
+.pearl[data-ask-pill]::after {
   content: "";
   position: absolute;
   pointer-events: none;
@@ -43,7 +46,7 @@
     opacity var(--dur-pearl-highlight) var(--ease-pearl);
 }
 
-.pearl[data-ask-pill="map"]::before {
+.pearl[data-ask-pill]::before {
   left: -15%;
   right: -15%;
   bottom: 25%;
@@ -52,7 +55,7 @@
   background-color: var(--ask-pearl-soft-highlight);
 }
 
-.pearl[data-ask-pill="map"]::after {
+.pearl[data-ask-pill]::after {
   left: 6%;
   right: 6%;
   top: 12%;
@@ -67,11 +70,11 @@
   );
 }
 
-.pearl[data-ask-pill="map"] svg {
+.pearl[data-ask-pill] svg {
   color: currentColor;
 }
 
-.pearl[data-ask-pill="map"]:hover {
+.pearl[data-ask-pill]:hover {
   --shadow-pearl-inset:
     inset 0 3px 5px rgba(255, 255, 255, 0.18),
     inset 0 -1px 3px rgba(0, 0, 0, 0.38),
@@ -80,21 +83,21 @@
   color: var(--ask-pearl-ink);
 }
 
-.pearl[data-ask-pill="map"]:hover::before {
+.pearl[data-ask-pill]:hover::before {
   transform: translateY(-5%);
 }
 
-.pearl[data-ask-pill="map"]:hover::after {
+.pearl[data-ask-pill]:hover::after {
   opacity: 0.4;
   transform: translateY(5%);
 }
 
-.pearl[data-ask-pill="map"]:focus-visible {
+.pearl[data-ask-pill]:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 3px;
 }
 
-.pearl[data-ask-pill="map"]:active {
+.pearl[data-ask-pill]:active {
   --shadow-pearl-inset:
     inset 0 3px 5px rgba(255, 255, 255, 0.2),
     inset 0 -1px 3px rgba(0, 0, 0, 0.45),
@@ -105,7 +108,7 @@
   transform: translateY(2px);
 }
 
-:global([data-theme="light"]) .pearl[data-ask-pill="map"] {
+:global([data-theme="light"]) .pearl[data-ask-pill] {
   --ask-pearl-ink: var(--panel);
   --ask-pearl-soft-highlight: rgba(255, 255, 255, 0.04);
   --shadow-pearl-outer:
@@ -113,22 +116,22 @@
     0 8px 8px -5px rgba(0, 0, 0, 0.25);
 }
 
-:global([data-theme="light"]) .pearl[data-ask-pill="map"]:active {
+:global([data-theme="light"]) .pearl[data-ask-pill]:active {
   --shadow-pearl-outer:
     0 8px 16px rgba(0, 0, 0, 0.09),
     0 3px 5px -3px rgba(0, 0, 0, 0.22);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pearl[data-ask-pill="map"],
-  .pearl[data-ask-pill="map"]::before,
-  .pearl[data-ask-pill="map"]::after {
+  .pearl[data-ask-pill],
+  .pearl[data-ask-pill]::before,
+  .pearl[data-ask-pill]::after {
     --dur-pearl-reduced: 1ms;
     transition-duration: var(--dur-pearl-reduced);
   }
 
-  .pearl[data-ask-pill="map"]:hover::before,
-  .pearl[data-ask-pill="map"]:hover::after {
+  .pearl[data-ask-pill]:hover::before,
+  .pearl[data-ask-pill]:hover::after {
     transform: none;
   }
 }

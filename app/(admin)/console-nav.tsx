@@ -23,6 +23,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export type ConsoleView =
@@ -30,6 +31,8 @@ export type ConsoleView =
   | "readiness"
   | "research"
   | "release-review"
+  | "fleet"
+  | "system-map"
   | "steward"
   | "sources"
   | "reader"
@@ -46,6 +49,10 @@ function pathFor(view: ConsoleView, state: string): string {
       return "/admin/research";
     case "release-review":
       return "/admin/release-review";
+    case "fleet":
+      return "/admin/fleet";
+    case "system-map":
+      return "/admin/system-map";
     case "steward":
       return "/admin/steward";
     case "sources":
@@ -68,6 +75,8 @@ const VIEW_LABEL: Record<ConsoleView, string> = {
   readiness: "State readiness",
   research: "Research detail",
   "release-review": "Software release review",
+  fleet: "Fleet operations",
+  "system-map": "System map",
   steward: "Shipping and integration",
   sources: "Sources and APIs",
   reader: "What readers are doing",
@@ -136,6 +145,8 @@ export function ConsoleNav(props: {
           <option value="readiness">{VIEW_LABEL.readiness}</option>
           <option value="research">{VIEW_LABEL.research}</option>
           <option value="release-review">{VIEW_LABEL["release-review"]}</option>
+          <option value="fleet">{VIEW_LABEL.fleet}</option>
+          <option value="system-map">{VIEW_LABEL["system-map"]}</option>
         </select>
       </label>
 
@@ -163,7 +174,14 @@ export function ConsoleNav(props: {
         </span>
       )}
 
-      <span className="console-nav-brand">Control centre</span>
+      {/* Admin parity (design handoff 2026-09-13): the admin shell consumes the
+          same Logo lockup as the reader shell — "Meanwhile" is never inline
+          display text in Admin either, and --mark stays scoped to the Logo.
+          "Control centre" stays as the surface-context caption beside it. */}
+      <span className="console-nav-brand">
+        <Logo variant="wordmark" size={18} />
+        <span className="console-nav-context">Control centre</span>
+      </span>
       <ThemeToggle className="shrink-0" />
     </nav>
   );

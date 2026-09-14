@@ -30,6 +30,9 @@
      app is one of these five, which is what makes them read as one system. */
   --radius: 10px;
   --radius-sm: 6px;
+  /* Card-corner alias for the ported Lumen surfaces (== --radius, the card
+     corner). Keeps the design-handoff CSS readable without a second value. */
+  --radius-card: var(--radius);
   --radius-lg: 16px;
   --radius-pill: 999px;
   --radius-circle: 50%;
@@ -138,12 +141,16 @@
   --party-democratic: #7da7f0;
   --party-republican: #f0857c;
   --party-green: #6fcf8f;
-  --party-independent: #b48ae0;
+  --party-independent: #b78ee1;
   --party-none: #9aa0ab;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.5);
+  /* Lumen × Meanwhile (2026-09-13): enriched to the shipped popup-card / modal
+     depth (was 0 10px 40px rgba(0,0,0,.5)); read only within globals.css. */
+  --shadow-popup: 0 18px 40px -16px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* App-card elevation for the ballot pill and other lit controls. */
+  --shadow-app-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 20px -10px rgba(0, 0, 0, 0.6);
 
   /* The design pass (2026-08-15) — the committed system. DESIGN.md is — docs/globals-css-notes.md#the-design-pass-2026-08-15-the-committed-system-design-md-is-6 */
   --voice: #a4b1c9;
@@ -152,8 +159,15 @@
   /* THE BROWN DIES (item 6, 2026-08-16). The author: "I hate this brown — docs/globals-css-notes.md#the-brown-dies-item-6-2026-08-16-the-author-i-hate-this-brown-8 */
   --link: #4fc9e8;
   --label: #a9adb9;
-  --action: #4fc9e8;
+  /* Lumen × Meanwhile (2026-09-13): toned from #4fc9e8 (which equalled --link),
+     too hot as a large dark-mode fill. Dark ink on #43b4d1 = 7.81:1, over the
+     7:1 sun bar; #38a3bf and below drop under it. Light theme keeps #0a4f61. */
+  --action: #43b4d1;
   --action-on: #0f1117;
+  /* The hover ring and its glow, for a pressed neutral control (Lumen material).
+     Kept distinct from --link so the FOCUS outline stays --link, not the ring. */
+  --ring: #4fc9e8;
+  --link-glow: rgba(79, 201, 232, 0.38);
 
   /* Text ON a filled PARTY chip (item 3). The party colours are tuned as
      TEXT colours, so in dark they are light and the chip's text is the page
@@ -220,6 +234,24 @@
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── LUMEN MATERIAL (Lumen × Meanwhile design handoff, 2026-09-13) ─────────
+     "Lumen lights what you can press; it never enters a fill that states a
+     fact." The lit surface, hairline rim and horizon for pressable NEUTRAL
+     controls and cards. The themed leaves are re-declared under
+     [data-theme="light"] because var() inside a custom-property resolves at the
+     scope where the DECLARATION lives, not where it is used. */
+  --lumen-peak: color-mix(in srgb, var(--panel) 82%, white);
+  --lumen-floor: var(--panel);
+  --lumen-rim: rgba(255, 255, 255, 0.1);
+  --lumen-rim-strong: rgba(255, 255, 255, 0.16);
+  --lumen-horizon: white;
+  /* Surfaces move on Lumen's slower clock; everything else keeps 120/200/320. */
+  --dur-lumen: 1s;
+  --ease-lumen: cubic-bezier(0.15, 0.83, 0.66, 1);
+  /* The Ask pearl fills with the meeting-online purple; aliased so the two can
+     diverge later without a hunt (--online also means "no room to attend"). */
+  --ask: var(--online);
 }
 
 [data-theme="light"] {
@@ -255,11 +287,11 @@
   --tier-fill-state: #1cc3a2;
   --tier-fill-national: #90afe4;
   --tier-fill-on: #14161c;
-  --party-democratic: #2457b8;
-  --party-republican: #b3362a;
-  --party-green: #1e7a3c;
+  --party-democratic: #1f4ca1;
+  --party-republican: #932c22;
+  --party-green: #175c2d;
   --party-independent: #6b3fa0;
-  --party-none: #6a7079;
+  --party-none: #4d5158;
 
   /* MTG-14 (2026-08-28): #4a8481 measured 3.81:1 against --bg, BELOW the AA
      bar, and it was shipping — the meeting status tokens had never been in the
@@ -275,8 +307,9 @@
   --district-line: #5a7280;
 
   --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --shadow-popup: 0 10px 40px rgba(0, 0, 0, 0.18);
+  --shadow-popup: 0 18px 40px -16px rgba(20, 22, 28, 0.28), 0 2px 6px rgba(20, 22, 28, 0.10);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-app-card: 0 1px 2px rgba(20, 22, 28, 0.05), 0 8px 20px -10px rgba(20, 22, 28, 0.2);
 
   /* The design-pass tokens, light theme. Same roles as dark — docs/globals-css-notes.md#the-design-pass-tokens-light-theme-same-roles-as-dark-14 */
   --voice: #3f4f68;
@@ -287,6 +320,19 @@
   --label: #494e5b;
   --action: #0a4f61;
   --action-on: #fdfaf4;
+  /* Lumen × Meanwhile (2026-09-13). #4fc9e8 on the light page is 1.73:1
+     (invisible); #17809e = 4.05:1, over the 3:1 graphics floor. */
+  --ring: #17809e;
+  --link-glow: rgba(23, 128, 158, 0.30);
+  /* Lumen material, re-declared (var() resolves at the declaration scope). */
+  --lumen-peak: var(--panel);
+  --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
+  --lumen-rim: rgba(0, 0, 0, 0.08);
+  --lumen-rim-strong: rgba(0, 0, 0, 0.14);
+  /* Was color-mix(--online 60%) — a purple line; --online means "online-only".
+     Now the interactive cyan, so both themes speak one language. */
+  --lumen-horizon: var(--ring);
+  --ask: var(--online);
 
   /* Light party colours are DEEP, so the filled chip's text is near-white —
      the inversion of the dark theme, same as the tier fills. */
@@ -467,7 +513,7 @@
 @layer components {
   .notice-eyebrow {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: var(--text-caption);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--link);
@@ -916,7 +962,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--space-1);
   min-width: 0;
 }
 
@@ -1028,7 +1074,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-size: 11px;
   line-height: 1.25;
   color: var(--text-dim);
-  margin-top: 5px;
+  margin-top: var(--space-1);
   overflow-wrap: break-word;
 }
 
@@ -1750,9 +1796,23 @@ label:has(> input[type="checkbox"]) {
   display: inline-flex;
   align-items: stretch;
   border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-app-card);
   overflow: hidden;
   white-space: nowrap;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
+}
+
+/* One object (design handoff 2026-09-13): hovering EITHER half rings and lifts
+   the PAIR — the halves never ring individually. The container clips overflow,
+   so a half cannot draw its own outer ring; the ring lives here. */
+.ballot-pill:hover {
+  box-shadow: 0 0 0 1px var(--ring), 0 0 14px var(--link-glow), var(--shadow-app-card);
+  transform: translateY(-1px);
+}
+.ballot-pill:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-base);
 }
 
 /* M139 (2026-08-18) — the two halves carry the pill's own curve — docs/globals-css-notes.md#m139-2026-08-18-the-two-halves-carry-the-pill-s-own-curve-33 */
@@ -1771,8 +1831,12 @@ label:has(> input[type="checkbox"]) {
   border-radius: var(--radius-pill) 0 0 var(--radius-pill);
 }
 
-.ballot-pill-main:hover {
-  filter: brightness(1.06);
+/* The action half stays FLAT --action and does not brighten on its own — the
+   pair's ring is the hover signal now. Ink pinned against base.css's a:hover. */
+a.ballot-pill-main,
+a.ballot-pill-main:hover,
+a.ballot-pill-main:focus {
+  color: var(--action-on);
 }
 
 .ballot-pill-soon {
@@ -1785,12 +1849,20 @@ label:has(> input[type="checkbox"]) {
 }
 
 .ballot-pill-zip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 11px 13px;
-  background: var(--panel);
-  border: 1px solid var(--signal);
+  border: 0;
+  /* Lumen lit surface (design handoff 2026-09-13): the pressable ZIP half is a
+     neutral control — lit from below, hairline rim. The pair's ring on hover
+     comes from .ballot-pill, so this half never draws its own outer ring. */
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
@@ -1803,11 +1875,37 @@ label:has(> input[type="checkbox"]) {
   /* 44px thumb target at phone width — the padding above already clears it,
      stated here so a later type change cannot quietly shrink it. */
   min-height: 44px;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen);
 }
 
-.ballot-pill-zip:hover,
+/* Inset horizon so the two halves never read as one continuous line. */
+.ballot-pill-zip::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  bottom: 0;
+  width: 60%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent);
+  opacity: 0.22;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+
+/* On PAIR hover, or while the switcher is open, the zip rim strengthens and its
+   horizon lights to the ring colour. */
+.ballot-pill:hover .ballot-pill-zip,
 .ballot-pill-zip[aria-expanded="true"] {
-  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong);
+}
+.ballot-pill:hover .ballot-pill-zip::after,
+.ballot-pill-zip[aria-expanded="true"]::after {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ring), transparent);
+}
+.ballot-pill-zip:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
 }
 
 /* Ask: the same weight as the ballot pill but the QUIET treatment, because
@@ -1943,25 +2041,59 @@ label:has(> input[type="checkbox"]) {
 }
 
 .card-section-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   min-height: 44px;
   padding: 0 14px;
-  border: 1px solid color-mix(in srgb, var(--link) 45%, var(--panel-border));
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
+  border: 0;
+  border-radius: var(--radius-sm);
+  /* Lumen control material (design handoff 2026-09-13): a disclosure row is a
+     control, so it is lit from below with a hairline rim and a horizon that
+     lights while the row is open. Was a flat --link-tinted pill. */
+  background-color: var(--surface);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--surface) 84%, white) 0%, var(--surface) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
   cursor: pointer;
   text-align: left;
-  transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move);
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
 }
 
-.card-section-header:hover,
-.card-section[data-open] > .card-section-header {
-  border-color: var(--link);
-  background: color-mix(in srgb, var(--link) 14%, var(--panel-bg));
+.card-section-header::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent);
+  opacity: 0.22;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+
+.card-section-header:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 1px var(--ring), 0 0 14px var(--link-glow);
+}
+
+/* Hover OR open lights the horizon to full cyan — the row stays lit while its
+   content is showing. */
+.card-section-header:hover::after,
+.card-section[data-open] > .card-section-header::after {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ring), transparent);
+}
+
+.card-section-header:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
 }
 
 .card-section-title {
@@ -1976,7 +2108,7 @@ label:has(> input[type="checkbox"]) {
 .card-section-meta {
   flex-shrink: 0;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   letter-spacing: 0.04em;
   color: var(--text-dim);
 }
@@ -2231,6 +2363,85 @@ label:has(> input[type="checkbox"]) {
   font-size: 0.8125rem;
 }
 
+/* BATTLECARD CTA (design handoff 2026-09-13). The one loud action on a candidate
+   — "View Battlecard" — in the reader's own battlecard green, wearing the Lumen
+   material. The hover ring is a DARKER green than the fill so the edge reads as a
+   rim; the glow stays the bright green and widens (a dark ring alone would make
+   the button recede on a dark panel). This green is scoped to the reader's
+   battlecard — Admin actions are neutral Lumen controls, never this. Replaces a
+   flat fill whose hover referenced an undefined --battlecard-green-hover. */
+.battlecard-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 8px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--battlecard-green);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--battlecard-green) 84%, white) 0%, var(--battlecard-green) 66%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, white 22%, transparent);
+  color: var(--battlecard-on-green);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
+}
+.battlecard-cta::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--battlecard-on-green) 55%, transparent), transparent);
+  opacity: 0.35;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+.battlecard-cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, white 34%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--battlecard-green) 72%, black),
+    0 0 20px color-mix(in srgb, var(--battlecard-green) 55%, transparent);
+}
+.battlecard-cta:hover::after {
+  opacity: 0.8;
+}
+.battlecard-cta:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-base);
+}
+.battlecard-cta:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--battlecard-green) 72%, black);
+  outline-offset: 2px;
+}
+/* Reduced motion drops every Lumen transition and every hover transform on the
+   new controls, via transition:none and transform:none — never a raw duration,
+   which the motion-token sweep exists to catch in a reader-facing rule. */
+@media (prefers-reduced-motion: reduce) {
+  .contact-pill,
+  .ballot-pill,
+  .ballot-pill-zip,
+  .card-section-header,
+  .battlecard-cta {
+    transition: none;
+  }
+  .contact-pill:hover,
+  .ballot-pill:hover,
+  .card-section-header:hover,
+  .battlecard-cta:hover {
+    transform: none;
+  }
+}
+
 .id-office {
   margin-top: 7px;
   font-size: 0.8125rem;
@@ -2260,28 +2471,77 @@ label:has(> input[type="checkbox"]) {
 }
 
 .contact-pill {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   gap: 7px;
   min-height: 44px;
   padding: 0 14px;
+  border: 0;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--panel-border);
-  background: var(--panel-bg);
+  /* Lumen control material (design handoff 2026-09-13): lit from below, a
+     hairline rim, a horizon at the base. "Lumen lights what you can press."
+     Replaces the flat --panel-bg fill + --link border-recolour on hover. */
+  background-color: var(--lumen-floor);
+  background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
   font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
-  transition: border-color var(--dur-fast) var(--ease-move),
-    color var(--dur-fast) var(--ease-move);
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow var(--dur-lumen) var(--ease-lumen),
+    transform var(--dur-lumen) var(--ease-lumen);
 }
 
-.contact-pill:hover,
+.contact-pill::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent);
+  opacity: 0.22;
+  transition: opacity var(--dur-lumen) var(--ease-lumen);
+}
+
+/* Hover is a ring around the WHOLE pill, not a border/label recolour — the
+   label stays put, so the pill still reads as one object and spends no
+   semantic colour (the cyan that used to sit beside party red / tier teal). */
+.contact-pill:hover {
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 1px var(--ring), 0 0 14px var(--link-glow);
+  transform: translateY(-1px);
+}
+
+.contact-pill:hover::after {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--ring), transparent);
+}
+
+.contact-pill:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-base);
+}
+
+/* Focus is independent of hover: it stays the --link outline, never the ring
+   (tests/focus-visible). An <a>.contact-pill inheriting base.css's a:hover
+   colour is pinned so the label does not flip to the foreground ink. */
 .contact-pill:focus-visible {
-  border-color: var(--link);
-  color: var(--link);
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.contact-pill,
+.contact-pill:hover,
+.contact-pill:focus {
+  color: var(--text);
 }
 
 /* The compact form for the small popup. Still above the tap floor: a 40px
@@ -2512,10 +2772,15 @@ label:has(> input[type="checkbox"]) {
   margin-right: 6px;
   padding: 0 10px;
   border-radius: 20px;
-  font-family: var(--font-mono);
+  /* Sans, not mono (design handoff 2026-09-13): mono is for numerals and
+     technical strings; "Concluded" is a label, and the sans uppercase label
+     register now matches the jurisdiction badges. The mark, the word and the
+     spoken qualifier all stay. */
+  font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  margin-inline-end: -0.08em;
   text-transform: uppercase;
   vertical-align: 1px;
   color: var(--bg);
@@ -3397,14 +3662,25 @@ button.jurisdiction-badge-action {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
-  transition: color var(--dur-fast) var(--ease-move),
-    border-color var(--dur-fast) var(--ease-move);
+  transition: color var(--dur-base) var(--ease-move),
+    border-color var(--dur-base) var(--ease-move),
+    box-shadow var(--dur-base) var(--ease-move);
 }
 
-button.jurisdiction-badge-action:hover,
+/* COULD_GOVERN is the one actionable badge, so it is the one that takes the
+   ring on hover (design handoff 2026-09-13); the other three are settled facts
+   and stay flat. At rest this still matches its three siblings exactly. */
+button.jurisdiction-badge-action:hover {
+  color: var(--link);
+  border-color: var(--ring);
+  box-shadow: 0 0 0 1px var(--ring), 0 0 12px var(--link-glow);
+  text-decoration-style: solid;
+}
+
+/* Focus stays the --link outline, independent of the hover ring. */
 button.jurisdiction-badge-action:focus-visible {
-  color: var(--text);
-  border-color: var(--text);
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
   text-decoration-style: solid;
 }
 
@@ -4325,7 +4601,48 @@ button.jurisdiction-badge-action:focus-visible {
   .funding-type > summary::after {
     transition: none;
   }
+  .funding-type > summary:hover .pill {
+    transform: none;
+  }
 }
+
+/* FUNDING PILL — the hybrid (design handoff 2026-09-13). A funding-type pill
+   states a category AND presses, so the flat family fill is left UNTOUCHED and
+   the interaction ring sits OUTSIDE it, in the family's own saturated ink — not
+   the generic cyan, because a cyan ring on an amber pill is a recolour by the
+   back door. Register: uppercase label with the trailing-space trim; the label
+   itself drops its leading article upstream (pillLabel in committee-types.ts).
+   The chevron already rotates 90° via .funding-type[open] > summary::after. */
+.funding-type .pill {
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  /* Trim the trailing letter-spacing: the exact negative of the tracking above,
+     as the trailing-space rule (LBL-2/OFF-2) requires it stated. */
+  margin-inline-end: -0.08em;
+  text-transform: uppercase;
+  transition: box-shadow var(--dur-base) var(--ease-move),
+    transform var(--dur-base) var(--ease-move);
+}
+.funding-type > summary:hover .pill {
+  transform: translateY(-1px);
+}
+/* Focus: the summary keeps the app's global :focus-visible ring (never
+   suppressed here — tests/focus-visible), so keyboard focus is always visible. */
+/* Expanded holds a steady 1px ring; hover adds the family glow. The ring value
+   is the family's own -text token — the one already contrast-checked against
+   that family's fill. */
+.funding-type[open] > summary .pill--teal { box-shadow: 0 0 0 1px var(--pill-teal-text); }
+.funding-type[open] > summary .pill--cyan { box-shadow: 0 0 0 1px var(--pill-cyan-text); }
+.funding-type[open] > summary .pill--amber { box-shadow: 0 0 0 1px var(--pill-amber-text); }
+.funding-type[open] > summary .pill--gold { box-shadow: 0 0 0 1px var(--pill-gold-text); }
+.funding-type[open] > summary .pill--slate { box-shadow: 0 0 0 1px var(--pill-slate-text); }
+.funding-type[open] > summary .pill--stone { box-shadow: 0 0 0 1px var(--pill-stone-text); }
+.funding-type > summary:hover .pill--teal { box-shadow: 0 0 0 1px var(--pill-teal-text), 0 0 12px color-mix(in srgb, var(--pill-teal-text) 45%, transparent); }
+.funding-type > summary:hover .pill--cyan { box-shadow: 0 0 0 1px var(--pill-cyan-text), 0 0 12px color-mix(in srgb, var(--pill-cyan-text) 45%, transparent); }
+.funding-type > summary:hover .pill--amber { box-shadow: 0 0 0 1px var(--pill-amber-text), 0 0 12px color-mix(in srgb, var(--pill-amber-text) 45%, transparent); }
+.funding-type > summary:hover .pill--gold { box-shadow: 0 0 0 1px var(--pill-gold-text), 0 0 12px color-mix(in srgb, var(--pill-gold-text) 45%, transparent); }
+.funding-type > summary:hover .pill--slate { box-shadow: 0 0 0 1px var(--pill-slate-text), 0 0 12px color-mix(in srgb, var(--pill-slate-text) 45%, transparent); }
+.funding-type > summary:hover .pill--stone { box-shadow: 0 0 0 1px var(--pill-stone-text), 0 0 12px color-mix(in srgb, var(--pill-stone-text) 45%, transparent); }
 
 /* The hamburger — thumb-sized, above the map, below the overlays. Rendered
    whenever the sidebar is effectively hidden, at any width (2f). */
@@ -4466,6 +4783,8 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 .account-modal {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -4476,6 +4795,39 @@ main[data-sidebar="closed"] .map-top-row {
   border-radius: var(--radius);
   box-shadow: var(--shadow-popup);
   overflow: hidden;
+}
+
+/* TierCard MODAL tier ring (design handoff 2026-09-13). The battlecard modal
+   wears the contest's REAL level of government, derived from the contest OCD id
+   via tierForOcdId — never guessed. data-tier is set only when the tier is
+   known; an unknown tier stays the neutral card above (no false claim). The
+   ring replaces the neutral border with a 1px inset at 62% + a 1px halo at 22%,
+   and lights a 2px tier horizon at the base. */
+/* The tier accent per level, read through the Tailwind bridge aliases
+   (--color-local/state/national == the tier accents) so the tier ring is a
+   genuine tier-semantic use without reading the amber-guarded --accent-local
+   directly (amber-remnant.test). */
+.account-modal[data-tier="local"] { --tier-ring: var(--color-local); }
+.account-modal[data-tier="state"] { --tier-ring: var(--color-state); }
+.account-modal[data-tier="national"] { --tier-ring: var(--color-national); }
+.account-modal[data-tier] {
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tier-ring) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tier-ring) 22%, transparent),
+    var(--shadow-popup);
+}
+.account-modal[data-tier]::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  bottom: 0;
+  width: 70%;
+  height: 2px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--tier-ring), transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tier-ring) 50%, transparent);
 }
 
 /* F01 2.5 (2026-08-19, the author): "those need to be fully in view at all — docs/globals-css-notes.md#f01-2-5-2026-08-19-the-author-those-need-to-be-fully-in-view-at-all-91 */

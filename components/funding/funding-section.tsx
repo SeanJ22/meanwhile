@@ -7,6 +7,7 @@ import {
   type IndividualAggregate,
 } from "@/lib/funding/donor-privacy";
 import { groupContributions, type ContributorGroup } from "@/lib/funding/grouping";
+import { committeePillLabel } from "@/lib/funding/committee-types";
 import {
   contributorTypeLabel,
   plainContributorLabel,
@@ -450,7 +451,9 @@ function ContributorRow({
         // palette.
         <details className="funding-type mt-0.5">
           <summary>
-            <span className={pillClassFor(typeLabel)}>{typeLabel.label}</span>
+            {/* The pill drops the leading article ("SUPER PAC"); the prose
+                `label` fragment is untouched and still used inline elsewhere. */}
+            <span className={pillClassFor(typeLabel)}>{committeePillLabel(typeLabel)}</span>
           </summary>
           <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
             {typeLabel.explainer}{" "}

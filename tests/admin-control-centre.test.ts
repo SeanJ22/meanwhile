@@ -77,6 +77,7 @@ test("SEEDED: every admin route returns 404 on the PUBLIC host", async () => {
     "/admin/auth/callback?code=x&state=y",
     "/api/admin/session",
     "/api/admin/decision",
+    "/admin/fleet",
     "/admin/anything/deeper",
   ];
   for (const path of paths) {
@@ -120,6 +121,17 @@ test("SEEDED: an unauthenticated admin page request on the ADMIN host is refused
 test("SEEDED: an unauthenticated admin API request on the ADMIN host is refused with 401", async () => {
   const response = await middleware(request(ADMIN_HOST, "/api/admin/decision"));
   assert.equal(response.status, 401);
+});
+
+test("the committed /admin/fleet page is guarded like any other admin page", async () => {
+  // The fleet operations console (app/(admin)/admin/fleet/page.tsx) is a PAGE
+  // under /admin, so both rules must reach it through the generic prefix logic:
+  // a bare 404 on the public host, and a redirect to the login (never a 401 —
+  // that is only for /api/admin/*) on the admin host without a session.
+  assert.equal((await middleware(request(PUBLIC_HOST, "/admin/fleet"))).status, 404);
+  const onAdmin = await middleware(request(ADMIN_HOST, "/admin/fleet"));
+  assert.equal(onAdmin.status, 307, "an unauthenticated fleet page request redirects to the login");
+  assert.match(onAdmin.headers.get("location") ?? "", /\/admin\/login/);
 });
 
 test("the login page, the Google start and callback, and the session route are reachable unauthenticated on the admin host", async () => {

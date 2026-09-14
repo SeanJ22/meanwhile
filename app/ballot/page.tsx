@@ -636,6 +636,9 @@ async function BallotBattlecard({
   return (
     <CandidateBattlecard
       name={name}
+      /* The contest's real government tier for the modal's tier ring — derived
+         from the contest OCD id, never guessed; null stays neutral. */
+      tier={tierForOcdId(contestOcdId)}
       partyLine={partyLine}
       partyLabel={partyLabel}
       photoUrl={card?.photoUrl ?? null}

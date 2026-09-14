@@ -155,17 +155,25 @@ export function PillCluster({
                 : "Ballot for this area coming soon"
             }
           >
+            {/* A marked ballot SHEET (design handoff 2026-09-13), not a check
+                in a box: ✓ already means "concluded" (status-marks.ts) and "yes"
+                in the vote grammar, so a third meaning for that shape is one too
+                many. Portrait, at 20px so it reads as paper rather than a card. */}
             <svg
-              width="16"
-              height="16"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               aria-hidden="true"
+              style={{ marginInlineStart: -1, marginInlineEnd: -3 }}
             >
-              <path d="M5 12l4 4L19 6" />
-              <rect x="3" y="10" width="18" height="10" rx="1.5" />
+              <rect x="4" y="2.8" width="16" height="18.4" rx="2" />
+              <path d="M8.3 9.9l2.1 2.1 4.2-4.2" />
+              <path d="M8.3 16.4h7.4" />
             </svg>
             <span>Ballot</span>
             {!covered && <span className="ballot-pill-soon">soon</span>}
@@ -201,24 +209,28 @@ export function PillCluster({
 
         <button
           type="button"
-          className={`ask-pill${placement === "map" ? ` ${pearlStyles.pearl}` : ""}`}
+          className={`ask-pill ${pearlStyles.pearl}`}
           data-ask-pill={placement}
           aria-expanded={askOpen}
           aria-label={pill.ariaLabel}
           onClick={() => onToggleAsk(!askOpen)}
         >
+          {/* A speech BUBBLE (design handoff 2026-09-13), not a "?" in a circle:
+              a "?" in a circle is the universal HELP icon, and Ask routes a real
+              question to a real body. The word sits beside it, so the bubble only
+              has to say "to someone". The Pearl now renders at every placement. */}
           <svg
             width="16"
             height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2.2"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             aria-hidden="true"
           >
-            <path d="M9.1 9a3 3 0 1 1 4.2 2.7c-.8.4-1.3 1.1-1.3 2" />
-            <line x1="12" y1="17.5" x2="12.01" y2="17.5" />
-            <circle cx="12" cy="12" r="9.5" />
+            <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-2.6-.4L4 21l1.4-4.1A8.2 8.2 0 0 1 3.6 11.5 8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4" />
           </svg>
           <span>{pill.label}</span>
         </button>

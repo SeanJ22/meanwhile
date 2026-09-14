@@ -168,6 +168,7 @@ import {
   inspectRuntimeReleaseEvidence,
   runtimeGithubRepository,
   runtimeGithubCredential,
+  runtimeProductionReadEnvironment,
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
@@ -201,7 +202,13 @@ function standingChildEnvironment(
   parentEnv: NodeJS.ProcessEnv = process.env,
 ): NodeJS.ProcessEnv {
   return provider === "postgres"
-    ? admittedRuntimeChildEnvironment({ parentEnv, capability, parentPid: process.pid })
+    ? admittedRuntimeChildEnvironment({
+      parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER", "NIGHTLY_RESEARCH"].includes(capability)
+        ? runtimeProductionReadEnvironment(parentEnv)
+        : parentEnv,
+      capability,
+      parentPid: process.pid,
+    })
     : { ...parentEnv };
 }
 

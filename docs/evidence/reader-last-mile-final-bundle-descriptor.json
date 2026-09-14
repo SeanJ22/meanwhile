@@ -1,7 +1,7 @@
 {
   "evidencePath": "docs/evidence/reader-last-mile-final-bundle.json",
-  "evidenceSha256": "145a652e59f42f10c623ef2e646d85745990538f6bc53aea4bc89f23e8292abf",
-  "exactHead": "1b8c63f7586bf7255c7ccbcc29e6753361f0f1f1",
+  "evidenceSha256": "559fdf6c32cd673934c5d287acf062046f3252aeff4b207ebc2a67149aee6c2a",
+  "exactHead": "9b01f3e51aab3ac397bfb1c7155442392a3740a6",
   "holdingPaths": [
     "data/ballot/candidate-cards-2026.json",
     "data/ballot/candidate-links-2026.json",

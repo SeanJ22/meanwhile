@@ -236,7 +236,7 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 544,
+      "recordObligations": 543,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
@@ -262,7 +262,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 112,
+      "recordObligations": 111,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -397,7 +397,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 542,
+      "recordObligations": 541,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],

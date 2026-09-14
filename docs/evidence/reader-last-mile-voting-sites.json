@@ -8361,7 +8361,7 @@
       "payloadSha256": "562ba830349b8c313249306f8bf9eb4287f40a104b9dde692fd0d21ecc2c758f"
     }
   ],
-  "exactHead": "1b8c63f7586bf7255c7ccbcc29e6753361f0f1f1",
+  "exactHead": "9b01f3e51aab3ac397bfb1c7155442392a3740a6",
   "sourceHashes": {
     "app/api/voting-sites/route.ts": "1ccaa35bce50622edb94fe926c857dcd45220a43011ddd63e6bddb01348aabf8",
     "lib/ballot/voting-sites-server.ts": "e09172c8209858ae44ddec57ada05a3f0f71567e0129ff97add153bd832bc9bf",

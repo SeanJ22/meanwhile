@@ -5,9 +5,9 @@
  * the same pure projection. It creates no second ledger, performs no write,
  * and never turns a failed read into an empty production-data observation.
  */
-import { neon } from "@neondatabase/serverless";
+import { Pool } from "@neondatabase/serverless";
 import { and, eq, gte, inArray, lte, notExists, or, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/neon-serverless";
 import { alias } from "drizzle-orm/pg-core";
 
 import * as schema from "../db/schema.ts";
@@ -25,8 +25,8 @@ import {
 
 /** One MVCC snapshot: Admin must never combine pre- and post-promotion facts. */
 export const ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS = {
-  isolationLevel: "RepeatableRead",
-  readOnly: true,
+  isolationLevel: "repeatable read",
+  accessMode: "read only",
 } as const;
 
 async function readRowsFromCanonicalTables(
@@ -34,7 +34,10 @@ async function readRowsFromCanonicalTables(
   since: string,
   now: string,
 ): Promise<RoutineObservabilityRows> {
-  const db = drizzle(neon(connection, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS), { schema });
+  // HTTP batches cap responses at 64 MiB. Keep the complete evidence over
+  // one connection and one read-only MVCC snapshot, closing it on every exit.
+  const pool = new Pool({ connectionString: connection, max: 1, connectionTimeoutMillis: 15000 });
+  try { return await drizzle(pool, { schema }).transaction(async (db) => {
   const candidateSelection = {
     id: civicDataCandidates.id,
     sourceId: civicDataCandidates.sourceId,
@@ -197,8 +200,7 @@ async function readRowsFromCanonicalTables(
     gte(civicDataCandidateEvents.at, since),
     inArray(civicDataCandidateEvents.candidateId, selectedCandidateIds),
   )!;
-  const [promotions, candidates, events] = await db.batch([
-    db.select({
+  const promotions = await db.select({
       key: civicDataPromotions.key,
       sourceId: civicDataPromotions.sourceId,
       recordClass: civicDataPromotions.recordClass,
@@ -208,11 +210,12 @@ async function readRowsFromCanonicalTables(
       promotedAt: civicDataPromotions.promotedAt,
       payload: civicDataPromotions.payload,
       validationReceipt: civicDataPromotions.validationReceipt,
-    }).from(civicDataPromotions),
-    db.select(candidateSelection).from(civicDataCandidates).where(selectedCandidate),
-    db.select(eventSelection).from(civicDataCandidateEvents).where(selectedEvent),
-  ]);
+    }).from(civicDataPromotions);
+  const candidates = await db.select(candidateSelection).from(civicDataCandidates).where(selectedCandidate);
+  const events = await db.select(eventSelection).from(civicDataCandidateEvents).where(selectedEvent);
   return { candidates, events, promotions };
+  }, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS);
+  } finally { await pool.end(); }
 }
 
 /**

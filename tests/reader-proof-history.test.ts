@@ -833,3 +833,59 @@ test("terminal Reader history cannot accept a valid child rehearsal or a relabel
   };
   assert.throws(() => readerProofAuthority(exactRelabeledReceipt, evidence({ ...productionBuilt.support, [relabeledPath]: relabeledArtifact }), HEAD_B, { requiredPhase: "PRODUCTION" }), /pinned production branch|provider branch identity differs|standing production store/);
 });
+
+
+function approvedDocumentaryMainProductionReceipt(
+  lineageOverrides: Record<string, unknown> = {},
+  importer = "c85082c04cef43fb0203adcfe92b936d8520e9e3",
+) {
+  const built = authorityArtifact("PRODUCTION");
+  const path = "docs/evidence/reader-last-mile-production-import-receipt.json";
+  const receipt = JSON.parse(built.support[path].toString("utf8"));
+  receipt.importSha = importer;
+  receipt.lineage = {
+    ...receipt.lineage,
+    importCommitASha: importer,
+    exactQuiescedMainSha: "9a9a76763f39980cca4aac448cb57ce9a8102101",
+    softwareLineageAnchorSha: "d04026d91c5b8c513ea335e4f9575cac3b6badb9",
+    importCommitALinearAfterExactMain: false,
+    importCommitALinearAfterSoftwareLineageAnchor: true,
+    documentaryMainJoinRequired: true,
+    ...lineageOverrides,
+  };
+  built.artifact.import.importerCodeSha = importer;
+  built.artifact.import.durableImport.importerCodeShas = [importer];
+  return authorityReceiptFromBuilt("PRODUCTION", replaceSupport(built, "PRODUCTION", "import", Buffer.from(JSON.stringify(receipt))));
+}
+
+test("production history validates the exact approved documentary-main receipt without relabeling importer ancestry", () => {
+  const closure = approvedDocumentaryMainProductionReceipt();
+  const read = evidence({ ...closure.support, [closure.receipt.executionAuthority.evidencePath]: closure.artifact });
+  assert.deepEqual(readerProofAuthority(closure.receipt, read, HEAD_B, { requiredPhase: "PRODUCTION" }),
+    { phase: "PRODUCTION", importerCodeSha: "c85082c04cef43fb0203adcfe92b936d8520e9e3" });
+});
+
+test("the documentary-main exception rejects near-miss and unbound lineage even when all enclosing hashes are recomputed", () => {
+  const mutations: Record<string, unknown>[] = [
+    { exactQuiescedMainSha: "1".repeat(40) },
+    { softwareLineageAnchorSha: "2".repeat(40) },
+    { importCommitALinearAfterExactMain: true },
+    { importCommitALinearAfterSoftwareLineageAnchor: false },
+    { documentaryMainJoinRequired: false },
+    { softwareLineageAnchorSha: undefined },
+    { documentaryMainJoinRequired: undefined },
+    { unapprovedExtension: true },
+    { importCommitASha: HEAD_A },
+    { preservedConcurrentPullRequests: [] },
+  ];
+  for (const mutation of mutations) {
+    const closure = approvedDocumentaryMainProductionReceipt(mutation);
+    assert.throws(() => readerProofAuthority(closure.receipt,
+      evidence({ ...closure.support, [closure.receipt.executionAuthority.evidencePath]: closure.artifact }), HEAD_B,
+      { requiredPhase: "PRODUCTION" }), /lineage is not exact and linear/);
+  }
+  const wrongImporter = approvedDocumentaryMainProductionReceipt({}, HEAD_A);
+  assert.throws(() => readerProofAuthority(wrongImporter.receipt,
+    evidence({ ...wrongImporter.support, [wrongImporter.receipt.executionAuthority.evidencePath]: wrongImporter.artifact }), HEAD_B,
+    { requiredPhase: "PRODUCTION" }), /lineage is not exact and linear/);
+});

@@ -61,6 +61,11 @@ const NOT_A_GATE = [
   `holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")`,
   '[[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1',
   'git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"',
+  // Materialize the exact PDC import fixture; accounting assertions remain in the suite.
+  "pdc_frozen_base=$(node --input-type=module -e 'import{readFileSync}from\"node:fs\";console.log(readFileSync(\"lib/civic-data/trusted-lkg-import.ts\",\"utf8\").match(/export const PDC_V2_FROZEN_BASE_SHA = \"([a-f0-9]{40})\";/)[1])')",
+  "[[ \"$pdc_frozen_base\" =~ ^[0-9a-f]{40}$ ]] || exit 1",
+  "git cat-file -e \"${pdc_frozen_base}:lib/funding/official-candidacies.json\" 2>/dev/null || git fetch --no-tags --depth=1 origin \"$pdc_frozen_base\"",
+  "git cat-file -e \"${pdc_frozen_base}:lib/funding/official-candidacies.json\"",
   // Shallow-checkout setup for the committed reader receipt's ancestry proof.
   "node scripts/reader-proof-history.mjs",
   /*
@@ -319,4 +324,17 @@ test("gate parity · every gate names the CI job it stands in for", () => {
     assert.ok(gate.ciJob?.trim(), `gate "${gate.id}" names no CI job`);
     assert.ok(gate.why?.trim(), `gate "${gate.id}" states no reason`);
   }
+});
+
+test("PDC hosted setup fetches the exact frozen bridge before the unchanged full suite", () => {
+  const workflow = parse(readFileSync(WORKFLOW, "utf8"));
+  const gates = workflow.jobs.gates;
+  const fixture = gates.steps.find((step: { name?: string }) => step.name === "Frozen holdings base for extraction proofs");
+  const full = gates.steps.find((step: { name?: string }) => step.name === "Test");
+  assert.ok(gates.steps.indexOf(fixture) < gates.steps.indexOf(full));
+  assert.ok(fixture.run.includes('git fetch --no-tags --depth=1 origin "$pdc_frozen_base"'));
+  assert.ok(fixture.run.trim().endsWith('git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"'));
+  assert.equal(full.run, "corepack pnpm test");
+  assert.equal(full["timeout-minutes"], 60);
+  assert.equal(gates["timeout-minutes"], 75);
 });

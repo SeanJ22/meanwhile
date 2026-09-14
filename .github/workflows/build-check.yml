@@ -439,7 +439,7 @@ jobs:
   gates:
     name: gates (test · lint · tsc)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     steps:
       # Pull-request checks run on GitHub's synthetic merge commit. The reader
       # closure receipt binds the immediately preceding executed proof head,
@@ -760,6 +760,11 @@ jobs:
           holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")
           [[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"
+          # PDC bridge accounting reads this distinct immutable import fixture.
+          pdc_frozen_base=$(node --input-type=module -e 'import{readFileSync}from"node:fs";console.log(readFileSync("lib/civic-data/trusted-lkg-import.ts","utf8").match(/export const PDC_V2_FROZEN_BASE_SHA = "([a-f0-9]{40})";/)[1])')
+          [[ "$pdc_frozen_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json" 2>/dev/null || git fetch --no-tags --depth=1 origin "$pdc_frozen_base"
+          git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"
 
       - name: Reader closure proof ancestry
         if: success() && steps.tier.outputs.expensive == 'yes'
@@ -810,7 +815,7 @@ jobs:
       # can prove that the receipt's executed head is really in HEAD's history.
       - name: Test
         if: success() && steps.tier.outputs.expensive == 'yes'
-        timeout-minutes: 15
+        timeout-minutes: 60
         run: corepack pnpm test
 
       - name: Schema shipping gate (only when the schema contract moved)

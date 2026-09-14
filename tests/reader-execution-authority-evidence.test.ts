@@ -17,10 +17,6 @@ import test from "node:test";
 
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import {
-  buildPdcV2TrustedLkgReattestationCandidate,
-  pdcV2UnionPimaOutcomeSnapshots,
-} from "../lib/civic-data/trusted-lkg-import-plan.ts";
-import {
   PDC_V2_FROZEN_BASE_SHA,
   TRUSTED_LKG_IMPORT_AUTHORIZATION,
   TRUSTED_LKG_IMPORT_PURPOSE,
@@ -37,6 +33,7 @@ import {
 import { sourceProjectionEvidence, VALIDATION_CHECKS, type CandidateVersionRecord, type PromotedProjection, type RoutineCandidate, type TrustedLkgImportEvidence, type TrustedLkgPimaOutcomeUnionEvidence } from "../lib/civic-data/types.ts";
 import {
   buildReaderExecutionAuthorityEvidence,
+  readerProductionTransferLineageShapeIssue,
   admitReaderExecutionAuthorityArchivedSupport,
   canonicalReaderAuthorityJson,
   PDC_NEON_PROJECT_ID,
@@ -62,6 +59,39 @@ import {
 } from "../scripts/reader-execution-authority-evidence.mts";
 
 const HEAD = "a".repeat(40);
+
+test("production lineage admits only the exact approved documentary-main join", () => {
+  const approvedA = "c85082c04cef43fb0203adcfe92b936d8520e9e3";
+  const ordinary: Record<string, unknown> = {
+    frozenImportDataBaseSha: "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+    exactQuiescedMainSha: "d".repeat(40), reviewedPostFrozenMainCommitOids: [],
+    importCommitASha: HEAD, importCommitALinearAfterExactMain: true,
+    preservedConcurrentPullRequests: [],
+  };
+  assert.equal(readerProductionTransferLineageShapeIssue(ordinary, HEAD), null);
+  const approved = {
+    ...ordinary, importCommitASha: approvedA,
+    exactQuiescedMainSha: "9a9a76763f39980cca4aac448cb57ce9a8102101",
+    softwareLineageAnchorSha: "d04026d91c5b8c513ea335e4f9575cac3b6badb9",
+    importCommitALinearAfterExactMain: false,
+    importCommitALinearAfterSoftwareLineageAnchor: true,
+    documentaryMainJoinRequired: true,
+  };
+  assert.equal(readerProductionTransferLineageShapeIssue(approved, approvedA), null);
+  assert.notEqual(readerProductionTransferLineageShapeIssue(approved, HEAD), null, "no future importer reuse");
+  assert.notEqual(readerProductionTransferLineageShapeIssue({...ordinary, importCommitASha: approvedA}, approvedA), null, "never assert false main ancestry for this A");
+  for (const key of Object.keys(approved)) {
+    const missing: Record<string, unknown> = {...approved}; delete missing[key];
+    assert.notEqual(readerProductionTransferLineageShapeIssue(missing, approvedA), null, `missing ${key}`);
+  }
+  for (const [key, value] of [
+    ["importCommitASha", HEAD], ["exactQuiescedMainSha", HEAD], ["softwareLineageAnchorSha", HEAD],
+    ["importCommitALinearAfterExactMain", true], ["importCommitALinearAfterSoftwareLineageAnchor", false],
+    ["documentaryMainJoinRequired", false], ["unknownField", true],
+  ] as const) {
+    assert.notEqual(readerProductionTransferLineageShapeIssue({...approved, [key]: value}, approvedA), null, key);
+  }
+});
 const PRODUCTION_PROOF_HEAD = "e".repeat(40);
 const FROZEN = "fc67e8cd34c489590c403f7b4a0d6008fa755296";
 const SHA256 = "b".repeat(64);
@@ -209,7 +239,15 @@ function pimaOutcomeUnionFixture(): PimaOutcomeUnionFixture {
     payload: predecessorCandidate.readModel,
     receipt: predecessorReceipt,
   };
-  const union = pdcV2UnionPimaOutcomeSnapshots(frozen, predecessorSnapshot);
+  // This retained-history fixture's one predecessor sitting is already in
+  // the frozen set. Spell out that exact synthetic union without a retired
+  // production import planner or a general replacement import helper.
+  assert.deepEqual(predecessorSnapshot.sittings, [frozen.sittings[0]]);
+  const union: OutcomeSnapshot = {
+    ...structuredClone(frozen),
+    tenants: ["pima"],
+    sittings: [...structuredClone(frozen.sittings)].sort((left, right) => left.meetingId.localeCompare(right.meetingId)),
+  };
   const fixtures = [{
     path: PIMA_OUTCOME_FIXTURE_PATH,
     sha256: sha256(fixtureBytes),
@@ -1879,19 +1917,155 @@ test("re-attested authority binds the exact predecessor row, receipt, pointer, a
     payload: sourceNative.readModel,
     receipt: predecessorReceipt,
   };
-  const successor = buildPdcV2TrustedLkgReattestationCandidate({
-    contract: {
-      id: "contract-001",
-      sourceId: sourceNative.sourceId,
-      recordClass: sourceNative.recordClass,
-      scope: sourceNative.scope,
-      parserNormalizerVersion: sourceNative.normalization.parserVersion,
-    } as Parameters<typeof buildPdcV2TrustedLkgReattestationCandidate>[0]["contract"],
-    pointer: predecessorPointer,
-    predecessor,
-    reattestedAt: NOW,
-    importerCodeSha: HEAD,
-  });
+  // Exact synthetic historical successor captured before the one-time door
+  // was retired. This fixture exercises the permanent historical validator;
+  // it never admits a new bootstrap candidate to a store.
+  const successor = {
+    "id": "curated-reader-primary-sources:trusted-lkg-reattested:6c51c2d324756c1a0a5796e0097994b4",
+    "sourceId": "curated-reader-primary-sources",
+    "recordClass": "CURATED_READER_RECORD",
+    "scope": "US:reader-authority-fixture:001",
+    "retrieval": {
+      "succeeded": true,
+      "requestedUrl": "pdc-v2-trusted-lkg:contract-001",
+      "finalUrl": null,
+      "httpStatus": null,
+      "retrievedAt": "2026-09-10T12:00:00.123Z",
+      "rawHash": "e30620dccf514cdd55a67c15a8d5e2eab370a92df163154ddd248d835b6a1ede"
+    },
+    "normalization": {
+      "succeeded": true,
+      "parserVersion": "reader-authority-fixture/1",
+      "schemaVersion": "reader-authority-fixture:1",
+      "normalizedHash": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "normalizedPayloadHash": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "inputRecords": 1,
+      "outputRecords": 1,
+      "droppedRecords": 0,
+      "missingRequiredFields": []
+    },
+    "identities": [
+      {
+        "subjectId": "fixture-001",
+        "jurisdiction": "US",
+        "identifiers": {
+          "fixture_id": "001"
+        },
+        "matchBasis": "OFFICIAL_ID",
+        "ambiguous": false
+      }
+    ],
+    "temporal": {
+      "version": "fixture-001",
+      "expectedVersion": "fixture-001",
+      "sourceThrough": "2026-09-08T00:00:00.000Z",
+      "staleAtRetrieval": true
+    },
+    "semantics": {
+      "factKind": "frozen Reader authority fixture",
+      "violations": []
+    },
+    "horizon": {
+      "kind": "OPEN_FACT_SET",
+      "query": "exact frozen Reader authority fixture",
+      "returnedRecords": 1,
+      "declaredTotal": null,
+      "paginationComplete": false,
+      "claimsComplete": false
+    },
+    "absence": {
+      "claimsAbsence": false,
+      "basis": "NONE",
+      "exactSubject": null,
+      "exactHorizon": null
+    },
+    "sourceProjectionEvidence": {
+      "kind": "SOURCE_PROJECTION_CONTRACT",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US:reader-authority-fixture:001"
+    },
+    "dependentChecks": [
+      {
+        "consumer": "reader-authority-001",
+        "passed": true,
+        "detail": "Exact fixture Reader projection passed."
+      }
+    ],
+    "normalizedPayload": {
+      "kind": "comment-access",
+      "records": [
+        {
+          "id": "comment-access:ocd-division/country:us/test:001",
+          "bodyId": "ocd-division/country:us/test:001",
+          "publicComment": "Exact fixture 001"
+        }
+      ]
+    },
+    "readModel": {
+      "kind": "comment-access",
+      "records": [
+        {
+          "id": "comment-access:ocd-division/country:us/test:001",
+          "bodyId": "ocd-division/country:us/test:001",
+          "publicComment": "Exact fixture 001"
+        }
+      ]
+    },
+    "civicRecords": [
+      {
+        "key": "curated-reader:comment-access:ocd-division/country:us/test:001",
+        "record": {
+          "id": "comment-access:ocd-division/country:us/test:001",
+          "bodyId": "ocd-division/country:us/test:001",
+          "publicComment": "Exact fixture 001"
+        }
+      }
+    ],
+    "changeSet": {
+      "outcome": "UNCHANGED",
+      "added": [],
+      "changed": [],
+      "removed": [],
+      "held": []
+    },
+    "bootstrapImport": {
+      "contractVersion": 1,
+      "kind": "TRUSTED_LKG_REATTESTATION",
+      "authorization": "PDC_V2_FROZEN_LKG_CUTOVER",
+      "purpose": "RE_ATTEST_EXISTING_DURABLE_LKG_TO_PERMANENT_INTEGRITY_CONTRACT",
+      "sourceAuthenticated": false,
+      "contractId": "contract-001",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US:reader-authority-fixture:001",
+      "parserVersion": "reader-authority-fixture/1",
+      "sourceVersion": "fixture-001",
+      "sourceThrough": "2026-09-08T00:00:00.000Z",
+      "sourceRetrievedAt": "2026-09-10T12:00:00.123Z",
+      "reattestedAt": "2026-09-10T12:00:00.123Z",
+      "importerCodeSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "predecessorVersionId": "curated-reader-primary-sources:trusted-lkg:36513714c768db6919153344e228995c",
+      "predecessorPromotedAt": "2026-09-10T12:00:00.123Z",
+      "predecessorPointerSha256": "dc06fd8b3da02c4b1e2117951de66a1ecceeb9ac10f5030bf67ad56bde30d574",
+      "predecessorCandidateRecordSha256": "115d83921d9c8287707083a8a3de4bbe9837da80f9090930aad3215d6944d4f3",
+      "predecessorCandidateSha256": "10199afa6623883bd4eb47c8f88fae06e358cc9f7e639a2bca0a776aea55a3a3",
+      "predecessorReceiptSha256": "b6b05007304511dc5963f5fd88b5f9f059434d8c2217512cf4d3ca23a749939e",
+      "predecessorPayloadSha256": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "predecessorReadModelSha256": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "predecessorNormalizedPayloadSha256": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "predecessorLegacyNormalizedHash": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "normalizedPayloadSha256": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "readModelSha256": "ca2e2e57ad2b85b2499d03220470f6be2720ccd211e7e8903edc02de33a1ba1a",
+      "candidateEnvelopeSha256": "1e678cd555bfbb7c61278173aae284263532bf5b00af66ce3a7563b551ea2ef1",
+      "validatorIds": [
+        "parser:reader-authority-fixture/1",
+        "reader:reader-authority-001",
+        "source-projection:curated-reader-primary-sources:CURATED_READER_RECORD:US:reader-authority-fixture:001"
+      ]
+    }
+  } as unknown as RoutineCandidate;
+  assert.equal(trustedLkgImportEvidenceIssue(successor, predecessor), null);
   const successorReceipt = validationReceiptFor(
     successor,
     "TRUSTED_LKG_REATTESTATION_PROVENANCE_VALID",

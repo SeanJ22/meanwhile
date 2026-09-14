@@ -4,9 +4,8 @@ import test from "node:test";
 
 import { canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import {
-  processRegisteredManualCandidate,
-  processRegisteredRoutineCandidate,
   processRoutineCandidate,
+  type PromotionOutcome,
 } from "../lib/civic-data/promotion.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -26,6 +25,7 @@ import {
 import {
   sourceProjectionEvidence,
   type RoutineCandidate,
+  type CandidateEvent,
   type TrustedLkgImportEvidence,
 } from "../lib/civic-data/types.ts";
 
@@ -163,24 +163,415 @@ function candidate(
   return { ...partial, id: trustedLkgCandidateId(evidence), bootstrapImport: evidence };
 }
 
-test("PDC-v2 trusted LKG imports only through the exact registered door and remain due", async () => {
+// Synthetic retained history captured from this test's original memory fixture.
+// Loading these records is not a new import and creates no production write path.
+const RETAINED_LKG_FIXTURE: {
+  readonly outcome: PromotionOutcome;
+  readonly events: readonly CandidateEvent[];
+} = {
+  "outcome": {
+    "candidate": {
+      "candidate": {
+        "id": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+        "sourceId": "curated-reader-primary-sources",
+        "recordClass": "CURATED_READER_RECORD",
+        "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+        "retrieval": {
+          "succeeded": true,
+          "requestedUrl": "pdc-v2-trusted-lkg:comment-access",
+          "finalUrl": null,
+          "httpStatus": null,
+          "retrievedAt": "2026-09-09T12:00:00.000Z",
+          "rawHash": "4ba6632478f4d8b3922a4e2cb241abfe79eec5e5c00792757b43bcd8e099d675"
+        },
+        "normalization": {
+          "succeeded": true,
+          "parserVersion": "curated-reader-records/2",
+          "schemaVersion": "comment-access:trusted-lkg:1",
+          "normalizedHash": "72a7f779487fb872f83ea12f073139067d9d6e3776eacbb9a7c47a750026b400",
+          "normalizedPayloadHash": "72a7f779487fb872f83ea12f073139067d9d6e3776eacbb9a7c47a750026b400",
+          "inputRecords": 1,
+          "outputRecords": 1,
+          "droppedRecords": 0,
+          "missingRequiredFields": []
+        },
+        "identities": [
+          {
+            "subjectId": "comment-access:ocd-division/country:us/state:az/county:example",
+            "jurisdiction": "US",
+            "identifiers": {
+              "record_id": "comment-access:ocd-division/country:us/state:az/county:example",
+              "body_id": "ocd-division/country:us/state:az/county:example"
+            },
+            "matchBasis": "OFFICIAL_ID",
+            "ambiguous": false
+          }
+        ],
+        "temporal": {
+          "version": "fixture-source-version",
+          "expectedVersion": "fixture-source-version",
+          "sourceThrough": "2026-09-08T00:00:00.000Z",
+          "staleAtRetrieval": true
+        },
+        "semantics": {
+          "factKind": "frozen comment-access LKG",
+          "violations": []
+        },
+        "horizon": {
+          "kind": "OPEN_FACT_SET",
+          "query": "exact frozen LKG members without a current publisher-universe claim",
+          "returnedRecords": 1,
+          "declaredTotal": null,
+          "paginationComplete": false,
+          "claimsComplete": false
+        },
+        "absence": {
+          "claimsAbsence": false,
+          "basis": "NONE",
+          "exactSubject": null,
+          "exactHorizon": null
+        },
+        "sourceProjectionEvidence": {
+          "kind": "SOURCE_PROJECTION_CONTRACT",
+          "sourceId": "curated-reader-primary-sources",
+          "recordClass": "CURATED_READER_RECORD",
+          "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies"
+        },
+        "dependentChecks": [
+          {
+            "consumer": "comment-access Reader projection",
+            "passed": true,
+            "detail": "The exact frozen projection satisfies its contract-specific Reader shape."
+          }
+        ],
+        "normalizedPayload": {
+          "kind": "comment-access",
+          "records": [
+            {
+              "id": "comment-access:ocd-division/country:us/state:az/county:example",
+              "bodyId": "ocd-division/country:us/state:az/county:example",
+              "publicComment": "Published exact frozen public-comment rule."
+            }
+          ]
+        },
+        "readModel": {
+          "kind": "comment-access",
+          "records": [
+            {
+              "id": "comment-access:ocd-division/country:us/state:az/county:example",
+              "bodyId": "ocd-division/country:us/state:az/county:example",
+              "publicComment": "Published exact frozen public-comment rule."
+            }
+          ]
+        },
+        "civicRecords": [
+          {
+            "key": "curated-reader:comment-access:ocd-division/country:us/state:az/county:example",
+            "record": {
+              "id": "comment-access:ocd-division/country:us/state:az/county:example",
+              "bodyId": "ocd-division/country:us/state:az/county:example",
+              "publicComment": "Published exact frozen public-comment rule."
+            }
+          }
+        ],
+        "bootstrapImport": {
+          "contractVersion": 1,
+          "kind": "TRUSTED_LKG_IMPORT",
+          "authorization": "PDC_V2_FROZEN_LKG_CUTOVER",
+          "purpose": "PRESERVE_EXISTING_READER_LKG_DURING_AUTHORITY_TRANSFER",
+          "sourceAuthenticated": false,
+          "contractId": "comment-access",
+          "sourceId": "curated-reader-primary-sources",
+          "recordClass": "CURATED_READER_RECORD",
+          "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+          "parserVersion": "curated-reader-records/2",
+          "sourceVersion": "fixture-source-version",
+          "sourceThrough": "2026-09-08T00:00:00.000Z",
+          "importedAt": "2026-09-09T12:00:00.000Z",
+          "frozenBaseSha": "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+          "importerCodeSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "fixtureSetSha256": "4ba6632478f4d8b3922a4e2cb241abfe79eec5e5c00792757b43bcd8e099d675",
+          "fixtures": [
+            {
+              "path": "lib/registry/comment-access.ts",
+              "sha256": "609dc874e438bfb74fbfa012bb178fec38e8e0462bc2d0af5e8d821be5916d92",
+              "bytes": 26
+            }
+          ],
+          "normalizedPayloadSha256": "72a7f779487fb872f83ea12f073139067d9d6e3776eacbb9a7c47a750026b400",
+          "readModelSha256": "72a7f779487fb872f83ea12f073139067d9d6e3776eacbb9a7c47a750026b400",
+          "candidateEnvelopeSha256": "b0e68b8bf95880bff16ddd20541875444bc0eacbb2c1971575f89eced54de020",
+          "validatorIds": [
+            "parser:curated-reader-records/2",
+            "reader:comment-access Reader projection",
+            "source-projection:curated-reader-primary-sources:CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies"
+          ]
+        },
+        "changeSet": {
+          "outcome": "CHANGED",
+          "added": [
+            {
+              "key": "curated-reader:comment-access:ocd-division/country:us/state:az/county:example",
+              "before": null,
+              "after": {
+                "id": "comment-access:ocd-division/country:us/state:az/county:example",
+                "bodyId": "ocd-division/country:us/state:az/county:example",
+                "publicComment": "Published exact frozen public-comment rule."
+              }
+            }
+          ],
+          "changed": [],
+          "removed": [],
+          "held": []
+        }
+      },
+      "state": "PROMOTED",
+      "acquisitionSucceeded": true,
+      "receipt": {
+        "contractVersion": 2,
+        "decision": "GOOD",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+        "sourceId": "curated-reader-primary-sources",
+        "recordClass": "CURATED_READER_RECORD",
+        "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+        "validatedAt": "2026-09-09T12:00:00.000Z",
+        "checks": [
+          {
+            "check": "SOURCE_AUTHENTICITY",
+            "verdict": "PASS",
+            "code": "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+            "detail": "Explicitly non-source-authenticated PDC-v2 LKG import from 1 immutable file(s), manifest 4ba6632478f4d8b3922a4e2cb241abfe79eec5e5c00792757b43bcd8e099d675, at code aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa."
+          },
+          {
+            "check": "SCHEMA_PARSE_VALIDITY",
+            "verdict": "PASS",
+            "code": "SCHEMA_AND_DISPOSITION_VALID",
+            "detail": "1/1 records normalized; 0 explicitly dropped."
+          },
+          {
+            "check": "IDENTITY_JURISDICTION_VALIDITY",
+            "verdict": "PASS",
+            "code": "IDENTITY_AND_JURISDICTION_EXACT",
+            "detail": "1 exact identity binding(s); no name-only inheritance."
+          },
+          {
+            "check": "TEMPORAL_VALIDITY",
+            "verdict": "PASS",
+            "code": "TRUSTED_LKG_IMPORT_STALENESS_RECORDED",
+            "detail": "The frozen LKG is explicitly stale at import (source through 2026-09-08T00:00:00.000Z); it may preserve service but cannot prove current publisher freshness."
+          },
+          {
+            "check": "SEMANTIC_VALIDITY",
+            "verdict": "PASS",
+            "code": "FACT_INTERPRETATION_VALID",
+            "detail": "frozen comment-access LKG."
+          },
+          {
+            "check": "COMPLETENESS_HORIZON_VALIDITY",
+            "verdict": "PASS",
+            "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+            "detail": "Valid individual facts may promote; broader completeness remains open."
+          },
+          {
+            "check": "ABSENCE_VALIDITY",
+            "verdict": "PASS",
+            "code": "NO_ABSENCE_CLAIM",
+            "detail": "The projection makes no absence claim."
+          },
+          {
+            "check": "DEPENDENT_READ_MODEL_VALIDITY",
+            "verdict": "PASS",
+            "code": "DEPENDENT_CONSUMERS_ACCEPT",
+            "detail": "comment-access Reader projection, lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection (source-scoped pre-promotion)"
+          }
+        ],
+        "excludedFacts": []
+      },
+      "promotedVersion": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "lastKnownGoodVersion": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "failureCode": null,
+      "failureDetail": null
+    },
+    "promoted": {
+      "key": "CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+      "versionId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "lastKnownGoodVersionId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "promotedAt": "2026-09-09T12:00:00.000Z",
+      "payload": {
+        "kind": "comment-access",
+        "records": [
+          {
+            "id": "comment-access:ocd-division/country:us/state:az/county:example",
+            "bodyId": "ocd-division/country:us/state:az/county:example",
+            "publicComment": "Published exact frozen public-comment rule."
+          }
+        ]
+      },
+      "receipt": {
+        "contractVersion": 2,
+        "decision": "GOOD",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+        "sourceId": "curated-reader-primary-sources",
+        "recordClass": "CURATED_READER_RECORD",
+        "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+        "validatedAt": "2026-09-09T12:00:00.000Z",
+        "checks": [
+          {
+            "check": "SOURCE_AUTHENTICITY",
+            "verdict": "PASS",
+            "code": "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+            "detail": "Explicitly non-source-authenticated PDC-v2 LKG import from 1 immutable file(s), manifest 4ba6632478f4d8b3922a4e2cb241abfe79eec5e5c00792757b43bcd8e099d675, at code aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa."
+          },
+          {
+            "check": "SCHEMA_PARSE_VALIDITY",
+            "verdict": "PASS",
+            "code": "SCHEMA_AND_DISPOSITION_VALID",
+            "detail": "1/1 records normalized; 0 explicitly dropped."
+          },
+          {
+            "check": "IDENTITY_JURISDICTION_VALIDITY",
+            "verdict": "PASS",
+            "code": "IDENTITY_AND_JURISDICTION_EXACT",
+            "detail": "1 exact identity binding(s); no name-only inheritance."
+          },
+          {
+            "check": "TEMPORAL_VALIDITY",
+            "verdict": "PASS",
+            "code": "TRUSTED_LKG_IMPORT_STALENESS_RECORDED",
+            "detail": "The frozen LKG is explicitly stale at import (source through 2026-09-08T00:00:00.000Z); it may preserve service but cannot prove current publisher freshness."
+          },
+          {
+            "check": "SEMANTIC_VALIDITY",
+            "verdict": "PASS",
+            "code": "FACT_INTERPRETATION_VALID",
+            "detail": "frozen comment-access LKG."
+          },
+          {
+            "check": "COMPLETENESS_HORIZON_VALIDITY",
+            "verdict": "PASS",
+            "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+            "detail": "Valid individual facts may promote; broader completeness remains open."
+          },
+          {
+            "check": "ABSENCE_VALIDITY",
+            "verdict": "PASS",
+            "code": "NO_ABSENCE_CLAIM",
+            "detail": "The projection makes no absence claim."
+          },
+          {
+            "check": "DEPENDENT_READ_MODEL_VALIDITY",
+            "verdict": "PASS",
+            "code": "DEPENDENT_CONSUMERS_ACCEPT",
+            "detail": "comment-access Reader projection, lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection (source-scoped pre-promotion)"
+          }
+        ],
+        "excludedFacts": []
+      }
+    },
+    "readerReadback": {
+      "contractVersion": 2,
+      "kind": "READER_PROJECTION_READBACK",
+      "contractId": "comment-access",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+      "projectionId": "public-comment-access",
+      "versionId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "pointerKey": "CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies",
+      "observedAt": "2026-09-09T12:00:00.000Z",
+      "evidenceKind": "TYPED_READER_READ_MODEL",
+      "verifierId": "lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection",
+      "verifierCodeSha": "667c533274eabe7e66b7d37b782eed10fef7654d",
+      "status": "PASS",
+      "detail": "The typed comment-access Reader read canonical version curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de."
+    }
+  },
+  "events": [
+    {
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "sequence": 1,
+      "state": "FETCHED",
+      "at": "2026-09-09T12:00:00.000Z",
+      "detail": "Acquired raw 4ba6632478f4d8b3922a4e2cb241abfe79eec5e5c00792757b43bcd8e099d675."
+    },
+    {
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "sequence": 2,
+      "state": "NORMALIZED",
+      "at": "2026-09-09T12:00:00.000Z",
+      "detail": "Normalized 1/1 records as 72a7f779487fb872f83ea12f073139067d9d6e3776eacbb9a7c47a750026b400."
+    },
+    {
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "sequence": 3,
+      "state": "VALIDATED",
+      "at": "2026-09-09T12:00:00.000Z",
+      "detail": "Every applicable GOOD check passed."
+    },
+    {
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "sequence": 4,
+      "state": "PROMOTED",
+      "at": "2026-09-09T12:00:00.000Z",
+      "detail": "Atomic pointer CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies moved from bootstrap/no-version to curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de."
+    },
+    {
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de",
+      "sequence": 5,
+      "state": "PROMOTED",
+      "at": "2026-09-09T12:00:00.000Z",
+      "detail": "READER_PROJECTION_READBACK_V2 {\"contractVersion\":2,\"kind\":\"READER_PROJECTION_READBACK\",\"contractId\":\"comment-access\",\"sourceId\":\"curated-reader-primary-sources\",\"recordClass\":\"CURATED_READER_RECORD\",\"scope\":\"US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies\",\"projectionId\":\"public-comment-access\",\"versionId\":\"curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de\",\"pointerKey\":\"CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies\",\"observedAt\":\"2026-09-09T12:00:00.000Z\",\"evidenceKind\":\"TYPED_READER_READ_MODEL\",\"verifierId\":\"lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection\",\"verifierCodeSha\":\"667c533274eabe7e66b7d37b782eed10fef7654d\",\"status\":\"PASS\",\"detail\":\"The typed comment-access Reader read canonical version curated-reader-primary-sources:trusted-lkg:92dec011b269cb1dc77667f2d91018de.\"}"
+    }
+  ]
+};
+
+function retainedHistoricalLkg() {
+  const { outcome, events } = structuredClone(RETAINED_LKG_FIXTURE);
+  assert.ok(outcome.promoted);
+  assert.equal(promotionProofIssue(MANUAL_RECORD_CLASS, MANUAL_SCOPE, outcome.promoted, outcome.candidate), null);
+  assert.deepEqual(events.map(({ sequence }) => sequence), [1, 2, 3, 4, 5]);
+  const store = new MemoryRoutineDataStore();
+  // Populate the deterministic test store with already retained rows. Production
+  // admission is tested separately below and may never create these markers.
+  Object.assign(store, {
+    candidates: new Map([[outcome.candidate.candidate.id, outcome.candidate]]),
+    history: new Map([[outcome.candidate.candidate.id, [...events]]]),
+    promotions: new Map([[outcome.promoted.key, outcome.promoted]]),
+  });
+  return { store, outcome };
+}
+
+test("retired trusted-LKG doors refuse new imports while retained history remains due", async () => {
   const directStore = new MemoryRoutineDataStore();
   await assert.rejects(
     processRoutineCandidate(directStore, candidate(), FIRST),
-    /TRUSTED_LKG_IMPORT_REQUIRES_REGISTERED_DOOR:comment-access/,
+    /TRUSTED_LKG_ADMISSION_RETIRED/,
   );
   assert.equal(await directStore.readPromotion(MANUAL_RECORD_CLASS, MANUAL_SCOPE), null);
 
   const ordinaryRoutineStore = new MemoryRoutineDataStore();
   await assert.rejects(
-    processRegisteredRoutineCandidate(ordinaryRoutineStore, "dotgov", candidate(FIRST, "a".repeat(40), "ROUTINE"), FIRST),
-    /TRUSTED_LKG_IMPORT_REQUIRES_REGISTERED_DOOR:dotgov/,
-    "the temporary seed never needed and may not use the ordinary routine-contract door",
+    processRoutineCandidate(ordinaryRoutineStore, candidate(FIRST, "a".repeat(40), "ROUTINE"), FIRST),
+    /TRUSTED_LKG_ADMISSION_RETIRED/,
+    "retained routine-source markers cannot create a new promotion",
   );
   assert.equal(await ordinaryRoutineStore.readPromotion("DOTGOV_REFERENCE", "US:current-full:election-domains"), null);
+  const retiredManualStore = new MemoryRoutineDataStore();
+  await assert.rejects(
+    processRoutineCandidate(retiredManualStore, candidate(), FIRST),
+    /TRUSTED_LKG_ADMISSION_RETIRED/,
+  );
+  assert.equal(await retiredManualStore.readPromotion(MANUAL_RECORD_CLASS, MANUAL_SCOPE), null);
+  for (const marker of [null, { kind: "TRUSTED_LKG_REATTESTATION" }]) {
+    const malformed = { ...candidate(), bootstrapImport: marker } as unknown as RoutineCandidate;
+    await assert.rejects(processRoutineCandidate(new MemoryRoutineDataStore(), malformed, FIRST), /TRUSTED_LKG_ADMISSION_RETIRED/);
+  }
 
-  const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredManualCandidate(store, MANUAL_CONTRACT_ID, candidate(), FIRST);
+
+  const { store, outcome } = retainedHistoricalLkg();
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.promoted?.versionId, outcome.candidate.candidate.id);
   assert.equal(
@@ -205,14 +596,14 @@ test("PDC-v2 trusted LKG imports only through the exact registered door and rema
 });
 
 test("trusted LKG evidence is content-bound and cannot replace an existing authority", async () => {
-  const store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, MANUAL_CONTRACT_ID, candidate(), FIRST);
+  const { store, outcome: first } = retainedHistoricalLkg();
   assert.ok(first.promoted);
 
   const replacement = candidate(SECOND, "b".repeat(40));
-  const refused = await processRegisteredManualCandidate(store, MANUAL_CONTRACT_ID, replacement, SECOND);
-  assert.equal(refused.candidate.state, "SOURCE_BLOCKED");
-  assert.equal(refused.candidate.failureCode, "TRUSTED_LKG_IMPORT_REQUIRES_EMPTY_POINTER");
+  await assert.rejects(
+    processRoutineCandidate(store, replacement, SECOND),
+    /TRUSTED_LKG_ADMISSION_RETIRED/,
+  );
   assert.equal(
     (await store.readPromotion(MANUAL_RECORD_CLASS, MANUAL_SCOPE))?.versionId,
     first.promoted!.versionId,
@@ -224,14 +615,15 @@ test("trusted LKG evidence is content-bound and cannot replace an existing autho
     bootstrapImport: { ...wrongContract.bootstrapImport!, contractId: "campaign-sites" },
   };
   await assert.rejects(
-    processRegisteredManualCandidate(new MemoryRoutineDataStore(), MANUAL_CONTRACT_ID, mismatched, FIRST),
-    /trusted-LKG contract campaign-sites does not equal comment-access/,
+    processRoutineCandidate(new MemoryRoutineDataStore(), mismatched, FIRST),
+    /TRUSTED_LKG_ADMISSION_RETIRED/,
   );
 
-  const invalid = candidate();
+  const invalid = structuredClone(first.candidate.candidate);
   const invalidEvidence = invalid.bootstrapImport;
   assert.ok(invalidEvidence);
   if (invalidEvidence.kind !== "TRUSTED_LKG_IMPORT") assert.fail("test candidate is not a first-seed import");
+  assert.equal(trustedLkgImportEvidenceIssue(invalid), null, "untampered historical evidence remains valid");
   const corrupt = {
     ...invalid,
     bootstrapImport: {
@@ -239,14 +631,15 @@ test("trusted LKG evidence is content-bound and cannot replace an existing autho
       fixtures: [{ ...invalidEvidence.fixtures[0]!, sha256: "f".repeat(64) }],
     },
   };
-  const corruptOutcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), MANUAL_CONTRACT_ID, corrupt, FIRST);
-  assert.equal(corruptOutcome.candidate.state, "SOURCE_BLOCKED");
-  assert.equal(corruptOutcome.candidate.failureCode, "TRUSTED_LKG_IMPORT_INVALID");
+  assert.match(trustedLkgImportEvidenceIssue(corrupt) ?? "", /fixture-set digest does not match/, "historical evidence still rejects the exact changed fixture hash");
+  await assert.rejects(
+    processRoutineCandidate(new MemoryRoutineDataStore(), corrupt, FIRST),
+    /TRUSTED_LKG_ADMISSION_RETIRED/,
+  );
 });
 
 test("Reader proof fails closed if durable trusted-LKG evidence is altered", async () => {
-  const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredManualCandidate(store, MANUAL_CONTRACT_ID, candidate(), FIRST);
+  const { store, outcome } = retainedHistoricalLkg();
   assert.ok(outcome.promoted);
   const altered = {
     ...outcome.candidate,
@@ -368,8 +761,7 @@ test("Reader proof fails closed if durable trusted-LKG evidence is altered", asy
 });
 
 test("Admin exposes imported LKG without claiming freshness or a source-authenticated success", async () => {
-  const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredManualCandidate(store, MANUAL_CONTRACT_ID, candidate(), FIRST);
+  const { store, outcome } = retainedHistoricalLkg();
   assert.ok(outcome.promoted);
   const row = outcome.candidate;
   const events = await store.events(row.candidate.id);

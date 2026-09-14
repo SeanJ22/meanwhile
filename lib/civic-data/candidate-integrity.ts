@@ -118,14 +118,10 @@ function candidateReadOnlyStore(
     throw new Error("SOURCE_SCOPED_PREFLIGHT_STORE_IS_READ_ONLY");
   };
   return {
-    assertPdcV2PreContractMigrationState: readOnly,
-    assertPdcV2PreImportDataIntegrity: readOnly,
-    assertPdcV2ContractMigrationPreflight: readOnly,
     create: readOnly,
     transition: readOnly,
     promote: readOnly,
     appendEvidence: readOnly,
-    retirePdcV2LegacyMeetingsAggregate: readOnly,
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,

@@ -20,9 +20,8 @@ import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts"
 import type { RoutineReaderVerification } from "./reader-verification.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 
-/** Only the exact registered contract doors in this module possess these tokens. */
+/** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
-const TRUSTED_LKG_REGISTERED_DOOR = Symbol("TRUSTED_LKG_REGISTERED_DOOR");
 
 function trustedLkgPredecessorVersionId(candidate: RoutineCandidate): string | null {
   const evidence = candidate.bootstrapImport;
@@ -158,8 +157,8 @@ export async function processRegisteredRoutineCandidate(
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   let boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredRoutineContract(contractId);
-  if (boundedCandidate.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT") {
-    throw new Error(`TRUSTED_LKG_IMPORT_REQUIRES_REGISTERED_DOOR:${boundedCandidate.bootstrapImport.contractId}`);
+  if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
+    throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
   }
   const issue = routineCandidateContractIssue(contractId, boundedCandidate);
   if (issue !== null) throw new Error(`ROUTINE_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
@@ -193,7 +192,7 @@ export async function processRegisteredRoutineCandidate(
       boundedCandidate,
       now,
       expectedBaseVersionId,
-      boundedCandidate.bootstrapImport ? TRUSTED_LKG_REGISTERED_DOOR : REGISTERED_PRODUCTION_DOOR,
+      REGISTERED_PRODUCTION_DOOR,
       sourceProjectionVerification,
     ),
     now,
@@ -226,7 +225,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   return appendTypedReaderProjectionReadback(
     store,
     contract,
-    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, TRUSTED_LKG_REGISTERED_DOOR, sourceProjectionVerification),
+    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
     now,
   );
 }
@@ -290,7 +289,7 @@ export async function processRegisteredManualCandidate(
   return appendTypedReaderProjectionReadback(
     store,
     contract,
-    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, TRUSTED_LKG_REGISTERED_DOOR, sourceProjectionVerification),
+    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
     now,
   );
 }
@@ -321,15 +320,11 @@ export async function processRoutineCandidate(
   sourceProjectionVerification: RoutineReaderVerification | null = null,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
-  if (
-    productionStore &&
-    registeredDoor !== REGISTERED_PRODUCTION_DOOR &&
-    registeredDoor !== TRUSTED_LKG_REGISTERED_DOOR
-  ) {
+  if (productionStore && registeredDoor !== REGISTERED_PRODUCTION_DOOR) {
     throw new Error("PRODUCTION_PROMOTION_REQUIRES_REGISTERED_CONTRACT_DOOR");
   }
-  if (inputCandidate.bootstrapImport && registeredDoor !== TRUSTED_LKG_REGISTERED_DOOR) {
-    throw new Error(`TRUSTED_LKG_IMPORT_REQUIRES_REGISTERED_DOOR:${inputCandidate.bootstrapImport.contractId}`);
+  if (Object.prototype.hasOwnProperty.call(inputCandidate, "bootstrapImport") && inputCandidate.bootstrapImport !== undefined) {
+    throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
   }
   // Production validation and durable events use a locally observed instant,
   // never an adapter-supplied clock. A future-dated adapter envelope is then

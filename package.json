@@ -226,7 +226,6 @@
     "pills": "tsx scripts/pill-census.mts",
     "pilot:disable": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action disable",
     "pilot:install": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install",
-    "routine:civic-data:acceptance": "node --env-file=.env.local --experimental-strip-types scripts/routine-civic-data-live-acceptance.mts",
     "routine:civic-data:firewall": "node --experimental-strip-types scripts/civic-data-firewall.mts",
     "civic-data:promote-manual": "node scripts/installed-runtime-command.mjs manual-promote",
     "pilot:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action start",

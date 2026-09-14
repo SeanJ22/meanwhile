@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 627,
-    "named": 6536,
+    "files": 625,
+    "named": 6501,
     "dynamic": 27
   },
   "files": {
@@ -2269,10 +2269,6 @@
         "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
         "a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof",
         "a terminal transition requires exact non-GOOD receipt evidence and is immutable",
-        "aggregate retirement locks its full proof snapshot before first execution and replay",
-        "aggregate retirement re-proves every replacement receipt, candidate, fact, and history",
-        "aggregate retirement treats the legacy authority as key OR canonical class/scope and retains exact history",
-        "aggregate retirement uses one shared canonical meeting fact digest and exact counts",
         "an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG",
         "append-only Reader evidence must be a receipt for the exact promoted contract and version",
         "candidate creation refuses a mismatched first event before persisting either half",
@@ -2282,10 +2278,10 @@
         "every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database",
         "production NODE_ENV alone cannot open the permanent routine-data writer",
         "promotion accepts only the exact persisted GOOD receipt",
+        "terminal store exposes no one-time import or aggregate retirement door",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
-        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt",
-        "the one-time aggregate retirement is an exact atomic payload transfer with one durable receipt"
+        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt"
       ],
       "dynamic": 0
     },
@@ -6029,6 +6025,7 @@
     },
     "tests/pdc-reader-remaining-repairs.test.ts": {
       "names": [
+        "an empty state funding selection retains stale disclosure but leaves current empty slots empty",
         "ballot keeps freshness for a federal none answer and leaves a current none answer empty",
         "candidate profile route proof recognizes only the exact field, key and demonstrated authority encoding",
         "contactless grounded bodies retain the routed topic and correctly attributed reachable contact",
@@ -6036,7 +6033,8 @@
         "full reproof refuses missing, stale, incomplete and wrong-build surface evidence",
         "listing witnesses bind the complete current group set rather than a historical literal",
         "registry seed proof binds exact curated records and rejects identity coincidence or wrong artifacts",
-        "split ZIP contacts require every covered ZIP and the exact contact facts and source"
+        "split ZIP contacts require every covered ZIP and the exact contact facts and source",
+        "state ballot funding discloses the exact held state's freshness and preserves its records"
       ],
       "dynamic": 0
     },
@@ -6051,19 +6049,6 @@
     "tests/pdc-v2-official-candidacy-bridge-accounting.test.ts": {
       "names": [
         "PDC trusted-LKG bridge explicitly accounts for all 1,468 frozen rows as 848 serving plus 620 retired research-only"
-      ],
-      "dynamic": 0
-    },
-    "tests/pdc-v2-trusted-lkg-importer.test.ts": {
-      "names": [
-        "exact fc67 fixtures deterministically build and seed the 96 planned trusted-LKG candidates",
-        "frozen module evaluation cannot change the process working directory",
-        "the Postgres retirement lock binds the exact pre-read replacement promotion clock",
-        "the browser-safe venue content key is an exact UTF-16 encoding",
-        "the exact frozen module closure is cwd-neutral and cleanup-safe",
-        "the exact venue identity is browser-safe across every alias-aware Next client reachability path",
-        "the importer consumes one fresh parent-bound quiescence lease before opening writes",
-        "the temporary importer CLI requires its exact explicit production invocation"
       ],
       "dynamic": 0
     },
@@ -6237,6 +6222,7 @@
         "POSITIVE CONTROL: name/count-only host control fails the exact-runtime checker",
         "POSITIVE CONTROL: parent-only termination fails the process-tree checker",
         "POSITIVE CONTROL: removing the prove-relaunch guard fails the checker",
+        "Windows task helper returns the native integer independently of diagnostic output",
         "disable judges the measured end state and refuses success over a denied /Change",
         "install keeps the Startup launcher fallback-only and removes it for a live task",
         "install registers the 5-minute multi-year relaunch trigger beside AtLogOn",
@@ -6747,6 +6733,7 @@
         "production authority binds the pinned standing branch and no clone claim",
         "production authority refuses a zero live legacy meetings census before import",
         "production authority rejects registered Reader denominator near misses",
+        "production lineage admits only the exact approved documentary-main join",
         "production replay accepts 111 already-proven authorities without relabeling their durable bootstrap",
         "re-attested authority binds the exact predecessor row, receipt, pointer, and contiguous events",
         "the CLI surface never accepts a database URL and derives phase-specific paths",
@@ -6755,6 +6742,16 @@
         "the publication-boundary repository proof rejects clean-head races",
         "the terminal comparator re-reads live authority and emits no driver secret",
         "writable, non-refusing, and database-mismatched handles fail closed"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-finance-authority-isolation.test.ts": {
+      "names": [
+        "Ask retains exact state finance records when only the unrelated FEC reader fails",
+        "NH and NJ lineup and measure lookups do not open the Arizona authority; AZ still fails explicitly",
+        "an unavailable NH finance holding remains explicit while NJ finance still renders",
+        "foreign contest and card keys do not initialize the AZ identity bridge",
+        "state officeholder finance also survives an unrelated FEC failure through the verified bridge"
       ],
       "dynamic": 0
     },
@@ -7580,29 +7577,6 @@
       ],
       "dynamic": 0
     },
-    "tests/routine-civic-data-live-acceptance.test.ts": {
-      "names": [
-        "PDC-12 acceptance covers each non-meeting contract and enumerates every exact meeting partition",
-        "PDC-12 acceptance uses six materially different refusal families",
-        "PDC-12 accepts an exact post-deploy refusal only when its pointer, payload, and LKG remain live",
-        "PDC-12 accepts no fabricated GOOD/LKG for genuinely empty meeting partitions",
-        "PDC-12 accepts only the latest append-only Reader readback for the current version",
-        "PDC-12 canary request and authority refuse a cross-contract capability",
-        "PDC-12 coordinator delegates each mutation to one exact normal contract child",
-        "PDC-12 live-attempt denominator is exactly the 134 routine contracts and never counts a trusted manual transfer",
-        "PDC-12 one-contract child redacts write credentials from a refused result",
-        "PDC-12 proves a pre-byte source outage is durable, isolated, and retry-backed",
-        "PDC-12 proves authenticated promotion durability and exact LKG hold without claiming external closure",
-        "PDC-12 reads every promoted meeting partition but injects only one representative semantic canary",
-        "PDC-12 refuses a pre-boundary durable GOOD attempt or promotion for every non-meeting source",
-        "PDC-12 uses one canonical, non-future deployment boundary for the whole denominator",
-        "PDC-12 verifies every typed Reader family and explicitly treats dotgov as non-Reader",
-        "a held or unavailable live attempt must be a canonical post-deploy event",
-        "promotable state rosters and bounded NH/NJ rolls require GOOD live proof while unavailable AZ rolls remain fail closed",
-        "terminal Reader production authority is a post-evidence gate, not a circular dependency inside the clean detached live harness"
-      ],
-      "dynamic": 0
-    },
     "tests/routine-civic-data-observability.test.ts": {
       "names": [
         "PDC meetings observability enumerates every source/body authority and excludes the retired aggregate",
@@ -7739,6 +7713,7 @@
         "one degraded provider occupies one lane while grouped unrelated providers drain",
         "one timed-out canonical clock is isolated while ordered sibling clocks settle",
         "one unresolved child cannot suppress sibling launch or classification",
+        "ordinary registered doors reject authority-transfer markers without changing LKG",
         "per-command child environments override the batch and never leak across siblings",
         "routine release output labels the seven-zero constant as structural, never observed",
         "runner receipts are exact JSON, exact-count, and seven-zero structural evidence",
@@ -7811,8 +7786,8 @@
         "branch, dirty tree, wrong SHA, wrong parent and wrong contract each fail closed",
         "child delegation rotates nonce and narrows capability/contract to one parent PID",
         "exact clean detached origin/main child with immediate-parent and contract admission passes",
-        "temporary importer capability cannot satisfy an ordinary source-child expectation",
-        "temporary importer helper binds only its attested repo, SHA, self PID and transient nonce"
+        "retired importer capability is refused at the raw environment parser",
+        "temporary importer capability cannot satisfy an ordinary source-child expectation"
       ],
       "dynamic": 0
     },
@@ -8891,29 +8866,9 @@
     "tests/trusted-lkg-import.test.ts": {
       "names": [
         "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
-        "PDC-v2 trusted LKG imports only through the exact registered door and remain due",
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
+        "retired trusted-LKG doors refuse new imports while retained history remains due",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"
-      ],
-      "dynamic": 0
-    },
-    "tests/trusted-lkg-reattestation.test.ts": {
-      "names": [
-        "NH bridge replay repairs an interrupted typed Reader receipt without another successor",
-        "a date-only legacy GOOD receipt is re-attested instead of being misclassified as 0026-ready",
-        "a pointer race leaves the predecessor live and the successor durably refused",
-        "batch Reader proof rejects duplicate predecessor rows instead of selecting one",
-        "dotgov re-attestation durably records its source-scoped projection proof and replay is idempotent",
-        "legacy Congress JSONB member ordering receives one exact canonical integrity successor",
-        "legacy durable LKG receives an exact no-data-change integrity successor and is immediately due",
-        "ordinary source authority fails closed when a re-attestation predecessor is missing or changed",
-        "permanent Reader proof fails closed without the exact predecessor row",
-        "re-attestation refuses pointer tamper, legacy-digest tamper, and cross-contract laundering",
-        "replay repairs a missing typed Reader receipt after pointer promotion without rewriting authority",
-        "the NH bridge CAS race keeps /2 live and durably refuses the unadmitted successor",
-        "the NH bridge refuses every near-miss legacy shape and cannot be relabeled onto another contract",
-        "the exact frozen NH /2 LKG receives one stale import-only /3 successor and fresh /3 authority supersedes it",
-        "the import-only NH bridge end-to-end refuses a healthy roll candidate without moving its LKG or a sibling source"
       ],
       "dynamic": 0
     },

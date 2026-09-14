@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
@@ -21,7 +21,7 @@ import {
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
+import { VALIDATION_CHECKS, type RoutineCandidate } from "../lib/civic-data/types.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { SOURCE_AUTHORITIES, authorityFor } from "../lib/civic-data/source-authority.ts";
 import {
@@ -74,6 +74,27 @@ import {
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
+
+test("ordinary registered doors reject authority-transfer markers without changing LKG", async () => {
+  const store = new MemoryRoutineDataStore();
+  const good = sourceGoodCandidate();
+  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding", good, T0);
+  assert.ok(seeded.promoted);
+  const before = await store.readPromotion(good.recordClass, good.scope);
+  for (const marker of [null, {kind: "RETIRED_TRANSFER", contractId: "fec-funding"}]) {
+    await assert.rejects(processRegisteredRoutineCandidate(store, "fec-funding", {...good, bootstrapImport: marker} as unknown as RoutineCandidate, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
+    assert.deepEqual(await store.readPromotion(good.recordClass, good.scope), before);
+  }
+  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "comment-access")!;
+  const manualStore = new MemoryRoutineDataStore();
+  const marked = {
+    ...good, sourceId: manual.sourceId, recordClass: manual.recordClass, scope: manual.scope,
+    normalization: {...good.normalization, parserVersion: manual.parserNormalizerVersion},
+    bootstrapImport: {kind: "RETIRED_TRANSFER", contractId: manual.id},
+  } as unknown as RoutineCandidate;
+  await assert.rejects(processRegisteredManualCandidate(manualStore, "comment-access", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
+  assert.equal(await manualStore.readPromotion(manual.recordClass, manual.scope), null);
+});
 
 test("the standing parent durably accounts for a routine child killed outside source attribution", () => {
   const cycleId = routineSupervisorCycleId("standing-host", T0);
@@ -203,7 +224,6 @@ test("the standing portfolio invokes data-plane scripts only", () => {
   assert.equal(new Set(ROUTINE_SOURCE_TASKS.map((task) => `${task.recordClass}:${task.scope}`)).size, ROUTINE_SOURCE_TASKS.length);
   const implementation = [
     "scripts/routine-civic-data-runner.mts",
-    "scripts/routine-civic-data-live-acceptance.mts",
     ...ROUTINE_SOURCE_TASKS.map((task) => task.command[0]),
   ].map((path) => readFileSync(path, "utf8")).join("\n");
   const executableImplementation = implementation
@@ -268,40 +288,12 @@ test("routine release output labels the seven-zero constant as structural, never
     "scripts/build-nj-morris-ballot.mts",
     "scripts/fetch-dotgov.mts",
     "scripts/routine-civic-data-runner.mts",
-    "scripts/routine-civic-data-live-acceptance.mts",
   ]) {
     const source = readFileSync(path, "utf8");
     assert.match(source, /structuralReleaseContract:\s*ZERO_RELEASE_EVENTS/, `${path} must label the constant as structural`);
     assert.doesNotMatch(source, /\breleaseEvents:\s*ZERO_RELEASE_EVENTS/, `${path} must not report a constant as observed release events`);
   }
-  const canary = readFileSync("scripts/routine-civic-data-live-acceptance.mts", "utf8");
-  for (const flag of [
-    "fec-prior", "fec-good",
-    "state-prior", "state-good",
-    "az-roster-prior", "az-roster-good",
-    "nj-roster-prior", "nj-roster-good",
-    "nh-roll-prior", "nh-roll-good",
-    "nj-roll-prior", "nj-roll-good",
-    "census-prior", "census-good",
-    "nj-prior", "nj-good",
-    "dotgov-prior", "dotgov-good",
-  ]) {
-    assert.match(
-      canary,
-      new RegExp(`requiredAssignment\\(process\\.argv,\\s*\\"${flag}\\"`),
-      `PDC-12 canary must require --${flag}`,
-    );
-  }
-  assert.match(canary, /requiredAssignment\(process\.argv,\s*"meetings-version-manifest"/);
-  assert.match(canary, /MEETING_PARTITION_CONTRACTS\.map/);
-  assert.doesNotMatch(canary, /supported-bodies/);
-  assert.match(canary, /observedReleaseEvents:\s*"REQUIRED_SEPARATELY"/);
-  assert.match(canary, /requiredAssignment\(process\.argv,\s*"deployed-sha"/);
-  assert.match(canary, /deployedAppShaEvidence:\s*\{/);
-  assert.match(canary, /before:\s*served\.sha/);
-  assert.match(canary, /after:\s*servedAfterCanaries\.sha/);
-  assert.match(canary, /unchanged:\s*true/);
-  assert.doesNotMatch(canary, /pdc12Complete:/);
+
 });
 
 test("cadence and retry are source-local", () => {
@@ -1339,13 +1331,7 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
   assert.match(runner, /captureTaskReceipt\(pending, child\.receipt, "VERIFIED_SOURCE_SUCCESS"\)/);
   assert.match(runner, /captureTaskReceipt\(pending, child\.receipt, "VERIFIED_SOURCE_FAILURE"\)/);
   assert.doesNotMatch(runner, /if \(supervisorFailures\.length > 0\) \{\s*try \{\s*const cycleId = await persistSupervisorOutcome/);
-  const liveProof = readFileSync("scripts/routine-civic-data-live-supervisor-proof.mts", "utf8");
-  assert.match(liveProof, /routineSupervisorCycleIsolationIssue\(outcome\)/);
-  assert.match(liveProof, /await durableRoutineRunnerReceiptIssue\(/);
-  assert.match(liveProof, /sameCanonicalSupervisorCycle: true/);
-  assert.match(liveProof, /sourceId: failed\.sourceId/);
-  assert.match(liveProof, /unaffectedSuccessfulSources/);
-  assert.match(liveProof, /sourceId !== failed\.sourceId/);
+
 });
 
 test("an exit-zero child is not called GOOD before exact receipt and canonical readback", () => {

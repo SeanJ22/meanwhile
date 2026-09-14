@@ -10,6 +10,7 @@ import {
   MemoryRoutineDataStore,
   routineDataStoreCandidateAuthorityIssue,
 } from "../lib/civic-data/store.ts";
+import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import {
@@ -652,10 +653,10 @@ test("a contract-A runtime envelope cannot mutate contract B through the public 
   assert.match(
     routineDataStoreCandidateAuthorityIssue(
       malformedTransfer,
-      { ...authority, capability: "TRUSTED_LKG_IMPORT", contract: null },
+      { ...authority, capability: "TRUSTED_LKG_IMPORT", contract: null } as unknown as RuntimeAuthorityEnvelope,
       "candidate",
     ) ?? "",
-    /trusted-LKG authority cannot write non-import candidate fec-funding/,
+    /contract fec-funding requires ROUTINE_CONTRACT, not TRUSTED_LKG_IMPORT/,
   );
   assert.match(
     routineDataStoreCandidateAuthorityIssue(
@@ -714,182 +715,6 @@ test("every Postgres candidate-event allocator is serialized inside its Neon bat
   assert.match(append, /civicDataPromotions\.lastKnownGoodVersionId\} = \$\{candidateId\}/);
 });
 
-test("the one-time aggregate retirement is an exact atomic payload transfer with one durable receipt", () => {
-  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
-  const retirement = postgres.slice(
-    postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate("),
-    postgres.indexOf("  async promote(", postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate(")),
-  );
-  assert.match(retirement, /replacement\."payload" = expected->'payload'/);
-  assert.match(retirement, /replacement_candidate\."candidate"->'readModel' = expected->'payload'/);
-  assert.match(retirement, /civicDataPromotions\.payload\} = \$\{observedLegacyPayloadJson\}::jsonb/);
-  assert.match(retirement, /civicDataCandidates\.candidate\}->'readModel' = \$\{observedLegacyPayloadJson\}::jsonb/);
-  assert.match(retirement, /insertRetirementEvent/);
-  assert.match(retirement, /deleteLegacyPointer/);
-  assert.match(retirement, /finalAssertion/);
-  assert.match(retirement, /select count\(\*\) = 1 from \$\{civicDataCandidateEvents\}[\s\S]*PDC_V2_LEGACY_MEETINGS_RETIREMENT_PREFIX\.length/);
-  assert.match(retirement, /this\.db\.batch\(\[[\s\S]*insertRetirementEvent,[\s\S]*deleteLegacyPointer,[\s\S]*finalAssertion/);
-  assert.doesNotMatch(retirement, /\.update\(civicDataPromotions\)/);
-});
-
-test("aggregate retirement re-proves every replacement receipt, candidate, fact, and history", () => {
-  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const replacementEvidence = source.slice(
-    source.indexOf("function pdcV2LegacyMeetingsReplacementEvidenceIssue("),
-    source.indexOf("function pdcV2LegacyMeetingsCandidateIssue("),
-  );
-  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
-  const retirement = postgres.slice(
-    postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate("),
-    postgres.indexOf("  async promote(", postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate(")),
-  );
-
-  assert.match(replacementEvidence, /pdcV2CanonicalMeetingFactEvidence\(\s*input\.replacementPointers\.map\(\(\{ payload \}\) => payload\)/);
-  assert.match(replacementEvidence, /facts\.sha256 !== input\.expected\.legacyMeetingFactSha256/);
-  assert.match(replacementEvidence, /facts\.meetingRowCount !== input\.expected\.meetingRowCount/);
-  assert.match(replacementEvidence, /facts\.agendaDocumentRowCount !== input\.expected\.agendaDocumentRowCount/);
-  assert.match(replacementEvidence, /!record\.acquisitionSucceeded/);
-  assert.match(replacementEvidence, /!candidate\.retrieval\.succeeded/);
-  assert.match(replacementEvidence, /parsedReceipt\?\.decision !== "GOOD"/);
-  assert.match(replacementEvidence, /!receiptsEqual\(parsedReceipt, expected\.receipt\)/);
-  assert.match(replacementEvidence, /!receiptsEqual\(pointer\.receipt, parsedReceipt\)/);
-  assert.match(replacementEvidence, /event\.sequence !== index \+ 1/);
-  assert.match(replacementEvidence, /events\[0\]\?\.state !== "FETCHED"/);
-  assert.match(replacementEvidence, /events\[1\]\?\.state !== "NORMALIZED"/);
-  assert.match(replacementEvidence, /events\[2\]\?\.state !== "VALIDATED"/);
-  assert.match(replacementEvidence, /events\[3\]\?\.state !== "PROMOTED"/);
-  assert.match(replacementEvidence, /readerReceipts\.at\(-1\)\?\.status !== "PASS"/);
-
-  assert.match(retirement, /replacement\."validation_receipt" = expected->'receipt'/);
-  assert.match(retirement, /replacement_candidate\."acquisition_succeeded" = true/);
-  assert.match(retirement, /replacement_candidate\."validation_receipt" = expected->'receipt'/);
-  assert.match(retirement, /replacementJson = JSON\.stringify\(input\.replacementPointers\.map\([\s\S]*events: replacementHistories\.get\(pointer\.versionId\) \?\? \[\]/);
-  assert.match(retirement, /select count\(\*\) = jsonb_array_length\(expected->'events'\)[\s\S]*actual_event\."candidate_id" = expected->>'versionId'/);
-  assert.match(retirement, /actual_event\."sequence" = \(expected_event->>'sequence'\)::integer/);
-  assert.match(retirement, /actual_event\."state" = expected_event->>'state'/);
-  assert.match(retirement, /actual_event\."at" = \(expected_event->>'at'\)::timestamptz/);
-  assert.match(retirement, /actual_event\."detail" = expected_event->>'detail'/);
-  assert.match(retirement, /min\(events\."sequence"\) = 1/);
-  assert.match(retirement, /count\(\*\) = count\(distinct events\."sequence"\)/);
-});
-
-test("aggregate retirement uses one shared canonical meeting fact digest and exact counts", () => {
-  const storeSource = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const planSource = readFileSync(join(ROOT, "lib", "civic-data", "trusted-lkg-import-plan.ts"), "utf8");
-  const factEvidence = storeSource.slice(
-    storeSource.indexOf("export function pdcV2CanonicalMeetingFactEvidence("),
-    storeSource.indexOf("function pdcV2ContractMigrationPreflightSql("),
-  );
-  const planDigest = planSource.slice(
-    planSource.indexOf("function canonicalMeetingFactSha256("),
-    planSource.indexOf("function pdcV2ExpectedMeetingsSnapshot("),
-  );
-
-  assert.match(factEvidence, /canonicalAgendaDocument\(/);
-  assert.match(factEvidence, /meetings\.sort\(/);
-  assert.match(factEvidence, /agendaDocuments\.sort\(/);
-  assert.match(factEvidence, /PDC_V2_MEETING_FACT_IDENTITY_DUPLICATED/);
-  assert.match(factEvidence, /createHash\("sha256"\)/);
-  assert.match(factEvidence, /canonicalCivicDataJson\(\{ meetings, agendaDocuments \}\)/);
-  assert.match(factEvidence, /meetingRowCount: meetings\.length/);
-  assert.match(factEvidence, /agendaDocumentRowCount: agendaDocuments\.length/);
-  assert.match(planSource, /pdcV2CanonicalMeetingFactEvidence,[\s\S]*from "\.\/store\.ts"/);
-  assert.match(planDigest, /validateSnapshot\(snapshot\)/);
-  assert.match(planDigest, /return pdcV2CanonicalMeetingFactEvidence\(\[snapshot\]\)\.sha256/);
-  assert.doesNotMatch(planDigest, /createHash\("sha256"\)/, "the import plan must not fork the store's canonical fact digest");
-});
-
-test("aggregate retirement treats the legacy authority as key OR canonical class/scope and retains exact history", () => {
-  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const memory = source.slice(
-    source.indexOf("  async retirePdcV2LegacyMeetingsAggregate("),
-    source.indexOf("  async promote(", source.indexOf("  async retirePdcV2LegacyMeetingsAggregate(")),
-  );
-  const retainedCandidate = source.slice(
-    source.indexOf("function pdcV2LegacyMeetingsCandidateIssue("),
-    source.indexOf("function validEventInput("),
-  );
-  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
-  const retirement = postgres.slice(
-    postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate("),
-    postgres.indexOf("  async promote(", postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate(")),
-  );
-  const pointerCensus = retirement.slice(
-    retirement.indexOf("const pointerRows"),
-    retirement.indexOf("if (pointerRows.length"),
-  );
-  const replay = retirement.slice(
-    retirement.indexOf("const replayAssertion"),
-    retirement.indexOf("return {", retirement.indexOf("const replayAssertion")),
-  );
-  const insert = retirement.slice(
-    retirement.indexOf("const insertRetirementEvent"),
-    retirement.indexOf("const deleteLegacyPointer"),
-  );
-  const finalAssertion = retirement.slice(
-    retirement.indexOf("const finalAssertion"),
-    retirement.indexOf("await this.db.batch([", retirement.indexOf("const finalAssertion")),
-  );
-  const assertKeyOrCanonicalScope = (fragment: string, label: string) => {
-    assert.match(fragment, /PDC_V2_LEGACY_MEETINGS_KEY/, `${label}: exact legacy key is not censused`);
-    assert.match(fragment, /(?:recordClass\}|record_class") = 'MEETING'/, `${label}: legacy record class is not censused`);
-    assert.match(fragment, /(?:scope\}|scope") = \$\{PDC_V2_LEGACY_MEETINGS_SCOPE\}/, `${label}: legacy scope is not censused`);
-    assert.match(fragment, /\bor\b/, `${label}: a rogue-key canonical legacy scope can escape the census`);
-  };
-
-  assert.match(memory, /const legacyPointers = \[\.\.\.this\.promotions\.values\(\)\]\.filter/);
-  assert.match(memory, /pointer\.key === PDC_V2_LEGACY_MEETINGS_KEY \|\|[\s\S]*pointer\.recordClass === "MEETING" && pointer\.scope === PDC_V2_LEGACY_MEETINGS_SCOPE/);
-  assert.match(memory, /legacyPointers\.length > 1/);
-  assertKeyOrCanonicalScope(pointerCensus, "initial pointer census");
-  assertKeyOrCanonicalScope(replay, "replay absence assertion");
-  assertKeyOrCanonicalScope(insert, "first-retirement XOR assertion");
-  assertKeyOrCanonicalScope(finalAssertion, "first-retirement final assertion");
-
-  assert.match(retainedCandidate, /candidate\.sourceId !== PDC_V2_LEGACY_MEETINGS_SOURCE_ID/);
-  assert.match(retainedCandidate, /candidate\.recordClass !== "MEETING"/);
-  assert.match(retainedCandidate, /candidate\.scope !== PDC_V2_LEGACY_MEETINGS_SCOPE/);
-  assert.match(retainedCandidate, /!receiptIsGoodForCandidate\(receipt, candidate\)/);
-  assert.match(retainedCandidate, /pdcV2CanonicalMeetingFactEvidence\(\[candidate\.readModel\]\)/);
-  assert.match(retainedCandidate, /event\.sequence !== index \+ 1/);
-  assert.match(retainedCandidate, /retirementCount !== 1/);
-  assert.match(retainedCandidate, /events\.at\(-1\)\?\.sequence !== retirementEvent\.sequence/);
-  assert.match(retirement, /const retainedLegacyProof =/);
-  assert.match(retirement, /retained\."candidate" = \$\{candidateJson\}::jsonb/);
-  assert.match(retirement, /retained\."validation_receipt" = \$\{receiptJson\}::jsonb/);
-  assert.match(retirement, /actual_event\."detail" = expected_event->>'detail'/);
-  assert.match(replay, /retainedLegacyProof\(evidence\.legacyVersionId, legacy\.record, legacy\.events\)/);
-});
-
-test("aggregate retirement locks its full proof snapshot before first execution and replay", () => {
-  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
-  const retirement = postgres.slice(
-    postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate("),
-    postgres.indexOf("  async promote(", postgres.indexOf("  async retirePdcV2LegacyMeetingsAggregate(")),
-  );
-  const replayStart = retirement.indexOf("const replayAssertion");
-  const replayEnd = retirement.indexOf("return {", replayStart);
-  const replay = retirement.slice(replayStart, replayEnd);
-  const firstTransactionStart = retirement.indexOf("await this.db.batch([", retirement.indexOf("const finalAssertion"));
-  const firstTransaction = retirement.slice(
-    firstTransactionStart,
-    retirement.indexOf("]);", firstTransactionStart) + 3,
-  );
-
-  assert.match(retirement, /lock table \$\{civicDataCandidates\}, \$\{civicDataCandidateEvents\}, \$\{civicDataPromotions\}[\s\S]*in share row exclusive mode/);
-  assert.match(replay, /retainedLegacyProof\(evidence\.legacyVersionId, legacy\.record, legacy\.events\)/);
-  assert.match(replay, /replacementProof/);
-  assert.match(replay, /await this\.db\.batch\(\[retirementTableLock\(\), replayAssertion\]\)/);
-  assert.ok(firstTransactionStart >= 0, "the first retirement transaction is missing");
-  const tableLockAt = firstTransaction.indexOf("retirementTableLock()");
-  const advisoryLockAt = firstTransaction.indexOf("this.candidateEventLock(pointerRow.currentVersionId)");
-  assert.ok(tableLockAt >= 0, "the first retirement transaction does not lock the proof tables");
-  assert.ok(advisoryLockAt >= 0, "the first retirement transaction does not serialize legacy history");
-  assert.ok(tableLockAt < advisoryLockAt, "the table lock must precede the candidate advisory lock to avoid a lock-order race");
-  assert.match(firstTransaction, /insertRetirementEvent,[\s\S]*deleteLegacyPointer,[\s\S]*finalAssertion/);
-});
-
 test("the Postgres retry clock is the local sequence-one event, never a refused acquisition claim", () => {
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
@@ -920,7 +745,6 @@ test("every Postgres civic-data mutation proves the sanctioned runtime authority
     "create",
     "transition",
     "appendEvidence",
-    "retirePdcV2LegacyMeetingsAggregate",
     "promote",
   ] as const;
   for (const [index, method] of methods.entries()) {
@@ -935,4 +759,19 @@ test("every Postgres civic-data mutation proves the sanctioned runtime authority
     assert.ok(authority >= 0, `${method}: sanctioned runtime authority is not checked`);
     assert.ok(databaseUse < 0 || authority < databaseUse, `${method}: database work begins before authority is proved`);
   }
+});
+
+test("terminal store exposes no one-time import or aggregate retirement door", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const adapter = readFileSync(join(ROOT, "lib", "civic-data", "candidate-integrity.ts"), "utf8");
+  const memory = new MemoryRoutineDataStore();
+  // Inspect the retired API family without importing or invoking its former
+  // callable vocabulary. Reject new members of that family as well.
+  const retiredMember = /^(?:assertPdcV2|retirePdcV2)/;
+  for (const target of [memory, Object.getPrototypeOf(memory)]) {
+    assert.deepEqual(Object.getOwnPropertyNames(target).filter((name) => retiredMember.test(name)), []);
+  }
+  const retiredDeclaration = /\b(?:assertPdcV2|retirePdcV2)\w*\s*\(/;
+  assert.doesNotMatch(source, retiredDeclaration);
+  assert.doesNotMatch(adapter, retiredDeclaration);
 });

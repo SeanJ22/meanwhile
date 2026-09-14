@@ -254,6 +254,35 @@ function validateProviderMetadata(
   return metadata as unknown as ReaderAuthorityProviderMetadata;
 }
 
+/** The one approved documentary-main join keeps importer A below software P. */
+export function readerProductionTransferLineageShapeIssue(
+  lineage: Row,
+  importerCodeSha: string,
+): string | null {
+  const ordinaryKeys = [
+    "frozenImportDataBaseSha", "exactQuiescedMainSha", "reviewedPostFrozenMainCommitOids",
+    "importCommitASha", "importCommitALinearAfterExactMain", "preservedConcurrentPullRequests",
+  ];
+  const approvedA = "c85082c04cef43fb0203adcfe92b936d8520e9e3";
+  if (importerCodeSha !== approvedA) {
+    return exactKeys(lineage, ordinaryKeys) && lineage.importCommitALinearAfterExactMain === true
+      ? null : "Reader production authority-transfer lineage shape is not ordinary and linear";
+  }
+  // Owner-approved one-time B repair; the immutable transfer receipt stays
+  // truthful. The generator separately proves A is a strict ancestor of B;
+  // the release controller still proves exact E/main parents at J and A at M.
+  const approvedKeys = [...ordinaryKeys, "softwareLineageAnchorSha",
+    "importCommitALinearAfterSoftwareLineageAnchor", "documentaryMainJoinRequired"];
+  return exactKeys(lineage, approvedKeys) && lineage.importCommitASha === approvedA &&
+    lineage.exactQuiescedMainSha === "9a9a76763f39980cca4aac448cb57ce9a8102101" &&
+    lineage.softwareLineageAnchorSha === "d04026d91c5b8c513ea335e4f9575cac3b6badb9" &&
+    lineage.importCommitALinearAfterExactMain === false &&
+    lineage.importCommitALinearAfterSoftwareLineageAnchor === true &&
+    lineage.documentaryMainJoinRequired === true
+    ? null : "Reader production authority-transfer lineage differs from the exact approved documentary-main join";
+}
+
+
 function validateImportReceipt(
   receipt: Row,
   receiptBytes: Buffer,
@@ -474,9 +503,9 @@ function validateImportReceipt(
     postImport?.exact0026Preflight !== "PASS" || imported?.durableRetirementReceiptExact !== true
   ) throw new Error("Reader production authority-transfer receipt is not terminally green");
   if (
-    !lineage || !exactKeys(lineage, ["frozenImportDataBaseSha", "exactQuiescedMainSha", "reviewedPostFrozenMainCommitOids", "importCommitASha", "importCommitALinearAfterExactMain", "preservedConcurrentPullRequests"]) ||
+    !lineage || readerProductionTransferLineageShapeIssue(lineage, String(receipt.importSha)) !== null ||
     lineage.frozenImportDataBaseSha !== PDC_V2_FROZEN_BASE_SHA || !SHA.test(String(lineage.exactQuiescedMainSha)) ||
-    lineage.importCommitASha !== receipt.importSha || lineage.importCommitALinearAfterExactMain !== true ||
+    lineage.importCommitASha !== receipt.importSha ||
     !Array.isArray(lineage.reviewedPostFrozenMainCommitOids) || lineage.reviewedPostFrozenMainCommitOids.some((sha) => !SHA.test(String(sha))) ||
     !Array.isArray(lineage.preservedConcurrentPullRequests) ||
     JSON.stringify(lineage.preservedConcurrentPullRequests.map((pr) => Number(row(pr)?.number)).sort((a, b) => a - b)) !== JSON.stringify([302, 303]) ||

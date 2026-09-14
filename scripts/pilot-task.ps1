@@ -725,7 +725,7 @@ function Invoke-Schtasks {
     $ErrorActionPreference = "Continue"
     $code = 0
     try {
-        & schtasks.exe @Arguments
+        & schtasks.exe @Arguments | Out-Host
         $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
     }
     catch {

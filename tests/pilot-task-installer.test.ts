@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -38,6 +39,27 @@ function scriptText(): string {
   // copy cannot turn a backtick continuation into a non-match.
   return readFileSync(SCRIPT, "utf8").replace(/\r\n/g, "\n");
 }
+
+test("Windows task helper returns the native integer independently of diagnostic output", {skip: process.platform !== "win32"}, () => {
+  const source = scriptText();
+  const helper = source.slice(source.indexOf("function Invoke-Schtasks {"), source.indexOf("function Invoke-PauseNote {"));
+  assert.ok(helper.includes("function Invoke-Schtasks {"));
+  function invoke(body: string, code: number, failInvocation = false): {count: number; values: unknown[]; types: string[]} {
+    const mock = `function schtasks.exe { param([string[]]$Arguments) ${failInvocation
+      ? 'throw "TEST_NATIVE_INVOCATION_FAILURE"'
+      : `Write-Output "TEST_NATIVE_DIAGNOSTIC"; $global:LASTEXITCODE=${code}`} }\n`;
+    const command = mock + body + '\n$result = @(Invoke-Schtasks @("/Run", "/TN", "TEST_ONLY")); [ordered]@{count=$result.Count;values=$result;types=@($result | ForEach-Object {$_.GetType().FullName})} | ConvertTo-Json -Compress; exit 0';
+    const result = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", command], {encoding: "utf8", windowsHide: true});
+    assert.equal(result.status, 0, result.stderr);
+    return JSON.parse(result.stdout.trim().split(/\r?\n/).at(-1)!);
+  }
+  for (const [code, failInvocation] of [[0, false], [1, false], [1, true]] as const) {
+    assert.deepEqual(invoke(helper, code, failInvocation), {count: 1, values: [code], types: ["System.Int32"]});
+  }
+  const regressed = helper.replace(" | Out-Host", "");
+  assert.notEqual(regressed, helper, "negative control must change the helper");
+  assert.deepEqual(invoke(regressed, 0).values, ["TEST_NATIVE_DIAGNOSTIC", 0], "planted regression contaminates the numeric return");
+});
 
 /** The body of one `"<action>" { ... }` case in the script's switch. */
 function actionBlock(src: string, action: string): string {

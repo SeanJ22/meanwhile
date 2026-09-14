@@ -6,7 +6,6 @@ import {
   admittedRuntimeChildEnvironment,
   runtimeAuthorityEnvelope,
   runtimeAuthorityIssue,
-  temporaryTrustedLkgImportEnvironment,
   type RuntimeAuthorityEnvelope,
   type RuntimeCheckoutFacts,
 } from "../lib/civic-data/runtime-authority.ts";
@@ -87,23 +86,17 @@ test("child delegation rotates nonce and narrows capability/contract to one pare
 });
 
 test("temporary importer capability cannot satisfy an ordinary source-child expectation", () => {
-  assert.match(issue(envelope({ capability: "TRUSTED_LKG_IMPORT", contract: null })) ?? "", /not one of/);
+  assert.match(issue({ ...envelope(), capability: "TRUSTED_LKG_IMPORT", contract: null } as unknown as RuntimeAuthorityEnvelope) ?? "", /not one of/);
 });
 
-test("temporary importer helper binds only its attested repo, SHA, self PID and transient nonce", () => {
-  const parsed = runtimeAuthorityEnvelope(temporaryTrustedLkgImportEnvironment({
-    env: { NODE_ENV: "test" },
-    repositoryRoot: ROOT,
-    headSha: SHA,
-    processPid: PID,
-    nonce: "f".repeat(64),
-  }));
-  assert.deepEqual(parsed, {
-    repo: ROOT,
-    sha: SHA,
-    capability: "TRUSTED_LKG_IMPORT",
-    contract: null,
-    parentPid: PID,
-    nonce: "f".repeat(64),
-  });
+test("retired importer capability is refused at the raw environment parser", () => {
+  const retired = {
+    WTP_RUNTIME_AUTHORITY_REPO: ROOT,
+    WTP_RUNTIME_AUTHORITY_SHA: SHA,
+    WTP_RUNTIME_AUTHORITY_CAPABILITY: "TRUSTED_LKG_IMPORT",
+    WTP_RUNTIME_AUTHORITY_PARENT_PID: String(PID),
+    WTP_RUNTIME_AUTHORITY_NONCE: "f".repeat(64),
+  };
+  assert.equal(runtimeAuthorityEnvelope(retired), null);
+  assert.match(issue(runtimeAuthorityEnvelope(retired)) ?? "", /absent or malformed/);
 });

@@ -23,9 +23,6 @@ export const RUNTIME_AUTHORITY_CAPABILITIES = [
   "OWNER_DISPATCH",
   "MANUAL_CONTRACT",
   "AGENT_BRIDGE",
-  // Temporary one-time cutover capability. The importer that mints it and
-  // this member are deleted together after the production seed readback.
-  "TRUSTED_LKG_IMPORT",
 ] as const;
 export type RuntimeAuthorityCapability = (typeof RUNTIME_AUTHORITY_CAPABILITIES)[number];
 
@@ -55,8 +52,6 @@ export interface RuntimeAuthorityExpectation {
   readonly contract?: string | null;
   /** Ordinary child admission proves the OS-observed immediate parent. */
   readonly immediateParentPid: number;
-  /** The one-time importer has its own stronger frozen-tree attestation. */
-  readonly allowTemporaryImporterCheckout?: boolean;
 }
 
 export class RuntimeAuthorityRefused extends Error {
@@ -181,9 +176,8 @@ export function runtimeAuthorityIssue(input: {
   if (checkout.headSha !== envelope.sha) return `runtime HEAD ${checkout.headSha} is not admitted SHA ${envelope.sha}`;
   if (!checkout.clean) return "runtime checkout is not clean";
 
-  const temporaryImporter = envelope.capability === "TRUSTED_LKG_IMPORT" && expectation.allowTemporaryImporterCheckout === true;
-  if (!temporaryImporter && !checkout.detached) return "runtime checkout is attached to a branch";
-  if (!temporaryImporter && !checkout.headOnOriginMain) return "runtime HEAD is not proven on origin/main";
+  if (!checkout.detached) return "runtime checkout is attached to a branch";
+  if (!checkout.headOnOriginMain) return "runtime HEAD is not proven on origin/main";
 
   if (expectation.contract !== undefined && envelope.contract !== expectation.contract) {
     return `admitted contract ${envelope.contract ?? "none"} is not ${expectation.contract ?? "none"}`;
@@ -251,39 +245,11 @@ export function admittedRuntimeChildEnvironment(input: {
   };
 }
 
-/**
- * Mint the separately self-attested one-time importer envelope in its own
- * process. This helper and capability are temporary cutover scaffolding and
- * must be deleted with `pdc-v2-trusted-lkg-import.mts` after seed readback.
- */
-export function temporaryTrustedLkgImportEnvironment(input: {
-  readonly env?: NodeJS.ProcessEnv;
-  readonly repositoryRoot: string;
-  readonly headSha: string;
-  readonly processPid?: number;
-  readonly nonce?: string;
-}): NodeJS.ProcessEnv {
-  if (!isAbsolute(input.repositoryRoot) || !FULL_SHA.test(input.headSha)) {
-    throw new RuntimeAuthorityRefused("temporary trusted-LKG importer lacks exact repository/SHA attestation");
-  }
-  return {
-    ...(input.env ?? process.env),
-    [RUNTIME_AUTHORITY_ENV.repo]: resolve(input.repositoryRoot),
-    [RUNTIME_AUTHORITY_ENV.sha]: input.headSha.toLowerCase(),
-    [RUNTIME_AUTHORITY_ENV.capability]: "TRUSTED_LKG_IMPORT",
-    [RUNTIME_AUTHORITY_ENV.contract]: undefined,
-    [RUNTIME_AUTHORITY_ENV.parentPid]: String(input.processPid ?? process.pid),
-    [RUNTIME_AUTHORITY_ENV.nonce]: input.nonce ?? randomBytes(32).toString("hex"),
-  };
-}
-
 export function assertRegisteredRuntimeContract(
   contractId: string,
   kind: "routine" | "manual",
   env: Readonly<Record<string, string | undefined>> = process.env,
 ): void {
-  const envelope = runtimeAuthorityEnvelope(env);
-  if (envelope?.capability === "TRUSTED_LKG_IMPORT") return;
   assertRuntimeAuthority({
     capabilities: [kind === "routine" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT"],
     contract: contractId,
@@ -300,16 +266,9 @@ export function assertSanctionedRuntimeAuthority(
     return;
   }
   if (operation === "a routine civic data candidate/version promotion") {
-    const envelope = runtimeAuthorityEnvelope(env);
     assertRuntimeAuthority({
-      capabilities: ["ROUTINE_SUPERVISOR", "ROUTINE_CONTRACT", "MANUAL_CONTRACT", "TRUSTED_LKG_IMPORT"],
-      allowTemporaryImporterCheckout: envelope?.capability === "TRUSTED_LKG_IMPORT",
-    }, env, {
-      // The temporary importer mints its envelope only after its own final
-      // frozen-code attestation, inside the same process. Ordinary authority
-      // always proves the actual immediate parent.
-      immediateParentPid: envelope?.capability === "TRUSTED_LKG_IMPORT" ? process.pid : process.ppid,
-    });
+      capabilities: ["ROUTINE_SUPERVISOR", "ROUTINE_CONTRACT", "MANUAL_CONTRACT"],
+    }, env);
     return;
   }
   throw new RuntimeAuthorityRefused(`sanctioned operation ${JSON.stringify(operation)} has no permanent runtime capability`);

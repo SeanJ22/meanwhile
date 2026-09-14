@@ -62,7 +62,7 @@ function chipStyle(active: boolean): CSSProperties {
     background: active ? "#272B36" : "#1A1D24",
     boxShadow: active ? "inset 0 0 0 1px rgba(255,255,255,0.20)" : "inset 0 0 0 1px rgba(255,255,255,0.07)",
     color: "var(--text, #E8E9ED)",
-    transition: "background 200ms ease",
+    transition: "background var(--dur-base) var(--ease-move)",
   };
 }
 
@@ -527,7 +527,7 @@ const SYSTEM_MAP_CSS = `
 [data-system-map] .sm-map { display: grid; gap: 20px; min-width: 0; }
 [data-system-map] .sm-detail { position: sticky; top: 12px; align-self: start; }
 [data-system-map] .sm-cardgrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-[data-system-map] .sm-card { text-align: left; cursor: pointer; border: 0; border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; transition: opacity 200ms ease, box-shadow 200ms ease, background 200ms ease; }
+[data-system-map] .sm-card { text-align: left; cursor: pointer; border: 0; border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; transition: opacity var(--dur-base) var(--ease-move), box-shadow var(--dur-base) var(--ease-move), background var(--dur-base) var(--ease-move); }
 [data-system-map] .sm-rail { margin: 2px 0 0; padding: 8px 0 0; border-top: 1px solid; }
 [data-system-map] .sm-ringgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 [data-system-map] .sm-notshown { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }

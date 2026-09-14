@@ -12,6 +12,7 @@ import type { PipelineStage, WindowRunRecord } from "./promotion/types.ts";
 import type { AutonomousObligationActivity } from "./workers/activity.ts";
 import type { ReadOutcome } from "./admin-data.ts";
 import type { FleetReceiptLoadEntry, FleetReceiptLoadReport } from "./fleet-receipt-store.ts";
+import type { RoutineRecordClass } from "../civic-data/types.ts";
 
 export const FLEET_DELIVERY_VERSION = "fleet-delivery/v1";
 
@@ -22,6 +23,22 @@ export const FLEET_DELIVERY_VERSION = "fleet-delivery/v1";
  * window-summary set rather than reaching into the retired live member.
  */
 export type HistoricalWindowRun = WindowRunRecord & { readonly promotionReceipts?: readonly HistoricalWindowReceiptSummary[] };
+
+/**
+ * A GOOD PDC permanent-authority publication — a validated `ValidationReceipt` v2 promotion into the
+ * permanent civic data plane, projected for the fleet report. This is PDC's CURRENT publication
+ * authority: it is what supersedes the retired promoter's APPROVED_FOR_PROMOTION → SHADOW pipeline.
+ * It is DISTINCT from a historical promoter/1 receipt (retained archive evidence, kept in the
+ * per-item `receipts` lane), and a promotion is validated-and-in-the-plane, NOT proof the deployed
+ * site served the record to a reader — that served-reader proof remains a separate, later signal.
+ */
+export interface PermanentAuthorityPromotion {
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly validatedAt: string;
+  readonly candidateId: string;
+  readonly sourceId: string;
+}
 
 // An unread timestamp cannot silently sort behind known-good evidence.
 function observationOrder(a: string, b: string): number {
@@ -62,7 +79,11 @@ export interface FleetDeliveryItem {
     readonly verification: PromotionReceipt["verification"]; readonly readback: FleetReceiptReadback["items"][number] | null;
     readonly readbackObservedAt: string | null; readonly readbackScope: "LOCAL_SNAPSHOT" | null;
     readonly refusal: string | null; readonly gaps: readonly string[] }[];
-  readonly status: "HELD" | "SHADOW_READBACK_VERIFIED" | "READER_MATERIALIZED_UNPROVEN" | "UNKNOWN";
+  readonly status: "HELD" | "SHADOW_READBACK_VERIFIED" | "READER_MATERIALIZED_UNPROVEN" | "PERMANENT_AUTHORITY_PROMOTED" | "UNKNOWN";
+  /** The PDC permanent-authority publication (GOOD ValidationReceipt v2) whose record class/scope
+   *  covers this record, when such evidence was supplied; null otherwise. Recognized INSTEAD of the
+   *  retired APPROVED_FOR_PROMOTION event. Distinct from the historical promoter/1 `receipts` above. */
+  readonly permanentAuthorityPromotion: PermanentAuthorityPromotion | null;
   /** Includes unresolved batch loads where per-item binding cannot yet be established. */
   readonly receiptLoads: readonly FleetReceiptLoadEntry[];
   readonly gaps: readonly string[];
@@ -77,7 +98,8 @@ export interface FleetDeliveryReport {
 /** Canonical per-item joins only. Window batch counts never prove an item's receipt or delivery. */
 export function projectFleetDelivery(input: { readonly activity: AutonomousObligationActivity; readonly windows: readonly HistoricalWindowRun[];
   readonly receipts?: readonly PromotionReceipt[]; readonly readbacks?: readonly FleetReceiptReadback[];
-  readonly receiptLoading?: ReadOutcome<Omit<FleetReceiptLoadReport, "receipts">> }): FleetDeliveryReport {
+  readonly receiptLoading?: ReadOutcome<Omit<FleetReceiptLoadReport, "receipts">>;
+  readonly permanentAuthority?: readonly PermanentAuthorityPromotion[] }): FleetDeliveryReport {
   const { activity } = input;
   const states = [...new Set(activity.facts.promotion.map(record => record.itemId))].sort()
     .map(id => deriveItemState(id, activity.facts.promotion.filter(record => record.itemId === id)));
@@ -153,16 +175,26 @@ export function projectFleetDelivery(input: { readonly activity: AutonomousOblig
       gaps.push(`RECEIPT_LOAD_${entry.state}:${entry.receiptId}`, ...entry.gaps);
     }
     if (input.receiptLoading && input.receiptLoading.kind !== "HELD") gaps.push(`RECEIPT_LOADING_${input.receiptLoading.kind}`);
+    // PDC's permanent authority is the current publication path: a GOOD ValidationReceipt v2 for this
+    // record's class/scope is recognized INSTEAD of the retired APPROVED_FOR_PROMOTION event, so a
+    // covered item is not reported HELD merely for lacking the legacy approval. A promotion is
+    // validated-and-in-the-plane; it is still not proof the deployed site served the record.
+    const permanentAuthorityPromotion = isMeetingFactClass(state.recordClass ?? "")
+      ? (input.permanentAuthority ?? []).find(p => p.recordClass === "MEETING" && state.subjectId !== null && p.scope === state.subjectId) ?? null
+      : null;
+    const refusedOrHeld = Boolean(latest?.refusal) || windowDecisions.at(-1)?.verdict === "REFUSE_WOULD";
     const status: FleetDeliveryItem["status"] = !loadUnproven && latest?.materialized && latest.gaps.length === 0
       ? latest.target === "SHADOW" ? "SHADOW_READBACK_VERIFIED" : "READER_MATERIALIZED_UNPROVEN"
-      : latest?.refusal || windowDecisions.at(-1)?.verdict === "REFUSE_WOULD" || !approval ? "HELD" : "UNKNOWN";
+      : permanentAuthorityPromotion && !refusedOrHeld ? "PERMANENT_AUTHORITY_PROMOTED"
+      : refusedOrHeld || !approval ? "HELD" : "UNKNOWN";
+    if (permanentAuthorityPromotion) gaps.push(`PERMANENT_AUTHORITY_PROMOTED:${permanentAuthorityPromotion.recordClass}:${permanentAuthorityPromotion.scope}`);
     gaps.push(latest?.target === "SHADOW" ? "SHADOW_DOES_NOT_PROVE_SERVED_READER" : "SERVED_READER_PROOF_NOT_OBSERVED");
     return { itemId: state.itemId, recordClass: state.recordClass, subjectId: state.subjectId,
       source: { artifactIds: scouted?.artifactIds ?? [], canonicalUrl: scouted?.canonicalUrl ?? null,
         factKey: source?.factKey ?? null, sourceKey: source?.sourceKey ?? null, workItemId: source?.workItemId ?? null },
       recordedStage: state.stage, approvalRecordId: approval?.recordId ?? null,
       pipelineRefusalReasons: state.refused?.reasons.map(reason => `${reason.code}: ${reason.detail}`) ?? [],
-      windowDecisions, receipts, receiptLoads, status, gaps: [...new Set(gaps)] };
+      windowDecisions, receipts, receiptLoads, status, permanentAuthorityPromotion, gaps: [...new Set(gaps)] };
   });
   return { version: FLEET_DELIVERY_VERSION, receiptAvailability: input.receipts === undefined ? "NOT_PROVIDED" : "PROVIDED", items };
 }

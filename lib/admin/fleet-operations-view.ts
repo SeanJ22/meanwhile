@@ -202,6 +202,7 @@ export function deliveryItemStatusLabel(item: FleetDeliveryItem): { readonly tex
     HELD: "held (established refusal or missing approval)",
     SHADOW_READBACK_VERIFIED: "shadow readback verified locally — NOT served to a reader",
     READER_MATERIALIZED_UNPROVEN: "reader-materialized, served proof still missing",
+    PERMANENT_AUTHORITY_PROMOTED: "promoted by the permanent civic-data authority (validated) — served-reader proof still separate",
     UNKNOWN: "unknown",
   };
   return { text: map[item.status], served: false };
@@ -329,7 +330,9 @@ export function fleetItemLane(op: FleetOperation): FleetLane {
  * omits it). The served surface reads receipts from the runner's OWNER_SNAPSHOT;
  * an INJECTED_STORE is only a runner/test-supplied store. This is historical
  * `promoter/1` archive provenance — it never upgrades to the permanent civic-data
- * authority, which stays NOT_CONNECTED until the PDC completion handoff wires it.
+ * authority. That permanent authority reads NOT_CONNECTED until PDC permanent-authority
+ * publication evidence (a GOOD ValidationReceipt v2) is supplied to the read, when it reads
+ * CONNECTED and names the validated publications; historical loading never becomes that.
  */
 export function receiptSourceSummary(source: FleetOperationsReport["receiptSource"]): {
   readonly kind: "OWNER_SNAPSHOT" | "INJECTED_STORE";
@@ -340,11 +343,14 @@ export function receiptSourceSummary(source: FleetOperationsReport["receiptSourc
   if (!source) return null;
   const origin = source.kind === "OWNER_SNAPSHOT" ? "owner snapshot" : "injected store (runner/test)";
   const observed = source.observedAt ? ` observed ${source.observedAt};` : "";
-  const permanent = source.permanentAuthority === "NOT_CONNECTED" ? "permanent receipt authority NOT CONNECTED" : source.permanentAuthority;
+  const promotions = source.permanentAuthorityPromotions ?? [];
+  const permanent = source.permanentAuthority === "CONNECTED"
+    ? `permanent civic-data authority CONNECTED (${promotions.length} validated publication${promotions.length === 1 ? "" : "s"})`
+    : "permanent receipt authority NOT CONNECTED";
   return {
     kind: source.kind,
     freshness: source.freshness,
-    permanentConnected: source.permanentAuthority !== "NOT_CONNECTED",
+    permanentConnected: source.permanentAuthority === "CONNECTED",
     text: `Receipt source: ${origin} — historical promoter/1 archive (${source.freshness.toLowerCase()});${observed} ${permanent}. Historical loading is not current civic-data delivery or served-publication proof.`,
   };
 }

@@ -9,7 +9,11 @@ import {
   districtKeyFor,
   surname,
 } from "../lib/sources/legiscan/districts.ts";
-import { getStateVotesSnapshot } from "../lib/sources/legiscan/snapshot.ts";
+import {
+  clearStateVotesProjectionCacheForTest,
+  getStateVotesSnapshot,
+  OFFICIAL_STATE_VOTE_SCOPES,
+} from "../lib/sources/legiscan/snapshot.ts";
 import { LEGISCAN_ATTRIBUTION } from "../lib/sources/legiscan/types.ts";
 import { readZip } from "../lib/sources/legiscan/zip.ts";
 
@@ -24,7 +28,47 @@ import { readZip } from "../lib/sources/legiscan/zip.ts";
  * committed boundary labels, and the snapshot is asserted for distinctness.
  */
 
-const snapshot = getStateVotesSnapshot();
+const fixtureSnapshots = OFFICIAL_STATE_VOTE_SCOPES.map((scope) => getStateVotesSnapshot(scope));
+const snapshot = {
+  generatedAt: fixtureSnapshots.map((value) => value.generatedAt).sort().at(-1)!,
+  datasets: fixtureSnapshots.flatMap((value) => value.datasets),
+  identifierMatch: {
+    peopleSeen: fixtureSnapshots.reduce((total, value) => total + value.identifierMatch.peopleSeen, 0),
+    peopleMatched: fixtureSnapshots.reduce((total, value) => total + value.identifierMatch.peopleMatched, 0),
+    distinctOfficeholders: new Set(fixtureSnapshots.flatMap((value) => value.positions.map((position) => position.officeholderId))).size,
+    byState: Object.assign({}, ...fixtureSnapshots.map((value) => value.identifierMatch.byState)),
+  },
+  rollCalls: fixtureSnapshots.flatMap((value) => value.rollCalls),
+  positions: fixtureSnapshots.flatMap((value) => value.positions),
+};
+
+test("production returns explicit unavailable and has no tracked LegiScan fallback without an official projection", { concurrency: false }, async () => {
+  clearStateVotesProjectionCacheForTest();
+  const testContext = process.env.NODE_TEST_CONTEXT;
+  const databaseUrl = process.env.DATABASE_URL;
+  const member = "az-legislature:unavailable-control";
+  delete process.env.NODE_TEST_CONTEXT;
+  delete process.env.DATABASE_URL;
+  try {
+    assert.throws(
+      () => getStateVotesSnapshot("US-AZ"),
+      /No proof-validated official state roll-call projection is loaded/,
+    );
+    const response = await votesGet(new Request(`https://example.test/api/votes?member=${member}`));
+    assert.equal(response.status, 503);
+    assert.deepEqual(await response.json(), {
+      generatedAt: null,
+      member,
+      holdingStatus: "HOLDING_UNAVAILABLE",
+      votes: [],
+    });
+  } finally {
+    if (testContext === undefined) delete process.env.NODE_TEST_CONTEXT;
+    else process.env.NODE_TEST_CONTEXT = testContext;
+    if (databaseUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = databaseUrl;
+  }
+});
 
 /* ------------------------------------------------------------- the join --- */
 

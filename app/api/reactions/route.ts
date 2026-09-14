@@ -19,6 +19,7 @@ import {
   isValidTargetType,
   isValueOnScaleFor,
   normalizeFreeText,
+  type ReactionTargetType,
 } from "@/lib/signal/reactions";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { getProvisionTargetIds } from "@/lib/ballot/measure-provisions";
@@ -28,7 +29,7 @@ import {
   getFundingTargetIds,
   refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
-import { getVoteIds } from "@/lib/votes/snapshot";
+import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
 
 /**
  * POST /api/reactions — the reaction write path (P03), hardened (T08).
@@ -71,8 +72,54 @@ export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 4096;
 
+interface ReactionAuthorityReaders {
+  readonly candidateTargets: (targetId: string) => Promise<Set<string>>;
+  readonly provisionTargets: () => Set<string>;
+  readonly refreshFunding: () => Promise<unknown>;
+  readonly fundingTargets: () => Set<string>;
+  readonly contributorTargets: () => Set<string>;
+  readonly refreshVotes: () => Promise<unknown>;
+  readonly voteTargets: () => Set<string>;
+}
+
+const reactionAuthorityReaders: ReactionAuthorityReaders = {
+  candidateTargets: getCandidateTargetIds,
+  provisionTargets: getProvisionTargetIds,
+  refreshFunding: refreshFundingFromPromoted,
+  fundingTargets: getFundingTargetIds,
+  contributorTargets: getContributorReactionTargetIds,
+  refreshVotes: refreshFederalVotesFromPromoted,
+  voteTargets: getVoteIds,
+};
+
+/**
+ * Open only the authority named by the validated target class. Intake for a
+ * candidate must not depend on FEC or roll-call availability, and the two
+ * latter authorities must not become one all-or-nothing preload domain.
+ */
+export async function validReactionTargetsFor(
+  targetType: ReactionTargetType,
+  targetId: string,
+  readers: ReactionAuthorityReaders = reactionAuthorityReaders,
+): Promise<Set<string>> {
+  switch (targetType) {
+    case "CANDIDATE":
+      return readers.candidateTargets(targetId);
+    case "MEASURE_PROVISION":
+      return readers.provisionTargets();
+    case "FUNDING_TOTAL_REACTION":
+      await readers.refreshFunding();
+      return readers.fundingTargets();
+    case "CONTRIBUTOR_REACTION":
+      await readers.refreshFunding();
+      return readers.contributorTargets();
+    case "FEDERAL_VOTE":
+      await readers.refreshVotes();
+      return readers.voteTargets();
+  }
+}
+
 export async function POST(request: Request) {
-  await refreshFundingFromPromoted();
   // The master ripcord (T08): intake closed means every write refused
   // before anything is read or counted. The reader's tap renders the
   // honest not-counted line; nothing silently records.
@@ -123,9 +170,9 @@ export async function POST(request: Request) {
     return Response.json({ error: "malformed text" }, { status: 400 });
   }
 
-  // The target must exist in the committed data for its type — votes in
-  // the votes snapshot, candidates in the ballot files (3d), funding
-  // reactions in the FEC snapshot (D34). A missing file fails closed —
+  // The target must exist in the canonical data for its type — votes in
+  // the promoted vote projection, candidates in the ballot projection (3d), funding
+  // reactions in the FEC projection (D34). An unavailable authority fails closed —
   // better to refuse a reaction than to store one against a target nothing
   // can render. The CONTRIBUTOR_REACTION set is empty while
   // ripcord.fecContributorDisplay is pulled, so the control's write path
@@ -133,16 +180,10 @@ export async function POST(request: Request) {
   // a ripcord.
   let validTargets: Set<string>;
   try {
-    validTargets =
-      submission.targetType === "CANDIDATE"
-        ? getCandidateTargetIds()
-        : submission.targetType === "MEASURE_PROVISION"
-          ? getProvisionTargetIds()
-          : submission.targetType === "FUNDING_TOTAL_REACTION"
-            ? getFundingTargetIds()
-            : submission.targetType === "CONTRIBUTOR_REACTION"
-              ? getContributorReactionTargetIds()
-              : getVoteIds();
+    validTargets = await validReactionTargetsFor(
+      submission.targetType,
+      submission.targetId,
+    );
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
   }
@@ -179,7 +220,7 @@ export async function POST(request: Request) {
     }
     let uncontested: Set<string>;
     try {
-      uncontested = getSingleCandidateTargetIds();
+      uncontested = await getSingleCandidateTargetIds(submission.targetId);
     } catch {
       return Response.json({ error: "target data unavailable" }, { status: 503 });
     }

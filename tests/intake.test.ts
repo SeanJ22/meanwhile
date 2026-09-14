@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
+
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
 
 /**
  * T08 — the store defends itself. Every test here asserts a MECHANISM
@@ -21,13 +23,15 @@ process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "5";
 // the authoritative counters answer "unavailable" — both paths asserted.
 delete process.env.DATABASE_URL;
 
+await initializeFederalVoteFirstSeed();
+
 const { classifySubmission, intakeLimits, isSameOriginSubmission } = await import(
   "../lib/signal/intake-limits.ts"
 );
 const { POST: postReaction } = await import("../app/api/reactions/route.ts");
 const { POST: postLog } = await import("../app/api/log/route.ts");
 const { getVoteIds } = await import("../lib/votes/snapshot.ts");
-const { analyzeStore, renderIntakeReport } = await import(
+const { analyzeStore } = await import(
   "../lib/signal/tripwire.ts"
 );
 const { aggregateReactions, rowsEligibleForAggregation } = await import(
@@ -412,34 +416,14 @@ test("tripwire: a day where quarantined rows are a disproportionate share is fla
   assert.match(flags[0].detail, /10 of 20/, "count and denominator, always");
 });
 
-test("tripwire report: identifier-free by construction, states its thresholds, and says None honestly", () => {
-  const report = renderIntakeReport({
-    generatedAt: "2026-08-14T00:00:00.000Z",
-    reactionDays: [{ day: "2026-08-13", total: 4, suspect: 0 }],
-    searchLogDays: [{ day: "2026-08-13", total: 40, suspect: 0 }],
-    limiterRowsPurged: 2,
-    limiterRowsRemaining: 3,
-  });
-  assert.match(report, /never an\nidentifier/i);
-  assert.match(report, /never auto-acted-on/);
-  assert.match(report, /\*\*None\.\*\*/, "no flags must be an explicit None, not silence");
-  assert.match(report, /purged this run: 2/);
-  const forbidden = /reaction_key|digest: [0-9a-f]|@|ip address|\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/i;
-  assert.ok(!forbidden.test(report), "nothing identifier-shaped may enter the report");
-});
+// ── The permanent runtime owns the observation; GitHub owns no clock ─────
 
-// ── The workflow exists and never acts on what it finds ──────────────────
-
-test("the tripwire is scheduled daily and only reads, purges expired limiter rows, and commits the report", () => {
-  const workflow = readFileSync(
-    join(process.cwd(), ".github", "workflows", "intake-tripwire.yml"),
-    "utf8",
-  );
-  assert.match(workflow, /cron: "41 10 \* \* \*"/, "the tripwire must run on a daily schedule");
-  assert.match(workflow, /intake:tripwire/);
-  assert.match(workflow, /docs\/intake-report\.md/);
-  assert.ok(
-    !/DELETE FROM reactions|ripcord/i.test(workflow),
-    "the workflow must never touch the stores or the switches — flagged, never auto-acted-on",
-  );
+test("the standing runner records the tripwire in the control plane without a tracked report", () => {
+  const runner = readFileSync(join(process.cwd(), "scripts", "pilot-runner.mts"), "utf8");
+  const tripwire = readFileSync(join(process.cwd(), "scripts", "intake-tripwire.mts"), "utf8");
+  assert.match(runner, /new IndependentRuntimeLaneScheduler\([\s\S]*run:\s*runIntakeRuntime/);
+  assert.match(runner, /intakeRuntime: observation/);
+  assert.match(tripwire, /INTAKE_RUNTIME_RECEIPT=/);
+  assert.doesNotMatch(tripwire, /docs\/intake-report\.md|writeFile|git\s+(?:add|commit|push)|push-main/);
+  assert.equal(existsSync(join(process.cwd(), ".github", "workflows", "intake-tripwire.yml")), false);
 });

@@ -43,6 +43,7 @@ import {
   buildResearchIntent,
   validateIntentNote,
 } from "../lib/control-plane/research-view.ts";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
 const flag = (name: string): string | null => {
   const hit = process.argv.slice(2).find((a) => a.startsWith(`--${name}=`));
@@ -77,6 +78,7 @@ const intent = buildResearchIntent(action, nowIso, `host:${host}`, noteCheck.not
 async function open(): Promise<ControlPlaneRepositories> {
   const store = flag("file-store");
   if (store !== null) return createFileRepositories(store);
+  assertRuntimeAuthority({ capabilities: ["OWNER_DISPATCH"] });
   const url = controlPlaneUrlFromEnv();
   if (url === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not set in this process`);
   return createPgRepositories(url, nowIso);

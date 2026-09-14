@@ -49,26 +49,10 @@ const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set is still the nine this rule was audited against", () => {
+test("the workflow set is the two release and software-CI workflows", () => {
   assert.equal(
     workflows.length,
-    // NINE as of 2026-08-24 (RULING 124): refresh-daily.yml joined the set, the
-    // one orchestrated run that now carries every source's cron. Its pins were
-    // audited here at the same time — checkout@v7 and setup-node@v7, matching
-    // every other workflow.
-    //
-    // Eight as of NJ Hunt 3 (2026-08-22): refresh-nj-filing.yml joined the set.
-    // Its pins were audited here at the same time — checkout@v7 and
-    // setup-node@v7, matching every other workflow.
-    //
-    // Seven as of NH Hunt 3 (2026-08-21): job-watch.yml joined the set under
-    // RULING 56. Its pins were audited here at the same time — checkout@v7 and
-    // setup-node@v7, matching every other workflow.
-    10,
-    // TEN as of 2026-08-29 (NH273): post-deploy-integrity.yml joined the set.
-    // Its pins were audited here at the same time — checkout@v7 and setup-node@v7,
-    // matching every other workflow.
-    //
+    2,
     `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
   );
 });
@@ -89,24 +73,8 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    18,
-    // 18 as of 2026-09-07: the FEC and LegiScan tracked-data refresh jobs were
-    // retired when routine data moved to direct production promotion. Their
-    // manual tombstones intentionally have no checkout or setup-node action.
-    //
-    // 20 as of 2026-08-24 (RULING 124), when refresh-daily.yml added its own
-    // checkout + setup-node pair.
-    //
-    // 18 as of NJ Hunt 3 (2026-08-22), when refresh-nj-filing.yml added its own
-    // checkout + setup-node pair.
-    //
-    // Seven workflows, one checkout + one setup-node each, plus the second
-    // job build-check.yml grew in Prompt B item 1c (the Linux gate) with its
-    // own pair. 16 as of NH Hunt 3, when job-watch.yml added its pair. Counted
-    // rather than assumed, so a new job without pins is caught.
-    // TWENTY as of 2026-08-24 (RULING 124): refresh-daily.yml adds a checkout
-    // and a setup-node, both pinned at the majors this guard requires.
-    `expected 18 Node-runtime action pins across the active workflow set, found ${pins}`,
+    6,
+    `expected 6 Node-runtime action pins across the active workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -144,157 +112,11 @@ test("R45: setup-node never tries to restore a cache before pnpm exists", () => 
   );
 });
 
-/**
- * AUD-07 (2026-08-18) — a refresh that changed nothing skips the suite it
- * would prove nothing with.
- *
- * Both scheduled refresh workflows used to run the full gate on EVERY run and
- * only then ask whether the governed artifact had moved. The overwhelmingly
- * common outcome of a refresh is that it did not move, so the suite was
- * executing against a snapshot byte-identical to the one already committed and
- * already validated — four times a day for meetings, weekly for dotgov.
- *
- * The order is now diff, then branch. This guards the order, because the
- * failure mode is silent: putting the gate back in front of the diff costs
- * nothing visible and simply resumes burning runner minutes proving a
- * tautology. It also guards the thing that must NOT change — the gate still
- * stands between changed data and the commit.
- */
-test("AUD-07: both refresh workflows diff before they gate, and still gate before they commit", () => {
-  const refreshers = [
-    { file: "refresh-meetings-snapshot.yml", artifact: "data/meetings-snapshot.json" },
-    { file: "refresh-dotgov-snapshot.yml", artifact: "data/dotgov/snapshot.json" },
-  ];
+/* ---- PDC-9: GitHub Actions is software CI only -------------------------- */
 
-  for (const { file, artifact } of refreshers) {
-    const source = readFileSync(join(DIR, file), "utf8");
-
-    const diffAt = source.indexOf("id: diff");
-    const gateAt = source.indexOf("run: corepack pnpm test");
-    const commitAt = source.indexOf("node scripts/push-main.mjs");
-
-    assert.ok(diffAt > 0, `${file}: the diff step is still there`);
-    assert.ok(gateAt > 0, `${file}: the gate is still there`);
-    assert.ok(commitAt > 0, `${file}: the protected push is still there`);
-
-    assert.ok(
-      diffAt < gateAt,
-      `${file}: the artifact must be diffed BEFORE the suite runs — otherwise every ` +
-        "no-op refresh validates data that did not move",
-    );
-    assert.ok(
-      gateAt < commitAt,
-      `${file}: the suite must still run BEFORE the commit — the changed-data path ` +
-        "does not weaken",
-    );
-
-    // The gate runs only on the changed branch, and the commit only when the
-    // change is real rather than simulated.
-    assert.match(
-      source,
-      // F25 (2026-08-20) put a `timeout-minutes` between the condition and the
-      // command. The claim guarded here is the CONDITION, not the adjacency.
-      /if: steps\.diff\.outputs\.changed == 'true'\s*\n\s*timeout-minutes: \d+\s*\n\s*run: corepack pnpm test/,
-      `${file}: the gate is conditioned on the artifact having changed`,
-    );
-    assert.match(
-      source,
-      /steps\.diff\.outputs\.simulated != 'true'/,
-      `${file}: a simulated run reaches the gate and can never commit`,
-    );
-    assert.ok(
-      source.includes(artifact),
-      `${file}: still diffing its own governed artifact (${artifact})`,
-    );
-
-    // The early exit STATES itself. A silent skip is indistinguishable from a
-    // gate that passed, which is the thing this whole change must not become.
-    assert.match(
-      source,
-      /SKIPPED: corepack pnpm test/,
-      `${file}: the skipped run says what it skipped and why`,
-    );
-  }
-});
-
-/* ---- F22: the four refresh gates are one gate, and they stay one --------- */
-
-/**
- * **F22 (2026-08-20). One test failure stopped every governed artifact.**
- *
- * `tests/coverage-manifest.test.ts` shipped on 2026-08-18 with an allowlist
- * keyed on Windows path separators. It passed on the author's machine and
- * failed on every Linux runner — and `build-check.yml` runs `pnpm build` and
- * the bundle budgets and never `pnpm test`, so the FOUR scheduled refresh
- * gates are this repo's only Linux runner of the suite. The meetings refresh
- * went red four times a day for two days, the snapshot stopped moving at
- * 2026-08-18T18:59Z, and readers were served stale meetings the whole time.
- * The other three refreshes were latent: their artifacts happened not to move,
- * so each took the "unchanged, gate skipped" path and reported success.
- *
- * That shared gate is the thing worth guarding. Two claims:
- *
- * 1. Every workflow that refreshes a governed artifact gates on the SAME
- *    full suite. A refresh that quietly validated a narrower set would be a
- *    fifth artifact nobody is checking.
- * 2. Every one of them still reaches that gate only on the CHANGED path
- *    (AUD-07), so a no-op run stays cheap.
- *
- * A fifth refresh workflow added without the gate fails here, by name.
- */
-const REFRESH_WORKFLOWS = [
-  /*
-   * RULING 124 (2026-08-24). The consolidated daily run is a governed-artifact
-   * refresh like any other and gates like one — it diffs `data/`, runs the full
-   * suite on the changed path only, and commits once.
-   */
-  "refresh-daily.yml",
-  "refresh-meetings-snapshot.yml",
-  "refresh-dotgov-snapshot.yml",
-  // NJ Hunt 3 (2026-08-22). The Morris County ballot is GENERATED from the
-  // clerk's filed-candidate PDFs, and the clerk republishes on their own
-  // schedule — one revision landed mid-session and the ballot was stale the day
-  // it shipped. It is a governed artifact and it gates like every other one.
-  "refresh-nj-filing.yml",
-];
-
-const RETIRED_DATA_REFRESH_WORKFLOWS = [
-  "refresh-fec-snapshot.yml",
-  "refresh-legiscan-snapshot.yml",
-];
-
-test("F22: every governed-artifact refresh gates on the same full suite", () => {
-  const found = readdirSync(DIR).filter((f) => /^refresh-.*\.ya?ml$/.test(f)).sort();
-  assert.deepEqual(
-    found,
-    [...REFRESH_WORKFLOWS, ...RETIRED_DATA_REFRESH_WORKFLOWS].sort(),
-    "the set of refresh workflows moved — a new one must be added to this guard WITH its gate",
-  );
-
-  const missing: string[] = [];
-  for (const file of REFRESH_WORKFLOWS) {
-    const text = readFileSync(join(DIR, file), "utf8");
-    // The gate itself: the whole suite, not a narrower selection.
-    if (!/run:\s*corepack pnpm test\s*$/m.test(text)) {
-      missing.push(`${file}: no "corepack pnpm test" gate step`);
-      continue;
-    }
-    // AUD-07: the gate hangs off the changed-artifact branch, so an
-    // unchanged run pays nothing. Asserted so a later edit cannot make the
-    // gate unconditional (expensive) or unreachable (unguarded).
-    if (!/if:\s*steps\.diff\.outputs\.changed == 'true'/.test(text)) {
-      missing.push(`${file}: the gate is not conditioned on the changed path`);
-    }
-  }
-  assert.deepEqual(missing, [], "a governed artifact can commit without the full gate");
-
-  for (const file of RETIRED_DATA_REFRESH_WORKFLOWS) {
-    const text = readFileSync(join(DIR, file), "utf8");
-    assert.match(text, /^\s*workflow_dispatch:\s*$/m, `${file}: the tombstone stays manual-only`);
-    assert.doesNotMatch(text, /^\s*(?:schedule:|-\s*cron:|-\s*uses:|env:)\s*/m, `${file}: retired refresh gained an execution path`);
-    assert.doesNotMatch(text, /\$\{\{\s*secrets\./, `${file}: retired refresh gained credentials`);
-    const runSteps = [...text.matchAll(/^\s*run:\s*(.+)$/gm)].map((match) => match[1]);
-    assert.equal(runSteps.length, 1, `${file}: retired refresh has more than its explanatory step`);
-    assert.match(runSteps[0], /^echo\s+/, `${file}: retired refresh can do more than explain its replacement`);
-  }
+test("PDC-9: no refresh workflow definition remains executable", () => {
+  const refreshWorkflow = /^refresh-.*\.ya?ml$/;
+  assert.equal(refreshWorkflow.test("refresh-daily.yml"), true, "the retired workflow class must remain detectable");
+  const found = readdirSync(DIR).filter((file) => refreshWorkflow.test(file)).sort();
+  assert.deepEqual(found, [], "routine civic data must not regain a GitHub Actions workflow");
 });

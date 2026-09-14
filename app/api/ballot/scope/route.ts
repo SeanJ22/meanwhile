@@ -1,5 +1,5 @@
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
-import { BALLOT_SOURCES } from "@/lib/ballot/registry";
+import { ballotSourcesForDivisions } from "@/lib/ballot/registry";
 import { divisionsAt } from "@/lib/registry/server";
 
 /**
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 
   // The same loop the page runs, asked at a point instead of a centroid, so
   // the two can never disagree about what a set contains.
-  for (const { source } of BALLOT_SOURCES) {
+  for (const { source } of ballotSourcesForDivisions(ocdIds)) {
     const candidate = source.normalize(await source.fetch());
     const hit = contestsForDivisions(candidate, ocdIds);
     if (hit.contests.length > 0 || hit.absences.length > 0) {

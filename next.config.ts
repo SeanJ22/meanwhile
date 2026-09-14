@@ -1,15 +1,12 @@
 import type { NextConfig } from "next";
 
-// Dynamic registry reads must retain their canonical inputs in every consuming route.
-const registryHoldingsTrace = [
+// Static geography is still file-backed. Mutable registry, roster, ballot,
+// meeting, vote, finance, profile, and outcome facts resolve canonical
+// production pointers and must not be forced back into the deployment bundle.
+const staticGeographyTrace = [
   "./data/states/*/geo/**/*.geojson",
-  "./data/states/*/officials/officeholders-*.json",
   "./data/derived/resolver-geometry.json",
   "./public/geo/*.geojson",
-  // The legacy street-index summary is an acquisition diagnostic; no reader
-  // loader opens it. Roster photos are statically imported into compiled code.
-  // These are the registry inputs that need filesystem delivery.
-  "./lib/registry/{officeholders-us,official-photos,promoted-bodies,registry}.json",
 ];
 
 const nextConfig: NextConfig = {
@@ -44,23 +41,16 @@ const nextConfig: NextConfig = {
     WTP_BUILD_DEPLOY_ID: process.env.DEPLOY_ID ?? "",
     WTP_BUILD_ON_NETLIFY: process.env.NETLIFY ?? "",
   },
-  // The API route reads committed data files off the filesystem at runtime —
-  // the boundary GeoJSON, the registry, the officeholder rosters, and the
-  // meetings snapshot. `readdir`/dynamic paths defeat Next's static tracing,
-  // so on a serverless host the files would silently be absent from the
-  // function bundle without this. Locally it changes nothing.
+  // Only static geography/schema inputs remain file-backed in production.
+  // `readdir`/dynamic paths defeat Next's static tracing, so those inputs are
+  // named per consuming route. Tracked civic-data first seeds are deliberately
+  // absent: production resolves the canonical store and fails closed when its
+  // pointer has not been recorded.
   outputFileTracingIncludes: {
-    "/api/positions/**": ["./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json", "./lib/registry/officeholders-us.json"],
-    "/api/funding/**": ["./data/states/*/funding/state-money-??-????.json", "./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json"],
-    "/api/agenda": ["./data/meetings-snapshot.json", "./data/states/*/outcomes/*.json"],
-    "/api/profile/**": ["./data/prl/prl-profiles.json"],
-    "/api/official-actions/**": ["./data/states/az/officials/az-governor-actions.json", "./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json", "./lib/registry/officeholders-us.json"],
-    "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": registryHoldingsTrace,
-    "/{ballot,about-area}": registryHoldingsTrace,
+    "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": staticGeographyTrace,
+    "/{ballot,about-area}": staticGeographyTrace,
     "/api/meetings": [
-      "./public/geo/**",
-      "./lib/registry/*.json",
-      "./data/*.json",
+      ...staticGeographyTrace,
       // The coverage-tier ledger (RULING 6, Prompt B item 8). `/api/meetings`
       // reaches it because every GET writes a search-log row and that row
       // carries the tier.
@@ -104,40 +94,7 @@ const nextConfig: NextConfig = {
       // Borough disappears again — a regression that looks exactly like
       // honest missing data, which is why it is named per route.
       "./data/derived/zip-division-ids.json",
-      /*
-       * STATE, COUNTY AND LOCAL CAMPAIGN MONEY (RULING 126, 2026-08-24).
-       *
-       * `lib/funding/state-snapshot.ts` reads these through `process.cwd()`, so
-       * the tracer has no static reference to follow. Untraced, the read
-       * returns nothing, `stateMoneyForTarget` answers with an empty array, and
-       * every state, county and local candidate's Campaign money section goes
-       * back to rendering NOTHING — which is indistinguishable from the gap
-       * this ruling was adopted to close, and would look exactly like honest
-       * missing data.
-       */
-      "./data/funding/*.json", "./data/states/*/funding/*.json",
-      /*
-       * THE ARIZONA 2026 IDENTITY LAYER (RULING 229, Session C3, 2026-09-01).
-       *
-       * `lib/identity/az-2026.ts` reads the statewide candidate registry and
-       * the certified-lineup reconciliation through `process.cwd()`, so the
-       * tracer has no static reference to follow. Untraced, both reads return
-       * null, every certified nominee falls back to the unreconciled state, and
-       * the money that IS held stops reaching the reader — indistinguishable
-       * from honest missing data, which is the exact reason this list exists.
-       */
-      "./data/identity/*.json", "./data/states/*/identity/*.json",
     ],
-    /*
-     * THE QUESTIONNAIRE PAGE RESOLVES AN ID TO A NAME, through `process.cwd()`.
-     *
-     * `lib/questionnaire/candidacy-display.ts` reads the committed ballot files
-     * to turn a candidacy id into what the person is actually called. Untraced,
-     * the read throws, the catch returns null, and every candidate lands on the
-     * neutral fallback — which reads as a deliberate choice rather than as a
-     * missing file, and is exactly the failure that made this list necessary.
-     */
-    "/questionnaire/*": ["./data/ballot/*.json", "./data/states/*/ballot/*.json"],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],
@@ -150,56 +107,14 @@ const nextConfig: NextConfig = {
      * failure than a silent pass and still not one anybody should ship.
      */
     "/api/schema": ["./lib/db/migrations/meta/_journal.json"],
-    /*
-     * **THE ONE ASK ENGINE READS FOUR COMMITTED STORES THROUGH `process.cwd()`**
-     * (PR #212 follow-up, 2026-08-28).
-     *
-     * The meetings snapshot, the ballot sets, the derived ZIP tables and the
-     * officeholder rosters. None of those paths is statically visible to the
-     * tracer, and an untraced read on a serverless host does not error in a way
-     * anybody notices — the catch returns null and Ask reports that we hold no
-     * such body, no such contest, and nobody to contact. That is
-     * INDISTINGUISHABLE FROM HONEST MISSING DATA, which is the exact reason
-     * this list exists at all.
-     *
-     * Named per route that reaches them, as every other entry here is.
-     */
+    // Ask still needs the static geographic indexes used to resolve an area.
+    // Its civic facts come from promoted pointers and are intentionally not
+    // deployment-traced from tracked first-seed JSON.
     "/api/ask/grounded": [
-      "./data/states/*/funding/state-money-??-????.json",
-      "./data/states/az/identity/*.json",
-      ...registryHoldingsTrace,
-      // Literal ballot/contact, corpus, meeting, outcome and local-finance
-      // reads are traced by Next.
-      // The independent postbuild reader-trace contract verifies each required
-      // file; broad directory includes duplicated them and bundled acquisition
-      // metadata that this route never reads.
+      ...staticGeographyTrace,
       "./data/derived/zip-coverage-tiers-runtime.json",
       "./data/derived/zip-division-ids.json",
-      /*
-       * **THE ROLL-CALL SNAPSHOTS (ASK-06, 2026-08-28).**
-       *
-       * `lib/ask/votes.ts` reads both through `process.cwd()`, so the tracer
-       * has no static reference to follow. Untraced, the reads throw, the
-       * catches return null, and every question about how a sitting member
-       * voted answers *"we could not read our roll-call records just now"* —
-       * on a store holding 12,234 correctly recorded positions. That failure
-       * is indistinguishable from honest missing data, which is the exact
-       * reason this list exists.
-       */
-      /*
-       * The Legistar outcome store (2026-08-29). Same reasoning as the votes
-       * snapshot immediately above, and the same failure mode if it is left
-       * out: 20 Pima Board sittings carrying 525 recorded actions and 2,083
-       * per-person votes would be absent from the deployed bundle, and a reader
-       * asking what the board decided would be told we have not acquired it —
-       * a sentence that is honest about our store and false about our repo.
-       *
-       * `lib/outcomes/store.ts` reads the default path as a LITERAL so the
-       * tracer can see it; this is the other half, and neither works alone.
-       */
-      "./data/outcomes/*.json", "./data/states/*/outcomes/*.json",
     ],
-    "/api/ask/agenda": ["./data/*.json"],
   },
   // The demo is unlisted. Platform-level visibility is the access control;
   // this keeps every route out of search indexes regardless of what a crawler

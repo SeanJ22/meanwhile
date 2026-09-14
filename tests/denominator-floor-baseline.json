@@ -52,8 +52,6 @@
     "scripts/f22-shots.mts",
     "scripts/fetch-fec.mts",
     "scripts/fetch-key-vote-positions.mts",
-    "scripts/fetch-key-votes.mts",
-    "scripts/fetch-law-votes.mts",
     "scripts/fetch-official-portraits.mts",
     "scripts/fetch-tiger-national.mts",
     "scripts/fetch-voting-sites.mts",

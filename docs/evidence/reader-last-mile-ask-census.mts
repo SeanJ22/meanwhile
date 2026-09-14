@@ -6,7 +6,7 @@ import { loadBallotForDivisions } from "../../lib/ask/server-sources.ts";
 import { ballotAskInventory } from "../../lib/ask/ballot-inventory.ts";
 import { readSnapshot } from "../../lib/meetings/snapshot.ts";
 import { getVotesSnapshot } from "../../lib/votes/snapshot.ts";
-import { getStateVotesSnapshot } from "../../lib/sources/legiscan/snapshot.ts";
+import { getStateVotesSnapshot, OFFICIAL_STATE_VOTE_SCOPES } from "../../lib/sources/legiscan/snapshot.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 delete process.env.ANTHROPIC_API_KEY;
 const after = process.argv.includes("--after");
@@ -34,6 +34,7 @@ for (const pilot of pilots) {
 }
 const readJson = (p: string) => JSON.parse(readFileSync(p, "utf8"));
 const counts = (record: object) => Object.fromEntries(Object.entries(record).filter(([, v]) => Array.isArray(v)).map(([k, v]) => [k, (v as unknown[]).length]));
+const stateVoteCounts = Object.fromEntries(OFFICIAL_STATE_VOTE_SCOPES.map((scope) => [scope, counts(getStateVotesSnapshot(scope))]));
 const census = {
   boundary: "Committed normalized reader projections only; autonomous acquisition/validation does not establish civic verification.",
   execution: "Real POST handler and committed loaders; ANTHROPIC_API_KEY deleted to prove structured grounding without model knowledge. Scope IDs are explicit route fixtures, not an address geocoder proof.",
@@ -43,7 +44,7 @@ const census = {
     { family: "statement-corpus", path: "data/corpus/statements.json", consumer: "unifiedCorpus -> positions endpoint; no Ask consumer", counts: counts(readJson("data/corpus/statements.json")), eligibleSubjects: [...new Set(snapshots.filter((s) => !s.subjectId.startsWith("ballot") && s.extraction === "ok" && s.text).map((s) => s.subjectId))], status: "ELIGIBLE_BUT_NOT_RENDERED", issue: "Ask never loads officeholder-keyed statements; person inventory excludes many held officeholders." },
     { family: "meetings", path: "data/meetings-snapshot.json", consumer: "readSnapshot -> bodyId -> selectSitting -> POST.records", counts: counts(meetings), status: "RENDERED", issue: "Global snapshot failure currently returns 503 for every Ask family; scoped bodies with no meeting are absent from binder." },
     { family: "outcomes", path: "data/states/az/outcomes/legistar-outcomes.json", consumer: "outcomeEvidenceFor -> POST.records", counts: counts(readJson("data/states/az/outcomes/legistar-outcomes.json")), status: "RENDERED", eligibility: "Exact body and meeting identity; action summary never promoted into member votes." },
-    { family: "votes", path: "data/votes/votes-snapshot.json and data/states/*/votes/*", consumer: "voteEvidenceFor -> getVotesSnapshot/getStateVotesSnapshot -> POST.records", counts: { federal: counts(getVotesSnapshot()), state: counts(getStateVotesSnapshot()) }, status: "RENDERED", issue: "Exact normalized full-name join refuses variant names even when the reader already has a canonical official ID; stable ID retrieval required." },
+    { family: "votes", path: "data/votes/votes-snapshot.json and data/states/*/votes/*", consumer: "voteEvidenceFor -> getVotesSnapshot/getStateVotesSnapshot(scope) -> POST.records", counts: { federal: counts(getVotesSnapshot()), stateByAuthority: stateVoteCounts }, status: "RENDERED", issue: "Exact normalized full-name join refuses variant names even when the reader already has a canonical official ID; stable ID retrieval required." },
     { family: "state-money", path: "data/states/*/funding/state-money-*.json", consumer: "stateMoneyForCard visual only; absent from Ask", status: "ELIGIBLE_BUT_NOT_RENDERED", issue: "Normalized reader totals and sourced filing absences omitted, generic scope gap rendered." },
   ],
   tracing: { required: ["data/meetings-snapshot.json", "data/states/*/ballot/*.json", "data/candidates/*.json", "data/corpus/*.json", "data/states/*/officials/*.json", "data/states/*/votes/*.json", "data/votes/*.json", "data/states/*/outcomes/*.json", "data/states/*/funding/*.json", "lib/registry/*.json"], verification: "Parent-owned deployment trace census; local imports alone do not prove bundle." },

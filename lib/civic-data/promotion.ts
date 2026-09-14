@@ -1,6 +1,84 @@
-import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "./types.ts";
-import type { RoutineDataStore } from "./store.ts";
+import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
+import { PostgresRoutineDataStore, PromotionBaseChangedError, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
+import { candidateChangeSet } from "./changes.ts";
+import { promotionProofIssue } from "./read-model.ts";
+import { requiredRoutineContract, type RoutineSourceContract } from "./contracts.ts";
+import { requiredMeetingPartitionContract } from "./meeting-partitions.ts";
+import { routineTaskFromContract } from "./runner.ts";
+import { authorityFor, authorityForManualReceipt } from "./source-authority.ts";
+import {
+  requiredManualProductionContract,
+  type ManualProductionContractId,
+  type ManualProductionSourceContract,
+} from "./manual-contracts.ts";
+import type { ReaderProjectionReadbackReceipt } from "./reader-readback.ts";
+import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
+import { trustedLkgImportUrl } from "./trusted-lkg-import.ts";
+import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
+import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts";
+import type { RoutineReaderVerification } from "./reader-verification.ts";
+import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
+
+/** Only the exact registered contract doors in this module possess this token. */
+const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
+
+function trustedLkgPredecessorVersionId(candidate: RoutineCandidate): string | null {
+  const evidence = candidate.bootstrapImport;
+  if (evidence?.kind === "TRUSTED_LKG_REATTESTATION") return evidence.predecessorVersionId;
+  return evidence?.kind === "TRUSTED_LKG_IMPORT"
+    ? evidence.pimaOutcomeUnion?.predecessorVersionId ?? null
+    : null;
+}
+
+function sourceProjectionObservedAt(store: RoutineDataStore, requested: string): string {
+  return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
+}
+
+type ObserveProductionNow = () => string;
+
+/**
+ * A production Reader readback happens after the pointer move, so its durable
+ * event must use a fresh local observation rather than an adapter/import-plan
+ * timestamp. Clamp a backwards wall-clock step to the promotion instant: an
+ * observation can be simultaneous with promotion, but never precede it in the
+ * candidate event history. Memory retains its caller-controlled test clock.
+ *
+ * `observeProductionNow` is an explicit deterministic seam for this pure
+ * clock rule. The standing mutation path never accepts a clock from callers.
+ */
+export function promotionReaderReadbackObservedAt(
+  store: RoutineDataStore,
+  requested: string,
+  promotedAt: string,
+  observeProductionNow: ObserveProductionNow = () => new Date().toISOString(),
+): string {
+  if (!(store instanceof PostgresRoutineDataStore)) return requested;
+  const observedAt = observeProductionNow();
+  const observedMs = Date.parse(observedAt);
+  const promotedMs = Date.parse(promotedAt);
+  if (!Number.isFinite(observedMs) || !Number.isFinite(promotedMs)) {
+    throw new Error("PRODUCTION_READER_READBACK_TIME_INVALID");
+  }
+  return observedMs >= promotedMs ? new Date(observedMs).toISOString() : promotedAt;
+}
+
+/**
+ * Bound the contract check, typed preflight, validation, and pointer move to
+ * one immutable-by-ownership JSON value. An adapter retaining references to
+ * its input cannot swap both payload and digest between those async steps.
+ */
+function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
+  try {
+    const encoded = JSON.stringify(candidate);
+    if (encoded === undefined) throw new Error("candidate is not JSON-representable");
+    return JSON.parse(encoded) as RoutineCandidate;
+  } catch (error) {
+    throw new Error(
+      `ROUTINE_CANDIDATE_NOT_DURABLE_JSON:${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
 
 function failureOf(receipt: NonNullable<CandidateVersionRecord["receipt"]>): { code: string; detail: string } {
   const check = receipt.checks.find((item) => item.verdict !== "PASS");
@@ -10,6 +88,223 @@ function failureOf(receipt: NonNullable<CandidateVersionRecord["receipt"]>): { c
 export interface PromotionOutcome {
   readonly candidate: CandidateVersionRecord;
   readonly promoted: PromotedProjection | null;
+  readonly readerReadback: ReaderProjectionReadbackReceipt | null;
+}
+
+async function appendTypedReaderProjectionReadback(
+  store: RoutineDataStore,
+  contract: RoutineSourceContract | ManualProductionSourceContract,
+  outcome: PromotionOutcome,
+  requestedAt: string,
+): Promise<PromotionOutcome> {
+  if (outcome.promoted === null || contract.readerProjection === null) return outcome;
+  const observedAt = promotionReaderReadbackObservedAt(
+    store,
+    requestedAt,
+    outcome.promoted.promotedAt,
+  );
+  const receipt = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, observedAt);
+  return { ...outcome, readerReadback: receipt };
+}
+
+function routineCandidateContractIssueFor(
+  contract: RoutineSourceContract,
+  candidate: RoutineCandidate,
+): string | null {
+  const task = routineTaskFromContract(contract);
+  if (candidate.sourceId !== task.sourceId) return `source ${candidate.sourceId} does not equal ${task.sourceId}`;
+  if (candidate.recordClass !== task.recordClass) return `record class ${candidate.recordClass} does not equal ${task.recordClass}`;
+  if (candidate.scope !== task.scope) return `scope ${candidate.scope} does not equal ${task.scope}`;
+  if (candidate.normalization.parserVersion !== task.parserVersion) return `parser ${candidate.normalization.parserVersion} does not equal ${task.parserVersion}`;
+  if (candidate.bootstrapImport) {
+    if (candidate.bootstrapImport.contractId !== contract.id) {
+      return `trusted-LKG contract ${candidate.bootstrapImport.contractId} does not equal ${contract.id}`;
+    }
+    if (
+      candidate.bootstrapImport.kind === "TRUSTED_LKG_IMPORT" &&
+      (candidate.retrieval.requestedUrl !== trustedLkgImportUrl(contract.id) || candidate.retrieval.finalUrl !== null)
+    ) {
+      return "trusted-LKG retrieval envelope does not name this exact registered contract";
+    }
+    return null;
+  }
+  if (task.authorityMode === "SINGLE_ROUTE") {
+    if (!candidate.retrieval.requestedUrl.startsWith(task.requestedUrl)) return `requested route ${candidate.retrieval.requestedUrl} is outside ${task.requestedUrl}`;
+    const authority = authorityFor(task.sourceId, task.recordClass, candidate.retrieval.requestedUrl);
+    if (!authority.ok) return `${authority.code}: ${authority.detail}`;
+  } else if (candidate.retrieval.succeeded) {
+    const authority = authorityFor(task.sourceId, task.recordClass, candidate.retrieval.requestedUrl);
+    if (!authority.ok) return `${authority.code}: ${authority.detail}`;
+  } else if (candidate.retrieval.requestedUrl !== "") {
+    const authority = authorityFor(task.sourceId, task.recordClass, candidate.retrieval.requestedUrl);
+    if (!authority.ok) return `${authority.code}: ${authority.detail}`;
+  }
+  return null;
+}
+
+export function routineCandidateContractIssue(contractId: string, candidate: RoutineCandidate): string | null {
+  return routineCandidateContractIssueFor(requiredRoutineContract(contractId), candidate);
+}
+
+/** Standing adapters enter promotion only through their exact registered contract. */
+export async function processRegisteredRoutineCandidate(
+  store: RoutineDataStore,
+  contractId: string,
+  candidate: RoutineCandidate,
+  now: string = new Date().toISOString(),
+  expectedBaseVersionId: string | null | undefined = undefined,
+): Promise<PromotionOutcome> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  let boundedCandidate = durableCandidateSnapshot(candidate);
+  const contract = requiredRoutineContract(contractId);
+  if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
+    throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
+  }
+  const issue = routineCandidateContractIssue(contractId, boundedCandidate);
+  if (issue !== null) throw new Error(`ROUTINE_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
+  const identityAuthorityIssue = await officialStateRollIdentityAuthorityIssue(store, boundedCandidate);
+  if (identityAuthorityIssue !== null) {
+    boundedCandidate = {
+      ...boundedCandidate,
+      dependentChecks: [
+        ...boundedCandidate.dependentChecks,
+        {
+          consumer: "canonical official state-legislator identity authority",
+          passed: false,
+          detail: identityAuthorityIssue,
+        },
+      ],
+    };
+  }
+  const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
+    contract,
+    boundedCandidate,
+    sourceProjectionObservedAt(store, now),
+    trustedLkgPredecessorVersionId(boundedCandidate) !== null
+      ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
+      : null,
+  );
+  return appendTypedReaderProjectionReadback(
+    store,
+    contract,
+    await processRoutineCandidate(
+      store,
+      boundedCandidate,
+      now,
+      expectedBaseVersionId,
+      REGISTERED_PRODUCTION_DOOR,
+      sourceProjectionVerification,
+    ),
+    now,
+  );
+}
+
+/** A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract. */
+export async function processRegisteredMeetingPartitionCandidate(
+  store: RoutineDataStore,
+  partitionId: string,
+  candidate: RoutineCandidate,
+  now: string = new Date().toISOString(),
+  expectedBaseVersionId: string | null | undefined = undefined,
+): Promise<PromotionOutcome> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const contract = requiredMeetingPartitionContract(partitionId);
+  const issue = routineCandidateContractIssueFor(contract, boundedCandidate);
+  if (issue !== null) {
+    throw new Error(`MEETING_PARTITION_CANDIDATE_MISMATCH:${partitionId}:${issue}`);
+  }
+  const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
+    contract,
+    boundedCandidate,
+    sourceProjectionObservedAt(store, now),
+    trustedLkgPredecessorVersionId(boundedCandidate) !== null
+      ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
+      : null,
+  );
+  return appendTypedReaderProjectionReadback(
+    store,
+    contract,
+    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
+    now,
+  );
+}
+
+export function manualCandidateContractIssue(contractId: ManualProductionContractId, candidate: RoutineCandidate): string | null {
+  const contract = requiredManualProductionContract(contractId);
+  if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
+  if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
+  if (candidate.scope !== contract.scope) return `scope ${candidate.scope} does not equal ${contract.scope}`;
+  if (candidate.normalization.parserVersion !== contract.parserNormalizerVersion) {
+    return `parser ${candidate.normalization.parserVersion} does not equal ${contract.parserNormalizerVersion}`;
+  }
+  if (candidate.bootstrapImport) {
+    if (candidate.bootstrapImport.contractId !== contract.id) {
+      return `trusted-LKG contract ${candidate.bootstrapImport.contractId} does not equal ${contract.id}`;
+    }
+    if (
+      candidate.bootstrapImport.kind === "TRUSTED_LKG_IMPORT" &&
+      (candidate.retrieval.requestedUrl !== trustedLkgImportUrl(contract.id) || candidate.retrieval.finalUrl !== null)
+    ) {
+      return "trusted-LKG retrieval envelope does not name this exact registered contract";
+    }
+    return null;
+  }
+  const finalUrl = candidate.retrieval.finalUrl ?? candidate.retrieval.requestedUrl;
+  if (candidate.retrieval.succeeded || finalUrl !== "") {
+    const authority = candidate.retrieval.manualSourceReceipt
+      ? authorityForManualReceipt(
+          contract.sourceId,
+          contract.recordClass,
+          candidate.retrieval.manualSourceReceipt,
+          candidate.retrieval.finalUrl,
+        )
+      : authorityFor(contract.sourceId, contract.recordClass, finalUrl);
+    if (!authority.ok) return `${authority.code}: ${authority.detail}`;
+  }
+  return null;
+}
+
+/** Owner-invoked sources enter the durable plane through their exact manual contract. */
+export async function processRegisteredManualCandidate(
+  store: RoutineDataStore,
+  contractId: ManualProductionContractId,
+  candidate: RoutineCandidate,
+  now: string = new Date().toISOString(),
+  expectedBaseVersionId: string | null | undefined = undefined,
+): Promise<PromotionOutcome> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
+  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const contract = requiredManualProductionContract(contractId);
+  const issue = manualCandidateContractIssue(contractId, boundedCandidate);
+  if (issue !== null) throw new Error(`MANUAL_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
+  const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
+    contract,
+    boundedCandidate,
+    sourceProjectionObservedAt(store, now),
+    trustedLkgPredecessorVersionId(boundedCandidate) !== null
+      ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
+      : null,
+  );
+  return appendTypedReaderProjectionReadback(
+    store,
+    contract,
+    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
+    now,
+  );
+}
+
+function invalidLkgReceipt(receipt: ValidationReceipt, code: string, detail: string): ValidationReceipt {
+  return {
+    ...receipt,
+    decision: "CANNOT_TELL",
+    checks: receipt.checks.map((check) => check.check === "TEMPORAL_VALIDITY" ? {
+      ...check,
+      verdict: "CANNOT_TELL",
+      code,
+      detail,
+    } : check),
+  };
 }
 
 /**
@@ -18,13 +313,87 @@ export interface PromotionOutcome {
  */
 export async function processRoutineCandidate(
   store: RoutineDataStore,
-  candidate: RoutineCandidate,
+  inputCandidate: RoutineCandidate,
   now: string = new Date().toISOString(),
+  expectedBaseVersionId: string | null | undefined = undefined,
+  registeredDoor: symbol | null = null,
+  sourceProjectionVerification: RoutineReaderVerification | null = null,
 ): Promise<PromotionOutcome> {
-  const current = await store.readPromotion(candidate.recordClass, candidate.scope);
+  const productionStore = store instanceof PostgresRoutineDataStore;
+  if (productionStore && registeredDoor !== REGISTERED_PRODUCTION_DOOR) {
+    throw new Error("PRODUCTION_PROMOTION_REQUIRES_REGISTERED_CONTRACT_DOOR");
+  }
+  if (Object.prototype.hasOwnProperty.call(inputCandidate, "bootstrapImport") && inputCandidate.bootstrapImport !== undefined) {
+    throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
+  }
+  // Production validation and durable events use a locally observed instant,
+  // never an adapter-supplied clock. A future-dated adapter envelope is then
+  // refused by TEMPORAL_VALIDITY before it can replace a serviceable LKG.
+  const transitionAt = productionStore ? new Date().toISOString() : now;
+  const current = await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
+  const observedBaseVersionId = current?.versionId ?? null;
+  const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
   const lkg = current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
+  const lkgPredecessorVersionId = lkg === null
+    ? null
+    : trustedLkgPredecessorVersionId(lkg.candidate);
+  const lkgTransferPredecessor = lkgPredecessorVersionId === null
+    ? null
+    : await store.readCandidate(lkgPredecessorVersionId);
+  const declaredBase = preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
+    ? await store.readCandidate(expectedBaseVersionId)
+    : null;
+  const exactDeclaredBase = declaredBase &&
+      declaredBase.candidate.id === expectedBaseVersionId &&
+      declaredBase.candidate.sourceId === inputCandidate.sourceId &&
+      declaredBase.candidate.recordClass === inputCandidate.recordClass &&
+      declaredBase.candidate.scope === inputCandidate.scope &&
+      declaredBase.state === "PROMOTED" &&
+      declaredBase.acquisitionSucceeded &&
+      declaredBase.promotedVersion === expectedBaseVersionId &&
+      declaredBase.lastKnownGoodVersion === expectedBaseVersionId
+    ? declaredBase
+    : null;
+  const lkgProofIssue = current === null
+    ? null
+    : lkg === null
+      ? "The canonical pointer's last-known-good candidate row is missing."
+      : promotionProofIssue(
+          inputCandidate.recordClass,
+          inputCandidate.scope,
+          current,
+          lkg,
+          lkgTransferPredecessor,
+        );
+  const candidate: RoutineCandidate = {
+    ...inputCandidate,
+    changeSet: candidateChangeSet(
+      inputCandidate,
+      preloadedBaseChanged ? exactDeclaredBase?.candidate.readModel ?? null : current?.payload ?? null,
+    ),
+  };
   const initialState: CandidateState = candidate.retrieval.succeeded ? "FETCHED" : "SOURCE_BLOCKED";
-  const validated = validateRoutineCandidate(candidate, lkg, now);
+  const trustedPredecessorVersionId = trustedLkgPredecessorVersionId(candidate);
+  const continuingExactLkg = trustedPredecessorVersionId !== null &&
+    lkg?.candidate.id === trustedPredecessorVersionId;
+  // A trusted first-pointer candidate is evaluated against the empty base it
+  // actually names. If a pointer appeared after its scan, the later CAS branch
+  // records that race; feeding the new pointer into validation would instead
+  // manufacture an earlier TRUSTED_LKG_IMPORT_REQUIRES_EMPTY_POINTER failure
+  // and make the durable receipt disagree with the real disposition.
+  const validationLkg = preloadedBaseChanged
+    ? exactDeclaredBase
+    : continuingExactLkg || lkgProofIssue === null ? lkg : null;
+  const validated = validateRoutineCandidate(
+    candidate,
+    validationLkg,
+    transitionAt,
+    sourceProjectionVerification === null ? [] : [{
+      consumer: `${sourceProjectionVerification.verifierId} (source-scoped pre-promotion)`,
+      passed: sourceProjectionVerification.status === "PASS",
+      detail: sourceProjectionVerification.detail,
+    }],
+  );
   const acquisitionFailure = candidate.retrieval.succeeded ? null : failureOf(validated.receipt);
   await store.create({
     candidate,
@@ -39,12 +408,12 @@ export async function processRoutineCandidate(
     candidateId: candidate.id,
     sequence: 1,
     state: initialState,
-    at: now,
+    at: transitionAt,
     detail: candidate.retrieval.succeeded ? `Acquired raw ${candidate.retrieval.rawHash}.` : (candidate.retrieval.failureDetail ?? "Source route blocked."),
   });
 
   if (!candidate.retrieval.succeeded) {
-    return { candidate: (await store.readCandidate(candidate.id))!, promoted: null };
+    return { candidate: (await store.readCandidate(candidate.id))!, promoted: null, readerReadback: null };
   }
   if (!candidate.normalization.succeeded || validated.receipt.checks.find((check) => check.check === "SCHEMA_PARSE_VALIDITY")?.verdict !== "PASS") {
     const failed = failureOf(validated.receipt);
@@ -53,17 +422,50 @@ export async function processRoutineCandidate(
     // terminal state must preserve that earlier cause instead of relabeling it
     // as a parser defect merely because the payload also failed to normalize.
     const terminal = validated.state === "VALIDATED" ? "PARSE_INVALID" : validated.state;
-    const record = await store.transition(candidate.id, terminal, now, failed.detail, validated.receipt, failed);
-    return { candidate: record, promoted: null };
+    const record = await store.transition(candidate.id, terminal, transitionAt, failed.detail, validated.receipt, failed);
+    return { candidate: record, promoted: null, readerReadback: null };
   }
 
-  await store.transition(candidate.id, "NORMALIZED", now, `Normalized ${candidate.normalization.outputRecords}/${candidate.normalization.inputRecords} records as ${candidate.normalization.normalizedHash}.`);
+  await store.transition(candidate.id, "NORMALIZED", transitionAt, `Normalized ${candidate.normalization.outputRecords}/${candidate.normalization.inputRecords} records as ${candidate.normalization.normalizedHash}.`);
   if (validated.state !== "VALIDATED") {
     const failed = failureOf(validated.receipt);
-    const record = await store.transition(candidate.id, validated.state, now, failed.detail, validated.receipt, failed);
-    return { candidate: record, promoted: null };
+    const record = await store.transition(candidate.id, validated.state, transitionAt, failed.detail, validated.receipt, failed);
+    return { candidate: record, promoted: null, readerReadback: null };
   }
-  await store.transition(candidate.id, "VALIDATED", now, "Every applicable GOOD check passed.", validated.receipt);
-  const promoted = await store.promote(candidate.id, validated.receipt, now);
-  return { candidate: (await store.readCandidate(candidate.id))!, promoted };
+  if (preloadedBaseChanged) {
+    const code = "PROMOTION_BASE_CHANGED";
+    const detail =
+      `Promotion refused because the source-scoped merge base moved from ${expectedBaseVersionId ?? "no pointer"} ` +
+      `to ${observedBaseVersionId ?? "no pointer"} before this candidate entered validation. ` +
+      "The current LKG remains live; a stale merge cannot overwrite facts from a newer authority.";
+    const receipt = invalidLkgReceipt(validated.receipt, code, detail);
+    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
+    return { candidate: record, promoted: null, readerReadback: null };
+  }
+  if (current !== null && lkgProofIssue !== null && !continuingExactLkg) {
+    const code = lkg === null ? "LKG_CANDIDATE_MISSING" : "LKG_PROMOTION_PROOF_INVALID";
+    const detail = `The existing canonical pointer is not a valid last-known-good proof (${lkgProofIssue}); promotion is held until the durable chain is repaired.`;
+    const receipt = invalidLkgReceipt(validated.receipt, code, detail);
+    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, {
+      code,
+      detail,
+    });
+    return { candidate: record, promoted: null, readerReadback: null };
+  }
+  await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt);
+  let promoted: PromotedProjection;
+  try {
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt);
+  } catch (error) {
+    if (!(error instanceof PromotionBaseChangedError)) throw error;
+    const code = "PROMOTION_BASE_CHANGED";
+    const detail =
+      `Promotion refused because the canonical pointer moved from ${error.expectedVersionId ?? "no pointer"} ` +
+      `to ${error.actualVersionId ?? "no pointer"} after this candidate was validated. ` +
+      "The current LKG remains live; this candidate did not overwrite an authority it was never checked against.";
+    const receipt = invalidLkgReceipt(validated.receipt, code, detail);
+    const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
+    return { candidate: record, promoted: null, readerReadback: null };
+  }
+  return { candidate: (await store.readCandidate(candidate.id))!, promoted, readerReadback: null };
 }

@@ -37,9 +37,8 @@ import type { EvidenceRecord } from "./evidence.ts";
  * source order would leak collection sequence.
  */
 
-import { formatDateLong } from "../text/format-date.ts";
-import { rosterForBody } from "../registry/body-rosters.ts";
-import { representationForDivision } from "../registry/representation.ts";
+export { contactReadLine } from "./contact-render.ts";
+import { rosterForBody, rosterHoldersForBody } from "../registry/body-rosters.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
@@ -92,10 +91,10 @@ function isStaff(holder: SeatHolder): boolean {
 /**
  * The verified people attached to one DIVISION's government.
  *
- * **Through `representationForDivision`, which is the sanctioned resolver for
- * this exact question** — *who represents or governs this division* — and not
- * through `governingRosterHoldersForDivision`, which
- * `tests/body-composition.test.ts` bans outside two named callers.
+ * **Through the promoted server-side roster projection for the division's
+ * exact governing body** — and not through the client representation helper.
+ * That helper now consumes rosters already projected onto a coverage response;
+ * Ask runs at the server request boundary and has no such response to borrow.
  *
  * That ban is right and it is worth restating rather than routing around: a
  * BODY's members come from `lib/registry/body-membership.ts` and from
@@ -105,13 +104,15 @@ function isStaff(holder: SeatHolder): boolean {
  * district", which is the division question, and it asks the resolver that owns
  * it.
  *
- * `null` coverage is deliberate: the route has divisions and no coverage
- * summary, and the resolver's legislative-seat branch is the one that needs one.
- * With none it falls through to the curated governing roster, which is the
- * branch a school district or a county board answers on anyway.
+ * Both recognized governing suffixes are exact keys. The first populated one
+ * wins, so an advisory body sharing the division can never leak into the
+ * answer and the promoted runtime roster remains the sole person authority.
  */
 export function contactsForDivision(ocdId: string, bodyName: string): AskContact[] {
-  const holders = representationForDivision(null, ocdId);
+  const governing = rosterHoldersForBody(`${ocdId}#governing`);
+  const holders = governing.length > 0
+    ? governing
+    : rosterHoldersForBody(`${ocdId}#board`);
   if (holders.length === 0) return [];
 
   const roster =
@@ -324,11 +325,3 @@ export function contactRecord(contact: AskContact): EvidenceRecord {
  * Null where nothing is held — never "source unknown", which reads as an
  * attribution and is not one.
  */
-export function contactReadLine(contact: AskContact): string | null {
-  const org = contact.sourceOrg?.trim() || null;
-  const on = formatDateLong(contact.retrievedAt);
-  if (org && on) return `${org}, read ${on}`;
-  if (org) return org;
-  if (on) return `read ${on}`;
-  return null;
-}

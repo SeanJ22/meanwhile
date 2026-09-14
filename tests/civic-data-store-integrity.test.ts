@@ -1,0 +1,777 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import test from "node:test";
+
+import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import {
+  assertRoutineDataStoreMutationAuthority,
+  canonicalPostgresRoutineTimestamp,
+  MemoryRoutineDataStore,
+  routineDataStoreCandidateAuthorityIssue,
+} from "../lib/civic-data/store.ts";
+import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
+import {
+  VALIDATION_CHECKS,
+  sourceProjectionEvidence,
+  type CandidateVersionRecord,
+  type RoutineCandidate,
+  type ValidationReceipt,
+} from "../lib/civic-data/types.ts";
+
+const HASH = "a".repeat(64);
+const ROOT = resolve(import.meta.dirname, "..");
+
+test("Postgres routine-data timestamps have one fail-closed canonical evidence boundary", () => {
+  const postgres = "2026-09-08 21:41:13.689+00";
+  const canonical = "2026-09-08T21:41:13.689Z";
+  assert.equal(canonicalPostgresRoutineTimestamp(postgres, "promotion.promotedAt"), canonical);
+  assert.equal(canonicalPostgresRoutineTimestamp(canonical, "candidateEvent.at"), canonical);
+  assert.equal(
+    canonicalPostgresRoutineTimestamp("2026-09-08 14:41:13.689-07", "candidateEvent.at"),
+    canonical,
+  );
+  assert.throws(
+    () => canonicalPostgresRoutineTimestamp("not-an-instant", "candidateEvent.at"),
+    /CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:candidateEvent\.at/,
+  );
+  assert.throws(
+    () => canonicalPostgresRoutineTimestamp(null, "promotion.promotedAt"),
+    /CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:promotion\.promotedAt/,
+  );
+
+  const canonicalPointer = { promotedAt: canonical, payload: { exact: true } };
+  const postgresPointer = {
+    ...canonicalPointer,
+    promotedAt: canonicalPostgresRoutineTimestamp(postgres, "promotion.promotedAt"),
+  };
+  const canonicalHistory = [{ sequence: 1, at: canonical, detail: "exact" }];
+  const postgresHistory = [{
+    ...canonicalHistory[0]!,
+    at: canonicalPostgresRoutineTimestamp(postgres, "candidateEvent.at"),
+  }];
+  assert.deepEqual(postgresPointer, canonicalPointer);
+  assert.deepEqual(postgresHistory, canonicalHistory);
+
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const adapter = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  assert.doesNotMatch(adapter, /promotedAt:\s*(?:row|pointerRow)\.promotedAt/);
+  assert.doesNotMatch(adapter, /promotedAt:\s*at,/);
+  assert.doesNotMatch(adapter, /\bat:\s*(?:row|event)\.at/);
+  assert.doesNotMatch(adapter, /const lastAttemptedAt = rows\[0\]\?\.attemptedAt;/);
+  assert.match(adapter, /postgresPromotionRowToProjection/);
+  assert.match(adapter, /postgresCandidateEventRowToEvent/);
+  assert.match(adapter, /canonicalPostgresRoutineTimestamp\(rows\[0\]\.attemptedAt/);
+  assert.match(adapter, /canonicalPostgresRoutineTimestamp\(lastSucceededAt/);
+});
+
+function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceId = "fec-open-api"): RoutineCandidate {
+  const normalizedPayload = { rows: [{ id }] };
+  const readModel = { candidates: [{ id, amount: 1 }] };
+  return {
+    id,
+    sourceId,
+    recordClass: "FEC_FUNDING",
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    retrieval: {
+      succeeded: true,
+      requestedUrl: "https://api.open.fec.gov/v1/",
+      finalUrl: "https://api.open.fec.gov/v1/",
+      httpStatus: 200,
+      retrievedAt,
+      rawHash: HASH,
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: "fec-funding/2",
+      schemaVersion: "2",
+      normalizedHash: normalizedHash(readModel),
+      normalizedPayloadHash: normalizedHash(normalizedPayload),
+      inputRecords: 1,
+      outputRecords: 1,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
+    identities: [{
+      subjectId: "H6AZ01001",
+      jurisdiction: "US",
+      identifiers: { candidate_id: "H6AZ01001" },
+      matchBasis: "OFFICIAL_ID",
+      ambiguous: false,
+    }],
+    temporal: {
+      version: "2026",
+      expectedVersion: "2026",
+      sourceThrough: retrievedAt,
+      staleAtRetrieval: false,
+    },
+    semantics: { factKind: "filed total", violations: [] },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "supported candidates",
+      returnedRecords: 1,
+      declaredTotal: null,
+      paginationComplete: true,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [{ consumer: "funding reader", passed: true, detail: "accepted" }],
+    normalizedPayload,
+    readModel,
+  };
+}
+
+function receiptFor(value: RoutineCandidate): ValidationReceipt {
+  return {
+    contractVersion: 2,
+    decision: "GOOD",
+    candidateId: value.id,
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    validatedAt: value.retrieval.retrievedAt,
+    checks: VALIDATION_CHECKS.map((check) => ({
+      check,
+      verdict: "PASS",
+      code: `${check}_PASS`,
+      detail: "persisted proof",
+    })),
+    excludedFacts: [],
+  };
+}
+
+async function seedValidated(
+  store: MemoryRoutineDataStore,
+  value: RoutineCandidate,
+  receipt: ValidationReceipt = receiptFor(value),
+  lastKnownGoodVersion: string | null = null,
+): Promise<ValidationReceipt> {
+  const record: CandidateVersionRecord = {
+    candidate: value,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion,
+    failureCode: null,
+    failureDetail: null,
+  };
+  await store.create(record, {
+    candidateId: value.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: value.retrieval.retrievedAt,
+    detail: "persisted acquisition",
+  });
+  await store.transition(value.id, "NORMALIZED", value.retrieval.retrievedAt, "persisted normalization");
+  await store.transition(value.id, "VALIDATED", value.retrieval.retrievedAt, "persisted validation", receipt);
+  return receipt;
+}
+
+test("promotion accepts only the exact persisted GOOD receipt", async () => {
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("exact-receipt");
+  const persisted = await seedValidated(store, value);
+  const substituted: ValidationReceipt = {
+    ...structuredClone(persisted),
+    checks: persisted.checks.map((check, index) => index === 0
+      ? { ...check, detail: "caller supplied different proof" }
+      : check),
+  };
+
+  await assert.rejects(
+    store.promote(value.id, substituted, "2026-09-08T12:01:00.000Z"),
+    /CANDIDATE_NOT_PROMOTABLE:exact-receipt/,
+  );
+  assert.equal(await store.readPromotion(value.recordClass, value.scope), null);
+  assert.equal((await store.readCandidate(value.id))?.state, "VALIDATED");
+  assert.deepEqual((await store.events(value.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED"]);
+
+  const promoted = await store.promote(value.id, structuredClone(persisted), "2026-09-08T12:02:00.000Z");
+  assert.deepEqual(promoted.receipt, persisted);
+  assert.equal(promoted.versionId, value.id);
+});
+
+test("a malformed or misidentified GOOD receipt cannot enter the validated durable state", async () => {
+  const mutations: Array<[string, (receipt: ValidationReceipt) => ValidationReceipt]> = [
+    ["candidate", (receipt) => ({ ...receipt, candidateId: "some-other-candidate" })],
+    ["source", (receipt) => ({ ...receipt, sourceId: "some-other-source" })],
+    ["class", (receipt) => ({ ...receipt, recordClass: "MEETING" })],
+    ["scope", (receipt) => ({ ...receipt, scope: "some-other-scope" })],
+    ["decision", (receipt) => ({ ...receipt, decision: "FAIL" })],
+    ["checks", (receipt) => ({ ...receipt, checks: receipt.checks.slice(1) })],
+  ];
+
+  for (const [label, mutate] of mutations) {
+    const store = new MemoryRoutineDataStore();
+    const value = candidate(`identity-${label}`);
+    const inconsistent = mutate(receiptFor(value));
+    await assert.rejects(
+      seedValidated(store, value, inconsistent),
+      new RegExp(`CANDIDATE_TRANSITION_RECEIPT_INVALID:${value.id}:VALIDATED`),
+    );
+    assert.equal(await store.readPromotion(value.recordClass, value.scope), null, `${label} mismatch moved the pointer`);
+    assert.equal((await store.readCandidate(value.id))?.state, "NORMALIZED", `${label} mismatch entered VALIDATED`);
+  }
+});
+
+test("durable validation and promotion clocks cannot run backward or into the far future", async () => {
+  const backwardValidationStore = new MemoryRoutineDataStore();
+  const backwardValidation = candidate("backward-validation", "2026-09-08T12:00:00.000Z");
+  await assert.rejects(
+    seedValidated(backwardValidationStore, backwardValidation, {
+      ...receiptFor(backwardValidation),
+      validatedAt: "2026-09-08T11:59:59.999Z",
+    }),
+    /CANDIDATE_TRANSITION_RECEIPT_INVALID:backward-validation:VALIDATED/,
+  );
+  assert.equal((await backwardValidationStore.readCandidate(backwardValidation.id))?.state, "NORMALIZED");
+  assert.equal(await backwardValidationStore.readPromotion(backwardValidation.recordClass, backwardValidation.scope), null);
+
+  const promotionStore = new MemoryRoutineDataStore();
+  const promotionCandidate = candidate("invalid-promotion-clock", "2026-09-08T12:00:00.000Z");
+  const persisted = await seedValidated(promotionStore, promotionCandidate);
+  await assert.rejects(
+    promotionStore.promote(promotionCandidate.id, persisted, "2026-09-08T11:59:59.999Z"),
+    /CANDIDATE_PROMOTION_TIME_INVALID:invalid-promotion-clock/,
+  );
+  await assert.rejects(
+    promotionStore.promote(promotionCandidate.id, persisted, "2999-01-01T00:00:00.000Z"),
+    /CANDIDATE_PROMOTION_TIME_INVALID:invalid-promotion-clock/,
+  );
+  assert.equal(await promotionStore.readPromotion(promotionCandidate.recordClass, promotionCandidate.scope), null);
+  assert.equal((await promotionStore.readCandidate(promotionCandidate.id))?.state, "VALIDATED");
+  assert.deepEqual(
+    (await promotionStore.events(promotionCandidate.id)).map((event) => event.state),
+    ["FETCHED", "NORMALIZED", "VALIDATED"],
+  );
+});
+
+test("the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt", async () => {
+  const store = new MemoryRoutineDataStore();
+  const current = candidate("current-promotion", "2026-09-08T12:00:00.000Z");
+  const currentReceipt = await seedValidated(store, current);
+  await store.promote(current.id, currentReceipt, "2026-09-08T12:01:00.000Z");
+  const laterAttempt = candidate("later-unpromoted-attempt", "2026-09-08T14:00:00.000Z");
+  await seedValidated(store, laterAttempt, receiptFor(laterAttempt), current.id);
+
+  assert.deepEqual(await store.clock(current.sourceId, current.recordClass, current.scope), {
+    lastAttemptedAt: laterAttempt.retrieval.retrievedAt,
+    lastSucceededAt: current.retrieval.retrievedAt,
+  });
+});
+
+test("a candidate cannot overwrite a pointer that moved after its LKG validation", async () => {
+  const store = new MemoryRoutineDataStore();
+  const base = candidate("base", "2026-09-08T12:00:00.000Z");
+  const baseReceipt = await seedValidated(store, base);
+  await store.promote(base.id, baseReceipt, "2026-09-08T12:01:00.000Z");
+
+  // Both candidates were validated against `base`. The winner moves first;
+  // the stale writer must not be able to replace a version it never saw.
+  const winner = candidate("winner", "2026-09-08T13:00:00.000Z");
+  const stale = candidate("stale", "2026-09-08T12:30:00.000Z");
+  const winnerReceipt = await seedValidated(store, winner, receiptFor(winner), base.id);
+  const staleReceipt = await seedValidated(store, stale, receiptFor(stale), base.id);
+  await store.promote(winner.id, winnerReceipt, "2026-09-08T13:01:00.000Z");
+
+  await assert.rejects(
+    store.promote(stale.id, staleReceipt, "2026-09-08T13:02:00.000Z"),
+    /PROMOTION_BASE_CHANGED:stale:expected=base:actual=winner/,
+  );
+  assert.equal((await store.readPromotion(stale.recordClass, stale.scope))?.versionId, winner.id);
+  assert.equal((await store.readCandidate(stale.id))?.state, "VALIDATED");
+  assert.deepEqual((await store.events(stale.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED"]);
+});
+
+test("an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG", async () => {
+  const base = candidate("race-base", "2026-09-08T12:00:00.000Z");
+  const winner = candidate("race-winner", "2026-09-08T13:00:00.000Z");
+  class RacingStore extends MemoryRoutineDataStore {
+    private raced = false;
+
+    override async promote(candidateId: string, receipt: ValidationReceipt, at: string) {
+      if (candidateId === "race-stale" && !this.raced) {
+        this.raced = true;
+        const winnerReceipt = await seedValidated(this, winner, receiptFor(winner), base.id);
+        await super.promote(winner.id, winnerReceipt, "2026-09-08T13:01:00.000Z");
+      }
+      return super.promote(candidateId, receipt, at);
+    }
+  }
+
+  const store = new RacingStore();
+  const baseReceipt = await seedValidated(store, base);
+  await store.promote(base.id, baseReceipt, "2026-09-08T12:01:00.000Z");
+  const staleBase = candidate("race-stale", "2026-09-08T12:30:00.000Z");
+  // Exercise the pointer race itself. Keep the same civic member key as the
+  // base so the independent incomplete-horizon removal firewall does not (and
+  // should not) refuse this candidate before it reaches atomic promotion.
+  const stale: RoutineCandidate = {
+    ...staleBase,
+    normalizedPayload: { rows: [{ id: base.id, amount: 2 }] },
+    readModel: { candidates: [{ id: base.id, amount: 2 }] },
+    normalization: {
+      ...staleBase.normalization,
+      normalizedHash: normalizedHash({ candidates: [{ id: base.id, amount: 2 }] }),
+      normalizedPayloadHash: normalizedHash({ rows: [{ id: base.id, amount: 2 }] }),
+    },
+  };
+  const outcome = await processRoutineCandidate(store, stale, "2026-09-08T13:02:00.000Z");
+
+  assert.equal(outcome.promoted, null);
+  assert.equal(outcome.candidate.state, "CANNOT_TELL");
+  assert.equal(outcome.candidate.failureCode, "PROMOTION_BASE_CHANGED");
+  assert.match(outcome.candidate.failureDetail ?? "", /current LKG remains live/i);
+  assert.equal((await store.readPromotion(stale.recordClass, stale.scope))?.versionId, winner.id);
+  assert.deepEqual(
+    (await store.events(stale.id)).map((event) => event.state),
+    ["FETCHED", "NORMALIZED", "VALIDATED", "CANNOT_TELL"],
+  );
+});
+
+test("a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof", async () => {
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("diverged-proof");
+  const persisted = await seedValidated(store, value);
+  await store.promote(value.id, persisted, "2026-09-08T12:01:00.000Z");
+  const changed: ValidationReceipt = {
+    ...structuredClone(persisted),
+    validatedAt: "2026-09-08T12:00:01.000Z",
+  };
+  await assert.rejects(
+    store.transition(value.id, "PROMOTED", "2026-09-08T12:02:00.000Z", "planted proof divergence", changed),
+    /CANDIDATE_TRANSITION_INVALID:diverged-proof:PROMOTED:PROMOTED/,
+  );
+
+  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), {
+    lastAttemptedAt: value.retrieval.retrievedAt,
+    lastSucceededAt: value.retrieval.retrievedAt,
+  });
+  assert.equal((await store.readPromotion(value.recordClass, value.scope))?.versionId, value.id);
+  assert.deepEqual((await store.events(value.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
+});
+
+test("candidate creation refuses a mismatched first event before persisting either half", async () => {
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("mismatched-first-event");
+  await assert.rejects(
+    store.create({
+      candidate: value,
+      state: "FETCHED",
+      acquisitionSucceeded: true,
+      receipt: null,
+      promotedVersion: null,
+      lastKnownGoodVersion: null,
+      failureCode: null,
+      failureDetail: null,
+    }, {
+      candidateId: "another-candidate",
+      sequence: 1,
+      state: "FETCHED",
+      at: value.retrieval.retrievedAt,
+      detail: "mismatched event",
+    }),
+    /CANDIDATE_INITIAL_EVENT_INVALID:mismatched-first-event/,
+  );
+  assert.equal(await store.readCandidate(value.id), null);
+  assert.deepEqual(await store.events(value.id), []);
+});
+
+test("candidate event time is a bounded local clock and never moves backward by sequence", async () => {
+  const futureStore = new MemoryRoutineDataStore();
+  const future = candidate("future-acquisition", "2999-01-01T00:00:00.000Z");
+  const observedAt = "2026-09-08T12:00:00.000Z";
+  await futureStore.create({
+    candidate: future,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
+    candidateId: future.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: observedAt,
+    detail: "the local process observed a candidate claiming a future acquisition",
+  });
+  await futureStore.transition(future.id, "NORMALIZED", observedAt, "normalized before the claimed future instant");
+  const futureFailure: ValidationReceipt = {
+    ...receiptFor(future),
+    decision: "FAIL",
+    validatedAt: observedAt,
+    checks: receiptFor(future).checks.map((check) => check.check === "TEMPORAL_VALIDITY" ? {
+      ...check,
+      verdict: "FAIL",
+      code: "ACQUISITION_TIME_AFTER_VALIDATION",
+      detail: "the acquisition instant is later than the local validation clock",
+    } : check),
+  };
+  await futureStore.transition(
+    future.id,
+    "TEMPORAL_INVALID",
+    observedAt,
+    "the acquisition instant is later than the local validation clock",
+    futureFailure,
+    {
+      code: "ACQUISITION_TIME_AFTER_VALIDATION",
+      detail: "the acquisition instant is later than the local validation clock",
+    },
+  );
+  assert.equal((await futureStore.readCandidate(future.id))?.state, "TEMPORAL_INVALID");
+  assert.deepEqual((await futureStore.events(future.id)).map(({ at }) => at), [observedAt, observedAt, observedAt]);
+  assert.deepEqual(await futureStore.clock(future.sourceId, future.recordClass, future.scope), {
+    lastAttemptedAt: observedAt,
+  }, "a refused future claim must not postpone the scheduler until the claimed year");
+
+  const futureEventStore = new MemoryRoutineDataStore();
+  const futureEvent = candidate("future-local-event", "2026-09-08T12:00:00.000Z");
+  await assert.rejects(
+    futureEventStore.create({
+      candidate: futureEvent,
+      state: "FETCHED",
+      acquisitionSucceeded: true,
+      receipt: null,
+      promotedVersion: null,
+      lastKnownGoodVersion: null,
+      failureCode: null,
+      failureDetail: null,
+    }, {
+      candidateId: futureEvent.id,
+      sequence: 1,
+      state: "FETCHED",
+      at: "2999-01-01T00:00:00.000Z",
+      detail: "materially future local event",
+    }),
+    /CANDIDATE_INITIAL_EVENT_INVALID:future-local-event/,
+  );
+  assert.equal(await futureEventStore.readCandidate(futureEvent.id), null);
+
+  const backwardSequenceStore = new MemoryRoutineDataStore();
+  const backwardSequence = candidate("event-clock-backward", "2026-09-08T12:00:00.000Z");
+  await backwardSequenceStore.create({
+    candidate: backwardSequence,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
+    candidateId: backwardSequence.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: "2026-09-08T12:01:00.000Z",
+    detail: "acquisition persisted after retrieval",
+  });
+  await assert.rejects(
+    backwardSequenceStore.transition(
+      backwardSequence.id,
+      "NORMALIZED",
+      "2026-09-08T12:00:30.000Z",
+      "backdated normalization",
+    ),
+    /CANDIDATE_EVENT_TIME_INVALID:event-clock-backward:NORMALIZED/,
+  );
+  assert.equal((await backwardSequenceStore.readCandidate(backwardSequence.id))?.state, "FETCHED");
+  assert.deepEqual((await backwardSequenceStore.events(backwardSequence.id)).map((event) => event.sequence), [1]);
+});
+
+test("a terminal transition requires exact non-GOOD receipt evidence and is immutable", async () => {
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("terminal-proof");
+  await store.create({
+    candidate: value,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
+    candidateId: value.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: value.retrieval.retrievedAt,
+    detail: "persisted acquisition",
+  });
+
+  await assert.rejects(
+    store.transition(value.id, "CANNOT_TELL", value.retrieval.retrievedAt, "unproved refusal"),
+    /CANDIDATE_TRANSITION_RECEIPT_INVALID:terminal-proof:CANNOT_TELL/,
+  );
+  const refusal: ValidationReceipt = {
+    ...receiptFor(value),
+    decision: "CANNOT_TELL",
+    checks: receiptFor(value).checks.map((check, index) => index === 0
+      ? { ...check, verdict: "CANNOT_TELL", code: "SOURCE_UNCERTAIN", detail: "source proof is incomplete" }
+      : check),
+  };
+  await store.transition(
+    value.id,
+    "CANNOT_TELL",
+    value.retrieval.retrievedAt,
+    "source proof is incomplete",
+    refusal,
+    { code: "SOURCE_UNCERTAIN", detail: "source proof is incomplete" },
+  );
+  await assert.rejects(
+    store.transition(value.id, "NORMALIZED", value.retrieval.retrievedAt, "late rewrite"),
+    /CANDIDATE_TRANSITION_INVALID:terminal-proof:CANNOT_TELL:NORMALIZED/,
+  );
+  assert.deepEqual((await store.events(value.id)).map((item) => item.state), ["FETCHED", "CANNOT_TELL"]);
+});
+
+test("append-only Reader evidence must be a receipt for the exact promoted contract and version", async () => {
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("reader-evidence-boundary");
+  const receipt = await seedValidated(store, value);
+  await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
+  await assert.rejects(
+    store.appendEvidence(value.id, "PROMOTED", "2026-09-08T12:02:00.000Z", "untyped success assertion"),
+    /CANDIDATE_READER_EVIDENCE_INVALID:reader-evidence-boundary/,
+  );
+  const readerReceipt = {
+    contractVersion: 2 as const,
+    kind: "READER_PROJECTION_READBACK" as const,
+    contractId: "fec-funding",
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    projectionId: "funding-snapshot",
+    versionId: value.id,
+    pointerKey: `${value.recordClass}:${value.scope}`,
+    observedAt: "2026-09-08T12:02:00.000Z",
+    evidenceKind: "TYPED_READER_READ_MODEL" as const,
+    verifierId: "tests/civic-data-store-integrity.test.ts#reader",
+    verifierCodeSha: "1".repeat(40),
+    status: "PASS" as const,
+    detail: "The exact typed funding Reader returned the promoted version.",
+  };
+  await assert.rejects(
+    store.appendEvidence(
+      value.id,
+      "PROMOTED",
+      readerReceipt.observedAt,
+      serializeReaderProjectionReadback({ ...readerReceipt, projectionId: "invented-reader" }),
+    ),
+    /CANDIDATE_READER_EVIDENCE_INVALID:reader-evidence-boundary/,
+  );
+  assert.deepEqual((await store.events(value.id)).map((item) => item.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
+  await store.appendEvidence(
+    value.id,
+    "PROMOTED",
+    readerReceipt.observedAt,
+    serializeReaderProjectionReadback(readerReceipt),
+  );
+  assert.equal((await store.events(value.id)).length, 5);
+});
+
+test("Reader proof cannot be appended after the canonical pointer leaves that version", async () => {
+  const store = new MemoryRoutineDataStore();
+  const old = candidate("reader-proof-old", "2026-09-08T12:00:00.000Z");
+  const oldReceipt = await seedValidated(store, old);
+  await store.promote(old.id, oldReceipt, "2026-09-08T12:01:00.000Z");
+  const current = candidate("reader-proof-current", "2026-09-08T13:00:00.000Z");
+  const currentReceipt = await seedValidated(store, current, receiptFor(current), old.id);
+  await store.promote(current.id, currentReceipt, "2026-09-08T13:01:00.000Z");
+
+  await assert.rejects(
+    store.appendEvidence(
+      old.id,
+      "PROMOTED",
+      "2026-09-08T13:02:00.000Z",
+      serializeReaderProjectionReadback({
+        contractVersion: 2,
+        kind: "READER_PROJECTION_READBACK",
+        contractId: "fec-funding",
+        sourceId: old.sourceId,
+        recordClass: old.recordClass,
+        scope: old.scope,
+        projectionId: "funding-snapshot",
+        versionId: old.id,
+        pointerKey: `${old.recordClass}:${old.scope}`,
+        observedAt: "2026-09-08T13:02:00.000Z",
+        evidenceKind: "TYPED_READER_READ_MODEL",
+        verifierId: "tests/civic-data-store-integrity.test.ts#stale-reader",
+        verifierCodeSha: "1".repeat(40),
+        status: "PASS",
+        detail: "A stale version cannot claim to be the current Reader projection.",
+      }),
+    ),
+    /CANDIDATE_READER_EVIDENCE_INVALID:reader-proof-old/,
+  );
+  assert.equal((await store.readPromotion(old.recordClass, old.scope))?.versionId, current.id);
+  assert.equal((await store.events(old.id)).length, 4);
+});
+
+test("production NODE_ENV alone cannot open the permanent routine-data writer", () => {
+  assert.throws(
+    () => assertRoutineDataStoreMutationAuthority({ NODE_ENV: "production", WTP_DB_ROLE: "production" }),
+    /PERMANENT_RUNTIME_AUTHORITY_REFUSED:authority envelope is absent or malformed/,
+  );
+});
+
+test("a contract-A runtime envelope cannot mutate contract B through the public store API", () => {
+  const value = candidate("contract-authority-boundary");
+  const authority = {
+    repo: ROOT,
+    sha: "1".repeat(40),
+    capability: "ROUTINE_CONTRACT" as const,
+    contract: "nh-members",
+    parentPid: 123,
+    nonce: "2".repeat(64),
+  };
+  assert.match(
+    routineDataStoreCandidateAuthorityIssue(value, authority, "candidate") ?? "",
+    /authority for nh-members cannot mutate fec-funding/,
+  );
+  assert.equal(
+    routineDataStoreCandidateAuthorityIssue(value, { ...authority, contract: "fec-funding" }, "candidate"),
+    null,
+  );
+  const malformedTransfer = {
+    ...value,
+    bootstrapImport: { kind: "UNRECOGNIZED_AUTHORITY_TRANSFER", contractId: "fec-funding" },
+  } as unknown as RoutineCandidate;
+  assert.match(
+    routineDataStoreCandidateAuthorityIssue(
+      malformedTransfer,
+      { ...authority, contract: "fec-funding" },
+      "candidate",
+    ) ?? "",
+    /ordinary ROUTINE_CONTRACT authority cannot write an authority-transfer marker/,
+  );
+  assert.match(
+    routineDataStoreCandidateAuthorityIssue(
+      malformedTransfer,
+      { ...authority, capability: "TRUSTED_LKG_IMPORT", contract: null } as unknown as RuntimeAuthorityEnvelope,
+      "candidate",
+    ) ?? "",
+    /contract fec-funding requires ROUTINE_CONTRACT, not TRUSTED_LKG_IMPORT/,
+  );
+  assert.match(
+    routineDataStoreCandidateAuthorityIssue(
+      value,
+      { ...authority, capability: "ROUTINE_SUPERVISOR", contract: null },
+      "candidate",
+    ) ?? "",
+    /routine supervisor cannot mutate source candidate fec-funding/,
+  );
+});
+
+test("the Postgres promotion transaction is selected from the exact persisted proof", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const promote = source.slice(source.indexOf("  async promote(candidateId", source.indexOf("export class Postgres")), source.indexOf("  async events(candidateId", source.indexOf("export class Postgres")));
+  assert.match(promote, /validationReceipt\} = \$\{receiptJson\}::jsonb/);
+  assert.match(promote, /state\} = 'VALIDATED'/);
+  assert.match(promote, /insert\(civicDataPromotions\)\.select/);
+  assert.match(promote, /insert\(civicDataCandidateEvents\)\.select/);
+  assert.match(promote, /this\.db\.batch\(\[/);
+  assert.match(promote, /setWhere:\s*expectedVersionId === null/);
+  assert.match(promote, /civicDataPromotions\.currentVersionId, expectedVersionId/);
+  assert.match(promote, /pointerOwnsCandidate/);
+  assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
+  assert.match(promote, /validationReceipt: persistedReceipt/);
+  assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
+});
+
+test("every Postgres candidate-event allocator is serialized inside its Neon batch", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  const transition = postgres.slice(postgres.indexOf("  async transition("), postgres.indexOf("  async readCandidate("));
+  const append = postgres.slice(postgres.indexOf("  async appendEvidence("), postgres.indexOf("  async promote("));
+  const promote = postgres.slice(postgres.indexOf("  async promote("), postgres.indexOf("  async events("));
+
+  assert.match(postgres, /pg_advisory_xact_lock\(hashtextextended\(/);
+  assert.match(postgres, /coalesce\(max\(\$\{civicDataCandidateEvents\.sequence\}\), 0\) \+ 1/);
+  for (const operation of [transition, append, promote]) {
+    assert.match(operation, /this\.db\.batch\(\[/);
+    assert.match(operation, /this\.candidateEventLock\(candidateId\)/);
+    assert.match(operation, /nextCandidateEventSequence\(candidateId\)/);
+    assert.doesNotMatch(operation, /eventRows\.length \+ 1/);
+  }
+  assert.match(transition, /priorStateEligible/);
+  assert.match(transition, /\$with\("updated_candidate"\)\.as\(/);
+  assert.match(transition, /update\(civicDataCandidates\)[\s\S]*where\(priorStateEligible\)/);
+  assert.match(transition, /with\(updatedCandidate\)\s*\.insert\(civicDataCandidateEvents\)/);
+  assert.match(transition, /from \$\{updatedCandidate\}/);
+  assert.doesNotMatch(
+    transition,
+    /const\s+eventWrite[\s\S]*const\s+candidateWrite/,
+    "a transition event and its compare-and-set must not be separate writes",
+  );
+  assert.match(transition, /if \(!eventRows\[0\] \|\| !updatedRows\[0\]\)/);
+  assert.match(append, /assertReaderEvidenceInput\(record, state, at, detail, authority\)/);
+  assert.match(append, /civicDataPromotions\.currentVersionId\} = \$\{candidateId\}/);
+  assert.match(append, /civicDataPromotions\.lastKnownGoodVersionId\} = \$\{candidateId\}/);
+});
+
+test("the Postgres retry clock is the local sequence-one event, never a refused acquisition claim", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  const clock = postgres.slice(postgres.indexOf("  async clock("));
+  assert.match(clock, /select\(\{ attemptedAt: civicDataCandidateEvents\.at \}\)/);
+  assert.match(clock, /eq\(civicDataCandidateEvents\.sequence, 1\)/);
+  assert.match(clock, /orderBy\(desc\(civicDataCandidateEvents\.at\)\)/);
+  assert.doesNotMatch(
+    clock,
+    /orderBy\(desc\(civicDataCandidates\.retrievedAt\)\)/,
+    "an untrusted future retrievedAt would postpone a source retry",
+  );
+});
+
+test("every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  const authorityDoor = source.slice(
+    source.indexOf("export function assertRoutineDataStoreMutationAuthority"),
+    source.indexOf("export class PromotionBaseChangedError"),
+  );
+  assert.match(postgres, /private assertMutationAuthority\(\): RuntimeAuthorityEnvelope/);
+  assert.match(authorityDoor, /assertWriteAllowed\(CIVIC_DATA_PROMOTION_OPERATION, env\)/);
+  assert.match(authorityDoor, /assertSanctionedRuntimeAuthority\(CIVIC_DATA_PROMOTION_OPERATION, env\)/);
+  assert.match(postgres, /routineDataStoreCandidateAuthorityIssue/);
+
+  const methods = [
+    "create",
+    "transition",
+    "appendEvidence",
+    "promote",
+  ] as const;
+  for (const [index, method] of methods.entries()) {
+    const start = postgres.indexOf(`  async ${method}(`);
+    const end = index + 1 < methods.length
+      ? postgres.indexOf(`  async ${methods[index + 1]}(`, start)
+      : postgres.indexOf("  async events(", start);
+    assert.ok(start >= 0 && end > start, `${method}: Postgres mutation method is missing`);
+    const body = postgres.slice(start, end);
+    const authority = body.search(/this\.assert(?:Candidate)?MutationAuthority\(/);
+    const databaseUse = body.search(/this\.db\.|this\.candidateEventLock\(|this\.nextCandidateEventSequence\(/);
+    assert.ok(authority >= 0, `${method}: sanctioned runtime authority is not checked`);
+    assert.ok(databaseUse < 0 || authority < databaseUse, `${method}: database work begins before authority is proved`);
+  }
+});
+
+test("terminal store exposes no one-time import or aggregate retirement door", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const adapter = readFileSync(join(ROOT, "lib", "civic-data", "candidate-integrity.ts"), "utf8");
+  const memory = new MemoryRoutineDataStore();
+  // Inspect the retired API family without importing or invoking its former
+  // callable vocabulary. Reject new members of that family as well.
+  const retiredMember = /^(?:assertPdcV2|retirePdcV2)/;
+  for (const target of [memory, Object.getPrototypeOf(memory)]) {
+    assert.deepEqual(Object.getOwnPropertyNames(target).filter((name) => retiredMember.test(name)), []);
+  }
+  const retiredDeclaration = /\b(?:assertPdcV2|retirePdcV2)\w*\s*\(/;
+  assert.doesNotMatch(source, retiredDeclaration);
+  assert.doesNotMatch(adapter, retiredDeclaration);
+});

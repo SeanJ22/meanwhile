@@ -1,6 +1,6 @@
 {
-  "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
-  "currentContests": 141,
+  "exactHead": "9b01f3e51aab3ac397bfb1c7155442392a3740a6",
+  "currentContests": 142,
   "currentCandidates": 362,
   "recovered": [
     {
@@ -277,9 +277,9 @@
     }
   ],
   "recoveredHolders": 17,
-  "committedRelations": 59,
-  "sameOfficeDivision": 37,
-  "personOnly": 22,
+  "committedRelations": 46,
+  "sameOfficeDivision": 30,
+  "personOnly": 16,
   "failed": 0,
   "rows": [
     {
@@ -967,23 +967,6 @@
       "status": "PROVEN"
     },
     {
-      "officialId": "plural:66e496a4-a407-4af1-add3-ef6899b89807",
-      "target": "ballot-az-pima:attorney-general|Warren Petersen",
-      "candidacyId": "ballot-az-pima:attorney-general:petersen-warren",
-      "contestId": "ballot-az-pima:attorney-general",
-      "officeTitle": "State Senator",
-      "contestTitle": "Attorney General",
-      "contestDivision": "ocd-division/country:us/state:az",
-      "holderDivisions": [],
-      "officeMatch": false,
-      "divisionMatch": false,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": false,
-      "actualHolderId": null,
-      "standing": "UNKNOWN",
-      "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
       "officialId": "statewide:az/state-treasurer",
       "target": "ballot-az-pima:superintendent|Kimberly Yee",
       "candidacyId": "ballot-az-pima:superintendent:yee-kimberly",
@@ -1056,158 +1039,6 @@
       "seatDiscriminatorMatch": true,
       "expectedIncumbent": true,
       "actualHolderId": "congress:G000606",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
-    },
-    {
-      "officialId": "plural:1e39adcf-868d-4722-a07b-09fcd36ad9ed",
-      "target": "ballot-az-pima:state-senate-19|Gail Griffin",
-      "candidacyId": "ballot-az-pima:state-senate-19:griffin-gail",
-      "contestId": "ballot-az-pima:state-senate-19",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Senator, District 19",
-      "contestDivision": "ocd-division/country:us/state:az/sldu:19",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldl:19"
-      ],
-      "officeMatch": false,
-      "divisionMatch": false,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": false,
-      "actualHolderId": null,
-      "standing": "UNKNOWN",
-      "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
-      "officialId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
-      "target": "ballot-az-pima:state-senate-20|Alma Hernandez",
-      "candidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
-      "contestId": "ballot-az-pima:state-senate-20",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Senator, District 20",
-      "contestDivision": "ocd-division/country:us/state:az/sldu:20",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldl:20"
-      ],
-      "officeMatch": false,
-      "divisionMatch": false,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": false,
-      "actualHolderId": null,
-      "standing": "UNKNOWN",
-      "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
-      "officialId": "plural:51520de4-0e87-475b-91d2-99aa18addf72",
-      "target": "ballot-az-pima:state-house-19|David Gowan",
-      "candidacyId": "ballot-az-pima:state-house-19:gowan-david",
-      "contestId": "ballot-az-pima:state-house-19",
-      "officeTitle": "State Senator",
-      "contestTitle": "State Representative, District 19",
-      "contestDivision": "ocd-division/country:us/state:az/sldl:19",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldu:19"
-      ],
-      "officeMatch": false,
-      "divisionMatch": false,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": false,
-      "actualHolderId": null,
-      "standing": "UNKNOWN",
-      "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
-      "officialId": "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5",
-      "target": "ballot-az-pima:state-house-19|Lupe Diaz",
-      "candidacyId": "ballot-az-pima:state-house-19:diaz-lupe",
-      "contestId": "ballot-az-pima:state-house-19",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Representative, District 19",
-      "contestDivision": "ocd-division/country:us/state:az/sldl:19",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldl:19"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
-    },
-    {
-      "officialId": "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5",
-      "target": "ballot-az-pima:state-house-20|Sally Ann Gonzales",
-      "candidacyId": "ballot-az-pima:state-house-20:gonzales-sally-ann",
-      "contestId": "ballot-az-pima:state-house-20",
-      "officeTitle": "State Senator",
-      "contestTitle": "State Representative, District 20",
-      "contestDivision": "ocd-division/country:us/state:az/sldl:20",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldu:20"
-      ],
-      "officeMatch": false,
-      "divisionMatch": false,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": false,
-      "actualHolderId": null,
-      "standing": "UNKNOWN",
-      "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
-      "officialId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2",
-      "target": "ballot-az-pima:state-house-20|Betty Villegas",
-      "candidacyId": "ballot-az-pima:state-house-20:villegas-betty",
-      "contestId": "ballot-az-pima:state-house-20",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Representative, District 20",
-      "contestDivision": "ocd-division/country:us/state:az/sldl:20",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldl:20"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
-    },
-    {
-      "officialId": "plural:11b313a8-0f20-4d81-8060-4ec7e65f1a29",
-      "target": "ballot-az-pima:state-house-17:keshel",
-      "candidacyId": "ballot-az-pima:state-house-17:keshel",
-      "contestId": "ballot-az-pima:state-house-17",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Representative, District 17",
-      "contestDivision": "ocd-division/country:us/state:az/sldl:17",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldl:17"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:11b313a8-0f20-4d81-8060-4ec7e65f1a29",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
-    },
-    {
-      "officialId": "plural:183af2d0-dd61-476d-873f-305ae591968f",
-      "target": "ballot-az-pima:state-house-17:volk",
-      "candidacyId": "ballot-az-pima:state-house-17:volk",
-      "contestId": "ballot-az-pima:state-house-17",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Representative, District 17",
-      "contestDivision": "ocd-division/country:us/state:az/sldl:17",
-      "holderDivisions": [
-        "ocd-division/country:us/state:az/sldl:17"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:183af2d0-dd61-476d-873f-305ae591968f",
       "standing": "INCUMBENT",
       "status": "PROVEN"
     },
@@ -1288,23 +1119,6 @@
       "status": "PERSON_ONLY_NOT_INCUMBENCY"
     },
     {
-      "officialId": "plural:2fe799f4-a099-4667-ac0d-1bce40a08e3d",
-      "target": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
-      "candidacyId": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
-      "contestId": "ballot-nh-merrimack:us-house-2",
-      "officeTitle": "State Representative",
-      "contestTitle": "Representative in Congress, District 2",
-      "contestDivision": "ocd-division/country:us/state:nh/cd:2",
-      "holderDivisions": [],
-      "officeMatch": false,
-      "divisionMatch": false,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": false,
-      "actualHolderId": null,
-      "standing": "UNKNOWN",
-      "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
       "officialId": "congress:G000604",
       "target": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
       "candidacyId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
@@ -1324,44 +1138,6 @@
       "status": "PROVEN"
     },
     {
-      "officialId": "plural:6328e7f7-d952-4d28-98b8-75a9a6f50c8d",
-      "target": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-      "candidacyId": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-      "contestId": "ballot-nh-merrimack:state-senate-7",
-      "officeTitle": "State Senator",
-      "contestTitle": "State Senator, District 7",
-      "contestDivision": "ocd-division/country:us/state:nh/sldu:7",
-      "holderDivisions": [
-        "ocd-division/country:us/state:nh/sldu:7"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:6328e7f7-d952-4d28-98b8-75a9a6f50c8d",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
-    },
-    {
-      "officialId": "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0",
-      "target": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-      "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-      "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Representative, Merrimack County District 7",
-      "contestDivision": "ocd-division/country:us/state:nh/sldl:607",
-      "holderDivisions": [
-        "ocd-division/country:us/state:nh/sldl:607"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
-    },
-    {
       "officialId": "roster:merrimack-delegation#5",
       "target": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
@@ -1376,28 +1152,9 @@
       "divisionMatch": false,
       "seatDiscriminatorMatch": true,
       "expectedIncumbent": false,
-      "actualHolderId": "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0",
+      "actualHolderId": "nh-general-court:7bf655275ef0fbc8b9a5d433",
       "standing": "INCUMBENT",
       "status": "PERSON_ONLY_NOT_INCUMBENCY"
-    },
-    {
-      "officialId": "plural:f1292af8-a209-4ff7-87b5-086acddcc10e",
-      "target": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-      "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
-      "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
-      "officeTitle": "State Representative",
-      "contestTitle": "State Representative, Merrimack County District 7",
-      "contestDivision": "ocd-division/country:us/state:nh/sldl:607",
-      "holderDivisions": [
-        "ocd-division/country:us/state:nh/sldl:607"
-      ],
-      "officeMatch": true,
-      "divisionMatch": true,
-      "seatDiscriminatorMatch": true,
-      "expectedIncumbent": true,
-      "actualHolderId": "plural:f1292af8-a209-4ff7-87b5-086acddcc10e",
-      "standing": "INCUMBENT",
-      "status": "PROVEN"
     }
   ]
 }

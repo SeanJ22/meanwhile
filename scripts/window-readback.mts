@@ -31,7 +31,7 @@ const OUT = outArg ? resolve(ROOT, outArg.slice("--out=".length)) : null;
 
 let repos: ControlPlaneRepositories;
 if (useFile) {
-  repos = await createFileRepositories(join(ROOT, "data", "control-plane", "freshness-shadow"));
+  repos = await createFileRepositories(join(ROOT, ".runtime", "control-plane", "freshness-shadow"));
 } else {
   const url = controlPlaneUrlFromEnv();
   if (url === null) {

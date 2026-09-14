@@ -4,6 +4,9 @@ import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("an explicit held local date retrieves that sitting rather than the next or latest one", async () => {
   delete process.env.ANTHROPIC_API_KEY;

@@ -3,6 +3,9 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import {
@@ -301,8 +304,8 @@ test("the surfaces render the rosters — the register is not shelf-ware", () =>
     "utf8",
   );
   assert.ok(
-    mapEntry.includes("rosterHoldersForBody"),
-    "map-entry must wire rosters into the meeting surfaces",
+    mapEntry.includes("projectedBodyRoster"),
+    "map-entry must render the roster projection supplied by the server",
   );
 });
 

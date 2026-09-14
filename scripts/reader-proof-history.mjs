@@ -3,6 +3,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { execFileSync, spawnSync } from "node:child_process";
+import { readerProofAuthority, readerProofHead } from "./lib/reader-proof-head.mjs";
 
 const root = process.cwd();
 const receiptPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
@@ -16,15 +17,13 @@ function readEvidence(path) {
   return gunzipSync(readFileSync(pack.path));
 }
 
-const receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
-const report = JSON.parse(readEvidence(receipt.inheritance.reportPath));
-const readerHead = report.currentReaderHead;
-if (!/^[0-9a-f]{40}$/.test(readerHead)) {
-  throw new Error("The reader closure receipt does not name an exact executed head.");
-}
+const receiptBytes = readFileSync(receiptPath);
+const receipt = JSON.parse(receiptBytes.toString("utf8"));
+const readerHead = readerProofHead(receipt, readEvidence);
+const authority = readerProofAuthority(receipt, readEvidence, readerHead, { receiptPath, receiptBytes });
 
-function isAncestor() {
-  const result = spawnSync("git", ["merge-base", "--is-ancestor", readerHead, "HEAD"], {
+function isAncestor(ancestor, descendant) {
+  const result = spawnSync("git", ["merge-base", "--is-ancestor", ancestor, descendant], {
     cwd: root,
     stdio: "ignore",
     windowsHide: true,
@@ -33,19 +32,24 @@ function isAncestor() {
   return result.status === 0;
 }
 
-if (!isAncestor()) {
+const allAuthorityHistoryIsReachable = () =>
+  isAncestor(readerHead, "HEAD") &&
+  (authority.importerCodeSha === null || isAncestor(authority.importerCodeSha, readerHead));
+
+if (!allAuthorityHistoryIsReachable()) {
   const shallow = execFileSync("git", ["rev-parse", "--is-shallow-repository"], {
     cwd: root,
     encoding: "utf8",
     windowsHide: true,
   }).trim();
   if (shallow !== "true") {
-    throw new Error(`Reader proof head ${readerHead} is not an ancestor of HEAD.`);
+    if (!isAncestor(readerHead, "HEAD")) throw new Error(`Reader proof head ${readerHead} is not an ancestor of HEAD.`);
+    throw new Error(`Reader importer head ${authority.importerCodeSha} is not an ancestor of Reader proof head ${readerHead}.`);
   }
 
   const ref = process.env.GITHUB_REF?.trim();
   if (!ref) throw new Error("GITHUB_REF is required to deepen a shallow reader-proof checkout.");
-  for (let deepen = 8; deepen <= 256 && !isAncestor(); deepen *= 2) {
+  for (let deepen = 8; deepen <= 256 && !allAuthorityHistoryIsReachable(); deepen *= 2) {
     execFileSync("git", ["fetch", "--no-tags", `--deepen=${deepen}`, "origin", ref], {
       cwd: root,
       stdio: "inherit",
@@ -54,8 +58,11 @@ if (!isAncestor()) {
   }
 }
 
-if (!isAncestor()) {
+if (!isAncestor(readerHead, "HEAD")) {
   throw new Error(`Reader proof head ${readerHead} is not reachable within the bounded shallow history.`);
 }
+if (authority.importerCodeSha !== null && !isAncestor(authority.importerCodeSha, readerHead)) {
+  throw new Error(`Reader importer head ${authority.importerCodeSha} is not reachable before proof head ${readerHead} within the bounded shallow history.`);
+}
 
-console.log(`Reader proof ancestry: PASS (${readerHead})`);
+console.log(`Reader proof ancestry: PASS (${readerHead}; authority=${authority.phase})`);

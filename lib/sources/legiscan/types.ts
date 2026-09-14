@@ -12,8 +12,9 @@
  *   the chamber's own description. No record here may carry a `score`,
  *   `rank`, `rating`, `match`, `fit`, `grade`, `alignment` or
  *   `recommendation` key — `tests/neutrality-guards.test.ts` holds that.
- * - **Snapshot architecture.** A committed artifact refreshed on a schedule,
- *   never fetched per page load.
+ * - **Projection architecture.** Production serves only proof-validated
+ *   official-publisher promotions from the standing data plane, never a
+ *   publisher fetch or tracked research artifact per page load.
  *
  * ## Attribution
  *
@@ -24,15 +25,20 @@
  *
  * ## The retrieval discipline
  *
- * Bulk first: the weekly dataset ZIPs, one per state session, refreshed by
- * LegiScan on Sunday mornings. `dataset_hash` is stored in the committed
- * manifest and compared before every download — **an unchanged hash is never
- * re-downloaded**, which is both the polite thing and the condition of not
- * being suspended. The front end of legiscan.com is never scraped.
+ * The retained LegiScan corpus is historical research/test evidence. It is
+ * not a production authority, standing refresh input, or Reader fallback.
  */
 
-/** The four states a chamber records. Nothing in between is invented. */
-export type StateVotePosition = "YES" | "NO" | "PRESENT" | "NOT_VOTING";
+/**
+ * The normalized compatibility states a chamber record may project.
+ *
+ * `UNKNOWN` is deliberately not folded into `NOT_VOTING`: some official
+ * exports contain a position row whose publisher label is blank or outside
+ * the currently understood vocabulary.  The exact publisher label remains
+ * on `StateMemberVote.publisherPosition`, while this value keeps Reader from
+ * inventing a substantive voting disposition.
+ */
+export type StateVotePosition = "YES" | "NO" | "ABSTAIN" | "PRESENT" | "NOT_VOTING" | "UNKNOWN";
 
 /**
  * The attribution CC BY 4.0 requires, rendered wherever this data appears.
@@ -75,6 +81,8 @@ export interface StateRollCall {
   term?: string;
   session?: string;
   actionStage?: string;
+  /** Exact source event family when the publisher exposes separate horizons. */
+  officialEventKind?: "ASSEMBLY_FLOOR" | "SENATE_FLOOR" | "ASSEMBLY_COMMITTEE" | "SENATE_COMMITTEE";
   /** `AZ` / `NJ` / `NH`. */
   state: string;
   /** LegiScan's session id — the join key back to the dataset. */
@@ -97,6 +105,11 @@ export interface StateRollCall {
   nv: number;
   /** The chamber's own outcome line, e.g. "Passed 14-9". */
   result: string;
+  /**
+   * Exact named tally fields when an official publisher's schema does not
+   * align one-for-one with the legacy compatibility counters above.
+   */
+  publisherTally?: Readonly<Record<string, number>>;
   /** The bill on the legislature's own site, where the dataset gives one. */
   billUrl: string | null;
   /** The roll call on LegiScan. */
@@ -114,13 +127,15 @@ export interface StateMemberVote {
   officialPersonId?: string;
   rollCallId: string;
   position: StateVotePosition;
+  /** Exact publisher value, including an intentionally empty string. */
+  publisherPosition?: string;
 }
 
 /**
  * What a refresh downloaded, so the next one can skip what has not changed.
  *
- * Committed. `dataset_hash` is LegiScan's; comparing it is the whole of the
- * "never re-download an unchanged dataset" discipline.
+ * Historical research metadata. Production official projections preserve
+ * their own source/version proof and do not depend on this vendor hash.
  */
 export interface LegiscanDatasetRecord {
   state: string;
@@ -134,6 +149,71 @@ export interface LegiscanDatasetRecord {
 
 export interface StateVotesSnapshot {
   generatedAt: string;
+  /** Exact source-specific cross-file accounting retained with the projection. */
+  officialSourceReconciliation?: {
+    rollCount: number;
+    positionCount: number;
+    exactPublisherCategoryMatches: number;
+    publisherCategoryDrift: readonly {
+      officialRollCallId: string;
+      publisherPresent: number;
+      publisherAbsent: number;
+      historyNotExcusedOrPresiding: number;
+      historyExcused: number;
+    }[];
+  };
+  /** Source-specific exact-horizon reconciliation retained with the promotion. */
+  officialHorizonAudit?: {
+    authorityMode: "API_ARCHIVE_EXACT_RECONCILIATION";
+    sessionIndexUrl: string;
+    sessionDisplay: string;
+    expectedParticipantRequests: number;
+    completedParticipantRequests: number;
+    apiRollCalls: number;
+    apiPositions: number;
+    reconciledArchivePositions: number;
+    archives: readonly {
+      kind: string;
+      url: string;
+      sha256: string;
+      rollCalls: number;
+      positions: number;
+    }[];
+  };
+  /**
+   * Exact promoted official-person authority used by the acquisition that
+   * joined member positions. Required for permanent official projections;
+   * absent only from the retired LegiScan research fixture.
+   */
+  officialIdentityAuthority?: {
+    contractId: string;
+    sourceId: string;
+    scope: string;
+    versionId: string;
+    /** Digest of the independently promoted current-officeholder pointer. */
+    currentOfficeholderIdsSha256: string;
+    /**
+     * Exact term/session participant universe used for historical positions.
+     * Former members may be present here without being rendered as current
+     * officeholders.  This set is source-versioned inside the same candidate
+     * evidence and may never be substituted with the current roster.
+     */
+    sessionParticipantSet: {
+      term: string;
+      session: string;
+      sourceVersion: string;
+      count: number;
+      officeholderIdsSha256: string;
+      /** Exact source-side identity enrichment reconciliation, when published. */
+      audit?: {
+        historyParticipantCount: number;
+        legislatorsIdentityCount: number;
+        enrichedParticipantCount: number;
+        historyOnlyParticipantCount: number;
+        historyOnlyPersonIds: readonly string[];
+      };
+    };
+  };
   /** One per state session covered, with its hash. */
   datasets: LegiscanDatasetRecord[];
   /**

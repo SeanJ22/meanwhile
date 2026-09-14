@@ -1,5 +1,8 @@
 /**
  * **NEW HAMPSHIRE CAMPAIGN MONEY — ACQUIRED STATEWIDE, PROJECTED TO A BALLOT.**
+ *
+ * @freshness-reads-here — the candidate clock follows the reconciled official
+ * corpus; the catch-path clock dates only the durable failed attempt.
  * (Session C, 2026-08-31. RULING 126, RULING 118. Split into acquisition and
  * projection by Session C3, lane C, 2026-09-01, under RULING 229.)
  *
@@ -136,7 +139,6 @@
  *   pnpm money:nh --acquire    re-acquire the statewide index first
  *   pnpm money:nh --dry        read and report, write no snapshot
  */
-import { writeFileSync } from "node:fs";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -157,6 +159,12 @@ import {
 } from "../lib/hunt/source-universe.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
+import { stateCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 export const YEAR = 2026;
@@ -294,6 +302,9 @@ export type FetchPage = (input: {
 }) => Promise<FilerPage>;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const liveRawBodies: string[] = [];
+let candidateSubmitted = false;
+let productionWritePrepared = false;
 
 /** The live route. The only place in this file that touches the network. */
 export const livePage: FetchPage = async ({ surname, pageNumber, pageSize }) => {
@@ -304,7 +315,9 @@ export const livePage: FetchPage = async ({ surname, pageNumber, pageSize }) => 
     body: JSON.stringify({ filerName: surname, pageNumber, pageSize }),
   });
   if (!res.ok) return { status: res.status, totalItems: null, items: [] };
-  const body = (await res.json()) as {
+  const raw = await res.text();
+  liveRawBodies.push(raw);
+  const body = JSON.parse(raw) as {
     data?: { items?: FilerRow[]; totalItems?: number };
   };
   return {
@@ -991,32 +1004,27 @@ export function previousRecords(path = OUT_FILE): StateMoneyRecord[] {
 }
 
 async function main(): Promise<void> {
-  const DRY = process.argv.includes("--dry");
+  if (!process.argv.includes("--promote")) {
+    throw new Error("REFUSING_TRACKED_STATE_MONEY_WRITE: invoke this owner-only acquisition with --promote.");
+  }
+  prepareProductionCivicDataWrite();
+  productionWritePrepared = true;
   const asOf = today();
-  const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "nh", "ballot", "nh-merrimack-2026.json"), "utf8"),
-  ) as Ballot;
-  const previous = previousRecords();
-  const REACQUIRE = process.argv.includes("--acquire");
+  const ballotProjection = await readNhBallotProjection({ bypassCache: true });
+  if (ballotProjection.kind !== "PROMOTED") {
+    throw new Error(
+      `NH_BALLOT_AUTHORITY_UNAVAILABLE:${ballotProjection.kind}: campaign-finance acquisition requires ` +
+        "the canonical promoted New Hampshire ballot projection and never reads its tracked bootstrap.",
+    );
+  }
+  const ballot = ballotProjection.value.ballot as Ballot;
+  const previous: StateMoneyRecord[] = [];
 
   /* ── ACQUISITION: the whole state, once (RULING 229) ───────────────────── */
 
-  let corpus = loadCorpus();
-  if (REACQUIRE || "error" in corpus) {
-    if ("error" in corpus && !REACQUIRE) {
-      console.log(`  the held corpus could not be used — ${corpus.error}\n  acquiring it now.`);
-    }
-    const read = await acquireStatewideIndex(livePage);
-    if (!read.ok) {
-      console.error(
-        `state-money-nh · the statewide acquisition did not complete (${read.reason}). ` +
-          "That is a fact about the route and states nothing about what the agency holds. " +
-          "Nothing written.",
-      );
-      process.exitCode = 2;
-      return;
-    }
-    const acquired: FilerCorpus = {
+  const read = await acquireStatewideIndex(livePage);
+  if (!read.ok) throw new Error(`The statewide acquisition did not complete: ${read.reason}`);
+  const corpus: FilerCorpus = {
       formatVersion: 1,
       acquiredAt: asOf,
       agency: AGENCY,
@@ -1041,19 +1049,8 @@ async function main(): Promise<void> {
       statedTotalItems: read.totalItems,
       retrieved: read.retrieved,
       rows: read.rows.map(narrowFilerRow),
-    };
-    writeFileSync(CORPUS_FILE, `${JSON.stringify(acquired, null, 1)}\n`, "utf8");
-    console.log(
-      `  ACQUIRED ${acquired.rows.length} filer row(s) against the publisher's stated ` +
-        `${acquired.statedTotalItems} — wrote ${CORPUS_FILE}`,
-    );
-    corpus = acquired;
-  } else {
-    console.log(
-      `  HELD CORPUS: ${corpus.rows.length} filer row(s) of ${corpus.statedTotalItems} stated, ` +
-        `acquired ${corpus.acquiredAt}. Re-acquire with --acquire.`,
-    );
-  }
+  };
+  console.log(`  ACQUIRED ${corpus.rows.length} filer row(s) against the publisher's stated ${corpus.statedTotalItems}.`);
 
   /* ── PROJECTION: this ballot, out of the corpus, with ZERO requests ────── */
 
@@ -1146,14 +1143,45 @@ async function main(): Promise<void> {
     );
   }
 
-  if (DRY) {
-    console.log(`--dry: nothing written. Would write ${OUT_FILE}`);
-  } else {
-    writeFileSync(OUT_FILE, `${JSON.stringify(snapshot, null, 1)}\n`, "utf8");
-    console.log(`wrote ${OUT_FILE}`);
-  }
+  const candidate = stateCampaignFinanceCandidate({
+    jurisdiction: "NH",
+    snapshot,
+    rawBodies: liveRawBodies,
+    requestedUrl: API,
+    finalUrl: API,
+    retrievedAt: new Date().toISOString(),
+    query: `Every filer returned for filerName=""; ${corpus.rows.length}/${corpus.statedTotalItems} publisher-stated rows`,
+    paginationComplete: corpus.rows.length === corpus.statedTotalItems,
+    declaredTotal: corpus.statedTotalItems,
+  });
+  candidateSubmitted = true;
+  const outcome = await processRegisteredManualCandidate(
+    new PostgresRoutineDataStore(),
+    "nh-sos-campaign-finance",
+    candidate,
+    candidate.retrieval.retrievedAt,
+  );
+  if (!outcome.promoted) throw new Error(`NH campaign-finance promotion refused: ${outcome.candidate.failureCode}`);
+  console.log(`promoted ${outcome.promoted.versionId}; no tracked runtime artifact was written`);
 }
 
 if (import.meta.filename === process.argv[1]) {
-  await main();
+  const attemptedAt = new Date().toISOString();
+  try {
+    await main();
+  } catch (error) {
+    if (process.argv.includes("--promote") && productionWritePrepared && !candidateSubmitted) {
+      const failed = failedAcquisitionCandidate({
+        sourceId: "nh-sos-campaign-finance",
+        recordClass: "STATE_CAMPAIGN_FINANCE",
+        scope: "US-NH:campaign-finance:2026",
+        requestedUrl: API,
+        attemptedAt,
+        failureDetail: error instanceof Error ? error.message : String(error),
+        parserVersion: "nh-campaign-finance/2",
+      });
+      await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "nh-sos-campaign-finance", failed, attemptedAt);
+    }
+    throw error;
+  }
 }

@@ -47,6 +47,17 @@ import { join } from "node:path";
 
 import { fundingForTarget } from "../../funding/snapshot.ts";
 import type { FundingCandidate } from "../../funding/types.ts";
+import {
+  civicDataReadNotInitialized,
+  mayUseTestFixture,
+  readPromotedCivicData,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../../civic-data/read-model.ts";
+import {
+  PIMA_LOCAL_FINANCE_CONTRACT,
+  type AzPimaFinanceReadModel,
+} from "../../funding/data-plane.ts";
 import type {
   AuthorityAggregate,
   Contribution,
@@ -116,9 +127,75 @@ export interface AzPimaHeld {
 }
 
 let azPimaCache: AzPimaHeld | null = null;
+let azTxCache: AzPimaTransactions | null = null;
+let azPimaReadState: CivicDataReadResult<AzPimaFinanceReadModel> = civicDataReadNotInitialized(
+  "LOCAL_CAMPAIGN_FINANCE",
+  PIMA_LOCAL_FINANCE_CONTRACT.scope,
+  "The Pima campaign-finance canonical pointer has not been read for this process.",
+);
+
+function loadPimaTestFixtures(): void {
+  if (!mayUseTestFixture()) return;
+  const maySeed = azPimaReadState.kind === "NOT_RECORDED" || (
+    azPimaReadState.kind === "STORE_UNREACHABLE" &&
+    (azPimaReadState.code === "STORE_NOT_CONFIGURED" || azPimaReadState.code === "READ_NOT_INITIALIZED")
+  );
+  if (!maySeed) return;
+  azPimaCache ??= JSON.parse(readFileSync(AZ_PIMA_FILE, "utf8")) as AzPimaHeld;
+  azTxCache ??= JSON.parse(readFileSync(AZ_PIMA_TX_FILE, "utf8")) as AzPimaTransactions;
+}
+
+function validatePimaProjection(value: AzPimaFinanceReadModel, version: string): void {
+  if (
+    value.formatVersion !== 1 ||
+    value.held?.formatVersion !== 1 ||
+    value.transactions?.formatVersion !== 1 ||
+    !Array.isArray(value.held.committeeRegisterCountyPortal) ||
+    !Array.isArray(value.held.filingsIndexed) ||
+    !Array.isArray(value.transactions.contributions) ||
+    !Array.isArray(value.transactions.distributions)
+  ) {
+    throw new Error(`Pima campaign-finance projection ${version} does not satisfy its Reader contract.`);
+  }
+}
+
+/** Canonical local-finance preload. A store failure never opens the fixture. */
+export async function refreshAzPimaFinanceFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  const result = await readPromotedCivicData<AzPimaFinanceReadModel>(
+    "LOCAL_CAMPAIGN_FINANCE",
+    PIMA_LOCAL_FINANCE_CONTRACT.scope,
+    options,
+  );
+  azPimaReadState = result;
+  if (result.kind === "PROMOTED") {
+    if (result.metadata.sourceId !== PIMA_LOCAL_FINANCE_CONTRACT.sourceId) {
+      throw new Error(`Pima campaign-finance pointer names ${result.metadata.sourceId}, not ${PIMA_LOCAL_FINANCE_CONTRACT.sourceId}.`);
+    }
+    validatePimaProjection(result.value, result.metadata.versionId ?? "unknown");
+    azPimaCache = result.value.held;
+    azTxCache = result.value.transactions;
+    return result.metadata.versionId;
+  }
+  azPimaCache = null;
+  azTxCache = null;
+  if (mayUseTestFixture() && (result.kind === "NOT_RECORDED" || (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED"))) {
+    loadPimaTestFixtures();
+    return null;
+  }
+  throw new Error(result.detail);
+}
+
+export function azPimaFinanceReadState(): CivicDataReadResult<AzPimaFinanceReadModel> {
+  return azPimaReadState;
+}
 
 export function azPimaHeld(): AzPimaHeld {
-  if (!azPimaCache) azPimaCache = JSON.parse(readFileSync(AZ_PIMA_FILE, "utf8")) as AzPimaHeld;
+  loadPimaTestFixtures();
+  if (!azPimaCache) {
+    throw new Error(`Pima campaign-finance filing index is ${azPimaReadState.kind}; call refreshAzPimaFinanceFromPromoted first.`);
+  }
   return azPimaCache;
 }
 
@@ -330,11 +407,24 @@ export interface AzPimaTransactions {
   readonly distributions: readonly AzPimaDistributionRow[];
 }
 
-let azTxCache: AzPimaTransactions | null = null;
-
 export function azPimaTransactions(): AzPimaTransactions {
-  if (!azTxCache) azTxCache = JSON.parse(readFileSync(AZ_PIMA_TX_FILE, "utf8")) as AzPimaTransactions;
+  loadPimaTestFixtures();
+  if (!azTxCache) {
+    throw new Error(`Pima campaign-finance transactions are ${azPimaReadState.kind}; call refreshAzPimaFinanceFromPromoted first.`);
+  }
   return azTxCache;
+}
+
+/** Test seam proving that production has no tracked-file fallback. */
+export function clearAzPimaFinanceProjectionForTest(): void {
+  if (!mayUseTestFixture()) throw new Error("Pima campaign-finance reset is test-only.");
+  azPimaCache = null;
+  azTxCache = null;
+  azPimaReadState = civicDataReadNotInitialized(
+    "LOCAL_CAMPAIGN_FINANCE",
+    PIMA_LOCAL_FINANCE_CONTRACT.scope,
+    "The Pima campaign-finance canonical pointer has not been read for this process.",
+  );
 }
 
 /**

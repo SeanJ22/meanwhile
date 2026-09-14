@@ -16,6 +16,9 @@ import {
   reviewFor,
 } from "../lib/photos/review.ts";
 import { personKey } from "../lib/photos/person.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 /**
  * **RULING 55 — a photo never blocks anything, and every photo is reviewed by

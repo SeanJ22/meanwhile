@@ -1,6 +1,9 @@
 /**
- * `pnpm voting-sites:fetch` — retrieve every covered jurisdiction's voting
- * locations from that jurisdiction's OWN election authority (tracker B19).
+ * `pnpm voting-sites:fetch` — owner-invoked acquisition and canonical
+ * promotion of every covered jurisdiction's voting locations (tracker B19).
+ *
+ * @freshness-reads-here — the candidate stamp follows the complete set of
+ * official reads; failure stamps identify the failed source attempt only.
  *
  * ## What this is not
  *
@@ -37,9 +40,16 @@
  * listed without a pin, with the count stated — never dropped, and never
  * pinned somewhere plausible.
  */
-import { writeFileSync } from "node:fs";
-import { join } from "node:path";
-
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import {
+  VOTING_SITES_CONTRACT,
+  votingSitesCandidate,
+  type VotingSiteAcquisitionFailure,
+} from "../lib/ballot/voting-sites-data-plane.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import {
   CENSUS_BENCHMARK,
@@ -70,6 +80,13 @@ const UA = OUTBOUND_USER_AGENT;
 const SPACING_MS = 400;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+if (!process.argv.slice(2).includes("--promote")) {
+  throw new Error(
+    "Voting-site acquisition is promotion-only. Invoke pnpm voting-sites:fetch; tracked snapshot writes are retired.",
+  );
+}
+prepareProductionCivicDataWrite();
+
 /** Today, from the clock. Never a plausible date. */
 // F01-continued session 2, item 0B: the Phoenix day comes from the one
 // module that owns it, exactly as `pnpm stamp` does. This file used to
@@ -78,17 +95,33 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 import { today } from "./doc-dates.mjs";
 const TODAY = today();
 
+const officialRawBodies: string[] = [];
+let successfulAuthorityReads = 0;
+
 async function getText(url: string): Promise<{ status: number; body: string }> {
   await sleep(SPACING_MS);
   const res = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
-  return { status: res.status, body: res.ok ? await res.text() : "" };
+  const body = await res.text();
+  officialRawBodies.push(`${url}\n${res.url}\nHTTP ${res.status}\n${body}`);
+  if (res.ok) successfulAuthorityReads += 1;
+  return { status: res.status, body };
 }
 
-async function getJson<T>(url: string): Promise<T | null> {
+async function getJson<T>(url: string): Promise<T> {
   await sleep(SPACING_MS);
-  const res = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" } });
-  if (!res.ok) return null;
-  return (await res.json()) as T;
+  const res = await fetch(url, {
+    headers: { "user-agent": UA, accept: "application/json" },
+    redirect: "follow",
+  });
+  const body = await res.text();
+  officialRawBodies.push(`${url}\n${res.url}\nHTTP ${res.status}\n${body}`);
+  if (!res.ok) throw new Error(`${url} answered HTTP ${res.status}`);
+  successfulAuthorityReads += 1;
+  try {
+    return JSON.parse(body) as T;
+  } catch {
+    throw new Error(`${url} returned invalid JSON`);
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -155,7 +188,8 @@ async function pimaLayer(service: string): Promise<ArcgisFeature[]> {
     `${PIMA_ORG}/${service}/FeatureServer/0/query` +
     `?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=json`;
   const json = await getJson<{ features?: ArcgisFeature[] }>(url);
-  return json?.features ?? [];
+  if (!Array.isArray(json.features)) throw new Error(`${service} has no ArcGIS feature array`);
+  return json.features;
 }
 
 function str(v: string | number | null | undefined): string | null {
@@ -165,6 +199,10 @@ function str(v: string | number | null | undefined): string | null {
 }
 
 async function retrievePima(): Promise<VotingJurisdiction> {
+  const publicPage = await getText(PIMA_SOURCE_PAGE);
+  if (publicPage.status !== 200) {
+    throw new Error(`Pima County voting page answered HTTP ${publicPage.status}`);
+  }
   const sites: VotingSite[] = [];
   let election: string | null = null;
   let dropped = 0;
@@ -339,25 +377,7 @@ async function retrieveMorris(): Promise<VotingJurisdiction[]> {
   const index = await getText(MORRIS_INDEX);
   const out: VotingJurisdiction[] = [];
   if (index.status !== 200) {
-    return [
-      {
-        ocdId: "ocd-division/country:us/state:nj/county:morris",
-        name: "Morris County",
-        state: "NJ",
-        model: "ASSIGNED",
-        election: null,
-        sites: [],
-        sourceOrg: "Morris County Board of Elections",
-        sourceUrl: MORRIS_INDEX,
-        collectedAt: TODAY,
-        refusal: {
-          wall: `The county's polling-place index answered HTTP ${index.status}.`,
-          rungs: [
-            { rung: 2, what: "Plain fetch of the index", result: `HTTP ${index.status}`, attemptedAt: TODAY },
-          ],
-        },
-      },
-    ];
+    throw new Error(`Morris County polling-place index answered HTTP ${index.status}`);
   }
 
   const pages = [
@@ -370,6 +390,10 @@ async function retrieveMorris(): Promise<VotingJurisdiction[]> {
     const [href, name] = s.split("|");
     return { url: href.startsWith("http") ? href : `https://www.morriscountynj.gov${href}`, name };
   });
+
+  if (pages.length === 0) {
+    throw new Error("Morris County polling-place index named no municipality pages");
+  }
 
   console.log(`  NJ Morris: ${pages.length} municipality pages listed`);
 
@@ -608,7 +632,7 @@ const NH_TOWN_MISSES: {
   },
 ];
 
-function nhStateRefusal(): VotingJurisdiction {
+function nhStateRefusal(status: number): VotingJurisdiction {
   return {
     ocdId: "ocd-division/country:us/state:nh",
     name: "New Hampshire",
@@ -620,20 +644,40 @@ function nhStateRefusal(): VotingJurisdiction {
     sourceUrl: "https://app.sos.nh.gov/statelistclerkandpolling",
     collectedAt: TODAY,
     refusal: {
-      wall: "The Secretary of State's statewide list of clerks and polling places refuses every automated client we can honestly send.",
-      rungs: NH_WALL,
+      wall: status >= 200 && status < 300
+        ? "The public landing page answered, but the statewide list remains behind a reCAPTCHA-gated request this adapter will not circumvent."
+        : `The Secretary of State's statewide list answered HTTP ${status}; the gated endpoint is not called.`,
+      rungs: [
+        { rung: 2, what: "Current owner-invoked fetch of the Secretary of State public list", result: `HTTP ${status}`, attemptedAt: TODAY },
+        ...NH_WALL,
+      ],
     },
   };
 }
 
-async function retrieveNewHampshire(): Promise<VotingJurisdiction[]> {
-  const out: VotingJurisdiction[] = [nhStateRefusal()];
+async function retrieveNewHampshire(): Promise<{
+  jurisdictions: VotingJurisdiction[];
+  failures: VotingSiteAcquisitionFailure[];
+}> {
+  const stateResult = await getText("https://app.sos.nh.gov/statelistclerkandpolling");
+  const stateRow = nhStateRefusal(stateResult.status);
+  const out: VotingJurisdiction[] = [stateRow];
+  const failures: VotingSiteAcquisitionFailure[] = [{
+    jurisdictionId: stateRow.ocdId,
+    code: "NH_STATE_LIST_GATED",
+    detail: stateRow.refusal!.wall,
+  }];
   let unplaced = 0;
 
   for (const town of NH_TOWN_HITS) {
-    const point = await geocode(town.address);
-    if (!point) {
-      unplaced += 1;
+    const townResult = await getText(town.sourceUrl);
+    const sourceStillStatesPlace = townResult.status === 200 &&
+      townResult.body.toLowerCase().includes(town.place.toLowerCase()) &&
+      townResult.body.toLowerCase().includes("25 seamans");
+    if (!sourceStillStatesPlace) {
+      const detail = townResult.status !== 200
+        ? `${town.name}'s official page answered HTTP ${townResult.status}.`
+        : `${town.name}'s current official page did not preserve the adapter's exact validated place/address text.`;
       out.push({
         ocdId: town.ocdId,
         name: town.name,
@@ -645,14 +689,15 @@ async function retrieveNewHampshire(): Promise<VotingJurisdiction[]> {
         sourceUrl: town.sourceUrl,
         collectedAt: TODAY,
         refusal: {
-          wall: `${town.name} publishes its polling place, but the address did not resolve to a point we could pin.`,
-          rungs: [
-            { rung: 2, what: "The town's own elections page", result: `HIT — ${town.place}, ${town.address}`, attemptedAt: town.readAt },
-          ],
+          wall: detail,
+          rungs: [{ rung: 2, what: "Current fetch of the town's own elections page", result: townResult.status === 200 ? "HTTP 200; exact validated place/address text not found" : `HTTP ${townResult.status}`, attemptedAt: TODAY }],
         },
       });
+      failures.push({ jurisdictionId: town.ocdId, code: "NH_TOWN_SITE_UNVERIFIED", detail });
       continue;
     }
+    const point = await geocode(town.address);
+    if (!point) unplaced += 1;
     out.push({
       ocdId: town.ocdId,
       name: town.name,
@@ -665,8 +710,9 @@ async function retrieveNewHampshire(): Promise<VotingJurisdiction[]> {
           name: town.place,
           address: town.address,
           room: null,
-          lat: point.lat,
-          lng: point.lng,
+          // A geocoder failure cannot erase an authority-published site.
+          lat: point?.lat ?? null,
+          lng: point?.lng ?? null,
           kind: "ELECTION_DAY",
           // The town states the place, not an election label. Left null so it
           // renders as the gap it is rather than borrowing a date.
@@ -682,6 +728,10 @@ async function retrieveNewHampshire(): Promise<VotingJurisdiction[]> {
   }
 
   for (const town of NH_TOWN_MISSES) {
+    const townResult = await getText(town.sourceUrl);
+    const detail = townResult.status === 200
+      ? `${town.name}'s page answered, but this adapter has no validated exact polling-place extraction for the current bytes.`
+      : `${town.name}'s official page answered HTTP ${townResult.status}.`;
     out.push({
       ocdId: town.ocdId,
       name: town.name,
@@ -693,10 +743,15 @@ async function retrieveNewHampshire(): Promise<VotingJurisdiction[]> {
       sourceUrl: town.sourceUrl,
       collectedAt: TODAY,
       refusal: {
-        wall: `${town.name}'s own site does not state where its residents vote, and the state list that would is walled.`,
-        rungs: [...town.rungs, ...NH_WALL.slice(0, 6)],
+        wall: `${detail} The state list that could answer remains gated.`,
+        rungs: [
+          { rung: 2, what: "Current fetch of the town's official page", result: `HTTP ${townResult.status}; no validated exact extraction promoted`, attemptedAt: TODAY },
+          ...town.rungs,
+          ...NH_WALL.slice(0, 6),
+        ],
       },
     });
+    failures.push({ jurisdictionId: town.ocdId, code: "NH_TOWN_SITE_UNAVAILABLE", detail });
   }
 
   console.log(
@@ -704,36 +759,162 @@ async function retrieveNewHampshire(): Promise<VotingJurisdiction[]> {
       `${NH_TOWN_MISSES.length} did not, ${unplaced} without a pin, ` +
       `state list walled at ${NH_WALL.length} recorded rungs`,
   );
-  return out;
+  return { jurisdictions: out, failures };
 }
 
 /* ------------------------------------------------------------------ *
  * Main
  * ------------------------------------------------------------------ */
 
-async function main() {
+function acquisitionRefusal(input: {
+  ocdId: string;
+  name: string;
+  state: "AZ" | "NH" | "NJ";
+  sourceOrg: string;
+  sourceUrl: string;
+  detail: string;
+}): VotingJurisdiction {
+  return {
+    ocdId: input.ocdId,
+    name: input.name,
+    state: input.state,
+    model: input.state === "AZ" ? "VOTE_CENTER" : "ASSIGNED",
+    election: null,
+    sites: [],
+    sourceOrg: input.sourceOrg,
+    sourceUrl: input.sourceUrl,
+    collectedAt: TODAY,
+    refusal: {
+      wall: input.detail,
+      rungs: [{ rung: 2, what: "Current owner-invoked official-source acquisition", result: input.detail, attemptedAt: TODAY }],
+    },
+  };
+}
+
+let candidateSubmitted = false;
+
+async function main(): Promise<void> {
   console.log(`voting-sites:fetch — ${TODAY}`);
+  const store = new PostgresRoutineDataStore();
+  const priorRead = await readVotingSitesProjection({ store, bypassCache: true });
+  if (priorRead.kind === "STORE_UNREACHABLE") throw new Error(priorRead.detail);
+  const prior = priorRead.kind === "PROMOTED" ? priorRead.value : null;
+
   const jurisdictions: VotingJurisdiction[] = [];
-  jurisdictions.push(await retrievePima());
-  jurisdictions.push(...(await retrieveMorris()));
-  jurisdictions.push(...(await retrieveNewHampshire()));
+  const failures: VotingSiteAcquisitionFailure[] = [];
+
+  try {
+    const pima = await retrievePima();
+    if (pima.sites.length === 0) throw new Error("Pima County returned zero current official sites");
+    jurisdictions.push(pima);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    jurisdictions.push(acquisitionRefusal({
+      ocdId: "ocd-division/country:us/state:az/county:pima",
+      name: "Pima County",
+      state: "AZ",
+      sourceOrg: "Pima County Recorder and Pima County Elections Department",
+      sourceUrl: PIMA_SOURCE_PAGE,
+      detail,
+    }));
+    failures.push({ state: "AZ", code: "PIMA_VOTING_SITES_UNAVAILABLE", detail });
+  }
+
+  try {
+    const morris = await retrieveMorris();
+    jurisdictions.push(...morris);
+    for (const row of morris.filter((jurisdiction) => jurisdiction.refusal !== null)) {
+      failures.push({
+        jurisdictionId: row.ocdId,
+        code: "MORRIS_MUNICIPALITY_SITES_UNAVAILABLE",
+        detail: row.refusal!.wall,
+      });
+    }
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    jurisdictions.push(acquisitionRefusal({
+      ocdId: "ocd-division/country:us/state:nj/county:morris",
+      name: "Morris County",
+      state: "NJ",
+      sourceOrg: "Morris County Board of Elections",
+      sourceUrl: MORRIS_INDEX,
+      detail,
+    }));
+    failures.push({ state: "NJ", code: "MORRIS_VOTING_SITES_UNAVAILABLE", detail });
+  }
+
+  try {
+    const nh = await retrieveNewHampshire();
+    jurisdictions.push(...nh.jurisdictions);
+    failures.push(...nh.failures);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    jurisdictions.push(acquisitionRefusal({
+      ocdId: "ocd-division/country:us/state:nh",
+      name: "New Hampshire",
+      state: "NH",
+      sourceOrg: "New Hampshire Department of State",
+      sourceUrl: "https://app.sos.nh.gov/statelistclerkandpolling",
+      detail,
+    }));
+    failures.push({ state: "NH", code: "NH_VOTING_SITES_UNAVAILABLE", detail });
+  }
 
   const file: VotingSitesFile = { generatedAt: TODAY, jurisdictions };
-  const path = join(process.cwd(), "data", "voting-sites.json");
-  writeFileSync(path, `${JSON.stringify(file, null, 2)}\n`, "utf8");
-
   const sites = jurisdictions.reduce((n, j) => n + j.sites.length, 0);
   const withSites = jurisdictions.filter((j) => j.sites.length > 0).length;
   console.log(
-    `\nWROTE ${path}\n` +
-      `  ${jurisdictions.length} jurisdictions, ${withSites} with sites, ` +
+    `  ${jurisdictions.length} jurisdiction outcomes, ${withSites} with sites, ` +
       `${jurisdictions.length - withSites} recorded as refusals with their rungs\n` +
       `  ${sites} voting sites total`,
   );
-  if (sites === 0) {
-    console.error("REFUSING: zero sites retrieved. An empty success is not a success.");
-    process.exit(1);
+
+  const retrievedAt = new Date().toISOString();
+  const candidate = votingSitesCandidate({
+    current: file,
+    prior,
+    failures,
+    rawBodies: officialRawBodies,
+    successfulAuthorityReads,
+    requestedUrl: PIMA_SOURCE_PAGE,
+    finalUrl: PIMA_SOURCE_PAGE,
+    retrievedAt,
+  });
+  candidateSubmitted = true;
+  const outcome = await processRegisteredManualCandidate(
+    store,
+    VOTING_SITES_CONTRACT.id,
+    candidate,
+    retrievedAt,
+  );
+  if (!outcome.promoted) {
+    throw new Error(`Voting-sites promotion refused: ${outcome.candidate.failureCode}`);
   }
+  console.log(
+    `promoted ${outcome.promoted.versionId}; exact jurisdiction/site changes and held scopes are in the canonical outcome receipt; no tracked runtime artifact was written`,
+  );
 }
 
-await main();
+try {
+  await main();
+} catch (error) {
+  if (!candidateSubmitted) {
+    const attemptedAt = new Date().toISOString();
+    const failed = failedAcquisitionCandidate({
+      sourceId: VOTING_SITES_CONTRACT.sourceId,
+      recordClass: VOTING_SITES_CONTRACT.recordClass,
+      scope: VOTING_SITES_CONTRACT.scope,
+      requestedUrl: PIMA_SOURCE_PAGE,
+      attemptedAt,
+      failureDetail: error instanceof Error ? error.message : String(error),
+      parserVersion: VOTING_SITES_CONTRACT.parserVersion,
+    });
+    await processRegisteredManualCandidate(
+      new PostgresRoutineDataStore(),
+      VOTING_SITES_CONTRACT.id,
+      failed,
+      attemptedAt,
+    );
+  }
+  throw error;
+}

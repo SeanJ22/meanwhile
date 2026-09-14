@@ -1,8 +1,17 @@
-import { authorityFor } from "./source-authority.ts";
+import { createHash } from "node:crypto";
+
+import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
+import {
+  MEETING_READER_SERVING_WINDOW_CONTRACT,
+  meetingReaderServingWindowAt,
+} from "../meetings/constants.ts";
+import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
+import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import type {
   CandidateDecision,
   CandidateState,
   CandidateVersionRecord,
+  DependentCheck,
   RoutineCandidate,
   ValidationCheck,
   ValidationCheckName,
@@ -10,6 +19,34 @@ import type {
 } from "./types.ts";
 
 const SHA256 = /^[a-f0-9]{64}$/;
+
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function durableCanonicalJson(value: unknown): { readonly canonical: string | null; readonly issue: string | null } {
+  try {
+    const encoded = JSON.stringify(value);
+    if (encoded === undefined) return { canonical: null, issue: "The value is not representable as durable JSON." };
+    const roundTrip = JSON.parse(encoded) as unknown;
+    const before = canonicalCivicDataJson(value);
+    const after = canonicalCivicDataJson(roundTrip);
+    if (before !== after) {
+      return { canonical: null, issue: "The value changes when persisted through the canonical JSONB representation." };
+    }
+    return { canonical: before, issue: null };
+  } catch (error) {
+    return {
+      canonical: null,
+      issue: `The value is not durable JSON: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+}
+
+function canonicalMembers(value: readonly { readonly key: string; readonly record: unknown }[]): string | null {
+  const durable = durableCanonicalJson([...value].sort((left, right) => left.key.localeCompare(right.key)));
+  return durable.canonical;
+}
 
 function result(check: ValidationCheckName, verdict: ValidationCheck["verdict"], code: string, detail: string): ValidationCheck {
   return { check, verdict, code, detail };
@@ -27,6 +64,123 @@ function temporalOrder(value: string): number | null {
 
 function firstBlocking(checks: readonly ValidationCheck[]): ValidationCheck | null {
   return checks.find((check) => check.verdict !== "PASS") ?? null;
+}
+
+function object(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationCheck | null {
+  const removed = candidate.changeSet?.removed ?? [];
+  const evidence = candidate.removalEvidence ?? [];
+  const reconciledCompleteHorizon = candidate.horizon.kind === "BOUNDED" &&
+    candidate.horizon.claimsComplete &&
+    candidate.horizon.paginationComplete &&
+    candidate.horizon.declaredTotal === candidate.horizon.returnedRecords;
+
+  if (removed.length === 0) {
+    return evidence.length === 0
+      ? null
+      : result(
+          "COMPLETENESS_HORIZON_VALIDITY",
+          "FAIL",
+          "REMOVAL_EVIDENCE_EXTRA",
+          `${evidence.length} removal-evidence row(s) name no removed record.`,
+        );
+  }
+  if (reconciledCompleteHorizon) {
+    return evidence.length === 0
+      ? null
+      : result(
+          "COMPLETENESS_HORIZON_VALIDITY",
+          "FAIL",
+          "REMOVAL_EVIDENCE_UNEXPECTED_FOR_COMPLETE_HORIZON",
+          "A complete, reconciled bounded universe authorizes its own removals; supplemental removal evidence is not accepted.",
+        );
+  }
+
+  if (candidate.recordClass !== "MEETING") {
+    return result(
+      "COMPLETENESS_HORIZON_VALIDITY",
+      evidence.length === 0 ? "CANNOT_TELL" : "FAIL",
+      evidence.length === 0 ? "INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED" : "REMOVAL_EVIDENCE_UNSUPPORTED",
+      `The incomplete ${candidate.horizon.kind} horizon removed ${removed.length} record(s) without a record-class removal contract.`,
+    );
+  }
+
+  const removedKeys = new Set(removed.map((delta) => delta.key));
+  const evidenceByKey = new Map<string, (typeof evidence)[number]>();
+  for (const row of evidence) {
+    if (!row || typeof row.key !== "string" || evidenceByKey.has(row.key)) {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_DUPLICATE_OR_INVALID", "Removal evidence must name each removed key exactly once.");
+    }
+    if (!removedKeys.has(row.key)) {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_EXTRA", `${row.key} is not an exact removed record key.`);
+    }
+    evidenceByKey.set(row.key, row);
+  }
+  const missing = removed.filter((delta) => !evidenceByKey.has(delta.key));
+  if (missing.length > 0) {
+    return result(
+      "COMPLETENESS_HORIZON_VALIDITY",
+      "CANNOT_TELL",
+      "INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED",
+      `${missing.length}/${removed.length} removal(s) lack exact competent evidence: ${missing.slice(0, 3).map(({ key }) => key).join(", ")}.`,
+    );
+  }
+
+  const validMeetingEvidence = new Map<string, (typeof evidence)[number]>();
+  const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  for (const delta of removed.filter(({ key }) => key.startsWith("meeting:"))) {
+    const row = evidenceByKey.get(delta.key)!;
+    const before = object(delta.before);
+    const meetingId = typeof before?.id === "string" ? before.id : null;
+    const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
+    const lower = Date.parse(row.lowerBound);
+    const upper = Date.parse(row.upperBound);
+    const prior = Date.parse(row.priorStartsAt);
+    if (
+      row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW" ||
+      row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
+      registeredWindow === null ||
+      row.lowerBound !== registeredWindow.lowerBound ||
+      row.upperBound !== registeredWindow.upperBound ||
+      row.parentMeetingKey !== undefined ||
+      !meetingId || delta.key !== `meeting:${meetingId}` ||
+      !startsAt || startsAt !== row.priorStartsAt ||
+      !Number.isFinite(lower) || !Number.isFinite(upper) || lower >= upper ||
+      !Number.isFinite(prior) || !(prior < lower || prior > upper)
+    ) {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven outside its explicit registered serving window.`);
+    }
+    validMeetingEvidence.set(delta.key, row);
+  }
+
+  for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
+    const row = evidenceByKey.get(delta.key)!;
+    const before = object(delta.before);
+    const documentId = typeof before?.id === "string" ? before.id : null;
+    const meetingId = typeof before?.meetingId === "string" ? before.meetingId : null;
+    const parentKey = meetingId ? `meeting:${meetingId}` : null;
+    const parent = parentKey ? validMeetingEvidence.get(parentKey) : null;
+    if (
+      row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW" ||
+      row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
+      !documentId || delta.key !== `agenda-document:${documentId}` ||
+      !parentKey || row.parentMeetingKey !== parentKey || !removedKeys.has(parentKey) || !parent ||
+      row.lowerBound !== parent.lowerBound || row.upperBound !== parent.upperBound || row.priorStartsAt !== parent.priorStartsAt
+    ) {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
+    }
+  }
+
+  const unsupported = removed.find(({ key }) => !key.startsWith("meeting:") && !key.startsWith("agenda-document:"));
+  if (unsupported) {
+    return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_UNSUPPORTED", `${unsupported.key} is not a meeting or attached agenda-document key.`);
+  }
+  return null;
 }
 
 export function failureStateFor(check: ValidationCheck): CandidateState {
@@ -47,13 +201,77 @@ export function validateRoutineCandidate(
   candidate: RoutineCandidate,
   lastKnownGood: CandidateVersionRecord | null,
   validatedAt: string = new Date().toISOString(),
+  sourceScopedChecks: readonly DependentCheck[] = [],
 ): { readonly receipt: ValidationReceipt; readonly state: "VALIDATED" | CandidateState } {
   const checks: ValidationCheck[] = [];
-  const authority = candidate.retrieval.finalUrl
-    ? authorityFor(candidate.sourceId, candidate.recordClass, candidate.retrieval.finalUrl)
-    : { ok: false as const, code: "FINAL_URL_MISSING", detail: "Successful retrieval has no final URL." };
+  const derivedCivicRecords = civicRecordsFor(candidate.recordClass, candidate.readModel);
+  const civicRecords = candidate.civicRecords ?? derivedCivicRecords;
+  const civicRecordKeys = civicRecords.map((member) => member.key);
+  const invalidCivicRecordKey = civicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
+  const duplicateCivicRecordKeys = civicRecordKeys.length - new Set(civicRecordKeys).size;
+  const derivedCivicRecordKeys = derivedCivicRecords.map((member) => member.key);
+  const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
+  const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
+  const normalizedPayload = durableCanonicalJson(candidate.normalizedPayload);
+  const readModel = durableCanonicalJson(candidate.readModel);
+  const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
+  const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
+  const authority = candidate.retrieval.manualSourceReceipt
+    ? authorityForManualReceipt(
+        candidate.sourceId,
+        candidate.recordClass,
+        candidate.retrieval.manualSourceReceipt,
+        candidate.retrieval.finalUrl,
+      )
+    : candidate.retrieval.finalUrl
+      ? authorityFor(candidate.sourceId, candidate.recordClass, candidate.retrieval.finalUrl)
+      : { ok: false as const, code: "FINAL_URL_MISSING", detail: "Successful retrieval has no final URL." };
+  const registered = candidate.bootstrapImport
+    ? sourceAuthority(candidate.sourceId)
+    : authority.ok
+      ? authority.contract
+      : null;
 
-  if (!candidate.retrieval.succeeded) {
+  if (candidate.bootstrapImport) {
+    const reattestation = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION";
+    const outcomeUnionPredecessorId = candidate.bootstrapImport.kind === "TRUSTED_LKG_IMPORT"
+      ? candidate.bootstrapImport.pimaOutcomeUnion?.predecessorVersionId ?? null
+      : null;
+    const exactPredecessorId = reattestation
+      ? candidate.bootstrapImport.predecessorVersionId
+      : outcomeUnionPredecessorId;
+    const issue = trustedLkgImportEvidenceIssue(candidate, lastKnownGood);
+    if (exactPredecessorId !== null && lastKnownGood?.candidate.id !== exactPredecessorId) {
+      checks.push(result(
+        "SOURCE_AUTHENTICITY",
+        "FAIL",
+        reattestation
+          ? "TRUSTED_LKG_REATTESTATION_REQUIRES_EXACT_LKG"
+          : "TRUSTED_LKG_PIMA_OUTCOME_UNION_REQUIRES_EXACT_LKG",
+        `${reattestation ? "Re-attestation" : "Pima outcome union"} names ${exactPredecessorId}, but the exact durable LKG is ${lastKnownGood?.candidate.id ?? "absent"}.`,
+      ));
+    } else if (!reattestation && outcomeUnionPredecessorId === null && lastKnownGood !== null) {
+      checks.push(result(
+        "SOURCE_AUTHENTICITY",
+        "FAIL",
+        "TRUSTED_LKG_IMPORT_REQUIRES_EMPTY_POINTER",
+        `Trusted LKG import is a one-time first-pointer transfer; existing LKG ${lastKnownGood.candidate.id} must not be replaced by bootstrap evidence.`,
+      ));
+    } else if (!registered || !registered.recordClasses.includes(candidate.recordClass)) {
+      checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "TRUSTED_LKG_IMPORT_SOURCE_UNREGISTERED", "The import does not bind a registered source authority and record class."));
+    } else if (issue !== null) {
+      checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "TRUSTED_LKG_IMPORT_INVALID", issue));
+    } else {
+      checks.push(result(
+        "SOURCE_AUTHENTICITY",
+        "PASS",
+        reattestation ? "TRUSTED_LKG_REATTESTATION_PROVENANCE_VALID" : "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+        reattestation
+          ? `Explicitly non-source-authenticated PDC-v2 integrity successor for exact predecessor ${candidate.bootstrapImport.predecessorVersionId}, pointer ${candidate.bootstrapImport.predecessorPointerSha256}, at code ${candidate.bootstrapImport.importerCodeSha}.`
+          : `Explicitly non-source-authenticated PDC-v2 LKG import from ${candidate.bootstrapImport.fixtures.length} immutable file(s), manifest ${candidate.bootstrapImport.fixtureSetSha256}, at code ${candidate.bootstrapImport.importerCodeSha}.`,
+      ));
+    }
+  } else if (!candidate.retrieval.succeeded) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "SOURCE_RETRIEVAL_FAILED", candidate.retrieval.failureDetail ?? `HTTP ${candidate.retrieval.httpStatus ?? "unknown"}; no authoritative bytes acquired.`));
   } else if (!authority.ok) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", authority.code, authority.detail));
@@ -67,8 +285,73 @@ export function validateRoutineCandidate(
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "PARSER_FAILED", candidate.normalization.failureDetail ?? "Normalizer did not produce a candidate."));
   } else if (!candidate.normalization.normalizedHash || !SHA256.test(candidate.normalization.normalizedHash)) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_HASH_INVALID", "Normalized payload does not carry a lowercase SHA-256 hash."));
-  } else if (authority.ok && candidate.normalization.parserVersion !== authority.contract.parserVersion) {
-    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "PARSER_VERSION_UNREGISTERED", `${candidate.normalization.parserVersion} does not equal ${authority.contract.parserVersion}.`));
+  } else if (readModel.issue !== null || readModel.canonical === null) {
+    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "READ_MODEL_NOT_DURABLE_JSON", readModel.issue ?? "Reader projection is not durable JSON."));
+  } else if (sha256(readModel.canonical) !== candidate.normalization.normalizedHash) {
+    checks.push(result(
+      "SCHEMA_PARSE_VALIDITY",
+      "FAIL",
+      "NORMALIZED_READ_MODEL_HASH_MISMATCH",
+      "The supplied normalized hash does not bind the exact bounded Reader projection presented for promotion.",
+    ));
+  } else if (candidate.normalization.normalizedPayloadHash === undefined && sourceScopedChecks.length > 0) {
+    checks.push(result(
+      "SCHEMA_PARSE_VALIDITY",
+      "FAIL",
+      "NORMALIZED_PAYLOAD_HASH_MISSING",
+      "A candidate entering a registered production contract does not bind its normalized/provenance evidence envelope.",
+    ));
+  } else if (candidate.normalization.normalizedPayloadHash !== undefined && (
+    candidate.normalization.normalizedPayloadHash === null ||
+    !SHA256.test(candidate.normalization.normalizedPayloadHash)
+  )) {
+    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_PAYLOAD_HASH_INVALID", "Normalized evidence does not carry a lowercase SHA-256 hash."));
+  } else if (candidate.normalization.normalizedPayloadHash !== undefined && (
+    normalizedPayload.issue !== null || normalizedPayload.canonical === null
+  )) {
+    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_PAYLOAD_NOT_DURABLE_JSON", normalizedPayload.issue ?? "Normalized payload is not durable JSON."));
+  } else if (
+    candidate.normalization.normalizedPayloadHash !== undefined &&
+    normalizedPayload.canonical !== null &&
+    sha256(normalizedPayload.canonical) !== candidate.normalization.normalizedPayloadHash
+  ) {
+    checks.push(result(
+      "SCHEMA_PARSE_VALIDITY",
+      "FAIL",
+      "NORMALIZED_PAYLOAD_HASH_MISMATCH",
+      "The supplied normalized-evidence hash does not bind the exact normalized payload presented for promotion.",
+    ));
+  } else if (invalidCivicRecordKey !== undefined) {
+    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "CIVIC_RECORD_KEY_INVALID", "A normalized civic record has no stable non-empty member key."));
+  } else if (duplicateCivicRecordKeys > 0) {
+    checks.push(result(
+      "SCHEMA_PARSE_VALIDITY",
+      "FAIL",
+      "CIVIC_RECORD_KEYS_DUPLICATED",
+      `${duplicateCivicRecordKeys} normalized civic record member key(s) are duplicated; no Map or delta projection may silently collapse them.`,
+    ));
+  } else if (invalidDerivedCivicRecordKey !== undefined) {
+    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "DERIVED_CIVIC_RECORD_KEY_INVALID", "The exact Reader projection derives a civic record with no stable non-empty member key."));
+  } else if (duplicateDerivedCivicRecordKeys > 0) {
+    checks.push(result(
+      "SCHEMA_PARSE_VALIDITY",
+      "FAIL",
+      "DERIVED_CIVIC_RECORD_KEYS_DUPLICATED",
+      `${duplicateDerivedCivicRecordKeys} exact Reader-projection member key(s) are duplicated; no supplied member list may conceal them.`,
+    ));
+  } else if (candidate.civicRecords !== undefined && (
+    suppliedCivicRecords === null ||
+    canonicalDerivedCivicRecords === null ||
+    suppliedCivicRecords !== canonicalDerivedCivicRecords
+  )) {
+    checks.push(result(
+      "SCHEMA_PARSE_VALIDITY",
+      "FAIL",
+      "CIVIC_RECORD_PROJECTION_MISMATCH",
+      "The supplied civic-record members do not equal the members derived from the exact Reader projection.",
+    ));
+  } else if (registered && candidate.normalization.parserVersion !== registered.parserVersion) {
+    checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "PARSER_VERSION_UNREGISTERED", `${candidate.normalization.parserVersion} does not equal ${registered.parserVersion}.`));
   } else if (candidate.normalization.missingRequiredFields.length > 0) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "REQUIRED_FIELDS_MISSING", candidate.normalization.missingRequiredFields.join(", ")));
   } else if (candidate.normalization.inputRecords < 0 || candidate.normalization.outputRecords < 0 || candidate.normalization.droppedRecords < 0 || candidate.normalization.outputRecords + candidate.normalization.droppedRecords !== candidate.normalization.inputRecords) {
@@ -77,7 +360,6 @@ export function validateRoutineCandidate(
     checks.push(result("SCHEMA_PARSE_VALIDITY", "PASS", "SCHEMA_AND_DISPOSITION_VALID", `${candidate.normalization.outputRecords}/${candidate.normalization.inputRecords} records normalized; ${candidate.normalization.droppedRecords} explicitly dropped.`));
   }
 
-  const registered = authority.ok ? authority.contract : null;
   const identityFailure = candidate.identities.find((identity) =>
     identity.ambiguous || identity.matchBasis === "NAME_ONLY" || Object.keys(identity.identifiers).length === 0,
   );
@@ -106,12 +388,40 @@ export function validateRoutineCandidate(
   }
 
   const current = lastKnownGood?.candidate.temporal;
+  const retrievedAt = Date.parse(candidate.retrieval.retrievedAt);
+  const currentRetrievedAt = lastKnownGood === null
+    ? null
+    : Date.parse(lastKnownGood.candidate.retrieval.retrievedAt);
+  const validationAt = Date.parse(validatedAt);
   const candidateOrder = temporalOrder(candidate.temporal.sourceThrough);
   const currentOrder = current ? temporalOrder(current.sourceThrough) : null;
-  if (!candidate.temporal.version || !candidate.temporal.sourceThrough) {
+  if (!Number.isFinite(retrievedAt) || !Number.isFinite(validationAt)) {
+    checks.push(result("TEMPORAL_VALIDITY", "FAIL", "ACQUISITION_TIME_INVALID", "The acquisition or validation instant is not a valid timestamp."));
+  } else if (retrievedAt > validationAt) {
+    checks.push(result(
+      "TEMPORAL_VALIDITY",
+      "FAIL",
+      "ACQUISITION_TIME_AFTER_VALIDATION",
+      `The acquisition instant ${candidate.retrieval.retrievedAt} is later than validation ${validatedAt}.`,
+    ));
+  } else if (currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) && retrievedAt < currentRetrievedAt) {
+    checks.push(result(
+      "TEMPORAL_VALIDITY",
+      "FAIL",
+      "ACQUISITION_TIME_REGRESSION",
+      `The candidate acquisition ${candidate.retrieval.retrievedAt} predates serving LKG acquisition ${lastKnownGood!.candidate.retrieval.retrievedAt}.`,
+    ));
+  } else if (!candidate.temporal.version || !candidate.temporal.sourceThrough) {
     checks.push(result("TEMPORAL_VALIDITY", "CANNOT_TELL", "SOURCE_THROUGH_UNKNOWN", "Candidate has no product/session/report source-through value."));
   } else if (candidate.temporal.version !== candidate.temporal.expectedVersion) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "WRONG_PERIOD_OR_VINTAGE", `${candidate.temporal.version} does not equal expected ${candidate.temporal.expectedVersion}.`));
+  } else if (candidate.temporal.staleAtRetrieval && candidate.bootstrapImport) {
+    checks.push(result(
+      "TEMPORAL_VALIDITY",
+      "PASS",
+      "TRUSTED_LKG_IMPORT_STALENESS_RECORDED",
+      `The frozen LKG is explicitly stale at import (source through ${candidate.temporal.sourceThrough}); it may preserve service but cannot prove current publisher freshness.`,
+    ));
   } else if (candidate.temporal.staleAtRetrieval) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "FRESH_FETCH_STALE_FACTS", "The route was freshly read but the source facts belong to an expired term/session/period."));
   } else if (current && candidate.temporal.version < current.version) {
@@ -130,6 +440,7 @@ export function validateRoutineCandidate(
     checks.push(result("SEMANTIC_VALIDITY", "PASS", "FACT_INTERPRETATION_VALID", `${candidate.semantics.factKind}${candidate.semantics.actionStage ? ` at ${candidate.semantics.actionStage}` : ""}.`));
   }
 
+  const removalCheck = incompleteHorizonRemovalCheck(candidate);
   if (candidate.horizon.returnedRecords !== candidate.normalization.outputRecords) {
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "HORIZON_RECORD_COUNT_MISMATCH", `${candidate.horizon.returnedRecords} horizon rows != ${candidate.normalization.outputRecords} normalized rows.`));
   } else if (candidate.horizon.claimsComplete && candidate.horizon.kind !== "BOUNDED") {
@@ -138,6 +449,8 @@ export function validateRoutineCandidate(
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "CANNOT_TELL", "PAGINATION_INCOMPLETE", "The candidate claims completeness before the bounded query's last page."));
   } else if (candidate.horizon.claimsComplete && candidate.horizon.declaredTotal !== candidate.horizon.returnedRecords) {
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "CANNOT_TELL", "DECLARED_TOTAL_NOT_RECONCILED", `${candidate.horizon.returnedRecords} returned != ${candidate.horizon.declaredTotal ?? "unstated"} declared.`));
+  } else if (removalCheck) {
+    checks.push(removalCheck);
   } else {
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "PASS", candidate.horizon.claimsComplete ? "BOUNDED_UNIVERSE_RECONCILED" : "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM", candidate.horizon.claimsComplete ? `${candidate.horizon.returnedRecords}/${candidate.horizon.declaredTotal} rows and pagination ended.` : "Valid individual facts may promote; broader completeness remains open."));
   }
@@ -159,13 +472,26 @@ export function validateRoutineCandidate(
     checks.push(result("ABSENCE_VALIDITY", "PASS", "AUTHORITATIVE_ABSENCE_BOUNDED", `${candidate.absence.basis}: ${candidate.absence.exactSubject} within ${candidate.absence.exactHorizon}.`));
   }
 
-  const failedConsumer = candidate.dependentChecks.find((check) => !check.passed);
-  if (candidate.dependentChecks.length === 0) {
+  const evidence = candidate.sourceProjectionEvidence;
+  const sourceProjectionEvidenceMatches = evidence?.kind === "SOURCE_PROJECTION_CONTRACT" &&
+    evidence.sourceId === candidate.sourceId &&
+    evidence.recordClass === candidate.recordClass &&
+    evidence.scope === candidate.scope;
+  const dependentChecks = [...candidate.dependentChecks, ...sourceScopedChecks];
+  const failedConsumer = dependentChecks.find((check) => !check.passed);
+  if (!sourceProjectionEvidenceMatches) {
+    checks.push(result(
+      "DEPENDENT_READ_MODEL_VALIDITY",
+      "FAIL",
+      "DEPENDENT_EVIDENCE_SCOPE_MISMATCH",
+      "Read-model evidence is not bound to this candidate's exact source, record class, and scope.",
+    ));
+  } else if (dependentChecks.length === 0) {
     checks.push(result("DEPENDENT_READ_MODEL_VALIDITY", "FAIL", "DEPENDENT_CHECK_MISSING", "No named Reader/Ask consumer exercised the promoted projection shape."));
   } else if (failedConsumer) {
     checks.push(result("DEPENDENT_READ_MODEL_VALIDITY", "FAIL", "DEPENDENT_CONSUMER_REJECTED", `${failedConsumer.consumer}: ${failedConsumer.detail}`));
   } else {
-    checks.push(result("DEPENDENT_READ_MODEL_VALIDITY", "PASS", "DEPENDENT_CONSUMERS_ACCEPT", candidate.dependentChecks.map((check) => check.consumer).join(", ")));
+    checks.push(result("DEPENDENT_READ_MODEL_VALIDITY", "PASS", "DEPENDENT_CONSUMERS_ACCEPT", dependentChecks.map((check) => check.consumer).join(", ")));
   }
 
   const blocking = firstBlocking(checks);

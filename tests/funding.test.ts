@@ -21,7 +21,9 @@ import {
   getContributorReactionTargetIds,
   getFundingSnapshot,
   getFundingTargetIds,
+  refreshFundingFromPromoted,
 } from "../lib/funding/snapshot.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   fundingAnswerForTarget,
   plainContributorLabel,
@@ -29,6 +31,7 @@ import {
   STATE_FUNDING_NOTE,
 } from "../lib/funding/display.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 
 /**
  * The FEC funding surface (D34) — the ripcord doctrine's first application,
@@ -39,6 +42,7 @@ import type { FundingSnapshot } from "../lib/funding/types.ts";
  */
 
 const ROOT = join(import.meta.dirname, "..");
+await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
 const snapshot = getFundingSnapshot();
 
 // ── The snapshot artifact ────────────────────────────────────────────────
@@ -1285,18 +1289,30 @@ test("R4: the first-hop candidate checks are unchanged by the second-hop fix", a
   assert.deepEqual(kinds, ["CANDIDATE_COUNT", "CANDIDATE_MISSING", "CONTRIBUTOR_ROWS"]);
 });
 
-test("thin guard: the fetch script runs it before writing and keeps the prior snapshot on failure", () => {
+test("the FEC acquisition script has no tracked writer and is reachable only through the standing routine contract", () => {
   const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
-  // The guard runs, the failure path exits nonzero WITHOUT writing, and the
-  // override is an explicit human flag — assert the wiring, not vibes.
-  assert.match(script, /findShrinkRegressions\(prior, snapshot\)/);
-  const guardAt = script.indexOf("findShrinkRegressions(prior, snapshot)");
-  // The write is stamp-stable since 2026-09-05 (RL-1): writeStampStable({ absolutePath: OUT, … }).
-  const writeAt = script.indexOf("absolutePath: OUT");
-  assert.ok(guardAt > 0 && writeAt > guardAt, "the guard must run BEFORE the snapshot write");
-  assert.match(script, /process\.exit\(1\)/);
-  assert.match(script, /--allow-shrink/);
-  assert.match(script, /ALLOW_SHRINK = process\.argv\.includes\("--allow-shrink"\)/);
+  assert.match(script, /if \(!PROMOTE && !MATCH_ONLY\)/);
+  assert.match(script, /fecFundingCandidate\(/);
+  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, snapshot\.fetchedAt\)/);
+  assert.doesNotMatch(script, /writeStampStable|writeFile(?:Sync)?|absolutePath:\s*OUT|--allow-shrink|findShrinkRegressions/);
+
+  const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
+    scripts: Record<string, string>;
+  };
+  assert.equal(manifest.scripts["fec:fetch"], undefined);
+  assert.equal(manifest.scripts["fec:promote"], undefined);
+  assert.ok(
+    Object.values(manifest.scripts).every((command) => !command.includes("scripts/fetch-fec.mts")),
+    "the standing routine adapter regained a direct package door",
+  );
+  assert.deepEqual(
+    requiredRoutineContract("fec-funding").acquisitionAdapter.command,
+    ["scripts/fetch-fec.mts", "--promote"],
+  );
+  assert.equal(
+    manifest.scripts["window:run"],
+    "node scripts/installed-runtime-command.mjs window",
+  );
 });
 
 

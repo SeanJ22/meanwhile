@@ -3,6 +3,9 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";

@@ -15,18 +15,23 @@ import { durableResearchTools } from "../lib/control-plane/workers/research-runt
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { today } from "./doc-dates.mjs";
 import { writeAutonomousFleetProof } from "./autonomous-fleet-proof-output.ts";
+import {
+  preloadOperationalReferenceBundle,
+  requiredOperationalJurisdictionRegistry,
+} from "../lib/civic-data/operational-references.ts";
 
 const root = resolve(import.meta.dirname, "..");
 const vaultRoot = process.argv.find(a => a.startsWith("--vault-root="))?.slice(13);
 if (!vaultRoot) throw new Error("SCOUT_PROOF_EXPLICIT_CANONICAL_VAULT_REQUIRED");
 const now = () => new Date().toISOString();
-const registry = JSON.parse(readFileSync(join(root, "data/states/nj/jurisdictions/nj.json"), "utf8"));
+const connection = controlPlaneUrlFromEnv();
+if (!connection) throw new Error("SCOUT_PROOF_CONTROL_PLANE_NOT_CONFIGURED");
+await preloadOperationalReferenceBundle({ bypassCache: true });
+const registry = requiredOperationalJurisdictionRegistry("nj");
 const subject = registry.jurisdictions.find((r: { id: string }) => r.id === "nj:county:county-of-atlantic");
 const sourceId = "BALLOT_AND_CANDIDATES:THIS_JURISDICTION:county-of-atlantic-county-clerk";
 const source = registry.sourceCatalog[sourceId];
-if (!subject || !source || !subject.sourceIds.includes(sourceId)) throw new Error("SCOUT_PROOF_CANONICAL_OWED_SOURCE_MISSING");
-const connection = controlPlaneUrlFromEnv();
-if (!connection) throw new Error("SCOUT_PROOF_CONTROL_PLANE_NOT_CONFIGURED");
+if (!subject || !subject.ownWebAddress || !source || !subject.sourceIds.includes(sourceId)) throw new Error("SCOUT_PROOF_CANONICAL_OWED_SOURCE_MISSING");
 const repos = await createPgRepositories(connection);
 const draft = createWorkItem({ project: "freshness", subject: subject.id,
   obligation: "Acquire the Atlantic County Clerk's 2026 candidate-filing universe",

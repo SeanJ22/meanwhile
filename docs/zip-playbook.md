@@ -3056,7 +3056,8 @@ temptation to do something else is what this paragraph exists to refuse:
   a guess about a specific sitting dressed as a fact, and a reader acts on it by
   driving somewhere.
 - **DO record the branches walked and the date.** RULING 53's clock runs from
-  there and the scheduled refresh re-walks it.
+  there; the standing runner derives the next due time and records every
+  re-walk attempt in the production data plane.
 
 ### A subcommittee's sittings can be filed under its PARENT board's category
 

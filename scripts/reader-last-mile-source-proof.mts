@@ -10,10 +10,16 @@ import {
   packReaderEvidence, sha256, type ReaderCensus, type ReaderClosureReceipt, type ReaderComponentCase,
 } from "../lib/holdings/reader-census.ts";
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "./lib/reader-proof-runtime.ts";
 
 // This renews presentation only. Retrieval comes from the still-hash-bound
 // canonical receipt, never from a model or a new acquisition.
 const root = process.cwd();
+await prepareReaderProofRuntime();
+const meetingAuthority = requiredPreparedReaderProofMeetingsAuthority();
 const exactHead = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const output = process.env.READER_RENEWAL_EXECUTION!;
 if (process.env.READER_RENEWAL_SESSION === "V94") {
@@ -21,7 +27,8 @@ if (process.env.READER_RENEWAL_SESSION === "V94") {
   assert.ok(output && process.env.READER_FINAL_PREPARED_CENSUS && process.env.READER_RENEWAL_VISUAL);
   if (process.env.READER_RENEWAL_EXPECTED_HEAD) assert.equal(exactHead, process.env.READER_RENEWAL_EXPECTED_HEAD);
   console.log(JSON.stringify(await executeV94ReaderSourceProof({ root, exactHead, output,
-    preparedCensusPath: process.env.READER_FINAL_PREPARED_CENSUS, visualPath: process.env.READER_RENEWAL_VISUAL })));
+    preparedCensusPath: process.env.READER_FINAL_PREPARED_CENSUS, visualPath: process.env.READER_RENEWAL_VISUAL,
+    meetingAuthority })));
   process.exit(0);
 }
 assert.ok(output && process.env.READER_FINAL_PREPARED_CENSUS && process.env.READER_RENEWAL_BALLOT);
@@ -51,7 +58,7 @@ const selected = census.records.filter(record => {
   seenDistrictClasses.add(key); return true;
 });
 floored("affected district rendering classes", "canonical eligible registry divisions by state/type", selected.length, selected.length);
-const bodies = await bodyRenderProof(root, { ...census, records: selected });
+const bodies = await bodyRenderProof(root, { ...census, records: selected }, meetingAuthority);
 assert.deepEqual(bodies.failures, []);
 assert.deepEqual(bodies.unsupported, []);
 assert.equal(bodies.cases.length, selected.length);

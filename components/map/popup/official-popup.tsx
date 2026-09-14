@@ -5,7 +5,6 @@ import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
-import { divisionOcdIdForRosterHolder } from "@/lib/registry/body-rosters";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
@@ -22,10 +21,7 @@ import {
 } from "@/components/officials/key-votes-section";
 import { votedCount } from "@/lib/votes/participation";
 import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
-import {
-  summaryForBill,
-  summaryPendingForBill,
-} from "@/lib/votes/bill-summaries";
+import type { BillSummary } from "@/lib/votes/bill-summaries";
 
 import { PopupCard, PopupSectionLabel } from "./popup-card";
 
@@ -58,7 +54,7 @@ interface OfficialPopupProps {
 const initialsOf = personInitials;
 
 /**
- * The four recorded states, as FILLED PILLS (item 5, 2026-08-16).
+ * The publisher-recorded states, as FILLED PILLS (item 5, 2026-08-16).
  *
  * They were bare bold text in a colour. A pill in the chip grammar is what
  * this system already uses for a stated fact, and the colours still state the
@@ -72,8 +68,10 @@ const initialsOf = personInitials;
 const POSITION_STYLE: Record<VotePosition, { label: string; tone: string }> = {
   YES: { label: "Voted yes", tone: "yes" },
   NO: { label: "Voted no", tone: "no" },
+  ABSTAIN: { label: "Abstained", tone: "neutral" },
   PRESENT: { label: "Voted present", tone: "neutral" },
   NOT_VOTING: { label: "Did not vote", tone: "neutral" },
+  UNKNOWN: { label: "Publisher position unclassified", tone: "neutral" },
 };
 
 /**
@@ -97,6 +95,9 @@ export type MemberRollCall = RollCallVote & {
   /** Item 3: per-party for/against, or null when it wouldn't sum to the
    *  chamber's recorded tally — the honest unavailable state. */
   partyBreakdown: { party: string; yes: number; no: number }[] | null;
+  /** Canonical server projection; the client never imports tracked civic data. */
+  billSummary: BillSummary | null;
+  billSummaryPending: boolean;
 };
 
 /**
@@ -397,7 +398,11 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                     <span className="text-muted">{explainer.noMeans}</span>
                   </p>
                 )}
-                <BillPlainSummary billUrl={vote.billUrl} />
+                <BillPlainSummary
+                  billUrl={vote.billUrl}
+                  summary={vote.billSummary}
+                  pending={vote.billSummaryPending}
+                />
                 <p className="mt-0.5 text-[0.625rem]">
                   <a
                     href={vote.rollCallUrl}
@@ -522,9 +527,15 @@ function VotingRecordViews({
  * A bill honestly pending renders the coming state; the vote row is never
  * blocked either way.
  */
-export function BillPlainSummary({ billUrl }: { billUrl: string | null }) {
-  const summary = summaryForBill(billUrl);
-  const pending = summaryPendingForBill(billUrl);
+export function BillPlainSummary({
+  billUrl,
+  summary,
+  pending,
+}: {
+  billUrl: string | null;
+  summary: BillSummary | null;
+  pending: boolean;
+}) {
   if (!summary && !pending) return null;
   if (!summary) {
     return (
@@ -670,7 +681,7 @@ export function OfficeBlurb({
   // another city's mayor.
   const blurb = blurbForTitle(
     holder.officeTitle,
-    divisionOcdIdForRosterHolder(holder.id),
+    holder.officeJurisdictionOcdId,
   );
   if (!blurb) return null;
   return (

@@ -12,7 +12,7 @@
  *   #805  FULL, green                     on an earlier head
  *   #806  FULL, green                     on be6e41ff, after a late review edit
  *   #807  FULL, green                     on the merge commit — same tree
- *   #808  cheap attestation               the observer's own bookkeeping commit
+ *   #808  cheap transition run            the observer's former bookkeeping commit
  * ```
  *
  * Roughly forty-five minutes in which the owner could not proceed while the
@@ -46,7 +46,7 @@
  *   <= 1  full hosted certification before merge
  *      0  redundant full certifications after merge when the shipped tree is
  *         proven equivalent to the certified candidate
- *   any   cheap attestations and post-ship observations
+ *   any   exact-tree attestations and canonical post-deploy observations
  * ```
  *
  * A second full certification is not forbidden — a candidate whose base really
@@ -82,7 +82,7 @@ export const TRANSACTION_STAGES = [
   "CERTIFIED",
   /** The certified tree is on the integration branch. */
   "MERGED",
-  /** Post-ship observation has been written. The transaction is closed. */
+  /** A canonical control-plane post-deploy receipt has been written. */
   "OBSERVED",
 ] as const;
 export type TransactionStage = (typeof TRANSACTION_STAGES)[number];
@@ -129,8 +129,6 @@ export const FOLLOW_UP_NOT_INVALIDATION: readonly string[] = [
 export const CERTIFICATION_KINDS = [
   /** Install, browser, builds, the whole suite. The expensive one. */
   "FULL",
-  /** RULING 278's proven-non-shipping path: the guards, and a receipt. */
-  "CHEAP_ATTESTATION",
   /** FCP-9C: the shipped tree is the certified tree. No expensive tier. */
   "TREE_EQUIVALENCE_ATTESTATION",
   /** RULING 279: the cheap tier was red, so nothing expensive was bought. */
@@ -198,8 +196,12 @@ export interface ShippingTransaction {
   /** The tree that actually landed on the integration branch. */
   readonly mergedTree: string | null;
   readonly mergedSha: string | null;
-  /** Bookkeeping commits written after the ship, by the producer that wrote them. */
-  readonly postShipObservations: readonly { readonly producer: string; readonly sha: string }[];
+  /** Durable release-observation receipts. These are data-plane rows, never Git commits. */
+  readonly releaseObservations: readonly {
+    readonly producer: string;
+    readonly subjectSha: string;
+    readonly receiptId: string;
+  }[];
   readonly openedAt: string;
   readonly closedAt: string | null;
 }
@@ -225,7 +227,7 @@ export function openTransaction(input: {
     certifications: [],
     mergedTree: null,
     mergedSha: null,
-    postShipObservations: [],
+    releaseObservations: [],
     openedAt: input.now,
     closedAt: null,
   };
@@ -395,14 +397,41 @@ export function recordMerge(
   return { ...txn, stage: "MERGED", mergedSha: input.sha, mergedTree: input.tree };
 }
 
-export function recordObservation(
+export function recordReleaseObservation(
   txn: ShippingTransaction,
-  input: { readonly producer: string; readonly sha: string; readonly now: string },
-): ShippingTransaction {
+  input: {
+    readonly producer: string;
+    readonly subjectSha: string;
+    readonly receiptId: string;
+    readonly now: string;
+  },
+): ShippingTransaction | StageRefusal {
+  if (!stageAtLeast(txn.stage, "MERGED") || txn.mergedSha === null) {
+    return { refused: true, reason: "a release observation cannot precede the certified merge" };
+  }
+  if (input.subjectSha !== txn.mergedSha) {
+    return {
+      refused: true,
+      reason: `release observation names ${input.subjectSha}, not merged subject ${txn.mergedSha}`,
+    };
+  }
+  if (!/^[0-9a-f]{40}$/.test(input.subjectSha)) {
+    return { refused: true, reason: "release observation subject is not an exact 40-character commit SHA" };
+  }
+  if (!input.producer.trim() || !input.receiptId.trim()) {
+    return { refused: true, reason: "release observation requires a producer and durable receipt id" };
+  }
+  if (txn.releaseObservations.some((row) => row.receiptId === input.receiptId)) {
+    return { refused: true, reason: `release observation receipt ${input.receiptId} is already recorded` };
+  }
   return {
     ...txn,
     stage: "OBSERVED",
     closedAt: input.now,
-    postShipObservations: [...txn.postShipObservations, { producer: input.producer, sha: input.sha }],
+    releaseObservations: [...txn.releaseObservations, {
+      producer: input.producer,
+      subjectSha: input.subjectSha,
+      receiptId: input.receiptId,
+    }],
   };
 }

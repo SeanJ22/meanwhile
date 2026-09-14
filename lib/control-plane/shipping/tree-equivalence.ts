@@ -5,14 +5,15 @@
  * ## The run this file exists because of
  *
  * On 2026-09-07 one logical engineering change — MapTiler quota isolation —
- * bought four full hosted certifications and one cheap attestation:
+ * bought three completed full hosted certifications, one cancelled run, and
+ * one runtime-observer Git hop that PDC later retired:
  *
  * ```
  *   #804  PR Build Check   superseded / cancelled
  *   #805  PR Build Check   full green on an earlier head
  *   #806  PR Build Check   full green on be6e41ff after a late review edit
  *   #807  main Build Check FULL AGAIN, on merge commit 0251d145
- *   #808  main Build Check cheap, on the observer's own bookkeeping commit
+ *   #808  main Build Check on the observer's former bookkeeping commit
  * ```
  *
  * Run #807 is the one this module refuses to repeat, and the reason is a fact
@@ -90,14 +91,13 @@
  * chain a proof to a proof to nothing. The structural reason it cannot is
  * recorded in `attestationCannotChain` below and asserted by the test: this
  * path exists ONLY for a push to the integration branch, and a pull request is
- * never cheap and never attested — `classifyCommitCost` answers FULL for every
- * pull request by construction. So a required context that is green on a
+ * never replaced by a draft result — ready pull requests receive the full
+ * proof by construction. So a required context that is green on a
  * branch head was earned by a full run, always.
  *
  * PURE. `judgeTreeEquivalence` takes facts and returns a verdict; nothing here
  * runs git, reads an environment or makes a request. `scripts/certified-tree.mjs`
- * is the adapter that gathers the facts, exactly as `scripts/ci-cost.mjs` is
- * the adapter for RULING 278's predicate.
+ * is the adapter that gathers the facts for this predicate.
  */
 
 export const TREE_EQUIVALENCE_FORMAT_VERSION = 1;
@@ -348,8 +348,8 @@ export const attestationCannotChain = {
   legs: [
     "reuse is evaluated only for event=push to the integration ref (judgeTreeEquivalence refuses " +
       "everything else with NOT_AN_INTEGRATION_PUSH)",
-    "a candidate head is a pull-request head, and classifyCommitCost answers FULL for every pull " +
-      "request by construction — the adapter passes null rather than a path list",
+    "a candidate head is a pull-request head — exact-tree reuse is evaluated only for the " +
+      "merge-to-main push, while ready pull requests receive the full proof",
     "so the green being relied on came from a run that installed, built and ran the suite",
   ],
 } as const;

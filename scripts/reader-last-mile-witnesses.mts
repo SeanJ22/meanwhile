@@ -5,6 +5,12 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { relative } from "node:path";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import type { BillSummary } from "../lib/votes/bill-summaries.ts";
+import { readMeetingsProjection, requireReaderProofMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
+import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import { commentAccessFor } from "../lib/registry/comment-access.ts";
+import { prepareReaderProofRuntime, requiredPreparedReaderProofMeetingsAuthority } from "./lib/reader-proof-runtime.ts";
+import { validateListingWitnessReadback } from "./lib/reader-full-reproof.ts";
 
 interface RenderedReaderCase {
   label: string;
@@ -22,6 +28,7 @@ interface RenderedBillSummary extends BillSummary {
 }
 interface RenderedReaderReport {
   exactHead: string | null;
+  buildId: string;
   results: RenderedReaderCase[];
   screenshots: string[];
 }
@@ -36,6 +43,11 @@ const head = report.exactHead ?? report.results[0]?.build?.commit;
 assert.ok(head, "Actual reader run must identify its proved commit");
 assert.ok(report.results.every(row => row.result === "PASS" && row.build?.commit === head));
 assert.ok(federal.results.every(row => row.result === "PASS" && row.build?.commit === head));
+await prepareReaderProofRuntime();
+const heldMeetings = requireReaderProofMeetingsProjection(await readMeetingsProjection({ bypassCache: true }), requiredPreparedReaderProofMeetingsAuthority()).meetings;
+const canonicalListingGroups = meetingListingIdentity(heldMeetings, canonicalBodyIdentity).groups
+  .filter((group) => group.sourceIds.some((id) => heldMeetings.find((meeting) => meeting.id === id)?.ocdId?.includes("/state:nh/")))
+  .map(({ sourceIds, reason, sourceListingCount, uniqueMeetingCount }) => ({ sourceIds, reason, sourceListingCount, uniqueMeetingCount }));
 const cases: Record<string, [string, string[]]> = {
   "person-identity": ["85701-desktop-light", ["map-money", "ballot-money"]],
   "contact-pills": ["85701-desktop-light", ["map-money", "ballot-money"]],
@@ -46,7 +58,7 @@ const cases: Record<string, [string, string[]]> = {
   "shuffled-facts": ["85641-phone-dark", ["about-area"]],
   "polling-lookup-fallback": ["85701-phone-dark", ["ballot-voting-outside-coverage", "ballot-voting-outside-coverage-last"]],
   "meeting-popup": ["85701-phone-dark", ["meeting-popup"]],
-  "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "legistar-pima-1827-comment-access", "diligent-tusd1-493-publication-index"]],
+  "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "diligent-tusd1-493-publication-index"]],
   "state-money-section": ["85701-desktop-light", ["map-money", "ballot-money"]],
   "candidate-contact": ["07866-desktop-dark", ["ballot-filed-contact"]],
   "funding-section": ["85641-phone-dark", ["map-federal-money", "ballot-federal-money"]],
@@ -75,11 +87,39 @@ const witnesses = requirements.filter(row => row.importReach).flatMap(row => {
     assert.ok(path, `Actual screenshot missing ${label}-${suffix}`);
     return { path: relative(process.cwd(), path).replaceAll("\\", "/"), sha256: hash(path) };
   });
-  const listingSuffixes = leaf === "meeting-popup" ? ["listing-popup-1", "listing-popup-2", "listing-popup-3"] : leaf === "meeting-panel" ? ["listing-count", "listing-overlay", "listing-venue"] : leaf === "entity-modal" ? ["listing-full-meeting"] : [];
+  if (leaf === "agenda-section") {
+    // Participation is not shown for concluded meetings. Bind this required
+    // subtree to a current future sitting's independently executed browser case.
+    const path = "docs/evidence/reader-last-mile-final-render.json";
+    const final = JSON.parse(readFileSync(path, "utf8")) as {
+      exactHead: string; buildId: string;
+      results: { id: string; result: string; meetingId: string; bodyId: string; startsAt: string; expectedLines: string[]; renderedLines: string[]; sourceUrl: string; screenshot: { path: string; sha256: string } }[];
+      screenshots: { path: string; sha256: string }[];
+    };
+    assert.equal(final.exactHead, head);
+    assert.equal(final.buildId, report.buildId);
+    const index = final.results.findIndex((result) => result.id === "current-participation");
+    const participation = final.results[index];
+    assert.equal(participation?.result, "PASS", "Current participation must have an actual passing browser case");
+    const meeting = heldMeetings.find((meeting) => meeting.id === participation.meetingId);
+    assert.ok(meeting && meeting.status !== "CANCELED" && Date.parse(meeting.startsAt) > Date.now());
+    assert.equal(participation.bodyId, meeting.bodyId);
+    assert.equal(participation.startsAt, meeting.startsAt);
+    const access = commentAccessFor(meeting.ocdId, meeting.bodyName, meeting.bodyId);
+    assert.ok(access && access.commentPeriod !== "UNKNOWN");
+    const lines = [access.commentPeriodDetail, access.timeLimit, access.signup, access.writtenComment, access.attend].filter(Boolean);
+    assert.ok(lines.length);
+    assert.deepEqual(participation.expectedLines, lines);
+    assert.deepEqual(participation.renderedLines, lines);
+    assert.equal(participation.sourceUrl, access.sourceUrl);
+    assert.ok(final.screenshots.some((shot) => shot.path === participation.screenshot.path && shot.sha256 === participation.screenshot.sha256));
+    assert.equal(hash(participation.screenshot.path), participation.screenshot.sha256);
+    return [{ ...row, exactHead: head, evidencePath: path, evidenceSha256: hash(path), resultPointer: `/results/${index}`, screenshots: [...screenshots, participation.screenshot], status: "PROVEN", boundary: "Actual current future-sitting participation instructions and source link, plus the executed minutes and publication-index screenshots. Exhaustive native-record and actual-leaf proofs remain required." }];
+  }
+  const listingSuffixes = leaf === "meeting-popup" ? canonicalListingGroups.map((_, index) => `listing-popup-${index + 1}`) : leaf === "meeting-panel" ? ["listing-count", "listing-overlay", "listing-venue"] : leaf === "entity-modal" ? ["listing-full-meeting"] : [];
   const listingCase = listingSuffixes.length ? report.results.find(result => result.label === "03255-phone-dark") : null;
   if (listingSuffixes.length) {
-    assert.equal(listingCase?.listingMultiplicity?.groups.length, 3, "All current ambiguous listing groups need actual rendered identity readback");
-    assert.ok(listingCase?.listingMultiplicity?.groups.every(group => group.sourceIds.length === group.sourceListingCount && group.uniqueMeetingCount === null));
+    validateListingWitnessReadback(listingCase?.listingMultiplicity?.groups, canonicalListingGroups);
     for (const suffix of listingSuffixes) {
       const path = report.screenshots.find(path => path.endsWith(`03255-phone-dark-${suffix}.png`));
       assert.ok(path, `Actual unresolved calendar-listing screenshot missing ${suffix}`);

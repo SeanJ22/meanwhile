@@ -233,19 +233,21 @@ function checkRunnerPublishesConsole(src: string): void {
   assert.ok(snapshot < readiness, "the owner snapshot must publish before readiness");
   assert.match(list[0], /"scripts\/readiness-refresh\.mts", "--target=control-plane"/, "readiness-refresh.mts is not asked to publish to the control plane");
 
-  const fn = src.match(/function publishConsole\(\): void \{[\s\S]*?\n\}/);
+  const fn = src.match(/async function publishConsole\(\): Promise<void> \{[\s\S]*?\n\}/);
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
   const body = fn[0];
   assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "publishConsole does not run every listed publisher");
-  assert.match(body, /spawnSync\(/, "each publisher is a child process");
-  assert.match(body, /"--env-file=\.env\.local", "--experimental-strip-types", \.\.\.publisher\.args/, "a publisher is not run the way the runner's own scripts are");
-  assert.match(body, /timeout: PUBLISH_TIMEOUT_MS/, "no ceiling on a publisher");
+  assert.match(body, /await runBoundedChildPass\(/, "each publisher is an asynchronously bounded child process");
+  assert.match(body, /args: \["--experimental-strip-types", \.\.\.publisher\.args\]/, "a publisher is not run through inherited parent environment");
+  assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
+  assert.match(body, /env: process\.env/, "the bounded child does not inherit the validated parent environment");
+  assert.match(body, /timeoutMs: PUBLISH_TIMEOUT_MS/, "no ceiling on a publisher");
   assert.match(src, /const PUBLISH_TIMEOUT_MS = 5 \* 60_000/, "the publisher ceiling is not five minutes");
   assert.match(body, /console publish: \$\{publisher\.name\} OK/, "no OK line");
   assert.match(body, /console publish: \$\{publisher\.name\} FAILED exit/, "no FAILED line");
   assert.doesNotMatch(body, /\bthrow\b/, "a publish failure is printed, never thrown");
 
-  const call = src.indexOf("\n  publishConsole();");
+  const call = src.indexOf("\n  await publishConsole();");
   assert.ok(call >= 0, "the loop never calls publishConsole()");
   const delivered = src.indexOf("const delivered = deliver(");
   const sleep = src.indexOf("await sleepUnlessRunNow(");
@@ -285,7 +287,17 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.match(honor[0], /intentId: id,\s*honors: intent\.intentId/);
   assert.match(honor[0], /honoredBy: `pilot-runner@\$\{hostname\(\)\}#\$\{process\.pid\}`/, "honoredBy does not name pilot-runner@host#pid");
 
-  assert.match(src, /\n  await holdWhilePaused\(\);\n  cycle \+= 1;/, "the loop does not hold on the owner's pause before a cycle");
+  assert.match(src, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run: runRoutineCivicData[\s\S]*run: runIntakeRuntime/, "the two permanent runtime lanes are not independently scheduled");
+  assert.match(src, /function startStandingRuntimeClock\(\)[\s\S]*standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/, "the runtime clock is not independently startable");
+  assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("while (cycle < CYCLES)"), "the runtime clock starts after research");
+  assert.match(src, /if \(runtimeAdmissionsHeld\) return;/, "a release hold cannot close runtime admission");
+  assert.match(src, /await standingRuntimeScheduler\.waitForIdle\(\)/, "release handoff does not wait for independently running source lanes");
+  assert.match(src, /const AUTO_RELEASE_HANDOFF = argv\.includes\("--release-handoff"\)/, "developer checkouts cannot be distinguished from the installed runtime checkout");
+  assert.doesNotMatch(src, /--installed-sha=/, "runner still relies on an immutable installed SHA instead of automatic release handoff");
+  assert.match(src, /await holdWhilePaused\(\);[\s\S]*cycle \+= 1;/, "the owner pause no longer holds research cycles");
+  const hold = src.match(/async function holdWhilePaused\(\): Promise<void> \{[\s\S]*?\n\}/);
+  assert.ok(hold, "pilot-runner.mts has no holdWhilePaused()");
+  assert.doesNotMatch(hold[0], /runStandingRuntimeTick/, "a research pause must not own or stop the independent runtime clock");
   assert.match(src, /if \(\(await ownerSays\(\)\) === "START_NOW"\) return;/, "the sleep does not end on the owner's word");
 }
 
@@ -300,7 +312,7 @@ test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on
 test("POSITIVE CONTROL: a runner that drops the publish call, the readiness target, or the dispatch check fails its checker", () => {
   const src = source("scripts/pilot-runner.mts");
 
-  const noCall = src.replace("\n  publishConsole();", "\n  /* not published */");
+  const noCall = src.replace("\n  await publishConsole();", "\n  /* not published */");
   assert.notEqual(noCall, src, "the mutation did not apply; the test would prove nothing");
   assert.ok(fails(() => checkRunnerPublishesConsole(noCall)), "a loop that never publishes passed");
 
@@ -315,6 +327,10 @@ test("POSITIVE CONTROL: a runner that drops the publish call, the readiness targ
   const noHold = src.replace("\n  await holdWhilePaused();\n  cycle += 1;", "\n  cycle += 1;");
   assert.notEqual(noHold, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noHold)), "a runner that cycles through a pause passed");
+
+  const starvedRuntime = src.replace('{ id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },\n', "");
+  assert.notEqual(starvedRuntime, src);
+  assert.ok(fails(() => checkRunnerHonorsOwnerIntents(starvedRuntime)), "a standing clock missing an independent lane passed");
 });
 
 /* --------------------------------------------- freshness-shadow.mts, as text */
@@ -485,5 +501,8 @@ test("runner-pause-note.mts exits 2 on a bad action, and never blocks when the p
 
   const unopened = runNote(["--action=PAUSE_RUNNER", "--note=pnpm pilot:stop on TESTHOST"]);
   assert.equal(unopened.status, 0, "a note that cannot land must not fail the stop");
-  assert.match(unopened.stdout, /pause note NOT recorded: WTP_CONTROL_PLANE_DATABASE_URL is not set/);
+  assert.match(
+    unopened.stdout,
+    /pause note NOT recorded: PERMANENT_RUNTIME_AUTHORITY_REFUSED:authority envelope is absent or malformed/,
+  );
 });

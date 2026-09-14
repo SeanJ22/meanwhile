@@ -234,6 +234,7 @@ export function membersOfBody(bodyId: string | null): ResolvedComposition {
         id: `composition:${composition.bodyId}#seat-${i}`,
         name: s.name as string,
         officeTitle: s.officeTitle,
+        officeJurisdictionOcdId: composition.bodyId.split("#")[0],
         termNote: null,
         partyLabel: null,
         websiteUrl: null,

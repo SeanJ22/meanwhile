@@ -9,6 +9,7 @@ import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
+import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
@@ -16,6 +17,13 @@ import { WIRED_STATUSES } from "@/lib/registry/coverage";
 import { coverageAt, divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
+import { currentCommentAccess, type CommentAccess } from "@/lib/registry/comment-access";
+import { refreshCommentAccessFromPromoted } from "@/lib/civic-data/curated-reader-read-model";
+import {
+  currentEverydayRoutingProjection,
+  readEverydayRoutingProjection,
+} from "@/lib/routing/everyday-data-plane";
+import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
 /**
  * GET /api/meetings?lat=&lng=&radiusKm=
@@ -34,6 +42,50 @@ import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
+  let commentAccess: readonly CommentAccess[] = [];
+  let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
+  let commentAccessDataDetail: string | null = null;
+  try {
+    if (process.env.NODE_ENV === "production") {
+      const version = await refreshCommentAccessFromPromoted();
+      commentAccessDataState = "PROMOTED";
+      commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
+    }
+    commentAccess = currentCommentAccess();
+  } catch (error) {
+    // Comment rules are independent of meeting acquisition. Withhold only
+    // this optional family and let the canonical meetings projection answer.
+    commentAccessDataState = "STORE_UNREACHABLE";
+    commentAccessDataDetail = error instanceof Error ? error.message : "The comment-access projection could not be read.";
+  }
+  let everydayRouting: EverydayRoutingProjection | null = null;
+  let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
+  let everydayRoutingDataDetail: string | null = null;
+  try {
+    if (process.env.NODE_ENV === "production") {
+      const read = await readEverydayRoutingProjection();
+      if (read.kind === "PROMOTED") {
+        everydayRouting = read.value;
+        everydayRoutingDataState = "PROMOTED";
+        everydayRoutingDataDetail = `Canonical everyday-routing projection ${read.metadata.versionId} was read.`;
+      } else if (read.kind === "NOT_RECORDED" || read.kind === "STORE_UNREACHABLE") {
+        everydayRoutingDataState = read.kind;
+        everydayRoutingDataDetail = read.detail;
+      } else {
+        everydayRoutingDataState = "INVALID";
+        everydayRoutingDataDetail = "The everyday-routing pointer did not resolve to a promoted projection.";
+      }
+    } else {
+      everydayRouting = currentEverydayRoutingProjection();
+    }
+  } catch (error) {
+    // Direct-owner routing is independent of meetings and every other source.
+    // Withhold only this optional projection; never reopen the tracked seed.
+    everydayRoutingDataState = "INVALID";
+    everydayRoutingDataDetail = error instanceof Error
+      ? error.message
+      : "The everyday-routing projection could not be read.";
+  }
   const params = new URL(request.url).searchParams;
 
   /*
@@ -182,7 +234,31 @@ export async function GET(request: Request) {
     }
   }
 
-  const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+  let result;
+  try {
+    result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+  } catch (error) {
+    if (error instanceof CivicDataStoreUnavailableError) {
+      return Response.json(
+        {
+          error: "the meetings corpus is not available right now",
+          dataState: "STORE_UNREACHABLE",
+          code: error.result.code,
+          detail: error.result.detail,
+        },
+        { status: 503 },
+      );
+    }
+    return Response.json(
+      {
+        error: "the meetings projection could not be validated",
+        dataState: "STORE_UNREACHABLE",
+        code: "MEETINGS_PROJECTION_INVALID",
+        detail: error instanceof Error ? error.message : "unknown meetings projection error",
+      },
+      { status: 503 },
+    );
+  }
 
   // A coverage statement we cannot stand behind is worse than none, so a
   // registry that fails to load degrades to the cascade's own answer rather
@@ -302,7 +378,7 @@ export async function GET(request: Request) {
   // When the snapshot serves the answer, say how old it is and which sources
   // it is missing — a failed source's bodies would otherwise show nothing
   // with no hint that the gap is ours and temporary.
-  const meta = getActiveSnapshotMeta();
+  const meta = await getActiveSnapshotMeta();
   // `meta.carried` rides along untouched (hotfix-0817): the footer's one age is true of
   // the fresh rows only, and the count of rows it is NOT true of has to reach
   // the client or the line keeps speaking for them.
@@ -459,6 +535,12 @@ export async function GET(request: Request) {
 
   return Response.json({
     ...result,
+    commentAccess,
+    commentAccessDataState,
+    commentAccessDataDetail,
+    everydayRouting,
+    everydayRoutingDataState,
+    everydayRoutingDataDetail,
     listingIdentity: meetingListingIdentity(result.meetings, canonicalBodyIdentity),
     coverage,
     snapshot,

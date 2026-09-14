@@ -8,10 +8,22 @@ import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 test("official voting lookup fallback preserves unavailable versus resolved jurisdictions on both surfaces", () => {
   assert.deepEqual(pollingLookupFallbacks("idle"), []);
   assert.deepEqual(pollingLookupFallbacks("asking"), []);
-  assert.deepEqual(pollingLookupFallbacks("failed"), POLLING_PLACE_LINKS);
-  assert.deepEqual(pollingLookupFallbacks("answered", { match: true, point: null, outsideCoverage: true, jurisdictions: [] }), POLLING_PLACE_LINKS);
+  assert.deepEqual(pollingLookupFallbacks("failed"), [], "a failed canonical read must not reopen the tracked first seed");
+  assert.deepEqual(pollingLookupFallbacks("answered", {
+    match: true,
+    point: null,
+    outsideCoverage: true,
+    jurisdictions: [],
+    pollingPlaceLinks: POLLING_PLACE_LINKS,
+  }), POLLING_PLACE_LINKS);
   for (const link of POLLING_PLACE_LINKS) {
-    const answer = { match: true, point: null, outsideCoverage: false, jurisdictions: [{ state: link.state, sites: [{ id: "held:site" }], refusal: null, narrowing: { kind: "EXACT" } }] } as VotingSitesAnswer;
+    const answer = {
+      match: true,
+      point: null,
+      outsideCoverage: false,
+      jurisdictions: [{ state: link.state, sites: [{ id: "held:site" }], refusal: null, narrowing: { kind: "EXACT" } }],
+      pollingPlaceLinks: POLLING_PLACE_LINKS,
+    } as unknown as VotingSitesAnswer;
     assert.deepEqual(pollingLookupFallbacks("answered", answer), [], "an exact held answer must not grow a duplicate handoff");
     answer.jurisdictions[0].narrowing = { kind: "REFUSED", sentence: "The held geometry cannot establish a voter assignment.", rungs: [] };
     assert.deepEqual(pollingLookupFallbacks("answered", answer), [link], "unresolved assignment only offers the exact named state's authority");
@@ -19,7 +31,7 @@ test("official voting lookup fallback preserves unavailable versus resolved juri
 });
 
 test("every held official lookup renders its actual URL, authority, access note and verification date", () => {
-  const output = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+  const output = execFileSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { PollingLookupFallback } from './components/ballot/polling-lookup-fallback.tsx';

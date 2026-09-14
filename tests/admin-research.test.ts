@@ -598,7 +598,7 @@ test("the metrics and ordering panels are OUR named gaps until a cycle computes 
     healthyInput({
       state: heldOut(
         state({
-          dispatchOrdering: { rule: "r", scope: "s", inputs: { readerImpactAt: "FreshnessObligation.readerImpactAt", pilotJurisdictions: "p", openRedQuestions: { count: 1, zips: ["85701"], run: "x" }, universeProviders: ["candidate-enrichment"], tieBreak: "oldest nextDueAt first within a band" }, bands: { 1: 2, 2: 3, 3: 4 }, appliesTo: "BOUNDED_MODEL_WORKER" },
+          dispatchOrdering: { rule: "r", scope: "s", inputs: { readerImpactAt: "FreshnessObligation.readerImpactAt", pilotJurisdictions: "p", universeProviders: ["candidate-enrichment"], tieBreak: "oldest nextDueAt first within a band" }, bands: { 1: 2, 2: 3, 3: 4 }, appliesTo: "BOUNDED_MODEL_WORKER" },
           metrics: {
             computedAt: FRESH,
             capacity: { meanUsdPerAttempt: 1.25, measuredAttempts: 4, unmeasuredAttempts: 0, windowHours: 24, ceilingUsd: 25, attemptsPerDayAtCap: 20, denominator: "d" },

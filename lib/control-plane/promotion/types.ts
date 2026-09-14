@@ -314,9 +314,7 @@ export const WINDOW_TRIGGERS = ["RUNNER_CLOCK", "CATCH_UP", "WAKEUP", "MANUAL"] 
 export type WindowTrigger = (typeof WINDOW_TRIGGERS)[number];
 
 export const WINDOW_STAGES = [
-  "LEGACY_REFRESH",
   "PIPELINE_EVALUATION",
-  "POST_PROMOTION_VERIFICATION",
   "DIGEST",
 ] as const;
 export type WindowStageName = (typeof WINDOW_STAGES)[number];
@@ -355,32 +353,12 @@ export interface WindowIncident {
   readonly formatVersion: typeof WINDOW_FORMAT_VERSION;
   readonly incidentId: string;
   readonly windowId: string;
-  readonly stage: WindowStageName | "LOCK" | "PROMOTION";
+  readonly stage: WindowStageName | "LOCK";
   readonly code: string;
   readonly detail: string;
   readonly openedAt: string;
   /** What the next window must catch up, by name. */
   readonly missedScope: readonly string[];
-}
-
-export interface LegacySourceOutcome {
-  readonly id: string;
-  readonly due: boolean;
-  readonly ran: boolean;
-  readonly outcome: "INGESTED" | "UNCHANGED" | "ROUTE_UNREAD" | "NOT_DUE" | "UNKNOWN";
-  readonly reason: string;
-  readonly governs: readonly string[];
-  readonly changedPaths: readonly string[];
-  readonly recoveredFrom: readonly string[];
-  readonly nextDueAt: string | null;
-}
-
-export interface LegacyRefreshReading {
-  /** JSON is Lane A's contract; MARKDOWN_FALLBACK parses docs/refresh-run.md's table. */
-  readonly source: "JSON" | "MARKDOWN_FALLBACK";
-  readonly runDate: string | null;
-  readonly exitCode: number | null;
-  readonly sources: readonly LegacySourceOutcome[];
 }
 
 export interface WindowLockFacts {
@@ -421,7 +399,6 @@ export interface WindowRunRecord {
   readonly lock: WindowLockFacts;
   readonly activationGate: ActivationGateReading;
   readonly stages: readonly WindowStageRecord[];
-  readonly legacyRefresh: LegacyRefreshReading | null;
   readonly pipeline: {
     readonly items: number;
     readonly byStage: Readonly<Record<PipelineStage, number>>;
@@ -433,32 +410,11 @@ export interface WindowRunRecord {
   readonly researchProgression?: import("../research-progression.ts").ResearchWindowProgression;
   /** Always 0 in SHADOW. */
   readonly promoted: number;
-  readonly postPromotionVerification: {
-    readonly instrument: string;
-    readonly asIfPromoted: true;
-    readonly exitCode: number | null;
-    readonly verdict: string;
-    readonly detail: string;
-  } | null;
   readonly controls: ControlScore | null;
   readonly incidents: readonly WindowIncident[];
   readonly digestPath: string | null;
   readonly mirrored: boolean | null;
   readonly recordPath: string | null;
-  /**
-   * PRDY-6 (2026-09-06): receipts the governed promoter wrote during this
-   * window. Empty while promotion is OFF (the promoter is never called);
-   * absent on windows recorded before the promoter existed.
-   */
-  readonly promotionReceipts?: readonly {
-    readonly receiptId: string;
-    readonly target: "SHADOW" | "READER";
-    readonly promoted: number;
-    readonly refused: number;
-    readonly reverted: boolean;
-    readonly incidentId: string | null;
-    readonly path: string | null;
-  }[];
 }
 
 export const WINDOW_INTENT_ACTIONS = ["RUN_WINDOW_NOW"] as const;

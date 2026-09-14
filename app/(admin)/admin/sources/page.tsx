@@ -11,38 +11,32 @@
  * ## THIS PAGE MAKES NO SOURCE CALLS
  *
  * *"Do not burn API calls merely because a key exists."* Nothing here fetches
- * anything. Three inputs, all cheap:
+ * anything. Three inputs, all read-only:
  *
  * ```
  *   the registers      TypeScript constants, read at build time — the adapters,
- *                      the wiring, the cadence table, the tenancy sweep
- *   the run record     docs/refresh-run.json, imported statically so it travels
- *                      in the bundle; the record carries its OWN run date, so a
- *                      stale copy shows as an old date rather than as a fresh one
+ *                      the wiring and the tenancy sweep
+ *   the data plane     canonical candidate/event/promotion tables, read directly
  *   the environment    presence only, and never a value or a name
  * ```
  *
- * The static import is deliberate rather than lazy. A runtime `readFileSync`
- * from an admin page is the failure this codebase has been bitten by before: an
- * untraced read returns nothing, the catch returns null, and the page renders
- * its own gap wording — which is indistinguishable from honest missing data. A
- * static import cannot fail that way, and the run date it carries is the whole
- * of its own freshness claim.
+ * The canonical data read is explicit and typed: missing configuration is
+ * NOT CONNECTED, a failed query is STORE UNREACHABLE, and neither becomes an
+ * empty or zero result.
  *
  * ## WHAT THE ENVIRONMENT READING IS AND IS NOT
  *
- * `process.env` is read once, through `readCredentialPresence`, which returns
+ * Credential presence is read once through `readCredentialPresence`, which returns
  * booleans keyed by ROUTE and never by variable name. A key absent from this
  * process is only evidence about routes whose key belongs in the website's own
- * settings; for the nightly job's secrets and the workstation's private file,
+ * settings; for credentials outside this runtime and the workstation's private file,
  * the registry returns a named gap saying this page cannot see that store. No
  * value and no variable name reaches the browser.
  */
-import DEBT_FILE from "@/data/ops/refresh-debt.json" with { type: "json" };
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { ConsoleNav } from "../../console-nav.tsx";
-import RUN_FILE from "@/docs/refresh-run.json" with { type: "json" };
 
+import { readRoutineDataObservability } from "@/lib/civic-data/observability-server.ts";
 import { formatCalendarDate } from "@/lib/control-plane/eastern-time.ts";
 import {
   auditRenderedNumbers,
@@ -61,11 +55,10 @@ import {
   sourceRegistryRenderedNumbers,
   type SourceRow,
 } from "@/lib/control-plane/source-registry.ts";
-import { utcDay } from "@/lib/ops/refresh-cadence.ts";
-import type { RefreshDebt, RefreshRun } from "@/lib/ops/refresh-report.ts";
 
 import { Band, GapNote, QueueButton, QueueForm, When, gapLabel } from "../../console-ui.tsx";
 import { Bar, Code, DefinedTile, NeedsYouLine, Plain, StatusBlock, type NeedsYou } from "../../status-ui.tsx";
+import { RoutineDataPanel } from "./routine-data-panel.tsx";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -73,31 +66,14 @@ export const revalidate = 0;
 /** Where a queued gap says it came from, and where the queue form returns to. */
 const HERE = "/admin/sources";
 
-/**
- * The run record and the debt file as the orchestrator writes them.
- *
- * Both are checked rather than asserted: a format version this page does not
- * understand becomes null, and null renders as the named gap the registry
- * builds for it. Reading a record of an unknown shape and printing whatever
- * fell out of it is how a page states a confident wrong date.
- */
-const LAST_RUN: RefreshRun | null =
-  RUN_FILE.formatVersion === 1 ? (RUN_FILE as unknown as RefreshRun) : null;
-
-const OPEN_DEBT: readonly RefreshDebt[] =
-  DEBT_FILE.formatVersion === 1 ? (DEBT_FILE.debts as unknown as RefreshDebt[]) : [];
-
-const RUN_PROVENANCE =
-  "The nightly refresh writes its own run record beside the data it committed, and this page carries the copy that was in the code the site was built from.";
-
 const READ_IN = "this website's own server settings";
 
 /** The four grades in the words that fit a source, for the legend. */
 const GRADE_MEANS: readonly (readonly [HealthLevel, string])[] = [
-  ["GREEN", "A run read this route and recorded what came back."],
-  ["AMBER", "Nothing is watching this route. What is committed may still be right; nothing would notice if it stopped being."],
-  ["RED", "A run tried and could not read it, or it is carrying debt from a run that failed."],
-  ["UNKNOWN", "Nothing calls this route, so nothing measures it. That is a standing decision rather than a failure."],
+  ["GREEN", "The capability has direct evidence that it is working."],
+  ["AMBER", "The capability has a named limitation that needs watching."],
+  ["RED", "The capability has a measured failure."],
+  ["UNKNOWN", "This capability inventory has no current health measurement; routine health appears only above."],
 ];
 
 /* ------------------------------------------------------------------ *
@@ -200,11 +176,11 @@ function Row({ row }: { row: SourceRow }) {
         {row.adapter.at !== null && <span className="src-note" title={row.adapter.at}> reads it</span>}
       </td>
 
-      <td className="src-refresh">
-        {row.refresh.says}
-        {row.refresh.legacyWorkflow !== null && (
+      <td className="src-operation">
+        <span className="src-note">Capability register says: {row.operation.says}</span>
+        {row.operation.contractIds.length > 0 && (
           <span className="src-note">
-            A button named {row.refresh.legacyWorkflow} still exists and runs on no clock.
+            Canonical contract{row.operation.contractIds.length === 1 ? "" : "s"}: {row.operation.contractIds.join(", ")}.
           </span>
         )}
       </td>
@@ -273,14 +249,11 @@ function Row({ row }: { row: SourceRow }) {
 
 export default async function SourcesPage() {
   const now = new Date();
+  const routineData = await readRoutineDataObservability({ now: now.toISOString() });
   const view = buildSourceRegistry({
-    today: utcDay(now),
     nowIso: now.toISOString(),
     credentialPresence: readCredentialPresence(process.env),
     credentialReadIn: READ_IN,
-    lastRun: LAST_RUN,
-    lastRunProvenance: RUN_PROVENANCE,
-    openDebt: OPEN_DEBT,
   });
 
   /*
@@ -297,13 +270,19 @@ export default async function SourcesPage() {
       <ConsoleNav view="sources" currentState={null} states={US_STATES} />
         <QueueForm returnTo={HERE} />
         <h1>Sources and outside interfaces</h1>
+        <p className="plain">
+          Canonical routine-data operations appear first and read only the production data-plane store. The retained
+          source and credential capability inventory follows as a separate static view.
+        </p>
+        <RoutineDataPanel outcome={routineData} />
+        <h2>Source and credential capability inventory</h2>
         <p className="refusal">
-          <strong>These numbers did not check out against themselves, so none of them is shown.</strong>{" "}
+          <strong>The capability inventory numbers did not check out against themselves, so none of them is shown.</strong>{" "}
           {audit.ok ? claims.detail : audit.detail}
         </p>
         <p className="note">
-          Nothing below is missing and nothing below is zero. The page refused to print a figure it could
-          not stand behind.
+          No capability inventory gap is being rendered as missing or zero. That section refused to print a figure it
+          could not stand behind; the canonical data-plane outcome above is independent.
         </p>
       </main>
     );
@@ -318,12 +297,16 @@ export default async function SourcesPage() {
 
       <h1>Sources and outside interfaces</h1>
       <p className="plain">
-        Every source and outside interface this product can name, one line per route: whether it needs a
-        key, whether the key is set, whether anything reads it, when it last answered and when it is next
-        owed. Nothing on this page calls a source — a key is never spent to draw a screen.
+        Canonical routine-data operations appear first, directly from durable production candidates, events and
+        promotion pointers. The wider source and credential capability inventory follows as a static view. Nothing
+        on this page calls a public source — a key is never spent to draw a screen.
       </p>
+      <RoutineDataPanel outcome={routineData} />
+
+      <h2>Source and credential capability inventory</h2>
       <p className="note">
-        Read <When iso={view.asOf} />. <Plain text={view.refreshProvenance} />
+        Capability inventory read <When iso={view.asOf} />. <Plain text={view.productionOutcomeAuthority} /> Current routine
+        cadence, outcomes, and due times exist only in the canonical section above.
       </p>
 
       {/* ---------------------------------------------------------- SUMMARY */}
@@ -351,9 +334,9 @@ export default async function SourcesPage() {
           }
         />
         <DefinedTile
-          figure={`${view.onNightlyRefresh.value} of ${view.onNightlyRefresh.denominator}`}
-          label="On the one scheduled run"
-          means="Routes that ride the single daily refresh. Everything else is read by hand, is a committed file, or is not read at all."
+          figure={`${view.githubRoutineDataRoutes.value} of ${view.githubRoutineDataRoutes.denominator}`}
+          label="On GitHub routine-data runs"
+          means="This must remain zero. Current routine cadence and outcomes are shown only in the canonical section above."
           needsYou={{ needed: false }}
         />
         <DefinedTile
@@ -368,14 +351,14 @@ export default async function SourcesPage() {
       <h2>Does this need you?</h2>
       {needsYouCount === 0 ? (
         <StatusBlock
-          what="Nothing on this page is waiting on a decision from you."
+          what="Nothing in this capability inventory is waiting on a decision from you."
           happened="Every route either has a standing somebody already decided, or is running."
-          next="The nightly refresh reads what is due tonight."
+          next="The standing runner reads each canonical contract when its own cadence makes it due."
           needsYou={{ needed: false }}
         />
       ) : (
         <StatusBlock
-          what={`${needsYouCount} route${needsYouCount === 1 ? "" : "s"} on this page waiting on a decision from you.`}
+          what={`${needsYouCount} route${needsYouCount === 1 ? "" : "s"} waiting on a decision from you.`}
           happened="Each one is named in the handoff inventory or held with no schedule, and nobody can pick a reader question for it but you."
           next="Say what each should answer, or rule it out. Either answer closes the row."
           needsYou={{ needed: true, action: "answer the questions below" }}
@@ -403,33 +386,24 @@ export default async function SourcesPage() {
         </StatusBlock>
       )}
 
-      {/* -------------------------------------------------------- SCHEDULER */}
-      <h2>How refreshing actually works right now</h2>
+      {/* ---------------------------------------------- PRODUCTION BOUNDARY */}
+      <h2>Production execution boundary</h2>
       <StatusBlock
-        what={`One scheduled run reads every source that is due: ${view.scheduler.theOneRun}.`}
-        happened={view.scheduler.whenItRuns}
-        next={`${view.onNightlyRefresh.value} of the ${view.onNightlyRefresh.denominator} routes below ride it. Everything else is read by hand or is a committed file.`}
+        what="GitHub Actions is software CI only"
+        happened="Zero capability routes acquire or promote routine civic data through GitHub Actions."
+        next="Use the canonical contract rows above for execution policy, next due time, receipts, Reader proof, and LKG state."
         needsYou={{ needed: false }}
         detail={
           <>
-            <p>{view.scheduler.authority}</p>
-            <p>{view.scheduler.migration}</p>
+            <p>{view.executionBoundary.authority}</p>
+            <p>{view.executionBoundary.operations}</p>
           </>
         }
-        detailLabel="Which clock is in charge, and where it is going"
+        detailLabel="Why this boundary is fail-closed"
       >
         <p className="note">
-          The {view.scheduler.legacy.length} per-source jobs below still exist as buttons somebody can
-          press. <strong>None of them runs on a clock any more</strong>, and this page will not show them
-          as though it did.
+          GitHub routine-data capability routes: {view.executionBoundary.githubRoutineDataRouteIds.length}.
         </p>
-        <ul className="src-legacy">
-          {view.scheduler.legacy.map((w) => (
-            <li key={w.file}>
-              <strong>{w.name}</strong> — press-only, no schedule. <code>{w.file}</code>
-            </li>
-          ))}
-        </ul>
       </StatusBlock>
 
       {/* ----------------------------------------------------- DISAGREEMENTS */}
@@ -500,7 +474,7 @@ export default async function SourcesPage() {
                   <th scope="col">Standing</th>
                   <th scope="col">Key</th>
                   <th scope="col">Adapter</th>
-                  <th scope="col">Refresh</th>
+                  <th scope="col">Production operation</th>
                   <th scope="col">Last read</th>
                   <th scope="col">Next due</th>
                   <th scope="col">Health</th>
@@ -541,23 +515,21 @@ export default async function SourcesPage() {
           />
         </li>
         <li>
-          <strong>There is no history of earlier reads.</strong> The nightly refresh publishes its last
-          run and nothing else, so a route that was not due on that run has no last-read date here rather
-          than a softer one.
+          <strong>This capability table deliberately does not duplicate routine history.</strong> The canonical section
+          above reads 24-hour, 7-day and 30-day candidate/event histories from the production data plane.
           <QueueButton
             where="Sources · last read"
-            says="Only the last refresh run is published, so no route has a history of earlier successful reads."
+            says="Canonical routine history is shown once, from durable data-plane events, in the section above."
             returnTo={HERE}
             compact
           />
         </li>
         <li>
-          <strong>A route nothing schedules is owed on no date.</strong> Its next-due cell says so rather
-          than showing the day it would be due if anything were watching it. Putting a source on the
-          nightly run is a decision about cost, so it is one you make rather than one a page assumes.
+          <strong>A route outside the canonical contract registry has no authoritative routine due date here.</strong>{" "}
+          Registered contracts get their actual expected cadence and next due time from the canonical section above.
           <QueueButton
             where="Sources · next due"
-            says="Routes off the nightly run are owed on no date, because nothing schedules them."
+            says="Routes outside the canonical routine contract registry have no authoritative routine due date."
             returnTo={HERE}
             compact
           />

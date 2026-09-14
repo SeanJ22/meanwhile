@@ -19,11 +19,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { markAdmitted, readCandidateStore, writeCandidateStore, writeMethodStore, readMethodStore } from "../lib/method/candidate.ts";
+import { emptyCandidateStore, markAdmitted, writeMethodStore, readMethodStore } from "../lib/method/candidate.ts";
 import { learnBatch } from "../lib/method/learn-batch.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { decideExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
-import { candidateStoreCounts, learnedRouteFrom, proposeScoutCandidates } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import {
+  METHOD_CANDIDATE_STORE_ID,
+  candidateStoreCounts,
+  learnedRouteFrom,
+  proposeScoutCandidates,
+  readMethodCandidateStore,
+} from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ScoutCandidate, ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 
 const REPO = join(import.meta.dirname, "..");
@@ -90,18 +97,34 @@ const opened = [
   { artifactId: "raw-1", tier: "RAW" as const, contentHash: "sha256-x", byteLength: 1, contentType: "text/calendar", canonicalUrl: "https://testville.gov/meetings.ics", partial: false, recordedAt: STAMP },
 ];
 
-test("1. an opened, evidence-backed candidate is proposed and VALIDATED — never admitted by the Scout", () => {
+const seedFixtureStore = async (repos: ReturnType<typeof createMemoryRepositories>): Promise<void> => {
+  await repos.methodCandidates.put(METHOD_CANDIDATE_STORE_ID, emptyCandidateStore(), STAMP);
+};
+
+test("0. an absent canonical candidate store refuses instead of becoming an empty tracked/local authority", async () => {
   const root = tempRoot();
-  const report = proposeScoutCandidates({ root, result: result([candidate()]), artifacts: opened, stamp: STAMP });
+  const repos = createMemoryRepositories();
+  await assert.rejects(
+    proposeScoutCandidates({ repos, root, result: result([candidate()]), artifacts: opened, stamp: STAMP }),
+    /METHOD_CANDIDATE_STORE_NOT_SEEDED/,
+  );
+  assert.equal(await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID), null);
+});
+
+test("1. an opened, evidence-backed candidate is proposed and VALIDATED — never admitted by the Scout", async () => {
+  const root = tempRoot();
+  const repos = createMemoryRepositories();
+  await seedFixtureStore(repos);
+  const report = await proposeScoutCandidates({ repos, root, result: result([candidate()]), artifacts: opened, stamp: STAMP });
   assert.equal(report.proposed.length, 1);
   assert.equal(report.proposed[0].lifecycle, "VALIDATED", report.proposed[0].issues.join("; "));
   assert.deepEqual(report.notProposed, []);
-  const store = readCandidateStore(join(root, "data", "method", "candidates.json"));
+  const store = await readMethodCandidateStore(repos);
   assert.equal(store.candidates.length, 1);
   assert.equal(store.candidates[0].lifecycle, "VALIDATED");
   assert.equal(store.candidates[0].admission, null, "the Scout may not promote its own proposal");
   assert.equal(readMethodStore(join(root, "data", "method", "knowledge.json")).version, report.storeVersionObserved, "the method store did not move");
-  assert.deepEqual(candidateStoreCounts(root), { PROPOSED: 0, VALIDATED: 1, ADMITTED: 0, REJECTED: 0 });
+  assert.deepEqual(await candidateStoreCounts(repos), { PROPOSED: 0, VALIDATED: 1, ADMITTED: 0, REJECTED: 0 });
 
   /* RULING 243: durable provenance carries the MACHINE's observedOn; the model's 2026-01-01 is a recorded claim beside it. */
   const rec = store.candidates[0];
@@ -113,36 +136,40 @@ test("1. an opened, evidence-backed candidate is proposed and VALIDATED — neve
   /* A candidate with no machine derivation is a pre-ruling shape and is not learned. */
   const unowned = { ...candidate({ routeId: "testville-unowned" }) } as Record<string, unknown>;
   delete unowned.provenance;
-  const noDerivation = proposeScoutCandidates({ root, result: result([unowned as never]), artifacts: opened, stamp: STAMP });
+  const noDerivation = await proposeScoutCandidates({ repos, root, result: result([unowned as never]), artifacts: opened, stamp: STAMP });
   assert.equal(noDerivation.proposed.length, 0);
   assert.match(noDerivation.notProposed[0].why, /no machine provenance derivation/);
 
   /* Idempotent: re-proposing the identical offer does not duplicate it. */
-  const again = proposeScoutCandidates({ root, result: result([candidate()]), artifacts: opened, stamp: STAMP });
+  const again = await proposeScoutCandidates({ repos, root, result: result([candidate()]), artifacts: opened, stamp: STAMP });
   assert.equal(again.proposed[0].already, true);
-  assert.equal(readCandidateStore(join(root, "data", "method", "candidates.json")).candidates.length, 1);
+  assert.equal((await readMethodCandidateStore(repos)).candidates.length, 1);
 });
 
-test("2. a candidate whose URL the Attempt never opened is NOT proposed, and the reason is named", () => {
+test("2. a candidate whose URL the Attempt never opened is NOT proposed, and the reason is named", async () => {
   const root = tempRoot();
-  const report = proposeScoutCandidates({ root, result: result([candidate({ url: "https://testville.gov/never-opened" })]), artifacts: opened, stamp: STAMP });
+  const repos = createMemoryRepositories();
+  await seedFixtureStore(repos);
+  const report = await proposeScoutCandidates({ repos, root, result: result([candidate({ url: "https://testville.gov/never-opened" })]), artifacts: opened, stamp: STAMP });
   assert.equal(report.proposed.length, 0);
   assert.equal(report.notProposed.length, 1);
   assert.match(report.notProposed[0].why, /not opened/);
 });
 
-test("3. a malformed proposal is REJECTED durably with its issue", () => {
+test("3. a malformed proposal is REJECTED durably with its issue", async () => {
   const root = tempRoot();
+  const repos = createMemoryRepositories();
+  await seedFixtureStore(repos);
   const bad = candidate({ routeId: "Bad Route Id!" });
-  const report = proposeScoutCandidates({ root, result: result([bad]), artifacts: opened, stamp: STAMP });
+  const report = await proposeScoutCandidates({ repos, root, result: result([bad]), artifacts: opened, stamp: STAMP });
   assert.equal(report.proposed.length, 0, "a non-kebab id never reaches the store");
   assert.match(report.notProposed[0].why, /kebab-case/);
 
   /* And a well-formed id whose LearnedRoute the validator refuses lands REJECTED. */
   const route = learnedRouteFrom(candidate({ recordClass: "" }), result([]), opened);
   assert.deepEqual(route.fields, [""]);
-  const report2 = proposeScoutCandidates({ root, result: result([candidate({ routeId: "testville-empty-fields", recordClass: "" })]), artifacts: opened, stamp: STAMP });
-  const store = readCandidateStore(join(root, "data", "method", "candidates.json"));
+  const report2 = await proposeScoutCandidates({ repos, root, result: result([candidate({ routeId: "testville-empty-fields", recordClass: "" })]), artifacts: opened, stamp: STAMP });
+  const store = await readMethodCandidateStore(repos);
   const rec = store.candidates.find((c) => c.proposal.id === "testville-empty-fields");
   assert.ok(rec, "the candidate is durable whatever the verdict");
   assert.ok(["VALIDATED", "REJECTED"].includes(rec!.lifecycle));
@@ -152,10 +179,11 @@ test("3. a malformed proposal is REJECTED durably with its issue", () => {
   }
 });
 
-test("4. POSITIVE CONTROL: once a session ADMITS the candidate, the decision rule selects deterministic replay", () => {
+test("4. POSITIVE CONTROL: once a session ADMITS the candidate, the decision rule selects deterministic replay", async () => {
   const root = tempRoot();
-  const report = proposeScoutCandidates({ root, result: result([candidate()]), artifacts: opened, stamp: STAMP });
-  const candidatePath = join(root, "data", "method", "candidates.json");
+  const repos = createMemoryRepositories();
+  await seedFixtureStore(repos);
+  const report = await proposeScoutCandidates({ repos, root, result: result([candidate()]), artifacts: opened, stamp: STAMP });
   const methodPath = join(root, "data", "method", "knowledge.json");
   const before = methodMaturityFrom(root)("testville-meetings-ics");
   assert.equal(before, "UNGRADUATED");
@@ -165,13 +193,15 @@ test("4. POSITIVE CONTROL: once a session ADMITS the candidate, the decision rul
   );
 
   /* The session's act, through the governed writer — the ONLY door into the method store. */
-  const store = readCandidateStore(candidatePath);
+  const current = await repos.methodCandidates.mustRead(METHOD_CANDIDATE_STORE_ID);
+  const store = current.value;
   const c = store.candidates.find((x) => x.id === report.proposed[0].candidateId)!;
   const knowledge = readMethodStore(methodPath);
   const learned = learnBatch(knowledge, [c.proposal], STAMP);
   writeMethodStore(methodPath, learned.knowledge, { expectedVersion: knowledge.version, stamp: STAMP });
-  writeCandidateStore(
-    candidatePath,
+  await repos.methodCandidates.compareAndSet(
+    METHOD_CANDIDATE_STORE_ID,
+    current.revision,
     markAdmitted(store, c.id, { at: STAMP, admittedAs: c.proposal.id, effect: "LEARNED", methodVersionAfter: learned.knowledge.version }).store,
     STAMP,
   );

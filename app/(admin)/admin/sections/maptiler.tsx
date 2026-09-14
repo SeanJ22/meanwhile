@@ -27,19 +27,58 @@
  * every number on the page disappears rather than being drawn at zero.
  */
 import { MAPTILER_SERVICE_TOKEN_VAR } from "@/lib/control-plane/maptiler/types.ts";
-import type { MapTilerPanel } from "@/lib/control-plane/maptiler/usage.ts";
+import type {
+  MapTilerAttemptHistory,
+  MapTilerHistoryAttempt,
+  MapTilerPanel,
+} from "@/lib/control-plane/maptiler/usage.ts";
 
 import { QueueButton, When } from "../../console-ui.tsx";
 import { NeedsYouLine } from "../../status-ui.tsx";
 
 export interface MapTilerSectionProps {
   readonly panel: MapTilerPanel;
+  readonly history: MapTilerAttemptHistory | null;
+  readonly historyGap: string | null;
 }
 
 const n = (value: number): string => value.toLocaleString("en-US");
 
-export function MapTilerSection({ panel }: MapTilerSectionProps) {
-  const connected = panel.connection === "CONNECTED";
+function attemptSays(attempt: MapTilerHistoryAttempt): string {
+  if (attempt.disposition === "PROMOTED_CURRENT") {
+    return "Complete provider reading promoted to current.";
+  }
+  if (attempt.disposition === "RETAINED_LKG") {
+    return "Collection failed; the prior good reading stayed live.";
+  }
+  if (attempt.disposition === "UNKNOWN_NO_LKG") {
+    return "Collection failed and no prior good reading was available.";
+  }
+  return "Receipt is inconsistent, so it licenses no health claim.";
+}
+
+function AttemptRow({ attempt }: { readonly attempt: MapTilerHistoryAttempt }) {
+  return (
+    <li>
+      <strong>{attemptSays(attempt)}</strong> Finished {" "}
+      <When iso={attempt.outcome.finishedAt} />. Provider result {" "}
+      <code>{attempt.outcome.attempt.connection}</code>.
+      {attempt.outcome.attempt.detail ? ` ${attempt.outcome.attempt.detail}` : ""}
+      {attempt.outcome.visibleMeasurement
+        ? ` Visible measurement: ${attempt.outcome.visibleMeasurement.collectedAt}.`
+        : " No measured reading was visible."}
+      {attempt.issue ? ` Evidence issue: ${attempt.issue}` : ""}
+      <br />
+      <span className="note">
+        Receipt <code>{attempt.digestId}</code>; candidate {" "}
+        <code>{attempt.outcome.candidate.canonicalSha256}</code>.
+      </span>
+    </li>
+  );
+}
+
+export function MapTilerSection({ panel, history, historyGap }: MapTilerSectionProps) {
+  const connected = panel.readingState !== "UNKNOWN";
   const pct =
     connected && panel.allowance !== null && panel.allowance > 0 && panel.used !== null
       ? Math.min(100, Math.round((panel.used / panel.allowance) * 100))
@@ -57,8 +96,16 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
 
       {/* 2 — what happened */}
       <p className="mt-status">
-        <strong>{connected ? "Reading taken." : "No reading."}</strong> {panel.says}
+        <strong>
+          {panel.readingState === "MEASURED_CURRENT"
+            ? "Current reading."
+            : panel.readingState === "MEASURED_LKG"
+              ? "Last-known-good reading."
+              : "No reading."}
+        </strong>{" "}
+        {panel.says}
       </p>
+      {panel.latestAttemptSays && <p className="note gap">{panel.latestAttemptSays}</p>}
 
       {!connected ? (
         <>
@@ -172,17 +219,15 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
             </table>
           )}
 
-          {panel.actors && (
-            <>
-              <h3>Our own robots, for comparison</h3>
-              <p className="note">{panel.actors.says}</p>
-              {panel.actors.defects.map((defect) => (
-                <p key={defect} className="note gap">
-                  {defect}
-                </p>
-              ))}
-            </>
-          )}
+          <h3>Our own robots, for comparison</h3>
+          <p className={panel.actors?.state === "MEASURED" ? "note" : "note gap"}>
+            {panel.actors?.says ?? "The comparison is unknown, not zero."}
+          </p>
+          {(panel.actors?.defects ?? []).map((defect) => (
+            <p key={defect} className="note gap">
+              {defect}
+            </p>
+          ))}
 
           {/* 3 — does this need you. It SUMMARISES: the items are listed once,
               below, and repeating the first of them here reads as two
@@ -214,6 +259,62 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
         {panel.automationBlocked ? "Yes." : "No — and it should be."} {panel.automationSays}
       </p>
 
+      <h3>Automatic collection history</h3>
+      <p className="note">
+        Every attempt below is an append-only control-plane receipt. The current or
+        last-known-good reading above can move; this history cannot be replaced by a later run.
+      </p>
+      {history === null ? (
+        <p className="note gap">
+          {historyGap ?? "The append-only map-provider history is unavailable, and this panel did not carry a reason."}
+        </p>
+      ) : (
+        <>
+          <div className="rq-summary mt-tiles">
+            {history.windows.map((window) => (
+              <div className="rq-tile" key={window.id}>
+                <div className="rq-figure">{n(window.attempts)}</div>
+                <div className="rq-caption">
+                  attempt(s) in {window.label}: {n(window.promotedCurrent)} promoted, {" "}
+                  {n(window.retainedLkg)} kept LKG, {n(window.unknownNoLkg)} had no LKG, {" "}
+                  {n(window.inconsistent)} inconsistent
+                </div>
+              </div>
+            ))}
+          </div>
+          {history.unplaced.length > 0 && (
+            <p className="note gap">
+              At least one durable receipt has an unreadable or future finish time. It is not
+              silently counted into a healthy window; inspect the exact receipt list below.
+            </p>
+          )}
+          <details className="status-detail">
+            <summary>
+              Exact automatic attempts in the last 30 days — {n(history.attempts.length)}
+            </summary>
+            {history.attempts.length === 0 ? (
+              <p className="note">No correctly timed attempt falls inside this window.</p>
+            ) : (
+              <ul>
+                {history.attempts.map((attempt) => (
+                  <AttemptRow key={attempt.digestId} attempt={attempt} />
+                ))}
+              </ul>
+            )}
+            {history.unplaced.length > 0 && (
+              <>
+                <h4>Durable receipts that could not be placed on the clock</h4>
+                <ul>
+                  {history.unplaced.map((attempt) => (
+                    <AttemptRow key={`unplaced:${attempt.digestId}`} attempt={attempt} />
+                  ))}
+                </ul>
+              </>
+            )}
+          </details>
+        </>
+      )}
+
       <details className="status-detail">
         <summary>Technical details</summary>
         {/*
@@ -229,18 +330,19 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
         */}
         {connected ? (
           <p className="note">
-            Reading taken <When iso={panel.collectedAt} />, against MapTiler&rsquo;s analytics API,
-            classified by <code>api_keys</code> and by <code>services</code>. Refreshed by{" "}
-            <code>pnpm maptiler:usage</code>. The service credential is server-side only and appears
-            nowhere on this page.
+            {panel.readingState === "MEASURED_LKG" ? "Last good reading taken " : "Reading taken "}
+            <When iso={panel.collectedAt} />, against MapTiler&rsquo;s analytics API, classified by{" "}
+            <code>api_keys</code> and by <code>services</code>. The standing production runner
+            refreshes this canonical snapshot automatically. The service credential is server-side
+            only and appears nowhere on this page.
           </p>
         ) : (
           <p className="note">
-            No reading has been taken, so there is no timestamp to show. The usage read needs a
+            No successful reading is available, so there is no measurement timestamp to show. The usage read needs a
             server-side credential named <code>{MAPTILER_SERVICE_TOKEN_VAR}</code>, created on the
-            MapTiler account&rsquo;s Credentials page and installed on the runner. Once it is,{" "}
-            <code>pnpm maptiler:usage</code> fills this panel in. <code>docs/maptiler-keys.md</code>{" "}
-            carries the full owner action.
+            MapTiler account&rsquo;s Credentials page and installed on the standing runner. Once it is,
+            that runner refreshes this canonical snapshot automatically. <code>docs/maptiler-keys.md</code>{" "}
+            carries the one-time owner action.
           </p>
         )}
         {panel.estimatedIncluded > 0 && (

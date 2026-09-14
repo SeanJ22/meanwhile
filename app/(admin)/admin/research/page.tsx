@@ -37,7 +37,7 @@ import { WorkerFleetPanel } from "./worker-fleet-panel";
  * a hover, not in a disclosure — and nothing in this file reads the
  * environment.
  *
- * Every read the page needs is issued in ONE round (ADM-14): the nine reads
+ * Every read the page needs is issued in ONE round (ADM-14): the ten reads
  * used to run as a group of six, then the fleet, then the window, then its
  * incidents — four sequential trips to Neon on every view switch.
  */
@@ -47,6 +47,7 @@ import { cookies } from "next/headers";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { displayNameOf } from "@/lib/control-plane/display-name.ts";
+import { readMethodCandidateAuthorityStatus } from "@/lib/control-plane/method-candidate-authority.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered } from "@/lib/control-plane/owner-surface.ts";
 import { plainWindow } from "@/lib/control-plane/plain-window.ts";
 import { modelName, plainCode, plainMeaning, plainText, usdCents } from "@/lib/control-plane/plain-words.ts";
@@ -204,7 +205,7 @@ export default async function ResearchPage() {
   }
 
   const nowIso = new Date().toISOString();
-  const [heartbeat, state, intents, results, spend, evidence, fleet, lastWindow, snapshotOut] = await Promise.all([
+  const [heartbeat, state, intents, results, spend, evidence, fleet, lastWindow, snapshotOut, methodAuthority] = await Promise.all([
     readHeartbeat(opened.repos),
     readResearchState(opened.repos),
     readResearchIntents(opened.repos),
@@ -214,6 +215,7 @@ export default async function ResearchPage() {
     readWorkerFleet(opened.repos, nowIso),
     readLastWindow(opened.repos),
     readSnapshot(opened.repos),
+    readMethodCandidateAuthorityStatus(opened.repos),
   ]);
   const view = buildResearchView({ nowIso, heartbeat, state, intents, results, spend, evidence });
   const candidateNames = snapshotOut.kind === "HELD" ? snapshotOut.value.candidateNames : undefined;
@@ -857,6 +859,54 @@ export default async function ResearchPage() {
           <GapNote gap={view.methodCandidates.gap} where="Method candidates" returnTo={HERE} />
         )}
       </p>
+      <section className="card">
+        <h3>
+          Method-candidate authority —{" "}
+          <span
+            className={
+              methodAuthority.state === "ADOPTED"
+                ? "state-green"
+                : methodAuthority.state === "REFUSED" || methodAuthority.state === "STORE_UNREACHABLE"
+                  ? "state-red"
+                  : "state-unknown"
+            }
+          >
+            {plainCode(methodAuthority.state)}
+          </span>
+        </h3>
+        <NeedsYouLine
+          needs={
+            methodAuthority.state === "ADOPTED"
+              ? NEEDS_NOTHING
+              : {
+                  needed: true,
+                  action: "leave method-candidate writes held while engineering restores or verifies the named control-plane authority",
+                }
+          }
+        />
+        <p className="plain">
+          {methodAuthority.state === "ADOPTED"
+            ? "The live method-learning queue is owned by the production control plane. Its historical Git seed is evidence only."
+            : methodAuthority.detail}
+        </p>
+        <details className="raw-ids">
+          <summary>Authority and adoption evidence</summary>
+          <p className="note">
+            Canonical aggregate <code>cp_method_candidates/live</code>; current revision{" "}
+            {methodAuthority.aggregateRevision ?? "not readable"}; status code <code>{methodAuthority.code}</code>.
+            {methodAuthority.aggregateUpdatedAt !== null && (
+              <> The aggregate was last written <When iso={methodAuthority.aggregateUpdatedAt} />.</>
+            )}
+            {methodAuthority.verifierCodeSha !== null && (
+              <>
+                {" "}The adoption receipt binds clean, detached verifier <code>{methodAuthority.verifierCodeSha}</code>
+                {methodAuthority.verifiedAt === null ? "." : <> and was recorded <When iso={methodAuthority.verifiedAt} />.</>}
+              </>
+            )}
+          </p>
+          <p className="note">{methodAuthority.detail}</p>
+        </details>
+      </section>
 
       {/* LAST NIGHTLY WINDOW (RULING 242) — one line, one picture, the rest behind a disclosure (ADM-13) */}
       <h2>
@@ -926,7 +976,7 @@ export default async function ResearchPage() {
         </div>
       )}
       <details className="ph-evidence">
-        <summary>Window detail — definitions, the gate, the legacy refresh, controls, proof</summary>
+        <summary>Window detail — definitions, the gate, controls, proof</summary>
         {windowView.reasons.length > 0 && (
           <ul>
             {windowView.reasons.map((r) => (
@@ -989,16 +1039,6 @@ export default async function ResearchPage() {
           </p>
         )}
         <p>
-          Legacy refresh:{" "}
-          {windowView.legacy.held ? (
-            <>
-              ran <Num m={windowView.legacy.value.ran} /> ({windowView.legacy.value.source})
-            </>
-          ) : (
-            <GapNote gap={windowView.legacy.gap} where="Nightly window · legacy refresh" returnTo={HERE} />
-          )}
-        </p>
-        <p>
           Controls:{" "}
           {windowView.controls.held ? (
             <>
@@ -1008,14 +1048,6 @@ export default async function ResearchPage() {
             </>
           ) : (
             <GapNote gap={windowView.controls.gap} where="Nightly window · controls" returnTo={HERE} />
-          )}
-        </p>
-        <p>
-          Served-surface check:{" "}
-          {windowView.verification.held ? (
-            `${windowView.verification.value.instrument}: ${windowView.verification.value.verdict}`
-          ) : (
-            <GapNote gap={windowView.verification.gap} where="Nightly window · served-surface check" returnTo={HERE} />
           )}
         </p>
         <p>

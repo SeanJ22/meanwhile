@@ -1,12 +1,11 @@
 import { geometryPath } from "../lib/holdings/files.ts";
 /**
- * Generate the division and body registry from the committed boundary files.
+ * Generate a deterministic registry fixture from committed version inputs.
  *
- *   pnpm registry:build
+ *   pnpm registry:fixture -- --fixture-output=<temporary path>
  *
- * Writes lib/registry/registry.json, committed the way the boundary files and
- * the ZCTA centroids are. Nothing here touches the network except the optional
- * canonical reconciliation pass.
+ * It is deliberately unable to write the production bootstrap holding. Live
+ * runtime bindings promote through the permanent data plane.
  *
  * The registry is derived, never hand-written: the polygons say which divisions
  * exist, lib/registry/derive.ts says which bodies each division implies, and
@@ -15,7 +14,7 @@ import { geometryPath } from "../lib/holdings/files.ts";
 
 import { readFileSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { today } from "./doc-dates.mjs";
@@ -42,7 +41,17 @@ import type {
 
 const here = dirname(fileURLToPath(import.meta.url));
 const HOLDINGS_ROOT = join(here, "..");
-const OUT = join(here, "..", "lib", "registry", "registry.json");
+const fixtureOutput = process.argv.find((value) => value.startsWith("--fixture-output="))?.slice("--fixture-output=".length);
+if (!fixtureOutput) throw new Error("FIXTURE_OUTPUT_REQUIRED: this retired generator cannot write tracked runtime truth.");
+const OUT = resolve(fixtureOutput);
+const repositoryRoot = resolve(here, "..");
+const retiredCanonical = resolve(repositoryRoot, "lib", "registry", "registry.json");
+if (OUT === retiredCanonical) throw new Error("TRACKED_REGISTRY_WRITE_FORBIDDEN: registry.json is first-seed evidence, not a mutable runtime store.");
+const outputWithinRepository = relative(repositoryRoot, OUT);
+if (outputWithinRepository && !outputWithinRepository.startsWith("..") && !isAbsolute(outputWithinRepository)
+  && !/^\.scratch(?:[\\/]|$)/.test(outputWithinRepository)) {
+  throw new Error("TRACKED_REGISTRY_WRITE_FORBIDDEN: fixture output must be outside the repository or under its ignored .scratch directory.");
+}
 
 const CANONICAL_URL =
   "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv";

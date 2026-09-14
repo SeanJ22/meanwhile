@@ -30,6 +30,7 @@ import {
   readValidatedResponse,
   sourceUserAgent,
 } from "../http.ts";
+import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
 /**
  * `Crawl-delay: 2`, as published at https://legistar.com/robots.txt and read
@@ -38,8 +39,6 @@ import {
  */
 export const INSITE_CRAWL_DELAY_SECONDS = 2;
 export const INSITE_SPACING_MS = INSITE_CRAWL_DELAY_SECONDS * 1000;
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * One tenant's session for the length of one fetch.
@@ -53,13 +52,19 @@ export class InSiteSession {
   private readonly jar = new Map<string, string>();
   private readonly spacingMs: number;
   private readonly impl: typeof fetch;
+  private readonly signal?: AbortSignal;
   private lastAt = 0;
 
   /** Every URL this session actually retrieved, in order. Reported, never guessed. */
   readonly retrieved: string[] = [];
 
-  constructor(options: { fetchImpl?: typeof fetch; spacingMs?: number } = {}) {
+  constructor(options: {
+    fetchImpl?: typeof fetch;
+    spacingMs?: number;
+    signal?: AbortSignal;
+  } = {}) {
     this.impl = options.fetchImpl ?? fetch;
+    this.signal = options.signal;
     // An injected fetch is a test's own double: it must not sleep, and the
     // suite must never wait two seconds per fixture.
     this.spacingMs = options.spacingMs ?? (options.fetchImpl ? 0 : INSITE_SPACING_MS);
@@ -83,7 +88,8 @@ export class InSiteSession {
 
   private async pace(): Promise<void> {
     const wait = this.lastAt + this.spacingMs - Date.now();
-    if (wait > 0) await sleep(wait);
+    if (wait > 0) await sourceAcquisitionSleep(wait, this.signal);
+    this.signal?.throwIfAborted();
     this.lastAt = Date.now();
   }
 
@@ -101,16 +107,21 @@ export class InSiteSession {
     accept = "*/*",
   ): Promise<{ status: number; contentType: string; text: string }> {
     await this.pace();
-    const response = await this.impl(url, { headers: this.headers({ Accept: accept }) });
+    const response = await this.impl(url, {
+      headers: this.headers({ Accept: accept }),
+      signal: this.signal,
+    });
     this.store(response);
     if (!response.ok) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }
     this.retrieved.push(url);
+    const text = await response.text();
+    this.signal?.throwIfAborted();
     return readValidatedResponse(url, 2, {
       status: response.status,
       contentType: response.headers.get("content-type") ?? "",
-      text: await response.text(),
+      text,
     });
   }
 
@@ -133,16 +144,19 @@ export class InSiteSession {
         Referer: url,
       }),
       body: new URLSearchParams(form).toString(),
+      signal: this.signal,
     });
     this.store(response);
     if (!response.ok) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }
     this.retrieved.push(`POST ${url}`);
+    const text = await response.text();
+    this.signal?.throwIfAborted();
     return readValidatedResponse(url, 2, {
       status: response.status,
       contentType: response.headers.get("content-type") ?? "",
-      text: await response.text(),
+      text,
     });
   }
 }

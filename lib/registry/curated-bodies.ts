@@ -1,4 +1,5 @@
 import type { Body, BodyClass } from "./types.ts";
+import { SOURCE_WIRING } from "./source-wiring.ts";
 
 /**
  * Bodies the boundary-file derivation cannot produce, curated from the
@@ -242,20 +243,11 @@ const TUCSON_BOARDS: Array<[name: string, boardId: number, cls?: BodyClass]> = [
  * today's serving window, and both could. Recorded as a tracker row rather
  * than folded in here, and named so it is not rediscovered as a surprise.
   */
-const LIVE_BOARD_IDS = new Set([
-  // Wired before g18.
-  38, 8, 23, 63, 19,
-  // g18: an "Nth weekday of each month" rule the parser already handles.
-  9, 12, 3, 131, 39, 42, 57, 50, 49, 40, 58, 41, 59, 133, 61, 65,
-  // g18: enumerated dates.
-  26, 25,
-  // g18: enumerated dates, all of them past. See the note above.
-  43,
-  // g19: the two the g18 pass named as parser gaps, plus one it did not see.
-  // 128 quarterly (grammar C), 15 month-name dates (grammar D), 130 an
-  // ordinary Nth-weekday rule written "of THE month" (grammar B, widened).
-  128, 15, 130,
-]);
+const LIVE_BOARD_IDS = new Set(
+  SOURCE_WIRING
+    .filter((row) => row.ocdId === TUCSON_OCD && row.agendaSourceType === "CLERKSBOARDS")
+    .map((row) => Number(row.config.boardId)),
+);
 
 function slugOf(name: string): string {
   return name
@@ -295,28 +287,6 @@ function tucsonBoardRow(entry: [string, number, BodyClass?]): Body {
     },
   };
 }
-
-/**
- * The board id behind every clerksboards body that is LIVE, keyed by body id.
- *
- * EXPORTED SO THE SOURCE WIRING CAN DERIVE ITSELF (g18). `source-wiring.ts`
- * held five hand-written `CLERKSBOARDS` entries beside this file's five-entry
- * `LIVE_BOARD_IDS`, and the two had to agree for a board to actually be read.
- * Widening `LIVE_BOARD_IDS` alone would have marked nineteen bodies LIVE with
- * nothing fetching them — a coverage status that claims a calendar we never
- * asked for, which is green standing in for verified.
- *
- * That was caught by asking the adapter what it returned rather than trusting
- * the status field, and the fix is the one AUD-06 makes everywhere else this
- * session: one list, derived, instead of two lists that must be kept in step.
- */
-export const TUCSON_CLERKSBOARDS: { bodyId: string; boardId: string }[] =
-  TUCSON_BOARDS.filter(([, boardId]) => LIVE_BOARD_IDS.has(boardId)).map(
-    ([name, boardId]) => ({
-      bodyId: `${TUCSON_OCD}#${slugOf(name)}`,
-      boardId: String(boardId),
-    }),
-  );
 
 export const CURATED_BODIES: Body[] = [
   // ── D28: Pima Community College Governing Board ─────────────────────────
@@ -1041,7 +1011,7 @@ function pima85641DistrictRows(): Body[] {
       name: "Central Arizona Water Conservation District Board of Directors",
       homepage: "https://www.cap-az.com/board/board-members/",
       authority:
-        "a multi-county water conservation district, and the only body here whose board is DIRECTLY ELECTED rather than the Board of Supervisors sitting as it. Fifteen members, elected by county — Maricopa 10, Pima 4, Pinal 1, which is the board's statutory composition. All fifteen members' own pages state a county, read 2026-08-27: the Pima four are Karen Cesare, Pat Jacobs, Justin Manuel and Mark Taylor. (An earlier read recorded only three confirmed Pima members and four pages stating no county; re-reading the pages corrected both. The roster is wired in lib/registry/cawcd-rosters.ts.)",
+        "a multi-county water conservation district, and the only body here whose board is DIRECTLY ELECTED rather than the Board of Supervisors sitting as it. Fifteen members, elected by county — Maricopa 10, Pima 4, Pinal 1, which is the board's statutory composition. All fifteen members' own pages state a county, read 2026-08-27: the Pima four are Karen Cesare, Pat Jacobs, Justin Manuel and Mark Taylor. (An earlier read recorded only three confirmed Pima members and four pages stating no county; re-reading the pages corrected both. The roster is wired in data/states/az/officials/cawcd-rosters.json.)",
       territory:
         "it taxes every parcel in Pima County: Pima County Resolution 2026-43 levies its ad valorem secondary at 0.1000 and its water storage secondary at 0.0400 on the county's full $12,350,762,412 valuation, plus groundwater replenishment charged per acre-foot and per lot. That is how this district was found at all — it appears in no Pima County directory and on no boundary layer this project has walked.",
       ocdId: PIMA_COUNTY,

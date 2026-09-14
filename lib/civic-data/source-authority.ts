@@ -1,10 +1,177 @@
-import type { RoutineRecordClass, SourceAuthorityContract } from "./types.ts";
+import {
+  MANUAL_SOURCE_CLASSES,
+  type ManualSourceSetReceipt,
+  type RoutineRecordClass,
+  type SourceAuthorityContract,
+} from "./types.ts";
 
 /**
  * The one authority/competence registry for routine civic data. An adapter may
  * add parser mechanics, but it may not invent trusted hosts or competent facts.
  */
 export const SOURCE_AUTHORITIES = {
+  "federal-legislative-records": {
+    id: "federal-legislative-records",
+    publisher: "U.S. House Clerk, U.S. Senate, and Congress.gov",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "FEDERAL_LEGISLATURE",
+    routePrefixes: [
+      "https://clerk.house.gov/",
+      "https://www.senate.gov/legislative/",
+      "https://api.congress.gov/v3/",
+      "https://www.congress.gov/bill/",
+    ],
+    allowedFinalHosts: ["clerk.house.gov", "www.senate.gov", "api.congress.gov", "www.congress.gov"],
+    jurisdictions: ["US"],
+    recordClasses: ["FEDERAL_ROLL_CALL", "FEDERAL_KEY_VOTE"],
+    competentFacts: [
+      "federal roll-call identity",
+      "chamber question and result",
+      "recorded member position",
+      "bill identity and official title",
+      "bill action stage",
+    ],
+    expectedIdentifierKeys: ["roll_call_id", "entry_id"],
+    expectedTemporalFields: ["congress", "session", "vote_date", "source_through"],
+    horizonSemantics: "A recent-vote projection is bounded by the declared per-chamber roll window. A reviewed key-question version is bounded by every explicitly selected chamber roll, and each official roll must be acquired before promotion.",
+    parserVersion: "federal-votes/2",
+    freshnessExpectation: "Manual owner-directed acquisition; no standing clock. Every acquisition produces a durable candidate/outcome receipt.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "congress-directory-project": {
+    id: "congress-directory-project",
+    publisher: "unitedstates/congress-legislators (community-maintained directory project)",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "INTERMEDIARY",
+    routePrefixes: ["https://raw.githubusercontent.com/unitedstates/congress-legislators/"],
+    allowedFinalHosts: ["raw.githubusercontent.com"],
+    jurisdictions: ["US"],
+    recordClasses: ["FEDERAL_DIRECTORY"],
+    competentFacts: ["current federal membership", "term and chamber", "official contact", "district office", "official social account", "committee membership"],
+    expectedIdentifierKeys: ["bioguide_id", "division_ocd_id", "committee_id"],
+    expectedTemporalFields: ["term_start", "term_end", "source_sha", "source_through"],
+    horizonSemantics: "The five files at one adopted commit SHA form one bounded directory version. Every file must be acquired and pass its declared floor; the project remains attributed as an intermediary rather than an official chamber record.",
+    parserVersion: "congress-directory/2",
+    freshnessExpectation: "Explicit owner invocation after adopting a new project SHA; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "registry-reviewed-bindings": {
+    id: "registry-reviewed-bindings",
+    publisher: "Exact government, Census, NCES, and official-platform sources named by the reviewed registry receipt",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["REGISTRY_RUNTIME_BINDING"],
+    competentFacts: ["body-to-division binding", "current body name and contact", "body roster membership and contact", "statewide officeholder and contact", "exact roster identity disposition", "officeholder-to-candidacy binding", "runtime body provenance", "licensed officeholder portrait binding"],
+    expectedIdentifierKeys: ["body_id", "division_ocd_id", "officeholder_id", "candidacy_id"],
+    expectedTemporalFields: ["source_through", "collected_at"],
+    horizonSemantics: "An explicit owner-reviewed package speaks only for its enumerated runtime bindings and exact source bytes. Static division/schema derivations remain separately versioned software inputs.",
+    parserVersion: "registry-runtime-bindings/3",
+    freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY"] },
+  },
+  "curated-reader-primary-sources": {
+    id: "curated-reader-primary-sources",
+    publisher: "Exact election-authority, candidate-controlled, public-body, and venue-coordinate reference sources named by each reviewed Reader-record receipt",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US", "US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: [
+      "published public-comment rule",
+      "official voter-registration lookup route",
+      "official polling-place lookup route",
+      "verified campaign or personal site binding",
+      "reviewed exact-source venue address and coordinate resolution",
+      "official everyday service contact route for an exact state/topic cell",
+      "explicit owner-reviewed CONTACT_OWED obligation where no supported contact is held",
+    ],
+    expectedIdentifierKeys: ["record_id", "body_id", "state", "officeholder_id", "source_id", "raw_location", "topic_id", "zip"],
+    expectedTemporalFields: ["source_version", "source_through", "verified_at", "collected_at", "reviewed_at"],
+    horizonSemantics: "Each contract is an independent, explicitly reviewed record family. Its receipt speaks only for the exact URLs and bytes in that family and cannot determine another family\u2019s disposition.",
+    parserVersion: "curated-reader-records/2",
+    freshnessExpectation: "Explicit owner invocation after a cited publisher changes; no standing clock and no tracked production writer.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: {
+      allowedSourceClasses: ["ELECTION_AUTHORITY", "CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "REFERENCE_PUBLISHER"],
+    },
+  },
+  "voting-sites": {
+    id: "voting-sites",
+    publisher: "Pima County Elections, Morris County Elections, and New Hampshire state and local election authorities",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [
+      "https://www.pima.gov/",
+      "https://services2.arcgis.com/UTBp78iglGpbqp1B/",
+      "https://www.morriscountynj.gov/",
+      "https://app.sos.nh.gov/",
+      "https://www.sos.nh.gov/",
+      "https://newlondon.nh.gov/",
+      "https://www.newbury.nh.gov/",
+      "https://www.wilmotnh.org/",
+    ],
+    allowedFinalHosts: [
+      "www.pima.gov",
+      "services2.arcgis.com",
+      "www.morriscountynj.gov",
+      "app.sos.nh.gov",
+      "www.sos.nh.gov",
+      "newlondon.nh.gov",
+      "www.newbury.nh.gov",
+      "www.wilmotnh.org",
+    ],
+    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["VOTING_SITE"],
+    competentFacts: [
+      "official voting-site identity and address",
+      "official vote-center or assigned-site model",
+      "published election and opening window",
+      "publisher-specific retrieval refusal",
+    ],
+    expectedIdentifierKeys: ["ocd_id", "voting_site_id"],
+    expectedTemporalFields: ["election", "collected_at", "source_through"],
+    horizonSemantics: "Every supported election authority is an independent acquisition scope. A failed authority retains only that scope's prior GOOD version; a zero-site response is a refusal, never proof that no place exists.",
+    parserVersion: "official-voting-sites/2",
+    freshnessExpectation: "Explicit owner invocation when an authority publishes or changes its election locations; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  prl: {
+    id: "prl",
+    publisher: "Polarization Research Lab at Dartmouth — America's Political Pulse",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "INTERMEDIARY",
+    routePrefixes: [
+      "https://americaspoliticalpulse.com/data/elite/",
+      "https://www.americaspoliticalpulse.com/data/elite/",
+    ],
+    allowedFinalHosts: ["americaspoliticalpulse.com", "www.americaspoliticalpulse.com"],
+    jurisdictions: ["US"],
+    recordClasses: ["PRL_PROFILE"],
+    competentFacts: [
+      "PRL's own congressional rhetoric statement count",
+      "PRL's own five allowlisted rhetoric mean shares",
+      "PRL measurement source and update date",
+      "PRL dataset attribution and licence",
+    ],
+    expectedIdentifierKeys: ["bioguide_id"],
+    expectedTemporalFields: ["communication_last_update", "source_through"],
+    horizonSemantics: "The national profiles archive is bounded by its exact CSV rows. Only positive-statement rows with exact Bioguide identifiers may promote, and the five attributed mean shares remain PRL measurements rather than government facts.",
+    parserVersion: "prl-rhetoric/2",
+    freshnessExpectation: "Explicit owner invocation after PRL publishes a new attributed archive; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
   "fec-open-api": {
     id: "fec-open-api",
     publisher: "Federal Election Commission",
@@ -21,6 +188,78 @@ export const SOURCE_AUTHORITIES = {
     parserVersion: "fec-funding/2",
     freshnessExpectation: "Weekly; FEC processing itself may lag filings by days.",
     absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["office", "state", "district", "cycle", "pagination"] },
+    routineAutoPromotion: true,
+  },
+  "az-sos-campaign-finance": {
+    id: "az-sos-campaign-finance",
+    publisher: "Arizona Secretary of State — SeeTheMoney",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://seethemoney.az.gov/Reporting/"],
+    allowedFinalHosts: ["seethemoney.az.gov"],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["STATE_CAMPAIGN_FINANCE"],
+    competentFacts: ["committee registration", "office and election cycle", "filed receipt and expenditure totals", "reporting period"],
+    expectedIdentifierKeys: ["committee_id", "candidacy_id"],
+    expectedTemporalFields: ["election_cycle", "checked_at", "source_through"],
+    horizonSemantics: "The union of the official active, less-active, and officeholder filters is the acquisition horizon. Dollar figures promote only after the publisher's itemized ledger reconciles them.",
+    parserVersion: "az-campaign-finance/2",
+    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["candidacy_id", "election_cycle", "filter_union"] },
+    routineAutoPromotion: true,
+  },
+  "nh-sos-campaign-finance": {
+    id: "nh-sos-campaign-finance",
+    publisher: "New Hampshire Secretary of State — Campaign Finance System",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://cfsapi.sos.nh.gov/api/PublicFilerDetails/"],
+    allowedFinalHosts: ["cfsapi.sos.nh.gov"],
+    jurisdictions: ["US-NH"],
+    recordClasses: ["STATE_CAMPAIGN_FINANCE"],
+    competentFacts: ["filer identity", "office and election cycle", "filed receipts and spending totals", "bounded filer absence"],
+    expectedIdentifierKeys: ["committee_id", "candidacy_id"],
+    expectedTemporalFields: ["election_cycle", "checked_at", "source_through"],
+    horizonSemantics: "The empty-name statewide filer query is complete only when every page reconciles to the publisher's totalItems; Reader narrowing makes no network request.",
+    parserVersion: "nh-campaign-finance/2",
+    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["candidacy_id", "election_cycle", "totalItems"] },
+    routineAutoPromotion: true,
+  },
+  "nj-elec-campaign-finance": {
+    id: "nj-elec-campaign-finance",
+    publisher: "New Jersey Election Law Enforcement Commission",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://www.njelecefilesearch.com/"],
+    allowedFinalHosts: ["www.njelecefilesearch.com", "njelecefilesearch.com"],
+    jurisdictions: ["US-NJ"],
+    recordClasses: ["STATE_CAMPAIGN_FINANCE"],
+    competentFacts: ["filing entity", "filing location", "office and election year", "filed report totals", "bounded filing absence"],
+    expectedIdentifierKeys: ["committee_id", "candidacy_id"],
+    expectedTemporalFields: ["election_year", "checked_at", "source_through"],
+    horizonSemantics: "Each official dropdown location is acquired with a control and its stated row count; an unacquired or short location remains ROUTE_UNREAD and cannot establish absence.",
+    parserVersion: "nj-campaign-finance/2",
+    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["candidacy_id", "election_year", "location_code"] },
+    routineAutoPromotion: true,
+  },
+  "az-pima-local-finance": {
+    id: "az-pima-local-finance",
+    publisher: "Pima County Elections public campaign-finance portal",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://ecf-api.easyvoteapp.com/"],
+    allowedFinalHosts: ["ecf-api.easyvoteapp.com"],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["LOCAL_CAMPAIGN_FINANCE"],
+    competentFacts: ["Pima filer identity", "public filing index", "redacted contribution row", "redacted distribution row", "filing authority identity"],
+    expectedIdentifierKeys: ["portal_filer_id", "filing_id"],
+    expectedTemporalFields: ["recorded_on", "retrieved_at", "source_through"],
+    horizonSemantics: "The public filer index and contribution/distribution searches are separate named horizons. A consistent year partition disproves the suspected round-number cap; other document classes remain explicitly held.",
+    parserVersion: "pima-campaign-finance/2",
+    freshnessExpectation: "Explicit owner invocation after a filing deadline or owner-requested review; no standing GitHub or production cadence.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
   "census-data-api": {
@@ -49,13 +288,232 @@ export const SOURCE_AUTHORITIES = {
     routePrefixes: ["https://www2.census.gov/programs-surveys/gus/", "https://www2.census.gov/geo/tiger/"],
     allowedFinalHosts: ["www2.census.gov"],
     jurisdictions: ["US"],
-    recordClasses: ["CENSUS_REFERENCE", "CENSUS_GEOGRAPHY"],
+    recordClasses: ["CENSUS_REFERENCE"],
     competentFacts: ["Census of Governments unit classification", "Census GEOID", "TIGER/Line boundary", "statistical geography classification"],
     expectedIdentifierKeys: ["product", "vintage", "geoid"],
     expectedTemporalFields: ["vintage", "source_through"],
     horizonSemantics: "Completeness is product/vintage-specific and must reconcile archive members, feature/row cardinality, unique identifiers, and geographic relationships. Statistical place does not imply an independent government.",
     parserVersion: "census-bulk/2",
     freshnessExpectation: "At the supported product's official release cadence.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+  },
+  "jurisdiction-operational-reference": {
+    id: "jurisdiction-operational-reference",
+    publisher: "U.S. Census Bureau and Arizona Secretary of State source vintages plus the reviewed AZ/NH/NJ jurisdiction-routing model",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: [
+      "https://www2.census.gov/programs-surveys/gus/",
+      "https://apps.azsos.gov/cfs/",
+    ],
+    allowedFinalHosts: ["www2.census.gov", "apps.azsos.gov"],
+    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["OPERATIONAL_REFERENCE"],
+    competentFacts: [
+      "named covered-state government from the adopted Census source vintage",
+      "reviewed filing-officer and election-custodian routing",
+      "explicit adapted, discovery-owed, and requires-adapter state",
+    ],
+    expectedIdentifierKeys: ["jurisdiction_id"],
+    expectedTemporalFields: ["source_version", "source_through"],
+    horizonSemantics: "The projection is complete only for the exact reviewed AZ/NH/NJ routing version and its named input vintages; it never claims every government or route in a state.",
+    parserVersion: "jurisdiction-operational-reference/3",
+    freshnessExpectation: "Owner-invoked version promotion only; the standing control plane consumes the promoted LKG and does not read tracked mutable runtime truth.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "meetings-public-bodies": {
+    id: "meetings-public-bodies",
+    publisher: "The configured public bodies in the canonical source-wiring registry",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: [
+      "https://api.thrillshare.com/", "https://bradfordnh.gov/", "https://calendar.google.com/",
+      "https://capaz.api.civicclerk.com/", "https://capaz.portal.civicclerk.com/", "https://govboard.tusd1.org/",
+      "https://clerksboards.tucsonaz.gov/", "https://meetings.boardbook.org/", "https://mesa.legistar.com/",
+      "https://webapi.legistar.com/v1/",
+      "https://morriscountynj.iqm2.com/", "https://newburynh.civicweb.net/", "https://newlondon.nh.gov/",
+      "https://pima.community.highbond.com/", "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
+      "https://pima.legistar.com/",
+      "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
+      "https://tusd1-schooldesk.community.diligentoneplatform.com/", "https://vailschooldistrictaz.thrillshare.com/",
+      "https://warnernh.gov/", "https://www.cap-az.com/", "https://www.kearsarge.org/", "https://www.merrimackcounty.net/",
+      "https://www.mesaaz.gov/", "https://www.mhrd.org/", "https://www.newbury.nh.gov/", "https://www.rockawaytownship.org/",
+      "https://www.suttonnh.gov/", "https://www.wilmotnh.org/",
+    ],
+    allowedFinalHosts: [
+      "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
+      "capaz.portal.civicclerk.com", "govboard.tusd1.org", "clerksboards.tucsonaz.gov", "meetings.boardbook.org",
+      "mesa.legistar.com", "morriscountynj.iqm2.com", "newburynh.civicweb.net",
+      "webapi.legistar.com",
+      "newlondon.nh.gov", "pima.community.highbond.com", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
+      "www.pima.gov",
+      "tusd1-schooldesk.community.diligentoneplatform.com", "vailschooldistrictaz.thrillshare.com", "warnernh.gov",
+      "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
+      "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
+    ],
+    jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+    recordClasses: ["MEETING"],
+    competentFacts: ["meeting time", "meeting status", "public body", "location", "agenda link", "agenda document"],
+    expectedIdentifierKeys: ["meeting_id", "body_id", "source_route"],
+    expectedTemporalFields: ["starts_at", "ends_at", "source_through"],
+    horizonSemantics: "Each configured body/route is an independent obligation. A failed route may retain only that route's LKG rows and cannot erase or authenticate any unrelated body.",
+    parserVersion: "meetings-composite/2",
+    freshnessExpectation: "Daily through the supported election window, then weekly; source/body retries are hourly.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "nj-morris-county-clerk": {
+    id: "nj-morris-county-clerk",
+    publisher: "Morris County Clerk",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://www.morriscountyclerk.org/"],
+    allowedFinalHosts: ["www.morriscountyclerk.org", "morriscountyclerk.org"],
+    jurisdictions: ["US-NJ"],
+    recordClasses: ["BALLOT_FILING"],
+    competentFacts: ["filed candidacy", "contest", "party", "slogan", "term", "seat count", "filed contact", "filing removal"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id", "division_id"],
+    expectedTemporalFields: ["election_date", "filing_revision", "source_through"],
+    horizonSemantics: "The clerk page's newest current general-election candidate and school-candidate PDFs jointly bound the county filing horizon; every input row is built or explicitly refused.",
+    parserVersion: "nj-morris-filing/2",
+    freshnessExpectation: "Daily through the general election, then weekly while post-certification corrections remain possible.",
+    absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["contest_id", "candidacy_id", "division_id"] },
+    routineAutoPromotion: true,
+  },
+  "cisa-dotgov-registry": {
+    id: "cisa-dotgov-registry",
+    publisher: "Cybersecurity and Infrastructure Security Agency",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "FEDERAL_AGENCY",
+    routePrefixes: [
+      "https://api.github.com/repos/cisagov/dotgov-data/",
+      "https://raw.githubusercontent.com/cisagov/dotgov-data/",
+      "https://github.com/cisagov/dotgov-data/",
+    ],
+    allowedFinalHosts: ["api.github.com", "raw.githubusercontent.com", "github.com"],
+    jurisdictions: ["US"],
+    recordClasses: ["DOTGOV_REFERENCE"],
+    competentFacts: ["registered .gov domain", "registrant organization", "CISA domain type", "registry source revision"],
+    expectedIdentifierKeys: ["domain", "source_sha"],
+    expectedTemporalFields: ["source_commit", "source_through"],
+    horizonSemantics: "The SHA-pinned current-full.csv is a complete domain registry for that source revision but never a government/body denominator.",
+    parserVersion: "cisa-dotgov/2",
+    freshnessExpectation: "Monthly check for a newer CISA source revision.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "az-election-authorities": {
+    id: "az-election-authorities",
+    publisher: "Arizona Secretary of State and exact named Arizona filing/canvass authorities",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["BALLOT_CANDIDACY"],
+    competentFacts: ["filed candidacy", "certified nominee", "contest", "party", "measure", "candidate identity crosswalk"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id", "identity_id"],
+    expectedTemporalFields: ["election_date", "source_through"],
+    horizonSemantics: "The explicit owner-reviewed source set names the exact Arizona filing, canvass, and local ballot documents represented by one projection; omissions remain stated and never become statewide absence claims.",
+    parserVersion: "az-election-manual/1",
+    freshnessExpectation: "Explicit owner invocation when a named election authority publishes a revision; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+  },
+  "nh-election-authorities": {
+    id: "nh-election-authorities",
+    publisher: "New Hampshire Secretary of State and exact named New Hampshire election authorities",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US-NH"],
+    recordClasses: ["BALLOT_CANDIDACY"],
+    competentFacts: ["filed candidacy", "contest", "party", "term", "seat count", "election date"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id"],
+    expectedTemporalFields: ["election_date", "source_through"],
+    horizonSemantics: "The explicit owner-reviewed source set bounds the exact New Hampshire filing documents and supported county projection; it does not claim an unobserved statewide ballot universe.",
+    parserVersion: "nh-election-manual/1",
+    freshnessExpectation: "Explicit owner invocation after a reviewed filing or certification revision; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+  },
+  "candidate-primary-publications": {
+    id: "candidate-primary-publications",
+    publisher: "Exact candidate-controlled, filing-authority, and official-publisher pages named in each reviewed receipt",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US-AZ", "US-NH", "US-NJ"],
+    recordClasses: ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"],
+    competentFacts: ["candidate-published biography", "candidate-controlled link", "filed contact", "candidate-authored publication", "official officeholder page"],
+    expectedIdentifierKeys: ["candidate_key", "document_id"],
+    expectedTemporalFields: ["retrieved_at", "source_through"],
+    horizonSemantics: "Each reviewed receipt speaks only for its enumerated URLs and exact candidate keys. It never establishes that a candidate published nothing elsewhere.",
+    parserVersion: "candidate-primary-manual/1",
+    freshnessExpectation: "Explicit owner invocation after an equal-effort reviewed collection pass; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER", "ELECTION_AUTHORITY"] },
+  },
+  "officeholder-primary-publications": {
+    id: "officeholder-primary-publications",
+    publisher: "Exact officeholder-controlled, campaign-controlled, and official office pages named in each reviewed receipt",
+    trust: "T3_ATTRIBUTED_PRIMARY",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US"],
+    recordClasses: ["OFFICEHOLDER_STATEMENT"],
+    competentFacts: ["officeholder-published statement", "campaign-controlled statement", "official office biography and publication"],
+    expectedIdentifierKeys: ["officeholder_id", "snapshot_id"],
+    expectedTemporalFields: ["retrieved_at", "source_through"],
+    horizonSemantics: "Each owner-reviewed receipt speaks only for its enumerated URLs and exact snapshots. It never establishes that an officeholder published nothing elsewhere.",
+    parserVersion: "officeholder-statements-manual/1",
+    freshnessExpectation: "Explicit owner invocation after a reviewed primary-publication collection pass; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["CANDIDATE_CONTROLLED", "OFFICIAL_PUBLISHER"] },
+  },
+  "az-official-actions": {
+    id: "az-official-actions",
+    publisher: "Office of the Arizona Governor and Arizona State Legislature official publications named in the reviewed receipt",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    allowedFinalHosts: [],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["STATE_EXECUTIVE_ACTION"],
+    competentFacts: ["executive order", "chaptered enactment", "governor approval", "veto", "official transmittal letter"],
+    expectedIdentifierKeys: ["action_id", "officeholder_id"],
+    expectedTemporalFields: ["occurred_at", "collected_at", "source_through"],
+    horizonSemantics: "Each promoted row is bounded by the exact Governor/Legislature document bytes in an owner-reviewed receipt. An unread letter remains unread and a partial index walk never claims a complete action universe.",
+    parserVersion: "az-official-actions/2",
+    freshnessExpectation: "Explicit owner invocation after a new official order, chapter, or letter is published; no GitHub or standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["OFFICIAL_PUBLISHER"] },
+  },
+  "pima-legistar-outcomes": {
+    id: "pima-legistar-outcomes",
+    publisher: "Pima County public Legistar records",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://webapi.legistar.com/v1/pima/"],
+    allowedFinalHosts: ["webapi.legistar.com"],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["MEETING_OUTCOME"],
+    competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status"],
+    expectedIdentifierKeys: ["meeting_id", "event_id"],
+    expectedTemporalFields: ["event_last_modified_utc", "observed_at", "source_through"],
+    horizonSemantics: "The events query bounds its date window; each changed sitting is an independent acquisition. Failed item or vote retrieval produces a refused durable candidate and cannot replace another sitting's LKG facts.",
+    parserVersion: "pima-legistar-outcomes/2",
+    freshnessExpectation: "Explicit owner invocation; incremental reads use the publisher's EventLastModifiedUtc and no GitHub clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
@@ -87,10 +545,10 @@ export const SOURCE_AUTHORITIES = {
     jurisdictions: ["US-NH"],
     recordClasses: ["STATE_LEGISLATOR", "STATE_ROLL_CALL"],
     competentFacts: ["legislative membership", "elected status", "chamber", "district", "committee assignment", "official roll call"],
-    expectedIdentifierKeys: ["seatNo", "chamber", "district", "rollCallId", "eventId"],
+    expectedIdentifierKeys: ["PersonID", "EmployeeNumber", "seatNo", "chamber", "district", "rollCallId", "eventId"],
     expectedTemporalFields: ["term", "session", "vote_date"],
-    horizonSemantics: "Members.txt is the whole published roster file but states no row total; row disposition must reconcile to its logical input. Roll-call completeness is bounded only by an identified chamber/session index or database horizon.",
-    parserVersion: "nh-general-court/2",
+    horizonSemantics: "Members.txt is the whole published current-roster file and legislators.txt supplies its exact official PersonID crosswalk; row disposition must reconcile to logical input. For 2026, RollCallSummary.txt, RollCallHistory.txt and legislators.txt form one bounded horizon only when every summary, member position, published tally and one-to-one EmployeeNumber/PersonID join reconciles.",
+    parserVersion: "nh-general-court/3",
     freshnessExpectation: "Roster daily while membership changes; roll calls after each sitting.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
@@ -155,6 +613,122 @@ export type SourceAuthorityId = keyof typeof SOURCE_AUTHORITIES;
 
 export function sourceAuthority(sourceId: string): SourceAuthorityContract | null {
   return (SOURCE_AUTHORITIES as Readonly<Record<string, SourceAuthorityContract>>)[sourceId] ?? null;
+}
+
+const SHA256 = /^[a-f0-9]{64}$/;
+
+export function manualSourceReceiptStructureIssue(
+  receipt: ManualSourceSetReceipt | undefined,
+): { readonly code: string; readonly detail: string } | null {
+  if (
+    !receipt || receipt.contractVersion !== 1 || typeof receipt.reviewedBy !== "string" ||
+    !receipt.reviewedBy.trim() || typeof receipt.reviewedAt !== "string" ||
+    !Number.isFinite(Date.parse(receipt.reviewedAt)) || !Array.isArray(receipt.sources)
+  ) {
+    return { code: "MANUAL_SOURCE_RECEIPT_INVALID", detail: "The source-set receipt lacks its version, reviewer, or review time." };
+  }
+  const reviewTime = Date.parse(receipt.reviewedAt);
+  for (const source of receipt.sources) {
+    if (
+      !source || typeof source !== "object" || typeof source.requestedUrl !== "string" ||
+      typeof source.finalUrl !== "string" || typeof source.publisher !== "string" ||
+      typeof source.retrievedAt !== "string" || typeof source.rawHash !== "string" ||
+      typeof source.reviewedEvidence !== "string"
+    ) {
+      return { code: "MANUAL_SOURCE_ATTEMPT_INVALID", detail: "A source attempt is not a complete review object." };
+    }
+    let requested: URL;
+    let final: URL;
+    try {
+      requested = new URL(source.requestedUrl);
+      final = new URL(source.finalUrl);
+    } catch {
+      return { code: "MANUAL_SOURCE_URL_INVALID", detail: `A reviewed source URL is not parseable: ${JSON.stringify(source.finalUrl)}.` };
+    }
+    if (requested.protocol !== "https:" || final.protocol !== "https:") {
+      return { code: "MANUAL_SOURCE_URL_NOT_HTTPS", detail: `${source.finalUrl} is not an HTTPS source attempt.` };
+    }
+    if (!(MANUAL_SOURCE_CLASSES as readonly string[]).includes(source.sourceClass)) {
+      return { code: "MANUAL_SOURCE_CLASS_INVALID", detail: `${source.sourceClass} is not a registered manual source class.` };
+    }
+    const retrieved = Date.parse(source.retrievedAt);
+    if (!Number.isFinite(retrieved) || retrieved > reviewTime) {
+      return { code: "MANUAL_SOURCE_TIME_INVALID", detail: `${source.finalUrl} lacks a retrieval time at or before the review.` };
+    }
+    if (!source.publisher.trim() || !Number.isInteger(source.httpStatus) || source.httpStatus < 0 || source.httpStatus > 599) {
+      return { code: "MANUAL_SOURCE_ATTEMPT_INVALID", detail: `${source.finalUrl} lacks a publisher or truthful HTTP outcome.` };
+    }
+    const outcome: unknown = source.reviewOutcome ?? "SUPPORTED";
+    if (outcome === "BLOCKED") {
+      if (typeof source.failureDetail !== "string" || !source.failureDetail.trim()) {
+        return { code: "MANUAL_SOURCE_BLOCK_DETAIL_MISSING", detail: `${source.finalUrl} is BLOCKED without an exact failure detail.` };
+      }
+      if (source.httpStatus === 0 ? source.rawHash !== "" : !SHA256.test(source.rawHash)) {
+        return { code: "MANUAL_SOURCE_BLOCK_PROOF_INVALID", detail: `${source.finalUrl} does not truthfully bind its blocked HTTP response bytes.` };
+      }
+    } else if (outcome === "SUPPORTED") {
+      if (source.httpStatus < 200 || source.httpStatus >= 300 || !SHA256.test(source.rawHash) || !source.reviewedEvidence.trim()) {
+        return { code: "MANUAL_SOURCE_SUPPORTED_PROOF_INVALID", detail: `${source.finalUrl} is marked SUPPORTED without successful exact bytes and reviewed evidence.` };
+      }
+    } else {
+      return { code: "MANUAL_SOURCE_REVIEW_OUTCOME_INVALID", detail: `${source.finalUrl} has an unknown review outcome.` };
+    }
+  }
+  return null;
+}
+
+/** Validate the dynamic publisher boundary used only by explicit manual contracts. */
+export function authorityForManualReceipt(
+  sourceId: string,
+  recordClass: RoutineRecordClass,
+  receipt: ManualSourceSetReceipt | undefined,
+  finalUrl: string | null,
+): { readonly ok: true; readonly contract: SourceAuthorityContract } | { readonly ok: false; readonly code: string; readonly detail: string } {
+  const contract = sourceAuthority(sourceId);
+  if (!contract) return { ok: false, code: "SOURCE_NOT_REGISTERED", detail: `${sourceId} is not in SOURCE_AUTHORITIES.` };
+  if (!contract.recordClasses.includes(recordClass)) {
+    return { ok: false, code: "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS", detail: `${sourceId} is not registered for ${recordClass}.` };
+  }
+  const policy = contract.manualReceiptPromotion;
+  if (!policy) return { ok: false, code: "MANUAL_SOURCE_RECEIPT_NOT_PERMITTED", detail: `${sourceId} does not permit receipt-bounded manual promotion.` };
+  const structureIssue = manualSourceReceiptStructureIssue(receipt);
+  if (structureIssue) return { ok: false, ...structureIssue };
+  if (receipt!.sources.length === 0) {
+    return { ok: false, code: "MANUAL_SOURCE_SET_EMPTY", detail: "A manual promotion must name at least one exact acquired source." };
+  }
+  const seen = new Set<string>();
+  for (const source of receipt!.sources) {
+    let requested: URL;
+    let final: URL;
+    try {
+      requested = new URL(source.requestedUrl);
+      final = new URL(source.finalUrl);
+    } catch {
+      return { ok: false, code: "MANUAL_SOURCE_URL_INVALID", detail: `A reviewed source URL is not parseable: ${JSON.stringify(source.finalUrl)}.` };
+    }
+    if (requested.protocol !== "https:" || final.protocol !== "https:") {
+      return { ok: false, code: "MANUAL_SOURCE_URL_NOT_HTTPS", detail: `${source.finalUrl} is not an HTTPS primary-source read.` };
+    }
+    if (!policy.allowedSourceClasses.includes(source.sourceClass)) {
+      return { ok: false, code: "MANUAL_SOURCE_CLASS_NOT_AUTHORIZED", detail: `${source.sourceClass} is outside ${sourceId}'s reviewed source classes.` };
+    }
+    if (source.reviewOutcome === "BLOCKED") {
+      return { ok: false, code: "MANUAL_SOURCE_REVIEW_BLOCKED", detail: `${source.finalUrl} was reviewed as blocked: ${source.failureDetail}.` };
+    }
+    if (!Number.isInteger(source.httpStatus) || source.httpStatus < 200 || source.httpStatus >= 300) {
+      return { ok: false, code: "MANUAL_SOURCE_HTTP_INVALID", detail: `${source.finalUrl} was not acquired with a successful HTTP status.` };
+    }
+    if (!SHA256.test(source.rawHash) || !source.publisher.trim() || !source.reviewedEvidence.trim()) {
+      return { ok: false, code: "MANUAL_SOURCE_PROOF_INCOMPLETE", detail: `${source.finalUrl} lacks exact bytes, publisher identity, or reviewed evidence.` };
+    }
+    const identity = `${final.href}\n${source.rawHash}`;
+    if (seen.has(identity)) return { ok: false, code: "MANUAL_SOURCE_PROOF_DUPLICATED", detail: `${source.finalUrl} repeats the same reviewed bytes.` };
+    seen.add(identity);
+  }
+  if (!finalUrl || !receipt!.sources.some((source) => source.finalUrl === finalUrl)) {
+    return { ok: false, code: "MANUAL_PRIMARY_ROUTE_NOT_RECEIPTED", detail: "The candidate's primary final URL is absent from its reviewed source set." };
+  }
+  return { ok: true, contract };
 }
 
 export function authorityFor(

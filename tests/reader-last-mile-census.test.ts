@@ -4,23 +4,212 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
-import { applyReaderApplicability, classifyReaderEligibility, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
+import { applyReaderApplicability, ballotAbsenceAuthorityRelation, buildReaderCensus, canonicalReaderAuthorityJson, classifyReaderEligibility, compareFrozenBodyRosterAuthority, compareFrozenBodyRosterAuthorityUniverse, compareFrozenOfficeholderStatementAuthority, composeReaderComponentProofs, datasetSurfaceCoverageProblems, importReachability, inspectReaderMarkup, packReaderEvidence, readReaderEvidence, reconcileDelivery, sha256, stateMoneyAuthorityRelation, type CensusRow, type EligibilityFacts, type ReaderDeliveryProof, type ReaderCensus, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyForTarget, resetStateMoneyCache } from "../lib/funding/state-snapshot.ts";
+import { currentOfficeholderStatements } from "../lib/corpus/data-plane.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../lib/registry/body-rosters.ts";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { proveVotingSites } from "../scripts/reader-last-mile-voting-sites.mts";
 import { registerReaderRenderHooks } from "../lib/holdings/reader-census.ts";
 import { readerSourceFingerprint, readerSourceHashProblems } from "../lib/holdings/reader-census.ts";
 import { ballotHolderObligationFailures } from "../lib/holdings/reader-census.ts";
-import { validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { isKnownLegacyReaderClosureReceipt, readerClosureExecutionAuthorityEvidenceProblems, readerClosureExecutionAuthorityProblems, readerClosureReadConnectionIdentity, validateReaderClosureReceipt, type ReaderClosureExecutionAuthorityEvidence, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
 import { readerAcquisitionBoundaryProblems } from "../lib/holdings/reader-census.ts";
 import { ballotQualificationFailures, type BallotQualificationObligation } from "../lib/holdings/reader-census.ts";
 import { sourceEolEquivalenceProblems, type ReaderSourceEolEquivalence } from "../lib/holdings/reader-census.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import ts from "typescript";
+import { PDC_NEON_PROJECT_ID, PDC_PRODUCTION_BRANCH_ID, readerAuthorityIdentityHash } from "../lib/holdings/reader-execution-authority.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 const canonical: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: "CANONICAL_READER_RECORD", identity: "RESOLVED" };
 const staged: EligibilityFacts = { ...canonical, source: "AUTONOMOUS_STAGING", relationship: "ACQUISITION_INPUT" };
+
+const authorityHash = (character: string) => character.repeat(64);
+const authorityHead = "a".repeat(40);
+const authorityProductionHead = "b".repeat(40);
+function authorityEvidence(phase: "REHEARSAL" | "PRODUCTION"): ReaderClosureExecutionAuthorityEvidence {
+  const slug = phase.toLowerCase();
+  return {
+    formatVersion: 1,
+    phase,
+    exactHead: phase === "PRODUCTION" ? authorityProductionHead : authorityHead,
+    store: {
+      kind: "NEON_POSTGRES",
+      authority: phase === "REHEARSAL" ? "ISOLATED_PRODUCTION_CLONE" : "STANDING_PRODUCTION",
+      projectIdentitySha256: readerAuthorityIdentityHash("project", PDC_NEON_PROJECT_ID),
+      branchIdentitySha256: phase === "PRODUCTION" ? readerAuthorityIdentityHash("branch", PDC_PRODUCTION_BRANCH_ID) : authorityHash("2"),
+      endpointIdentitySha256: authorityHash("3"),
+      databaseIdentitySha256: authorityHash("4"),
+      schemaIdentitySha256: authorityHash("5"),
+      providerMetadataPath: `docs/evidence/reader-last-mile-${slug}-provider-metadata.json`,
+      providerMetadataSha256: authorityHash("c"),
+    },
+    readOnly: {
+      roleIdentitySha256: authorityHash("6"),
+      roleWritePrivilegesRefused: true,
+      attemptedWriteRefused: true,
+      roleSuperuser: false,
+      roleCreateRole: false,
+      roleCreateDatabase: false,
+      roleReplication: false,
+      roleBypassRls: false,
+      databaseCreate: false,
+      schemaCreate: false,
+      relationOwnershipCount: 0,
+      columnWritePrivilegeCount: 0,
+      sequenceWritePrivilegeCount: 0,
+      writeCapableMemberRoleCount: 0,
+      executableSecurityDefinerFunctionCount: 0,
+      relations: [
+        { relation: "public.civic_data_candidate_events", select: true, insert: false, update: false, delete: false, truncate: false, references: false, trigger: false },
+        { relation: "public.civic_data_candidates", select: true, insert: false, update: false, delete: false, truncate: false, references: false, trigger: false },
+        { relation: "public.civic_data_promotions", select: true, insert: false, update: false, delete: false, truncate: false, references: false, trigger: false },
+      ],
+    },
+    import: {
+      importerCodeSha: authorityHead,
+      receiptPath: `docs/evidence/reader-last-mile-${slug}-import-receipt.json`,
+      receiptSha256: authorityHash("7"),
+      resultSha256: authorityHash("f"),
+      dispositionSetSha256: authorityHash("1"),
+      canonicalPointerSetSha256: authorityHash("8"),
+      canonicalPointerCount: 157,
+      durableImport: {
+        authorization: "PDC_V2_FROZEN_LKG_CUTOVER",
+        candidateCount: 95,
+        currentPointerLinkCount: 95,
+        promotedDispositionCount: 91,
+        reattestedDispositionCount: 7,
+        skippedDispositionCount: 4,
+        candidateSetSha256: authorityHash("d"),
+        eventCandidateCount: 95,
+        eventCount: 475,
+        terminalPromotedEventCount: 95,
+        eventSetSha256: authorityHash("e"),
+        predecessorCandidateCount: 7,
+        predecessorEventCount: 35,
+        predecessorEventSetSha256: authorityHash("9"),
+        importerCodeShas: [authorityHead],
+      },
+    },
+    clone: phase === "REHEARSAL" ? {
+      parentProductionBranchIdentitySha256: readerAuthorityIdentityHash("branch", PDC_PRODUCTION_BRANCH_ID),
+      sourceSnapshotSha256: authorityHash("a"),
+      controlPlaneReceiptSha256: authorityHash("b"),
+    } : null,
+  };
+}
+
+test("Reader authority counts a union predecessor only with authenticated disposition context", () => {
+  const evidence = authorityEvidence("REHEARSAL");
+  const withUnion = { ...evidence, import: { ...evidence.import, durableImport: { ...evidence.import.durableImport, predecessorCandidateCount: 8 } } };
+  const expected = { phase: "REHEARSAL" as const, provedHead: authorityHead, importerIsAncestor: true };
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems(withUnion, expected).some((failure) => failure.includes("denominator")));
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(withUnion, { ...expected, unionPredecessorCount: 1 }), []);
+  for (const count of [-1, 2, 0.5]) assert.ok(readerClosureExecutionAuthorityEvidenceProblems(withUnion, { ...expected, unionPredecessorCount: count }).some((failure) => failure.includes("denominator")));
+});
+
+test("Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production", () => {
+  const rehearsal = authorityEvidence("REHEARSAL");
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(rehearsal, {
+    phase: "REHEARSAL",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+  }), []);
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems(rehearsal, {
+    phase: "REHEARSAL",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+  }).some((failure) => failure.includes("requires PRODUCTION")));
+
+  const relabeled = { ...rehearsal, phase: "PRODUCTION" as const };
+  const relabeledProblems = readerClosureExecutionAuthorityEvidenceProblems(relabeled, {
+    phase: "PRODUCTION",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+  });
+  assert.ok(relabeledProblems.some((failure) => failure.includes("standing production store")));
+  assert.ok(relabeledProblems.some((failure) => failure.includes("rehearsal clone claim")));
+
+  const production = authorityEvidence("PRODUCTION");
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(production, {
+    phase: "PRODUCTION",
+    provedHead: authorityProductionHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+  }), []);
+
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems({ ...production, plantedSecret: "postgresql://owner:password@db.example/civic" }, {
+    phase: "PRODUCTION", provedHead: authorityProductionHead, importerIsAncestor: true,
+  }).some((failure) => failure.includes("credential-bearing") || failure.includes("fields differ")), "a planted connection secret cannot enter committed authority evidence");
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems({
+    ...production,
+    import: { ...production.import, durableImport: { ...production.import.durableImport, skippedDispositionCount: 5 } },
+  }, {
+    phase: "PRODUCTION", provedHead: authorityProductionHead, importerIsAncestor: true,
+  }).some((failure) => failure.includes("pointer/event/disposition denominator")), "durable disposition counts cannot drift from the exact candidate set");
+
+  const activeProduction = readerClosureReadConnectionIdentity("postgresql://readonly_reader:never-serialized@production.example.test/civic");
+  assert.throws(() => readerClosureReadConnectionIdentity("postgresql://owner:secret@production.example.test/civic"), /read-only role/);
+  assert.deepEqual(
+    readerClosureReadConnectionIdentity("postgresql://readonly_reader:one@ep-example.us-east-2.aws.neon.tech/civic"),
+    readerClosureReadConnectionIdentity("postgresql://readonly_reader:two@ep-example-pooler.us-east-2.aws.neon.tech/civic"),
+    "the provider's direct and pooled hosts identify the same Neon endpoint/role/database",
+  );
+  const boundProduction: ReaderClosureExecutionAuthorityEvidence = {
+    ...production,
+    store: {
+      ...production.store,
+      endpointIdentitySha256: activeProduction.endpointIdentitySha256,
+      databaseIdentitySha256: activeProduction.databaseIdentitySha256,
+      schemaIdentitySha256: activeProduction.schemaIdentitySha256,
+    },
+    readOnly: { ...production.readOnly, roleIdentitySha256: activeProduction.roleIdentitySha256 },
+  };
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(boundProduction, {
+    phase: "PRODUCTION",
+    provedHead: authorityProductionHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+    requiredReadConnectionIdentity: activeProduction,
+  }), []);
+  const fullyRelabeledChild: ReaderClosureExecutionAuthorityEvidence = {
+    ...rehearsal,
+    phase: "PRODUCTION",
+    store: { ...rehearsal.store, authority: "STANDING_PRODUCTION" },
+    clone: null,
+  };
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems(fullyRelabeledChild, {
+    phase: "PRODUCTION",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+    requiredReadConnectionIdentity: activeProduction,
+  }).some((failure) => failure.includes("active production read handle")), "a child endpoint cannot become production by relabeling every phase field");
+});
+
+test("fresh Reader closure admission requires authority while inherited historical receipts retain compatibility", () => {
+  const census = { rows: [] } as unknown as ReaderCensus;
+  assert.deepEqual(readerClosureExecutionAuthorityProblems(process.cwd(), census, undefined, []), ["Fresh Reader closure requires exact execution-authority evidence"]);
+});
+
+test("legacy execution-authority compatibility is pinned to exact pre-seam path and bytes", () => {
+  const root = process.cwd();
+  const path = "docs/evidence/reader-last-mile-closure-receipt.json";
+  const bytes = readReaderEvidence(root, path);
+  assert.equal(sha256(bytes), "3aa9b15510ef18786b67e8b0781151caac6432fd2d963f4fba741195681f6f51");
+  const receipt = JSON.parse(bytes.toString("utf8")) as ReaderClosureReceipt;
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, path, receipt), true);
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, "docs/evidence/reader-last-mile-forged-receipt.json", receipt), false);
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, "docs/evidence/reader-last-mile-final-closure-receipt.json", receipt), false);
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, path, { ...receipt, holdingsDigest: "0".repeat(64) }), false);
+});
 
 test("receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",()=>{
  const path="app/api/ask/grounded/route.ts" as const;
@@ -47,7 +236,7 @@ test("the committed complete reader graph still matches its proved holdings, loa
   // skipped check. Documentation-only commits need no new reader proof; changed
   // holdings, identity joins, reader code or CSS invalidate this receipt.
   const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-final-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;
-  assert.deepEqual(validateReaderClosureReceipt(root, receipt), []);
+  assert.deepEqual(validateReaderClosureReceipt(root, receipt, { receiptPath: "docs/evidence/reader-last-mile-final-closure-receipt.json" }), []);
 });
 
 test("ballot scope cannot hide an eligible incumbent when the consumer join returns null", () => {
@@ -130,6 +319,157 @@ test("eligibility negative controls keep extraction and acquisition separate fro
   // Even a forged completion/promotion string cannot bypass the normalized
   // reader snapshot boundary by dropping newly acquired bytes beside it.
   assert.equal(classifyReaderEligibility({ ...staged, promotion: "PROMOTED", validator: "PASS", audit: "PASS", externalAuthority: "VERIFIED" }).state, "STAGED_NOT_ELIGIBLE");
+});
+
+test("the frozen Reader census retains retired authorities as withheld evidence without restoring their production identities", () => {
+  const census = buildReaderCensus(process.cwd());
+  assert.deepEqual(census.failures.filter((failure) => /OFFICEHOLDER_STATEMENT|BODY_ROSTER_AUTHORITY/.test(failure)), []);
+  const recordsAt = (path: string) => census.records.filter((record) => record.holdingPath === path);
+  const withheldAt = (path: string) => recordsAt(path).filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE");
+
+  const retiredRolls = recordsAt("data/votes/state-votes-snapshot.json");
+  assert.equal(retiredRolls.length, 1_632);
+  assert.equal(withheldAt("data/votes/state-votes-snapshot.json").length, 1_632);
+  assert.ok(retiredRolls.every((record) => record.eligibility.reason.includes("legiscan-state-rollcalls is RESEARCH_ONLY")));
+
+  const retiredRosters = census.records.filter((record) =>
+    /^data\/states\/(?:az|nh|nj)\/officials\/officeholders-\d{2}\.json$/.test(record.holdingPath)
+  );
+  assert.equal(retiredRosters.length, 620);
+  assert.equal(retiredRosters.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE").length, 620);
+  assert.ok(retiredRosters.every((record) => record.eligibility.reason.includes("plural-bulk-roster is RESEARCH_ONLY")));
+
+  const statements = recordsAt("data/corpus/statements.json");
+  assert.equal(statements.length, 32);
+  const eligibleStatements = statements.filter((record) => record.eligibility.state === "READER_ELIGIBLE");
+  const heldStatements = statements.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE");
+  assert.equal(eligibleStatements.length, 29);
+  assert.equal(heldStatements.length, 3);
+  assert.ok(eligibleStatements.every((record) => record.canonicalIdentity.every((id) => !id.startsWith("plural:"))));
+  assert.equal(eligibleStatements.filter((record) => record.canonicalIdentity.some((id) => id.startsWith("ballot-"))).length, 10);
+  assert.ok(heldStatements.every((record) => record.canonicalIdentity.some((id) => id.startsWith("plural:"))));
+
+  const campaignSites = recordsAt("lib/officials/campaign-sites.ts");
+  assert.equal(campaignSites.length, 12);
+  assert.equal(campaignSites.filter((record) => record.eligibility.state === "READER_ELIGIBLE").length, 9);
+  assert.equal(campaignSites.filter((record) => record.eligibility.state === "NOT_READER_ELIGIBLE").length, 3);
+
+  const federalAbsences = recordsAt("data/fec/fec-2026.json").filter((record) => record.unit === "absences");
+  assert.equal(federalAbsences.length, 14);
+  assert.ok(federalAbsences.every((record) => record.eligibility.state === "NOT_READER_ELIGIBLE"));
+  assert.ok(federalAbsences.every((record) => record.eligibility.reason.includes("completed pagination")));
+
+  const venues = recordsAt("lib/meetings/venue-cache.ts");
+  const unstampedVenueFixtures = venues.filter((record) => record.eligibility.reason.includes("historical adoption/node:test fixture"));
+  assert.equal(venues.length, 69);
+  assert.equal(unstampedVenueFixtures.length, 3);
+  assert.ok(unstampedVenueFixtures.every((record) => record.eligibility.state === "NOT_READER_ELIGIBLE"));
+
+  const source = readFileSync(new URL("../lib/holdings/reader-census.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /getStateVotesSnapshot\(/);
+  assert.match(source, /record\.eligibility\.state === "READER_ELIGIBLE" && \["votes", "positions", "rollCalls"\]/);
+});
+
+test("promoted officeholder-statement drift fails without redefining the frozen 29/3 denominator", () => {
+  const root = process.cwd();
+  const baseline = structuredClone(currentOfficeholderStatements());
+  const complete = compareFrozenOfficeholderStatementAuthority(root, baseline);
+  assert.equal(complete.frozenEligibleSnapshotIds.length, 29);
+  assert.equal(complete.frozenUnresolvedSnapshotIds.length, 3);
+  assert.deepEqual(complete.failures, []);
+
+  const omitted = compareFrozenOfficeholderStatementAuthority(root, {
+    snapshots: baseline.snapshots.slice(1),
+  });
+  assert.equal(omitted.frozenEligibleSnapshotIds.length, 29, "promoted omission cannot shrink eligibility");
+  assert.equal(omitted.frozenUnresolvedSnapshotIds.length, 3);
+  assert.ok(omitted.failures.some((failure) => failure === `OFFICEHOLDER_STATEMENT_AUTHORITY_MISSING:${baseline.snapshots[0]!.id}`));
+
+  const changedSnapshots = structuredClone(baseline.snapshots);
+  changedSnapshots[0] = { ...changedSnapshots[0]!, subjectName: `${changedSnapshots[0]!.subjectName} drift` };
+  const changed = compareFrozenOfficeholderStatementAuthority(root, { snapshots: changedSnapshots });
+  assert.equal(changed.frozenEligibleSnapshotIds.length, 29, "promoted payload drift cannot shrink eligibility");
+  assert.ok(changed.failures.some((failure) => failure === `OFFICEHOLDER_STATEMENT_AUTHORITY_PAYLOAD_MISMATCH:${baseline.snapshots[0]!.id}`));
+
+  const extraUrl = "https://records.example.gov/officeholder-statement";
+  const extraHash = "f".repeat(64);
+  const extra = {
+    ...structuredClone(baseline.snapshots[0]!),
+    id: `${baseline.snapshots[0]!.subjectId}|${extraUrl}|${extraHash}`,
+    url: extraUrl,
+    contentHash: extraHash,
+  };
+  const unexpected = compareFrozenOfficeholderStatementAuthority(root, {
+    snapshots: [...baseline.snapshots, extra],
+  });
+  assert.equal(unexpected.frozenEligibleSnapshotIds.length, 29, "an unexpected promoted row cannot enlarge eligibility");
+  assert.ok(unexpected.failures.some((failure) => failure === `OFFICEHOLDER_STATEMENT_AUTHORITY_UNEXPECTED:${extra.id}`));
+});
+
+test("promoted roster member and disposition drift fails without shrinking the frozen child denominator", () => {
+  const frozen = structuredClone(currentBodyRosters()[0]!);
+  const dispositions = frozen.members.map((member) => currentRosterMemberReaderDisposition(member.id)!);
+  assert.ok(frozen.members.length > 1);
+  assert.ok(dispositions.every(Boolean));
+  const complete = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], structuredClone(dispositions));
+  assert.deepEqual(complete.failures, []);
+  assert.equal(complete.childDispositions.length, frozen.members.length);
+
+  const first = frozen.members[0]!;
+  const withoutMember = compareFrozenBodyRosterAuthority(
+    frozen,
+    [{ ...structuredClone(frozen), members: structuredClone(frozen.members.slice(1)) }],
+    structuredClone(dispositions),
+  );
+  assert.equal(withoutMember.childDispositions.length, frozen.members.length);
+  assert.ok(withoutMember.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_MEMBER_MISSING:${frozen.bodyId}:${first.id}`));
+  assert.equal(withoutMember.childDispositions[0]!.state, "AUTHORITY_MISMATCH");
+
+  const changedMembers = structuredClone(frozen.members);
+  changedMembers[0] = { ...changedMembers[0]!, name: `${changedMembers[0]!.name} drift` };
+  const changedMember = compareFrozenBodyRosterAuthority(frozen, [{ ...structuredClone(frozen), members: changedMembers }], structuredClone(dispositions));
+  assert.ok(changedMember.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_MEMBER_PAYLOAD_MISMATCH:${frozen.bodyId}:${first.id}`));
+  assert.equal(changedMember.childDispositions.length, frozen.members.length);
+
+  const unexpectedMemberId = `${first.id.split("#")[0]}#unexpected`;
+  const unexpectedMember = compareFrozenBodyRosterAuthority(
+    frozen,
+    [{ ...structuredClone(frozen), members: [...structuredClone(frozen.members), { ...structuredClone(first), id: unexpectedMemberId, name: "Unexpected member" }] }],
+    structuredClone(dispositions),
+  );
+  assert.ok(unexpectedMember.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_MEMBER_UNEXPECTED:${frozen.bodyId}:${unexpectedMemberId}`));
+  assert.equal(unexpectedMember.childDispositions.length, frozen.members.length);
+
+  const withoutDisposition = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], structuredClone(dispositions.slice(1)));
+  assert.ok(withoutDisposition.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_MISSING:${frozen.bodyId}:${first.id}`));
+  assert.equal(withoutDisposition.childDispositions.length, frozen.members.length);
+  assert.equal(withoutDisposition.childDispositions[0]!.state, "AUTHORITY_MISMATCH");
+
+  const changedDispositions = structuredClone(dispositions);
+  changedDispositions[0] = { ...changedDispositions[0]!, state: "IDENTITY_UNRESOLVED", canonicalId: null };
+  const changedDisposition = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], changedDispositions);
+  assert.ok(changedDisposition.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_PAYLOAD_MISMATCH:${frozen.bodyId}:${first.id}`));
+  assert.equal(changedDisposition.childDispositions.length, frozen.members.length);
+
+  const unexpectedDisposition = {
+    sourceId: unexpectedMemberId,
+    canonicalId: null,
+    state: "IDENTITY_UNRESOLVED" as const,
+    reason: "A valid but unexpected promoted disposition must not enlarge the frozen denominator.",
+  };
+  const extraDisposition = compareFrozenBodyRosterAuthority(frozen, [structuredClone(frozen)], [...structuredClone(dispositions), unexpectedDisposition]);
+  assert.ok(extraDisposition.failures.some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_UNEXPECTED:${frozen.bodyId}:${unexpectedMemberId}`));
+  assert.equal(extraDisposition.childDispositions.length, frozen.members.length);
+
+  const globallyUnexpectedDisposition = {
+    ...unexpectedDisposition,
+    sourceId: "roster:wholly-unexpected#0",
+  };
+  assert.ok(compareFrozenBodyRosterAuthorityUniverse(
+    [frozen],
+    [structuredClone(frozen)],
+    [...structuredClone(dispositions), globallyUnexpectedDisposition],
+  ).some((failure) => failure === `BODY_ROSTER_AUTHORITY_DISPOSITION_UNEXPECTED:${globallyUnexpectedDisposition.sourceId}`));
 });
 
 test("the actual reader graph cannot consume autonomous staging merely because an artifact exists", (t) => {
@@ -222,6 +562,87 @@ test("current normalized state-money records survive the canonical exact-key sel
   assert.equal(superseded, 94, "54 source observations are superseded by same-candidacy filings and 40 duplicate sourced absences consolidate; none is lost at a loader");
   assert.deepEqual(stateMoneyForTarget("unresolved:Katie Hobbs"), [], "a familiar name without a committed target identity never resolves");
   assert.deepEqual(stateMoneyForTarget("ballot-az-pima:governor:invented-person"), []);
+});
+
+test("Reader authority canonicalization ignores transport metadata and JSON key order only", () => {
+  assert.equal(
+    canonicalReaderAuthorityJson({ z: 1, nested: { b: 2, a: 1 }, _manifestStateCodes: ["az"] }),
+    canonicalReaderAuthorityJson({ nested: { a: 1, b: 2 }, z: 1 }),
+  );
+  assert.notEqual(
+    canonicalReaderAuthorityJson({ nested: { a: 1 }, claim: "held fact" }),
+    canonicalReaderAuthorityJson({ nested: { a: 1 }, claim: "changed fact" }),
+  );
+});
+
+test("state-money supersession requires one later non-weakening authority for the exact identity", () => {
+  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/az/funding/state-money-az-2026.json"), "utf8")) as { records: StateMoneyRecord[] };
+  const frozen = structuredClone(snapshot.records.find((record) => record.filingState === "FILED")!);
+  const successor: StateMoneyRecord = {
+    ...structuredClone(frozen),
+    checkedAt: "2026-09-08",
+    totals: { ...frozen.totals, receipts: (frozen.totals.receipts ?? 0) + 1 },
+    provenance: { ...frozen.provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  };
+
+  assert.equal(stateMoneyAuthorityRelation(frozen, [structuredClone(frozen)], "2026-09-08").kind, "EXACT");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [successor], "2026-09-08").kind, "MONOTONIC_SUCCESSOR");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, agency: `${successor.agency} drift` }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, targetKeys: ["ballot-az-pima:other-person"] }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, targetKeys: [...successor.targetKeys, "ballot-az-pima:other-person"] }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, committeeId: "different-committee" }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, checkedAt: "2026-08-31" }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, checkedAt: "2026-09-09", provenance: { ...successor.provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, provenance: { ...successor.provenance, collectedAt: "2026-08-31" } }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...successor, filingState: "NO_REPORTS_ON_FILE" }], "2026-09-08").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [{ ...structuredClone(frozen), totals: { ...frozen.totals, receipts: (frozen.totals.receipts ?? 0) + 1 } }], "2026-09-08").kind, "MISSING", "changed bytes at the same observation time are not a later authority");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [successor], "2026-08-31").kind, "MISSING");
+  assert.equal(stateMoneyAuthorityRelation(frozen, [
+    successor,
+    { ...structuredClone(successor), checkedAt: "2026-09-09", totals: { ...successor.totals, receipts: (successor.totals.receipts ?? 0) + 1 }, provenance: { ...successor.provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } },
+  ], "2026-09-09").kind, "MISSING", "two different plausible successors cannot be selected by guesswork");
+
+  const frozenAbsence = structuredClone(snapshot.records.find((record) => record.filingState === "NO_REPORTS_ON_FILE" && record.committeeId === null)!);
+  const registeredSuccessor: StateMoneyRecord = {
+    ...structuredClone(frozenAbsence),
+    committeeId: "102250",
+    registeredName: "Miceli for Governor",
+    filingState: "REGISTERED_NO_ACTIVITY_REPORTED",
+    match: {
+      ...frozenAbsence.match,
+      registeredName: "Miceli for Governor",
+      officeAsFiled: frozenAbsence.officeSought,
+      electionYearAsFiled: frozenAbsence.electionYear,
+      allThreeAgree: true,
+      note: "exact target, office, cycle and registered committee verified",
+    },
+    checkedAt: "2026-09-08",
+    provenance: { ...frozenAbsence.provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  };
+  assert.equal(
+    stateMoneyAuthorityRelation(frozenAbsence, [registeredSuccessor], "2026-09-08").kind,
+    "MONOTONIC_SUCCESSOR",
+    "the observed exact-target absence-to-registered transition remains admissible",
+  );
+});
+
+test("ballot absence supersession permits only a unique later verification of the exact same fact", () => {
+  const snapshot = JSON.parse(readFileSync(join(process.cwd(), "data/states/nj/ballot/nj-morris-2026.json"), "utf8")) as { absences: Record<string, unknown>[] };
+  const frozen = structuredClone(snapshot.absences[0]!);
+  const provenance = frozen.provenance as Record<string, unknown>;
+  const successor = {
+    ...structuredClone(frozen),
+    provenance: { ...provenance, collectedAt: "2026-09-08", verifiedAt: "2026-09-08" },
+  };
+
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [structuredClone(frozen)]).kind, "EXACT");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [successor]).kind, "MONOTONIC_SUCCESSOR");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, statement: `${String(frozen.statement)} drift` }]).kind, "MISSING");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [{ ...successor, provenance: { ...provenance, collectedAt: "2026-08-31", verifiedAt: "2026-08-31" } }]).kind, "MISSING");
+  assert.equal(ballotAbsenceAuthorityRelation(frozen, [
+    successor,
+    { ...structuredClone(successor), provenance: { ...provenance, collectedAt: "2026-09-09", verifiedAt: "2026-09-09" } },
+  ]).kind, "MISSING", "two later observations cannot be resolved by array order");
 });
 
 test("committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens", () => {

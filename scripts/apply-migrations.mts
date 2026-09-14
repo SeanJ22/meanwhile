@@ -13,11 +13,12 @@
  * migration applied without its journal row re-runs forever.
  *
  * So the hand pass becomes a command. It uses the HTTP driver the rest of the
- * repo uses, applies each pending migration's statements in file order, and
- * writes the same `drizzle.__drizzle_migrations` row `drizzle-kit` would —
- * `hash` = sha256 of the file's raw bytes, `created_at` = the journal's own
- * `when`. A later `drizzle-kit migrate`, if its driver is ever fixed, reads
- * this table and sees the work as done.
+ * repo uses and applies each pending migration's statements plus its journal
+ * row in one Postgres transaction. `hash` is sha256 of the file's raw bytes;
+ * `created_at` is the journal's own `when`. A failed statement rolls the whole
+ * migration back, so production cannot be left half-migrated and unjournalled.
+ * A later `drizzle-kit migrate`, if its driver is ever fixed, reads this table
+ * and sees the work as done.
  *
  * ## Which database, and the refusals
  *
@@ -103,18 +104,39 @@ const journal = JSON.parse(
   readFileSync(join(process.cwd(), "lib/db/migrations/meta/_journal.json"), "utf8"),
 ) as { entries: JournalEntry[] };
 
-await sql`CREATE SCHEMA IF NOT EXISTS drizzle`;
-await sql`
-  CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (
-    id SERIAL PRIMARY KEY,
-    hash text NOT NULL,
-    created_at bigint
-  )
-`;
+type AppliedMigration = { hash: string; created_at: string | number };
 
-const applied = (await sql`
-  SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
-`) as { hash: string; created_at: string | number }[];
+let applied: AppliedMigration[];
+if (DRY) {
+  /*
+   * Planning is a read path. In particular, the first dry run against an
+   * empty database must not create Drizzle's schema merely so it can report
+   * that every committed migration is pending. `to_regclass` lets that first
+   * observation stay a SELECT; an absent journal is the same planning state
+   * as an existing journal with zero rows.
+   */
+  const journalState = (await sql`
+    SELECT to_regclass('drizzle.__drizzle_migrations') IS NOT NULL AS exists
+  `) as { exists: boolean }[];
+  applied = journalState[0]?.exists
+    ? ((await sql`
+        SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
+      `) as AppliedMigration[])
+    : [];
+} else {
+  await sql`CREATE SCHEMA IF NOT EXISTS drizzle`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (
+      id SERIAL PRIMARY KEY,
+      hash text NOT NULL,
+      created_at bigint
+    )
+  `;
+
+  applied = (await sql`
+    SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
+  `) as AppliedMigration[];
+}
 const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
 
 /*
@@ -198,28 +220,27 @@ if (!nothingPending && !DRY) {
       process.exit(1);
     }
 
-    for (const statement of statements) {
-      const oneLine = statement.replace(/\s+/g, " ").slice(0, 110);
-      try {
-        await sql.query(statement);
-        statementsRun += 1;
-        console.log(`  OK    ${oneLine}`);
-      } catch (error) {
-        console.error(`  FAIL  ${oneLine}`);
-        console.error(`        ${(error as Error).message}`);
-        console.error(
-          `\n${entry.tag} failed partway. ${statementsRun} statement(s) applied in this run and ` +
-            `NOT journalled. Nothing is being guessed at or retried — read the error, fix the ` +
-            `cause, and run again.`,
-        );
-        process.exit(1);
-      }
+    try {
+      await sql.transaction((transaction) => [
+        ...statements.map((statement) => transaction.query(statement)),
+        transaction`
+          INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
+          VALUES (${hash}, ${entry.when})
+        `,
+      ]);
+    } catch (error) {
+      console.error(`  FAIL  transaction rolled back before the journal row was written`);
+      console.error(`        ${(error as Error).message}`);
+      console.error(
+        `\n${entry.tag} applied no durable statements in this run. Nothing is being guessed at ` +
+          `or retried — read the error, fix the cause, and run again.`,
+      );
+      process.exit(1);
     }
-
-    await sql`
-      INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
-      VALUES (${hash}, ${entry.when})
-    `;
+    statementsRun += statements.length;
+    for (const statement of statements) {
+      console.log(`  OK    ${statement.replace(/\s+/g, " ").slice(0, 110)}`);
+    }
     console.log(`  journalled  hash=${hash.slice(0, 16)}…  created_at=${entry.when}`);
   }
 

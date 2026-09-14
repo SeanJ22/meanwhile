@@ -17,10 +17,9 @@
  * is now READER IMPACT, in three bands, oldest due first within a band:
  *
  * ```
- *   band 1   feeds a pilot surface or an open red reader question:
- *            readerImpactAt is set on the obligation, OR the subject is in a
- *            pilot jurisdiction, OR an open red reader question names the
- *            subject's pilot ZIP
+ *   band 1   feeds a pilot surface: readerImpactAt is set on the canonical
+ *            obligation, OR the subject is in a release-pinned pilot
+ *            jurisdiction
  *   band 2   source-universe completion (RULING 229): the statewide and
  *            per-jurisdiction universe providers
  *   band 3   the long tail — everything else
@@ -114,11 +113,6 @@ export const PILOT_JURISDICTION_KEYS: Readonly<Record<string, readonly string[]>
 export const UNIVERSE_PROVIDERS: readonly string[] = ["candidate-enrichment", "local-jurisdictions", "campaign-finance"];
 
 export interface OrderingInputs {
-  /** ZIPs an open RED reader question applies to, from the latest reader-suite run and the question corpus. */
-  readonly openRedQuestionZips: readonly string[];
-  /** The count behind `openRedQuestionZips`, for the record. */
-  readonly openRedQuestions: number;
-  readonly readerSuiteRun: string | null;
   /** The pilot ZIPs in force. */
   readonly pilotZips: readonly string[];
 }
@@ -144,7 +138,6 @@ export interface DispatchOrdering {
   readonly inputs: {
     readonly readerImpactAt: "FreshnessObligation.readerImpactAt";
     readonly pilotJurisdictions: string;
-    readonly openRedQuestions: { readonly count: number; readonly zips: readonly string[]; readonly run: string | null };
     readonly universeProviders: readonly string[];
     readonly tieBreak: "oldest nextDueAt first within a band";
   };
@@ -154,12 +147,11 @@ export interface DispatchOrdering {
 }
 
 export const ORDERING_RULE =
-  "band 1 = feeds a pilot surface or an open red reader question (readerImpactAt set, pilot jurisdiction, or a red question's ZIP); " +
+  "band 1 = feeds a pilot surface (canonical FreshnessObligation.readerImpactAt set or release-pinned pilot jurisdiction); " +
   "band 2 = source-universe completion (RULING 229 universe providers); band 3 = long tail; within a band, oldest due first";
 
 export const ORDERING_SCOPE =
-  "decides WHICH due model-class rows are opened under the per-cycle Scout ceiling; the in-cycle pool then starts the opened rows " +
-  "oldest-first (shadow-loop dueNow), so with a ceiling of three the order chooses the three and not their start sequence. The deterministic lane keeps oldest-first";
+  "orders every due model-class row before admission to the bounded Scout pool, so reader-impact priority decides both which rows fit the per-cycle ceiling and which one starts first. The deterministic lane keeps oldest-first";
 
 function pilotKeysFor(zips: readonly string[]): string[] {
   return [...new Set(zips.flatMap((z) => PILOT_JURISDICTION_KEYS[z] ?? []))];
@@ -171,12 +163,27 @@ export function bandFor(row: OrderableObligation, inputs: OrderingInputs): { rea
   if (row.readerImpactAt !== null) return { band: 1, why: `readerImpactAt ${row.readerImpactAt} is set by the provider` };
   const pilotKey = pilotKeysFor(inputs.pilotZips).find((k) => hay.includes(k));
   if (pilotKey !== undefined) return { band: 1, why: `subject is in a pilot jurisdiction (${pilotKey})` };
-  const redKey = pilotKeysFor(inputs.openRedQuestionZips).find((k) => hay.includes(k));
-  if (redKey !== undefined) return { band: 1, why: `an open red reader question names this subject's ZIP (${redKey})` };
   if (row.providerId !== null && UNIVERSE_PROVIDERS.includes(row.providerId)) {
     return { band: 2, why: `provider ${row.providerId} is a source-universe denominator (RULING 229)` };
   }
   return { band: 3, why: "no reader-impact signal and not a universe provider: the long tail" };
+}
+
+/**
+ * The one comparator behind both the recorded queue and the live Scout pool.
+ * Keeping it here prevents the standing loop from growing a second band table
+ * that can disagree with the owner-visible ordering record.
+ */
+export function compareReaderImpact(
+  left: OrderableObligation,
+  right: OrderableObligation,
+  inputs: OrderingInputs,
+): number {
+  return (
+    bandFor(left, inputs).band - bandFor(right, inputs).band ||
+    (left.nextDueAt < right.nextDueAt ? -1 : left.nextDueAt > right.nextDueAt ? 1 : 0) ||
+    left.id.localeCompare(right.id)
+  );
 }
 
 /** Order a due queue by reader impact. Returns the ordered rows and the record of the rule. */
@@ -185,7 +192,7 @@ export function orderByReaderImpact<T extends OrderableObligation>(
   inputs: OrderingInputs,
 ): { readonly ordered: BandedObligation<T>[]; readonly ordering: DispatchOrdering } {
   const banded = rows.map((row) => ({ row, ...bandFor(row, inputs) }));
-  banded.sort((a, b) => a.band - b.band || (a.row.nextDueAt < b.row.nextDueAt ? -1 : a.row.nextDueAt > b.row.nextDueAt ? 1 : 0) || a.row.id.localeCompare(b.row.id));
+  banded.sort((a, b) => compareReaderImpact(a.row, b.row, inputs));
   const count = (band: ReaderImpactBand): number => banded.filter((b) => b.band === band).length;
   return {
     ordered: banded,
@@ -195,7 +202,6 @@ export function orderByReaderImpact<T extends OrderableObligation>(
       inputs: {
         readerImpactAt: "FreshnessObligation.readerImpactAt",
         pilotJurisdictions: `PILOT_ZIPS ${inputs.pilotZips.join(", ")} -> PILOT_JURISDICTION_KEYS (lib/control-plane/research-metrics.ts)`,
-        openRedQuestions: { count: inputs.openRedQuestions, zips: inputs.openRedQuestionZips, run: inputs.readerSuiteRun },
         universeProviders: UNIVERSE_PROVIDERS,
         tieBreak: "oldest nextDueAt first within a band",
       },
@@ -250,8 +256,8 @@ export function graduationFunnel(input: {
       count: byStage.get(stage) ?? 0,
       source: byStage.has(stage) ? input.pipelineSource : `${input.pipelineSource} (none recorded for ${stage})`,
     })),
-    { stage: "VALIDATED", count: input.candidateCounts?.validated ?? 0, source: "data/method/candidates.json lifecycle counts" },
-    { stage: "ADMITTED", count: input.candidateCounts?.admitted ?? 0, source: "data/method/candidates.json lifecycle counts" },
+    { stage: "VALIDATED", count: input.candidateCounts?.validated ?? 0, source: "cp_method_candidates/live lifecycle counts" },
+    { stage: "ADMITTED", count: input.candidateCounts?.admitted ?? 0, source: "cp_method_candidates/live lifecycle counts" },
     { stage: "DETERMINISTIC_REPLAYS", count: input.deterministicReplays, source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read" },
   ];
   return { stages, pipelineSource: input.pipelineSource };

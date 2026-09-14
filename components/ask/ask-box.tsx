@@ -5,6 +5,7 @@ import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import { telHref } from "@/lib/officials/phone-numbers";
 import { AskAnswerRecords } from "./answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
 
@@ -188,6 +189,73 @@ const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
  */
 
 
+/**
+ * The everyday-answer contact card(s): the office that owns the reader's topic,
+ * with the real line, its own body name over it, and one source line at the
+ * bottom. Shared by the standalone ROUTED answer and — when a contactless
+ * grounded subject would otherwise suppress the routed block (#7) — by the
+ * grounded answer, so a held, verified civic contact is delivered identically
+ * on both paths and the render/civic proofs see the same markup. One
+ * implementation, so the two placements cannot drift.
+ */
+function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
+  return (
+    <div className="mt-2 space-y-2">
+      {contacts.map((contact) => (
+        <div
+          key={`${contact.body}|${contact.service}`}
+          className="rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
+        >
+          <p className="text-[0.875rem] font-semibold text-paper">
+            {contact.body}
+          </p>
+          <p className="text-[0.75rem] leading-relaxed text-voice">
+            {contact.service}
+          </p>
+          <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            {contact.phone && (
+              <a
+                href={telHref(contact.phone)}
+                className="font-mono text-[0.9375rem] font-semibold text-link"
+              >
+                {contact.phone}
+              </a>
+            )}
+            {contact.email && (
+              <a
+                href={`mailto:${contact.email}`}
+                className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+              >
+                {contact.email}
+              </a>
+            )}
+            {contact.requestUrl && (
+              <a
+                href={contact.requestUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+              >
+                online request
+              </a>
+            )}
+          </p>
+          {contact.note && (
+            <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
+              {contact.note}
+            </p>
+          )}
+          {/* SRC-3: one source line, at the bottom, in the level register —
+              the publisher named in full, never a competing click target. */}
+          <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+            This was sourced from {contact.sourceOrg}.
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function AskBox({
   coverage,
   zip,
@@ -220,7 +288,7 @@ export function AskBox({
    */
   onOpenPerson?: (holder: SeatHolder) => void;
 }) {
-  const { venues, meetings, allMeetings } = useShellData();
+  const { venues, meetings, allMeetings, everydayRouting } = useShellData();
   const ui = useUi();
   /* WGH-15: the reader's HOME, so an Ask subject is not browse-scoped only. */
   const home = useResolvedLocation(zip);
@@ -550,7 +618,7 @@ export function AskBox({
 
     void (async () => {
       const started = Date.now();
-      let result = answerQuestion(question, coverage, zip, { entities });
+      let result = answerQuestion(question, coverage, zip, { entities, everydayRouting });
 
       /*
        * M119's first rule: an exact name is a SEARCH, not a question.
@@ -651,6 +719,7 @@ export function AskBox({
           result = answerQuestion(question, coverage, zip, {
             classified: topic,
             entities,
+            everydayRouting,
           });
         }
       }
@@ -775,6 +844,28 @@ export function AskBox({
 
   const acOpen = Boolean(onSearchPick) && ui.search.open && flat.length > 0;
   let cursor = -1;
+
+  /*
+   * #7 — A CONTACTLESS GROUNDED SUBJECT MUST NOT SUPPRESS A HELD CIVIC CONTACT.
+   *
+   * Grounded precedence (below) hides the standalone routed block whenever the
+   * question resolved to a grounded subject, so one answer leads the panel
+   * (ASK-05). But when that subject is CONTACTLESS — e.g. "Board of Assessment
+   * Commissioners" for a property-tax question — and the topic router DID hold
+   * a verified everyday contact for the reader ("Borough of Rockaway — Tax
+   * Collector"), plain suppression drops a real, source-linked answer, which
+   * ASK-05 ("nothing lost") forbids. In that exact case we surface the held
+   * routed contact inside the grounded answer, under its OWN body name and
+   * source — never merged with, or attributed to, the grounded subject.
+   */
+  const preservedRoutedContact = Boolean(
+    grounded?.subject &&
+      (grounded.contacts?.length ?? 0) === 0 &&
+      asked &&
+      asked.answer.kind === "ROUTED" &&
+      asked.answer.topic &&
+      asked.contacts.length > 0,
+  );
 
   // The flagship treatment (design pass, item 1): a standout feature
   // dressed as one — a raised block, a real heading, an input that
@@ -1330,6 +1421,25 @@ export function AskBox({
           <AskAnswerContacts contacts={grounded.contacts ?? []} />
 
           {/*
+            #7: a CONTACTLESS grounded subject must not suppress a held,
+            verified everyday contact the topic router found for the reader.
+            Rendered under the contact's OWN body name and source — evidence
+            under the one grounded answer, never attributed to the grounded
+            subject or silently merged with it. `preservedRoutedContact` only
+            fires when the grounded subject carries no contacts of its own, so
+            this never competes with or duplicates `grounded.contacts` above.
+          */}
+          {preservedRoutedContact && asked && (
+            <div className="mt-3" data-ask-preserved-contact>
+              <p className="t-eyebrow text-signal">Who handles this</p>
+              <p className="mt-1 text-[0.9375rem] font-semibold text-paper">
+                {asked.answer.topic?.label}
+              </p>
+              <RoutedContactCards contacts={asked.contacts} />
+            </div>
+          )}
+
+          {/*
             **NO BRANCH MAY RENDER SILENCE.** A reply with no subject, no
             records and no gaps rendered an empty panel back at a reader who had
             just typed a question — found on the ballot surface by reading the
@@ -1339,7 +1449,12 @@ export function AskBox({
             and the verdict on ourselves is struck (RULING 139). Then it offers
             the narrowing and stops.
           */}
-          {!grounded.answer &&
+          {/* #7: when a held routed contact is surfaced above for a
+              contactless grounded subject, the engine's "nothing recorded"
+              sentence would contradict a civic answer that IS on screen — the
+              civic proof asserts NOTHING_HELD is absent in exactly that case. */}
+          {!preservedRoutedContact &&
+            !grounded.answer &&
             (grounded.records?.length ?? 0) === 0 &&
             (grounded.gaps?.length ?? 0) === 0 &&
             grounded.mode !== "CLARIFY" &&
@@ -1534,72 +1649,11 @@ export function AskBox({
             {asked.answer.topic.label}
           </p>
           {asked.contacts.length > 0 && (
-            // The everyday answer: the office that owns the fix, with the
-            // real line. A service line that owns the topic IS the answer.
-            <div className="mt-2 space-y-2">
-              {asked.contacts.map((contact) => (
-                <div
-                  key={`${contact.body}|${contact.service}`}
-                  className="rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
-                >
-                  <p className="text-[0.875rem] font-semibold text-paper">
-                    {contact.body}
-                  </p>
-                  <p className="text-[0.75rem] leading-relaxed text-voice">
-                    {contact.service}
-                  </p>
-                  <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    {contact.phone && (
-                      <a
-                        href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
-                        className="font-mono text-[0.9375rem] font-semibold text-link"
-                      >
-                        {contact.phone}
-                      </a>
-                    )}
-                    {contact.email && (
-                      <a
-                        href={`mailto:${contact.email}`}
-                        className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
-                      >
-                        {contact.email}
-                      </a>
-                    )}
-                    {contact.requestUrl && (
-                      <a
-                        href={contact.requestUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
-                      >
-                        online request
-                      </a>
-                    )}
-                  </p>
-                  {contact.note && (
-                    <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
-                      {contact.note}
-                    </p>
-                  )}
-                  {/*
-                    **SRC-3 (2026-08-24) — ONE SOURCE LINE, AT THE BOTTOM.**
-
-                    This was a per-item `source — {org}` link on every contact
-                    card. It is the same sentence the meeting cards now carry,
-                    in the same place, in the level register: the publisher is
-                    named in full and verbatim, and it is not a competing click
-                    target beside the phone number the reader came for.
-
-                    The URL is NOT deleted — it is on the record, and the
-                    battlecard this contact belongs to lists it under Sources.
-                    What changed is what renders.
-                  */}
-                  <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-                    This was sourced from {contact.sourceOrg}.
-                  </p>
-                </div>
-              ))}
-            </div>
+            // The everyday answer: the office that owns the fix, with the real
+            // line. A service line that owns the topic IS the answer. Same card
+            // as the grounded-precedence path (#7) — one shared component, so
+            // the two placements cannot drift.
+            <RoutedContactCards contacts={asked.contacts} />
           )}
           <ol className="mt-2 space-y-2.5">
             {asked.answer.steps.map((step, i) => (

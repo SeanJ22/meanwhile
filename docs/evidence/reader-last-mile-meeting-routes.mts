@@ -2,16 +2,27 @@ import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readSnapshot } from "../../lib/meetings/snapshot.ts";
+import {
+  readMeetingsProjection,
+  requireReaderProofMeetingsProjection,
+} from "../../lib/meetings/snapshot.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../../lib/meetings/constants.ts";
 import { floored } from "../../lib/ops/denominator-floor.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
 import { meetingListingIdentity, type MeetingListingIdentityReadback } from "../../lib/meetings/listing-identity.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "../../scripts/lib/reader-proof-runtime.ts";
 const hash = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
-const snapshot = readSnapshot(); assert.ok(snapshot);
+await prepareReaderProofRuntime();
+const snapshot = requireReaderProofMeetingsProjection(
+  await readMeetingsProjection({ bypassCache: true }),
+  requiredPreparedReaderProofMeetingsAuthority(),
+);
 const asOf = new Date();
 const windowStart = asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
 const windowEnd = asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
@@ -39,7 +50,7 @@ for (let start = 0; start < points.length; start += 4) await Promise.all(points.
 records.sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));
 const missing = expected.filter(meeting => !seen.has(meeting.id)).map(meeting => ({ id: meeting.id, bodyId: meeting.bodyId, ocdId: meeting.ocdId, location: meeting.location, startsAt: meeting.startsAt }));
 floored("current-window held meetings returned", "every canonical held meeting inside the current serving window", expected.length, expected.length - missing.length);
-const sourcePaths = ["app/api/meetings/route.ts", "lib/meetings/query.ts", "lib/meetings/listing-identity.ts", "lib/ask/body-identity.ts", "lib/meetings/constants.ts", "lib/sources/snapshot/index.ts", "lib/registry/server.ts", "data/meetings-snapshot.json"];
+const sourcePaths = ["app/api/meetings/route.ts", "lib/meetings/query.ts", "lib/meetings/listing-identity.ts", "lib/ask/body-identity.ts", "lib/meetings/constants.ts", "lib/meetings/snapshot.ts", "lib/civic-data/meeting-partitions.ts", "lib/registry/server.ts", "scripts/lib/reader-proof-runtime.ts"];
 const proof = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), executionLevel: "ACTUAL_HTTP_ROUTE", asOf: asOf.toISOString(), sourceHashes: sourcePaths.map(path=>({path,sha256:hash(readFileSync(path))})), denominator: { held: snapshot.meetings.length, inCurrentWindow: expected.length, returned: expected.length - missing.length, outsideWindow: dispositions.length, queriedHeldLocations: points.length }, dispositions, missing, records };
 writeFileSync(process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-meeting-routes.json", JSON.stringify(proof, null, 2) + "\n");
 console.log(JSON.stringify({ denominator: proof.denominator, missing }, null, 2));

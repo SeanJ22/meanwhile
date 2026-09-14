@@ -6,6 +6,10 @@
  * challenges plain clients) confirmed as the destination the authority's own
  * fetched page links to. The verification sentence records which.
  */
+import {
+  currentCuratedReaderRecords,
+  type BallotNavigationProjectionRecord,
+} from "../civic-data/curated-reader-read-model.ts";
 
 export interface RegistrationLink {
   state: string;
@@ -17,6 +21,7 @@ export interface RegistrationLink {
   verifiedAt: string;
 }
 
+/** Initial adoption/node:test evidence; production reads `ballot-navigation`. */
 export const REGISTRATION_LINKS: RegistrationLink[] = [
   {
     state: "AZ",
@@ -47,6 +52,17 @@ export const REGISTRATION_LINKS: RegistrationLink[] = [
   },
 ];
 
-export function registrationLinkFor(state: string): RegistrationLink | null {
-  return REGISTRATION_LINKS.find((l) => l.state === state) ?? null;
+export function currentRegistrationLinks(): readonly RegistrationLink[] {
+  const seed: BallotNavigationProjectionRecord[] = REGISTRATION_LINKS.map((value) => ({
+    id: `registration:${value.state}`,
+    kind: "REGISTRATION_LINK",
+    value: value as unknown as Readonly<Record<string, unknown>>,
+  }));
+  return currentCuratedReaderRecords("ballot-navigation", seed)
+    .filter((record): record is BallotNavigationProjectionRecord => record.kind === "REGISTRATION_LINK")
+    .map((record) => record.value as unknown as RegistrationLink);
+}
+
+export function registrationLinkFor(state: string, projection?: readonly RegistrationLink[]): RegistrationLink | null {
+  return (projection ?? currentRegistrationLinks()).find((l) => l.state === state) ?? null;
 }

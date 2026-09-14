@@ -2,21 +2,58 @@ import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { applyReaderApplicability, buildReaderCensus, censusClosureFailures, composeCanonicalRouteProofs, composeReaderComponentProofs, packReaderEvidence, readerBundleEvidence, readerCensusSummary, readerProofInventory, readReaderEvidence, projectCanonicalReaderRecords, reconcileDelivery, renderCanonicalReaderComponents, renderCensusMarkdown, sha256, type ReaderDeliveryProof, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { readerSourceFingerprint, readerNestedFieldInventory, validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { readerSourceFingerprint, readerNestedFieldInventory, readerClosureExecutionAuthorityAdmission, readerClosureExecutionAuthorityProblems, validateReaderClosureReceipt, validateReaderProductionClosureReceipt, type ReaderClosureExecutionAuthorityEvidence, type ReaderClosureExecutionAuthorityReference, type ReaderClosureReceipt, type ReaderSourceHash } from "../lib/holdings/reader-census.ts";
+import { readerExecutionAuthorityLiveProblems } from "../lib/holdings/reader-execution-authority.ts";
+import { createNeonReaderAuthoritySql } from "./reader-execution-authority-evidence.mts";
 import { activePortraitInventory } from "../lib/holdings/reader-census.ts";
+import {
+  freshReaderClosureReceipt,
+  readerCensusOutputPaths,
+} from "./lib/reader-census-output-contract.ts";
+import { readerProofSources } from "./lib/reader-proof-sources.ts";
+import {
+  prepareReaderProofRuntime,
+  requiredPreparedReaderProofMeetingsAuthority,
+} from "./lib/reader-proof-runtime.ts";
 
 const args = process.argv.slice(2);
 const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
 const root = option("--root") ?? process.cwd();
 const receiptToValidate = option("--validate-closure");
 if (receiptToValidate) {
-  const failures = validateReaderClosureReceipt(root, JSON.parse(readReaderEvidence(root, receiptToValidate).toString("utf8")) as ReaderClosureReceipt);
-  console.log(JSON.stringify({ receiptToValidate, failures },null,2));
+  const receipt = JSON.parse(readReaderEvidence(root, receiptToValidate).toString("utf8")) as ReaderClosureReceipt;
+  const requiredAuthorityPhase = option("--require-authority-phase");
+  if (requiredAuthorityPhase && requiredAuthorityPhase !== "PRODUCTION") throw new Error("Only the terminal PRODUCTION authority phase can be required");
+  const productionReadConnection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY?.trim() ?? "";
+  const failures = requiredAuthorityPhase === "PRODUCTION"
+    ? validateReaderProductionClosureReceipt(root, receipt, productionReadConnection, receiptToValidate)
+    : validateReaderClosureReceipt(root, receipt, { receiptPath: receiptToValidate });
+  if (requiredAuthorityPhase === "PRODUCTION" && failures.length === 0 && receipt.executionAuthority) {
+    try {
+      const evidence = JSON.parse(
+        readReaderEvidence(root, receipt.executionAuthority.evidencePath).toString("utf8"),
+      ) as ReaderClosureExecutionAuthorityEvidence;
+      failures.push(...await readerExecutionAuthorityLiveProblems(evidence, {
+        connection: productionReadConnection,
+        providerMetadataPath: evidence.store.providerMetadataPath,
+        providerMetadataBytes: readReaderEvidence(root, evidence.store.providerMetadataPath),
+        importReceiptPath: evidence.import.receiptPath,
+        importReceiptBytes: readReaderEvidence(root, evidence.import.receiptPath),
+        sql: createNeonReaderAuthoritySql(productionReadConnection),
+      }));
+    } catch {
+      failures.push("Reader production closure live authority readback could not be executed");
+    }
+  }
+  console.log(JSON.stringify({ receiptToValidate, requiredAuthorityPhase: requiredAuthorityPhase ?? "ANY_EXPLICIT_PHASE_OR_LEGACY_INHERITED", failures },null,2));
   process.exit(failures.length ? 1 : 0);
 }
 const packPath = option("--pack");
 if (packPath) { console.log(JSON.stringify(packReaderEvidence(root, packPath), null, 2)); process.exit(0); }
+await prepareReaderProofRuntime();
+const meetingAuthority = requiredPreparedReaderProofMeetingsAuthority();
 const output = option("--output") ?? "docs/evidence/reader-last-mile-current.json";
+const sideOutputs = readerCensusOutputPaths(args, output);
 const proofPath = option("--proof");
 const proofs = proofPath ? JSON.parse(readReaderEvidence(root, proofPath).toString("utf8")) as ReaderDeliveryProof[] : [];
 let census = buildReaderCensus(root);
@@ -30,11 +67,12 @@ floored("reader-eligible records", "canonical records in datasets declaring read
 const problems = [...census.failures];
 const projectionPath = option("--projection");
 if (args.includes("--project") || projectionPath) {
-  const projection = projectionPath ? JSON.parse(readReaderEvidence(root, projectionPath).toString("utf8")) as ReaderProjectionReport : await projectCanonicalReaderRecords(root, census);
+  const projection = projectionPath ? JSON.parse(readReaderEvidence(root, projectionPath).toString("utf8")) as ReaderProjectionReport : await projectCanonicalReaderRecords(root, census, meetingAuthority);
   census = applyReaderApplicability(census, projection);
   const path = output.replace(/\.json$/, "-projection.json");
   if (!args.includes("--check") && !projectionPath) writeFileSync(join(root, path), `${JSON.stringify(projection, null, 2)}\n`);
-  if (!args.includes("--check")) writeFileSync(join(root,"docs/evidence/reader-last-mile-active-portraits.json"),`${JSON.stringify({holdingsDigest:census.holdingsDigest,records:activePortraitInventory(census,projection)},null,2)}\n`);
+  if (!args.includes("--check")) writeFileSync(join(root,sideOutputs.activePortraits),`${JSON.stringify({holdingsDigest:census.holdingsDigest,records:activePortraitInventory(census,projection)},null,2)}\n`);
+  if (sideOutputs.proofSources) writeFileSync(join(root, sideOutputs.proofSources), `${JSON.stringify(readerProofSources(root, census), null, 2)}\n`);
   console.log(JSON.stringify({ projection: path, counts: projection.counts, failureCount: projection.failures.length, firstFailures: projection.failures.slice(0, 20) }, null, 2));
   if (args.includes("--projection-closure")) problems.push(...projection.failures);
 }
@@ -58,10 +96,10 @@ if (executedEvidencePaths) {
 const buildReceiptPath = option("--build-receipt");
 if (buildReceiptPath) {
   const evidence = readerBundleEvidence(root, census, buildReceiptPath, option("--portrait-proof"));
-  const evidencePath = "docs/evidence/reader-last-mile-bundle.json";
+  const evidencePath = sideOutputs.bundle;
   const bytes = `${JSON.stringify(evidence, null, 2)}\n`;
   writeFileSync(join(root, evidencePath), bytes);
-  writeFileSync(join(root, "docs/evidence/reader-last-mile-bundle-descriptor.json"), `${JSON.stringify({ evidencePath, evidenceSha256: sha256(bytes), exactHead: evidence.exactHead, holdingPaths: evidence.holdings.map((holding) => holding.path) }, null, 2)}\n`);
+  writeFileSync(join(root, sideOutputs.bundleDescriptor), `${JSON.stringify({ evidencePath, evidenceSha256: sha256(bytes), exactHead: evidence.exactHead, holdingPaths: evidence.holdings.map((holding) => holding.path) }, null, 2)}\n`);
   problems.push(...evidence.failures);
   console.log(JSON.stringify({ bundleEvidence: evidencePath, holdings: evidence.holdings.length, failures: evidence.failures }, null, 2));
 }
@@ -89,7 +127,7 @@ for (const proof of proofs) {
 if (args.includes("--render-components")) {
   const rendered = await renderCanonicalReaderComponents(root, census);
   floored("reader component cases passing", "every applicable canonical payload assigned to the component harness", rendered.cases.length, rendered.cases.filter((entry) => entry.failures.length === 0).length);
-  const path = output.replace(/\.json$/, "-components.json");
+  const path = sideOutputs.renderedComponents;
   writeFileSync(join(root, path), `${JSON.stringify(rendered, null, 2)}\n`);
   problems.push(...rendered.failures);
   console.log(JSON.stringify({ componentEvidence: path, cases: rendered.cases.length, failureCount: rendered.failures.length, firstFailures: rendered.failures.slice(0, 20) }, null, 2));
@@ -108,13 +146,45 @@ if (args.includes("--check")) {
   writeFileSync(join(root, markdownPath), markdown);
   writeFileSync(join(root, output.replace(/\.json$/, "-summary.json")), `${JSON.stringify(readerCensusSummary(census), null, 2)}\n`);
 }
-if (args.includes("--closure")) problems.push(...censusClosureFailures(census));
+let closureAuthority: ReaderClosureExecutionAuthorityReference | undefined;
+let closureEvidenceHashes: readonly ReaderSourceHash[] = [];
+if (args.includes("--closure")) {
+  problems.push(...censusClosureFailures(census));
+  const authorityEvidencePath = option("--authority-evidence");
+  const preparedAuthorityEvidencePath = process.env.READER_EXECUTION_AUTHORITY_EVIDENCE?.trim();
+  const witnessManifest = option("--component-witnesses");
+  let authoritySupportPaths: readonly string[] = [];
+  if (!authorityEvidencePath) {
+    problems.push("Fresh Reader closure requires --authority-evidence");
+  } else if (authorityEvidencePath !== preparedAuthorityEvidencePath) {
+    problems.push("Reader closure authority path differs from the authority used to prepare meeting proof");
+  } else {
+    try {
+      const admission = readerClosureExecutionAuthorityAdmission(root, authorityEvidencePath);
+      closureAuthority = admission.reference;
+      authoritySupportPaths = admission.supportPaths;
+    } catch (error) {
+      problems.push(error instanceof Error ? error.message : "Reader closure authority evidence is missing or unreadable");
+    }
+  }
+  const evidencePaths = [...new Set([
+    ...census.rows.flatMap((row)=>row.evidencePaths),
+    ...(witnessManifest ? [witnessManifest] : []),
+    ...(authorityEvidencePath ? [authorityEvidencePath] : []),
+    ...authoritySupportPaths,
+  ])].sort();
+  closureEvidenceHashes = evidencePaths.flatMap((path) => {
+    try { return [{ path, sha256: sha256(readReaderEvidence(root, path)) }]; }
+    catch { problems.push(`Reader closure evidence is missing or unreadable: ${path}`); return []; }
+  });
+  problems.push(...readerClosureExecutionAuthorityProblems(root, census, closureAuthority, closureEvidenceHashes));
+}
 if (args.includes("--closure") && problems.length === 0) {
   // RULING 20 keeps screenshot bytes outside git. Validate their hashes during
   // composition, then retain the exact reviewed-image manifest as durable proof.
-  const witnessManifest = option("--component-witnesses");
-  const evidenceHashes = [...new Set([...census.rows.flatMap((row)=>row.evidencePaths), ...(witnessManifest ? [witnessManifest] : [])])].sort().map((path)=>({path,sha256:sha256(readReaderEvidence(root,path))}));
-  const receipt: ReaderClosureReceipt = { formatVersion: 1, censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes };
+  // The separately hashed authority artifact contains sanitized environment,
+  // read-only, import and pointer-set identities; no credential enters Git.
+  const receipt: ReaderClosureReceipt = freshReaderClosureReceipt({ censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes: closureEvidenceHashes, ...(closureAuthority ? { executionAuthority: closureAuthority } : {}) });
   writeFileSync(join(root, output.replace(/\.json$/, "-receipt.json")), `${JSON.stringify(receipt,null,2)}\n`);
 }
 console.log(JSON.stringify({ output, denominator: census.denominator, delivery: Object.fromEntries([...new Set(census.rows.map((r) => r.deliveryState))].map((state) => [state, census.rows.filter((r) => r.deliveryState === state).length])), stagedAutonomous: census.autonomous.length, closureObligations: censusClosureFailures(census).length, problemCount: problems.length, firstProblems: problems.slice(0, 20) }, null, 2));

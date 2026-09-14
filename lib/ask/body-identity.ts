@@ -1,7 +1,6 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
-import { BODY_ROSTERS } from "../registry/body-rosters.ts";
+import { currentBodyRosters } from "../registry/body-rosters.ts";
+import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 
 /**
  * **WHICH BODY IS THIS — read off the canonical registry, synchronously.**
@@ -143,19 +142,12 @@ interface RegistryFile {
   divisions?: RegistryDivisionRow[];
 }
 
-interface PromotedFile {
-  bodies?: RegistryBodyRow[];
-}
-
 interface LoadedIndex {
-  key: string;
+  runtime: RegistryRuntimeReadModel;
   byBodyId: Map<string, CanonicalBodyIdentity>;
 }
 
 let cached: LoadedIndex | null = null;
-
-const REGISTRY_RELATIVE = join("lib", "registry", "registry.json");
-const PROMOTED_RELATIVE = join("lib", "registry", "promoted-bodies.json");
 
 /**
  * A parenthetical acronym is decoration on a name, not part of it.
@@ -195,26 +187,19 @@ function rosterBodyName(bodyId: string): string {
   return name ?? "";
 }
 
-let rosterNameCache: Map<string, string> | null = null;
-
 function rosterNames(): Map<string, string> {
-  if (!rosterNameCache) {
-    rosterNameCache = new Map();
-    for (const roster of BODY_ROSTERS) {
-      // First writer wins, matching rosterForBody's own read of the array;
-      // tests/body-rosters.test.ts separately forbids two rosters on one body.
-      if (!rosterNameCache.has(roster.bodyId)) {
-        rosterNameCache.set(roster.bodyId, roster.bodyName);
-      }
+  const names = new Map<string, string>();
+  for (const roster of currentBodyRosters()) {
+    // First writer wins; projection validation separately forbids duplicates.
+    if (!names.has(roster.bodyId)) {
+      names.set(roster.bodyId, roster.bodyName);
     }
   }
-  return rosterNameCache;
+  return names;
 }
 
-function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
-  const registry = JSON.parse(
-    readFileSync(join(root, REGISTRY_RELATIVE), "utf8"),
-  ) as RegistryFile;
+function buildIndex(runtime: RegistryRuntimeReadModel): Map<string, CanonicalBodyIdentity> {
+  const registry = runtime.registry as RegistryFile;
 
   const divisions = new Map<string, RegistryDivisionRow>();
   for (const division of registry.divisions ?? []) {
@@ -247,7 +232,7 @@ function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
       unslugBodySuffix(row.id) ||
       row.id;
     byBodyId.set(row.id, {
-      sourceUrl: own ? row.provenance?.sourceUrl ?? null : BODY_ROSTERS.find((r) => r.bodyId === row.id)?.sourceUrl ?? row.provenance?.sourceUrl ?? null,
+      sourceUrl: own ? row.provenance?.sourceUrl ?? null : currentBodyRosters().find((r) => r.bodyId === row.id)?.sourceUrl ?? row.provenance?.sourceUrl ?? null,
       retrievedAt: row.provenance?.collectedAt ?? null,
       bodyId: row.id,
       name,
@@ -260,26 +245,6 @@ function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
   };
 
   for (const row of registry.bodies ?? []) add(row);
-
-  /*
-   * Promoted bodies are a SECOND canonical file rather than a lesser one
-   * (`lib/registry/promoted-bodies.ts`: `registry.json` had four writers and
-   * this split is what stopped them fighting). Registry rows win a collision
-   * only because they are the generated view of everything, including these.
-   */
-  try {
-    const promoted = JSON.parse(
-      readFileSync(join(root, PROMOTED_RELATIVE), "utf8"),
-    ) as PromotedFile;
-    for (const row of promoted.bodies ?? []) add(row);
-  } catch {
-    /*
-     * Absent or unreadable is a real state and it degrades HONESTLY: every
-     * body still in `registry.json` resolves, and one that is not resolves to
-     * null, which callers already have to handle. It is never a reason to fall
-     * back to the division — that is the defect.
-     */
-  }
 
   return byBodyId;
 }
@@ -294,10 +259,6 @@ function unslugBodySuffix(bodyId: string): string {
     .trim();
 }
 
-function repoRoot(root?: string): string {
-  return root ?? process.cwd();
-}
-
 /**
  * The whole index, cached on the registry file's mtime.
  *
@@ -307,11 +268,11 @@ function repoRoot(root?: string): string {
  * serve a stale identity without any signal that it had.
  */
 export function bodyIdentityIndex(root?: string): Map<string, CanonicalBodyIdentity> {
-  const base = repoRoot(root);
-  const key = base;
-  if (cached && cached.key === key) return cached.byBodyId;
-  const byBodyId = buildIndex(base);
-  cached = { key, byBodyId };
+  if (root !== undefined) throw new Error("Tracked registry roots are test evidence only; initialize the canonical runtime projection instead.");
+  const runtime = getRegistryRuntimeReadModel();
+  if (cached?.runtime === runtime) return cached.byBodyId;
+  const byBodyId = buildIndex(runtime);
+  cached = { runtime, byBodyId };
   return byBodyId;
 }
 

@@ -18,8 +18,9 @@
  *
  * These are unit-level. The LIVE proofs — two-process contention, a real
  * `process.exit` kill, concurrent append positions, cross-process debt
- * inheritance, a dump/wipe/restore — are `pnpm control-plane:proof`, because
- * none of them can be performed honestly inside one process.
+ * inheritance, a dump/wipe/restore — are preserved in the immutable cutover
+ * evidence. The destructive live proof executable was retired after cutover;
+ * none of those claims can be performed honestly inside one process.
  */
 
 import assert from "node:assert/strict";
@@ -331,8 +332,8 @@ test("SEEDED W3.C: freshness debt survives a store round-trip and keeps its ORIG
 
   /* A DIFFERENT repository handle over the same root, holding NO reference to
      the first — the closest a single process gets to "a fresh process". The
-     genuine two-process proof is `pnpm control-plane:proof` P6, where one OS
-     process writes the debt, exits, and another reads it back. */
+     genuine two-process proof is the preserved cutover P6 evidence, where one
+     OS process wrote the debt, exited, and another read it back. */
   const reopened = await createFileRepositories(root);
   const loaded = await loadDebts(reopened);
   const mine = loaded.filter((d) => d.obligationId === "ob-1");

@@ -38,8 +38,6 @@
  * prints matched-over-total. Nothing is ever filled with a plausible value.
  */
 
-import fs from "node:fs";
-
 const API = "https://api.congress.gov/v3";
 const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 
@@ -317,7 +315,7 @@ export async function relatedBillsOf(
 export async function measuresVotedInHouse(
   congress: number,
   apiKey: string,
-  cachePath: string,
+  _retiredCachePath?: string,
 ): Promise<LawRecord[]> {
   // Every roll call the House took, from its own index.
   const measures = new Set<string>();
@@ -336,13 +334,11 @@ export async function measuresVotedInHouse(
     }
   }
 
-  // Titles, cached — 397 requests for one congress otherwise.
-  let cache: Record<string, string> = {};
-  try {
-    cache = JSON.parse(fs.readFileSync(cachePath, "utf8"));
-  } catch {
-    // No cache is a state, not an error.
-  }
+  // This resolver is now a fixture-tested library, not a tracked cache
+  // writer. A production acquisition owns its durable facts in the civic-
+  // data candidate/version store; a process-local map only deduplicates one
+  // explicit invocation.
+  const cache: Record<string, string> = {};
   let fetched = 0;
   for (const key of measures) {
     const cacheKey = `${congress}|${key}`;
@@ -356,7 +352,6 @@ export async function measuresVotedInHouse(
     fetched++;
     await new Promise((r) => setTimeout(r, 40));
   }
-  if (fetched > 0) fs.writeFileSync(cachePath, JSON.stringify(cache, null, 1), "utf8");
   console.log(
     `    house-vote index: ${measures.size} distinct measures in congress ${congress}, ${fetched} titles newly fetched`,
   );

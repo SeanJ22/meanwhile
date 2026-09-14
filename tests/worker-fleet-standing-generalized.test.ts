@@ -19,9 +19,20 @@ import { auditReasoningContext } from "../lib/control-plane/workers/model-audit.
 import { advanceHeldWorkerFleet, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import type { GeneralizedCivicExtractionContract, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
+import {
+  installOperationalReferenceBundle,
+  operationalReferenceBundle,
+} from "../lib/civic-data/operational-references.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const METHOD = JSON.parse(readFileSync(path.join(ROOT, "data/method/knowledge.json"), "utf8"));
+installOperationalReferenceBundle(operationalReferenceBundle({
+  az: JSON.parse(readFileSync(path.join(ROOT, "data/states/az/jurisdictions/az.json"), "utf8")),
+  nh: JSON.parse(readFileSync(path.join(ROOT, "data/states/nh/jurisdictions/nh.json"), "utf8")),
+  nj: JSON.parse(readFileSync(path.join(ROOT, "data/states/nj/jurisdictions/nj.json"), "utf8")),
+}));
+await installRegistryRuntimeFirstSeeds();
 const SUBJECT = "curated:az/corona-de-tucson-fire-district#governing";
 const START = "2026-09-03T04:00:00.000Z";
 const PRIMARY = "https://www.coronafire.org/sitemap.xml";

@@ -1,0 +1,929 @@
+{
+  "schemaVersion": 1,
+  "result": "PDC_AUTHORITY_TRANSFER_COMPLETE_B_ADMISSION_READY",
+  "apply": true,
+  "observedAt": "2026-09-14T04:35:48.776Z",
+  "importSha": "c85082c04cef43fb0203adcfe92b936d8520e9e3",
+  "frozenBaseSha": "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+  "migrationBlobSha1": "28c5daace7e19ec70d978487b16be5cd07fb4dd7",
+  "cutoverContractSha256": "87ad9ac5349fe16913bdf7c15423c4a46ced2530464fa8f50ab91a86855b6456",
+  "narrowRoleProofSha256": "498731032dafe5042e4eb32abfbe8b7687f54d338c6a0a7cde0e4d0e8576c365",
+  "githubProofSha256": "d58962099469d6ae1397ad2a32e300cc4941721dc83b1cc3c5fb063acec49af6",
+  "lineage": {
+    "frozenImportDataBaseSha": "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+    "exactQuiescedMainSha": "9a9a76763f39980cca4aac448cb57ce9a8102101",
+    "softwareLineageAnchorSha": "d04026d91c5b8c513ea335e4f9575cac3b6badb9",
+    "reviewedPostFrozenMainCommitOids": [
+      "673f1ddc63fbc5f513a89034d65990ff9849b99b",
+      "b1b2fbdfc745c374f76fa43df069c0521a5a69ff",
+      "87dc3b693ce2feb4972d174d72de1bc8ce477b2c",
+      "16c6e900ab7c48c95e381b9e8c11aa28276eea02",
+      "1c43bcaf0b3d15e1207cf2f976cad5276e87887b",
+      "d03c90b26938e0619ba37a5eb972b5d78835ba6d",
+      "90315a08c02a16c64b691cbdf0d32fe57f30e3b4",
+      "4af89a0773bc5585c35f43e2c3e6d68dab070197",
+      "44f91c68ab81b407dd5d746acee4dbf600950525",
+      "6d8c0b01fc6b27e116869e9fae7632eaec9d4bf7",
+      "e51475978d45c32cb15157476fcb37a5d6d6cdef",
+      "8406f726fa429e180a9057a8a2305c8f416cd63f",
+      "713e4e06f9fba7319c14d8af90f12ac1a38e3e8f",
+      "eca9f1d75d16dfda29c68f12381e1affb982379c",
+      "d04026d91c5b8c513ea335e4f9575cac3b6badb9"
+    ],
+    "importCommitASha": "c85082c04cef43fb0203adcfe92b936d8520e9e3",
+    "importCommitALinearAfterExactMain": false,
+    "importCommitALinearAfterSoftwareLineageAnchor": true,
+    "documentaryMainJoinRequired": true,
+    "preservedConcurrentPullRequests": [
+      {
+        "number": 302,
+        "state": "OPEN",
+        "isDraft": true,
+        "baseRefName": "main",
+        "baseRefOid": "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+        "headRefName": "claude/admin-feedback-2026-09-07",
+        "headRefOid": "f1744234020c57ed945f3f7c856676380a05ac99",
+        "uniqueCommitOids": [
+          "e08d61fd617d20c8ed199d2b656913bba4e0488e",
+          "72cee590cdf01085f9a46312afcc95e108f8c29a",
+          "270cb936a238dbe2991a3b4cfae36bfbe225fef1",
+          "3f9fadb87287fd6c0ac69dc526b36705c34a4ff8",
+          "c6ad5370fe618cc86b693725a66064f614ac3176",
+          "b07e7223588e8b58637ce7d5f2e084e8f24d2ab7",
+          "d2ff9199121934ce4374d4a64fb564dcf9b4efc9",
+          "91cf364c2682504b10b8509882c8b77762534a12",
+          "8d4197a4342c2b38538884c22a2bb08585ddef2f",
+          "57f09b18961c6884c65bdd93bb3422b47cb6cb6f",
+          "f1744234020c57ed945f3f7c856676380a05ac99"
+        ],
+        "headAncestorOfA": false,
+        "uniqueCommitsInAAncestry": 0,
+        "patchEquivalentCommitsInA": 0
+      },
+      {
+        "number": 303,
+        "state": "OPEN",
+        "isDraft": true,
+        "baseRefName": "main",
+        "baseRefOid": "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+        "headRefName": "codex/reader-visual-9-7-26",
+        "headRefOid": "375a68760d7ebc88d15d8531718201eadf8332f5",
+        "uniqueCommitOids": [
+          "375a68760d7ebc88d15d8531718201eadf8332f5"
+        ],
+        "headAncestorOfA": false,
+        "uniqueCommitsInAAncestry": 0,
+        "patchEquivalentCommitsInA": 0
+      }
+    ]
+  },
+  "prewriteAdmission": {
+    "protocol": 1,
+    "nonceSha256": "8f6443f73dcdac4282ce5d55e73f0f475ccbdfee22b525d4d400f4f5f0fdf4ea",
+    "parentPid": 35592,
+    "readyRequests": 1,
+    "liveRecensusAtReady": true,
+    "receiptTtlMs": 25000
+  },
+  "preImportAuthority": {
+    "initialCensus": "PASS",
+    "liveRecensusAtReady": "PASS",
+    "exact0026PreflightWithProspectiveSuccessors": "PASS",
+    "registeredContractKeys": 157,
+    "canonicalPromotionCount": 17,
+    "registeredCurrentPromotionCount": 16,
+    "obsoleteAggregatePointers": 1,
+    "durableRetirementReceipt": "NOT_APPLICABLE_POINTER_PRESENT",
+    "liveLegacyVersionId": "cv-892383cc30468eaaf2d5c3d788188cb7",
+    "liveLegacyPointerSha256": "41c4d50d53ead2a46cb2e32ecd7898f1f7cf0a460e61d0c146292c525cb56af5",
+    "liveLegacyCandidateRecordSha256": "ba7cc0d09a169ca0425511b6168e1aebef17d3ad539ec9107a19f73901399f0b",
+    "liveLegacyHistorySha256": "bb13aeadaa6c3d24af002a1f590dc8b23d70e65d9162be84f3cb4d3183a62720",
+    "liveLegacyHistoryEventCount": 4,
+    "liveLegacyMeetingFactSha256": "9e9a7baf70b1800cb5cb9fde242bcf2caefba73148b3e07942c4d3dffa79bb0c",
+    "liveLegacyMeetingRowCount": 605,
+    "liveLegacyAgendaDocumentRowCount": 187,
+    "prospectiveReattestationCount": 1
+  },
+  "github": {
+    "legacyWorkflowDefinitionsDisabled": 8,
+    "nonterminalLegacyRuns": 0,
+    "bypassActors": 0,
+    "enabledWriteDeployKeys": 0,
+    "legacyRuntimeSecrets": 0
+  },
+  "host": {
+    "obsoleteScheduledTasks": 0,
+    "startupLaunchers": 0,
+    "oldProcessTreeMembers": 0
+  },
+  "import": {
+    "promoted": 111,
+    "reattestedExisting": 15,
+    "skippedExisting": 0,
+    "dispositions": 111,
+    "dispositionSet": [
+      {
+        "contractId": "az-official-actions",
+        "candidateId": "az-official-actions:trusted-lkg:3ec8417aaffa95c0dec67f201b16ad7c",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "az-official-actions:trusted-lkg:3ec8417aaffa95c0dec67f201b16ad7c",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "az-pima-local-finance",
+        "candidateId": "az-pima-local-finance:trusted-lkg-reattested:066f68a5403e3187bb5cef826bcd38af",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "az-pima-local-finance:trusted-lkg-reattested:066f68a5403e3187bb5cef826bcd38af",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "az-sos-ballot",
+        "candidateId": "az-election-authorities:trusted-lkg-reattested:69b0ac533b8b46e8029701bc1bf01e7c",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "az-election-authorities:trusted-lkg-reattested:69b0ac533b8b46e8029701bc1bf01e7c",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "az-sos-campaign-finance",
+        "candidateId": "az-sos-campaign-finance:trusted-lkg-reattested:8da80f6b2492fc0a3f1831a8d2969fa6",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "az-sos-campaign-finance:trusted-lkg-reattested:8da80f6b2492fc0a3f1831a8d2969fa6",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "ballot-navigation",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:19ab53916b17bb1b2ce6b7cf8c4695ea",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "curated-reader-primary-sources:trusted-lkg:19ab53916b17bb1b2ce6b7cf8c4695ea",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "campaign-sites",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:a120a63fcb83a4d67a2d4650a106fbaa",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "curated-reader-primary-sources:trusted-lkg:a120a63fcb83a4d67a2d4650a106fbaa",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "candidate-corpus",
+        "candidateId": "candidate-primary-publications:trusted-lkg:14c9b355ba991ed29b399055b6be4e79",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "candidate-primary-publications:trusted-lkg:14c9b355ba991ed29b399055b6be4e79",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "candidate-profiles",
+        "candidateId": "candidate-primary-publications:trusted-lkg:ae9d4c17cc82ffd5adbc5002f259ea71",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "candidate-primary-publications:trusted-lkg:ae9d4c17cc82ffd5adbc5002f259ea71",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "census-acs-population",
+        "candidateId": "census-data-api:trusted-lkg-reattested:0cb3e2be938cd0ec8a8f62f8caca6906",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "census-data-api:trusted-lkg-reattested:0cb3e2be938cd0ec8a8f62f8caca6906",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "comment-access",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:2a78ccfe93f339945f192f600c39d33c",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "curated-reader-primary-sources:trusted-lkg:2a78ccfe93f339945f192f600c39d33c",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "congress-bulk-roster",
+        "candidateId": "congress-directory-project:trusted-lkg-reattested:c4ad00e5a8c773b473733c8dc61a4c81",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "congress-directory-project:trusted-lkg-reattested:c4ad00e5a8c773b473733c8dc61a4c81",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "congress-rollcalls",
+        "candidateId": "federal-legislative-records:trusted-lkg:c7f8d6c171ba3c60ffe455328fd19140",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "federal-legislative-records:trusted-lkg:c7f8d6c171ba3c60ffe455328fd19140",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "dotgov",
+        "candidateId": "cisa-dotgov-registry:trusted-lkg-reattested:5e31b270c0e589410982fa4a39286362",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "cisa-dotgov-registry:trusted-lkg-reattested:5e31b270c0e589410982fa4a39286362",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "everyday-routing",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:ee97a5ec50a5256a6d38740da6a93a6d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "curated-reader-primary-sources:trusted-lkg:ee97a5ec50a5256a6d38740da6a93a6d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "fec-funding",
+        "candidateId": "fec-open-api:trusted-lkg-reattested:e5b72e31dc35905304de291fabb3eff5",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "fec-open-api:trusted-lkg-reattested:e5b72e31dc35905304de291fabb3eff5",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "federal-key-votes",
+        "candidateId": "federal-legislative-records:trusted-lkg:33d388e8f6b01527122a159bd32af809",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "federal-legislative-records:trusted-lkg:33d388e8f6b01527122a159bd32af809",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "jurisdiction-operational-reference",
+        "candidateId": "jurisdiction-operational-reference:trusted-lkg-reattested:6564abfe4ffc1538e8426c7b4c2f5adb",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "jurisdiction-operational-reference:trusted-lkg-reattested:6564abfe4ffc1538e8426c7b4c2f5adb",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:apptegy:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Avail_unified_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:8e806c24e2a7efcdc0c09a96146a6732",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:8e806c24e2a7efcdc0c09a96146a6732",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:apptegy:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fschool_district%3Arockaway_township_school_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:e1433e28c19ba5afac3950b8a1c93a45",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:e1433e28c19ba5afac3950b8a1c93a45",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:boardbook:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Aamphitheater_unified_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:27c3543acc632ecbe9c81bc1a87180e2",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:27c3543acc632ecbe9c81bc1a87180e2",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:civicclerk:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23central-arizona-water-conservation-district",
+        "candidateId": "meetings-public-bodies:trusted-lkg:f08eef7adc7c26bd6b9b026627d02e80",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:f08eef7adc7c26bd6b9b026627d02e80",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23board-of-adjustment",
+        "candidateId": "meetings-public-bodies:trusted-lkg:88de8e653779b1bec7921d35ae8cf1ac",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:88de8e653779b1bec7921d35ae8cf1ac",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:eb506b6d07ba9e8a53f62db27baa7a3d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:eb506b6d07ba9e8a53f62db27baa7a3d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:civicplus:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%2Fplace%3Arockaway_township%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:8e3d69e55fa90472426302c1b4d52e56",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:8e3d69e55fa90472426302c1b4d52e56",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23armory-park-historic-zone-advisory-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:3dc6b579d95bd57c1aa521f046f1af2c",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:3dc6b579d95bd57c1aa521f046f1af2c",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23barrio-historico-historic-zone-advisory-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:d7f2c6108bd6efdcd386fadd039595e2",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:d7f2c6108bd6efdcd386fadd039595e2",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23board-of-adjustment",
+        "candidateId": "meetings-public-bodies:trusted-lkg:0ca5d2b7c36b99a70547714e5bffb160",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:0ca5d2b7c36b99a70547714e5bffb160",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23citizens-water-advisory-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:2b3a53e599ad39d431f6b77091b6f050",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:2b3a53e599ad39d431f6b77091b6f050",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23commission-on-disability-issues",
+        "candidateId": "meetings-public-bodies:trusted-lkg:218b797ee51ddd279d68affaff2a8fc3",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:218b797ee51ddd279d68affaff2a8fc3",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23commission-on-equitable-housing-and-development",
+        "candidateId": "meetings-public-bodies:trusted-lkg:66f4043978e5b6294eeec72f6919edd8",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:66f4043978e5b6294eeec72f6919edd8",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23community-police-advisory-review-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:b4436f4c2f3734fdbc772d428514766f",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:b4436f4c2f3734fdbc772d428514766f",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23complete-streets-coordinating-council",
+        "candidateId": "meetings-public-bodies:trusted-lkg:35fd0f1ba133e2a1c348dee3af8544fa",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:35fd0f1ba133e2a1c348dee3af8544fa",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23design-review-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:da79898b0ffabb322ac4d4e430f75b7b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:da79898b0ffabb322ac4d4e430f75b7b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23human-relations-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:9b44262be72555414374cccb3f58d024",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:9b44262be72555414374cccb3f58d024",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23park-tucson-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:ce6a297df25b8b34c403a59d3d9dfc38",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:ce6a297df25b8b34c403a59d3d9dfc38",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23planning-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:a17ef656d04b92b1f399cc7936869b19",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:a17ef656d04b92b1f399cc7936869b19",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23tucson-parks-and-recreation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:0d587f18472814ce1aeb958fc1d17b47",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:0d587f18472814ce1aeb958fc1d17b47",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:clerksboards:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23tucson-pima-county-historical-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:35033ef8d1305ccc822e65aa923e372b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:35033ef8d1305ccc822e65aa923e372b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:diligent:curated%3Aaz%2Fpima-community-college%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1df42f576fda12bf8341e729ae636d2d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1df42f576fda12bf8341e729ae636d2d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Asunnyside_unified_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1b0438919d59126fb4173faa78413c92",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1b0438919d59126fb4173faa78413c92",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:4a5e4e71a2357641f0344c772712af59",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:4a5e4e71a2357641f0344c772712af59",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:diligent:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:14ed569824744ae384de2b182eaf44a4",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:14ed569824744ae384de2b182eaf44a4",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23budget-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:b283940407bed968f4fd613d0ab4be6a",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:b283940407bed968f4fd613d0ab4be6a",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23cemetery-trustees",
+        "candidateId": "meetings-public-bodies:trusted-lkg:ec1b5dbc96ffc3b1ee799d81d278ded9",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:ec1b5dbc96ffc3b1ee799d81d278ded9",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23cip-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:7529a167f2a44da4e1e49b86ea9f158e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:7529a167f2a44da4e1e49b86ea9f158e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:deeca4497616cb063763e97f2f8a2f4e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:deeca4497616cb063763e97f2f8a2f4e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23economic-development-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:6bbcd96fd0ae697293da4e1ffcbbdd37",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:6bbcd96fd0ae697293da4e1ffcbbdd37",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23independence-day-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1a58054b0f818f19a790ec0cc3694de7",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1a58054b0f818f19a790ec0cc3694de7",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:be030c69e4400d61ce4e2f28a07d1031",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:be030c69e4400d61ce4e2f28a07d1031",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23select-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:479f562566eec43d9342c2a686046fe8",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:479f562566eec43d9342c2a686046fe8",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23supervisors-of-the-checklist",
+        "candidateId": "meetings-public-bodies:trusted-lkg:e6a2bcb302c31195305138b7515aa8a5",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:e6a2bcb302c31195305138b7515aa8a5",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Abradford_town%23zoning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:4b21d8abec5fef0f29d8898a1407f45a",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:4b21d8abec5fef0f29d8898a1407f45a",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23blodgett-sewer-user-advisory-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:130360c2c520780ada1ee036d4e346fb",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:130360c2c520780ada1ee036d4e346fb",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:8b221adce98b23f350c6eda593d9e8fa",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:8b221adce98b23f350c6eda593d9e8fa",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:245ad9e8c5ec95339578da5293c238da",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:245ad9e8c5ec95339578da5293c238da",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:0695ccc8da8b4fb4ae8501c8949ba800",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:0695ccc8da8b4fb4ae8501c8949ba800",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23supervisors-of-the-checklist",
+        "candidateId": "meetings-public-bodies:trusted-lkg:55cc166e1b91a07c04e20ca9b7239971",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:55cc166e1b91a07c04e20ca9b7239971",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23zoning-board-of-adjustment",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1be05b0bf8992fffa46a455d2861f58e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1be05b0bf8992fffa46a455d2861f58e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Asutton_town%23ad-hoc-sutton-connects-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:a813ed6f1ff6a7d25e04ecf0f92c858e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:a813ed6f1ff6a7d25e04ecf0f92c858e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Asutton_town%23cemetery-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1e6195b81998721983971cb1bc311458",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1e6195b81998721983971cb1bc311458",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Asutton_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1cf755ed3a3b7a6f5bf368aa61fef984",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1cf755ed3a3b7a6f5bf368aa61fef984",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Asutton_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1d7d2cea9642a155476b44780f92b4f9",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1d7d2cea9642a155476b44780f92b4f9",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Asutton_town%23select-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:49e4f10709b6199d7d39f11e085eafe6",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:49e4f10709b6199d7d39f11e085eafe6",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Asutton_town%23zoning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:4033c64223959c9e54008f73e3de6d65",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:4033c64223959c9e54008f73e3de6d65",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23agricultural-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:0cbd9071f0a4c25630ebea6fb159e750",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:0cbd9071f0a4c25630ebea6fb159e750",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23budget-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:a9de9f9b1c59e169a5d011f86672e446",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:a9de9f9b1c59e169a5d011f86672e446",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:f83371ed757ee1c4fd75a0137f1b0e7e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:f83371ed757ee1c4fd75a0137f1b0e7e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23housing-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:32eae2c26142abeea93b1037c57a042b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:32eae2c26142abeea93b1037c57a042b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23parks-and-recreation",
+        "candidateId": "meetings-public-bodies:trusted-lkg:aeaf1eddef29ccb254e4798ed6fe081b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:aeaf1eddef29ccb254e4798ed6fe081b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:082fb0e6afa04679e43366b3e2c96a59",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:082fb0e6afa04679e43366b3e2c96a59",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23road-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:10f2ef8b2cf55c17be264f4c7c5c306a",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:10f2ef8b2cf55c17be264f4c7c5c306a",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23select-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:ddbaf37b99b7733635cf0e2f82efaaf4",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:ddbaf37b99b7733635cf0e2f82efaaf4",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23trustees-of-the-trust-funds",
+        "candidateId": "meetings-public-bodies:trusted-lkg:063c9ef33737389c4d838cb87840efe8",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:063c9ef33737389c4d838cb87840efe8",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awarner_town%23zoning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:ee40cdfe88fe0236be086540402e1f44",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:ee40cdfe88fe0236be086540402e1f44",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awilmot_town%23cemetery-trustees",
+        "candidateId": "meetings-public-bodies:trusted-lkg:0441cc507d451d0d3fa9f2f7464f2d99",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:0441cc507d451d0d3fa9f2f7464f2d99",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awilmot_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:e45f505dd3ed3fe60bd686109891ad13",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:e45f505dd3ed3fe60bd686109891ad13",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awilmot_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:97f1033ae830036a00017446947763de",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:97f1033ae830036a00017446947763de",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:ical:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Awilmot_town%23selectboard",
+        "candidateId": "meetings-public-bodies:trusted-lkg:b6e82113cb27350d4bb57dd88463f19b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:b6e82113cb27350d4bb57dd88463f19b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:iqm2:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fcounty%3Amorris%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:6dec199a9e97d6bfe747cf49b7a243ff",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:6dec199a9e97d6bfe747cf49b7a243ff",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:ef6fa5119b0304de397be1a018574336",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:ef6fa5119b0304de397be1a018574336",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Amesa%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:bc15ed011a3a1f47708d07c5c5378d42",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:bc15ed011a3a1f47708d07c5c5378d42",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:c649405830a94f7b0d7987b51f1db09e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:c649405830a94f7b0d7987b51f1db09e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:onbase:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:311a08e37a807a6fb370da25fe42c170",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:311a08e37a807a6fb370da25fe42c170",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:revize:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%23governing",
+        "candidateId": "meetings-public-bodies:trusted-lkg:e3564c522e0916c1a351cde86dae4b7d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:e3564c522e0916c1a351cde86dae4b7d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23board-of-selectmen",
+        "candidateId": "meetings-public-bodies:trusted-lkg:b94f616d0e6a54d3d2761a815075e7a0",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:b94f616d0e6a54d3d2761a815075e7a0",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23budget-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:d66330ca2f294d532d468d55138dd30e",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:d66330ca2f294d532d468d55138dd30e",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23capital-improvement-program",
+        "candidateId": "meetings-public-bodies:trusted-lkg:7f39e5d470e4dcdd3cfee6b836d4641b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:7f39e5d470e4dcdd3cfee6b836d4641b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:4c672063ee34a7277bfa588111b6660d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:4c672063ee34a7277bfa588111b6660d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23energy-committee",
+        "candidateId": "meetings-public-bodies:trusted-lkg:39179f9ccf4d0a12602d0c5a567011a2",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:39179f9ccf4d0a12602d0c5a567011a2",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23housing-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:a856cb47df2850963e764e2c7b997aeb",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:a856cb47df2850963e764e2c7b997aeb",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:18fec606370c5701b77a82b007411c86",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:18fec606370c5701b77a82b007411c86",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23recreation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:55b4b3fded611901772c2d372c405d1d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:55b4b3fded611901772c2d372c405d1d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23supervisors-of-the-checklist",
+        "candidateId": "meetings-public-bodies:trusted-lkg:65a84f02a959ec7980c02ebf6803778d",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:65a84f02a959ec7980c02ebf6803778d",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23tri-town-assessing-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:c18914642a5dac879b2c051a47f54812",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:c18914642a5dac879b2c051a47f54812",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anew_london_town%23zoning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1c24479e1ae11c20f840f4eaa1f29813",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1c24479e1ae11c20f840f4eaa1f29813",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23conservation-commission",
+        "candidateId": "meetings-public-bodies:trusted-lkg:47e9437cb0c8c43e2c18dbd0d48c9d63",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:47e9437cb0c8c43e2c18dbd0d48c9d63",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23planning-board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:10ad49c0eec0e2c68bc6c7eacd9bc917",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:10ad49c0eec0e2c68bc6c7eacd9bc917",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23zoning-board-of-adjustment",
+        "candidateId": "meetings-public-bodies:trusted-lkg:8605ebdc6b49e3856ff9792dc2c875c9",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:8605ebdc6b49e3856ff9792dc2c875c9",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fschool_district%3Akearsarge_regional_school_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:296ef8ee391b81d27568e75ed78267df",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:296ef8ee391b81d27568e75ed78267df",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anj%2Fschool_district%3Amorris_hills_regional_school_district%23board",
+        "candidateId": "meetings-public-bodies:trusted-lkg:1357580c34a9ca61879f40f854c12bcc",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "meetings-public-bodies:trusted-lkg:1357580c34a9ca61879f40f854c12bcc",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "nh-curated-ballot",
+        "candidateId": "nh-election-authorities:trusted-lkg-reattested:be36ccf6eba3efead342ab06fe78784a",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "nh-election-authorities:trusted-lkg-reattested:be36ccf6eba3efead342ab06fe78784a",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "nh-members",
+        "candidateId": "nh-general-court:trusted-lkg-reattested:d73e79d222ccc9672d465ba25b5103fb",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "nh-general-court:trusted-lkg-reattested:d73e79d222ccc9672d465ba25b5103fb",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "nh-sos-campaign-finance",
+        "candidateId": "nh-sos-campaign-finance:trusted-lkg-reattested:5cb94ee54c78061b4d927d398452f44b",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "nh-sos-campaign-finance:trusted-lkg-reattested:5cb94ee54c78061b4d927d398452f44b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "nj-elec-campaign-finance",
+        "candidateId": "nj-elec-campaign-finance:trusted-lkg-reattested:731a5a21fed5c502c73d6fc434ead798",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "nj-elec-campaign-finance:trusted-lkg-reattested:731a5a21fed5c502c73d6fc434ead798",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "nj-morris-filing",
+        "candidateId": "nj-morris-county-clerk:trusted-lkg-reattested:0beafa22f7a89288cef7f803dc92d9aa",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "nj-morris-county-clerk:trusted-lkg-reattested:0beafa22f7a89288cef7f803dc92d9aa",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "officeholder-statements",
+        "candidateId": "officeholder-primary-publications:trusted-lkg:a670304b658f46ba742606c36a6f9643",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "officeholder-primary-publications:trusted-lkg:a670304b658f46ba742606c36a6f9643",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "pima-legistar-outcomes",
+        "candidateId": "pima-legistar-outcomes:trusted-lkg:b53731fbbd91c47ec2ac378b68f3c6f0",
+        "disposition": "PROMOTED_FROZEN_LKG_UNION",
+        "versionId": "pima-legistar-outcomes:trusted-lkg:b53731fbbd91c47ec2ac378b68f3c6f0",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "prl",
+        "candidateId": "prl:trusted-lkg-reattested:3a0cb8f1771020ad4b6fa2bf92058178",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "prl:trusted-lkg-reattested:3a0cb8f1771020ad4b6fa2bf92058178",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "registry-runtime-bindings",
+        "candidateId": "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "venue-resolutions",
+        "candidateId": "curated-reader-primary-sources:trusted-lkg:90c0a4e12e459c9183601e0e0163abc5",
+        "disposition": "PROMOTED_ABSENT_POINTER",
+        "versionId": "curated-reader-primary-sources:trusted-lkg:90c0a4e12e459c9183601e0e0163abc5",
+        "readerReadback": "PASS"
+      },
+      {
+        "contractId": "voting-sites",
+        "candidateId": "voting-sites:trusted-lkg-reattested:00ca7d7b60c2f313abfe2790fe2f7e4b",
+        "disposition": "REATTESTED_EXISTING_AUTHORITY",
+        "versionId": "voting-sites:trusted-lkg-reattested:00ca7d7b60c2f313abfe2790fe2f7e4b",
+        "readerReadback": "PASS"
+      }
+    ],
+    "dispositionSetSha256": "b2db64c1073daef4c99c3d74995663dd8cade0f9cf401362582145d1b5e3c57f",
+    "zeroMeetingPartitionsRefused": 41,
+    "retirementDisposition": "RETIRED",
+    "durableRetirementReceiptExact": true,
+    "legacyMeetingFactSha256": "9e9a7baf70b1800cb5cb9fde242bcf2caefba73148b3e07942c4d3dffa79bb0c",
+    "replacementPointerSha256": "b4116882f69d1dc5324e15ac9fcc9cbf7ef573cca45d0bb31ab1c4e7aaea4faa",
+    "legacyPointerSha256": "41c4d50d53ead2a46cb2e32ecd7898f1f7cf0a460e61d0c146292c525cb56af5",
+    "legacyCandidateRecordSha256": "ba7cc0d09a169ca0425511b6168e1aebef17d3ad539ec9107a19f73901399f0b",
+    "legacyHistorySha256": "bb13aeadaa6c3d24af002a1f590dc8b23d70e65d9162be84f3cb4d3183a62720",
+    "legacyHistoryEventCount": 4,
+    "replacementFullPointerSetSha256": "6b76e68deccd83acb7125fcb53110c8c6483f51e02541be5e6a7545a347a2a61",
+    "replacementCandidateRecordSetSha256": "436f4bdf0f32a1895ed53f695a2b97fb5e5cb9bfcf7cacbac29a0af75a03984a",
+    "replacementHistorySetSha256": "95927decbe9d15f152bd6feef0ce6aaf273e62033dfcb315d52f2e7e3124b6d3",
+    "replacementAuthoritySha256": "00aac9e60469b23528e73b8fa65b97beefdac9ae97fcb9147da299dce1a0dbd8",
+    "resultSha256": "a56308684707d3aecebe3632f6bc8e01e37cde50915f456b082a9e8b5e0a131c"
+  },
+  "postImport": {
+    "exact0026Preflight": "PASS",
+    "schema": "pre-0026",
+    "promotionCount": 111,
+    "expectedPromotionCount": 111,
+    "registeredContractCount": 157,
+    "obsoleteAggregatePointers": 0,
+    "unregisteredPromotions": 0
+  },
+  "commitBAdmissionReady": true
+}

@@ -1,31 +1,54 @@
-import { readFileSync, statSync, renameSync, writeFileSync, mkdirSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 
-import type { AgendaDocument } from "./agenda-documents.ts";
+import { canonicalAgendaDocument, type AgendaDocument } from "./agenda-documents.ts";
 import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
+import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
+import {
+  CivicDataStoreUnavailableError,
+  mayUseTestFixture,
+  readPromotedCivicDataBatch,
+  readPromotedCivicData,
+  type CivicDataReadMetadata,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
+import {
+  MEETING_PARTITION_CONTRACTS,
+  type MeetingPartitionContract,
+} from "../civic-data/meeting-partitions.ts";
+import { collapseDuplicateSittings } from "../sources/composite/index.ts";
+
+export const MEETINGS_RECORD_CLASS = "MEETING" as const;
+/** Reader composition scope; no canonical pointer is ever written at this key. */
+export const MEETINGS_SCOPE = "source-wiring-partitions";
+export const MEETINGS_SOURCE_ID = "meetings-public-bodies";
+/** Observation-only fields excluded when research projections compare civic facts. */
+export const MEETINGS_SNAPSHOT_STAMPS = {
+  stampKeys: ["generatedAt", "collectedAt", "verifiedAt", "retrievedAt", "lastFreshAt"],
+  ignoreTopLevel: ["counts", "sources"],
+} as const;
 
 /**
- * The committed meetings snapshot — the production data path.
+ * The bundled meetings snapshot — a first-canonical bootstrap fixture.
  *
  * The composite fans out to five vendor portals live, which is fine on a
  * developer's machine and wrong in production twice over: a serverless
  * function times out around ten seconds and five serialized portal fetches
  * exceed it under normal conditions, and a fetch per visitor against a public
  * body's portal is exactly the service degradation `CLAUDE.md`'s retrieval
- * discipline forbids. So `pnpm ingest composite` runs the fan-out once,
- * writes what came back to a committed file, and the app reads the file.
+ * discipline forbids. The standing routine-data runner therefore performs
+ * the fan-out once and promotes one validated durable projection.
  *
- * Committed, not generated at build: the build stays deterministic and never
- * depends on a vendor being reachable, a changed agenda shows up in a diff,
- * and a failed refresh leaves the last good snapshot in place — the site
- * serves stale-but-honest data and *says* how stale (`generatedAt` renders as
- * "last checked").
+ * This committed file remains only to bootstrap a new, answered-but-empty
+ * store. It is never selected after a store read error: not knowing whether a
+ * canonical pointer exists is not evidence that it does not exist.
  *
- * **This module is the only place that knows the file path.** Everything else
- * goes through `readSnapshot()`/`writeSnapshot()`, so moving the snapshot to
- * a database or object store — which is what four zips becoming 90,000
- * governments requires, same limit `docs/state.md` records for the committed
- * GeoJSON — changes this file and nothing else.
+ * `readSnapshot()` remains the explicit read-only bootstrap boundary. The
+ * production module exports no repository writer; deterministic round-trip
+ * tests use a guarded test-only helper. Runtime consumers go through
+ * `readMeetingsProjection()` instead.
  */
 
 export interface SnapshotSourceReport {
@@ -87,6 +110,8 @@ export interface SnapshotSourceReport {
    * nothing on the reader's card claims a freshness it does not have.
    */
   carriedForward?: number;
+  /** Exact acquired bodies and observed final redirects for durable promotion proof. */
+  acquisitions?: readonly SourceAcquisitionEvidence[];
 }
 
 /**
@@ -303,18 +328,33 @@ export function reconcileCounts(snap: MeetingsSnapshot): void {
       `snapshot states ${counts.carried} carried meetings but ${marked} row(s) carry the mark`,
     );
   }
-  for (const s of snap.sources) {
-    const claimedCarried = s.carriedForward ?? 0;
-    const actual = markedBySource.get(s.source) ?? 0;
+  for (const source of new Set(snap.sources.map(({ source }) => source))) {
+    const reports = snap.sources.filter((row) => row.source === source);
+    const claimedCarried = reports.reduce((sum, row) => sum + (row.carriedForward ?? 0), 0);
+    const actual = markedBySource.get(source) ?? 0;
     if (claimedCarried !== actual) {
       throw new Error(
-        `${s.source}: reports ${claimedCarried} meeting(s) carried forward but ${actual} row(s) carry its mark`,
+        `${source}: reports ${claimedCarried} meeting(s) carried forward but ${actual} row(s) carry its mark`,
+      );
+    }
+    const unexplainedClaims = reports
+      .filter((row) => row.ok && (row.unreachableOcdIds?.length ?? 0) === 0)
+      .reduce((sum, row) => sum + (row.carriedForward ?? 0), 0);
+    const unexplainedRows = snap.meetings.filter((meeting) =>
+      meeting.carried?.source === source && meeting.carried.reason === "UNEXPLAINED_DISAPPEARANCE"
+    ).length;
+    if (unexplainedClaims !== unexplainedRows) {
+      throw new Error(
+        `${source}: reports ${unexplainedClaims} successful-response carry row(s) but ${unexplainedRows} row(s) name UNEXPLAINED_DISAPPEARANCE`,
       );
     }
   }
 }
 
-export function validateSnapshot(value: unknown): asserts value is MeetingsSnapshot {
+export function validateSnapshot(
+  value: unknown,
+  options: { readonly allowAllSourcesFailedForDurableTransfer?: boolean } = {},
+): asserts value is MeetingsSnapshot {
   const snap = value as MeetingsSnapshot;
   if (!snap || typeof snap !== "object") throw new Error("snapshot is not an object");
   if (snap.formatVersion !== 1) {
@@ -356,20 +396,20 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
     ) {
       throw new Error(`${s.source}: unreachableOcdIds must be a list of division ids`);
     }
-    // A source that reports every one of its divisions unreachable AND
-    // reports itself ok is contradicting itself; the adapter is required to
-    // throw in that case so the source reads as failed.
-    if (s.ok && s.carriedForward !== undefined && s.carriedForward > 0 &&
-        (s.unreachableOcdIds?.length ?? 0) === 0) {
-      throw new Error(
-        `${s.source}: carried ${s.carriedForward} meeting(s) forward while reporting nothing unreachable`,
-      );
-    }
+    // Successful-but-thin responses can retain an unexplained prior row, but
+    // reconcileCounts requires every such row to carry that exact reason.
   }
   if (!snap.sources.some((s) => s.ok)) {
-    throw new Error(
-      "every source failed — refusing to write a snapshot that would blank the map; keep the previous one",
-    );
+    const exactCarriedLkg = options.allowAllSourcesFailedForDurableTransfer === true &&
+      Array.isArray(snap.meetings) && snap.meetings.length > 0 &&
+      snap.counts?.fresh === 0 &&
+      snap.counts.carried === snap.counts.total &&
+      snap.counts.total === snap.meetings.length;
+    if (!exactCarriedLkg) {
+      throw new Error(
+        "every source failed — refusing any shape except an explicit nonempty all-carried durable LKG",
+      );
+    }
   }
   if (!Array.isArray(snap.meetings)) throw new Error("meetings must be an array");
   const sourceNames = new Set(snap.sources.map((s) => s.source));
@@ -392,6 +432,11 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
         `agenda document ${doc.id} cites meeting ${doc.meetingId}, which is not in the snapshot`,
       );
     }
+    if (doc.text?.includes("\u0000") || /^(?:PK\u0003\u0004|%PDF-)/.test(doc.text ?? "")) {
+      throw new Error(
+        `agenda document ${doc.id} contains binary bytes in its Reader text; retain its URL/hash and mark extraction failed`,
+      );
+    }
   }
   assertBodyIdentityIsPresent(snap);
   assertAttributionIsHonest(snap);
@@ -405,18 +450,17 @@ export function validateSnapshot(value: unknown): asserts value is MeetingsSnaps
  * did not hold them. Before it existed, a meeting took its body from its
  * GEOGRAPHY, and the snapshot written the day before carried no such field.
  *
- * That created a hazard with no code in it: this file is REGENERATED by a
- * scheduled job and committed, so an older snapshot can arrive by a perfectly
- * ordinary route — a merge, a rebase, a revert, a cron run from an older ref —
- * and nothing about it looks wrong. It parses. It validates. It has meetings in
- * it. It simply attributes them to the wrong governments, silently, and the
- * misattribution class comes back whole.
+ * That created a hazard with no code in it: this file was formerly regenerated
+ * and committed by a scheduled job, and it remains a bootstrap fixture that
+ * can arrive from an older ref. Nothing about that looks wrong. It parses. It
+ * validates. It has meetings in it. It simply attributes them to the wrong
+ * governments, silently, and the misattribution class comes back whole.
  *
  * A session resolved exactly that conflict by hand on 2026-08-27, in favour of
  * the branch's snapshot. **A safety property that depends on a future merge
  * being judged correctly is not a safety property.** So the invariant is
- * mechanical and it is asserted at the boundary `readSnapshot` and
- * `writeSnapshot` both run through: a snapshot whose meetings do not carry body
+ * mechanical and it is asserted by `validateSnapshot`, which both the
+ * bootstrap reader and the production candidate path call: a snapshot whose meetings do not carry body
  * identity fails LOUDLY here rather than serving.
  *
  * Deliberately NOT keyed to the conflicting commit, and deliberately not a
@@ -499,11 +543,12 @@ interface CachedRead {
 }
 
 let cached: CachedRead | null = null;
+const validatedProjectionValues = new WeakSet<object>();
 
 /**
- * The committed snapshot, or null when none exists (a fresh clone before the
- * first ingest). Cached per process, invalidated by file mtime so a dev
- * re-running the ingest sees the new data without a server restart.
+ * The bundled bootstrap fixture, or null when none exists. Cached per process,
+ * invalidated by file mtime so an explicit manual fixture refresh is visible
+ * without a process restart.
  *
  * A file that exists but does not validate *throws* — a corrupt snapshot
  * silently treated as absent would blank the map while reporting nothing,
@@ -521,25 +566,478 @@ export function readSnapshot(root?: string): MeetingsSnapshot | null {
     return cached.snapshot;
   }
   const parsed: unknown = JSON.parse(readFileSync(path, "utf8"));
+  if (
+    parsed !== null &&
+    typeof parsed === "object" &&
+    Array.isArray((parsed as { agendaDocuments?: unknown }).agendaDocuments)
+  ) {
+    (parsed as { agendaDocuments: AgendaDocument[] }).agendaDocuments =
+      (parsed as { agendaDocuments: AgendaDocument[] }).agendaDocuments.map(canonicalAgendaDocument);
+  }
   validateSnapshot(parsed);
+  validatedProjectionValues.add(parsed);
   cached = { path, mtimeMs, snapshot: parsed };
   return parsed;
 }
 
+export interface MeetingsProjectionReadOptions extends PromotedCivicDataReadOptions {
+  /** Fixture root injection for deterministic bootstrap tests. */
+  readonly root?: string;
+  /** Explicit non-production escape hatch; never converts a failed DB read. */
+  readonly allowUnconfiguredBootstrap?: boolean;
+}
+
+export interface MeetingPartitionReadback {
+  readonly contractId: string;
+  readonly source: string;
+  readonly bodyId: string;
+  readonly scope: string;
+  readonly kind: CivicDataReadResult<MeetingsSnapshot>["kind"];
+  readonly versionId: string | null;
+  readonly detail: string | null;
+}
+
+export type MeetingsProjectionReadResult =
+  | {
+      readonly kind: "PROMOTED";
+      readonly value: MeetingsSnapshot;
+      readonly metadata: CivicDataReadMetadata;
+      readonly partitions: readonly MeetingPartitionReadback[];
+      readonly detail: string;
+    }
+  | Extract<CivicDataReadResult<MeetingsSnapshot>, { readonly kind: "BOOTSTRAP" | "NOT_RECORDED" | "STORE_UNREACHABLE" }>;
+
 /**
- * Validate and write. Refuses invalid snapshots (see `validateSnapshot`);
- * writes via a temp file and rename so a crash mid-write can never leave a
- * half-written file where the last good snapshot used to be.
+ * Read and prove one exact source/body pointer. Standing writers use this
+ * narrow boundary for carry-forward; they never open sibling pointers or the
+ * aggregate Reader composition.
  */
-export function writeSnapshot(snapshot: MeetingsSnapshot, root?: string): string {
-  validateSnapshot(snapshot);
-  const path = snapshotPath(root);
-  mkdirSync(dirname(path), { recursive: true });
-  const tmp = `${path}.tmp`;
-  writeFileSync(tmp, JSON.stringify(snapshot, null, 1) + "\n", "utf8");
-  renameSync(tmp, path);
-  cached = null;
-  return path;
+export async function readMeetingPartitionProjection(
+  partition: MeetingPartitionContract,
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<MeetingsSnapshot>> {
+  const now = options.now ?? new Date().toISOString();
+  const result = await readPromotedCivicData<MeetingsSnapshot>(MEETINGS_RECORD_CLASS, partition.scope, {
+    ...(options.store ? { store: options.store } : {}),
+    now,
+    maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
+    bypassCache: options.bypassCache,
+  });
+  return validateMeetingPartitionProjection(partition, result);
+}
+
+function validateMeetingPartitionProjection(
+  partition: MeetingPartitionContract,
+  result: CivicDataReadResult<MeetingsSnapshot>,
+): CivicDataReadResult<MeetingsSnapshot> {
+  if (result.kind !== "PROMOTED") return result;
+  try {
+    if (!validatedProjectionValues.has(result.value)) {
+      // A durable partition may consist entirely of explicitly carried rows
+      // from one failed route. The write door still refuses a failed live
+      // acquisition; the Reader must nevertheless serve that already-proved
+      // LKG instead of mistaking its honest outage envelope for blank data.
+      validateSnapshot(result.value, {
+        allowAllSourcesFailedForDurableTransfer: true,
+      });
+      validatedProjectionValues.add(result.value);
+    }
+    if (result.value.sources.length !== 1 || result.value.sources[0]?.source !== partition.meetingSource) {
+      throw new Error(`MEETING_PARTITION_SOURCE_MISMATCH:${partition.id}`);
+    }
+    for (const meeting of result.value.meetings) {
+      if (meeting.bodyId !== partition.bodyId || !meeting.id.startsWith(`${partition.meetingSource}:`)) {
+        throw new Error(`MEETING_PARTITION_ROW_SCOPE_MISMATCH:${partition.id}:${meeting.id}`);
+      }
+    }
+    return result;
+  } catch (error) {
+    return {
+      kind: "STORE_UNREACHABLE",
+      value: null,
+      metadata: result.metadata,
+      code: "PROMOTION_PROOF_INVALID",
+      detail: error instanceof Error ? error.message : `MEETING_PARTITION_PAYLOAD_INVALID:${partition.id}`,
+    };
+  }
+}
+
+function latestSourceInstant(snapshot: MeetingsSnapshot): string {
+  return snapshot.meetings
+    .flatMap((meeting) => [
+      meeting.carried?.lastFreshAt,
+      meeting.provenance?.collectedAt,
+    ])
+    .filter(
+      (value): value is string =>
+        typeof value === "string" && Number.isFinite(Date.parse(value)),
+    )
+    .sort()
+    .at(-1) ?? snapshot.generatedAt;
+}
+
+/**
+ * Read the typed canonical meetings projection. The bundled file is selected
+ * only after the store has answered that no pointer exists. A configured
+ * store error always remains `STORE_UNREACHABLE`.
+ */
+export async function readMeetingsProjection(
+  options: MeetingsProjectionReadOptions = {},
+): Promise<MeetingsProjectionReadResult> {
+  const now = options.now ?? new Date().toISOString();
+  const allowUnconfiguredBootstrap =
+    process.env.NODE_ENV !== "production" &&
+    (options.allowUnconfiguredBootstrap ?? mayUseTestFixture());
+  const partitionResults = await readPromotedCivicDataBatch<MeetingsSnapshot>(
+    MEETINGS_RECORD_CLASS,
+    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+    {
+      ...(options.store ? { store: options.store } : {}),
+      now,
+      maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
+      bypassCache: options.bypassCache,
+    },
+  );
+  const reads = MEETING_PARTITION_CONTRACTS.map((partition, index) => ({
+    partition,
+    result: validateMeetingPartitionProjection(partition, partitionResults[index]!),
+  }));
+  const rawPromoted = reads.filter((row): row is typeof row & { result: Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "PROMOTED" }> } => row.result.kind === "PROMOTED");
+  const invalid = new Map(
+    reads.flatMap(({ partition, result }) =>
+      result.kind === "STORE_UNREACHABLE" && result.code === "PROMOTION_PROOF_INVALID"
+        ? [[partition.id, result.detail] as const]
+        : [],
+    ),
+  );
+
+  // A duplicate id across authority partitions is ambiguous evidence. Reject
+  // every partition claiming that id, not whichever happened to be iterated
+  // second; unrelated partitions remain eligible for composition.
+  const meetingOwners = new Map<string, string[]>();
+  const documentOwners = new Map<string, string[]>();
+  for (const { partition, result } of rawPromoted) {
+    if (invalid.has(partition.id)) continue;
+    for (const meeting of result.value.meetings) {
+      meetingOwners.set(meeting.id, [...(meetingOwners.get(meeting.id) ?? []), partition.id]);
+    }
+    for (const document of result.value.agendaDocuments) {
+      documentOwners.set(document.id, [...(documentOwners.get(document.id) ?? []), partition.id]);
+    }
+  }
+  for (const [id, owners] of meetingOwners) {
+    if (owners.length < 2) continue;
+    for (const owner of new Set(owners)) invalid.set(owner, `MEETING_PARTITION_ID_COLLISION:${id}`);
+  }
+  for (const [id, owners] of documentOwners) {
+    if (owners.length < 2) continue;
+    for (const owner of new Set(owners)) invalid.set(owner, `MEETING_PARTITION_DOCUMENT_COLLISION:${id}`);
+  }
+
+  const promoted = rawPromoted.filter(({ partition }) => !invalid.has(partition.id));
+  const partitionReadbacks: MeetingPartitionReadback[] = reads.map(({ partition, result }) => ({
+    contractId: partition.id,
+    source: partition.meetingSource,
+    bodyId: partition.bodyId,
+    scope: partition.scope,
+    kind: invalid.has(partition.id) ? "STORE_UNREACHABLE" : result.kind,
+    versionId: result.metadata.versionId,
+    detail: invalid.get(partition.id) ?? ("detail" in result ? result.detail : null),
+  }));
+
+  if (promoted.length > 0) {
+    const meetings: Meeting[] = [];
+    const agendaDocuments: AgendaDocument[] = [];
+    const sources: SnapshotSourceReport[] = [];
+    for (const { result } of promoted) {
+      meetings.push(...result.value.meetings);
+      agendaDocuments.push(...result.value.agendaDocuments);
+      sources.push(result.value.sources[0]!);
+    }
+    for (const { partition } of reads) {
+      if (promoted.some((row) => row.partition.id === partition.id)) continue;
+      const readback = partitionReadbacks.find((row) => row.contractId === partition.id)!;
+      sources.push({
+        source: partition.meetingSource,
+        ok: false,
+        error: `${partition.bodyId}: ${readback.detail ?? "partition unavailable"}`,
+        failure: "WALL",
+        fetched: 0,
+        normalized: 0,
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+        ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
+      });
+    }
+    const collapsed = collapseDuplicateSittings(meetings);
+    const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
+    const retainedDocuments = agendaDocuments.filter((document) => retainedIds.has(document.meetingId));
+    const generatedAt = promoted.map(({ result }) => result.value.generatedAt).sort().at(-1) ?? now;
+    const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
+    const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
+    const promotedAt = promoted.map(({ result }) => result.metadata.promotedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
+    const allPartitionsProofValid = promoted.length === MEETING_PARTITION_CONTRACTS.length;
+    const stale = promoted.some(({ result }) => result.metadata.stale === "STALE")
+      ? "STALE" as const
+      : !allPartitionsProofValid || promoted.some(({ result }) => result.metadata.stale === "UNKNOWN")
+        ? "UNKNOWN" as const
+        : "CURRENT" as const;
+    const value: MeetingsSnapshot = {
+      formatVersion: 1,
+      generatedAt,
+      counts: snapshotCounts(collapsed.rows, collapsed.dropped.length),
+      sources,
+      meetings: collapsed.rows,
+      agendaDocuments: retainedDocuments,
+    };
+    validateSnapshot(value, {
+      allowAllSourcesFailedForDurableTransfer: true,
+    });
+    return {
+      kind: "PROMOTED",
+      value,
+      metadata: {
+        recordClass: MEETINGS_RECORD_CLASS,
+        scope: MEETINGS_SCOPE,
+        sourceId: MEETINGS_SOURCE_ID,
+        version: null,
+        versionId: null,
+        lastKnownGoodVersionId: null,
+        sourceThrough,
+        retrievedAt,
+        promotedAt,
+        stale,
+        staleAt: null,
+      },
+      partitions: partitionReadbacks,
+      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.`,
+    };
+  }
+
+  const invalidPromoted = rawPromoted.find(({ partition }) => invalid.has(partition.id));
+  if (invalidPromoted) {
+    return {
+      kind: "STORE_UNREACHABLE",
+      value: null,
+      metadata: invalidPromoted.result.metadata,
+      code: "PROMOTION_PROOF_INVALID",
+      detail: `${invalidPromoted.partition.id} cannot be composed: ${invalid.get(invalidPromoted.partition.id)}`,
+    };
+  }
+
+  const invalidRead = reads.find(({ result }) =>
+    result.kind === "STORE_UNREACHABLE" && result.code === "PROMOTION_PROOF_INVALID"
+  );
+  if (invalidRead?.result.kind === "STORE_UNREACHABLE") return invalidRead.result;
+
+  const storeFailure = reads
+    .map(({ result }) => result)
+    .find((result): result is Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "STORE_UNREACHABLE" }> => result.kind === "STORE_UNREACHABLE");
+  const fixtureEligible = allowUnconfiguredBootstrap && reads.every(({ result }) =>
+    result.kind === "NOT_RECORDED" || (
+      result.kind === "STORE_UNREACHABLE" &&
+      (result.code === "STORE_NOT_CONFIGURED" || result.code === "READ_NOT_INITIALIZED")
+    ),
+  );
+  if (storeFailure && !fixtureEligible) return storeFailure;
+  if (fixtureEligible) {
+    const fixture = readSnapshot(options.root);
+    if (fixture) {
+      return {
+        kind: "BOOTSTRAP",
+        value: fixture,
+        metadata: {
+          recordClass: MEETINGS_RECORD_CLASS,
+          scope: MEETINGS_SCOPE,
+          sourceId: MEETINGS_SOURCE_ID,
+          version: fixture.generatedAt,
+          versionId: `bootstrap:${MEETINGS_RECORD_CLASS}:${MEETINGS_SCOPE}:${fixture.generatedAt}`,
+          lastKnownGoodVersionId: null,
+          sourceThrough: latestSourceInstant(fixture),
+          retrievedAt: fixture.generatedAt,
+          promotedAt: null,
+          stale: "UNKNOWN",
+          staleAt: null,
+        },
+        detail: "No source/body pointer exists; the explicit test-only first-bootstrap fixture was selected.",
+      };
+    }
+  }
+  if (storeFailure) return storeFailure;
+  return {
+    kind: "NOT_RECORDED",
+    value: null,
+    metadata: {
+      recordClass: MEETINGS_RECORD_CLASS,
+      scope: MEETINGS_SCOPE,
+      sourceId: null,
+      version: null,
+      versionId: null,
+      lastKnownGoodVersionId: null,
+      sourceThrough: null,
+      retrievedAt: null,
+      promotedAt: null,
+      stale: "UNKNOWN",
+      staleAt: null,
+    },
+    detail: "The store answered, but no proof-valid source/body meetings partition has been promoted.",
+  };
+}
+
+/** Convert the typed state to data or a loud serving failure. */
+export function requireMeetingsProjection(
+  result: MeetingsProjectionReadResult,
+): MeetingsSnapshot {
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") return result.value;
+  if (result.kind === "STORE_UNREACHABLE") {
+    throw new CivicDataStoreUnavailableError(result);
+  }
+  throw new Error(result.detail);
+}
+
+export interface ReaderProofMeetingPartitionAuthority {
+  readonly contractId: string;
+  readonly kind: "PROMOTED" | "NOT_RECORDED";
+  readonly versionId: string | null;
+}
+
+export interface ReaderProofMeetingsExpectedAuthority {
+  /** Exact counts already validated against the phase import receipt. */
+  readonly meetingPartitionsWithLkg: number;
+  readonly meetingPartitionsWithoutLkg: number;
+  /** Exact legacy aggregate facts authenticated by the phase import receipt. */
+  readonly legacyMeetingsAggregate: {
+    readonly factSha256: string;
+    readonly meetingRowCount: number;
+    readonly agendaDocumentRowCount: number;
+  };
+  /** Exact imported membership and promoted version identities. */
+  readonly partitions: readonly ReaderProofMeetingPartitionAuthority[];
+}
+
+function readerProofExpectedMeetingAuthority(
+  expected: ReaderProofMeetingsExpectedAuthority | undefined,
+): ReadonlyMap<string, ReaderProofMeetingPartitionAuthority> {
+  if (!expected) {
+    throw new Error("Meeting Reader proof expected phase-import authority was not provided.");
+  }
+  if (
+    !expected.legacyMeetingsAggregate ||
+    !/^[a-f0-9]{64}$/.test(expected.legacyMeetingsAggregate.factSha256) ||
+    !Number.isSafeInteger(expected.legacyMeetingsAggregate.meetingRowCount) ||
+    expected.legacyMeetingsAggregate.meetingRowCount <= 0 ||
+    !Number.isSafeInteger(expected.legacyMeetingsAggregate.agendaDocumentRowCount) ||
+    expected.legacyMeetingsAggregate.agendaDocumentRowCount <= 0
+  ) {
+    throw new Error("Meeting Reader proof expected legacy aggregate authority is invalid.");
+  }
+  const registered = new Set(MEETING_PARTITION_CONTRACTS.map(({ id }) => id));
+  const ids = expected.partitions.map(({ contractId }) => contractId);
+  if (
+    ids.length !== registered.size ||
+    new Set(ids).size !== ids.length ||
+    ids.some((id) => !registered.has(id))
+  ) {
+    throw new Error("Meeting Reader proof expected authority has a missing, duplicate, or unexpected partition.");
+  }
+  if (
+    !Number.isSafeInteger(expected.meetingPartitionsWithLkg) ||
+    expected.meetingPartitionsWithLkg < 0 ||
+    !Number.isSafeInteger(expected.meetingPartitionsWithoutLkg) ||
+    expected.meetingPartitionsWithoutLkg < 0 ||
+    expected.meetingPartitionsWithLkg + expected.meetingPartitionsWithoutLkg !== registered.size
+  ) {
+    throw new Error("Meeting Reader proof expected authority counts do not cover the registered partition denominator.");
+  }
+  let promoted = 0;
+  let notRecorded = 0;
+  for (const partition of expected.partitions) {
+    if (partition.kind === "PROMOTED") {
+      promoted += 1;
+      if (!partition.versionId) {
+        throw new Error(`${partition.contractId} expected promoted meeting partition has no version identity.`);
+      }
+      continue;
+    }
+    if (partition.kind === "NOT_RECORDED") {
+      notRecorded += 1;
+      if (partition.versionId !== null) {
+        throw new Error(`${partition.contractId} expected NOT_RECORDED meeting partition names a version.`);
+      }
+      continue;
+    }
+    throw new Error(`${partition.contractId} expected meeting partition has an invalid disposition.`);
+  }
+  if (
+    promoted !== expected.meetingPartitionsWithLkg ||
+    notRecorded !== expected.meetingPartitionsWithoutLkg
+  ) {
+    throw new Error("Meeting Reader proof expected authority counts differ from its exact membership.");
+  }
+  return new Map(expected.partitions.map((partition) => [partition.contractId, partition]));
+}
+
+/**
+ * Documentary Reader proof requires a complete authority readback, including
+ * every intentional no-LKG partition. A partially unreadable authority cannot
+ * be hidden by the aggregate's normal source-isolation behavior. The expected
+ * membership is supplied independently from the already-validated phase
+ * import receipt; the projection under test may never authorize itself.
+ */
+export function requireReaderProofMeetingsProjection(
+  result: MeetingsProjectionReadResult,
+  expectedAuthority: ReaderProofMeetingsExpectedAuthority,
+): MeetingsSnapshot {
+  const expectedById = readerProofExpectedMeetingAuthority(expectedAuthority);
+  if (result.kind !== "PROMOTED") {
+    throw new Error(`Meeting Reader proof authority is ${result.kind}: ${result.detail}`);
+  }
+  const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
+  const actual = result.partitions.map(({ contractId }) => contractId);
+  if (
+    actual.length !== registered.size ||
+    new Set(actual).size !== actual.length ||
+    actual.some((id) => !registered.has(id))
+  ) {
+    throw new Error("Meeting Reader proof authority has a missing, duplicate, or unexpected partition readback.");
+  }
+  let promoted = 0;
+  let notRecorded = 0;
+  for (const partition of result.partitions) {
+    const contract = registered.get(partition.contractId)!;
+    if (
+      partition.source !== contract.meetingSource ||
+      partition.bodyId !== contract.bodyId ||
+      partition.scope !== contract.scope
+    ) {
+      throw new Error(`${partition.contractId} meeting partition readback identity differs from its registered contract.`);
+    }
+    if (partition.kind === "PROMOTED") {
+      promoted += 1;
+      if (!partition.versionId) throw new Error(`${partition.contractId} promoted meeting partition has no version identity.`);
+    } else if (partition.kind === "NOT_RECORDED") {
+      notRecorded += 1;
+      if (partition.versionId !== null) throw new Error(`${partition.contractId} NOT_RECORDED meeting partition names a version.`);
+    } else {
+      throw new Error(`${partition.contractId} meeting partition is ${partition.kind}: ${partition.detail ?? "no detail"}`);
+    }
+    const expected = expectedById.get(partition.contractId)!;
+    if (partition.kind !== expected.kind) {
+      throw new Error(
+        `${partition.contractId} meeting partition disposition differs from phase import authority: ` +
+          `expected ${expected.kind}, got ${partition.kind}.`,
+      );
+    }
+    if (partition.versionId !== expected.versionId) {
+      throw new Error(`${partition.contractId} meeting partition version differs from phase import authority.`);
+    }
+  }
+  if (
+    promoted !== expectedAuthority!.meetingPartitionsWithLkg ||
+    notRecorded !== expectedAuthority!.meetingPartitionsWithoutLkg
+  ) {
+    throw new Error("Meeting Reader proof authority counts differ from the exact phase import denominator.");
+  }
+  return result.value;
 }
 
 /**
@@ -574,6 +1072,18 @@ export interface SnapshotCarriedMeta {
 /** What the client is told about the snapshot behind its answer. */
 export interface SnapshotClientMeta {
   generatedAt: string;
+  /** Which durable/read fallback state supplied these rows. */
+  dataState?: "PROMOTED" | "BOOTSTRAP";
+  /** Canonical/LKG metadata stays visible instead of being inferred from age. */
+  versionId?: string | null;
+  lastKnownGoodVersionId?: string | null;
+  sourceThrough?: string | null;
+  retrievedAt?: string | null;
+  promotedAt?: string | null;
+  stale?: CivicDataReadMetadata["stale"];
+  staleAt?: string | null;
+  /** Exact canonical versions (or explicit gaps) behind the composed Reader view. */
+  partitions?: readonly MeetingPartitionReadback[];
   /** Present only when the snapshot actually holds carried rows. */
   carried?: SnapshotCarriedMeta;
   sources: Array<{
@@ -587,13 +1097,33 @@ export interface SnapshotClientMeta {
   }>;
 }
 
-export function snapshotClientMeta(snapshot: MeetingsSnapshot): SnapshotClientMeta {
+export function snapshotClientMeta(
+  snapshot: MeetingsSnapshot,
+  read?: {
+    readonly kind: "PROMOTED" | "BOOTSTRAP";
+    readonly metadata: CivicDataReadMetadata;
+    readonly partitions?: readonly MeetingPartitionReadback[];
+  },
+): SnapshotClientMeta {
   const stamps = snapshot.meetings.flatMap((m) =>
     m.carried ? [m.carried.lastFreshAt] : [],
   );
   const days = new Set(stamps.map((iso) => iso.slice(0, 10)));
   return {
     generatedAt: snapshot.generatedAt,
+    ...(read
+      ? {
+          dataState: read.kind,
+          versionId: read.metadata.versionId,
+          lastKnownGoodVersionId: read.metadata.lastKnownGoodVersionId,
+          sourceThrough: read.metadata.sourceThrough,
+          retrievedAt: read.metadata.retrievedAt,
+          promotedAt: read.metadata.promotedAt,
+          stale: read.metadata.stale,
+          staleAt: read.metadata.staleAt,
+          ...(read.partitions ? { partitions: read.partitions } : {}),
+        }
+      : {}),
     ...(stamps.length > 0
       ? {
           carried: {
@@ -629,15 +1159,18 @@ export function snapshotClientMeta(snapshot: MeetingsSnapshot): SnapshotClientMe
  * Lives here rather than in the meeting registry because this module is
  * server-only (node:fs) and the registry sits on the client-reachable graph.
  */
-export function getActiveSnapshotMeta(): SnapshotClientMeta | null {
+export async function getActiveSnapshotMeta(): Promise<SnapshotClientMeta | null> {
   const name = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
-  if (name !== "snapshot") return null;
-  try {
-    const snapshot = readSnapshot();
-    return snapshot ? snapshotClientMeta(snapshot) : null;
-  } catch {
-    // The route degrades to no freshness line rather than failing the search;
-    // the snapshot source itself will throw loudly if it cannot serve.
-    return null;
+  if (process.env.NODE_ENV === "production" && name !== "snapshot") {
+    throw new Error(`PRODUCTION_MEETING_SOURCE_MUST_BE_CANONICAL:${name}`);
   }
+  if (name !== "snapshot") return null;
+  const read = await readMeetingsProjection();
+  if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+    return snapshotClientMeta(read.value, read);
+  }
+  if (read.kind === "STORE_UNREACHABLE") {
+    throw new CivicDataStoreUnavailableError(read);
+  }
+  return null;
 }

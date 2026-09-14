@@ -8,11 +8,16 @@ export interface ReaderPositionAnswer extends PositionAnswer {
   passages: (PositionPassage & { canonicalSubjectId: string })[];
 }
 
-/** One sourced passage answer, whether the caller has an official or card ID. */
-export function readerPositionsFor(subjectId: string, topic: string, corpus: StatementCorpus = unifiedCorpus()): ReaderPositionAnswer {
-  const keys = verifiedReaderPersonKeys(subjectId);
-  const selected = corpus.snapshots.filter((snapshot) => keys.includes(snapshot.subjectId));
-  const answers = keys.map((key) => ({ key, answer: positionsFor(key, topic, corpus) }));
+/** Search only the exact identity keys already established by the caller. */
+export function readerPositionsForKeys(
+  subjectId: string,
+  topic: string,
+  corpus: StatementCorpus,
+  keys: readonly string[],
+): ReaderPositionAnswer {
+  const canonicalKeys = [...new Set(keys.length ? keys : [subjectId])].sort();
+  const selected = corpus.snapshots.filter((snapshot) => canonicalKeys.includes(snapshot.subjectId));
+  const answers = canonicalKeys.map((key) => ({ key, answer: positionsFor(key, topic, corpus) }));
   const seen = new Set<string>();
   const passages = answers.flatMap(({ key, answer }) => answer.passages.flatMap((passage) => {
     const identity = `${passage.snapshotId}#${passage.quote}`;
@@ -22,7 +27,12 @@ export function readerPositionsFor(subjectId: string, topic: string, corpus: Sta
   }));
   passages.sort((a, b) => b.matchedTerms.length - a.matchedTerms.length || b.retrievedAt.localeCompare(a.retrievedAt) || a.snapshotId.localeCompare(b.snapshotId));
   const readable = selected.filter((snapshot) => snapshot.extraction === "ok" && snapshot.text);
-  return { kind: passages.length ? "MATCHED" : readable.length ? "SEARCHED_NOTHING_MATCHED" : "NOT_YET_COLLECTED", topic, passages, canonicalSubjectKeys: keys,
+  return { kind: passages.length ? "MATCHED" : readable.length ? "SEARCHED_NOTHING_MATCHED" : "NOT_YET_COLLECTED", topic, passages, canonicalSubjectKeys: canonicalKeys,
     searched: { pages: new Set(readable.map((snapshot) => snapshot.url)).size, snapshots: readable.length, unreadable: selected.length - readable.length, presentButUnquotable: answers.reduce((count, { answer }) => count + answer.searched.presentButUnquotable, 0) },
     theirPage: answers.find(({ answer }) => answer.theirPage)?.answer.theirPage ?? null };
+}
+
+/** One sourced passage answer, whether the caller has an official or card ID. */
+export function readerPositionsFor(subjectId: string, topic: string, corpus: StatementCorpus = unifiedCorpus()): ReaderPositionAnswer {
+  return readerPositionsForKeys(subjectId, topic, corpus, verifiedReaderPersonKeys(subjectId));
 }

@@ -430,16 +430,16 @@ console.log(`walking every held credential — zips ${zips.join(", ")}`);
   });
 }
 
-/* ── 7. LEGISCAN_API_KEY — already wired, stated for completeness ────────── */
+/* ── 7. LEGISCAN_API_KEY — intentionally not spent in production ────────── */
 results.push({
   key: "LEGISCAN_API_KEY",
   what: "LegiScan — state bills and roll calls",
   called: false,
   status: null,
   returned:
-    "WIRED and on a daily schedule (scripts/fetch-legiscan.mts, " +
-    "refresh-legiscan-snapshot.yml). Not re-walked here — it is a bill and " +
-    "roll-call source, and closes no Kelly field about a person.",
+    "NOT A PRODUCTION CALLER. The legacy LegiScan writer and GitHub refresh workflow " +
+    "were retired; active bill and roll-call contracts use official publishers. The key " +
+    "is intentionally not spent here because it closes no Kelly field about a person.",
   fieldsClosed: 0,
   wouldClose: "sponsored-bill records for the state delegation, which is a positions question",
   records: [],

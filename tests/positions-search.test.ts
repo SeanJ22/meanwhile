@@ -4,6 +4,11 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { positionsFor } from "../lib/corpus/positions.ts";
+import { currentOfficeholderStatements } from "../lib/corpus/data-plane.ts";
+import {
+  validateStatementIdentityFirstSeedEvidence,
+  type StatementIdentityFirstSeedEvidence,
+} from "../lib/corpus/statement-identity-transfer.ts";
 import { unifiedCorpus, unifiedCorpusCounts } from "../lib/corpus/unified.ts";
 import { currentExtraction } from "../lib/candidates/corpus.ts";
 import { getCandidateCorpus } from "../lib/candidates/positions.ts";
@@ -33,11 +38,22 @@ const ROOT = join(import.meta.dirname, "..");
 
 test("13: the search index is the UNION of both statement corpora", () => {
   const c = unifiedCorpusCounts();
+  const corpus = unifiedCorpus();
+  const statementSubjects = new Set(
+    currentOfficeholderStatements().snapshots.map(({ subjectId }) => subjectId),
+  );
+  const candidateSubjects = new Set(
+    currentExtraction(getCandidateCorpus().documents).map(({ candidateKey }) => candidateKey),
+  );
 
   // Denominators stated. A union that quietly became one corpus again would
   // reproduce the defect SILENTLY — the search would go on answering with a
   // sentence rather than an error.
-  assert.ok(c.statements > 20, `officeholder snapshots collapsed to ${c.statements}`);
+  assert.ok(c.statements >= 19, `production-eligible officeholder snapshots collapsed to ${c.statements}`);
+  assert.ok(
+    corpus.snapshots.every((snapshot) => !snapshot.subjectId.startsWith("plural:")),
+    "retired intermediary identities must not re-enter the canonical statement projection",
+  );
   assert.ok(
     c.candidateDocuments > 40,
     `candidate documents collapsed to ${c.candidateDocuments}`,
@@ -47,9 +63,42 @@ test("13: the search index is the UNION of both statement corpora", () => {
     c.statements + c.candidateDocuments,
     "the union must be exactly both halves",
   );
-  assert.ok(
-    c.subjects >= c.statementSubjects + c.candidateSubjects - 2,
-    "the two key spaces should barely overlap; a big overlap means a key collision",
+
+  // The permanent first-seed transfer deliberately aligns an officeholder's
+  // historical statements with that same person's candidacy key. That makes
+  // the old "at most two overlaps" heuristic false. Permit overlap only when
+  // the cryptographically frozen, reviewed bridge names the exact candidacy;
+  // any other shared key is still a collision and fails closed.
+  const bridge = JSON.parse(
+    readFileSync(
+      join(ROOT, "lib", "corpus", "fixtures", "statement-identity-first-seed-v1.json"),
+      "utf8",
+    ),
+  ) as StatementIdentityFirstSeedEvidence;
+  validateStatementIdentityFirstSeedEvidence(bridge);
+  const bridgeTargetsPresentInCandidateCorpus = bridge.rows
+    .flatMap(({ status, candidacy }) => status === "RESOLVED" && candidacy !== null
+      ? [candidacy.candidacyId]
+      : [])
+    .filter((subjectId) => candidateSubjects.has(subjectId))
+    .sort();
+  const actualOverlap = [...statementSubjects]
+    .filter((subjectId) => candidateSubjects.has(subjectId))
+    .sort();
+  assert.deepEqual(
+    actualOverlap,
+    bridgeTargetsPresentInCandidateCorpus,
+    "the corpora may share only exact candidacy identities established by the frozen transfer bridge",
+  );
+  assert.equal(
+    c.subjects,
+    c.statementSubjects + c.candidateSubjects - actualOverlap.length,
+    "the subject union must lose exactly the reviewed shared identities and no others",
+  );
+  assert.equal(
+    new Set(corpus.snapshots.map(({ id }) => id)).size,
+    corpus.snapshots.length,
+    "statement/document record identities must remain unique across the union",
   );
   console.log(
     `positions index: ${c.statements} + ${c.candidateDocuments} = ${c.total} snapshots, ` +

@@ -2,18 +2,44 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { launchGuarded } from "./browser.mts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, searchTerms, type PositionAnswer } from "../lib/corpus/positions.ts";
 import { reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { ROSTER_FILES } from "../lib/coverage/artifacts.ts";
+import { PRODUCTION_OFFICEHOLDER_ROSTER_FILES } from "../lib/officials/roster-authority.ts";
+import { configuredReaderProofPath } from "../lib/holdings/reader-proof-environment.ts";
 import { rosterPath } from "../lib/holdings/runtime-paths.ts";
+import { prepareReaderProofRuntime } from "./lib/reader-proof-runtime.ts";
 
-const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
+export function readerPositionEvidencePaths(
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): { readonly candidateCorpusMap: string; readonly ballotPlan: string } {
+  return {
+    candidateCorpusMap: configuredReaderProofPath(
+      environment,
+      "READER_CANDIDATE_CORPUS_MAP",
+      "docs/evidence/reader-last-mile-candidate-corpus-map.json",
+    ),
+    ballotPlan: configuredReaderProofPath(
+      environment,
+      "READER_BALLOT_PLAN",
+      "docs/evidence/reader-last-mile-ballot-plan.json",
+    ),
+  };
+}
+
+export async function generateReaderPositionEvidence(
+  environment: Readonly<Record<string, string | undefined>> = process.env,
+): Promise<void> {
+const base = environment.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
-const inventory = JSON.parse(readFileSync("docs/evidence/reader-last-mile-candidate-corpus-map.json", "utf8")) as { records: { auditId: string; snapshotId: string; subjectId: string }[] };
-const plan = JSON.parse(readFileSync("docs/evidence/reader-last-mile-ballot-plan.json", "utf8")) as { chosen: { zip: string }[] };
+await prepareReaderProofRuntime();
+const paths = readerPositionEvidencePaths(environment);
+const inventory = JSON.parse(readFileSync(paths.candidateCorpusMap, "utf8")) as { records: { auditId: string; snapshotId: string; subjectId: string }[] };
+const plan = JSON.parse(readFileSync(paths.ballotPlan, "utf8")) as { chosen: { zip: string }[] };
 const corpus = unifiedCorpus();
 const pending = new Map(inventory.records.map((record) => [record.snapshotId, record]));
 floored("candidate corpus position controls", "every eligible candidate snapshot in the canonical census", pending.size, inventory.records.length);
@@ -83,9 +109,15 @@ try {
     console.log(JSON.stringify({ zip, proved: proofs.length, remaining: pending.size }));
   }
 } finally { await context.close(); await browser.close(); }
-const sourcePaths = ["data/candidates/corpus-2026.json", "data/corpus/statements.json", "data/states/az/identity/az-2026-candidate-registry.json", "data/states/az/identity/az-2026-certified-lineup-reconciliation.json", "lib/funding/official-candidacies.json", "lib/funding/campaign-money.ts", "lib/identity/reader-person.ts", "lib/identity/az-2026.ts", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "app/api/positions/[subject]/[topic]/route.ts", "components/officials/positions-section.tsx", "components/ballot/candidate-battlecard.tsx", ...ROSTER_FILES.map(rosterPath)];
+const sourcePaths = ["data/candidates/corpus-2026.json", "data/corpus/statements.json", "data/states/az/identity/az-2026-candidate-registry.json", "data/states/az/identity/az-2026-certified-lineup-reconciliation.json", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", "lib/identity/reader-person.ts", "lib/identity/az-2026.ts", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "app/api/positions/[subject]/[topic]/route.ts", "components/officials/positions-section.tsx", "components/ballot/candidate-battlecard.tsx", ...PRODUCTION_OFFICEHOLDER_ROSTER_FILES.map(rosterPath)];
 const sourceHashes = Object.fromEntries(sourcePaths.map(path => [path, createHash("sha256").update(readFileSync(path)).digest("hex")]));
 const output = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes, execution: "Actual candidate battlecard gestures, typed source-grounded query, real positions HTTP route, every returned quotation/citation/count inspected in rendered DOM.", expectedCount: inventory.records.length, proofs, dispositions, unresolved: [...pending.values()] };
 writeFileSync("docs/evidence/reader-last-mile-positions.json", JSON.stringify(output, null, 2) + "\n");
 assert.equal(pending.size, 0, "Every current reader-eligible candidate snapshot must have an actual reader query or explicit quotation exclusion.");
 console.log(JSON.stringify({ proofs: proofs.length, dispositions: dispositions.length, unresolved: pending.size }));
+}
+
+const main = typeof process.argv[1] === "string" &&
+  resolve(process.argv[1]).toLowerCase() === resolve(fileURLToPath(import.meta.url)).toLowerCase();
+
+if (main) await generateReaderPositionEvidence();

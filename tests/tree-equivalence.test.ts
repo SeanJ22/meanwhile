@@ -36,7 +36,6 @@ import {
   type EquivalenceFacts,
 } from "../lib/control-plane/shipping/tree-equivalence.ts";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
-import { classifyCommitCost } from "../lib/ops/deploy-paths.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const BUILD_CHECK = join(ROOT, ".github", "workflows", "build-check.yml");
@@ -329,15 +328,7 @@ test("every declared verdict and reason is reachable from the matrix above", () 
  * AN ATTESTATION MAY NEVER REST ON AN ATTESTATION
  * ═════════════════════════════════════════════════════════════════════════ */
 
-test("a pull request is FULL by construction, so a candidate's green was earned fully", () => {
-  /*
-   * The adapter passes `null` for a pull request, and null is UNKNOWN -> FULL.
-   * Asserted against the SHIPPED classifier, which is what makes the
-   * no-chaining argument a fact rather than a paragraph in a header.
-   */
-  const decision = classifyCommitCost(null);
-  assert.equal(decision.cost, "FULL");
-  assert.equal(decision.klass, "UNKNOWN");
+test("a candidate's green cannot be another exact-tree attestation", () => {
   assert.equal(attestationCannotChain.legs.length, 3);
 });
 
@@ -392,8 +383,8 @@ test("no expensive step in either job runs on an attested head", () => {
     for (const { i } of hits) {
       /*
        * Walk back to this step's own `if:`. A step is guarded when its `if:`
-       * requires `expensive == 'yes'` — which excludes no-certified, no-cheap
-       * and no-preflight together — or when it explicitly excludes
+       * requires `expensive == 'yes'` — which excludes no-certified and
+       * no-preflight together — or when it explicitly excludes
        * no-certified.
        */
       let guarded = false;

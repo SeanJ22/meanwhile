@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 573,
-    "named": 6139,
-    "dynamic": 28
+    "files": 625,
+    "named": 6501,
+    "dynamic": 27
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -34,6 +34,15 @@
         "a session cannot satisfy the doctrine by opening a tracker row",
         "the AGENTS.md mirror has not drifted from current law",
         "the acquisition doctrine is CURRENT canonical law with author provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/action-outcome-data-plane.test.ts": {
+      "names": [
+        "a failed Legistar sitting is durable, cannot replace LKG, and cannot affect a later source-scoped promotion",
+        "an unreceipted official action is held alone while its prior member and supported authority metadata remain live",
+        "one blocked Arizona publication cannot hold an unrelated valid official action",
+        "store failure never reopens tracked action or outcome snapshots"
       ],
       "dynamic": 0
     },
@@ -178,7 +187,7 @@
         "ADM-15: every readiness ZIP row carries a next step and a Deploy-fleet-here intent that returns to the state's page",
         "ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a decision whose card has left the snapshot is still listed",
         "ADM-16: a fresh decision is recorded and WAITING on the tracker and the work; an applied one names the row and the work opened",
-        "ADM-16: the page renders the split and the receipt, the routes return to the console page the form came from, and the sync is scheduled on the runner",
+        "ADM-16: the page renders the split and receipt, while tracked tracker synchronization stays outside the immutable runtime",
         "ADM-16: the whole way out, on a file-backed control plane: record → pull → the applied tracker rows → canonicalize → a receipt with every step DONE",
         "ADM-17: a role whose attempts all ran without a paid model is $0 by design with its non-dollar measures; a model role with no dollars is unmeasured",
         "ADM-18: the reader-suite section leads with what it measures and collapses to one line when there is no grid",
@@ -199,7 +208,7 @@
       "names": [
         "ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current contract and the clearing command",
         "ADM-2: the console header navigates inside a transition, shows the choice at once, and the read path skips the schema bootstrap",
-        "ADM-3: FRESHNESS reads the measured shadow risk through one shared projection in both scripts",
+        "ADM-3: FRESHNESS reads measured canonical-cycle risk through the owner publisher",
         "ADM-3: a stale reader check reads as one plain sentence, and the scale names all four grades",
         "ADM-4: a predicate row is a BLOCKED_WHILE wall with no options and its last recheck; an acknowledgement row is ACKNOWLEDGE",
         "ADM-4: a snapshot written before the kind field existed still classifies by verifiability",
@@ -477,14 +486,14 @@
         "§6: a route NOT called absent is one the code really does name",
         "§6: a route called absent from this repository really is absent from it",
         "§6: a route that needs no key never claims a reading of one",
-        "§6: a route the last run did not read has no last-read date, and says whose gap that is",
-        "§6: an open debt turns the grade red and says since when",
-        "§6: no run record at all is a gap, never a zero and never a green",
         "§6: presence anywhere is presence, and it needs every part of a pair",
-        "§7: every route that says it rides the nightly run names a real refresh source",
-        "§7: exactly one refresh workflow runs on a clock, and it is the one the page names",
-        "§7: the cron detector catches a schedule when there is one",
-        "§7: the five per-source refreshes are press-only, and none has grown a schedule back"
+        "§6: routine route health and dates appear only in the canonical panel",
+        "§6: the capability registry has no tracked runtime-state input or fallback",
+        "§7: GitHub carries no routine data or operations clock",
+        "§7: every capability-to-production-contract join names a permanent contract",
+        "§7: every obsolete refresh workflow definition is deleted",
+        "§7: the terminal-zero workflow detector catches a planted cron",
+        "§7: the wider capability registry never reconstructs a second routine clock"
       ],
       "dynamic": 0
     },
@@ -513,6 +522,7 @@
         "no offered control ships anything, so the release-execution verdict still stands",
         "no sentence the model produces carries a machine constant or the word our",
         "the commit production was built from reads as live, and that outranks the decision on it",
+        "the exact durable post-deploy outcome reaches the owner-facing lifecycle",
         "the fixture the page validates its heartbeat reading with is a real code identity",
         "the page is uncached and reads the model rather than deriving one",
         "the page must not fork the exact-commit review writer",
@@ -542,6 +552,7 @@
         "a meeting with no agenda link yields null, not a fabricated fetch",
         "a revised agenda appends beside the old version, never over it",
         "an unchanged document is not stored twice",
+        "binary Office bytes retain their URL/hash but never become Reader text or JSONB NULs",
         "contentHashOf is stable for identical bytes",
         "extractHtmlText strips markup and scripts, keeps the words",
         "retrieveAgendaDocument extracts HTML text and records provenance"
@@ -604,6 +615,13 @@
         "every declaration states a basis — a bare state is a guess about a vendor",
         "ical is ABSENT, and that is an ANSWER rather than outstanding work",
         "legistar is PRESENT, and its basis names the field that makes it observable"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-source-isolation.test.ts": {
+      "names": [
+        "outcome-store failure cannot erase an independently held meeting or listing identity",
+        "registry failure cannot erase held outcome records"
       ],
       "dynamic": 0
     },
@@ -774,6 +792,14 @@
       ],
       "dynamic": 0
     },
+    "tests/apply-migrations-dry.test.ts": {
+      "names": [
+        "db:apply --dry plans against an absent journal using SELECT only",
+        "db:apply --dry preserves applied/pending planning without issuing DDL",
+        "non-dry db:apply keeps setup and migration journalling fail-closed"
+      ],
+      "dynamic": 0
+    },
     "tests/area-facts.test.ts": {
       "names": [
         "all three covered states answer all seven mover questions",
@@ -925,8 +951,8 @@
         "ASK-05: every mode returns the WHOLE contract, not two or three keys",
         "ASK-05: the topic sweep is EVIDENCE under the one answer, never a second answer",
         "ASK-06 (a): a reader asking about their sitting representative gets his roll calls",
-        "ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never silence",
-        "ASK-06 (c): the committed person bridge preserves the held Senate office beside a House candidacy",
+        "ASK-06 (b): a candidate without a permanent voting-office identity gets a NAMED gap, never silence",
+        "ASK-06 (c): a retired intermediary bridge cannot attach Senate votes beside a House candidacy",
         "ASK-24: 'Explain Prop 141 to me' carries NOTHING off the measure — no Senate bullet, no unconnected people",
         "BALLOT: a contest resolves and lists who filed for it",
         "BALLOT: a measure resolves from the short form a reader actually types",
@@ -1437,6 +1463,12 @@
       ],
       "dynamic": 0
     },
+    "tests/ballot-nh-roster-preload.test.ts": {
+      "names": [
+        "a fresh ballot process preloads the permanent NH roster and fails closed on unavailable or absent authority"
+      ],
+      "dynamic": 0
+    },
     "tests/ballot-picks.test.ts": {
       "names": [
         "3e: the picks disclosure is stated ONCE, on the ballot page, with the reaction distinction",
@@ -1447,6 +1479,16 @@
         "the picks module never transmits — no fetch, no navigator.sendBeacon, no import of client APIs",
         "the transparency page discloses picks as device-local",
         "the transparency page says the card is drawn on-device"
+      ],
+      "dynamic": 0
+    },
+    "tests/ballot-source-isolation.test.ts": {
+      "names": [
+        "a planted NJ authority failure cannot take down AZ or NH Readers and stays explicit for NJ",
+        "a supporting ballot authority failure cannot suppress the ballot or another supporting family",
+        "all production ballot entry points use state-scoped selection",
+        "ballot authority selection happens from exact state or target identity before a read",
+        "reaction intake opens only the authority named by its submitted target family"
       ],
       "dynamic": 0
     },
@@ -1670,8 +1712,8 @@
         "no passage this matcher produces is template chrome",
         "structural exclusion removes a marked container even when it is a div",
         "structural exclusion removes nav, header, footer and aside",
-        "the collector strips chrome before extracting, and says which extractor it is",
         "the ellipsis sits outside the word, with a space",
+        "the legacy Git collector cannot bypass permanent manual data-plane admission",
         "the matched phrase is never cut in half by the window",
         "the repetition test says when it could not run",
         "two revisions at the SAME extractor both survive — that is the record"
@@ -1876,6 +1918,18 @@
       ],
       "dynamic": 0
     },
+    "tests/campaign-finance-data-plane.test.ts": {
+      "names": [
+        "AZ, NH, and NJ finance candidates bind exact source/class/scope and promote with record-level receipts",
+        "Pima filing index and transactions promote together; a capped successor preserves LKG",
+        "a bad state candidate and a failed source attempt preserve the prior GOOD pointer",
+        "documentary state-money proof inventory binds every promoted authority and fails closed otherwise",
+        "finance contracts are owner-only and executable paths cannot write tracked runtime truth",
+        "one invalid state projection cannot suppress or erase another state's Reader",
+        "state Reader follows promoted pointers and never selects a tracked fixture after store failure"
+      ],
+      "dynamic": 0
+    },
     "tests/campaign-finance-firewall.test.ts": {
       "names": [
         "NH: Executive Council is a STATE office, not a town council",
@@ -1929,7 +1983,7 @@
         "B14: the denominator is measured from the ballot, not quoted",
         "D05: a held-but-unreadable page is not a search that came back empty",
         "D05: a passage is a short quote with its link and date, never the page",
-        "D05: a wall is a rung, and the archive is wired in rather than walked by hand",
+        "D05: a wall remains durable evidence after the legacy Git collector is retired",
         "D05: every answer that searched carries its own scope",
         "D05: the corpus is real, append-only, and states what it could not reach",
         "D05: the revision detector hashes the TEXT, not the bytes",
@@ -1980,6 +2034,13 @@
         "every candidate-links key resolves to a real candidacy or lineup nominee",
         "every link was fetch-verified: url, verification sentence, and date present",
         "no ranking vocabulary anywhere in the links file"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-profile-change-set.test.ts": {
+      "names": [
+        "an exact duplicate hunt remains two members and yields one exact removal",
+        "candidate-profile hunt observations have unique, order-independent exact member identities"
       ],
       "dynamic": 0
     },
@@ -2090,41 +2151,19 @@
       ],
       "dynamic": 0
     },
-    "tests/ci-cost.test.ts": {
-      "names": [
-        "RULING 278 — Build Check answers cheaply and EXPLICITLY rather than disappearing",
-        "RULING 278 — Build Check classifies before any expensive step, in every job",
-        "RULING 278 — UNKNOWN is FULL, and an unreadable list is not an empty one",
-        "RULING 278 — a `paths-ignore:` filter added to Build Check is caught",
-        "RULING 278 — a hand-rolled path condition is caught",
-        "RULING 278 — an ops-only entry no pusher is granted is caught",
-        "RULING 278 — dropping the condition from an expensive step is caught",
-        "RULING 278 — every expensive step in Build Check consumes the classifier's verdict",
-        "RULING 278 — every ops-only artifact names guards the cheap path actually runs",
-        "RULING 278 — every ops-only entry is an exact file, on disk, with its reason stated",
-        "RULING 278 — every ops-only file is written to main by the scheduled pusher that declares it",
-        "RULING 278 — every step needing an install is gated on the CLASSIFICATION, not on a step output",
-        "RULING 278 — neither workflow keeps a second path-classification truth table",
-        "RULING 278 — no directory-wide skip may be resurrected",
-        "RULING 278 — the COMMITTED ops-only artifacts still hold their shape",
-        "RULING 278 — the class table: only a positively proven ops-only commit is cheap",
-        "RULING 278 — the ops-only set is a STRICT SUBSET of the non-shipping set",
-        "RULING 278 — the post-deploy observer consumes the same classifier, before it installs",
-        "RULING 278 — the shape check is shown catching a real malformation"
-      ],
-      "dynamic": 0
-    },
     "tests/ci-preflight.test.ts": {
       "names": [
         "a red preflight makes every required job fail loudly, and skips nothing into looking green",
         "every required job runs the preflight before it buys anything",
         "one step decides whether the expensive tier runs, and every expensive step asks it",
         "the browser and the suite are bought only on a head whose cheap tier is green",
+        "the certified suite executes owner-facing TSX projection contracts",
         "the closure walk actually follows a dynamic import",
         "the duplicate check reuses the one census and agrees with the suite's baseline",
         "the gates job runs the cheap checks before it fetches a browser or runs the suite",
         "the local door runs the preflight before the gate loop, and refuses rather than continuing",
         "the preflight checks are cheap, named, and both report",
+        "the preflight firewall supplies both production contract registries instead of failing as an instrument",
         "the preflight is declared as something the local door runs, not exempted from parity",
         "the preflight needs no dependency install — it runs on the bare checkout",
         "the preflight never stages, commits or otherwise mutates the tree",
@@ -2132,6 +2171,119 @@
         "visible-tree passes on a tree whose files are all tracked, and names the ones that are not"
       ],
       "dynamic": 1
+    },
+    "tests/civic-data-bootstrap-callers.test.ts": {
+      "names": [
+        "every bundled-bootstrap caller is enumerated and keeps an explicit fixture gate",
+        "literal bootstrap permission exists only behind the two explicit node-test branches",
+        "the meetings aggregate keeps its custom fixture boundary explicit and production-closed",
+        "the shared selector makes production bootstrap impossible even if a caller asks for it"
+      ],
+      "dynamic": 0
+    },
+    "tests/civic-data-durability-migration.test.ts": {
+      "names": [
+        "PDC 0026 database triggers preserve legal state order, immutable evidence, and current Reader binding",
+        "PDC 0026 keeps generated schema metadata aligned with the database-level identity constraints",
+        "PDC 0026 preflight has exact predicate coverage for every validating ADD constraint",
+        "PDC 0026 refuses every planted durable-corruption class and never repairs data in place"
+      ],
+      "dynamic": 0
+    },
+    "tests/civic-data-firewall.test.ts": {
+      "names": [
+        "Legistar adapters cannot reopen frozen tracked venue registries",
+        "a manual contract cannot reclaim a routine canonical record-class/scope authority",
+        "a retired data executable cannot survive behind a renamed package command",
+        "actual 673f1dd job-watch tracker commit shape is blocked at the deleted workflow/writer boundary",
+        "arbitrary-checkout control-plane bootstrap/proof writers cannot return as executable or package doors",
+        "candidate research holdings and statement history cannot regain production authority",
+        "canonical record-class/scope authority cannot be reclaimed under a different source id",
+        "civic-data firewall accepts one release-free adapter and clock per contract",
+        "civic-data firewall refuses every retired Plural/OpenStates production door",
+        "civic-data firewall refuses every retired federal-vote Git writer or Reader door",
+        "civic-data firewall refuses release calls, repository writers, duplicate authority, and unclassified rows",
+        "civic-data firewall refuses the exact scheduled bot-commit architecture",
+        "civic-data firewall requires both surviving federal-vote commands to promote",
+        "comment access gate accepts mapped canonical records and rejects seed fallbacks",
+        "deleted schedule-audit and Git-refresh bridge/revert implementations cannot return or hide behind a rename",
+        "every explicit production data command must prepare its own sanctioned write context",
+        "federal directory and registry runtime truth cannot return to tracked readers or writers",
+        "freshness/nightly tracked run stores are rejected while historical docs and fixtures remain evidence",
+        "meetings cannot regain an aggregate pointer, receipt, or hidden membership denominator",
+        "mutable curated Reader facts cannot reopen tracked fallbacks or Git writers",
+        "official actions and meeting outcomes cannot reopen tracked runtime authority",
+        "package aliases must preserve the exact installed-dispatcher contract mapping",
+        "production executables cannot bypass source-scoped evidence through the generic transition driver",
+        "registered data commands cannot hide Git or deploy machinery in imported helpers",
+        "registered data commands cannot hide any Node filesystem mutation in imported helpers",
+        "registered data-command closure follows package aliases and literal local child-script edges",
+        "registry seed recognition requires an actual import or filesystem read",
+        "reported four-path operational commits stay FULL and their routine writer is forbidden",
+        "retired Arizona filing and ACS adapters cannot regain callable tracked-file writers",
+        "routine data and runtime-ops workflows cannot regain a cron, contents write, or Git commit path",
+        "run 34232794631 regression: a source path cannot execute unrelated software certification",
+        "run 34232794631 regression: indirect helpers cannot smuggle software certification into acquisition or promotion",
+        "standing Scout ordering and health cannot consume tracked Reader certification state",
+        "terminal PDC guard follows renamed bootstrap capability, mint, bypass, store, promotion, plan, and test admissions",
+        "terminal PDC guard preserves historical trusted-LKG receipt validation and Admin interpretation",
+        "terminal PDC guard refuses every exact one-time trusted-LKG path and package door",
+        "the immutable standing runtime cannot invoke a tracked tracker or method-candidate writer",
+        "the repaired Git-shipping transition model cannot survive as a callable backup",
+        "the standing owner snapshot cannot turn tracked run or sweep outputs into live health",
+        "voting-sites and PRL commands and adapters remain promotion-only",
+        "voting-sites and PRL tracked seeds cannot become production Readers",
+        "workflow classification follows renamed package aliases and cycle-safe local composite actions",
+        "workflow executable closure fails closed on unresolved actions and excessive alias depth"
+      ],
+      "dynamic": 0
+    },
+    "tests/civic-data-fixture-policy.test.ts": {
+      "names": [
+        "runtime Readers cannot improvise a NODE_TEST_CONTEXT fixture gate",
+        "tracked fixture seeding requires a test environment and a non-error authority state"
+      ],
+      "dynamic": 0
+    },
+    "tests/civic-data-read-model.test.ts": {
+      "names": [
+        "FEC, ACS, and NH adapters expose outage instead of silently retaining tracked data",
+        "NH synchronous selector consumes an explicitly established bootstrap projection",
+        "Reader freshness and bootstrap identity derive from the canonical source contract",
+        "an answered absent canonical pointer does not reopen Git without the fixture gate",
+        "bootstrap requires the explicit non-production fixture gate and never follows a read error",
+        "canonical read distinguishes absent pointer, promoted LKG metadata, and store failure",
+        "canonical read refuses a planted pointer/candidate proof mismatch",
+        "legacy FEC, NH, and ACS tracked-write commands are retired before acquisition",
+        "production refuses tracked bootstrap even when a caller requests the fixture gate",
+        "routine FEC target acquisition cannot reopen mutable tracked roster or ballot authority"
+      ],
+      "dynamic": 0
+    },
+    "tests/civic-data-store-integrity.test.ts": {
+      "names": [
+        "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
+        "Reader proof cannot be appended after the canonical pointer leaves that version",
+        "a candidate cannot overwrite a pointer that moved after its LKG validation",
+        "a contract-A runtime envelope cannot mutate contract B through the public store API",
+        "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
+        "a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof",
+        "a terminal transition requires exact non-GOOD receipt evidence and is immutable",
+        "an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG",
+        "append-only Reader evidence must be a receipt for the exact promoted contract and version",
+        "candidate creation refuses a mismatched first event before persisting either half",
+        "candidate event time is a bounded local clock and never moves backward by sequence",
+        "durable validation and promotion clocks cannot run backward or into the far future",
+        "every Postgres candidate-event allocator is serialized inside its Neon batch",
+        "every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database",
+        "production NODE_ENV alone cannot open the permanent routine-data writer",
+        "promotion accepts only the exact persisted GOOD receipt",
+        "terminal store exposes no one-time import or aggregate retirement door",
+        "the Postgres promotion transaction is selected from the exact persisted proof",
+        "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
+        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt"
+      ],
+      "dynamic": 0
     },
     "tests/class-stamp-sweep.test.ts": {
       "names": [
@@ -2170,6 +2322,19 @@
         "grammar D reads month-name dates, and a TBD month yields no date",
         "normalizes Planning Commission meetings with venue, agenda and cancellation",
         "parses the recorded Planning Commission page"
+      ],
+      "dynamic": 0
+    },
+    "tests/cli-args.test.ts": {
+      "names": [
+        "assignment reads only the exact --name=value argument"
+      ],
+      "dynamic": 0
+    },
+    "tests/client-data-plane-boundary.test.ts": {
+      "names": [
+        "the real map client entry bundles without Node runtime builtins",
+        "use-client modules cannot value-import the server civic-data graph"
       ],
       "dynamic": 0
     },
@@ -2389,6 +2554,7 @@
         "controlPlaneTestUrlFromEnv reads its OWN variable, never the production one",
         "controlPlaneUrlFromEnv refuses an empty value rather than defaulting",
         "createPgRepositories refuses an empty connection string",
+        "schema v10 places live method candidates in every canonical provider",
         "schema v5 declares the four nightly-door logs, and every provider bundle carries them",
         "schema v9 declares the Action Gateway's three tables, and every provider bundle carries them",
         "the advisory lock key is STABLE — two machines computing it must agree",
@@ -2710,6 +2876,13 @@
       ],
       "dynamic": 0
     },
+    "tests/coverage-runtime-state.test.ts": {
+      "names": [
+        "a healthy exact-scope roster still populates its seat and has no gap notice",
+        "coverage preserves NOT_RECORDED and STORE_UNREACHABLE as independent exact-scope facts"
+      ],
+      "dynamic": 0
+    },
     "tests/coverage-tier.test.ts": {
       "names": [
         "6.2: a tier is all-or-nothing against its own denominator",
@@ -2788,6 +2961,18 @@
         "the division-less venue rows resolve for their own tenant and nobody else's",
         "the slug rule matches the canonical list's own slugs",
         "two division-less bodies on one source do not share a venue scope"
+      ],
+      "dynamic": 0
+    },
+    "tests/curated-reader-data-plane.test.ts": {
+      "names": [
+        "Admin projects the four manual authorities without inventing a clock",
+        "a bad curated family is held against its own LKG and cannot affect another family",
+        "comment-access drops the control-plane transport id at the Reader boundary",
+        "curated Reader evidence is source-scoped and never names software certification",
+        "each mutable curated Reader family promotes and reads from its own canonical pointer",
+        "reference-publisher evidence is confined to venue coordinates",
+        "store failure does not reopen any curated tracked first seed"
       ],
       "dynamic": 0
     },
@@ -2888,30 +3073,6 @@
         "RULING 159: a measured population reports both numbers",
         "RULING 159: a zero denominator with no stated reason THROWS",
         "RULING 159: an empty population WITH a reason is COULD_NOT_ASSERT, never a pass"
-      ],
-      "dynamic": 0
-    },
-    "tests/deploy-key-ssh.test.ts": {
-      "names": [
-        "RULING 165: RUNNER_TEMP is preferred, because the runner destroys it whatever we do",
-        "RULING 165: a key pasted without its trailing newline is repaired",
-        "RULING 165: a key path with a space survives GIT_SSH_COMMAND's word splitting",
-        "RULING 165: a key root inside a synced folder is REFUSED, by name",
-        "RULING 165: a key root inside the repository is REFUSED",
-        "RULING 165: a relative key root is refused rather than resolved",
-        "RULING 165: a structurally valid key is accepted",
-        "RULING 165: an ABSENT secret is refused, and the message names the secret",
-        "RULING 165: an EMPTY secret is refused and named as what a missing secret looks like",
-        "RULING 165: every GitHub remote shape resolves to the same SSH URL",
-        "RULING 165: every workflow that pushes main passes PUSH_DEPLOY_KEY to the push step",
-        "RULING 165: host verification is PINNED and the disable flags are absent",
-        "RULING 165: materialising with an unusable secret THROWS and writes nothing",
-        "RULING 165: no refusal message can carry key material",
-        "RULING 165: the PUBLIC half pasted into the secret is refused, and says so",
-        "RULING 165: the deploy key is required by the DESTINATION, not by the environment",
-        "RULING 165: the key lands outside the repo, 0600, and cleanup removes it",
-        "RULING 165: the ordinary ephemeral root is accepted",
-        "RULING 165: the pinned known_hosts is a real known_hosts, one host per line"
       ],
       "dynamic": 0
     },
@@ -3145,6 +3306,17 @@
       ],
       "dynamic": 0
     },
+    "tests/draft-pr-ci.test.ts": {
+      "names": [
+        "draft cannot buy builds, browsers, the full suite, or shipping-only gates",
+        "draft runs install and every named deterministic gate",
+        "draft/full classifier is fail-closed for the complete pull-request event matrix",
+        "every required job consumes the one draft/full classifier before preflight",
+        "ready_for_review is an explicit trigger and the existing shipping triggers remain",
+        "required contexts, read-only permissions, and the exact-head rerun stay intact"
+      ],
+      "dynamic": 0
+    },
     "tests/duplicate-implementations.test.ts": {
       "names": [
         "a recorded group that has been consolidated leaves the baseline",
@@ -3180,6 +3352,19 @@
         "A-005 · the same UID-less event published twice IS one meeting, and is COUNTED",
         "A-005 · two UID-less events at the same instant are two meetings, not one",
         "A-005 · whitespace and case differences are the same sitting"
+      ],
+      "dynamic": 0
+    },
+    "tests/everyday-routing-data-plane.test.ts": {
+      "names": [
+        "a newly proven contact closes only its exact CONTACT_OWED cell",
+        "a store failure cannot reopen the tracked seed in production",
+        "one blocked official source retains only its LKG while an unrelated contact advances",
+        "record identities are canonical and cannot create a second authority for one fact",
+        "the documentary civic proof enumerates the exact promoted routing authority",
+        "the manual import candidate promotes and the strict read model returns the canonical projection",
+        "the meeting server preload carries the full projection to the Reader shell",
+        "the tracked first import accounts for all 36 cells, 26 exact contact sources, and six honest obligations"
       ],
       "dynamic": 0
     },
@@ -3245,8 +3430,9 @@
     },
     "tests/fact-chain.test.ts": {
       "names": [
-        "PRDY-3: a second acquisition that moves a sitting is a CONFIRMATION_FACT_CONFLICT hold for that fact and confirms the others; a stale class is refused at approval; a malformed capture bridges nothing",
-        "PRDY-3: two independent acquisitions plus a validated and audited extraction carry 36 facts to AUDITED; approval waits for the governed freshness obligation and then lands"
+        "PDC: a failed permanent meetings attempt stays a data-plane LKG/retry receipt and never becomes a legacy acquisition clock",
+        "PRDY-3/PDC: immutable facts can read the permanent meetings receipt, but cannot install or run their own acquisition clock",
+        "PRDY-3: a second acquisition that moves a sitting is a CONFIRMATION_FACT_CONFLICT hold for that fact and confirms the others; a stale class is refused at approval; a malformed capture bridges nothing"
       ],
       "dynamic": 0
     },
@@ -3262,13 +3448,8 @@
     },
     "tests/failure-diagnosis.test.ts": {
       "names": [
-        "a credential refusal is POLICY — every retry presents the same credential",
-        "a losing race IS retried, because rebasing changes the input",
-        "a ruleset refusal is POLICY and is NOT retried",
         "an unrecognised failure says so LOUDLY and shows what it saw",
-        "an unrecognised rejection is retried and says it is unrecognised",
         "every failure class carries at least one shape and a remedy that is not a pointer",
-        "every scheduled pusher ends with the diagnosing step",
         "the diagnoser names the ruleset refusal from the real log",
         "the diagnoser recognises the store-and-views disagreement it was NOT derived from",
         "the diagnoser reports EVERY matching class, not the first (RULING 164)"
@@ -3280,6 +3461,25 @@
         "item 5: every dropped division is recorded with the id it could not find",
         "item 5: every federal officeholder is division-linked or a NAMED non-voting member",
         "item 5: the counts reconcile — 533 + 6 = 539, stated as a pair"
+      ],
+      "dynamic": 0
+    },
+    "tests/federal-votes-data-plane.test.ts": {
+      "names": [
+        "a store error never opens either tracked first seed",
+        "bad selected-roll positions are held and the prior federal-key-vote version remains live",
+        "bill summaries and pending reviews are stable exact Admin members without changing the Reader payload contract",
+        "congress-rollcalls promotes to the canonical plane and its Reader follows the exact GOOD pointer",
+        "duplicate key-vote coverage-miss identities fail closed before promotion",
+        "duplicate pending bill-summary identities fail closed before promotion",
+        "federal validation refuses dependent evidence from any other source projection",
+        "federal-key-votes binds mutable official facts to the exact reviewed v1 selection",
+        "first live roll-call acquisition may use only the immutable bill-summary seed after an answered absent pointer",
+        "key-vote coverage misses, law misses, and coverage semantics are exact Admin members",
+        "one missing official roll receipt refuses the candidate and preserves roll-call LKG",
+        "source failure is a durable data-plane outcome and never erases roll-call LKG",
+        "the two live federal acquisition commands have no circular canonical-pointer prerequisite",
+        "tracked vote JSON is first-seed-only and the manual contracts have no clock"
       ],
       "dynamic": 0
     },
@@ -3432,7 +3632,6 @@
         "aggregate model admission stops at cycle, operational-night, and rolling-24-hour ceilings",
         "an unmetered Scout cost row fails closed instead of disappearing from aggregate spend",
         "concurrent public reads cannot both reserve the same remaining byte allowance",
-        "promotion remains structurally off for the standing safety proof",
         "public redirects are counted as separate provider requests under one byte ceiling",
         "request, payload-byte, dispatch, and wall ceilings fail closed with named deferral",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
@@ -3500,41 +3699,6 @@
       ],
       "dynamic": 0
     },
-    "tests/freshness-control-plane.test.ts": {
-      "names": [
-        "FCP-8 row 1 · a quiet day: no commit, no build, no deploy, no hosted freshness run",
-        "FCP-8 row 10 · a restart loses no obligation and ships nothing twice",
-        "FCP-8 row 11 · a fully met gate DOES transfer, so the gate is not a permanent no",
-        "FCP-8 row 11 · the repository's CURRENT proof state does NOT transfer authority",
-        "FCP-8 row 11 · the transfer gate is four named conditions, not a judgement",
-        "FCP-8 row 12 · after transfer the GitHub cron is MANUAL_ONLY — it cannot run due work",
-        "FCP-8 row 12 · two authoritative clocks is refused, and so is zero",
-        "FCP-8 row 2 · four sources changed: one coalesced candidate, at most ONE commit",
-        "FCP-8 row 3 · one acquisition fails: the others continue, locally, with no extra hosted run",
-        "FCP-8 row 4 · one consumer proof fails: ONLY that holding is held",
-        "FCP-8 row 4b · an unrelated witness cannot select itself onto another record class",
-        "FCP-8 row 5 · the browser is down: acquisitions stay truthful and there are no N-source debts",
-        "FCP-8 row 6 · MapTiler is unavailable: no acquisition and no certification can even ask",
-        "FCP-8 row 7 · Actions exhausted: acquisition and local certification are unaffected",
-        "FCP-8 row 8 · push is refused: the candidate stays certified and queued, with no refetch",
-        "FCP-8 row 9 · recovery: the held holding certifies, debt clears, and shipping coalesces",
-        "a content defect outranks an infrastructure block",
-        "a record class no executor claims stays PENDING rather than certifying itself",
-        "a selected executor that reported nothing leaves the holding PENDING",
-        "an unclassified failure escalates — the opposite default from an unknown resource",
-        "an unknown resource and an unknown execution class are both REFUSED",
-        "crossing an execution-class boundary is reported, not silently permitted",
-        "every domain policy states its threshold's reason",
-        "every execution class states why its grant is that size, and no grant is empty",
-        "every proof executor declares at least one record class it actually reads",
-        "no downstream outcome, of any kind, can rewrite an acquisition verdict",
-        "no valid last-known-good escalates on sight; every other domain waits",
-        "the backup wakeup does no work while the authoritative clock is alive",
-        "the forbidden acquisition dependencies are named, and no executor smuggles one in",
-        "the only cross-holding coupling regenerates over the final set and ships nothing together"
-      ],
-      "dynamic": 1
-    },
     "tests/freshness-provenance.test.ts": {
       "names": [
         "RULING 107: a run date never renders as a data date",
@@ -3544,6 +3708,23 @@
         "RULING 107: the declaration is what separates a reading path from a restamp",
         "RULING 107: the sweep sees a stamp broken across two lines",
         "RULING 107: the wider class of stamp sites only shrinks"
+      ],
+      "dynamic": 0
+    },
+    "tests/funding-bootstrap-absence-safety.test.ts": {
+      "names": [
+        "FEC bootstrap preserves the candidate LKG without reviving unproven frozen absences"
+      ],
+      "dynamic": 0
+    },
+    "tests/funding-source-isolation.test.ts": {
+      "names": [
+        "a failed federal holding cannot erase an independently held state answer",
+        "a failed state holding cannot erase an independently held federal answer",
+        "all applicable finance authorities unavailable is explicit, never kind none",
+        "an NH target opens NH only and never touches AZ identity or another state",
+        "direct target planning selects one exact state and never treats a state contest as federal",
+        "identity-store failure preserves a direct exact state holding but cannot attach another identity"
       ],
       "dynamic": 0
     },
@@ -3599,6 +3780,7 @@
         "no runtime code reads FEC_API_KEY — fetch script only",
         "plainMoney speaks the way people do",
         "snapshot target keys resolve to real app-side ids",
+        "the FEC acquisition script has no tracked writer and is reachable only through the standing routine contract",
         "the aggregation layer never imports the funding corpus",
         "the contributions rewording is recorded, and the author's version bump with it",
         "the funding sentences name the cycle and the small-donor method",
@@ -3612,7 +3794,6 @@
         "thin guard: a vanished candidate WITH a recorded absence still fails, naming the recorded reason",
         "thin guard: growth and steady state pass clean",
         "thin guard: the Kelly-504 shape — a retained candidate's rows shrink — is a regression",
-        "thin guard: the fetch script runs it before writing and keeps the prior snapshot on failure",
         "thin guard: the second hop thins under the same rule — a fund that stops answering fails"
       ],
       "dynamic": 0
@@ -3657,7 +3838,8 @@
         "RULING 92 + RULING 107: no PURE generator reads the clock",
         "RULING 92: a PURE generator's artifact is byte-identical to what it produces now",
         "RULING 92: a file declaring itself GENERATED is registered here",
-        "RULING 92: every registered generated artifact exists and names its generator"
+        "RULING 92: every registered generated artifact exists and names its generator",
+        "promoted manual civic-data fixtures are immutable bootstrap evidence, not generated runtime outputs"
       ],
       "dynamic": 0
     },
@@ -3694,13 +3876,13 @@
         "corpora: 537 of 537 sitting members match people we already hold",
         "corpora: RULING 100 — both count assertions MATCHED, neither is NOT_ASSERTABLE",
         "corpora: RULING 20 holds — no portrait byte was committed to the repo",
-        "corpora: a portrait fetched over git is cited to git, not to the Pages URL",
         "corpora: every owed portrait was retrieved AND verified as a real image",
+        "corpora: reviewed portrait bindings enter the canonical registry package with exact source receipts",
         "corpora: sources.md records both repositories with licence, tier and access method",
         "corpora: the licence reader identifies CC0 and refuses to guess",
         "corpora: the licence was read from each repository's OWN LICENSE file",
         "corpora: the members the corpus genuinely does not carry are NAMED, not counted",
-        "corpora: the photo fetcher walks the git road before recording an absence"
+        "corpora: the tracked official-photo fetcher is retired from production"
       ],
       "dynamic": 0
     },
@@ -3719,6 +3901,7 @@
     },
     "tests/governance-atomicity.test.ts": {
       "names": [
+        "PDC current law cannot keep the retired runtime Git pusher as an instruction",
         "a hand-edited generated view is caught by governance:check",
         "every generated governance view reproduces byte-for-byte",
         "no superseded operative text sits in current authority",
@@ -3831,18 +4014,11 @@
     },
     "tests/hosted-cost-invariant.test.ts": {
       "names": [
-        "FCP-9D · a broad data/** or docs/** change is still FULL",
-        "FCP-9D · every scheduled pusher's own output is cheap, so no pusher can recurse",
-        "FCP-9D · the chain terminates: the observer's commit cannot cause another observation",
-        "FCP-9D · the observer's own commit takes the CHEAP path",
-        "FCP-9D · the ops-only set stays EXACT FILES — no directory-wide skip",
-        "cost invariant · N source changes in one window cost AT MOST ONE shipping path",
-        "cost invariant · N source retries cost ZERO additional hosted runs, for every N",
-        "cost invariant · a quiet freshness day costs ZERO hosted runs",
-        "cost invariant · every scarce resource is refused by default until a class names it",
-        "cost invariant · exactly ONE execution class may spend hosted minutes, and it is not freshness",
-        "no workflow keeps a second path-classification table",
-        "the refresh workflow asks whether the authoritative clock ran before it spends"
+        "FCP-9D · deploy classification remains distinct from software certification",
+        "PDC · Build Check has no runtime-path cost exception",
+        "PDC · the former direct-main writer stack is deleted, not dormant",
+        "PDC · the observer has no Git feedback hop",
+        "no workflow keeps a second path-classification table"
       ],
       "dynamic": 0
     },
@@ -4044,6 +4220,18 @@
       ],
       "dynamic": 0
     },
+    "tests/installed-runtime-dispatch.test.ts": {
+      "names": [
+        "active adapter guidance cannot restore retired direct production doors",
+        "package production doors either disappear or enter the installed dispatcher",
+        "payload parsing has a closed mode set and no control-line arguments",
+        "the host controller validates installed authority and the exact parent before dispatch",
+        "the installed dispatcher admits one exact registered manual contract",
+        "the owner window cannot impersonate the standing clock",
+        "unknown, missing, and duplicated manual contracts are refused"
+      ],
+      "dynamic": 0
+    },
     "tests/instrument-hardening.test.ts": {
       "names": [
         "SEEDED WI1.1: a LIST answer about the wrong body is RED even with every member present",
@@ -4052,7 +4240,6 @@
         "SEEDED WI1.3: an absence scoped to 2025 does not satisfy an expectation scoped to 2026",
         "SEEDED WI1.4: a correct known_absence answer is ABSENCE_ASSERTED, never FACT_STATED",
         "SEEDED WI1.4: an owner edit that is a REQUIREMENT does not become the question",
-        "SEEDED WI1.5: the committed HELD observer record renders PROVEN and names its SHA",
         "SEEDED WI1.6: the opener and the closer derive the SAME synthetic coverage id",
         "SEEDED WI1.8: this session's own canonical run is SESSION_MEASURED, not reproduced",
         "WI1.1: an expectation stating subjectId null is not bound to the instance's subject",
@@ -4064,11 +4251,23 @@
         "WI1.4: a known_absence fact the surface asserts as PRESENT is still a false presence",
         "WI1.4: isQuestionShaped requires an ENDING question mark or an opening interrogative",
         "WI1.4: the amendment is never DROPPED — it carries a product requirement",
-        "WI1.5: an unrecognised observer verdict still fails closed",
         "WI1.8: a clean, already-integrated, non-session run IS independently reproduced",
         "WI1.8: a dirty tree is SESSION_MEASURED — nothing uncommitted is reproducible",
         "WI1.8: a record with NO provenance block is SESSION_MEASURED, and says why",
         "WI1.8: an unmerged branch is SESSION_MEASURED however clean and however canonical"
+      ],
+      "dynamic": 0
+    },
+    "tests/intake-runtime.test.ts": {
+      "names": [
+        "a complete quiet production reading projects HEALTHY with exact denominators",
+        "a source-store anomaly is ATTENTION data, not an execution failure",
+        "an unreconciled response is UNREADABLE, never an empty healthy board",
+        "collector contains a database failure as an UNREADABLE runtime receipt",
+        "intake observations append idempotently and an ATTENTION beat cannot disappear",
+        "malformed intake history is UNKNOWN/actionable and constructor refuses it",
+        "receipt parser refuses a shallow object whose nested counts contradict the outcome",
+        "standing runtime persists intake receipts without Git, deploy, or software CI"
       ],
       "dynamic": 0
     },
@@ -4090,9 +4289,8 @@
         "same-origin: matching origin passes, missing and foreign origins fail",
         "the limiter digest can never join the reaction store — different hash context, disjoint columns",
         "the per-IP window refuses a burst that rotates device keys",
-        "the tripwire is scheduled daily and only reads, purges expired limiter rows, and commits the report",
+        "the standing runner records the tripwire in the control plane without a tracked report",
         "thresholds read their env vars — tuning needs no deploy of code",
-        "tripwire report: identifier-free by construction, states its thresholds, and says None honestly",
         "tripwire: a day where quarantined rows are a disproportionate share is flagged; a lone suspect tap is not",
         "tripwire: a volume spike far outside the trailing range is flagged, quiet days are not"
       ],
@@ -4270,6 +4468,7 @@
         "an id that is neither shape is refused, not guessed at",
         "every position points at a roll call that exists",
         "no state vote record carries a score, rank or recommendation",
+        "production returns explicit unavailable and has no tracked LegiScan fallback without an official projection",
         "surnames fold accents and generational suffixes, and nothing else",
         "the NH county table agrees with our own boundary labels",
         "the join is distinct — a match rate is not a match",
@@ -4543,6 +4742,47 @@
       ],
       "dynamic": 0
     },
+    "tests/manual-ballot-profile-data-plane.test.ts": {
+      "names": [
+        "a changed ballot yields an exact record delta; a bad successor is held and cannot erase LKG",
+        "candidate-publication admission refuses a content hash that does not identify the normalized text",
+        "manual Reader proof is bound to the exact source, class, and scope",
+        "manual authorities have no clock and Admin reuses the canonical outcome projection",
+        "one candidate-publication receipt mismatch cannot hold an unrelated exact document version",
+        "store failure never opens a bundled ballot/profile/corpus seed",
+        "the four former tracked authorities promote through the canonical candidate/event/pointer plane",
+        "tracked writers and alternate Reader doors stay retired"
+      ],
+      "dynamic": 0
+    },
+    "tests/manual-production-write-context.test.ts": {
+      "names": [
+        "an explicit data promotion establishes the sanctioned handle but refuses without exact runtime authority",
+        "the data-promotion context never falls back to a nearby DATABASE_URL",
+        "the data-promotion context refuses a read-only production identity",
+        "the named sanction remains operation-scoped"
+      ],
+      "dynamic": 0
+    },
+    "tests/manual-source-isolation.test.ts": {
+      "names": [
+        "a blocked publisher holds only its exact curated member while unrelated valid members promote",
+        "a stale source-scoped merge base is durably refused before it can roll back a newer pointer",
+        "an all-source outage stays SOURCE_BLOCKED and cannot replace the curated LKG",
+        "an omitted member cannot be deleted without typed positive removal evidence"
+      ],
+      "dynamic": 0
+    },
+    "tests/manual-source-receipt-urls.test.ts": {
+      "names": [
+        "a truthfully blocked exact source set records SOURCE_RETRIEVAL_FAILED and preserves LKG",
+        "an HTTP 200 challenge shell explicitly reviewed as BLOCKED cannot authorize promotion",
+        "an explicit failed/superseded URL remains recorded without demanding fabricated positive bytes",
+        "an unreceipted current member is held without withholding an independently supported member",
+        "malformed failed-status input is rejected before it can reach a store"
+      ],
+      "dynamic": 0
+    },
     "tests/map-bounds.test.ts": {
       "names": [
         "4c: the bottom stack's upper bound is not scoped to one viewport width",
@@ -4605,16 +4845,21 @@
     "tests/maptiler-usage.test.ts": {
       "names": [
         "a 200 records enough provenance to audit the number back to the bytes",
+        "a 200 with no measured rows is a failed extraction, never measured zero",
         "a key label is matched exactly, and anything else is UNCLASSIFIED",
+        "a missing actor aggregate is an explicit UNKNOWN beside a valid provider measurement",
         "a non-200 is a failed read with its provenance, never an empty timeline",
         "a published snapshot carries no reader-level field",
         "a synthetic run that reached the provider is a defect, not a ratio",
         "a token never survives a message",
         "an unasked question declares no numbers at all",
         "burn is measured over a stated window and never over the provider's own projection",
+        "every MapTiler attempt is append-only history before the replaceable current/LKG projection",
         "every declared key gets a row even at zero — that is how a stopped spend is visible",
         "every number the panel renders carries a denominator and a contract",
+        "failed collection retains the prior measured snapshot and exposes LKG in Admin",
         "no service token is NOT CONNECTED, and it is never zero usage",
+        "normalization refuses omitted identities, dates, and counts instead of manufacturing zero",
         "services stay separable — Tiles and Rendered maps never collapse",
         "the admin page audits the map panel from the same projection it renders",
         "the allowance is stated as assumed until somebody confirms it",
@@ -4622,7 +4867,9 @@
         "the panel answers each of MAPQ-6's questions with a number or a named gap",
         "the panel never calls production-key usage a count of people",
         "the panel's face-rendered prose carries no machine constant, command or code path",
-        "the provider's own vocabulary survives normalization"
+        "the provider's own vocabulary survives normalization",
+        "the standing collector refuses a partial classifier answer",
+        "the standing collector requires both classifiers to describe one billing window"
       ],
       "dynamic": 0
     },
@@ -4791,6 +5038,26 @@
       ],
       "dynamic": 0
     },
+    "tests/meeting-partition-data-plane.test.ts": {
+      "names": [
+        "a canonical preload outage emits no fabricated source attempt",
+        "a cross-partition id collision holds every claimant and never hides an unrelated good row",
+        "a semantic refusal holds only the exact source/body partition",
+        "a successful thin response retains unexplained in-window rows with exact held evidence",
+        "an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence",
+        "batched pointer/candidate proof failure cannot suppress an unrelated partition",
+        "caller-invented narrow bounds cannot remove an in-window meeting",
+        "meeting Reader repair composes the shared aggregate once and correlates exact partition receipts",
+        "one meeting source/body failure retains only its LKG while another partition promotes",
+        "one partition invocation narrows a shared adapter to exactly one body",
+        "only exact out-of-window meeting evidence removes a row and its attached agenda document",
+        "production Reader configuration cannot reopen live composite acquisition",
+        "production membership and scopes are one-to-one and the global disposition is absent",
+        "the batched Reader bounds database calls and isolates a corrupt partition",
+        "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
     "tests/meeting-subline.test.ts": {
       "names": [
         "MTG-2: a bare generic noun is not a fact, and renders as nothing",
@@ -4801,6 +5068,37 @@
         "MTG-4: a created event carries the venue in its location field",
         "MTG-4: a source publishing the ADDRESS as the venue name does not double it",
         "MTG-4: an online meeting's event still carries no invented address"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-data-plane-cutover.test.ts": {
+      "names": [
+        "all assigned runtime consumers use the promoted meetings projection",
+        "an unreachable store never masquerades as the bundled fixture",
+        "meetings acquisition tracing hashes exact response bytes and retains the observed redirect",
+        "meetings bootstrap is selected only after an answered absent pointer",
+        "meetings candidate proves SOURCE_WIRING obligations independently of row count",
+        "meetings promotion fails closed without per-child bytes or on an untrusted child redirect",
+        "one partition carry-forward opens only its own pointer and ignores an unreachable sibling",
+        "production refuses the meetings fixture even when a caller requests it",
+        "production-capable composite ingest has no non-promotion file door",
+        "promotion carry-forward reads canonical first and does not fallback on DB error",
+        "the live Pima Legistar/InSite schedule bridge is an exact registered authority route",
+        "validated curl-rung bytes retain curl's effective redirect URL"
+      ],
+      "dynamic": 0
+    },
+    "tests/method-candidate-authority.test.ts": {
+      "names": [
+        "a malformed adopted aggregate is a broken lineage, not a store outage or an empty population",
+        "an aggregate without an absolute durable write instant cannot be adopted",
+        "an invalid adoption instant cannot poison the append-only authority history",
+        "an unreceipted aggregate that moved or changed is preserved and refused, never repaired",
+        "clean detached deployed code adopts exact revision 1 into the existing owner outcome log, idempotently",
+        "contradictory or duplicate adoption receipts refuse instead of being ignored",
+        "dirty, attached, off-SHA, or off-main code cannot create an adoption receipt",
+        "later CAS lifecycle progress retains adoption, while omission or core rewrite breaks lineage",
+        "the immutable manifest exactly binds the historical seven-candidate seed"
       ],
       "dynamic": 0
     },
@@ -4963,6 +5261,14 @@
       ],
       "dynamic": 0
     },
+    "tests/migration-catalog-verifier.test.ts": {
+      "names": [
+        "0026 catalog proof names every constraint, function, trigger, and index it installs",
+        "catalog parser fails closed on duplicate declarations",
+        "exact migration receipt refuses missing hashes and duplicate physical rows"
+      ],
+      "dynamic": 0
+    },
     "tests/migration-immutability.test.ts": {
       "names": [
         "Drizzle's committed journal carries NO hash — the absence is asserted, not assumed",
@@ -4992,9 +5298,9 @@
       "names": [
         "NOTHING applies a migration automatically, and no gate may heal what it finds",
         "ONE DETECTOR — the gate reuses the comparator, it does not reimplement it",
+        "PDC terminal boundary: the schema/intake tripwire is not a GitHub routine clock",
         "SMOKE MAY NOT MANUFACTURE A DIFF — the flag overrides the exit, never the finding",
         "THE PLANT: each narrowing shape is caught, and an additive one is not",
-        "THE TRIPWIRE STAYS, and it is still an independent daily check",
         "Windows separators and ./ prefixes do not hide a migration",
         "a CONTRACT migration may NOT precede its code",
         "a CONTRACT migration still pending at its own deploy is the CORRECT ordering",
@@ -5015,7 +5321,8 @@
         "the 0013/0014 pair is expressible — this is why migrate-always-first is refused",
         "the classifier reads STATEMENTS, never the comment above them",
         "the declaration states a reason, and names no migration that does not exist",
-        "the second reading is dispatchable — pre-deploy is not the only moment",
+        "the production migration applier commits each migration and its journal row atomically",
+        "the second reading is automatic after a shipping main push",
         "the shipping gate is in the LOCAL gate set too — the RO04 hole stays closed",
         "the shipping gate runs in the PR gate job on every pull request and every push to main",
         "the smoke input exists, is opt-in, and is off unless a person dispatches it",
@@ -5161,6 +5468,16 @@
       ],
       "dynamic": 0
     },
+    "tests/nh-official-rollcalls.test.ts": {
+      "names": [
+        "NH 2026 roll exports reconcile every source row and preserve publisher blank as UNKNOWN",
+        "NH current roster replaces synthetic IDs with 386 strict official joins plus two exact reviewed publisher exceptions",
+        "NH publisher bytes strip a UTF-8 BOM and preserve Windows-1252 text",
+        "NH roll parsing fails closed on duplicates, orphan rolls, pair conflicts, unknown labels, and tally loss",
+        "NH same-host reads are serial with the publisher's fixed 11-second delay and a no-sleep test seam"
+      ],
+      "dynamic": 0
+    },
     "tests/nh-remaining-routes.test.ts": {
       "names": [
         "a permission measurement records what it measured, and never a verdict it did not read",
@@ -5172,53 +5489,19 @@
       ],
       "dynamic": 0
     },
-    "tests/nh31-partial-commit.test.ts": {
-      "names": [
-        "NH31 class sweep: no other refresh writes its artifact and then exits non-zero",
-        "NH31: a code-2 run still ends red, and does so LAST",
-        "NH31: a job failure exits WRITTEN_WITH_JOB_FAILURES, never NOTHING_WRITTEN",
-        "NH31: a run that wrote nothing still refuses to commit",
-        "NH31: only the written-with-failures code asks the caller to commit",
-        "NH31: the proof harness cannot fire on a scheduled run",
-        "NH31: the proof harness runs after the write and touches no data",
-        "NH31: the three outcomes carry three distinct exit codes",
-        "NH31: the workflow carries a code-2 run past the gate to its commit"
-      ],
-      "dynamic": 0
-    },
     "tests/nightly-window.test.ts": {
       "names": [
         "04:00 America/New_York is computed in the zone, so DST is the zone's business",
-        "SEEDED (a, dynamic): with promotion OFF and an APPROVED open-class item, the promoter is never called and nothing outside data/control-plane and data/health changes",
+        "PDC: local shadow run records are diagnostic only and cannot activate promotion",
         "SEEDED (a, structural): the window module has no writer for any reader-content path",
-        "SEEDED (b): with promotion ON, a non-APPROVED item never reaches the promoter and reads REFUSE_WOULD with its stage",
         "a foreign row under window_runs is not a window: the last-window read and the due-check both skip it",
-        "a regression on the served surface reverts the batch through the shipping door and opens an incident — dry-run records what it would do",
         "a stage failure is an incident that names what the next window catches up, and the digest and headline state it",
         "evaluation: PROMOTE_WOULD needs APPROVED and an open class; everything else is REFUSE_WOULD with the reason, grouped with denominators",
-        "the Markdown fallback parses the committed docs/refresh-run.md table and SAYS it is the fallback",
         "the Sunday-morning window corresponding to Saturday night is suppressed and never caught up",
-        "the activation gate is closed, reads the contracts from the newest run record, and treats an unreadable record as not GREEN",
         "the last-window view derives FAILED_STAGE from the stages, carries denominators, and passes its own audits",
         "the lease refuses a second window, and a released or expired lease can be re-claimed",
-        "the legacy refresh's JSON contract is read exactly, and a zero-source or wrong-version file is a failed read",
         "the window is due once per local date, and a missed date is caught up BY NAME",
         "withNightlyWindowLease releases in a finally and refuses while held"
-      ],
-      "dynamic": 0
-    },
-    "tests/nj-filing-clock.test.ts": {
-      "names": [
-        "2.3: a curatedAt that cannot be parsed reads as stale, never as fresh",
-        "2.3: past the one-day window the record is STALE even when it agrees",
-        "2.3: the window is a DAY, not RULING 53's seven — this document is the ballot",
-        "2.4: a ballot rendering no contests diverges even when the counts match",
-        "2.4: a clerk who has published FEWER is equally a divergence",
-        "2.4: a clerk who has published MORE than we render is a divergence",
-        "2.4: a zero parse is a FAILED extraction, never an empty filing",
-        "2.4: an unreadable clerk is CANNOT TELL, never agreement",
-        "2.4: the pair reconciling inside its window is the only passing state",
-        "2: the committed ballot's ids are distinct and its coverage never silently shrinks"
       ],
       "dynamic": 0
     },
@@ -5241,6 +5524,15 @@
       ],
       "dynamic": 0
     },
+    "tests/nj-morris-data-plane.test.ts": {
+      "names": [
+        "Morris filing horizon requires the clerk's current general and school documents",
+        "NJ Reader uses the promoted ballot/contact projection and exposes its exact LKG",
+        "NJ ballot and filed contacts bootstrap only after an answered missing pointer",
+        "NJ store failure is not disguised as a successful bundled ballot read"
+      ],
+      "dynamic": 0
+    },
     "tests/nj-slogan-audit.test.ts": {
       "names": [
         "agrees with the shipped parser on every row",
@@ -5250,6 +5542,19 @@
         "read BOTH clerk documents, not just the general one",
         "states its count assertion rather than passing quietly",
         "the NJ slogan audit at 07866"
+      ],
+      "dynamic": 0
+    },
+    "tests/nj-state-rollcalls.test.ts": {
+      "names": [
+        "ABSTAIN remains its own exact Reader disposition in rendered and census paths",
+        "NJ API and all four archives reconcile exactly before producing a promotable projection",
+        "NJ ZIP admission proves the one exact entry, size, CRC, and UTF-8 body",
+        "NJ biennial archives admit both session years and reject dates outside the exact term",
+        "NJ partial member acquisition and any API/archive disagreement fail closed",
+        "NJ permanent adapter requires normal two-GOOD live acceptance while AZ alone remains fail-closed",
+        "NJ registered endpoints reject redirects, query broadening, and cross-member final URLs",
+        "NJ session admission selects the named current session instead of pseudo-year numeric maxima"
       ],
       "dynamic": 0
     },
@@ -5273,6 +5578,24 @@
       ],
       "dynamic": 0
     },
+    "tests/non-routine-dispositions.test.ts": {
+      "names": [
+        "Census geometry has one reviewed immutable authority and no competing runtime promotion door",
+        "LegiScan is immutable research evidence, not a production fallback or mutable writer",
+        "Plural/OpenStates is research evidence only: production has no state-roster Reader or tracked writer",
+        "denominator accounting cannot be mistaken for terminal PDC-7 closure",
+        "every explicit-owner production contract resolves one frozen inventory row without becoming a routine clock",
+        "every lawful non-routine disposition forbids schedules and automatic promotion",
+        "research holdings have no standing Reader, candidate denominator, or tracked writer",
+        "six direct routine rows plus the retired LegiScan row resolve every standing contract without an aggregate authority",
+        "the NJ questionnaire plan is a non-writing operation, not a second ballot authority",
+        "the PDC-7 frozen denominator accounts for every source row and all 42 holdings families exactly once",
+        "the family classifier preserves the frozen split-family semantics without UNKNOWN",
+        "the formerly mixed curated Reader row has an exact truthful path partition and no PDC-7 blocker",
+        "the registry fails closed for a new source, lost family, scheduled non-routine row, and research runtime fallback"
+      ],
+      "dynamic": 0
+    },
     "tests/nul-bytes.test.ts": {
       "names": [
         "0A: no tracked source file contains a literal NUL byte",
@@ -5283,6 +5606,7 @@
     "tests/obligation-registry.test.ts": {
       "names": [
         "ABSENT, UNREADABLE and PRESENT_EMPTY are three different answers",
+        "PDC retires every durable tracked-meetings clock without deleting its history",
         "THE PROMOTION BOUNDARY: the tail writes under staging and nowhere else",
         "a 200 carrying the wrong shape is a FAILED extraction, not an INGESTED record",
         "a CORRECTED provider signal reaches a row that is already durable",
@@ -5305,13 +5629,12 @@
         "an acquired record with NO NORMALIZER stages a gap, never an empty snapshot",
         "an obligation with no registered descriptor names OUR gap, not a publisher's",
         "both registered normalizers exist for the routes that acquire",
-        "meetings obligation ids are UNCHANGED, so no durable row is orphaned",
         "the NH normalizer reads the publisher's OWN declared total",
         "the digest counts BOTH staged states, always",
         "the ingestion path turns a converted tracker row into a scheduled unit",
         "the manifest MERGES, so a cycle cannot erase what it did not touch",
         "the real shape with real rows is satisfied and states the count",
-        "the registry carries TWO LIVE PROVIDERS and neither is meetings-only",
+        "the standing research registry is not a parallel tracked-meetings authority",
         "the tail runs to a STAGED FILE a later session can point at",
         "the tracker provider reports ABSENT as an absence, not as an empty domain",
         "the two-byte 200 that would have become Arizona's filer index is ABORTED",
@@ -5357,6 +5680,19 @@
       ],
       "dynamic": 0
     },
+    "tests/officeholder-statements-data-plane.test.ts": {
+      "names": [
+        "a new statement version reports the exact append while an invalid successor cannot erase LKG",
+        "officeholder statement ownership is manual and visible in the existing Admin outcome projection",
+        "officeholder statements use the canonical candidate/event/promotion pointer with exact source-scoped proof",
+        "one statement receipt mismatch is held alone while an unrelated exact publication version promotes",
+        "standing candidate enrichment derives all three state denominators from promoted projections",
+        "store failure and an unseeded production store never reopen tracked statement history",
+        "the statement first seed uses the same exact permanent identity transfer as cutover",
+        "tracked statement and candidate-universe writer doors stay deleted"
+      ],
+      "dynamic": 0
+    },
     "tests/officeholders.test.ts": {
       "names": [
         "a House term with no district is reported rather than guessed at",
@@ -5371,6 +5707,16 @@
         "seats that matched nothing are reported, not silently dropped",
         "the division link is many-to-many, which is why it is a join table",
         "the roster carries no score, rank, or ordering by fit"
+      ],
+      "dynamic": 0
+    },
+    "tests/official-action-source-isolation.test.ts": {
+      "names": [
+        "AZ action-store failure is explicit and cannot become an empty action answer",
+        "AZ display-key target requires its exact identity holding and fails explicitly",
+        "AZ official target reads actions without opening candidate identity",
+        "ambiguous official target fails closed when person identity is unavailable",
+        "non-AZ ballot target never opens the AZ action or AZ identity authorities"
       ],
       "dynamic": 0
     },
@@ -5400,6 +5746,16 @@
         "MTG-11: the voting control dismisses BEFORE it opens",
         "WGH-15: selecting a district writes SELECTION and never the reader's home",
         "WGH-15: the map shell reads the home store, and never writes it"
+      ],
+      "dynamic": 0
+    },
+    "tests/operational-reference-data-plane.test.ts": {
+      "names": [
+        "a semantically bad successor is refused without replacing the promoted reference",
+        "first seed promotes with source-scoped evidence and a later HTTPS failure retains LKG",
+        "live-input acquisition derives both Census sheets and carries exact response-byte receipts",
+        "standing jurisdiction obligations require the installed promoted projection and never read tracked JSON",
+        "the production promoter has no tracked-input or Git-writer fallback"
       ],
       "dynamic": 0
     },
@@ -5667,6 +6023,45 @@
       ],
       "dynamic": 0
     },
+    "tests/pdc-reader-remaining-repairs.test.ts": {
+      "names": [
+        "an empty state funding selection retains stale disclosure but leaves current empty slots empty",
+        "ballot keeps freshness for a federal none answer and leaves a current none answer empty",
+        "candidate profile route proof recognizes only the exact field, key and demonstrated authority encoding",
+        "contactless grounded bodies retain the routed topic and correctly attributed reachable contact",
+        "full component and body evidence requires current source bindings and actual cases",
+        "full reproof refuses missing, stale, incomplete and wrong-build surface evidence",
+        "listing witnesses bind the complete current group set rather than a historical literal",
+        "registry seed proof binds exact curated records and rejects identity coincidence or wrong artifacts",
+        "split ZIP contacts require every covered ZIP and the exact contact facts and source",
+        "state ballot funding discloses the exact held state's freshness and preserves its records"
+      ],
+      "dynamic": 0
+    },
+    "tests/pdc-terminal-contract.test.ts": {
+      "names": [
+        "the 673f1dd root cause is bound to the live commit and classifier evidence",
+        "the frozen ledger names every amended terminal PDC invariant exactly",
+        "the frozen regression evidence retains both concrete failure classes"
+      ],
+      "dynamic": 0
+    },
+    "tests/pdc-v2-official-candidacy-bridge-accounting.test.ts": {
+      "names": [
+        "PDC trusted-LKG bridge explicitly accounts for all 1,468 frozen rows as 848 serving plus 620 retired research-only"
+      ],
+      "dynamic": 0
+    },
+    "tests/permanent-civic-data-plane-pdc8.test.ts": {
+      "names": [
+        "PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG",
+        "PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG",
+        "PDC-8 meetings: changed rows promote with exact added/changed/removed/held evidence; source-auth failure holds LKG",
+        "PDC-8 trusted bootstrap fixtures project byte-for-structure through the three candidate builders",
+        "run 34232794631 regression: software CI red cannot fail, relabel, or revert a source, and another source still promotes"
+      ],
+      "dynamic": 0
+    },
     "tests/person-initials.test.ts": {
       "names": [
         "a generational suffix is not a surname",
@@ -5716,7 +6111,8 @@
         "a candidate who holds no office keeps their own card photo",
         "no person renders two different photos, on any surface",
         "person keys ignore suffixes, accents and punctuation, and nothing else",
-        "the author's case: Hobbs's ballot card renders her official portrait, with its own credit"
+        "the author's case: Hobbs's ballot card renders her official portrait, with its own credit",
+        "the production person-photo resolver reads only the promoted registry projection"
       ],
       "dynamic": 0
     },
@@ -5804,20 +6200,40 @@
       ],
       "dynamic": 0
     },
+    "tests/pilot-runtime-config.test.ts": {
+      "names": [
+        "standing runtime accepts only a clean detached checkout at the explicit deployed SHA",
+        "standing runtime refuses a SHA that is not proven on origin/main",
+        "standing runtime refuses dirty, branch-attached, or off-SHA checkouts",
+        "standing runtime requires an absolute environment path and refuses a tracked secret file",
+        "the Windows installer executes only the target commit's exact validator bytes"
+      ],
+      "dynamic": 0
+    },
     "tests/pilot-task-installer.test.ts": {
       "names": [
         "POSITIVE CONTROL: a constant relaunchTriggerPresent fails the checker",
+        "POSITIVE CONTROL: a name-only task start or count-only process check fails the permanent-identity checker",
+        "POSITIVE CONTROL: a restored second-clock action or incomplete uninstall fails the PDC checker",
         "POSITIVE CONTROL: a state-blind Write-TriggerLines fails the disabled checker",
+        "POSITIVE CONTROL: an unconditional Startup launcher fails the single-entrypoint checker",
         "POSITIVE CONTROL: an unconditional or unchecked disable fails the checker",
-        "POSITIVE CONTROL: dropping the daily trigger, the --wakeup flag, or the one-liner fails the install-window checker",
         "POSITIVE CONTROL: dropping the repetition trigger from install fails the checker",
+        "POSITIVE CONTROL: name/count-only host control fails the exact-runtime checker",
+        "POSITIVE CONTROL: parent-only termination fails the process-tree checker",
         "POSITIVE CONTROL: removing the prove-relaunch guard fails the checker",
+        "Windows task helper returns the native integer independently of diagnostic output",
         "disable judges the measured end state and refuses success over a denied /Change",
+        "install keeps the Startup launcher fallback-only and removes it for a live task",
         "install registers the 5-minute multi-year relaunch trigger beside AtLogOn",
-        "install-window registers a daily Eastern-derived trigger running nightly-window.mts --wakeup, and prints the elevated one-liner when refused",
+        "install validates an explicit clean detached checkout, absolute environment path, and deployed SHA before registration",
         "prove-relaunch refuses (exit 2) before killing anything when the trigger is absent",
+        "start validates the single permanent entrypoint and reads back exact process identity",
         "status derives relaunch-trigger presence from the live task, not a constant",
         "status never describes a DISABLED task as relaunching the runner in five minutes",
+        "status, trigger verification and relaunch proof bind to the exact installed runtime and process",
+        "stop, disable, uninstall, and relaunch proof terminate and read back the full runner process tree",
+        "the standing runner has no installable nightly-window backup clock and install/uninstall retire the old task",
         "verify-triggers exits on the derived presence and prove-relaunch writes the typed record"
       ],
       "dynamic": 0
@@ -5910,6 +6326,16 @@
       ],
       "dynamic": 0
     },
+    "tests/position-source-isolation.test.ts": {
+      "names": [
+        "a partial corpus cannot manufacture searched-nothing or not-yet-collected",
+        "an explicit unresolved identity remains fail-closed rather than falling back to an exact key",
+        "candidate-publication failure preserves a source-linked officeholder passage and names the partial holding",
+        "identity holding failure searches only the requested exact key and never erases its proven passage",
+        "officeholder-statement failure preserves a source-linked candidate passage and names the partial holding"
+      ],
+      "dynamic": 0
+    },
     "tests/positions-search.test.ts": {
       "names": [
         "13: a failed search and an empty search are different sentences",
@@ -5936,6 +6362,16 @@
       ],
       "dynamic": 0
     },
+    "tests/post-deploy-integrity-data-plane.test.ts": {
+      "names": [
+        "missing, unreachable, and malformed authority fail closed without a tracked fallback",
+        "post-deploy outcomes append to the existing release log and read back exactly",
+        "release-review rows cannot contaminate the fixed post-deploy partition",
+        "the durable outcome preserves exact-head and fail-closed release-freeze semantics",
+        "the executable workflow has no Git mutation or deploy/build feedback loop"
+      ],
+      "dynamic": 0
+    },
     "tests/post-deploy-observer.test.ts": {
       "names": [
         "OB1: the observer sees the expected commit and says which attempt saw it",
@@ -5947,10 +6383,10 @@
         "OB4: an `unknown` commit is an ABSENCE, never a served sha",
         "OB4b: a non-200 and a refused connection are both `null`, and each says which",
         "OB4c: every probe declares itself synthetic",
-        "OB5: the record the observer commits cannot trigger a deploy",
+        "OB5: a deploy observation has no Git feedback hop",
         "OB6: the observer contains no rollback action of any kind",
         "OB7: the observer spawns the existing reading rather than asking the database itself",
-        "OB8: the workflow triggers on a push to main, is bounded, and commits through push-main"
+        "OB8: the workflow is bounded, exact-head, read-only in Git, and appends canonical outcome"
       ],
       "dynamic": 0
     },
@@ -5965,6 +6401,13 @@
         "D62: the CSV reader survives a quoted field full of commas",
         "D62: the attribution is the RHETORIC citation, not the survey one",
         "D62: the committed snapshot is real, and states its own denominators"
+      ],
+      "dynamic": 0
+    },
+    "tests/process-singleton.test.ts": {
+      "names": [
+        "invalid singleton identities fail before binding",
+        "the OS-held singleton atomically excludes a second writer and releases after exit-equivalent close"
       ],
       "dynamic": 0
     },
@@ -6000,25 +6443,11 @@
         "an abbreviated recorded SHA and the full served one are the SAME commit",
         "an unparseable or future-shaped record reads as UNKNOWN rather than throwing or passing",
         "an unsupplied observation FREEZES rather than defaulting to permitted",
-        "the committed record parses, declares its version, and is not vacuous",
+        "the canonical durable record validator accepts exact readings and rejects vacuous ones",
         "the freeze gate is in the gate set, in the required CI job",
         "the freeze gate runs in build-check.yml's gates job and is bounded",
         "the freshness bound has no environment escape hatch and no skip flag",
         "the freshness split is by EVENT, and the pull-request half is untouched"
-      ],
-      "dynamic": 0
-    },
-    "tests/promoter.test.ts": {
-      "names": [
-        "PRDY-6: a failed post-promotion verification reverts the exact before-state bytes and opens an incident; an unanswerable one opens an incident without a revert",
-        "PRDY-6: an as-if authority on an isolated SHADOW root materializes PROMOTE_WOULD meeting facts through writeSnapshot, refuses closed classes, holds and non-verdicts by name, and leaves a receipt with before/after hashes",
-        "PRDY-6: with the LIVE gate the promoter refuses everything PROMOTION_OFF and writes nothing; runPromotionStep never even calls it"
-      ],
-      "dynamic": 0
-    },
-    "tests/promotion-canary.test.ts": {
-      "names": [
-        "PRDY-6: the canary proves positive, refusal and rollback canaries on an isolated root and leaves reader truth and the gate untouched"
       ],
       "dynamic": 0
     },
@@ -6057,24 +6486,18 @@
     },
     "tests/protection-state.test.ts": {
       "names": [
-        "RULING 156 + 163: a RENAMED required context reads as MISSING, not as agreement",
-        "RULING 163: a bypass granted to anyone but the Actions app is DRIFTED",
-        "RULING 163: a ruleset that forgets strict is DRIFTED",
-        "RULING 163: an EVALUATE-mode ruleset does not count as protection",
-        "RULING 163: an unreadable API is COULD-NOT-TELL, never intact",
-        "RULING 163: classic protection left ON beside the ruleset still blocks the bot, and is reported",
-        "RULING 163: no protection at all is DRIFTED and says so plainly",
-        "RULING 163: the ruleset end state is INTACT — this is what Sean is clicking toward",
-        "RULING 163: today's classic protection is DRIFTED only on the missing bot bypass",
-        "RULING 165: ZERO write-enabled deploy keys is DRIFT — a bypass granted to an empty category",
-        "RULING 165: a SECOND write-enabled deploy key is DRIFT — the bypass is category-wide",
-        "RULING 165: a read-only deploy key beside the pusher is fine and is not miscounted",
-        "RULING 165: a ruleset that drops the deletion and force-push rules is DRIFTED",
-        "RULING 165: bypass mode `always` reads as DRIFTED, never as agreement",
-        "RULING 165: shape `both` is DRIFTED — the two mechanisms STACK and the key is still refused",
-        "RULING 165: the LIVE ruleset read from the API on 2026-08-26 is INTACT",
-        "RULING 165: the bypass must be Deploy keys — an Actions-app grant is DRIFT, not agreement",
-        "RULING 24 + 164: an UNREAD deploy-key list is cannot-tell, never a pass"
+        "PDC regression: the former DeployKey bypass plus scheduled-pusher key is drift",
+        "PDC target: exact live ruleset payload after bypass and write-key retirement is intact",
+        "PDC: a missing, renamed, duplicated, or unexpected required context is drift",
+        "PDC: a write-enabled deploy key is drift even when no ruleset bypass is present",
+        "PDC: an indeterminate deploy-key privilege or omitted bypass inventory is not intact",
+        "PDC: an unread deploy-key inventory is cannot-tell",
+        "PDC: an unreadable API is cannot-tell, never intact",
+        "PDC: evaluate mode, classic-only, classic plus ruleset, or multiple rulesets is drift",
+        "PDC: every bypass actor type is drift, including an Actions app or a human role",
+        "PDC: lax status checks, missing PR, deletion, or force-push bars are drift",
+        "PDC: no protection is drift",
+        "PDC: terminal main ruleset has strict exact software gates and no direct-write route"
       ],
       "dynamic": 0
     },
@@ -6091,55 +6514,6 @@
         "the ceiling is hard, and the request that crosses it is refused rather than counted",
         "the ledger records what a run spent, and never a key",
         "the shared browser site enforces the barrier, and enforces it first"
-      ],
-      "dynamic": 0
-    },
-    "tests/push-allowlist.test.ts": {
-      "names": [
-        "RULING 157: the audit catches a guardless pusher it was not derived from",
-        "RULING 162: NEVER_PUSHABLE overrides a profile that was widened by mistake",
-        "RULING 162: a path outside the profile is refused and NAMED",
-        "RULING 162: an EMPTY diff refuses — zero is a result that must be earned",
-        "RULING 162: an UNREADABLE diff refuses — it is not an empty diff",
-        "RULING 162: an unknown workflow id refuses rather than inheriting a grant",
-        "RULING 162: build-check mentions the pusher in prose and is NOT read as one",
-        "RULING 162: every workflow that pushes main declares a profile and stages only what it grants",
-        "RULING 162: no --workflow id refuses, and does not read as an empty diff",
-        "RULING 162: one refresher may not write another's artifact",
-        "RULING 162: the git add reader ignores comments, so a mention is not a stage",
-        "RULING 162: the happy path is allowed, and states its count",
-        "RULING 162: the tracker grant is to job-watch ALONE",
-        "RULING 162: traversal and absolute paths are refused before any rule is consulted"
-      ],
-      "dynamic": 0
-    },
-    "tests/push-generated-freshness.test.ts": {
-      "names": [
-        "a dependent that FAILS to regenerate is reported, never silently passed",
-        "a planted stale generator → the guard refuses and names it",
-        "a single stale artifact is enough to refuse — one red invariant stops the push",
-        "all checks green → the guard is fresh",
-        "owner deliverable 1: a stale generator input causes its dependent to REGENERATE before commit",
-        "the guard runs over the REAL register too, not just the sample",
-        "verifiableCheckCommands dedupes by command — one state-manifest check covers many docs"
-      ],
-      "dynamic": 0
-    },
-    "tests/push-main.test.ts": {
-      "names": [
-        "F25: every workflow job is bounded well under the platform's six hours",
-        "F25: the gate step and the browser install it needs are each bounded",
-        "Prompt C 1b: the bundle scan still reports CANNOT RUN rather than passing",
-        "Prompt C 1b: the bundle-scanning check runs in the job that has a build",
-        "R48: a push that cannot land never reports success",
-        "R48: every workflow that pushes main goes through the protected push",
-        "R48: two runs pushing into the same window both land their work",
-        "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux",
-        "RULING 157: the cutover holds for job-watch — a profile it was NOT derived from",
-        "RULING 165: a missing deploy key FAILS CLOSED and names the secret",
-        "RULING 165: a push carrying a disallowed path is REFUSED, names it, and nothing lands",
-        "RULING 165: the key material is cleaned up when the push FAILS, not only when it succeeds",
-        "RULING 165: the same push WITHOUT the offending path succeeds and lands"
       ],
       "dynamic": 0
     },
@@ -6180,7 +6554,6 @@
         "questionnaire: an over-limit answer is REFUSED with its own count, never cut",
         "questionnaire: answering again clears a withdrawal",
         "questionnaire: each refusal reason gets its own sentence",
-        "questionnaire: every NJ candidacy has an invitation, and none claims a send",
         "questionnaire: every NJ contest classifies, and none falls back",
         "questionnaire: every candidate for an office class is asked the IDENTICAL five questions",
         "questionnaire: every office class has exactly two class questions",
@@ -6194,6 +6567,7 @@
         "questionnaire: office class is read from the DIVISION wherever it can be",
         "questionnaire: the PLURAL is part of the shape — Commissioners resolves",
         "questionnaire: the asked state names the dates and the symmetry",
+        "questionnaire: the canonical NJ filing derives a complete unsent plan without a tracked output",
         "questionnaire: the committed question-set document is what the generator writes",
         "questionnaire: the compression shapes catch a real compression",
         "questionnaire: the core three are asked of every office class, unchanged",
@@ -6345,22 +6719,58 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-execution-authority-evidence.test.ts": {
+      "names": [
+        "Neon Date values preserve exact millisecond authority hashes across transport paging",
+        "Reader authority keyset cursors fail closed when a transport does not advance",
+        "a source-native skipped pointer needs promotion/readback proof but no bootstrap envelope",
+        "authority output is atomic, exclusive, and identical support recovery is bounded",
+        "diagnostics redact URL and credential material",
+        "forged durable candidate and event receipts fail independently of pointer counts",
+        "forged receipts and pointer sets cannot become authority evidence",
+        "missing, forged, stale, extra, and secret-bearing provider metadata fail closed",
+        "phase relabeling cannot turn a rehearsal child into production evidence",
+        "production authority binds the pinned standing branch and no clone claim",
+        "production authority refuses a zero live legacy meetings census before import",
+        "production authority rejects registered Reader denominator near misses",
+        "production lineage admits only the exact approved documentary-main join",
+        "production replay accepts 111 already-proven authorities without relabeling their durable bootstrap",
+        "re-attested authority binds the exact predecessor row, receipt, pointer, and contiguous events",
+        "the CLI surface never accepts a database URL and derives phase-specific paths",
+        "the Neon adapter submits the write probe only as an explicit read-only transaction",
+        "the fake transport produces only sanitized, hash-bound rehearsal authority",
+        "the publication-boundary repository proof rejects clean-head races",
+        "the terminal comparator re-reads live authority and emits no driver secret",
+        "writable, non-refusing, and database-mismatched handles fail closed"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-finance-authority-isolation.test.ts": {
+      "names": [
+        "Ask retains exact state finance records when only the unrelated FEC reader fails",
+        "NH and NJ lineup and measure lookups do not open the Arizona authority; AZ still fails explicitly",
+        "an unavailable NH finance holding remains explicit while NJ finance still renders",
+        "foreign contest and card keys do not initialize the AZ identity bridge",
+        "state officeholder finance also survives an unrelated FEC failure through the verified bridge"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-finance-delivery.test.ts": {
       "names": [
         "Katie Hobbs ballot, official API, and shared Ask selector use one canonical record",
         "a candidacy for another office stays explicitly identified as that candidacy",
-        "a missing certified identity bridge cannot become a display-key funding absence",
+        "a missing canonical ballot identity projection cannot become a display-key funding absence",
         "a missing deployed normalized holding raises a failed read even if staged evidence exists",
+        "a retired Plural officeholder cannot resolve through the finance identity bridge",
         "a reused officeholder slot, changed office, or changed jurisdiction fails the committed identity",
-        "accent-equivalent current person identity never joins a different Hernandez",
-        "an unmapped roster division cannot erase an explicitly resolved person's held candidacy",
         "every eligible normalized record survives the shared canonical target projection; leads stay withheld",
         "every resolved official, including NJ county and NH governor, preserves its full canonical finance answer",
         "exact duplicate roster aliases preserve the canonical finance answer and requested identity",
         "federal finance answer remains identical for every existing FEC target",
         "federal officeholders' held state candidacies project without inventing federal records",
         "malformed roster person identities remain unresolved before any finance fallback",
-        "official finance identity bridge reproduces current canonical sources",
+        "official finance identity bridge is carried by the canonical registry projection",
+        "retired intermediary name reconciliation cannot attach Alma Hernandez's candidacy",
         "the canonical federal contest cannot manufacture an Arizona state-finance gap",
         "unverified extraction PASS and Auditor INCONCLUSIVE do not promote money",
         "wrong-candidate and unlinked-official targets never inherit Katie Hobbs money"
@@ -6453,6 +6863,7 @@
         "direct official vote IDs never fall through to another same-name person",
         "each readable canonical statement subject can be searched without a general-knowledge answer",
         "multiple verified roles share an Ask subject only through the committed person bridge",
+        "one canonical Reader preload failure cannot reject or suppress an unrelated preload",
         "raw acquisition, extraction PASS, and unresolved finance never become a state-money answer",
         "the canonical body inventory remains available where no meeting has been acquired",
         "the real Ask route carries Mejia's published filing contact with its own provenance"
@@ -6465,9 +6876,22 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-census-outputs.test.ts": {
+      "names": [
+        "Reader census output redirection fails closed on partial, unused, unsafe, duplicate, or colliding destinations",
+        "Reader census preserves its historical side-output defaults",
+        "Reader census redirects every side output through explicit bounded paths",
+        "fresh Reader closure serialization cannot acquire an inheritance seam"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-census.test.ts": {
       "names": [
+        "Reader authority canonicalization ignores transport metadata and JSON key order only",
+        "Reader authority counts a union predecessor only with authenticated disposition context",
+        "Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production",
         "applicability keeps source inputs distinct without erasing direct reader obligations",
+        "ballot absence supersession permits only a unique later verification of the exact same fact",
         "ballot scope cannot hide an eligible incumbent when the consumer join returns null",
         "committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens",
         "committed proof fingerprint rejects a vanished loader or changed holding, without requiring the same documentary HEAD",
@@ -6478,13 +6902,19 @@
         "every declared canonical dataset/surface edge has an executable consumer path",
         "every held voting jurisdiction and site survives the real route into the actual panel leaf",
         "evidence packaging preserves the exact baseline JSON and deterministic archive",
+        "fresh Reader closure admission requires authority while inherited historical receipts retain compatibility",
         "graph control crosses actual API fetches and fails when the reader import is removed",
+        "legacy execution-authority compatibility is pinned to exact pre-seam path and bytes",
+        "promoted officeholder-statement drift fails without redefining the frozen 29/3 denominator",
+        "promoted roster member and disposition drift fails without shrinking the frozen child denominator",
         "reader readback counts missing rows and refuses wrong-candidate identities, false counts, and unchecked evidence",
         "receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",
         "render instrument rejects a vanished eligible fact, an inherited identity and a false row count",
         "source fingerprint follows a directory index and imported reader CSS as files",
+        "state-money supersession requires one later non-weakening authority for the exact identity",
         "the actual reader graph cannot consume autonomous staging merely because an artifact exists",
-        "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt"
+        "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt",
+        "the frozen Reader census retains retired authorities as withheld evidence without restoring their production identities"
       ],
       "dynamic": 0
     },
@@ -6498,6 +6928,16 @@
       "names": [
         "every canonical state-finance target survives the real route, including long school-seat IDs",
         "funding route refuses malformed or excessive identifiers without guessing another person"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-generator-paths.test.ts": {
+      "names": [
+        "Reader final packaging is lossless and does not rewrite an inherited closure receipt",
+        "Reader final packaging preflights every source before mutating any source",
+        "Reader final packaging requires a complete explicit deterministic target denominator",
+        "Reader proof generators retain production defaults and accept explicit rehearsal paths",
+        "Reader proof path overrides fail closed when blank, duplicate, or outside the evidence namespace"
       ],
       "dynamic": 0
     },
@@ -6516,6 +6956,7 @@
     },
     "tests/reader-last-mile-meeting-knowledge-ask.test.ts": {
       "names": [
+        "documentary meeting-knowledge proof receives comment-access authority explicitly",
         "every held minutes summary and public-comment rule survives real Ask with exact source fields",
         "minutes paraphrases never attach to another body or supply a member roll call",
         "missing or unreadable summary identity holdings stay explicit OURS gaps",
@@ -6574,8 +7015,16 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-surface-witnesses.test.ts": {
+      "names": [
+        "surface witness composition is an exact-head, hash-bound deterministic union",
+        "surface witness composition refuses duplicate, stale, changed, or incomplete proof"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-trace.test.ts": {
       "names": [
+        "Next deployment tracing includes static geography and excludes every migrated runtime first seed",
         "every dynamic reader contract fails if one holding is removed from deployment tracing",
         "postbuild checker rejects a removed dynamic holding in emitted route manifests",
         "the completed Next production bundle includes every declared runtime holding"
@@ -6623,6 +7072,40 @@
       "names": [
         "PRDY-4: a moved sitting is a REPLACE naming the changed fields; an online sitting renders its label and never a pin; a missing agenda is OUR gap unless the publisher's slot was observed empty",
         "PRDY-4: over the real committed snapshot, the 17 held Pima sittings project UNCHANGED (fact equals the Reader's own row) and the 18th is ADDED through validateSnapshot"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-proof-history.test.ts": {
+      "names": [
+        "a fresh Reader receipt derives one exact head from every applicable census row",
+        "a fresh Reader receipt rejects an applicable row with no exact proof head",
+        "a fresh Reader receipt rejects applicable rows proved at mixed heads",
+        "an inherited Reader receipt keeps the invalidation report as its proof-head authority but legacy authority is exact-byte bounded",
+        "archived controller support binds exact result and disposition membership digests",
+        "archived production support rejects registered Reader denominator near misses",
+        "archived rehearsal support requires the one planned existing-authority union overlap",
+        "archived support keeps the 96-plan, 111-authority, and 157-registry denominators distinct",
+        "archived support rejects recursive schema additions and secret-bearing keys regardless of value type",
+        "fresh Reader history re-parses exact archived provider and controller support instead of trusting matching hashes",
+        "fresh Reader history requires a hash-bound execution authority at the exact proved head",
+        "production Reader history accepts only controller import commit A bound beneath distinct authority commit B",
+        "production Reader history accepts the exact all-111-skipped retirement replay",
+        "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-proof-runtime.test.ts": {
+      "names": [
+        "Reader proof authority binds the actual read-only connection without exposing it",
+        "Reader proof authority permits a descendant only for an unchanged validated production merge",
+        "deployed Reader runtime closure admits documentary-only descendants and rejects source drift",
+        "documentary Reader meeting authority fails closed before explicit phase admission",
+        "documentary Reader proof initializes every required promoted authority exactly once",
+        "documentary Reader proof rejects an absent or failed required authority",
+        "exact documentary producers do not reopen reviewed first-seed or stale proof artifacts",
+        "meeting proof derives the exact 83/41 authority from admitted import membership",
+        "meeting proof identity binds all promoted and intentional no-LKG partitions independent of readback order",
+        "meeting proof identity rejects incomplete, ambiguous, or unreadable partition authority"
       ],
       "dynamic": 0
     },
@@ -6681,6 +7164,12 @@
         "source renewal accepts an exact removed dependency only beside current execution and complete graph absence",
         "source-only reader renewal cannot inherit a changed canonical identity or eligibility projection",
         "successive source renewal inherits only byte-identical already-classified dependencies"
+      ],
+      "dynamic": 0
+    },
+    "tests/readiness-authority.test.ts": {
+      "names": [
+        "readiness authority keeps missing, promoted, and store-unreachable outcomes distinct"
       ],
       "dynamic": 0
     },
@@ -6777,12 +7266,13 @@
     "tests/readiness-reader-delivery.test.ts": {
       "names": [
         "ADM-39: neither summary tile is a dash — both hold a measurement with a denominator",
-        "ADM-40: Arizona, New Hampshire and New Jersey do NOT produce the same breakdown",
-        "ADM-40: Federal · FEC carries a REAL per-state denominator, never the national one",
-        "ADM-40: New Hampshire and New Jersey candidate filings are no longer blank, and carry their real counts",
+        "ADM-40: the remaining static readiness denominators retain real state differences",
         "ADM-41: a Census county division is not rendered as though it were the town",
-        "ADM-41: the ZIP population is the ACS 2024 estimate, and a zero is never asserted as a count",
-        "ADM-41: the state denominators are the 2024 release, in the same run as the ZIP numerators",
+        "PDC-7: Admin does not report retired Plural/OpenStates state rosters as Reader delivery",
+        "PDC: Federal FEC readiness never reprojects the retired tracked corpus",
+        "PDC: ballot candidacy and state-finance readiness never reproject tracked manual-production seeds",
+        "PDC: changing the five tracked manual-production bootstrap families cannot alter readiness",
+        "PDC: readiness authority coverage accounts for every production contract",
         "the publisher writes all three pilot states under the CURRENT derivation contract",
         "§9A.9: every cell says something, and no cell says a machine constant",
         "§9A.9: something the Reader is served says so — never 'no data' and never an empty cell"
@@ -6806,19 +7296,6 @@
         "the CSV reader survives quoted commas, escaped quotes and embedded newlines",
         "the Census type breakdown sums to the unit total",
         "the Census workbook reconciles: 90,837 units + 1,313 dependent = 92,150"
-      ],
-      "dynamic": 0
-    },
-    "tests/refresh-cadence.test.ts": {
-      "names": [
-        "FEC and state-roll routines are absent from the scheduled commit-and-build orchestrator",
-        "a source with no elevation is unaffected by the election date",
-        "every source states a cadence reason and what it governs",
-        "every source the orchestrator knows about governs a path under data/",
-        "exactly three workflows are scheduled, and only one can cost a build",
-        "the election elevation expires ON its stated date, not around it",
-        "the five decronned refreshers keep workflow_dispatch and lost their schedule",
-        "weekly runs on Monday only; monthly on the 1st only"
       ],
       "dynamic": 0
     },
@@ -6851,63 +7328,6 @@
       ],
       "dynamic": 0
     },
-    "tests/refresh-execution-result.test.ts": {
-      "names": [
-        "R1: a result from run A cannot be read back under run B's key",
-        "R1: a written record round-trips through the durable store",
-        "R1: readGithubIdentity names the missing variables rather than inventing a blank identity",
-        "R1: the on-disk key contains the repository, run id and run attempt",
-        "R1: the store is immutable — a differing rewrite for the same (run, attempt) is refused",
-        "R1: timestamps are machine-owned — taken from the run record, not an argument",
-        "R1: two attempts of the same run are distinct records with distinct keys",
-        "R2: a healthy survivor can be committed while the overall status stays red",
-        "R2: a not-due source is distinguishable from a failed source",
-        "R2: one source fails while another succeeds — the outcomes stay apart",
-        "R2: the final status is derived from typed phase state, not a prose or exit code",
-        "R2: validation can fail independently of a successful source",
-        "R3: a correctly bound run reconciles",
-        "R3: a later main SHA cannot silently replace the run's starting SHA",
-        "R3: a nonexistent survivor SHA yields PROVENANCE_MISMATCH",
-        "R3: a stale local checkout cannot override the canonical run",
-        "R3: the correct run id but wrong run attempt yields PROVENANCE_MISMATCH",
-        "R3: the wrong workflow run id yields PROVENANCE_MISMATCH"
-      ],
-      "dynamic": 0
-    },
-    "tests/refresh-gate-isolation.test.ts": {
-      "names": [
-        "SEEDED: run 33517560447 attributes its one failing file to meetings, and nj-filing and dotgov SURVIVE",
-        "SEEDED: run 33636708298 attributes four files to nj-filing and meetings and one to the tree — and commits NOTHING under the tree's red",
-        "SEEDED: the five failing files of run 33636708298 are read off the reporter's own summary",
-        "a file that passes only with EVERY changed source reverted is the refresh's jointly — every changed source is culpable",
-        "a file that passes when EITHER of two sources is reverted refuses the combination, and both are culpable",
-        "a future date on a rendered line is declared on that line, and a past one is left alone",
-        "a path mentioned OUTSIDE the failing section is not a failing file",
-        "a red with no changed source at all is the tree's by construction",
-        "a reporter that died before its summary still yields its own `test at` lines, and nothing else",
-        "a source in debt is DUE whatever its cadence says, and clears when it lands",
-        "debt counts consecutive failures, keeps the first day, and is discharged by name",
-        "nextCadenceDay and dayAfter agree with the cadence table",
-        "no failing file is GREEN, and every changed source survives",
-        "the debt file is written only when its debts move — a quiet day stays quiet",
-        "the run record round-trips, keeps the contract's field names, and the Markdown is rendered from it"
-      ],
-      "dynamic": 0
-    },
-    "tests/refresh-renewal.test.ts": {
-      "names": [
-        "NOT_NEEDED and RENEWED carry no refusal, and the summary leads with the verdict and the head",
-        "RLC-2: a generator that cannot regenerate after the restore is reported, never passed off as coherent",
-        "RLC-2: a refused change goes back to HEAD and THEN the PURE dependents regenerate from the restored tree, in that order, through the registry",
-        "RLC-2: the FAILED record carries what the refusal put back and regenerated, and the summary states it beside the refusal",
-        "RLC-2: the orchestrator refuses through the shared restore, and the refresh workflow never arms the forced-refusal seam",
-        "a failed renewal refuses only the sources whose change touched a holding, names the step, and says the paths are back at HEAD",
-        "changedHoldings names a holding whose bytes moved, appeared or vanished, and nothing else",
-        "legacy renewal no longer owns FEC/state-roll data-plane holdings",
-        "the run record round-trips RL-1 observations and the renewal, and the Markdown states both"
-      ],
-      "dynamic": 0
-    },
     "tests/refusal-copy.test.ts": {
       "names": [
         "BAL-7: an apology and a confession are caught, and 'we haven't yet' is not",
@@ -6935,14 +7355,34 @@
     "tests/registry-ownership.test.ts": {
       "names": [
         "NH232 CONTROL: a generator that skips the promoted overlay is caught",
+        "NH232/PDC: no path writes the retired tracked registry authority",
         "NH232: every promoted body is reconciled to a workstream promotion or a census gap walk",
         "NH232: every promoted input body reaches the generated registry",
         "NH232: every promoted row in the registry came from the input store",
-        "NH232: exactly one path writes the generated registry",
         "NH232: the full expected body set equals the generated body set",
         "NH232: the promoted input store is sound on its own terms",
-        "NH232: the promoted store is an INPUT, and is not registered as generated",
-        "NH232: the registry is registered as a generated artifact"
+        "PDC: the tracked promoted-body overlay is first-seed evidence, not generated runtime truth",
+        "PDC: the tracked registry is first-seed evidence, not a generated runtime artifact"
+      ],
+      "dynamic": 0
+    },
+    "tests/registry-runtime-data-plane.test.ts": {
+      "names": [
+        "both Reader projections reject cross-source proof and never bootstrap on store failure",
+        "federal civic member ordering is independent of source-map insertion order",
+        "federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer",
+        "manual contracts have no clock and retired tracked writers cannot be invoked",
+        "one blocked registry publisher holds only its dependent members while an unrelated roster update promotes",
+        "registry civic member ordering is independent of JSONB object-key order",
+        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live"
+      ],
+      "dynamic": 0
+    },
+    "tests/registry-source-isolation.test.ts": {
+      "names": [
+        "division and geometry authority never opens the unrelated federal roster",
+        "federal directory scope is exact and excludes local/state-legislative divisions",
+        "official lookup still fails closed when its required federal roster is unavailable"
       ],
       "dynamic": 0
     },
@@ -7124,25 +7564,112 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-civic-data-frontier.test.ts": {
+      "names": [
+        "a corrupt supervisor row is explicit and cannot erase valid fairness clocks",
+        "a malformed exact receipt cannot suppress a valid prior supervisor attempt",
+        "an all-unavailable provider rotates deterministically across frozen admission slots",
+        "an exact task receipt excludes that task from the supervisor-only attempt clock",
+        "frontier configuration and identities fail closed",
+        "one pass admits one least-recently-considered task per provider domain",
+        "repeated supervisor faults rotate fairly within one provider without changing other domains",
+        "the real pass ceiling is based on provider domains, not every partition in a failed provider tail"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-civic-data-observability.test.ts": {
+      "names": [
+        "PDC meetings observability enumerates every source/body authority and excludes the retired aggregate",
+        "PDC-13: 24h, 7d, and 30d histories use exact attempt/event members",
+        "PDC-13: LKG serving is based on candidate chronology, not pointer-write timestamp",
+        "PDC-13: Reader delivery UNKNOWN is surfaced separately from fresh source data",
+        "PDC-13: Reader evidence cannot become a source refusal even if its event state is malformed",
+        "PDC-13: Reader repair ordering uses append-only sequence without corrupting source promotion",
+        "PDC-13: a PROMOTED candidate row without atomic event never masquerades as an outcome",
+        "PDC-13: a Reader PASS cannot be current when the deployed code identity is unavailable",
+        "PDC-13: a broken pointer proof makes canonical and Reader visibility UNKNOWN",
+        "PDC-13: a contract without a Reader projection is never labeled Reader-visible",
+        "PDC-13: a durable failed typed Reader readback is UNKNOWN, never false health",
+        "PDC-13: a feature/preview build cannot certify production Reader visibility",
+        "PDC-13: a final dotgov outage supersedes an earlier synthetic refusal as RETRYING while LKG serves",
+        "PDC-13: a future adapter timestamp is a contained refusal on the local attempt clock",
+        "PDC-13: a future validation receipt cannot manufacture a contained refusal",
+        "PDC-13: a future-dated Reader PASS cannot certify present Reader visibility",
+        "PDC-13: a gap before Reader readback fails delivery closed without changing source disposition",
+        "PDC-13: a historical promotion event must follow its own source-scoped evidence",
+        "PDC-13: a later refusal leaves the proven LKG serving with exact held and refused reasons",
+        "PDC-13: a later retired Reader receipt cannot be hidden behind an older V2 PASS",
+        "PDC-13: a later source-state event invalidates only that candidate's pointer proof",
+        "PDC-13: a manual promotion also requires durable typed Reader proof before Admin can call it healthy",
+        "PDC-13: a pointer without its atomic PROMOTED event is UNKNOWN, never canonical",
+        "PDC-13: a terminal candidate row without its append-only event is UNKNOWN, not retrying",
+        "PDC-13: a terminal event cannot be revived into a nonterminal state on the same candidate",
+        "PDC-13: a trusted-LKG import leaves the standing source due immediately",
+        "PDC-13: an abandoned standing attempt becomes HELD instead of remaining silently in progress",
+        "PDC-13: an answered empty store is NOT_RECORDED while a complete history count is measured zero",
+        "PDC-13: an illegal adjacent source transition cannot become canonical or counted success",
+        "PDC-13: an old typed Reader PASS cannot certify a later deployed Reader version",
+        "PDC-13: an unrecognised source event cannot coexist with a healthy canonical pointer",
+        "PDC-13: connection, store, projection, and answered evidence are distinct outcomes",
+        "PDC-13: contradictory acquisition scalars cannot report source success or a contained failure",
+        "PDC-13: contradictory durable evidence becomes UNKNOWN instead of a false zero",
+        "PDC-13: declared consumers without a durable typed Reader readback do not prove delivery",
+        "PDC-13: elapsed automatic retries and owner-invoked refusals are explicitly HELD",
+        "PDC-13: exact change members, GOOD pointer, and typed Reader receipt prove delivered CHANGED",
+        "PDC-13: freshness separates FRESH, DUE, STALE, and UNKNOWN",
+        "PDC-13: future source evidence cannot become a latest attempt, exact count, or retry clock",
+        "PDC-13: malformed authority-transfer evidence cannot masquerade as live-source success",
+        "PDC-13: older uncertain authority evidence does not hide a later proven source attempt",
+        "PDC-13: one source refusal cannot alter another source's Admin disposition",
+        "PDC-13: pointer or candidate LKG drift cannot remain canonical, Reader-visible, or healthy",
+        "PDC-13: pointer payload drift is UNKNOWN even when an older typed Reader PASS receipt exists",
+        "PDC-13: receipt-held records retain their exact key and record payload",
+        "PDC-13: render words never collapse unknown, not recorded, not applicable, and measured zero",
+        "PDC-13: the deterministic Admin render contract leads with canonical operations and refuses false zeroes",
+        "PDC-13: the exact 30d window does not truncate the full meeting-partition volume",
+        "PDC-13: the pure source-state classifier refuses skipped, revived, and repeated dispositions",
+        "PDC-13: tied latest attempts cannot be ordered by UUID or database return order"
+      ],
+      "dynamic": 0
+    },
     "tests/routine-civic-data-promotion.test.ts": {
       "names": [
-        "Census product/vintage/GEOID/cardinality can atomically replace resolver geography",
         "FEC candidate identity accepts the official nine-character office forms and rejects a numeric congressional impostor",
         "GOOD is the only path that reaches PROMOTED",
         "T4 intermediary bytes remain research-only and cannot auto-promote",
         "a FEC period that regresses behind the class LKG is refused",
+        "a Reader code-version change re-verifies the same LKG immediately without source reacquisition",
+        "a Reader projection whose declared digest names different bytes is refused before LKG moves",
+        "a delayed older acquisition cannot overwrite a newer source-scoped LKG",
+        "a future-dated acquisition cannot replace LKG with a pointer the Reader will refuse",
+        "a malformed typed Reader projection is refused before it can replace LKG",
+        "a nested Reader row without a stable civic identity is refused even when its digests match",
+        "a non-null but invalid LKG row cannot bless a replacement",
+        "a normalized payload whose declared digest names different bytes is refused before LKG moves",
+        "a pointer whose LKG candidate is missing cannot bless a replacement",
         "a pre-parser source failure is one durable terminal event with a validation receipt",
+        "a registered production candidate must bind its normalized evidence, not only its Reader payload",
         "a state member whose chamber and term contradict the normalized seat is refused",
-        "all destructive classes are enumerated by the contract",
+        "a supplied civic-member projection cannot hide or replace the members derived from Reader",
+        "a transient Reader readback failure self-heals on the same version without reacquisition or LKG mutation",
+        "all standing routine-source destructive classes are enumerated by the contract",
         "ambiguous FEC identity is refused",
         "an incomplete claimed horizon is CANNOT_TELL and holds LKG",
         "an incomplete state chamber/term identity is refused and holds the state LKG",
+        "an unexplained removal from any OPEN/incomplete horizon is refused generically",
         "an unregistered redirect that also returns malformed bytes remains SOURCE_BLOCKED",
         "blocked route is evidence of acquisition failure, never absence",
+        "dependent evidence can affect only its exact source, record class, and scope",
+        "duplicate civic member keys are refused before a delta or pointer can collapse facts",
         "explicit bounded authoritative absence can promote",
         "freshly fetched stale FEC facts are refused",
         "malformed FEC payload is persisted as PARSE_INVALID and holds LKG",
         "official state roll identity, term, event and stage can promote directly",
+        "production Reader readback re-observes after promotion and cannot move event chronology backwards",
+        "registered promotion durably reads back the exact Reader projection instead of inferring delivery",
+        "registered promotion snapshots one durable candidate before any async store step",
+        "the generic transition driver cannot write a production store outside an exact registered contract door",
+        "the standing promotion door binds adapter output to its exact registered contract",
         "wrong Census schema is refused",
         "wrong Census vintage is refused",
         "wrong roll-call event/stage is refused without weakening exact roll identity",
@@ -7152,6 +7679,7 @@
     },
     "tests/routine-civic-data-regressions.test.ts": {
       "names": [
+        "PDC: a thin NH response with one plausible member per chamber cannot replace LKG",
         "RCD-9: CARES has no fabricated House member positions for an unrelated 2019 vote",
         "RCD-9: a blocked route remains our acquisition gap, never an official absence",
         "RCD-9: a freshly fetched stale state roster is refused",
@@ -7165,10 +7693,45 @@
     },
     "tests/routine-civic-data-runner.test.ts": {
       "names": [
+        "--only selection refuses typos and empty tokens before store access",
+        "Reader readback repair covers the observable registry independently of source cadence",
+        "Reader repair work drains continuously under a fixed cap after one item hangs or fails",
+        "a child process or receipt failure is operational and cannot fabricate source state",
+        "a genuine source-unavailable child receipt remains durable and preserves exact LKG",
+        "a killed Reader child is an exact delivery repair fault and cannot mutate source or LKG",
+        "a launcher exception is contained as one result after every sibling starts",
+        "a proven durable source outcome survives a later child execution failure",
+        "an exit-zero child is not called GOOD before exact receipt and canonical readback",
+        "an operational-reference-only contract fabricates no Reader delivery result",
         "cadence and retry are source-local",
+        "durable receipt verification rejects a publisher label in the task identity field",
+        "each admitted meeting source/body contract is its own concurrent child boundary",
+        "every standing source child emits its exact contract id and the supervisor persists admitted code identity",
+        "failure-domain declarations and timeout bounds fail closed",
+        "nonzero child receipts must prove a durable held candidate and cannot claim PROMOTED",
         "one canonical registry owns every supported authority and refuses arbitrary gov hosts",
+        "one degraded provider occupies one lane while grouped unrelated providers drain",
+        "one timed-out canonical clock is isolated while ordered sibling clocks settle",
+        "one unresolved child cannot suppress sibling launch or classification",
+        "ordinary registered doors reject authority-transfer markers without changing LKG",
+        "per-command child environments override the batch and never leak across siblings",
         "routine release output labels the seven-zero constant as structural, never observed",
-        "the standing portfolio invokes data-plane scripts only"
+        "runner receipts are exact JSON, exact-count, and seven-zero structural evidence",
+        "same-cycle isolation requires exact task/candidate receipts, never aggregate counts",
+        "standing routine data and intake launch together and one failure cannot suppress the other",
+        "standing task construction enforces every declarative authority and validation field",
+        "the Neon transport deadline aborts underlying I/O instead of abandoning a promise",
+        "the fixed pool caps host load and drains queued siblings after timeout and launcher failure",
+        "the pilot awaits independently bounded routine and intake children without overlapping ticks",
+        "the pilot outer bound contains the one-per-provider frontier, not a failed provider tail",
+        "the pilot surfaces Reader failures without converting them into source or software failures",
+        "the real child boundary enforces both timeout and per-stream output limits",
+        "the routine runner derives its clock from durable candidate history",
+        "the routine writer acquires its own OS singleton before store or clock access",
+        "the standing authority envelope is narrowed independently for every runtime child",
+        "the standing parent durably accounts for a routine child killed outside source attribution",
+        "the standing portfolio invokes data-plane scripts only",
+        "the standing scheduler advances a free lane on a later tick without overlapping a hung lane"
       ],
       "dynamic": 0
     },
@@ -7218,72 +7781,35 @@
       ],
       "dynamic": 0
     },
-    "tests/schedule-audit.test.ts": {
+    "tests/runtime-authority.test.ts": {
       "names": [
-        "2026-08-27 was late for all three at once — one upstream event, not three defects",
-        "A SKIPPED MONDAY IS RECOVERED — the fourteen-day gap this repair exists for",
-        "NOT_YET_CREATED and NO_RUN_BEYOND_ENVELOPE are DIFFERENT STATES for the same missing run",
-        "QUEUED is a different verdict with a different cause",
-        "a daily cron parses to its UTC minute of the day",
-        "a failure whose log was not read says the discrimination COULD NOT be made",
-        "a landed refresh and a legitimate quiet day are DIFFERENT STATES",
-        "a landed refresh today or later means there is nothing to recover",
-        "a pending slot names the 638-minute run as the reason it is still pending",
-        "a quiet window falls back to the STATED FLOOR and says the floor is not evidence",
-        "a run created ten hours late belongs to ITS OWN slot, not the next day's",
-        "a single skipped day unions that day's sources into the next run",
-        "a slot before the workflow's FIRST EVER RUN is qualified, not reported as a missed run",
-        "a slot past the envelope FLIPS when the run finally arrives — it was never an absence",
-        "a slot past the envelope states the ENVELOPE and the as-of, and blames nobody",
-        "a source due TODAY is never reported as a catch-up",
-        "a workflow with no Unchanged step says it CANNOT TELL, never that it landed",
-        "a workflow_dispatch never fills a slot",
-        "an in-flight run is neither a success nor a failure",
-        "an unsupported cron shape THROWS A NAMED ERROR rather than returning no slots",
-        "catch-up does not raise the build ceiling",
-        "catch-up never DROPS today, however far back the window reaches",
-        "every audited slot carries a denominator's worth of verdicts, and every verdict a note",
-        "expectedSlots lists one UTC instant a day, inside the window and no wider",
-        "no cron value is written into the audit's TypeScript",
-        "no verdict KIND is a did-not-fire verdict",
-        "no verdict SENTENCE ever says a cron did not fire — swept over every fixture",
-        "scheduled runs older than every slot are reported, never silently dropped",
-        "the 2026-08-27 refresh is DISPATCH_DELAYED, and its queue wait is zero",
-        "the 2026-08-28 board: one workflow past the envelope, two still pending",
-        "the GitHub-side commit_refs fatal is a push rejection too (NH171)",
-        "the crons come out of the workflow files, and there are three of them",
-        "the derived quiet-day fixture declares that it is derived",
-        "the envelope is a floor that GROWS — the previous maximum is never a ceiling",
-        "the envelope is derived from the largest observed delay, and says so",
-        "the forbidden-claim detector actually catches the phrasings it is meant to",
-        "the observed delays come out of the recorded runs, and the 2026-08-27 event is in them",
-        "the ordinary 11-to-57-minute lateness is NOT a finding",
-        "the two failures the existing watcher CONFLATES are told apart",
-        "the union is a UNION — it never runs a source no day asked for",
-        "the window is CAPPED, and the cap keeps a quiet fortnight off a daily cadence",
-        "the window is every uncovered day, oldest first, with TODAY always last",
-        "with no last-landed date, catch-up claims nothing — today alone"
+        "branch, dirty tree, wrong SHA, wrong parent and wrong contract each fail closed",
+        "child delegation rotates nonce and narrows capability/contract to one parent PID",
+        "exact clean detached origin/main child with immediate-parent and contract admission passes",
+        "retired importer capability is refused at the raw environment parser",
+        "temporary importer capability cannot satisfy an ordinary source-child expectation"
       ],
       "dynamic": 0
     },
-    "tests/schedule-staleness.test.ts": {
+    "tests/runtime-operational-authority.test.ts": {
       "names": [
-        "SEEDED REGRESSION: a cron the parser cannot read is UNREADABLE, never NOT_SCHEDULED",
-        "SEEDED REGRESSION: a stopped cron followed by a MANUAL dispatch is still STALE",
-        "SEEDED: a DISPATCH-ONLY workflow is NOT_SCHEDULED and can never be stale",
-        "SEEDED: a GREEN scheduled refresh that landed NOTHING on a day sources were due is an incident",
-        "SEEDED: a SCHEDULED workflow with a stale scheduled run is an INCIDENT",
-        "SEEDED: run 33636708298 — the newest SCHEDULED refresh FAILED at the gate — is an incident on its own",
-        "a LANDED refresh, confirmed on the branch, is no incident",
-        "a landed-shaped run whose branch was NOT checked opens nothing — could-not-tell is not evidence",
-        "a legitimate QUIET DAY — the Unchanged step RAN — is no incident, whatever was due",
-        "a manual dispatch that went green after a failed scheduled run does not clear the incident",
-        "a scheduled workflow whose CRON has never fired is its own state",
-        "an unreadable last-run timestamp also refuses to pass quietly",
-        "newestScheduledRun ignores every non-schedule trigger, and orders by time",
-        "ordinary GitHub lateness does NOT fire — the window is twice the interval",
-        "the cron reader is what separates scheduled from not, and it reads the file",
-        "two daily slots halve the interval, so the window halves with it"
+        "no executable tracked-health reporter can become a second operational authority",
+        "production children are hidden behind the installed runtime and local proofs stay ignored",
+        "runtime writers and Admin no longer use tracked operational run paths",
+        "standing and supervisor outcomes share owner history without conflating their authorities",
+        "the immutable runner adopts method authority before opening clocks and invokes no tracked writer"
+      ],
+      "dynamic": 0
+    },
+    "tests/runtime-release-handoff.test.ts": {
+      "names": [
+        "GitHub check reader refuses truncation and does not expose its token",
+        "a dirty runtime refuses before fetch/switch and leaves ignored host evidence",
+        "handoff fails closed on short/unknown served SHA, stale or refused integrity, and unreadable certification",
+        "newest exact required-context attempt governs; no non-success conclusion is treated as green",
+        "origin parsing supports the repository's HTTPS and SSH forms without retaining .git",
+        "quiescent apply fetches only origin/main, detaches exact target, frozen-installs, and verifies clean readback",
+        "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
       ],
       "dynamic": 0
     },
@@ -7314,6 +7840,7 @@
     },
     "tests/scheduler-freshness.test.ts": {
       "names": [
+        "NH328: canonical reader-impact priority reaches the Scout pool before an older band-2 row",
         "SEEDED W3.3: an obligation with broken cadence data is NAMED, never defaulted",
         "SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable",
         "W3.3: a declared publisher cycle outranks a rate we inferred",
@@ -7353,6 +7880,7 @@
     },
     "tests/scout-candidates.test.ts": {
       "names": [
+        "0. an absent canonical candidate store refuses instead of becoming an empty tracked/local authority",
         "1. an opened, evidence-backed candidate is proposed and VALIDATED — never admitted by the Scout",
         "2. a candidate whose URL the Attempt never opened is NOT proposed, and the reason is named",
         "3. a malformed proposal is REJECTED durably with its issue",
@@ -7511,13 +8039,6 @@
       ],
       "dynamic": 0
     },
-    "tests/serving-edge.test.ts": {
-      "names": [
-        "NH206 — THE INSTRUMENT IS SHOWN CATCHING A CONSTRUCTED CROSSING",
-        "NH206: the committed snapshot is not FROZEN, and its shedding is explicable"
-      ],
-      "dynamic": 0
-    },
     "tests/serving-surfaces.test.ts": {
       "names": [
         "NS15 — every serving surface is checked against its store",
@@ -7563,6 +8084,7 @@
     "tests/shipping-transaction.test.ts": {
       "names": [
         "a certification beyond the first with a REASON is not a defect",
+        "a release observation requires the merged exact head and a new durable receipt",
         "a rollup of nothing reports null rather than zero",
         "a satisfied freeze moves the transaction to REVIEW_FROZEN and records the head",
         "a transaction whose runs reported no minutes reports NOT MEASURED, not 0",
@@ -7574,7 +8096,7 @@
         "nothing can be reopened when nothing is frozen",
         "owner wait is measured from the first certification start to merge-ready",
         "stageAtLeast orders the whole lifecycle",
-        "the 2026-09-07 incident scores FOUR full certifications and is over budget",
+        "the 2026-09-07 software incident scores three completed full certifications and is over budget",
         "the incident's own repair table names what each fix removes, and what survives",
         "the repaired transaction: one full certification, one attestation, no defects"
       ],
@@ -7639,7 +8161,19 @@
         "the snapshot source re-derives status from now; CANCELED survives",
         "the snapshot source refuses to serve when no snapshot exists",
         "the stated total must be the number of rows actually present",
+        "the test-only snapshot writer refuses the repository bootstrap path",
         "write then read round-trips, and the reader validates what it reads"
+      ],
+      "dynamic": 0
+    },
+    "tests/software-ci-boundary.test.ts": {
+      "names": [
+        "Build Check has no transitional path-cost or OPS_ONLY tier",
+        "every Build Check job defaults non-draft, non-reused work to full certification",
+        "post-deploy classifies only deploy possibility, before installing",
+        "push/main/manual triggers remain and no workflow hides behind a path filter",
+        "the repository inventory does not project current operational health from retired Git state",
+        "the surviving software-staging promoter cannot advertise the retired runtime bypass"
       ],
       "dynamic": 0
     },
@@ -7652,6 +8186,26 @@
         "RULING 160: an unaligned buyer is COUNTED, never taken as a side",
         "RULING 160: constraint 4 — an offer at a rate that is not on the published card is off-catalog",
         "RULING 160: the worked example reconciles — both sides approached, same published rate, same day"
+      ],
+      "dynamic": 0
+    },
+    "tests/source-acquisition-failure.test.ts": {
+      "names": [
+        "a partial FEC aggregate failure with no prior row cannot mint a promoted absence",
+        "a real acquisition deadline persists one exact source failure while retaining LKG",
+        "a receipt is fully transported through a child pipe before a nonzero exit",
+        "a registered source failure is one durable attempt with retry clock and unchanged LKG",
+        "all five single-route adapters can persist a well-formed source-scoped failure receipt",
+        "an unavailable canonical store remains an operational failure and emits no synthetic receipt",
+        "each standing single-route entrypoint uses the source-aware durable failure door",
+        "every registered meeting capability carries the composite's exact abort signal to transport",
+        "narrow publisher transport boundaries brand failures without leaking the thrown message",
+        "program/store/protocol exceptions cannot be relabelled as a source attempt",
+        "publisher request, body, and retry deadlines cancel their real work before reporting failure",
+        "source parsers brand publisher evidence while a missing credential remains configuration",
+        "the curl rung receives both a native deadline and an abortable process signal",
+        "the shared meeting client cancels hung request/body work and its real retry sleep",
+        "the source deadline leaves a bounded durable-settlement window inside the outer child kill"
       ],
       "dynamic": 0
     },
@@ -7864,7 +8418,8 @@
     },
     "tests/state-holdings-meeting-data.test.ts": {
       "names": [
-        "meeting consumers read held rows and retain version and venue matching"
+        "a missing canonical Legistar venue scope fails closed",
+        "meeting consumers use the canonical venue test seam and retain version and venue matching"
       ],
       "dynamic": 1
     },
@@ -7888,15 +8443,29 @@
       ],
       "dynamic": 0
     },
+    "tests/state-legislator-official-rosters.test.ts": {
+      "names": [
+        "Arizona official roster accounts for every active and resigned publisher row",
+        "Arizona roster refuses stale terms, silent exclusions, and incomplete seat topology",
+        "New Jersey official roster requires 120 unique BioLink identities and exact 2/1 district topology",
+        "New Jersey roster refuses malformed IDs, duplicates, vacancies, and truncation",
+        "an Arizona document failure is durable and cannot replace either its LKG or New Jersey's disposition",
+        "the standing AZ/NJ adapter builds official complete-roster candidates instead of horizon probes"
+      ],
+      "dynamic": 0
+    },
     "tests/state-manifest.test.ts": {
       "names": [
         "a new state's first acquisition creates a required manifest without a state list edit",
         "a readback update makes a byte-current manifest stale while preserving its observed_at",
         "a transitive generator code change invalidates manifests independently of held data",
+        "an authority-cutover label cannot hide a present file or drift from its frozen hash and production contract",
+        "an exact authority cutover preserves the frozen law-title evidence but removes the dead Git path from current holdings",
         "content-addressed asset aliases preserve the union of authoritative state joins",
         "dataset-to-surface contract refuses absent datasets and absent reader surfaces",
         "every advertised table row count equals the rendered row count",
         "every exempt canonical TypeScript holding has an explicit export and dependency contract",
+        "every migrated contract bootstrap fixture rendered by a state manifest is labeled evidence, never live Reader authority",
         "extracted canonical envelopes count roster records and render every member",
         "ignored local source bytes are never external manifest inputs",
         "imported module values cannot pass freshness after a supporting source changes",
@@ -7965,6 +8534,23 @@
         "requireStateRegistry THROWS, so a caller that forgot to check still cannot hunt",
         "the row counter does not count headers or separators as sources",
         "the three pilot states are registered, and the gate says so with a count"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-rollcall-permanent-boundary.test.ts": {
+      "names": [
+        "AZ, NH, and NJ are three independent permanent routine authorities",
+        "AZ/NH/NJ official current-person authorities are exact and never use the retired aggregate",
+        "a roll promotion is refused unless its exact roster pointer, LKG, and ID-set digest match",
+        "an incomplete official horizon is durable refusal and cannot move or erase that state's LKG",
+        "an official roster promotes to its exact typed Reader and horizon refusal preserves LKG",
+        "grounded Ask reaches an exact official state identity without a Plural roster",
+        "official state identities determine one scope before a Reader opens",
+        "one state's absent roster cannot hide an independently promoted sibling roster",
+        "one state's refusal cannot change either sibling disposition",
+        "source-namespaced identity mismatch is refused instead of joining a vendor id",
+        "the manual registry pointer and official state-roster contracts have no overlapping subject authority",
+        "the standing state-roll door accepts one exact state and no tracked-output mode"
       ],
       "dynamic": 0
     },
@@ -8070,6 +8656,7 @@
     "tests/tenant-body-binding.test.ts": {
       "names": [
         "Mesa binds — the body the audit questioned, checked rather than assumed",
+        "SOURCE_WIRING is the complete serving-membership denominator",
         "a body id nothing in the registry carries is caught, and the message names the tenant",
         "a clean synthetic tenant produces no fault",
         "a division the registry does not have is caught",
@@ -8080,7 +8667,6 @@
         "every adapter the composite builds with no wiring rows owns a checked table",
         "every serving source tenant binds to exactly one registry body",
         "no adapter carries a body id outside the serving-tenant denominator",
-        "the denominator is not empty, and it covers more than the shared table",
         "the printed table lists every tenant, bound or faulted"
       ],
       "dynamic": 0
@@ -8239,7 +8825,8 @@
         "item 8a: every row in both stores carries a plain-English description",
         "the stated open count equals the rows underneath it, section by section",
         "the two stores reconcile as a pair against the frozen tracker",
-        "the workbook round-trips, and a shared-string sheet reads as text"
+        "the workbook round-trips, and a shared-string sheet reads as text",
+        "tracker serialization preserves multiline evidence without trailing-whitespace failures"
       ],
       "dynamic": 0
     },
@@ -8259,7 +8846,7 @@
     },
     "tests/tree-equivalence.test.ts": {
       "names": [
-        "a pull request is FULL by construction, so a candidate's green was earned fully",
+        "a candidate's green cannot be another exact-tree attestation",
         "both required jobs still report on the attested path",
         "every declared verdict and reason is reachable from the matrix above",
         "main's tip was an ancestor of the candidate, which is what collapses the three trees",
@@ -8275,6 +8862,15 @@
         "the workflow keeps no path list of its own for this decision either"
       ],
       "dynamic": 1
+    },
+    "tests/trusted-lkg-import.test.ts": {
+      "names": [
+        "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
+        "Reader proof fails closed if durable trusted-LKG evidence is altered",
+        "retired trusted-LKG doors refuse new imports while retained history remains due",
+        "trusted LKG evidence is content-bound and cannot replace an existing authority"
+      ],
+      "dynamic": 0
     },
     "tests/unsourced-fallback.test.ts": {
       "names": [
@@ -8403,6 +8999,22 @@
       ],
       "dynamic": 0
     },
+    "tests/vote-source-isolation.test.ts": {
+      "names": [
+        "a New Hampshire member opens only the exact New Hampshire authority",
+        "a production process cannot reopen the retired aggregate through a test marker",
+        "a requested New Jersey failure remains explicitly unavailable without opening AZ or NH",
+        "a state-vote pointer cannot borrow another state's publisher, identity, or denominator",
+        "an exact Arizona id absent from its held projection is a scoped no-record result",
+        "an official empty member result cannot be mislabeled as legacy LegiScan evidence",
+        "key-vote failure cannot erase independently held roll-call supporting facts",
+        "official state proof enumeration fails closed on an unreadable canonical store",
+        "official state proof enumeration keeps NOT_RECORDED explicit without borrowing the retired aggregate",
+        "party-label failure cannot erase an independently held key-vote projection",
+        "the permanent state-vote Reader has no retired aggregate-scope probe"
+      ],
+      "dynamic": 0
+    },
     "tests/votes.test.ts": {
       "names": [
         "every position is one of the four recorded states, keyed to a real vote",
@@ -8440,6 +9052,17 @@
         "VOT-1: the distance is a real great-circle measure, checked against a known pair",
         "VOT-1: the radius Sean named is the radius the map draws",
         "VOT-1: with NO resolved point the authority's own order stands"
+      ],
+      "dynamic": 0
+    },
+    "tests/voting-sites-prl-data-plane.test.ts": {
+      "names": [
+        "PRL licensing/ranking defects and source failures preserve the prior GOOD attributed projection",
+        "PRL promotes only its attributed allowlisted measurement and Reader joins by exact Bioguide",
+        "a globally empty voting candidate is refused and store failure never opens the tracked fixture",
+        "one failed voting authority retains only its prior scope while healthy authorities and exact deltas advance",
+        "voting sites promote with exact source/class/scope evidence and the Reader follows only the pointer",
+        "voting-sites and PRL are owner-only promotion commands with no tracked mutable writer or release path"
       ],
       "dynamic": 0
     },
@@ -8496,6 +9119,7 @@
         "1c: alternating failures are not a pair — the rule is still ADJACENT",
         "1c: the MOST RECENT pair is the one returned",
         "JOB02: two manual dispatches do NOT raise a row",
+        "PDC terminal boundary: no job watcher is dispatchable and GitHub owns zero routine clocks",
         "a PASSING TEST is never surfaced as a cause, however cause-shaped its name",
         "a cause already visible in the tail is not repeated above it",
         "a clip is STATED with both numbers, never implied",
@@ -8503,13 +9127,11 @@
         "a long single line is capped rather than carried whole",
         "a real scheduled double failure STILL raises a row",
         "a stack frame is never mistaken for the naming of a failure",
-        "a workflow actually runs the watcher on a schedule",
         "an in-flight run cannot mask the failure before it",
         "an unclipped tail does not claim to be clipped",
         "an unknown trigger is NOT treated as a drill",
         "asOf hides later runs, so the detector can be held against known history",
         "cancelled is not failure — a cancelled run is nobody's diagnosis",
-        "every scheduled workflow in the repo is on the watch list",
         "one failure is not a finding — a wall does not usually repeat",
         "post-job git cleanup is filtered out — a tail made of it has told the reader nothing",
         "runs out of order are sorted before the top two are read",
@@ -8519,7 +9141,6 @@
         "the real recorded run names its cause, not only its stack",
         "the scaffolding comes off: no job column, no step column, no ISO timestamp",
         "the tail carries the REAL cause line off the real recorded run",
-        "the watcher composes the tail into the row it opens",
         "too little history returns null, which is not the same claim as healthy",
         "two failures at the top of the list is a finding",
         "two failures separated by a success is not a finding"
@@ -8643,6 +9264,7 @@
     "tests/worker-fleet-coordinator.test.ts": {
       "names": [
         "Hunter transport failure is durable OPEN evidence and retry reuses the canonical scheduling debt",
+        "PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source",
         "Scout cycle cap and remaining wall time defer dispatch without inventing failed Attempts",
         "a newly observed Scout route flows to Hunter without rewriting its extraction contract",
         "an exact URL quotation from a publisher outside canonical seed scope cannot ground acquisition",
@@ -8836,11 +9458,10 @@
     },
     "tests/workflow-actions.test.ts": {
       "names": [
-        "AUD-07: both refresh workflows diff before they gate, and still gate before they commit",
-        "F22: every governed-artifact refresh gates on the same full suite",
+        "PDC-9: no refresh workflow definition remains executable",
         "R45: no workflow pins an action major that targets Node 20",
         "R45: setup-node never tries to restore a cache before pnpm exists",
-        "the workflow set is still the nine this rule was audited against"
+        "the workflow set is the two release and software-CI workflows"
       ],
       "dynamic": 0
     },
@@ -8854,18 +9475,19 @@
     },
     "tests/workflow-failure-reporting.test.ts": {
       "names": [
+        "PDC terminal boundary: the retired intake workflow cannot swallow or report runtime checks",
         "RULING 164: a continue-on-error step must have its outcome READ somewhere",
-        "RULING 164: a failed SOURCE is reported even when validation also fails",
-        "RULING 164: intake-tripwire asks all three of its independent questions",
         "RULING 164: the swallowed-failure reader catches a planted one"
       ],
       "dynamic": 0
     },
     "tests/workflow-permissions.test.ts": {
       "names": [
+        "PDC terminal boundary: GITHUB_ROUTINE_OPS_CRONS=0 and ROUTINE_OPS_GIT_WRITERS=0",
+        "THE PLANT: a routine publisher credential cannot return to Actions",
         "THE PLANT: the guard catches a pusher whose permissions block is gone",
-        "every workflow that pushes main declares contents: write",
-        "refresh-daily is the consolidated pusher and carries the declaration"
+        "no workflow pushes main or declares contents: write",
+        "surviving workflows reference exactly the software-CI/release secret allowlist"
       ],
       "dynamic": 0
     },
@@ -8936,11 +9558,11 @@
         "assertWriteAllowed is silent when the pairing is legitimate",
         "assertWriteAllowed throws a named error, not a generic one",
         "every database write path asserts the guard",
-        "g13 audit: every scheduled workflow that writes carries a sanction",
+        "g13 audit: GitHub workflows have no production write handle or runtime sanction",
+        "g13/PDC: a correctly scoped purge sanction still requires the admitted standing runtime",
         "g13: the refusal names the sanctioned path, not only .env.local",
         "g13: the sanction table is a closed list, and both narrow operations are on it",
-        "g13: the scheduled purge, declared as the workflow declares it, is allowed",
-        "g13: the workflow declares exactly what the guard requires",
+        "g13: the standing intake runtime declares exactly what the guard requires",
         "no write path outside the guarded set has appeared",
         "the defect that caused this: a dev server pointed at production is refused",
         "the production runtime writing to the production database is allowed",

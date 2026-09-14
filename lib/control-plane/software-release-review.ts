@@ -4,17 +4,17 @@
  *
  * The owner reviews a SOFTWARE BUILD — the exact staging SHA Prompt 3's
  * release manifest names — section by section, and records what he decided.
- * This module is the record's shape and nothing else: no logic, no reader, no
- * civic fact. The rows live in the control plane's `software_release_reviews`
- * append-only log, keyed by the staging SHA the row was made against, so a new
- * SHA starts with no rows at all and no decision ever carries forward. Nothing
- * is updated or deleted; a later decision supersedes an earlier one for gating
- * and the earlier one stays as history.
+ * The same canonical software-release log also holds the automatic
+ * post-deploy integrity reading for an exact production SHA. Review decisions
+ * are partitioned by staging SHA; integrity readings use the fixed
+ * `production-integrity` partition. Nothing is updated or deleted.
  *
- * It joins nothing. No OCD id, no work item, no readiness cell, no promotion
- * record, no civic fact: a row here says what the owner thought of a build,
- * and the build is named by its SHA and its Netlify deploy id.
+ * It joins nothing civic. No OCD id, no work item, no readiness cell and no
+ * civic promotion record: every row is software-release evidence, bound to the
+ * exact commit it concerns.
  */
+
+import type { IntegrityRecord } from "../ops/production-integrity.ts";
 
 export const SOFTWARE_RELEASE_REVIEW_FORMAT_VERSION = 1;
 
@@ -38,8 +38,11 @@ export const REVIEW_RECORD_KINDS = [
   "RAISED_STATE_CHOICE",
   "OWNER_APPROVED_FOR_PRODUCTION",
   "MANIFEST_OBSERVED",
+  "POST_DEPLOY_INTEGRITY",
 ] as const;
 export type ReviewRecordKind = (typeof REVIEW_RECORD_KINDS)[number];
+
+export const PRODUCTION_INTEGRITY_LOG_KEY = "production-integrity" as const;
 
 export interface SoftwareReleaseReviewRecord {
   readonly formatVersion: typeof SOFTWARE_RELEASE_REVIEW_FORMAT_VERSION;
@@ -67,4 +70,31 @@ export interface SoftwareReleaseReviewRecord {
     readonly stagingBoundary: string | null;
     readonly reportedAt: string | null;
   };
+  /**
+   * Present only on `POST_DEPLOY_INTEGRITY`. Older decision rows predate this
+   * field, so absence is the review-record case; it is never interpreted as an
+   * empty integrity reading.
+   */
+  readonly productionIntegrity?: IntegrityRecord;
+  /** The trusted run that took the reading, never a credential or free text. */
+  readonly sourceRunId?: string | null;
+}
+
+export type ProductionIntegrityLogRecord = SoftwareReleaseReviewRecord & {
+  readonly decision: "POST_DEPLOY_INTEGRITY";
+  readonly section: null;
+  readonly raisedStateChoice: null;
+  readonly feedback: null;
+  readonly composedFrom: null;
+  readonly productionIntegrity: IntegrityRecord;
+};
+
+export function isProductionIntegrityLogRecord(
+  row: SoftwareReleaseReviewRecord,
+): row is ProductionIntegrityLogRecord {
+  return row.decision === "POST_DEPLOY_INTEGRITY" && row.productionIntegrity !== undefined;
+}
+
+export function isOwnerReleaseReviewRecord(row: SoftwareReleaseReviewRecord): boolean {
+  return row.decision !== "POST_DEPLOY_INTEGRITY";
 }

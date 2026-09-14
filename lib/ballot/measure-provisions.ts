@@ -179,7 +179,15 @@ function p(
     kind,
     label,
     what,
-    citesUrl: citationFor(prop),
+    // Citation authority belongs to the promoted ballot projection. Resolve it
+    // only when a Reader actually renders/serializes this provision, after that
+    // request has initialized the canonical projection. Resolving here would
+    // make importing the route depend on a live runtime store during `next
+    // build`; copying a bootstrap URL here would instead reopen tracked data as
+    // an implicit production authority.
+    get citesUrl(): string {
+      return citationFor(prop);
+    },
     writtenAt: WRITTEN_AT,
   };
 }

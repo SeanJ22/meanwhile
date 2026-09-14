@@ -460,8 +460,8 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
   {
     key: "reader_truth.change_door",
     question:
-      "Through what door does reader-facing civic truth change — session shipping and the legacy refresh, or the single nightly window on the standing runner's clock?",
-    values: ["session-and-legacy-refresh", "single-nightly-window"],
+      "Through what door does reader-facing routine civic truth change — session shipping and legacy refresh, a nightly Git window, or the standing runner's production data plane?",
+    values: ["session-and-legacy-refresh", "single-nightly-window", "standing-runner-production-data-plane"],
   },
   {
     key: "provenance.owner",
@@ -474,6 +474,31 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question:
       "Does the WORKER EFFICIENCY LAW (cache the stable prefix, route each step to the cheapest adequate model class, budget representations, never re-read or re-walk, measure per step) bind every autonomous worker and session-spawned agent?",
     values: ["adopted-verbatim", "not-adopted"],
+  },
+  {
+    key: "github_actions.role",
+    question: "What role may GitHub Actions play after the permanent civic-data cutover?",
+    values: ["software-ci-only", "software-ci-and-routine-runtime"],
+  },
+  {
+    key: "routine_runtime.canonical_store",
+    question: "Where does mutable routine civic-data and operational truth live?",
+    values: ["production-data-plane", "tracked-repository-files"],
+  },
+  {
+    key: "routine_runtime.git_writers",
+    question: "How many routine data or operational processes may write runtime truth to Git?",
+    values: ["zero", "one-or-more"],
+  },
+  {
+    key: "pr.draft_certification",
+    question: "Which certification tier does a draft pull request receive?",
+    values: ["cheap-deterministic-structural", "full-normal"],
+  },
+  {
+    key: "pr.ready_certification",
+    question: "Which certification tier does a ready pull request receive?",
+    values: ["full-normal", "cheap-deterministic-structural"],
   },
   {
     key: "admin.identity",

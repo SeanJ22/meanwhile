@@ -7,6 +7,9 @@ import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { documentsFor, failuresFor } from "../lib/candidates/positions.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("every held statement identity bridge gives the Positions API the same complete answer from each current person/card identity", async () => {
   const corpus = unifiedCorpus();

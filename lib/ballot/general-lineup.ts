@@ -1,5 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
+import { azContestRecord } from "./az-contest-record.ts";
 
 /**
  * The certified general-election lineup (6a): each party's primary winner
@@ -38,26 +38,11 @@ export interface GeneralLineup {
   contests: LineupContest[];
 }
 
-let cache: GeneralLineup | null = null;
-
-/** Null when no lineup file exists — the filing list then stands. */
+/** The lineup embedded in the exact promoted Arizona ballot projection. */
 export function getGeneralLineup(): GeneralLineup | null {
-  if (cache) return cache;
-  try {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "states", "az", "ballot", "az-general-lineup-2026.json"),
-        "utf8",
-      ),
-    ) as GeneralLineup;
-    return cache;
-  } catch {
-    return null;
-  }
+  return currentAzBallotProjection().generalLineup;
 }
 
 export function lineupForContest(contestId: string): LineupContest | null {
-  return (
-    getGeneralLineup()?.contests.find((c) => c.contestId === contestId) ?? null
-  );
+  return azContestRecord(contestId, () => getGeneralLineup()?.contests);
 }

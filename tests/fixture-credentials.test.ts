@@ -168,9 +168,8 @@ test("a signed LINK is a public record identifier, not a credential", () => {
 });
 
 test("a PEM header quoted in prose or stubbed in a test is not a private key", () => {
-  // Both of these are real: `docs/deploy-key-setup.md` names the header in a
-  // sentence, and `tests/deploy-key-ssh.test.ts` uses a body of sixty-four `x`s
-  // deliberately, so that no test run ever handles key material.
+  // Both shapes are real: prose may name the header, while a structural test
+  // placeholder uses sixty-four `x`s so no test run ever handles key material.
   const prose = "the private half is many lines beginning `-----BEGIN OPENSSH PRIVATE KEY-----`.";
   assert.equal(credentials(scanText(prose, sha256)).length, 0);
 

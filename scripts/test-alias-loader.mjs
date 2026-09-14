@@ -9,6 +9,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import ts from "typescript";
 
 const root = process.cwd();
 
@@ -64,6 +65,40 @@ export function resolve(specifier, context, nextResolve) {
  * only class keys actually declared by the imported module; paint remains a
  * browser assertion and an unknown class key still resolves to undefined. */
 export function load(url, context, nextLoad) {
+  /*
+   * Node's built-in type stripping intentionally refuses TSX. Admin's
+   * canonical runtime-outcome projection has a server-rendered component
+   * contract, so silently omitting its TSX test from the certified suite
+   * would leave the owner-facing PDC evidence outside certification.
+   * Transpile TSX only for this test loader; the app still uses Next.
+   */
+  if (url.endsWith(".tsx")) {
+    const source = readFileSync(fileURLToPath(url), "utf8");
+    const compiled = ts.transpileModule(source, {
+      compilerOptions: {
+        jsx: ts.JsxEmit.ReactJSX,
+        module: ts.ModuleKind.ESNext,
+        target: ts.ScriptTarget.ES2022,
+      },
+      fileName: fileURLToPath(url),
+      reportDiagnostics: false,
+    });
+    return { format: "module", shortCircuit: true, source: compiled.outputText };
+  }
+  /*
+   * JSON the bundler imports by default but Node's ESM loader refuses without
+   * an explicit `with { type: "json" }` attribute (Node 24). Next and tsx both
+   * resolve a bare `import data from "x.json"` to the parsed value as the
+   * default export; the reader body-render proof reaches one such import
+   * (data/derived/school-district-dependency.json via lib/officials/school-
+   * dependency.ts). Return the same default export so the certified test loader
+   * matches the bundler rather than diverging from it. JSON exposes only a
+   * default binding either way, so this cannot mask a named-import mistake.
+   */
+  if (url.endsWith(".json")) {
+    const json = readFileSync(fileURLToPath(url), "utf8");
+    return { format: "module", shortCircuit: true, source: `export default ${json};` };
+  }
   if (!url.endsWith(".module.css")) return nextLoad(url, context);
   const css = readFileSync(fileURLToPath(url), "utf8");
   const classKeys = [...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map(match => match[1]);

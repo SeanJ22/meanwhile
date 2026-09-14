@@ -28,8 +28,7 @@
  * exactly like honest missing data, which is why it is called out here.
  */
 
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 
 import type {
   AzIdentityRegistry,
@@ -40,32 +39,19 @@ import type {
 export const AZ_REGISTRY_FILE = "az-2026-candidate-registry.json";
 export const AZ_LINEUP_BRIDGE_FILE = "az-2026-certified-lineup-reconciliation.json";
 
-function readIdentityFile<T>(file: string): T | null {
-  const path = join(process.cwd(), "data", "states", "az", "identity", file);
-  if (!existsSync(path)) return null;
-  try {
-    return JSON.parse(readFileSync(path, "utf8")) as T;
-  } catch {
-    /* A file that cannot be parsed is a FAILURE of that file. It resolves to
-       null, every nominee falls to its honest unreconciled state, and no name
-       is ever guessed at to cover for it. */
-    return null;
-  }
-}
-
 let registryCache: AzIdentityRegistry | null | undefined;
 let bridgeCache: LineupReconciliation | null | undefined;
 let rowIndex: Map<string, LineupReconciliationRow> | null = null;
 let coveredContests: Set<string> | null = null;
 
 export function azIdentityRegistry(): AzIdentityRegistry | null {
-  if (registryCache === undefined) registryCache = readIdentityFile<AzIdentityRegistry>(AZ_REGISTRY_FILE);
+  if (registryCache === undefined) registryCache = currentAzBallotProjection().identityRegistry;
   return registryCache;
 }
 
 export function azLineupReconciliation(): LineupReconciliation | null {
   if (bridgeCache === undefined) {
-    bridgeCache = readIdentityFile<LineupReconciliation>(AZ_LINEUP_BRIDGE_FILE);
+    bridgeCache = currentAzBallotProjection().lineupReconciliation;
     rowIndex = null;
     coveredContests = null;
   }
@@ -88,6 +74,7 @@ function index(): Map<string, LineupReconciliationRow> {
  * `false` here and must keep working exactly as they did.
  */
 export function lineupBridgeCovers(contestId: string): boolean {
+  if (!contestId.startsWith("ballot-az-")) return false;
   if (!coveredContests) {
     const bridge = azLineupReconciliation();
     coveredContests = new Set((bridge?.rows ?? []).map((r) => r.contestId));
@@ -97,6 +84,7 @@ export function lineupBridgeCovers(contestId: string): boolean {
 
 /** The precomputed row for one nominee card, or `null` if there is none. */
 export function lineupRowForCard(cardKey: string): LineupReconciliationRow | null {
+  if (!cardKey.startsWith("ballot-az-")) return null;
   return index().get(cardKey) ?? null;
 }
 
@@ -109,7 +97,7 @@ export function lineupRowForCard(cardKey: string): LineupReconciliationRow | nul
  * the reason, for the artifact and for the reader's sentence.
  */
 export function reconciledCandidacyIdForCard(cardKey: string): string | null {
-  const row = index().get(cardKey);
+  const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "RECONCILED") return null;
   return row.canonicalCandidacyId;
 }

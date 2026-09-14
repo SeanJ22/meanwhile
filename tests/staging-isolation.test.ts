@@ -41,7 +41,7 @@ import {
   recordPathCollides,
   sameEndpointIdentity,
 } from "../lib/ops/staging-isolation.ts";
-import { RECORD_PATH } from "../scripts/production-integrity.mts";
+import { RETIRED_PRODUCTION_RECORD_PATH } from "../scripts/production-integrity.mts";
 import { STAGING_RECORD_PATH, STAGING_URL_VARIABLE } from "../scripts/staging-observer.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -339,14 +339,14 @@ test("the isolation gate prints variable NAMES, and never reads a value into a m
 /* ========================================================================== */
 
 test("the two record paths are two files, and the collision predicate catches every spelling", () => {
-  assert.notEqual(STAGING_RECORD_PATH, RECORD_PATH);
-  assert.equal(recordPathCollides(STAGING_RECORD_PATH, RECORD_PATH), false);
+  assert.notEqual(STAGING_RECORD_PATH, RETIRED_PRODUCTION_RECORD_PATH);
+  assert.equal(recordPathCollides(STAGING_RECORD_PATH, RETIRED_PRODUCTION_RECORD_PATH), false);
 
   // Identical, separator-different and case-different spellings are ONE file on
   // Windows. A case-sensitive comparison would let the third through.
-  assert.equal(recordPathCollides(RECORD_PATH, RECORD_PATH), true);
-  assert.equal(recordPathCollides(RECORD_PATH.replace(/\\/g, "/"), RECORD_PATH), true);
-  assert.equal(recordPathCollides(RECORD_PATH.toUpperCase(), RECORD_PATH), true);
+  assert.equal(recordPathCollides(RETIRED_PRODUCTION_RECORD_PATH, RETIRED_PRODUCTION_RECORD_PATH), true);
+  assert.equal(recordPathCollides(RETIRED_PRODUCTION_RECORD_PATH.replace(/\\/g, "/"), RETIRED_PRODUCTION_RECORD_PATH), true);
+  assert.equal(recordPathCollides(RETIRED_PRODUCTION_RECORD_PATH.toUpperCase(), RETIRED_PRODUCTION_RECORD_PATH), true);
 });
 
 test("the staging observer refuses structurally, and takes the staging origin BY NAME", () => {
@@ -355,7 +355,7 @@ test("the staging observer refuses structurally, and takes the staging origin BY
 
   assert.match(
     code,
-    /recordPathCollides\(STAGING_RECORD_PATH,\s*RECORD_PATH\)/,
+    /recordPathCollides\(STAGING_RECORD_PATH,\s*RETIRED_PRODUCTION_RECORD_PATH\)/,
     "the observer no longer checks its record path against the production one",
   );
   assert.match(code, /STAGING_RENDER_ORIGIN/, "the observer no longer names the staging origin");

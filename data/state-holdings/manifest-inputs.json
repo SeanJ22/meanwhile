@@ -1904,6 +1904,23 @@
       "source": "SESSION_BASE"
     }
   ],
+  "authorityCutovers": [
+    {
+      "formerPath": "data/votes/law-titles-cache.json",
+      "frozenSha256": "eb0b9ce579c2d157dca57bde6cd7e55507c63be6e29b46d3514e669656940ce5",
+      "disposition": "RETIRED_TO_PRODUCTION_DATA_PLANE",
+      "formerContentDisposition": "NON_SERVING_ACQUISITION_SURPLUS",
+      "contractId": "federal-key-votes",
+      "recordClass": "FEDERAL_KEY_VOTE",
+      "scope": "US:reviewed-key-vote-selection:v1",
+      "servingSeedPaths": [
+        "data/votes/key-votes-snapshot.json",
+        "data/votes/key-vote-positions.json"
+      ],
+      "readerImplementation": "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection",
+      "reason": "The frozen move-plan consumer census records only docs/repo-inventory.md and no executable consumer for this full-title acquisition lookup corpus, so its unselected rows were non-serving surplus rather than Reader facts. The exact frozen hash remains historical evidence. Selected questions, official roll identities, titles, tallies, verification facts, and member positions are independently complete in the two named first-seed files and now advance only through the federal-key-votes production candidate/promotion contract."
+    }
+  ],
   "rule": "Finite session denominator: exact base SHA plus these committed external readback bytes. Later discoveries create future manifest obligations; they do not enlarge this session's denominator unless they falsify A1/A2 or are introduced regressions.",
   "classificationCorrections": [
     {

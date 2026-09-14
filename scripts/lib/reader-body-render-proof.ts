@@ -3,9 +3,9 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
 import ts from "typescript";
-import { sha256, inspectReaderMarkup, readReaderEvidence, type ReaderCensus, type CensusRecord, type ReaderComponentCase } from "../../lib/holdings/reader-census.ts";
+import { sha256, inspectReaderMarkup, type ReaderCensus, type CensusRecord, type ReaderComponentCase } from "../../lib/holdings/reader-census.ts";
 import { loadManifestContext } from "../../lib/holdings/manifest.ts";
-import type { Registry } from "../../lib/registry/types.ts";
+import { getRegistryRuntimeReadModel, registryRuntimeReadState } from "../../lib/registry/runtime-read-model.ts";
 import type { CoveredBody } from "../../lib/registry/coverage.ts";
 import type { ModalSubject, BodyDefinitionText } from "../../components/map/popup/entity-modal.tsx";
 import type { SeatHolder } from "../../lib/officials/lookup.ts";
@@ -13,12 +13,17 @@ import type { DistrictHit } from "../../lib/map/districts.ts";
 import type { ComponentType, ReactNode } from "react";
 import type { ShellData } from "../../lib/state/data.tsx";
 import type { Meeting } from "../../lib/sources/types.ts";
-import { readSnapshot } from "../../lib/meetings/snapshot.ts";
+import {
+  readMeetingsProjection,
+  requireReaderProofMeetingsProjection,
+  type ReaderProofMeetingsExpectedAuthority,
+} from "../../lib/meetings/snapshot.ts";
 import { meetingListingIdentity } from "../../lib/meetings/listing-identity.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import { groupByVenue } from "../../lib/meetings/venues.ts";
 import { membersOfBody } from "../../lib/registry/body-membership.ts";
 import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-rosters.ts";
+import { projectedBodyRoster } from "../../lib/registry/body-roster-client.ts";
 import { jurisdictionClaim, representationNoteForClaim } from "../../lib/meetings/jurisdiction-badge.ts";
 import { TIER_LABEL } from "../../lib/ocd/tiers.ts";
 import { districtCardSources } from "../../lib/officials/card-sources.ts";
@@ -30,7 +35,11 @@ import { readerOfficeTitle } from "../../lib/officials/reader-office-title.ts";
 import { runsSomething, topOfficesFor } from "../../lib/officials/top-offices.ts";
 
 /** Actual product leaves, compiled in memory. This makes no in-situ or build claim. */
-export async function bodyRenderProof(root = process.cwd(), preparedCensus?: ReaderCensus) {
+export async function bodyRenderProof(
+  root: string,
+  preparedCensus: ReaderCensus,
+  meetingAuthority: ReaderProofMeetingsExpectedAuthority,
+) {
   const moduleApi = await import("node:module") as unknown as { registerHooks: (hooks: { resolve: (specifier: string, context: { parentURL?: string }, next: (specifier: string, context: unknown) => unknown) => unknown; load: (url: string, context: unknown, next: (url: string, context: unknown) => unknown) => unknown }) => { deregister: () => void } };
   const entityPath = "components/map/popup/entity-modal.tsx";
   const districtPath = "components/map/popup/district-popup.tsx";
@@ -58,15 +67,17 @@ export async function bodyRenderProof(root = process.cwd(), preparedCensus?: Rea
   const { schoolDependency } = await import("../../lib/officials/school-dependency.ts");
   const { CardSourcesList } = await import("../../components/officials/card-sources-list.tsx");
   const { DataProvider } = await import("../../lib/state/data.tsx");
-  const snapshot = readSnapshot();
-  if (!snapshot) throw new Error("The canonical meeting snapshot is required for the actual product provider");
-  const canonicalMeetings = snapshot.meetings;
-  const listingIdentity = meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity);
+  const meetingsProjection = requireReaderProofMeetingsProjection(
+    await readMeetingsProjection({ bypassCache: true }),
+    meetingAuthority,
+  );
+  const canonicalMeetings = meetingsProjection.meetings;
+  const listingIdentity = meetingListingIdentity(canonicalMeetings, canonicalBodyIdentity);
   // This proves an exact body's record view, not residence or geographical
   // applicability. No address, point, drawn district or governing set is invented.
   const providerValue: ShellData = {
-    allMeetings: snapshot.meetings, meetings: snapshot.meetings, listingIdentity,
-    venues: groupByVenue(snapshot.meetings, listingIdentity), result: null, location: null,
+    allMeetings: canonicalMeetings, meetings: canonicalMeetings, listingIdentity,
+    venues: groupByVenue(canonicalMeetings, listingIdentity), result: null, location: null,
     drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false,
     governing: null, zipPartial: null, basis: "ZIP",
   };
@@ -80,10 +91,14 @@ export async function bodyRenderProof(root = process.cwd(), preparedCensus?: Rea
   if (nodes.length !== names.length) throw new Error("Canonical body selector functions changed; review the proof adapter.");
   const extracted = nodes.map((node) => node.getText(ast)).join("\n");
   const javascript = ts.transpileModule(extracted, { compilerOptions: { jsx: ts.JsxEmit.React, jsxFactory: "createElement", target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-  const dependencies = { createElement, membersOfBody, rosterGapForBody, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
+  const dependencies = { createElement, membersOfBody, rosterGapForBody, projectedBodyRoster, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
   const bodySubject = new Function(...Object.keys(dependencies), `${javascript}\nreturn bodySubject;`)(...Object.values(dependencies)) as (body: CoveredBody, meetings: Meeting[]) => ModalSubject;
-  const census = preparedCensus ?? JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-current.json").toString("utf8")) as ReaderCensus;
-  const registry = JSON.parse(readFileSync(join(root, "lib/registry/registry.json"), "utf8")) as Registry;
+  const census = preparedCensus;
+  const registryAuthority = registryRuntimeReadState();
+  if (registryAuthority.kind !== "PROMOTED" || !registryAuthority.metadata.versionId) {
+    throw new Error(`Body Reader proof registry authority is ${registryAuthority.kind}; a promoted version is required.`);
+  }
+  const registry = getRegistryRuntimeReadModel().registry;
   const divisions = new Map(registry.divisions.map((row) => [row.ocdId, row]));
   const bodies = new Map(registry.bodies.map((row) => [row.id, row]));
   const datasetValues = new Map(loadManifestContext(root).datasets.map((dataset) => [dataset.path, dataset.value]));
@@ -139,6 +154,6 @@ export async function bodyRenderProof(root = process.cwd(), preparedCensus?: Rea
       add(record, entityPath, "canonical definitionsForBody selected on exact current body → actual DefinitionBlock", output.subject.bodyCard!.whatItDoes, record.canonicalIdentity.filter((identity) => identity === consumer.id || identity === raw.formKey || identity === raw.classKey), output.markup, [definition.text, definition.basis ?? "", definition.readOn ?? ""].filter(Boolean));
     }
   }
-  const sourcePaths = [selectorPath, entityPath, districtPath, "components/officials/card-sources-list.tsx", "lib/state/data.tsx", "lib/meetings/venues.ts", "lib/meetings/listing-identity.ts", "lib/ask/body-identity.ts", "data/meetings-snapshot.json", "lib/registry/registry.json", "lib/registry/body-membership.ts", "lib/registry/body-rosters.ts", "lib/officials/body-definitions.ts", "lib/officials/form-definitions.ts", "lib/officials/body-form.ts"];
-  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), formatVersion: 1, holdingsDigest: census.holdingsDigest, executionLevel: "ACTUAL_PRODUCT_LEAF_SSR", rule: "Actual product selector AST and product component bodies under the real DataProvider with canonical snapshot meetings and listing identity. EntityModal default header plus actual private expanded-content leaves rendered independently; no claim about browser expansion, residence, geometry applicability or deployed availability. Separate in-situ witnesses required.", providerContext: { sourceListingCount: snapshot.meetings.length, listingIdentity, location: null, governing: null, zipPartial: null, atAddress: false }, selectorAstSha256: sha256(extracted), sourceHashes: sourcePaths.map((path) => ({ path, sha256: sha256(readFileSync(join(root, path))) })), cases, unsupported, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)) };
+  const sourcePaths = [selectorPath, entityPath, districtPath, "components/officials/card-sources-list.tsx", "lib/state/data.tsx", "lib/meetings/snapshot.ts", "lib/meetings/venues.ts", "lib/meetings/listing-identity.ts", "lib/ask/body-identity.ts", "lib/registry/runtime-read-model.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/body-membership.ts", "lib/registry/body-rosters.ts", "lib/officials/body-definitions.ts", "lib/officials/form-definitions.ts", "lib/officials/body-form.ts"];
+  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), formatVersion: 1, holdingsDigest: census.holdingsDigest, executionLevel: "ACTUAL_PRODUCT_LEAF_SSR", rule: "Actual product selector AST and product component bodies under the real DataProvider with the complete composed promoted meetings/agenda projection and its listing identity. EntityModal default header plus actual private expanded-content leaves rendered independently; no claim about browser expansion, residence, geometry applicability or deployed availability. Separate in-situ witnesses required.", registryAuthority: { kind: registryAuthority.kind, recordClass: registryAuthority.metadata.recordClass, scope: registryAuthority.metadata.scope, sourceId: registryAuthority.metadata.sourceId, version: registryAuthority.metadata.version, versionId: registryAuthority.metadata.versionId, sourceThrough: registryAuthority.metadata.sourceThrough }, providerContext: { sourceListingCount: canonicalMeetings.length, sourceAgendaDocumentCount: meetingsProjection.agendaDocuments.length, listingIdentity, location: null, governing: null, zipPartial: null, atAddress: false }, selectorAstSha256: sha256(extracted), sourceHashes: sourcePaths.map((path) => ({ path, sha256: sha256(readFileSync(join(root, path))) })), cases, unsupported, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)) };
 }

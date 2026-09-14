@@ -1,5 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
+import { azContestRecord } from "./az-contest-record.ts";
 
 /**
  * The retrieved official measure analyses — the Legislative Council's
@@ -23,32 +23,17 @@ export interface MeasureAnalysis {
   text: string | null;
 }
 
-interface AnalysesFile {
-  generatedAt: string;
-  counts: { measures: number; fetched: number; extracted: number; failed: number };
-  analyses: MeasureAnalysis[];
+export interface AnalysesFile {
+  readonly generatedAt: string;
+  readonly counts: { readonly measures: number; readonly fetched: number; readonly extracted: number; readonly failed: number };
+  readonly analyses: readonly MeasureAnalysis[];
 }
 
-let cache: AnalysesFile | null = null;
-
-/** Null when the file is absent — an honest empty, never a throw at render. */
+/** The analysis set embedded in the exact promoted Arizona ballot projection. */
 export function getMeasureAnalyses(): AnalysesFile | null {
-  if (cache) return cache;
-  try {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "states", "az", "ballot", "az-analyses-2026.json"),
-        "utf8",
-      ),
-    ) as AnalysesFile;
-    return cache;
-  } catch {
-    return null;
-  }
+  return currentAzBallotProjection().measureAnalyses;
 }
 
 export function analysisForContest(contestId: string): MeasureAnalysis | null {
-  return (
-    getMeasureAnalyses()?.analyses.find((a) => a.contestId === contestId) ?? null
-  );
+  return azContestRecord(contestId, () => getMeasureAnalyses()?.analyses);
 }

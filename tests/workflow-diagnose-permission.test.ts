@@ -63,14 +63,10 @@ function declaresActionsRead(text: string): boolean {
 
 test("every workflow that runs `pnpm diagnose` grants actions: read", () => {
   const all = workflows();
-  assert.ok(all.length >= 5, `only ${all.length} workflow file(s) found — the sweep did not reach them`);
+  assert.equal(all.length, 2, `expected the two release/CI workflow files, found ${all.length}`);
 
   const diagnosers = all.filter((w) => diagnosesItself(w.text));
-  assert.ok(
-    diagnosers.length >= 5,
-    `only ${diagnosers.length} workflow(s) run the diagnoser — either the step was renamed, in ` +
-      "which case this reader is now blind, or the diagnosers are gone",
-  );
+  assert.equal(diagnosers.length, 1, "only the post-deploy release observer should diagnose its Actions run");
 
   const blind = diagnosers.filter((w) => !declaresActionsRead(w.text)).map((w) => w.name);
   assert.deepEqual(

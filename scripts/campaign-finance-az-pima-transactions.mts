@@ -1,6 +1,9 @@
 /**
  * `pnpm tsx scripts/campaign-finance-az-pima-transactions.mts`
  *
+ * @freshness-reads-here — successful retrieval time is captured after all
+ * official response bodies parse; failed-attempt time describes that attempt.
+ *
  * **THE ROUTE THAT BROKE THE 401.**
  *
  * `data/states/az/campaign-finance/az-pima-2026-held.json` recorded, honestly and
@@ -71,15 +74,19 @@
  * what it returned.
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-
 import { floorLine, flooredSelector } from "../lib/ops/denominator-floor.ts";
 import { stamp } from "./stamp.mts";
-
-const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = join(HERE, "..");
+import { pimaCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import type {
+  AzPimaCommitteeRow,
+  AzPimaFilingIndexRow,
+  AzPimaHeld,
+  AzPimaTransactions,
+} from "../lib/control-plane/campaign-finance/held-records.ts";
 
 const API_BASE = "https://ecf-api.easyvoteapp.com";
 /** The tenant the Origin header names. The API resolves its website user from this. */
@@ -87,7 +94,10 @@ const TENANT_ORIGIN = "https://pimacountyaz.easyvotecampaignfinance.com";
 /** Pima County's customer id, read from the portal itself in the prior acquisition. */
 const CUSTOMER_ID = "19626734-D3E9-449C-BB5D-EDB9C0034907";
 
-const OUT = join(REPO, "data", "states", "az", "campaign-finance", "az-pima-2026-transactions.json");
+if (!process.argv.includes("--promote")) {
+  throw new Error("REFUSING_TRACKED_LOCAL_FINANCE_WRITE: invoke this owner-only acquisition with --promote.");
+}
+prepareProductionCivicDataWrite();
 
 /** Politeness. The vendor rate-limits, and a rushed loop got HTML back. */
 const PAUSE_MS = 3000;
@@ -99,6 +109,7 @@ interface FetchResult {
   readonly bytes: number;
   readonly rows: readonly Record<string, unknown>[] | null;
   readonly bodyPreview: string | null;
+  readonly rawText: string;
 }
 
 async function getJson(path: string): Promise<FetchResult> {
@@ -120,6 +131,7 @@ async function getJson(path: string): Promise<FetchResult> {
       rows: null,
       // Strip tags so an ASP.NET error page is readable in a log.
       bodyPreview: text.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 300),
+      rawText: text,
     };
   }
   return {
@@ -128,7 +140,27 @@ async function getJson(path: string): Promise<FetchResult> {
     bytes: text.length,
     rows: JSON.parse(text) as Record<string, unknown>[],
     bodyPreview: null,
+    rawText: text,
   };
+}
+
+interface ObjectFetchResult {
+  readonly url: string;
+  readonly status: number;
+  readonly value: Record<string, unknown> | null;
+  readonly rawText: string;
+}
+
+async function getObjectJson(path: string): Promise<ObjectFetchResult> {
+  const url = `${API_BASE}${path}`;
+  const response = await fetch(url, { headers: { Origin: TENANT_ORIGIN, Accept: "application/json, text/plain, */*" } });
+  const rawText = await response.text();
+  let value: Record<string, unknown> | null = null;
+  try {
+    const parsed = JSON.parse(rawText) as unknown;
+    if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) value = parsed as Record<string, unknown>;
+  } catch { /* malformed official response is a failed acquisition below */ }
+  return { url, status: response.status, value: response.ok ? value : null, rawText };
 }
 
 function yearOf(value: unknown): string {
@@ -138,6 +170,15 @@ function yearOf(value: unknown): string {
 async function main(): Promise<void> {
   const recordedOn = stamp();
   console.log(`Pima County campaign-finance transaction acquisition — ${recordedOn}`);
+
+  const user = await getObjectJson("/user/current");
+  if (!user.value) throw new Error(`Pima public tenant identity failed with HTTP ${user.status}`);
+  await sleep(PAUSE_MS);
+  const filers = await getJson(`/filer/documentsearch/${CUSTOMER_ID}`);
+  if (!filers.rows || filers.rows.length === 0) {
+    throw new Error(`Pima public filer index failed or returned zero rows: ${filers.bodyPreview ?? `HTTP ${filers.status}`}`);
+  }
+  await sleep(PAUSE_MS);
 
   const contributionsPath = `/advancedsearch/contributions/${CUSTOMER_ID}`;
   const distributionsPath = `/advancedsearch/distributions/${CUSTOMER_ID}`;
@@ -335,13 +376,109 @@ async function main(): Promise<void> {
     ],
     contributions: contributions.rows,
     distributions: distributions.rows,
-  };
+  } as unknown as AzPimaTransactions;
 
-  mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(OUT, `${JSON.stringify(document, null, 1)}\n`, "utf8");
-  console.log(`\nwrote ${OUT}`);
+  const customer = user.value.Customer && typeof user.value.Customer === "object"
+    ? user.value.Customer as Record<string, unknown>
+    : {};
+  const committeeRegisterCountyPortal: AzPimaCommitteeRow[] = filers.rows.map((row) => ({
+    portalFilerId: String(row.filerid ?? ""),
+    registeredName: String(row.committeename ?? row.displayname ?? ""),
+    filerType: String(row.filertype ?? ""),
+    status: String(row.status ?? ""),
+    officeName: row.officename === null || row.officename === undefined ? null : String(row.officename),
+    filingCount: Array.isArray(row.documents) ? row.documents.length : 0,
+    source: filers.url,
+  }));
+  const filingsIndexed: AzPimaFilingIndexRow[] = filers.rows.flatMap((row) => {
+    const portalFilerId = String(row.filerid ?? "");
+    const committeeRegisteredName = String(row.committeename ?? row.displayname ?? "");
+    return (Array.isArray(row.documents) ? row.documents : []).map((documentRow) => {
+      const filed = documentRow as Record<string, unknown>;
+      const documentId = String(filed.documentid ?? "");
+      return {
+        portalFilerId,
+        committeeRegisteredName,
+        filingId: `easyvote:pima:${documentId}`,
+        documentName: String(filed.documentname ?? ""),
+        documentType: String(filed.documenttype ?? ""),
+        dateSubmitted: String(filed.datesubmitted ?? ""),
+        documentBodyHeld: false,
+        documentBodyWall: `${API_BASE}/documents/getdocumentfiling/${documentId} is not part of this public-index/transaction acquisition; no filing-body fact is inferred.`,
+      };
+    });
+  });
+  if (committeeRegisterCountyPortal.some((row) => !row.portalFilerId || !row.registeredName)) {
+    throw new Error("The Pima filer index contains a row without its official filer id or registered name.");
+  }
+  if (new Set(committeeRegisterCountyPortal.map((row) => row.portalFilerId)).size !== committeeRegisterCountyPortal.length) {
+    throw new Error("The Pima filer index contains duplicate official filer ids.");
+  }
+
+  const held: AzPimaHeld = {
+    formatVersion: 1,
+    recordedOn,
+    filingAuthorityIdentification: {
+      authorityId: "az:county:pima:officer-in-charge-of-elections",
+      officeNameAsPublished: String(customer.Name ?? "Pima County Elections"),
+      readFrom: user.url,
+      readOn: recordedOn,
+      whatThisEstablishesAndWhatItDoesNot:
+        "The official public tenant record identifies the office operating this filing portal. It does not establish a broader statutory role.",
+    },
+    committeeRegisterCountyPortal,
+    committeeRegisterStateFtp: [],
+    filingsIndexed,
+    expectedFilingPeriodsAz2026PacParty: [],
+    acquisitions: [
+      { routeId: "AZ_PIMA_EASYVOTE_TENANT", url: user.url, method: "GET", httpStatus: user.status, retrievedOn: recordedOn },
+      { routeId: "AZ_PIMA_EASYVOTE_PUBLIC_FILINGS", url: filers.url, method: "GET", httpStatus: filers.status, retrievedOn: recordedOn, yielded: `${committeeRegisterCountyPortal.length} filers and ${filingsIndexed.length} filing index rows` },
+    ],
+    notHeld: [
+      "The public filing-body route is not part of this projection; only the official index and separately published redacted transaction searches are held.",
+      "No independent-expenditure report is inferred from a transaction endpoint whose returned rows are CCFR records.",
+      "No committee-to-measure position is inferred from committee names.",
+      "The Arizona statewide reporting-period table is not duplicated into this local projection.",
+    ],
+  };
+  const retrievedAt = new Date().toISOString();
+  const candidate = pimaCampaignFinanceCandidate({
+    held,
+    transactions: document,
+    rawBodies: [user.rawText, filers.rawText, contributions.rawText, distributions.rawText],
+    requestedUrl: filers.url,
+    finalUrl: filers.url,
+    retrievedAt,
+  });
+  candidateSubmitted = true;
+  const outcome = await processRegisteredManualCandidate(
+    new PostgresRoutineDataStore(),
+    "az-pima-local-finance",
+    candidate,
+    retrievedAt,
+  );
+  if (!outcome.promoted) throw new Error(`Pima campaign-finance promotion refused: ${outcome.candidate.failureCode}`);
+  console.log(`\npromoted ${outcome.promoted.versionId}; no tracked runtime artifact was written`);
   console.log(`  ${contributions.rows.length} contribution rows, ${distributions.rows.length} distribution rows`);
   console.log(`  reconciliation: ${document.reconciliation.verdict}`);
 }
 
-await main();
+let candidateSubmitted = false;
+try {
+  await main();
+} catch (error) {
+  if (!candidateSubmitted) {
+    const attemptedAt = new Date().toISOString();
+    const failed = failedAcquisitionCandidate({
+      sourceId: "az-pima-local-finance",
+      recordClass: "LOCAL_CAMPAIGN_FINANCE",
+      scope: "US-AZ:county:pima:campaign-finance:2026",
+      requestedUrl: `${API_BASE}/filer/documentsearch/${CUSTOMER_ID}`,
+      attemptedAt,
+      failureDetail: error instanceof Error ? error.message : String(error),
+      parserVersion: "pima-campaign-finance/2",
+    });
+    await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "az-pima-local-finance", failed, attemptedAt);
+  }
+  throw error;
+}

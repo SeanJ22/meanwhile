@@ -1,4 +1,11 @@
 import type { OcdId } from "../sources/types.ts";
+import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
+import {
+  projectedCommentAccessFor,
+  type CommentAccess,
+} from "./comment-access-client.ts";
+
+export type { CommentAccess } from "./comment-access-client.ts";
 
 /**
  * How to actually be heard, per body — tracker **D25**.
@@ -17,40 +24,7 @@ import type { OcdId } from "../sources/types.ts";
  * the fact that a meeting is public — many are public to observe and closed
  * to speak.
  */
-export interface CommentAccess {
-  /** Matches `Body.id`. */
-  bodyId: string;
-  /** Null for a body with no Census division (D28). */
-  ocdId: OcdId | null;
-  /**
-   * The body names, as published in meeting feeds, this rule applies to.
-   *
-   * Required routing the moment a division carries more than one body
-   * (D29): a Planning Commission meeting must never render the Mayor and
-   * Council's speaker-card rules. A row without `bodyNames` applies only
-   * while it is the sole row for its division — see `commentAccessFor`.
-   * This is display routing scoped to one division's own published names,
-   * not the cross-source name join CLAUDE.md forbids.
-   */
-  bodyNames?: string[];
-  /** Whether the body holds a public comment period at all. */
-  commentPeriod: "YES" | "NO" | "UNKNOWN";
-  /** Where in the meeting it falls, as the body describes it. */
-  commentPeriodDetail: string | null;
-  /** Advance sign-up: how, and by when. */
-  signup: string | null;
-  /** Deadline and address for written comment. */
-  writtenComment: string | null;
-  /** How to attend beyond the meeting's own venue — virtual link, streaming. */
-  attend: string | null;
-  /** Time limit per speaker, as published. */
-  timeLimit: string | null;
-  /** The rule or page every field above was read from. */
-  sourceUrl: string;
-  collectedAt: string;
-  verifiedAt: string | null;
-}
-
+/** Initial adoption/node:test evidence; production reads `comment-access`. */
 export const COMMENT_ACCESS: CommentAccess[] = [
   // ── Pima Community College Governing Board (D28) ────────────────────────
   // All this board's meeting types follow the same published procedure.
@@ -546,6 +520,15 @@ export const COMMENT_ACCESS: CommentAccess[] = [
   },
 ];
 
+export function currentCommentAccess(): readonly CommentAccess[] {
+  const seed = COMMENT_ACCESS.map((value) => ({
+    id: `comment-access:${value.bodyId}`,
+    ...value,
+  }));
+  return currentCuratedReaderRecords("comment-access", seed)
+    .map(({ id: _id, ...value }) => value as unknown as CommentAccess);
+}
+
 /**
  * The comment-access record for a meeting, if one is curated.
  *
@@ -556,24 +539,18 @@ export function commentAccessFor(
   ocdId: OcdId | null,
   bodyName?: string,
   bodyId?: string | null,
+  projection?: readonly CommentAccess[],
 ): CommentAccess | undefined {
-  // A resolved body is authoritative. Never fall through to another body's
-  // standing rules when its own record is absent or ambiguous.
-  if (bodyId) {
-    const exact = COMMENT_ACCESS.filter((c) => c.bodyId === bodyId);
-    return exact.length === 1 && exact[0].ocdId === ocdId ? exact[0] : undefined;
+  let records = projection;
+  if (!records) {
+    try {
+      records = currentCommentAccess();
+    } catch {
+      // A missing/unreachable comment-rule pointer withholds only this
+      // optional family. It must not make the independent meetings corpus or
+      // another source's Reader answer fail.
+      records = [];
+    }
   }
-  // Null is not a shared civic identity for unrelated divisionless bodies.
-  if (ocdId === null) return undefined;
-  const rows = COMMENT_ACCESS.filter((c) => c.ocdId === ocdId);
-  if (rows.length === 0) return undefined;
-
-  if (bodyName) {
-    const wanted = bodyName.trim().toLowerCase();
-    const named = rows.filter((c) =>
-      c.bodyNames?.some((n) => n.trim().toLowerCase() === wanted),
-    );
-    return named.length === 1 ? named[0] : undefined;
-  }
-  return undefined;
+  return projectedCommentAccessFor(ocdId, bodyName, bodyId, records);
 }

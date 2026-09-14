@@ -25,9 +25,9 @@
  * (no venue, no clock, unwired tenant) is a REFUSAL with the adapter's own drop
  * accounting, never a fact with a guessed field.
  *
- * Canonical identity comes from the same registries the Reader uses:
- * `LEGISTAR_CLIENTS` for a Legistar slug and `SOURCE_WIRING` for a CivicClerk
- * tenant. A tenant with no row — Avondale today — yields no fact and a named
+ * Canonical identity comes from SOURCE_WIRING. The Legistar slug lookup is a
+ * derived view of those same rows, not another membership list. A tenant with
+ * no row — Avondale today — yields no fact and a named
  * refusal (`BODY_IDENTITY_UNRESOLVED`), because a body id is a claim about
  * which government met and this module invents none.
  *

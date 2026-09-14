@@ -8,7 +8,12 @@ import { parse } from "yaml";
 
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
 import { GATES, PRECONDITIONS } from "../scripts/gates.mjs";
-import { PREFLIGHT_CHECKS, duplicateImplementations, visibleTree } from "../scripts/preflight.mjs";
+import {
+  PREFLIGHT_CHECKS,
+  civicDataReleaseFirewall,
+  duplicateImplementations,
+  visibleTree,
+} from "../scripts/preflight.mjs";
 
 /* ========================================================================== */
 /* RULING 279 — the cheap tier runs first, and a red one buys nothing more     */
@@ -16,6 +21,9 @@ import { PREFLIGHT_CHECKS, duplicateImplementations, visibleTree } from "../scri
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WORKFLOW = join(ROOT, ".github", "workflows", "build-check.yml");
+const PACKAGE = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
+  readonly scripts?: Readonly<Record<string, string>>;
+};
 
 interface Step {
   readonly name?: string;
@@ -36,6 +44,17 @@ const label = (s: Step) => s.name ?? s.uses ?? "(unnamed)";
 
 /** Anything that costs real runner time: a dependency install, a browser, a build. */
 const EXPENSIVE = /install|playwright|browser|build|pnpm test\b/i;
+
+test("the certified suite executes owner-facing TSX projection contracts", () => {
+  assert.match(
+    PACKAGE.scripts?.test ?? "",
+    /tests\/\*\*\/\*\.test\.tsx/,
+    "the Admin runtime-outcome render test is outside pnpm test",
+  );
+  const loader = readFileSync(join(ROOT, "scripts", "test-alias-loader.mjs"), "utf8");
+  assert.match(loader, /url\.endsWith\("\.tsx"\)/);
+  assert.match(loader, /transpileModule/);
+});
 
 /* -------------------------------------------------------------------------- */
 /* The shape of the change                                                     */
@@ -78,9 +97,11 @@ test("one step decides whether the expensive tier runs, and every expensive step
   for (const [id, job] of Object.entries(jobs())) {
     const decision = job.steps.find((s) => s.id === "tier");
     assert.ok(decision, `job ${id} has no tier decision`);
-    // RULING 278: one table. The decision reads the classifier and the preflight;
-    // nothing else re-derives it from those two.
-    assert.match(decision.run ?? "", /steps\.cost\.outputs\.cost/);
+    // One table. The decision reads only PR state, exact-tree reuse, and the
+    // preflight; the retired runtime-path cost classifier cannot waive CI.
+    assert.match(decision.run ?? "", /steps\.pr_tier\.outputs\.tier/);
+    assert.match(decision.run ?? "", /steps\.certified\.outputs\.certified/);
+    assert.doesNotMatch(decision.run ?? "", /steps\.cost|no-cheap/);
     assert.match(decision.run ?? "", /steps\.preflight\.outcome/);
 
     /*
@@ -243,6 +264,19 @@ test("the duplicate check reuses the one census and agrees with the suite's base
   assert.match(outcome.says, /duplicate group/);
 });
 
+test("the preflight firewall supplies both production contract registries instead of failing as an instrument", () => {
+  const outcome = civicDataReleaseFirewall({ cwd: ROOT });
+  assert.doesNotMatch(
+    outcome.says,
+    /could not read its denominator/,
+    `the preflight firewall threw instead of auditing the tree: ${outcome.says}`,
+  );
+  if (!outcome.ok) {
+    assert.match(outcome.says, /release-coupling finding/);
+    assert.ok((outcome.detail ?? "").length > 0, "a real firewall refusal must name its findings");
+  }
+});
+
 /**
  * THE CLAIM THE WHOLE ORDERING RESTS ON, MADE EXECUTABLE.
  *
@@ -254,12 +288,11 @@ test("the duplicate check reuses the one census and agrees with the suite's base
  *
  * ## Two things this guard could not see, and both cost a real run
  *
- * **It walked only STATIC imports.** `scripts/certified-tree.mjs` and
- * `scripts/backup-wakeup.mjs` are `.mjs` files that reach their `.ts` modules
- * through `await import(…)`, exactly as `scripts/ci-cost.mjs` does, so their
- * whole closure was invisible here.
+ * **It walked only STATIC imports.** `scripts/certified-tree.mjs` reaches its
+ * `.ts` modules through `await import(…)`, exactly as `scripts/deploy-classify.mjs`
+ * does, so its whole closure was invisible here.
  *
- * **It watched one script.** Three now run before the install.
+ * **It watched one script.** Four now run before the install.
  *
  * Run 34160631768, 2026-09-07 — the first main-side run of the tree-equivalence
  * check — printed `the predicate would not load (Cannot find package 'yaml'
@@ -277,16 +310,16 @@ const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
     why: "RULING 279's cheap tier — it answers from the tree before anything is bought",
   },
   {
-    script: "scripts/ci-cost.mjs",
+    script: "scripts/deploy-classify.mjs",
     why: "RULING 278's classifier — it decides how much the rest of the job may spend",
+  },
+  {
+    script: "scripts/pr-ci-tier.mjs",
+    why: "the draft/full event classifier — it must answer before a draft installs anything",
   },
   {
     script: "scripts/certified-tree.mjs",
     why: "RULING 281's tree-equivalence adapter — it decides whether the expensive tier runs at all",
-  },
-  {
-    script: "scripts/backup-wakeup.mjs",
-    why: "the refresh's cost gate — the whole point is that it answers before the install",
   },
 ];
 
@@ -333,7 +366,10 @@ for (const { script, why } of BEFORE_INSTALL) {
        * this because it only ever reached four files; widening the walk is
        * what made the sloppiness visible.
        */
-      for (const m of src.matchAll(/^\s*(?:import|export)[^;]*?from\s+"([^"]+)"/gm)) {
+      // `import type` / `export type` are erased by Node's type stripper and
+      // therefore cannot create a bare-checkout runtime dependency. Following
+      // them reports packages that the executable never asks Node to load.
+      for (const m of src.matchAll(/^\s*(?:import|export)(?!\s+type\b)[^;]*?from\s+"([^"]+)"/gm)) {
         specs.push(m[1]);
       }
       /* Bare side-effect import: `import "x"`. */

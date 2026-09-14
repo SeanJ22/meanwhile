@@ -1,0 +1,295 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import {
+  CURATED_READER_CONTRACT_IDS,
+  readCuratedReaderProjection,
+} from "../lib/civic-data/curated-reader-read-model.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import {
+  manualProjectionCandidate,
+  type CuratedReaderProjection,
+  type ManualProjectionPackage,
+} from "../lib/civic-data/manual-projections.ts";
+import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import type { ManualSourceClass, ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
+import { COMMENT_ACCESS, currentCommentAccess } from "../lib/registry/comment-access.ts";
+import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
+
+const T0 = "2026-09-08T12:00:00.000Z";
+const T1 = "2026-09-08T12:01:00.000Z";
+const URLS = {
+  "comment-access": ["https://public.example.gov/comment-policy"],
+  "ballot-navigation": [
+    "https://elections.example.gov/polling-place",
+    "https://elections.example.gov/registration",
+  ],
+  "campaign-sites": ["https://candidate.example/campaign"],
+  "venue-resolutions": [
+    "https://public.example.gov/meetings/venue",
+    "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=100+Main+St&benchmark=Public_AR_Current&format=json",
+  ],
+} as const;
+
+function receipt(
+  id: (typeof CURATED_READER_CONTRACT_IDS)[number],
+  at: string,
+  hashCharacter: string,
+): ManualSourceSetReceipt {
+  return {
+    contractVersion: 1,
+    reviewedAt: at,
+    reviewedBy: "pdc7-owner-test",
+    sources: URLS[id].map((url, index) => ({
+      requestedUrl: url,
+      finalUrl: url,
+      publisher: "Exact named primary publisher",
+      sourceClass: curatedReaderSourceClass(id),
+      retrievedAt: at,
+      httpStatus: 200,
+      rawHash: String.fromCharCode(hashCharacter.charCodeAt(0) + index).repeat(64),
+      reviewedEvidence: "The exact response bytes and normalized record were reviewed together.",
+    })),
+  };
+}
+
+function payloadFor(
+  id: (typeof CURATED_READER_CONTRACT_IDS)[number],
+  at: string,
+): CuratedReaderProjection {
+  if (id === "comment-access") {
+    return {
+      kind: id,
+      records: [{
+        id: "comment-access:body:test",
+        bodyId: "body:test",
+        commentPeriod: "YES",
+        commentPeriodDetail: "The body publishes one comment period.",
+        sourceUrl: URLS[id][0],
+        collectedAt: at,
+        verifiedAt: at,
+      }],
+    };
+  }
+  if (id === "ballot-navigation") {
+    return {
+      kind: id,
+      records: [
+        {
+          id: "polling-place:AZ",
+          kind: "POLLING_PLACE_LINK",
+          value: { state: "AZ", url: URLS[id][0], verifiedAt: at, label: "Find a polling place" },
+        },
+        {
+          id: "registration:AZ",
+          kind: "REGISTRATION_LINK",
+          value: { state: "AZ", url: URLS[id][1], verifiedAt: at, label: "Check registration" },
+        },
+      ],
+    };
+  }
+  if (id === "campaign-sites") {
+    return {
+      kind: id,
+      records: [{
+        id: "campaign-site:congress:C001133",
+        officeholderId: "congress:C001133",
+        site: {
+          url: URLS[id][0],
+          foundVia: "reviewed primary-source search",
+          verification: "The site names the person and office.",
+          attemptedAt: at,
+        },
+      }],
+    };
+  }
+  return {
+    kind: id,
+    records: [{
+      id: "venue:test:body:100mainst",
+      sourceId: "test-source",
+      bodyOcdId: "ocd-division/country:us/state:az/place:test",
+      match: "Council Chamber, 100 Main St",
+      name: "Test Council Chamber",
+      address: "100 Main St, Test, AZ 85000",
+      lat: 32.1,
+      lng: -110.9,
+      addressSourceUrl: URLS[id][0],
+      coordinateSourceUrl: URLS[id][1],
+      verifiedAt: at,
+    }],
+  };
+}
+
+function packageFor(
+  id: (typeof CURATED_READER_CONTRACT_IDS)[number],
+  at = T0,
+  hashCharacter = "a",
+): ManualProjectionPackage {
+  return {
+    contractId: id,
+    version: at,
+    sourceThrough: at,
+    sourceReceipt: receipt(id, at, hashCharacter),
+    payload: payloadFor(id, at),
+  };
+}
+
+test("each mutable curated Reader family promotes and reads from its own canonical pointer", async () => {
+  const store = new MemoryRoutineDataStore();
+  for (const id of CURATED_READER_CONTRACT_IDS) {
+    const candidate = manualProjectionCandidate(packageFor(id));
+    const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
+    assert.equal(outcome.candidate.state, "PROMOTED", id);
+    assert.equal(outcome.candidate.receipt?.decision, "GOOD", id);
+    assert.equal(outcome.readerReadback?.status, "PASS", id);
+    assert.deepEqual(
+      (await store.events(candidate.id)).map((event) => event.state),
+      ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
+      id,
+    );
+    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 });
+    assert.equal(read.kind, "PROMOTED", id);
+    if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
+  }
+});
+
+test("comment-access drops the control-plane transport id at the Reader boundary", async () => {
+  const store = new MemoryRoutineDataStore();
+  const candidate = manualProjectionCandidate(packageFor("comment-access"));
+  const outcome = await processRegisteredManualCandidate(store, "comment-access", candidate, T0);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  await readCuratedReaderProjection("comment-access", { store, bypassCache: true, now: T0 });
+
+  const records = currentCommentAccess();
+  assert.equal(records.length, 1);
+  assert.deepEqual(records[0], payloadFor("comment-access", T0).records[0] && {
+    bodyId: "body:test",
+    commentPeriod: "YES",
+    commentPeriodDetail: "The body publishes one comment period.",
+    sourceUrl: URLS["comment-access"][0],
+    collectedAt: T0,
+    verifiedAt: T0,
+  });
+  assert.equal("id" in (records[0] as unknown as Record<string, unknown>), false);
+  assert.ok(COMMENT_ACCESS.every((record) => !("id" in (record as unknown as Record<string, unknown>))));
+});
+
+test("a bad curated family is held against its own LKG and cannot affect another family", async () => {
+  const store = new MemoryRoutineDataStore();
+  const promotedIds = new Map<string, string>();
+  const promotedCandidates = new Map<string, ReturnType<typeof manualProjectionCandidate>>();
+  for (const id of CURATED_READER_CONTRACT_IDS) {
+    const candidate = manualProjectionCandidate(packageFor(id));
+    const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
+    assert.ok(outcome.promoted, id);
+    promotedIds.set(id, outcome.promoted!.versionId);
+    promotedCandidates.set(id, candidate);
+  }
+
+  const broken = structuredClone(packageFor("campaign-sites", T1, "d"));
+  const brokenPayload = broken.payload as CuratedReaderProjection;
+  const site = brokenPayload.records[0]!.site as Record<string, unknown>;
+  site.url = "http://not-an-authoritative-https-site.invalid";
+  const refused = await processRegisteredManualCandidate(
+    store,
+    "campaign-sites",
+    manualProjectionCandidate(broken, {
+      prior: {
+        versionId: promotedIds.get("campaign-sites")!,
+        payload: promotedCandidates.get("campaign-sites")!.readModel as CuratedReaderProjection,
+        sourceReceipt: promotedCandidates.get("campaign-sites")!.retrieval.manualSourceReceipt!,
+      },
+    }),
+    T1,
+  );
+  assert.equal(refused.promoted, null);
+  assert.equal(refused.candidate.state, "SEMANTIC_INVALID");
+
+  for (const id of CURATED_READER_CONTRACT_IDS) {
+    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
+    assert.equal(
+      (await store.readPromotion(contract.recordClass, contract.scope))?.versionId,
+      promotedIds.get(id),
+      `${id} LKG/pointer changed after the unrelated campaign-site refusal`,
+    );
+  }
+});
+
+test("curated Reader evidence is source-scoped and never names software certification", () => {
+  for (const id of CURATED_READER_CONTRACT_IDS) {
+    const candidate = manualProjectionCandidate(packageFor(id));
+    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
+    assert.deepEqual(candidate.sourceProjectionEvidence, {
+      kind: "SOURCE_PROJECTION_CONTRACT",
+      sourceId: contract.sourceId,
+      recordClass: contract.recordClass,
+      scope: contract.scope,
+    });
+    assert.ok(candidate.dependentChecks.every((check) => !/(?:playwright|office-opening-spell|pnpm\s+(?:test|build)|browser installation|full test tier)/i.test(`${check.consumer} ${check.detail}`)));
+  }
+});
+
+test("store failure does not reopen any curated tracked first seed", async () => {
+  let candidateReads = 0;
+  const brokenStore = {
+    async readPromotion() { throw new Error("database unavailable"); },
+    async readCandidate() { candidateReads += 1; return null; },
+  };
+  const reads = await Promise.all(CURATED_READER_CONTRACT_IDS.map((id) =>
+    readCuratedReaderProjection(id, { store: brokenStore, bypassCache: true })
+  ));
+  assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
+  assert.equal(candidateReads, 0);
+});
+
+test("Admin projects the four manual authorities without inventing a clock", () => {
+  const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
+  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
+  assert.equal(contracts.length, 4);
+  assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
+  assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
+  const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);
+  assert.ok(view.contracts.every((row) => row.cadence.clock === "MANUAL"));
+  assert.ok(view.contracts.every((row) => row.cadence.nextDue.kind === "NOT_APPLICABLE"));
+});
+
+test("reference-publisher evidence is confined to venue coordinates", async () => {
+  const venue = structuredClone(packageFor("venue-resolutions"));
+  (venue.sourceReceipt.sources[1]! as { sourceClass: ManualSourceClass }).sourceClass = "REFERENCE_PUBLISHER";
+  const venueOutcome = await processRegisteredManualCandidate(
+    new MemoryRoutineDataStore(),
+    "venue-resolutions",
+    manualProjectionCandidate(venue),
+    T0,
+  );
+  assert.equal(venueOutcome.candidate.state, "PROMOTED");
+
+  for (const id of ["comment-access", "ballot-navigation", "campaign-sites"] as const) {
+    const wrong = structuredClone(packageFor(id));
+    (wrong.sourceReceipt.sources[0]! as { sourceClass: ManualSourceClass }).sourceClass = "REFERENCE_PUBLISHER";
+    const outcome = await processRegisteredManualCandidate(
+      new MemoryRoutineDataStore(),
+      id,
+      manualProjectionCandidate(wrong),
+      T0,
+    );
+    assert.equal(outcome.candidate.state, "SEMANTIC_INVALID", id);
+    assert.equal(outcome.promoted, null, id);
+    assert.ok(outcome.candidate.receipt?.checks.some((check) =>
+      check.check === "SEMANTIC_VALIDITY" && check.detail.includes(`cannot authorize ${id}`)
+    ), id);
+  }
+
+  const wrongVenueField = structuredClone(packageFor("venue-resolutions"));
+  (wrongVenueField.sourceReceipt.sources[0]! as { sourceClass: ManualSourceClass }).sourceClass = "REFERENCE_PUBLISHER";
+  const wrongVenueOutcome = await processRegisteredManualCandidate(
+    new MemoryRoutineDataStore(),
+    "venue-resolutions",
+    manualProjectionCandidate(wrongVenueField),
+    T0,
+  );
+  assert.equal(wrongVenueOutcome.candidate.state, "SEMANTIC_INVALID");
+});

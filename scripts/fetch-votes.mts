@@ -7,9 +7,9 @@
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
 /**
- * Fetch the recent-roll-call window into the votes snapshot (5).
+ * Acquire and promote the recent federal roll-call window (5).
  *
- * `pnpm votes:fetch [--window 20]`
+ * `pnpm votes:fetch -- --window 20`
  *
  * Sources, all official:
  *  - House: https://clerk.house.gov/evs/<year>/roll<NNN>.xml (member votes
@@ -27,22 +27,25 @@
  * compare identifier sets before trusting an adapter; a zero-match join must
  * be loud).
  *
- * Serialized requests, identified User-Agent, bounded window. The snapshot
- * is committed; nothing fetches live per page load.
+ * Serialized requests, identified User-Agent, bounded window. This explicit
+ * owner operation writes only the candidate/event/promotion plane. It has no
+ * scheduler and never changes a tracked file or invokes a software release.
  */
-import { mkdir, writeFile } from "node:fs/promises";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
 import type {
   MemberVote,
   RollCallVote,
   VotePosition,
   VotesSnapshot,
 } from "../lib/votes/types.ts";
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT = join(ROOT, "data", "votes", "votes-snapshot.json");
+import { federalRollCallsCandidate, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID, type OfficialAcquisition } from "../lib/votes/data-plane.ts";
+import {
+  billSummariesForRollCallAcquisition,
+  readFederalRollCallsProjection,
+} from "../lib/votes/snapshot.ts";
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
 const CONGRESS = 119;
 const SESSION = 2;
@@ -51,11 +54,46 @@ const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 
 const windowArg = process.argv.indexOf("--window");
 const WINDOW = windowArg === -1 ? 20 : Number(process.argv[windowArg + 1]);
+if (!process.argv.includes("--promote")) throw new Error("PASS_--promote: this command has no tracked-output mode");
+prepareProductionCivicDataWrite();
 
-async function get(url: string): Promise<string> {
-  const response = await fetch(url, { headers: { "user-agent": UA } });
-  if (!response.ok) throw new Error(`${url} -> HTTP ${response.status}`);
-  return response.text();
+const store = new PostgresRoutineDataStore();
+const previous = await readFederalRollCallsProjection({ store, bypassCache: true });
+const billSummaries = billSummariesForRollCallAcquisition(previous);
+const acquisitions: OfficialAcquisition[] = [];
+let failureRecorded = false;
+
+async function recordFailure(url: string, detail: string): Promise<void> {
+  if (failureRecorded) return;
+  failureRecorded = true;
+  const attemptedAt = new Date().toISOString();
+  const failed = failedAcquisitionCandidate({
+    sourceId: FEDERAL_VOTES_SOURCE_ID,
+    recordClass: "FEDERAL_ROLL_CALL",
+    scope: FEDERAL_ROLLCALL_SCOPE,
+    requestedUrl: url,
+    attemptedAt,
+    failureDetail: detail,
+    parserVersion: FEDERAL_VOTES_PARSER_VERSION,
+  });
+  await processRegisteredManualCandidate(store, "congress-rollcalls", failed, attemptedAt);
+}
+
+async function get(url: string, proveOfficial: boolean = true): Promise<string> {
+  let response: Response;
+  try {
+    response = await fetch(url, { headers: { "user-agent": UA } });
+  } catch (error) {
+    await recordFailure(url, error instanceof Error ? error.message : "official fetch failed");
+    throw error;
+  }
+  if (!response.ok) {
+    await recordFailure(url, `${url} -> HTTP ${response.status}`);
+    throw new Error(`${url} -> HTTP ${response.status}`);
+  }
+  const body = await response.text();
+  if (proveOfficial) acquisitions.push({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body });
+  return body;
 }
 
 function tag(xml: string, name: string): string | null {
@@ -76,6 +114,7 @@ function mapPosition(raw: string): VotePosition | null {
 const legislators = JSON.parse(
   await get(
     "https://unitedstates.github.io/congress-legislators/legislators-current.json",
+    false,
   ),
 ) as { id: { bioguide: string; lis?: string } }[];
 const lisToBioguide = new Map<string, string>();
@@ -91,10 +130,14 @@ async function latestHouseRoll(): Promise<number> {
   let hi = 1200;
   while (hi - lo > 1) {
     const mid = Math.floor((lo + hi) / 2);
-    const response = await fetch(
-      `https://clerk.house.gov/evs/${YEAR}/roll${String(mid).padStart(3, "0")}.xml`,
-      { method: "HEAD", headers: { "user-agent": UA } },
-    );
+    const url = `https://clerk.house.gov/evs/${YEAR}/roll${String(mid).padStart(3, "0")}.xml`;
+    let response: Response;
+    try {
+      response = await fetch(url, { method: "HEAD", headers: { "user-agent": UA } });
+    } catch (error) {
+      await recordFailure(url, error instanceof Error ? error.message : "House roll horizon lookup failed");
+      throw error;
+    }
     if (response.ok) lo = mid;
     else hi = mid;
   }
@@ -264,12 +307,18 @@ if (apiKey) {
     const parsed = billType(legis);
     if (!parsed) continue;
     try {
+      // Never persist the credential-bearing request URL in durable acquisition
+      // evidence. The authority/route is provable without its query string.
+      const requestedUrl = `https://api.congress.gov/v3/bill/${CONGRESS}/${parsed.type}/${parsed.num}`;
+      const credentialedUrl = `${requestedUrl}?api_key=${encodeURIComponent(apiKey)}&format=json`;
       const response = await fetch(
-        `https://api.congress.gov/v3/bill/${CONGRESS}/${parsed.type}/${parsed.num}?api_key=${apiKey}&format=json`,
+        credentialedUrl,
         { headers: { "user-agent": UA } },
       );
       if (!response.ok) continue;
-      const data = (await response.json()) as {
+      const raw = await response.text();
+      acquisitions.push({ requestedUrl, finalUrl: requestedUrl, httpStatus: response.status, body: raw });
+      const data = JSON.parse(raw) as {
         bill?: { title?: string };
       };
       const title = data.bill?.title;
@@ -296,25 +345,13 @@ if (apiKey) {
           titled++;
         }
       }
-      // The rolling-window rule for plain-language summaries (item 4): a
-      // bill entering the window without a curated summary in
-      // data/votes/bill-summaries.json prints here so the next session
-      // curates it — the surface renders the honest coming state until then.
-      try {
-        const { readFileSync } = await import("node:fs");
-        const curated = JSON.parse(
-          readFileSync("data/votes/bill-summaries.json", "utf8"),
-        ) as { summaries: Record<string, unknown>; pending: { billUrl: string }[] };
-        if (
-          !curated.summaries[billUrl] &&
-          !curated.pending.some((p) => p.billUrl === billUrl)
-        ) {
-          console.warn(
-            `  UNSUMMARIZED: ${legis} (${billUrl}) has no plain-language summary — curate it in data/votes/bill-summaries.json`,
-          );
-        }
-      } catch {
-        // A missing summaries file just means nothing is curated yet.
+      if (
+        !billSummaries.summaries[billUrl] &&
+        !billSummaries.pending.some((pending) => pending.billUrl === billUrl)
+      ) {
+        console.warn(
+          `  UNSUMMARIZED: ${legis} (${billUrl}) has no reviewed explanation in the current canonical projection`,
+        );
       }
     } catch {
       // A missing title leaves the chamber's own words — honest either way.
@@ -337,8 +374,16 @@ const snapshot: VotesSnapshot = {
   positions,
 };
 
-await mkdir(dirname(OUT), { recursive: true });
-await writeFile(OUT, JSON.stringify(snapshot, null, 1) + "\n");
+const attemptedAt = new Date().toISOString();
+const candidate = federalRollCallsCandidate({
+  acquisitions,
+  retrievedAt: attemptedAt,
+  expectedCongress: CONGRESS,
+  expectedSession: SESSION,
+  snapshot,
+  billSummaries,
+});
+const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt);
 
 console.log(
   `house: ${houseRolls.length} rolls (${houseRolls[0]}–${houseRolls[houseRolls.length - 1]}), identifier match ${houseMatched}/${houseTotal}`,
@@ -347,7 +392,7 @@ console.log(
   `senate: ${senateWindow.length} votes (${senateWindow[0]?.number}–${senateWindow[senateWindow.length - 1]?.number}), identifier match ${senateMatched}/${senateTotal}`,
 );
 console.log(
-  `${votes.length} votes, ${positions.length} member positions, ${titled} title assignments from Congress.gov → ${OUT}`,
+  `${votes.length} votes, ${positions.length} member positions, ${titled} title assignments from Congress.gov → ${outcome.candidate.state} ${candidate.id}`,
 );
 
 if (houseTotal > 0 && houseMatched / houseTotal < 0.95) {
@@ -361,4 +406,7 @@ if (senateTotal > 0 && senateMatched / senateTotal < 0.95) {
 if (positions.length === 0) {
   console.error("zero positions extracted — that is a finding, not a success");
   process.exit(1);
+}
+if (outcome.candidate.state !== "PROMOTED") {
+  throw new Error(`FEDERAL_ROLLCALL_PROMOTION_REFUSED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);
 }

@@ -1,6 +1,7 @@
 import type { BodyStanding } from "../state/resolved-location.ts";
 
-import { WIRED_STATUSES, type CoveredBody } from "./coverage.ts";
+import type { CoveredBody } from "./coverage.ts";
+import { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * ONE DENOMINATOR for the Who Governs Here card (item 1a, 2026-08-17).

@@ -3,15 +3,15 @@
  *
  * ## Why this file exists, stated as the defect it closes
  *
- * `lib/control-plane/campaign-finance/obligations.ts` models two real
- * obligations against a real committed ballot. Every caller of it was either
- * its own definition, `campaignFinanceObligations()`, or a test. **A domain
+ * `lib/control-plane/campaign-finance/obligations.ts` models a genuinely local
+ * campaign-finance obligation against a real committed ballot. Before this
+ * provider, every caller was either its own definition or a test. **A domain
  * obligation reachable only from tests is a failure**: the tests were written
  * beside the model and cannot disagree with it, and no unattended process ever
- * opened one of its routes. Workers hunted meetings and nothing else.
+ * opened one of its routes.
  *
  * This provider puts campaign-finance records into the same scheduler the
- * meetings corpus goes through, so a due Arizona or New Hampshire route opens
+ * research corpus goes through, so a due Arizona or New Hampshire route opens
  * an occurrence, a WorkItem, a RouteTask, an Attempt, a disposition, debt and a
  * persisted next-due exactly as a body's calendar does — with no operator
  * choosing a finance hunt.
@@ -80,7 +80,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { campaignFinanceObligations } from "../../campaign-finance/obligations.ts";
+import { arizonaLocalObligation } from "../../campaign-finance/obligations.ts";
 
 import type {
   ObligationProvider,
@@ -419,21 +419,26 @@ function builtInRecords(): ProvidedObligation[] {
 /**
  * **THE DEFECT THIS SECTION CLOSES, NAMED EXACTLY.**
  *
- * `campaignFinanceObligations()` in
- * `lib/control-plane/campaign-finance/obligations.ts` models two real
- * obligations against a real committed ballot — U.S. House 6 and Proposition
- * 423 — with nine OPEN routes between them, each carrying its disposition, its
- * permission state, its rung and its citation. Every caller of it was its own
- * definition, `campaignFinanceObligations()` itself, or a test.
+ * `arizonaLocalObligation()` in
+ * `lib/control-plane/campaign-finance/obligations.ts` models Proposition 423's
+ * genuinely local Pima County routes, each carrying its disposition,
+ * permission state, rung and citation.
  *
  * **A domain obligation reachable only from tests is a failure.** The tests
  * were written beside the model and cannot disagree with it, so nine open
  * routes sat with no clock, no worker and no next-due while the digest reported
  * a healthy schedule over a different set of rows entirely.
  *
- * So the model's OPEN routes are registered here. Each one gets an occurrence,
+ * So the LOCAL model's OPEN routes are registered here. Each one gets an occurrence,
  * a RouteTask, an Attempt, a disposition, debt and a persisted next-due like
  * any other representation.
+ *
+ * PDC deliberately excludes the sibling federal AZ-06 model. The permanent
+ * `fec-funding` contract is now the one clock and authority for FEC acquisition,
+ * promotion, LKG and Reader delivery. Registering the federal model here would
+ * restore a second set of FEC clocks and would also require this child process
+ * to bootstrap a synchronous projection from the canonical store merely to
+ * construct its registry.
  *
  * ## NO URL IS INVENTED, and that is why most of them do not fetch
  *
@@ -466,7 +471,7 @@ const MODELLED_ROUTE_SUPERSEDED_BY: Readonly<Record<string, string>> = {
 
 function modelledRecords(nowIso: string): ProvidedObligation[] {
   const out: ProvidedObligation[] = [];
-  for (const obligation of campaignFinanceObligations(nowIso)) {
+  for (const obligation of [arizonaLocalObligation(nowIso)]) {
     const routes: RouteDescriptor[] = obligation.openRoutes.map((planned) => {
       const id = planned.declaration.routeId;
       const url = MODELLED_ROUTE_URLS[id];

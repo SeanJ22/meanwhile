@@ -25,10 +25,16 @@
  */
 
 import { KEY_MATRIX, type KeyIdentityName } from "../../map/key-matrix.ts";
-import type { RenderedNumber } from "../owner-surface.ts";
+import {
+  ownerDigestAttention,
+  type MapTilerUsageCollectionOutcome,
+  type OwnerDigestRecord,
+  type RenderedNumber,
+} from "../owner-surface.ts";
 import type { MapTilerClassifier, MapTilerGroup } from "./types.ts";
 import {
   DEFAULT_MAPTILER_ALLOWANCE,
+  MAPTILER_USAGE_FORMAT_VERSION,
   type MapTilerActorCounts,
   type MapTilerUsageDay,
   type MapTilerUsageSnapshot,
@@ -51,15 +57,22 @@ export function normalizeTimeline(input: {
   readonly classifier: MapTilerClassifier;
   readonly group: MapTilerGroup;
 }): readonly MapTilerUsageDay[] {
+  if (!Array.isArray(input.timeline.datasets) || input.timeline.datasets.length === 0) {
+    throw new Error(
+      "MAPTILER_TIMELINE_EMPTY: a missing or empty dataset collection is not a usage reading",
+    );
+  }
   const labels = new Map<string, string>();
   for (const entry of input.timeline.legend ?? []) {
     if (entry.item_id) labels.set(entry.item_id, entry.label ?? entry.item_id);
   }
 
   const rows: MapTilerUsageDay[] = [];
-  for (const dataset of input.timeline.datasets ?? []) {
-    const itemId = dataset.item_id ?? "";
-    if (itemId === "") continue;
+  for (const dataset of input.timeline.datasets) {
+    const itemId = dataset.item_id?.trim() ?? "";
+    if (itemId === "") {
+      throw new Error("MAPTILER_TIMELINE_ITEM_ID_MISSING: every dataset must name what was counted");
+    }
     const label = labels.get(itemId) ?? itemId;
     const group = dataset.group_id ?? input.group;
 
@@ -67,10 +80,18 @@ export function normalizeTimeline(input: {
       point: { readonly date?: string; readonly value?: number } | undefined,
       estimated: boolean,
     ): void => {
-      if (!point?.date) return;
-      const count = typeof point.value === "number" && Number.isFinite(point.value) ? point.value : 0;
+      const date = point?.date?.trim() ?? "";
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(`${date}T00:00:00Z`))) {
+        throw new Error("MAPTILER_TIMELINE_DATE_INVALID: every point must carry a real ISO date");
+      }
+      if (typeof point?.value !== "number" || !Number.isFinite(point.value) || point.value < 0) {
+        throw new Error(
+          "MAPTILER_TIMELINE_COUNT_INVALID: a missing, non-finite, or negative count is not zero",
+        );
+      }
+      const count = point.value;
       rows.push({
-        date: point.date,
+        date,
         classifier: input.classifier,
         itemId,
         label,
@@ -86,6 +107,9 @@ export function normalizeTimeline(input: {
     const estimated: unknown = dataset.estimated_data;
     const estimates = Array.isArray(estimated) ? estimated : estimated ? [estimated] : [];
     for (const point of estimates as { date?: string; value?: number }[]) push(point, true);
+  }
+  if (rows.length === 0) {
+    throw new Error("MAPTILER_TIMELINE_EMPTY: no day row was measured or estimated");
   }
   return rows;
 }
@@ -178,7 +202,8 @@ export interface BurnReading {
 }
 
 export interface ActorComparison {
-  readonly counts: MapTilerActorCounts;
+  readonly state: "MEASURED" | "UNKNOWN";
+  readonly counts: MapTilerActorCounts | null;
   /** Defects, not ratios. Empty is the expected state after MAPQ-1. */
   readonly defects: readonly string[];
   readonly says: string;
@@ -186,6 +211,8 @@ export interface ActorComparison {
 
 export interface MapTilerPanel {
   readonly connection: MapTilerUsageSnapshot["connection"];
+  /** Whether the face is showing a current measurement, retained LKG, or no measurement. */
+  readonly readingState: "MEASURED_CURRENT" | "MEASURED_LKG" | "UNKNOWN";
   /** The one-line reading. Plain language, and never a claim about people. */
   readonly says: string;
   readonly collectedAt: string;
@@ -203,6 +230,8 @@ export interface MapTilerPanel {
   readonly automationBlocked: boolean;
   readonly automationSays: string;
   readonly actors: ActorComparison | null;
+  /** The newest automatic attempt when it failed after the displayed measurement. */
+  readonly latestAttemptSays: string | null;
   /** Everything that needs the owner, as finished sentences. */
   readonly needsOwner: readonly string[];
 }
@@ -286,8 +315,19 @@ export function burnFrom(input: {
 export function compareActors(input: {
   readonly counts: MapTilerActorCounts | null;
   readonly byKey: readonly KeyRow[];
-}): ActorComparison | null {
-  if (input.counts === null) return null;
+  readonly unknownDetail?: string | null;
+}): ActorComparison {
+  if (input.counts === null) {
+    return {
+      state: "UNKNOWN",
+      counts: null,
+      defects: [],
+      says:
+        input.unknownDetail ??
+        "The standing collector could not measure our Reader-event comparison for this billing " +
+          "window. That comparison is unknown, not zero.",
+    };
+  }
   const defects: string[] = [];
   for (const row of input.byKey) {
     if (row.expectation === "UNCLASSIFIED" && row.requests > 0) {
@@ -300,6 +340,7 @@ export function compareActors(input: {
   const c = input.counts;
   const total = c.declaredSynthetic + c.undeclaredPublic + c.unattributed + c.author;
   return {
+    state: "MEASURED",
     counts: c,
     defects,
     says:
@@ -311,6 +352,77 @@ export function compareActors(input: {
       "app events, not map sessions, and not a count of people — every session that reaches the " +
       "Reader loads the map, so they move together, but one is not the other.",
   };
+}
+
+function measuredSnapshotIssue(snapshot: MapTilerUsageSnapshot): string | null {
+  if (snapshot.connection !== "CONNECTED") return "the provider did not return a complete reading";
+  if (
+    snapshot.since === null || snapshot.until === null ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(snapshot.since) ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(snapshot.until) ||
+    snapshot.since > snapshot.until
+  ) return "the provider did not return one valid billing window";
+  const measured = snapshot.days.filter((day) => !day.estimated && day.group === "request");
+  if (!measured.some((day) => day.classifier === "api_keys")) {
+    return "the key-attribution classifier returned no measured rows";
+  }
+  if (!measured.some((day) => day.classifier === "services")) {
+    return "the service classifier returned no measured rows";
+  }
+  if (snapshot.days.some((day) => !Number.isFinite(day.count) || day.count < 0)) {
+    return "a usage row carried an invalid count";
+  }
+  return null;
+}
+
+/**
+ * Promote only a complete provider reading. A failed or partial attempt is
+ * recorded on the retained prior measurement instead of replacing that LKG.
+ */
+export function retainMapTilerLastKnownGood(input: {
+  readonly candidate: MapTilerUsageSnapshot;
+  readonly previous: MapTilerUsageSnapshot | null | undefined;
+}): MapTilerUsageSnapshot {
+  const issue = measuredSnapshotIssue(input.candidate);
+  if (issue === null) {
+    return {
+      ...input.candidate,
+      formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
+      latestAttempt: input.candidate.latestAttempt ?? {
+        attemptedAt: input.candidate.collectedAt,
+        connection: "CONNECTED",
+        detail: null,
+        provenance: input.candidate.provenance,
+      },
+    };
+  }
+
+  const failedCandidate: MapTilerUsageSnapshot = input.candidate.connection === "CONNECTED"
+    ? {
+        ...input.candidate,
+        formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
+        connection: "COULD_NOT_ASK",
+        detail: `REFUSED PARTIAL MAPTILER READING — ${issue}. This is not a reading of zero.`,
+        days: [],
+        actors: null,
+        actorsDetail: "The provider reading was refused, so the comparison is unknown.",
+      }
+    : { ...input.candidate, formatVersion: MAPTILER_USAGE_FORMAT_VERSION };
+  const failedAttempt = {
+    attemptedAt: failedCandidate.collectedAt,
+    connection: failedCandidate.connection,
+    detail: failedCandidate.detail ?? issue,
+    provenance: failedCandidate.provenance,
+  } as const;
+
+  if (input.previous && measuredSnapshotIssue(input.previous) === null) {
+    return {
+      ...input.previous,
+      formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
+      latestAttempt: failedAttempt,
+    };
+  }
+  return { ...failedCandidate, latestAttempt: failedAttempt };
 }
 
 /**
@@ -327,6 +439,20 @@ export function projectPanel(input: {
 }): MapTilerPanel {
   const snap = input.snapshot;
   const needsOwner: string[] = [];
+  const latestAttempt = snap.latestAttempt ?? null;
+  const latestFailed = latestAttempt !== null && latestAttempt.connection !== "CONNECTED"
+    ? latestAttempt
+    : null;
+  const readingState: MapTilerPanel["readingState"] = snap.connection !== "CONNECTED"
+    ? "UNKNOWN"
+    : latestFailed === null
+      ? "MEASURED_CURRENT"
+      : "MEASURED_LKG";
+  const latestAttemptSays = readingState === "MEASURED_LKG" && latestFailed !== null
+    ? `The latest automatic collection at ${latestFailed.attemptedAt} failed: ` +
+      `${latestFailed.detail ?? "MapTiler did not return a complete reading."} ` +
+      "The prior measured reading remains live, and the standing runner will retry."
+    : null;
 
   /* No leading "Yes." — the panel puts the verdict in front of this sentence,
    * and the two together read "Yes. Yes." if this one answers as well. */
@@ -346,6 +472,7 @@ export function projectPanel(input: {
     );
     return {
       connection: snap.connection,
+      readingState,
       says:
         snap.detail ??
         "NOT CONNECTED — nobody has asked MapTiler what this account spent. That is not the same " +
@@ -363,7 +490,8 @@ export function projectPanel(input: {
       burn: null,
       automationBlocked: true,
       automationSays,
-      actors: compareActors({ counts: snap.actors, byKey: [] }),
+      actors: compareActors({ counts: snap.actors, byKey: [], unknownDetail: snap.actorsDetail }),
+      latestAttemptSays,
       needsOwner,
     };
   }
@@ -450,16 +578,20 @@ export function projectPanel(input: {
     );
   }
 
-  const says =
+  const measuredSays =
     `${used.toLocaleString("en-US")} request(s) this billing period` +
     (snap.allowance === null
       ? ", against an allowance nobody has confirmed."
       : ` of ${snap.allowance.toLocaleString("en-US")}` +
         (snap.allowanceIsAssumed ? " (assumed)" : "") +
         `, leaving ${(remaining ?? 0).toLocaleString("en-US")}.`);
+  const says = readingState === "MEASURED_LKG"
+    ? `Showing the last-known-good reading collected at ${snap.collectedAt}: ${measuredSays}`
+    : measuredSays;
 
   return {
     connection: snap.connection,
+    readingState,
     says,
     collectedAt: snap.collectedAt,
     since: snap.since,
@@ -474,7 +606,8 @@ export function projectPanel(input: {
     burn,
     automationBlocked: true,
     automationSays,
-    actors: compareActors({ counts: snap.actors, byKey }),
+    actors: compareActors({ counts: snap.actors, byKey, unknownDetail: snap.actorsDetail }),
+    latestAttemptSays,
     needsOwner,
   };
 }
@@ -558,6 +691,130 @@ export function maptilerSectionNumbers(panel: MapTilerPanel): readonly RenderedN
   }
 
   return numbers;
+}
+
+/* ------------------------------------------------------------------ *
+ * 5. APPEND-ONLY ATTEMPT HISTORY — 24h / 7d / 30d, never latest-only
+ * ------------------------------------------------------------------ */
+
+export type MapTilerHistoryDisposition =
+  | MapTilerUsageCollectionOutcome["disposition"]
+  | "INCONSISTENT_RECEIPT";
+
+export interface MapTilerHistoryAttempt {
+  readonly digestId: string;
+  readonly writtenAt: string;
+  readonly outcome: MapTilerUsageCollectionOutcome;
+  readonly disposition: MapTilerHistoryDisposition;
+  /** Non-null means the row is durable but cannot license a healthy claim. */
+  readonly issue: string | null;
+}
+
+export interface MapTilerHistoryWindow {
+  readonly id: "24h" | "7d" | "30d";
+  readonly label: "24 hours" | "7 days" | "30 days";
+  readonly since: string;
+  readonly through: string;
+  readonly attempts: number;
+  readonly promotedCurrent: number;
+  readonly retainedLkg: number;
+  readonly unknownNoLkg: number;
+  readonly inconsistent: number;
+}
+
+export interface MapTilerAttemptHistory {
+  readonly windows: readonly MapTilerHistoryWindow[];
+  /** Exact, newest-first receipts whose finish time lies in the last 30 days. */
+  readonly attempts: readonly MapTilerHistoryAttempt[];
+  /** Durable rows whose time is malformed or in the future; never silently omitted. */
+  readonly unplaced: readonly MapTilerHistoryAttempt[];
+}
+
+const MAPTILER_HISTORY_WINDOWS = [
+  { id: "24h", label: "24 hours", milliseconds: 24 * 60 * 60 * 1_000 },
+  { id: "7d", label: "7 days", milliseconds: 7 * 24 * 60 * 60 * 1_000 },
+  { id: "30d", label: "30 days", milliseconds: 30 * 24 * 60 * 60 * 1_000 },
+] as const;
+
+/**
+ * Project the durable owner-digest rows without rereading the replaceable
+ * owner snapshot. A malformed receipt remains visible as inconsistent and is
+ * never counted as a successful collection.
+ */
+export function projectMapTilerAttemptHistory(
+  digests: readonly OwnerDigestRecord[],
+  nowIso: string,
+): MapTilerAttemptHistory {
+  const now = Date.parse(nowIso);
+  if (!Number.isFinite(now)) throw new Error("MAPTILER_HISTORY_NOW_INVALID");
+
+  const rows: MapTilerHistoryAttempt[] = digests.flatMap((digest) => {
+    const outcome = digest.runtimeOutcome;
+    if (outcome?.kind !== "MAPTILER_USAGE_COLLECTION") return [];
+    const attention = ownerDigestAttention(digest);
+    const finished = Date.parse(outcome.finishedAt);
+    const timeIssue = !Number.isFinite(finished)
+      ? "The receipt has no readable finish time."
+      : finished > now
+        ? "The receipt finish time is in the future."
+        : null;
+    const outcomeIssue = attention.level === "UNKNOWN" ? attention.happened : null;
+    const issue = timeIssue ?? outcomeIssue;
+    return [{
+      digestId: digest.digestId,
+      writtenAt: digest.writtenAt,
+      outcome,
+      disposition: issue === null ? outcome.disposition : "INCONSISTENT_RECEIPT",
+      issue,
+    }];
+  });
+
+  const placed = rows
+    .filter((row) => {
+      const finished = Date.parse(row.outcome.finishedAt);
+      return Number.isFinite(finished) && finished <= now && finished >= now - MAPTILER_HISTORY_WINDOWS[2].milliseconds;
+    })
+    .sort((left, right) => right.outcome.finishedAt.localeCompare(left.outcome.finishedAt));
+  const unplaced = rows.filter((row) => row.issue?.includes("finish time") || row.issue?.includes("future"));
+
+  const windows = MAPTILER_HISTORY_WINDOWS.map((window): MapTilerHistoryWindow => {
+    const sinceMs = now - window.milliseconds;
+    const inWindow = placed.filter((row) => Date.parse(row.outcome.finishedAt) >= sinceMs);
+    return {
+      id: window.id,
+      label: window.label,
+      since: new Date(sinceMs).toISOString(),
+      through: new Date(now).toISOString(),
+      attempts: inWindow.length,
+      promotedCurrent: inWindow.filter((row) => row.disposition === "PROMOTED_CURRENT").length,
+      retainedLkg: inWindow.filter((row) => row.disposition === "RETAINED_LKG").length,
+      unknownNoLkg: inWindow.filter((row) => row.disposition === "UNKNOWN_NO_LKG").length,
+      inconsistent: inWindow.filter((row) => row.disposition === "INCONSISTENT_RECEIPT").length,
+    };
+  });
+
+  return { windows, attempts: placed, unplaced };
+}
+
+/** Every history figure rendered by Admin, with the attempt population named. */
+export function maptilerHistoryNumbers(history: MapTilerAttemptHistory): readonly RenderedNumber[] {
+  return history.windows.flatMap((window) => {
+    const denominator = window.attempts;
+    const source = `append-only map-provider receipts finished from ${window.since} through ${window.through}`;
+    const number = (label: string, value: number, contract: string): RenderedNumber => ({
+      label: `map provider ${window.id} ${label}`,
+      value,
+      denominator,
+      contract: `${contract}, out of every ${source}.`,
+    });
+    return [
+      number("attempts", window.attempts, "durable collection attempts recorded"),
+      number("promoted current", window.promotedCurrent, "complete attempts that advanced the current reading"),
+      number("retained LKG", window.retainedLkg, "failed attempts for which the prior good reading remained live"),
+      number("unknown without LKG", window.unknownNoLkg, "failed attempts with no prior good reading to serve"),
+      number("inconsistent receipts", window.inconsistent, "receipts that could not license any healthy outcome claim"),
+    ];
+  });
 }
 
 /** The allowance the reading was taken against, and whether anybody confirmed it. */

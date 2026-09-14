@@ -56,24 +56,19 @@ test("every serving source tenant binds to exactly one registry body", () => {
   );
 });
 
-test("the denominator is not empty, and it covers more than the shared table", () => {
+test("SOURCE_WIRING is the complete serving-membership denominator", () => {
   const tenants = servingTenants();
   const tables = new Set(tenants.map((t) => t.table));
 
   assert.ok(tenants.length > 0, "the serving-tenant denominator went empty");
-  // The whole point: the adapter-owned tables are inside the denominator.
-  assert.ok(tables.has("SOURCE_WIRING"));
-  assert.ok(tables.has("LEGISTAR_CLIENTS"));
-  assert.ok(tables.has("INSITE_TENANTS"));
+  assert.deepEqual([...tables], ["SOURCE_WIRING"]);
 });
 
 test("Mesa binds — the body the audit questioned, checked rather than assumed", () => {
   const mesa = servingTenants().filter((t) =>
     t.bodyId.includes("state:az/place:mesa"),
   );
-  // Two rows now: the InSite tenant that was already serving, and the wiring
-  // row that makes the registry able to say so.
-  assert.ok(mesa.length >= 2, `expected the tenant and its wiring row, got ${mesa.length}`);
+  assert.equal(mesa.length, 1, `expected exactly the canonical wiring row, got ${mesa.length}`);
   assert.deepEqual(checkTenantBodyBinding(mesa, REGISTRY).map(formatFault), []);
 
   const body = REGISTRY.bodies.filter(
@@ -91,10 +86,7 @@ test("no adapter carries a body id outside the serving-tenant denominator", () =
    * audits — which is exactly how Mesa arrived, and the reason this sweep
    * exists rather than a comment asking people to remember.
    */
-  const DECLARED = new Set([
-    join("lib", "sources", "legistar", "client-registry.ts"),
-    join("lib", "sources", "legistar-insite", "tenant-registry.ts"),
-  ]);
+  const DECLARED = new Set<string>();
 
   // `tsFilesUnder` walks the whole tree, so an adapter directory somebody adds
   // is swept from the moment it exists rather than when this file is extended.

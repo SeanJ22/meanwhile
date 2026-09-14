@@ -61,9 +61,9 @@
  * Registered-claims-or-`Bearer`-position separates those two perfectly, and it
  * is grounded in the standard rather than in a vocabulary someone guessed at.
  * The same discipline retires the other false positive the first draft had:
- * `docs/deploy-key-setup.md` and `tests/deploy-key-ssh.test.ts` both quote the
- * string `-----BEGIN OPENSSH PRIVATE KEY-----`, one in prose and one as a
- * deliberate structural placeholder with a body of sixty-four `x`s. Requiring
+ * prose and the scanner's regression test both quote the string
+ * `-----BEGIN OPENSSH PRIVATE KEY-----`, with the test using a deliberate
+ * structural placeholder whose body is sixty-four `x`s. Requiring
  * an actual base64 body with real alphabet diversity excludes both **on the
  * evidence**, which is the only kind of exclusion that stays correct when
  * somebody edits those files.
@@ -225,15 +225,15 @@ export const CLASSES: readonly CredentialClass[] = [
     /*
      * THE BODY IS PART OF THE MATCH, and that is the whole refinement.
      *
-     * Matching the header alone flagged a sentence in `docs/deploy-key-setup.md`
-     * that NAMES the header, which is how a guard teaches people to ignore it.
+     * Matching the header alone flags prose that merely NAMES the header,
+     * which is how a guard teaches people to ignore it.
      */
     pattern:
       /-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----[\r\n]+([A-Za-z0-9+/=][A-Za-z0-9+/=\r\n]{31,})/,
     confirm: (_value, { groups }) => {
       const body = (groups[0] ?? "").replace(/[\r\n]/g, "");
       // A real key body uses most of the base64 alphabet. A placeholder is one
-      // character repeated — `tests/deploy-key-ssh.test.ts` uses sixty-four `x`s
+      // character repeated — the regression test uses sixty-four `x`s
       // deliberately, so that no test run ever handles key material.
       const distinct = new Set(body).size;
       if (distinct < 8) {

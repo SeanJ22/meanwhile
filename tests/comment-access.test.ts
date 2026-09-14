@@ -79,7 +79,11 @@ test("lookup is by division plus published body name, never the wrong body's rul
 
 test("every held standing rule survives its exact canonical body join", () => {
   for (const row of COMMENT_ACCESS) {
-    assert.equal(commentAccessFor(row.ocdId, "Unrelated vendor heading", row.bodyId), row);
+    // The Reader boundary now routes comment-access through the control-plane
+    // store (which carries a transport id) and strips that id on the way out,
+    // so it returns a value-equal copy rather than the COMMENT_ACCESS reference.
+    // The contract is exact content survival, checked by value.
+    assert.deepEqual(commentAccessFor(row.ocdId, "Unrelated vendor heading", row.bodyId), row);
   }
 });
 

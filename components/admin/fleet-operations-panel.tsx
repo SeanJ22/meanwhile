@@ -32,6 +32,7 @@ import {
   progressSummary,
   receiptLoadEntryLabel,
   receiptLoadingSummary,
+  receiptSourceSummary,
   scoutPrerequisite,
   spendingDisplay,
 } from "@/lib/admin/fleet-operations-view";
@@ -162,15 +163,20 @@ function OperationCard({ op }: { op: FleetOperation }) {
   );
 }
 
-function ReceiptLoadingBlock({ loading }: { loading?: FleetOperationsReport["receiptLoading"] }) {
+function ReceiptLoadingBlock({ loading, source }: {
+  loading?: FleetOperationsReport["receiptLoading"];
+  source?: FleetOperationsReport["receiptSource"];
+}) {
   // An older producer (pre-v1.2) omits the field entirely; render nothing then.
   if (!loading) return null;
   const s = receiptLoadingSummary(loading);
+  const src = receiptSourceSummary(source);
   const op = !s.available ? (loading.kind === "STORE_UNREACHABLE" ? "blocked" : "stale") : s.unresolved ? "stale" : "finished";
   const entries = loading.kind === "HELD" ? loading.value.entries : [];
   return (
     <div className="note" data-receipt-loading>
       <span className="op-badge" data-op={op}>receipt loading</span> {s.text}
+      {src && <><br /><span data-receipt-source>{src.text}</span></>}
       {s.caveat && <><br />{s.caveat}</>}
       {entries.length > 0 && (
         <ul style={{ margin: ".2rem 0 0", paddingLeft: "1rem" }}>
@@ -206,7 +212,7 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
             <span className="note">Read at {report.observedAt}. {NOTES.delivery}</span>
           </p>
 
-          <ReceiptLoadingBlock loading={report.receiptLoading} />
+          <ReceiptLoadingBlock loading={report.receiptLoading} source={report.receiptSource} />
 
           <h2>Is useful work advancing?</h2>
           <Outcome label="Operations" outcome={report.operations}>

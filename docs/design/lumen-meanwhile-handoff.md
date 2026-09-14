@@ -11,11 +11,77 @@ secrets. Base `main @ 713e4e06`.
   UI, the client-bundle fix, the 7:1 party-chip candidate, and the full-suite gate repairs (ADM-21,
   rhythm, absence-defaults, label-tracking, duplicate-census, meeting-body-attribution). The served
   `/admin/fleet` page + endpoint keep the receipt store **UNMOUNTED** (an OPTIONAL-store seam), which
-  clears the production build (§7A/§11). **Read the Phase-5 Update immediately below first** — it
-  supersedes the earlier "why unmounted" text: the receipt leaf is now incorporated, remounting was
-  MEASURED to still refuse the build (a runtime-fs over-trace, not the import graph), and the build is
-  kept green.
+  clears the production build (§7A/§11); receipt loading now reaches the served surface through Fleet's
+  owner-snapshot transport instead. **Read the Phase-6 Update immediately below first** — it is the
+  newest state (Fleet's `e174e219` owner-snapshot transport incorporated at `1d16c640`, combined build +
+  page/Refresh parity verified); the Phase-5 Update below it explains why the filesystem store stays
+  unmounted.
 - No push / merge / deploy / production write / live dispatch; PDC untouched.
+
+## Update — 2026-09-13 (Phase 6): Fleet's owner-snapshot receipt transport incorporated; combined build + page/Refresh parity verified
+
+**New combined HEAD.** `integration/lumen-fleet-20260913` atop **`1d16c640`** — Fleet's final delta
+**`e174e219`** ("Read historical fleet receipts through owner snapshot transport") cherry-picked `-x`
+from the read-only fleet clone, plus this commit's integration edits. One clean fleet delta atop the
+leaf; the earlier fleet series was not re-applied.
+
+**What the delta does — it RESOLVES Phase-5 remaining-dependency #1 (served-bundle receipt loading).**
+Instead of mounting the filesystem store in a served bundle (which over-traces — Phase 5), the runner
+composes a bounded receipt reading into the existing `OwnerSnapshot.fleetReceipts`
+(`withFleetReceiptSnapshot`, runner-only), and the served `readFleetOperations` reads it from the
+database via `readFleetReceiptSnapshot`. The fs store is imported **type-only** in that read path, so no
+`node:fs` enters the served bundle. New additive `FleetOperationsReport.receiptSource`
+(`kind: OWNER_SNAPSHOT | INJECTED_STORE`, `authority: HISTORICAL_PROMOTER_1`, `freshness`,
+`permanentAuthority: NOT_CONNECTED`) states provenance. Wire versions unchanged. The fs store stays
+**unmounted** in both served entries (Fleet's route edit only removed the old default store; my
+optional-store wiring/comments are preserved) — the store remains for runner/isolated tests.
+
+**My integration work (this commit).** Resolved the `route.ts` cherry-pick conflict by keeping my
+served wiring under a merged comment (snapshot transport + the measured reason the fs store stays
+unmounted). Corrected the now-active comments in `page.tsx`, `fleet-seed.ts` and
+`fleet-operations-http.ts` (receipts arrive via the owner snapshot; NOT_RECORDED only when the snapshot
+also lacks the extension). Surfaced provenance honestly: a `receiptSourceSummary` consumer helper + a
+one-line receipt-source note in the panel ("owner snapshot — historical promoter/1 archive … permanent
+receipt authority NOT CONNECTED; historical loading is not current civic-data delivery or
+served-publication proof"). Added the committed-page snapshot **parity** test
+(`tests/fleet-operations-page.test.ts`): a populated owner snapshot feeds `readFleetSeedState` (page
+seed) and `handleFleetOperationsRequest` (Refresh) identically, and a snapshot with no receipt
+extension is NOT_RECORDED on both — both with no filesystem store, both rendered.
+
+**Combined verification at this HEAD** (isolated clone; preview harnesses excluded = a real checkout;
+no push / merge / deploy / PDC change):
+- `npx tsc --noEmit` → clean.
+- Targeted ESLint on the changed TypeScript → clean (0 errors).
+- `rm -rf .next && pnpm build` → **GREEN**. `build-output · 440 repo files traced · tests/ traced 0`;
+  budget 1a largest app trace **228 < 230** (`api/ask/grounded`; the fleet page/route sit at normal
+  cardinality — the snapshot read opens no receipt file); budget 1b 927 < 1050; `reader-trace →
+  failures: []`; both `/admin/fleet` and `/api/admin/fleet/operations` present as ƒ; TypeScript clean.
+  This is **Claude's combined page build**, which Fleet's own isolated build explicitly did not perform.
+- `tests/deploy-paths.test.ts` → **12/12**, incl. the trace-manifest non-shipping sweep.
+- All 13 `tests/fleet-*.test.ts` (incl. Fleet's new `fleet-receipt-snapshot.test.ts` and updated
+  `fleet-receipt-admin.test.ts`, and my two page-parity cases) → **84/84, 0 fail**.
+
+**Remaining release blockers — all PDC-owned, awaiting the authorized PDC completion handoff.** Checked
+read-only: `.runtime/PDC_V2_CODEX_COMPLETION_HANDOFF.md` is **not present** in any local PDC workspace
+(only the provisional `1b8c63f7…` candidate amendment exists; the fleet docs are explicit that final
+bindings "cannot be inferred from old fact or meeting IDs"). So, unchanged and exact:
+1. **Permanent receipt authority** — `receiptSource.permanentAuthority` stays `NOT_CONNECTED`. Binding
+   Fleet identities to PDC's `readPromotedCivicData` / `readRoutineDataObservability` / typed reader
+   receipts requires the authorized handoff's final source/class/scope/candidate/version bindings.
+2. **Historical selector** — the loader still derives summaries from `WindowRunRecord.promotionReceipts`
+   (PDC removes it). Needs an authorized retained-history selector + archive root; the member/producer
+   is never restored to satisfy imports.
+3. **Publisher mounting** — the fleet/integration owner composes `withFleetReceiptSnapshot` into the
+   authorized permanent publisher's existing snapshot CAS (no competing writer), once selector/root and
+   `CONSOLE_PUBLISHER` authority are settled.
+4. **Served operation** — a real publisher cycle + Admin datastore read, cross-cycle retention and the
+   exact current/LKG/served bindings, verified only after operational authorization. Served publication
+   stays `UNKNOWN`; historical loading is not current PDC delivery or served-publication proof.
+
+**Resume checkpoint.** When `PDC_V2_CODEX_COMPLETION_HANDOFF.md` arrives, bind (1)+(2), mount (3) in the
+authorized publisher, and verify (4). PDC combination disposition is unchanged: keep the `promoter.ts`
+deletion, discard the compatibility edit to that deleted file, retain the leaf + direct consumer
+imports, never restore the producer.
 
 ## Update — 2026-09-13 (Phase 5): Fleet's receipt leaf incorporated; remount measured; build kept green
 
@@ -61,12 +127,13 @@ now})` for first paint and `handleFleetOperationsRequest(req, {open, receiptStor
 necessity, not oversight: mounting refuses the build.
 
 **Remaining integration dependencies (three, all explicit):**
-1. **Served-bundle receipt loading (the decisive one).** The trusted store cannot be mounted in a
-   served serverless bundle without over-tracing. Resolution is Fleet/architecture-owned: adapt the
-   runtime-fs read to a trace-safe shape, OR — matching how every other admin surface works — have the
-   runner own the fs store and write receipt-loading STATUS to the control plane, read by the served
-   page via `openControlPlane`. (The deployed web function has no receipts directory and no DSN anyway;
-   the fs store genuinely runs in the runner/test contexts — 73/73 fleet tests.)
+1. **Served-bundle receipt loading (the decisive one). — RESOLVED in the Phase-6 Update above.** The
+   trusted store cannot be mounted in a served serverless bundle without over-tracing. Resolution is
+   Fleet/architecture-owned: adapt the runtime-fs read to a trace-safe shape, OR — matching how every
+   other admin surface works — have the runner own the fs store and write receipt-loading STATUS to the
+   control plane, read by the served page via `openControlPlane`. (The deployed web function has no
+   receipts directory and no DSN anyway; the fs store genuinely runs in the runner/test contexts —
+   73/73 fleet tests.) Fleet's `e174e219` chose exactly the second option (owner-snapshot transport).
 2. **`WindowRunRecord.promotionReceipts` (PDC removes it).** The loader still derives its `Summary`
    from this member and delivery joins it. PDC's removal needs an authorized historical window/receipt
    selector; the member is not restored as a claim about permanent output.

@@ -65,20 +65,17 @@ export const metadata = {
 };
 
 export default async function FleetOperationsPage() {
-  // The trusted READER receipt store is NOT mounted here — same MEASURED reason as
-  // the GET route (app/api/admin/fleet/operations/route.ts). Fleet's `e1140c78`
-  // leaf shrank the store's import closure (esbuild 44 → 3), but mounting it in
-  // this served bundle was rebuilt and verified to STILL refuse check-build-output:
-  // the store's request-time `open(join(process.cwd(), ...RECEIPTS_DIR, id))` read
-  // is the R23 over-trace shape (2214 repo files traced, ceiling 230; tests/ and
-  // docs/evidence pulled in). The leaf does not change that, and the sanctioned
-  // trace fixes need a finite build-time file set that runner-populated receipts
-  // are not. `readFleetSeedState` keeps its OPTIONAL receiptStore seam, so first
-  // paint and endpoint Refresh stay equivalent — both read without a store today,
-  // yielding NOT_RECORDED receipt loading. The receipt UI, retained timestamps and
-  // failure states are proven with an injected store in
-  // tests/fleet-operations-page.test.ts. Reporting it on a served surface is a
-  // remaining integration dependency (see the handoff doc).
+  // The trusted READER filesystem receipt store is NOT mounted here — mounting it
+  // in a served bundle was rebuilt and MEASURED to refuse check-build-output (the
+  // store's request-time process.cwd() receipt read is the R23 over-trace shape;
+  // Fleet's zero-import leaf did not change that, the trace is the fs read not the
+  // import graph). Instead receipt readings arrive through the existing
+  // control-plane OWNER SNAPSHOT: with no store injected, readFleetSeedState →
+  // readFleetOperations reads OwnerSnapshot.fleetReceipts (Fleet's `e174e219`
+  // transport). The OPTIONAL receiptStore seam is preserved for runner/isolated
+  // tests, so this first paint and endpoint Refresh read the SAME snapshot —
+  // populated/missing page↔Refresh parity is proven in
+  // tests/fleet-operations-page.test.ts. See the handoff doc.
   const initialState = await readFleetSeedState({
     open: openControlPlane,
     now: () => new Date().toISOString(),

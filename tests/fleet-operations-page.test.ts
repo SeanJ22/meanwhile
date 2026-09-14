@@ -13,7 +13,7 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, rm, unlink, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import test from "node:test";
@@ -25,6 +25,9 @@ import { createFleetReceiptStore } from "../lib/control-plane/fleet-receipt-stor
 import { handleFleetOperationsRequest } from "../lib/control-plane/fleet-operations-http.ts";
 import type { FleetOperationsReport } from "../lib/control-plane/fleet-operations.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
+import { withFleetReceiptSnapshot } from "../lib/control-plane/fleet-receipt-publisher.ts";
+import { gap, type OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { liveAuthority, promoteFacts, receiptSummary, type PromotionReceipt } from "../lib/control-plane/promotion/promoter.ts";
 import type { WindowRunRecord } from "../lib/control-plane/promotion/types.ts";
@@ -139,5 +142,104 @@ test("the committed /admin/fleet page loads receipts from a temporary root, rend
     assert.equal(refreshed.shown?.observedAt, now());
     const refreshedMarkup = renderPageView(refreshed, root);
     assert.match(refreshedMarkup, /receipt loading/i, "the refreshed page still renders the receipt-loading block");
+  });
+});
+
+/** The base owner snapshot the real publisher writes — only the fields the fleet read
+ *  consults; every measured aggregate is an explicit gap, never a fabricated zero. */
+function baseSnapshot(publishedAt: string): OwnerSnapshot {
+  const nothing = gap<never>("OURS", "Not measured in this page snapshot fixture");
+  return { formatVersion: 1, publishedAt, publishedFromSha: null, publisher: "offline-page-fixture",
+    pilotGreen: null, contracts: [], decisionCards: [], obligationsByState: [], obligationsByProvider: [], freshnessDebtRows: nothing,
+    incidents: [], costByRole: [], costByModel: [], cacheHitRateByCaller: [], deterministicShare: nothing, costPerVerifiedRecord: nothing,
+    intakeFolder: nothing, intakeItemsFound: nothing, intakeItemsProcessed: nothing, intakeUnidentifiable: nothing, zipRows: nothing };
+}
+
+test("the committed /admin/fleet page and its Refresh read the SAME owner-snapshot receipt transport — populated and missing parity, no filesystem store", async t => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => { throw new Error("OFFLINE_FLEET_PAGE_SNAPSHOT_NETWORK_REFUSED"); };
+  t.after(() => { globalThis.fetch = originalFetch; });
+  const root = await mkdtemp(join(tmpdir(), "fleet-page-snap-"));
+  t.after(async () => {
+    const target = resolve(root);
+    assert.equal(dirname(target), resolve(tmpdir()));
+    assert.ok(basename(target).startsWith("fleet-page-snap-"));
+    await rm(target, { recursive: true, force: true, maxRetries: 3 });
+  });
+
+  // Runner-side: a real receipt on a temp root, composed into the existing owner
+  // snapshot by Fleet's withFleetReceiptSnapshot — no live publisher, database or dispatch.
+  const receipt = await promoteFacts({ target: { kind: "SHADOW", root }, authority: liveAuthority(readActivationGate(process.cwd())),
+    verdicts: [{ itemId: "fixture-item", recordClass: "meeting-times", stage: null, verdict: "REFUSE_WOULD", reason: "isolated page snapshot fixture" }],
+    facts: new Map(), now: AT, windowId: "fixture-page-snap-window" });
+  assert.ok(receipt.receiptPath);
+  const window = windowFor(receipt, LATER);
+  const store = createFleetReceiptStore({ targets: [{ kind: "SHADOW", root }] });
+  const composed = await withFleetReceiptSnapshot(baseSnapshot(LATER), { store, readWindows: async () => [window], previous: null });
+  assert.ok(composed.fleetReceipts, "runner composed the receipt snapshot into the owner aggregate");
+
+  await withAdminSessionKey(async () => {
+    const iat = Math.floor(Date.parse(LATER) / 1000);
+    const signed = await signSession({ sid: "adm_fleet_page_snap", iat, exp: iat + 3600, via: "google" }, SESSION_KEY);
+    const cookie = `${ADMIN_SESSION_COOKIE}=${signed}`;
+    const now = () => LATER;
+
+    // ── Populated snapshot: page seed and Refresh both surface the loaded receipt, WITHOUT a store. ──
+    await t.test("a populated owner snapshot feeds the page seed and Refresh identically", async () => {
+      const base = createMemoryRepositories();
+      const repos = { ...base, windowRuns: { ...base.windowRuns, readAll: async () => [window] } };
+      await repos.ownerSnapshots.put(SNAPSHOT_ID, composed, LATER);
+      const open = async () => ({ ok: true as const, repos });
+
+      const seed = await readFleetSeedState({ open, now });   // NO store injected
+      assert.equal(seed.shown?.receiptLoading.kind, "HELD", "the page seed loads receipts from the owner snapshot");
+      if (seed.shown?.receiptLoading.kind !== "HELD") throw new Error("SNAP_SEED_NOT_HELD");
+      const seedEntry = seed.shown.receiptLoading.value.entries.find(e => e.receiptId === receipt.receiptId);
+      assert.ok(seedEntry, "the snapshot-sourced page read surfaces the receipt reference");
+      assert.equal(seedEntry.state, "LOADED");
+      assert.equal(seed.shown.receiptSource?.kind, "OWNER_SNAPSHOT");
+      assert.equal(seed.shown.receiptSource?.authority, "HISTORICAL_PROMOTER_1");
+      assert.equal(seed.shown.receiptSource?.permanentAuthority, "NOT_CONNECTED");
+      assert.equal(seed.shown.receiptSource?.freshness, "FRESH");
+
+      const response = await handleFleetOperationsRequest(request(ADMIN_ORIGIN, cookie), { open, now });  // NO store injected
+      assert.equal(response.status, 200);
+      const report = await response.json() as FleetOperationsReport;
+      // page ↔ Refresh parity: identical receipt loading + provenance from the same snapshot.
+      assert.deepEqual(report.receiptLoading, seed.shown.receiptLoading, "Refresh receipt loading equals the page seed's");
+      assert.deepEqual(report.receiptSource, seed.shown.receiptSource, "Refresh receipt source equals the page seed's");
+
+      const markup = renderPageView(seed, root);
+      assert.match(markup, /receipt loading/i);
+      assert.match(markup, /Receipt source: owner snapshot/i, "the page names the owner-snapshot receipt source");
+      assert.match(markup, /permanent receipt authority NOT CONNECTED/i, "the page states the permanent authority is not connected");
+      assert.ok(!markup.includes(root), "no filesystem root leaks into the rendered page");
+      assert.ok(!markup.includes(SESSION_KEY));
+    });
+
+    // ── Missing extension: NOT_RECORDED, unknown freshness, no empty-success; parity holds. ──
+    await t.test("an owner snapshot with no receipt extension is NOT_RECORDED on both the page seed and Refresh", async () => {
+      const base = createMemoryRepositories();
+      const repos = { ...base, windowRuns: { ...base.windowRuns, readAll: async () => [window] } };
+      await repos.ownerSnapshots.put(SNAPSHOT_ID, baseSnapshot(LATER), LATER);   // no fleetReceipts extension
+      const open = async () => ({ ok: true as const, repos });
+
+      const seed = await readFleetSeedState({ open, now });   // NO store injected
+      assert.equal(seed.shown?.receiptLoading.kind, "NOT_RECORDED", "an absent extension is NOT_RECORDED, never an empty success");
+      assert.equal(seed.shown?.receiptSource?.kind, "OWNER_SNAPSHOT");
+      assert.equal(seed.shown?.receiptSource?.observedAt, null);
+      assert.equal(seed.shown?.receiptSource?.freshness, "UNKNOWN");
+      assert.equal(seed.shown?.receiptSource?.permanentAuthority, "NOT_CONNECTED");
+
+      const response = await handleFleetOperationsRequest(request(ADMIN_ORIGIN, cookie), { open, now });
+      assert.equal(response.status, 200);
+      const report = await response.json() as FleetOperationsReport;
+      assert.deepEqual(report.receiptLoading, seed.shown!.receiptLoading, "missing-snapshot Refresh matches the page seed");
+      assert.deepEqual(report.receiptSource, seed.shown!.receiptSource);
+
+      const markup = renderPageView(seed, root);
+      assert.match(markup, /Receipt source: owner snapshot/i);
+      assert.match(markup, /permanent receipt authority NOT CONNECTED/i);
+    });
   });
 });

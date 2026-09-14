@@ -9,11 +9,13 @@ const headers = { "cache-control": "no-store, no-cache, must-revalidate" };
 
 /** The real Admin boundary, with server-owned resources injectable for isolated compatibility checks.
  *
- * `receiptStore` is OPTIONAL: when absent, the read runs without a trusted receipt
- * store and `receiptLoading` is NOT_RECORDED. The served route currently omits it
- * because mounting `createFleetReceiptStore` in a Next server bundle drags the
- * promoter's filesystem graph in and over-traces the bundle (see the receipt
- * store's own note); tests still inject a real store to exercise loading. */
+ * `receiptStore` is OPTIONAL. The served route omits it: mounting the filesystem
+ * store in a Next server bundle over-traces it (the store's request-time
+ * process.cwd() receipt read is the R23 shape — not the import graph), so with no
+ * store the read obtains receipt loading from the owner snapshot
+ * (`OwnerSnapshot.fleetReceipts`, Fleet's e174e219 transport); when the snapshot
+ * also lacks that extension, `receiptLoading` is NOT_RECORDED. Tests inject a real
+ * store to exercise the filesystem loader directly. */
 export async function handleFleetOperationsRequest(request: NextRequest, dependencies: {
   readonly open: typeof openControlPlane;
   readonly receiptStore?: FleetReceiptStore;

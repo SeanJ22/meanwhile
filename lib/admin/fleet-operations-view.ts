@@ -202,7 +202,7 @@ export const RECEIPT_NOTES = {
   loadedNotProof: "LOADED = a valid receipt file was read and bound to its window summary — not promotion, not verification, and never served publication.",
   retained: "A RETAINED receipt is the last validated one kept after a failed refresh; it is historical evidence, keeps its original read time, and is never current proof.",
   truncated: "Bounded loading omitted references; a truncated load is an evidence gap, never a complete receipt history.",
-  notRecorded: "No trusted receipt store was supplied to this read; receipts, if any, came from the internal-evidence path rather than the loader.",
+  notRecorded: "No receipt reading is available: no store was injected and the owner snapshot carries no historical-receipt extension yet (runner collection not connected).",
 } as const;
 
 /** One receipt LOAD entry, said plainly, never upgrading load state to proof. */
@@ -242,4 +242,30 @@ export function receiptLoadingSummary(loading: FleetReceiptLoading): {
     ? `No receipt references in the read windows (loader active, limits ${limits.maximumReceipts} files / ${limits.maxReceiptBytes} bytes).${truncNote}`
     : `${entries.length} receipt reference(s): ${parts.join(", ")}${truncNote}`;
   return { available: true, unresolved, text, caveat: RECEIPT_NOTES.loadedNotProof };
+}
+
+/**
+ * Provenance of the receipt reading (`receiptSource`, additive on
+ * `fleet-operations/v1`; a report from before Fleet's owner-snapshot transport
+ * omits it). The served surface reads receipts from the runner's OWNER_SNAPSHOT;
+ * an INJECTED_STORE is only a runner/test-supplied store. This is historical
+ * `promoter/1` archive provenance — it never upgrades to the permanent civic-data
+ * authority, which stays NOT_CONNECTED until the PDC completion handoff wires it.
+ */
+export function receiptSourceSummary(source: FleetOperationsReport["receiptSource"]): {
+  readonly kind: "OWNER_SNAPSHOT" | "INJECTED_STORE";
+  readonly freshness: "FRESH" | "STALE" | "UNKNOWN";
+  readonly permanentConnected: boolean;
+  readonly text: string;
+} | null {
+  if (!source) return null;
+  const origin = source.kind === "OWNER_SNAPSHOT" ? "owner snapshot" : "injected store (runner/test)";
+  const observed = source.observedAt ? ` observed ${source.observedAt};` : "";
+  const permanent = source.permanentAuthority === "NOT_CONNECTED" ? "permanent receipt authority NOT CONNECTED" : source.permanentAuthority;
+  return {
+    kind: source.kind,
+    freshness: source.freshness,
+    permanentConnected: source.permanentAuthority !== "NOT_CONNECTED",
+    text: `Receipt source: ${origin} — historical promoter/1 archive (${source.freshness.toLowerCase()});${observed} ${permanent}. Historical loading is not current civic-data delivery or served-publication proof.`,
+  };
 }

@@ -1422,7 +1422,7 @@ interface HistoricalPromotionProof {
 }
 
 /** A historical PROMOTED label is an outcome only with its exact source-scoped proof. */
-function historicalPromotionProof(
+function historicalPromotionProofUncached(
   event: ExactOutcomeEvent,
   candidate: RoutineCandidateRow,
   candidates: readonly RoutineCandidateRow[],
@@ -2019,7 +2019,7 @@ function contractMember(row: RoutineContractObservation): RoutineContractMember 
 }
 
 /** Build the whole owner view from one complete read of canonical evidence. */
-export function projectRoutineDataObservability(
+function projectRoutineDataObservabilityUncached(
   rows: RoutineObservabilityRows,
   now: string,
   contracts: readonly ObservableCivicDataContract[] = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS],
@@ -2136,4 +2136,27 @@ export async function projectRoutineDataObservabilityRead(
       detail: `The canonical store answered, but Admin could not project its evidence (${error instanceof Error ? error.name : "unknown error"}). No source/store failure and no empty or zero outcome is being inferred.`,
     };
   }
+}
+
+// The projector is synchronous and never mutates its canonical snapshot.
+// Repeated 24h/7d/30d checks reuse only identical historical proof inputs in
+// this call. A later read gets a fresh cache; nested calls restore their parent.
+let historicalProofMemo: { ids: WeakMap<object, number>; nextId: number; results: Map<string, ReturnType<typeof historicalPromotionProofUncached>> } | null = null;
+function historicalPromotionProof(...args: Parameters<typeof historicalPromotionProofUncached>): ReturnType<typeof historicalPromotionProofUncached> {
+  const memo = historicalProofMemo;
+  if (memo === null) return historicalPromotionProofUncached(...args);
+  const [event, candidate, candidates, events, nowMs] = args;
+  const identity = (value: object) => { let id = memo.ids.get(value); if (id === undefined) { id = ++memo.nextId; memo.ids.set(value, id); } return id; };
+  const key = JSON.stringify([identity(candidate), identity(candidates), identity(events), nowMs, canonicalCivicDataJson(event)]);
+  const cached = memo.results.get(key);
+  if (cached !== undefined) return cached;
+  const result = historicalPromotionProofUncached(...args);
+  memo.results.set(key, result);
+  return result;
+}
+export function projectRoutineDataObservability(...args: Parameters<typeof projectRoutineDataObservabilityUncached>): ReturnType<typeof projectRoutineDataObservabilityUncached> {
+  const previous = historicalProofMemo;
+  historicalProofMemo = { ids: new WeakMap(), nextId: 0, results: new Map() };
+  try { return projectRoutineDataObservabilityUncached(...args); }
+  finally { historicalProofMemo = previous; }
 }

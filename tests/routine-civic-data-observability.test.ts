@@ -1722,6 +1722,40 @@ test("PDC-13: render words never collapse unknown, not recorded, not applicable,
   assert.equal(drilldownCountText({ kind: "UNKNOWN", detail: "unreadable", members: [] }), "Cannot tell");
 });
 
+test("PDC-13: historical proof reuse never survives a later snapshot read", () => {
+  const contract = ROUTINE_SOURCE_CONTRACTS[0]!;
+  const candidate = candidateRow(contract, { id: "snapshot-cache-boundary", at: "2026-09-08T01:00:00.000Z" });
+  const rows = { candidates: [candidate], events: sourceHistory(candidate), promotions: [promotion(contract, candidate)] };
+  const read = () => projectRoutineDataObservability(rows, NOW, [contract], READER_BUILD).contracts[0]!;
+  const original = read();
+  for (const window of ["24h", "7d", "30d"] as const) {
+    const count = original.histories[window].counts.promotions;
+    assert.equal(count.kind, "MEASURED");
+    if (count.kind === "MEASURED") assert.equal(count.value, 1);
+  }
+  const envelope = candidate.candidate as { readModel: { candidateId: string } };
+  envelope.readModel.candidateId = "different-payload-with-same-row-reference";
+  const changedPayload = read();
+  for (const window of ["24h", "7d", "30d"] as const)
+    assert.equal(changedPayload.histories[window].counts.promotions.kind, "UNKNOWN");
+  envelope.readModel.candidateId = candidate.id;
+  assert.deepEqual(read(), original);
+
+  const lastEvent = rows.events.at(-1)!;
+  rows.events[rows.events.length - 1] = { ...lastEvent, candidateId: "unrelated-candidate" };
+  const changedEvents = read();
+  for (const window of ["24h", "7d", "30d"] as const)
+    assert.notDeepEqual(changedEvents.histories[window].counts.promotions, original.histories[window].counts.promotions);
+  rows.events[rows.events.length - 1] = lastEvent;
+  assert.deepEqual(read(), original);
+
+  rows.candidates[0] = { ...candidate, validationReceipt: validationReceipt(contract, "wrong-receipt-candidate", candidate.retrievedAt) };
+  for (const window of ["24h", "7d", "30d"] as const)
+    assert.equal(read().histories[window].counts.promotions.kind, "UNKNOWN");
+  rows.candidates[0] = candidate;
+  assert.deepEqual(read(), original);
+});
+
 test("PDC-13: the deterministic Admin render contract leads with canonical operations and refuses false zeroes", () => {
   const page = readFileSync("app/(admin)/admin/sources/page.tsx", "utf8");
   const panel = readFileSync("app/(admin)/admin/sources/routine-data-panel.tsx", "utf8");
@@ -1738,8 +1772,8 @@ test("PDC-13: the deterministic Admin render contract leads with canonical opera
   assert.match(store, /from "\.\.\/db\/schema\.ts"/);
   assert.match(store, /projectRoutineDataObservabilityRead/);
   assert.deepEqual(ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS, {
-    isolationLevel: "RepeatableRead",
-    readOnly: true,
+    isolationLevel: "repeatable read",
+    accessMode: "read only",
   });
   for (const table of ["civicDataCandidates", "civicDataCandidateEvents", "civicDataPromotions"])
     assert.match(store, new RegExp(`\\b${table}\\b`));
@@ -1762,7 +1796,9 @@ test("PDC-13: the deterministic Admin render contract leads with canonical opera
   assert.match(store, /eq\(candidateAttemptEvent\.sequence, 1\)/, "candidate selection must use the durable local attempt clock");
   assert.match(store, /lte\(civicDataCandidates\.retrievedAt, now\)/, "future source timestamps cannot displace the last authenticated success");
   assert.doesNotMatch(store, /gte\(civicDataCandidates\.retrievedAt, since\)/, "rolling history authority is local event time, not an adapter timestamp");
-  assert.match(store, /await db\.batch\(\[/);
+  assert.match(store, /drizzle\(pool, \{ schema \}\)\.transaction\(async \(db\) =>/);
+  assert.match(store, /\}, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS\)/);
+  assert.match(store, /finally \{ await pool\.end\(\); \}/);
   assert.doesNotMatch(store, /Promise\.all\(/, "canonical rows must come from one repeatable-read transaction");
   assert.doesNotMatch(`${server}\n${store}`, /\.(?:insert|update|delete)\(/, "the observability read path must remain read-only");
   for (const label of [

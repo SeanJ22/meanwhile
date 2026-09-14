@@ -10,6 +10,24 @@ const MIGRATION_PATH = join(ROOT, "lib", "db", "migrations", "0026_lame_sunset_b
 const SNAPSHOT_PATH = join(ROOT, "lib", "db", "migrations", "meta", "0026_snapshot.json");
 const SCHEMA_PATH = join(ROOT, "lib", "db", "schema.ts");
 
+test("0027 preserves the complete history firewall while resolving each trigger row separately", () => {
+  const original = readFileSync(MIGRATION_PATH, "utf8");
+  const functionSql = original.split("--> statement-breakpoint").find((statement) =>
+    statement.includes("CREATE OR REPLACE FUNCTION assert_civic_data_candidate_history_integrity()"));
+  assert.ok(functionSql);
+  const broken = `checked_candidate_id := CASE WHEN TG_TABLE_NAME = 'civic_data_candidates' THEN NEW."id" ELSE NEW."candidate_id" END;`;
+  const fixed = `IF TG_TABLE_NAME = 'civic_data_candidates' THEN
+    checked_candidate_id := NEW."id";
+  ELSE
+    checked_candidate_id := NEW."candidate_id";
+  END IF;`;
+  assert.equal(functionSql.split(broken).length, 2);
+  const repair = readFileSync(join(ROOT, "lib/db/migrations/0027_pdc_candidate_history_shape.sql"), "utf8")
+    .replace(/^--[^\n]*\n/gm, "").trim();
+  assert.equal(repair, functionSql.replace(broken, fixed).trim(), "the forward migration must retain every original assertion and change no data");
+  assert.equal(declaredPhase("0027_pdc_candidate_history_shape")?.phase, "expand");
+});
+
 const FIREWALLS = [
   ["noncontiguous event history", /min\("sequence"\)[\s\S]*max\("sequence"\)[\s\S]*count\(\*\)/],
   ["backward event clock", /lag\("at"\) OVER \(PARTITION BY "candidate_id" ORDER BY "sequence"\)/],

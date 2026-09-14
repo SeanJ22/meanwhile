@@ -377,6 +377,14 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "Existing rows are scanned and nonconforming writes begin failing, so the conforming PDC " +
       "store code must be serving and the read-only integrity census must pass before application.",
   },
+  "0027_pdc_candidate_history_shape": {
+    phase: "expand",
+    why:
+      "Restores the existing 0026 history trigger's intended acceptance by resolving NEW fields " +
+      "in separate table-specific IF branches. No constraint, assertion, column or data changes. " +
+      "The already deployed PDC store writes the same shape; apply this compatible correction " +
+      "before deploying the release that records it, after isolated positive and negative proof.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

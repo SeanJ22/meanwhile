@@ -18,6 +18,7 @@ import {
   fetchGithubCheckRuns,
   inspectRuntimeReleaseEvidence,
   runtimeGithubRepository,
+  runtimeGithubCredential,
 } from "../lib/ops/runtime-release-handoff.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
@@ -110,7 +111,7 @@ async function assertCurrentCertifiedRuntime(root: string): Promise<void> {
   const checks = await fetchGithubCheckRuns({
     repository,
     sha: served.sha,
-    token: process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? null,
+    token: runtimeGithubCredential({ root, env: process.env }),
   });
   const verdict = inspectRuntimeReleaseEvidence({ runningSha, served, integrity, checkRuns: checks });
   if (verdict.state !== "CURRENT") {

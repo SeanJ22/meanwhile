@@ -44,8 +44,12 @@ try {
 
     Push-Location $RepoPath
     try {
-        $head = (& git rev-parse HEAD 2>$null | Select-Object -First 1)
-        if ($LASTEXITCODE -ne 0 -or $head -notmatch '^[0-9a-fA-F]{40}$') { Refuse "repository HEAD is unreadable" }
+        # Drain the native process before inspecting its output. Selecting the
+        # first pipeline row can terminate Git early and report exit -1.
+        $headRows = @(& git rev-parse HEAD 2>$null)
+        $headExitCode = $LASTEXITCODE
+        $head = if ($headRows.Count -eq 1) { [string]$headRows[0] } else { "" }
+        if ($headExitCode -ne 0 -or $headRows.Count -ne 1 -or $head -notmatch '^[0-9a-fA-F]{40}$') { Refuse "repository HEAD is unreadable" }
 
         # Reuse the installation validator against the current head. It proves
         # exact root, detached state, clean tree, origin/main ancestry, and a

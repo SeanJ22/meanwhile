@@ -40,6 +40,33 @@ function scriptText(): string {
   return readFileSync(SCRIPT, "utf8").replace(/\r\n/g, "\n");
 }
 
+test("the Windows launcher drains Git and requires its successful exact single HEAD", {skip: process.platform !== "win32"}, () => {
+  const source = readFileSync(LAUNCHER, "utf8").replace(/\r\n/g, "\n");
+  const start = source.indexOf("        $headRows =");
+  const end = source.indexOf("        # Reuse the installation validator", start);
+  assert.ok(start > 0 && end > start);
+  const block = source.slice(start, end);
+  const sha = "421ca52ac7d43ed144ee0f1262bf162be713d1fa";
+  function run(body: string, nativeCommand?: string): {accepted: boolean; head?: string; code?: number} {
+    const mock = nativeCommand === undefined ? "" : `function git { & $env:ComSpec /d /s /c '${nativeCommand.replaceAll("'", "''")}' }\n`;
+    const command = '$ErrorActionPreference="Stop"; function Refuse([string]$message) { throw $message }\n' + mock +
+      'try {\n' + body + '\n[ordered]@{accepted=$true;head=$head;code=$headExitCode} | ConvertTo-Json -Compress\n} catch { [ordered]@{accepted=$false} | ConvertTo-Json -Compress }; exit 0';
+    const result = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", command], {cwd: ROOT, encoding: "utf8", windowsHide: true});
+    assert.equal(result.status, 0, result.stderr);
+    return JSON.parse(result.stdout.trim().split(/\r?\n/).at(-1)!);
+  }
+  const actual = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8", windowsHide: true});
+  assert.equal(actual.status, 0, actual.stderr);
+  assert.deepEqual(run(block), {accepted: true, head: actual.stdout.trim(), code: 0});
+  const delayedSuccess = `echo ${sha}&ping -n 2 127.0.0.1 >nul&exit /b 0`;
+  assert.deepEqual(run(block, delayedSuccess), {accepted: true, head: sha, code: 0});
+  for (const native of [`echo ${sha}&exit /b 7`, "exit /b 0", `echo ${sha}&echo ${sha}&exit /b 0`, "echo not-a-sha&exit /b 0"]) {
+    assert.deepEqual(run(block, native), {accepted: false});
+  }
+  const earlyConsumer = '        $head = (& git rev-parse HEAD 2>$null | Select-Object -First 1)\n        if ($LASTEXITCODE -ne 0 -or $head -notmatch "^[0-9a-fA-F]{40}$") { Refuse "repository HEAD is unreadable" }';
+  assert.deepEqual(run(earlyConsumer, delayedSuccess), {accepted: false}, "the old early-consuming pipeline kills a valid native producer");
+});
+
 test("Windows task helper returns the native integer independently of diagnostic output", {skip: process.platform !== "win32"}, () => {
   const source = scriptText();
   const helper = source.slice(source.indexOf("function Invoke-Schtasks {"), source.indexOf("function Invoke-PauseNote {"));

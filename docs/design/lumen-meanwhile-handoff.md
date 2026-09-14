@@ -30,7 +30,8 @@ Handoff were treated as dated context; the seed deck is kept OUT of the applicat
 
 **Target Operating Model — `/admin/system-map` (new nav view; ○ Static).**
 `components/admin/system-map.tsx` + `lib/admin/system-map-model.ts` (20 nodes, 5 rings, 2 journeys, 4
-layers, `NOT_SHOWN` overlay boundary — content verbatim from the canvas). Reproduced interactions,
+layers, `NOT_SHOWN` overlay boundary — node/ring/journey content verbatim from the canvas, plus one
+added honesty caveat on the code-name labels; see Content reconciliation below). Reproduced interactions,
 verified live: select any node → its detail (purpose / inputs / outputs / dependencies / when-it-fails /
 next action / connected-to links); focus a layer (others dim to 0.24; re-click resets); highlight any of
 five feedback rings (stations numbered in travel order, everything else dimmed); two illustrative
@@ -60,6 +61,26 @@ fixture, this reads REAL data, so it carries no "illustrative fixture" label and
 capabilities and code-name labels describe intent; they do not imply the current contracts establish
 them.
 
+**Content reconciliation — the three points confirmed in the actual Target Operating Model component.**
+(a) **Retained evidence stays subject to freshness** — confirmed accurate in the verbatim content and
+surfaced in the always-visible feedback rings: RING 01 (retry) states "the last good capture is retained
+and keeps serving, with its age reported", RING 03 (recurring refresh) states "Currency is a standing
+obligation, not a one-time task", and the `sources` / `acquirers` node detail add that a stale capture
+"never satisfies a stage on its own" and that a capture failing "integrity, provenance or currency is
+refused". No change needed. (b) **Publication precedes served-readback confirmation** — confirmed
+accurate: the default journey renders the authorized-pipeline step (`pipeline`) BEFORE the
+served-result-confirmation step (`served`), whose detail is "Publication is confirmed by reading what the
+site returns, not by a completed task", and `served`'s node detail adds "a loaded receipt is never read
+as a served one". No change needed. (c) **Code labels must not present retired/unverified paths as
+current** — this one was CORRECTED: the pipeline node's label is `promotion/promoter.ts`, the module
+being retired in this very integration, so a code-name honesty caveat was added
+(`SYSTEM_HEADER.codeNamesNote`, rendered under the code-name toggle): the labels "point at the code path
+each capability is intended to use at full effectiveness … not a claim that every path is implemented
+today or that a retired module still stands — the legacy promotion producer named on the
+authorized-pipeline node (promotion/promoter.ts) is being retired". All three are asserted by
+`tests/system-map.test.ts` (a dedicated "content reconciliation" test) and the caveat's presence was
+also confirmed in the browser.
+
 **Scope discipline.** No new scheduler, worker, publication or telemetry capability was built because
 the target map depicts one. Panels with no producer are named, not faked. The shared on-demand read
 `fetchFleetOperations` was consolidated into `lib/admin/fleet-operations-view.ts` so the panel and the
@@ -82,9 +103,21 @@ no push / merge / deploy / PDC change):
   230** (neither new surface over-traces — the map reads the DB snapshot, the system map reads nothing);
   reader-trace `failures: []`.
 - `tests/deploy-paths.test.ts` → **12/12**.
-- Browser interactions verified on the running dev server for both native surfaces (select/detail,
-  related-link, layer focus+reset, ring numbering, journeys, code toggle for the model; lane filter,
-  expand, view switch, code toggle for the map).
+- **Browser-exercised** on the running dev server (control clicked, resulting state observed): for the
+  Target Operating Model — node select → detail, related-node link → select, layer focus + re-click
+  reset, ring highlight (travel-order numbering + dim + control note), BOTH journeys (including the
+  three-branch "a branch blocks while other work continues"), architecture-only (journey narration
+  hidden), and the code-name toggle (labels show/hide, and the added code-label caveat renders). For the
+  Fleet map — lane filter (item count narrows), a work-item expand/collapse (`aria-expanded`), the
+  Operations ↔ Field-mapping view switch, and the code-name toggle. (The Target Operating Model's
+  interactivity was exercised via a reader-layout dev route; the `(admin)`-shell harness rendered it
+  identically, but that layout's control-plane read hung in this dev session — an environmental dev
+  issue, not a component defect.)
+- **Source-inspected + render-test-verified** (not individually browser-clicked): clicking a numbered
+  step inside the journey narration and clicking a node name inside a feedback-ring card — both use the
+  same `onSelect` path proven by the related-node link above; and the Fleet map's lane re-click-to-clear
+  and its `CONTROL_PLANE_UNAVAILABLE` branch (the seeded harness exercised the HELD branch; the
+  unavailable branch is covered by the map render test and the existing consumer tests).
 
 **Remaining dependencies on PDC's final handoff (unchanged from Phase 6).** The system map is
 illustrative and depends on nothing. The Fleet map's live panels populate only when the control plane +

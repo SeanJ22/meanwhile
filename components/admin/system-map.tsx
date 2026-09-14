@@ -210,6 +210,10 @@ export function SystemMap() {
           Show code-name labels
         </label>
 
+        {/* Honesty: the labels are target pointers, not a claim of current
+            implementation — and a retired module is not shown as current. */}
+        <p className="note sm-codenote">{SYSTEM_HEADER.codeNamesNote}</p>
+
         <p className="note sm-controlnote" role="status" aria-live="polite">{controlNote}</p>
       </div>
 
@@ -518,6 +522,7 @@ const SYSTEM_MAP_CSS = `
 [data-system-map] .sm-chiprow { display: flex; flex-wrap: wrap; gap: 8px; }
 [data-system-map] .sm-codetoggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim, #a8abb7); cursor: pointer; }
 [data-system-map] .sm-controlnote { margin: 0; max-width: 74ch; }
+[data-system-map] .sm-codenote { margin: 0; max-width: 82ch; opacity: 0.85; }
 [data-system-map] .sm-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); align-items: start; }
 [data-system-map] .sm-map { display: grid; gap: 20px; min-width: 0; }
 [data-system-map] .sm-detail { position: sticky; top: 12px; align-self: start; }

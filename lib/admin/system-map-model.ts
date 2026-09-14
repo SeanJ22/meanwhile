@@ -59,6 +59,15 @@ export const SYSTEM_HEADER = {
   bannerTitle: "TARGET OPERATING MODEL — NOT LIVE OPERATIONAL STATUS",
   bannerBody:
     "This map describes how the system should behave at full effectiveness. It is not a reading of what is running now, and it authorises no backend change. Actual status, queue depth, freshness, spending and blockers come from supported data only and belong to the Admin fleet operations overlay, where an unavailable measurement stays unavailable rather than being filled in.",
+  /**
+   * Honesty caveat for the code-name labels (§ content reconciliation, 2026-09-13).
+   * The labels point at the code path each capability is INTENDED to use at full
+   * effectiveness — a reading aid, not a claim of current implementation. This
+   * matters concretely: the legacy promotion producer named on the pipeline node
+   * (`promotion/promoter.ts`) is being retired, so it is not a current path.
+   */
+  codeNamesNote:
+    "Code-name labels point at the code path each capability is intended to use at full effectiveness. They are a reading aid, not a claim that every path is implemented today or that a retired module still stands — the legacy promotion producer named on the authorized-pipeline node (promotion/promoter.ts) is being retired, and a target capability's label never means the current contracts establish it.",
 } as const;
 
 export const SYSTEM_NODES: readonly SystemNode[] = [

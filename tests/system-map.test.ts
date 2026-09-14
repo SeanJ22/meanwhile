@@ -62,6 +62,29 @@ test("the system map renders the whole model, labelled as target architecture, n
   assert.match(html, /unavailable measurement stays unavailable/);
 });
 
+test("content reconciliation: freshness of retained evidence, publication before served-readback, honest code labels", () => {
+  const html = render();
+
+  // (a) Retained evidence remains subject to freshness rules — surfaced in the
+  // always-visible feedback rings (retry keeps the last capture with its age
+  // reported; recurring refresh keeps currency a standing obligation).
+  assert.match(html, /last good capture is retained and keeps serving, with its age reported/i,
+    "retained evidence is shown as kept-with-age, not as current");
+  assert.match(html, /Currency is a standing obligation/i, "scheduled refresh keeps retrieving new observations");
+
+  // (b) Publication precedes served-readback confirmation — the default journey
+  // renders the authorized pipeline step BEFORE the served-result-confirmation step.
+  const pipelineAt = html.indexOf("The update goes through the authorized pipeline");
+  const servedAt = html.indexOf("Publication is confirmed by reading what the site returns, not by a completed task");
+  assert.ok(pipelineAt >= 0 && servedAt >= 0, "both the pipeline and served-readback steps render");
+  assert.ok(pipelineAt < servedAt, "the authorized pipeline precedes served-readback confirmation");
+
+  // (c) Code-name labels are target pointers, not a claim of current implementation,
+  // and a retired module (the legacy promoter) is not presented as current.
+  assert.match(html, /not a claim that every path is implemented today/i);
+  assert.match(html, /being retired/i);
+});
+
 /** Match react-dom/server's HTML entity escaping for the assertions above. */
 function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

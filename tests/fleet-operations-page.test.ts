@@ -29,8 +29,8 @@ import { SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
 import { withFleetReceiptSnapshot } from "../lib/control-plane/fleet-receipt-publisher.ts";
 import { gap, type OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
-import { liveAuthority, promoteFacts, receiptSummary, type PromotionReceipt } from "../lib/control-plane/promotion/promoter.ts";
-import type { WindowRunRecord } from "../lib/control-plane/promotion/types.ts";
+import { liveAuthority, promoteFacts, receiptSummary, type PromotionReceipt } from "./helpers/legacy-promoter.ts";
+import type { HistoricalWindowRun } from "../lib/control-plane/fleet-delivery.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { SESSION_KEY, withAdminSessionKey } from "./admin-session.ts";
 
@@ -43,14 +43,14 @@ function request(origin: string, cookie?: string) {
   });
 }
 
-function windowFor(receipt: PromotionReceipt, finishedAt: string): WindowRunRecord {
+function windowFor(receipt: PromotionReceipt, finishedAt: string): HistoricalWindowRun {
   return { formatVersion: 1, windowId: receipt.windowId!, localDate: "2026-09-05", zone: "America/New_York", scheduledFor: AT,
     trigger: "MANUAL", mode: "SHADOW", startedAt: AT, finishedAt, host: "offline-page-fixture", testedSha: null, provider: "fixture",
     caughtUp: [], lock: { leaseId: "fixture", holder: "fixture", claimedAt: AT, expiresAt: finishedAt, releasedAt: finishedAt },
-    activationGate: readActivationGate(process.cwd()), stages: [], legacyRefresh: null,
+    activationGate: readActivationGate(process.cwd()), stages: [],
     pipeline: { items: 1, byStage: { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 }, refused: 1,
       verdicts: [{ itemId: "fixture-item", recordClass: "meeting-times", stage: null, verdict: "REFUSE_WOULD", reason: "isolated page fixture" }], byRecordClass: [] },
-    promoted: 0, postPromotionVerification: null, controls: null, incidents: [], digestPath: null, mirrored: null, recordPath: null,
+    promoted: 0, controls: null, incidents: [], digestPath: null, mirrored: null, recordPath: null,
     promotionReceipts: [receiptSummary(receipt)] };
 }
 

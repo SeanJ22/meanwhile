@@ -24,14 +24,9 @@
       "reason": "The production helper derives the official roll-call URL it requires, while the test-only helper independently constructs source-receipt inputs. Sharing it would let an incorrect production URL validate against itself; the duplicate is an isolated oracle and has no runtime authority."
     },
     {
-      "id": "exact:tests/fleet-operations-page.test.ts#request,tests/fleet-operations-route.test.ts#request,tests/fleet-receipt-admin.test.ts#request",
+      "id": "exact:tests/fleet-operations-page.test.ts#request,tests/fleet-operations-route.test.ts#request",
       "disposition": "OWED",
-      "reason": "A one-line NextRequest test-fixture builder — request(origin, cookie) → new NextRequest(...) — repeated across the three fleet Admin tests (page, route, receipt-admin). Trivial and test-local; consolidation into a shared tests/helpers builder is owed. It is fixture code, never shipped."
-    },
-    {
-      "id": "shape:tests/zip-acquisition-plan.test.ts#latest,tests/zip-gap-resolution.test.ts#latest",
-      "disposition": "OWED",
-      "reason": "A latest-of-array test helper shared in shape by the two ZIP planning tests; the second arrived with the v1.2 fleet cherry-pick. Trivial and test-local; consolidation is owed. Fixture code, never shipped."
+      "reason": "A one-line NextRequest test-fixture builder — request(origin, cookie) → new NextRequest(...) — repeated across the two fleet Admin tests (page, route). Trivial and test-local; consolidation into a shared tests/helpers builder is owed. It is fixture code, never shipped."
     },
     {
       "id": "exact:lib/ballot/dated-events.ts#phoenixToday,scripts/doc-dates.mjs#today",

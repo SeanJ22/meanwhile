@@ -8,7 +8,7 @@ import { build, type Metafile } from "esbuild";
 import ts from "typescript";
 import { PROMOTER_VERSION, RECEIPTS_DIR, receiptSummary, type PromotionReceipt } from "../lib/control-plane/promotion/historical-receipt.ts";
 import type { FleetReceiptStore } from "../lib/control-plane/fleet-receipt-store.ts";
-import type { WindowRunRecord } from "../lib/control-plane/promotion/types.ts";
+import type { HistoricalWindowRun } from "../lib/control-plane/fleet-delivery.ts";
 
 const ENTRY = "lib/control-plane/fleet-receipt-store.ts";
 const LEAF = "lib/control-plane/promotion/historical-receipt.ts";
@@ -100,14 +100,14 @@ test("copied archive loader reads and retains historical receipts with the produ
     before: { path: join(root, "data", "meetings-snapshot.json"), existed: false, sha256: null, copy: null },
     after: { sha256: null, meetings: null, written: false }, verification: null, regression: null, reversal: null, incident: null,
     receiptPath, lines: ["Archive fixture only; no publication performed"] };
-  const window: WindowRunRecord = { formatVersion: 1, windowId: receipt.windowId!, localDate: "2026-09-05", zone: "America/New_York",
+  const window: HistoricalWindowRun = { formatVersion: 1, windowId: receipt.windowId!, localDate: "2026-09-05", zone: "America/New_York",
     scheduledFor: AT, trigger: "MANUAL", mode: "SHADOW", startedAt: AT, finishedAt: OBSERVED, host: "archive-fixture", testedSha: null,
     provider: "fixture", caughtUp: [], lock: { leaseId: "fixture", holder: "fixture", claimedAt: AT, expiresAt: OBSERVED, releasedAt: OBSERVED },
     activationGate: { promotionEnabled: false, mode: "SHADOW", openRecordClasses: [], independentlyReproduced: false, readFrom: null,
       contracts: { READER: "UNKNOWN", TRUTH: "UNKNOWN", FRESHNESS: "UNKNOWN" }, reason: "Historical reporting fixture" },
-    stages: [], legacyRefresh: null, pipeline: { items: 1, byStage: { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 },
+    stages: [], pipeline: { items: 1, byStage: { SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 },
       refused: 1, verdicts: [{ itemId: "archive-fixture-item", recordClass: "meeting-times", stage: null, verdict: "REFUSE_WOULD", reason: "Historical refusal fixture" }], byRecordClass: [] },
-    promoted: 0, postPromotionVerification: null, controls: null, incidents: [], digestPath: null, mirrored: null, recordPath: null,
+    promoted: 0, controls: null, incidents: [], digestPath: null, mirrored: null, recordPath: null,
     promotionReceipts: [receiptSummary(receipt)] };
   mkdirSync(dirname(receiptPath), { recursive: true });
   writeFileSync(receiptPath, JSON.stringify(receipt));

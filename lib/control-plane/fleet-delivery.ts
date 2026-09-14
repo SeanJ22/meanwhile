@@ -6,7 +6,7 @@ import { canonicalJson } from "./repository/types.ts";
 import { deriveItemState } from "./promotion/pipeline.ts";
 import type { FactItem } from "./promotion/fact-chain.ts";
 import { isMeetingFactClass } from "./promotion/meeting-facts.ts";
-import type { PromotionReceipt } from "./promotion/historical-receipt.ts";
+import type { PromotionReceipt, HistoricalWindowReceiptSummary } from "./promotion/historical-receipt.ts";
 import { projectFactToReader, readerRendering, type ReaderRendering } from "./promotion/reader-projection.ts";
 import type { PipelineStage, WindowRunRecord } from "./promotion/types.ts";
 import type { AutonomousObligationActivity } from "./workers/activity.ts";
@@ -14,6 +14,14 @@ import type { ReadOutcome } from "./admin-data.ts";
 import type { FleetReceiptLoadEntry, FleetReceiptLoadReport } from "./fleet-receipt-store.ts";
 
 export const FLEET_DELIVERY_VERSION = "fleet-delivery/v1";
+
+/**
+ * Post-PDC the canonical `WindowRunRecord` carries no promotion receipts; a
+ * genuine retained historical record may still bind them through this optional
+ * member. Current windows have none, so the per-item join records an empty
+ * window-summary set rather than reaching into the retired live member.
+ */
+export type HistoricalWindowRun = WindowRunRecord & { readonly promotionReceipts?: readonly HistoricalWindowReceiptSummary[] };
 
 // An unread timestamp cannot silently sort behind known-good evidence.
 function observationOrder(a: string, b: string): number {
@@ -48,7 +56,7 @@ export interface FleetDeliveryItem {
   readonly windowDecisions: readonly { readonly windowId: string; readonly at: string; readonly mode: "SHADOW";
     readonly verdict: string; readonly reason: string;
     readonly receiptSummaryBinding: "WINDOW_ONLY_NOT_PER_ITEM";
-    readonly receiptSummaries: NonNullable<WindowRunRecord["promotionReceipts"]> }[];
+    readonly receiptSummaries: readonly HistoricalWindowReceiptSummary[] }[];
   readonly receipts: readonly { readonly receiptId: string; readonly target: "SHADOW" | "READER"; readonly windowId: string | null;
     readonly at: string; readonly identityMatch: boolean; readonly materialized: boolean; readonly reverted: boolean;
     readonly verification: PromotionReceipt["verification"]; readonly readback: FleetReceiptReadback["items"][number] | null;
@@ -67,7 +75,7 @@ export interface FleetDeliveryReport {
 }
 
 /** Canonical per-item joins only. Window batch counts never prove an item's receipt or delivery. */
-export function projectFleetDelivery(input: { readonly activity: AutonomousObligationActivity; readonly windows: readonly WindowRunRecord[];
+export function projectFleetDelivery(input: { readonly activity: AutonomousObligationActivity; readonly windows: readonly HistoricalWindowRun[];
   readonly receipts?: readonly PromotionReceipt[]; readonly readbacks?: readonly FleetReceiptReadback[];
   readonly receiptLoading?: ReadOutcome<Omit<FleetReceiptLoadReport, "receipts">> }): FleetDeliveryReport {
   const { activity } = input;

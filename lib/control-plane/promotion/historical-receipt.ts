@@ -77,8 +77,24 @@ export interface PromotionReceipt {
   readonly lines: readonly string[];
 }
 
+/**
+ * The window record's summary of one historical promoter/1 receipt — the shape a
+ * pre-PDC window carried on `WindowRunRecord.promotionReceipts`. PDC removed that
+ * member (the canonical window is SHADOW-only now), so the historical loader owns
+ * this shape here in the leaf rather than reaching into the live window contract.
+ */
+export type HistoricalWindowReceiptSummary = {
+  readonly receiptId: string;
+  readonly target: "SHADOW" | "READER";
+  readonly promoted: number;
+  readonly refused: number;
+  readonly reverted: boolean;
+  readonly incidentId: string | null;
+  readonly path: string | null;
+};
+
 /** The window record's summary of one receipt. */
-export function receiptSummary(receipt: PromotionReceipt): { receiptId: string; target: "SHADOW" | "READER"; promoted: number; refused: number; reverted: boolean; incidentId: string | null; path: string | null } {
+export function receiptSummary(receipt: PromotionReceipt): HistoricalWindowReceiptSummary {
   return { receiptId: receipt.receiptId, target: receipt.target.kind, promoted: receipt.items.length, refused: receipt.refused.length,
     reverted: receipt.reversal?.executed === true && receipt.reversal.matchesBefore === true, incidentId: receipt.incident?.incidentId ?? null, path: receipt.receiptPath };
 }

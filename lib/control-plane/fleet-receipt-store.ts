@@ -1,8 +1,7 @@
 import { constants } from "node:fs";
 import { lstat, open, realpath } from "node:fs/promises";
 import { dirname, isAbsolute, join, parse, relative, resolve, sep } from "node:path";
-import { RECEIPTS_DIR, receiptSummary, isHistoricalPromotionReceipt, isHistoricalReceiptTimestamp, type PromotionReceipt, type PromotionTarget } from "./promotion/historical-receipt.ts";
-import type { WindowRunRecord } from "./promotion/types.ts";
+import { RECEIPTS_DIR, receiptSummary, isHistoricalPromotionReceipt, isHistoricalReceiptTimestamp, type PromotionReceipt, type PromotionTarget, type HistoricalWindowReceiptSummary } from "./promotion/historical-receipt.ts";
 import { canonicalJson } from "./repository/types.ts";
 
 export const FLEET_RECEIPT_LOADING_VERSION = "fleet-receipt-loading/v1";
@@ -22,10 +21,23 @@ export interface FleetReceiptLoadReport {
   readonly limits: { readonly maximumReceipts: number; readonly maxReceiptBytes: number };
   readonly truncated: number;
 }
-export interface FleetReceiptStore {
-  read(windows: readonly WindowRunRecord[], observedAt: string): Promise<FleetReceiptLoadReport>;
+/**
+ * A historical promoter/1 window's receipt summaries. Post-PDC the canonical
+ * `WindowRunRecord` no longer carries promotion receipts (the legacy window is
+ * SHADOW-only), so the historical loader takes its own narrow record shape:
+ * genuine retained records that still carry summaries bind through the optional
+ * member, and current windows simply have none. This never restores the removed
+ * member to the live window contract.
+ */
+export interface HistoricalWindowReceiptRef {
+  readonly windowId: string;
+  readonly finishedAt: string;
+  readonly promotionReceipts?: readonly HistoricalWindowReceiptSummary[];
 }
-type Summary = NonNullable<WindowRunRecord["promotionReceipts"]>[number];
+export interface FleetReceiptStore {
+  read(windows: readonly HistoricalWindowReceiptRef[], observedAt: string): Promise<FleetReceiptLoadReport>;
+}
+type Summary = HistoricalWindowReceiptSummary;
 function pathEqual(a: string, b: string): boolean {
   const left = resolve(a), right = resolve(b);
   return process.platform === "win32" ? left.toLowerCase() === right.toLowerCase() : left === right;

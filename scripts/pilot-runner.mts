@@ -167,6 +167,7 @@ import {
   fetchGithubCheckRuns,
   inspectRuntimeReleaseEvidence,
   runtimeGithubRepository,
+  runtimeGithubCredential,
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
@@ -1092,7 +1093,7 @@ async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
     ? await fetchGithubCheckRuns({
         repository,
         sha: served.sha,
-        token: process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN ?? null,
+        token: runtimeGithubCredential({ root: ROOT, env: process.env }),
       })
     : null;
   return inspectRuntimeReleaseEvidence({

@@ -263,6 +263,27 @@ export function runtimeGithubRepository(root: string, run: RunCommand = defaultR
   return result.status === 0 ? githubRepositoryFromOrigin(result.stdout) : null;
 }
 
+/** Reuse the host's authenticated CLI without copying its credential to disk. */
+export function runtimeGithubCredential(input: {
+  readonly root: string;
+  readonly env: Readonly<Record<string, string | undefined>>;
+  readonly runCommand?: RunCommand;
+}): string | null {
+  const configured = input.env.GH_TOKEN ?? input.env.GITHUB_TOKEN;
+  if (configured !== undefined) return configured;
+  try {
+    const result = (input.runCommand ?? defaultRunCommand)(
+      "gh", ["auth", "token", "--hostname", "github.com"],
+      { cwd: input.root, timeoutMs: 15_000 },
+    );
+    // Never include stdout/stderr in a diagnostic: either may contain secrets.
+    const token = result.stdout.trim();
+    return result.status === 0 && /^[A-Za-z0-9_]+$/.test(token) ? token : null;
+  } catch {
+    return null;
+  }
+}
+
 function conciseFailure(result: CommandResult): string {
   const first = `${result.stderr}\n${result.stdout}`.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
   return first?.slice(0, 300) ?? `exit ${result.status ?? "unresolved"}`;

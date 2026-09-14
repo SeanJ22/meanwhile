@@ -11,6 +11,7 @@ import {
   githubRepositoryFromOrigin,
   inspectRuntimeReleaseEvidence,
   requiredContextEvidence,
+  runtimeGithubCredential,
   type CommandResult,
   type GithubCheckRun,
 } from "../lib/ops/runtime-release-handoff.ts";
@@ -19,6 +20,37 @@ import type { ProductionIntegrityRead } from "../lib/ops/production-integrity-da
 
 const RUNNING = "1".repeat(40);
 const TARGET = "2".repeat(40);
+
+test("standing runtime preserves configured GitHub credentials without invoking the CLI", () => {
+  const runCommand = (): never => { throw new Error("configured credentials must not be replaced"); };
+  assert.equal(runtimeGithubCredential({ root: ".", env: { GH_TOKEN: "configured", GITHUB_TOKEN: "other" }, runCommand }), "configured");
+  assert.equal(runtimeGithubCredential({ root: ".", env: { GITHUB_TOKEN: "other" }, runCommand }), "other");
+});
+
+test("standing runtime reuses only the existing github.com CLI login in memory", () => {
+  const root = mkdtempSync(join(tmpdir(), "runtime-auth-"));
+  const calls: unknown[] = [];
+  const token = runtimeGithubCredential({ root, env: {}, runCommand: (exe, args, options) => {
+    calls.push([exe, args, options]);
+    return { status: 0, stdout: "fixture_cli_token\r\n", stderr: "" };
+  } });
+  assert.equal(token, "fixture_cli_token");
+  assert.deepEqual(calls, [["gh", ["auth", "token", "--hostname", "github.com"], { cwd: root, timeoutMs: 15_000 }]]);
+});
+
+test("missing, failed, malformed and multiple CLI credentials preserve the certification refusal", () => {
+  for (const result of [
+    { status: 1, stdout: "fixture_secret", stderr: "fixture_secret" },
+    { status: null, stdout: "fixture_secret", stderr: "timeout" },
+    { status: 0, stdout: "", stderr: "" },
+    { status: 0, stdout: "first_secret\nsecond_secret", stderr: "" },
+    { status: 0, stdout: "token: fixture_secret", stderr: "" },
+  ]) assert.equal(runtimeGithubCredential({ root: ".", env: {}, runCommand: () => result }), null);
+  assert.equal(runtimeGithubCredential({ root: ".", env: {}, runCommand: () => { throw new Error("fixture_secret"); } }), null);
+  const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
+  assert.match(runner, /token: runtimeGithubCredential\(\{ root: ROOT, env: process\.env \}\)/);
+  assert.equal(inspectRuntimeReleaseEvidence({ runningSha: TARGET, served: { sha: TARGET, how: "fixture", httpStatus: 200 }, integrity: integrity(), checkRuns: null }).code, "SOFTWARE_CERTIFICATION_UNREADABLE");
+});
 
 function checks(conclusion: string | null = "success"): GithubCheckRun[] {
   return REQUIRED_CONTEXTS.map((name, index) => ({

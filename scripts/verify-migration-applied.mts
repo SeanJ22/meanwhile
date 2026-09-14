@@ -143,12 +143,17 @@ for (const index of declared.indexes) {
 }
 
 for (const constraint of declared.constraints) {
+  // table_constraints hides rows from a SELECT-only role. The catalog remains
+  // readable; ::name applies the server's own identifier-length semantics.
   const found = (await sql`
-    select constraint_name
-      from information_schema.table_constraints
-     where constraint_schema = 'public'
-       and table_name = ${constraint.table}
-       and constraint_name = ${constraint.name}
+    select c.conname as constraint_name
+      from pg_catalog.pg_constraint c
+      join pg_catalog.pg_class r on r.oid = c.conrelid
+      join pg_catalog.pg_namespace n on n.oid = r.relnamespace
+     where n.nspname = 'public'
+       and r.relname = ${constraint.table}
+       and c.conname = ${constraint.name}::name
+       and c.convalidated
   `) as { constraint_name: string }[];
   if (found.length !== 1) {
     mismatched += 1;

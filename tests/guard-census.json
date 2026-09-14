@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 625,
-    "named": 6501,
+    "files": 639,
+    "named": 6573,
     "dynamic": 27
   },
   "files": {
@@ -169,6 +169,7 @@
         "stated N must equal rendered rows",
         "the admin host check is ONE implementation and reads the forwarded host",
         "the admin host serves ONLY the admin surface",
+        "the committed /admin/fleet page is guarded like any other admin page",
         "the login page, the Google start and callback, and the session route are reachable unauthenticated on the admin host",
         "the session cookie carries every attribute that makes it safe",
         "timingSafeEqual folds length in rather than short-circuiting on it"
@@ -334,7 +335,7 @@
         "the exchange posts the code, the verifier and the client secret to Google's token endpoint",
         "the flag is the exact word `enabled`: `true`, `1`, `Enabled` and blank all keep the path closed",
         "the incident record names class, moment and outcome, passes aggregate-only, and carries no value",
-        "the login page renders Sign in with Google and shows the secret form ONLY under the break-glass flag",
+        "the login page renders Continue with Google and shows the secret form ONLY under the break-glass flag",
         "the middleware's unauthenticated set is exactly the four surfaces",
         "the rate limit is read from the durable log: the ceiling refuses, old records do not count, undated ones do",
         "the start and the callback are reachable unauthenticated on the ADMIN host, and nothing else new is",
@@ -2183,6 +2184,7 @@
     },
     "tests/civic-data-durability-migration.test.ts": {
       "names": [
+        "0027 preserves the complete history firewall while resolving each trigger row separately",
         "PDC 0026 database triggers preserve legal state order, immutable evidence, and current Reader binding",
         "PDC 0026 keeps generated schema metadata aligned with the database-level identity constraints",
         "PDC 0026 preflight has exact predicate coverage for every validating ADD constraint",
@@ -3612,6 +3614,111 @@
       ],
       "dynamic": 0
     },
+    "tests/fleet-coordinator-progression.test.ts": {
+      "names": [
+        "an already elapsed deadline is never described as a dispatch count limit",
+        "insufficient dispatch time stops expensive planning and reports the actual ceiling",
+        "unserved obligations receive a turn before an earlier item consumes another stage"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-operations-consumer.test.ts": {
+      "names": [
+        "a Scout admission reads as a prerequisite with a boundary, never a dispatch",
+        "a failed refresh retains the last report and its original observedAt (no restamp)",
+        "a real op with no cost ledger renders 'not measured', never $0",
+        "a shadow readback is never labelled served, and HTTP delivery discloses receipts-not-provided",
+        "a store-unreachable section is surfaced even though other sections are held",
+        "an unknown format version is refused rather than mis-rendered",
+        "the client-safe version mirror in the consumer cannot drift from the contract",
+        "the consumer folds a real empty report and matches the version",
+        "the v1.1 extension capability is PRESENT from this producer, UNAVAILABLE when omitted"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-operations-map.test.ts": {
+      "names": [
+        "fleetItemLane derives one lane per item from task state, in strict precedence",
+        "the map renders a real producer report as lanes, work items and honestly-labelled panels"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-operations-page.test.ts": {
+      "names": [
+        "the committed /admin/fleet page and its Refresh read the SAME owner-snapshot receipt transport — populated and missing parity, no filesystem store",
+        "the committed /admin/fleet page loads receipts from a temporary root, renders them, and retains a failed refresh without upgrading it"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-operations-route.test.ts": {
+      "names": [
+        "authenticated missing-store response names unavailable data without an empty successful fleet",
+        "fleet operations detail refuses public hosts and unauthenticated owners before any store read"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-operations.test.ts": {
+      "names": [
+        "admission reporting reuses canonical due calculation and preserves missing cost entries",
+        "an acquisition failure advances activity but not successful evidence progress",
+        "committed acquisition stays inventory and parent stage stays open; uncommitted evidence cannot claim acquisition",
+        "delivery freshness reuses pulse tolerance and never treats missing or future observations as fresh",
+        "delivery reads windows once and isolates their failure from held activity",
+        "legacy registered route never gets worker TERMINAL admission or invented Scout retry",
+        "owner decisions exclude machine blockers, acknowledgements and already answered cards; coverage keeps its original gap",
+        "projection failures retain typed unavailable outcomes and independent sections",
+        "read service distinguishes empty, unavailable and unrecorded without writing",
+        "recorded funnel preserves append order of tied refusal times without claiming publication"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-permanent-authority.test.ts": {
+      "names": [
+        "Fleet reporting recognizes PDC permanent-authority publication evidence, not the retired approval, and keeps historical evidence separate"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-receipt-imports.test.ts": {
+      "names": [
+        "copied archive loader reads and retains historical receipts with the producer and all its data physically absent",
+        "historical receipt contract typechecks independently of application and producer types",
+        "historical receipt leaf has no imports, including type-only and re-export dependencies",
+        "receipt loader executable closure excludes the retiring producer and its civic source graph"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-receipt-snapshot.test.ts": {
+      "names": [
+        "Admin snapshot reads preserve stale clocks, name malformed or missing evidence and isolate read outages",
+        "collection failure retains prior historical detail with a current named failure and no refreshed success",
+        "new valid failed or reversed evidence supersedes an older successful receipt",
+        "snapshot enforces transport and receipt bounds and reports incomplete loads as unknown",
+        "snapshot reads distinguish absent, malformed, wrong-version and future data",
+        "snapshot rejects receipt-entry identity, target, clock and completeness contradictions",
+        "staleness preserves original collection and successful-read timestamps without mutating evidence",
+        "stateless publisher restart retains a missing or invalid receipt using the previous snapshot"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-receipt-store.test.ts": {
+      "names": [
+        "count bounds cover file reads, returned receipts/statuses and historical cache; conflicting summaries cannot pass",
+        "invalid JSON, nested schema, bytes, target, window, summary and paths are named refusals; historical receipt is retained",
+        "loads an actual promoter refusal from the configured root; missing storage preserves its last trustworthy receipt and stamp",
+        "new valid failed/reversed receipt replaces cached prior content; retention cannot resurrect earlier success",
+        "receipt IDs and roots cannot select paths; symlink/junction receipt directories are refused"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-recovery-journey.test.ts": {
+      "names": [
+        "corrupt held candidate cannot starve a separately validated current capture; history and original attribution survive",
+        "failed publisher refresh retains the last acquired capture for unfinished validation while automatic recovery remains owed",
+        "recorded research to verified meeting facts survives expired parser lease, refuses late completion, preserves proof and withholds publication",
+        "recovery never relaxes provenance, freshness, partial-capture or permission boundaries"
+      ],
+      "dynamic": 0
+    },
     "tests/fleet-role-wording.test.ts": {
       "names": [
         "ADM-43: the role card prints one name, one sentence, Needs you at the top, and no code in its heading",
@@ -3636,6 +3743,14 @@
         "request, payload-byte, dispatch, and wall ceilings fail closed with named deferral",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-scout-reporting.test.ts": {
+      "names": [
+        "Admin joins the exact Scout denial backoff without authorizing the missing transport",
+        "Scout continuation reporting uses the coordinator's family backoff and actual continuation identity",
+        "Scout-shaped prose and unrelated route tasks do not earn autonomous admission evidence"
       ],
       "dynamic": 0
     },
@@ -3808,6 +3923,7 @@
     },
     "tests/gate-parity.test.ts": {
       "names": [
+        "PDC hosted setup fetches the exact frozen bridge before the unchanged full suite",
         "gate parity · block commands cannot consume later steps or turn comments into gates",
         "gate parity · each canonical authority is in BOTH the local set and the required CI job",
         "gate parity · every command CI runs as a gate is in the local gate set",
@@ -6233,6 +6349,7 @@
         "status never describes a DISABLED task as relaunching the runner in five minutes",
         "status, trigger verification and relaunch proof bind to the exact installed runtime and process",
         "stop, disable, uninstall, and relaunch proof terminate and read back the full runner process tree",
+        "the Windows launcher drains Git and requires its successful exact single HEAD",
         "the standing runner has no installable nightly-window backup clock and install/uninstall retire the old task",
         "verify-triggers exits on the derived presence and prove-relaunch writes the typed record"
       ],
@@ -7090,7 +7207,9 @@
         "fresh Reader history requires a hash-bound execution authority at the exact proved head",
         "production Reader history accepts only controller import commit A bound beneath distinct authority commit B",
         "production Reader history accepts the exact all-111-skipped retirement replay",
-        "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone"
+        "production history validates the exact approved documentary-main receipt without relabeling importer ancestry",
+        "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone",
+        "the documentary-main exception rejects near-miss and unbound lineage even when all enclosing hashes are recomputed"
       ],
       "dynamic": 0
     },
@@ -7618,6 +7737,7 @@
         "PDC-13: exact change members, GOOD pointer, and typed Reader receipt prove delivered CHANGED",
         "PDC-13: freshness separates FRESH, DUE, STALE, and UNKNOWN",
         "PDC-13: future source evidence cannot become a latest attempt, exact count, or retry clock",
+        "PDC-13: historical proof reuse never survives a later snapshot read",
         "PDC-13: malformed authority-transfer evidence cannot masquerade as live-source success",
         "PDC-13: older uncertain authority evidence does not hide a later proven source attempt",
         "PDC-13: one source refusal cannot alter another source's Admin disposition",
@@ -7806,9 +7926,13 @@
         "GitHub check reader refuses truncation and does not expose its token",
         "a dirty runtime refuses before fetch/switch and leaves ignored host evidence",
         "handoff fails closed on short/unknown served SHA, stale or refused integrity, and unreadable certification",
+        "missing, failed, malformed and multiple CLI credentials preserve the certification refusal",
         "newest exact required-context attempt governs; no non-success conclusion is treated as green",
+        "operational civic reads bind the explicit production read handle without rewriting credentials",
         "origin parsing supports the repository's HTTPS and SSH forms without retaining .git",
         "quiescent apply fetches only origin/main, detaches exact target, frozen-installs, and verifies clean readback",
+        "standing runtime preserves configured GitHub credentials without invoking the CLI",
+        "standing runtime reuses only the existing github.com CLI login in memory",
         "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
       ],
       "dynamic": 0
@@ -8650,6 +8774,13 @@
         "places still carry LSAD, so a CDP can be told from a city",
         "the municipalities behind two target zips have geometry",
         "the same name in two counties gets two identifiers"
+      ],
+      "dynamic": 0
+    },
+    "tests/system-map.test.ts": {
+      "names": [
+        "content reconciliation: freshness of retained evidence, publication before served-readback, honest code labels",
+        "the system map renders the whole model, labelled as target architecture, not live status"
       ],
       "dynamic": 0
     },
@@ -9618,6 +9749,17 @@
         "every pilot zip resolves to the state it is actually in",
         "the printed line names the ruling, the state, and how many witnesses spoke",
         "the witnesses are distinct publishers, and one of them is not the Census"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-queue.test.ts": {
+      "names": [
+        "another ZIP reuses named canonical candidacies and sources across jurisdictions, preserving authority scope",
+        "missing geometry and corpus preserve unknowns despite successful state-only projection",
+        "prepared committed ZIP queues reproduce their evidence artifact without outbound acquisition",
+        "stale evidence remains intact and duplicate or wrong-state preparations fail explicitly",
+        "trusted readiness preserves state scope without inventing a ZIP-specific assertion",
+        "unavailable readiness is not treated as unwalked source or trusted readiness"
       ],
       "dynamic": 0
     },

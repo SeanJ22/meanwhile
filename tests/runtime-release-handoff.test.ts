@@ -12,6 +12,7 @@ import {
   inspectRuntimeReleaseEvidence,
   requiredContextEvidence,
   runtimeGithubCredential,
+  runtimeProductionReadEnvironment,
   type CommandResult,
   type GithubCheckRun,
 } from "../lib/ops/runtime-release-handoff.ts";
@@ -20,6 +21,18 @@ import type { ProductionIntegrityRead } from "../lib/ops/production-integrity-da
 
 const RUNNING = "1".repeat(40);
 const TARGET = "2".repeat(40);
+
+test("operational civic reads bind the explicit production read handle without rewriting credentials", () => {
+  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", DATABASE_URL: "postgresql://developer:fixture@dev.example/test", WTP_PRODUCTION_DATABASE_URL_READONLY: "postgresql://readonly:fixture@production.example/live", WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:fixture@production.example/live", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://control:fixture@control.example/control" };
+  const before = { ...env };
+  const child = runtimeProductionReadEnvironment(env);
+  assert.equal(child.DATABASE_URL, env.WTP_PRODUCTION_DATABASE_URL_READONLY);
+  assert.equal(child.WTP_PRODUCTION_DATABASE_URL_WRITE, env.WTP_PRODUCTION_DATABASE_URL_WRITE);
+  assert.equal(child.WTP_CONTROL_PLANE_DATABASE_URL, env.WTP_CONTROL_PLANE_DATABASE_URL);
+  assert.deepEqual(env, before);
+  for (const value of [undefined, "", "  ", "malformed-sensitive-value", "https://example.test"])
+    assert.throws(() => runtimeProductionReadEnvironment({ NODE_ENV: "test", DATABASE_URL: env.DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY: value }), /RUNTIME_CIVIC_READ_TARGET_(?:UNAVAILABLE|INVALID)$/);
+});
 
 test("standing runtime preserves configured GitHub credentials without invoking the CLI", () => {
   const runCommand = (): never => { throw new Error("configured credentials must not be replaced"); };

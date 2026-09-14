@@ -263,6 +263,19 @@ export function runtimeGithubRepository(root: string, run: RunCommand = defaultR
   return result.status === 0 ? githubRepositoryFromOrigin(result.stdout) : null;
 }
 
+/** Operational civic readers must not inherit a developer checkout's database. */
+export function runtimeProductionReadEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const connection = env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+  if (!connection?.trim()) throw new Error("RUNTIME_CIVIC_READ_TARGET_UNAVAILABLE");
+  let protocol: string;
+  try { protocol = new URL(connection).protocol; }
+  catch { throw new Error("RUNTIME_CIVIC_READ_TARGET_INVALID"); }
+  if (protocol !== "postgres:" && protocol !== "postgresql:") {
+    throw new Error("RUNTIME_CIVIC_READ_TARGET_INVALID");
+  }
+  return { ...env, DATABASE_URL: connection };
+}
+
 /** Reuse the host's authenticated CLI without copying its credential to disk. */
 export function runtimeGithubCredential(input: {
   readonly root: string;

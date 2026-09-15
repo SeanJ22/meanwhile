@@ -8,6 +8,10 @@ on:
       - ".github/workflows/**"
       - "scripts/gates.mjs"
       - "scripts/preflight.mjs"
+      - "scripts/reader-presentation-renewal.mjs"
+      - "lib/control-plane/presentation-renewal.ts"
+      - "docs/evidence/reader-last-mile-lumen-presentation-renewal.json"
+      - "tests/reader-presentation-renewal.test.ts"
       - "tests/gate-parity.test.ts"
       - "package.json"
       - "pnpm-lock.yaml"
@@ -32,4 +36,4 @@ jobs:
       - run: corepack enable
       - run: corepack pnpm install --frozen-lockfile
       - name: Verify local and hosted gates and early history prerequisites
-        run: corepack pnpm exec node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/gate-parity.test.ts
+        run: corepack pnpm exec node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/gate-parity.test.ts tests/reader-presentation-renewal.test.ts

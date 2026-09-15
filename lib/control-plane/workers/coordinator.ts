@@ -10,7 +10,7 @@ import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { autonomousScoutHistory, scoutTransientDenial } from "./scout-scheduling.ts";
-import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { isScheduled } from "../scheduler/obligation.ts";
@@ -28,11 +28,15 @@ export interface AutonomousDecision {
   readonly reason: string;
 }
 
+export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {
+  if (plan.version !== 1 || plan.contract.subjectId !== item.subject || !plan.sourceRegistryReferences.length ||
+    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.subject) ||
+    plan.detective.some(d => d.question.subjectId !== item.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+}
+
 export async function registerAutonomousPlan(repos: ControlPlaneRepositories, workItemId: string, plan: AutonomousWorkPlan, now: string): Promise<void> {
   const item = await repos.workItems.mustRead(workItemId);
-  if (plan.version !== 1 || plan.contract.subjectId !== item.value.subject || !plan.sourceRegistryReferences.length ||
-    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.value.subject) ||
-    plan.detective.some(d => d.question.subjectId !== item.value.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+  assertAutonomousPlanIdentity(item.value, plan);
   if (item.value.autonomousPlan) {
     if (canonicalJson(item.value.autonomousPlan) !== canonicalJson(plan)) throw new Error("AUTONOMOUS_PLAN_ALREADY_REGISTERED_DIFFERENT_CONTRACT");
     return;
@@ -75,12 +79,29 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem): Promise<Obse
 }
 
 /** Typed state chooses one next operation. Absence is never inferred from an empty list. */
-export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string): Promise<AutonomousDecision> {
+export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string, knownItems?: readonly WorkItem[]): Promise<AutonomousDecision> {
   const repos = runtime.repos;
   const item = (await repos.workItems.mustRead(workItemId)).value;
   const plan = item.autonomousPlan;
   const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,reason,task});
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
+  type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
+  const children = (knownItems ?? (await repos.workItems.list()).map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
+  const linkedId = (item as LinkedItem).planRepairObservation?.successorWorkItemId;
+  if (children.length || linkedId) {
+    const child = children[0] as LinkedItem | undefined;
+    const next = child?.autonomousPlan;
+    const valid = children.length === 1 && child && next && (!linkedId || linkedId === child.id) &&
+      child.planRepair?.authority === "WORK_INSTRUCTIONS_ONLY" && child.subject === item.subject &&
+      canonicalJson(child.contract) === canonicalJson(item.contract) && canonicalJson(child.dependencies) === canonicalJson(item.dependencies) &&
+      next.contract.subjectId === plan.contract.subjectId && next.contract.recordClass === plan.contract.recordClass &&
+      next.contract.schemaVersion === 2 && plan.contract.schemaVersion === 2 && next.contract.verification.required &&
+      canonicalJson(next.contract.identity) === canonicalJson(plan.contract.identity) &&
+      canonicalJson(next.contract.requiredFields) === canonicalJson(plan.contract.requiredFields) && canonicalJson(next.detective) === canonicalJson(plan.detective);
+    if (!valid) return decision("BLOCKED", "REPAIR_SUCCESSOR_LINK_INVALID: linked work is missing, incomplete or outside the unchanged obligation; recovery remains owed.");
+    assertAutonomousPlanIdentity(child, next);
+    return decision("BLOCKED", `REPAIR_WAITING_ON_SUCCESSOR:${child.id}: original obligation and blockers remain open; dispatch continues on the linked successor.`);
+  }
   if (
     runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
     isRetiredRoutineMeetingAcquisition(plan.contract)
@@ -91,11 +112,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
-  const records = [] as Awaited<ReturnType<typeof repos.workerResults.read>>[number][];
-  for (const record of await repos.workerResults.read(item.id)) {
-    try { records.push((await readCompletedWorkerResult(repos, record.id)).record); }
-    catch { /* An uncommitted result never drives the next civic computation. */ }
-  }
+  const records = [...await readCompletedWorkerResults(repos, item.id)];
   records.sort((a,b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id));
   const attempts = (await repos.attempts.list()).map(a=>a.value);
   const taskFor = async (input:Parameters<typeof enqueueWorkerTask>[1]) => {
@@ -148,6 +165,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   let staged = false;
   let unresolved = false;
   let outsideExtractionScope=false;
+  const pendingRefreshes: Parameters<typeof enqueueWorkerTask>[1][] = [];
   // Acquire the declared supporting authorities before scheduling their dependent validation.
   for (const acquisition of acquisitions) {
     const history = records.filter(r => r.result.role === "ACQUIRER" && r.result.source.id === acquisition.route.id && r.result.source.url === acquisition.route.url);
@@ -162,10 +180,12 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const schedule=scheduleAutonomousAcquisition(plan,latest.result,now);
       if(!isScheduled(schedule)) {unresolved=true;continue;}
       if(Date.parse(schedule.nextDueAt)<=Date.parse(now)) {
-        // A publisher freshness check must not reuse an expired immutable capture.
-        const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,
+        // Finish independent checking of retained bytes before refreshing them.
+        // Otherwise a source whose cadence is shorter than the runner interval
+        // consumes every turn with acquisition and never reaches a verifier.
+        // Freshness still prevents staging and the refresh uses a real fetch.
+        pendingRefreshes.push({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,
           acquisition:{...acquisition,held:[]},replayLabel:`refresh-after:${latest.id}`});
-        if(next)return next;
         unresolved=true;
       }
       continue;
@@ -240,6 +260,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ENGINEERING",artifactId:engineering.methodArtifactId,engineering});
     if(next)return next;
   }
+  for (const refresh of pendingRefreshes) {
+    const next = await taskFor(refresh);
+    if (next) return next;
+  }
   if (staged && !unresolved) return decision("STAGED","Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
   const novelty = await scoutOperation(true);
   return outsideExtractionScope ? {...novelty,reason:`EXTRACTION_SCOPE_UNESTABLISHED: the acquired representation needs a compatible extraction contract. ${novelty.reason}`} : novelty;
@@ -273,7 +297,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
     while(cursor<ids.length && admitted<maximum && hasDispatchTime()) {
       const id=ids[cursor++];
       try {
-      const d=await nextAutonomousOperation(runtime,id); decisions.push(d);
+      const d=await nextAutonomousOperation(runtime,id,items.map(row=>row.value)); decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
       const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:WORKER_MAX_WALL_MS;

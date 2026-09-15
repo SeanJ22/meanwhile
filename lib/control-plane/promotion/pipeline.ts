@@ -47,6 +47,7 @@ export const PROMOTION_PIPELINE_LOG = "promotion_pipeline";
 export interface PipelineContext {
   readonly workerResultById?: (id: string) => import("../workers/types.ts").WorkerResultRecord | null;
   readonly workerAuditBlocks?: (artifactIds: readonly string[]) => boolean;
+  readonly workerFactAuditBlocks?: (artifactIds: readonly string[], auditorResultId: string) => boolean;
   readonly artifactById: (artifactId: string) => ArtifactRecord | null;
   readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
   /**
@@ -346,7 +347,15 @@ export function validateTransition(
       break;
     case "APPROVED_FOR_PROMOTION":
       reasons.push(...approvalReasons(state, offered));
-      if (ctx.workerAuditBlocks?.(state.byStage.SCOUTED?.artifactIds ?? [])) reasons.push({ code: "WORKER_AUDIT_BLOCKS_PROMOTION", detail: "A durable worker finding reopened or blocked this artifact's dependent work." });
+      {
+        const ids = state.byStage.SCOUTED?.artifactIds ?? [];
+        const auditorId = state.byStage.AUDITED?.workerResultId;
+        const scopedFact = state.byStage.SCOUTED?.source.kind === "FLEET_EXTRACTION" &&
+          ["meeting-times", "agendas"].includes(state.recordClass ?? "") && auditorId;
+        const blocked = scopedFact && ctx.workerFactAuditBlocks
+          ? ctx.workerFactAuditBlocks(ids, auditorId!) : ctx.workerAuditBlocks?.(ids);
+        if (blocked) reasons.push({ code: "WORKER_AUDIT_BLOCKS_PROMOTION", detail: "A durable worker finding reopened or blocked this artifact's dependent work." });
+      }
       break;
   }
   return reasons.length === 0 ? { ok: true, record: offered } : { ok: false, record: refuse(offered, reasons) };
@@ -425,6 +434,15 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
         !completion.get(r.workItemId)?.audits.some(a => a.survived) ||
         completion.get(r.workItemId)?.audits.some(a => !a.survived && a.resolvedAt === null) ||
         ["REOPENED", "BLOCKED"].includes(workItems.get(r.workItemId)?.state ?? ""))),
+    workerFactAuditBlocks: (ids, auditorId) => {
+      const audits = results.filter(record => record.result.role === "ADVERSARIAL_AUDITOR" &&
+        record.inputArtifactIds.some(id => ids.includes(id))).sort((a, b) => b.endedAt.localeCompare(a.endedAt));
+      // A captured-fact audit does not close the source-universe obligation.
+      // It may certify only its exact current validated facts. Actual breaks
+      // remain blocking; a later captured-only run cannot erase them.
+      return audits[0]?.id !== auditorId || audits[0]?.result.verdict !== "SURVIVED" ||
+        audits.some(record => record.result.verdict === "BROKE");
+    },
   };
 }
 

@@ -83,7 +83,40 @@ async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: Wo
 }
 
 export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories): Promise<void> {
-  for (const record of await repos.workerResults.readAll()) await applyWorkerCompletion(repos, record);
+  const records = await repos.workerResults.readAll();
+  if (records.length === 0) return;
+  // Recovery must not pay several network round trips for every historical
+  // success before admitting today's work. Only exact, fully applied commits
+  // can skip replay; incomplete projections still use the guarded writer.
+  const [attemptRows, taskRows, leaseRows, costs, itemRows] = await Promise.all([
+    repos.attempts.list(), repos.routeTasks.list(), repos.leases.list(), repos.costs.readAll(), repos.workItems.list(),
+  ]);
+  const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
+  const tasks = new Map(taskRows.map(row => [row.id, row.value]));
+  const leases = new Map(leaseRows.map(row => [row.id, row.value]));
+  const items = new Map(itemRows.map(row => [row.id, row.value]));
+  const recordedCosts = new Set(costs.map(cost => canonicalJson(cost)));
+  for (const record of records) {
+    const task = tasks.get(record.routeTaskId);
+    const lease = leases.get(record.routeTaskId);
+    const result = record.result;
+    const noTransition = record.completion.completedTask.workerTask?.purpose === "DIAGNOSTIC_REPLAY" ||
+      result.role === "ACQUIRER" || result.role === "DETECTIVE" || result.role === "ENGINEERING";
+    const transitioned = noTransition || items.get(record.workItemId)?.transitions.some(t => t.by === `worker-result:${record.id}`);
+    const costApplied = task?.workerTask && recordedCosts.has(canonicalJson({
+      attemptId: record.attemptId, workItemId: record.workItemId, routeTaskId: record.routeTaskId,
+      routeId: task.routeId, source: task.target, jurisdiction: task.workerTask.contract.subjectId,
+      project: record.grant.project, role: record.worker.role, cost: record.cost, recordedAt: record.endedAt,
+    }));
+    const dependentsApplied = noTransition || result.role !== "ADVERSARIAL_AUDITOR" || result.verdict !== "BROKE" ||
+      itemRows.every(row => !row.value.dependencies.some(d => d.upstreamId === record.workItemId) ||
+        row.value.transitions.some(t => t.by === `worker-result:${record.id}`));
+    if (task && canonicalJson(task) === canonicalJson(record.completion.completedTask) &&
+        canonicalJson(attempts.get(record.attemptId) ?? null) === canonicalJson(record.completion.closedAttempt) &&
+        (!lease || lease.released || lease.id !== record.completion.closedAttempt.leaseId) &&
+        costApplied && transitioned && dependentsApplied) continue;
+    await applyWorkerCompletion(repos, record);
+  }
 }
 
 /** Result consumers never accept output from an uncommitted, dead, or mismatched producer. */
@@ -91,9 +124,27 @@ export async function readCompletedWorkerResult(repos: ControlPlaneRepositories,
   const record = (await repos.workerResults.readAll()).find(r => r.id === id);
   if (!record) throw new Error("WORKER_RESULT_MISSING");
   const attempt = (await repos.attempts.mustRead(record.attemptId)).value;
+  assertCompletedWorkerResult(record, attempt);
+  return { record, attempt };
+}
+
+function assertCompletedWorkerResult(record: WorkerResultRecord, attempt: Attempt): void {
   if (attempt.outcome !== "COMPLETED" || canonicalJson(attempt) !== canonicalJson(record.completion.closedAttempt)) throw new Error("WORKER_RESULT_UNCOMMITTED_PRODUCER");
   assertFleetResult(record.result, record.completion.completedTask.workerTask!.role, attempt.id);
-  return { record, attempt };
+}
+
+/** Same exact producer validation as a point read, with bounded repository reads for inherited history. */
+export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId?: string): Promise<readonly WorkerResultRecord[]> {
+  const [records, attemptRows] = await Promise.all([
+    workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId), repos.attempts.list(),
+  ]);
+  const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
+  return records.filter(record => {
+    const attempt = attempts.get(record.attemptId);
+    if (!attempt) return false;
+    try { assertCompletedWorkerResult(record, attempt); return true; }
+    catch { return false; /* Uncommitted or malformed history is never inherited as evidence. */ }
+  });
 }
 
 export interface WorkerCompletionEvidence {

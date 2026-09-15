@@ -4,6 +4,10 @@ import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
+import { cycleLaneSlots, observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
  * (Session B, W3.5, 2026-08-30. Rewritten Session B resume, W3.B/C/E/F,
@@ -402,7 +406,13 @@ if (wantsPostgres) {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
 }
+const cycleObservation = observeCyclePhases(repos);
+repos = cycleObservation.repos;
 crashRepos = repos;
+const finishPhase = (name: string) => {
+  const phase = cycleObservation.finish(name);
+  console.log(`  phase ${phase.name}: ${phase.durationMs}ms; ${phase.repositoryCalls} repository calls`);
+};
 
 if (wantsPostgres) {
   const methodAuthority = await readMethodCandidateAuthorityStatus(repos);
@@ -529,6 +539,7 @@ console.log(
 );
 
 const sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
+finishPhase("references-and-registration");
 console.log(
   `  ${floorLine(
     floored(
@@ -791,7 +802,34 @@ const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation)
   });
   return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
 };
-const openingOrder = [...dueDeterministicRows, ...scoutOrder.map((b) => b.row.entry)];
+if (!dry && !canary && !scheduledBlackout && !intents.runnerPause.paused) {
+  try {
+    const retained = await retainRecentRoutineMeetingEvidence({ repos,
+      store: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
+      methodVersion: readMethodStore(join(ROOT, ...METHOD_STORE)).version, now: nowIso });
+    console.log(`  permanent meeting captures retained for independent workers: ${retained.length}`);
+  } catch (error) {
+    runtimeConditions.push(`permanent meeting evidence could not enter independent workers: ${error instanceof Error ? error.message : "ROUTINE_MEETING_INTAKE_FAILED"}`);
+  }
+}
+const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.list()).filter(item =>
+  item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
+);
+// A held Parser/Validator chain has no autonomous acquisition plan. Its next
+// stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
+// reserve downstream time until that pass can inspect their retained evidence.
+const heldWorkIds = new Set(canary || scheduledBlackout ? [] : (await repos.routeTasks.list())
+  .filter(row => row.value.workerTask?.contract.schemaVersion === 1 &&
+    (row.value.state === "PENDING" || row.value.state === "RECLAIMABLE" ||
+      (row.value.state === "RESULT_RECORDED" && row.value.workerTask.role !== "ADVERSARIAL_AUDITOR")))
+  .map(row => row.value.workItemId));
+const downstreamWorkCount = plannedWork.length + heldWorkIds.size;
+const fleetScoutReserve = !dry && !canary && plannedWork.length ? Math.min(1, SCOUT_MAX) : 0;
+const slots = cycleLaneSlots({ maximum: canary ? 1 : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
+  deterministic: Math.min(MAX_DISPATCHES, dueDeterministic),
+  scouts: Math.min(SCOUT_MAX - fleetScoutReserve, dueModel.length), planned: dry ? 0 : downstreamWorkCount });
+const openingOrder = [...scoutOrder.map((b) => b.row.entry), ...dueDeterministicRows];
+finishPhase("schedule-and-intents");
 if (dispatchOrdering !== null) {
   console.log(
     `  Scout lane order: band 1 ${dispatchOrdering.bands[1]} · band 2 ${dispatchOrdering.bands[2]} · band 3 ${dispatchOrdering.bands[3]} of ${dueModel.length} due model-class ` +
@@ -812,7 +850,7 @@ for (const { obligation: o, nextDueAt } of openingOrder) {
    */
   const lane = decisionFor(o.id, o.routeId).kind;
   const opened = lane === "BOUNDED_MODEL_WORKER" ? openedModel : openedDeterministic;
-  const laneCeiling = lane === "BOUNDED_MODEL_WORKER" ? SCOUT_MAX : MAX_DISPATCHES;
+  const laneCeiling = lane === "BOUNDED_MODEL_WORKER" ? slots.scouts : slots.deterministic;
   const aggregateOpeningCeiling = canary ? 1 : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle;
   if (scheduledBlackout || opened >= laneCeiling || openedDeterministic + openedModel >= aggregateOpeningCeiling) {
     deferredForCeiling += 1;
@@ -844,6 +882,7 @@ console.log(
       ? ` — ${resumedCount} of them RESUMED from an earlier cycle that opened them and did not reach them`
       : ""),
 );
+finishPhase("open-occurrences");
 if (deferredForCeiling > 0) {
   console.log(
     `  ${deferredForCeiling} due obligation(s) got NO occurrence this cycle: the stated ceilings are ` +
@@ -929,6 +968,8 @@ try {
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
 }
 const spendWindow = researchSpendInWindow(costLedger, NOW);
+let finalSpendWindow: ReturnType<typeof researchSpendInWindow> | null = null;
+let finalSpendAsOf: string | null = null;
 let spentThisCycle = 0;
 let scoutsAdmittedThisCycle = 0;
 let priorCircuits: readonly ProviderCircuit[] = [];
@@ -1119,15 +1160,9 @@ function measureHostSupervision(): HostSupervision {
       ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", join(ROOT, "scripts", "pilot-task.ps1"), "-Action", "verify-triggers"],
       { encoding: "utf8", timeout: 60_000, windowsHide: true },
     );
-    const text = `${run.stdout ?? ""}`;
-    const start = text.indexOf("{");
-    const parsed = start >= 0 ? (JSON.parse(text.slice(start)) as { relaunchTriggerPresent?: unknown; taskPresent?: unknown; state?: unknown }) : null;
-    if (parsed === null) {
-      detail = `verify-triggers printed no JSON (exit ${run.status ?? "null"}${run.error ? `, ${run.error.message}` : ""})`;
-    } else {
-      present = parsed.relaunchTriggerPresent === true;
-      detail = `verify-triggers: taskPresent ${String(parsed.taskPresent)}, state ${String(parsed.state)}, relaunchTriggerPresent ${String(parsed.relaunchTriggerPresent)} (exit ${run.status ?? "null"})`;
-    }
+    const reading = readRelaunchTriggerVerification({ stdout: run.stdout ?? "", status: run.status, failedToRun: Boolean(run.error) });
+    present = reading.present;
+    detail = reading.detail;
   } catch (error) {
     detail = `verify-triggers could not run: ${error instanceof Error ? error.message : String(error)}`;
   }
@@ -1154,6 +1189,7 @@ let metrics: ResearchMetrics | null = null;
 const researchWindowId = `research:${HOST}:${NOW}`;
 let researchProgression = priorResearchState?.researchProgression ?? null;
 let researchProgressionFailure: string | null = null;
+let autonomousDispatchedThisCycle = 0;
 
 /**
  * The research state this cycle writes, carrying the owner's dispatch it
@@ -1165,7 +1201,9 @@ let researchProgressionFailure: string | null = null;
 type CycleResearchState = ResearchState & { readonly ownerDispatch: OwnerDispatchRecord | null };
 
 function researchState(cycleFinishedAt: string | null): CycleResearchState {
-  const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
+  const measuredSpend = finalSpendWindow ?? spendWindow;
+  const window = finalSpendWindow !== null ? finalSpendWindow.windowUsd
+    : spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
   return {
     formatVersion: RESEARCH_FORMAT_VERSION,
     beatAt: nowIso(),
@@ -1187,9 +1225,9 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     bounds: { ...RESEARCH_BOUNDS, maxScoutDispatchesPerCycle: SCOUT_MAX },
     spend: {
       windowUsd: window,
-      measuredAttempts: spendWindow.measured,
-      unmeasuredAttempts: spendWindow.unmeasured,
-      asOf: nowIso(),
+      measuredAttempts: measuredSpend.measured,
+      unmeasuredAttempts: measuredSpend.unmeasured,
+      asOf: finalSpendAsOf ?? NOW,
     },
     queue: {
       registeredUnits: allUnits.length,
@@ -1197,13 +1235,17 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       modelClassDue: dueModel.length,
       modelClassDispatchedThisCycle: laneCounts.modelDispatched,
       modelClassDeferredForCeiling: laneCounts.deferredBy.CEILING ?? 0,
-      modelClassDeferredForCycleMax: (laneCounts.deferredBy.CYCLE_MAX ?? 0) + Math.max(0, dueModel.length - openedModel),
+      modelClassDeferredForCycleMax: laneCounts.deferredBy.CYCLE_MAX ?? 0,
+      modelClassDeferredForBudget: laneCounts.deferredBy.BUDGET ?? 0,
+      modelClassNotOpenedThisCycle: Math.max(0, dueModel.length - openedModel),
+      autonomousDispatchedThisCycle,
       modelClassDeferredForLane: (laneCounts.deferredBy.LANE_DISABLED ?? 0) + (laneCounts.deferredBy.PAUSED ?? 0),
       deterministicDue: dueDeterministic,
       deterministicDispatchedThisCycle: laneCounts.deterministicDispatched,
     },
     running: [...running],
     runtimeConditions: [...runtimeConditions],
+    cyclePhases: [...cycleObservation.phases],
     methodCandidates: (() => {
       const counts = canonicalCandidateCounts;
       return counts === null
@@ -1380,13 +1422,10 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 
 // Keep a bounded share of the existing cycle for registered multi-worker work.
 // Otherwise an always-full refresh queue could starve the fleet indefinitely.
-const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.list()).filter(item =>
-  item.value.autonomousPlan && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
-);
-const fleetReserveMs = !dry && !canary && plannedWork.length ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
+const fleetReserveMs = !dry && !canary && downstreamWorkCount ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
 // Registered investigations also need Scout after a known source fails or leaves
 // verification unresolved; initial source discovery is not the only model work.
-const fleetScoutReserve = !dry && !canary && plannedWork.length ? Math.min(1, SCOUT_MAX) : 0;
+finishPhase("worker-context");
 
 const cycle = await runCycle({
   repos,
@@ -1410,7 +1449,9 @@ const cycle = await runCycle({
     state: "NOT_READY",
     reason: "not computed by this run; the truth contract is the control set's to state",
   },
-  maxDispatches: MAX_DISPATCHES,
+  maxDispatches: slots.deterministic,
+  requireOpenOccurrence: true,
+  onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
   budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
@@ -1450,6 +1491,7 @@ const cycle = await runCycle({
     },
   },
 });
+finishPhase("dispatch");
 laneCounts = {
   deterministicDispatched: cycle.lanes?.deterministic.dispatched ?? laneCounts.deterministicDispatched,
   modelDispatched: cycle.lanes?.model.dispatched ?? laneCounts.modelDispatched,
@@ -1487,6 +1529,7 @@ for (const result of cycle.dispatched) {
 }
 
 const persisted = await persistDebts(repos, cycle.debts, NOW, canary ? corpus.map((obligation) => obligation.id) : null);
+finishPhase("occurrence-and-debt-commit");
 console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
 );
@@ -1510,16 +1553,30 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
       spaceOut: spacer,
       openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
       ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) } : {}) });
-    const autonomous = await runAutonomousCoordinator(fleet, { maximum: 3, concurrency: 2,
+    // Retained civic bytes get one guaranteed stage before open-ended discovery.
+    // Both queues consume the same aggregate counter; unused shares are lent
+    // back within the existing ten-dispatch and wall limits.
+    const downstreamStartedAt = fleetSafety.snapshot().cycle.dispatches;
+    const heldFirst = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
+      maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
+    });
+    const heldUsed = fleetSafety.snapshot().cycle.dispatches - downstreamStartedAt;
+    const autonomous = await runAutonomousCoordinator(fleet, { maximum: Math.max(0, 3 - heldUsed), concurrency: 2,
       deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
       admitDispatch: work => fleetSafety.admitDispatch(work) });
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
+    const legacy = [...heldFirst];
     const remaining = Math.max(0, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle - fleetSafety.snapshot().cycle.dispatches);
-    const legacy = Date.now() + 150_000 < DISPATCH_DEADLINE_MS
-      ? await runHeldWorkerFleetCycle(ROOT, fleet, true, { maximumDispatches: remaining, admitDispatch: work => fleetSafety.admitDispatch(work) })
-      : [];
-    const fleetDispatches = [...autonomous.dispatches, ...legacy];
+    for (let slot = 0; slot < remaining && Date.now() + 150_000 < DISPATCH_DEADLINE_MS; slot += 1) {
+      const next = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
+        maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
+      });
+      legacy.push(...next);
+      if (next.length === 0) break;
+    }
+    const fleetDispatches = [...legacy, ...autonomous.dispatches];
+    autonomousDispatchedThisCycle = fleetDispatches.filter(row => row.attemptId !== null).length;
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     /* PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result keeps the generic offer. */
     const factReport = await projectFleetPipeline(repos, {
@@ -1534,6 +1591,7 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
   }
 }
+finishPhase("autonomous-workers-and-projection");
 /* ------------------------------------------------------- the promotion tail --- */
 
 /*
@@ -1591,6 +1649,8 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     return null;
   }
   const at = nowIso();
+  finalSpendWindow = researchSpendInWindow(costsNow, at);
+  finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
@@ -1666,6 +1726,7 @@ if (!dry && !canary) {
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);
   }
 }
+finishPhase("metrics-and-finalization");
 await writeResearchState(finishedAt);
 const finalState = researchState(finishedAt);
 

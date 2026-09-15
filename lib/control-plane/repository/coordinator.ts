@@ -813,14 +813,20 @@ export async function reconcile(
 ): Promise<ReconcileReport> {
   const commits = await repos.dispositions.readAll();
   const healed: string[] = [];
+  if (commits.length === 0) return { commitsSeen: 0, healed };
+  const [taskRows, attemptRows] = await Promise.all([repos.routeTasks.list(), repos.attempts.list()]);
+  const tasks = new Map(taskRows.map(row => [row.id, row]));
+  const attempts = new Map(attemptRows.map(row => [row.id, row]));
   for (const commit of commits) {
-    const task = await repos.routeTasks.read(commit.routeTaskId);
-    const attempt = await repos.attempts.read(commit.attemptId);
+    const task = tasks.get(commit.routeTaskId) ?? null;
+    const attempt = attempts.get(commit.attemptId) ?? null;
     const taskApplied = task !== null && canonicalJson(task.value) === canonicalJson(commit.disposedTask);
     const attemptApplied =
       attempt !== null && canonicalJson(attempt.value) === canonicalJson(commit.closedAttempt);
     if (taskApplied && attemptApplied) continue;
-    await applyDispositionCommit(repos, commit, now);
+    const applied = await applyDispositionCommit(repos, commit, now);
+    tasks.set(commit.routeTaskId, applied.task);
+    attempts.set(commit.attemptId, applied.attempt);
     healed.push(commit.commitId);
   }
   return { commitsSeen: commits.length, healed };

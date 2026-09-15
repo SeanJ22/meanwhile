@@ -8,7 +8,7 @@ import { spawnSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const MODES = new Set(["manual-promote", "window", "agent-bridge-job", "agent-bridge-review"]);
+const MODES = new Set(["manual-promote", "window", "agent-bridge-job", "agent-bridge-review", "routine-refresh"]);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const [mode, ...args] = process.argv.slice(2);
 if (!mode || !MODES.has(mode)) {

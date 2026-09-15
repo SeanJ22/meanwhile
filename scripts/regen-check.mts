@@ -231,7 +231,10 @@ if (WRITE) {
     const entry = entryFor(ROOT, a.command);
     if (entry === null) continue;
     const d = digestGenerator(ROOT, entry);
-    if (next[a.path]?.digest !== d.digest) moved += 1;
+    // --write records completed regeneration of changed generators. An
+    // unchanged entry still describes its original regeneration, not this run.
+    if (next[a.path]?.digest === d.digest) continue;
+    moved += 1;
     next[a.path] = {
       digest: d.digest,
       files: d.files,

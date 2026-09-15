@@ -9,27 +9,38 @@ import { VAULT_DIR } from "../scheduler/vault.ts";
 import { methodFields, standingFleetRuntime } from "./standing.ts";
 import { computeRouteFloor } from "../preflight.ts";
 import { readMethodStore } from "../../method/candidate.ts";
-import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
+import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
+import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
+import { consumePlanRepairs, planRepairBrief } from "./plan-repair.ts";
+import { evidenceProjection } from "./runtime.ts";
+import { researchVaultResolver } from "./vault-object.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
+  if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{})};
-  const prior=await input.repos.scoutResults.readAll();
-  const priorWorkers=[] as Awaited<ReturnType<typeof input.repos.workerResults.readAll>>[number][];
-  for(const record of await input.repos.workerResults.readAll()) {
-    try { priorWorkers.push((await readCompletedWorkerResult(input.repos,record.id)).record); }
-    catch { /* Uncommitted results do not become inherited investigation evidence. */ }
-  }
+  const [prior, priorWorkers] = await Promise.all([
+    input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
+  ]);
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
-  const runtime:AutonomousCoordinatorRuntime={...standingFleetRuntime(input),routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
+  const heldRuntime = standingFleetRuntime(input);
+  const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
+  await consumePlanRepairs({ repos: input.repos, scouts: prior, now: now(),
+    readCapture: async id => {
+      const { artifact } = await readRepairCapture(id);
+      return { evidence: evidenceProjection(await heldRuntime.readEvidence(id)), permission: artifact.permission, transport: artifact.transport,
+        httpStatus: artifact.httpStatus, partial: artifact.httpStatus === 206 || Boolean(artifact.headers["content-range"]) || artifact.retentionPolicy === "DIAGNOSTIC" };
+    } });
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id})}),
       contextFor:()=>{
@@ -44,7 +55,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const floor=computeRouteFloor({knowledge,jurisdiction:{state:plan.jurisdiction.toLowerCase(),...(plan.contract.schemaVersion===2?{publisher:plan.contract.sourceScope.sourceId}:{})},
           fields:plan.contract.schemaVersion===2?methodFields(plan.capability,plan.contract):["meeting","agenda"],
           adapterRoutes:plan.sources.map(source=>({routeId:source.id,label:source.applicableBecause,target:source.url}))});
-        return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}.`,
+        return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
           inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds)])],summary:[
             `Inherited method version ${knowledge.version}. Walk applicable known methods before novelty; the fourteen retrieval rungs are a floor, never a completion ceiling.`,
             ...floor.routes.map(r=>`${r.routeId}: ${r.obligation}; ${r.proof}; ${r.label}; target ${r.target}; applicability ${r.grade}`),

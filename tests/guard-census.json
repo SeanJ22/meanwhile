@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 641,
-    "named": 6593,
+    "files": 647,
+    "named": 6633,
     "dynamic": 27
   },
   "files": {
@@ -3614,6 +3614,12 @@
       ],
       "dynamic": 0
     },
+    "tests/fleet-activity-scaling.test.ts": {
+      "names": [
+        "fleet lease attribution preserves ownership and order without rescanning every task for every lease"
+      ],
+      "dynamic": 0
+    },
     "tests/fleet-coordinator-progression.test.ts": {
       "names": [
         "an already elapsed deadline is never described as a dispatch count limit",
@@ -3638,6 +3644,7 @@
     },
     "tests/fleet-operations-map.test.ts": {
       "names": [
+        "a full Fleet backlog renders a bounded first page with every page reachable",
         "fleetItemLane derives one lane per item from task state, in strict precedence",
         "the map renders a real producer report as lanes, work items and honestly-labelled panels"
       ],
@@ -3923,6 +3930,9 @@
     },
     "tests/gate-parity.test.ts": {
       "names": [
+        "CI history contract accepts complete history and rejects absent consumers",
+        "CI history contract covers every preflight consumer, including build matrix",
+        "CI history contract rejects shallow checkout and setup after preflight",
         "PDC hosted setup fetches the exact frozen bridge before the unchanged full suite",
         "gate parity · block commands cannot consume later steps or turn comments into gates",
         "gate parity · each canonical authority is in BOTH the local set and the required CI job",
@@ -4795,7 +4805,11 @@
         "SEEDED: a host that cannot be asked derives DEGRADED naming the host, never ACTIVE by default",
         "SEEDED: a proof file absent on the host derives DEGRADED naming the path and the command",
         "SEEDED: a stored ACTIVE flag is still ignored — a state asserting active with no proof reads DEGRADED",
-        "SEEDED: no supervision reading on the state derives DEGRADED naming the unproven relaunch"
+        "SEEDED: no supervision reading on the state derives DEGRADED naming the unproven relaunch",
+        "current nested task verification proves the live trigger while the relaunch proof remains independently required",
+        "explicit task trigger absence or disabled task stays false in a verified envelope",
+        "missing malformed and legacy flat task results remain unknown rather than asserting an absent trigger",
+        "refused or failed trigger verification cannot certify supervision or disable model admission"
       ],
       "dynamic": 0
     },
@@ -4885,7 +4899,10 @@
         "a blocked publisher holds only its exact curated member while unrelated valid members promote",
         "a stale source-scoped merge base is durably refused before it can roll back a newer pointer",
         "an all-source outage stays SOURCE_BLOCKED and cannot replace the curated LKG",
-        "an omitted member cannot be deleted without typed positive removal evidence"
+        "an omitted member cannot be deleted without typed positive removal evidence",
+        "corrupt imported base proof and an ordinary base with no source receipt are refused",
+        "first source-reviewed venue successor preserves imported members without inventing a source review",
+        "the producer preserves source-isolated omitted members across every independent curated family"
       ],
       "dynamic": 0
     },
@@ -6076,6 +6093,14 @@
       ],
       "dynamic": 0
     },
+    "tests/owner-routine-refresh.test.ts": {
+      "names": [
+        "a crash after reservation cannot restart the same attempt indefinitely",
+        "owner refresh accepts one exact registered partition and at most two attempts; no direct source child",
+        "standing parent consumes durable bounded refresh requests independently of ordinary source due time"
+      ],
+      "dynamic": 0
+    },
     "tests/owner-uncertainty-is-not-evidence.test.ts": {
       "names": [
         "MEASURED: the Pima roll-call routes are walked, and the counts are the record",
@@ -6368,6 +6393,19 @@
         "a state only the owner can move says Yes AND names the action; everything else says No",
         "the plain rows carry dollars to the cent, never four decimal places",
         "the rungs a Scout still owes are named, which is the proof another route exists"
+      ],
+      "dynamic": 0
+    },
+    "tests/plan-repair.test.ts": {
+      "names": [
+        "Scout contract-repair context contains executable typed grammar rather than unspecified objects",
+        "completed Scout repair retains parent instructions and creates one ordinary successor that really acquires, parses and verifies",
+        "completed fresh fetch can reobserve unchanged old bytes without rewriting their immutable acquisition time",
+        "old content identity needs a real completed fetch rung for fresh observation; inherited replay cannot refresh it",
+        "repair refuses fabricated, stale, missing, unsupported and self-verifying evidence without altering required verification",
+        "seven already observed proposals cannot starve an older actionable repair",
+        "successor creation is atomic and an interrupted older registration is recoverable",
+        "successors preserve parent Detective burdens and refuse depth-unbounded replacements"
       ],
       "dynamic": 0
     },
@@ -7569,6 +7607,23 @@
       ],
       "dynamic": 0
     },
+    "tests/research-production-meetings.test.ts": {
+      "names": [
+        "routine acquisition bytes reach independent workers, approved facts, the sole partition door and Reader readback"
+      ],
+      "dynamic": 0
+    },
+    "tests/research-progress-health.test.ts": {
+      "names": [
+        "a downstream dispatch prevents a false zero-work stall even if the Scout queue did not dispatch",
+        "old, future and absent observations cannot claim current progress",
+        "owner pause, disabled lane and no due work are distinguished from scheduler starvation",
+        "repeated empty cycles with owed work are stalled despite a fresh heartbeat and enabled lane",
+        "the command centre cannot turn stalled research green because its process is alive",
+        "unknown model costs remain unknown and mixed costs are marked partial"
+      ],
+      "dynamic": 0
+    },
     "tests/research-progression.test.ts": {
       "names": [
         "a real worker wall remains a reusable bottleneck with its obligation and history retained",
@@ -7947,10 +8002,12 @@
     "tests/runtime-release-handoff.test.ts": {
       "names": [
         "GitHub check reader refuses truncation and does not expose its token",
+        "Windows frozen install invokes same-Node Corepack JavaScript with unparsed argument paths",
         "a dirty runtime refuses before fetch/switch and leaves ignored host evidence",
         "handoff fails closed on short/unknown served SHA, stale or refused integrity, and unreadable certification",
         "missing, failed, malformed and multiple CLI credentials preserve the certification refusal",
         "newest exact required-context attempt governs; no non-success conclusion is treated as green",
+        "non-Windows handoff retains direct Corepack execution",
         "operational civic reads bind the explicit production read handle without rewriting credentials",
         "origin parsing supports the repository's HTTPS and SSH forms without retaining .git",
         "quiescent apply fetches only origin/main, detaches exact target, frozen-installs, and verifies clean readback",
@@ -8025,6 +8082,16 @@
       ],
       "dynamic": 0
     },
+    "tests/scheduler-maintenance-scaling.test.ts": {
+      "names": [
+        "2454 never-worked obligations retain their owed time instead of causing 4908 preparation round trips",
+        "277 unchanged debts consume one bulk read and no write; changed and discharged debts persist",
+        "full 614 deterministic / 1840 Scout backlog leaves slots for discovery and downstream work",
+        "phase timing reports actual repository calls without arguments",
+        "unchanged full-size registry synchronization uses one read and never rewrites provider or runtime state"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-candidates.test.ts": {
       "names": [
         "0. an absent canonical candidate store refuses instead of becoming an empty tracked/local authority",
@@ -8055,7 +8122,8 @@
         "6. SEEDED: the rolling ceiling DEFERS model work by name and disposes nothing",
         "7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is DERIVED",
         "8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt",
-        "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open"
+        "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open",
+        "full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows"
       ],
       "dynamic": 0
     },
@@ -9421,10 +9489,10 @@
         "PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source",
         "Scout cycle cap and remaining wall time defer dispatch without inventing failed Attempts",
         "a newly observed Scout route flows to Hunter without rewriting its extraction contract",
+        "an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",
         "an exact URL quotation from a publisher outside canonical seed scope cannot ground acquisition",
         "an independent Auditor break remains blocked and never becomes staged inventory",
         "completed Scout without a candidate continues after canonical backoff with durable rungs and immutable prior history",
-        "current acquired evidence avoids re-fetch; an elapsed canonical cadence schedules Hunter and a real re-observation resets freshness",
         "explicitly required external verification remains missing while the diagnostic audit records an honest inconclusive result",
         "missing Scout transport creates one attributable policy denial; retry requires both elapsed backoff and actual availability",
         "shared model admission contention defers Scout without an Attempt and releases for a later cycle",
@@ -9557,10 +9625,12 @@
         "BROKE remains blocking through captured audit/replay until a newer exact independent source-universe chain survives",
         "a Validator-passing captured result is broken by another official route and dependent work reopens",
         "actual isolated Parser → Validator → Auditor dispatch persists the existing durable execution contract",
+        "completed worker history recovers with bulk reads and no per-result replay calls",
         "completion aggregates every artifact chain and a newer failed Validator overrides its own old pass",
         "diagnostic replay preserves workflow and captured-only audit cannot discharge whole-obligation completion",
         "every runtime grant denies promotion/restricted reads, and Parser/Validator deny network",
         "file-provider restart reconciles a committed result before an expired-lease sweep can manufacture failure",
+        "inherited worker history uses two reads for 1500 results and rejects missing or divergent producers",
         "malformed evidence produces a persisted typed failure and blocks the item, never an empty successful extraction",
         "missing, hash-corrupted, or wrong immutable input abandons the Attempt without any civic output",
         "partial computation lost before commit stays nonterminal, then lease recovery runs a fresh Parser",

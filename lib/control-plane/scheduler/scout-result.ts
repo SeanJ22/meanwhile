@@ -184,6 +184,8 @@ export interface ScoutCandidate {
   readonly claims?: ScoutProvenanceClaims;
   /** The machine's derivation record. Absent on results recorded before RULING 243. */
   readonly provenance?: ScoutCandidateProvenance;
+  /** Proposal only; the standing coordinator replays it against completed vaulted evidence. */
+  readonly contractRepair?: unknown;
 }
 
 /** An evidence finding: the record itself, or a pointer to it, was acquired. */

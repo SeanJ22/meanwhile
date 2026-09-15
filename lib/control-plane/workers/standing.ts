@@ -16,6 +16,7 @@ import { workerTaskAdmission } from "./scheduling.ts";
 import type { WorkerEvidence } from "./types.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
 import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
+import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 
 const SUBJECT = "az:city:city-of-avondale";
 const API_HOST = "avondaleaz.api.civicclerk.com";
@@ -58,6 +59,10 @@ function linksOfficialPortal(evidence: WorkerEvidence): boolean {
 
 /** The implemented learned procedure is deliberately scoped to this existing owed/held artifact class. */
 export function heldEventContract(root: string, artifact: ArtifactRecord): LegacyCivicExtractionContract | null {
+  if (!artifact.partial) {
+    const registered = registeredHeldMeetingContract(artifact.canonicalUrl);
+    if (registered) return registered;
+  }
   const url = publicUrl(artifact.canonicalUrl);
   if (!url || url.hostname !== API_HOST || url.pathname !== "/v1/Events" || artifact.partial) return null;
   const registry = requiredOperationalJurisdictionRegistry("az");
@@ -151,18 +156,32 @@ export function methodFields(capability: string, contract: GeneralizedCivicExtra
   return [...new Set([...(known[normalized] ?? [normalized]), contract.recordClass.toLowerCase(), ...contract.requiredFields])];
 }
 
+/** A shared content hash does not transfer the old owner's work instructions. */
+export function heldAuditAttribution(input: { artifacts: readonly ArtifactRecord[]; items: readonly WorkItem[]; artifactId: string;
+  contract: GeneralizedCivicExtractionContract; workItemId?: string }) {
+  const matches = input.artifacts.filter(artifact => artifact.artifactId === input.artifactId && !artifact.partial &&
+    (input.workItemId === undefined || artifact.workItemId === input.workItemId));
+  if (!matches.length) throw new Error("AUDIT_ARTIFACT_WORK_ITEM_ATTRIBUTION_MISSING");
+  const eligible = matches.flatMap(primary => {
+    const owner = input.items.find(item => item.id === primary.workItemId);
+    return owner?.subject === input.contract.subjectId && canonicalJson(owner.autonomousPlan?.contract ?? null) === canonicalJson(input.contract)
+      ? [{ primary, owner }] : [];
+  });
+  if (!eligible.length) throw new Error(matches.some(primary => input.items.some(owner => owner.id === primary.workItemId && owner.subject === input.contract.subjectId))
+    ? "AUDIT_CANONICAL_SCOPE_MISMATCH" : "AUDIT_ARTIFACT_SUBJECT_MISMATCH");
+  if (new Set(eligible.map(row => row.owner.id)).size !== 1) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
+  return eligible[0];
+}
+
 async function generalizedIndependentContext(input: {
   root: string; repos: ControlPlaneRepositories; method: MethodKnowledge; readEvidence: FleetRuntime["readEvidence"];
-  artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number;
+  artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number; workItemId?: string;
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
   if (contract.methodVersion !== input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
   const artifacts = await input.repos.artifacts.readAll();
-  const primary = artifacts.find(artifact => artifact.artifactId === input.artifactId);
-  if (!primary) throw new Error("AUDIT_ARTIFACT_MISSING");
   const items = (await input.repos.workItems.list()).map(row => row.value);
-  const owner = items.find(item => item.id === primary.workItemId);
-  if (!owner || owner.subject !== contract.subjectId) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
+  const { primary, owner } = heldAuditAttribution({ artifacts, items, artifactId: input.artifactId, contract, workItemId: input.workItemId });
   const canonical = heldGeneralizedContract(input.root, primary, owner);
   if (!canonical || canonicalJson(canonical) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
   const { subject, knownUrls } = registryScope(input.root, contract);
@@ -239,9 +258,34 @@ export function standingFleetRuntime(input: { root: string; vaultRoot?: string; 
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
     ...(input.transport ? { auditReasoner: modelAuditReasoner(input.repos, input.transport, now) } : {}),
-    independentContext: async ({ artifactId, contract, auditScope, methodVersion }): Promise<IndependentAuditContext> => {
+    independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
-      if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion });
+      if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });
+      const primaryRow = (await input.repos.artifacts.readAll()).find(artifact => artifact.artifactId === artifactId);
+      const permanentContract = primaryRow && registeredHeldMeetingContract(primaryRow.canonicalUrl, contract.subjectId);
+      if (permanentContract) {
+        if (auditScope !== "CAPTURED_ARTIFACT") throw new Error("AUDIT_SOURCE_UNIVERSE_NOT_ESTABLISHED");
+        if (canonicalJson(permanentContract) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
+        const owner = (await input.repos.workItems.mustRead(primaryRow!.workItemId)).value;
+        if (owner.subject !== contract.subjectId) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
+        const captures = (await input.repos.artifacts.readAll()).filter(artifact => artifact.artifactId === artifactId && artifact.workItemId === owner.id &&
+          !artifact.partial && registeredHeldMeetingContract(artifact.canonicalUrl, owner.subject));
+        if (captures.length > HELD_AUDIT_MAX_ARTIFACTS || captures.reduce((sum, artifact) => sum + artifact.byteLength, 0) > HELD_AUDIT_CONTEXT_MAX_BYTES) throw new Error("AUDIT_EVIDENCE_UNIVERSE_BOUND_EXCEEDED");
+        const evidence = await Promise.all(captures.map(async artifact => evidenceProjection(await readEvidence(artifact.artifactId))));
+        const routes: OfficialRouteExpectation[] = evidence.map(held => ({ routeId: held.methodRouteId, canonicalUrl: held.canonicalUrl,
+          applicable: true, status: "HELD", artifactIds: [held.artifactId],
+          reason: "Exact registered permanent meeting source/body capture, independently read from the evidence vault." }));
+        const floor = computeRouteFloor({ knowledge: method, jurisdiction: { state: "az", governmentType: "county", platform: "legistar", publisher: "webapi.legistar.com" },
+          fields: ["meeting", "agenda"], adapterRoutes: routes.map(route => ({ routeId: route.routeId, label: route.reason, target: route.canonicalUrl })) });
+        for (const route of floor.routes) if (!routes.some(held => held.routeId === route.routeId && held.canonicalUrl === route.target)) {
+          routes.push({ routeId: route.routeId, canonicalUrl: route.target, applicable: route.obligation === "REQUIRED", status: "OPEN", artifactIds: [],
+            reason: `Inherited method route remains open outside this captured-artifact audit: ${route.label}` });
+        }
+        return { subjectId: owner.subject, contract, methodVersion, scope: auditScope,
+          publisherSurfaces: [...new Set(captures.map(artifact => artifact.canonicalUrl))],
+          routes,
+          evidence, startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"] };
+      }
       const artifacts = await input.repos.artifacts.readAll();
       const primary = artifacts.find(a => a.artifactId === artifactId);
       if (!primary) throw new Error("AUDIT_ARTIFACT_MISSING");

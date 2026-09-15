@@ -49,7 +49,9 @@
 
 import { ConsoleNav } from "@/app/(admin)/console-nav";
 import { FleetOperationsMap } from "@/components/admin/fleet-operations-map";
-import { openControlPlane } from "@/lib/control-plane/admin-data";
+import { ResearchProgress } from "@/components/admin/research-progress.tsx";
+import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
+import { openControlPlane, readFleetSafety } from "@/lib/control-plane/admin-data";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { readFleetSeedState } from "@/lib/admin/fleet-seed";
 
@@ -76,15 +78,22 @@ export default async function FleetOperationsPage() {
   // tests, so this first paint and endpoint Refresh read the SAME snapshot —
   // populated/missing page↔Refresh parity is proven in
   // tests/fleet-operations-page.test.ts. See the handoff doc.
-  const initialState = await readFleetSeedState({
-    open: openControlPlane,
-    now: () => new Date().toISOString(),
-  });
+  const opened = openControlPlane();
+  const [initialState, progressState] = await Promise.all([
+    readFleetSeedState({ open: () => opened, now: () => new Date().toISOString() }),
+    opened.then(async (result) => {
+      if (!result.ok) return null;
+      const state = await readFleetSafety(result.repos);
+      return state.kind === "HELD" ? state.value : null;
+    }),
+  ]);
+  const progress = researchProgressHealth(progressState, new Date().toISOString());
   return (
     <main className="admin console-page">
       <ConsoleNav view="fleet" currentState={null} states={US_STATES} />
 
       <h1>Fleet operations</h1>
+      <ResearchProgress reading={progress} />
       <p className="note">
         On-demand read of the fleet operations report. The first read is taken server-side because you
         navigated here; Refresh re-reads on demand through the authenticated endpoint. Neither is the

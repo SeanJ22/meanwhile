@@ -6,6 +6,7 @@ import {
   meetingReaderServingWindowAt,
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
+import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import type {
   CandidateDecision,
@@ -231,6 +232,8 @@ export function validateRoutineCandidate(
     : authority.ok
       ? authority.contract
       : null;
+  const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood);
+  const inheritedAuthority = manualPriorAuthorityOf(candidate);
 
   if (candidate.bootstrapImport) {
     const reattestation = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION";
@@ -277,6 +280,11 @@ export function validateRoutineCandidate(
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", authority.code, authority.detail));
   } else if (!candidate.retrieval.rawHash || !SHA256.test(candidate.retrieval.rawHash)) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "RAW_HASH_INVALID", "Acquired bytes do not carry a lowercase SHA-256 hash."));
+  } else if (inheritedAuthorityIssue !== null) {
+    checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "MANUAL_PRIOR_AUTHORITY_INVALID", inheritedAuthorityIssue));
+  } else if (inheritedAuthority) {
+    checks.push(result("SOURCE_AUTHENTICITY", "PASS", "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID",
+      `${authority.contract.publisher}; current acquired sources plus ${inheritedAuthority.retainedMembers.length} unchanged members inherited from GOOD version ${inheritedAuthority.versionId}. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
   } else {
     checks.push(result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}; raw ${candidate.retrieval.rawHash}.`));
   }

@@ -27,6 +27,7 @@
  * PURE. Already-read values in, answers out. No store, no clock, no environment.
  */
 import type { HealthLevel } from "./owner-surface.ts";
+import type { ResearchProgressHealth } from "./research-progress-health.ts";
 
 /** One answer: what it is, what it says, whether it needs the owner, where to look. */
 export interface Answer {
@@ -48,6 +49,7 @@ export interface Answer {
 }
 
 export interface CommandCentreInput {
+  readonly researchProgress?: Pick<ResearchProgressHealth, "state" | "level" | "detail">;
   /** The runner's own reading, from `runnerStanding`. */
   readonly runner: { readonly state: string; readonly level: HealthLevel; readonly needsYou: boolean; readonly action: string | null };
   /** Raw main, the executable head and the runner's tested SHA, from the heartbeat's code identity. */
@@ -140,13 +142,13 @@ export function commandCentre(input: CommandCentreInput): readonly Answer[] {
   );
 
   answers.push({
-    question: "Is the fleet alive?",
-    says: input.runner.state,
+    question: "Is the fleet making progress?",
+    says: input.researchProgress ? `Research ${input.researchProgress.state.toLowerCase()}; process ${input.runner.state.toLowerCase()}` : `Process ${input.runner.state.toLowerCase()}; research progress not read`,
     gap: null,
-    level: input.runner.level,
+    level: input.runner.level === "RED" ? "RED" : input.researchProgress?.level ?? "UNKNOWN",
     needsYou: input.runner.needsYou,
     action: input.runner.action,
-    where: "#runner",
+    where: "/admin/research",
     exact: input.code?.executable ?? null,
   });
 
@@ -156,10 +158,10 @@ export function commandCentre(input: CommandCentreInput): readonly Answer[] {
      * session turns it on, and this line states the law and the count of open
      * record classes beside it so the owner can see both.
      */
-    question: "Is anything being published to readers?",
+    question: "Is research publication enabled?",
     says: input.promotionOn
-      ? "Yes — promotion to readers is ON"
-      : `No. Promotion to readers is off${input.openRecordClasses === null ? "" : `, and ${input.openRecordClasses} record class${input.openRecordClasses === 1 ? " is" : "es are"} open`}.`,
+      ? "Research promotion is enabled; actual publication is measured separately"
+      : `Research promotion is off${input.openRecordClasses === null ? "" : `, and ${input.openRecordClasses} research record class${input.openRecordClasses === 1 ? " is" : "es are"} open`}. Routine data has its own production path.`,
     gap: null,
     level: input.promotionOn ? "AMBER" : "GREEN",
     needsYou: false,

@@ -1,0 +1,48 @@
+import type { ControlPlaneRepositories } from "../repository/types.ts";
+
+export interface CyclePhase {
+  readonly name: string;
+  readonly durationMs: number;
+  readonly repositoryCalls: number;
+}
+
+/** Counts repository calls, not guessed SQL counts; contains no arguments or credentials. */
+export function observeCyclePhases(repos: ControlPlaneRepositories, now: () => number = Date.now) {
+  let calls = 0;
+  let phaseCalls = 0;
+  let since = now();
+  const phases: CyclePhase[] = [];
+  const observed = new Proxy(repos, {
+    get(target, key, receiver) {
+      const value = Reflect.get(target, key, receiver);
+      if (!value || typeof value !== "object") return value;
+      return new Proxy(value, {
+        get(repository, method) {
+          const operation = Reflect.get(repository, method);
+          if (typeof operation !== "function") return operation;
+          return (...args: unknown[]) => { calls += 1; return operation.apply(repository, args); };
+        },
+      });
+    },
+  });
+  return {
+    repos: observed,
+    phases,
+    finish(name: string): CyclePhase {
+      const at = now();
+      const phase = { name, durationMs: Math.max(0, at - since), repositoryCalls: calls - phaseCalls };
+      phases.push(phase);
+      since = at;
+      phaseCalls = calls;
+      return phase;
+    },
+  };
+}
+
+/** Slots are reserved before occurrences open, so the first lane cannot consume them all. */
+export function cycleLaneSlots(input: { maximum: number; deterministic: number; scouts: number; planned: number }) {
+  const autonomous = Math.min(input.planned, 3, Math.max(0, input.maximum - Math.min(1, input.scouts)));
+  const scouts = Math.min(input.scouts, Math.max(0, input.maximum - autonomous));
+  const deterministic = Math.min(input.deterministic, Math.max(0, input.maximum - autonomous - scouts));
+  return { autonomous, scouts, deterministic };
+}

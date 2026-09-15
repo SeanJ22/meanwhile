@@ -47,7 +47,7 @@
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 
 import type { FreshnessDebt } from "./debt.ts";
 import type { FreshnessObligation } from "./obligation.ts";
@@ -526,6 +526,7 @@ export async function persistDebts(
     ? await repos.debts.list()
     : (await Promise.all(scope.map((id) => repos.debts.read(id)))).filter((row) => row !== null);
   const cleared: string[] = [];
+  const existingById = new Map(existing.map(row => [row.id, row]));
 
   for (const row of existing) {
     if (byId.has(row.value.obligationId)) continue;
@@ -549,10 +550,11 @@ export async function persistDebts(
 
   let written = 0;
   for (const debt of next) {
-    const row = await repos.debts.read(debt.obligationId);
+    const row = existingById.get(debt.obligationId) ?? null;
     if (row === null) {
       await repos.debts.put(debt.obligationId, debt, now);
     } else {
+      if (canonicalJson(row.value) === canonicalJson(debt)) continue;
       await repos.debts.compareAndSet(row.id, row.revision, debt, now);
     }
     written += 1;

@@ -260,6 +260,9 @@ const FINISH_SPEC: ScoutToolSpec = {
             recordClass: { type: "string", description: "CLAIM: the obligation's record class, as briefed." },
             deterministic: { type: "boolean" },
             unverified: { type: "array", items: { type: "string" } },
+            contractRepair: { type: "object", description: "Optional bounded source-contract proposal. Never a verification result. Use schemaVersion:1, sourceArtifactId, extraction (existing JSON_RECORDS/XML_RECORDS/HTML_TABLE/DELIMITED_TEXT mapping), and authorities (existing typed independent authority descriptors). All cited source/authority artifacts must be real vaulted evidence cited in evidenceArtifactIds. Do not change subject/class, invent authorities, or disable required verification.",
+              properties: { schemaVersion: { type: "integer", enum: [1] }, sourceArtifactId: { type: "string" }, extraction: { type: "object" }, authorities: { type: "array", maxItems: 4, items: { type: "object" } } },
+              required: ["schemaVersion", "sourceArtifactId", "extraction", "authorities"], additionalProperties: false },
           },
           required: [
             "routeId",

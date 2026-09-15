@@ -89,6 +89,7 @@
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
+import { reserveRoutineRefresh, finishRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
@@ -721,6 +722,9 @@ async function runRoutineCivicData(): Promise<void> {
   }
   const startedAt = new Date().toISOString();
   const cycleId = routineSupervisorCycleId(hostname(), startedAt);
+  const refreshRepos = await ownerRepositories();
+  const ownerRefresh = refreshRepos ? await reserveRoutineRefresh(refreshRepos, startedAt) : null;
+  if (ownerRefresh) console.log(`  owner routine refresh ${ownerRefresh.requestId}: attempt ${ownerRefresh.ordinal + 1} of exact partition ${ownerRefresh.contractId}`);
   const childEnvironment = standingChildEnvironment(
     "ROUTINE_SUPERVISOR",
     {
@@ -731,7 +735,7 @@ async function runRoutineCivicData(): Promise<void> {
   const [run] = await runBoundedChildPass([{
     id: "routine-civic-data",
     executable: process.execPath,
-    args: ["--experimental-strip-types", "scripts/routine-civic-data-runner.mts"],
+    args: ["--experimental-strip-types", "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
     env: childEnvironment,
   }], {
     cwd: ROOT,
@@ -741,6 +745,7 @@ async function runRoutineCivicData(): Promise<void> {
     concurrency: 1,
   });
   if (!run) throw new Error("ROUTINE_CIVIC_DATA_CHILD_RESULT_MISSING");
+  if (ownerRefresh && refreshRepos) await finishRoutineRefresh(refreshRepos, ownerRefresh, new Date().toISOString(), run.status);
   const lines = `${run.stdout ?? ""}\n${run.stderr ?? ""}`.split("\n").filter((line) => /^(RCD_|RCD_RECEIPT=)/.test(line));
   for (const line of lines) console.log(`  ${line}`);
   const readerFailures = lines.filter((line) =>

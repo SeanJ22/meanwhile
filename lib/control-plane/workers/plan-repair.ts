@@ -1,0 +1,210 @@
+import type { ScoutCandidate, ScoutResult } from "../scheduler/scout-result.ts";
+import type { AutonomousWorkPlan } from "./autonomous-plan.ts";
+import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson } from "../repository/types.ts";
+import { fingerprint } from "../ids.ts";
+import { createWorkItem, type WorkItem } from "../work-item.ts";
+import { registerWorkItem } from "../repository/coordinator.ts";
+import { assertAutonomousPlanIdentity, registerAutonomousPlan } from "./coordinator.ts";
+import type { GeneralizedCivicExtractionContract, RecordExtractionShape, VerificationAuthority, WorkerEvidence } from "./types.ts";
+import { parseGeneralizedRecords } from "./generalized-parser.ts";
+import { verifyExternalAuthorities } from "./record-verification.ts";
+import { assertGeneralizedScope } from "./record-evidence.ts";
+import { createHash } from "node:crypto";
+
+export const PLAN_REPAIR_CLASSES = ["OFFICIAL_DOCUMENT_SITEMAP", "OFFICIAL_BOARD_DIRECTORY", "OFFICIAL_SOURCE_SCHEMA", "CANDIDATE_FILING_DOCUMENT", "OFFICIAL_ROSTER"] as const;
+const MAX_REPAIR_DEPTH = 3;
+export interface PlanRepairLink {
+  readonly parentWorkItemId: string; readonly rootWorkItemId: string; readonly depth: number;
+  readonly proposalHash: string; readonly scoutAttemptId: string; readonly sourceArtifactId: string;
+  readonly retainedEvidenceIds: readonly string[]; readonly admittedAt: string;
+  readonly authority: "WORK_INSTRUCTIONS_ONLY"; readonly unresolved: readonly string[];
+}
+type LinkedWorkItem = WorkItem & { readonly planRepair?: PlanRepairLink; readonly planRepairObservations?: Readonly<Record<string, RepairObservation>> };
+export interface RepairObservation { readonly parentWorkItemId: string; readonly scoutAttemptId: string; readonly code: string; readonly successorWorkItemId: string | null; readonly detail: string; }
+function requireThat(condition: unknown, code: string): asserts condition { if (!condition) throw new Error(code); }
+function origin(value: string): string {
+  const url = new URL(value); requireThat(url.protocol === "https:" && !url.username && !url.password && (!url.port || url.port === "443"), "REPAIR_PUBLIC_HTTPS_REQUIRED"); return url.origin;
+}
+function shape(value: unknown): RecordExtractionShape {
+  requireThat(value && typeof value === "object" && !Array.isArray(value), "REPAIR_EXTRACTION_MISSING");
+  const candidate = value as RecordExtractionShape;
+  requireThat(candidate.format !== "UNSUPPORTED", "REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED");
+  requireThat(["JSON_RECORDS", "XML_RECORDS", "HTML_TABLE", "DELIMITED_TEXT"].includes(candidate.format), "REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED");
+  requireThat(candidate.fields && Object.keys(candidate.fields).length > 0 && Object.keys(candidate.fields).length <= 32, "REPAIR_MAPPING_BOUND");
+  return candidate;
+}
+
+/** No side effects and no civic receipt: replay only decides whether instructions are executable. */
+export function evaluatePlanRepair(input: { plan: AutonomousWorkPlan; candidate: ScoutCandidate; evidence: readonly WorkerEvidence[]; now: string;
+  observedAtByArtifact?: ReadonlyMap<string, string> }) {
+  const { plan, candidate, evidence, now } = input;
+  requireThat(plan.contract.schemaVersion === 2 && (PLAN_REPAIR_CLASSES as readonly string[]).includes(plan.contract.recordClass), "REPAIR_CLASS_NOT_ADMITTED");
+  requireThat(candidate.recordClass === plan.contract.recordClass && candidate.permission === "ALLOWED", "REPAIR_CANDIDATE_SCOPE_MISMATCH");
+  requireThat(candidate.contractRepair && Buffer.byteLength(canonicalJson(candidate.contractRepair)) <= 32_768, "REPAIR_PROPOSAL_BOUND");
+  const proposal = candidate.contractRepair as { schemaVersion?: unknown; sourceArtifactId?: unknown; extraction?: unknown; authorities?: unknown };
+  requireThat(Object.keys(proposal).every(key => ["schemaVersion", "sourceArtifactId", "extraction", "authorities"].includes(key)) && proposal.schemaVersion === 1 && typeof proposal.sourceArtifactId === "string", "REPAIR_PROPOSAL_INVALID");
+  requireThat(Array.isArray(proposal.authorities) && proposal.authorities.length <= 4, "REPAIR_AUTHORITY_BOUND");
+  const cited = new Set(candidate.evidenceArtifactIds);
+  requireThat(cited.size > 0 && cited.size <= 16 && evidence.length === cited.size && evidence.every(row => cited.has(row.artifactId)), "REPAIR_EVIDENCE_BOUND");
+  for (const row of evidence) {
+    const observedAt = input.observedAtByArtifact?.get(row.artifactId) ?? row.retrievedAt;
+    requireThat(Date.parse(observedAt) >= Date.parse(row.retrievedAt), "REPAIR_OBSERVATION_PRECEDES_CAPTURE");
+    const age = Date.parse(now) - Date.parse(observedAt);
+    requireThat(Number.isFinite(age) && age >= 0 && age <= 24 * 3_600_000, "REPAIR_EVIDENCE_STALE");
+    requireThat(/^sha256-[a-f0-9]{64}$/.test(row.contentHash) && row.acquiredByAttemptId && row.text.length > 0, "REPAIR_EVIDENCE_PROVENANCE_MISSING");
+    requireThat(row.contentHash === `sha256-${createHash("sha256").update(row.text).digest("hex")}`, "REPAIR_EVIDENCE_HASH_MISMATCH");
+  }
+  const primary = evidence.find(row => row.artifactId === proposal.sourceArtifactId);
+  requireThat(primary && primary.canonicalUrl === candidate.url, "REPAIR_SOURCE_CAPTURE_MISSING");
+  const trustedOrigins = [...plan.seedUrls, ...plan.sources.map(source => source.url), ...plan.contract.sourceScope.canonicalUrls].map(origin);
+  requireThat(trustedOrigins.includes(origin(primary.canonicalUrl)), "REPAIR_PUBLISHER_SCOPE_MISMATCH");
+  // Neither subject, jurisdiction, class, identity, required fields nor any
+  // identity/denominator Detective can be weakened by a model proposal.
+  const extraction = shape(proposal.extraction);
+  const authorities = proposal.authorities as VerificationAuthority[];
+  requireThat(plan.contract.verification.required && authorities.length >= plan.contract.verification.authorities.length, "REPAIR_VERIFICATION_CANNOT_WEAKEN");
+  requireThat(plan.contract.verification.authorities.every(prior => authorities.some(next => canonicalJson(next) === canonicalJson(prior))), "REPAIR_AUTHORITY_CANNOT_REMOVE");
+  for (const authority of authorities) {
+    requireThat(authority && authority.type === "GOVERNMENT_REGISTER" && authority.independenceBasis === "DISTINCT_AUTHORITY" &&
+      typeof authority.publisher === "string" && authority.publisher.trim().length >= 4 && typeof authority.independenceExplanation === "string" && authority.independenceExplanation.trim().length >= 20,
+      "REPAIR_DISTINCT_GOVERNMENT_AUTHORITY_REQUIRED");
+    requireThat(Array.isArray(authority.artifactIds) && authority.artifactIds.length > 0 && Array.isArray(authority.authorityEvidenceArtifactIds) && authority.authorityEvidenceArtifactIds.length > 0 &&
+      [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds].every(id => cited.has(id)), "REPAIR_AUTHORITY_EVIDENCE_MISSING");
+    requireThat(authority.sourceId !== primary.sourceId && authority.comparison?.kind === "RECORD_VALUES" && authority.comparison.fields.length > 0 &&
+      [...plan.contract.requiredFields, ...plan.contract.identity.keyFields].every(field => authority.comparison.fields.includes(field)), "REPAIR_AUTHORITY_BURDEN_MISMATCH");
+    shape(authority.extraction);
+    for (const id of [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds]) {
+      const row = evidence.find(entry => entry.artifactId === id)!;
+      const host = new URL(row.canonicalUrl).hostname;
+      requireThat((host.endsWith(".gov") || host.endsWith(".state.nj.us")) && row.sourceId === authority.sourceId &&
+        origin(row.canonicalUrl) !== origin(primary.canonicalUrl) && row.contentHash !== primary.contentHash, "REPAIR_AUTHORITY_NOT_INDEPENDENT");
+    }
+    requireThat(authority.authorityEvidenceArtifactIds.some(id => evidence.find(row => row.artifactId === id)!.text.includes(authority.publisher)), "REPAIR_AUTHORITY_IDENTITY_UNPROVEN");
+  }
+  const sourceScope = { ...plan.contract.sourceScope, sourceId: primary.sourceId, canonicalUrls: [primary.canonicalUrl],
+    routeIds: [...new Set([candidate.routeId, primary.methodRouteId])], observationArtifactIds: [...cited] };
+  const contract: GeneralizedCivicExtractionContract = { ...plan.contract, sourceScope, extraction, verification: { required: true, authorities } };
+  assertGeneralizedScope(contract, primary);
+  // These local replay IDs are not Attempts and are never written as worker
+  // results, counts, verification timestamps or promotion evidence.
+  const replay = parseGeneralizedRecords({ attemptId: "contract-instruction-replay", worker: { role: "PARSER", provider: "local-preflight", version: "1", instance: "contract-instruction-replay" }, evidence: primary, contract }, contract);
+  requireThat(replay.verdict === "EXTRACTED" && replay.warnings.length === 0, `REPAIR_EXTRACTION_REFUSED:${replay.warnings.map(issue => issue.code).join(",")}`);
+  const checks = verifyExternalAuthorities({ attemptId: "contract-instruction-comparison", producerAttemptId: replay.attemptId, candidate: replay,
+    evidence: primary, authorityEvidence: evidence, verifiedAt: now }, contract);
+  requireThat(checks.every(check => check.verdict === "PASS"), `REPAIR_AUTHORITY_COMPARISON_REFUSED:${checks.flatMap(check => check.discrepancies.map(issue => issue.code)).join(",")}`);
+  const unresolved = [...(!authorities.length ? ["EXTERNAL_VERIFICATION_MISSING"] : []), ...(plan.detective.length ? ["PARENT_DETECTIVE_BURDENS_RETAINED"] : [])];
+  return { contract, primary, unresolved, proposalHash: fingerprint([canonicalJson(contract), primary.contentHash]) };
+}
+
+export function planRepairBrief(plan: AutonomousWorkPlan): string {
+  if (plan.contract.schemaVersion !== 2 || !(PLAN_REPAIR_CLASSES as readonly string[]).includes(plan.contract.recordClass)) return "";
+  const fields = Object.fromEntries([...new Set([...plan.contract.requiredFields, ...plan.contract.identity.keyFields])].map(name => [name, { source: `/${name}`, type: "STRING" as const }]));
+  // Typed examples keep the model-visible grammar tied to the executor types.
+  const examples: RecordExtractionShape[] = [
+    { format: "JSON_RECORDS", rowsPointer: "/records", fields },
+    { format: "XML_RECORDS", rowTag: "record", fields: { [Object.keys(fields)[0]]: { source: "fieldName", type: "STRING" } } },
+    { format: "HTML_TABLE", tableIndex: 0, headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" } } },
+    { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: { [Object.keys(fields)[0]]: { source: 0, type: "STRING" } } },
+  ];
+  const authority: VerificationAuthority = { id: "replace-with-register-id", type: "GOVERNMENT_REGISTER", publisher: "replace-with-actual-publisher-quoted-in-evidence",
+    sourceId: "replace-with-captured-source-id", canonicalUrls: ["https://replace-with-actual-register.gov/records"], artifactIds: ["replace-with-actual-record-artifact-id"],
+    authorityEvidenceArtifactIds: ["replace-with-actual-publisher-evidence-artifact-id"], independenceBasis: "DISTINCT_AUTHORITY",
+    independenceExplanation: "Replace with the evidenced reason this distinct government authority independently publishes these records.", extraction: examples[0],
+    comparison: { kind: "RECORD_VALUES", keyFields: [...plan.contract.identity.keyFields], fields: Object.keys(fields) } };
+  const grammar = ` Exact extraction descriptor examples: ${JSON.stringify(examples)}. Replace every example locator with one inspected in retained bytes. JSON rowsPointer is an RFC6901 pointer to an array (empty string selects a root array); optional countPointer locates a published count. JSON field source is an RFC6901 pointer relative to each row. XML rowTag and field source are element names. HTML tableIndex and numeric field source are zero-based indexes; headerRows counts excluded headers. Delimited text accepts only comma or tab. Every fields entry is {source:string|number,type:STRING|NUMBER|BOOLEAN|SCALAR}; map every required and identity field, at most32. Exact authority descriptor example: ${JSON.stringify(authority)}. At most4 authorities and16 cited artifacts. Examples are grammar only, never evidence or permission to guess values.`;
+  const brief = `CONTRACT REPAIR remains owed. Existing class ${plan.contract.recordClass}; required fields ${plan.contract.requiredFields.join(", ")}; identity ${plan.contract.identity.keyFields.join(", ")}; shape ${plan.contract.extraction.format}; independent authorities ${plan.contract.verification.authorities.length}. Acquire actual official source bytes using the existing tools, then optionally attach contractRepair to a finish candidate: {schemaVersion:1,sourceArtifactId,extraction,authorities}. Extraction uses an implemented JSON_RECORDS, XML_RECORDS, HTML_TABLE or DELIMITED_TEXT mapping; cite every source/authority artifact in evidenceArtifactIds. Missing PDF/OCR adapters remain REPAIR_ADAPTER_IMPLEMENTATION_REQUIRED, not successful parsing. Each proposed authority needs an actual distinct government register on .gov or .state.nj.us, exact source identity evidence, sourceId/canonicalUrls/artifactIds/authorityEvidenceArtifactIds, independenceBasis:DISTINCT_AUTHORITY, independenceExplanation, extraction and a RECORD_VALUES comparison covering all required/identity fields. An empty authorities list preserves required verification and remains unresolved. Subject, class, identity and existing Detective burdens cannot change. A replayed proposal creates only linked work instructions; independent workers must still execute every real check.`;
+  return brief + grammar;
+}
+
+/** Consume only completed accepted Scout records; bounded, deduplicated, no acquisition here. */
+export async function consumePlanRepairs(input: { repos: ControlPlaneRepositories; scouts: readonly ScoutResult[]; now: string;
+  readCapture: (id: string) => Promise<{ evidence: WorkerEvidence; permission: string; transport: string; httpStatus: number | null; partial: boolean }> }): Promise<readonly RepairObservation[]> {
+  const observations: RepairObservation[] = [];
+  const items = (await input.repos.workItems.list()).map(row => row.value as LinkedWorkItem);
+  const attempts = new Map((await input.repos.attempts.list()).map(row => [row.id, row.value]));
+  for (const scout of [...input.scouts].reverse()) {
+    const candidates = scout.candidates.filter(candidate => candidate.contractRepair !== undefined);
+    if (!candidates.length || scout.refusal !== null) continue;
+    const parent = items.find(item => item.id === scout.workItemId);
+    const proposalAttempt = attempts.get(scout.attemptId);
+    if (!parent?.autonomousPlan || proposalAttempt?.outcome !== "COMPLETED" || proposalAttempt.workItemId !== parent.id || proposalAttempt.worker.role !== "SCOUT") continue;
+    const replayed = items.find(item => item.planRepair?.parentWorkItemId === parent.id && item.planRepair.scoutAttemptId === scout.attemptId);
+    // Completed immutable proposals never consume this cycle's new-work budget.
+    // An interrupted older registration must be recovered before it can count.
+    if (replayed?.autonomousPlan || (!replayed && parent.planRepairObservations?.[scout.attemptId])) continue;
+    if (observations.length >= 7) break;
+    let successorWorkItemId: string | null = null;
+    try {
+      requireThat(candidates.length === 1, "REPAIR_ONE_PROPOSAL_PER_ATTEMPT");
+      requireThat((parent.planRepair?.depth ?? 0) < MAX_REPAIR_DEPTH, "REPAIR_SUCCESSOR_DEPTH_BOUND");
+      const candidate = candidates[0];
+      const evidence = await Promise.all(candidate.evidenceArtifactIds.map(async id => {
+        const capture = await input.readCapture(id);
+        requireThat(capture.permission === "ALLOWED" && capture.transport === "REACHABLE" && !capture.partial &&
+          capture.httpStatus !== null && capture.httpStatus >= 200 && capture.httpStatus < 300, "REPAIR_CAPTURE_NOT_ADMISSIBLE");
+        const row = capture.evidence; const acquisition = attempts.get(row.acquiredByAttemptId);
+        requireThat(acquisition?.outcome === "COMPLETED" && acquisition.workItemId === parent.id, "REPAIR_CAPTURE_COMPLETION_MISSING"); return row;
+      }));
+      const observedAtByArtifact = new Map<string, string>();
+      for (const row of evidence) {
+        // Content identity keeps its original time. Only an actual completed
+        // network rung can witness a newer observation of those same bytes.
+        const observed = scout.rungs.filter(rung => ["fetch_public", "browse"].includes(rung.tool) && rung.target === row.canonicalUrl &&
+          rung.artifactIds.includes(row.artifactId) && rung.ok === true && rung.transport === "REACHABLE" &&
+          typeof rung.httpStatus === "number" && rung.httpStatus >= 200 && rung.httpStatus < 300 &&
+          Date.parse(rung.at) >= Date.parse(proposalAttempt.startedAt) && Date.parse(rung.at) <= Date.parse(proposalAttempt.endedAt!))
+          .map(rung => rung.at).sort().at(-1);
+        if (observed) observedAtByArtifact.set(row.artifactId, observed);
+      }
+      const evaluated = evaluatePlanRepair({ plan: parent.autonomousPlan, candidate, evidence, now: input.now, observedAtByArtifact });
+      const previous = items.find(item => item.planRepair?.parentWorkItemId === parent.id);
+      if (previous) {
+        requireThat(previous.planRepair!.proposalHash === evaluated.proposalHash, "REPAIR_PARENT_HAS_SUCCESSOR_CONTINUE_THERE");
+      }
+      {
+        const primary = evaluated.primary;
+        const route = { ...parent.autonomousPlan.sources[0], id: candidate.routeId, url: primary.canonicalUrl, observedLocator: primary.canonicalUrl,
+          sourceId: primary.sourceId, publisher: evaluated.contract.sourceScope.publisher, subjectId: parent.subject,
+          jurisdiction: parent.autonomousPlan.jurisdiction, recordClass: evaluated.contract.recordClass,
+          observedAt: observedAtByArtifact.get(primary.artifactId) ?? primary.retrievedAt, firstObservedAt: primary.retrievedAt, methodVersion: evaluated.contract.methodVersion,
+          permission: "ALLOWED" as const, retrieval: "fetch_public" as const, nextRouteIds: ["INDEPENDENT_AUTHORITY_AND_CONTRACT_REPAIR"],
+          applicableBecause: "Completed Scout retained and locally replayed this exact official source under the unchanged civic question.",
+          observation: { artifactId: primary.artifactId, contentHash: primary.contentHash, start: 0, end: Math.min(primary.text.length, 256), quote: primary.text.slice(0, 256), offsetUnit: "UTF16_CODE_UNITS" as const },
+          publisherSubjectEvidence: [{ artifactId: primary.artifactId, contentHash: primary.contentHash, start: 0, end: Math.min(primary.text.length, 256), quote: primary.text.slice(0, 256), offsetUnit: "UTF16_CODE_UNITS" as const }] };
+        const link: PlanRepairLink = { parentWorkItemId: parent.id, rootWorkItemId: parent.planRepair?.rootWorkItemId ?? parent.id,
+          depth: (parent.planRepair?.depth ?? 0) + 1, proposalHash: evaluated.proposalHash, scoutAttemptId: scout.attemptId, sourceArtifactId: primary.artifactId,
+          retainedEvidenceIds: candidate.evidenceArtifactIds, admittedAt: input.now, authority: "WORK_INSTRUCTIONS_ONLY", unresolved: evaluated.unresolved };
+        const child: LinkedWorkItem = { ...createWorkItem({ project: parent.project, subject: parent.subject,
+          obligation: `${parent.obligation} — source contract successor ${evaluated.proposalHash}`,
+          why: `Continue ${parent.id} with evidence-backed executable instructions. The original obligation and all unresolved burdens remain open.`, contract: parent.contract, dependencies: parent.dependencies, now: input.now }), planRepair: link };
+        const plan: AutonomousWorkPlan = { ...parent.autonomousPlan, contract: evaluated.contract, sources: [route], acquisition: [{ route, held: [] }],
+          seedUrls: [...new Set([...parent.autonomousPlan.seedUrls, primary.canonicalUrl])] };
+        assertAutonomousPlanIdentity(child, plan);
+        if (previous) {
+          // Recover a row written by an interrupted older two-step producer.
+          requireThat(previous.id === child.id, "REPAIR_SUCCESSOR_IDENTITY_MISMATCH");
+          await registerAutonomousPlan(input.repos, previous.id, plan, input.now);
+          items[items.findIndex(item => item.id === previous.id)] = { ...previous, autonomousPlan: plan };
+        } else {
+          // The validated plan and its identity link share a single atomic row.
+          await registerWorkItem(input.repos, { ...child, autonomousPlan: plan }, input.now);
+          items.push({ ...child, autonomousPlan: plan });
+        }
+        successorWorkItemId = child.id;
+      }
+      observations.push({ parentWorkItemId: parent.id, scoutAttemptId: scout.attemptId, code: "REPAIR_SUCCESSOR_REGISTERED", successorWorkItemId,
+        detail: evaluated.unresolved.join(", ") || "Instructions replayed; real independent worker execution remains required." });
+    } catch (error) {
+      observations.push({ parentWorkItemId: parent.id, scoutAttemptId: scout.attemptId, code: error instanceof Error ? error.message : "REPAIR_REFUSED", successorWorkItemId: null,
+        detail: "Original plan and blockers retained; obtain the named missing evidence or implemented adapter." });
+    }
+  }
+  for (const observation of observations) {
+    const row = await input.repos.workItems.mustRead(observation.parentWorkItemId);
+    const value = row.value as LinkedWorkItem & { readonly planRepairObservation?: RepairObservation };
+    const next = { ...value, planRepairObservation: observation, planRepairObservations: { ...value.planRepairObservations, [observation.scoutAttemptId]: observation } };
+    if (canonicalJson(value.planRepairObservation ?? null) !== canonicalJson(observation)) await input.repos.workItems.compareAndSet(row.id, row.revision, next, input.now);
+  }
+  return observations;
+}

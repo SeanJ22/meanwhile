@@ -184,12 +184,20 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
 });
 
-test("current acquired evidence avoids re-fetch; an elapsed canonical cadence schedules Hunter and a real re-observation resets freshness",async()=>{
+test("an elapsed acquisition cadence finishes retained worker handoffs before a real refresh",async()=>{
   const h=await autonomousHarness(); const acquired=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
   const first=(await h.repos.workerResults.readAll())[0]; if(first.result.role!=="ACQUIRER")throw new Error("wrong role");
   const calls=h.calls.length; assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.workerTask?.role,"PARSER"); assert.equal(h.calls.length,calls);
   const schedule=scheduleAutonomousAcquisition(h.item.autonomousPlan!,first.result,h.now()); assert.ok("nextDueAt" in schedule); if(!("nextDueAt" in schedule))throw new Error("unscheduled"); assert.equal(schedule.cadenceSource,"DEFAULT_NO_SIGNAL");
   h.advanceTo(new Date(Date.parse(schedule.nextDueAt)+86_400_000).toISOString());
+  for (const role of ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
+    const next = await nextAutonomousOperation(h.runtime, h.item.id);
+    assert.equal(next.task?.workerTask?.role, role, "Due refreshes cannot starve a retained extraction chain.");
+    const advanced = await dispatchWorkerTask(h.runtime, next.task!);
+    assert.equal(advanced.outcome, "WORKED", advanced.detail);
+    h.advanceTo(new Date(Date.parse(h.now()) + 86_400_000).toISOString());
+  }
+  assert.equal(h.calls.length, calls, "Independent checks use the captured evidence, with no fabricated fresh acquisition.");
   const stale=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(stale.task?.workerTask?.role,"ACQUIRER"); assert.notEqual(stale.task?.id,acquired.dispatches[0].routeTaskId); assert.deepEqual(stale.task?.workerTask?.acquisition?.held,[]);
   assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.id,stale.task?.id);
   const refreshed=await dispatchWorkerTask(h.runtime,stale.task!); assert.equal(refreshed.outcome,"WORKED",refreshed.detail); assert.ok(h.calls.length>calls);

@@ -3,8 +3,10 @@ import { PROMOTION_PIPELINE_FORMAT_VERSION, VERIFICATION_CHECKS, type Transition
 import { projectFactChains, type FactChainOptions, type FactChainReport } from "../promotion/fact-chain.ts";
 import { meetingFactContract } from "../promotion/meeting-facts.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
+import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
+import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 
 /**
  * PRDY-3 (2026-09-06): a completed extraction under a meeting-fact contract
@@ -19,7 +21,10 @@ export type FleetPipelineOptions = Pick<FactChainOptions, "readArtifactText" | "
 /** Offer exact worker outputs through the existing gated pipeline; missing confirmation remains a durable refusal. */
 export async function projectFleetPipeline(repos: ControlPlaneRepositories, options?: FleetPipelineOptions): Promise<FactChainReport | null> {
   if (options && !options.registryBodyIds) await refreshRegistryRuntimeFromPromoted();
-  const results = await repos.workerResults.readAll();
+  // Fact normalization consumes the promoted venue authority synchronously.
+  // Refuse a missing/unreachable production pointer before offering any facts.
+  if (options && !mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
+  const results = await readCompletedWorkerResults(repos);
   if (!results.length) return null;
   const ctx = await contextFromRepositories(repos);
   for (const scout of await repos.scoutResults.readAll()) {
@@ -31,7 +36,6 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories, opti
   const states = await readPipelineStates(repos);
   for (const result of results) {
     if (result.result.role !== "VALIDATOR" && result.result.role !== "ADVERSARIAL_AUDITOR") continue;
-    await readCompletedWorkerResult(repos, result.id);
     if (factPath && meetingFactContract(result) !== null) continue;
     const state = states.find(s => s.byStage.SCOUTED?.artifactIds.some(id => result.inputArtifactIds.includes(id)));
     if (!state) continue;

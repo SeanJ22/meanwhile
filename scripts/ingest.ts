@@ -74,6 +74,8 @@ import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from 
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
 import type { Meeting, MeetingSource } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingResearchWitness,
+  type RetainedSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
 
 /*
  * The committed registry, read the same way lib/registry/server.ts reads it:
@@ -321,7 +323,7 @@ async function main() {
   // the app's own cascade window, so the snapshot holds exactly what a reader
   // can be shown and no more.
   const now = Date.now();
-  const raw = await source.fetch({
+  const retained = await retainMeetingFetchBytes(() => source.fetch({
     lat: 39.5,
     lng: -98.35,
     radiusKm: 5000,
@@ -331,7 +333,12 @@ async function main() {
     startsBefore: new Date(
       now + UPCOMING_HORIZON_DAYS * 86_400_000,
     ).toISOString(),
+  }), "legistar", value => {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "webapi.legistar.com" && partitions.some(partition =>
+      partition.meetingSource === "legistar" && url.pathname.toLowerCase() === `/v1/${partition.wiring.config.slug}/events`);
   });
+  const raw = retained.value;
 
   const meetings: Meeting[] = resolveAttribution(
     (source as MeetingSource<unknown>).normalize(raw as unknown[]),
@@ -433,7 +440,9 @@ async function main() {
       previous,
       promotionStore,
       partitions,
+      retained.responses,
     );
+    for (const refusal of retained.refusals) console.error(refusal);
   } else {
     const dropped = raw.length - meetings.length;
     if (dropped > 0) {
@@ -715,12 +724,13 @@ export async function promoteMeetingPartition(
   snapshot: MeetingsSnapshot,
   additionalViolations: readonly string[] = [],
   removalEvidence: readonly RoutineRemovalEvidence[] = [],
+  retainedResponses: readonly RetainedSourceResponse[] = [],
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
   validateSnapshot(snapshot);
-  const candidate = candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence);
+  const candidate = retainMeetingCandidateEvidence(candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence), snapshot, retainedResponses);
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt);
   return { candidate, outcome };
 }
@@ -754,6 +764,13 @@ export interface MeetingPartitionPromotionResult {
   readonly outcome: PromotionOutcome;
 }
 
+/** The routine partition child reads research; only its existing production door writes. */
+async function standingResearchMeetingIntake(partition: MeetingPartitionContract, previous: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) {
+  if (!previous || Date.parse(now) - Date.parse(previous.generatedAt) > 24 * 3_600_000) return null;
+  const activationReceipt = await readMeetingResearchWitness(partition, observed);
+  return activationReceipt ? { snapshot: previous, activationReceipt } : null;
+}
+
 export async function promoteMeetingPartitions(input: {
   readonly store: RoutineDataStore;
   readonly partitions: readonly MeetingPartitionContract[];
@@ -762,11 +779,42 @@ export async function promoteMeetingPartitions(input: {
   readonly reports: NonNullable<CompositeSource["lastReport"]>["children"];
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
+  readonly researchIntake?: (partition: MeetingPartitionContract, current: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) => Promise<ApprovedResearchMeetingPartition | null>;
+  readonly retainedResponses?: readonly RetainedSourceResponse[];
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
   const results: MeetingPartitionPromotionResult[] = [];
+  const intake = input.researchIntake ?? (input.store instanceof PostgresRoutineDataStore ? standingResearchMeetingIntake : undefined);
+  const offerResearch = async (partition: MeetingPartitionContract, current: MeetingsSnapshot, observed: MeetingsSnapshot): Promise<MeetingPartitionPromotionResult | null> => {
+    if (!intake) return null;
+    try {
+      const research = await intake(partition, current, input.generatedAt, observed);
+      if (!research) return null;
+      const covered = new Set(research.activationReceipt.coveredMeetingIds);
+      if (research.activationReceipt.evidenceScope !== "CURRENT_CAPTURE_MEETING_FACTS" ||
+          research.activationReceipt.partitionId !== partition.id || covered.size !== observed.meetings.length ||
+          observed.meetings.some(meeting => !covered.has(meeting.id)) ||
+          research.activationReceipt.approvedFactCount !== observed.meetings.reduce((count, meeting) => count + 1 + Number(Boolean(meeting.agendaUrl)), 0)) {
+        throw new Error("RESEARCH_MEETING_CAPTURE_SCOPE_MISMATCH");
+      }
+      // Approval covers current acquired facts. Carried rows and richer routine
+      // fields keep the authority of the just-validated complete partition.
+      const base = candidateForMeetingPartition(partition, current);
+      const receipt = JSON.stringify(research.activationReceipt);
+      const candidate: RoutineCandidate = { ...base, id: `${base.id}-research-${sha256(receipt).slice(0, 16)}`,
+        dependentChecks: [...base.dependentChecks, { consumer: research.activationReceipt.kind, passed: true, detail: receipt }] };
+      const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, candidate, input.generatedAt);
+      printMeetingPartitionReceipt(partition, candidate, outcome, outcome.candidate.failureDetail);
+      return { partition, candidate, outcome };
+    } catch (error) {
+      console.error(`Research meeting intake refused for ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
+      return null;
+    }
+  };
   for (const partition of input.partitions) {
     const report = input.reports.find((candidate) => candidate.source === partition.meetingSource);
     if (!report || !report.ok) {
+      // Current source failure is always receipted. A historical research
+      // approval cannot relabel the failed fetch or its LKG as new progress.
       const failureDetail = report?.error ?? `The composite produced no report for ${partition.meetingSource}.`;
       const failed = failedAcquisitionCandidate({
         sourceId: MEETINGS_SOURCE_ID,
@@ -831,6 +879,7 @@ export async function promoteMeetingPartitions(input: {
       snapshot,
       scopeFailures,
       reconciled.removalEvidence,
+      input.retainedResponses,
     );
     printMeetingPartitionReceipt(
       partition,
@@ -838,7 +887,12 @@ export async function promoteMeetingPartitions(input: {
       outcome,
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
-    results.push({ partition, candidate, outcome });
+    // The exact-byte re-observation supplies current freshness to retained
+    // independent reviews. Its separate durable witness may certify no change.
+    const observed: MeetingsSnapshot = { ...snapshot, meetings: [...freshRows], agendaDocuments: [...freshDocuments],
+      counts: snapshotCounts(freshRows, 0) };
+    const research = outcome.promoted ? await offerResearch(partition, snapshot, observed) : null;
+    results.push(research ?? { partition, candidate, outcome });
   }
   return results;
 }
@@ -856,6 +910,7 @@ async function promoteSelectedMeetingPartitions(
   previous: MeetingsSnapshot | null,
   promotionStore: RoutineDataStore,
   partitions: readonly MeetingPartitionContract[],
+  retainedResponses: readonly RetainedSourceResponse[] = [],
 ): Promise<void> {
   const report = source.lastReport;
   if (!report) {
@@ -917,6 +972,7 @@ async function promoteSelectedMeetingPartitions(
     reports: report.children,
     generatedAt: snapshot.generatedAt,
     previousByContract: new Map(partitions.map((partition) => [partition.id, previous])),
+    retainedResponses,
   });
   const promotedCount = partitionResults.filter((result) => result.outcome.promoted !== null).length;
   const heldCount = partitionResults.length - promotedCount;

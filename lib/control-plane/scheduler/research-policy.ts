@@ -556,6 +556,8 @@ export function deriveLevel1(input: {
               ? `the relaunch proof measured ${proof.measuredAt} read NOT_RELAUNCHED (killed pid ${proof.killedPid ?? "?"}, nothing came back)`
               : !proofFresh
                 ? `the RELAUNCHED proof measured ${proof.measuredAt} is ${proofAgeDays === null ? "undated" : `${Math.floor(proofAgeDays)} day(s)`} old, past the ${SUPERVISION_PROOF_MAX_AGE_DAYS}-day tolerance; re-run prove-relaunch`
+                : supervision.relaunchTrigger.present === null
+                  ? `the RELAUNCHED proof stands (${proof.measuredAt}, ${proof.secondsToRelaunch ?? "?"}s) but live supervision could not be verified: ${supervision.relaunchTrigger.detail}`
                 : !triggerLive
                   ? `the RELAUNCHED proof stands (${proof.measuredAt}, ${proof.secondsToRelaunch ?? "?"}s) but the live task no longer carries the relaunch trigger: ${supervision.relaunchTrigger.detail}`
                   : `parent relaunch proven ${proof.measuredAt}: pid ${proof.killedPid ?? "?"} killed, pid ${proof.relaunchedPid ?? "?"} back in ${proof.secondsToRelaunch ?? "?"}s; relaunch trigger present on ${supervision.host} at ${supervision.checkedAt}`,

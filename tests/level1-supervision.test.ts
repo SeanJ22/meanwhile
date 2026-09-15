@@ -12,6 +12,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 
 import {
   RESEARCH_BOUNDS,
@@ -138,4 +139,59 @@ test("SEEDED: a host that cannot be asked derives DEGRADED naming the host, neve
 test("SEEDED: a stored ACTIVE flag is still ignored — a state asserting active with no proof reads DEGRADED", () => {
   const r = derive(state(undefined, { active: true, verdict: "ACTIVE", supervised: true }));
   assert.equal(r.verdict, "DEGRADED");
+});
+
+const verifiedTask = {
+  facts: { taskPresent: true, state: "Running", relaunchTriggerPresent: true },
+  verdict: "VERIFIED", stableLauncherVerified: true, processIdentityVerified: true,
+};
+const readTrigger = (value: unknown, status: number | null = 0) =>
+  readRelaunchTriggerVerification({ stdout: JSON.stringify(value), status });
+
+test("current nested task verification proves the live trigger while the relaunch proof remains independently required", () => {
+  const reading = readTrigger(verifiedTask);
+  assert.equal(reading.present, true);
+  assert.match(reading.detail, /taskPresent true, state Running, relaunchTriggerPresent true/);
+  assert.equal(derive(state(supervision({ relaunchTrigger: reading }))).verdict, "ACTIVE");
+  assert.equal(derive(state(supervision({ relaunchTrigger: reading, proof: null }))).verdict, "DEGRADED");
+  assert.equal(derive(state(supervision({ relaunchTrigger: reading }, { verdict: "NOT_RELAUNCHED" }))).verdict, "DEGRADED");
+});
+
+test("refused or failed trigger verification cannot certify supervision or disable model admission", () => {
+  for (const reading of [
+    readTrigger({ ...verifiedTask, verdict: "REFUSED" }),
+    readTrigger({ ...verifiedTask, stableLauncherVerified: false }),
+    readTrigger({ ...verifiedTask, processIdentityVerified: false }),
+    readTrigger(verifiedTask, 1), readTrigger(verifiedTask, null),
+    readRelaunchTriggerVerification({ stdout: JSON.stringify(verifiedTask), status: 0, failedToRun: true }),
+  ]) {
+    assert.equal(reading.present, null);
+    const current = state(supervision({ relaunchTrigger: reading }));
+    const derived = derive(current);
+    assert.equal(derived.verdict, "DEGRADED");
+    assert.equal(current.modelLaneEnabled, true);
+    assert.equal(condition(derived).required, false);
+    assert.match(condition(derived).reason, /live supervision could not be verified/);
+    assert.doesNotMatch(condition(derived).reason, /no longer carries/);
+  }
+});
+
+test("missing malformed and legacy flat task results remain unknown rather than asserting an absent trigger", () => {
+  for (const value of [null, {}, [], verifiedTask.facts, { ...verifiedTask, facts: null },
+    ...[{}, { ...verifiedTask.facts, taskPresent: "true" }, { ...verifiedTask.facts, relaunchTriggerPresent: null },
+      { ...verifiedTask.facts, relaunchTriggerPresent: "true" }, { ...verifiedTask.facts, state: undefined },
+      { ...verifiedTask.facts, state: "unrecognized" }, { ...verifiedTask.facts, state: "Unknown" }].map(facts => ({ ...verifiedTask, facts })),
+  ]) assert.equal(readTrigger(value).present, null);
+  for (const stdout of ["", "No task information", "{malformed}"]) {
+    assert.equal(readRelaunchTriggerVerification({ stdout, status: 0 }).present, null);
+  }
+});
+
+test("explicit task trigger absence or disabled task stays false in a verified envelope", () => {
+  for (const facts of [{ ...verifiedTask.facts, relaunchTriggerPresent: false },
+    { ...verifiedTask.facts, taskPresent: false }, { ...verifiedTask.facts, state: "Disabled" }]) {
+    const reading = readTrigger({ ...verifiedTask, facts });
+    assert.equal(reading.present, false);
+    assert.equal(derive(state(supervision({ relaunchTrigger: reading }))).verdict, "DEGRADED");
+  }
 });

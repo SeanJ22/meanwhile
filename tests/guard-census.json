@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 647,
-    "named": 6629,
+    "named": 6633,
     "dynamic": 27
   },
   "files": {
@@ -4805,7 +4805,11 @@
         "SEEDED: a host that cannot be asked derives DEGRADED naming the host, never ACTIVE by default",
         "SEEDED: a proof file absent on the host derives DEGRADED naming the path and the command",
         "SEEDED: a stored ACTIVE flag is still ignored — a state asserting active with no proof reads DEGRADED",
-        "SEEDED: no supervision reading on the state derives DEGRADED naming the unproven relaunch"
+        "SEEDED: no supervision reading on the state derives DEGRADED naming the unproven relaunch",
+        "current nested task verification proves the live trigger while the relaunch proof remains independently required",
+        "explicit task trigger absence or disabled task stays false in a verified envelope",
+        "missing malformed and legacy flat task results remain unknown rather than asserting an absent trigger",
+        "refused or failed trigger verification cannot certify supervision or disable model admission"
       ],
       "dynamic": 0
     },

@@ -5,6 +5,7 @@ import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinat
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { cycleLaneSlots, observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 /**
@@ -1159,15 +1160,9 @@ function measureHostSupervision(): HostSupervision {
       ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", join(ROOT, "scripts", "pilot-task.ps1"), "-Action", "verify-triggers"],
       { encoding: "utf8", timeout: 60_000, windowsHide: true },
     );
-    const text = `${run.stdout ?? ""}`;
-    const start = text.indexOf("{");
-    const parsed = start >= 0 ? (JSON.parse(text.slice(start)) as { relaunchTriggerPresent?: unknown; taskPresent?: unknown; state?: unknown }) : null;
-    if (parsed === null) {
-      detail = `verify-triggers printed no JSON (exit ${run.status ?? "null"}${run.error ? `, ${run.error.message}` : ""})`;
-    } else {
-      present = parsed.relaunchTriggerPresent === true;
-      detail = `verify-triggers: taskPresent ${String(parsed.taskPresent)}, state ${String(parsed.state)}, relaunchTriggerPresent ${String(parsed.relaunchTriggerPresent)} (exit ${run.status ?? "null"})`;
-    }
+    const reading = readRelaunchTriggerVerification({ stdout: run.stdout ?? "", status: run.status, failedToRun: Boolean(run.error) });
+    present = reading.present;
+    detail = reading.detail;
   } catch (error) {
     detail = `verify-triggers could not run: ${error instanceof Error ? error.message : String(error)}`;
   }

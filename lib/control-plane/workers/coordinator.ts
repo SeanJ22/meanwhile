@@ -28,11 +28,15 @@ export interface AutonomousDecision {
   readonly reason: string;
 }
 
+export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {
+  if (plan.version !== 1 || plan.contract.subjectId !== item.subject || !plan.sourceRegistryReferences.length ||
+    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.subject) ||
+    plan.detective.some(d => d.question.subjectId !== item.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+}
+
 export async function registerAutonomousPlan(repos: ControlPlaneRepositories, workItemId: string, plan: AutonomousWorkPlan, now: string): Promise<void> {
   const item = await repos.workItems.mustRead(workItemId);
-  if (plan.version !== 1 || plan.contract.subjectId !== item.value.subject || !plan.sourceRegistryReferences.length ||
-    !plan.jurisdiction || !plan.capability || plan.acquisition.some(a => a.route.subjectId !== item.value.subject) ||
-    plan.detective.some(d => d.question.subjectId !== item.value.subject)) throw new Error("AUTONOMOUS_PLAN_CANONICAL_IDENTITY_REFUSED");
+  assertAutonomousPlanIdentity(item.value, plan);
   if (item.value.autonomousPlan) {
     if (canonicalJson(item.value.autonomousPlan) !== canonicalJson(plan)) throw new Error("AUTONOMOUS_PLAN_ALREADY_REGISTERED_DIFFERENT_CONTRACT");
     return;
@@ -75,12 +79,29 @@ async function scoutSources(runtime: FleetRuntime, item: WorkItem): Promise<Obse
 }
 
 /** Typed state chooses one next operation. Absence is never inferred from an empty list. */
-export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string): Promise<AutonomousDecision> {
+export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string, knownItems?: readonly WorkItem[]): Promise<AutonomousDecision> {
   const repos = runtime.repos;
   const item = (await repos.workItems.mustRead(workItemId)).value;
   const plan = item.autonomousPlan;
   const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,reason,task});
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
+  type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
+  const children = (knownItems ?? (await repos.workItems.list()).map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
+  const linkedId = (item as LinkedItem).planRepairObservation?.successorWorkItemId;
+  if (children.length || linkedId) {
+    const child = children[0] as LinkedItem | undefined;
+    const next = child?.autonomousPlan;
+    const valid = children.length === 1 && child && next && (!linkedId || linkedId === child.id) &&
+      child.planRepair?.authority === "WORK_INSTRUCTIONS_ONLY" && child.subject === item.subject &&
+      canonicalJson(child.contract) === canonicalJson(item.contract) && canonicalJson(child.dependencies) === canonicalJson(item.dependencies) &&
+      next.contract.subjectId === plan.contract.subjectId && next.contract.recordClass === plan.contract.recordClass &&
+      next.contract.schemaVersion === 2 && plan.contract.schemaVersion === 2 && next.contract.verification.required &&
+      canonicalJson(next.contract.identity) === canonicalJson(plan.contract.identity) &&
+      canonicalJson(next.contract.requiredFields) === canonicalJson(plan.contract.requiredFields) && canonicalJson(next.detective) === canonicalJson(plan.detective);
+    if (!valid) return decision("BLOCKED", "REPAIR_SUCCESSOR_LINK_INVALID: linked work is missing, incomplete or outside the unchanged obligation; recovery remains owed.");
+    assertAutonomousPlanIdentity(child, next);
+    return decision("BLOCKED", `REPAIR_WAITING_ON_SUCCESSOR:${child.id}: original obligation and blockers remain open; dispatch continues on the linked successor.`);
+  }
   if (
     runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
     isRetiredRoutineMeetingAcquisition(plan.contract)
@@ -276,7 +297,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
     while(cursor<ids.length && admitted<maximum && hasDispatchTime()) {
       const id=ids[cursor++];
       try {
-      const d=await nextAutonomousOperation(runtime,id); decisions.push(d);
+      const d=await nextAutonomousOperation(runtime,id,items.map(row=>row.value)); decisions.push(d);
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
       const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:WORKER_MAX_WALL_MS;

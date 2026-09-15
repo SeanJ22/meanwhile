@@ -89,7 +89,8 @@ async function harness(repos: ControlPlaneRepositories = createMemoryRepositorie
   const runtime: FleetRuntime = {
     repos, methodVersion: METHOD_VERSION, now, readEvidence,
     independentContext: async (scope) => {
-      assert.deepEqual(Object.keys(scope).sort(), ["artifactId", "auditScope", "contract", "methodVersion"], "No producer or validator result may enter starting-context construction.");
+      assert.deepEqual(Object.keys(scope).sort(), ["artifactId", "auditScope", "contract", "methodVersion", "workItemId"], "Canonical task identity may select attribution; no producer or validator result may enter starting-context construction.");
+      assert.equal(scope.workItemId, item.id);
       return {
         subjectId: scope.contract.subjectId, contract: scope.contract, methodVersion: scope.methodVersion,
         publisherSurfaces: ["https://webapi.legistar.com/v1/pima/events"],

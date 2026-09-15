@@ -156,18 +156,32 @@ export function methodFields(capability: string, contract: GeneralizedCivicExtra
   return [...new Set([...(known[normalized] ?? [normalized]), contract.recordClass.toLowerCase(), ...contract.requiredFields])];
 }
 
+/** A shared content hash does not transfer the old owner's work instructions. */
+export function heldAuditAttribution(input: { artifacts: readonly ArtifactRecord[]; items: readonly WorkItem[]; artifactId: string;
+  contract: GeneralizedCivicExtractionContract; workItemId?: string }) {
+  const matches = input.artifacts.filter(artifact => artifact.artifactId === input.artifactId && !artifact.partial &&
+    (input.workItemId === undefined || artifact.workItemId === input.workItemId));
+  if (!matches.length) throw new Error("AUDIT_ARTIFACT_WORK_ITEM_ATTRIBUTION_MISSING");
+  const eligible = matches.flatMap(primary => {
+    const owner = input.items.find(item => item.id === primary.workItemId);
+    return owner?.subject === input.contract.subjectId && canonicalJson(owner.autonomousPlan?.contract ?? null) === canonicalJson(input.contract)
+      ? [{ primary, owner }] : [];
+  });
+  if (!eligible.length) throw new Error(matches.some(primary => input.items.some(owner => owner.id === primary.workItemId && owner.subject === input.contract.subjectId))
+    ? "AUDIT_CANONICAL_SCOPE_MISMATCH" : "AUDIT_ARTIFACT_SUBJECT_MISMATCH");
+  if (new Set(eligible.map(row => row.owner.id)).size !== 1) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
+  return eligible[0];
+}
+
 async function generalizedIndependentContext(input: {
   root: string; repos: ControlPlaneRepositories; method: MethodKnowledge; readEvidence: FleetRuntime["readEvidence"];
-  artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number;
+  artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number; workItemId?: string;
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
   if (contract.methodVersion !== input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
   const artifacts = await input.repos.artifacts.readAll();
-  const primary = artifacts.find(artifact => artifact.artifactId === input.artifactId);
-  if (!primary) throw new Error("AUDIT_ARTIFACT_MISSING");
   const items = (await input.repos.workItems.list()).map(row => row.value);
-  const owner = items.find(item => item.id === primary.workItemId);
-  if (!owner || owner.subject !== contract.subjectId) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
+  const { primary, owner } = heldAuditAttribution({ artifacts, items, artifactId: input.artifactId, contract, workItemId: input.workItemId });
   const canonical = heldGeneralizedContract(input.root, primary, owner);
   if (!canonical || canonicalJson(canonical) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
   const { subject, knownUrls } = registryScope(input.root, contract);
@@ -244,9 +258,9 @@ export function standingFleetRuntime(input: { root: string; vaultRoot?: string; 
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
     ...(input.transport ? { auditReasoner: modelAuditReasoner(input.repos, input.transport, now) } : {}),
-    independentContext: async ({ artifactId, contract, auditScope, methodVersion }): Promise<IndependentAuditContext> => {
+    independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
-      if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion });
+      if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });
       const primaryRow = (await input.repos.artifacts.readAll()).find(artifact => artifact.artifactId === artifactId);
       const permanentContract = primaryRow && registeredHeldMeetingContract(primaryRow.canonicalUrl, contract.subjectId);
       if (permanentContract) {

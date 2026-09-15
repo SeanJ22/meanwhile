@@ -52,7 +52,7 @@ export interface FleetRuntime {
   readonly repos: ControlPlaneRepositories;
   readonly readEvidence: (artifactId: string) => Promise<ParserInput>;
   /** Receives canonical scope only, before the producer or validator result is read. */
-  readonly independentContext: (input: Pick<WorkerTaskSpec, "artifactId" | "contract" | "auditScope"> & { methodVersion: number }) => Promise<IndependentAuditContext>;
+  readonly independentContext: (input: Pick<WorkerTaskSpec, "artifactId" | "contract" | "auditScope"> & { methodVersion: number; workItemId?: string }) => Promise<IndependentAuditContext>;
   readonly methodVersion: number;
   readonly requireModelAudit?: boolean;
   readonly now?: () => string;
@@ -116,7 +116,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     try {
     if (role === "ADVERSARIAL_AUDITOR") {
       if (runtime.requireModelAudit && !runtime.auditReasoner) throw new Error("DENIED_BY_POLICY:AUDIT_MODEL_TRANSPORT_UNAVAILABLE");
-      independent = await runtime.independentContext({ artifactId: spec.artifactId, contract: spec.contract, auditScope: spec.auditScope, methodVersion: runtime.methodVersion });
+      independent = await runtime.independentContext({ artifactId: spec.artifactId, contract: spec.contract, auditScope: spec.auditScope, methodVersion: runtime.methodVersion, workItemId });
       const allowed = new Set(["subjectId", "contract", "publisherSurfaces", "methodVersion", "routes", "evidence", "surfaceEvidence", "authorityEvidence", "startedFrom", "scope"]);
       if (Object.keys(independent).some(k => !allowed.has(k)) || independent.subjectId !== spec.contract.subjectId ||
           independent.methodVersion !== runtime.methodVersion || independent.startedFrom.includes("OUR_SUMMARY")) throw new Error("AUDIT_STARTING_CONTEXT_NOT_INDEPENDENT");

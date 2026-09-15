@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 641,
-    "named": 6592,
+    "named": 6593,
     "dynamic": 27
   },
   "files": {
@@ -7195,7 +7195,8 @@
         "the negative check rejects a reader dependency that changed outside the permitted scope",
         "verification fails when a bound file changes, names the receipt is wrong, or the ancestry is broken",
         "verification passes after a subsequent evidence/documentation commit (HEAD past the integration commit)",
-        "verification passes on a GitHub-style merge checkout with the bound files unchanged"
+        "verification passes on a GitHub-style merge checkout with the bound files unchanged",
+        "verification tolerates a shallow clone with the integration commit absent, but still enforces content"
       ],
       "dynamic": 0
     },

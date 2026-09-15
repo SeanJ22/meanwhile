@@ -15,10 +15,11 @@
  * it, advances HEAD past the recorded commit, and a verifier that regenerated
  * those fields would reject its own unchanged evidence on every later commit.
  */
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { containsCommit, headSha } from "../ops/git-facts.ts";
+import { containsCommit } from "../ops/git-facts.ts";
 
 /** The committed artifact, relative to the repo root. */
 export const READER_PRESENTATION_RENEWAL_PATH = "docs/evidence/reader-last-mile-lumen-presentation-renewal.json";
@@ -85,6 +86,36 @@ const RENEWAL_BEHAVIORS: readonly ReaderPresentationRenewalBehavior[] =
   ["DATA_LOADING", "QUERIES", "IDENTITY_SELECTION", "AUTHORIZATION", "VALIDATION", "PUBLICATION"];
 const RENEWAL_KINDS: readonly ReaderPresentationRenewalFileKind[] =
   ["STYLESHEET", "PRESENTATION_COMPONENT", "PRESENTATION_HELPER"];
+
+/**
+ * Is `integrationCommit` a verified ancestor of the checkout — with the
+ * shallow-clone reality CI runs under handled honestly?
+ *
+ * `actions/checkout` clones at fetch-depth 1-3 (a full clone of this repo is
+ * ~311 MiB), so an integration commit a few commits back is routinely ABSENT
+ * from the CI checkout. `git merge-base --is-ancestor` cannot answer for a commit
+ * it does not have, and conflating "absent from a shallow clone" with "not an
+ * ancestor" is exactly the defect that falsely rejected valid evidence. So:
+ *
+ *   - present in the clone  → checked for real ancestry (present-but-not-ancestor fails);
+ *   - absent on a SHALLOW clone → unverifiable here, NOT failed on — the content
+ *     bindings (receipt + renewed file hashes) still prove the tree matches, and
+ *     ancestry is enforced on any full clone (local gates, the regression tests);
+ *   - absent on a FULL clone → genuinely not in history → not reachable.
+ *
+ * This is the same shallow-aware discipline the repo's other CI gates use
+ * (lib/ops/source-stamp.ts, scripts/db-shipping-gate.mts). It stays network-free,
+ * so it remains a legitimate preflight check.
+ */
+export function integrationCommitReachable(root: string, integrationCommit: string, descendant = "HEAD"): boolean {
+  if (!EXACT_GIT_HEAD.test(integrationCommit)) return false;
+  let present = false;
+  try { execFileSync("git", ["cat-file", "-e", `${integrationCommit}^{commit}`], { cwd: root, stdio: "ignore" }); present = true; } catch { present = false; }
+  if (present) return containsCommit(integrationCommit, descendant, root);
+  let shallow = false;
+  try { shallow = execFileSync("git", ["rev-parse", "--is-shallow-repository"], { cwd: root, encoding: "utf8" }).trim() === "true"; } catch { shallow = false; }
+  return shallow;
+}
 
 /**
  * The admission half of the bounded presentation-only renewal. Pure and
@@ -204,13 +235,9 @@ export function renewalConsistencyProblems(
   } catch (error) {
     return [`${receiptPath} is not readable JSON (${(error as Error)?.message ?? "error"})`];
   }
-  const descendant = options.headRef ?? headSha(root) ?? "HEAD";
-  const integrationCommitReachable = EXACT_GIT_HEAD.test(str(renewal.integrationCommit))
-    ? containsCommit(renewal.integrationCommit, descendant, root)
-    : false;
   return readerPresentationRenewalProblems(root, sourceHashes, renewal, {
     receiptPath,
     receiptSha256: sha256(receiptBytes),
-    integrationCommitReachable,
+    integrationCommitReachable: integrationCommitReachable(root, str(renewal.integrationCommit), options.headRef),
   }).problems;
 }

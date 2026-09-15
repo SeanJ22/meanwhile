@@ -1,0 +1,35 @@
+# Fast feedback on the CI contract itself. This is supplementary and does not
+# replace any required Build check job or admit a draft to production.
+name: CI workflow contract
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/**"
+      - "scripts/gates.mjs"
+      - "scripts/preflight.mjs"
+      - "tests/gate-parity.test.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+permissions:
+  contents: read
+concurrency:
+  group: ci-workflow-contract-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  contract:
+    name: CI workflow contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack pnpm install --frozen-lockfile
+      - name: Verify local and hosted gates and early history prerequisites
+        run: corepack pnpm exec node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/gate-parity.test.ts

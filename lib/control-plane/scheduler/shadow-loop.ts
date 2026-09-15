@@ -72,6 +72,10 @@ export interface CycleInput {
   readonly debts: readonly FreshnessDebt[];
   /** Obligation id → the RouteTask that works it, where one is registered. */
   readonly routeTaskFor: (obligationId: string) => string | null;
+  /** The standing runner opens only its bounded lane slots, retaining all other due rows. */
+  readonly requireOpenOccurrence?: boolean;
+  /** Observability only; recovery still completes before any worker is admitted. */
+  readonly onRecoveryComplete?: () => void;
   readonly maturity: MethodMaturity;
   /**
     * The executor, WITH its lane declared. (W3.E regression, 2026-08-31.)
@@ -300,6 +304,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         now: input.now,
         observedBy: input.holder,
       });
+  input.onRecoveryComplete?.();
 
   /* 2 · SCHEDULE. Both lists; the unscheduled are named, never defaulted. */
   const schedule = scheduleAll(input.obligations, nowMs);
@@ -540,12 +545,17 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   /* THE DETERMINISTIC LANE — the serial queue, exactly as before. */
   const deterministicLane = async (): Promise<void> => {
-    for (const [i, row] of deterministicRows.entries()) {
+    let admitted = 0;
+    for (const row of deterministicRows) {
+      if (input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
+        deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
+        continue;
+      }
       if (budgetSpent()) {
         deferForBudget(row);
         continue;
       }
-      if (i >= ceiling) {
+      if (admitted >= ceiling) {
         deferred.push({
           obligationId: row.obligation.id,
           why:
@@ -557,6 +567,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         continue;
       }
       if (!aggregateAdmits(row)) continue;
+      admitted += 1;
       const result = await dispatchRow(row, {
         executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
         leaseTtlMs: input.leaseTtlMs,
@@ -593,6 +604,12 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
     await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
+      if (input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
+        deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
+        modelDeferred += 1;
+        deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
+        return;
+      }
       const deadline = input.budget?.deadlineMs;
       if (
         budgetSpent() ||

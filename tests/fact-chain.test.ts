@@ -167,23 +167,22 @@ test("PRDY-3/PDC: immutable facts can read the permanent meetings receipt, but c
   assert.equal(reading.obligationId, permanentMeetingsReceiptId(partition.id, partition.scope));
 
   const pass2 = await projectFactChains(h.repos, { ...options, freshness });
-  assert.equal(pass2.counts.byStage.APPROVED_FOR_PROMOTION, 0, "the permanent Reader is authoritative; old fact rows never become a second promoted view");
+  assert.equal(pass2.counts.byStage.APPROVED_FOR_PROMOTION, 36, "reviewed meeting classes may enter the sole permanent partition door");
   assert.ok(pass2.offers.every((o) => o.error === null));
   const held = pass2.states.find((s) => s.itemId === state1801.itemId)!;
-  assert.equal(held.stage, "AUDITED");
-  assert.equal(held.byStage.APPROVED_FOR_PROMOTION, undefined);
-  assert.ok(held.refused!.reasons.some((reason) => /RECORD_CLASS_CANDIDATE/.test(reason.detail)));
+  assert.equal(held.stage, "APPROVED_FOR_PROMOTION");
+  assert.ok(held.byStage.APPROVED_FOR_PROMOTION!.burdens!.every(burden => burden.result === "PASS"));
 
   /* A third projection re-offers nothing new and errors on nothing. */
   const pass3 = await projectFactChains(h.repos, { ...options, freshness });
   assert.equal(pass3.offers.filter((o) => o.appended).length, 0);
   assert.equal(pass3.offers.filter((o) => o.error !== null).length, 0);
-  assert.equal(pass3.counts.byStage.APPROVED_FOR_PROMOTION, 0);
+  assert.equal(pass3.counts.byStage.APPROVED_FOR_PROMOTION, 36);
 
-  /* The live gate stays OFF and no legacy fact reaches it as approved. */
+  /* The old writer stays OFF even when the PDC intake can read approved facts. */
   const verdicts = evaluateItems(pass3.states, ACTIVATION_GATE);
   assert.equal(ACTIVATION_GATE.promotionEnabled, false);
-  assert.ok(verdicts.verdicts.every((v) => v.verdict === "REFUSE_WOULD" && /AUDITED/.test(v.reason)));
+  assert.ok(verdicts.verdicts.every((v) => v.verdict === "REFUSE_WOULD"));
 });
 
 test("PDC: a failed permanent meetings attempt stays a data-plane LKG/retry receipt and never becomes a legacy acquisition clock", () => {

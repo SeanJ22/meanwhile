@@ -76,6 +76,7 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
   const [lane, setLane] = useState<FleetLane | null>(null);
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [showCode, setShowCode] = useState(true);
+  const [page, setPage] = useState(0);
 
   const refresh = useCallback(() => {
     setBusy(true);
@@ -97,6 +98,11 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
     return c;
   }, [ops, laneOf]);
   const shownOps = useMemo(() => (lane ? ops.filter((o) => laneOf(o) === lane) : ops), [ops, lane, laneOf]);
+  const pageSize = 50;
+  const pageCount = Math.max(1, Math.ceil(shownOps.length / pageSize));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pageStart = currentPage * pageSize;
+  const pageOps = shownOps.slice(pageStart, pageStart + pageSize);
 
   // First item expanded by default (once), matching the design; toggled thereafter.
   const isOpen = useCallback((id: string) => (id in open ? open[id] : ops[0]?.workItemId === id), [open, ops]);
@@ -152,7 +158,7 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
                   key={l.id}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setLane(active ? null : l.id)}
+                  onClick={() => { setLane(active ? null : l.id); setPage(0); }}
                   className="fm-lane"
                   style={{ boxShadow: active ? `inset 0 0 0 1px ${l.color}` : "inset 0 0 0 1px rgba(255,255,255,0.08)" }}
                 >
@@ -174,14 +180,23 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
           <section aria-label="Work in flight" style={{ display: "grid", gap: 8 }}>
             <div style={{ display: "flex", gap: 10, alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap" }}>
               <h3 style={{ margin: 0, fontSize: "0.95rem" }}>Work in flight — {lane ? fleetLaneMeta(lane).label.toLowerCase() : "all lanes"}</h3>
-              <span className="note">{shownOps.length} of {ops.length} items</span>
+              <span className="note">Showing {pageOps.length === 0 ? 0 : pageStart + 1}–{pageStart + pageOps.length} of {shownOps.length} matching items · {ops.length} total</span>
             </div>
             {shownOps.length === 0 ? (
               <p className="note">{ops.length === 0 ? "The canonical work-item store holds no rows." : "No items in this lane."}</p>
             ) : (
-              shownOps.map((op) => (
+              pageOps.map((op) => (
                 <WorkItem key={op.workItemId} op={op} lane={laneOf(op)} open={isOpen(op.workItemId)} onToggle={toggleOpen} view={view} showCode={showCode} />
               ))
+            )}
+            {pageCount > 1 && (
+              <nav aria-label="Work item pages" style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous items</button>
+                <label>Page <select aria-label="Work item page" value={currentPage} onChange={(event) => setPage(Number(event.target.value))}>
+                  {Array.from({ length: pageCount }, (_, index) => <option key={index} value={index}>{index + 1}</option>)}
+                </select> of {pageCount}</label>
+                <button type="button" disabled={currentPage + 1 === pageCount} onClick={() => setPage(currentPage + 1)}>Next items</button>
+              </nav>
             )}
           </section>
 

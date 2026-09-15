@@ -79,6 +79,8 @@ export const MAX_DERIVED_CADENCE_HOURS = 24 * 30;
  * re-opens itself would make "complete" mean two different things in one store.
  */
 export interface FreshnessObligation {
+  /** Durable scheduling hint: retain the first owed time until this obligation is actually worked. */
+  readonly nextDueAt?: string | null;
   readonly id: string;
   /** The record class this keeps fresh — "meetings", "roster", "filings". */
   readonly recordClass: string;
@@ -249,9 +251,13 @@ export function scheduleObligation(
    * names it. Without that half this line would be a hot loop.
    */
   if (!Number.isFinite(anchor)) {
+    const firstDue = obligation.nextDueAt ? Date.parse(obligation.nextDueAt) : NaN;
     return {
       obligation,
-      nextDueAt: new Date(nowMs).toISOString(),
+      // Moving NOW on every look rewrites every unworked durable row each
+      // cycle and erases its queue age. A previously owed timestamp stays owed.
+      // An invalid or future legacy hint must never delay the first reading.
+      nextDueAt: new Date(Number.isFinite(firstDue) && firstDue <= nowMs ? firstDue : nowMs).toISOString(),
       cadenceHours,
       cadenceSource: source,
       basis:

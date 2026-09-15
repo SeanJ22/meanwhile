@@ -53,6 +53,8 @@ import { plainWindow } from "@/lib/control-plane/plain-window.ts";
 import { modelName, plainCode, plainMeaning, plainText, usdCents } from "@/lib/control-plane/plain-words.ts";
 import { scoutStory } from "@/lib/control-plane/plain-work.ts";
 import { METRIC_GROUP_MEANING, metricGroupLead, type DigestRow } from "@/lib/control-plane/research-digest.ts";
+import { ResearchProgress } from "@/components/admin/research-progress.tsx";
+import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
 import {
   buildResearchView,
   countClaimsOf,
@@ -218,6 +220,7 @@ export default async function ResearchPage() {
     readMethodCandidateAuthorityStatus(opened.repos),
   ]);
   const view = buildResearchView({ nowIso, heartbeat, state, intents, results, spend, evidence });
+  const progressHealth = researchProgressHealth(state.kind === "HELD" ? state.value : null, nowIso);
   const candidateNames = snapshotOut.kind === "HELD" ? snapshotOut.value.candidateNames : undefined;
 
   // THE LAST NIGHTLY WINDOW (RULING 242). Read from the same control plane; a
@@ -245,10 +248,10 @@ export default async function ResearchPage() {
   }
 
   const verdictClass =
-    view.verdict === "ACTIVE" ? "state-green" : view.verdict === "DEGRADED" ? "state-unknown" : "state-red";
+    progressHealth.level === "RED" ? "state-red" : "state-unknown";
   const verdictPlain =
     view.verdict === "ACTIVE"
-      ? "The research lane is running within its bounds."
+      ? "The research lane is enabled within its bounds. Actual worker progress is reported below."
       : view.verdict === "DEGRADED"
         ? "The research lane is running, but not every condition holds."
         : "The research lane is not running right now. Nothing needs a decision from you unless a line below says so.";
@@ -273,9 +276,10 @@ export default async function ResearchPage() {
       <ConsoleNav view="research" currentState={null} states={US_STATES} />
       <QueueForm returnTo={HERE} />
       <h1>
-        Research — <span className={verdictClass}>{plainCode(view.verdict)}</span>
+        Research — <span className={verdictClass}>{plainCode(progressHealth.state)}</span>
       </h1>
       <p className="plain">{verdictPlain}</p>
+      <ResearchProgress reading={progressHealth} />
       <NeedsYouLine needs={view.verdict === "ACTIVE" ? NEEDS_NOTHING : runnerNeedsYou} />
       <details className="ph-evidence">
         <summary>What &ldquo;research&rdquo; is allowed to do here, and what the levels are</summary>

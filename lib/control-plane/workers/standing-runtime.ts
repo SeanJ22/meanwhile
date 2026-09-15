@@ -9,25 +9,25 @@ import { VAULT_DIR } from "../scheduler/vault.ts";
 import { methodFields, standingFleetRuntime } from "./standing.ts";
 import { computeRouteFloor } from "../preflight.ts";
 import { readMethodStore } from "../../method/candidate.ts";
-import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
+import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
+import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
   await refreshRegistryRuntimeFromPromoted();
+  if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{})};
-  const prior=await input.repos.scoutResults.readAll();
-  const priorWorkers=[] as Awaited<ReturnType<typeof input.repos.workerResults.readAll>>[number][];
-  for(const record of await input.repos.workerResults.readAll()) {
-    try { priorWorkers.push((await readCompletedWorkerResult(input.repos,record.id)).record); }
-    catch { /* Uncommitted results do not become inherited investigation evidence. */ }
-  }
+  const [prior, priorWorkers] = await Promise.all([
+    input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
+  ]);
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
   const runtime:AutonomousCoordinatorRuntime={...standingFleetRuntime(input),routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,

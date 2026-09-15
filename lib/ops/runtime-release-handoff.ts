@@ -14,7 +14,7 @@
 
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, win32 } from "node:path";
 
 import type { ProductionIntegrityRead } from "./production-integrity-data-plane.ts";
 import { REQUIRED_CONTEXTS } from "./required-contexts.ts";
@@ -257,6 +257,20 @@ function defaultRunCommand(
   };
 }
 
+/** Windows cannot spawn a .cmd shim without a shell. Invoke its same-Node JS entry directly. */
+export function runtimePackageManagerCommand(input: {
+  readonly platform?: NodeJS.Platform;
+  readonly nodeExecutable?: string;
+  readonly exists?: (path: string) => boolean;
+} = {}): { readonly executable: string; readonly args: readonly string[] } | null {
+  const args = ["pnpm", "install", "--frozen-lockfile"];
+  if ((input.platform ?? process.platform) !== "win32") return { executable: "corepack", args };
+  const node = input.nodeExecutable ?? process.execPath;
+  const entry = win32.join(win32.dirname(node), "node_modules", "corepack", "dist", "corepack.js");
+  if (!(input.exists ?? existsSync)(entry)) return null;
+  return { executable: node, args: [entry, ...args] };
+}
+
 /** Resolve the API repository from the checkout's configured origin. */
 export function runtimeGithubRepository(root: string, run: RunCommand = defaultRunCommand): string | null {
   const result = run("git", ["remote", "get-url", "origin"], { cwd: root, timeoutMs: COMMAND_TIMEOUT_MS });
@@ -359,8 +373,9 @@ export function applyRuntimeRelease(input: {
   switched = true;
 
   if (input.install !== false) {
-    const corepack = process.platform === "win32" ? "corepack.cmd" : "corepack";
-    const installed = run(corepack, ["pnpm", "install", "--frozen-lockfile"], { cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS });
+    const command = runtimePackageManagerCommand();
+    if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
+    const installed = run(command.executable, command.args, { cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS });
     if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
   }
 

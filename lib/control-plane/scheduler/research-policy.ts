@@ -179,6 +179,9 @@ export interface ResearchState {
     readonly modelClassDispatchedThisCycle: number;
     readonly modelClassDeferredForCeiling: number;
     readonly modelClassDeferredForCycleMax: number;
+    readonly modelClassDeferredForBudget?: number;
+    readonly modelClassNotOpenedThisCycle?: number;
+    readonly autonomousDispatchedThisCycle?: number;
     readonly modelClassDeferredForLane: number;
     readonly deterministicDue: number;
     readonly deterministicDispatchedThisCycle: number;
@@ -186,6 +189,7 @@ export interface ResearchState {
   readonly running: readonly RunningScout[];
   /** Named runtime conditions preventing eligible Scout work from dispatching. Empty when none. */
   readonly runtimeConditions: readonly string[];
+  readonly cyclePhases?: readonly import("./cycle-phases.ts").CyclePhase[];
   readonly methodCandidates: {
     readonly proposed: number;
     readonly validated: number;

@@ -65,6 +65,33 @@ function renderMap(state: FleetConsumerState, scratchDir: string): string {
   `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 16_000_000 });
 }
 
+test("a full Fleet backlog renders a bounded first page with every page reachable", async (t) => {
+  const dir = await mkdtemp(join(tmpdir(), "fleet-map-page-"));
+  t.after(async () => {
+    const target = resolve(dir);
+    assert.equal(dirname(target), resolve(tmpdir()));
+    assert.ok(basename(target).startsWith("fleet-map-page-"));
+    await rm(target, { recursive: true, force: true, maxRetries: 3 });
+  });
+  const now = "2026-09-15T16:00:00.000Z";
+  const repos = createMemoryRepositories();
+  const item = createWorkItem({ project: "map-pagination", subject: "first operation", obligation: "Read records", why: "test", now });
+  await registerWorkItem(repos, item, now);
+  const report = await readFleetOperations(repos, { observedAt: now });
+  assert.equal(report.operations.kind, "HELD");
+  if (report.operations.kind !== "HELD") throw new Error("Expected held report");
+  const first = report.operations.value[0];
+  const operations = Array.from({ length: 2664 }, (_, i) => ({ ...first, workItemId: `page-item-${i}`, subject: `Operation ${i}` }));
+  const state = applyRefresh(EMPTY_CONSUMER_STATE, { status: "REPORT", report: { ...report, operations: { kind: "HELD", value: operations } } });
+  const html = renderMap(state, dir);
+  assert.equal((html.match(/class="fm-wi-head"/g) ?? []).length, 50);
+  assert.match(html, /Showing 1–50 of 2664 matching items/);
+  assert.match(html, /aria-label="Work item page"/);
+  assert.match(html, /<option value="53">54<\/option>/);
+  assert.match(html, /Next items/);
+  assert.ok(!html.includes("Operation 2663"), "later rows remain in the report without thousands of hidden DOM cards");
+});
+
 test("the map renders a real producer report as lanes, work items and honestly-labelled panels", async (t) => {
   const dir = await mkdtemp(join(tmpdir(), "fleet-map-"));
   t.after(async () => {

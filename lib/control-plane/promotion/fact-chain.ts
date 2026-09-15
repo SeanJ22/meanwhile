@@ -411,11 +411,12 @@ export async function projectFactChains(repos: ControlPlaneRepositories, options
         { name: "FRESHNESS_NOT_STALE", result: reading.hold ? "FAIL" : "PASS", detail: `${reading.state}: ${reading.reason}` },
         { name: "RECORD_CLASS_CANDIDATE", result: LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) && isMeetingFactClass(fact.recordClass) ? "PASS" : "FAIL", detail: `${fact.recordClass} ${LOW_RISK_CANDIDATE_CLASSES.includes(fact.recordClass) ? "is" : "is not"} in the owner's candidate set` },
       ];
-      const approved: ApprovedRecord = {
+      const approved: ApprovedRecord & { readonly readerMeeting: typeof fact.meeting; readonly publicationDoor: "PERMANENT_MEETING_PARTITION" } = {
         formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${itemId}:approved:${audited.recordId}`, itemId, at: audited.at,
         actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: `fact-approver:${FACT_CHAIN_VERSION}:${itemId}` },
         stage: "APPROVED_FOR_PROMOTION", chain: { scouted: scouted.recordId, confirmed: confirmed.recordId, verified: verified.recordId, audited: audited.recordId },
         recordClass: fact.recordClass, burdens,
+        readerMeeting: fact.meeting, publicationDoor: "PERMANENT_MEETING_PARTITION",
       };
       state = await offer(approved);
     }

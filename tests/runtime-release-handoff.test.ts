@@ -13,6 +13,7 @@ import {
   requiredContextEvidence,
   runtimeGithubCredential,
   runtimeProductionReadEnvironment,
+  runtimePackageManagerCommand,
   type CommandResult,
   type GithubCheckRun,
 } from "../lib/ops/runtime-release-handoff.ts";
@@ -21,6 +22,20 @@ import type { ProductionIntegrityRead } from "../lib/ops/production-integrity-da
 
 const RUNNING = "1".repeat(40);
 const TARGET = "2".repeat(40);
+
+test("Windows frozen install invokes same-Node Corepack JavaScript with unparsed argument paths", () => {
+  const node = "C:\\Program Files\\Node & Tools\\node.exe";
+  const entry = "C:\\Program Files\\Node & Tools\\node_modules\\corepack\\dist\\corepack.js";
+  const command = runtimePackageManagerCommand({ platform: "win32", nodeExecutable: node, exists: path => path === entry });
+  assert.deepEqual(command, { executable: node, args: [entry, "pnpm", "install", "--frozen-lockfile"] });
+  assert.equal(command?.executable.endsWith(".cmd"), false);
+  assert.equal(runtimePackageManagerCommand({ platform: "win32", nodeExecutable: node, exists: () => false }), null);
+});
+
+test("non-Windows handoff retains direct Corepack execution", () => {
+  assert.deepEqual(runtimePackageManagerCommand({ platform: "linux", nodeExecutable: "/usr/bin/node", exists: () => false }),
+    { executable: "corepack", args: ["pnpm", "install", "--frozen-lockfile"] });
+});
 
 test("operational civic reads bind the explicit production read handle without rewriting credentials", () => {
   const env: NodeJS.ProcessEnv = { NODE_ENV: "test", DATABASE_URL: "postgresql://developer:fixture@dev.example/test", WTP_PRODUCTION_DATABASE_URL_READONLY: "postgresql://readonly:fixture@production.example/live", WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:fixture@production.example/live", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://control:fixture@control.example/control" };

@@ -749,8 +749,9 @@ test("ADM-42: the heading reads Research — <state>, the back-link is gone, and
   const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
   // The owner: "Research Level 1 Active: out of how many levels? What does that mean?"
   assert.doesNotMatch(source, /Research — Level 1/, "the heading no longer prints a level number as the state");
-  assert.match(source, /Research — <span className=\{verdictClass\}>\{plainCode\(view\.verdict\)\}<\/span>/, "the heading is the derived state in words");
-  assert.match(source, /The research lane is running within its bounds\./, "the ACTIVE sentence the owner kept is kept");
+  assert.match(source, /Research — <span className=\{verdictClass\}>\{plainCode\(progressHealth\.state\)\}<\/span>/, "the heading describes work progress, not activation permission");
+  assert.match(source, /The research lane is enabled within its bounds\./, "activation permission must not assert that workers are advancing");
+  assert.match(source, /<ResearchProgress reading=\{progressHealth\}/, "actual progress is shown beside activation");
   // "I don't need a back section to go back to Pilot Health. I have the dropdown."
   assert.doesNotMatch(source, /← Pilot health/, "no back-link duplicating the View dropdown");
   assert.doesNotMatch(source, /this page is the instrument detail behind the fleet view/);

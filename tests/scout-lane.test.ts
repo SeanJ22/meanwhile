@@ -60,6 +60,41 @@ import {
 const NOW = "2026-09-01T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
 
+test("full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows", async () => {
+  const { repos, task } = await registered();
+  const obligations = [
+    ...Array.from({ length: 614 }, (_, i) => ({ ...OBLIGATION, id: `det-${i}` })),
+    OBLIGATION,
+    ...Array.from({ length: 1839 }, (_, i) => ({ ...OBLIGATION, id: `scout-${i}` })),
+  ];
+  let admissions = 0;
+  let executions = 0;
+  const cycle = await runCycle({
+    repos, obligations, debts: [], requireOpenOccurrence: true,
+    routeTaskFor: id => id === OBLIGATION.id ? task.id : null,
+    maturity: () => "UNGRADUATED", holder: "scaled-cycle", now: NOW, leaseTtlMs: 60_000,
+    executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("unopened deterministic dispatched"); } },
+    budget: { deadlineMs: NOW_MS + 7 * 60_000, now: () => NOW_MS + 90_000 },
+    reader: { contract: "READER", state: "NOT_READY", reason: "fixture" },
+    truth: { contract: "TRUTH", state: "NOT_READY", reason: "fixture" },
+    research: {
+      decide: row => ({ kind: row.obligation.id.startsWith("det-") ? "DETERMINISTIC" : "BOUNDED_MODEL_WORKER", why: "fixture", disagreement: null }),
+      admitScout: () => { admissions += 1; return { admit: true }; },
+      modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => {
+        executions += 1;
+        return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "bounded recorded fixture attempt" };
+      } },
+      maxConcurrentScouts: 2, scoutLeaseTtlMs: 420_000, scoutWallMs: 300_000,
+    },
+  });
+  assert.equal(executions, 1);
+  assert.equal(admissions, 1);
+  assert.equal(cycle.lanes?.model.due, 1840);
+  assert.equal(cycle.lanes?.model.deferredBy.NO_OPEN_OCCURRENCE, 1839);
+  assert.equal(cycle.deferred.length, 2453);
+  assert.equal(cycle.debts.length, 1, "unopened rows are still due, never manufactured failed attempts");
+});
+
 const OBLIGATION: FreshnessObligation = {
   id: "freshness:test:scout#novel-route",
   recordClass: "meetings",

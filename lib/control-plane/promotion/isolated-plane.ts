@@ -33,14 +33,8 @@ import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY
 import type { CivicExtractionContract, FleetRole, IndependentAuditContext, OfficialRouteExpectation, WorkerResultRecord, WorkerTaskSpec } from "../workers/types.ts";
 
 /** The real Pima County Legistar events contract the chain suites and the canary use. */
-export const PIMA_LEGISTAR_CONTRACT: CivicExtractionContract = {
-  recordClass: "LEGISTAR_EVENTS", schemaVersion: 1,
-  subjectId: "ocd-division/country:us/state:az/county:pima#governing",
-  sourceBodyId: 138, sourceBodyName: "Board of Supervisors", publisherSlug: "pima",
-  requiredFields: ["EventId", "EventBodyId", "EventBodyName", "EventDate", "EventTime"],
-  completenessScope: "Every event in this captured representation; no all-future-meetings claim.",
-  expectedSourceDate: null,
-};
+import { PIMA_LEGISTAR_CONTRACT } from "../workers/held-meeting-contract.ts";
+export { PIMA_LEGISTAR_CONTRACT } from "../workers/held-meeting-contract.ts";
 export const PIMA_LEGISTAR_FEED_URL = "https://webapi.legistar.com/v1/pima/events";
 export const ISOLATED_PLANE_PROJECT = "freshness";
 

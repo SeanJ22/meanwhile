@@ -10,7 +10,7 @@ import { fingerprint } from "../ids.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, evidenceProjection, FLEET_POLICY_VERSION, WORKER_MAX_WALL_MS, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { autonomousScoutHistory, scoutTransientDenial } from "./scout-scheduling.ts";
-import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { isScheduled } from "../scheduler/obligation.ts";
@@ -91,11 +91,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     );
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
-  const records = [] as Awaited<ReturnType<typeof repos.workerResults.read>>[number][];
-  for (const record of await repos.workerResults.read(item.id)) {
-    try { records.push((await readCompletedWorkerResult(repos, record.id)).record); }
-    catch { /* An uncommitted result never drives the next civic computation. */ }
-  }
+  const records = [...await readCompletedWorkerResults(repos, item.id)];
   records.sort((a,b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id));
   const attempts = (await repos.attempts.list()).map(a=>a.value);
   const taskFor = async (input:Parameters<typeof enqueueWorkerTask>[1]) => {
@@ -148,6 +144,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   let staged = false;
   let unresolved = false;
   let outsideExtractionScope=false;
+  const pendingRefreshes: Parameters<typeof enqueueWorkerTask>[1][] = [];
   // Acquire the declared supporting authorities before scheduling their dependent validation.
   for (const acquisition of acquisitions) {
     const history = records.filter(r => r.result.role === "ACQUIRER" && r.result.source.id === acquisition.route.id && r.result.source.url === acquisition.route.url);
@@ -162,10 +159,12 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       const schedule=scheduleAutonomousAcquisition(plan,latest.result,now);
       if(!isScheduled(schedule)) {unresolved=true;continue;}
       if(Date.parse(schedule.nextDueAt)<=Date.parse(now)) {
-        // A publisher freshness check must not reuse an expired immutable capture.
-        const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,
+        // Finish independent checking of retained bytes before refreshing them.
+        // Otherwise a source whose cadence is shorter than the runner interval
+        // consumes every turn with acquisition and never reaches a verifier.
+        // Freshness still prevents staging and the refresh uses a real fetch.
+        pendingRefreshes.push({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,
           acquisition:{...acquisition,held:[]},replayLabel:`refresh-after:${latest.id}`});
-        if(next)return next;
         unresolved=true;
       }
       continue;
@@ -239,6 +238,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   for (const engineering of plan.engineering) {
     const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ENGINEERING",artifactId:engineering.methodArtifactId,engineering});
     if(next)return next;
+  }
+  for (const refresh of pendingRefreshes) {
+    const next = await taskFor(refresh);
+    if (next) return next;
   }
   if (staged && !unresolved) return decision("STAGED","Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
   const novelty = await scoutOperation(true);

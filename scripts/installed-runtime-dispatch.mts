@@ -25,14 +25,15 @@ import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { fetchServedCommit } from "./post-deploy-observer.mts";
+import { requestRoutineRefresh } from "../lib/civic-data/owner-refresh.ts";
 
-export type InstalledRuntimeMode = "manual-promote" | "window" | "agent-bridge-job" | "agent-bridge-review";
+export type InstalledRuntimeMode = "manual-promote" | "window" | "agent-bridge-job" | "agent-bridge-review" | "routine-refresh";
 export interface InstalledRuntimePayload {
   readonly mode: InstalledRuntimeMode;
   readonly args: readonly string[];
 }
 
-const MODES: readonly InstalledRuntimeMode[] = ["manual-promote", "window", "agent-bridge-job", "agent-bridge-review"];
+const MODES: readonly InstalledRuntimeMode[] = ["manual-promote", "window", "agent-bridge-job", "agent-bridge-review", "routine-refresh"];
 
 export function parseInstalledRuntimePayload(encoded: string | null): InstalledRuntimePayload {
   if (!encoded || !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) throw new Error("OWNER_COMMAND_PAYLOAD_INVALID");
@@ -63,6 +64,7 @@ function assigned(args: readonly string[], name: string): readonly string[] {
 
 /** Closed source-contract plan; extra flags go only to the registered adapter. */
 export function installedRuntimeChildPlan(payload: InstalledRuntimePayload): InstalledRuntimeChildPlan {
+  if (payload.mode === "routine-refresh") throw new Error("OWNER_REFRESH_HAS_NO_CHILD_COMMAND");
   if (payload.mode === "manual-promote") {
     const contracts = assigned(payload.args, "contract");
     if (contracts.length !== 1) throw new Error("OWNER_MANUAL_CONTRACT_REQUIRED_ONCE");
@@ -124,8 +126,15 @@ async function run(): Promise<void> {
   assertRuntimeAuthority({ capabilities: ["OWNER_DISPATCH"] });
   const encoded = process.argv.find((arg) => arg.startsWith("--payload="))?.slice("--payload=".length) ?? null;
   const payload = parseInstalledRuntimePayload(encoded);
-  const plan = installedRuntimeChildPlan(payload);
   await assertCurrentCertifiedRuntime(root);
+  if (payload.mode === "routine-refresh") {
+    const repos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
+    const request = await requestRoutineRefresh(repos, payload.args, new Date().toISOString());
+    console.log(JSON.stringify({ requestId: request.id, contractId: request.contractId, maximumAttempts: request.maximumAttempts,
+      state: "QUEUED_FOR_STANDING_PARENT", requestedAt: request.requestedAt }));
+    return;
+  }
+  const plan = installedRuntimeChildPlan(payload);
   const env = admittedRuntimeChildEnvironment({
     parentEnv: process.env,
     capability: plan.capability,

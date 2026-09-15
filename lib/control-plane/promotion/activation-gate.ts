@@ -23,6 +23,10 @@ export const ACTIVATION_GATE = {
 export const LOW_RISK_CANDIDATE_CLASSES: readonly string[] = [
   "published-minutes",
   "routine-filings",
+  // Reviewed facts enter only the registered permanent meeting partition.
+  // This does not open the retired SHADOW writer or any other civic class.
+  "meeting-times",
+  "agendas",
 ];
 
 /** Classes that stay closed until the owner approves each one by name. */

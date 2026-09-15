@@ -10,11 +10,10 @@ import { isAbsolute, relative, resolve } from "node:path";
 
 import {
   MANUAL_PROJECTION_CONTRACT_IDS,
-  manualProjectionCandidate,
-  readManualProjectionPrior,
   type ManualProjectionContractId,
   type ManualProjectionPackage,
 } from "../lib/civic-data/manual-projections.ts";
+import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -44,14 +43,13 @@ if (input.contractId !== contractId) {
 prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
-const prior = await readManualProjectionPrior(contractId, store, input.sourceReceipt.reviewedAt);
-const candidate = manualProjectionCandidate(input, { prior });
+const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, input.sourceReceipt.reviewedAt);
 const outcome = await processRegisteredManualCandidate(
   store,
   contractId,
   candidate,
   input.sourceReceipt.reviewedAt,
-  prior?.versionId ?? null,
+  expectedBaseVersionId,
 );
 
 console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({

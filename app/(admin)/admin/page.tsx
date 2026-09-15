@@ -51,6 +51,8 @@
  */
 
 import { Suspense } from "react";
+import { ResearchProgress } from "@/components/admin/research-progress.tsx";
+import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
 
 import { cookies } from "next/headers";
 
@@ -261,6 +263,7 @@ export default async function AdminPage() {
   });
   const deployments = dispatchHistory(intentLog);
   const fleetSafety = fleetSafetyOut.kind === "HELD" ? fleetSafetyOut.value.fleetSafety ?? null : null;
+  const researchProgress = researchProgressHealth(fleetSafetyOut.kind === "HELD" ? fleetSafetyOut.value : null, nowIso);
   const heartbeat = heartbeatOut.kind === "HELD" ? heartbeatOut.value : null;
   const standing = runnerStanding(heartbeat, intentLog, nowIso, fleetSafety);
   /*
@@ -441,6 +444,7 @@ export default async function AdminPage() {
   const stuckIncidents = groupIncidents(snapshot?.incidents ?? []).find((g) => g.key === "NEEDS_YOU")?.incidents.length ?? 0;
   const centre: CommandCentreInput = {
     runner: { state: plainCode(standing.state), level: standing.level, needsYou: runnerNeeds(standing, fleetSafety).needed, action: runnerNeeds(standing, fleetSafety).action },
+    researchProgress,
     code: heartbeat?.codeIdentity
       ? { rawMain: heartbeat.codeIdentity.rawMainSha, executable: heartbeat.codeIdentity.effectiveExecutableSha, verdict: heartbeat.codeIdentity.verdict }
       : null,
@@ -526,6 +530,7 @@ export default async function AdminPage() {
       )}
 
       {/* 3 — THE RUNNER */}
+      <ResearchProgress reading={researchProgress} />
       <RunnerSection
         standing={standing}
         heartbeat={heartbeat}

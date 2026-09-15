@@ -119,13 +119,8 @@ test("failed publisher refresh retains the last acquired capture for unfinished 
   if (!("nextDueAt" in schedule)) throw new Error("FIXTURE_SCHEDULE_REQUIRED");
   h.advanceTo(new Date(Date.parse(schedule.nextDueAt) + 1000).toISOString());
   response.transportError = "socket timeout";
-  const refresh = await nextAutonomousOperation(h.runtime, h.item.id);
-  assert.equal(refresh.task?.workerTask?.role, "ACQUIRER");
-  assert.equal((await dispatchWorkerTask(h.runtime, refresh.task!)).outcome, "WORKED");
-  const failure = (await h.repos.workerResults.readAll()).find(record => record.routeTaskId === refresh.task!.id)!;
-  assert.equal(failure.result.verdict, "BLOCKED");
   const parsing = await nextAutonomousOperation(h.runtime, h.item.id);
-  assert.equal(parsing.task?.workerTask?.role, "PARSER", "the failed refresh must not hide previously acquired trustworthy bytes");
+  assert.equal(parsing.task?.workerTask?.role, "PARSER", "a due refresh must not starve the captured bytes' unfinished downstream stages");
   assert.equal(parsing.task?.workerTask?.artifactId, originalArtifact.artifactId);
   assert.equal((await dispatchWorkerTask(h.runtime, parsing.task!)).outcome, "WORKED");
   for (const expectedRole of ["VALIDATOR", "ADVERSARIAL_AUDITOR"]) {
@@ -133,6 +128,11 @@ test("failed publisher refresh retains the last acquired capture for unfinished 
     assert.equal(next.task?.workerTask?.role, expectedRole);
     assert.equal((await dispatchWorkerTask(h.runtime, next.task!)).outcome, "WORKED");
   }
+  const refresh = await nextAutonomousOperation(h.runtime, h.item.id);
+  assert.equal(refresh.task?.workerTask?.role, "ACQUIRER", "finishing held work leaves the real due acquisition owed");
+  assert.equal((await dispatchWorkerTask(h.runtime, refresh.task!)).outcome, "WORKED");
+  const failure = (await h.repos.workerResults.readAll()).find(record => record.routeTaskId === refresh.task!.id)!;
+  assert.equal(failure.result.verdict, "BLOCKED");
   assert.equal((await nextAutonomousOperation(h.runtime, h.item.id)).action, "SCOUT", "a successful retained extraction never clears the latest source failure");
   assert.equal((await h.runtime.readEvidence(originalArtifact.artifactId)).text, originalText);
   assert.equal((await h.repos.workerResults.readAll()).find(record => record.id === acquired.id)?.endedAt, acquired.endedAt);

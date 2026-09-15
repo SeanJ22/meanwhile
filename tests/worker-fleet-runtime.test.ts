@@ -19,7 +19,7 @@ import {
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { loadWorkerCompletionEvidence, readCompletedWorkerResult, reconcileWorkerCompletions } from "../lib/control-plane/repository/worker-completion.ts";
+import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, reconcileWorkerCompletions } from "../lib/control-plane/repository/worker-completion.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
@@ -185,6 +185,52 @@ test("actual isolated Parser → Validator → Auditor dispatch persists the exi
   }), /WORKER_TASK_CANNOT_WRITE_CIVIC_DISPOSITION/);
   assert.deepEqual(await h.repos.routeTasks.mustRead(completed.id), completed);
   assert.deepEqual(await h.repos.dispositions.read(completed.id), [], "Computational success confers no civic disposition authority even through the coordinator API.");
+});
+
+test("completed worker history recovers with bulk reads and no per-result replay calls", async () => {
+  const h = await harness();
+  const artifact = await h.hold(CAPTURE);
+  const parser = await run(h, artifact, "PARSER");
+  const records = await h.repos.workerResults.readAll();
+  const fail = async (): Promise<never> => { throw new Error("historical result caused a point read or write"); };
+  const observed: ControlPlaneRepositories = { ...h.repos,
+    workerResults: { ...h.repos.workerResults, readAll: async () => Array.from({ length: 1500 }, () => records[0]) },
+    attempts: { ...h.repos.attempts, read: fail, mustRead: fail, compareAndSet: fail },
+    routeTasks: { ...h.repos.routeTasks, read: fail, mustRead: fail, compareAndSet: fail },
+    leases: { ...h.repos.leases, read: fail, compareAndSet: fail },
+    costs: { ...h.repos.costs, append: fail },
+    workItems: { ...h.repos.workItems, read: fail, mustRead: fail, compareAndSet: fail },
+  };
+  await reconcileWorkerCompletions(observed);
+  // Losing the cost append is a real partial commit, even with both aggregates
+  // present. It must reach recovery, never the historical-success fast path.
+  await assert.rejects(reconcileWorkerCompletions({ ...observed,
+    costs: { ...observed.costs, readAll: async () => [] },
+  }), /historical result caused/);
+  assert.equal((await h.repos.attempts.mustRead(parser.attemptId)).value.outcome, "COMPLETED");
+});
+
+test("inherited worker history uses two reads for 1500 results and rejects missing or divergent producers", async () => {
+  const h = await harness();
+  const artifact = await h.hold(CAPTURE);
+  const parser = await run(h, artifact, "PARSER");
+  const attempts = await h.repos.attempts.list();
+  let calls = 0;
+  const observed: ControlPlaneRepositories = { ...h.repos,
+    workerResults: { ...h.repos.workerResults, readAll: async () => {
+      calls += 1;
+      return [...Array.from({ length: 1500 }, () => parser),
+        { ...parser, id: "missing-producer", attemptId: "absent" },
+        { ...parser, id: "divergent-producer", completion: { ...parser.completion,
+          closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
+    } },
+    attempts: { ...h.repos.attempts, list: async () => { calls += 1; return attempts; },
+      mustRead: async () => { throw new Error("N+1 point read"); } },
+  };
+  const inherited = await readCompletedWorkerResults(observed);
+  assert.equal(inherited.length, 1500);
+  assert.ok(inherited.every(record => record.id === parser.id));
+  assert.equal(calls, 2);
 });
 
 test("every runtime grant denies promotion/restricted reads, and Parser/Validator deny network", () => {

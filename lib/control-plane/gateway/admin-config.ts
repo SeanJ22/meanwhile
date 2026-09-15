@@ -69,6 +69,7 @@ export const ADMIN_CONFIG_ID = "current";
 export const ADMIN_CONFIG_NEVER_WRITTEN = "1970-01-01T00:00:00.000Z";
 
 export interface AdminConfig {
+  readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
   readonly formatVersion: 1;
   readonly apiFallback: {
     /** May paid API fallback be used at all. Defaults false and stays false through a restart. */

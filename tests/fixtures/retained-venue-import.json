@@ -1,0 +1,424 @@
+{
+  "record": {
+    "candidate": {
+      "id": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+      "retrieval": {
+        "succeeded": true,
+        "requestedUrl": "pdc-v2-trusted-lkg:venue-resolutions",
+        "finalUrl": null,
+        "httpStatus": null,
+        "retrievedAt": "2026-09-09T01:00:00.000Z",
+        "rawHash": "b4eebc535b738c15089694de7db8b223ae25571c98743adae0e37e12d694b08a"
+      },
+      "normalization": {
+        "succeeded": true,
+        "parserVersion": "curated-reader-records/2",
+        "schemaVersion": "curated-reader-records:venue-resolutions:2",
+        "normalizedHash": "475edf51e25dfe4e6919b1453bc2b301b0f70bf18b735e054eeed04c75c72c65",
+        "normalizedPayloadHash": "475edf51e25dfe4e6919b1453bc2b301b0f70bf18b735e054eeed04c75c72c65",
+        "inputRecords": 2,
+        "outputRecords": 2,
+        "droppedRecords": 0,
+        "missingRequiredFields": []
+      },
+      "identities": [
+        {
+          "subjectId": "venue-source-1:ocd-division/country:us/state:az/place:test-1:1 Main St",
+          "jurisdiction": "US",
+          "identifiers": {
+            "record_id": "venue:test:1"
+          },
+          "matchBasis": "EXACT_SCOPED_ID",
+          "ambiguous": false
+        },
+        {
+          "subjectId": "venue-source-2:ocd-division/country:us/state:az/place:test-2:2 Main St",
+          "jurisdiction": "US",
+          "identifiers": {
+            "record_id": "venue:test:2"
+          },
+          "matchBasis": "EXACT_SCOPED_ID",
+          "ambiguous": false
+        }
+      ],
+      "temporal": {
+        "version": "2026-09-09T01:00:00.000Z",
+        "expectedVersion": "2026-09-09T01:00:00.000Z",
+        "sourceThrough": "2026-09-09T01:00:00.000Z",
+        "staleAtRetrieval": true
+      },
+      "semantics": {
+        "factKind": "owner-reviewed venue-resolutions Reader records",
+        "violations": []
+      },
+      "horizon": {
+        "kind": "OPEN_FACT_SET",
+        "query": "exact records represented by the explicitly owner-reviewed source set; no wider universe claim",
+        "returnedRecords": 2,
+        "declaredTotal": null,
+        "paginationComplete": false,
+        "claimsComplete": false
+      },
+      "absence": {
+        "claimsAbsence": false,
+        "basis": "NONE",
+        "exactSubject": null,
+        "exactHorizon": null
+      },
+      "sourceProjectionEvidence": {
+        "kind": "SOURCE_PROJECTION_CONTRACT",
+        "sourceId": "curated-reader-primary-sources",
+        "recordClass": "CURATED_READER_RECORD",
+        "scope": "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions"
+      },
+      "dependentChecks": [
+        {
+          "consumer": "meeting acquisition venue-resolution dependency",
+          "passed": true,
+          "detail": "2 exact venue-resolutions record(s); this check has no software-suite or other-source input."
+        }
+      ],
+      "normalizedPayload": {
+        "kind": "venue-resolutions",
+        "records": [
+          {
+            "id": "venue:test:1",
+            "sourceId": "venue-source-1",
+            "bodyOcdId": "ocd-division/country:us/state:az/place:test-1",
+            "match": "1 Main St",
+            "name": "Room retained-1",
+            "address": "1 Main St, Test, AZ 85000",
+            "lat": 32,
+            "lng": -110,
+            "addressSourceUrl": "https://one.example.gov/venue-resolutions",
+            "coordinateSourceUrl": "https://one.example.gov/venue-resolutions",
+            "verifiedAt": "2026-09-09T01:00:00.000Z"
+          },
+          {
+            "id": "venue:test:2",
+            "sourceId": "venue-source-2",
+            "bodyOcdId": "ocd-division/country:us/state:az/place:test-2",
+            "match": "2 Main St",
+            "name": "Room retained-2",
+            "address": "2 Main St, Test, AZ 85000",
+            "lat": 32.1,
+            "lng": -110.1,
+            "addressSourceUrl": "https://two.example.gov/venue-resolutions",
+            "coordinateSourceUrl": "https://two.example.gov/venue-resolutions",
+            "verifiedAt": "2026-09-09T01:00:00.000Z"
+          }
+        ]
+      },
+      "readModel": {
+        "kind": "venue-resolutions",
+        "records": [
+          {
+            "id": "venue:test:1",
+            "sourceId": "venue-source-1",
+            "bodyOcdId": "ocd-division/country:us/state:az/place:test-1",
+            "match": "1 Main St",
+            "name": "Room retained-1",
+            "address": "1 Main St, Test, AZ 85000",
+            "lat": 32,
+            "lng": -110,
+            "addressSourceUrl": "https://one.example.gov/venue-resolutions",
+            "coordinateSourceUrl": "https://one.example.gov/venue-resolutions",
+            "verifiedAt": "2026-09-09T01:00:00.000Z"
+          },
+          {
+            "id": "venue:test:2",
+            "sourceId": "venue-source-2",
+            "bodyOcdId": "ocd-division/country:us/state:az/place:test-2",
+            "match": "2 Main St",
+            "name": "Room retained-2",
+            "address": "2 Main St, Test, AZ 85000",
+            "lat": 32.1,
+            "lng": -110.1,
+            "addressSourceUrl": "https://two.example.gov/venue-resolutions",
+            "coordinateSourceUrl": "https://two.example.gov/venue-resolutions",
+            "verifiedAt": "2026-09-09T01:00:00.000Z"
+          }
+        ]
+      },
+      "civicRecords": [
+        {
+          "key": "curated-reader:venue:test:1",
+          "record": {
+            "id": "venue:test:1",
+            "sourceId": "venue-source-1",
+            "bodyOcdId": "ocd-division/country:us/state:az/place:test-1",
+            "match": "1 Main St",
+            "name": "Room retained-1",
+            "address": "1 Main St, Test, AZ 85000",
+            "lat": 32,
+            "lng": -110,
+            "addressSourceUrl": "https://one.example.gov/venue-resolutions",
+            "coordinateSourceUrl": "https://one.example.gov/venue-resolutions",
+            "verifiedAt": "2026-09-09T01:00:00.000Z"
+          }
+        },
+        {
+          "key": "curated-reader:venue:test:2",
+          "record": {
+            "id": "venue:test:2",
+            "sourceId": "venue-source-2",
+            "bodyOcdId": "ocd-division/country:us/state:az/place:test-2",
+            "match": "2 Main St",
+            "name": "Room retained-2",
+            "address": "2 Main St, Test, AZ 85000",
+            "lat": 32.1,
+            "lng": -110.1,
+            "addressSourceUrl": "https://two.example.gov/venue-resolutions",
+            "coordinateSourceUrl": "https://two.example.gov/venue-resolutions",
+            "verifiedAt": "2026-09-09T01:00:00.000Z"
+          }
+        }
+      ],
+      "excludedFacts": [],
+      "bootstrapImport": {
+        "contractVersion": 1,
+        "kind": "TRUSTED_LKG_IMPORT",
+        "authorization": "PDC_V2_FROZEN_LKG_CUTOVER",
+        "purpose": "PRESERVE_EXISTING_READER_LKG_DURING_AUTHORITY_TRANSFER",
+        "sourceAuthenticated": false,
+        "contractId": "venue-resolutions",
+        "sourceId": "curated-reader-primary-sources",
+        "recordClass": "CURATED_READER_RECORD",
+        "scope": "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+        "parserVersion": "curated-reader-records/2",
+        "sourceVersion": "2026-09-09T01:00:00.000Z",
+        "sourceThrough": "2026-09-09T01:00:00.000Z",
+        "importedAt": "2026-09-09T01:00:00.000Z",
+        "frozenBaseSha": "fc67e8cd34c489590c403f7b4a0d6008fa755296",
+        "importerCodeSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "fixtureSetSha256": "b4eebc535b738c15089694de7db8b223ae25571c98743adae0e37e12d694b08a",
+        "fixtures": [
+          {
+            "path": "data/meetings/venues.json",
+            "sha256": "91a169acbed9f9c648008e012c5f94a22ef73bfeeae8fcf206670a0ab7380d81",
+            "bytes": 13
+          }
+        ],
+        "normalizedPayloadSha256": "475edf51e25dfe4e6919b1453bc2b301b0f70bf18b735e054eeed04c75c72c65",
+        "readModelSha256": "475edf51e25dfe4e6919b1453bc2b301b0f70bf18b735e054eeed04c75c72c65",
+        "candidateEnvelopeSha256": "b256b6997061a15a45ae1e026f92216b484692768effd878e30fb33ce0ee2677",
+        "validatorIds": [
+          "parser:curated-reader-records/2",
+          "reader:meeting acquisition venue-resolution dependency",
+          "source-projection:curated-reader-primary-sources:CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:reviewed-venue-resolutions"
+        ]
+      },
+      "changeSet": {
+        "outcome": "CHANGED",
+        "added": [
+          {
+            "key": "curated-reader:venue:test:1",
+            "before": null,
+            "after": {
+              "id": "venue:test:1",
+              "sourceId": "venue-source-1",
+              "bodyOcdId": "ocd-division/country:us/state:az/place:test-1",
+              "match": "1 Main St",
+              "name": "Room retained-1",
+              "address": "1 Main St, Test, AZ 85000",
+              "lat": 32,
+              "lng": -110,
+              "addressSourceUrl": "https://one.example.gov/venue-resolutions",
+              "coordinateSourceUrl": "https://one.example.gov/venue-resolutions",
+              "verifiedAt": "2026-09-09T01:00:00.000Z"
+            }
+          },
+          {
+            "key": "curated-reader:venue:test:2",
+            "before": null,
+            "after": {
+              "id": "venue:test:2",
+              "sourceId": "venue-source-2",
+              "bodyOcdId": "ocd-division/country:us/state:az/place:test-2",
+              "match": "2 Main St",
+              "name": "Room retained-2",
+              "address": "2 Main St, Test, AZ 85000",
+              "lat": 32.1,
+              "lng": -110.1,
+              "addressSourceUrl": "https://two.example.gov/venue-resolutions",
+              "coordinateSourceUrl": "https://two.example.gov/venue-resolutions",
+              "verifiedAt": "2026-09-09T01:00:00.000Z"
+            }
+          }
+        ],
+        "changed": [],
+        "removed": [],
+        "held": []
+      }
+    },
+    "state": "PROMOTED",
+    "acquisitionSucceeded": true,
+    "receipt": {
+      "contractVersion": 2,
+      "decision": "GOOD",
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+      "validatedAt": "2026-09-09T01:00:00.000Z",
+      "checks": [
+        {
+          "check": "SOURCE_AUTHENTICITY",
+          "verdict": "PASS",
+          "code": "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+          "detail": "Explicitly non-source-authenticated PDC-v2 LKG import from 1 immutable file(s), manifest b4eebc535b738c15089694de7db8b223ae25571c98743adae0e37e12d694b08a, at code aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa."
+        },
+        {
+          "check": "SCHEMA_PARSE_VALIDITY",
+          "verdict": "PASS",
+          "code": "SCHEMA_AND_DISPOSITION_VALID",
+          "detail": "2/2 records normalized; 0 explicitly dropped."
+        },
+        {
+          "check": "IDENTITY_JURISDICTION_VALIDITY",
+          "verdict": "PASS",
+          "code": "IDENTITY_AND_JURISDICTION_EXACT",
+          "detail": "2 exact identity binding(s); no name-only inheritance."
+        },
+        {
+          "check": "TEMPORAL_VALIDITY",
+          "verdict": "PASS",
+          "code": "TRUSTED_LKG_IMPORT_STALENESS_RECORDED",
+          "detail": "The frozen LKG is explicitly stale at import (source through 2026-09-09T01:00:00.000Z); it may preserve service but cannot prove current publisher freshness."
+        },
+        {
+          "check": "SEMANTIC_VALIDITY",
+          "verdict": "PASS",
+          "code": "FACT_INTERPRETATION_VALID",
+          "detail": "owner-reviewed venue-resolutions Reader records."
+        },
+        {
+          "check": "COMPLETENESS_HORIZON_VALIDITY",
+          "verdict": "PASS",
+          "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+          "detail": "Valid individual facts may promote; broader completeness remains open."
+        },
+        {
+          "check": "ABSENCE_VALIDITY",
+          "verdict": "PASS",
+          "code": "NO_ABSENCE_CLAIM",
+          "detail": "The projection makes no absence claim."
+        },
+        {
+          "check": "DEPENDENT_READ_MODEL_VALIDITY",
+          "verdict": "PASS",
+          "code": "DEPENDENT_CONSUMERS_ACCEPT",
+          "detail": "meeting acquisition venue-resolution dependency"
+        }
+      ],
+      "excludedFacts": []
+    },
+    "promotedVersion": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+    "lastKnownGoodVersion": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+    "failureCode": null,
+    "failureDetail": null
+  },
+  "projection": {
+    "key": "CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+    "sourceId": "curated-reader-primary-sources",
+    "recordClass": "CURATED_READER_RECORD",
+    "scope": "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+    "versionId": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+    "lastKnownGoodVersionId": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+    "promotedAt": "2026-09-09T01:00:00.000Z",
+    "payload": {
+      "kind": "venue-resolutions",
+      "records": [
+        {
+          "id": "venue:test:1",
+          "sourceId": "venue-source-1",
+          "bodyOcdId": "ocd-division/country:us/state:az/place:test-1",
+          "match": "1 Main St",
+          "name": "Room retained-1",
+          "address": "1 Main St, Test, AZ 85000",
+          "lat": 32,
+          "lng": -110,
+          "addressSourceUrl": "https://one.example.gov/venue-resolutions",
+          "coordinateSourceUrl": "https://one.example.gov/venue-resolutions",
+          "verifiedAt": "2026-09-09T01:00:00.000Z"
+        },
+        {
+          "id": "venue:test:2",
+          "sourceId": "venue-source-2",
+          "bodyOcdId": "ocd-division/country:us/state:az/place:test-2",
+          "match": "2 Main St",
+          "name": "Room retained-2",
+          "address": "2 Main St, Test, AZ 85000",
+          "lat": 32.1,
+          "lng": -110.1,
+          "addressSourceUrl": "https://two.example.gov/venue-resolutions",
+          "coordinateSourceUrl": "https://two.example.gov/venue-resolutions",
+          "verifiedAt": "2026-09-09T01:00:00.000Z"
+        }
+      ]
+    },
+    "receipt": {
+      "contractVersion": 2,
+      "decision": "GOOD",
+      "candidateId": "curated-reader-primary-sources:trusted-lkg:8699eed254f1310c60f6b7c112d500f4",
+      "sourceId": "curated-reader-primary-sources",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+      "validatedAt": "2026-09-09T01:00:00.000Z",
+      "checks": [
+        {
+          "check": "SOURCE_AUTHENTICITY",
+          "verdict": "PASS",
+          "code": "TRUSTED_LKG_IMPORT_PROVENANCE_VALID",
+          "detail": "Explicitly non-source-authenticated PDC-v2 LKG import from 1 immutable file(s), manifest b4eebc535b738c15089694de7db8b223ae25571c98743adae0e37e12d694b08a, at code aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa."
+        },
+        {
+          "check": "SCHEMA_PARSE_VALIDITY",
+          "verdict": "PASS",
+          "code": "SCHEMA_AND_DISPOSITION_VALID",
+          "detail": "2/2 records normalized; 0 explicitly dropped."
+        },
+        {
+          "check": "IDENTITY_JURISDICTION_VALIDITY",
+          "verdict": "PASS",
+          "code": "IDENTITY_AND_JURISDICTION_EXACT",
+          "detail": "2 exact identity binding(s); no name-only inheritance."
+        },
+        {
+          "check": "TEMPORAL_VALIDITY",
+          "verdict": "PASS",
+          "code": "TRUSTED_LKG_IMPORT_STALENESS_RECORDED",
+          "detail": "The frozen LKG is explicitly stale at import (source through 2026-09-09T01:00:00.000Z); it may preserve service but cannot prove current publisher freshness."
+        },
+        {
+          "check": "SEMANTIC_VALIDITY",
+          "verdict": "PASS",
+          "code": "FACT_INTERPRETATION_VALID",
+          "detail": "owner-reviewed venue-resolutions Reader records."
+        },
+        {
+          "check": "COMPLETENESS_HORIZON_VALIDITY",
+          "verdict": "PASS",
+          "code": "INDIVIDUAL_FACTS_NO_UNIVERSE_CLAIM",
+          "detail": "Valid individual facts may promote; broader completeness remains open."
+        },
+        {
+          "check": "ABSENCE_VALIDITY",
+          "verdict": "PASS",
+          "code": "NO_ABSENCE_CLAIM",
+          "detail": "The projection makes no absence claim."
+        },
+        {
+          "check": "DEPENDENT_READ_MODEL_VALIDITY",
+          "verdict": "PASS",
+          "code": "DEPENDENT_CONSUMERS_ACCEPT",
+          "detail": "meeting acquisition venue-resolution dependency"
+        }
+      ],
+      "excludedFacts": []
+    }
+  }
+}

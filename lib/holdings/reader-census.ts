@@ -13,6 +13,15 @@ import { gzipSync, gunzipSync } from "node:zlib";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import ts from "typescript";
 import { DATASET_FAMILIES, READER_SURFACES, type ReaderSurfaceId } from "./datasets.ts";
+import {
+  readerPresentationRenewalProblems,
+  renewalConsistencyProblems,
+  READER_PRESENTATION_RENEWAL_PATH,
+  type ReaderPresentationRenewal,
+  type ReaderPresentationRenewalFile,
+  type ReaderPresentationRenewalFileKind,
+  type ReaderPresentationRenewalBehavior,
+} from "../control-plane/presentation-renewal.ts";
 import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } from "./registry-seed-proof.ts";
 import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type ManifestContext } from "./manifest.ts";
 import { nonRoutineDispositionForTrackedPath } from "../civic-data/non-routine-dispositions.ts";
@@ -1894,144 +1903,22 @@ export function isKnownLegacyReaderClosureReceipt(
   } catch { return false; }
 }
 
-export type ReaderPresentationRenewalFileKind = "STYLESHEET" | "PRESENTATION_COMPONENT" | "PRESENTATION_HELPER";
-export type ReaderPresentationRenewalBehavior =
-  "DATA_LOADING" | "QUERIES" | "IDENTITY_SELECTION" | "AUTHORIZATION" | "VALIDATION" | "PUBLICATION";
-
-export interface ReaderPresentationRenewalFile {
-  readonly path: string;
-  /** The exact fingerprint this file carried in the preserved production receipt. */
-  readonly baselineSha256: string;
-  /** The exact fingerprint of the renewed presentation bytes at the integration commit. */
-  readonly renewedSha256: string;
-  readonly kind: ReaderPresentationRenewalFileKind;
-  /** Why this exact change cannot alter data loading, queries, identity
-   * selection, authorization, validation or publication behavior. */
-  readonly behaviorReview: string;
-}
-
-/**
- * A one-time, explicitly bounded presentation-only renewal, approved by the
- * author for a single integration. It is recorded SEPARATELY from the preserved
- * production closure receipt and only ever LINKS to it — the receipt keeps its
- * original source and execution bindings at their original head, and this record
- * never claims the original production execution occurred at the new head.
- */
-export interface ReaderPresentationRenewal {
-  readonly formatVersion: 1;
-  readonly renewalKind: "PRESENTATION_ONLY";
-  /** The author's recorded approval and its bounded justification. */
-  readonly rationale: string;
-  /** The exact integration commit whose reader bytes this renewal describes. */
-  readonly integrationCommit: string;
-  /** The preserved production receipt this renewal is linked to; never mutated. */
-  readonly baselineReceiptPath: string;
-  readonly baselineReceiptSha256: string;
-  /** The enumerated presentation files (nine restyled surfaces plus any shared
-   * styling dependency) whose post-proof fingerprint drift this admits. */
-  readonly permittedFiles: readonly ReaderPresentationRenewalFile[];
-  /** The behavior classes verified unchanged across every permitted file. */
-  readonly unchangedBehavior: readonly ReaderPresentationRenewalBehavior[];
-  /** Fresh, focused browser results, bound to the same integration commit. */
-  readonly browserVerification: {
-    readonly at: string;
-    readonly head: string;
-    readonly surfaces: readonly {
-      readonly surface: string;
-      readonly expectedRecords: string;
-      readonly changedControls: string;
-      readonly result: "RENDERED_AS_EXPECTED";
-    }[];
-  };
-}
-
-const READER_PRESENTATION_RENEWAL_BEHAVIORS: readonly ReaderPresentationRenewalBehavior[] =
-  ["DATA_LOADING", "QUERIES", "IDENTITY_SELECTION", "AUTHORIZATION", "VALIDATION", "PUBLICATION"];
-const READER_PRESENTATION_RENEWAL_KINDS: readonly ReaderPresentationRenewalFileKind[] =
-  ["STYLESHEET", "PRESENTATION_COMPONENT", "PRESENTATION_HELPER"];
-
-/**
- * The admission half of the bounded presentation-only renewal. It NEVER mutates
- * or relabels the preserved production receipt: source and execution bindings
- * stand at their original head. It admits source-fingerprint drift only on the
- * enumerated presentation files that actually changed after that proof, each
- * bound to the receipt's original bytes (`baselineSha256`), to the renewed bytes
- * on disk at the integration commit (`renewedSha256`), to an actual change
- * between the two, and to a presentation kind.
- *
- * The negative half is mandatory and fails closed: every reader dependency that
- * actually changed MUST be an admitted presentation file, or it stays a hard
- * failure — so a data-loading, query, identity-selection, authorization,
- * validation or publication source change can never ride in under this rule,
- * and neither can a stale or unbound renewal.
- */
-export function readerPresentationRenewalProblems(
-  root: string,
-  receipt: ReaderClosureReceipt,
-  renewal: ReaderPresentationRenewal,
-  options: {
-    readonly receiptPath: string;
-    readonly receiptSha256: string;
-    readonly integrationCommitReachable: boolean;
-    readonly skipPaths?: ReadonlySet<string>;
-  },
-): { readonly admittedPaths: ReadonlySet<string>; readonly problems: string[] } {
-  const problems: string[] = [];
-  const admittedPaths = new Set<string>();
-  const skip = options.skipPaths ?? new Set<string>();
-
-  if (renewal.formatVersion !== 1) problems.push("Presentation renewal format is not version 1");
-  if (renewal.renewalKind !== "PRESENTATION_ONLY") problems.push("Presentation renewal is not a PRESENTATION_ONLY admission");
-  if (typeof renewal.rationale !== "string" || renewal.rationale.trim().length === 0) problems.push("Presentation renewal lacks a recorded author rationale");
-
-  // Bound to the exact integration commit: recorded, and reachable from HEAD.
-  if (!EXACT_GIT_HEAD.test(String(renewal.integrationCommit))) problems.push("Presentation renewal integration commit is not an exact Git head");
-  else if (!options.integrationCommitReachable) problems.push("Presentation renewal integration commit is not part of the integration history");
-
-  // Linked to the preserved production receipt WITHOUT touching it.
-  if (renewal.baselineReceiptPath !== options.receiptPath) problems.push("Presentation renewal is not linked to the receipt under validation");
-  if (!EXACT_SHA256.test(String(renewal.baselineReceiptSha256))) problems.push("Presentation renewal baseline receipt hash is not a sanitized SHA-256");
-  else if (renewal.baselineReceiptSha256 !== options.receiptSha256) problems.push("Presentation renewal does not bind the exact preserved production receipt bytes");
-
-  // The full behavior-class set must be attested unchanged.
-  const attested = new Set(Array.isArray(renewal.unchangedBehavior) ? renewal.unchangedBehavior : []);
-  for (const behavior of READER_PRESENTATION_RENEWAL_BEHAVIORS) if (!attested.has(behavior)) problems.push(`Presentation renewal does not attest unchanged ${behavior} behavior`);
-
-  // Fresh focused browser verification, bound to the same integration commit.
-  const browser = renewal.browserVerification;
-  if (!browser || !Array.isArray(browser.surfaces) || browser.surfaces.length === 0) problems.push("Presentation renewal lacks focused browser verification of the affected reader surfaces");
-  else {
-    if (browser.head !== renewal.integrationCommit) problems.push("Presentation renewal browser verification is not bound to the integration commit");
-    for (const surface of browser.surfaces) if (surface.result !== "RENDERED_AS_EXPECTED") problems.push(`Presentation renewal browser verification did not confirm ${string(surface.surface) || "an affected surface"}`);
-  }
-
-  const baseline = new Map(receipt.sourceHashes.map((source) => [source.path, source.sha256]));
-  for (const file of Array.isArray(renewal.permittedFiles) ? renewal.permittedFiles : []) {
-    const original = baseline.get(file.path);
-    if (original === undefined) { problems.push(`${file.path}: presentation renewal names a file absent from the production receipt fingerprint`); continue; }
-    if (file.baselineSha256 !== original) { problems.push(`${file.path}: presentation renewal baseline does not match the preserved production fingerprint`); continue; }
-    if (!READER_PRESENTATION_RENEWAL_KINDS.includes(file.kind)) { problems.push(`${file.path}: presentation renewal kind is not a presentation class`); continue; }
-    if (typeof file.behaviorReview !== "string" || file.behaviorReview.trim().length === 0) { problems.push(`${file.path}: presentation renewal lacks a per-file behavior review`); continue; }
-    let currentSha: string | null = null;
-    try { currentSha = existsSync(join(root, file.path)) ? sha256(readFileSync(join(root, file.path))) : null; } catch { currentSha = null; }
-    if (currentSha === null) { problems.push(`${file.path}: presentation-renewed file is missing`); continue; }
-    if (currentSha !== file.renewedSha256) { problems.push(`${file.path}: presentation renewal renewed fingerprint does not match the current bytes`); continue; }
-    if (file.renewedSha256 === file.baselineSha256) { problems.push(`${file.path}: presentation renewal lists an unchanged file`); continue; }
-    admittedPaths.add(file.path);
-  }
-
-  // NEGATIVE CHECK — the focused rejection of anything outside the permitted
-  // scope: every reader dependency that actually changed must be an admitted
-  // presentation file, or it remains a hard "changed after proof" failure.
-  for (const source of receipt.sourceHashes) {
-    if (skip.has(source.path)) continue;
-    let changed: boolean;
-    try { changed = !existsSync(join(root, source.path)) || sha256(readFileSync(join(root, source.path))) !== source.sha256; } catch { changed = true; }
-    if (changed && !admittedPaths.has(source.path)) problems.push(`Reader dependency changed outside the permitted presentation renewal: ${source.path}`);
-  }
-
-  return { admittedPaths, problems: unique(problems) };
-}
+// The bounded presentation-only renewal — its types, its pure semantic
+// validator, and the preflight consistency check — live in a node-only leaf so
+// the cheap preflight can run them without importing this heavy module. They are
+// imported at the top of this file for local use and re-exported here so existing
+// importers of reader-census keep resolving them.
+export {
+  readerPresentationRenewalProblems,
+  renewalConsistencyProblems,
+  READER_PRESENTATION_RENEWAL_PATH,
+};
+export type {
+  ReaderPresentationRenewal,
+  ReaderPresentationRenewalFile,
+  ReaderPresentationRenewalFileKind,
+  ReaderPresentationRenewalBehavior,
+};
 
 export function validateReaderClosureReceipt(
   root: string,
@@ -2061,7 +1948,7 @@ export function validateReaderClosureReceipt(
     try { receiptSha256 = sha256(readReaderEvidence(root, options.receiptPath ?? "")); } catch { /* an empty hash fails the exact-bind check below */ }
     let integrationCommitReachable = false;
     try { execFileSync("git", ["merge-base", "--is-ancestor", options.presentationRenewal.integrationCommit, "HEAD"], { cwd: root, stdio: "ignore" }); integrationCommitReachable = true; } catch { /* reported by the admission */ }
-    failures.push(...readerPresentationRenewalProblems(root, receipt, options.presentationRenewal, {
+    failures.push(...readerPresentationRenewalProblems(root, receipt.sourceHashes, options.presentationRenewal, {
       receiptPath: options.receiptPath ?? "",
       receiptSha256,
       integrationCommitReachable,

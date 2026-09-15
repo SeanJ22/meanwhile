@@ -1,27 +1,34 @@
 /**
- * Generate (or --check) the one-time, explicitly bounded presentation-only
+ * **EVIDENCE CREATION.** Write the one-time, explicitly bounded presentation-only
  * renewal that admits the Lumen reader restyle against the PRESERVED production
  * reader closure receipt.
  *
- *   node scripts/reader-presentation-renewal.mjs           # write the artifact
- *   node scripts/reader-presentation-renewal.mjs --check   # verify the committed artifact
+ *   node scripts/reader-presentation-renewal.mjs   # (re)write the artifact
+ *
+ * Verification is a SEPARATE concern: the preflight's `presentation-renewal`
+ * check (lib/control-plane/presentation-renewal.ts → renewalConsistencyProblems)
+ * validates the recorded artifact's receipt/file bindings and integration
+ * ancestry against the candidate tree. It never regenerates this file, so a
+ * later commit or merge with the bound files unchanged still passes. Do not add
+ * a --check mode here that recomputes the integration commit from HEAD: that was
+ * the CIE defect of run 34915265113.
  *
  * This NEVER edits `reader-last-mile-final-closure-receipt.json`: the production
  * receipt keeps its original source and execution bindings at their original
  * head. The renewal is a SEPARATE, linked record. Baseline hashes are read from
- * the preserved receipt; renewed hashes are read from the current bytes at the
- * integration commit; the integration commit is the current HEAD. The admission
- * rule (`readerPresentationRenewalProblems`) fails closed on any file that is
- * not enumerated here, so this declaration is the entire permitted scope.
+ * the preserved receipt; renewed hashes are read from the current bytes; the
+ * integration commit is the current HEAD at creation. The admission rule fails
+ * closed on any file not enumerated here, so this declaration is the whole scope.
  */
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { READER_PRESENTATION_RENEWAL_PATH } from "../lib/control-plane/presentation-renewal.ts";
 
 const root = process.cwd();
 const RECEIPT_PATH = "docs/evidence/reader-last-mile-final-closure-receipt.json";
-const OUTPUT_PATH = "docs/evidence/reader-last-mile-lumen-presentation-renewal.json";
+const OUTPUT_PATH = READER_PRESENTATION_RENEWAL_PATH;
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 // The nine restyled reader files. The CSS scan confirmed no shared styling
@@ -106,28 +113,14 @@ const BROWSER_SURFACES = [
   },
 ];
 
-const check = process.argv.includes("--check");
 const receiptBytes = readFileSync(join(root, RECEIPT_PATH));
 const receipt = JSON.parse(receiptBytes.toString("utf8"));
 const baseline = new Map(receipt.sourceHashes.map((s) => [s.path, s.sha256]));
 
-// integrationCommit is recorded ONCE, at write time, as the branch HEAD then.
-// On --check it must be read back from the committed artifact and NOT recomputed
-// from HEAD: committing the renewal (and later merging) advances HEAD past that
-// commit, so recomputing would spuriously report drift on every CI run. What the
-// check enforces instead is that the recorded commit is still an ancestor of
-// HEAD — exactly the lineage the admission gate (readerPresentationRenewalProblems)
-// requires. Content integrity (receipt link, baseline and renewed fingerprints)
-// is still recomputed and compared below.
-let integrationCommit;
-if (check) {
-  if (!existsSync(join(root, OUTPUT_PATH))) { console.error(`MISSING: ${OUTPUT_PATH} — run without --check to write it.`); process.exit(1); }
-  integrationCommit = JSON.parse(readFileSync(join(root, OUTPUT_PATH), "utf8")).integrationCommit;
-  try { execFileSync("git", ["merge-base", "--is-ancestor", integrationCommit, "HEAD"], { cwd: root, stdio: "ignore" }); }
-  catch { console.error(`DRIFT: recorded integrationCommit ${integrationCommit} is not an ancestor of HEAD.`); process.exit(1); }
-} else {
-  integrationCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-}
+// The integration commit is recorded ONCE, here, as the branch HEAD at creation.
+// Verification (the preflight check) reads it back and only requires it to be an
+// ancestor of the checkout — it is never recomputed from HEAD.
+const integrationCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
 
 const permittedFiles = PERMITTED.map((file) => {
   const baselineSha256 = baseline.get(file.path);
@@ -170,14 +163,6 @@ const renewal = {
 };
 
 const serialized = `${JSON.stringify(renewal, null, 2)}\n`;
-if (check) {
-  const committed = existsSync(join(root, OUTPUT_PATH)) ? readFileSync(join(root, OUTPUT_PATH), "utf8") : "";
-  if (committed !== serialized) {
-    console.error(`DRIFT: ${OUTPUT_PATH} does not match the current tree/receipt. Re-run without --check.`);
-    process.exit(1);
-  }
-  console.log(`OK: ${OUTPUT_PATH} matches (${permittedFiles.length} permitted files, integration ${integrationCommit.slice(0, 8)}).`);
-} else {
-  writeFileSync(join(root, OUTPUT_PATH), serialized);
-  console.log(`Wrote ${OUTPUT_PATH}: ${permittedFiles.length} permitted files, integration ${integrationCommit.slice(0, 8)}, browser ${renewal.browserVerification.at}.`);
-}
+writeFileSync(join(root, OUTPUT_PATH), serialized);
+console.log(`Wrote ${OUTPUT_PATH}: ${permittedFiles.length} permitted files, integration ${integrationCommit.slice(0, 8)}, browser ${renewal.browserVerification.at}.`);
+console.log("Verify with the preflight: node scripts/preflight.mjs (the presentation-renewal check).");

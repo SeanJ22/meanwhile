@@ -339,3 +339,57 @@ test("PDC hosted setup fetches the exact frozen bridge before the unchanged full
   assert.deepEqual(full.env, { NODE_OPTIONS: "--max-old-space-size=4096" });
   assert.equal(gates["timeout-minutes"], 75);
 });
+
+
+/**
+ * #853 moved an ancestry consumer into preflight while its history setup
+ * remained in the expensive tier. A valid historical proof then appeared
+ * unrelated in CI. Every job that runs preflight must supply complete history
+ * before it; adding commits must not change whether a valid ancestor is visible.
+ */
+function assertPreflightHistory(src: string): void {
+  const workflow = parse(src) as {
+    jobs: Record<string, { steps?: {
+      uses?: string; id?: string; if?: string;
+      with?: Record<string, unknown>;
+    }[] }>;
+  };
+  let consumers = 0;
+  for (const [name, job] of Object.entries(workflow.jobs)) {
+    const steps = job.steps ?? [];
+    const preflight = steps.findIndex((step) => step.id === "preflight");
+    if (preflight < 0) continue;
+    consumers++;
+    const checkout = steps.findIndex((step) =>
+      step.uses?.startsWith("actions/checkout@"),
+    );
+    assert.ok(checkout >= 0 && checkout < preflight,
+      `${name}: checkout must precede preflight`);
+    assert.equal(steps[checkout].with?.["fetch-depth"], 0,
+      `${name}: historical proofs require complete history before preflight`);
+    assert.equal(steps[checkout].if, undefined,
+      `${name}: history setup must not depend on expensive-tier admission`);
+  }
+  assert.ok(consumers > 0, "no preflight consumers found");
+}
+
+test("CI history contract covers every preflight consumer, including build matrix", () => {
+  assertPreflightHistory(readFileSync(WORKFLOW, "utf8"));
+});
+
+test("CI history contract rejects shallow checkout and setup after preflight", () => {
+  const fixture = (steps: string) => `jobs:\n  example:\n    steps:\n${steps}`;
+  assert.throws(() => assertPreflightHistory(fixture(
+    "      - uses: actions/checkout@v7\n        with:\n          fetch-depth: 3\n      - id: preflight\n",
+  )), /complete history/);
+  assert.throws(() => assertPreflightHistory(fixture(
+    "      - id: preflight\n      - uses: actions/checkout@v7\n        with:\n          fetch-depth: 0\n",
+  )), /precede preflight/);
+});
+
+test("CI history contract accepts complete history and rejects absent consumers", () => {
+  assertPreflightHistory(
+    "jobs:\n  example:\n    steps:\n      - uses: actions/checkout@v7\n        with:\n          fetch-depth: 0\n      - id: preflight\n",
+  );
+  assert.throws(() => assertPreflightHistory("jobs: {}"), /no preflight consumers/);
+});

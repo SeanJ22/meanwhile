@@ -1,3 +1,9 @@
+/**
+ * @freshness-reads-here
+ * retainMeetingFetchBytes stamps only the actual successful fetch whose cloned
+ * response bytes were just read and hashed. Replayed candidates carry that
+ * original timestamp; approval lookup never mints a source freshness date.
+ */
 import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import type { RoutineCandidate } from "./types.ts";

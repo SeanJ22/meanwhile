@@ -92,10 +92,10 @@ const STYLE = `
   background-color: var(--panel);
   background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
-  transition: box-shadow 1s cubic-bezier(.15,.83,.66,1), transform 1s cubic-bezier(.15,.83,.66,1); }
+  transition: box-shadow var(--dur-slow) var(--ease-move), transform var(--dur-slow) var(--ease-move); }
 [data-admin-signin] .signin-lumen::after { content:""; position:absolute; left:15%; right:15%; bottom:0; height:1px;
   background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent); opacity:.22;
-  transition: opacity 1s cubic-bezier(.15,.83,.66,1); pointer-events:none; }
+  transition: opacity var(--dur-slow) var(--ease-move); pointer-events:none; }
 [data-admin-signin] .signin-lumen:hover { transform: translateY(-1px);
   box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), 0 0 0 1px var(--ring), 0 0 14px var(--link-glow); }
 [data-admin-signin] .signin-lumen:hover::after { opacity: 1; }

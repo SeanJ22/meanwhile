@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 639,
-    "named": 6573,
+    "files": 641,
+    "named": 6589,
     "dynamic": 27
   },
   "files": {
@@ -7177,6 +7177,25 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-presentation-renewal.test.ts": {
+      "names": [
+        "a malformed integration commit is rejected",
+        "a non-presentation kind is rejected",
+        "a permitted file that did not actually change is rejected as scope inflation",
+        "a permitted file whose baseline does not match the preserved receipt is rejected",
+        "a renewal linked to the wrong receipt path is rejected",
+        "a renewal not bound to the integration history is rejected",
+        "a renewal that does not bind the exact preserved receipt bytes is rejected",
+        "a renewal that omits a behavior-class attestation is rejected",
+        "a stale renewed fingerprint (file drifted past the renewal) is rejected",
+        "a valid bounded presentation renewal admits exactly the enumerated changed files",
+        "browser verification is required, bound to the commit, and must confirm every surface",
+        "the committed presentation-renewal artifact matches the current tree and receipt",
+        "the funding committee pill drops the leading article without touching the prose label",
+        "the negative check rejects a reader dependency that changed outside the permitted scope"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-prl-delivery.test.ts": {
       "names": [
         "PRL is exact official identity only, never a display-name or wrong-tier join",
@@ -9723,6 +9742,13 @@
         "the composite turns the refusal into JOB, so the run goes red",
         "the factory refuses a non-zero fetch that yielded nothing and dropped nothing",
         "the three honest empties still pass"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-acquisition-plan.test.ts": {
+      "names": [
+        "adding a duplicate corpus row turns a direct candidacy ambiguous without touching other assignments",
+        "isolated planning resolves each assignment class from synthetic inputs, with no network or registration"
       ],
       "dynamic": 0
     },

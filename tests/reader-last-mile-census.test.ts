@@ -15,7 +15,7 @@ import { proveVotingSites } from "../scripts/reader-last-mile-voting-sites.mts";
 import { registerReaderRenderHooks } from "../lib/holdings/reader-census.ts";
 import { readerSourceFingerprint, readerSourceHashProblems } from "../lib/holdings/reader-census.ts";
 import { ballotHolderObligationFailures } from "../lib/holdings/reader-census.ts";
-import { isKnownLegacyReaderClosureReceipt, readerClosureExecutionAuthorityEvidenceProblems, readerClosureExecutionAuthorityProblems, readerClosureReadConnectionIdentity, validateReaderClosureReceipt, type ReaderClosureExecutionAuthorityEvidence, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { isKnownLegacyReaderClosureReceipt, readerClosureExecutionAuthorityEvidenceProblems, readerClosureExecutionAuthorityProblems, readerClosureReadConnectionIdentity, validateReaderClosureReceipt, type ReaderClosureExecutionAuthorityEvidence, type ReaderClosureReceipt, type ReaderPresentationRenewal } from "../lib/holdings/reader-census.ts";
 import { readerAcquisitionBoundaryProblems } from "../lib/holdings/reader-census.ts";
 import { ballotQualificationFailures, type BallotQualificationObligation } from "../lib/holdings/reader-census.ts";
 import { sourceEolEquivalenceProblems, type ReaderSourceEolEquivalence } from "../lib/holdings/reader-census.ts";
@@ -235,8 +235,16 @@ test("the committed complete reader graph still matches its proved holdings, loa
   // Mandatory current evidence: a missing receipt is a failing gate, never a
   // skipped check. Documentation-only commits need no new reader proof; changed
   // holdings, identity joins, reader code or CSS invalidate this receipt.
-  const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-final-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;
-  assert.deepEqual(validateReaderClosureReceipt(root, receipt, { receiptPath: "docs/evidence/reader-last-mile-final-closure-receipt.json" }), []);
+  //
+  // The Lumen × Meanwhile integration restyled nine presentation files. The
+  // production receipt is PRESERVED byte-for-byte (its source and execution
+  // bindings stand at their original head); the enumerated presentation-only
+  // fingerprint drift is admitted solely through the one-time, negative-checked
+  // presentation renewal, which fails closed on any change outside its scope.
+  const receiptPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
+  const receipt = JSON.parse(readReaderEvidence(root, receiptPath).toString("utf8")) as ReaderClosureReceipt;
+  const presentationRenewal = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-lumen-presentation-renewal.json").toString("utf8")) as ReaderPresentationRenewal;
+  assert.deepEqual(validateReaderClosureReceipt(root, receipt, { receiptPath, presentationRenewal }), []);
 });
 
 test("ballot scope cannot hide an eligible incumbent when the consumer join returns null", () => {

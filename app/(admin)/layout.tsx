@@ -67,81 +67,98 @@ export const metadata: Metadata = {
 const STYLES = `
 /* ============================================================ tokens */
 .admin, .console-nav {
-  --ce-void: #1b1c22;
-  --ce-graphite: #0b151e;
-  --ce-panel: #20222a;
-  --ce-panel-raised: #262932;
+  /* ADMIN PARITY (design handoff 2026-09-13). The control-centre now speaks the
+     READER's shared visual language. The whole --ce-* recipe below is unchanged;
+     only these token VALUES are re-pointed at the shared tokens in
+     app/globals.css, so every admin surface inherits the reader's material,
+     palette, interactive accent, hairlines, motion, radii and tier accents
+     WITHOUT a component rewrite (layouts, functionality and structure preserved).
+     Supersedes the standalone Lumen Edge palette (ADM-21) per the newer
+     ADMIN-PARITY directive. The bridged tokens auto-theme through the shared
+     tokens, so the light block below only restates the admin-LOCAL per-theme
+     literals: the health-grade legend (--ce-text-*) and the chart bar tone
+     (--ce-slate-rise) — a grade scale and a bar colour are operational tooling,
+     never the reader's tier/party/funding vocabulary. */
+  /* Each token is var(--shared, <original literal>): production renders under the
+     root layout's globals.css, so the shared token wins → parity; an isolated
+     render without globals.css (e.g. tests/admin-readiness-cell-state) falls back
+     to the admin's original self-contained value, so the surface still works. */
+  --ce-void: var(--bg, #1b1c22);
+  --ce-graphite: var(--panel, #0b151e);
+  --ce-panel: var(--panel-bg, #20222a);
+  --ce-panel-raised: var(--surface, #262932);
   --ce-slate-rise: #47515c;
-  --ce-hairline: #2f3441;
-  --ce-fg: #ffffff;
-  --ce-muted: #a8aebb;
-  --ce-lumen: #cfd8e6;
-  --ce-alpha-hairline: rgba(255,255,255,.10);
-  --ce-alpha-hairline-strong: rgba(255,255,255,.16);
-  /* .72, not .66: at .66 the recipe's button text measured 4.47:1 against the
-     brightest stop of the raised surface (#47515c), under AA's 4.5 (Admin Pass A). */
-  --ce-fg-66: rgba(255,255,255,.72);
-  /* Grade colours AS TEXT. The swatch fills (#4c9a5a, #d99a3a, #cc4b4b) are a
-     legend the owner reads, and they stay; but the same values as 12–16px text
-     measured 3.1–4.0:1 on the cards in dark and 2.1–4.0:1 on the light ground
-     (Admin Pass A, 28 failing groups). Text gets its own lifted/darkened
-     values, ≥5.7:1 against the card's brightest stop in each theme. */
+  --ce-hairline: var(--panel-border, #2f3441);
+  --ce-fg: var(--text, #ffffff);
+  --ce-muted: var(--text-dim, #a8aebb);
+  /* The one interactive accent, shared with the reader (was a bespoke slate). */
+  --ce-lumen: var(--link, #cfd8e6);
+  --ce-alpha-hairline: var(--lumen-rim, rgba(255,255,255,.10));
+  --ce-alpha-hairline-strong: var(--lumen-rim-strong, rgba(255,255,255,.16));
+  /* Button rest ink → the shared secondary; hover lifts to --ce-fg (--text). */
+  --ce-fg-66: var(--text-dim, rgba(255,255,255,.72));
+  /* Grade colours AS TEXT — the owner's health legend, an operational grade
+     scale, never a reader tier/party/funding colour. Kept, both themes. */
   --ce-text-ok: #74c986;
   --ce-text-warn: #d99a3a;
   --ce-text-bad: #ef8a8a;
-  --ce-surface-gradient: radial-gradient(ellipse at bottom, rgba(71,81,92,1) 0%, rgba(11,21,30,1) 45%);
-  --ce-surface-gradient-soft: radial-gradient(ellipse at bottom, rgba(71,81,92,.55) 0%, rgba(11,21,30,.95) 55%);
-  --ce-surface-panel-gradient: radial-gradient(ellipse at bottom, rgba(47,52,65,.6) 0%, rgba(20,22,30,1) 65%);
+  /* The Lumen material, expressed through the bridged surface tokens (so it
+     inherits their fallbacks): cards lit from --ce-panel, controls from the
+     lighter --ce-panel-raised so a button still reads apart from its card. */
+  --ce-surface-gradient: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--ce-panel-raised) 88%, white) 0%, var(--ce-panel-raised) 66%);
+  --ce-surface-gradient-soft: radial-gradient(ellipse 130% 100% at 50% 100%, color-mix(in srgb, var(--ce-panel-raised) 94%, white) 0%, var(--ce-panel-raised) 66%);
+  --ce-surface-panel-gradient: radial-gradient(ellipse 120% 100% at 50% 100%, color-mix(in srgb, var(--ce-panel) 88%, white) 0%, var(--ce-panel) 66%);
   --ce-horizon: linear-gradient(90deg, rgba(255,255,255,0) 0%, #ffffff 50%, rgba(255,255,255,0) 100%);
-  --ce-horizon-lumen: linear-gradient(90deg, rgba(255,255,255,0) 0%, #cfd8e6 50%, rgba(255,255,255,0) 100%);
+  --ce-horizon-lumen: linear-gradient(90deg, rgba(255,255,255,0) 0%, var(--ce-lumen) 50%, rgba(255,255,255,0) 100%);
   --ce-rim: inset 0 0 0 1px var(--ce-alpha-hairline);
   --ce-rim-strong: inset 0 0 0 1px var(--ce-alpha-hairline-strong);
   --ce-shadow-card: 0 1px 1px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.6);
   --ce-shadow-raised: 0 2px 4px rgba(0,0,0,.5), 0 24px 48px -16px rgba(0,0,0,.7);
-  --ce-focus: 0 0 0 1px var(--ce-lumen), 0 0 16px rgba(207,216,230,.25);
+  --ce-focus: 0 0 0 1px var(--ce-lumen), 0 0 16px color-mix(in srgb, var(--ce-lumen) 38%, transparent);
   --ce-motion-slow: 1s cubic-bezier(.15,.83,.66,1);
   --ce-motion-medium: 420ms cubic-bezier(.15,.83,.66,1);
   --ce-motion-fast: 200ms cubic-bezier(.15,.83,.66,1);
-  --ce-radius-md: 7px;
-  --ce-radius-lg: 14px;
-  /* The reader map legend's level colours — dark values from app/globals.css. */
-  --lvl-local: #ffb000;
-  --lvl-state: #00b894;
-  --lvl-school: #e84393;
-  --lvl-federal: #6c8fd4;
+  --ce-radius-md: var(--radius-sm, 7px);
+  --ce-radius-lg: var(--radius, 14px);
+  /* Level colours ARE the reader's tier accents — one source (app/globals.css),
+     with the map legend's own values as the self-contained fallback. */
+  --lvl-local: var(--accent-local, #ffb000);
+  --lvl-state: var(--accent-state, #00b894);
+  --lvl-school: var(--accent-school, #e84393);
+  --lvl-federal: var(--accent-national, #6c8fd4);
 }
 [data-theme="light"] .admin, [data-theme="light"] .console-nav {
-  --ce-void: #eef0f3;
-  --ce-graphite: #d3d9e1;
-  --ce-panel: #ffffff;
-  --ce-panel-raised: #f7f8fa;
+  /* Light: the bridged tokens auto-theme through the shared tokens; the fallback
+     is the admin's original light literal, and only the tokens whose light value
+     does NOT derive from a bridged token (the horizon line, the softer shadows,
+     the health legend) are restated here. */
+  --ce-void: var(--bg, #eef0f3);
+  --ce-graphite: var(--panel, #d3d9e1);
+  --ce-panel: var(--panel-bg, #ffffff);
+  --ce-panel-raised: var(--surface, #f7f8fa);
   --ce-slate-rise: #c6ced8;
-  --ce-hairline: #d5d9e0;
-  --ce-fg: #101318;
-  --ce-muted: #4d5666;
-  --ce-lumen: #3d5f9e;
-  --ce-alpha-hairline: rgba(0,0,0,.08);
-  --ce-alpha-hairline-strong: rgba(0,0,0,.14);
-  --ce-fg-66: rgba(16,19,24,.72);
-  --ce-surface-gradient: radial-gradient(ellipse at bottom, #ffffff 0%, #dfe4eb 45%);
-  --ce-surface-gradient-soft: radial-gradient(ellipse at bottom, rgba(255,255,255,.9) 0%, rgba(223,228,235,.95) 55%);
-  --ce-surface-panel-gradient: radial-gradient(ellipse at bottom, rgba(255,255,255,1) 0%, #f1f3f6 65%);
+  --ce-hairline: var(--panel-border, #d5d9e0);
+  --ce-fg: var(--text, #101318);
+  --ce-muted: var(--text-dim, #4d5666);
+  --ce-lumen: var(--link, #3d5f9e);
+  --ce-alpha-hairline: var(--lumen-rim, rgba(0,0,0,.08));
+  --ce-alpha-hairline-strong: var(--lumen-rim-strong, rgba(0,0,0,.14));
+  --ce-fg-66: var(--text-dim, rgba(16,19,24,.72));
   --ce-horizon: linear-gradient(90deg, rgba(0,0,0,0) 0%, #2b3340 50%, rgba(0,0,0,0) 100%);
-  --ce-horizon-lumen: linear-gradient(90deg, rgba(0,0,0,0) 0%, #3d5f9e 50%, rgba(0,0,0,0) 100%);
   --ce-shadow-card: 0 1px 1px rgba(0,0,0,.2), 0 12px 32px -12px rgba(0,0,0,.3);
   --ce-shadow-raised: 0 2px 4px rgba(0,0,0,.25), 0 24px 48px -16px rgba(0,0,0,.35);
-  --ce-focus: 0 0 0 1px var(--ce-lumen), 0 0 16px rgba(61,95,158,.25);
   --ce-text-ok: #176f36;
   --ce-text-warn: #7f5400;
   --ce-text-bad: #b3261e;
-  --lvl-local: #b8860b;
-  --lvl-state: #00896e;
-  --lvl-school: #c2185b;
-  --lvl-federal: #3d5f9e;
+  --lvl-local: var(--accent-local, #b8860b);
+  --lvl-state: var(--accent-state, #00896e);
+  --lvl-school: var(--accent-school, #c2185b);
+  --lvl-federal: var(--accent-national, #3d5f9e);
 }
-/* The whole viewport is the void, so the page never sits on the reader's ground. */
-body:has(main.admin) { background: #1b1c22; }
-[data-theme="light"] body:has(main.admin) { background: #eef0f3; }
+/* The viewport is the reader's own ground in production (parity), the admin's
+   own void when globals.css is absent. */
+body:has(main.admin) { background: var(--bg, #1b1c22); }
+[data-theme="light"] body:has(main.admin) { background: var(--bg, #eef0f3); }
 
 /* ============================================================ the recipe layer
    Generic rules only: elements under .admin, the card, the button, the field,
@@ -265,6 +282,33 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .state-red { color: var(--ce-text-bad); font-weight: 600; }
 .admin .state-amber { color: var(--ce-text-warn); font-weight: 600; }
 .admin .state-unknown { color: var(--ce-muted); font-weight: 600; }
+
+/* OPERATIONAL BADGES (ADMIN-PARITY §3, design handoff 2026-09-13). An operational
+   state carries its meaning by SHAPE (filled / outline / dashed) in a neutral ink,
+   or by the two existing status tokens — never by a tier, party or funding colour,
+   because every one of those already means something a reader learned from the map.
+   Each state keeps its OWN label/type (data-op), so a blocked job can never read as
+   a jurisdiction result. Same shape grammar the JurisdictionBadge uses. */
+.admin .op-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .12rem .5rem; border-radius: var(--ce-radius-md);
+  font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  font-family: inherit; white-space: nowrap; border: 1px solid transparent;
+}
+/* fresh / confirmed → FILLED in the foreground ink (the GOVERNS move). */
+.admin .op-badge[data-op="fresh"] { background: var(--ce-fg); border-color: var(--ce-fg); color: var(--ce-void); }
+/* stale / awaiting → 1px OUTLINE, dimmer ink. */
+.admin .op-badge[data-op="stale"] { border-color: var(--ce-hairline); color: var(--ce-muted); }
+/* unpublished / blocked / device-local → the same outline, DASHED. */
+.admin .op-badge[data-op="blocked"] { border-style: dashed; border-color: var(--ce-hairline); color: var(--ce-muted); }
+/* exporting / active → the awaiting OUTLINE shape, set apart from stale by a
+   full-WEIGHT foreground ink (ADMIN-PARITY §4: a shape/weight/mono numeral, never
+   a new hue). It does not repurpose the interactive accent (--ce-lumen/--link) or
+   any semantic colour. */
+.admin .op-badge[data-op="exporting"] { border-color: var(--ce-hairline); color: var(--ce-fg); font-weight: 700; }
+/* the two allowed status tokens: did not happen, and finished. */
+.admin .op-badge[data-op="did-not-happen"] { border-color: color-mix(in srgb, var(--canceled, #e17055) 60%, transparent); color: var(--canceled, #e17055); }
+.admin .op-badge[data-op="finished"] { border-color: color-mix(in srgb, var(--concluded, #6fa8a5) 60%, transparent); color: var(--concluded, #6fa8a5); }
 .admin .plain { font-size: 1.05rem; margin: .35rem 0 .75rem; }
 .admin .free { color: var(--ce-muted); font-variant-numeric: tabular-nums; }
 .admin .when { font-variant-numeric: tabular-nums; }
@@ -282,6 +326,16 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .card.lvl-state::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-state) 50%, transparent 100%); opacity: .85; }
 .admin .card.lvl-school::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-school) 50%, transparent 100%); opacity: .85; }
 .admin .card.lvl-federal::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-federal) 50%, transparent 100%); opacity: .85; }
+/* ADMIN PARITY (2026-09-13): a card ABOUT a level of government wears the
+   reader's TIER RING — a 1px inset at 62% + a 1px halo at 22% — not only a
+   tinted horizon. Same treatment as the reader's popup/battlecard tier ring;
+   the colour is the level's own, set by the .lvl-* class, never at the call
+   site. Health-grade and runner-standing cards (.ph-l-*, .l-*) are NOT levels
+   and keep their own horizon, no ring. */
+.admin .card.lvl-local { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lvl-local) 62%, transparent), 0 0 0 1px color-mix(in srgb, var(--lvl-local) 22%, transparent), var(--ce-shadow-card); }
+.admin .card.lvl-state { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lvl-state) 62%, transparent), 0 0 0 1px color-mix(in srgb, var(--lvl-state) 22%, transparent), var(--ce-shadow-card); }
+.admin .card.lvl-school { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lvl-school) 62%, transparent), 0 0 0 1px color-mix(in srgb, var(--lvl-school) 22%, transparent), var(--ce-shadow-card); }
+.admin .card.lvl-federal { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lvl-federal) 62%, transparent), 0 0 0 1px color-mix(in srgb, var(--lvl-federal) 22%, transparent), var(--ce-shadow-card); }
 
 /* ============================================================ pilot health */
 .admin .ph-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin: .5rem 0 1.25rem; }
@@ -547,7 +601,9 @@ body:has(main.admin) { background: #1b1c22; }
 /* The keyboard user is told where they landed; the mouse user is not shouted at. */
 .admin .reveal-target:focus-visible { outline: 2px solid var(--ce-lumen); outline-offset: .5rem; border-radius: .25rem; }
 /* .console-nav label and select are in the recipe layer with the other controls. */
-.console-nav-brand { margin-left: auto; align-self: center; font-size: .75rem; color: var(--ce-muted); }
+.console-nav-brand { margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: .5rem; }
+/* The surface-context caption beside the Logo lockup (design handoff 2026-09-13). */
+.console-nav-context { font-size: .75rem; color: var(--ce-muted); }
 .console-nav .icon-btn { align-self: center; }
 .console-nav-pending { align-self: center; font-size: .8rem; color: var(--ce-lumen); }
 .console-nav[aria-busy="true"] select { opacity: .7; }

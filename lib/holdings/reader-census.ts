@@ -13,6 +13,16 @@ import { gzipSync, gunzipSync } from "node:zlib";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import ts from "typescript";
 import { DATASET_FAMILIES, READER_SURFACES, type ReaderSurfaceId } from "./datasets.ts";
+import {
+  readerPresentationRenewalProblems,
+  renewalConsistencyProblems,
+  integrationCommitReachable,
+  READER_PRESENTATION_RENEWAL_PATH,
+  type ReaderPresentationRenewal,
+  type ReaderPresentationRenewalFile,
+  type ReaderPresentationRenewalFileKind,
+  type ReaderPresentationRenewalBehavior,
+} from "../control-plane/presentation-renewal.ts";
 import { curatedRegistrySeedProblems, CURATED_BODY_SEED, REGISTRY_FIRST_SEED } from "./registry-seed-proof.ts";
 import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type ManifestContext } from "./manifest.ts";
 import { nonRoutineDispositionForTrackedPath } from "../civic-data/non-routine-dispositions.ts";
@@ -1894,10 +1904,27 @@ export function isKnownLegacyReaderClosureReceipt(
   } catch { return false; }
 }
 
+// The bounded presentation-only renewal — its types, its pure semantic
+// validator, and the preflight consistency check — live in a node-only leaf so
+// the cheap preflight can run them without importing this heavy module. They are
+// imported at the top of this file for local use and re-exported here so existing
+// importers of reader-census keep resolving them.
+export {
+  readerPresentationRenewalProblems,
+  renewalConsistencyProblems,
+  READER_PRESENTATION_RENEWAL_PATH,
+};
+export type {
+  ReaderPresentationRenewal,
+  ReaderPresentationRenewalFile,
+  ReaderPresentationRenewalFileKind,
+  ReaderPresentationRenewalBehavior,
+};
+
 export function validateReaderClosureReceipt(
   root: string,
   receipt: ReaderClosureReceipt,
-  options: { readonly receiptPath?: string } = {},
+  options: { readonly receiptPath?: string; readonly presentationRenewal?: ReaderPresentationRenewal } = {},
 ): string[] {
   const failures: string[] = [];
   failures.push(...readerClosureReceiptShapeProblems(receipt));
@@ -1914,7 +1941,25 @@ export function validateReaderClosureReceipt(
       if (!problems.length) equivalentPaths.add(equivalence.path);
     } catch { failures.push(`${equivalence.path}: cannot read the explicit source EOL equivalence`); }
   }
-  failures.push(...readerSourceHashProblems(root, receipt.sourceHashes.filter(source => !equivalentPaths.has(source.path))));
+  if (options.presentationRenewal) {
+    // A preserved production receipt whose enumerated presentation files drifted
+    // is admitted ONLY through the bounded, negative-checked renewal — the
+    // receipt itself is never mutated or relabelled.
+    let receiptSha256 = "";
+    try { receiptSha256 = sha256(readReaderEvidence(root, options.receiptPath ?? "")); } catch { /* an empty hash fails the exact-bind check below */ }
+    // Shallow-clone-aware ancestry: CI checks out at fetch-depth 1-3, so the
+    // integration commit is routinely absent from the checkout; the helper treats
+    // absent-on-shallow as unverifiable-here rather than "not an ancestor".
+    const reachable = integrationCommitReachable(root, options.presentationRenewal.integrationCommit);
+    failures.push(...readerPresentationRenewalProblems(root, receipt.sourceHashes, options.presentationRenewal, {
+      receiptPath: options.receiptPath ?? "",
+      receiptSha256,
+      integrationCommitReachable: reachable,
+      skipPaths: equivalentPaths,
+    }).problems);
+  } else {
+    failures.push(...readerSourceHashProblems(root, receipt.sourceHashes.filter(source => !equivalentPaths.has(source.path))));
+  }
   const bytes = readReaderEvidence(root, receipt.censusPath);
   if (sha256(bytes) !== receipt.censusSha256) failures.push("Committed closure census bytes changed");
   const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;

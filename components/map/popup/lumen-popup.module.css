@@ -65,7 +65,10 @@
   --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
   --lumen-rim: rgba(0, 0, 0, 0.08);
   --lumen-rim-strong: rgba(0, 0, 0, 0.14);
-  --lumen-horizon: color-mix(in srgb, var(--online) 60%, transparent);
+  /* Design handoff 2026-09-13: was color-mix(--online 60%) — a PURPLE horizon,
+     and --online means "online only" elsewhere. Now the interactive cyan --ring
+     (defined in globals.css), so both themes speak one language. */
+  --lumen-horizon: var(--ring);
   --shadow-lumen-raised:
     0 2px 4px rgba(0, 0, 0, 0.25),
     0 24px 48px -16px rgba(0, 0, 0, 0.35);
@@ -77,4 +80,72 @@
     --dur-lumen-slow: 1ms;
     transition-duration: var(--dur-lumen-slow);
   }
+}
+
+/* THE TIER RING (design handoff 2026-09-13). A card that is ABOUT a level of
+   government wears that tier's colour: a 1px inset at 62%, a 1px outer halo at
+   22%, over the raised elevation, and the horizon becomes the tier colour at
+   2px with a glow. `data-tier` is set on PopupCard from its real tier prop; the
+   colour is never set at the call site. `concluded` dims the horizon rather than
+   changing the shape — the same move as hollow-means-concluded. These rules sit
+   after the base + hover rules so the ring persists on hover of a tier card. */
+.card:global(.popup-card)[data-tier="local"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-local) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent-local) 22%, transparent),
+    var(--shadow-lumen-raised);
+}
+.card:global(.popup-card)[data-tier="local"]::after {
+  height: 2px;
+  opacity: 0.9;
+  background: linear-gradient(90deg, transparent, var(--accent-local), transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-local) 50%, transparent);
+}
+.card:global(.popup-card)[data-tier="state"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-state) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent-state) 22%, transparent),
+    var(--shadow-lumen-raised);
+}
+.card:global(.popup-card)[data-tier="state"]::after {
+  height: 2px;
+  opacity: 0.9;
+  background: linear-gradient(90deg, transparent, var(--accent-state), transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-state) 50%, transparent);
+}
+.card:global(.popup-card)[data-tier="national"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-national) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent-national) 22%, transparent),
+    var(--shadow-lumen-raised);
+}
+.card:global(.popup-card)[data-tier="national"]::after {
+  height: 2px;
+  opacity: 0.9;
+  background: linear-gradient(90deg, transparent, var(--accent-national), transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-national) 50%, transparent);
+}
+.card:global(.popup-card)[data-tier="school"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-school) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--accent-school) 22%, transparent),
+    var(--shadow-lumen-raised);
+}
+.card:global(.popup-card)[data-tier="school"]::after {
+  height: 2px;
+  opacity: 0.9;
+  background: linear-gradient(90deg, transparent, var(--accent-school), transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-school) 50%, transparent);
+}
+.card:global(.popup-card)[data-tier="concluded"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--concluded) 62%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--concluded) 22%, transparent),
+    var(--shadow-lumen-raised);
+}
+.card:global(.popup-card)[data-tier="concluded"]::after {
+  height: 2px;
+  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, var(--concluded), transparent);
+  box-shadow: none;
 }

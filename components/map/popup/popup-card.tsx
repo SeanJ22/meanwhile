@@ -101,6 +101,10 @@ export function PopupCard({
     <div
       ref={rootRef}
       className={`popup-card pointer-events-auto ${lumenStyles.card}`}
+      /* The tier ring (design handoff 2026-09-13): the card wears its real
+         level-of-government colour. Styled in lumen-popup.module.css by
+         data-tier; the colour is never set here at the call site. */
+      data-tier={tier}
       role="dialog"
       aria-label={title}
     >

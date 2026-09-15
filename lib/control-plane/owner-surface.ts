@@ -69,6 +69,7 @@
 import type { CodeIdentity } from "./code-identity.ts";
 import type { CacheCallerHealth, MeteringCounts, MonthlySpendView } from "./cost-panel.ts";
 import type { ScoutCapacity } from "./research-metrics.ts";
+import type { FleetReceiptSnapshot } from "./fleet-receipt-snapshot.ts";
 import type { MapTilerUsageAttempt, MapTilerUsageSnapshot } from "./maptiler/types.ts";
 import {
   intakeRuntimeObservationCycleId,
@@ -1531,6 +1532,9 @@ export interface OwnerSnapshot {
    * CONNECTED — never as zero usage, which would read as headroom.
    */
   readonly maptiler?: MapTilerUsageSnapshot | null;
+
+  /** Bounded runner reading of historical receipts; absent until the authorized publisher supplies it. */
+  readonly fleetReceipts?: FleetReceiptSnapshot | null;
 }
 
 /**

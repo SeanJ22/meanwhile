@@ -17,6 +17,7 @@ import { IdentityChip, IdentityPortrait } from "@/components/officials/person-id
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
+import type { Tier } from "@/lib/ocd/tiers";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
@@ -88,6 +89,7 @@ export function CandidateBattlecard({
   holdsOrHeldTheOffice = false,
   questionnaire = UNESTABLISHED,
   contactHolder = null,
+  tier = null,
 }: {
   name: string;
   /**
@@ -105,6 +107,14 @@ export function CandidateBattlecard({
    * record, and the row then renders nothing rather than an empty state.
    */
   contactHolder?: SeatHolder | null;
+  /**
+   * The contest's government tier, derived by the caller from the contest OCD id
+   * (`tierForOcdId`) — never guessed here. Drives the modal's tier ring and the
+   * eyebrow colour. Null when the OCD id does not resolve to a tier, in which
+   * case the modal stays neutral rather than claiming a level (design handoff
+   * 2026-09-13).
+   */
+  tier?: Tier | null;
   /**
    * **BAL-18 (2026-08-25) — the party is a COLOURED PILL, matching the map.**
    *
@@ -287,7 +297,7 @@ export function CandidateBattlecard({
           they are siblings in one column, so it is shared by construction
           rather than by a number typed twice.
         */
-        className="mt-2 w-full cursor-pointer rounded-md border border-[var(--battlecard-green)] bg-[var(--battlecard-green)] px-3 py-2 text-center text-[0.8125rem] font-semibold text-[var(--battlecard-on-green)] transition-colors hover:border-[var(--battlecard-green-hover)] hover:bg-[var(--battlecard-green-hover)]"
+        className="battlecard-cta w-full"
       >
         View Battlecard
       </button>
@@ -302,7 +312,7 @@ export function CandidateBattlecard({
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <div className="account-modal" data-candidate-battlecard data-candidate-subject={subjectId}>
+          <div className="account-modal" data-candidate-battlecard data-candidate-subject={subjectId} data-tier={tier ?? undefined}>
             <header className="account-modal-header">
               {/*
                 **BAL-17, BAL-18 and BAL-20 — the ballot card's header is the
@@ -320,7 +330,15 @@ export function CandidateBattlecard({
                 <IdentityPortrait name={name} photoUrl={photoUrl} />
 
                 <div className="min-w-0 flex-1">
-                  <p className="popup-type" style={{ color: "var(--accent-local)" }}>
+                  {/* Eyebrow coloured by the contest's REAL tier (design handoff
+                      2026-09-13), replacing a hardcoded --accent-local (amber) that
+                      claimed "local" for every contest — a tier-scoping slip
+                      (amber-remnant.test). Neutral --text-dim when the tier is
+                      unknown, never a guessed accent. */}
+                  <p
+                    className="popup-type"
+                    style={{ color: tier ? `var(--accent-${tier})` : "var(--text-dim)" }}
+                  >
                     Candidate
                   </p>
                   <p className="truncate text-[1rem] font-semibold tracking-tight">

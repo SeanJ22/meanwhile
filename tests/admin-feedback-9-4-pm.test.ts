@@ -745,7 +745,12 @@ test("ADM-15: every readiness ZIP row carries a next step and a Deploy-fleet-her
 
 test("ADM-21: the admin stylesheet carries the four Lumen signals, the reader legend's level colours in both themes, and no font import", () => {
   const layout = src("app/(admin)/layout.tsx");
-  assert.match(layout, /--ce-surface-panel-gradient: radial-gradient\(ellipse at bottom, rgba\(47,52,65,\.6\) 0%, rgba\(20,22,30,1\) 65%\)/, "signal 1: the bottom-lit surface");
+  // Signal 1: the bottom-lit surface. Under the approved ADMIN-PARITY language the
+  // gradient is no longer a hardcoded rgba pair — it is lit from the SHARED
+  // `--ce-panel` token (so the admin surface tracks the reader's panel) while
+  // staying a bottom-anchored radial gradient that lifts toward the base. This
+  // verifies that intended behavior, not the superseded literal.
+  assert.match(layout, /--ce-surface-panel-gradient: radial-gradient\([^;]*at 50% 100%,[^;]*color-mix\(in srgb, var\(--ce-panel\) \d+%, white\)[^;]*var\(--ce-panel\)[^;]*\);/, "signal 1: the bottom-lit surface, lit from the shared --ce-panel token");
   assert.match(layout, /--ce-rim: inset 0 0 0 1px var\(--ce-alpha-hairline\)/, "signal 2: an inset hairline, never a border");
   assert.match(layout, /\.admin \.card::after \{[^}]*left: 15%; width: 70%; height: 1px;/, "signal 3: the horizon line");
   assert.match(layout, /cubic-bezier\(\.15,\.83,\.66,1\)/, "signal 4: the motion curve");
@@ -762,12 +767,20 @@ test("ADM-21: the admin stylesheet carries the four Lumen signals, the reader le
     const dark = token(accent, 0);
     const lit = token(accent, light);
     assert.ok(dark && lit, `globals carries --accent-${accent} in both themes`);
-    assert.match(layout, new RegExp(`--lvl-${level}: ${dark};`), `dark ${level} matches the reader legend`);
-    assert.match(layout, new RegExp(`--lvl-${level}: ${lit};`), `light ${level} matches the reader legend`);
+    // Under ADMIN-PARITY the level colours are not COPIED from the reader legend;
+    // they REFERENCE its `--accent-*` token live, with the legend's own value kept
+    // as the self-contained fallback (for an isolated render without globals.css).
+    // So each still matches the reader legend — more faithfully than a copy.
+    assert.match(layout, new RegExp(`--lvl-${level}: var\\(--accent-${accent}, ${dark}\\);`), `dark ${level} references the reader legend, legend value as fallback`);
+    assert.match(layout, new RegExp(`--lvl-${level}: var\\(--accent-${accent}, ${lit}\\);`), `light ${level} references the reader legend, legend value as fallback`);
   }
   assert.match(layout, /\.admin \.card\.lvl-state::after \{ background: linear-gradient\(90deg, transparent 0%, var\(--lvl-state\) 50%, transparent 100%\)/, "the horizon carries the hue");
-  // Scope: the consumer app is untouched.
-  assert.doesNotMatch(globals, /--ce-surface|lumen|Lumen/);
+  // Scope: the admin's OWN recipe tokens never leak into the reader stylesheet.
+  // (The Lumen MATERIAL itself now lives in globals.css by the approved Lumen ×
+  // Meanwhile design — the reader wears it too — so this no longer asserts the
+  // superseded "lumen is admin-only"; it asserts the still-true invariant that the
+  // `--ce-*` control-centre recipe stays out of the consumer stylesheet.)
+  assert.doesNotMatch(globals, /--ce-surface|--ce-void|--ce-graphite|--ce-panel-raised/);
   assert.equal(existsSync(join(ROOT, "DESIGN.md")), false, "no DESIGN.md at the repo root");
   assert.equal(existsSync(join(ROOT, "css", "system.css")), false);
   assert.match(src("app/(admin)/console-ui.tsx"), /export function LevelLegend/);

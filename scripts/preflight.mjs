@@ -41,7 +41,7 @@
  *   node scripts/preflight.mjs --list   # the check ids, for the parity test
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -52,6 +52,7 @@ import { BASELINE_FILE, census } from "./duplicate-implementations.mts";
 import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { civicDataFirewall } from "../lib/civic-data/firewall.ts";
+import { renewalConsistencyProblems, READER_PRESENTATION_RENEWAL_PATH } from "../lib/control-plane/presentation-renewal.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -76,7 +77,55 @@ export const PREFLIGHT_CHECKS = [
     what: "routine civic data cannot enter Git, Actions, build, browser, or deploy machinery",
     run: civicDataReleaseFirewall,
   },
+  {
+    id: "presentation-renewal",
+    what: "the bounded presentation-only renewal still binds its receipt, files and integration ancestry",
+    run: renewalConsistency,
+  },
 ];
+
+/* ------------------------------------------------ presentation-only renewal */
+
+/**
+ * **VERIFICATION, NOT REGENERATION.** (The CIE bottleneck of run 34915265113.)
+ *
+ * The reader closure's frozen production receipt is preserved byte-for-byte; a
+ * presentation-only restyle is admitted through a separate, linked renewal
+ * artifact. This confirms that recorded evidence still binds: the receipt it
+ * names, the exact renewed bytes of every enumerated file, and the integration
+ * commit's ancestry of this checkout. It reuses the same validator the closure
+ * gate uses, so the two cannot disagree.
+ *
+ * It never recomputes the integration commit or the browser head from the
+ * current HEAD — committing the renewal and later merging it advance HEAD past
+ * the recorded commit, and a check that regenerated those fields would reject
+ * its own unchanged evidence on every subsequent commit (which is exactly the
+ * defect this replaced). Ancestry, not equality; recorded evidence, preserved.
+ *
+ * Cheap and deterministic: file hashes plus one `git merge-base --is-ancestor`.
+ * A tree with no renewal artifact has nothing to verify and passes.
+ */
+export function renewalConsistency({ cwd = ROOT } = {}) {
+  try {
+    const present = existsSync(join(cwd, READER_PRESENTATION_RENEWAL_PATH));
+    const problems = renewalConsistencyProblems(cwd);
+    if (problems.length === 0) {
+      return {
+        ok: true,
+        says: present
+          ? "the bounded presentation renewal binds its receipt, renewed files and integration ancestry."
+          : "no presentation renewal artifact to verify.",
+      };
+    }
+    return {
+      ok: false,
+      says: `${problems.length} presentation-renewal binding problem(s) — the recorded evidence no longer matches the tree.`,
+      detail: problems.map((p) => `    ${p}`).join("\n"),
+    };
+  } catch (error) {
+    return { ok: false, says: `the presentation-renewal check could not run (${error?.message ?? "error"}).` };
+  }
+}
 
 export function civicDataReleaseFirewall({ cwd = ROOT } = {}) {
   try {

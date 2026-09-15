@@ -1045,9 +1045,9 @@ test("the break-glass route's security sequence, in order, from its source", () 
   assert.doesNotMatch(whole, /console\.(log|error|warn)\([^)]*secret/i, "nothing about the submitted value may be logged");
 });
 
-test("the login page renders Sign in with Google and shows the secret form ONLY under the break-glass flag", () => {
+test("the login page renders Continue with Google and shows the secret form ONLY under the break-glass flag", () => {
   const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "login", "page.tsx"), "utf8");
-  assert.match(source, /Sign in with Google/);
+  assert.match(source, /Continue with Google/);
   assert.match(source, /href=\{OAUTH_START_PATH\}/);
   const form = source.indexOf("<form");
   const gate = source.indexOf("{breakGlass && (");

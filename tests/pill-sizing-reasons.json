@@ -52,6 +52,16 @@
       "selector": ".district-info-pill",
       "props": ["padding", "font-size"],
       "reason": "LAY-12 replaces the expanded boundary card with an ACTION control on tablet and phone. It inherits the 44px minimum tap target and uses 13px text with 10px vertical/16px horizontal insets to stay compact beside Who Governs Here while naming the selected district. These component tokens derive from the spacing and detail/body scales; the smaller non-tappable vote tag is not its size reference."
+    },
+    {
+      "selector": ".contact-pill::after",
+      "props": ["height"],
+      "reason": "Not the pill body: the Lumen horizon line at the base of the control (design handoff 2026-09-13), a 1px lit gradient. Its height is the hairline itself and is deliberately unrelated to the reference tag's height."
+    },
+    {
+      "selector": ".ballot-pill-zip::after",
+      "props": ["height"],
+      "reason": "Not the pill body: the Lumen horizon line at the base of the ballot pill's zip half (design handoff 2026-09-13), a 1px lit gradient, sized as a hairline rather than against the reference tag."
     }
   ]
 }

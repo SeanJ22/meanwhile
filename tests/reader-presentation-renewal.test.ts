@@ -303,6 +303,25 @@ test("verification fails when a bound file changes, names the receipt is wrong, 
   }
 });
 
+test("verification tolerates a shallow clone with the integration commit absent, but still enforces content", () => {
+  // The exact CI shape: actions/checkout at fetch-depth 1-3, so the integration
+  // commit is not in the checkout. Absent-on-shallow ancestry must be tolerated
+  // (the content bindings still prove the tree), or CI falsely rejects valid
+  // evidence — the second defect this fix addresses.
+  const { root } = makeGitRepo();
+  const shallow = mkdtempSync(join(tmpdir(), "pres-renewal-shallow-"));
+  try {
+    // -c core.autocrlf=false: match the Linux CI checkout so byte hashes are stable
+    // on Windows too (the clone does not inherit the origin's config).
+    execFileSync("git", ["clone", "-c", "core.autocrlf=false", "--quiet", "--depth=1", `file:///${root.replace(/\\/g, "/")}`, shallow], { stdio: "pipe" });
+    assert.equal(execFileSync("git", ["rev-parse", "--is-shallow-repository"], { cwd: shallow, encoding: "utf8" }).trim(), "true");
+    assert.deepEqual(renewalConsistencyProblems(shallow), [], "absent-on-shallow ancestry must be tolerated; content still binds");
+    // Content is STILL enforced on a shallow clone.
+    appendFileSync(join(shallow, "styles/a.css"), "/* drift on shallow */\n");
+    assert.ok(renewalConsistencyProblems(shallow).some((p) => p.includes("styles/a.css")), "a changed bound file must still fail on a shallow clone");
+  } finally { rmSync(root, { recursive: true, force: true }); rmSync(shallow, { recursive: true, force: true }); }
+});
+
 /* ==================== the real committed artifact ==================== */
 
 test("the committed presentation renewal verifies against this checkout (receipt, files, ancestry)", () => {

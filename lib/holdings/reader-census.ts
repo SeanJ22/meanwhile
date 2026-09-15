@@ -16,6 +16,7 @@ import { DATASET_FAMILIES, READER_SURFACES, type ReaderSurfaceId } from "./datas
 import {
   readerPresentationRenewalProblems,
   renewalConsistencyProblems,
+  integrationCommitReachable,
   READER_PRESENTATION_RENEWAL_PATH,
   type ReaderPresentationRenewal,
   type ReaderPresentationRenewalFile,
@@ -1946,12 +1947,14 @@ export function validateReaderClosureReceipt(
     // receipt itself is never mutated or relabelled.
     let receiptSha256 = "";
     try { receiptSha256 = sha256(readReaderEvidence(root, options.receiptPath ?? "")); } catch { /* an empty hash fails the exact-bind check below */ }
-    let integrationCommitReachable = false;
-    try { execFileSync("git", ["merge-base", "--is-ancestor", options.presentationRenewal.integrationCommit, "HEAD"], { cwd: root, stdio: "ignore" }); integrationCommitReachable = true; } catch { /* reported by the admission */ }
+    // Shallow-clone-aware ancestry: CI checks out at fetch-depth 1-3, so the
+    // integration commit is routinely absent from the checkout; the helper treats
+    // absent-on-shallow as unverifiable-here rather than "not an ancestor".
+    const reachable = integrationCommitReachable(root, options.presentationRenewal.integrationCommit);
     failures.push(...readerPresentationRenewalProblems(root, receipt.sourceHashes, options.presentationRenewal, {
       receiptPath: options.receiptPath ?? "",
       receiptSha256,
-      integrationCommitReachable,
+      integrationCommitReachable: reachable,
       skipPaths: equivalentPaths,
     }).problems);
   } else {

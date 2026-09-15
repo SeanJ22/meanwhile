@@ -179,11 +179,12 @@ jobs:
         mode: [standalone, default]
     name: build (${{ matrix.mode }})
     steps:
-      # Depth 2 rather than 1 gives the exact-tree reuse check the candidate and
-      # its parent while keeping the checkout shallow.
+      # Preflight and certification both inspect historical evidence and ancestry.
+      # Materialize history before either consumer runs; a fixed shallow depth
+      # becomes invalid whenever another commit is added to a branch.
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       # v7 targets Node 24 natively; package-manager-cache off because pnpm is
       # not on PATH until corepack enable.
@@ -441,12 +442,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
-      # Pull-request checks run on GitHub's synthetic merge commit. The reader
-      # closure receipt binds the immediately preceding executed proof head,
-      # so the gate needs merge -> branch head -> proof head and no more.
+      # Use the same complete history as the build jobs and local certification.
+      # Proof heads are preserved historical commits, not a fixed number of
+      # parents behind GitHub's synthetic merge commit.
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 3
+          fetch-depth: 0
 
       # Setup Node precedes the dependency-free PR-tier and exact-tree adapters,
       # which import type-strippable local modules. The holdings fetch is git
@@ -833,14 +834,10 @@ jobs:
       # disk to correspond exactly. None of that needs a secret, so it runs on a
       # fork pull request and on a laptop with no .env.local.
       #
-      # THE MERGE BASE ON A SHALLOW CLONE: `actions/checkout` clones at depth 1
-      # and this repository's pack is 311 MiB, so `fetch-depth: 0` here would
-      # cost every run of every gate a full history fetch. The gate takes the
-      # base from the platform instead — `pull_request.base.sha`, fetched BY SHA
-      # with a deepening `git fetch --depth=` when it is absent, and for a push
-      # the event's own added/modified/removed lists, which need no history at
-      # all. Nothing is built on commit dates: a per-file `git log` returns the
-      # tip date for every file on a shallow clone, with no error.
+      # The workflow supplies complete history before any checker runs. The
+      # schema gate still uses the event's exact base and retains its bounded
+      # fetch fallback for standalone use in a shallow checkout. Never infer
+      # a source timestamp from an incomplete per-file history.
       #
       # WTP_SCHEMA_GATE_SMOKE is empty on every push and every pull request —
       # the `inputs` context is empty outside workflow_dispatch — so the gate's

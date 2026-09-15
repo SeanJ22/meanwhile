@@ -110,7 +110,24 @@ const check = process.argv.includes("--check");
 const receiptBytes = readFileSync(join(root, RECEIPT_PATH));
 const receipt = JSON.parse(receiptBytes.toString("utf8"));
 const baseline = new Map(receipt.sourceHashes.map((s) => [s.path, s.sha256]));
-const integrationCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
+
+// integrationCommit is recorded ONCE, at write time, as the branch HEAD then.
+// On --check it must be read back from the committed artifact and NOT recomputed
+// from HEAD: committing the renewal (and later merging) advances HEAD past that
+// commit, so recomputing would spuriously report drift on every CI run. What the
+// check enforces instead is that the recorded commit is still an ancestor of
+// HEAD — exactly the lineage the admission gate (readerPresentationRenewalProblems)
+// requires. Content integrity (receipt link, baseline and renewed fingerprints)
+// is still recomputed and compared below.
+let integrationCommit;
+if (check) {
+  if (!existsSync(join(root, OUTPUT_PATH))) { console.error(`MISSING: ${OUTPUT_PATH} — run without --check to write it.`); process.exit(1); }
+  integrationCommit = JSON.parse(readFileSync(join(root, OUTPUT_PATH), "utf8")).integrationCommit;
+  try { execFileSync("git", ["merge-base", "--is-ancestor", integrationCommit, "HEAD"], { cwd: root, stdio: "ignore" }); }
+  catch { console.error(`DRIFT: recorded integrationCommit ${integrationCommit} is not an ancestor of HEAD.`); process.exit(1); }
+} else {
+  integrationCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
+}
 
 const permittedFiles = PERMITTED.map((file) => {
   const baselineSha256 = baseline.get(file.path);

@@ -53,10 +53,15 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
   if(options.observedAt!==undefined && !Number.isFinite(Date.parse(options.observedAt))) throw new Error("AUTONOMOUS_ACTIVITY_CLOCK_INVALID");
   return snapshot.workItems.map((workItem): AutonomousObligationActivity => {
     const workItemId = workItem.id;
+    const routeTasks = snapshot.routeTasks.filter(task => task.workItemId === workItemId);
+    // Fleet reads every obligation. Searching all tasks again for each lease
+    // makes that read cubic and can time out the served admin page. Index the
+    // owned task IDs once, retaining the original lease order and records.
+    const routeTaskIds = new Set(routeTasks.map(task => task.id));
     const facts: AutonomousActivitySnapshot = {
-      workItems: [workItem], routeTasks: snapshot.routeTasks.filter(x => x.workItemId === workItemId),
+      workItems: [workItem], routeTasks,
       attempts: snapshot.attempts.filter(x => x.workItemId === workItemId),
-      leases: snapshot.leases.filter(x => snapshot.routeTasks.some(t => t.id === x.routeTaskId && t.workItemId === workItemId)),
+      leases: snapshot.leases.filter(lease => routeTaskIds.has(lease.routeTaskId)),
       transitions: snapshot.transitions.filter(x => x.workItemId === workItemId),
       dispositions: snapshot.dispositions.filter(x => x.workItemId === workItemId),
       artifacts: snapshot.artifacts.filter(x => x.workItemId === workItemId), costs: snapshot.costs.filter(x => x.workItemId === workItemId),

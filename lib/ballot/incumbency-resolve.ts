@@ -23,6 +23,8 @@
  * this seat — and the coverage matrix now reads the same answer.
  */
 
+import { cache } from "react";
+
 import type { SeatHolder } from "../officials/lookup.ts";
 import { seatHoldersForOffice, seatHolderById } from "../registry/server.ts";
 import { standingChipMayAttach } from "../officials/elected-role.ts";
@@ -180,19 +182,34 @@ export function sameSeatDiscriminators(contestTitle: string, holderTitle: string
 }
 
 /** Person identity is necessary but insufficient: incumbency also requires the exact current office and division. */
+/**
+ * Keyed on the PRIMITIVES (ocdId, title, targetKey) rather than the contest
+ * object, so the memo (React `cache`, 2026-09-14) dedupes across every
+ * `contestIncumbency` call in a request — those pass distinct contest objects
+ * per candidate card, and keying on the object would only dedupe within one
+ * call. The resolution is a pure function of the immutable officeholder holding
+ * and these keys within a request. Outside a request scope `cache` runs it
+ * without memoising, so tests are unchanged.
+ */
+const committedHolderByKey = cache(
+  async (ocdId: string, title: string, targetKey: string): Promise<SeatHolder | null> => {
+    const office = officeIdentity(title);
+    if (!office || !standingChipMayAttach(title)) return null;
+    const matches = readerPersonKeys(targetKey).keys.flatMap((key) => {
+      const current = currentOfficialIdentity(key);
+      return current && current.divisions.includes(ocdId) && officeIdentity(current.officeTitle) === office
+        && sameSeatDiscriminators(title, current.officeTitle, ocdId) ? [current.id] : [];
+    });
+    const ids = [...new Set(matches)];
+    return ids.length === 1 ? seatHolderById(ids[0]) : null;
+  },
+);
+
 export async function committedIncumbentHolderFor(
   contest: Pick<ContestForIncumbency, "ocdId" | "title">,
   targetKey: string,
 ): Promise<SeatHolder | null> {
-  const office = officeIdentity(contest.title);
-  if (!office || !standingChipMayAttach(contest.title)) return null;
-  const matches = readerPersonKeys(targetKey).keys.flatMap(key => {
-    const current = currentOfficialIdentity(key);
-    return current && current.divisions.includes(contest.ocdId) && officeIdentity(current.officeTitle) === office
-      && sameSeatDiscriminators(contest.title, current.officeTitle, contest.ocdId) ? [current.id] : [];
-  });
-  const ids = [...new Set(matches)];
-  return ids.length === 1 ? seatHolderById(ids[0]) : null;
+  return committedHolderByKey(contest.ocdId, contest.title, targetKey);
 }
 
 /**

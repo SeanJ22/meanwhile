@@ -56,37 +56,58 @@ test("an unknown id gets null, never a plausible phrase", () => {
   }
 });
 
-test("no reader-facing component interpolates an internal source id", () => {
-  // The structural mistake, read for directly: a component reaching for
-  // `.source` or `sourceId` on a meeting, a snapshot or a carried mark. The
-  // provenance field `sourceOrg` is a DIFFERENT thing and is deliberately not
-  // matched — it holds the body's own name ("Rockaway Township"), which is
-  // exactly what should render.
+test("no reader-facing surface interpolates an internal source id", () => {
+  // The structural mistake, read for directly: a surface reaching for `.source`
+  // or `sourceId` on a meeting, a snapshot or a carried mark. The provenance
+  // field `sourceOrg` is a DIFFERENT thing and is deliberately not matched — it
+  // holds the body's own name ("Rockaway Township"), which is what should render.
+  //
+  // 2026-09-14: this now walks `.ts` as well as `.tsx`, and scans the reader
+  // freshness/coverage prose contracts that live in `lib`. The footer's
+  // adapter-id list — "couldn't reach clerksboards, … ical …" — lived in
+  // `lib/meetings/freshness.ts`, a `.ts` file this guard never opened, which is
+  // exactly how it reached production. A `.ts`-blind guard is a guard with the
+  // hole the defect walked through.
   const surfaces: string[] = [];
-  const walk = (dir: string) => {
+  const walk = (dir: string, exts: readonly string[]) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const path = join(dir, entry.name);
-      if (entry.isDirectory()) walk(path);
-      else if (entry.name.endsWith(".tsx")) surfaces.push(path);
+      if (entry.isDirectory()) walk(path, exts);
+      else if (exts.some((ext) => entry.name.endsWith(ext))) surfaces.push(path);
     }
   };
-  walk(join(ROOT, "components"));
-  walk(join(ROOT, "app"));
+  // Components are the presentation layer: every `.ts` and `.tsx` is a surface.
+  walk(join(ROOT, "components"), [".ts", ".tsx"]);
+  // App: the pages a reader sees. API route `.ts` files render no text and
+  // legitimately name adapters internally, so only their pages are walked.
+  walk(join(ROOT, "app"), [".tsx"]);
+  // The reader-prose contracts that live in `lib` and render straight to the
+  // footer and the who-governs card — the class this test grew to cover.
+  surfaces.push(
+    join(ROOT, "lib", "meetings", "freshness.ts"),
+    join(ROOT, "lib", "registry", "wording.ts"),
+  );
 
   const offenders: string[] = [];
   for (const path of surfaces) {
     const source = readFileSync(path, "utf8");
-    // A literal id typed into a component, or a render of the internal field.
+    const rel = path.slice(ROOT.length + 1);
+    // A literal id typed into a surface, or a render of the internal field.
     for (const id of internalSourceIds()) {
       if (new RegExp(`["'\`]${id}["'\`]`).test(source)) {
-        offenders.push(`${path.slice(ROOT.length + 1)} names "${id}" literally`);
+        offenders.push(`${rel} names "${id}" literally`);
       }
     }
     if (/\{[^}]*\bcarried\.source\b[^}]*\}/.test(source)) {
-      offenders.push(`${path.slice(ROOT.length + 1)} renders carried.source`);
+      offenders.push(`${rel} renders carried.source`);
     }
     if (/\{[^}]*\bsnapshot\.sources\b[^}]*\.source\b/.test(source)) {
-      offenders.push(`${path.slice(ROOT.length + 1)} renders a snapshot source name`);
+      offenders.push(`${rel} renders a snapshot source name`);
+    }
+    // The footer's actual shape: a source field mapped out of a failed/sources
+    // array. `couldn't reach ${status.failed.map((f) => f.source).join(...)}`.
+    if (/=>\s*\w+\.source\b/.test(source)) {
+      offenders.push(`${rel} maps a source name out into prose`);
     }
   }
 

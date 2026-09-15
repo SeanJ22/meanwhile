@@ -138,28 +138,35 @@ async function loadRegistry(): Promise<RegistryLoaded> {
     await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
   ) as { files: string[] };
   const names = manifest.files;
-  const features: GeoFeature[] = [];
-  // Literal roots keep dynamic reads bounded in the server deployment trace.
-  for (const name of names) {
-    const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
-    const nationalFile = /^public\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
-    let raw: string;
-    if (stateFile) {
-      const [, state, file] = stateFile;
-      if (!stateCodes.has(state)) throw new Error(`Unknown state in resolver manifest: ${name}`);
-      const fips = /-(\d{2})\.geojson$/.exec(file)?.[1];
-      if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
-        throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
+  // Read every geometry file CONCURRENTLY (E.1, 2026-09-14). The files are
+  // independent and a cold ballot spent most of its wall-clock awaiting these
+  // ~25 reads and parses one after another. `Promise.all` keeps each file's
+  // validation identical — a throw still rejects the whole load — and the
+  // feature ORDER does not matter: `divisionsById` keys on ocdId and the
+  // point-in-polygon scan is order-free. Literal roots keep dynamic reads
+  // bounded in the server deployment trace, exactly as the serial loop did.
+  const perFile = await Promise.all(
+    names.map(async (name): Promise<GeoFeature[]> => {
+      const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
+      const nationalFile = /^public\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
+      let raw: string;
+      if (stateFile) {
+        const [, state, file] = stateFile;
+        if (!stateCodes.has(state)) throw new Error(`Unknown state in resolver manifest: ${name}`);
+        const fips = /-(\d{2})\.geojson$/.exec(file)?.[1];
+        if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
+          throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
+        }
+        raw = await readFile(join(root, "data", "states", state, "geo", file), "utf8");
+      } else if (nationalFile) {
+        raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
+      } else {
+        throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
       }
-      raw = await readFile(join(root, "data", "states", state, "geo", file), "utf8");
-    } else if (nationalFile) {
-      raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
-    } else {
-      throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
-    }
-    const parsed = JSON.parse(raw);
-    features.push(...(parsed.features as GeoFeature[]));
-  }
+      return (JSON.parse(raw) as { features: GeoFeature[] }).features;
+    }),
+  );
+  const features: GeoFeature[] = perFile.flat();
 
   const registry: Registry = runtimeRegistry.registry;
 
@@ -176,22 +183,25 @@ async function load(base: RegistryLoaded): Promise<Loaded> {
   const { features, divisionsById, registry } = base;
 
   // A required roster failure is an OURS loading failure, never an empty roster.
-  // Do not cache a partial registry as if those officials were not held.
-  const sets: OfficeholderSet[] = [];
-  for (const name of ROSTERS) {
-    const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
-    const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
-    if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
-    try {
-      sets.push(name === "officeholders-us.json"
-        ? getFederalOfficeholderSet()
-        : JSON.parse(await readFile(join(root, "data", "states", state!, "officials", name), "utf8")) as OfficeholderSet);
-    } catch (error) {
-      throw new RegistryHoldingReadError(name === "officeholders-us.json"
-        ? "lib/registry/officeholders-us.json"
-        : `data/states/${state}/officials/${name}`, error);
-    }
-  }
+  // Do not cache a partial registry as if those officials were not held. Read
+  // concurrently (E.1) — same per-roster validation and error, `Promise.all`
+  // preserves ROSTERS order so `sets` is unchanged.
+  const sets: OfficeholderSet[] = await Promise.all(
+    ROSTERS.map(async (name) => {
+      const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
+      const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
+      if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
+      try {
+        return name === "officeholders-us.json"
+          ? getFederalOfficeholderSet()
+          : (JSON.parse(await readFile(join(root, "data", "states", state!, "officials", name), "utf8")) as OfficeholderSet);
+      } catch (error) {
+        throw new RegistryHoldingReadError(name === "officeholders-us.json"
+          ? "lib/registry/officeholders-us.json"
+          : `data/states/${state}/officials/${name}`, error);
+      }
+    }),
+  );
 
   // The photo manifest (D20): per-image source and license, images served
   // from our origin. Missing or unreadable degrades to initials everywhere.

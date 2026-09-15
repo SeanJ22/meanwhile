@@ -20,6 +20,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ensureStateRelief } from "@/lib/map/state-relief";
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
+import { detectRaster } from "@/components/map/raster-capability";
 import flightStyles from "./map-flight.module.css";
 type ProjectPoint = (point: [number, number]) => { x: number; y: number };
 
@@ -677,8 +678,29 @@ export function MapCanvas({
      * a new gesture inside the window cancels the pending settle, so nothing
      * ever fires mid-gesture.
      */
-    // Hold every application overlay on every renderer until post-motion idle.
+    /*
+     * Restore the 2026-09-01 scoping (db727666): the motion hold hides NOTHING
+     * on a GPU. V94 (8f37c059) made this unconditional on every renderer, which
+     * is what blanked the district lines, the meeting pins and the who-governs
+     * card on every wheel-zoom and pan for EVERY reader — trading a real
+     * software-rasteriser win (the fly-in slideshow, measured at 28.8% of a bare
+     * map) for a defect on the hardware the overwhelming majority of readers
+     * have.
+     *
+     * So the hold — hiding the district/relief/voting layers and the DOM
+     * markers, and reporting the map surface not-ready — runs ONLY on a
+     * positively-identified CPU rasteriser (SwiftShader, llvmpipe, …). On
+     * hardware and on an unreadable ("unknown") renderer it is a no-op: MapLibre
+     * lays out its own layers and the DOM markers track the camera natively
+     * there, which is exactly what the CPU rasteriser is too slow to do (see
+     * components/map/raster-capability.ts). The reading runs ONCE per map, never
+     * per frame. The mount-time hold (above) and its first-idle reveal are
+     * separate and still unconditional, so every renderer still reveals its
+     * overlays once the first style has drawn.
+     */
+    const degradeInMotion = detectRaster().kind === "software";
     const enterMotionDegrade = () => {
+      if (!degradeInMotion) return;
       holdMapPresentation(map);
       shellRef.current?.setAttribute("data-camera-moving", "1");
       setPresentationVisible(map, false);

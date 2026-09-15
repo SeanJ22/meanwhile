@@ -28,6 +28,7 @@ import { jurisdictionClaim, representationNoteForClaim } from "../../lib/meeting
 import { TIER_LABEL } from "../../lib/ocd/tiers.ts";
 import { districtCardSources } from "../../lib/officials/card-sources.ts";
 import { definitionsForBody } from "../../lib/officials/body-definitions.ts";
+import { schoolDependency } from "../../lib/officials/school-dependency.ts";
 import { bodyClassLong } from "../../lib/registry/body-class-labels.ts";
 import { seatHoldersForDivision } from "../../lib/registry/server.ts";
 import { DISTRICT_LAYERS } from "../../lib/map/districts.ts";
@@ -114,7 +115,7 @@ export async function bodyRenderProof(
     const cached = bodyOutput.get(id); if (cached) return cached;
     const body = bodies.get(id); if (!body) return null;
     const division = body.ocdId ? divisions.get(body.ocdId) : undefined;
-    const covered: CoveredBody = { bodyId: body.id, ocdId: body.ocdId, name: body.name, divisionLabel: division?.label ?? "", divisionType: division?.divisionType ?? null, lsad: division?.lsad ?? null, bodyClass: body.bodyClass, coverageStatus: body.coverageStatus, homepageUrl: body.homepageUrl, agendaSourceRef: body.agendaSourceRef, lookedAt: body.coverageStatus !== "NOT_ATTEMPTED", tier: division?.tier ?? "local" };
+    const covered: CoveredBody = { bodyId: body.id, ocdId: body.ocdId, name: body.name, divisionLabel: division?.label ?? "", divisionType: division?.divisionType ?? null, lsad: division?.lsad ?? null, schoolDependency: schoolDependency(body.ocdId), bodyClass: body.bodyClass, coverageStatus: body.coverageStatus, homepageUrl: body.homepageUrl, agendaSourceRef: body.agendaSourceRef, lookedAt: body.coverageStatus !== "NOT_ATTEMPTED", tier: division?.tier ?? "local" };
     const subject = bodySubject(covered, canonicalMeetings);
     const definitions = [subject.bodyCard!.whatItDoes.classDefinition, subject.bodyCard!.whatItDoes.formDefinition].filter((definition): definition is BodyDefinitionText => definition !== null);
     const markup = renderProduct(createElement(Fragment, null, createElement(EntityModal, { subject, onClose: () => {} }), ...definitions.map((definition, index) => createElement(DefinitionBlock, { key: index, definition })), createElement(Representation, { holders: subject.representation, note: subject.representationNote, gaps: subject.rosterGaps }), createElement(CardSourcesList, { sources: subject.sources })));

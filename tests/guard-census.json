@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 641,
-    "named": 6593,
+    "files": 642,
+    "named": 6599,
     "dynamic": 27
   },
   "files": {
@@ -2247,6 +2247,16 @@
       ],
       "dynamic": 0
     },
+    "tests/civic-data-read-model-memo.test.ts": {
+      "names": [
+        "a bypassCache read never uses the memo — it re-proves the version every time",
+        "a pointer move to a new version is fetched and re-proved, never masked by the memo",
+        "the batch read fetches candidate envelopes only for versions not yet proven",
+        "the batch read hauls only the moved partition's envelope when one pointer advances",
+        "the single read proves a version once, then attests without re-reading the candidate"
+      ],
+      "dynamic": 0
+    },
     "tests/civic-data-read-model.test.ts": {
       "names": [
         "FEC, ACS, and NH adapters expose outage instead of silently retaining tracked data",
@@ -3789,8 +3799,9 @@
       "names": [
         "a real GPU classifies as hardware and is therefore left alone",
         "an unreadable renderer is unknown, and unknown is NOT software",
-        "every renderer holds overlays at motion start and reveals only on post-motion idle",
         "holding keeps sources cached, hides application layers, and removes the DOM state art from the map",
+        "the data layer never waits for the camera: the meetings fetch is not gated on map readiness",
+        "the motion hold is scoped to a software rasteriser, not every renderer",
         "the renderer strings this was measured through classify as software",
         "the software floor and the jank ceiling are the stated numbers",
         "the software verdict refuses an arm that measured nothing",
@@ -8388,7 +8399,7 @@
         "an unknown id gets null, never a plausible phrase",
         "every wired adapter has a human calendar name",
         "no label is an internal id wearing a label's clothes",
-        "no reader-facing component interpolates an internal source id"
+        "no reader-facing surface interpolates an internal source id"
       ],
       "dynamic": 0
     },

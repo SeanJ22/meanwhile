@@ -152,6 +152,27 @@ interface CachedPromotion {
 
 const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
 
+/**
+ * **Proven versions, keyed by the IMMUTABLE versionId (RULING 288's "attest,
+ * never re-run", made in-process).**
+ *
+ * A promoted version's candidate bytes and promotion payload never change once
+ * written: the store admits `VALIDATED → PROMOTED` only, re-promoting a promoted
+ * row is a no-op, and CHECK constraints tie the pointer payload and the durable
+ * hashes to the versionId. So a versionId that `promotionProofIssue` has cleared
+ * once is cleared for the life of this instance. This memo lets a pointer that
+ * has NOT moved skip the second candidate fetch (the 1.77 MB envelope haul on a
+ * dense meetings read) AND the proof's ~10 canonical passes + two sha256 — the
+ * dominant cost of a cache-miss — and serve the already-proven candidate.
+ *
+ * It never weakens the proof and never serves stale data. A versionId is entered
+ * ONLY after the full proof returned `null` (GOOD) for it; the pointer is ALWAYS
+ * re-read, so a promotion that advanced the pointer is a memo MISS that fetches
+ * and re-proves the new version; and a `bypassCache` caller (the verification
+ * paths) skips the memo entirely and always re-proves. Cleared alongside `cache`.
+ */
+const provenByVersion = new Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>();
+
 function emptyMetadata(recordClass: RoutineRecordClass, scope: string): CivicDataReadMetadata {
   return {
     recordClass,
@@ -272,6 +293,18 @@ export async function readPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
+    // Attest, never re-run (RULING 288): if this exact version is already proven
+    // GOOD in this instance, reuse its candidate — skip the second fetch and the
+    // whole proof — and refresh the scope cache. The pointer was just read
+    // fresh, so a promotion that advanced the pointer is a memo MISS below.
+    // `bypassCache` (the verification paths) opts out and always re-proves.
+    if (!options.bypassCache) {
+      const proven = provenByVersion.get(projection.versionId);
+      if (proven) {
+        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
+        return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
+      }
+    }
     const candidate = await store.readCandidate(projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
     const predecessor = predecessorVersionId !== null
@@ -286,8 +319,9 @@ export async function readPromotedCivicData<T>(
       now,
       options.maxAgeMs,
     );
-    if (!injected && result.kind === "PROMOTED" && candidate !== null) {
-      cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+    if (result.kind === "PROMOTED" && candidate !== null) {
+      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (!options.bypassCache) provenByVersion.set(projection.versionId, { projection, candidate });
     }
     return result;
   } catch (error) {
@@ -376,7 +410,19 @@ export async function readPromotedCivicDataBatch<T>(
     const uniqueProjections = [...projectionsByScope.values()]
       .filter((rows) => rows.length === 1)
       .map((rows) => rows[0]!);
-    const candidateIds = [...new Set(uniqueProjections.map((projection) => projection.versionId))];
+    // Attest, never re-run (RULING 288): only fetch candidate envelopes for
+    // versions NOT already proven in this instance. On a steady meetings read
+    // where no pointer has moved, this fetches ZERO candidates — the ~1.77 MB
+    // envelope haul and every partition's proof are skipped, and the value is
+    // served from the freshly-read pointer + the memoised candidate. A pointer
+    // that has moved names a new versionId, which is a memo miss fetched and
+    // re-proved here. `bypassCache` (verification) opts out of the memo entirely.
+    const memoUsable = !options.bypassCache;
+    const candidateIds = [...new Set(
+      uniqueProjections
+        .filter((projection) => !(memoUsable && provenByVersion.has(projection.versionId)))
+        .map((projection) => projection.versionId),
+    )];
     let candidates: readonly CandidateVersionReadback[] = [];
     if (candidateIds.length > 0) {
       try {
@@ -463,6 +509,18 @@ export async function readPromotedCivicDataBatch<T>(
         ));
         continue;
       }
+      // Proven-version reuse (RULING 288): the pointer was read fresh above; if
+      // its version is already proven, serve the memoised candidate and skip the
+      // per-partition proof. No candidate was fetched for it (filtered out of
+      // `candidateIds`), so `candidatesById` will not hold it.
+      const proven = memoUsable ? provenByVersion.get(projection.versionId) : undefined;
+      if (proven) {
+        results.set(scope, promotedResult(projection, proven.candidate, now, options.maxAgeMs));
+        if (!injected) {
+          cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
+        }
+        continue;
+      }
       const candidateRows = candidatesById.get(projection.versionId) ?? [];
       if (candidateRows.length > 1) {
         results.set(scope, promotionProofInvalidResult(
@@ -511,8 +569,9 @@ export async function readPromotedCivicDataBatch<T>(
         );
       }
       results.set(scope, result);
-      if (!injected && result.kind === "PROMOTED" && candidate !== null) {
-        cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (result.kind === "PROMOTED" && candidate !== null) {
+        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+        if (!options.bypassCache) provenByVersion.set(projection.versionId, { projection, candidate });
       }
     }
   }
@@ -766,4 +825,5 @@ export function promotedVersionOrThrow<T>(result: CivicDataReadResult<T>): strin
 
 export function clearPromotedReadModelCache(): void {
   cache.clear();
+  provenByVersion.clear();
 }

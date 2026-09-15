@@ -8,7 +8,14 @@ import { afterResponse } from "@/lib/log/after-response";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
-import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
+import { snapshotSourceFor } from "@/lib/meetings/registry";
+import {
+  getActiveSnapshotMeta,
+  readMeetingsProjection,
+  requireMeetingsProjection,
+  snapshotClientMeta,
+  type SnapshotClientMeta,
+} from "@/lib/meetings/snapshot";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
@@ -234,9 +241,35 @@ export async function GET(request: Request) {
     }
   }
 
+  // ONE projection read per request (D.1). The search and the freshness meta
+  // both derive from the SAME composed snapshot, instead of each reading,
+  // validating and composing the 124-partition projection independently — two
+  // full passes for one request. The `WTP_MEETING_SOURCE` diagnostic seam
+  // (mock/composite, non-production only) does not read the canonical
+  // projection, so it keeps its own path.
+  const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
+  let snapshotMeta: SnapshotClientMeta | null = null;
   try {
-    result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+    if (meetingSourceName === "snapshot") {
+      const read = await readMeetingsProjection();
+      const snapshot = requireMeetingsProjection(read);
+      result = await searchMeetings(
+        lat,
+        lng,
+        radiusKm,
+        new Date(),
+        divisionsAtPoint,
+        snapshotSourceFor(snapshot),
+      );
+      snapshotMeta =
+        read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
+          ? snapshotClientMeta(read.value, read)
+          : null;
+    } else {
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+      snapshotMeta = await getActiveSnapshotMeta();
+    }
   } catch (error) {
     if (error instanceof CivicDataStoreUnavailableError) {
       return Response.json(
@@ -378,13 +411,23 @@ export async function GET(request: Request) {
   // When the snapshot serves the answer, say how old it is and which sources
   // it is missing — a failed source's bodies would otherwise show nothing
   // with no hint that the gap is ours and temporary.
-  const meta = await getActiveSnapshotMeta();
+  // The one projection read above already produced this (D.1) — no second read.
+  const meta = snapshotMeta;
   // `meta.carried` rides along untouched (hotfix-0817): the footer's one age is true of
   // the fresh rows only, and the count of rows it is NOT true of has to reach
   // the client or the line keeps speaking for them.
+  //
+  // D.4 (2026-09-14): the wire snapshot is trimmed to exactly what a reader
+  // surface reads — the age, the carried-rows summary, and the failed sources
+  // attributed to bodies. `meta.sources` (124 rows) and `meta.partitions` (124
+  // rows) together ran ~40-50 KB of every response and no client reads either;
+  // they are used here to build `failed`, then dropped. `version` lets a later
+  // format change be detected rather than guessed from shape.
   const snapshot = meta
     ? {
-        ...meta,
+        version: 2 as const,
+        generatedAt: meta.generatedAt,
+        ...(meta.carried ? { carried: meta.carried } : {}),
         failed: meta.sources
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({

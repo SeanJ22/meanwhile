@@ -1,6 +1,9 @@
 /** Renderer classification and normalized performance floors remain valid.
- * V94 replaces software-only motion wiring with a hold on every renderer
- * until post-motion idle. Runtime frame evidence is recorded separately. */
+ * The motion hold is scoped BACK to a positively-identified software
+ * rasteriser (reversing V94's every-renderer hold, which blanked the district
+ * lines, the pins and the who-governs card for every reader on a GPU); and the
+ * data layer never waits for the camera. Runtime frame evidence is recorded
+ * separately. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -66,9 +69,26 @@ test("an unreadable renderer is unknown, and unknown is NOT software", () => {
 });
 
 const PRESENTATION = readFileSync(join(ROOT, "lib", "map", "flight-presentation.ts"), "utf8");
+const MAP_ENTRY = readFileSync(join(ROOT, "components", "map", "map-entry.tsx"), "utf8");
 
-test("every renderer holds overlays at motion start and reveals only on post-motion idle", () => {
-  assert.match(CANVAS, /map\.on\("movestart", onMoveStart\);/);
+test("the motion hold is scoped to a software rasteriser, not every renderer", () => {
+  /*
+   * B (2026-09-14): V94 (8f37c059) made the motion hold unconditional on every
+   * renderer, which blanked the overlays on a wheel-zoom for readers on a GPU.
+   * The 2026-09-01 scoping (db727666) is restored: the hold runs ONLY on a
+   * positively-identified CPU rasteriser. Hardware and unknown hide nothing.
+   */
+  assert.match(CANVAS, /const degradeInMotion = detectRaster\(\)\.kind === "software";/);
+  const enter = CANVAS.slice(
+    CANVAS.indexOf("const enterMotionDegrade"),
+    CANVAS.indexOf("const onPresentationIdle"),
+  );
+  assert.match(enter, /if \(!degradeInMotion\) return;/, "enterMotionDegrade must no-op off a software rasteriser");
+  /*
+   * The mount-time hold and its first-idle reveal stay UNCONDITIONAL, so every
+   * renderer still reveals its overlays once the first style has drawn — the
+   * scoping is on the motion re-hold, never on the one-time reveal.
+   */
   assert.match(CANVAS, /map\.on\("idle", onPresentationIdle\);/);
   const idle = CANVAS.slice(CANVAS.indexOf("const onPresentationIdle"), CANVAS.indexOf('map.on("idle", onPresentationIdle)'));
   assert.match(idle, /map\.isMoving\(\) \|\| !mapPresentationHeld\(map\)/);
@@ -76,7 +96,22 @@ test("every renderer holds overlays at motion start and reveals only on post-mot
   assert.match(idle, /ensureDistricts\(\)/);
   const end = CANVAS.slice(CANVAS.indexOf("const onMoveEnd"), CANVAS.indexOf('map.on("movestart", onMoveStart)'));
   assert.ok(!end.includes("releaseMapPresentation(") && !end.includes("setPresentationVisible("));
-  assert.ok(!CANVAS.includes("degradeInMotion"), "hardware and unknown renderers receive the same flight sequencing");
+});
+
+test("the data layer never waits for the camera: the meetings fetch is not gated on map readiness", () => {
+  /*
+   * A (2026-09-14): the meetings request fires the moment a `view` is known and
+   * is torn down only by a view/retry change — never by the map's first `idle`
+   * or by a motion that flips presentation readiness. Chaining it behind the
+   * camera is what sat the panel at "0 Meetings / — Bodies / — Officials".
+   */
+  assert.ok(MAP_ENTRY.includes("/api/meetings"), "map-entry owns the meetings fetch");
+  // The fetch effect's only early return is on a missing view.
+  assert.match(MAP_ENTRY, /if \(!view\) return;\n\n    const controller = new AbortController\(\);/);
+  // Its dependency array is the view and the retry nonce — no readiness flag.
+  assert.ok(MAP_ENTRY.includes("}, [view, retryNonce]);"), "fetch deps are [view, retryNonce]");
+  // The stale-closure readiness ref that used to gate the answer is gone.
+  assert.ok(!MAP_ENTRY.includes("mapPresentationReadyRef"), "no readiness ref gates the fetch");
 });
 
 test("holding keeps sources cached, hides application layers, and removes the DOM state art from the map", () => {

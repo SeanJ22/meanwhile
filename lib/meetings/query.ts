@@ -9,7 +9,7 @@ import {
   UPCOMING_HORIZON_DAYS,
   type CoverageTier,
 } from "./constants.ts";
-import { getMeetingSource } from "./registry.ts";
+import { getMeetingSource, type ResolvedMeetingSource } from "./registry.ts";
 
 /**
  * The empty-state cascade.
@@ -173,8 +173,15 @@ export async function searchMeetings(
    * non-route caller wants.
    */
   divisionsAtPoint: ReadonlySet<string> = new Set(),
+  /**
+   * The resolved meeting source. Injected by the API route so the request reads
+   * and composes the canonical projection ONCE and feeds the same snapshot to
+   * both the search and the freshness metadata (D.1). Every other caller omits
+   * it and gets the active source for the environment.
+   */
+  injectedSource?: ResolvedMeetingSource,
 ): Promise<MeetingSearchResult> {
-  const source = getMeetingSource();
+  const source = injectedSource ?? getMeetingSource();
   const center = { lat, lng };
 
   const ladder = RADIUS_LADDER_KM.filter((r) => r >= startRadiusKm);

@@ -162,6 +162,13 @@ export function bodyFromRow(row: {
     // definitions library falls back to the generic municipality class rather
     // than claiming this is a township.
     lsad: null,
+    // A search-row body is a lightweight fallback with no boundary data, and
+    // this module is on the CLIENT graph — importing the 103 KB dependency table
+    // here would put it right back in the first-load bundle (G, 2026-09-14). So
+    // the school-system stamp is UNCLASSIFIED, which renders no class definition
+    // (the honest gap for this surface); the full covered body carries the real
+    // value, stamped on the server in lib/registry/coverage.ts.
+    schoolDependency: "UNCLASSIFIED",
     /*
      * `BodyClass` has no "we are not saying" member, and every member it does
      * have is a CLAIM: GOVERNING, ADVISORY, COMMISSION, REGIONAL and

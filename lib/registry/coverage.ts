@@ -10,6 +10,7 @@ import {
   type SeatHolder,
 } from "../officials/lookup.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { schoolDependency, type SchoolDependency } from "../officials/school-dependency.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import type { BodyTerritoryFile } from "./body-territory.ts";
@@ -149,6 +150,14 @@ export interface CoveredBody {
    * on `Division` and was being dropped here.
    */
   lsad: string | null;
+  /**
+   * INDEPENDENT / DEPENDENT / UNCLASSIFIED school-system stamp (DEF-2), computed
+   * on the server from the Census classification. Carried on the body so the
+   * battlecard's class definition needs no client-side lookup — the 103 KB
+   * `school-district-dependency.json` used to ride into the first-load JS bundle
+   * through `map-entry.tsx` for exactly this one field (G, 2026-09-14).
+   */
+  schoolDependency: SchoolDependency;
   bodyClass: BodyClass;
   coverageStatus: CoverageStatus;
   homepageUrl: string | null;
@@ -402,6 +411,7 @@ export function summarizeCoverage(
       // Southeast Regional Council case — real, hyperlocal, and not a division.
       divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,
+      schoolDependency: schoolDependency(body.ocdId),
       bodyClass: body.bodyClass,
       coverageStatus: body.coverageStatus,
       homepageUrl: body.homepageUrl,

@@ -58,7 +58,6 @@ import {
 } from "@/lib/registry/representation";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
-import { schoolDependency } from "@/lib/officials/school-dependency";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
 import {
   formatMeetingDate,
@@ -214,10 +213,17 @@ function MapEntryInner() {
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
 
+  /*
+   * The map's first-idle / motion-degrade signal (map-canvas reports it). It
+   * still drives purely-visual chrome — the tutorial overlay — but it NO LONGER
+   * gates the meetings fetch below. Chaining the data behind the map's first
+   * `idle` is what made the panel sit at "0 Meetings / — Bodies / — Officials"
+   * for the whole of a cold load, and made every motion (which flips this
+   * false→true on a software rasteriser) abort and re-issue the request. The
+   * data answers to the reader's `view`, not to the camera.
+   */
   const [mapPresentationReady, setMapPresentationReady] = useState(false);
-  const mapPresentationReadyRef = useRef(false);
   const onMapPresentationReady = useCallback((ready: boolean) => {
-    mapPresentationReadyRef.current = ready;
     setMapPresentationReady(ready);
   }, []);
   const [result, setResult] = useState<TaggedResult | null>(null);
@@ -389,7 +395,14 @@ function MapEntryInner() {
       : zipView;
 
   useEffect(() => {
-    if (!view || !mapPresentationReady || !mapPresentationReadyRef.current) return;
+    // Fire the moment a `view` is known — the URL zip, the stored zip, or a
+    // settled viewport. It used to also wait for `mapPresentationReady`, which
+    // chained the first answer behind the map's first `idle` and re-issued it on
+    // every motion that flipped that flag. The camera no longer gates the data.
+    // A settled-viewport re-query still happens only on a USER gesture, because
+    // `settled` is set only from `onViewportSettle` (map-canvas gates that on
+    // `wasUserMove`); the app's own flyTo/fitBounds never change `view`.
+    if (!view) return;
 
     const controller = new AbortController();
     const { key, zip, lat, lng, radiusKm } = view;
@@ -411,7 +424,7 @@ function MapEntryInner() {
             signal: controller.signal,
           },
         );
-        if (controller.signal.aborted || !mapPresentationReadyRef.current) return;
+        if (controller.signal.aborted) return;
         if (!response.ok) {
           // Let the failure name itself — the status distinguishes "the
           // service is broken" (5xx) from "the request was rejected" (4xx)
@@ -427,7 +440,7 @@ function MapEntryInner() {
 
         const payload: MeetingSearchResult & { nearZip?: string | null } =
           await response.json();
-        if (controller.signal.aborted || !mapPresentationReadyRef.current) return;
+        if (controller.signal.aborted) return;
         setResult({
           ...payload,
           // The label the notices speak: the typed zip, the settled area's
@@ -437,7 +450,7 @@ function MapEntryInner() {
         });
         setFailure(null);
       } catch {
-        if (controller.signal.aborted || !mapPresentationReadyRef.current) return;
+        if (controller.signal.aborted) return;
         console.error(`meetings fetch got no answer for ${view.kind} view`);
         setResult(null);
         setFailure({ status: null });
@@ -445,7 +458,7 @@ function MapEntryInner() {
     })();
 
     return () => controller.abort();
-  }, [view, retryNonce, mapPresentationReady]);
+  }, [view, retryNonce]);
 
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
@@ -1080,18 +1093,29 @@ function MapEntryInner() {
     });
   }, [current, dispatch]);
 
-  const data = useMemo<ShellData>(
-    () => ({
-      allMeetings: current?.meetings ?? [],
-      commentAccess: current?.commentAccess ?? [],
-      // The projection is global and canonical, so retain its last response
-      // only during an in-flight map refresh. A completed unavailable read
-      // still arrives as `current` with null and is withheld fail-closed.
-      everydayRouting: (current ?? shown)?.everydayRouting ?? null,
+  const data = useMemo<ShellData>(() => {
+    /*
+     * The answer every surface reads. `current` is the fresh answer for THIS
+     * view; it is null for the whole gap between a settle and its reply. `shown`
+     * is the last real answer, carried through that gap (6f/R47). Reading
+     * `current ?? shown` gives the tiles, doors and highlight sets the SAME
+     * carry-forward the pins and the who-governs card already have, so a refresh
+     * DIMS them (`data-refreshing`) rather than blanking them — Bodies,
+     * Officials and the coverage rung no longer drop to "—" on every wheel-zoom
+     * or pan. A COMPLETED answer — even an unavailable one — arrives as
+     * `current` (non-null) and is respected fail-closed; the fall back to
+     * `shown` only ever bridges the in-flight gap, never a settled null. This is
+     * the discipline `everydayRouting` already used, applied to the rest.
+     */
+    const answer = current ?? shown;
+    return {
+      allMeetings: answer?.meetings ?? [],
+      commentAccess: answer?.commentAccess ?? [],
+      everydayRouting: answer?.everydayRouting ?? null,
       meetings,
       listingIdentity: pinned?.listingIdentity,
       venues,
-      result: current,
+      result: answer,
       location,
       drawnDistricts,
       dropped: 0,
@@ -1109,8 +1133,8 @@ function MapEntryInner() {
        * (the server's resolution failed) both mean "we cannot say", and both
        * become null rather than an empty set.
        */
-      governing: current?.governingOcdIds
-        ? new Set(current.governingOcdIds)
+      governing: answer?.governingOcdIds
+        ? new Set(answer.governingOcdIds)
         : null,
       /*
        * `JUR-2` (2026-08-23). Same construction and same null discipline as
@@ -1118,11 +1142,10 @@ function MapEntryInner() {
        * `null` (unmeasured) both become null, because neither is "measured,
        * nothing partial" and an empty set says exactly that.
        */
-      zipPartial: current?.partialOcdIds ? new Set(current.partialOcdIds) : null,
+      zipPartial: answer?.partialOcdIds ? new Set(answer.partialOcdIds) : null,
       basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
-    }),
-    [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view],
-  );
+    };
+  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view]);
 
   /*
    * M135 (2026-08-18) — the autocomplete's rows join the rule the rest of the
@@ -1788,7 +1811,17 @@ function MapEntryInner() {
         />
       )}
 
-      {location && (!mapPresentationReady || (!shown && !failure)) ? <GoverningSkeleton /> : shown &&
+      {/*
+        The skeleton stands ONLY before the first answer for this area — no
+        `shown` (held) answer yet and no failure. It used to also stand on
+        `!mapPresentationReady`, which meant the card fell back to skeleton bars
+        on every motion (and, on a software rasteriser, mid-fly-in) even with a
+        held answer in hand. A refresh now DIMS the held card through the
+        `data-refreshing` rule; it never unmounts. A first-time visitor sees the
+        skeleton the moment they enter a zip (location set, answer in flight),
+        never a blank.
+      */}
+      {location && !shown && !failure ? <GoverningSkeleton /> : shown &&
         (noticeCollapsed ? (
           /*
            * Shrunk out of the way (2h), not gone: one tap brings the full
@@ -1838,6 +1871,12 @@ function MapEntryInner() {
             failedSourceOcdIds={
               shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
             }
+            /* The snapshot's last-refresh instant, spelled out by the card's
+               per-body source notes (RULING 258). The card intersects
+               `failedSourceOcdIds` with the reader's own bodies, so the
+               unscoped site-wide failure list never puts another area's board
+               on this card. */
+            lastCheckedAt={shown.snapshot?.generatedAt ?? null}
             /* F01 7.2: what the MAP is actually showing, so the card
                cannot say “may be missing” about a body whose pins the
                reader can see. Read off the same meeting array the pins
@@ -2759,7 +2798,9 @@ function bodySubject(
               ocdId: body.ocdId,
               divisionType: body.divisionType,
               lsad: body.lsad,
-              schoolDependency: schoolDependency(body.ocdId),
+              // Server-stamped on the covered body (G, 2026-09-14) so the 103 KB
+              // dependency table no longer ships in the client bundle.
+              schoolDependency: body.schoolDependency,
             }),
       isSchoolDistrict: body.divisionType === "school_district",
       // The superintendent is HIRED by the board, so they are not in the

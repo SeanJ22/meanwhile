@@ -30,7 +30,7 @@
  * and the layout collapses to one column on narrow viewports.
  */
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 
 import { DecisionQueue, type PriorityGroupView } from "@/app/(admin)/admin/decisions.tsx";
@@ -124,6 +124,24 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
     }));
   }, [decisionCards]);
 
+  const [readAgo, setReadAgo] = useState<string | null>(null);
+  useEffect(() => {
+    const ts = report?.observedAt;
+    if (!ts) { setReadAgo(null); return; }
+    const tick = (): void => {
+      const ms = Date.now() - Date.parse(ts);
+      if (!Number.isFinite(ms) || ms < 0) { setReadAgo(null); return; }
+      const minutes = Math.floor(ms / 60_000);
+      if (minutes < 1) setReadAgo("just now");
+      else if (minutes === 1) setReadAgo("1 minute ago");
+      else if (minutes < 60) setReadAgo(`${minutes} minutes ago`);
+      else { const h = Math.floor(minutes / 60); setReadAgo(`${h} hour${h === 1 ? "" : "s"} ago`); }
+    };
+    tick();
+    const id = setInterval(tick, 60_000);
+    return () => clearInterval(id);
+  }, [report?.observedAt]);
+
   return (
     <section data-fleet-map style={{ display: "grid", gap: 16 }}>
       <style>{FLEET_MAP_CSS}</style>
@@ -137,7 +155,8 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
         </div>
         {report && (
           <p className="note" style={{ margin: 0 }}>
-            observedAt {report.observedAt} · deliveryFreshness {report.deliveryFreshness}. {NOTES.delivery}
+            Read {readAgo ?? report.observedAt}. Nothing re-reads this page. There is no cycle here.
+            {" "}deliveryFreshness {report.deliveryFreshness}. {NOTES.delivery}
           </p>
         )}
       </header>
@@ -145,7 +164,7 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
       {consumer.lastError && (
         <div className="refusal">
           <strong>{report ? "Refresh failed." : "Could not read the operations report."}</strong> {consumer.lastError}
-          {report && ` Showing the last successful read from ${report.observedAt} (unchanged).`}
+          {report && ` Showing the last successful read from ${readAgo ?? report.observedAt} (unchanged).`}
         </div>
       )}
 

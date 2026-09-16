@@ -275,11 +275,23 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
             )}
           </section>
 
-          {/* Panels */}
-          <section aria-label="Panels" className="fm-panels">
-            {FLEET_MAP_PANELS.map((p) => (
-              <Panel key={p.id} meta={p} report={report} view={view} showCode={showCode} />
-            ))}
+          {/* Panels — split by producer existence */}
+          <section aria-label="Panels">
+            <h3 style={{ margin: "0 0 .4rem", fontSize: ".88rem" }}>Reads something <span className="note">{FLEET_MAP_PANELS.filter((p) => p.producer !== "NO_PRODUCER").length}</span></h3>
+            <div className="fm-panels">
+              {FLEET_MAP_PANELS.filter((p) => p.producer !== "NO_PRODUCER").map((p) => (
+                <Panel key={p.id} meta={p} report={report} view={view} showCode={showCode} />
+              ))}
+            </div>
+            <h3 style={{ margin: ".8rem 0 .4rem", fontSize: ".88rem" }}>No producer <span className="note">{FLEET_MAP_PANELS.filter((p) => p.producer === "NO_PRODUCER").length}</span></h3>
+            <p className="note" style={{ margin: "0 0 .4rem" }}>
+              These panels have no data producer anywhere in the codebase. There is no reading to be late, and refreshing changes nothing.
+            </p>
+            <div className="fm-panels fm-panels-no-producer">
+              {FLEET_MAP_PANELS.filter((p) => p.producer === "NO_PRODUCER").map((p) => (
+                <Panel key={p.id} meta={p} report={report} view={view} showCode={showCode} />
+              ))}
+            </div>
           </section>
         </>
       )}
@@ -513,6 +525,7 @@ const FLEET_MAP_CSS = `
 [data-fleet-map] .fm-lanes { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 [data-fleet-map] .fm-lane { text-align: left; cursor: pointer; border: 0; border-radius: 12px; padding: 12px 14px; background: var(--panel, #181a20); color: inherit; display: block; }
 [data-fleet-map] .fm-panels { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+[data-fleet-map] .fm-panels-no-producer .card { background: transparent; box-shadow: none; border: 1.5px dashed #6fa8a5; }
 [data-fleet-map] .fm-wi-head { width: 100%; display: flex; gap: 10px; align-items: center; justify-content: space-between; background: transparent; border: 0; cursor: pointer; color: inherit; font: inherit; text-align: left; padding: 0; }
 [data-fleet-map] button:focus-visible, [data-fleet-map] .fm-lane:focus-visible, [data-fleet-map] .fm-wi-head:focus-visible { outline: 2px solid var(--link, #4fc9e8); outline-offset: 2px; }
 `;

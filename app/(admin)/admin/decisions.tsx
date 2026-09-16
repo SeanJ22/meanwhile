@@ -74,6 +74,10 @@ export interface WaitingCardView {
   readonly checkedThisRun: string | null;
   /** True when the owner may answer in his own words. */
   readonly ownWords: boolean;
+  /** Null means not measured — never rendered as 0. */
+  readonly blockedDescendants: number | null;
+  /** The tracker row's own "Last verified" stamp, when present. */
+  readonly lastVerified: string | null;
 }
 
 export interface PriorityGroupView {
@@ -328,7 +332,8 @@ export function DecisionQueue({
                                   <p className="note">
                                     {card.checkedThisRun
                                       ? `Rechecked on the last tracker generation: ${card.checkedThisRun}.`
-                                      : "No recheck was recorded on the last tracker generation."}{" "}
+                                      : "No recheck was recorded on the last tracker generation."}
+                                    {card.lastVerified ? ` Last verified: ${card.lastVerified}.` : ""}{" "}
                                     This clears itself the moment the blocker stops being true; it is not a decision.
                                   </p>
                                 </>
@@ -336,6 +341,12 @@ export function DecisionQueue({
                                 <>
                                   <p>
                                     <strong>What is needed:</strong> {card.whatIsNeeded}
+                                  </p>
+                                  <p className="note">
+                                    <strong>Blocked descendants:</strong>{" "}
+                                    {card.blockedDescendants === null
+                                      ? "not measured"
+                                      : `${card.blockedDescendants} waiting behind this decision`}
                                   </p>
                                   <details>
                                     <summary>Why no machine can decide it</summary>

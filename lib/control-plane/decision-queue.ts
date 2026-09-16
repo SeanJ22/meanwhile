@@ -258,6 +258,8 @@ export function waitingCardView(card: OwnerDecisionCard): {
   readonly blocker: string | null;
   readonly checkedThisRun: string | null;
   readonly ownWords: boolean;
+  readonly blockedDescendants: number | null;
+  readonly lastVerified: string | null;
 } {
   const kind = decisionCardKind(card);
   const meta = [
@@ -278,6 +280,8 @@ export function waitingCardView(card: OwnerDecisionCard): {
     blocker: kind === "BLOCKED_WHILE" ? (card.blocker ?? card.whatIsNeeded) : null,
     checkedThisRun: card.checkedThisRun ?? null,
     ownWords: kind === "DECISION",
+    blockedDescendants: card.blockedDescendants ?? null,
+    lastVerified: card.lastVerified ?? null,
   };
 }
 

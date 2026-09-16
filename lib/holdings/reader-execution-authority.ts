@@ -1126,6 +1126,7 @@ async function readAuthorityDatabase(
       parseReaderProjectionReadback(detail)
     ).find((receipt) => receipt !== null) ?? null;
     const fallbackReaderReceipt = latestReaderReceipt === null && expectedImport.expectedPointerSha256 === null
+      && candidate?.bootstrapImport == null
       ? normalizedEvents
           .filter((event) => dispositionOriginalCandidateIds.includes(event.candidateId))
           .map(({ detail }) => parseReaderProjectionReadback(detail))
@@ -1162,7 +1163,7 @@ async function readAuthorityDatabase(
     const importIssue = importedHere && candidate
       ? trustedLkgImportEvidenceIssue(candidate as unknown as RoutineCandidate, predecessor)
       : null;
-    const dispositionIssue = expectedImport.expectedPointerSha256 === null && !importedHere
+    const dispositionIssue = expectedImport.expectedPointerSha256 === null && !importedHere && !hasBootstrapImport
       ? null
       : disposition === "PROMOTED_ABSENT_POINTER"
         ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT"

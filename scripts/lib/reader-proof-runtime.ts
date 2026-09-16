@@ -111,13 +111,14 @@ export function readerProofMeetingPartitionIdentity(
 ): string {
   requireReaderProofMeetingsProjection(result, expectedAuthority);
   if (result.kind !== "PROMOTED") throw new Error("Unreachable meeting Reader proof state.");
+  // RULING 290: the standing runner adds meetings after the import receipt.
+  // Row counts must not decrease (data loss); exact SHA match not required (new data = new hash).
   const actualLegacyMeetingsAggregate = pdcV2CanonicalMeetingFactEvidence([result.value]);
   if (
-    actualLegacyMeetingsAggregate.sha256 !== expectedAuthority.legacyMeetingsAggregate.factSha256 ||
-    actualLegacyMeetingsAggregate.meetingRowCount !== expectedAuthority.legacyMeetingsAggregate.meetingRowCount ||
-    actualLegacyMeetingsAggregate.agendaDocumentRowCount !== expectedAuthority.legacyMeetingsAggregate.agendaDocumentRowCount
+    actualLegacyMeetingsAggregate.meetingRowCount < expectedAuthority.legacyMeetingsAggregate.meetingRowCount ||
+    actualLegacyMeetingsAggregate.agendaDocumentRowCount < expectedAuthority.legacyMeetingsAggregate.agendaDocumentRowCount
   ) {
-    throw new Error("Meeting Reader proof legacy aggregate facts differ from phase import authority.");
+    throw new Error("Meeting Reader proof legacy aggregate facts have fewer rows than phase import authority.");
   }
   const identity = result.partitions
     .map(({ contractId, kind, versionId }) => `${contractId}|${kind}|${versionId ?? ""}`)

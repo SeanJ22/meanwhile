@@ -448,6 +448,7 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
     /disposition differs from phase import authority/,
   );
 
+  // RULING 290: fewer rows than expected still fails (data loss).
   const omittedMeeting = {
     ...input.value,
     meetings: input.value.meetings.slice(1),
@@ -457,18 +458,17 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
       meetingProofInput(input.partitions, omittedMeeting),
       expected,
     ),
-    /legacy aggregate facts differ from phase import authority/,
+    /legacy aggregate facts have fewer rows than phase import authority/,
   );
-  assert.throws(
-    () => readerProofMeetingPartitionIdentity(input, {
-      ...expected,
-      legacyMeetingsAggregate: {
-        ...expected.legacyMeetingsAggregate,
-        factSha256: "c".repeat(64),
-      },
-    }),
-    /legacy aggregate facts differ from phase import authority/,
-  );
+  // RULING 290: a different SHA alone is allowed (runner adds new data).
+  assert.ok(readerProofMeetingPartitionIdentity(input, {
+    ...expected,
+    legacyMeetingsAggregate: {
+      ...expected.legacyMeetingsAggregate,
+      factSha256: "c".repeat(64),
+    },
+  }));
+  // RULING 290: expected row count higher than actual still fails (data loss).
   assert.throws(
     () => readerProofMeetingPartitionIdentity(input, {
       ...expected,
@@ -477,7 +477,7 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
         meetingRowCount: expected.legacyMeetingsAggregate.meetingRowCount + 1,
       },
     }),
-    /legacy aggregate facts differ from phase import authority/,
+    /legacy aggregate facts have fewer rows than phase import authority/,
   );
   assert.throws(
     () => readerProofMeetingPartitionIdentity(input, {
@@ -487,7 +487,7 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
         agendaDocumentRowCount: expected.legacyMeetingsAggregate.agendaDocumentRowCount + 1,
       },
     }),
-    /legacy aggregate facts differ from phase import authority/,
+    /legacy aggregate facts have fewer rows than phase import authority/,
   );
   assert.throws(
     () => readerProofMeetingPartitionIdentity(input, {

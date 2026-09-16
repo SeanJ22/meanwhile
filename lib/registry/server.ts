@@ -19,7 +19,7 @@ import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForB
 import { membersOfBody } from "./body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import { federalDirectoryReadState, getFederalOfficeholderSet, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
+import { federalDirectoryReadState, getFederalOfficeholderSet, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
 import {
@@ -30,8 +30,9 @@ import {
 } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { curatedReaderReadState, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
+import { currentCampaignSitesEdge, currentFederalDirectoryEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
+import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import {
   heldOfficialStateLegislators,
@@ -39,6 +40,7 @@ import {
   readOfficialStateLegislatorsProjection,
 } from "../state-rollcalls/legislators.ts";
 import {
+  officialStateLegislatorTargetByScope,
   officialStateLegislatorTargetByState,
   officialStateVoteScopeForOfficeholderId,
   type OfficialStateVoteScope,
@@ -285,12 +287,31 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
+/**
+ * The federal reader, edge-aware: a reader request that primed a request-scoped
+ * federal-directory edge value serves it WITHOUT reading Neon; the runner and
+ * workers (which never set it) fall through to the authoritative database reader.
+ */
+async function settleFederalDirectoryRead(): Promise<void> {
+  const edge = currentFederalDirectoryEdge();
+  if (edge) { primeFederalDirectoryFromValue(edge.value, edge.versionId); return; }
+  await refreshFederalDirectoryFromPromoted();
+}
+
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
   scope: "REGISTRY" | "OFFICIALS",
   readers: RegistryAuthorityReaders = {
-    registry: async () => { await refreshRegistryRuntimeFromPromoted(); },
-    federal: async () => { await refreshFederalDirectoryFromPromoted(); },
+    // Reader requests that primed a request-scoped registry-runtime edge value
+    // serve it WITHOUT reading Neon. The standing runner and workers never set
+    // that value, so they fall through to the authoritative database reader —
+    // `refreshRegistryRuntimeFromPromoted` is unchanged.
+    registry: async () => {
+      const edge = currentRegistryRuntimeEdge();
+      if (edge) { primeRegistryRuntimeFromValue(edge.value, edge.versionId); return; }
+      await refreshRegistryRuntimeFromPromoted();
+    },
+    federal: settleFederalDirectoryRead,
   },
 ): Promise<void> {
   await readers.registry();
@@ -306,12 +327,16 @@ async function currentRegistryAuthorityKey(): Promise<string> {
 async function currentAuthorityKey(registryKey: string): Promise<string> {
   await settleRegistryAuthorityReads("OFFICIALS", {
     registry: async () => undefined,
-    federal: async () => { await refreshFederalDirectoryFromPromoted(); },
+    federal: settleFederalDirectoryRead,
   });
   let campaign = "TEST_FIRST_SEED";
   if (process.env.NODE_ENV === "production") {
     try {
-      await refreshCampaignSitesFromPromoted();
+      // Campaign URLs, edge-aware: a primed request-scoped value serves without
+      // Neon; otherwise the authoritative database read (runner/workers path).
+      const edge = currentCampaignSitesEdge();
+      if (edge) primeCuratedReaderProjection("campaign-sites", edge.value, edge.versionId);
+      else await refreshCampaignSitesFromPromoted();
       const state = curatedReaderReadState("campaign-sites");
       campaign = `${state.kind}:${state.metadata.versionId ?? "none"}`;
     } catch {
@@ -586,10 +611,43 @@ export type CoverageStateLegislatorReader = (
  * disposition. In particular, an empty canonical pointer and an unavailable
  * store both yield no names, but remain different facts on CoverageSummary.
  */
+/**
+ * The state-legislators reader, edge-aware: a reader request that primed the
+ * request-scoped state-legislators edge map serves it (per scope) WITHOUT
+ * reading Neon; the runner/workers fall through to the authoritative database
+ * reader. BOOTSTRAP kind — the serving copy carries the value + version, not the
+ * promotion receipt.
+ */
+const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) => {
+  const edge = currentStateLegislatorsEdge();
+  const value = edge?.value?.[scope];
+  if (value) {
+    return {
+      kind: "BOOTSTRAP",
+      value,
+      metadata: {
+        recordClass: "STATE_LEGISLATOR",
+        scope,
+        sourceId: officialStateLegislatorTargetByScope(scope)?.sourceId ?? null,
+        version: null,
+        versionId: edge.versionId,
+        lastKnownGoodVersionId: edge.versionId,
+        sourceThrough: null,
+        retrievedAt: null,
+        promotedAt: null,
+        stale: "CURRENT",
+        staleAt: null,
+      },
+      detail: `Served from the state-legislators edge artifact (version ${edge.versionId}); the promotion receipt stays on the authoritative database path.`,
+    };
+  }
+  return readOfficialStateLegislatorsProjection(scope);
+};
+
 export async function settleCoverageStateLegislators(
   exactDivisions: readonly Division[],
   officials: OfficeholderIndex,
-  reader: CoverageStateLegislatorReader = readOfficialStateLegislatorsProjection,
+  reader: CoverageStateLegislatorReader = settleStateLegislatorsRead,
 ): Promise<{
   readonly officials: OfficeholderIndex;
   readonly authorities: StateLegislatorCoverageAuthority[];

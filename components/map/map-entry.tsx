@@ -449,6 +449,28 @@ function MapEntryInner() {
           viewKey: key,
         });
         setFailure(null);
+        // The SEARCH log rides the same fire-and-forget beacon as every other
+        // reader event (never the response path), so a cold first visit never
+        // waits for a database write. Orientation-only zip + the governing
+        // divisions; the synthetic-run marker rides the body for walk/reader
+        // classification. Disclosed on /transparency.
+        {
+          const extra = payload as {
+            requestedRadiusKm?: number;
+            governingOcdIds?: readonly string[] | null;
+          };
+          logEvent(
+            "SEARCH",
+            Array.isArray(extra.governingOcdIds) ? [...extra.governingOcdIds] : [],
+            {
+              tier: payload.tier,
+              radiusKm: payload.radiusKm,
+              ...(typeof extra.requestedRadiusKm === "number" ? { requestedRadiusKm: extra.requestedRadiusKm } : {}),
+              meetingCount: payload.meetings.length,
+            },
+            zip ?? payload.nearZip ?? null,
+          );
+        }
       } catch {
         if (controller.signal.aborted) return;
         console.error(`meetings fetch got no answer for ${view.kind} view`);

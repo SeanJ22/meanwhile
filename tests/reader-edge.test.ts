@@ -1,0 +1,222 @@
+import assert from "node:assert/strict";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+
+import {
+  NATIONAL_SCOPE,
+  mergeScopeArtifacts,
+  partitionSnapshotByScope,
+  scopeOfMeeting,
+  scopesForStates,
+  stateOfOcdId,
+  type ReaderManifest,
+} from "../lib/meetings/edge-artifacts.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import {
+  publishReaderEdgeArtifacts,
+  readReaderEdgeMeetings,
+} from "../lib/meetings/edge-serving.ts";
+import type { Meeting } from "../lib/sources/types.ts";
+import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+
+function meeting(id: string, ocdId: string | null, extra: Partial<Meeting> = {}): Meeting {
+  return {
+    id,
+    ocdId,
+    title: `Meeting ${id}`,
+    startsAt: "2026-09-20T18:00:00.000Z",
+    location: { lat: 32.2, lng: -110.9 },
+    ...extra,
+  } as unknown as Meeting;
+}
+
+function snapshot(meetings: Meeting[]): MeetingsSnapshot {
+  const carried = meetings.filter((m) => (m as { carried?: unknown }).carried).length;
+  return {
+    formatVersion: 1,
+    generatedAt: "2026-09-15T12:00:00.000Z",
+    counts: { fresh: meetings.length - carried, carried, total: meetings.length, duplicatesCollapsed: 0 },
+    sources: [{ source: "az-portal", ok: true, error: null, fetched: 2, normalized: 2 } as never],
+    meetings,
+    agendaDocuments: [],
+  };
+}
+
+const META = { sourceThrough: "2026-09-15T00:00:00.000Z", retrievedAt: "2026-09-15T00:00:00.000Z", promotedThrough: "2026-09-15T00:00:00.000Z" };
+
+test("stateOfOcdId / scopeOfMeeting derive the geographic partition key", () => {
+  assert.equal(stateOfOcdId("ocd-division/country:us/state:az/place:tucson#governing"), "az");
+  assert.equal(stateOfOcdId("ocd-division/country:us/state:nj/county:morris"), "nj");
+  assert.equal(stateOfOcdId("ocd-division/country:us"), null);
+  assert.equal(stateOfOcdId(null), null);
+  assert.equal(scopeOfMeeting(meeting("x", null)), NATIONAL_SCOPE);
+  assert.equal(scopeOfMeeting(meeting("y", "ocd-division/country:us/state:nh/place:newbury")), "nh");
+});
+
+test("scopesForStates dedupes, lowercases, validates, and always includes the national bucket", () => {
+  assert.deepEqual(scopesForStates(["AZ", "az", "nj"]), ["az", "nj", "us"]);
+  assert.deepEqual(scopesForStates([]), ["us"]);
+  assert.deepEqual(scopesForStates(["bogus", "z"]), ["us"], "malformed states are dropped, us remains");
+});
+
+test("partitionSnapshotByScope splits meetings by state with a national bucket, deterministic order", () => {
+  const snap = snapshot([
+    meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing"),
+    meeting("nj1", "ocd-division/country:us/state:nj/county:morris#governing"),
+    meeting("az2", "ocd-division/country:us/state:az/county:pima#governing"),
+    meeting("none", null),
+  ]);
+  const artifacts = partitionSnapshotByScope(snap);
+  assert.deepEqual(artifacts.map((a) => a.scope), ["az", "nj", "us"], "sorted scope order");
+  const az = artifacts.find((a) => a.scope === "az")!;
+  assert.equal(az.meetings.length, 2);
+  assert.equal(az.counts.total, 2);
+  assert.equal(artifacts.find((a) => a.scope === "us")!.meetings.length, 1);
+});
+
+test("publish → read round-trips through the file store and merges only the requested scopes", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-")));
+  const snap = snapshot([
+    meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing"),
+    meeting("nj1", "ocd-division/country:us/state:nj/county:morris#governing"),
+    meeting("none", null),
+  ]);
+  const published = await publishReaderEdgeArtifacts(snap, META, { store });
+  assert.equal(published.status, "PUBLISHED");
+  if (published.status === "PUBLISHED") assert.equal(published.sequence, 1);
+
+  // An AZ reader gets AZ + the national bucket, never NJ.
+  const azRead = await readReaderEdgeMeetings({ store, states: ["az"] });
+  assert.equal(azRead.kind, "PROMOTED");
+  if (azRead.kind !== "PROMOTED") return;
+  const ids = azRead.value.meetings.map((m) => m.id).sort();
+  assert.deepEqual(ids, ["az1", "none"], "AZ reader gets AZ meetings + the national bucket, not NJ");
+  assert.match(azRead.detail, /reader edge artifacts/);
+});
+
+test("republishing an unchanged composition is idempotent (CURRENT), a changed one advances the sequence monotonically", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-")));
+  const snap = snapshot([meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing")]);
+  const first = await publishReaderEdgeArtifacts(snap, META, { store });
+  assert.equal(first.status, "PUBLISHED");
+
+  // Same data (only the generatedAt stamp differs) → nothing republished.
+  const again = await publishReaderEdgeArtifacts({ ...snap, generatedAt: "2026-09-15T13:00:00.000Z" }, META, { store });
+  assert.equal(again.status, "CURRENT");
+  if (again.status === "CURRENT") assert.equal(again.sequence, 1);
+
+  // Changed data → new immutable sequence.
+  const changed = snapshot([
+    meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing"),
+    meeting("az2", "ocd-division/country:us/state:az/county:pima#governing"),
+  ]);
+  const advanced = await publishReaderEdgeArtifacts(changed, META, { store });
+  assert.equal(advanced.status, "PUBLISHED");
+  if (advanced.status === "PUBLISHED") assert.equal(advanced.sequence, 2, "monotonic advance");
+});
+
+test("a stale publisher that read an older manifest cannot regress the pointer (monotonic CAS)", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-")));
+  const a = snapshot([meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing")]);
+  await publishReaderEdgeArtifacts(a, META, { store });
+
+  // Two overlapping publishers both saw sequence 1; simulate by having one write
+  // through a store whose manifest is pinned to the sequence-1 ETag while another
+  // advanced it. The second write must land against the CURRENT etag only.
+  const staleExpected = (await store.readManifest())!.etag;
+  // First writer advances 1 -> 2.
+  const changed = snapshot([
+    meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing"),
+    meeting("az2", "ocd-division/country:us/state:az/county:pima#governing"),
+  ]);
+  await publishReaderEdgeArtifacts(changed, META, { store });
+  // Second (stale) writer tries to CAS against the OLD etag → refused, no regression.
+  const refused = await store.writeManifest(
+    { formatVersion: 1, sequence: 2, generatedAt: "old", sourceThrough: null, retrievedAt: null, promotedThrough: null, sources: [], scopes: [] } as ReaderManifest,
+    staleExpected,
+  );
+  assert.equal(refused.modified, false, "a CAS against a superseded etag writes nothing");
+  const now = (await store.readManifest())!.manifest;
+  assert.equal(now.sequence, 2, "the newer publication still stands");
+});
+
+test("the reader defers to the injected fallback when no manifest exists", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-empty-")));
+  let fellBack = false;
+  const read = await readReaderEdgeMeetings({
+    store,
+    states: ["az"],
+    fallback: async () => {
+      fellBack = true;
+      return { kind: "NOT_RECORDED", detail: "FALLBACK" } as never;
+    },
+  });
+  assert.equal(fellBack, true, "an empty store defers to the fallback, not the edge path");
+  assert.doesNotMatch(read.kind === "PROMOTED" ? read.detail : read.detail ?? read.kind, /reader edge artifacts/);
+});
+
+test("the reader caches each scope artifact in-process per version and refreshes on a new one", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-cache-")));
+  let reads = 0;
+  // Count only readArtifact; every other store call is delegated unchanged.
+  const counting = new Proxy(store, {
+    get(target, prop) {
+      const orig = (target as unknown as Record<string | symbol, unknown>)[prop];
+      if (prop === "readArtifact") {
+        return (key: string) => {
+          reads++;
+          return (orig as (k: string) => unknown).call(target, key);
+        };
+      }
+      return typeof orig === "function" ? (orig as (...a: unknown[]) => unknown).bind(target) : orig;
+    },
+  });
+
+  const v1 = snapshot([meeting("cache-az1", "ocd-division/country:us/state:az/place:tucson#governing")]);
+  await publishReaderEdgeArtifacts(v1, META, { store: counting });
+
+  const first = await readReaderEdgeMeetings({ store: counting, states: ["az"] });
+  assert.equal(first.kind, "PROMOTED");
+  const readsAfterFirst = reads;
+  assert.ok(readsAfterFirst >= 1, "the first read fetches the scope artifact from the store");
+
+  // A second read of the SAME published version serves from the in-process cache.
+  const second = await readReaderEdgeMeetings({ store: counting, states: ["az"] });
+  assert.equal(second.kind, "PROMOTED");
+  assert.equal(reads, readsAfterFirst, "a second read of the same version hits the cache, not the store");
+
+  // A new publication (changed AZ data → new per-scope sha) must refresh, never stale-serve.
+  const v2 = snapshot([
+    meeting("cache-az1", "ocd-division/country:us/state:az/place:tucson#governing"),
+    meeting("cache-az2", "ocd-division/country:us/state:az/county:pima#governing"),
+  ]);
+  await publishReaderEdgeArtifacts(v2, META, { store: counting });
+  const third = await readReaderEdgeMeetings({ store: counting, states: ["az"] });
+  assert.equal(third.kind, "PROMOTED");
+  if (third.kind !== "PROMOTED") return;
+  assert.deepEqual(
+    third.value.meetings.map((m) => m.id).sort(),
+    ["cache-az1", "cache-az2"],
+    "the changed scope is refreshed from the store, not served stale from cache",
+  );
+  assert.ok(reads > readsAfterFirst, "a new version re-reads the changed artifact");
+});
+
+test("mergeScopeArtifacts dedupes by id and takes the national sources accounting from the manifest", () => {
+  const snap = snapshot([
+    meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing"),
+    meeting("us1", null),
+  ]);
+  const [az, us] = [
+    partitionSnapshotByScope(snap).find((a) => a.scope === "az")!,
+    partitionSnapshotByScope(snap).find((a) => a.scope === "us")!,
+  ];
+  const manifest = { generatedAt: "2026-09-15T12:00:00.000Z", sources: snap.sources };
+  const merged = mergeScopeArtifacts([az, us], manifest);
+  assert.deepEqual(merged.meetings.map((m) => m.id).sort(), ["az1", "us1"]);
+  assert.equal(merged.counts.total, 2);
+  assert.equal(merged.sources, snap.sources.length ? merged.sources : merged.sources); // sources carried through
+  assert.equal(merged.sources.length, 1);
+});

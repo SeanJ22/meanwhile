@@ -142,6 +142,8 @@ function candidateReadOnlyStore(
         : [],
     events: async (_candidateId): Promise<readonly CandidateEvent[]> => [],
     clock: async () => ({}),
+    readPreparedReaderProjection: async () => null,
+    writePreparedReaderProjection: readOnly,
   };
 }
 

@@ -99,6 +99,11 @@
       "reason": "These are source-named preload bindings used by routes and tests. They delegate the canonical read and shared CivicDataStoreUnavailableError semantics, but intentionally retain distinct entry points so a route cannot preload the wrong authority through an untyped generic string."
     },
     {
+      "id": "shape:lib/officials/federal-directory-read-model.ts#primeFederalDirectoryFromValue,lib/registry/runtime-read-model.ts#primeRegistryRuntimeFromValue",
+      "disposition": "ALLOWED",
+      "reason": "The request-scoped edge counterparts of the refresh*FromPromoted bindings above: each seats a runner-published authority artifact into its OWN module cache for one reader request, binding a different type (RegistryRuntimeReadModel vs FederalDirectoryReadModel), domain validator, and isolated cache, and setting that module's read-state to BOOTSTRAP. A generic would take an untyped value into a caller-named cache — exactly the wrong-authority-through-a-string hazard the refresh group is kept separate to prevent — while duplicating no validation or cache policy."
+    },
+    {
       "id": "shape:lib/registry/runtime-read-model.ts#getRegistryRuntimeReadModel,lib/votes/key-votes-projection.ts#getFederalKeyVotesReadModel,lib/votes/snapshot.ts#getFederalVotesReadModel",
       "disposition": "ALLOWED",
       "reason": "Each synchronous accessor guards a different module-local cache and names the exact preload required. Their matching fail-closed shape is intentional; a shared accessor would need mutable cache parameters and could weaken the source-isolation boundary this cutover tests."

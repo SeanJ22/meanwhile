@@ -10,7 +10,7 @@ import {
   cadenceMsAt,
   type RoutineSourceContract,
 } from "./contracts.ts";
-import { observableRoutineContracts } from "./meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "./meeting-partitions.ts";
 import {
   MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   type ManualProductionSourceContract,
@@ -127,10 +127,30 @@ export interface RoutinePromotionRow {
   readonly validationReceipt: unknown;
 }
 
+export interface RoutinePreparedProjectionRow {
+  readonly key: string;
+  readonly recordClass: string;
+  readonly scope: string;
+  readonly sequence: number;
+  readonly composedFrom: unknown;
+  readonly generatedAt: string;
+  readonly composedAt: string;
+  readonly promotedThrough: string | null;
+}
+
 export interface RoutineObservabilityRows {
   readonly candidates: readonly RoutineCandidateRow[];
   readonly events: readonly RoutineCandidateEventRow[];
   readonly promotions: readonly RoutinePromotionRow[];
+  /**
+   * The prepared reader-serving snapshots (RULING 283 serving copies), read in
+   * the SAME MVCC snapshot as the promotions above so publication lag is a
+   * comparison of two facts from one instant, never two reads. Optional: a
+   * caller that predates this read (or a store with no such table yet) leaves
+   * it undefined, and the projector reports the serving copy as not-yet-read
+   * rather than inventing an empty or a zero lag.
+   */
+  readonly preparedProjections?: readonly RoutinePreparedProjectionRow[];
 }
 
 export interface ExactChangedRecord {
@@ -284,6 +304,44 @@ export interface RoutineContractMember {
   readonly freshness: FreshnessState;
 }
 
+/**
+ * One promoted meeting partition whose current authoritative version has not
+ * yet reached the prepared reader-serving snapshot — publication lag, made of
+ * two facts read in one MVCC snapshot: the partition's current promotion and
+ * what the serving copy was last composed from.
+ */
+export interface PreparedSnapshotLagMember {
+  readonly contractId: string;
+  readonly scope: string;
+  readonly promotedVersionId: string;
+  /** null when the partition is absent from the serving copy entirely. */
+  readonly servedVersionId: string | null;
+}
+
+/**
+ * The prepared meetings reader snapshot (the RULING 283 serving copy the reader
+ * actually reads) observed against the authoritative promotions. It is not a
+ * registered source contract, so it lives beside the contract rows rather than
+ * as one of them: a serving projection, its freshness, and its lag behind the
+ * promoted partitions — never presented as an acquisition or a promotion clock.
+ */
+export interface PreparedSnapshotObservation {
+  readonly recordClass: string;
+  readonly scope: string;
+  readonly present: boolean;
+  readonly sequence: Observation<number>;
+  readonly generatedAt: Observation<string>;
+  readonly composedAt: Observation<string>;
+  readonly promotedThrough: Observation<string>;
+  /** How many meeting partitions the serving copy was composed from. */
+  readonly composedPartitions: Observation<number>;
+  /** How many meeting partitions currently hold an authoritative promotion. */
+  readonly promotedPartitions: Observation<number>;
+  /** Promoted partitions not yet reflected in the serving copy. */
+  readonly lag: DrilldownCount<PreparedSnapshotLagMember>;
+  readonly detail: string;
+}
+
 export interface RoutineObservabilityView {
   readonly asOf: string;
   readonly source: "civic_data_candidates+civic_data_candidate_events+civic_data_promotions";
@@ -312,6 +370,8 @@ export interface RoutineObservabilityView {
     readonly latestOutcomeNotRecorded: DrilldownCount<RoutineContractMember>;
     readonly latestOutcomeUnknown: DrilldownCount<RoutineContractMember>;
   };
+  /** The prepared meetings reader-serving snapshot: its freshness and its lag. */
+  readonly preparedMeetingSnapshot: PreparedSnapshotObservation;
 }
 
 export type RoutineObservabilityRead =
@@ -2018,6 +2078,124 @@ function contractMember(row: RoutineContractObservation): RoutineContractMember 
   };
 }
 
+// Mirrors MEETINGS_RECORD_CLASS / MEETINGS_PREPARED_SCOPE in
+// lib/meetings/prepared-snapshot.ts (the reader path is authoritative). Inlined
+// here so the admin projector never imports the composing reader; a reader test
+// pins the two together.
+const PREPARED_MEETING_RECORD_CLASS = "MEETING";
+const PREPARED_MEETING_SCOPE = "composed-reader-snapshot";
+
+function preparedCoupling(value: unknown): Map<string, string> | null {
+  if (!Array.isArray(value)) return null;
+  const out = new Map<string, string>();
+  for (const entry of value) {
+    const row = object(entry);
+    if (!row || typeof row.contractId !== "string" || typeof row.versionId !== "string") return null;
+    out.set(row.contractId, row.versionId);
+  }
+  return out;
+}
+
+/**
+ * Observe the prepared meetings reader-serving snapshot against the promoted
+ * partitions read in the same MVCC snapshot. Publication lag is exactly the set
+ * of meeting partitions whose current authoritative promotion is not what the
+ * serving copy was last composed from — so an owner sees, without guessing,
+ * that promoted data has not yet reached the reader and by how much. A missing
+ * serving copy is an explicit first-seed condition, never a zero lag.
+ */
+function projectPreparedMeetingSnapshot(
+  rows: RoutineObservabilityRows,
+  nowMs: number,
+): PreparedSnapshotObservation {
+  const base = { recordClass: PREPARED_MEETING_RECORD_CLASS, scope: PREPARED_MEETING_SCOPE } as const;
+  const promotedByScope = new Map<string, string>();
+  for (const promotion of rows.promotions) {
+    if (
+      promotion.recordClass === PREPARED_MEETING_RECORD_CLASS &&
+      MEETING_PARTITION_CONTRACTS.some((contract) => contract.scope === promotion.scope)
+    ) {
+      promotedByScope.set(promotion.scope, promotion.currentVersionId);
+    }
+  }
+  const promotedPartitions = measured(promotedByScope.size);
+
+  if (rows.preparedProjections === undefined) {
+    const detail = "The prepared reader-serving snapshot was not read in this MVCC snapshot.";
+    return {
+      ...base, present: false,
+      sequence: notRecorded(detail), generatedAt: notRecorded(detail), composedAt: notRecorded(detail),
+      promotedThrough: notRecorded(detail), composedPartitions: notRecorded(detail), promotedPartitions,
+      lag: { kind: "NOT_RECORDED", detail, members: [] }, detail,
+    };
+  }
+  const matches = rows.preparedProjections.filter(
+    (row) => row.recordClass === PREPARED_MEETING_RECORD_CLASS && row.scope === PREPARED_MEETING_SCOPE,
+  );
+  if (matches.length === 0) {
+    const detail = "No prepared reader snapshot exists yet (initial rollout). Until the standing runner publishes one, the reader composes the partitions on demand.";
+    return {
+      ...base, present: false,
+      sequence: notRecorded(detail), generatedAt: notRecorded(detail), composedAt: notRecorded(detail),
+      promotedThrough: notRecorded(detail), composedPartitions: notRecorded(detail), promotedPartitions,
+      lag: { kind: "NOT_RECORDED", detail, members: [] }, detail,
+    };
+  }
+  if (matches.length > 1) {
+    const detail = `The prepared reader snapshot query returned ${matches.length} rows for one scope; uniqueness is not proven.`;
+    return {
+      ...base, present: true,
+      sequence: unknown(detail), generatedAt: unknown(detail), composedAt: unknown(detail),
+      promotedThrough: unknown(detail), composedPartitions: unknown(detail), promotedPartitions,
+      lag: { kind: "UNKNOWN", detail, members: [] }, detail,
+    };
+  }
+  const row = matches[0]!;
+  const coupling = preparedCoupling(row.composedFrom);
+  const generatedAt = iso(row.generatedAt);
+  const composedAt = iso(row.composedAt);
+  const promotedThrough = iso(row.promotedThrough);
+  const sequenceOk = Number.isInteger(row.sequence) && row.sequence > 0;
+  if (coupling === null || generatedAt === null || composedAt === null || !sequenceOk) {
+    const detail = `The prepared reader snapshot row is unreadable (${coupling === null ? "coupling" : !sequenceOk ? "sequence" : "timestamp"}).`;
+    return {
+      ...base, present: true,
+      sequence: sequenceOk ? measured(row.sequence) : unknown(detail),
+      generatedAt: generatedAt ? measured(generatedAt) : unknown(detail),
+      composedAt: composedAt ? measured(composedAt) : unknown(detail),
+      promotedThrough: promotedThrough ? measured(promotedThrough) : notRecorded("The serving copy records no promoted-through instant."),
+      composedPartitions: coupling ? measured(coupling.size) : unknown(detail),
+      promotedPartitions,
+      lag: { kind: "UNKNOWN", detail, members: [] }, detail,
+    };
+  }
+  const lagMembers: PreparedSnapshotLagMember[] = [];
+  for (const contract of MEETING_PARTITION_CONTRACTS) {
+    const promotedVersionId = promotedByScope.get(contract.scope);
+    if (promotedVersionId === undefined) continue; // not promoted → nothing to lag behind
+    const servedVersionId = coupling.get(contract.id) ?? null;
+    if (servedVersionId !== promotedVersionId) {
+      lagMembers.push({ contractId: contract.id, scope: contract.scope, promotedVersionId, servedVersionId });
+    }
+  }
+  const ageMs = nowMs - Date.parse(generatedAt);
+  const ageText = Number.isFinite(ageMs) ? `${Math.max(0, Math.round(ageMs / 60_000))} min old` : "age unknown";
+  const detail = lagMembers.length === 0
+    ? `Current: all ${promotedByScope.size} promoted meeting partitions are reflected in serving sequence ${row.sequence} (${ageText}).`
+    : `${lagMembers.length} promoted meeting partition(s) have advanced past serving sequence ${row.sequence} (${ageText}); the reader serves the last valid snapshot until the runner republishes.`;
+  return {
+    ...base, present: true,
+    sequence: measured(row.sequence),
+    generatedAt: measured(generatedAt),
+    composedAt: measured(composedAt),
+    promotedThrough: promotedThrough ? measured(promotedThrough) : notRecorded("The serving copy records no promoted-through instant."),
+    composedPartitions: measured(coupling.size),
+    promotedPartitions,
+    lag: exactCount(lagMembers),
+    detail,
+  };
+}
+
 /** Build the whole owner view from one complete read of canonical evidence. */
 function projectRoutineDataObservabilityUncached(
   rows: RoutineObservabilityRows,
@@ -2060,6 +2238,7 @@ function projectRoutineDataObservabilityUncached(
       latestOutcomeNotRecorded: exactCount(projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "NOT_RECORDED" ? [members[index]] : [])),
       latestOutcomeUnknown: exactCount(projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "UNKNOWN" ? [members[index]] : [])),
     },
+    preparedMeetingSnapshot: projectPreparedMeetingSnapshot(rows, nowMs),
   };
 }
 

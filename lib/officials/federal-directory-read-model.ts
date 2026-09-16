@@ -81,6 +81,37 @@ export async function refreshFederalDirectoryFromPromoted(options: PromotedCivic
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
+/**
+ * Prime the federal-directory cache from a validated EDGE serving artifact, no
+ * database read — the reader's normal path (request-scoped, see
+ * `lib/registry/runtime-edge.ts`). Does NOT alter `refreshFederalDirectoryFromPromoted`,
+ * which the runner and workers still use for the authoritative path. BOOTSTRAP
+ * kind: the serving copy carries the validated value and its version, not the
+ * promotion receipt (no fabricated receipt).
+ */
+export function primeFederalDirectoryFromValue(value: FederalDirectoryReadModel, versionId: string): void {
+  validate(value, versionId);
+  cache = value;
+  readState = {
+    kind: "BOOTSTRAP",
+    value,
+    metadata: {
+      recordClass: "FEDERAL_DIRECTORY",
+      scope: FEDERAL_DIRECTORY_SCOPE,
+      sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
+      version: null,
+      versionId,
+      lastKnownGoodVersionId: versionId,
+      sourceThrough: null,
+      retrievedAt: null,
+      promotedAt: null,
+      stale: "CURRENT",
+      staleAt: null,
+    },
+    detail: `Served from the federal-directory edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
+  };
+}
+
 export function federalDirectoryReadState(): CivicDataReadResult<FederalDirectoryReadModel> {
   return readState;
 }

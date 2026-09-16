@@ -210,6 +210,12 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
 
           {/* NEEDS YOU — owner decisions, mounted as the real DecisionQueue */}
           {report.ownerDecisions.kind === "HELD" && (
+            <>
+            <p className="note">
+              This queue is the project-wide decision store, not fleet-only. Fleet decisions (research
+              findings, data and sources) appear alongside business, legal, commercial and design
+              decisions because the page draws from the same owner snapshot.
+            </p>
             <DecisionQueue
               groups={priorityGroups}
               total={decisionCards.length}
@@ -218,6 +224,7 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
               returnTo="/admin/fleet"
               stateVersion={stateVersion}
             />
+            </>
           )}
 
           {/* Work in flight */}

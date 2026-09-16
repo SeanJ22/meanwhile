@@ -28,6 +28,8 @@ export function logEvent(
   eventType: SearchLogEventType,
   ocdIds: string[],
   detail?: Record<string, string | number | boolean>,
+  /** Orientation-only zip for a SEARCH; never coordinates, never identity. */
+  approximateLocation?: string | null,
 ): void {
   try {
     /*
@@ -48,11 +50,10 @@ export function logEvent(
       typeof (window as { __WTP_SYNTHETIC_RUN__?: unknown }).__WTP_SYNTHETIC_RUN__ === "string"
         ? (window as unknown as { __WTP_SYNTHETIC_RUN__: string }).__WTP_SYNTHETIC_RUN__
         : undefined;
-    const body = JSON.stringify(
-      declared === undefined
-        ? { eventType, ocdIds, detail }
-        : { eventType, ocdIds, detail, [SYNTHETIC_RUN_BODY_KEY]: declared },
-    );
+    const base: Record<string, unknown> = { eventType, ocdIds, detail };
+    if (approximateLocation !== undefined) base.approximateLocation = approximateLocation;
+    if (declared !== undefined) base[SYNTHETIC_RUN_BODY_KEY] = declared;
+    const body = JSON.stringify(base);
     if (typeof navigator !== "undefined" && navigator.sendBeacon) {
       navigator.sendBeacon(
         "/api/log",

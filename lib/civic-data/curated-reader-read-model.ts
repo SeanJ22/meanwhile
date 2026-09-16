@@ -72,6 +72,39 @@ export async function refreshCuratedReaderProjection(
   return version;
 }
 
+/**
+ * Prime a curated-reader projection from a validated EDGE serving artifact, no
+ * database read — the reader's normal path (request-scoped). Does NOT alter the
+ * `refresh*` database readers the runner/workers use. BOOTSTRAP kind: the serving
+ * copy carries the validated value + version, not the promotion receipt.
+ */
+export function primeCuratedReaderProjection(
+  id: CuratedReaderContractId,
+  value: CuratedReaderProjection,
+  versionId: string,
+): void {
+  validate(id, value, versionId);
+  const contract = requiredManualProductionContract(id);
+  states.set(id, {
+    kind: "BOOTSTRAP",
+    value,
+    metadata: {
+      recordClass: contract.recordClass,
+      scope: contract.scope,
+      sourceId: contract.sourceId ?? null,
+      version: null,
+      versionId,
+      lastKnownGoodVersionId: versionId,
+      sourceThrough: null,
+      retrievedAt: null,
+      promotedAt: null,
+      stale: "CURRENT",
+      staleAt: null,
+    },
+    detail: `Served from the ${id} edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
+  });
+}
+
 export const refreshCommentAccessFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("comment-access", options);
 export const refreshBallotNavigationFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>

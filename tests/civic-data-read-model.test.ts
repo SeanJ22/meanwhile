@@ -1,13 +1,20 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { test } from "node:test";
+import { beforeEach, test } from "node:test";
 
 import {
+  clearPromotedReadModelCache,
   readPromotedCivicData,
   readPromotedOrBootstrap,
   type CivicDataReadStore,
 } from "../lib/civic-data/read-model.ts";
+
+// The read model now memoises a proven version by its immutable versionId
+// (RULING 288). These tests reuse a single fixture versionId ("candidate-1")
+// across scenarios, so each test starts from a cleared memo — otherwise a
+// version proven in one test would be reused, by design, in the next.
+beforeEach(() => clearPromotedReadModelCache());
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS, sourceProjectionEvidence, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
@@ -175,6 +182,10 @@ test("canonical read distinguishes absent pointer, promoted LKG metadata, and st
   assert.equal(failed.kind, "STORE_UNREACHABLE");
   if (failed.kind === "STORE_UNREACHABLE") assert.equal(failed.code, "STORE_READ_FAILED");
 
+  // This scenario is a FIRST read whose candidate fetch fails, so clear the
+  // memo that scenario two above just populated for this versionId — otherwise
+  // the proven version is (correctly) reused and the candidate is never fetched.
+  clearPromotedReadModelCache();
   const pointerThenFailure: CivicDataReadStore = {
     ...promotedStore({ answer: 42 }),
     readCandidate: async () => { throw new Error("candidate table offline"); },

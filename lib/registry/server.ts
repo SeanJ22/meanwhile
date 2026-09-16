@@ -19,7 +19,7 @@ import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForB
 import { membersOfBody } from "./body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import { federalDirectoryReadState, getFederalOfficeholderSet, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
+import { federalDirectoryReadState, getFederalOfficeholderSet, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
 import {
@@ -30,8 +30,9 @@ import {
 } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { curatedReaderReadState, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
+import { currentCampaignSitesEdge, currentFederalDirectoryEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
+import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import {
   heldOfficialStateLegislators,
@@ -39,6 +40,7 @@ import {
   readOfficialStateLegislatorsProjection,
 } from "../state-rollcalls/legislators.ts";
 import {
+  officialStateLegislatorTargetByScope,
   officialStateLegislatorTargetByState,
   officialStateVoteScopeForOfficeholderId,
   type OfficialStateVoteScope,
@@ -138,28 +140,35 @@ async function loadRegistry(): Promise<RegistryLoaded> {
     await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
   ) as { files: string[] };
   const names = manifest.files;
-  const features: GeoFeature[] = [];
-  // Literal roots keep dynamic reads bounded in the server deployment trace.
-  for (const name of names) {
-    const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
-    const nationalFile = /^public\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
-    let raw: string;
-    if (stateFile) {
-      const [, state, file] = stateFile;
-      if (!stateCodes.has(state)) throw new Error(`Unknown state in resolver manifest: ${name}`);
-      const fips = /-(\d{2})\.geojson$/.exec(file)?.[1];
-      if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
-        throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
+  // Read every geometry file CONCURRENTLY (E.1, 2026-09-14). The files are
+  // independent and a cold ballot spent most of its wall-clock awaiting these
+  // ~25 reads and parses one after another. `Promise.all` keeps each file's
+  // validation identical — a throw still rejects the whole load — and the
+  // feature ORDER does not matter: `divisionsById` keys on ocdId and the
+  // point-in-polygon scan is order-free. Literal roots keep dynamic reads
+  // bounded in the server deployment trace, exactly as the serial loop did.
+  const perFile = await Promise.all(
+    names.map(async (name): Promise<GeoFeature[]> => {
+      const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
+      const nationalFile = /^public\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
+      let raw: string;
+      if (stateFile) {
+        const [, state, file] = stateFile;
+        if (!stateCodes.has(state)) throw new Error(`Unknown state in resolver manifest: ${name}`);
+        const fips = /-(\d{2})\.geojson$/.exec(file)?.[1];
+        if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
+          throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
+        }
+        raw = await readFile(join(root, "data", "states", state, "geo", file), "utf8");
+      } else if (nationalFile) {
+        raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
+      } else {
+        throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
       }
-      raw = await readFile(join(root, "data", "states", state, "geo", file), "utf8");
-    } else if (nationalFile) {
-      raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
-    } else {
-      throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
-    }
-    const parsed = JSON.parse(raw);
-    features.push(...(parsed.features as GeoFeature[]));
-  }
+      return (JSON.parse(raw) as { features: GeoFeature[] }).features;
+    }),
+  );
+  const features: GeoFeature[] = perFile.flat();
 
   const registry: Registry = runtimeRegistry.registry;
 
@@ -176,22 +185,25 @@ async function load(base: RegistryLoaded): Promise<Loaded> {
   const { features, divisionsById, registry } = base;
 
   // A required roster failure is an OURS loading failure, never an empty roster.
-  // Do not cache a partial registry as if those officials were not held.
-  const sets: OfficeholderSet[] = [];
-  for (const name of ROSTERS) {
-    const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
-    const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
-    if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
-    try {
-      sets.push(name === "officeholders-us.json"
-        ? getFederalOfficeholderSet()
-        : JSON.parse(await readFile(join(root, "data", "states", state!, "officials", name), "utf8")) as OfficeholderSet);
-    } catch (error) {
-      throw new RegistryHoldingReadError(name === "officeholders-us.json"
-        ? "lib/registry/officeholders-us.json"
-        : `data/states/${state}/officials/${name}`, error);
-    }
-  }
+  // Do not cache a partial registry as if those officials were not held. Read
+  // concurrently (E.1) — same per-roster validation and error, `Promise.all`
+  // preserves ROSTERS order so `sets` is unchanged.
+  const sets: OfficeholderSet[] = await Promise.all(
+    ROSTERS.map(async (name) => {
+      const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
+      const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
+      if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
+      try {
+        return name === "officeholders-us.json"
+          ? getFederalOfficeholderSet()
+          : (JSON.parse(await readFile(join(root, "data", "states", state!, "officials", name), "utf8")) as OfficeholderSet);
+      } catch (error) {
+        throw new RegistryHoldingReadError(name === "officeholders-us.json"
+          ? "lib/registry/officeholders-us.json"
+          : `data/states/${state}/officials/${name}`, error);
+      }
+    }),
+  );
 
   // The photo manifest (D20): per-image source and license, images served
   // from our origin. Missing or unreadable degrades to initials everywhere.
@@ -275,12 +287,31 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
+/**
+ * The federal reader, edge-aware: a reader request that primed a request-scoped
+ * federal-directory edge value serves it WITHOUT reading Neon; the runner and
+ * workers (which never set it) fall through to the authoritative database reader.
+ */
+async function settleFederalDirectoryRead(): Promise<void> {
+  const edge = currentFederalDirectoryEdge();
+  if (edge) { primeFederalDirectoryFromValue(edge.value, edge.versionId); return; }
+  await refreshFederalDirectoryFromPromoted();
+}
+
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
   scope: "REGISTRY" | "OFFICIALS",
   readers: RegistryAuthorityReaders = {
-    registry: async () => { await refreshRegistryRuntimeFromPromoted(); },
-    federal: async () => { await refreshFederalDirectoryFromPromoted(); },
+    // Reader requests that primed a request-scoped registry-runtime edge value
+    // serve it WITHOUT reading Neon. The standing runner and workers never set
+    // that value, so they fall through to the authoritative database reader —
+    // `refreshRegistryRuntimeFromPromoted` is unchanged.
+    registry: async () => {
+      const edge = currentRegistryRuntimeEdge();
+      if (edge) { primeRegistryRuntimeFromValue(edge.value, edge.versionId); return; }
+      await refreshRegistryRuntimeFromPromoted();
+    },
+    federal: settleFederalDirectoryRead,
   },
 ): Promise<void> {
   await readers.registry();
@@ -296,12 +327,16 @@ async function currentRegistryAuthorityKey(): Promise<string> {
 async function currentAuthorityKey(registryKey: string): Promise<string> {
   await settleRegistryAuthorityReads("OFFICIALS", {
     registry: async () => undefined,
-    federal: async () => { await refreshFederalDirectoryFromPromoted(); },
+    federal: settleFederalDirectoryRead,
   });
   let campaign = "TEST_FIRST_SEED";
   if (process.env.NODE_ENV === "production") {
     try {
-      await refreshCampaignSitesFromPromoted();
+      // Campaign URLs, edge-aware: a primed request-scoped value serves without
+      // Neon; otherwise the authoritative database read (runner/workers path).
+      const edge = currentCampaignSitesEdge();
+      if (edge) primeCuratedReaderProjection("campaign-sites", edge.value, edge.versionId);
+      else await refreshCampaignSitesFromPromoted();
       const state = curatedReaderReadState("campaign-sites");
       campaign = `${state.kind}:${state.metadata.versionId ?? "none"}`;
     } catch {
@@ -576,10 +611,43 @@ export type CoverageStateLegislatorReader = (
  * disposition. In particular, an empty canonical pointer and an unavailable
  * store both yield no names, but remain different facts on CoverageSummary.
  */
+/**
+ * The state-legislators reader, edge-aware: a reader request that primed the
+ * request-scoped state-legislators edge map serves it (per scope) WITHOUT
+ * reading Neon; the runner/workers fall through to the authoritative database
+ * reader. BOOTSTRAP kind — the serving copy carries the value + version, not the
+ * promotion receipt.
+ */
+const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) => {
+  const edge = currentStateLegislatorsEdge();
+  const value = edge?.value?.[scope];
+  if (value) {
+    return {
+      kind: "BOOTSTRAP",
+      value,
+      metadata: {
+        recordClass: "STATE_LEGISLATOR",
+        scope,
+        sourceId: officialStateLegislatorTargetByScope(scope)?.sourceId ?? null,
+        version: null,
+        versionId: edge.versionId,
+        lastKnownGoodVersionId: edge.versionId,
+        sourceThrough: null,
+        retrievedAt: null,
+        promotedAt: null,
+        stale: "CURRENT",
+        staleAt: null,
+      },
+      detail: `Served from the state-legislators edge artifact (version ${edge.versionId}); the promotion receipt stays on the authoritative database path.`,
+    };
+  }
+  return readOfficialStateLegislatorsProjection(scope);
+};
+
 export async function settleCoverageStateLegislators(
   exactDivisions: readonly Division[],
   officials: OfficeholderIndex,
-  reader: CoverageStateLegislatorReader = readOfficialStateLegislatorsProjection,
+  reader: CoverageStateLegislatorReader = settleStateLegislatorsRead,
 ): Promise<{
   readonly officials: OfficeholderIndex;
   readonly authorities: StateLegislatorCoverageAuthority[];

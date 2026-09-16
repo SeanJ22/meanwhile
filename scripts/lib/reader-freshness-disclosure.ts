@@ -33,9 +33,9 @@ export function freshnessDisclosureProblems(
   const text = collapse(pageText);
   const required = freshnessDisclosure(status);
   const problems: string[] = [];
-  if (required.unreachable && !text.includes(collapse(required.unreachable))) {
-    problems.push(`the footer does not say: ${required.unreachable}`);
-  }
+  // The footer no longer lists unreachable sources (RLC-1 amended 2026-09-14):
+  // that per-adapter line moved to the who-governs card, scoped and in plain
+  // language. Only the carried-rows sentence remains for the proof to require.
   if (required.carried) {
     const { lead, form, reached, lastFreshAt, count } = required.carried;
     const sentence = collapse(`${lead} ${reached}`);

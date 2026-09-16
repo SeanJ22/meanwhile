@@ -2,7 +2,6 @@
 
 import {
   carriedListingsDisclosure,
-  freshnessDisclosure,
   relativeAge,
   type SnapshotCarriedNote,
   type SnapshotStatus,
@@ -31,11 +30,16 @@ export function DataFreshness({ snapshot }: { snapshot: SnapshotStatus }) {
   // snapshot's freshness — it states its own, here in the count and on each
   // row's own card.
   const carried = snapshot.carried;
-  const disclosure = freshnessDisclosure(snapshot);
 
   // A footnote, not a headline (3): provenance matters, but "who governs
   // here" gets the visible position. No panel chrome — quiet small text at
-  // the bottom of the stack. A failed source still speaks in signal color.
+  // the bottom of the stack.
+  //
+  // The per-source unreachable line is gone (2026-09-14): it joined raw adapter
+  // ids, unscoped to the reader's area, which is an internal id on a reader
+  // surface. Which of a reader's OWN bodies could not be refreshed now reads on
+  // that body's row in the who-governs card, in plain language. The footer keeps
+  // its age and, when a run carried listings forward, that.
   return (
     <p className="pointer-events-auto max-w-md text-[0.625rem] leading-relaxed text-muted">
       <span className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em]">
@@ -44,12 +48,6 @@ export function DataFreshness({ snapshot }: { snapshot: SnapshotStatus }) {
       <time dateTime={snapshot.generatedAt} title={when.toLocaleString()}>
         {relativeAge(snapshot.generatedAt)}
       </time>
-      {disclosure.unreachable && (
-        <>
-          {" · "}
-          <span className="text-signal">{disclosure.unreachable}</span>
-        </>
-      )}
       {carried && carried.count > 0 && (
         <CarriedListingsLine carried={carried} />
       )}

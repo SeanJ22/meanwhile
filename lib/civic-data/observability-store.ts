@@ -15,6 +15,7 @@ import {
   civicDataCandidateEvents,
   civicDataCandidates,
   civicDataPromotions,
+  civicDataReaderProjections,
 } from "../db/schema.ts";
 import {
   projectRoutineDataObservabilityRead,
@@ -213,7 +214,19 @@ async function readRowsFromCanonicalTables(
     }).from(civicDataPromotions);
   const candidates = await db.select(candidateSelection).from(civicDataCandidates).where(selectedCandidate);
   const events = await db.select(eventSelection).from(civicDataCandidateEvents).where(selectedEvent);
-  return { candidates, events, promotions };
+  // The reader-serving copies (RULING 283), read in the SAME snapshot as the
+  // promotions above so publication lag compares two facts from one instant.
+  const preparedProjections = await db.select({
+      key: civicDataReaderProjections.key,
+      recordClass: civicDataReaderProjections.recordClass,
+      scope: civicDataReaderProjections.scope,
+      sequence: civicDataReaderProjections.sequence,
+      composedFrom: civicDataReaderProjections.composedFrom,
+      generatedAt: civicDataReaderProjections.generatedAt,
+      composedAt: civicDataReaderProjections.composedAt,
+      promotedThrough: civicDataReaderProjections.promotedThrough,
+    }).from(civicDataReaderProjections);
+  return { candidates, events, promotions, preparedProjections };
   }, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS);
   } finally { await pool.end(); }
 }

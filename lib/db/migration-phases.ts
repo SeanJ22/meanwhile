@@ -385,6 +385,15 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "The already deployed PDC store writes the same shape; apply this compatible correction " +
       "before deploying the release that records it, after isolated positive and negative proof.",
   },
+  "0028_wise_ikaris": {
+    phase: "expand",
+    why:
+      "Creates civic_data_reader_projections (the prepared reader serving copy) with its unique " +
+      "index and two inline CHECK constraints on the NEW table only. Purely additive: no existing " +
+      "build reads or writes it, and the inline checks constrain rows this migration's own table " +
+      "will hold, never an existing one — so it is safe to apply BEFORE the deploy that first " +
+      "writes the prepared snapshot.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

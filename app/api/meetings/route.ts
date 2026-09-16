@@ -2,13 +2,17 @@ import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZcta } from "@/lib/geo/zcta";
-import { logSearchEvent } from "@/lib/db/search-log";
-import { afterResponse } from "@/lib/log/after-response";
-
-import { raiseWriteAlarm } from "@/lib/db/write-alarm";
-import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
-import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
+import { snapshotSourceFor } from "@/lib/meetings/registry";
+import {
+  getActiveSnapshotMeta,
+  requireMeetingsProjection,
+  snapshotClientMeta,
+  type SnapshotClientMeta,
+} from "@/lib/meetings/snapshot";
+import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
@@ -42,16 +46,39 @@ import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
+  // PDC-9: one edge read serves the whole ready-to-display bundle. The manifest
+  // (CDN-cached, no database) carries meetings (via its scope artifacts) AND the
+  // comment-access + everyday-routing families, so a normal visit never wakes the
+  // database. Each family below prefers the embedded edge value and falls back to
+  // its own database read only when the edge has not published it yet.
+  const edgeManifest = await readReaderManifest().catch(() => null);
+
+  // PDC-9: bind the reader-authority edge bundle (registry-runtime division/
+  // coverage/roster bindings, the federal directory, and campaign-site URLs)
+  // request-scoped, so divisionsAt/coverageAt below serve them from the edge and
+  // never wake Neon. Each family is fetched at most once per version per process.
+  // Any family the manifest omits (rollout) falls through to the DB reader.
+  if (edgeManifest?.authorityArtifacts) {
+    const authorityEdge = await ensureReaderAuthorityEdge(edgeManifest).catch(() => null);
+    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+  }
+
   let commentAccess: readonly CommentAccess[] = [];
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (process.env.NODE_ENV === "production") {
-      const version = await refreshCommentAccessFromPromoted();
+    if (edgeManifest?.commentAccess !== undefined) {
+      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
+      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+    } else {
+      if (process.env.NODE_ENV === "production") {
+        const version = await refreshCommentAccessFromPromoted();
+        commentAccessDataState = "PROMOTED";
+        commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
+      }
+      commentAccess = currentCommentAccess();
     }
-    commentAccess = currentCommentAccess();
   } catch (error) {
     // Comment rules are independent of meeting acquisition. Withhold only
     // this optional family and let the canonical meetings projection answer.
@@ -62,7 +89,11 @@ export async function GET(request: Request) {
   let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
   let everydayRoutingDataDetail: string | null = null;
   try {
-    if (process.env.NODE_ENV === "production") {
+    if (edgeManifest?.everydayRouting !== undefined) {
+      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
+      everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
+      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+    } else if (process.env.NODE_ENV === "production") {
       const read = await readEverydayRoutingProjection();
       if (read.kind === "PROMOTED") {
         everydayRouting = read.value;
@@ -234,9 +265,52 @@ export async function GET(request: Request) {
     }
   }
 
+  // ONE projection read per request (D.1). The search and the freshness meta
+  // both derive from the SAME composed snapshot, instead of each reading,
+  // validating and composing the 124-partition projection independently — two
+  // full passes for one request. The `WTP_MEETING_SOURCE` diagnostic seam
+  // (mock/composite, non-production only) does not read the canonical
+  // projection, so it keeps its own path.
+  const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
+  let snapshotMeta: SnapshotClientMeta | null = null;
   try {
-    result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+    if (meetingSourceName === "snapshot") {
+      // PDC-9: read the runner-published GEOGRAPHIC edge artifacts for this
+      // ZIP's state(s) — one small edge fetch, no database wake, no 124-partition
+      // compose. The scopes are the states the resolved divisions name (plus the
+      // national `us` bucket); when the division lookup failed we pass none and
+      // the reader loads every published scope rather than guess. Fallback chain
+      // is edge → DB prepared row → live compose, so the result shape is
+      // identical and the freshness meta below is unchanged.
+      const readerStates = resolvedDivisions
+        ? [...new Set(
+            resolvedDivisions
+              .map((d) => stateOfOcdId(d.ocdId))
+              .filter((s): s is string => s !== null),
+          )]
+        : [];
+      const read = await readReaderEdgeMeetings({
+        manifest: edgeManifest,
+        ...(readerStates.length > 0 ? { states: readerStates } : {}),
+      });
+      const snapshot = requireMeetingsProjection(read);
+      result = await searchMeetings(
+        lat,
+        lng,
+        radiusKm,
+        new Date(),
+        divisionsAtPoint,
+        snapshotSourceFor(snapshot),
+      );
+      snapshotMeta =
+        read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
+          ? snapshotClientMeta(read.value, read)
+          : null;
+    } else {
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+      snapshotMeta = await getActiveSnapshotMeta();
+    }
   } catch (error) {
     if (error instanceof CivicDataStoreUnavailableError) {
       return Response.json(
@@ -378,13 +452,23 @@ export async function GET(request: Request) {
   // When the snapshot serves the answer, say how old it is and which sources
   // it is missing — a failed source's bodies would otherwise show nothing
   // with no hint that the gap is ours and temporary.
-  const meta = await getActiveSnapshotMeta();
+  // The one projection read above already produced this (D.1) — no second read.
+  const meta = snapshotMeta;
   // `meta.carried` rides along untouched (hotfix-0817): the footer's one age is true of
   // the fresh rows only, and the count of rows it is NOT true of has to reach
   // the client or the line keeps speaking for them.
+  //
+  // D.4 (2026-09-14): the wire snapshot is trimmed to exactly what a reader
+  // surface reads — the age, the carried-rows summary, and the failed sources
+  // attributed to bodies. `meta.sources` (124 rows) and `meta.partitions` (124
+  // rows) together ran ~40-50 KB of every response and no client reads either;
+  // they are used here to build `failed`, then dropped. `version` lets a later
+  // format change be detected rather than guessed from shape.
   const snapshot = meta
     ? {
-        ...meta,
+        version: 2 as const,
+        generatedAt: meta.generatedAt,
+        ...(meta.carried ? { carried: meta.carried } : {}),
         failed: meta.sources
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({
@@ -426,73 +510,20 @@ export async function GET(request: Request) {
     nearZip =
       near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
   }
-  const resolvedOcdIds = coverage
-    ? [
-        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
-        ...coverage.seats.map((s) => s.ocdId),
-      ]
-    : [];
   /*
-   * **THE WRITE ITSELF IS DEFERRED, NOT ONLY ITS ALARM** (Prompt E item 4,
-   * 2026-08-20; `PD04`).
+   * PDC-9: THE SEARCH LOG NO LONGER WRITES ON THE RESPONSE PATH.
    *
-   * Prompt D found that an unawaited promise is dropped when a serverless
-   * invocation returns, and fixed it — for the ALARM. The INSERT one line
-   * above it had exactly the same shape and was left alone: `logSearchEvent()`
-   * was called, its promise was never awaited and never handed to `after()`,
-   * and the handler returned its JSON immediately below. Every row that had
-   * not reached Neon by the time the response went out was dropped by the
-   * runtime, silently, with no alarm — because a dropped promise never
-   * rejects, so there is nothing for a `.catch` to catch.
-   *
-   * That is the class the named-instance rule points at: one sighting of a
-   * floating promise on a sold-store write path was one of two, in the same
-   * function, five lines apart. `tests/write-alarm.test.ts` now asserts every
-   * sold-store write in `app/api/` is either awaited or inside `after()`, so
-   * the third one cannot ship.
-   *
-   * **RULING 25 — THE READER-FACING BEHAVIOUR IS UNCHANGED.** The catch still
-   * swallows, the search has already answered, and the response below is
-   * byte-identical. `after()` runs strictly after the response has gone; it
-   * costs the reader nothing and buys the row a runtime that stays alive long
-   * enough to write it.
+   * The SEARCH row was the last database write in the reader's hot path — an
+   * `after()`-deferred `logSearchEvent`. On a cold visit that write woke Neon
+   * (~2 s) and, in a non-serverless runtime, held the response until it did.
+   * It is now sent from the client as a fire-and-forget `sendBeacon` to
+   * `/api/log` (the SAME beacon every other reader event already uses:
+   * OFFICIAL_OPENED, MEETING_OPENED, …), with the synthetic-run marker riding
+   * the body so walk-vs-reader classification is preserved. The reader's answer
+   * therefore never waits for, and never wakes the database for, a bookkeeping
+   * write — on any runtime. Disclosed on /transparency; see
+   * `components/map/map-entry.tsx` and `lib/log/client.ts`.
    */
-  /*
-   * Read from the request BEFORE the response goes. `after()` runs once the
-   * invocation has answered, and a request object read at that point is a
-   * different question from a request object read during the handler; a run
-   * that declared itself in a header must not become a reader because we
-   * asked too late. Captured here, used in the closure below.
-   */
-  const marker = markerFromRequest(request);
-  await afterResponse(() =>
-    logSearchEvent({
-      eventType: "SEARCH",
-      // Zip-level either way: the typed zip, or the nearest centroid's zip for
-      // a panned viewport. Never coordinates — the log stays orientation-only.
-      approximateLocation: nearZip,
-      ocdIds: resolvedOcdIds,
-      detail: {
-        tier: result.tier,
-        radiusKm: result.radiusKm,
-        requestedRadiusKm: result.requestedRadiusKm,
-        meetingCount: result.meetings.length,
-      },
-      // C05: whose traffic this is. A walk declares itself in a header; a
-      // reader declares nothing and is organic.
-      marker,
-    }).catch(async (error) => {
-      /*
-       * Still swallowed for the reader, still raised for us. The alarm no
-       * longer needs its own `after()` — it is already inside one, and
-       * nesting a second would schedule work from work the platform is
-       * already keeping alive. Awaited here so the invocation stays up for
-       * it, which is the whole reason `after()` is wrapped round the outside.
-       */
-      console.error("search log write failed", error);
-      await raiseWriteAlarm("search_log", error);
-    }),
-  );
 
   /*
    * M81 — which of these bodies actually governs the reader.

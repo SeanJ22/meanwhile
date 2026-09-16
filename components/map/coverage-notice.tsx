@@ -49,6 +49,7 @@ import {
   type PanelSeat,
 } from "@/lib/state/panel-seats";
 import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
+import { formatDateLong } from "@/lib/text/format-date";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
@@ -107,6 +108,14 @@ interface CoverageNoticeProps {
    * true, they are different facts, and only one of them was ever being said.
    */
   ocdIdsWithMeetings?: string[];
+  /**
+   * When the meetings snapshot behind this card was last refreshed
+   * (`snapshot.generatedAt`, an ISO instant). The per-body source notes spell
+   * this out as the "last check" date through the product's one formatter. Null
+   * when unknown, in which case the note states the fact without a date rather
+   * than inventing one.
+   */
+  lastCheckedAt?: string | null;
   /**
    * The answer under this card is the previous area's, and a fresher one is
    * in flight (6f). The card DIMS rather than un-rendering — un-rendering is
@@ -535,6 +544,7 @@ function CoverageBody({
   coverage,
   failedSourceOcdIds = [],
   ocdIdsWithMeetings = [],
+  lastCheckedAt = null,
   onOpenOfficial,
   onOpenBody,
   onAddressResolved,
@@ -545,6 +555,8 @@ function CoverageBody({
   failedSourceOcdIds?: string[];
   /** F01 7.2: which of those bodies has rows on screen anyway. */
   ocdIdsWithMeetings?: string[];
+  /** When the meetings snapshot was last refreshed, for the per-body notes. */
+  lastCheckedAt?: string | null;
   onOpenOfficial?: OpenOfficial;
   onOpenBody?: (body: CoveredBody) => void;
   /** WGH-5: the reader settled their address, on any surface. */
@@ -721,6 +733,11 @@ function CoverageBody({
    */
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
+  // The per-body source notes spell out the snapshot's last-refresh date through
+  // the product's one formatter (RULING 258); "" when we cannot say, so the
+  // sentence stands without a date rather than inventing one.
+  const lastCheckedLong = formatDateLong(lastCheckedAt);
+  const lastCheckedClause = lastCheckedLong ? `, ${lastCheckedLong}` : "";
   /*
    * The governing list is NOT cut. A cut would put the prose count and the row
    * count back into disagreement the moment a zip had more governments than the
@@ -1280,17 +1297,16 @@ function CoverageBody({
         bodies exactly like bodies with nothing scheduled — a gap of ours
         presented as a fact about their government.
       */}
-      {/* F01 7.2 (2026-08-19) — TWO SENTENCES, because there are two facts.
+      {/* F01 7.2 (2026-08-19), rewritten 2026-09-14 — TWO FACTS, in plain
+          language and dated, never "couldn't reach" and never an adapter id
+          (RULING 254: no verdict on ourselves; RULING 258: reader-plain, dated
+          through the one formatter).
 
-          This used to be one footnote over every body whose source refused,
-          saying their meetings “may be missing here”. For a body whose rows
-          were carried forward that is false ON ITS FACE: the rows are on the
-          map, and the author clicked one. What is true of that body is that we
-          could not REFRESH it — which is what the carried rows already say
-          individually, and what this card was contradicting.
-
-          A body with no rows on screen keeps the original sentence, which was
-          right all along for the case it was written for. */}
+          A body whose calendar page did not answer at the last refresh is one of
+          two cases. If it has listings on screen, they were carried from before,
+          so the fact is "what's shown is older". If it has none, its meetings may
+          genuinely be missing here. Two different facts; each says its own, and
+          neither reads as "nothing is scheduled". */}
       {collapseFootnotes(
         shown.filter(
           (body) =>
@@ -1299,7 +1315,7 @@ function CoverageBody({
             ocdIdsWithMeetings.includes(body.ocdId),
         ),
         () =>
-          "we couldn’t reach their calendar source at the last check, so what’s on the map for them is from our previous check.",
+          `their calendar page didn’t answer at our last check${lastCheckedClause}; the listings shown for them are from an earlier check.`,
       ).map((footnote) => (
         <p
           key={`source-stale:${footnote.subjects}`}
@@ -1318,7 +1334,7 @@ function CoverageBody({
             !ocdIdsWithMeetings.includes(body.ocdId),
         ),
         () =>
-          "we couldn’t reach their calendar source at the last check, so their meetings may be missing here.",
+          `their calendar page didn’t answer at our last check${lastCheckedClause}, so their meetings may be missing here.`,
       ).map((footnote) => (
         <p
           key={`source-failed:${footnote.subjects}`}
@@ -1637,6 +1653,7 @@ export function CoverageNotice({
   coverage,
   failedSourceOcdIds,
   ocdIdsWithMeetings,
+  lastCheckedAt,
   refreshing = false,
   onOpenOfficial,
   onOpenBody,
@@ -1785,6 +1802,7 @@ export function CoverageNotice({
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}
           ocdIdsWithMeetings={ocdIdsWithMeetings}
+          lastCheckedAt={lastCheckedAt}
           onOpenOfficial={onOpenOfficial}
           onOpenBody={onOpenBody}
           onAddressResolved={onAddressResolved}

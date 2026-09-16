@@ -2,6 +2,7 @@ import type { CompositeSource } from "../sources/composite/index.ts";
 import { buildCompositeSource } from "../sources/composite/wiring.ts";
 import { mockSource } from "../sources/mock/index.ts";
 import { makeSnapshotSource } from "../sources/snapshot/index.ts";
+import type { MeetingsSnapshot } from "./snapshot.ts";
 import type { Meeting, MeetingQuery, MeetingSource } from "../sources/types.ts";
 
 /**
@@ -73,6 +74,20 @@ export function getMeetingSource(): ResolvedMeetingSource {
  */
 export function getActiveComposite(): CompositeSource | null {
   return activeComposite;
+}
+
+/**
+ * A resolved snapshot source over an ALREADY-composed snapshot (D.1).
+ *
+ * The API route reads and composes the canonical projection once, then hands
+ * that snapshot to both the search cascade (through this source) and the
+ * freshness metadata — instead of the snapshot source's default `load`, which
+ * reads, validates and composes the 124-partition projection a second time. The
+ * `load` is a constant, so `fetch()`/`normalize()` behave exactly as the
+ * default does over the same snapshot.
+ */
+export function snapshotSourceFor(snapshot: MeetingsSnapshot): ResolvedMeetingSource {
+  return resolve(makeSnapshotSource({ load: () => snapshot }));
 }
 
 // The snapshot freshness metadata accessor lives in lib/meetings/snapshot.ts

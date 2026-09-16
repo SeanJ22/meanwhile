@@ -713,8 +713,9 @@ test("F01 7.2: a refused body with rows on screen is STALE, not missing", () => 
   );
 
   // And they must say different things. A body whose pins are on the map is
-  // never told its meetings may be missing.
-  assert.match(surface, /what’s on the map for them is from our previous check/);
+  // told its listings are from an earlier check (2026-09-14: plain, no
+  // "couldn't reach"); a body with none is told its meetings may be missing.
+  assert.match(surface, /the listings shown for them are from an earlier check/);
   assert.match(surface, /their meetings may be missing here/);
 });
 

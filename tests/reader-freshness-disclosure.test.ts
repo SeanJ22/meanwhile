@@ -80,7 +80,14 @@ test("RLC-1: the actual footer satisfies the proof's check in every form the sna
   assert.match(rendered[0], /104 calendar listings are older than that: each one says when we last reached it/);
   assert.match(rendered[1], /74 calendar listings are older than that: we last reached them\s+3 days ago/);
   assert.match(rendered[2], /1 calendar listing is older than that: we last reached it\s+3 days ago/);
-  assert.match(rendered[0], /couldn't reach schedulepage, ical — some calendars may be missing/);
+  // 2026-09-14: the footer no longer lists which sources were unreachable. RUN_25
+  // has two failed sources, yet not one adapter id — and not "couldn't reach" —
+  // may appear on ANY rendered footer. That line moved to the who-governs card,
+  // scoped and in plain language.
+  for (const markup of rendered) {
+    assert.doesNotMatch(markup, /couldn't reach|some calendars may be missing/);
+    assert.doesNotMatch(markup, /\b(schedulepage|legistar|ical|clerksboards)\b/);
+  }
   // A clean refresh says its age and nothing else — no sentence is required and none rendered.
   assert.equal(freshnessDisclosureProblems(rendered[3], CLEAN).required.carried, null);
   assert.doesNotMatch(rendered[3], /older than that|couldn't reach/);
@@ -93,11 +100,6 @@ test("RLC-1 NEGATIVE: a page missing the disclosure, or carrying the form the ro
   const withoutCarried = honest.replace(/104 calendar listings are older than that: each one says when we last reached it/, "");
   assert.deepEqual(freshnessDisclosureProblems(withoutCarried, RUN_25).problems, [
     "the footer does not say: 104 calendar listings are older than that: each one says when we last reached it",
-  ]);
-
-  const withoutUnreachable = honest.replace(/couldn't reach schedulepage, ical — some calendars may be missing/, "");
-  assert.deepEqual(freshnessDisclosureProblems(withoutUnreachable, RUN_25).problems, [
-    "the footer does not say: couldn't reach schedulepage, ical — some calendars may be missing",
   ]);
 
   // The other form: one date spoken for rows that disagree. A claim, refused.
@@ -122,7 +124,9 @@ test("RLC-1 NEGATIVE: a page missing the disclosure, or carrying the form the ro
   ]);
 
   // Blank page: every required sentence is named, nothing is waved through.
-  assert.equal(freshnessDisclosureProblems("", RUN_25).problems.length, 2);
+  // RUN_25 now requires exactly one sentence (the carried-rows line) — the
+  // unreachable-sources line is no longer a footer disclosure.
+  assert.equal(freshnessDisclosureProblems("", RUN_25).problems.length, 1);
 });
 
 test("RLC-1 SEEDED run #25: the old proof's own sentence refused the honest footer; the contract check passes it and refuses the stale claim", () => {
@@ -135,7 +139,8 @@ test("RLC-1 SEEDED run #25: the old proof's own sentence refused the honest foot
 });
 
 test("RLC-1: neither the footer nor the proof keeps a second copy of the disclosure prose", () => {
-  const phrases = ["older than that", "we last reached", "each one says when", "some calendars may be missing"];
+  // "some calendars may be missing" retired 2026-09-14 with the unreachable line.
+  const phrases = ["older than that", "we last reached", "each one says when"];
   const contract = readFileSync(join(ROOT, "lib/meetings/freshness.ts"), "utf8");
   for (const phrase of phrases) assert.ok(contract.includes(phrase), `the contract states: ${phrase}`);
   for (const file of ["components/map/data-freshness.tsx", "scripts/reader-last-mile-final-render.mts", "scripts/lib/reader-freshness-disclosure.ts"]) {
@@ -143,8 +148,10 @@ test("RLC-1: neither the footer nor the proof keeps a second copy of the disclos
     for (const phrase of phrases) assert.ok(!source.includes(phrase), `${file} carries its own copy of "${phrase}"`);
   }
   const footer = readFileSync(join(ROOT, "components/map/data-freshness.tsx"), "utf8");
-  assert.match(footer, /freshnessDisclosure\(snapshot\)/, "the footer renders the contract");
+  // The footer renders the carried line through the one contract, and no longer
+  // renders any unreachable-sources line at all.
   assert.match(footer, /carriedListingsDisclosure\(carried\)/, "the carried line renders the contract");
+  assert.ok(!footer.includes("couldn't reach"), "the footer carries no unreachable-sources copy");
   const proof = readFileSync(join(ROOT, "scripts/reader-last-mile-final-render.mts"), "utf8");
   assert.match(proof, /freshnessDisclosureProblems\(pageText, served\.snapshot\)/, "the proof checks the served status against the contract");
   assert.ok(!/assert\.match\(pageText/.test(proof), "the proof no longer matches the page against a sentence of its own");

@@ -80,6 +80,8 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [showCode, setShowCode] = useState(true);
   const [page, setPage] = useState(0);
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<"oldest" | "newest" | "subject">("oldest");
 
   const refresh = useCallback(() => {
     setBusy(true);
@@ -100,7 +102,18 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
     for (const op of ops) c[laneOf(op)] += 1;
     return c;
   }, [ops, laneOf]);
-  const shownOps = useMemo(() => (lane ? ops.filter((o) => laneOf(o) === lane) : ops), [ops, lane, laneOf]);
+  const shownOps = useMemo(() => {
+    let filtered = lane ? ops.filter((o) => laneOf(o) === lane) : [...ops];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      filtered = filtered.filter((o) => o.subject.toLowerCase().includes(q));
+    }
+    const sorted = Array.isArray(filtered) ? filtered : [...filtered];
+    if (sortKey === "oldest") sorted.sort((a, b) => (a.lastActivity?.at ?? "").localeCompare(b.lastActivity?.at ?? ""));
+    else if (sortKey === "newest") sorted.sort((a, b) => (b.lastActivity?.at ?? "").localeCompare(a.lastActivity?.at ?? ""));
+    else sorted.sort((a, b) => a.subject.localeCompare(b.subject));
+    return sorted;
+  }, [ops, lane, laneOf, search, sortKey]);
   const pageSize = 50;
   const pageCount = Math.max(1, Math.ceil(shownOps.length / pageSize));
   const currentPage = Math.min(page, pageCount - 1);
@@ -233,8 +246,19 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
               <h3 style={{ margin: 0, fontSize: "0.95rem" }}>Work in flight — {lane ? fleetLaneMeta(lane).label.toLowerCase() : "all lanes"}</h3>
               <span className="note">Showing {pageOps.length === 0 ? 0 : pageStart + 1}–{pageStart + pageOps.length} of {shownOps.length} matching items · {ops.length} total</span>
             </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: ".82rem" }}>
+              <input
+                type="search" placeholder="Search subjects…" value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+                style={{ flex: "1 1 12rem", minWidth: 0, padding: "4px 8px", borderRadius: 4, border: "1px solid var(--ce-hairline, rgba(255,255,255,.12))", background: "var(--ce-panel, #1A1D24)", color: "inherit", font: "inherit" }}
+              />
+              <span className="note" style={{ whiteSpace: "nowrap" }}>Sort:</span>
+              <button type="button" style={pill(sortKey === "oldest")} onClick={() => { setSortKey("oldest"); setPage(0); }}>Oldest activity</button>
+              <button type="button" style={pill(sortKey === "newest")} onClick={() => { setSortKey("newest"); setPage(0); }}>Newest activity</button>
+              <button type="button" style={pill(sortKey === "subject")} onClick={() => { setSortKey("subject"); setPage(0); }}>Subject</button>
+            </div>
             {shownOps.length === 0 ? (
-              <p className="note">{ops.length === 0 ? "The canonical work-item store holds no rows." : "No items in this lane."}</p>
+              <p className="note">{ops.length === 0 ? "The canonical work-item store holds no rows." : "No items match."}</p>
             ) : (
               pageOps.map((op) => (
                 <WorkItem key={op.workItemId} op={op} lane={laneOf(op)} open={isOpen(op.workItemId)} onToggle={toggleOpen} view={view} showCode={showCode} />

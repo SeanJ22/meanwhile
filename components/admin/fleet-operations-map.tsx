@@ -60,6 +60,9 @@ import { FLEET_MAP_CONTRACTS, FLEET_MAP_PANELS, type FleetMapPanelMeta } from "@
 
 type MapView = "operations" | "fields";
 
+const FLEET_PREFIXES = /^(NH|D\d|ASK|NW|R\d)/i;
+function isFleetRowId(rowId: string): boolean { return FLEET_PREFIXES.test(rowId); }
+
 function pill(active: boolean, color?: string): CSSProperties {
   return {
     appearance: "none", cursor: "pointer", whiteSpace: "nowrap", font: "inherit", fontSize: 13,
@@ -129,13 +132,40 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
     return od?.kind === "HELD" ? od.value.cards : [];
   }, [report]);
 
+  const { fleetCards, nonFleetCards } = useMemo(() => {
+    const fleet: OwnerDecisionCard[] = [];
+    const other: OwnerDecisionCard[] = [];
+    for (const c of decisionCards) {
+      if (isFleetRowId(c.rowId)) fleet.push(c);
+      else other.push(c);
+    }
+    return { fleetCards: fleet, nonFleetCards: other };
+  }, [decisionCards]);
+
   const priorityGroups = useMemo<readonly PriorityGroupView[]>(() => {
-    return groupWaiting(decisionCards).map((g) => ({
+    return groupWaiting(fleetCards).map((g) => ({
       priority: g.priority,
       count: g.count,
       types: g.types.map((t) => ({ type: t.type, cards: t.cards.map(waitingCardView) })),
     }));
-  }, [decisionCards]);
+  }, [fleetCards]);
+
+  const nonFleetGroups = useMemo(() => {
+    const groups: { label: string; cards: OwnerDecisionCard[] }[] = [
+      { label: "Commercial and product", cards: [] },
+      { label: "Business, legal and trust", cards: [] },
+      { label: "Design and console calls", cards: [] },
+      { label: "Defect reports", cards: [] },
+    ];
+    for (const c of nonFleetCards) {
+      const r = c.rowId;
+      if (/^OWN/i.test(r)) groups[3].cards.push(c);
+      else if (/^NS/i.test(r)) groups[2].cards.push(c);
+      else if (/^[BT]\d/i.test(r)) groups[1].cards.push(c);
+      else groups[0].cards.push(c);
+    }
+    return groups.filter((g) => g.cards.length > 0);
+  }, [nonFleetCards]);
 
   const [readAgo, setReadAgo] = useState<string | null>(null);
   useEffect(() => {
@@ -221,22 +251,35 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
             })}
           </div>
 
-          {/* NEEDS YOU — owner decisions, mounted as the real DecisionQueue */}
+          {/* NEEDS YOU — fleet decisions first, then non-fleet summary */}
           {report.ownerDecisions.kind === "HELD" && (
             <>
-            <p className="note">
-              This queue is the project-wide decision store, not fleet-only. Fleet decisions (research
-              findings, data and sources) appear alongside business, legal, commercial and design
-              decisions because the page draws from the same owner snapshot.
-            </p>
             <DecisionQueue
               groups={priorityGroups}
-              total={decisionCards.length}
-              summary={waitingSummary(groupWaiting(decisionCards))}
+              total={fleetCards.length}
+              summary={waitingSummary(groupWaiting(fleetCards))}
               actionRoute="/api/admin/action"
               returnTo="/admin/fleet"
               stateVersion={stateVersion}
             />
+            {nonFleetCards.length > 0 && (
+              <div className="dq-non-fleet">
+                <hr style={{ border: "none", borderTop: "1px solid var(--ce-hairline, rgba(255,255,255,.08))", margin: ".6rem 0" }} />
+                <p className="note" style={{ margin: "0 0 .4rem" }}>
+                  {nonFleetCards.length} decisions not fleet work
+                </p>
+                <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
+                  {nonFleetGroups.map((g) => (
+                    <div key={g.label} className="card" style={{ padding: "10px 14px" }}>
+                      <strong style={{ fontSize: 13 }}>{g.label}</strong>
+                      <span className="note" style={{ display: "block", margin: "2px 0 0" }}>
+                        {g.cards.length} decision{g.cards.length === 1 ? "" : "s"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             </>
           )}
 

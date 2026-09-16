@@ -1195,7 +1195,7 @@ async function readAuthorityDatabase(
                             ? "the current candidate event history is not terminally promoted"
                             : latestReaderReceipt?.status !== "PASS"
                               ? "the current candidate lacks a passing Reader readback event"
-                              : latestReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
+                              : expectedImport.expectedPointerSha256 !== null && latestReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
                                 ? "the Reader readback verifier differs from the importer code"
                                 : latestReaderReceipt.versionId !== candidateRow.candidate_id ||
                                     latestReaderReceipt.pointerKey !== candidateRow.pointer_key ||

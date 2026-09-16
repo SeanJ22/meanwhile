@@ -683,7 +683,10 @@ export function admitReaderExecutionAuthorityArchivedSupport(
   if (evidence.import.importerCodeSha !== imported.importerCodeSha) throw new Error("Reader execution authority importer differs from its archived controller receipt");
   if (evidence.import.resultSha256 !== imported.resultSha256) throw new Error("Reader execution authority result digest differs from its archived controller receipt");
   if (evidence.import.dispositionSetSha256 !== imported.dispositionSetSha256) throw new Error("Reader execution authority disposition membership digest differs from its archived controller receipt");
-  if (evidence.import.canonicalPointerCount !== imported.expectedPointerCount) throw new Error("Reader execution authority pointer count differs from its archived controller receipt");
+  if (imported.expectedPointerSha256 !== null
+    ? evidence.import.canonicalPointerCount !== imported.expectedPointerCount
+    : evidence.import.canonicalPointerCount < imported.expectedPointerCount
+  ) throw new Error("Reader execution authority pointer count differs from its archived controller receipt");
   if (imported.expectedPointerSha256 !== null && evidence.import.canonicalPointerSetSha256 !== imported.expectedPointerSha256) {
     throw new Error("Reader execution authority pointer digest differs from its archived rehearsal receipt");
   }
@@ -1121,10 +1124,14 @@ async function readAuthorityDatabase(
     const hasBootstrapImport = candidate?.bootstrapImport != null;
     const expectedDisposition = latestReaderReceipt === null
       ? null
-      : expectedImport.dispositionSet.find(({ contractId, versionId }) =>
-          contractId === latestReaderReceipt.contractId &&
-          versionId === candidateRow.current_version_id
-        ) ?? null;
+      : expectedImport.expectedPointerSha256 !== null
+        ? expectedImport.dispositionSet.find(({ contractId, versionId }) =>
+            contractId === latestReaderReceipt.contractId &&
+            versionId === candidateRow.current_version_id
+          ) ?? null
+        : expectedImport.dispositionSet.find(({ contractId }) =>
+            contractId === latestReaderReceipt.contractId
+          ) ?? null;
     const disposition = expectedDisposition?.disposition ?? null;
     // Other standing pointers are legitimate permanent runtime authorities but
     // are outside the bounded frozen-LKG transfer denominator.
@@ -1301,8 +1308,16 @@ async function readAuthorityDatabase(
     versionId,
     readerReadback,
   }));
-  if (canonicalReaderAuthorityJson(observedServingDispositions) !== canonicalReaderAuthorityJson(expectedServingDispositions)) {
-    throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
+  if (expectedImport.expectedPointerSha256 !== null) {
+    if (canonicalReaderAuthorityJson(observedServingDispositions) !== canonicalReaderAuthorityJson(expectedServingDispositions)) {
+      throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
+    }
+  } else {
+    const observedMembership = observedServingDispositions.map(({ contractId, disposition, readerReadback }) => ({ contractId, disposition, readerReadback }));
+    const expectedMembership = expectedServingDispositions.map(({ contractId, disposition, readerReadback }) => ({ contractId, disposition, readerReadback }));
+    if (canonicalReaderAuthorityJson(observedMembership) !== canonicalReaderAuthorityJson(expectedMembership)) {
+      throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
+    }
   }
   return {
     relations: relations.map(([relation]) => ({ relation, select: true as const, insert: false as const, update: false as const, delete: false as const, truncate: false as const, references: false as const, trigger: false as const })),

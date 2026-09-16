@@ -1030,9 +1030,15 @@ async function readAuthorityDatabase(
     predecessors.set(predecessorId, predecessorRows[0]!);
   }
 
+  const dispositionOriginalCandidateIds = expectedImport.expectedPointerSha256 === null
+    ? expectedImport.dispositionSet
+        .map(({ versionId }) => String(versionId))
+        .filter((id) => id.length > 0)
+    : [];
   const eventCandidateIds = [...new Set([
     ...candidates.map(({ candidate_id }) => String(candidate_id)),
     ...predecessorIds,
+    ...dispositionOriginalCandidateIds,
   ])].sort();
   const events: Row[] = [];
   let eventCursorId: string | null = null;
@@ -1119,18 +1125,26 @@ async function readAuthorityDatabase(
     const latestReaderReceipt = [...history].reverse().map(({ detail }) =>
       parseReaderProjectionReadback(detail)
     ).find((receipt) => receipt !== null) ?? null;
+    const fallbackReaderReceipt = latestReaderReceipt === null && expectedImport.expectedPointerSha256 === null
+      ? normalizedEvents
+          .filter((event) => dispositionOriginalCandidateIds.includes(event.candidateId))
+          .map(({ detail }) => parseReaderProjectionReadback(detail))
+          .find((receipt) => receipt !== null && receipt.pointerKey === candidateRow.pointer_key)
+          ?? null
+      : null;
+    const effectiveReaderReceipt = latestReaderReceipt ?? fallbackReaderReceipt;
     const importedHere = transfer?.authorization === "PDC_V2_FROZEN_LKG_CUTOVER" &&
       transfer.importerCodeSha === expectedImport.importerCodeSha;
     const hasBootstrapImport = candidate?.bootstrapImport != null;
-    const expectedDisposition = latestReaderReceipt === null
+    const expectedDisposition = effectiveReaderReceipt === null
       ? null
       : expectedImport.expectedPointerSha256 !== null
         ? expectedImport.dispositionSet.find(({ contractId, versionId }) =>
-            contractId === latestReaderReceipt.contractId &&
+            contractId === effectiveReaderReceipt.contractId &&
             versionId === candidateRow.current_version_id
           ) ?? null
         : expectedImport.dispositionSet.find(({ contractId }) =>
-            contractId === latestReaderReceipt.contractId
+            contractId === effectiveReaderReceipt.contractId
           ) ?? null;
     const disposition = expectedDisposition?.disposition ?? null;
     // Other standing pointers are legitimate permanent runtime authorities but
@@ -1202,19 +1216,19 @@ async function readAuthorityDatabase(
                           ? "the current candidate event history is empty or non-contiguous"
                           : history.at(-1)?.state !== "PROMOTED"
                             ? "the current candidate event history is not terminally promoted"
-                            : latestReaderReceipt?.status !== "PASS"
+                            : effectiveReaderReceipt?.status !== "PASS"
                               ? "the current candidate lacks a passing Reader readback event"
-                              : expectedImport.expectedPointerSha256 !== null && latestReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
+                              : expectedImport.expectedPointerSha256 !== null && effectiveReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
                                 ? "the Reader readback verifier differs from the importer code"
-                                : latestReaderReceipt.versionId !== candidateRow.candidate_id ||
-                                    latestReaderReceipt.pointerKey !== candidateRow.pointer_key ||
-                                    latestReaderReceipt.sourceId !== candidateRow.source_id ||
-                                    latestReaderReceipt.recordClass !== candidateRow.record_class ||
-                                    latestReaderReceipt.scope !== candidateRow.scope ||
-                                    !latestReaderReceipt.contractId
+                                : (latestReaderReceipt !== null && effectiveReaderReceipt.versionId !== candidateRow.candidate_id) ||
+                                    effectiveReaderReceipt.pointerKey !== candidateRow.pointer_key ||
+                                    effectiveReaderReceipt.sourceId !== candidateRow.source_id ||
+                                    effectiveReaderReceipt.recordClass !== candidateRow.record_class ||
+                                    effectiveReaderReceipt.scope !== candidateRow.scope ||
+                                    !effectiveReaderReceipt.contractId
                                   ? "the Reader readback identity differs from the durable pointer"
                                   : importedHere && (
-                                      transfer?.contractId !== latestReaderReceipt.contractId ||
+                                      transfer?.contractId !== effectiveReaderReceipt.contractId ||
                                       transfer.sourceId !== candidateRow.source_id ||
                                       transfer.recordClass !== candidateRow.record_class ||
                                       transfer.scope !== candidateRow.scope
@@ -1240,7 +1254,7 @@ async function readAuthorityDatabase(
                 ? "the predecessor promotion time has no matching durable event"
                 : null;
     if (
-      !candidate || latestReaderReceipt === null || dispositionIssue !== null ||
+      !candidate || effectiveReaderReceipt === null || dispositionIssue !== null ||
       !currentRecord || promotionIssue !== null ||
       importIssue !== null ||
       linkageIssue !== null || predecessorIssue !== null
@@ -1263,7 +1277,7 @@ async function readAuthorityDatabase(
       transferKind: importedHere ? String(transfer?.kind) : null,
       authorization: importedHere ? "PDC_V2_FROZEN_LKG_CUTOVER" as const : null,
       importerCodeSha: importedHere ? String(transfer?.importerCodeSha) : null,
-      readerVerifierCodeSha: latestReaderReceipt.verifierCodeSha,
+      readerVerifierCodeSha: effectiveReaderReceipt.verifierCodeSha,
       readerReadback: "PASS" as const,
       predecessorEventCount: predecessorHistory.length,
       predecessorEventSetSha256: predecessorHistory.length > 0

@@ -506,6 +506,11 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "How does the owner authenticate to the admin control centre — a shared secret, or Sign in with Google for exactly the enrolled owner address?",
     values: ["shared-secret", "google-owner-only"],
   },
+  {
+    key: "reader_authority.production_pointer_validation",
+    question: "Does PRODUCTION authority require exact pointer parity with the import receipt, or accept a superset?",
+    values: ["exact-parity", "superset-accepted"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

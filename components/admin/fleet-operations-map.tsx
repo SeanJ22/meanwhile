@@ -60,7 +60,7 @@ import { FLEET_MAP_CONTRACTS, FLEET_MAP_PANELS, type FleetMapPanelMeta } from "@
 
 type MapView = "operations" | "fields";
 
-const FLEET_PREFIXES = /^(NH|D\d|ASK|NW|R\d)/i;
+const FLEET_PREFIXES = /^(NH|D\d|ASK|NW|RO)/i;
 function isFleetRowId(rowId: string): boolean { return FLEET_PREFIXES.test(rowId); }
 
 function pill(active: boolean, color?: string): CSSProperties {
@@ -261,6 +261,7 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
               actionRoute="/api/admin/action"
               returnTo="/admin/fleet"
               stateVersion={stateVersion}
+              heading="Fleet decisions waiting on you"
             />
             {nonFleetCards.length > 0 && (
               <div className="dq-non-fleet">

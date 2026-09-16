@@ -113,6 +113,7 @@ export function DecisionQueue({
   actionRoute,
   returnTo,
   stateVersion,
+  heading,
 }: {
   readonly groups: readonly PriorityGroupView[];
   readonly total: number;
@@ -128,6 +129,7 @@ export function DecisionQueue({
    * against a queue that has since changed, is not the answer he thinks it is.
    */
   readonly stateVersion: string;
+  readonly heading?: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -261,7 +263,7 @@ export function DecisionQueue({
           {open ? "▾" : "▸"}
         </span>
         <h2 id="dq-heading">
-          Decisions waiting on you <span className="dq-count">{waitingNow}</span>
+          {heading ?? "Decisions waiting on you"} <span className="dq-count">{waitingNow}</span>
         </h2>
         <span className="dq-summary">{summary}</span>
       </button>

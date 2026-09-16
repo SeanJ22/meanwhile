@@ -33,7 +33,10 @@
 import { useCallback, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 
+import { DecisionQueue, type PriorityGroupView } from "@/app/(admin)/admin/decisions.tsx";
+import { groupWaiting, waitingCardView, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
 import type { FleetOperation, FleetOperationsReport } from "@/lib/control-plane/fleet-operations";
+import type { OwnerDecisionCard } from "@/lib/control-plane/owner-surface.ts";
 import {
   applyRefresh,
   deliveryItemStatusLabel,
@@ -69,7 +72,7 @@ function pill(active: boolean, color?: string): CSSProperties {
   };
 }
 
-export function FleetOperationsMap({ initialState }: { initialState?: FleetConsumerState }) {
+export function FleetOperationsMap({ initialState, stateVersion }: { initialState?: FleetConsumerState; stateVersion: string }) {
   const [consumer, setConsumer] = useState<FleetConsumerState>(initialState ?? EMPTY_CONSUMER_STATE);
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<MapView>("operations");
@@ -107,6 +110,19 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
   // First item expanded by default (once), matching the design; toggled thereafter.
   const isOpen = useCallback((id: string) => (id in open ? open[id] : ops[0]?.workItemId === id), [open, ops]);
   const toggleOpen = useCallback((id: string) => setOpen((o) => ({ ...o, [id]: !(id in o ? o[id] : false) })), []);
+
+  const decisionCards = useMemo<readonly OwnerDecisionCard[]>(() => {
+    const od = report?.ownerDecisions;
+    return od?.kind === "HELD" ? od.value.cards : [];
+  }, [report]);
+
+  const priorityGroups = useMemo<readonly PriorityGroupView[]>(() => {
+    return groupWaiting(decisionCards).map((g) => ({
+      priority: g.priority,
+      count: g.count,
+      types: g.types.map((t) => ({ type: t.type, cards: t.cards.map(waitingCardView) })),
+    }));
+  }, [decisionCards]);
 
   return (
     <section data-fleet-map style={{ display: "grid", gap: 16 }}>
@@ -173,8 +189,17 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
             })}
           </div>
 
-          {/* NEEDS YOU — owner decisions */}
-          <NeedsYou report={report} showCode={showCode} />
+          {/* NEEDS YOU — owner decisions, mounted as the real DecisionQueue */}
+          {report.ownerDecisions.kind === "HELD" && (
+            <DecisionQueue
+              groups={priorityGroups}
+              total={decisionCards.length}
+              summary={waitingSummary(groupWaiting(decisionCards))}
+              actionRoute="/api/admin/action"
+              returnTo="/admin/fleet"
+              stateVersion={stateVersion}
+            />
+          )}
 
           {/* Work in flight */}
           <section aria-label="Work in flight" style={{ display: "grid", gap: 8 }}>
@@ -226,36 +251,6 @@ function ControlPlaneState({ report }: { report: FleetOperationsReport }) {
         {" "}This is a real read against real infrastructure; an unavailable measurement stays unavailable.
       </p>
     </div>
-  );
-}
-
-function NeedsYou({ report, showCode }: { report: FleetOperationsReport; showCode: boolean }) {
-  const od = report.ownerDecisions;
-  if (od.kind !== "HELD") return null;
-  const cards = od.value.cards;
-  return (
-    <section aria-label="Needs you" className="card" style={{ display: "grid", gap: 8, boxShadow: cards.length ? "inset 0 0 0 1px color-mix(in srgb, var(--accent, #d97757) 40%, transparent)" : undefined }}>
-      <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
-        <strong style={{ fontSize: 13, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--accent, #d97757)" }}>Needs you</strong>
-        <span className="note">· {cards.length}</span>
-      </div>
-      {cards.length === 0 ? (
-        <p className="note" style={{ margin: 0 }}>No unanswered owner decisions. Machine blockers and acknowledgements are excluded.</p>
-      ) : (
-        <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
-          {cards.map((c) => (
-            <li key={c.rowId} style={{ display: "grid", gap: 2 }}>
-              <span style={{ fontSize: 13 }}>{c.title}</span>
-              {showCode && (
-                <span className="note" style={{ margin: 0, fontFamily: "var(--font-mono, ui-monospace, monospace)", fontSize: 11 }}>
-                  OwnerDecisionCard · rowId {c.rowId}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
   );
 }
 

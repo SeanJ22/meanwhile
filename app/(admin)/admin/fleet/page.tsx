@@ -51,7 +51,8 @@ import { ConsoleNav } from "@/app/(admin)/console-nav";
 import { FleetOperationsMap } from "@/components/admin/fleet-operations-map";
 import { ResearchProgress } from "@/components/admin/research-progress.tsx";
 import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
-import { openControlPlane, readFleetSafety } from "@/lib/control-plane/admin-data";
+import { openControlPlane, readDecisions, readFleetSafety, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data";
+import { pulseRevision } from "@/lib/control-plane/live-pulse";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { readFleetSeedState } from "@/lib/admin/fleet-seed";
 
@@ -79,15 +80,28 @@ export default async function FleetOperationsPage() {
   // populated/missing page↔Refresh parity is proven in
   // tests/fleet-operations-page.test.ts. See the handoff doc.
   const opened = openControlPlane();
-  const [initialState, progressState] = await Promise.all([
+  const [initialState, progressState, heartbeatOut, snapshotOut, decisionsOut] = await Promise.all([
     readFleetSeedState({ open: () => opened, now: () => new Date().toISOString() }),
     opened.then(async (result) => {
       if (!result.ok) return null;
       const state = await readFleetSafety(result.repos);
       return state.kind === "HELD" ? state.value : null;
     }),
+    opened.then(async (result) => result.ok ? readHeartbeat(result.repos) : null),
+    opened.then(async (result) => result.ok ? readSnapshot(result.repos) : null),
+    opened.then(async (result) => result.ok ? readDecisions(result.repos) : null),
   ]);
   const progress = researchProgressHealth(progressState, new Date().toISOString());
+  const heartbeat = heartbeatOut?.kind === "HELD" ? heartbeatOut.value : null;
+  const snapshot = snapshotOut?.kind === "HELD" ? snapshotOut.value : null;
+  const fleetSafety = progressState?.fleetSafety ?? null;
+  const stateVersion = pulseRevision({
+    beatAt: heartbeat?.beatAt ?? null,
+    snapshotRevision: snapshot ? (snapshot.publishedAt ? Date.parse(snapshot.publishedAt) : null) : null,
+    decisionCount: decisionsOut?.kind === "HELD" ? decisionsOut.value.length : null,
+    researchRevision: fleetSafety ? Date.parse(fleetSafety.cycle.startedAt) : null,
+    receiptCount: null,
+  });
   return (
     <main className="admin console-page">
       <ConsoleNav view="fleet" currentState={null} states={US_STATES} />
@@ -100,7 +114,7 @@ export default async function FleetOperationsPage() {
         heartbeat. Lanes are derived from each work item&rsquo;s task states; a live lease means activity,
         not proven progress.
       </p>
-      <FleetOperationsMap initialState={initialState} />
+      <FleetOperationsMap initialState={initialState} stateVersion={stateVersion} />
 
       <h2>ZIP preparation</h2>
       <p className="note">

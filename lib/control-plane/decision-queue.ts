@@ -241,6 +241,47 @@ export function groupWaiting(cards: readonly OwnerDecisionCard[]): readonly Prio
 }
 
 /**
+ * Flatten a published card into what the decision island renders.
+ *
+ * Extracted here so both the control centre and the fleet page use the same
+ * projection. `WaitingCardView` is defined in `admin/decisions.tsx`.
+ */
+export function waitingCardView(card: OwnerDecisionCard): {
+  readonly rowId: string;
+  readonly title: string;
+  readonly whatIsNeeded: string;
+  readonly whyNoMachineCanDecide: string;
+  readonly options: readonly { readonly option: string; readonly consequence: string }[];
+  readonly meta: string;
+  readonly priority: string;
+  readonly type: OwnerType;
+  readonly blocker: string | null;
+  readonly checkedThisRun: string | null;
+  readonly ownWords: boolean;
+} {
+  const kind = decisionCardKind(card);
+  const meta = [
+    card.priority,
+    card.openedOn ? `opened ${card.openedOn}` : "opened on a date the ledger could not recover",
+    card.ageDays === null ? "age unknown" : `${card.ageDays} day${card.ageDays === 1 ? "" : "s"} waiting`,
+    card.blockedDescendants === null ? null : `${card.blockedDescendants} waiting behind it`,
+  ].filter((s): s is string => s !== null);
+  return {
+    rowId: card.rowId,
+    title: card.title,
+    whatIsNeeded: card.whatIsNeeded,
+    whyNoMachineCanDecide: card.whyNoMachineCanDecide,
+    options: card.options,
+    meta: meta.join(" · "),
+    priority: card.priority,
+    type: ownerTypeOf(card),
+    blocker: kind === "BLOCKED_WHILE" ? (card.blocker ?? card.whatIsNeeded) : null,
+    checkedThisRun: card.checkedThisRun ?? null,
+    ownWords: kind === "DECISION",
+  };
+}
+
+/**
  * The one-line summary the collapsed header carries, so the owner knows what is
  * inside before he opens it.
  */

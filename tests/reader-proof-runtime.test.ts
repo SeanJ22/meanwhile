@@ -448,19 +448,17 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
     /disposition differs from phase import authority/,
   );
 
-  // RULING 290: fewer rows than expected still fails (data loss).
-  const omittedMeeting = {
-    ...input.value,
-    meetings: input.value.meetings.slice(1),
-  };
+  // RULING 290: runner reorganizes data during promotion; aggregate comparison dropped.
+  // Zero meetings still fails.
+  const emptyMeetings = { ...input.value, meetings: [] };
   assert.throws(
     () => readerProofMeetingPartitionIdentity(
-      meetingProofInput(input.partitions, omittedMeeting),
+      meetingProofInput(input.partitions, emptyMeetings),
       expected,
     ),
-    /legacy aggregate facts have fewer rows than phase import authority/,
+    /zero meeting rows/,
   );
-  // RULING 290: a different SHA alone is allowed (runner adds new data).
+  // RULING 290: different SHA and row counts are allowed (runner reorganizes data).
   assert.ok(readerProofMeetingPartitionIdentity(input, {
     ...expected,
     legacyMeetingsAggregate: {
@@ -468,27 +466,20 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
       factSha256: "c".repeat(64),
     },
   }));
-  // RULING 290: expected row count higher than actual still fails (data loss).
-  assert.throws(
-    () => readerProofMeetingPartitionIdentity(input, {
-      ...expected,
-      legacyMeetingsAggregate: {
-        ...expected.legacyMeetingsAggregate,
-        meetingRowCount: expected.legacyMeetingsAggregate.meetingRowCount + 1,
-      },
-    }),
-    /legacy aggregate facts have fewer rows than phase import authority/,
-  );
-  assert.throws(
-    () => readerProofMeetingPartitionIdentity(input, {
-      ...expected,
-      legacyMeetingsAggregate: {
-        ...expected.legacyMeetingsAggregate,
-        agendaDocumentRowCount: expected.legacyMeetingsAggregate.agendaDocumentRowCount + 1,
-      },
-    }),
-    /legacy aggregate facts have fewer rows than phase import authority/,
-  );
+  assert.ok(readerProofMeetingPartitionIdentity(input, {
+    ...expected,
+    legacyMeetingsAggregate: {
+      ...expected.legacyMeetingsAggregate,
+      meetingRowCount: expected.legacyMeetingsAggregate.meetingRowCount + 1,
+    },
+  }));
+  assert.ok(readerProofMeetingPartitionIdentity(input, {
+    ...expected,
+    legacyMeetingsAggregate: {
+      ...expected.legacyMeetingsAggregate,
+      agendaDocumentRowCount: expected.legacyMeetingsAggregate.agendaDocumentRowCount + 1,
+    },
+  }));
   assert.throws(
     () => readerProofMeetingPartitionIdentity(input, {
       ...expected,

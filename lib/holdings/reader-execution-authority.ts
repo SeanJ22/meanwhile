@@ -948,7 +948,7 @@ async function readAuthorityDatabase(
     }
     pointers.push(page[0]!);
     pointerCursor = nextCursor;
-    if (pointers.length > expectedImport.expectedPointerCount) {
+    if (expectedImport.expectedPointerSha256 !== null && pointers.length > expectedImport.expectedPointerCount) {
       throw new Error("Reader authority pointer set exceeds its controller receipt");
     }
   }
@@ -1359,8 +1359,9 @@ export async function buildReaderExecutionAuthorityEvidence(
   );
   const live = await readAuthorityDatabase(options.sql, connection, imported);
   if (
-    imported.expectedPointerCount !== live.pointerCount ||
-    (imported.expectedPointerSha256 !== null && imported.expectedPointerSha256 !== live.pointerSha256)
+    imported.expectedPointerSha256 !== null
+      ? (imported.expectedPointerCount !== live.pointerCount || imported.expectedPointerSha256 !== live.pointerSha256)
+      : live.pointerCount < imported.expectedPointerCount
   ) throw new Error("Reader authority live pointer set differs from the durable import receipt");
 
   const endpoint = canonicalNeonEndpointHost(connection);

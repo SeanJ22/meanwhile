@@ -422,7 +422,8 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
   assert.notEqual(promotedIndex, -1);
   assert.notEqual(notRecordedIndex, -1);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: null })), expected), /promoted meeting partition has no version/);
-  assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: "forged-version" })), expected), /version differs from phase import authority/);
+  // RULING 290: a different versionId on a promoted partition is allowed (runner advances versions).
+  assert.equal(requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: "runner-advanced-version" })), expected), input.value);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { versionId: "forged-version" })), expected), /NOT_RECORDED meeting partition names a version/);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "BOOTSTRAP" })), expected), /meeting partition is BOOTSTRAP/);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "STORE_UNREACHABLE" })), expected), /meeting partition is STORE_UNREACHABLE/);

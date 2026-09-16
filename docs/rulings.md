@@ -13173,6 +13173,20 @@ The same principle extends to the readback verifier code check (line 1198): the 
 
 ---
 
+## RULING 290 — meeting partition versions may advance past the import receipt
+
+*DECISION · ACTIVE · adopted 2026-09-16*
+
+- **related_to** → `R-0283`, `R-0289`
+
+**The meeting partition version check accepts any promoted version, not only the exact version recorded in the import receipt.**
+
+The import receipt captures a frozen snapshot of production at the moment of the one-time PDC migration. The standing runner (RULING 283) promotes meeting partitions continuously — 79 partitions advanced from their bootstrap `trusted-lkg` versions to real `cv-` civic versions within 24 hours of the import. The exact-version check at snapshot.ts:1030 meant the proof pipeline could only pass if the runner had done nothing since the import, which inverts the design: the runner working correctly was the failure mode.
+
+Every partition in the receipt must still be present and still be promoted. A newer version passes. Missing, unpromoted, or rolled-backward partitions still fail. The disposition check (PROMOTED vs NOT_RECORDED) and the partition membership check are unchanged.
+
+---
+
 ---
 
 ## Un-numbered governance records

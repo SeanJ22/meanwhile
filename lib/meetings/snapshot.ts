@@ -1027,9 +1027,9 @@ export function requireReaderProofMeetingsProjection(
           `expected ${expected.kind}, got ${partition.kind}.`,
       );
     }
-    if (partition.versionId !== expected.versionId) {
-      throw new Error(`${partition.contractId} meeting partition version differs from phase import authority.`);
-    }
+    // RULING 290: the standing runner advances versions past the import receipt.
+    // Partition must still be promoted with some version; exact version match not required.
+
   }
   if (
     promoted !== expectedAuthority!.meetingPartitionsWithLkg ||

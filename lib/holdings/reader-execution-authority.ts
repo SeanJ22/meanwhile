@@ -1148,26 +1148,28 @@ async function readAuthorityDatabase(
     const importIssue = importedHere && candidate
       ? trustedLkgImportEvidenceIssue(candidate as unknown as RoutineCandidate, predecessor)
       : null;
-    const dispositionIssue = disposition === "PROMOTED_ABSENT_POINTER"
-      ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT"
-        ? "an absent-pointer disposition lacks its exact durable import bootstrap"
-        : null
-      : disposition === "PROMOTED_FROZEN_LKG_UNION"
-        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT" || !row(transfer.pimaOutcomeUnion)
-          ? "a frozen-LKG union disposition lacks its exact durable predecessor-bound import bootstrap"
+    const dispositionIssue = expectedImport.expectedPointerSha256 === null && !importedHere
+      ? null
+      : disposition === "PROMOTED_ABSENT_POINTER"
+        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT"
+          ? "an absent-pointer disposition lacks its exact durable import bootstrap"
           : null
-      : disposition === "REATTESTED_EXISTING_AUTHORITY"
-        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
-          ? "a re-attestation disposition lacks its exact durable re-attestation bootstrap"
-          : null
-        : disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY"
-          ? hasBootstrapImport && (
-              !importedHere ||
-              !["TRUSTED_LKG_IMPORT", "TRUSTED_LKG_REATTESTATION"].includes(String(transfer?.kind))
-            )
-            ? "a skipped imported authority is not bound to the exact durable bootstrap"
+        : disposition === "PROMOTED_FROZEN_LKG_UNION"
+          ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT" || !row(transfer.pimaOutcomeUnion)
+            ? "a frozen-LKG union disposition lacks its exact durable predecessor-bound import bootstrap"
             : null
-          : "the live authority is absent from the controller disposition membership";
+        : disposition === "REATTESTED_EXISTING_AUTHORITY"
+          ? !importedHere || transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
+            ? "a re-attestation disposition lacks its exact durable re-attestation bootstrap"
+            : null
+          : disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY"
+            ? hasBootstrapImport && (
+                !importedHere ||
+                !["TRUSTED_LKG_IMPORT", "TRUSTED_LKG_REATTESTATION"].includes(String(transfer?.kind))
+              )
+              ? "a skipped imported authority is not bound to the exact durable bootstrap"
+              : null
+            : "the live authority is absent from the controller disposition membership";
     const linkageIssue = !candidate || !currentRecord
       ? "the durable current candidate is missing"
       : candidateRow.pointer_key !== `${String(candidateRow.record_class)}:${String(candidateRow.scope)}`

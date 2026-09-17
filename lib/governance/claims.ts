@@ -511,6 +511,11 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question: "Does PRODUCTION authority require exact pointer parity with the import receipt, or accept a superset?",
     values: ["exact-parity", "superset-accepted"],
   },
+  {
+    key: "reader_authority.partition_version_validation",
+    question: "Does PRODUCTION authority require exact partition version parity with the import receipt, or accept advancement?",
+    values: ["exact-version", "advancement-accepted"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

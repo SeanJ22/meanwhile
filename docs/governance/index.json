@@ -1,12 +1,12 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "600aeb1a0a95d1e2",
+  "snapshot": "64fa684ee53e1999",
   "counts": {
-    "records": 326,
-    "current": 51,
+    "records": 327,
+    "current": 52,
     "law": 37,
-    "decisions": 14,
+    "decisions": 15,
     "historical": 275
   },
   "records": [
@@ -7825,6 +7825,39 @@
         {
           "kind": "related_to",
           "target": "R-0283"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author explicit ruling during PRODUCTION-lineage closure session, 2026-09-16"
+    },
+    {
+      "id": "R-0290",
+      "aliases": [
+        "RULING 290",
+        "R290",
+        "R-290"
+      ],
+      "title": "RULING 290 — meeting partition versions may advance past the import receipt",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-16",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "reader_authority.partition_version_validation",
+          "value": "advancement-accepted"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0283"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0289"
         }
       ],
       "uncertain": [],

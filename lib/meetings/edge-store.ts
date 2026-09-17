@@ -1,4 +1,5 @@
-import { mkdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
@@ -139,8 +140,7 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   }
 
   private etagOf(path: string): string {
-    const stat = statSync(path);
-    return `${stat.size}-${Math.round(stat.mtimeMs)}`;
+    return createHash("sha256").update(readFileSync(path)).digest("hex").slice(0, 16);
   }
 
   async readManifest(): Promise<StoredManifest | null> {

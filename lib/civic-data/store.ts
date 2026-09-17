@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
-import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions } from "../db/schema.ts";
+import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections } from "../db/schema.ts";
 import {
   type CandidateEvent,
   type CandidateState,
@@ -45,6 +45,44 @@ export interface CandidateVersionReadback {
   readonly record: CandidateVersionRecord;
 }
 
+/** One coupled partition version the prepared reader snapshot was composed from. */
+export interface PreparedProjectionCoupling {
+  readonly contractId: string;
+  readonly versionId: string;
+}
+
+/**
+ * A derived reader-serving projection row — a pure function of the partitions it
+ * names in `composedFrom`, written by the standing runner and read once by the
+ * reader. A SERVING COPY, never authoritative civic truth.
+ */
+export interface PreparedReaderProjectionRow {
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly sequence: number;
+  readonly payload: unknown;
+  readonly composedFrom: readonly PreparedProjectionCoupling[];
+  readonly factSha256: string;
+  readonly generatedAt: string;
+  readonly composedAt: string;
+  readonly sourceThrough: string | null;
+  readonly retrievedAt: string | null;
+  readonly promotedThrough: string | null;
+}
+
+export interface PreparedReaderProjectionInput {
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly payload: unknown;
+  readonly composedFrom: readonly PreparedProjectionCoupling[];
+  readonly factSha256: string;
+  readonly generatedAt: string;
+  readonly composedAt: string;
+  readonly sourceThrough: string | null;
+  readonly retrievedAt: string | null;
+  readonly promotedThrough: string | null;
+}
+
 export interface RoutineDataStore {
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
@@ -60,6 +98,20 @@ export interface RoutineDataStore {
   /** Set-oriented Reader door; production composition must not fan out per authority. */
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
+  /** Read the single derived reader-serving projection for a record class + scope (one query). Null before the first is published. */
+  readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
+  /**
+   * Publish a derived reader-serving projection (a SERVING COPY of the promoted
+   * partitions, never a promotion). Monotonic + last-valid-safe: the write lands
+   * only if the row is still at `expectedSequence` (null = expect absent), so two
+   * overlapping runner passes can never put an older composition over a newer
+   * one, and a stale pass sees `published:false` and re-reads instead of
+   * overwriting a newer publication.
+   */
+  readonly writePreparedReaderProjection: (
+    input: PreparedReaderProjectionInput,
+    expectedSequence: number | null,
+  ) => Promise<{ readonly published: boolean; readonly sequence: number }>;
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string) => Promise<PromotedProjection>;
   /** Append non-disposition evidence without changing the candidate's state. */
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
@@ -493,6 +545,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
+  private readonly preparedProjections = new Map<string, PreparedReaderProjectionRow>();
 
   private nextEvent(
     candidateId: string,
@@ -554,6 +607,39 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       const row = this.promotions.get(projectionKey(recordClass, scope));
       return row ? [structuredClone(row) as PromotedProjection<T>] : [];
     });
+  }
+
+  async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
+    const row = this.preparedProjections.get(projectionKey(recordClass, scope));
+    return row ? structuredClone(row) : null;
+  }
+
+  async writePreparedReaderProjection(
+    input: PreparedReaderProjectionInput,
+    expectedSequence: number | null,
+  ): Promise<{ readonly published: boolean; readonly sequence: number }> {
+    const key = projectionKey(input.recordClass, input.scope);
+    const current = this.preparedProjections.get(key);
+    // Monotonic CAS: only advance when the row is still at the sequence the
+    // caller read; otherwise a newer pass already published — don't regress it.
+    if ((current?.sequence ?? null) !== expectedSequence) {
+      return { published: false, sequence: current?.sequence ?? 0 };
+    }
+    const sequence = (expectedSequence ?? 0) + 1;
+    this.preparedProjections.set(key, structuredClone({
+      recordClass: input.recordClass,
+      scope: input.scope,
+      sequence,
+      payload: input.payload,
+      composedFrom: input.composedFrom,
+      factSha256: input.factSha256,
+      generatedAt: input.generatedAt,
+      composedAt: input.composedAt,
+      sourceThrough: input.sourceThrough,
+      retrievedAt: input.retrievedAt,
+      promotedThrough: input.promotedThrough,
+    }));
+    return { published: true, sequence };
   }
 
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
@@ -688,6 +774,22 @@ function postgresPromotionRowToProjection<T = unknown>(
     promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
     payload: row.payload as T,
     receipt: row.validationReceipt as ValidationReceipt,
+  };
+}
+
+function preparedRowToProjection(row: typeof civicDataReaderProjections.$inferSelect): PreparedReaderProjectionRow {
+  return {
+    recordClass: row.recordClass as RoutineRecordClass,
+    scope: row.scope,
+    sequence: row.sequence,
+    payload: row.payload,
+    composedFrom: row.composedFrom as readonly PreparedProjectionCoupling[],
+    factSha256: row.factSha256,
+    generatedAt: row.generatedAt,
+    composedAt: canonicalPostgresRoutineTimestamp(row.composedAt, "readerProjection.composedAt"),
+    sourceThrough: row.sourceThrough,
+    retrievedAt: row.retrievedAt,
+    promotedThrough: row.promotedThrough,
   };
 }
 
@@ -860,6 +962,63 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       inArray(civicDataPromotions.scope, [...scopes]),
     ));
     return rows.map((row) => postgresPromotionRowToProjection<T>(row));
+  }
+
+  async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
+    const [row] = await this.db.select().from(civicDataReaderProjections).where(and(
+      eq(civicDataReaderProjections.recordClass, recordClass),
+      eq(civicDataReaderProjections.scope, scope),
+    )).limit(1);
+    return row ? preparedRowToProjection(row) : null;
+  }
+
+  async writePreparedReaderProjection(
+    input: PreparedReaderProjectionInput,
+    expectedSequence: number | null,
+  ): Promise<{ readonly published: boolean; readonly sequence: number }> {
+    // The DB write sanction is the gate: this is a reader-evidence-class derived
+    // write (a serving copy), never a candidate mutation, and the standing
+    // runner's reader-repair pass already holds the sanction. The reader path,
+    // holding no sanction, can never reach this.
+    this.assertMutationAuthority();
+    const key = projectionKey(input.recordClass, input.scope);
+    const body = {
+      key,
+      recordClass: input.recordClass,
+      scope: input.scope,
+      payload: input.payload,
+      composedFrom: input.composedFrom,
+      factSha256: input.factSha256,
+      generatedAt: input.generatedAt,
+      composedAt: input.composedAt,
+      sourceThrough: input.sourceThrough,
+      retrievedAt: input.retrievedAt,
+      promotedThrough: input.promotedThrough,
+    };
+    if (expectedSequence === null) {
+      // First publication: insert; a racing insert is rejected (published:false).
+      const inserted = await this.db.insert(civicDataReaderProjections)
+        .values({ ...body, sequence: 1 })
+        .onConflictDoNothing()
+        .returning({ sequence: civicDataReaderProjections.sequence });
+      if (inserted.length > 0) return { published: true, sequence: 1 };
+    } else {
+      // Monotonic CAS: advance only if the row is still at the read sequence.
+      const nextSequence = expectedSequence + 1;
+      const updated = await this.db.update(civicDataReaderProjections)
+        .set({ ...body, sequence: nextSequence })
+        .where(and(
+          eq(civicDataReaderProjections.key, key),
+          eq(civicDataReaderProjections.sequence, expectedSequence),
+        ))
+        .returning({ sequence: civicDataReaderProjections.sequence });
+      if (updated.length > 0) return { published: true, sequence: nextSequence };
+    }
+    const [cur] = await this.db.select({ sequence: civicDataReaderProjections.sequence })
+      .from(civicDataReaderProjections)
+      .where(eq(civicDataReaderProjections.key, key))
+      .limit(1);
+    return { published: false, sequence: cur?.sequence ?? 0 };
   }
 
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {

@@ -683,7 +683,10 @@ export function admitReaderExecutionAuthorityArchivedSupport(
   if (evidence.import.importerCodeSha !== imported.importerCodeSha) throw new Error("Reader execution authority importer differs from its archived controller receipt");
   if (evidence.import.resultSha256 !== imported.resultSha256) throw new Error("Reader execution authority result digest differs from its archived controller receipt");
   if (evidence.import.dispositionSetSha256 !== imported.dispositionSetSha256) throw new Error("Reader execution authority disposition membership digest differs from its archived controller receipt");
-  if (evidence.import.canonicalPointerCount !== imported.expectedPointerCount) throw new Error("Reader execution authority pointer count differs from its archived controller receipt");
+  if (imported.expectedPointerSha256 !== null
+    ? evidence.import.canonicalPointerCount !== imported.expectedPointerCount
+    : evidence.import.canonicalPointerCount < imported.expectedPointerCount
+  ) throw new Error("Reader execution authority pointer count differs from its archived controller receipt");
   if (imported.expectedPointerSha256 !== null && evidence.import.canonicalPointerSetSha256 !== imported.expectedPointerSha256) {
     throw new Error("Reader execution authority pointer digest differs from its archived rehearsal receipt");
   }
@@ -948,7 +951,7 @@ async function readAuthorityDatabase(
     }
     pointers.push(page[0]!);
     pointerCursor = nextCursor;
-    if (pointers.length > expectedImport.expectedPointerCount) {
+    if (expectedImport.expectedPointerSha256 !== null && pointers.length > expectedImport.expectedPointerCount) {
       throw new Error("Reader authority pointer set exceeds its controller receipt");
     }
   }
@@ -1027,9 +1030,15 @@ async function readAuthorityDatabase(
     predecessors.set(predecessorId, predecessorRows[0]!);
   }
 
+  const dispositionOriginalCandidateIds = expectedImport.expectedPointerSha256 === null
+    ? expectedImport.dispositionSet
+        .map(({ versionId }) => String(versionId))
+        .filter((id) => id.length > 0)
+    : [];
   const eventCandidateIds = [...new Set([
     ...candidates.map(({ candidate_id }) => String(candidate_id)),
     ...predecessorIds,
+    ...dispositionOriginalCandidateIds,
   ])].sort();
   const events: Row[] = [];
   let eventCursorId: string | null = null;
@@ -1116,15 +1125,28 @@ async function readAuthorityDatabase(
     const latestReaderReceipt = [...history].reverse().map(({ detail }) =>
       parseReaderProjectionReadback(detail)
     ).find((receipt) => receipt !== null) ?? null;
+    const fallbackReaderReceipt = latestReaderReceipt === null && expectedImport.expectedPointerSha256 === null
+      && candidate?.bootstrapImport == null
+      ? normalizedEvents
+          .filter((event) => dispositionOriginalCandidateIds.includes(event.candidateId))
+          .map(({ detail }) => parseReaderProjectionReadback(detail))
+          .find((receipt) => receipt !== null && receipt.pointerKey === candidateRow.pointer_key)
+          ?? null
+      : null;
+    const effectiveReaderReceipt = latestReaderReceipt ?? fallbackReaderReceipt;
     const importedHere = transfer?.authorization === "PDC_V2_FROZEN_LKG_CUTOVER" &&
       transfer.importerCodeSha === expectedImport.importerCodeSha;
     const hasBootstrapImport = candidate?.bootstrapImport != null;
-    const expectedDisposition = latestReaderReceipt === null
+    const expectedDisposition = effectiveReaderReceipt === null
       ? null
-      : expectedImport.dispositionSet.find(({ contractId, versionId }) =>
-          contractId === latestReaderReceipt.contractId &&
-          versionId === candidateRow.current_version_id
-        ) ?? null;
+      : expectedImport.expectedPointerSha256 !== null
+        ? expectedImport.dispositionSet.find(({ contractId, versionId }) =>
+            contractId === effectiveReaderReceipt.contractId &&
+            versionId === candidateRow.current_version_id
+          ) ?? null
+        : expectedImport.dispositionSet.find(({ contractId }) =>
+            contractId === effectiveReaderReceipt.contractId
+          ) ?? null;
     const disposition = expectedDisposition?.disposition ?? null;
     // Other standing pointers are legitimate permanent runtime authorities but
     // are outside the bounded frozen-LKG transfer denominator.
@@ -1141,26 +1163,28 @@ async function readAuthorityDatabase(
     const importIssue = importedHere && candidate
       ? trustedLkgImportEvidenceIssue(candidate as unknown as RoutineCandidate, predecessor)
       : null;
-    const dispositionIssue = disposition === "PROMOTED_ABSENT_POINTER"
-      ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT"
-        ? "an absent-pointer disposition lacks its exact durable import bootstrap"
-        : null
-      : disposition === "PROMOTED_FROZEN_LKG_UNION"
-        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT" || !row(transfer.pimaOutcomeUnion)
-          ? "a frozen-LKG union disposition lacks its exact durable predecessor-bound import bootstrap"
+    const dispositionIssue = expectedImport.expectedPointerSha256 === null && !importedHere && !hasBootstrapImport
+      ? null
+      : disposition === "PROMOTED_ABSENT_POINTER"
+        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT"
+          ? "an absent-pointer disposition lacks its exact durable import bootstrap"
           : null
-      : disposition === "REATTESTED_EXISTING_AUTHORITY"
-        ? !importedHere || transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
-          ? "a re-attestation disposition lacks its exact durable re-attestation bootstrap"
-          : null
-        : disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY"
-          ? hasBootstrapImport && (
-              !importedHere ||
-              !["TRUSTED_LKG_IMPORT", "TRUSTED_LKG_REATTESTATION"].includes(String(transfer?.kind))
-            )
-            ? "a skipped imported authority is not bound to the exact durable bootstrap"
+        : disposition === "PROMOTED_FROZEN_LKG_UNION"
+          ? !importedHere || transfer?.kind !== "TRUSTED_LKG_IMPORT" || !row(transfer.pimaOutcomeUnion)
+            ? "a frozen-LKG union disposition lacks its exact durable predecessor-bound import bootstrap"
             : null
-          : "the live authority is absent from the controller disposition membership";
+        : disposition === "REATTESTED_EXISTING_AUTHORITY"
+          ? !importedHere || transfer?.kind !== "TRUSTED_LKG_REATTESTATION"
+            ? "a re-attestation disposition lacks its exact durable re-attestation bootstrap"
+            : null
+          : disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY"
+            ? hasBootstrapImport && (
+                !importedHere ||
+                !["TRUSTED_LKG_IMPORT", "TRUSTED_LKG_REATTESTATION"].includes(String(transfer?.kind))
+              )
+              ? "a skipped imported authority is not bound to the exact durable bootstrap"
+              : null
+            : "the live authority is absent from the controller disposition membership";
     const linkageIssue = !candidate || !currentRecord
       ? "the durable current candidate is missing"
       : candidateRow.pointer_key !== `${String(candidateRow.record_class)}:${String(candidateRow.scope)}`
@@ -1193,19 +1217,19 @@ async function readAuthorityDatabase(
                           ? "the current candidate event history is empty or non-contiguous"
                           : history.at(-1)?.state !== "PROMOTED"
                             ? "the current candidate event history is not terminally promoted"
-                            : latestReaderReceipt?.status !== "PASS"
+                            : effectiveReaderReceipt?.status !== "PASS"
                               ? "the current candidate lacks a passing Reader readback event"
-                              : latestReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
+                              : expectedImport.expectedPointerSha256 !== null && effectiveReaderReceipt.verifierCodeSha !== expectedImport.importerCodeSha
                                 ? "the Reader readback verifier differs from the importer code"
-                                : latestReaderReceipt.versionId !== candidateRow.candidate_id ||
-                                    latestReaderReceipt.pointerKey !== candidateRow.pointer_key ||
-                                    latestReaderReceipt.sourceId !== candidateRow.source_id ||
-                                    latestReaderReceipt.recordClass !== candidateRow.record_class ||
-                                    latestReaderReceipt.scope !== candidateRow.scope ||
-                                    !latestReaderReceipt.contractId
+                                : (latestReaderReceipt !== null && effectiveReaderReceipt.versionId !== candidateRow.candidate_id) ||
+                                    effectiveReaderReceipt.pointerKey !== candidateRow.pointer_key ||
+                                    effectiveReaderReceipt.sourceId !== candidateRow.source_id ||
+                                    effectiveReaderReceipt.recordClass !== candidateRow.record_class ||
+                                    effectiveReaderReceipt.scope !== candidateRow.scope ||
+                                    !effectiveReaderReceipt.contractId
                                   ? "the Reader readback identity differs from the durable pointer"
                                   : importedHere && (
-                                      transfer?.contractId !== latestReaderReceipt.contractId ||
+                                      transfer?.contractId !== effectiveReaderReceipt.contractId ||
                                       transfer.sourceId !== candidateRow.source_id ||
                                       transfer.recordClass !== candidateRow.record_class ||
                                       transfer.scope !== candidateRow.scope
@@ -1231,7 +1255,7 @@ async function readAuthorityDatabase(
                 ? "the predecessor promotion time has no matching durable event"
                 : null;
     if (
-      !candidate || latestReaderReceipt === null || dispositionIssue !== null ||
+      !candidate || effectiveReaderReceipt === null || dispositionIssue !== null ||
       !currentRecord || promotionIssue !== null ||
       importIssue !== null ||
       linkageIssue !== null || predecessorIssue !== null
@@ -1254,7 +1278,7 @@ async function readAuthorityDatabase(
       transferKind: importedHere ? String(transfer?.kind) : null,
       authorization: importedHere ? "PDC_V2_FROZEN_LKG_CUTOVER" as const : null,
       importerCodeSha: importedHere ? String(transfer?.importerCodeSha) : null,
-      readerVerifierCodeSha: latestReaderReceipt.verifierCodeSha,
+      readerVerifierCodeSha: effectiveReaderReceipt.verifierCodeSha,
       readerReadback: "PASS" as const,
       predecessorEventCount: predecessorHistory.length,
       predecessorEventSetSha256: predecessorHistory.length > 0
@@ -1301,8 +1325,16 @@ async function readAuthorityDatabase(
     versionId,
     readerReadback,
   }));
-  if (canonicalReaderAuthorityJson(observedServingDispositions) !== canonicalReaderAuthorityJson(expectedServingDispositions)) {
-    throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
+  if (expectedImport.expectedPointerSha256 !== null) {
+    if (canonicalReaderAuthorityJson(observedServingDispositions) !== canonicalReaderAuthorityJson(expectedServingDispositions)) {
+      throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
+    }
+  } else {
+    const observedMembership = observedServingDispositions.map(({ contractId, disposition, readerReadback }) => ({ contractId, disposition, readerReadback }));
+    const expectedMembership = expectedServingDispositions.map(({ contractId, disposition, readerReadback }) => ({ contractId, disposition, readerReadback }));
+    if (canonicalReaderAuthorityJson(observedMembership) !== canonicalReaderAuthorityJson(expectedMembership)) {
+      throw new Error("Reader authority live durable membership differs from the exact controller disposition set");
+    }
   }
   return {
     relations: relations.map(([relation]) => ({ relation, select: true as const, insert: false as const, update: false as const, delete: false as const, truncate: false as const, references: false as const, trigger: false as const })),
@@ -1359,8 +1391,9 @@ export async function buildReaderExecutionAuthorityEvidence(
   );
   const live = await readAuthorityDatabase(options.sql, connection, imported);
   if (
-    imported.expectedPointerCount !== live.pointerCount ||
-    (imported.expectedPointerSha256 !== null && imported.expectedPointerSha256 !== live.pointerSha256)
+    imported.expectedPointerSha256 !== null
+      ? (imported.expectedPointerCount !== live.pointerCount || imported.expectedPointerSha256 !== live.pointerSha256)
+      : live.pointerCount < imported.expectedPointerCount
   ) throw new Error("Reader authority live pointer set differs from the durable import receipt");
 
   const endpoint = canonicalNeonEndpointHost(connection);

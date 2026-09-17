@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 647,
-    "named": 6633,
+    "files": 652,
+    "named": 6661,
     "dynamic": 27
   },
   "files": {
@@ -2247,6 +2247,16 @@
       ],
       "dynamic": 0
     },
+    "tests/civic-data-read-model-memo.test.ts": {
+      "names": [
+        "a bypassCache read never uses the memo — it re-proves the version every time",
+        "a pointer move to a new version is fetched and re-proved, never masked by the memo",
+        "the batch read fetches candidate envelopes only for versions not yet proven",
+        "the batch read hauls only the moved partition's envelope when one pointer advances",
+        "the single read proves a version once, then attests without re-reading the candidate"
+      ],
+      "dynamic": 0
+    },
     "tests/civic-data-read-model.test.ts": {
       "names": [
         "FEC, ACS, and NH adapters expose outage instead of silently retaining tracked data",
@@ -3796,8 +3806,9 @@
       "names": [
         "a real GPU classifies as hardware and is therefore left alone",
         "an unreadable renderer is unknown, and unknown is NOT software",
-        "every renderer holds overlays at motion start and reveals only on post-motion idle",
         "holding keeps sources cached, hides application layers, and removes the DOM state art from the map",
+        "the data layer never waits for the camera: the meetings fetch is not gated on map readiness",
+        "the motion hold is scoped to a software rasteriser, not every renderer",
         "the renderer strings this was measured through classify as software",
         "the software floor and the jank ceiling are the stated numbers",
         "the software verdict refuses an arm that measured nothing",
@@ -6545,6 +6556,25 @@
       ],
       "dynamic": 0
     },
+    "tests/prepared-meeting-snapshot.test.ts": {
+      "names": [
+        "preparing over an unchanged promoted set is idempotent and never recomposes",
+        "the prepared projection publishes monotonically — an older composition can never overwrite a newer one",
+        "the reader fast-path falls back to the composing reader only when no prepared row exists",
+        "the reader fast-path serves the one prepared row and reconstructs the exact partitions shape"
+      ],
+      "dynamic": 0
+    },
+    "tests/prepared-snapshot-admin-lag.test.ts": {
+      "names": [
+        "admin lag: a partition absent from the serving copy is lag with a null served version",
+        "admin lag: a partition promoted past the serving copy is exact publication lag",
+        "admin lag: a serving copy composed from the current promotions reports zero lag",
+        "admin lag: an unread serving copy is not-recorded, distinct from a rollout absence",
+        "admin lag: no serving copy at all is an explicit first-seed condition, not a zero"
+      ],
+      "dynamic": 0
+    },
     "tests/prl.test.ts": {
       "names": [
         "D62: PRL's race-competitiveness rating is not in this build",
@@ -6853,6 +6883,20 @@
       "names": [
         "a missing deployed directory fails instead of claiming empty committees and offices",
         "all normalized directory entries survive exact Bioguide projection"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-edge.test.ts": {
+      "names": [
+        "a stale publisher that read an older manifest cannot regress the pointer (monotonic CAS)",
+        "mergeScopeArtifacts dedupes by id and takes the national sources accounting from the manifest",
+        "partitionSnapshotByScope splits meetings by state with a national bucket, deterministic order",
+        "publish → read round-trips through the file store and merges only the requested scopes",
+        "republishing an unchanged composition is idempotent (CURRENT), a changed one advances the sequence monotonically",
+        "scopesForStates dedupes, lowercases, validates, and always includes the national bucket",
+        "stateOfOcdId / scopeOfMeeting derive the geographic partition key",
+        "the reader caches each scope artifact in-process per version and refreshes on a new one",
+        "the reader defers to the injected fallback when no manifest exists"
       ],
       "dynamic": 0
     },
@@ -7555,6 +7599,15 @@
         "one blocked registry publisher holds only its dependent members while an unrelated roster update promotes",
         "registry civic member ordering is independent of JSONB object-key order",
         "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live"
+      ],
+      "dynamic": 0
+    },
+    "tests/registry-runtime-edge.test.ts": {
+      "names": [
+        "primeRegistryRuntimeFromValue serves the value synchronously with its version, no DB",
+        "republishing the same authority version is idempotent; a new version advances the pointer",
+        "the registry-runtime edge value is request-scoped: absent by default (runner/workers keep the DB path)",
+        "the runner publishes registry-runtime as a compressed artifact the reader reads back losslessly"
       ],
       "dynamic": 0
     },
@@ -8456,7 +8509,7 @@
         "an unknown id gets null, never a plausible phrase",
         "every wired adapter has a human calendar name",
         "no label is an internal id wearing a label's clothes",
-        "no reader-facing component interpolates an internal source id"
+        "no reader-facing surface interpolates an internal source id"
       ],
       "dynamic": 0
     },

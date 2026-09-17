@@ -135,6 +135,42 @@ export async function refreshRegistryRuntimeFromPromoted(options: PromotedCivicD
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
+/**
+ * Prime the registry-runtime cache from a validated EDGE serving artifact,
+ * with NO database read. This is the reader's normal path: the runner has
+ * already published the promoted registry-runtime as a compressed edge artifact,
+ * and `settleRegistryAuthorityReads` calls this (request-scoped, see
+ * `lib/registry/runtime-edge.ts`) instead of `refreshRegistryRuntimeFromPromoted`
+ * for ordinary visitors. It deliberately does NOT alter that DB reader, which
+ * the standing runner and workers still use for the authoritative path.
+ */
+export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, versionId: string): void {
+  validate(value, versionId);
+  cache = value;
+  // BOOTSTRAP, not PROMOTED: the serving copy carries the validated value and its
+  // version, but not the full promotion receipt (that stays on the authoritative
+  // DB path the runner/workers use). This is the honest kind — no fabricated
+  // receipt. The version drives the registry authority cache key.
+  readState = {
+    kind: "BOOTSTRAP",
+    value,
+    metadata: {
+      recordClass: "REGISTRY_RUNTIME_BINDING",
+      scope: REGISTRY_RUNTIME_SCOPE,
+      sourceId: REGISTRY_RUNTIME_SOURCE_ID,
+      version: null,
+      versionId,
+      lastKnownGoodVersionId: versionId,
+      sourceThrough: null,
+      retrievedAt: null,
+      promotedAt: null,
+      stale: "CURRENT",
+      staleAt: null,
+    },
+    detail: `Served from the registry-runtime edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
+  };
+}
+
 export function registryRuntimeReadState(): CivicDataReadResult<RegistryRuntimeReadModel> {
   return readState;
 }

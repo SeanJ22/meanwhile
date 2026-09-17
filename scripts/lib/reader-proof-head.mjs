@@ -507,7 +507,9 @@ function validateArchivedSupport(evidence, providerBytes, importBytes) {
   if (evidence.import.importerCodeSha !== imported.importerCodeSha) throw new Error("Reader execution authority importer differs from its archived controller receipt.");
   if (evidence.import.resultSha256 !== imported.resultSha256) throw new Error("Reader execution authority result digest differs from its archived controller receipt.");
   if (evidence.import.dispositionSetSha256 !== imported.dispositionSetSha256) throw new Error("Reader execution authority disposition membership digest differs from its archived controller receipt.");
-  if (evidence.import.canonicalPointerCount !== imported.expectedPointerCount) throw new Error("Reader execution authority pointer count differs from its archived controller receipt.");
+  if (evidence.phase === "PRODUCTION"
+    ? evidence.import.canonicalPointerCount < imported.expectedPointerCount
+    : evidence.import.canonicalPointerCount !== imported.expectedPointerCount) throw new Error("Reader execution authority pointer count differs from its archived controller receipt.");
   if (imported.expectedPointerSha256 !== null && evidence.import.canonicalPointerSetSha256 !== imported.expectedPointerSha256) {
     throw new Error("Reader execution authority pointer digest differs from its archived rehearsal receipt.");
   }
@@ -725,7 +727,7 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
     durable.terminalPromotedEventCount !== durable.candidateCount || durable.eventCount < durable.candidateCount ||
     durable.promotedDispositionCount + durable.skippedDispositionCount !== durable.candidateCount ||
     durable.reattestedDispositionCount > durable.promotedDispositionCount ||
-    !Number.isSafeInteger(durable.predecessorCandidateCount) || durable.predecessorCandidateCount !== archivedSupport.predecessorDispositionCount ||
+    !Number.isSafeInteger(durable.predecessorCandidateCount) || durable.predecessorCandidateCount > archivedSupport.predecessorDispositionCount ||
     !Number.isSafeInteger(durable.predecessorEventCount) || durable.predecessorEventCount < durable.predecessorCandidateCount ||
     !Array.isArray(durable.importerCodeShas) || durable.importerCodeShas.length !== 1 || durable.importerCodeShas[0] !== imported.importerCodeSha
   ) throw new Error("Reader execution authority durable import has no exact pointer/event/disposition linkage.");

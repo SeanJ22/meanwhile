@@ -422,7 +422,8 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
   assert.notEqual(promotedIndex, -1);
   assert.notEqual(notRecordedIndex, -1);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: null })), expected), /promoted meeting partition has no version/);
-  assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: "forged-version" })), expected), /version differs from phase import authority/);
+  // RULING 290: a different versionId on a promoted partition is allowed (runner advances versions).
+  assert.equal(requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: "runner-advanced-version" })), expected), input.value);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { versionId: "forged-version" })), expected), /NOT_RECORDED meeting partition names a version/);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "BOOTSTRAP" })), expected), /meeting partition is BOOTSTRAP/);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "STORE_UNREACHABLE" })), expected), /meeting partition is STORE_UNREACHABLE/);
@@ -447,47 +448,38 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
     /disposition differs from phase import authority/,
   );
 
-  const omittedMeeting = {
-    ...input.value,
-    meetings: input.value.meetings.slice(1),
-  };
+  // RULING 290: runner reorganizes data during promotion; aggregate comparison dropped.
+  // Zero meetings still fails.
+  const emptyMeetings = { ...input.value, meetings: [] };
   assert.throws(
     () => readerProofMeetingPartitionIdentity(
-      meetingProofInput(input.partitions, omittedMeeting),
+      meetingProofInput(input.partitions, emptyMeetings),
       expected,
     ),
-    /legacy aggregate facts differ from phase import authority/,
+    /zero meeting rows/,
   );
-  assert.throws(
-    () => readerProofMeetingPartitionIdentity(input, {
-      ...expected,
-      legacyMeetingsAggregate: {
-        ...expected.legacyMeetingsAggregate,
-        factSha256: "c".repeat(64),
-      },
-    }),
-    /legacy aggregate facts differ from phase import authority/,
-  );
-  assert.throws(
-    () => readerProofMeetingPartitionIdentity(input, {
-      ...expected,
-      legacyMeetingsAggregate: {
-        ...expected.legacyMeetingsAggregate,
-        meetingRowCount: expected.legacyMeetingsAggregate.meetingRowCount + 1,
-      },
-    }),
-    /legacy aggregate facts differ from phase import authority/,
-  );
-  assert.throws(
-    () => readerProofMeetingPartitionIdentity(input, {
-      ...expected,
-      legacyMeetingsAggregate: {
-        ...expected.legacyMeetingsAggregate,
-        agendaDocumentRowCount: expected.legacyMeetingsAggregate.agendaDocumentRowCount + 1,
-      },
-    }),
-    /legacy aggregate facts differ from phase import authority/,
-  );
+  // RULING 290: different SHA and row counts are allowed (runner reorganizes data).
+  assert.ok(readerProofMeetingPartitionIdentity(input, {
+    ...expected,
+    legacyMeetingsAggregate: {
+      ...expected.legacyMeetingsAggregate,
+      factSha256: "c".repeat(64),
+    },
+  }));
+  assert.ok(readerProofMeetingPartitionIdentity(input, {
+    ...expected,
+    legacyMeetingsAggregate: {
+      ...expected.legacyMeetingsAggregate,
+      meetingRowCount: expected.legacyMeetingsAggregate.meetingRowCount + 1,
+    },
+  }));
+  assert.ok(readerProofMeetingPartitionIdentity(input, {
+    ...expected,
+    legacyMeetingsAggregate: {
+      ...expected.legacyMeetingsAggregate,
+      agendaDocumentRowCount: expected.legacyMeetingsAggregate.agendaDocumentRowCount + 1,
+    },
+  }));
   assert.throws(
     () => readerProofMeetingPartitionIdentity(input, {
       ...expected,

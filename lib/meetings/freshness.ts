@@ -34,8 +34,19 @@ export interface SnapshotCarriedNote {
 }
 
 export interface SnapshotStatus {
+  /**
+   * Wire-format version (D.4, 2026-09-14). Absent on payloads cached before the
+   * trim; a later shape change bumps it rather than being guessed from shape.
+   */
+  version?: number;
   generatedAt: string;
-  sources: Array<{ source: string; ok: boolean; error: string | null }>;
+  /**
+   * The per-(adapter × body) source rows. No reader surface reads these, so as
+   * of 2026-09-14 the API no longer ships them — the 124-row block was ~40-50 KB
+   * of every meetings response. Kept optional for payloads cached before the
+   * trim and for the proof fixtures that still construct a full status.
+   */
+  sources?: Array<{ source: string; ok: boolean; error: string | null }>;
   failed: SnapshotFailureNote[];
   /** Present only when the snapshot holds rows this run did not retrieve. */
   carried?: SnapshotCarriedNote;
@@ -106,19 +117,23 @@ export function carriedListingsDisclosure(carried: SnapshotCarriedNote): Carried
 }
 
 export interface FreshnessDisclosure {
-  /** "couldn't reach schedulepage, ical — some calendars may be missing"; null when every source was reached. */
-  unreachable: string | null;
   /** The carried-rows sentence; null when the snapshot carries no rows. */
   carried: CarriedListingsDisclosure | null;
 }
 
-/** Everything the footer must say beyond the snapshot's own age, given what the route served. */
-export function freshnessDisclosure(status: Pick<SnapshotStatus, "failed" | "carried">): FreshnessDisclosure {
+/*
+ * Everything the footer must say beyond the snapshot's own age (RLC-1). As of
+ * 2026-09-14 the footer NO LONGER lists which sources were unreachable. That
+ * line joined raw partition/adapter ids — "couldn't reach clerksboards,
+ * clerksboards, … ical, ical … schedulepage" — unscoped to the reader's area:
+ * an internal id on a reader surface (RULING 258) and a verdict on ourselves
+ * (RULING 254), for a board that in most cases simply lists nothing. Per-body
+ * attribution now lives on each body's own row in the who-governs card, in
+ * plain language and scoped to the reader. The footer keeps only its age and
+ * the carried-rows sentence.
+ */
+export function freshnessDisclosure(status: Pick<SnapshotStatus, "carried">): FreshnessDisclosure {
   return {
-    unreachable:
-      status.failed.length > 0
-        ? `couldn't reach ${status.failed.map((f) => f.source).join(", ")} — some calendars may be missing`
-        : null,
     carried: status.carried && status.carried.count > 0 ? carriedListingsDisclosure(status.carried) : null,
   };
 }

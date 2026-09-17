@@ -148,6 +148,16 @@ let nhState: CivicDataReadResult<NhBallotProjection> = civicDataReadNotInitializ
 let profilesState: CivicDataReadResult<CandidateProfilesProjection> = civicDataReadNotInitialized("CANDIDATE_PROFILE", PROFILES.scope, "The candidate profile pointer has not been read for this process.");
 let corpusState: CivicDataReadResult<CandidateCorpus> = civicDataReadNotInitialized("CANDIDATE_PUBLICATION", CORPUS.scope, "The candidate publication pointer has not been read for this process.");
 
+/**
+ * Which (class:scope:versionId) triples have already passed `validate` in this
+ * process. A promoted version is immutable, so validating it once is sufficient
+ * — the ballot page reads the AZ projection several times per request and
+ * re-scanned the whole ballot each time. Skipped for an injected store (tests),
+ * which re-validate every time so a planted malformed fixture is never waved
+ * through by a version another test already cleared.
+ */
+const validatedVersions = new Set<string>();
+
 async function readManual<T>(
   contract: typeof AZ | typeof NH | typeof PROFILES | typeof CORPUS,
   bootstrap: () => CivicDataBootstrap<T>,
@@ -161,7 +171,15 @@ async function readManual<T>(
     bootstrap,
     allowUnconfiguredBootstrap: process.env.NODE_ENV === "development" || mayUseTestFixture(),
   });
-  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") validate(result.value, result.metadata.versionId ?? result.kind);
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
+    const injected = options.store !== undefined;
+    const version = result.metadata.versionId ?? result.kind;
+    const key = `${contract.recordClass}:${contract.scope}:${version}`;
+    if (injected || !validatedVersions.has(key)) {
+      validate(result.value, version);
+      if (!injected) validatedVersions.add(key);
+    }
+  }
   return result;
 }
 

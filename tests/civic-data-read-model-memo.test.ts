@@ -1,0 +1,257 @@
+/**
+ * **The promotion proof is memoised per immutable versionId (RULING 288, made
+ * in-process) — 2026-09-14.**
+ *
+ * A dense reader read (meetings: 83 promoted partitions) re-proved every
+ * partition and re-hauled every candidate envelope on each cache-miss — the
+ * 5.7 s / 13.4 s cold `/api/meetings` the owner saw. Because a promoted version
+ * is immutable, a version proven GOOD once is GOOD for the instance's life, so
+ * the read model now attests rather than re-runs: the pointer is still read
+ * fresh every time (freshness is preserved), but a version already proven is
+ * served without re-fetching its candidate or re-running the ~10 canonical
+ * passes + two sha256 of the proof.
+ *
+ * These guards hold that it (a) proves once then attests, (b) NEVER masks a
+ * pointer that has moved to a new version, and (c) fetches no candidate envelope
+ * at all on the steady-state read. The store is a spy so the reads are counted;
+ * each test clears the instance memo so a proven version does not leak between
+ * scenarios (that leak, deliberately, is exactly what the memo does in life).
+ */
+import assert from "node:assert/strict";
+import { beforeEach, test } from "node:test";
+
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import {
+  clearPromotedReadModelCache,
+  readPromotedCivicData,
+  readPromotedCivicDataBatch,
+  type CivicDataReadStore,
+} from "../lib/civic-data/read-model.ts";
+import type { CandidateVersionReadback } from "../lib/civic-data/store.ts";
+import type {
+  CandidateVersionRecord,
+  PromotedProjection,
+  RoutineRecordClass,
+} from "../lib/civic-data/types.ts";
+import { VALIDATION_CHECKS, sourceProjectionEvidence, type ValidationReceipt } from "../lib/civic-data/types.ts";
+
+const CLASS: RoutineRecordClass = "FEC_FUNDING";
+
+interface Version {
+  projection: PromotedProjection;
+  candidate: CandidateVersionRecord;
+}
+
+/** A fully proof-valid (pointer, candidate) pair for one version. */
+function version(scope: string, versionId: string, payload: unknown): Version {
+  const payloadHash = normalizedHash(payload);
+  const receipt: ValidationReceipt = {
+    contractVersion: 2,
+    decision: "GOOD",
+    candidateId: versionId,
+    sourceId: "fec-open-api",
+    recordClass: CLASS,
+    scope,
+    validatedAt: "2026-09-01T00:01:00.000Z",
+    checks: VALIDATION_CHECKS.map((check) => ({
+      check,
+      verdict: "PASS",
+      code: `${check}_PASS`,
+      detail: `${check} was proven for ${versionId}.`,
+    })),
+    excludedFacts: [],
+  };
+  const projection = {
+    key: `${CLASS}:${scope}`,
+    sourceId: "fec-open-api",
+    recordClass: CLASS,
+    scope,
+    versionId,
+    lastKnownGoodVersionId: versionId,
+    promotedAt: "2026-09-02T00:00:00.000Z",
+    payload,
+    receipt,
+  } satisfies PromotedProjection;
+  const candidate = {
+    candidate: {
+      id: versionId,
+      sourceId: "fec-open-api",
+      recordClass: CLASS,
+      scope,
+      sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", CLASS, scope),
+      retrieval: {
+        succeeded: true,
+        requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
+        finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
+        httpStatus: 200,
+        retrievedAt: "2026-09-01T00:00:00.000Z",
+        rawHash: "a".repeat(64),
+      },
+      normalization: {
+        succeeded: true,
+        parserVersion: "fec-funding/2",
+        schemaVersion: "2",
+        normalizedHash: payloadHash,
+        normalizedPayloadHash: payloadHash,
+        inputRecords: 1,
+        outputRecords: 1,
+        droppedRecords: 0,
+        missingRequiredFields: [],
+      },
+      identities: [],
+      temporal: { version: "2026", expectedVersion: "2026", sourceThrough: "2026-08-31", staleAtRetrieval: false },
+      semantics: { factKind: "test", violations: [] },
+      horizon: { kind: "OPEN_FACT_SET", query: "test", returnedRecords: 1, declaredTotal: null, paginationComplete: true, claimsComplete: false },
+      absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+      dependentChecks: [{ consumer: "test", passed: true, detail: "accepted" }],
+      normalizedPayload: payload,
+      readModel: payload,
+    },
+    state: "PROMOTED",
+    acquisitionSucceeded: true,
+    receipt,
+    promotedVersion: versionId,
+    lastKnownGoodVersion: versionId,
+    failureCode: null,
+    failureDetail: null,
+  } satisfies CandidateVersionRecord;
+  return { projection, candidate };
+}
+
+interface SpyCounts {
+  readPromotion: number;
+  readCandidate: number;
+  readPromotions: number;
+  /** One entry per `readCandidates` call, each the versionIds it was asked for. */
+  readCandidates: string[][];
+}
+
+/**
+ * A spy store over a MUTABLE pointer map (so a test can advance a pointer) and a
+ * cumulative version→candidate map (old versions remain fetchable). Counts every
+ * read so a test can prove which the memo skipped.
+ */
+function spyStore(pointers: Map<string, Version>) {
+  const counts: SpyCounts = { readPromotion: 0, readCandidate: 0, readPromotions: 0, readCandidates: [] };
+  const byVersion = new Map<string, CandidateVersionRecord>();
+  const record = (v: Version) => byVersion.set(v.projection.versionId, v.candidate);
+  for (const v of pointers.values()) record(v);
+  const store = {
+    readPromotion: async <R>(_recordClass: RoutineRecordClass, scope: string) => {
+      counts.readPromotion += 1;
+      return (pointers.get(scope)?.projection ?? null) as PromotedProjection<R> | null;
+    },
+    readCandidate: async (candidateId: string) => {
+      counts.readCandidate += 1;
+      return byVersion.get(candidateId) ?? null;
+    },
+    readPromotions: async <R>(_recordClass: RoutineRecordClass, scopes: readonly string[]) => {
+      counts.readPromotions += 1;
+      return scopes.flatMap((scope) => {
+        const projection = pointers.get(scope)?.projection;
+        return projection ? [projection as PromotedProjection<R>] : [];
+      });
+    },
+    readCandidates: async (candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> => {
+      counts.readCandidates.push([...candidateIds]);
+      return candidateIds.flatMap((id) => {
+        const rec = byVersion.get(id);
+        return rec ? [{ candidateId: id, record: rec }] : [];
+      });
+    },
+  };
+  /** Advance a scope's pointer to a new version, keeping the old fetchable. */
+  const advance = (scope: string, next: Version) => {
+    record(next);
+    pointers.set(scope, next);
+  };
+  return { store: store as unknown as CivicDataReadStore, counts, advance };
+}
+
+beforeEach(() => clearPromotedReadModelCache());
+
+test("the single read proves a version once, then attests without re-reading the candidate", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts } = spyStore(pointers);
+
+  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+
+  assert.equal(first.kind, "PROMOTED");
+  assert.equal(second.kind, "PROMOTED");
+  if (first.kind === "PROMOTED" && second.kind === "PROMOTED") {
+    assert.equal(first.value.answer, 1);
+    assert.deepEqual(second.value, first.value);
+  }
+  // The pointer is re-read every time (freshness); the candidate is fetched ONCE.
+  assert.equal(counts.readPromotion, 2, "the pointer is always read fresh");
+  assert.equal(counts.readCandidate, 1, "the candidate envelope is hauled once, then attested");
+});
+
+test("a pointer move to a new version is fetched and re-proved, never masked by the memo", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts, advance } = spyStore(pointers);
+
+  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  assert.equal(first.kind, "PROMOTED");
+  if (first.kind === "PROMOTED") assert.equal(first.value.answer, 1);
+
+  // A new promotion advances the pointer to v-b. The instance still holds v-a as
+  // proven — the memo must NOT serve it. The freshly read pointer names v-b.
+  advance("federal-supported", version("federal-supported", "v-b", { answer: 2 }));
+
+  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  assert.equal(second.kind, "PROMOTED");
+  if (second.kind === "PROMOTED") {
+    assert.equal(second.value.answer, 2, "the new version is served — a pointer move is honored");
+  }
+  assert.equal(counts.readCandidate, 2, "v-b's candidate is fetched and proved; the memo did not mask it");
+});
+
+test("a bypassCache read never uses the memo — it re-proves the version every time", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts } = spyStore(pointers);
+
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
+
+  assert.equal(counts.readCandidate, 2, "the verification path re-fetches and re-proves each time");
+});
+
+test("the batch read fetches candidate envelopes only for versions not yet proven", async () => {
+  const pointers = new Map([
+    ["scope-a", version("scope-a", "v-a", { answer: 1 })],
+    ["scope-b", version("scope-b", "v-b", { answer: 2 })],
+  ]);
+  const { store, counts } = spyStore(pointers);
+
+  const first = await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
+  assert.deepEqual(first.map((r) => r.kind), ["PROMOTED", "PROMOTED"]);
+  assert.equal(counts.readCandidates.length, 1, "the first batch read hauls candidates once");
+  assert.deepEqual(new Set(counts.readCandidates[0]), new Set(["v-a", "v-b"]), "both versions' envelopes are hauled");
+
+  const second = await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
+  assert.deepEqual(second.map((r) => r.kind), ["PROMOTED", "PROMOTED"]);
+  // The pointers are re-read (freshness) but NO candidate envelope is hauled:
+  // both versions are attested. This is the steady-state meetings read.
+  assert.equal(counts.readPromotions, 2, "each batch read re-reads the pointers");
+  assert.equal(counts.readCandidates.length, 1, "no envelope is hauled on the steady-state read");
+});
+
+test("the batch read hauls only the moved partition's envelope when one pointer advances", async () => {
+  const pointers = new Map([
+    ["scope-a", version("scope-a", "v-a", { answer: 1 })],
+    ["scope-b", version("scope-b", "v-b", { answer: 2 })],
+  ]);
+  const { store, counts, advance } = spyStore(pointers);
+
+  await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
+  advance("scope-b", version("scope-b", "v-b2", { answer: 3 }));
+  const second = await readPromotedCivicDataBatch<{ answer: number }>(CLASS, ["scope-a", "scope-b"], { store });
+
+  assert.equal(counts.readCandidates.length, 2, "the second read hauls candidates again");
+  assert.deepEqual(counts.readCandidates[1], ["v-b2"], "only the moved partition's envelope is hauled; scope-a is attested");
+  const b = second[1];
+  assert.equal(b.kind, "PROMOTED");
+  if (b.kind === "PROMOTED") assert.equal(b.value.answer, 3);
+});

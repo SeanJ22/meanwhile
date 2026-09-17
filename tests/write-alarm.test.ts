@@ -46,9 +46,11 @@ function soldStoreWriteRoutes(): string[] {
 test("6.4: every sold-store write path raises on the alarm path", () => {
   const routes = soldStoreWriteRoutes();
   assert.ok(
-    routes.length >= 3,
+    routes.length >= 2,
     `only ${routes.length} sold-store write route(s) found — the sweep shrank, ` +
-      "and a sweep that stopped looking reports the same thing as a clean tree",
+      "and a sweep that stopped looking reports the same thing as a clean tree. " +
+      "(PDC-9: the SEARCH write moved off /api/meetings to the /api/log beacon, so " +
+      "the sold-store writers are /api/log and /api/reactions.)",
   );
 
   const silent: string[] = [];
@@ -148,13 +150,12 @@ test("6.4 / RULING 25: the reader-facing answers on the write paths are unchange
    * pinned so a later edit to the alarm cannot quietly change what a visitor
    * gets.
    */
-  const meetings = readFileSync(join(ROOT, "app", "api", "meetings", "route.ts"), "utf8");
-  assert.match(
-    meetings,
-    /console\.error\("search log write failed", error\)/,
-    "the search-log failure is still swallowed for the reader — the search answers anyway",
-  );
-
+  // PDC-9: the SEARCH write is no longer on /api/meetings — it moved to the
+  // /api/log beacon (fire-and-forget in lib/log/client.ts, which swallows every
+  // failure so a lost log row never costs the reader). The former assertion that
+  // the meetings route swallows a search-log failure is therefore retired; the
+  // reader-facing swallow now lives in the beacon client and /api/log's answer
+  // is pinned below.
   const reactions = readFileSync(join(ROOT, "app", "api", "reactions", "route.ts"), "utf8");
   assert.match(
     reactions,
@@ -350,7 +351,7 @@ test("PD04: no sold-store WRITE is left as a floating promise either", () => {
    * nothing about this write.
    */
   const routes = soldStoreWriteRoutes();
-  assert.ok(routes.length >= 3, `only ${routes.length} sold-store write route(s) found`);
+  assert.ok(routes.length >= 2, `only ${routes.length} sold-store write route(s) found (PDC-9: SEARCH moved to the /api/log beacon)`);
 
   const floating: string[] = [];
   for (const f of routes) {

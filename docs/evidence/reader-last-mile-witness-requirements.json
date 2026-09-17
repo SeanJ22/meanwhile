@@ -175,7 +175,6 @@
       ],
       "recordObligations": 3002,
       "selectorClasses": [
-        "canonical registry body and exact division join → EntityModal",
         "exact map-entry bodySubject AST → actual EntityModal header and private DefinitionBlock/Representation leaves (collapsed children rendered independently)",
         "canonical definitionsForBody selected on exact current body → actual DefinitionBlock"
       ],
@@ -236,9 +235,9 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 543,
+      "recordObligations": 531,
       "selectorClasses": [
-        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
       ],
       "importReach": true
     },
@@ -249,9 +248,9 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 598,
+      "recordObligations": 571,
       "selectorClasses": [
-        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
       ],
       "importReach": false
     },
@@ -262,7 +261,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 111,
+      "recordObligations": 80,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -275,7 +274,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 146,
+      "recordObligations": 110,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -397,9 +396,9 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 541,
+      "recordObligations": 529,
       "selectorClasses": [
-        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
       ],
       "importReach": false
     },
@@ -409,7 +408,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 145,
+      "recordObligations": 138,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -495,7 +494,6 @@
       ],
       "recordObligations": 2267,
       "selectorClasses": [
-        "canonical registry division → DistrictPopup",
         "canonical registry division → seatHoldersForDivision → actual DistrictPopup"
       ],
       "importReach": true

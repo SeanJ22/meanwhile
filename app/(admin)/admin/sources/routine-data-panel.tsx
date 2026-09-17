@@ -10,11 +10,14 @@ import {
   type ExactOutcomeEvent,
   type ExactRefusedRecord,
   type Observation,
+  type PreparedSnapshotLagMember,
+  type PreparedSnapshotObservation,
   type RoutineContractMember,
   type RoutineContractObservation,
   type RoutineHistoryWindow,
   type RoutineObservabilityRead,
 } from "@/lib/civic-data/observability.ts";
+import type { ReaderEdgeObservation } from "@/lib/meetings/edge-observability.ts";
 import { Band, When } from "../../console-ui.tsx";
 import { Code, NeedsYouLine, StatusBlock } from "../../status-ui.tsx";
 
@@ -284,7 +287,128 @@ function Contract({ row }: { readonly row: RoutineContractObservation }) {
   );
 }
 
-export function RoutineDataPanel({ outcome }: { readonly outcome: RoutineObservabilityRead }) {
+function PreparedSnapshotLagLine({ item }: { readonly item: PreparedSnapshotLagMember }) {
+  return (
+    <>
+      <strong>{item.contractId}</strong> · <code>{item.scope}</code> — promoted <code>{item.promotedVersionId}</code>; serving{" "}
+      {item.servedVersionId ? <code>{item.servedVersionId}</code> : "not in the serving copy"}
+    </>
+  );
+}
+
+function PreparedSnapshot({ snapshot }: { readonly snapshot: PreparedSnapshotObservation }) {
+  const lagCount = snapshot.lag.kind === "MEASURED" ? snapshot.lag.value : null;
+  const level = !snapshot.present
+    ? "UNKNOWN"
+    : lagCount === 0
+      ? "GREEN"
+      : lagCount !== null && lagCount > 0
+        ? "AMBER"
+        : "UNKNOWN";
+  const state = !snapshot.present ? "FIRST SEED" : lagCount === 0 ? "CURRENT" : lagCount !== null && lagCount > 0 ? "BEHIND" : "PRESENT";
+  return (
+    <article className="status-block" id="routine-prepared-meeting-snapshot">
+      <h3>Prepared reader snapshot — meetings</h3>
+      <p className="plain">
+        The one composed serving copy the reader reads per request (<code>{snapshot.recordClass}</code> · <code>{snapshot.scope}</code>).
+        The promoted meeting partitions remain the authoritative civic truth; this is the runner-published projection of them, and its
+        lag below is promoted data that has not yet reached the reader.
+      </p>
+      <p>
+        <strong>State:</strong> <Band level={level}>{state}</Band>
+      </p>
+      <p className="note">{snapshot.detail}</p>
+      <dl>
+        <dt>Serving sequence</dt><dd><Evidence value={snapshot.sequence}>{(value) => <code>{value}</code>}</Evidence></dd>
+        <dt>Composed at</dt><dd><TimeEvidence value={snapshot.composedAt} /></dd>
+        <dt>Data generated at</dt><dd><TimeEvidence value={snapshot.generatedAt} /></dd>
+        <dt>Promoted through</dt><dd><TimeEvidence value={snapshot.promotedThrough} /></dd>
+        <dt>Composed from partitions</dt><dd><Evidence value={snapshot.composedPartitions}>{(value) => <>{value}</>}</Evidence></dd>
+        <dt>Currently promoted partitions</dt><dd><Evidence value={snapshot.promotedPartitions}>{(value) => <>{value}</>}</Evidence></dd>
+      </dl>
+      <CountDisclosure
+        label="promoted partitions not yet in the serving copy (publication lag)"
+        count={snapshot.lag}
+        member={(item) => <PreparedSnapshotLagLine item={item} />}
+      />
+    </article>
+  );
+}
+
+function EdgeServing({
+  edge,
+  preparedGeneratedAt,
+}: {
+  readonly edge: ReaderEdgeObservation;
+  readonly preparedGeneratedAt: string | null;
+}) {
+  const behind =
+    edge.kind === "PUBLISHED" && preparedGeneratedAt !== null &&
+    Number.isFinite(Date.parse(preparedGeneratedAt)) && Number.isFinite(Date.parse(edge.generatedAt)) &&
+    Date.parse(preparedGeneratedAt) > Date.parse(edge.generatedAt);
+  const level =
+    edge.kind === "PUBLISHED" ? (behind ? "AMBER" : "GREEN")
+    : edge.kind === "ABSENT" || edge.kind === "NOT_CONFIGURED" ? "UNKNOWN"
+    : "RED";
+  const state =
+    edge.kind === "PUBLISHED" ? (behind ? "BEHIND" : "CURRENT")
+    : edge.kind === "ABSENT" ? "NOT PUBLISHED"
+    : edge.kind === "NOT_CONFIGURED" ? "NOT CONFIGURED"
+    : "UNREACHABLE";
+  return (
+    <article className="status-block" id="routine-reader-edge">
+      <h3>Reader edge serving (CDN artifacts)</h3>
+      <p className="plain">
+        The geographic serving artifacts the reader reads from the CDN edge — no database wake, no per-visit composition.
+        The promoted partitions stay authoritative; this is their published serving copy, updated without a rebuild.
+      </p>
+      <p><strong>State:</strong> <Band level={level}>{state}</Band></p>
+      <p className="note">{edge.kind === "PUBLISHED"
+        ? behind
+          ? `The edge manifest (sequence ${edge.sequence}) is OLDER than the DB prepared snapshot — a publish is lagging; the last valid edge artifacts keep serving.`
+          : `The edge manifest (sequence ${edge.sequence}) is current with the prepared snapshot.`
+        : edge.detail}</p>
+      {edge.kind === "PUBLISHED" && (
+        <dl>
+          <dt>Store</dt><dd><Code raw={edge.storeKind} /></dd>
+          <dt>Manifest sequence</dt><dd><code>{edge.sequence}</code></dd>
+          <dt>Generated at</dt><dd><When iso={edge.generatedAt} year /> {edge.ageMinutes !== null ? `(${edge.ageMinutes} min old)` : ""}</dd>
+          <dt>Promoted through</dt><dd>{edge.promotedThrough ? <When iso={edge.promotedThrough} year /> : <span className="src-gap">not recorded</span>}</dd>
+          <dt>Scopes / total meetings</dt><dd>{edge.scopes.length} scope(s) · {edge.totalMeetings} meetings</dd>
+          <dt>Authority artifacts</dt><dd>{edge.authorityArtifacts.length > 0
+            ? <ul className="src-evidence">{edge.authorityArtifacts.map((a) => <li key={a.family}><code>{a.family}</code> — <code>{a.version}</code></li>)}</ul>
+            : <span className="src-gap">none published to the edge (reader uses the DB for them)</span>}</dd>
+        </dl>
+      )}
+      {edge.kind === "PUBLISHED" && (
+        <details className="status-detail">
+          <summary>{edge.scopes.length} geographic scope artifact{edge.scopes.length === 1 ? "" : "s"}</summary>
+          <ol className="src-evidence">
+            {edge.scopes.map((s) => (
+              <li key={s.scope}>
+                <code>{s.scope}</code> — {s.meetingCount} meeting{s.meetingCount === 1 ? "" : "s"} · <When iso={s.generatedAt} year />
+              </li>
+            ))}
+          </ol>
+        </details>
+      )}
+      <NeedsYouLine needs={{
+        needed: edge.kind === "STORE_UNREACHABLE" || behind,
+        action: edge.kind === "STORE_UNREACHABLE"
+          ? "restore the reader edge store connection"
+          : "inspect the standing runner's edge publish; the CDN is serving older data than the DB holds",
+      }} />
+    </article>
+  );
+}
+
+export function RoutineDataPanel({
+  outcome,
+  edge,
+}: {
+  readonly outcome: RoutineObservabilityRead;
+  readonly edge?: ReaderEdgeObservation;
+}) {
   if (outcome.kind === "NOT_CONNECTED") {
     return (
       <section aria-labelledby="routine-data-heading">
@@ -357,6 +481,17 @@ export function RoutineDataPanel({ outcome }: { readonly outcome: RoutineObserva
         <CountDisclosure label="latest canonical outcomes not recorded" count={view.summary.latestOutcomeNotRecorded} member={(item) => <ContractMemberLine member={item} />} />
         <CountDisclosure label="latest canonical outcomes that cannot be proven" count={view.summary.latestOutcomeUnknown} member={(item) => <ContractMemberLine member={item} />} />
       </div>
+      <PreparedSnapshot snapshot={view.preparedMeetingSnapshot} />
+      {edge && (
+        <EdgeServing
+          edge={edge}
+          preparedGeneratedAt={
+            view.preparedMeetingSnapshot.generatedAt.kind === "MEASURED"
+              ? view.preparedMeetingSnapshot.generatedAt.value
+              : null
+          }
+        />
+      )}
       {view.contracts.map((row) => <Contract key={row.contractId} row={row} />)}
     </section>
   );

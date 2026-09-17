@@ -1564,3 +1564,55 @@ export const civicDataPromotions = pgTable(
     }).onDelete("restrict").onUpdate("restrict"),
   ],
 );
+
+/**
+ * **Derived reader-serving projections (PDC-8b, 2026-09-15).**
+ *
+ * A SERVING COPY — never an acquisition source and never a promotion authority.
+ * Each row is a pure function of the currently-promoted partitions it names in
+ * `composed_from`: the standing runner's reader-repair pass composes the
+ * partitions ONCE at promote time (reusing the exact reader composition) and
+ * writes the result here, and `/api/meetings` reads it in one query instead of
+ * hauling+composing 124 partitions per visit. The individual
+ * `civic_data_promotions` partitions remain the sole authoritative civic truth;
+ * this table holds no pointer they do not already carry. RULING 283's enabling
+ * clause governs it — "a cross-holding invariant couples a final projection to
+ * the final promoted set only when a measured dependency proves the coupling" —
+ * and the measured coupling is `composed_from` (the exact partition versionIds)
+ * plus `fact_sha256`.
+ *
+ * `sequence` is a monotonic publish counter: a write lands only when it exceeds
+ * the stored sequence (see `writePreparedReaderProjection`), so two overlapping
+ * runner passes can never put an older composition over a newer one. The last
+ * valid row keeps serving until a newer one atomically replaces it, so a slow or
+ * failed preparation never blanks the reader — it serves slightly-older-but-
+ * honest data whose freshness is `generated_at`. The scope is deliberately NOT a
+ * `civic_data_promotions`/`MEETING` pointer: the aggregate meetings PROMOTION
+ * door stays removed (lib/civic-data/meeting-partitions.ts) — this is a derived
+ * reader projection, written in the supervisor's reader-evidence lane.
+ */
+export const civicDataReaderProjections = pgTable(
+  "civic_data_reader_projections",
+  {
+    key: text("key").primaryKey(),
+    recordClass: text("record_class").notNull(),
+    scope: text("scope").notNull(),
+    sequence: integer("sequence").notNull(),
+    payload: jsonb("payload").notNull(),
+    composedFrom: jsonb("composed_from").notNull(),
+    factSha256: text("fact_sha256").notNull(),
+    generatedAt: text("generated_at").notNull(),
+    composedAt: timestamp("composed_at", { withTimezone: true, mode: "string" }).notNull(),
+    sourceThrough: text("source_through"),
+    retrievedAt: text("retrieved_at"),
+    promotedThrough: text("promoted_through"),
+  },
+  (table) => [
+    uniqueIndex("civic_data_reader_projections_record_scope_idx").on(table.recordClass, table.scope),
+    check(
+      "civic_data_reader_projections_key_coherent",
+      sql`${table.key} = ${table.recordClass} || ':' || ${table.scope}`,
+    ),
+    check("civic_data_reader_projections_sequence_positive", sql`${table.sequence} > 0`),
+  ],
+);

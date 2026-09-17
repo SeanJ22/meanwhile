@@ -1,12 +1,12 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "411dbe6d8f729e54",
+  "snapshot": "64fa684ee53e1999",
   "counts": {
-    "records": 325,
-    "current": 50,
+    "records": 327,
+    "current": 52,
     "law": 37,
-    "decisions": 13,
+    "decisions": 15,
     "historical": 275
   },
   "records": [
@@ -7800,6 +7800,68 @@
       ],
       "uncertain": [],
       "sourceRef": "Author PDC amendments — draft PR cost and permanent runtime/software boundary, 2026-09-09"
+    },
+    {
+      "id": "R-0289",
+      "aliases": [
+        "RULING 289",
+        "R289",
+        "R-289"
+      ],
+      "title": "RULING 289 — PRODUCTION authority accepts a pointer superset from the import receipt",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-16",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "reader_authority.production_pointer_validation",
+          "value": "superset-accepted"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0283"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author explicit ruling during PRODUCTION-lineage closure session, 2026-09-16"
+    },
+    {
+      "id": "R-0290",
+      "aliases": [
+        "RULING 290",
+        "R290",
+        "R-290"
+      ],
+      "title": "RULING 290 — meeting partition versions may advance past the import receipt",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-16",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "reader_authority.partition_version_validation",
+          "value": "advancement-accepted"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0283"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0289"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author explicit ruling during PRODUCTION-lineage closure session, 2026-09-16"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

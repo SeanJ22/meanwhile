@@ -297,7 +297,30 @@ function pgAggregateRepository<T>(
   };
 }
 
-function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<T> {
+/**
+ * How many log records one read statement fetches.
+ *
+ * The Neon serverless (HTTP) driver caps a single response at 64 MiB, and an
+ * append-only log grows without bound — so a full-log read must NEVER assume it
+ * fits in one response. On 2026-09-15 the owner-digest log crossed 64 MiB and
+ * every `SELECT record ... ORDER BY position` for it began throwing
+ * `NeonDbError: Server error (HTTP status 507): response is too large`, which
+ * surfaced to callers as STORE_UNREACHABLE and stopped the standing runner at
+ * its startup method-candidate-authority gate (the read there is how it verifies
+ * the adoption receipt in the owner digest log). Appends kept succeeding — they
+ * are small — so the log only grew, one crash-loop hold every five minutes.
+ *
+ * Reads are fetched in keyset pages instead. 100 rows keeps a page far under the
+ * cap even at the largest record this control plane has ever held (~0.25 MiB →
+ * ~25 MiB per page), with room for the log to keep growing. The concatenation is
+ * identical to the old single statement because `position` is a strict
+ * per-`log_key` order and `(log_key, position)` is strict across the whole
+ * table — both backed by the `cp_log_<name>_order` unique index the schema
+ * already creates, so each page is an index range scan, not a re-sort.
+ */
+export const APPEND_ONLY_LOG_READ_PAGE = 100;
+
+export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<T> {
   const table = `cp_log_${log}`;
 
   return {
@@ -400,18 +423,50 @@ function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<
     },
 
     async read(key) {
-      const rows = (await sql.query(
-        `SELECT record FROM ${table} WHERE log_key = $1 ORDER BY position ASC`,
-        [key],
-      )) as Record<string, unknown>[];
-      return rows.map((r) => parseValue<T>(r.record, `${table} ${key}`));
+      /* Keyset-paged by position so no one response can exceed the driver's
+         64 MiB cap. `position > $2` starting at -1 includes position 0. */
+      const out: T[] = [];
+      let afterPosition = -1;
+      for (;;) {
+        const rows = (await sql.query(
+          `SELECT position, record FROM ${table}
+           WHERE log_key = $1 AND position > $2
+           ORDER BY position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          [key, afterPosition],
+        )) as Record<string, unknown>[];
+        for (const r of rows) out.push(parseValue<T>(r.record, `${table} ${key}`));
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        afterPosition = Number(rows[rows.length - 1].position);
+      }
+      return out;
     },
 
     async readAll() {
-      const rows = (await sql.query(
-        `SELECT log_key, record FROM ${table} ORDER BY log_key ASC, position ASC`,
-      )) as Record<string, unknown>[];
-      return rows.map((r) => parseValue<T>(r.record, `${table} ${String(r.log_key)}`));
+      /* Keyset-paged over the whole table in the same (log_key, position) order
+         the single statement used, for the same 64 MiB reason as `read`. */
+      const out: T[] = [];
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const rows = (cursor === null
+          ? await sql.query(
+              `SELECT log_key, position, record FROM ${table}
+               ORDER BY log_key ASC, position ASC
+               LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+            )
+          : await sql.query(
+              `SELECT log_key, position, record FROM ${table}
+               WHERE (log_key, position) > ($1, $2)
+               ORDER BY log_key ASC, position ASC
+               LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+              [cursor.key, cursor.position],
+            )) as Record<string, unknown>[];
+        for (const r of rows) out.push(parseValue<T>(r.record, `${table} ${String(r.log_key)}`));
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
+      }
+      return out;
     },
 
     async keys() {

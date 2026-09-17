@@ -70,7 +70,7 @@ import {
 } from "@/lib/control-plane/admin-data.ts";
 import { costSectionNumbers, spendWindowRows } from "@/lib/control-plane/cost-panel.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
-import { groupWaiting, ownerTypeOf, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
+import { groupWaiting, ownerTypeOf, waitingCardView, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
 import { splitDecided } from "@/lib/control-plane/decision-receipt.ts";
 import { fixQueueView } from "@/lib/control-plane/fix-queue.ts";
 import { dispatchHistory } from "@/lib/control-plane/fleet-view.ts";
@@ -81,7 +81,6 @@ import {
   auditRenderedNumbers,
   checkStatedEqualsRendered,
   countClaimsFor,
-  decisionCardKind,
   pilotHealthView,
   renderCacheObservation,
   type CountClaim,
@@ -176,28 +175,7 @@ function outcomeNote<T>(outcome: ReadOutcome<T>): string | null {
 }
 
 /** Flatten a published card into what the decision island renders. */
-function waitingView(card: OwnerDecisionCard): WaitingCardView {
-  const kind = decisionCardKind(card);
-  const meta = [
-    card.priority,
-    card.openedOn ? `opened ${card.openedOn}` : "opened on a date the ledger could not recover",
-    card.ageDays === null ? "age unknown" : `${card.ageDays} day${card.ageDays === 1 ? "" : "s"} waiting`,
-    card.blockedDescendants === null ? null : `${card.blockedDescendants} waiting behind it`,
-  ].filter((s): s is string => s !== null);
-  return {
-    rowId: card.rowId,
-    title: card.title,
-    whatIsNeeded: card.whatIsNeeded,
-    whyNoMachineCanDecide: card.whyNoMachineCanDecide,
-    options: card.options,
-    meta: meta.join(" · "),
-    priority: card.priority,
-    type: ownerTypeOf(card),
-    blocker: kind === "BLOCKED_WHILE" ? (card.blocker ?? card.whatIsNeeded) : null,
-    checkedThisRun: card.checkedThisRun ?? null,
-    ownWords: kind === "DECISION",
-  };
-}
+const waitingView: (card: OwnerDecisionCard) => WaitingCardView = waitingCardView;
 
 /* ------------------------------------------------------------------ *
  * THE PAGE

@@ -30,10 +30,13 @@
  * and the layout collapses to one column on narrow viewports.
  */
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 
+import { DecisionQueue, type PriorityGroupView } from "@/app/(admin)/admin/decisions.tsx";
+import { groupWaiting, waitingCardView, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
 import type { FleetOperation, FleetOperationsReport } from "@/lib/control-plane/fleet-operations";
+import type { OwnerDecisionCard } from "@/lib/control-plane/owner-surface.ts";
 import {
   applyRefresh,
   deliveryItemStatusLabel,
@@ -57,6 +60,9 @@ import { FLEET_MAP_CONTRACTS, FLEET_MAP_PANELS, type FleetMapPanelMeta } from "@
 
 type MapView = "operations" | "fields";
 
+const FLEET_PREFIXES = /^(NH|D\d|ASK|NW|RO)/i;
+function isFleetRowId(rowId: string): boolean { return FLEET_PREFIXES.test(rowId); }
+
 function pill(active: boolean, color?: string): CSSProperties {
   return {
     appearance: "none", cursor: "pointer", whiteSpace: "nowrap", font: "inherit", fontSize: 13,
@@ -69,7 +75,7 @@ function pill(active: boolean, color?: string): CSSProperties {
   };
 }
 
-export function FleetOperationsMap({ initialState }: { initialState?: FleetConsumerState }) {
+export function FleetOperationsMap({ initialState, stateVersion }: { initialState?: FleetConsumerState; stateVersion: string }) {
   const [consumer, setConsumer] = useState<FleetConsumerState>(initialState ?? EMPTY_CONSUMER_STATE);
   const [busy, setBusy] = useState(false);
   const [view, setView] = useState<MapView>("operations");
@@ -77,6 +83,8 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [showCode, setShowCode] = useState(true);
   const [page, setPage] = useState(0);
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<"oldest" | "newest" | "subject">("oldest");
 
   const refresh = useCallback(() => {
     setBusy(true);
@@ -97,7 +105,18 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
     for (const op of ops) c[laneOf(op)] += 1;
     return c;
   }, [ops, laneOf]);
-  const shownOps = useMemo(() => (lane ? ops.filter((o) => laneOf(o) === lane) : ops), [ops, lane, laneOf]);
+  const shownOps = useMemo(() => {
+    let filtered = lane ? ops.filter((o) => laneOf(o) === lane) : [...ops];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      filtered = filtered.filter((o) => o.subject.toLowerCase().includes(q));
+    }
+    const sorted = Array.isArray(filtered) ? filtered : [...filtered];
+    if (sortKey === "oldest") sorted.sort((a, b) => (a.lastActivity?.at ?? "").localeCompare(b.lastActivity?.at ?? ""));
+    else if (sortKey === "newest") sorted.sort((a, b) => (b.lastActivity?.at ?? "").localeCompare(a.lastActivity?.at ?? ""));
+    else sorted.sort((a, b) => a.subject.localeCompare(b.subject));
+    return sorted;
+  }, [ops, lane, laneOf, search, sortKey]);
   const pageSize = 50;
   const pageCount = Math.max(1, Math.ceil(shownOps.length / pageSize));
   const currentPage = Math.min(page, pageCount - 1);
@@ -107,6 +126,65 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
   // First item expanded by default (once), matching the design; toggled thereafter.
   const isOpen = useCallback((id: string) => (id in open ? open[id] : ops[0]?.workItemId === id), [open, ops]);
   const toggleOpen = useCallback((id: string) => setOpen((o) => ({ ...o, [id]: !(id in o ? o[id] : false) })), []);
+
+  const decisionCards = useMemo<readonly OwnerDecisionCard[]>(() => {
+    const od = report?.ownerDecisions;
+    return od?.kind === "HELD" ? od.value.cards : [];
+  }, [report]);
+
+  const { fleetCards, nonFleetCards } = useMemo(() => {
+    const fleet: OwnerDecisionCard[] = [];
+    const other: OwnerDecisionCard[] = [];
+    for (const c of decisionCards) {
+      if (isFleetRowId(c.rowId)) fleet.push(c);
+      else other.push(c);
+    }
+    return { fleetCards: fleet, nonFleetCards: other };
+  }, [decisionCards]);
+
+  const priorityGroups = useMemo<readonly PriorityGroupView[]>(() => {
+    return groupWaiting(fleetCards).map((g) => ({
+      priority: g.priority,
+      count: g.count,
+      types: g.types.map((t) => ({ type: t.type, cards: t.cards.map(waitingCardView) })),
+    }));
+  }, [fleetCards]);
+
+  const nonFleetGroups = useMemo(() => {
+    const groups: { label: string; cards: OwnerDecisionCard[] }[] = [
+      { label: "Commercial and product", cards: [] },
+      { label: "Business, legal and trust", cards: [] },
+      { label: "Design and console calls", cards: [] },
+      { label: "Defect reports", cards: [] },
+    ];
+    for (const c of nonFleetCards) {
+      const r = c.rowId;
+      if (/^OWN/i.test(r)) groups[3].cards.push(c);
+      else if (/^NS/i.test(r)) groups[2].cards.push(c);
+      else if (/^[BT]\d/i.test(r)) groups[1].cards.push(c);
+      else groups[0].cards.push(c);
+    }
+    return groups.filter((g) => g.cards.length > 0);
+  }, [nonFleetCards]);
+
+  const observedAt = report?.observedAt;
+  const [nowMs, setNowMs] = useState<number>(() => Date.now());
+  useEffect(() => {
+    if (!observedAt) return;
+    const id = setInterval(() => setNowMs(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, [observedAt]);
+  const readAgo = useMemo<string | null>(() => {
+    if (!observedAt) return null;
+    const ms = nowMs - Date.parse(observedAt);
+    if (!Number.isFinite(ms) || ms < 0) return null;
+    const minutes = Math.floor(ms / 60_000);
+    if (minutes < 1) return "just now";
+    if (minutes === 1) return "1 minute ago";
+    if (minutes < 60) return `${minutes} minutes ago`;
+    const h = Math.floor(minutes / 60);
+    return `${h} hour${h === 1 ? "" : "s"} ago`;
+  }, [observedAt, nowMs]);
 
   return (
     <section data-fleet-map style={{ display: "grid", gap: 16 }}>
@@ -121,7 +199,8 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
         </div>
         {report && (
           <p className="note" style={{ margin: 0 }}>
-            observedAt {report.observedAt} · deliveryFreshness {report.deliveryFreshness}. {NOTES.delivery}
+            Read {readAgo ?? report.observedAt}. Nothing re-reads this page. There is no cycle here.
+            {" "}deliveryFreshness {report.deliveryFreshness}. {NOTES.delivery}
           </p>
         )}
       </header>
@@ -129,7 +208,7 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
       {consumer.lastError && (
         <div className="refusal">
           <strong>{report ? "Refresh failed." : "Could not read the operations report."}</strong> {consumer.lastError}
-          {report && ` Showing the last successful read from ${report.observedAt} (unchanged).`}
+          {report && ` Showing the last successful read from ${readAgo ?? report.observedAt} (unchanged).`}
         </div>
       )}
 
@@ -173,8 +252,38 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
             })}
           </div>
 
-          {/* NEEDS YOU — owner decisions */}
-          <NeedsYou report={report} showCode={showCode} />
+          {/* NEEDS YOU — fleet decisions first, then non-fleet summary */}
+          {report.ownerDecisions.kind === "HELD" && (
+            <>
+            <DecisionQueue
+              groups={priorityGroups}
+              total={fleetCards.length}
+              summary={waitingSummary(groupWaiting(fleetCards))}
+              actionRoute="/api/admin/action"
+              returnTo="/admin/fleet"
+              stateVersion={stateVersion}
+              heading="Fleet decisions waiting on you"
+            />
+            {nonFleetCards.length > 0 && (
+              <div className="dq-non-fleet">
+                <hr style={{ border: "none", borderTop: "1px solid var(--ce-hairline, rgba(255,255,255,.08))", margin: ".6rem 0" }} />
+                <p className="note" style={{ margin: "0 0 .4rem" }}>
+                  {nonFleetCards.length} decisions not fleet work
+                </p>
+                <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
+                  {nonFleetGroups.map((g) => (
+                    <div key={g.label} className="card" style={{ padding: "10px 14px" }}>
+                      <strong style={{ fontSize: 13 }}>{g.label}</strong>
+                      <span className="note" style={{ display: "block", margin: "2px 0 0" }}>
+                        {g.cards.length} decision{g.cards.length === 1 ? "" : "s"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            </>
+          )}
 
           {/* Work in flight */}
           <section aria-label="Work in flight" style={{ display: "grid", gap: 8 }}>
@@ -182,8 +291,19 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
               <h3 style={{ margin: 0, fontSize: "0.95rem" }}>Work in flight — {lane ? fleetLaneMeta(lane).label.toLowerCase() : "all lanes"}</h3>
               <span className="note">Showing {pageOps.length === 0 ? 0 : pageStart + 1}–{pageStart + pageOps.length} of {shownOps.length} matching items · {ops.length} total</span>
             </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: ".82rem" }}>
+              <input
+                type="search" placeholder="Search subjects…" value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+                style={{ flex: "1 1 12rem", minWidth: 0, padding: "4px 8px", borderRadius: 4, border: "1px solid var(--ce-hairline, rgba(255,255,255,.12))", background: "var(--ce-panel, #1A1D24)", color: "inherit", font: "inherit" }}
+              />
+              <span className="note" style={{ whiteSpace: "nowrap" }}>Sort:</span>
+              <button type="button" style={pill(sortKey === "oldest")} onClick={() => { setSortKey("oldest"); setPage(0); }}>Oldest activity</button>
+              <button type="button" style={pill(sortKey === "newest")} onClick={() => { setSortKey("newest"); setPage(0); }}>Newest activity</button>
+              <button type="button" style={pill(sortKey === "subject")} onClick={() => { setSortKey("subject"); setPage(0); }}>Subject</button>
+            </div>
             {shownOps.length === 0 ? (
-              <p className="note">{ops.length === 0 ? "The canonical work-item store holds no rows." : "No items in this lane."}</p>
+              <p className="note">{ops.length === 0 ? "The canonical work-item store holds no rows." : "No items match."}</p>
             ) : (
               pageOps.map((op) => (
                 <WorkItem key={op.workItemId} op={op} lane={laneOf(op)} open={isOpen(op.workItemId)} onToggle={toggleOpen} view={view} showCode={showCode} />
@@ -200,11 +320,23 @@ export function FleetOperationsMap({ initialState }: { initialState?: FleetConsu
             )}
           </section>
 
-          {/* Panels */}
-          <section aria-label="Panels" className="fm-panels">
-            {FLEET_MAP_PANELS.map((p) => (
-              <Panel key={p.id} meta={p} report={report} view={view} showCode={showCode} />
-            ))}
+          {/* Panels — split by producer existence */}
+          <section aria-label="Panels">
+            <h3 style={{ margin: "0 0 .4rem", fontSize: ".88rem" }}>Reads something <span className="note">{FLEET_MAP_PANELS.filter((p) => p.producer !== "NO_PRODUCER").length}</span></h3>
+            <div className="fm-panels">
+              {FLEET_MAP_PANELS.filter((p) => p.producer !== "NO_PRODUCER").map((p) => (
+                <Panel key={p.id} meta={p} report={report} view={view} showCode={showCode} />
+              ))}
+            </div>
+            <h3 style={{ margin: ".8rem 0 .4rem", fontSize: ".88rem" }}>No producer <span className="note">{FLEET_MAP_PANELS.filter((p) => p.producer === "NO_PRODUCER").length}</span></h3>
+            <p className="note" style={{ margin: "0 0 .4rem" }}>
+              These panels have no data producer anywhere in the codebase. There is no reading to be late, and refreshing changes nothing.
+            </p>
+            <div className="fm-panels fm-panels-no-producer">
+              {FLEET_MAP_PANELS.filter((p) => p.producer === "NO_PRODUCER").map((p) => (
+                <Panel key={p.id} meta={p} report={report} view={view} showCode={showCode} />
+              ))}
+            </div>
           </section>
         </>
       )}
@@ -226,36 +358,6 @@ function ControlPlaneState({ report }: { report: FleetOperationsReport }) {
         {" "}This is a real read against real infrastructure; an unavailable measurement stays unavailable.
       </p>
     </div>
-  );
-}
-
-function NeedsYou({ report, showCode }: { report: FleetOperationsReport; showCode: boolean }) {
-  const od = report.ownerDecisions;
-  if (od.kind !== "HELD") return null;
-  const cards = od.value.cards;
-  return (
-    <section aria-label="Needs you" className="card" style={{ display: "grid", gap: 8, boxShadow: cards.length ? "inset 0 0 0 1px color-mix(in srgb, var(--accent, #d97757) 40%, transparent)" : undefined }}>
-      <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
-        <strong style={{ fontSize: 13, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--accent, #d97757)" }}>Needs you</strong>
-        <span className="note">· {cards.length}</span>
-      </div>
-      {cards.length === 0 ? (
-        <p className="note" style={{ margin: 0 }}>No unanswered owner decisions. Machine blockers and acknowledgements are excluded.</p>
-      ) : (
-        <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
-          {cards.map((c) => (
-            <li key={c.rowId} style={{ display: "grid", gap: 2 }}>
-              <span style={{ fontSize: 13 }}>{c.title}</span>
-              {showCode && (
-                <span className="note" style={{ margin: 0, fontFamily: "var(--font-mono, ui-monospace, monospace)", fontSize: 11 }}>
-                  OwnerDecisionCard · rowId {c.rowId}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
   );
 }
 
@@ -468,6 +570,7 @@ const FLEET_MAP_CSS = `
 [data-fleet-map] .fm-lanes { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 [data-fleet-map] .fm-lane { text-align: left; cursor: pointer; border: 0; border-radius: 12px; padding: 12px 14px; background: var(--panel, #181a20); color: inherit; display: block; }
 [data-fleet-map] .fm-panels { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+[data-fleet-map] .fm-panels-no-producer .card { background: transparent; box-shadow: none; border: 1.5px dashed #6fa8a5; }
 [data-fleet-map] .fm-wi-head { width: 100%; display: flex; gap: 10px; align-items: center; justify-content: space-between; background: transparent; border: 0; cursor: pointer; color: inherit; font: inherit; text-align: left; padding: 0; }
 [data-fleet-map] button:focus-visible, [data-fleet-map] .fm-lane:focus-visible, [data-fleet-map] .fm-wi-head:focus-visible { outline: 2px solid var(--link, #4fc9e8); outline-offset: 2px; }
 `;

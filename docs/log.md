@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-13 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-15 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **190 sessions.**
+Newest first. **191 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## fleet-rework-0915-nonhunt · 2026-09-15
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **D74** — OwnerDecisionCard.blockedDescendants is typed number|null and is hardcoded null at decision-cards.ts:115 because nothing computes it. It is the count of work items blocked behind a decision, the field needed to answer which of the 69 decisions should be answered first. The tracker has no column recording which decision a work item is waiting on. The Depends on column records general inter-row dependencies and must not be overloaded for this because a column whose meaning depends on what it happens to point at breaks the first time a decision row also has ordinary dependencies. A new Blocked by decision column is needed first (schema change), then a projection-time query that walks work items whose blocker names a given decision rowId, counts them, and populates the field. Until it lands, the admin page prints the literal not measured and never 0. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## pdc-v2-final-p-legacy-retirement-nonhunt · 2026-09-11
 

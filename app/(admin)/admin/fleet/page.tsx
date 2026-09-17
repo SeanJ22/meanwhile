@@ -51,7 +51,9 @@ import { ConsoleNav } from "@/app/(admin)/console-nav";
 import { FleetOperationsMap } from "@/components/admin/fleet-operations-map";
 import { ResearchProgress } from "@/components/admin/research-progress.tsx";
 import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
-import { openControlPlane, readFleetSafety } from "@/lib/control-plane/admin-data";
+import { openControlPlane, readDecisions, readFleetSafety, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data";
+import { pulseRevision } from "@/lib/control-plane/live-pulse";
+import { HEARTBEAT_LATE_MINUTES } from "@/lib/control-plane/owner-surface.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { readFleetSeedState } from "@/lib/admin/fleet-seed";
 
@@ -66,6 +68,12 @@ export const metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
+function formatGap(s: number): string {
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return r > 0 ? `${m}m ${r}s` : `${m}m`;
+}
+
 export default async function FleetOperationsPage() {
   // The trusted READER filesystem receipt store is NOT mounted here — mounting it
   // in a served bundle was rebuilt and MEASURED to refuse check-build-output (the
@@ -79,20 +87,57 @@ export default async function FleetOperationsPage() {
   // populated/missing page↔Refresh parity is proven in
   // tests/fleet-operations-page.test.ts. See the handoff doc.
   const opened = openControlPlane();
-  const [initialState, progressState] = await Promise.all([
+  const [initialState, progressState, heartbeatOut, snapshotOut, decisionsOut] = await Promise.all([
     readFleetSeedState({ open: () => opened, now: () => new Date().toISOString() }),
     opened.then(async (result) => {
       if (!result.ok) return null;
       const state = await readFleetSafety(result.repos);
       return state.kind === "HELD" ? state.value : null;
     }),
+    opened.then(async (result) => result.ok ? readHeartbeat(result.repos) : null),
+    opened.then(async (result) => result.ok ? readSnapshot(result.repos) : null),
+    opened.then(async (result) => result.ok ? readDecisions(result.repos) : null),
   ]);
   const progress = researchProgressHealth(progressState, new Date().toISOString());
+  const heartbeat = heartbeatOut?.kind === "HELD" ? heartbeatOut.value : null;
+  const snapshot = snapshotOut?.kind === "HELD" ? snapshotOut.value : null;
+  const fleetSafety = progressState?.fleetSafety ?? null;
+  const stateVersion = pulseRevision({
+    beatAt: heartbeat?.beatAt ?? null,
+    snapshotRevision: snapshot ? (snapshot.publishedAt ? Date.parse(snapshot.publishedAt) : null) : null,
+    decisionCount: decisionsOut?.kind === "HELD" ? decisionsOut.value.length : null,
+    researchRevision: fleetSafety ? Date.parse(fleetSafety.cycle.startedAt) : null,
+    receiptCount: null,
+  });
+  const fleetReadAt = initialState.shown?.observedAt ?? null;
+  const runnerObservedAt = progress.asOf;
+  let clockGapSeconds: number | null = null;
+  if (fleetReadAt && runnerObservedAt) {
+    const gap = Math.abs(Date.parse(fleetReadAt) - Date.parse(runnerObservedAt));
+    if (Number.isFinite(gap)) clockGapSeconds = Math.round(gap / 1000);
+  }
   return (
     <main className="admin console-page">
       <ConsoleNav view="fleet" currentState={null} states={US_STATES} />
 
       <h1>Fleet operations</h1>
+      {(fleetReadAt || runnerObservedAt) && (
+        <p className="two-clock">
+          Fleet read{" "}
+          <code>{fleetReadAt ? fleetReadAt.replace(/^.*T/, "").replace(/\.\d+/, "") : "not read"}</code>
+          {runnerObservedAt && (
+            <>
+              {" · "}Runner heartbeat{" "}
+              <code>{runnerObservedAt.replace(/^.*T/, "").replace(/\.\d+/, "")}</code>
+            </>
+          )}
+          {clockGapSeconds !== null && clockGapSeconds > HEARTBEAT_LATE_MINUTES * 60 && (
+            <span className="two-clock-gap">
+              {formatGap(clockGapSeconds)} apart &mdash; two clocks, one page
+            </span>
+          )}
+        </p>
+      )}
       <ResearchProgress reading={progress} />
       <p className="note">
         On-demand read of the fleet operations report. The first read is taken server-side because you
@@ -100,7 +145,7 @@ export default async function FleetOperationsPage() {
         heartbeat. Lanes are derived from each work item&rsquo;s task states; a live lease means activity,
         not proven progress.
       </p>
-      <FleetOperationsMap initialState={initialState} />
+      <FleetOperationsMap initialState={initialState} stateVersion={stateVersion} />
 
       <h2>ZIP preparation</h2>
       <p className="note">

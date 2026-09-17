@@ -61,8 +61,9 @@ export function researchProgressHealth(state: ResearchState | null, nowIso: stri
         : "No scheduled route unit is due in this observation. This does not certify completed records or publication.",
     };
   }
+  const obligations = progress?.scope.obligations ?? 0;
   const advanced = progress ? RESEARCH_MILESTONES.filter((stage) => stage !== "discovered")
-    .map((stage) => `${stage}: ${progress.milestones[stage].newlyReached}`).join("; ") : null;
+    .map((stage) => `${stage}: ${progress.milestones[stage].newlyReached} / ${obligations}`).join("; ") : null;
   const knownUsd = state.spend.windowUsd;
   const unknownCosts = state.spend.unmeasuredAttempts;
   const spend = knownUsd === null || !Number.isFinite(knownUsd) || knownUsd < 0
@@ -70,10 +71,10 @@ export function researchProgressHealth(state: ResearchState | null, nowIso: stri
     : `$${knownUsd.toFixed(2)} measured research model spending across ${state.spend.measuredAttempts} cost entries in the trailing ${state.bounds.windowHours} hours${unknownCosts > 0 ? `; ${unknownCosts} additional entries have unknown cost, so this is a partial total` : ""}. Routine fetch activity is accounted for separately.`;
   return {
     ...reading, asOf: state.beatAt,
-    dispatch: `${scheduled} scheduled dispatches from ${due} due route units this cycle; ${downstream === undefined ? "downstream dispatch count was not recorded" : `${downstream} downstream dispatches`}.`,
+    dispatch: `${scheduled} scheduled dispatches from ${due} due route units (${q.modelClassDue} model-class, ${q.deterministicDue} deterministic) this cycle; ${downstream === undefined ? "downstream dispatch count was not recorded" : `${downstream} downstream dispatches`}.`,
     deferrals: q.modelClassDeferredForBudget === undefined ? "Wall-time deferrals were not recorded separately by this runner version."
-      : `${q.modelClassDeferredForBudget} model route units deferred by execution budget; ${q.modelClassDeferredForCycleMax} by dispatch-count limit; ${q.modelClassDeferredForCeiling} by model-spend ceiling; ${q.modelClassDeferredForLane} by lane state.`,
-    advancement: progress ? `${completed} completed role results across ${progress.activity.obligationsWorked} worked investigations. Newly reached stages, counted as distinct investigations per stage: ${advanced}. Scope: ${progress.scope.obligations} registered investigations; ${progress.scope.excludedUnclassifiedWorkItems} other work items are not classified in this report.` : missing.advancement,
+      : `Model-class deferrals (of ${q.modelClassDue} due): ${q.modelClassDeferredForBudget} by execution budget; ${q.modelClassDeferredForCycleMax} by dispatch-count limit; ${q.modelClassDeferredForCeiling} by model-spend ceiling; ${q.modelClassDeferredForLane} by lane state. Deterministic units (${q.deterministicDue} due, ${q.deterministicDispatchedThisCycle} dispatched) do not have per-reason deferral accounting.`,
+    advancement: progress ? `Scope: ${obligations} registered investigations; ${progress.scope.excludedUnclassifiedWorkItems} other work items are not classified in this report. ${completed} completed role results across ${progress.activity.obligationsWorked} worked investigations. Newly reached stages (per ${obligations}): ${advanced}.` : missing.advancement,
     acquisition: progress ? `${progress.milestones.acquired.newlyReached} investigations first reached acquisition in this window; ${progress.activity.newEvidenceArtifacts} new evidence artifacts. These are research results, separate from routine source refreshes.` : missing.acquisition,
     publication: progress ? `${progress.readerVisible.count === null ? "Unknown number of" : progress.readerVisible.count} reader-visible research records in this window. ${progress.readerVisible.reason}` : missing.publication,
     spend, window: progress ? { since: progress.since, through: progress.through } : null,

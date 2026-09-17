@@ -745,6 +745,10 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin pre.digest { white-space: pre-wrap; word-break: break-word; font-size: .78rem; color: var(--ce-fg-66); max-height: 28rem; overflow: auto; }
 .admin .audit-footer { font-size: .78rem; }
 
+/* ---- Two-clock strip (§3): labels the two time sources on the fleet page. ---- */
+.admin .two-clock { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .5rem; font-size: .82rem; color: var(--ce-muted); margin: .1rem 0 .35rem; }
+.admin .two-clock code { color: var(--ce-fg); }
+.admin .two-clock-gap { padding: .1rem .5rem; border-radius: .25rem; background: color-mix(in srgb, var(--ce-text-warn) 15%, transparent); color: var(--ce-text-warn); font-weight: 500; }
 
 /* ============================================================ Admin C — the command centre strip (ADM-C1) */
 .admin .cc { margin: 0 0 1.5rem; }

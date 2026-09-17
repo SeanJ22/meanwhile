@@ -109,6 +109,11 @@
       "file": "app/(admin)/admin/sections/maptiler.tsx",
       "text": "The append-only map-provider history is unavailable, and this panel did not carry a reason.",
       "reason": "Names an internal owner-surface gap only when both the projected history and the read outcome detail are absent. It deliberately avoids the former unsupported claim that the canonical history contains no attempts, and makes no assertion about provider activity, LKG, or store reachability."
+    },
+    {
+      "file": "app/(admin)/admin/decisions.tsx",
+      "text": "Decisions waiting on you",
+      "reason": "Not an absence. It is the heading on the decision queue (decisions.tsx:266), and the ?? chooses between a caller's own title — the fleet page passes 'Fleet decisions waiting on you' — and the console's standard one. It labels a section and asserts nothing about any record; the measured quantity is the separate dq-count beside it (waitingNow). Same shape as the 'Technical details' and 'a decision from you' admin labels already recorded here."
     }
   ]
 }

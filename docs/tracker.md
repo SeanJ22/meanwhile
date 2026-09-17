@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-09-13 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-15 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **409 open**, 544 resolved.
+- **410 open**, 544 resolved.
 - **76 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -562,7 +562,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**99 open · 123 resolved.**
+**100 open · 123 resolved.**
 
 ### P1
 
@@ -587,6 +587,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **D50** — The second pass at candidate and official photographs, now that the author has opened the door for portraits a government body publishes about its own members. More faces on cards, each one carrying the door it came through.
 
 **D52** — Turning each state's campaign-finance filing vocabulary into words a fifteen-year-old reads. Every state files differently, so this is a programme with one adapter per state rather than a single job.
+
+**D74** — OwnerDecisionCard.blockedDescendants is typed number|null and is hardcoded null at decision-cards.ts:115 because nothing computes it. It is the count of work items blocked behind a decision, the field needed to answer which of the 69 decisions should be answered first. The tracker has no column recording which decision a work item is waiting on. The Depends on column records general inter-row dependencies and must not be overloaded for this because a column whose meaning depends on what it happens to point at breaks the first time a decision row also has ordinary dependencies. A new Blocked by decision column is needed first (schema change), then a projection-time query that walks work items whose blocker names a given decision rowId, counts them, and populates the field. Until it lands, the admin page prints the literal not measured and never 0.
 
 **F02** — The product renders 186 congressional committee rows with no description of what any of them does. The text does not exist in the upstream file, so it has to come from somewhere else.
 

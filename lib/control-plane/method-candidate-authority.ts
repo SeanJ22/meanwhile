@@ -160,10 +160,15 @@ function seedLineageIssues(store: CandidateStore): readonly string[] {
   return issues;
 }
 
+/** The one owner-outcome kind that carries a method-candidate adoption receipt. */
+const ADOPTION_OUTCOME_KIND = "METHOD_CANDIDATE_AUTHORITY_ADOPTION";
+/** The scalar JSON path a targeted owner-digest query filters an outcome on. */
+const OUTCOME_KIND_PATH = ["runtimeOutcome", "kind"] as const;
+
 function hasAdoptionKind(value: unknown): boolean {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return false;
   const row = value as Record<string, unknown>;
-  return row.kind === "METHOD_CANDIDATE_AUTHORITY_ADOPTION";
+  return row.kind === ADOPTION_OUTCOME_KIND;
 }
 
 function receiptMatchesSeed(value: unknown): value is MethodCandidateAuthorityAdoptionOutcome {
@@ -294,11 +299,18 @@ export async function readMethodCandidateAuthorityStatus(
   repos: ControlPlaneRepositories,
 ): Promise<MethodCandidateAuthorityStatus> {
   try {
-    const [current, digests] = await Promise.all([
+    const [current, adoptionReceipts] = await Promise.all([
       repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID),
-      repos.ownerDigests.read(DIGEST_LOG_KEY),
+      /* Targeted, stable content query: the adoption receipt is found by WHAT it
+         is, not where it sits, so a 60+ MB owner-digest log costs one small read
+         rather than the whole thing (reading the whole log past Neon's 64 MiB
+         response cap is what stopped the runner). Empty is NOT silently "not
+         adopted": statusFrom refuses when the aggregate has moved past the
+         pristine seed and no receipt is found. A store error THROWS, to the
+         catch below, and is never read as an empty history. */
+      repos.ownerDigests.readWhere(DIGEST_LOG_KEY, OUTCOME_KIND_PATH, ADOPTION_OUTCOME_KIND),
     ]);
-    return statusFrom(current, digests);
+    return statusFrom(current, adoptionReceipts);
   } catch (error) {
     return {
       state: "STORE_UNREACHABLE",
@@ -388,7 +400,8 @@ export async function ensureMethodCandidateAuthorityAdopted(input: {
   try {
     [current, digests] = await Promise.all([
       input.repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID),
-      input.repos.ownerDigests.read(DIGEST_LOG_KEY),
+      /* Same targeted adoption-receipt query as the read-only status above. */
+      input.repos.ownerDigests.readWhere(DIGEST_LOG_KEY, OUTCOME_KIND_PATH, ADOPTION_OUTCOME_KIND),
     ]);
   } catch (error) {
     const status = await readMethodCandidateAuthorityStatus(input.repos);

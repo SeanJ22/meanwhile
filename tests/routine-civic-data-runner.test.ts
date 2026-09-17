@@ -127,7 +127,10 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-  assert.match(pilot, /row\.digestId === cycleId/);
+  // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
+  // records carrying that exact digestId (a targeted content query, not a scan
+  // of the whole log) and then confirms the supervisor kind.
+  assert.match(pilot, /readWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
 

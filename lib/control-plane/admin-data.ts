@@ -168,14 +168,16 @@ export async function readDigests(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<readonly OwnerDigestRecord[]>> {
   try {
-    const rows = await repos.ownerDigests.read(DIGEST_LOG_KEY);
+    /* The digest HISTORY view: the newest bounded window, newest first. A tail
+       read (ORDER BY position DESC LIMIT) rather than the whole 60+ MB log. */
+    const rows = await repos.ownerDigests.readRecent(DIGEST_LOG_KEY, DIGEST_HISTORY_LIMIT);
     if (rows.length === 0) {
       return {
         kind: "NOT_RECORDED",
         detail: "The control plane is reachable and holds no digest yet.",
       };
     }
-    return { kind: "HELD", value: [...rows].reverse().slice(0, DIGEST_HISTORY_LIMIT) };
+    return { kind: "HELD", value: rows };
   } catch (error) {
     return {
       kind: "STORE_UNREACHABLE",
@@ -197,9 +199,13 @@ export async function readMapTilerUsageDigests(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<readonly OwnerDigestRecord[]>> {
   try {
-    const rows = await repos.ownerDigests.read(DIGEST_LOG_KEY);
-    const maptiler = rows.filter(
-      (row) => row.runtimeOutcome?.kind === "MAPTILER_USAGE_COLLECTION",
+    /* Every map-provider receipt, found by kind — a targeted content query, not
+       the whole log — so the 7d/30d history is complete no matter how many
+       unrelated outcomes a busy runner wrote between two map attempts. */
+    const maptiler = await repos.ownerDigests.readWhere(
+      DIGEST_LOG_KEY,
+      ["runtimeOutcome", "kind"],
+      "MAPTILER_USAGE_COLLECTION",
     );
     if (maptiler.length === 0) {
       return {
@@ -221,10 +227,13 @@ export async function readLatestIntakeRuntimeDigest(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<OwnerDigestRecord>> {
   try {
-    const rows = await repos.ownerDigests.read(DIGEST_LOG_KEY);
-    const latest = [...rows].reverse().find(
-      (row) => row.runtimeOutcome?.kind === "INTAKE_RUNTIME_OBSERVATION",
+    /* All intake observations by kind, newest last in append order. */
+    const observations = await repos.ownerDigests.readWhere(
+      DIGEST_LOG_KEY,
+      ["runtimeOutcome", "kind"],
+      "INTAKE_RUNTIME_OBSERVATION",
     );
+    const latest = observations.at(-1);
     return latest
       ? { kind: "HELD", value: latest }
       : {

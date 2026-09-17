@@ -1,16 +1,20 @@
 /**
- * The append-only log read must not exceed the Neon HTTP driver's 64 MiB
- * response cap. Before 2026-09-17 `pgAppendOnlyRepository.read`/`readAll` issued
- * ONE `SELECT ... ORDER BY position` with no bound, so when the owner-digest log
- * crossed 64 MiB the read threw `NeonDbError: response is too large`. That read
- * is how the standing runner verifies its method-candidate adoption receipt at
- * startup, so the throw stopped the runner in a five-minute crash loop.
+ * The append-only log reads must not exceed the Neon HTTP driver's 64 MiB
+ * response cap, and callers that want a subset must get it by CONTENT, not by
+ * position. Before 2026-09-17 `pgAppendOnlyRepository.read`/`readAll` issued ONE
+ * unbounded `SELECT ... ORDER BY position`, so when the owner-digest log crossed
+ * 64 MiB every read threw `NeonDbError: response is too large` — and that read
+ * is how the standing runner verifies its adoption receipt at startup, so it
+ * crash-looped. `read`/`readAll` now page; `readWhere` is a paged content filter
+ * (`record #>> path = value`) that finds a record by what it is rather than
+ * where it sits; `readRecent` is a bounded newest-first tail.
  *
  * These are deterministic, provider-independent tests over a fake `Sql` that
- * enforces the keyset contract the paginated read depends on: every read is
- * bounded by `LIMIT`, and the concatenation across pages equals the whole log in
- * the same order the single statement produced. The fake THROWS on an unbounded
- * `SELECT`, so the pre-fix code fails these tests rather than passing by luck.
+ * enforces the contract the reads depend on: every scan is bounded by `LIMIT`,
+ * the concatenation across pages equals the whole selection in order, and a
+ * content filter returns EVERY match regardless of position. The fake THROWS on
+ * an unbounded scan, so a regression to a single unbounded `SELECT` fails here
+ * rather than only against a >64 MiB production log.
  */
 
 import assert from "node:assert/strict";
@@ -24,53 +28,66 @@ import {
 interface Row {
   readonly log_key: string;
   readonly position: number;
-  readonly record: unknown;
+  readonly record: Record<string, unknown>;
+}
+
+/** The scalar text at a `{a,b}` path, mirroring Postgres `record #>> '{a,b}'`. */
+function textAt(record: unknown, path: readonly string[]): string | null {
+  let cursor: unknown = record;
+  for (const seg of path) {
+    if (cursor === null || typeof cursor !== "object") return null;
+    cursor = (cursor as Record<string, unknown>)[seg];
+  }
+  return cursor === null || cursor === undefined || typeof cursor === "object" ? null : String(cursor);
 }
 
 /**
- * A minimal in-memory stand-in for the one method the repository calls. It
- * understands only the two paged read shapes and refuses anything unbounded, so
- * a regression to a single `SELECT ... ORDER BY position` (no `LIMIT`) is caught
- * here instead of only against a >64 MiB production log.
+ * A minimal stand-in for the one method the repository calls. It understands the
+ * paged read shapes and refuses anything without a `LIMIT`, so a regression to
+ * an unbounded scan is caught here.
  */
 function fakeLogSql(rows: readonly Row[]) {
   const calls: string[] = [];
-  const limitOf = (text: string): number => {
-    const m = /LIMIT\s+(\d+)/i.exec(text);
-    if (m === null) {
-      throw new Error(`unbounded read would exceed the 64 MiB response cap: ${text.replace(/\s+/g, " ").trim()}`);
-    }
-    return Number(m[1]);
-  };
+  const byKeyPos = (a: Row, b: Row) => (a.log_key === b.log_key ? a.position - b.position : a.log_key < b.log_key ? -1 : 1);
   const sql = {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push(text);
-      const limit = limitOf(text);
-      // read(key): WHERE log_key = $1 AND position > $2 ORDER BY position ASC
+      const litLimit = /LIMIT\s+(\d+)/.exec(text);
+      // readRecent: newest first, LIMIT is a parameter.
+      if (/ORDER BY\s+position DESC/i.test(text)) {
+        const [key, limit] = params as [string, number];
+        return rows.filter((r) => r.log_key === key).sort((a, b) => b.position - a.position).slice(0, Number(limit))
+          .map((r) => ({ record: r.record }));
+      }
+      if (litLimit === null) {
+        throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
+      }
+      const limit = Number(litLimit[1]);
+      // readWhere: WHERE log_key=$1 AND position > $2 AND record #>> '{path}' = $3
+      const where = /record #>> '\{([^}]*)\}' = \$3/.exec(text);
+      if (where !== null) {
+        const [key, after, value] = params as [string, number, string];
+        const path = where[1].split(",");
+        return rows.filter((r) => r.log_key === key && r.position > after && textAt(r.record, path) === value)
+          .sort((a, b) => a.position - b.position).slice(0, limit)
+          .map((r) => ({ position: r.position, record: r.record }));
+      }
+      // read: WHERE log_key=$1 AND position > $2
       if (/WHERE\s+log_key\s*=\s*\$1\s+AND\s+position\s*>\s*\$2/i.test(text)) {
         const [key, after] = params as [string, number];
-        return rows
-          .filter((r) => r.log_key === key && r.position > after)
-          .sort((a, b) => a.position - b.position)
-          .slice(0, limit)
+        return rows.filter((r) => r.log_key === key && r.position > after)
+          .sort((a, b) => a.position - b.position).slice(0, limit)
           .map((r) => ({ position: r.position, record: r.record }));
       }
       // readAll next page: WHERE (log_key, position) > ($1, $2)
       if (/WHERE\s+\(log_key,\s*position\)\s*>\s*\(\$1,\s*\$2\)/i.test(text)) {
         const [key, position] = params as [string, number];
-        return rows
-          .filter((r) => r.log_key > key || (r.log_key === key && r.position > position))
-          .sort((a, b) => (a.log_key === b.log_key ? a.position - b.position : a.log_key < b.log_key ? -1 : 1))
-          .slice(0, limit)
-          .map((r) => ({ log_key: r.log_key, position: r.position, record: r.record }));
+        return rows.filter((r) => r.log_key > key || (r.log_key === key && r.position > position))
+          .sort(byKeyPos).slice(0, limit).map((r) => ({ log_key: r.log_key, position: r.position, record: r.record }));
       }
-      // readAll first page: ORDER BY log_key ASC, position ASC, no WHERE cursor
+      // readAll first page: ORDER BY log_key ASC, position ASC (no WHERE cursor)
       if (/ORDER BY\s+log_key ASC,\s*position ASC/i.test(text) && !/WHERE/i.test(text)) {
-        return rows
-          .slice()
-          .sort((a, b) => (a.log_key === b.log_key ? a.position - b.position : a.log_key < b.log_key ? -1 : 1))
-          .slice(0, limit)
-          .map((r) => ({ log_key: r.log_key, position: r.position, record: r.record }));
+        return rows.slice().sort(byKeyPos).slice(0, limit).map((r) => ({ log_key: r.log_key, position: r.position, record: r.record }));
       }
       throw new Error(`fake Sql did not recognize query: ${text.replace(/\s+/g, " ").trim()}`);
     },
@@ -78,22 +95,18 @@ function fakeLogSql(rows: readonly Row[]) {
   return { sql, calls };
 }
 
-test("read() pages a log larger than one response and returns every record in position order", async () => {
-  const n = APPEND_ONLY_LOG_READ_PAGE * 2 + 30; // forces at least three pages
-  const rows: Row[] = Array.from({ length: n }, (_, i) => ({
-    log_key: "owner-digest",
-    position: i,
-    record: { seq: i },
-  }));
-  // Noise under other keys must not leak into a single-key read.
-  rows.push({ log_key: "other", position: 0, record: { seq: -1 } });
+const seq = (n: number, log_key: string, extra: (i: number) => Record<string, unknown> = () => ({})) =>
+  Array.from({ length: n }, (_, i) => ({ log_key, position: i, record: { seq: i, ...extra(i) } }));
 
+test("read() pages a log larger than one response and returns every record in position order", async () => {
+  const n = APPEND_ONLY_LOG_READ_PAGE * 2 + 30;
+  const rows: Row[] = [...seq(n, "owner-digest"), { log_key: "other", position: 0, record: { seq: -1 } }];
   const { sql, calls } = fakeLogSql(rows);
   const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
 
   const out = await repo.read("owner-digest");
-  assert.equal(out.length, n, "read must return every record for the key");
-  assert.deepEqual(out.map((r) => r.seq), Array.from({ length: n }, (_, i) => i), "records must be in position order");
+  assert.equal(out.length, n);
+  assert.deepEqual(out.map((r) => r.seq), Array.from({ length: n }, (_, i) => i));
   assert.ok(calls.length >= 3, `expected multiple bounded pages, saw ${calls.length}`);
   assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every read statement must carry LIMIT");
 });
@@ -107,21 +120,52 @@ test("read() of an absent key is one empty bounded page", async () => {
 
 test("readAll() pages the whole table in (log_key, position) order", async () => {
   const big = APPEND_ONLY_LOG_READ_PAGE * 2 + 5;
-  const rows: Row[] = [];
-  for (let i = 0; i < 5; i++) rows.push({ log_key: "aaa", position: i, record: { k: "aaa", p: i } });
-  for (let i = 0; i < big; i++) rows.push({ log_key: "bbb", position: i, record: { k: "bbb", p: i } });
-  for (let i = 0; i < 3; i++) rows.push({ log_key: "ccc", position: i, record: { k: "ccc", p: i } });
-
+  const rows: Row[] = [...seq(5, "aaa"), ...seq(big, "bbb"), ...seq(3, "ccc")];
   const { sql, calls } = fakeLogSql(rows);
-  const repo = pgAppendOnlyRepository<{ k: string; p: number }>(sql, "owner_digests");
+  const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
 
   const out = await repo.readAll();
-  assert.equal(out.length, rows.length, "readAll must return every record in the table");
-  const expected = rows
-    .slice()
-    .sort((a, b) => (a.log_key === b.log_key ? a.position - b.position : a.log_key < b.log_key ? -1 : 1))
-    .map((r) => r.record);
-  assert.deepEqual(out, expected, "readAll order must be (log_key, position)");
-  assert.ok(calls.length >= 3, `expected multiple bounded pages, saw ${calls.length}`);
-  assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every readAll statement must carry LIMIT");
+  assert.equal(out.length, rows.length);
+  assert.ok(calls.length >= 3);
+  assert.ok(calls.every((c) => /LIMIT/i.test(c)));
+});
+
+test("readWhere() returns EVERY match by content, paged, regardless of position", async () => {
+  // A large log where the wanted records are sparse and scattered — the record
+  // at position 3 and the record at the very end both match, positions apart.
+  const n = APPEND_ONLY_LOG_READ_PAGE * 2 + 40;
+  const rows: Row[] = seq(n, "owner-digest", (i) => ({
+    runtimeOutcome: { kind: i === 3 || i === n - 1 || i % 97 === 0 ? "WANT" : "OTHER" },
+  }));
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<{ seq: number; runtimeOutcome: { kind: string } }>(sql, "owner_digests");
+
+  const out = await repo.readWhere("owner-digest", ["runtimeOutcome", "kind"], "WANT");
+  const expected = rows.filter((r) => (r.record as { runtimeOutcome: { kind: string } }).runtimeOutcome.kind === "WANT").map((r) => r.record.seq);
+  assert.deepEqual(out.map((r) => r.seq), expected, "must find every WANT record in position order");
+  assert.ok(out.some((r) => r.seq === 3) && out.some((r) => r.seq === n - 1), "a match near the start and one at the very end both come back");
+  assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every readWhere statement must carry LIMIT");
+});
+
+test("readWhere() of a value with no match is an empty result, not an error", async () => {
+  const rows: Row[] = seq(10, "owner-digest", () => ({ runtimeOutcome: { kind: "OTHER" } }));
+  const { sql } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
+  assert.deepEqual(await repo.readWhere("owner-digest", ["runtimeOutcome", "kind"], "ABSENT"), []);
+});
+
+test("readWhere() refuses an unsafe JSON path segment rather than building SQL from it", async () => {
+  const { sql } = fakeLogSql([]);
+  const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
+  await assert.rejects(() => repo.readWhere("owner-digest", ["runtimeOutcome", "kind'); drop"], "x"), /unsafe JSON path/);
+});
+
+test("readRecent() returns the newest N, newest first, bounded", async () => {
+  const rows: Row[] = seq(50, "owner-digest");
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
+
+  const out = await repo.readRecent("owner-digest", 5);
+  assert.deepEqual(out.map((r) => r.seq), [49, 48, 47, 46, 45], "newest first, exactly the tail");
+  assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
 });

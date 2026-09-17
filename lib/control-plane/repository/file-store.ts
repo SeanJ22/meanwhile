@@ -99,6 +99,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   canonicalJson,
+  jsonTextAtPath,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -564,6 +565,21 @@ export function fileAppendOnlyRepository<T>(
 
     read: async (key: string): Promise<readonly T[]> =>
       (await readLines(key)).map((line) => line.record),
+
+    readWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+    ): Promise<readonly T[]> =>
+      (await readLines(key))
+        .map((line) => line.record)
+        .filter((record) => jsonTextAtPath(record, jsonPath) === value),
+
+    readRecent: async (key: string, limit: number): Promise<readonly T[]> => {
+      const records = (await readLines(key)).map((line) => line.record);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return records.slice(Math.max(0, records.length - bounded)).reverse();
+    },
 
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),

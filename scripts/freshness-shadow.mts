@@ -1654,7 +1654,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
     const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
-    const priorDigests = await repos.ownerDigests.read(DIGEST_LOG_KEY);
+    const priorDigests = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
     for (const rec of freshnessCycleOutcomes(priorDigests)) {
       const lanes = rec.research?.lanes;
       if (!lanes || Date.parse(rec.startedAt) < since) continue;

@@ -323,6 +323,19 @@ export const APPEND_ONLY_LOG_READ_PAGE = 100;
 export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<T> {
   const table = `cp_log_${log}`;
 
+  /* The `#>>` path is a fixed literal built from CODE-PROVIDED segments, never a
+     query value; validate each segment so it can never carry SQL, then embed it
+     (the extracted VALUE is the parameter). */
+  const jsonPathLiteral = (path: readonly string[]): string => {
+    if (path.length === 0) throw new Error(`${table}: an empty JSON path cannot select a field`);
+    for (const segment of path) {
+      if (!/^[A-Za-z0-9_]+$/.test(segment)) {
+        throw new Error(`${table}: unsafe JSON path segment ${JSON.stringify(segment)}`);
+      }
+    }
+    return `{${path.join(",")}}`;
+  };
+
   return {
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
       /*
@@ -442,6 +455,29 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
       return out;
     },
 
+    async readWhere(key, path, value) {
+      /* Content filter, keyset-paged like `read`: the response only ever holds
+         matching rows (bounded by the page), so a selective filter over a log
+         far larger than the 64 MiB cap still returns every match. The cursor
+         advances by the last match's position, skipping non-matching rows. */
+      const jsonPath = jsonPathLiteral(path);
+      const out: T[] = [];
+      let afterPosition = -1;
+      for (;;) {
+        const rows = (await sql.query(
+          `SELECT position, record FROM ${table}
+           WHERE log_key = $1 AND position > $2 AND record #>> '${jsonPath}' = $3
+           ORDER BY position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          [key, afterPosition, value],
+        )) as Record<string, unknown>[];
+        for (const r of rows) out.push(parseValue<T>(r.record, `${table} ${key}`));
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        afterPosition = Number(rows[rows.length - 1].position);
+      }
+      return out;
+    },
+
     async readAll() {
       /* Keyset-paged over the whole table in the same (log_key, position) order
          the single statement used, for the same 64 MiB reason as `read`. */
@@ -467,6 +503,16 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
         cursor = { key: String(last.log_key), position: Number(last.position) };
       }
       return out;
+    },
+
+    async readRecent(key, limit) {
+      /* Newest `limit`, newest first. `limit` bounds the response, so this needs
+         no paging — callers pass a small tail (e.g. a digest-history window). */
+      const rows = (await sql.query(
+        `SELECT record FROM ${table} WHERE log_key = $1 ORDER BY position DESC LIMIT $2`,
+        [key, Math.max(0, Math.trunc(limit))],
+      )) as Record<string, unknown>[];
+      return rows.map((r) => parseValue<T>(r.record, `${table} ${key}`));
     },
 
     async keys() {

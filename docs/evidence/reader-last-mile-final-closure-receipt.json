@@ -2113,7 +2113,7 @@
     },
     {
       "path": "docs/evidence/reader-last-mile-final-invalidation.json",
-      "sha256": "702602848c8c1992b28ca9f71bd31950d936ce6ce9abec93d4b235f7447b75dc"
+      "sha256": "752dda69c4b895dd2c4c57d280d1fef19e40f144403cfc614be2127dec59fb8f"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-key-votes-ask.json",
@@ -2183,6 +2183,6 @@
   },
   "inheritance": {
     "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
-    "reportSha256": "702602848c8c1992b28ca9f71bd31950d936ce6ce9abec93d4b235f7447b75dc"
+    "reportSha256": "752dda69c4b895dd2c4c57d280d1fef19e40f144403cfc614be2127dec59fb8f"
   }
 }

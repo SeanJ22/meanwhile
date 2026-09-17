@@ -167,23 +167,24 @@ export function FleetOperationsMap({ initialState, stateVersion }: { initialStat
     return groups.filter((g) => g.cards.length > 0);
   }, [nonFleetCards]);
 
-  const [readAgo, setReadAgo] = useState<string | null>(null);
+  const observedAt = report?.observedAt;
+  const [nowMs, setNowMs] = useState<number>(() => Date.now());
   useEffect(() => {
-    const ts = report?.observedAt;
-    if (!ts) { setReadAgo(null); return; }
-    const tick = (): void => {
-      const ms = Date.now() - Date.parse(ts);
-      if (!Number.isFinite(ms) || ms < 0) { setReadAgo(null); return; }
-      const minutes = Math.floor(ms / 60_000);
-      if (minutes < 1) setReadAgo("just now");
-      else if (minutes === 1) setReadAgo("1 minute ago");
-      else if (minutes < 60) setReadAgo(`${minutes} minutes ago`);
-      else { const h = Math.floor(minutes / 60); setReadAgo(`${h} hour${h === 1 ? "" : "s"} ago`); }
-    };
-    tick();
-    const id = setInterval(tick, 60_000);
+    if (!observedAt) return;
+    const id = setInterval(() => setNowMs(Date.now()), 60_000);
     return () => clearInterval(id);
-  }, [report?.observedAt]);
+  }, [observedAt]);
+  const readAgo = useMemo<string | null>(() => {
+    if (!observedAt) return null;
+    const ms = nowMs - Date.parse(observedAt);
+    if (!Number.isFinite(ms) || ms < 0) return null;
+    const minutes = Math.floor(ms / 60_000);
+    if (minutes < 1) return "just now";
+    if (minutes === 1) return "1 minute ago";
+    if (minutes < 60) return `${minutes} minutes ago`;
+    const h = Math.floor(minutes / 60);
+    return `${h} hour${h === 1 ? "" : "s"} ago`;
+  }, [observedAt, nowMs]);
 
   return (
     <section data-fleet-map style={{ display: "grid", gap: 16 }}>

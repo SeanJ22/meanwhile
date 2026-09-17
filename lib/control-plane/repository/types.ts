@@ -375,10 +375,43 @@ export interface AppendOnlyRepository<T> {
   append(key: string, recordId: string, record: T, now: string): Promise<AppendOutcome<T>>;
   /** Records under one key, in append order. */
   read(key: string): Promise<readonly T[]>;
+  /**
+   * Records under one key whose JSON value at `path` (a scalar `#>>` text
+   * extraction) equals `value`, in append order.
+   *
+   * A CONTENT filter, not a position lookup: it returns EVERY matching record
+   * regardless of where it sits, so it is stable as the log grows and cannot
+   * false-negative an existing record the way "give me position N" can. Reading
+   * by what the caller is looking for is the point — `["runtimeOutcome","kind"]
+   * = "METHOD_CANDIDATE_AUTHORITY_ADOPTION"` still finds the receipt after ten
+   * thousand later rows shift its position. An empty result means the store
+   * genuinely holds no such record; the CALLER decides whether that is a valid
+   * absence or a failure (an empty where a record must exist is the caller's to
+   * reject, loudly). A store/transport error THROWS and is never an empty list.
+   */
+  readWhere(key: string, path: readonly string[], value: string): Promise<readonly T[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
+  /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
+  readRecent(key: string, limit: number): Promise<readonly T[]>;
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
+}
+
+/**
+ * The scalar text at `path` inside a record, or null — the in-process mirror of
+ * Postgres `record #>> '{a,b}'`: null when the path does not resolve, and null
+ * for a non-scalar leaf (no caller filters on an object/array leaf). Used by the
+ * file and memory providers so `readWhere` filters identically to the pg one.
+ */
+export function jsonTextAtPath(record: unknown, path: readonly string[]): string | null {
+  let cursor: unknown = record;
+  for (const segment of path) {
+    if (cursor === null || typeof cursor !== "object" || Array.isArray(cursor)) return null;
+    cursor = (cursor as Record<string, unknown>)[segment];
+  }
+  if (cursor === null || cursor === undefined || typeof cursor === "object") return null;
+  return String(cursor);
 }
 
 /**

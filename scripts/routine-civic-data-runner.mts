@@ -193,7 +193,8 @@ async function latestUnreceiptedSupervisorAttempts(): Promise<RoutineSupervisorA
   assertDurableRepositories(repos, "routine civic-data provider-frontier history");
   const taskIds = new Set(ROUTINE_SOURCE_TASKS.map(({ id }) => id));
   return routineUnreceiptedSupervisorAttemptHistory(
-    await repos.ownerDigests.read(DIGEST_LOG_KEY),
+    /* Only supervisor outcomes matter here; fetch them by kind, not the whole log. */
+    await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR"),
     taskIds,
   );
 }

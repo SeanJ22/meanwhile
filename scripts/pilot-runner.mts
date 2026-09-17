@@ -802,8 +802,8 @@ async function persistOuterRoutineChildFailure(
   try {
     const repos = await ownerRepositories();
     if (repos === null) throw new Error("production control plane is not configured");
-    const existing = (await repos.ownerDigests.read(DIGEST_LOG_KEY)).find(
-      (row) => row.digestId === cycleId && row.runtimeOutcome?.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR",
+    const existing = (await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["digestId"], cycleId)).find(
+      (row) => row.runtimeOutcome?.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR",
     );
     if (existing) {
       console.error(`  routine civic data: canonical supervisor incident ${cycleId} was already persisted by the child`);

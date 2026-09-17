@@ -51,6 +51,7 @@ import {
   ConcurrentModification,
   RepositoryLockHeld,
   UnknownAggregate,
+  jsonTextAtPath,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -178,6 +179,24 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     read: async (key: string): Promise<readonly T[]> =>
       (partitions.get(key) ?? []).map((entry) => jsonCopy(entry.record)),
+
+    readWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+    ): Promise<readonly T[]> =>
+      (partitions.get(key) ?? [])
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value)
+        .map((entry) => jsonCopy(entry.record)),
+
+    readRecent: async (key: string, limit: number): Promise<readonly T[]> => {
+      const partition = partitions.get(key) ?? [];
+      const bounded = Math.max(0, Math.trunc(limit));
+      return partition
+        .slice(Math.max(0, partition.length - bounded))
+        .reverse()
+        .map((entry) => jsonCopy(entry.record));
+    },
 
     readAll: async (): Promise<readonly T[]> =>
       [...partitions.entries()]

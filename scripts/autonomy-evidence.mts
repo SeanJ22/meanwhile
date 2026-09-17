@@ -214,7 +214,7 @@ interface CycleRecord {
 }
 
 const cycles: CycleRecord[] = [];
-for (const parsed of freshnessCycleOutcomes(await repos.ownerDigests.read(DIGEST_LOG_KEY))) {
+for (const parsed of freshnessCycleOutcomes(await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"))) {
     const provider = parsed.provider;
     /* Only the POSTGRES cycles. A file-store cycle is a real cycle and is not
        the authoritative control plane, and mixing them would let a claim about

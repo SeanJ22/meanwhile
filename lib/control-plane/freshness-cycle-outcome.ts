@@ -366,11 +366,11 @@ export function routineSupervisorCycleIsolationIssue(
 export async function readLatestFreshnessCycleOutcome(
   repos: ControlPlaneRepositories,
 ): Promise<{ readonly digest: OwnerDigestRecord; readonly outcome: FreshnessCycleOutcome } | null> {
-  const rows = await repos.ownerDigests.read(DIGEST_LOG_KEY);
-  for (let index = rows.length - 1; index >= 0; index -= 1) {
-    const outcome = rows[index].runtimeOutcome;
-    if (outcome?.kind === "FRESHNESS_CYCLE") return { digest: rows[index], outcome };
-  }
+  /* Targeted by kind, newest last in append order — not a scan of the whole log. */
+  const rows = await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE");
+  const digest = rows.at(-1);
+  const outcome = digest?.runtimeOutcome;
+  if (digest && outcome?.kind === "FRESHNESS_CYCLE") return { digest, outcome };
   return null;
 }
 

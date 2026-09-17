@@ -16,6 +16,7 @@ import {
   readerCensusSummary,
   readerClosureExecutionAuthorityAdmission,
   readerClosureExecutionAuthorityProblems,
+  readerRowStructuralSha256,
   readerSourceFingerprint,
   readReaderEvidence,
   reconcileDelivery,
@@ -224,6 +225,12 @@ if (meetingKnowledgeAskPath) {
       return applicable.length === (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length ? row : { ...row, applicableEligibleRecordIds: applicable };
     }) };
   }
+  const finalRows = new Map(census.rows.map((row) => [row.id, row]));
+  for (const reportRow of inheritanceReport.rows) {
+    const final = finalRows.get(reportRow.rowId);
+    if (final) reportRow.currentStructuralSha256 = readerRowStructuralSha256(final);
+  }
+  writeFileSync(invalidationPath, `${JSON.stringify(inheritanceReport, null, 2)}\n`);
 }
 
 const closureFailures = censusClosureFailures(census);

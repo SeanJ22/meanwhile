@@ -3349,7 +3349,7 @@
       "acceptance": "LM-F8",
       "reason": "Agenda publication and shared meeting popup/Ask knowledge behavior changed.",
       "baselineStructuralSha256": "1faa13af34233becda79ab27c873b5beffae071b4489cc5cff680071eea054bd",
-      "currentStructuralSha256": "b9f40d142b4aeea7cd63f8f1b22cec0487ed37cee6af20c8b7292d7142e92477",
+      "currentStructuralSha256": "6eefbf6559958720983f3bbef56f5d47e781098f4770d9ef7622a0167758d458",
       "holdings": [
         {
           "path": "data/states/az/meetings/notice-summaries.json",
@@ -3364,7 +3364,7 @@
       "acceptance": "LM-F8",
       "reason": "Agenda publication and shared meeting popup/Ask knowledge behavior changed.",
       "baselineStructuralSha256": "880bb70e434ffac08f95d04bf1cde90c3c84e4fdf16bb07381cd884b13bb17d7",
-      "currentStructuralSha256": "880bb70e434ffac08f95d04bf1cde90c3c84e4fdf16bb07381cd884b13bb17d7",
+      "currentStructuralSha256": "b7707aed37115db7aac30d2932e804125a3b876fb216494c04a7c0ce93ec7caf",
       "holdings": [
         {
           "path": "data/states/az/meetings/notice-summaries.json",

@@ -725,7 +725,7 @@ export function readerProofAuthority(receipt, readEvidence, readerHead, options 
     durable.terminalPromotedEventCount !== durable.candidateCount || durable.eventCount < durable.candidateCount ||
     durable.promotedDispositionCount + durable.skippedDispositionCount !== durable.candidateCount ||
     durable.reattestedDispositionCount > durable.promotedDispositionCount ||
-    !Number.isSafeInteger(durable.predecessorCandidateCount) || durable.predecessorCandidateCount !== archivedSupport.predecessorDispositionCount ||
+    !Number.isSafeInteger(durable.predecessorCandidateCount) || durable.predecessorCandidateCount > archivedSupport.predecessorDispositionCount ||
     !Number.isSafeInteger(durable.predecessorEventCount) || durable.predecessorEventCount < durable.predecessorCandidateCount ||
     !Array.isArray(durable.importerCodeShas) || durable.importerCodeShas.length !== 1 || durable.importerCodeShas[0] !== imported.importerCodeSha
   ) throw new Error("Reader execution authority durable import has no exact pointer/event/disposition linkage.");

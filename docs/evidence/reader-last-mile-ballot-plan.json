@@ -1,7 +1,7 @@
 {
   "rule": "Deterministic ZIP set cover from committed ZIP/division geometry, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.",
-  "contests": 141,
-  "sourcedAbsences": 15,
+  "contests": 142,
+  "sourcedAbsences": 14,
   "chosen": [
     {
       "zip": "03255",
@@ -18,12 +18,12 @@
         "ballot-nh-merrimack:county-attorney",
         "ballot-nh-merrimack:county-treasurer",
         "ballot-nh-merrimack:register-of-deeds",
-        "ballot-nh-merrimack:register-of-probate"
+        "ballot-nh-merrimack:register-of-probate",
+        "ballot-nh-merrimack:cacr-13"
       ],
       "absenceOcdIds": [
         "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-        "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
-        "ocd-division/country:us/state:nh"
+        "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district"
       ]
     },
     {

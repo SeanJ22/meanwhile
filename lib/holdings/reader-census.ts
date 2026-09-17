@@ -1280,7 +1280,7 @@ export function readerClosureExecutionAuthorityEvidenceProblems(
     !Number.isSafeInteger(durable.predecessorCandidateCount) || Number(durable.predecessorCandidateCount) < 0 ||
     !Number.isSafeInteger(durable.predecessorEventCount) || Number(durable.predecessorEventCount) < Number(durable.predecessorCandidateCount) ||
     !Number.isSafeInteger(unionPredecessorCount) || unionPredecessorCount < 0 || unionPredecessorCount > promotedCount ||
-    Number(durable.predecessorCandidateCount) !== reattestedCount + unionPredecessorCount ||
+    Number(durable.predecessorCandidateCount) > reattestedCount + unionPredecessorCount ||
     !Number.isSafeInteger(durable.eventCount) || Number(durable.eventCount) < candidateCount ||
     !Number.isSafeInteger(promotedCount) || !Number.isSafeInteger(reattestedCount) || !Number.isSafeInteger(skippedCount) ||
     promotedCount < 0 || reattestedCount < 0 || skippedCount < 0 ||

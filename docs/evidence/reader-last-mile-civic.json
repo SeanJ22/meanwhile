@@ -1,6 +1,6 @@
 {
-  "exactHead": "9b01f3e51aab3ac397bfb1c7155442392a3740a6",
-  "buildId": "DuOTzpchdyoAyeSWU1nMz",
+  "exactHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
+  "buildId": "xZVwHdCi-RZ5tyeL4fVyV",
   "sourceHashes": {
     "lib/routing/everyday.ts": "b00840fba176f775797dc300c5121285e03b49826dd589a95bf6385bb92600c5",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
@@ -8,8 +8,8 @@
     "lib/routing/ask.ts": "726ff0a2966b4431aa1f9ae94dbc9639ec7fe161c1f7b6ab2995aed296388b76",
     "lib/officials/phone-numbers.ts": "ad62063e7ab2fc702a370dc2d3abee5ce2af81cfa8d931c8ae019d81d0523f1a",
     "components/ask/ask-box.tsx": "72e2b5f7d67880ba848973c95f962ab2feada15a4a59d3e6330b2086c2dc667d",
-    "components/shell/pill-cluster.tsx": "e3007318b4a21950d5445846e17d8705c757896b4d448c30a559b94607195477",
-    "app/globals.css": "5ea8070b355ebb34c5922aef638a4ff8d1697cf4e886b2878b4091b454eaa7a2"
+    "components/shell/pill-cluster.tsx": "18d4a6c311695b56a8f4d4f8a5922a37f2f8ab342d4608d17a64a9a656d1b3e0",
+    "app/globals.css": "cf97e13d50e33b5d42757009da5fc138c8d166d6d363402fa56b9310e1f67177"
   },
   "everydayRoutingAuthority": {
     "kind": "PROMOTED",
@@ -93,7 +93,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
-      "canonicalAnswerSha256": "21fa8f62db8f422e167d8f079b038dfd6a26fc6c418e7ff0dbf1e4a6f6c86b18",
+      "canonicalAnswerSha256": "261ff73c09010f9c2a2c11f2906ecbdc0402803c81dee9abbf272c07d18b0b6f",
       "renderedTextSha256": "f0b7a8c14407b86dcf8e90b3015597a85214e2bb00d0e5bf0a90206d3ecfca7c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -139,7 +139,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with broken playground equipment and park maintenance and pool hours and reserve a pavilion?",
-      "canonicalAnswerSha256": "fa80cbcf0a0f49a4081998dd5f501cd8d5565067a549e6a5532c9d2eeb89d006",
+      "canonicalAnswerSha256": "4bac216afeb32cf4535bd2e743787e3f4d52cca01cd3def84fee7b5562305115",
       "renderedTextSha256": "f7ba60f9d5195fc2b0e2f359956eecda50e010d8390f1bb9fdd23dd365b6b228",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -187,7 +187,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "aa6b55981d12abc2cbb625b24f6f3689d293853cdffda9905121609aaf897c36",
+      "canonicalAnswerSha256": "28e5ace5f4ac7d7b152640a8117c7ab39088ff02e32aa704c86d76bfa0b82f43",
       "renderedTextSha256": "9c0fabfbac5455453cb94d888dd45ec73e19bd9d3c4c90226a835f923fedd50b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -235,7 +235,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "f52c91121cd2bc26c76f18a84de02c66053c0c7c54158a222d1ed599ba9d02e9",
+      "canonicalAnswerSha256": "8e598cbb8d5f435e6d0d454a3855399d1643527818585ccd79cb3c125ff3d85e",
       "renderedTextSha256": "6387e74e9d8d6777f5e547e77a6740b6d1269bff618508e8e563ed77d6800fb9",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -285,7 +285,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with street not plowed and plow damage and ice on the road?",
-      "canonicalAnswerSha256": "6c0ac0d9d12498a1d8987e4e44632102ccacc6d8afc2fe7e78e26334c6f65dbd",
+      "canonicalAnswerSha256": "9351a9e0dbc765d3ea2c52e2b5a357d837b58a125a44f4efd7bced1fb65d057f",
       "renderedTextSha256": "e651dc7574a11df4a0604c34ae13661d290aeaa54841d3071bb94bcecaf4e058",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -333,7 +333,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
-      "canonicalAnswerSha256": "1dd59f16220b6a19123ed972948994cb791ec1a4c36a99469e4334651c704133",
+      "canonicalAnswerSha256": "748929f3c0e2bc30d8763f71fe8327a2076df12b59fecae2ea3eb45c43178958",
       "renderedTextSha256": "b2cd1440f24d9e899223cb9f2dc1e271c8d56754b11098136d091df13e6de4c7",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -395,8 +395,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
-      "canonicalAnswerSha256": "3fdf3412fd58ee3100e12de676e7a3c26312d9938af248a56302239f46f983f8",
-      "renderedTextSha256": "edb5ed740d673c2aa484c4d5af02a985c2d0632c71035197c5e2c05c4c59e478",
+      "canonicalAnswerSha256": "135ebafe6bb3a92b1e2b6bb61c6151a38ed172bb82721b36926d7b8f537b1546",
+      "renderedTextSha256": "50f91eb054d9d1faf74946036a21381a5e056a185b097c2a4fc56b627812acd6",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -513,8 +513,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -561,8 +561,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -607,8 +607,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
-      "canonicalAnswerSha256": "e00f49021dad2e6d6069c34cf4fed7c788cc13fa3fef47a4ccb8b72b999b5843",
-      "renderedTextSha256": "bd026f146c03a89a1bd72021c0b69f2bfc4d0f9753cceb46285bb9508451e193",
+      "canonicalAnswerSha256": "a459d79e2862988a7402bd8ce5c0ea0ffed0b4296dbd3ef3fb3692da3b9cf9bf",
+      "renderedTextSha256": "1fe8d4b9a8bd6c74452046ab1b5ca697359323244603861017afbce89a874bc2",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -655,8 +655,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
-      "canonicalAnswerSha256": "e00f49021dad2e6d6069c34cf4fed7c788cc13fa3fef47a4ccb8b72b999b5843",
-      "renderedTextSha256": "bd026f146c03a89a1bd72021c0b69f2bfc4d0f9753cceb46285bb9508451e193",
+      "canonicalAnswerSha256": "a459d79e2862988a7402bd8ce5c0ea0ffed0b4296dbd3ef3fb3692da3b9cf9bf",
+      "renderedTextSha256": "1fe8d4b9a8bd6c74452046ab1b5ca697359323244603861017afbce89a874bc2",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -705,8 +705,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with broken playground equipment and park maintenance and pool hours and reserve a pavilion?",
-      "canonicalAnswerSha256": "75f7fe8ac4707ab4a3e7b6db228fd34a855767a330a6a28a6d7d108284b1dff5",
-      "renderedTextSha256": "6f3f408a466ac5e4599cc7cbd2718e01fee0855723b02aa133ba55322046cc67",
+      "canonicalAnswerSha256": "346cb69a80f173caab497ea4d53603496a6d1c30842d92ccde67945a00bb38ab",
+      "renderedTextSha256": "a81a4ad7ec0b639a16f899ac812566d70632699a3ace958dc86af746858873eb",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -756,7 +756,7 @@
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
       "canonicalAnswerSha256": "2632e28366e7096670bb4648295126a8932bede60e42a108b990e3e75855780e",
-      "renderedTextSha256": "0468e730446d71c78c9aaad78653822b08d741bbf9b3d820cd0dbd7fa08595a1",
+      "renderedTextSha256": "c1414841bef43761dff929cd4b1a52b83c58e5a90cd6cb60e30fcabbce0582fa",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -805,8 +805,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "d6d70d4bc659934c515f34944860802ad8ee20c37d3a130d787bf1fbb67ccfc2",
-      "renderedTextSha256": "01f5cb59c15e7835ee7df7335d22d0f426e5c7d47583eddcd79f8aad91ac7b38",
+      "canonicalAnswerSha256": "648f9be28ab28cf7f6cc8b61b1e3d9bcaefa00b26cca91d66adabebe2d1c53e7",
+      "renderedTextSha256": "cb1d2778377f7be7a837e74aeb23cf446e650ebe59ffe0d19312979a79844737",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -855,8 +855,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "d6d70d4bc659934c515f34944860802ad8ee20c37d3a130d787bf1fbb67ccfc2",
-      "renderedTextSha256": "01f5cb59c15e7835ee7df7335d22d0f426e5c7d47583eddcd79f8aad91ac7b38",
+      "canonicalAnswerSha256": "648f9be28ab28cf7f6cc8b61b1e3d9bcaefa00b26cca91d66adabebe2d1c53e7",
+      "renderedTextSha256": "cb1d2778377f7be7a837e74aeb23cf446e650ebe59ffe0d19312979a79844737",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -905,8 +905,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with street not plowed and plow damage and ice on the road?",
-      "canonicalAnswerSha256": "44bb930c5dc8d5c15bb7547d064ffd5dda556c8ac881df007a175a237eac2888",
-      "renderedTextSha256": "44d6cec712a5f4909a9708cec4e72604bc6cc2c26b3455f6b0c8a1a1a7a0a7f2",
+      "canonicalAnswerSha256": "c2ed3fb07340062a320866059b4bcee338483e883919971f6be2dd2427ffe8ef",
+      "renderedTextSha256": "1c2edc2255ee5fbdcd79cf04f71be83a46ab6c190c669f2b1f2c5d0df1ebb480",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -955,8 +955,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with street not plowed and plow damage and ice on the road?",
-      "canonicalAnswerSha256": "44bb930c5dc8d5c15bb7547d064ffd5dda556c8ac881df007a175a237eac2888",
-      "renderedTextSha256": "44d6cec712a5f4909a9708cec4e72604bc6cc2c26b3455f6b0c8a1a1a7a0a7f2",
+      "canonicalAnswerSha256": "c2ed3fb07340062a320866059b4bcee338483e883919971f6be2dd2427ffe8ef",
+      "renderedTextSha256": "1c2edc2255ee5fbdcd79cf04f71be83a46ab6c190c669f2b1f2c5d0df1ebb480",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1003,8 +1003,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
-      "canonicalAnswerSha256": "ffd6e3a4ad76a837d564dbd3c695252fb8d5f7e22bd19c52c0a89eb14fa2c073",
-      "renderedTextSha256": "4374f2984c28172b3e1a90ab3f10e882fed7eca120fb872c4afefc78fb9c6182",
+      "canonicalAnswerSha256": "2b43981f0592483dcc81960365f4c181f50e32edd783ebbc079755b120ee004d",
+      "renderedTextSha256": "9feca1f88d745ee2fe072b3ecbb973a5542fa32548fe67c8c55a9cf0d469073b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1053,8 +1053,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
-      "canonicalAnswerSha256": "ffd6e3a4ad76a837d564dbd3c695252fb8d5f7e22bd19c52c0a89eb14fa2c073",
-      "renderedTextSha256": "4374f2984c28172b3e1a90ab3f10e882fed7eca120fb872c4afefc78fb9c6182",
+      "canonicalAnswerSha256": "2b43981f0592483dcc81960365f4c181f50e32edd783ebbc079755b120ee004d",
+      "renderedTextSha256": "9feca1f88d745ee2fe072b3ecbb973a5542fa32548fe67c8c55a9cf0d469073b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1103,8 +1103,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
-      "canonicalAnswerSha256": "4dcba88aebd2e6f84497ca93f42d5e55ceb3551b0c7e98133582d70022ddf638",
-      "renderedTextSha256": "aed4cbeb714741ede6bf47aa92b35d67356fa91e08c04eb9110fd97985e12a40",
+      "canonicalAnswerSha256": "01b89e565c36cc4eea6119e3591d193bd339031620b80a610508be3f1f7bd275",
+      "renderedTextSha256": "9c75f414cacb02d7a5b6b56c6017693d8f119e797df550b1f0dcfd870c1380f8",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1153,8 +1153,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
-      "canonicalAnswerSha256": "4dcba88aebd2e6f84497ca93f42d5e55ceb3551b0c7e98133582d70022ddf638",
-      "renderedTextSha256": "aed4cbeb714741ede6bf47aa92b35d67356fa91e08c04eb9110fd97985e12a40",
+      "canonicalAnswerSha256": "01b89e565c36cc4eea6119e3591d193bd339031620b80a610508be3f1f7bd275",
+      "renderedTextSha256": "9c75f414cacb02d7a5b6b56c6017693d8f119e797df550b1f0dcfd870c1380f8",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1203,8 +1203,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
-      "canonicalAnswerSha256": "2aa06898c5e84d012f83858aa2b3179a7465a2698dadd8a9aaf454f58e4cfaca",
-      "renderedTextSha256": "94660ce72220556bfbd5bc7e4874b1b29e57f5980bbe31c585a6f1364759facf",
+      "canonicalAnswerSha256": "c551e7a65c0df8969a6fa1de9e8f70647510b43461c50a076969b076d8cbec77",
+      "renderedTextSha256": "278867d8200dfc93ead67ce8971a7d40c59c6104cfd97d8ce51efb04db322a87",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1251,8 +1251,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1299,8 +1299,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1347,8 +1347,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1395,8 +1395,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1443,8 +1443,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1491,8 +1491,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1539,8 +1539,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1587,8 +1587,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1635,8 +1635,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1683,8 +1683,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "46b0def9181d63b23b5f3837379e3294b65dc08702ac90ea023bfcc9f160e172",
-      "renderedTextSha256": "a362ba4f898f8af64558e6f29e3087dae2eb1bfc2d05788c0a648eb8a323ca0d",
+      "canonicalAnswerSha256": "39b2df94b22efcd4b40f21f6c3915b313cde68bf530d3eb5fe6f833fbedcb5c3",
+      "renderedTextSha256": "ef531ecf57c49392cb4d08e236875502b209d56e24e86f4aa834c131df56b35f",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1729,8 +1729,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "bad825a4320ff2b9508e8f6b595c3b13560d110e0c29d4747b6985d403fc6cb0",
-      "renderedTextSha256": "77a65a13c706765fa1006748aa09a9a0eb485fa667d12a6b0c8e26a5d9764c45",
+      "canonicalAnswerSha256": "c6e922395ca3f3ec013eabd5c1b7f42efdaac517757b5b6ace01c63875122e85",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1775,8 +1775,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
-      "canonicalAnswerSha256": "9f23995a49b667cf255be6edfacf27e0f9fdfba9a124bcfd7f40305ceffd846f",
-      "renderedTextSha256": "c7ca713acebbc02c33322b9a6933405299fd52cf3efdd08c517ef21a62c5744d",
+      "canonicalAnswerSha256": "41d1b89b41b3d3added225820afe0714ef9936f90eb3f40b5783585c4f453e3c",
+      "renderedTextSha256": "0b919e35ce78de5272c6bf44f7d4818c672b1a4fed5de9bee3c0da50ad9398b2",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1837,8 +1837,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "ecc8431450a40876a69224f30230294b718e98fceb83f52742f0a53bd30add7e",
-      "renderedTextSha256": "9472b6526ec1bfb7c9b8f59e0d7331f7e170020f81e798af1d3de1d40e024d7b",
+      "canonicalAnswerSha256": "1fc3d3c906244273185b9d4528e325932d385fa057527b7a7499c526f34d7b78",
+      "renderedTextSha256": "879a7fbaf65cdcb96a1402b104e1d0383cee6af889df98e8a4d3fa12ec895320",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1885,8 +1885,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "0d216448f75dbdec89ab80f17d6031ab95d694414cb0a449ddc24818c247ce48",
-      "renderedTextSha256": "35897d1bf8b7116cedc6ab6c51508fe30987c1d78c567c709e35339ca6bdd83f",
+      "canonicalAnswerSha256": "f547097578477f333a95287c2b1557e8bfcf0355770b2441e0a19b89b0be86d1",
+      "renderedTextSha256": "d22d14f403dc38dd6c6d9bb51e7c0a79c84938ffd674d1ffa9cb08ad1dc76848",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1961,8 +1961,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
-      "canonicalAnswerSha256": "9b98783ddc356cf1dedb76d723a96bdc3bfda26a111442bb4a5ebe217d409c5b",
-      "renderedTextSha256": "928ff94f031e1ed2df394b65d3810f0d3047978080f087918524e5aea4555b82",
+      "canonicalAnswerSha256": "ff5fe0f677af222690aa24016af3095d4c5e6959ed384a697890cf429b3aaafd",
+      "renderedTextSha256": "d6d821f9c54a5ba85727c36f9fe0299d1ccb458737455a2f958f50f1a173b327",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2009,8 +2009,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
-      "canonicalAnswerSha256": "411773946e01bf2a38ac807b5dc6f2b0c64b3cb57370f4d1766b7301ae161b13",
-      "renderedTextSha256": "df473c3af627924aa85a34ef3cb0a7aed6a2e03716b209740af3424b0d7e89f4",
+      "canonicalAnswerSha256": "4bbf4cc0d46dcd5f5ac32a0fe349ed819738cb6c64c0a9d9092df90f09ca5424",
+      "renderedTextSha256": "0e30898f0a4a47dc6731ec599d4c5ae81facd5536438e3d6dcf46c25398a0b87",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2055,8 +2055,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "bad825a4320ff2b9508e8f6b595c3b13560d110e0c29d4747b6985d403fc6cb0",
-      "renderedTextSha256": "77a65a13c706765fa1006748aa09a9a0eb485fa667d12a6b0c8e26a5d9764c45",
+      "canonicalAnswerSha256": "c6e922395ca3f3ec013eabd5c1b7f42efdaac517757b5b6ace01c63875122e85",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2101,8 +2101,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "bad825a4320ff2b9508e8f6b595c3b13560d110e0c29d4747b6985d403fc6cb0",
-      "renderedTextSha256": "77a65a13c706765fa1006748aa09a9a0eb485fa667d12a6b0c8e26a5d9764c45",
+      "canonicalAnswerSha256": "c6e922395ca3f3ec013eabd5c1b7f42efdaac517757b5b6ace01c63875122e85",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2147,8 +2147,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "bad825a4320ff2b9508e8f6b595c3b13560d110e0c29d4747b6985d403fc6cb0",
-      "renderedTextSha256": "77a65a13c706765fa1006748aa09a9a0eb485fa667d12a6b0c8e26a5d9764c45",
+      "canonicalAnswerSha256": "c6e922395ca3f3ec013eabd5c1b7f42efdaac517757b5b6ace01c63875122e85",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2193,8 +2193,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "bad825a4320ff2b9508e8f6b595c3b13560d110e0c29d4747b6985d403fc6cb0",
-      "renderedTextSha256": "77a65a13c706765fa1006748aa09a9a0eb485fa667d12a6b0c8e26a5d9764c45",
+      "canonicalAnswerSha256": "c6e922395ca3f3ec013eabd5c1b7f42efdaac517757b5b6ace01c63875122e85",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2239,8 +2239,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "bad825a4320ff2b9508e8f6b595c3b13560d110e0c29d4747b6985d403fc6cb0",
-      "renderedTextSha256": "77a65a13c706765fa1006748aa09a9a0eb485fa667d12a6b0c8e26a5d9764c45",
+      "canonicalAnswerSha256": "c6e922395ca3f3ec013eabd5c1b7f42efdaac517757b5b6ace01c63875122e85",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2285,8 +2285,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "cd2dd404f30772a66184e0cf1b5467a2be513bcdf25c414b1e4dd73ea4c479b3",
-      "renderedTextSha256": "e4739fc303fccc62cb673640e334ca0b2e1fb6d8f4fa0271f61072d75e27ac4b",
+      "canonicalAnswerSha256": "a0c07d2f04b688d2405c0c0ac2aeda732d534d80893755365c99d00f807e854a",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2331,8 +2331,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
-      "canonicalAnswerSha256": "9e9cf3312578ac8acc74bce958f5cd0424cb128f3bea8468826eee6a333a8843",
-      "renderedTextSha256": "fbfaa2b83c4cb2e8cfc75d268e2d1c1aec2cb321c93d1b303101b9dee2769263",
+      "canonicalAnswerSha256": "aedee6c6b1f21902a87afab64dbd6a34171f6b40cb2ed176c1582dc2f7a14d69",
+      "renderedTextSha256": "5bfac6241f448454be5514d14fc7652c37d3cab50a4a93cf057e2595659a9efe",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2377,8 +2377,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with broken playground equipment and park maintenance and pool hours and reserve a pavilion?",
-      "canonicalAnswerSha256": "292d9499d1b326ee3d73f2b7f7b537f58c5994655058af10d63c65a45cae5b83",
-      "renderedTextSha256": "140800d0755e25ecb61259afd9cd2bc175c65d96c2b32857abb7f0b377a792fc",
+      "canonicalAnswerSha256": "1c307c02d1ae846de960df503143638ae3b5e29a0d230d9a07e3f33fcd20a704",
+      "renderedTextSha256": "c879181f1f9152e8f70118c177f4bd966486bdd270559009cafcee03b2b862a2",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2425,8 +2425,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "ed002889ef4e002f8d7c465908b28480a08623eaba719a3f738ded990bfac1b5",
-      "renderedTextSha256": "aada03592303283204aaa27369ac9de902ee29e50bb49cc30bdc6f55c74d6688",
+      "canonicalAnswerSha256": "6143b06ab75f2211403d36eb549590f99bdfd9cdd43971975f95a3d48dc0fced",
+      "renderedTextSha256": "b978fc8ee7074341658b9bdc64b6382813b61089e2263e393e19fba8cd4ad272",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2473,8 +2473,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "38a1e6c47eaa5645f2418f4965137fe5ef065fe1f3cf0222316d14f18aa575c6",
-      "renderedTextSha256": "c84af369c8e170f4a2b68e063e963c950831b5388c80a86e819fc0698ae4703b",
+      "canonicalAnswerSha256": "16773f6941fc907087c0d8f502d93e389c80493d40d917ef0d121d2469d38e2f",
+      "renderedTextSha256": "e22a4bcb33a69312fb25398f69e29f66e9c684301fd3c1a2b76dc2ebf0302885",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2533,8 +2533,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
-      "canonicalAnswerSha256": "f180502c2ccaace7c018208ac5e2884cb9160b8151094ea09e829648c825711e",
-      "renderedTextSha256": "92922eb1b321a8046bc08cac2459414d0b647c4c5aac3e042782a7eab36b06a4",
+      "canonicalAnswerSha256": "2570d629420dc9cc92760eecd04629c3e63925d3d5916a17124b1a30165bb531",
+      "renderedTextSha256": "0b53f10de22eb374590b99b781fce5a0ad852204116554a8f7383b79c0ad66d8",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2581,8 +2581,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
-      "canonicalAnswerSha256": "cd4f3f8b650325c6bb2227ae7746923468e78d277e84247c6e73d0568c7ce280",
-      "renderedTextSha256": "d81f2ac395432e80afd54cfbb20850aeec62033c3500eb1925e510e1a75951cf",
+      "canonicalAnswerSha256": "4e6caf159348b99bdfee8be964d2e70ba4a4364b1a9c79716b97261f4e4854f6",
+      "renderedTextSha256": "2849db42e4f69c86a65b6fb3d62fdde56bca5d0e534814457f5c6d8175afef80",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2629,8 +2629,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
-      "canonicalAnswerSha256": "2e5126899f12bee67f488512c211a1f9762b8a276b21dec83783a2ec4800b780",
-      "renderedTextSha256": "64b05a00fb4101639b4c5ff7529a5abb781207463e94017138536484af37eb13",
+      "canonicalAnswerSha256": "caa51eb0085b855ff876e503408c7734074b662e62d673dc9efbfa9607f0028d",
+      "renderedTextSha256": "b4b00532027d89d37a92e27a50a33d2ebc926983cb1b00780dac98f5464a6fd3",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2675,8 +2675,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "cd2dd404f30772a66184e0cf1b5467a2be513bcdf25c414b1e4dd73ea4c479b3",
-      "renderedTextSha256": "e4739fc303fccc62cb673640e334ca0b2e1fb6d8f4fa0271f61072d75e27ac4b",
+      "canonicalAnswerSha256": "a0c07d2f04b688d2405c0c0ac2aeda732d534d80893755365c99d00f807e854a",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2721,8 +2721,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "cd2dd404f30772a66184e0cf1b5467a2be513bcdf25c414b1e4dd73ea4c479b3",
-      "renderedTextSha256": "e4739fc303fccc62cb673640e334ca0b2e1fb6d8f4fa0271f61072d75e27ac4b",
+      "canonicalAnswerSha256": "a0c07d2f04b688d2405c0c0ac2aeda732d534d80893755365c99d00f807e854a",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2767,8 +2767,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "cd2dd404f30772a66184e0cf1b5467a2be513bcdf25c414b1e4dd73ea4c479b3",
-      "renderedTextSha256": "e4739fc303fccc62cb673640e334ca0b2e1fb6d8f4fa0271f61072d75e27ac4b",
+      "canonicalAnswerSha256": "a0c07d2f04b688d2405c0c0ac2aeda732d534d80893755365c99d00f807e854a",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2813,8 +2813,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "cd2dd404f30772a66184e0cf1b5467a2be513bcdf25c414b1e4dd73ea4c479b3",
-      "renderedTextSha256": "e4739fc303fccc62cb673640e334ca0b2e1fb6d8f4fa0271f61072d75e27ac4b",
+      "canonicalAnswerSha256": "a0c07d2f04b688d2405c0c0ac2aeda732d534d80893755365c99d00f807e854a",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2859,8 +2859,8 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
-      "canonicalAnswerSha256": "cd2dd404f30772a66184e0cf1b5467a2be513bcdf25c414b1e4dd73ea4c479b3",
-      "renderedTextSha256": "e4739fc303fccc62cb673640e334ca0b2e1fb6d8f4fa0271f61072d75e27ac4b",
+      "canonicalAnswerSha256": "a0c07d2f04b688d2405c0c0ac2aeda732d534d80893755365c99d00f807e854a",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     }
   ],
@@ -3048,9 +3048,9 @@
         "left": 35,
         "right": 449,
         "top": 204.40625,
-        "bottom": 1064.78125,
+        "bottom": 948.28125,
         "width": 414,
-        "height": 860.375,
+        "height": 743.875,
         "viewportWidth": 1440,
         "viewportHeight": 1000,
         "overflowX": false,
@@ -3060,8 +3060,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 07866 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 813.28125,
-        "bottom": 852.78125,
+        "top": 893.78125,
+        "bottom": 933.28125,
         "viewportHeight": 1000,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3077,9 +3077,9 @@
         "left": 35,
         "right": 449,
         "top": 204.40625,
-        "bottom": 1064.78125,
+        "bottom": 948.28125,
         "width": 414,
-        "height": 860.375,
+        "height": 743.875,
         "viewportWidth": 1440,
         "viewportHeight": 1000,
         "overflowX": false,
@@ -3089,8 +3089,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 07866 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 813.28125,
-        "bottom": 852.78125,
+        "top": 893.78125,
+        "bottom": 933.28125,
         "viewportHeight": 1000,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3118,8 +3118,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 07866 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 777.75,
-        "bottom": 817.25,
+        "top": 792.25,
+        "bottom": 831.75,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3147,8 +3147,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 07866 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 777.75,
-        "bottom": 817.25,
+        "top": 792.25,
+        "bottom": 831.75,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3164,9 +3164,9 @@
         "left": 35,
         "right": 355,
         "top": 204.40625,
-        "bottom": 1220.65625,
+        "bottom": 1084.65625,
         "width": 320,
-        "height": 1016.25,
+        "height": 880.25,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3176,8 +3176,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 07866 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 657.15625,
-        "bottom": 696.65625,
+        "top": 656.15625,
+        "bottom": 695.65625,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3193,9 +3193,9 @@
         "left": 35,
         "right": 355,
         "top": 204.40625,
-        "bottom": 1220.65625,
+        "bottom": 1084.65625,
         "width": 320,
-        "height": 1016.25,
+        "height": 880.25,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3205,8 +3205,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 07866 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 657.15625,
-        "bottom": 696.65625,
+        "top": 656.15625,
+        "bottom": 695.65625,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3222,9 +3222,9 @@
         "left": 35,
         "right": 449,
         "top": 204.40625,
-        "bottom": 876.28125,
+        "bottom": 759.78125,
         "width": 414,
-        "height": 671.875,
+        "height": 555.375,
         "viewportWidth": 1440,
         "viewportHeight": 1000,
         "overflowX": false,
@@ -3234,8 +3234,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85641 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 821.78125,
-        "bottom": 861.28125,
+        "top": 705.28125,
+        "bottom": 744.78125,
         "viewportHeight": 1000,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3251,9 +3251,9 @@
         "left": 35,
         "right": 449,
         "top": 204.40625,
-        "bottom": 876.28125,
+        "bottom": 759.78125,
         "width": 414,
-        "height": 671.875,
+        "height": 555.375,
         "viewportWidth": 1440,
         "viewportHeight": 1000,
         "overflowX": false,
@@ -3263,8 +3263,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85641 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 821.78125,
-        "bottom": 861.28125,
+        "top": 705.28125,
+        "bottom": 744.78125,
         "viewportHeight": 1000,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3280,9 +3280,9 @@
         "left": 12,
         "right": 378,
         "top": 118.5,
-        "bottom": 776.375,
+        "bottom": 659.875,
         "width": 366,
-        "height": 657.875,
+        "height": 541.375,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3292,8 +3292,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85641 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 721.875,
-        "bottom": 761.375,
+        "top": 605.375,
+        "bottom": 644.875,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3309,9 +3309,9 @@
         "left": 12,
         "right": 378,
         "top": 118.5,
-        "bottom": 776.375,
+        "bottom": 659.875,
         "width": 366,
-        "height": 657.875,
+        "height": 541.375,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3321,8 +3321,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85641 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 721.875,
-        "bottom": 761.375,
+        "top": 605.375,
+        "bottom": 644.875,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3338,9 +3338,9 @@
         "left": 35,
         "right": 355,
         "top": 204.40625,
-        "bottom": 952.65625,
+        "bottom": 816.65625,
         "width": 320,
-        "height": 748.25,
+        "height": 612.25,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3350,8 +3350,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85641 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 657.15625,
-        "bottom": 696.65625,
+        "top": 762.15625,
+        "bottom": 801.65625,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3367,9 +3367,9 @@
         "left": 35,
         "right": 355,
         "top": 204.40625,
-        "bottom": 952.65625,
+        "bottom": 816.65625,
         "width": 320,
-        "height": 748.25,
+        "height": 612.25,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3379,8 +3379,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85641 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 657.15625,
-        "bottom": 696.65625,
+        "top": 762.15625,
+        "bottom": 801.65625,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3396,9 +3396,9 @@
         "left": 35,
         "right": 449,
         "top": 204.40625,
-        "bottom": 876.28125,
+        "bottom": 759.78125,
         "width": 414,
-        "height": 671.875,
+        "height": 555.375,
         "viewportWidth": 1440,
         "viewportHeight": 1000,
         "overflowX": false,
@@ -3408,8 +3408,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85701 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 821.78125,
-        "bottom": 861.28125,
+        "top": 705.28125,
+        "bottom": 744.78125,
         "viewportHeight": 1000,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3425,9 +3425,9 @@
         "left": 35,
         "right": 449,
         "top": 204.40625,
-        "bottom": 876.28125,
+        "bottom": 759.78125,
         "width": 414,
-        "height": 671.875,
+        "height": 555.375,
         "viewportWidth": 1440,
         "viewportHeight": 1000,
         "overflowX": false,
@@ -3437,8 +3437,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85701 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 821.78125,
-        "bottom": 861.28125,
+        "top": 705.28125,
+        "bottom": 744.78125,
         "viewportHeight": 1000,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3454,9 +3454,9 @@
         "left": 12,
         "right": 378,
         "top": 118.5,
-        "bottom": 776.375,
+        "bottom": 659.875,
         "width": 366,
-        "height": 657.875,
+        "height": 541.375,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3466,8 +3466,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85701 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 721.875,
-        "bottom": 761.375,
+        "top": 605.375,
+        "bottom": 644.875,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3483,9 +3483,9 @@
         "left": 12,
         "right": 378,
         "top": 118.5,
-        "bottom": 776.375,
+        "bottom": 659.875,
         "width": 366,
-        "height": 657.875,
+        "height": 541.375,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3495,8 +3495,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85701 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 721.875,
-        "bottom": 761.375,
+        "top": 605.375,
+        "bottom": 644.875,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3512,9 +3512,9 @@
         "left": 35,
         "right": 355,
         "top": 204.40625,
-        "bottom": 952.65625,
+        "bottom": 816.65625,
         "width": 320,
-        "height": 748.25,
+        "height": 612.25,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3524,8 +3524,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85701 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 657.15625,
-        "bottom": 696.65625,
+        "top": 762.15625,
+        "bottom": 801.65625,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
@@ -3541,9 +3541,9 @@
         "left": 35,
         "right": 355,
         "top": 204.40625,
-        "bottom": 952.65625,
+        "bottom": 816.65625,
         "width": 320,
-        "height": 748.25,
+        "height": 612.25,
         "viewportWidth": 390,
         "viewportHeight": 844,
         "overflowX": false,
@@ -3553,8 +3553,8 @@
       },
       "tailReadback": {
         "text": "Based on what we track here around 85701 — 2 of 2 steps point at a body or person we can actually name.",
-        "top": 657.15625,
-        "bottom": 696.65625,
+        "top": 762.15625,
+        "bottom": 801.65625,
         "viewportHeight": 844,
         "unobscured": true,
         "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"

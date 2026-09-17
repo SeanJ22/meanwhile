@@ -1,6 +1,6 @@
 {
-  "exactHead": "9b01f3e51aab3ac397bfb1c7155442392a3740a6",
-  "buildId": "DuOTzpchdyoAyeSWU1nMz",
+  "exactHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
+  "buildId": "xZVwHdCi-RZ5tyeL4fVyV",
   "sourceHashes": {
     "data/candidates/corpus-2026.json": "6aa106eabc191a3eddbcfd721d301fcbe094454a1a207c0aa11d06ee07bf638d",
     "data/corpus/statements.json": "01e27fd3179e311aa207d0c51f2bf26172d9baa989ee466338ce0cffd5e50b61",
@@ -8,7 +8,7 @@
     "data/states/az/identity/az-2026-certified-lineup-reconciliation.json": "39b1cd2953b6d45d5d32bb58457c7662c41b5d66fe27757b68657986cc678f0d",
     "lib/funding/campaign-money.ts": "c114efcd4b69edfb3a251d7bed54def28a5872687d58eb1f70b801b8b8309449",
     "lib/registry/runtime-data-plane.ts": "c091adb71d4f86a43df32d8ee865dca2d85f53953ad4a61ab3b075b212e6df87",
-    "lib/registry/runtime-read-model.ts": "1f8f3a4d9e52288978a0bf259a42c82f4e424efa67ce26afe1270f2756075532",
+    "lib/registry/runtime-read-model.ts": "21cdc6f81770e5e2b086a1fe29b862f13a4551cbc9d31b203e2337348c11350c",
     "lib/identity/reader-person.ts": "e6e3ce856884b353aabb6bd2911efe441688e5f91e202687310558cdf5a73b13",
     "lib/identity/az-2026.ts": "b33a3cb9cfb1c3ff8b46c4fbd2ebf672e13bc30b4d05f7d7f31c04c1a5843811",
     "lib/corpus/unified.ts": "c13590b0deee7bc342693c8f128146754f600dc5ff4a644e08cedf7883572ad8",
@@ -16,7 +16,7 @@
     "lib/corpus/reader-positions.ts": "7fdbd494e16c938241333cdbdabadac7f43c9db810920a1e3053c3816bfd27b5",
     "app/api/positions/[subject]/[topic]/route.ts": "e9eb3c8b34236d4fe916738383a6a78c610b2c7d71a88fc5291dfb2f209421c5",
     "components/officials/positions-section.tsx": "ded4503e71ea6a96395a9cf55ba5dd46778159cf2256aec556eb5aa3691d3547",
-    "components/ballot/candidate-battlecard.tsx": "b2ab0d7f2f945c95887616c190a6a8c7e4f7b29e9f7884258b071427f0fbf993",
+    "components/ballot/candidate-battlecard.tsx": "4949e19023584348bfc7336574809aba2e0b84efe0ec6dac4404d618c8813831",
     "lib/registry/officeholders-us.json": "f0d392ab8f2de9af390c69612cded1ff3d723bda2804c1bbb89eef5086df2423"
   },
   "execution": "Actual candidate battlecard gestures, typed source-grounded query, real positions HTTP route, every returned quotation/citation/count inspected in rendered DOM.",

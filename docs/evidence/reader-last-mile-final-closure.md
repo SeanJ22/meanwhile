@@ -92,7 +92,7 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | measure-summaries | ballot | nj | 0 | 0 | SOURCE/HOLDING_UNAVAILABLE | 0 | UNMEASURED | true |
 | measure-summaries | ask | nj | 0 | 0 | SOURCE/HOLDING_UNAVAILABLE | 0 | UNMEASURED | true |
 | notice-summaries | map | az | 1 | 0 | RENDERED | 0 | 0 | true |
-| notice-summaries | ask | az | 1 | 0 | RENDERED | 0 | 0 | true |
+| notice-summaries | ask | az | 1 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | notice-summaries | map | nh | 0 | 0 | SOURCE/HOLDING_UNAVAILABLE | 0 | UNMEASURED | true |
 | notice-summaries | ask | nh | 0 | 0 | SOURCE/HOLDING_UNAVAILABLE | 0 | UNMEASURED | true |
 | notice-summaries | map | nj | 0 | 0 | SOURCE/HOLDING_UNAVAILABLE | 0 | UNMEASURED | true |
@@ -165,8 +165,8 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | meetings | map | az | 287 | 7 | RENDERED | 0 | 0 | true |
 | meetings | meetings | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | agenda | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
-| meetings | ask | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
-| meetings | map | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
+| meetings | ask | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| meetings | map | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | meetings | nh | 341 | 36 | RENDERED | 0 | 0 | true |
 | meetings | agenda | nh | 341 | 36 | RENDERED | 0 | 0 | true |
 | meetings | ask | nh | 341 | 36 | RENDERED | 0 | 0 | true |

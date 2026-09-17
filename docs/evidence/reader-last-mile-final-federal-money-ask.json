@@ -1,0 +1,3254 @@
+{
+  "exactHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
+  "executionLevel": "REAL_ROUTE_HANDLER",
+  "modelDisabled": true,
+  "sourceHashes": [
+    {
+      "path": "app/api/ask/grounded/route.ts",
+      "sha256": "9e21b3604d898b38b288d3159c0029187e0904fe5aa48212f7f97fe04daacaa1"
+    },
+    {
+      "path": "lib/ask/campaign-money.ts",
+      "sha256": "c6b2e0c23ad515fc9fa383d9a2b537e18282923cd69a0c08bea29406a1c05e28"
+    },
+    {
+      "path": "lib/ask/subject.ts",
+      "sha256": "66a21acfdc8f7505cb524bd5cf1df4a2fcae611489fbc8bbf4d788629b3a2c20"
+    },
+    {
+      "path": "lib/ask/resolve.ts",
+      "sha256": "1b62ab008630fe778104e2b77027227ca31c4fd40d2c26ae09df44185af242aa"
+    },
+    {
+      "path": "lib/ask/ballot-inventory.ts",
+      "sha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125"
+    },
+    {
+      "path": "lib/funding/campaign-money.ts",
+      "sha256": "c114efcd4b69edfb3a251d7bed54def28a5872687d58eb1f70b801b8b8309449"
+    },
+    {
+      "path": "lib/funding/display.ts",
+      "sha256": "1c4ddd344cd8bf4b22a819ccc483871a371dad4f46a89dc6d5c4d55a68f3669b"
+    },
+    {
+      "path": "lib/funding/snapshot.ts",
+      "sha256": "99fc15f16a949f997356ed55555d3cd27e0d98f8f5673eb8a49b0a19d8e06acd"
+    },
+    {
+      "path": "data/fec/fec-2026.json",
+      "sha256": "0026c3f523702f48e589ba2f672105171aa8d1f232742918851722c045e5e5a2"
+    }
+  ],
+  "candidateDenominator": 24,
+  "absenceDenominator": 0,
+  "proofs": [
+    {
+      "nativeId": "S0NH00219",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:S001181"
+      ],
+      "target": "congress:S001181",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:S001181",
+            "name": "Jeanne Shaheen",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:S001181",
+        "name": "Jeanne Shaheen",
+        "office": "U.S. Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S0NH00219"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S0NH00219",
+          "canonicalSubjectId": "S0NH00219",
+          "text": "This campaign has raised $173,000 in the 2025–26 election cycle and spent $757,000. It has $872,000 on hand. About 6% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S0NH00219"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S0NH00219",
+          "subjectId": "congress:S001181",
+          "canonicalSubjectId": "S0NH00219",
+          "text": "This campaign has raised $173,000 in the 2025–26 election cycle and spent $757,000. It has $872,000 on hand. About 6% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "5da4c8408333506e768baa234df1e5be86f69d7d51e4e4db8e50686a73614d29",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Jeanne Shaheen."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Jeanne Shaheen. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Jeanne Shaheen. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 32,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 4,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 95,
+      "traceRecordCount": 95,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S4NJ00185",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:B001288",
+        "ballot-nj-morris:us-senate:booker"
+      ],
+      "target": "congress:B001288",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:B001288",
+            "name": "Cory A. Booker",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:B001288",
+        "name": "Cory A. Booker",
+        "office": "U.S. Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S4NJ00185"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S4NJ00185",
+          "canonicalSubjectId": "S4NJ00185",
+          "text": "This campaign has raised $19 million in the 2025–26 election cycle and spent $7 million. It has $23 million on hand. About 45% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S4NJ00185"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S4NJ00185",
+          "subjectId": "congress:B001288",
+          "canonicalSubjectId": "S4NJ00185",
+          "text": "This campaign has raised $19 million in the 2025–26 election cycle and spent $7 million. It has $23 million on hand. About 45% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "80fb9ff9ccddc0c524b0f2490fb89731593e602bc91af6eba5f8d296dd58a669",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Cory A. Booker."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Cory A. Booker. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Cory A. Booker. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 2,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 32,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 4,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 100,
+      "traceRecordCount": 100,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S4AZ00139",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:G000574"
+      ],
+      "target": "congress:G000574",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:G000574",
+            "name": "Ruben Gallego",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:G000574",
+        "name": "Ruben Gallego",
+        "office": "U.S. Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S4AZ00139"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S4AZ00139",
+          "canonicalSubjectId": "S4AZ00139",
+          "text": "This campaign has raised $4.3 million in the 2025–26 election cycle and spent $2.5 million. It has $2.1 million on hand. About 41% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S4AZ00139"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S4AZ00139",
+          "subjectId": "congress:G000574",
+          "canonicalSubjectId": "S4AZ00139",
+          "text": "This campaign has raised $4.3 million in the 2025–26 election cycle and spent $2.5 million. It has $2.1 million on hand. About 41% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "cd74468ea76451be9ae5bcb519d16d5ae215394f3dc395ea145bfdc90284b665",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Ruben Gallego."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CARES Act (March 2020), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The American Rescue Plan (March 2021), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Infrastructure Investment and Jobs Act (2021), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Bipartisan Safer Communities Act (2022), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CHIPS and Science Act (2022), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Honoring our PACT Act (2022), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Inflation Reduction Act (2022), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Respect for Marriage Act (2022), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Fiscal Responsibility Act (2023), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Ukraine, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Israel and humanitarian aid for Gaza, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: Indo-Pacific and Taiwan, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: TikTok divest-or-ban, and sanctions, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Social Security Fairness Act (2025), we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Amy Coney Barrett to the Supreme Court, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Xavier Becerra as Secretary of Health and Human Services, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Deb Haaland as Secretary of the Interior, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Alejandro Mayorkas as Secretary of Homeland Security, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Merrick Garland as Attorney General, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Janet Yellen as Secretary of the Treasury, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Pete Buttigieg as Secretary of Transportation, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Jerome Powell for a second term as Chair of the Federal Reserve, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Ketanji Brown Jackson to the Supreme Court, we hold the Senate roll call but no sourced position for Ruben Gallego. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Ruben Gallego. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Ruben Gallego. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 12,
+        "keyVotePositionsUnresolved": 23,
+        "billSummariesReturned": 4,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 75,
+      "traceRecordCount": 75,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S6NH00091",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:H001076"
+      ],
+      "target": "congress:H001076",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:H001076",
+            "name": "Margaret Wood Hassan",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:H001076",
+        "name": "Margaret Wood Hassan",
+        "office": "U.S. Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S6NH00091"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S6NH00091",
+          "canonicalSubjectId": "S6NH00091",
+          "text": "This campaign has raised $2.5 million in the 2025–26 election cycle and spent $1.7 million. It has $1.7 million on hand. About 32% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S6NH00091"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S6NH00091",
+          "subjectId": "congress:H001076",
+          "canonicalSubjectId": "S6NH00091",
+          "text": "This campaign has raised $2.5 million in the 2025–26 election cycle and spent $1.7 million. It has $1.7 million on hand. About 32% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "ec40f60beb06d8c8e5bdf68b0a6fc9b56b6db9e65d90f4caf9e741b66c90b58c",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Margaret Wood Hassan."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Margaret Wood Hassan. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Margaret Wood Hassan. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 32,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 4,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 95,
+      "traceRecordCount": 95,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S4NJ00466",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:K000394"
+      ],
+      "target": "congress:K000394",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:K000394",
+            "name": "Andy Kim",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:K000394",
+        "name": "Andy Kim",
+        "office": "U.S. Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S4NJ00466"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S4NJ00466",
+          "canonicalSubjectId": "S4NJ00466",
+          "text": "This campaign has raised $1.7 million in the 2025–26 election cycle and spent $1.1 million. It has $1.2 million on hand. About 22% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S4NJ00466"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S4NJ00466",
+          "subjectId": "congress:K000394",
+          "canonicalSubjectId": "S4NJ00466",
+          "text": "This campaign has raised $1.7 million in the 2025–26 election cycle and spent $1.1 million. It has $1.2 million on hand. About 22% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "004f378f65b1f87225b639972cbdf228c440b7369384e5f54dcae9e465529e66",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Andy Kim."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CARES Act (March 2020), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The American Rescue Plan (March 2021), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Infrastructure Investment and Jobs Act (2021), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Bipartisan Safer Communities Act (2022), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CHIPS and Science Act (2022), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Honoring our PACT Act (2022), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Inflation Reduction Act (2022), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Respect for Marriage Act (2022), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Fiscal Responsibility Act (2023), we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Ukraine, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Israel and humanitarian aid for Gaza, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: Indo-Pacific and Taiwan, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: TikTok divest-or-ban, and sanctions, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Amy Coney Barrett to the Supreme Court, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Xavier Becerra as Secretary of Health and Human Services, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Deb Haaland as Secretary of the Interior, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Alejandro Mayorkas as Secretary of Homeland Security, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Merrick Garland as Attorney General, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Janet Yellen as Secretary of the Treasury, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Pete Buttigieg as Secretary of Transportation, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Jerome Powell for a second term as Chair of the Federal Reserve, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Ketanji Brown Jackson to the Supreme Court, we hold the Senate roll call but no sourced position for Andy Kim. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Andy Kim. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Andy Kim. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 13,
+        "keyVotePositionsUnresolved": 22,
+        "billSummariesReturned": 4,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 76,
+      "traceRecordCount": 76,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S0AZ00350",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:K000377"
+      ],
+      "target": "congress:K000377",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:K000377",
+            "name": "Mark Kelly",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:K000377",
+        "name": "Mark Kelly",
+        "office": "U.S. Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S0AZ00350"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S0AZ00350",
+          "canonicalSubjectId": "S0AZ00350",
+          "text": "This campaign has raised $41 million in the 2025–26 election cycle and spent $21 million. It has $24 million on hand. About 65% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S0AZ00350"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S0AZ00350",
+          "subjectId": "congress:K000377",
+          "canonicalSubjectId": "S0AZ00350",
+          "text": "This campaign has raised $41 million in the 2025–26 election cycle and spent $21 million. It has $24 million on hand. About 65% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "d1490b92a6d4fdffb9a80c658cae603405c00cd5f352ef8879c6223e50e986f5",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Mark Kelly."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CARES Act (March 2020), we hold the Senate roll call but no sourced position for Mark Kelly. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For Amy Coney Barrett to the Supreme Court, we hold the Senate roll call but no sourced position for Mark Kelly. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Mark Kelly. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Mark Kelly. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 30,
+        "keyVotePositionsUnresolved": 2,
+        "billSummariesReturned": 4,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 93,
+      "traceRecordCount": 93,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H2AZ02360",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:C001133",
+        "ballot-az-pima:us-house-6:ciscomani-juan",
+        "ballot-az-pima:us-house-6|Juan Ciscomani"
+      ],
+      "target": "congress:C001133",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:C001133",
+            "name": "Juan Ciscomani",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:C001133",
+        "name": "Juan Ciscomani",
+        "office": "U.S. Representative"
+      },
+      "expectedRecordIds": [
+        "fec:H2AZ02360"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H2AZ02360",
+          "canonicalSubjectId": "H2AZ02360",
+          "text": "This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H2AZ02360"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H2AZ02360",
+          "subjectId": "congress:C001133",
+          "canonicalSubjectId": "H2AZ02360",
+          "text": "This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "d8414e5a132ea4306ccd0395541f2aa28b80c777a3ff5d9583183bc92fb32a20",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Juan Ciscomani."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The American Rescue Plan (March 2021), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Infrastructure Investment and Jobs Act (2021), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Bipartisan Safer Communities Act (2022), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CHIPS and Science Act (2022), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Honoring our PACT Act (2022), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Inflation Reduction Act (2022), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Respect for Marriage Act (2022), we hold the House roll call but no sourced position for Juan Ciscomani. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Juan Ciscomani. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Juan Ciscomani. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 2,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 12,
+        "keyVotePositionsUnresolved": 7,
+        "billSummariesReturned": 6,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 79,
+      "traceRecordCount": 79,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H4NH02399",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:G000604",
+        "ballot-nh-merrimack:us-house-2:goodlander-maggie"
+      ],
+      "target": "congress:G000604",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:G000604",
+            "name": "Maggie Goodlander",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:G000604",
+        "name": "Maggie Goodlander",
+        "office": "U.S. Representative"
+      },
+      "expectedRecordIds": [
+        "fec:H4NH02399"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H4NH02399",
+          "canonicalSubjectId": "H4NH02399",
+          "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.5 million. It has $2.7 million on hand. About 7% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H4NH02399"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H4NH02399",
+          "subjectId": "congress:G000604",
+          "canonicalSubjectId": "H4NH02399",
+          "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.5 million. It has $2.7 million on hand. About 7% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "2af5d408e7a8188e7c478604d6d97674955216ec20fbacaf40403eaf62645c8c",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Maggie Goodlander."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The American Rescue Plan (March 2021), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Infrastructure Investment and Jobs Act (2021), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Bipartisan Safer Communities Act (2022), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CHIPS and Science Act (2022), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Honoring our PACT Act (2022), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Inflation Reduction Act (2022), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Respect for Marriage Act (2022), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Fiscal Responsibility Act (2023), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Ukraine, we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Israel and humanitarian aid for Gaza, we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: Indo-Pacific and Taiwan, we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: TikTok divest-or-ban, and sanctions, we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Social Security Fairness Act (2025), we hold the House roll call but no sourced position for Maggie Goodlander. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Maggie Goodlander. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Maggie Goodlander. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 2,
+        "candidateContactSourceUrlsUnrecorded": 2,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 6,
+        "keyVotePositionsUnresolved": 13,
+        "billSummariesReturned": 6,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 76,
+      "traceRecordCount": 76,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6AZ07121",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:G000606",
+        "ballot-az-pima:us-house-7:grijalva-adelita",
+        "ballot-az-pima:us-house-7|Adelita Grijalva"
+      ],
+      "target": "congress:G000606",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:G000606",
+            "name": "Adelita S. Grijalva",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:G000606",
+        "name": "Adelita S. Grijalva",
+        "office": "U.S. Representative"
+      },
+      "expectedRecordIds": [
+        "fec:H6AZ07121"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6AZ07121",
+          "canonicalSubjectId": "H6AZ07121",
+          "text": "This campaign has raised $2.3 million in the 2025–26 election cycle and spent $1.9 million. It has $428,000 on hand. About 44% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6AZ07121"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6AZ07121",
+          "subjectId": "congress:G000606",
+          "canonicalSubjectId": "H6AZ07121",
+          "text": "This campaign has raised $2.3 million in the 2025–26 election cycle and spent $1.9 million. It has $428,000 on hand. About 44% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "e96a2cd8e2d33c77e3d38858c30ac6a6d0b40228535e1981babda24da1655d7f",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Adelita S. Grijalva."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The American Rescue Plan (March 2021), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Infrastructure Investment and Jobs Act (2021), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Bipartisan Safer Communities Act (2022), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CHIPS and Science Act (2022), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Honoring our PACT Act (2022), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Inflation Reduction Act (2022), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Respect for Marriage Act (2022), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Fiscal Responsibility Act (2023), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Ukraine, we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Israel and humanitarian aid for Gaza, we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: Indo-Pacific and Taiwan, we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: TikTok divest-or-ban, and sanctions, we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Social Security Fairness Act (2025), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Laken Riley Act (2025), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The One Big Beautiful Bill Act (2025), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The GENIUS Act (2025), we hold the House roll call but no sourced position for Adelita S. Grijalva. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Adelita S. Grijalva. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Adelita S. Grijalva. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 2,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 3,
+        "keyVotePositionsUnresolved": 16,
+        "billSummariesReturned": 6,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 70,
+      "traceRecordCount": 70,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6NJ11286",
+      "nativeKind": "candidate",
+      "targets": [
+        "congress:M001246",
+        "ballot-nj-morris:us-house-11:mejia"
+      ],
+      "target": "congress:M001246",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [],
+        "activeSubjects": [
+          {
+            "id": "congress:M001246",
+            "name": "Analilia Mejia",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "congress:M001246",
+        "name": "Analilia Mejia",
+        "office": "U.S. Representative"
+      },
+      "expectedRecordIds": [
+        "fec:H6NJ11286"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6NJ11286",
+          "canonicalSubjectId": "H6NJ11286",
+          "text": "This campaign has raised $1.8 million in the 2025–26 election cycle and spent $1.8 million. It has $27,000 on hand. About 35% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6NJ11286"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6NJ11286",
+          "subjectId": "congress:M001246",
+          "canonicalSubjectId": "H6NJ11286",
+          "text": "This campaign has raised $1.8 million in the 2025–26 election cycle and spent $1.8 million. It has $27,000 on hand. About 35% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "ffa4a8755c5af5cf2a346d5f43f758ebb0bfdb232ed8ee259d0ef1c3a23bc500",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Analilia Mejia."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The American Rescue Plan (March 2021), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Infrastructure Investment and Jobs Act (2021), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Bipartisan Safer Communities Act (2022), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The CHIPS and Science Act (2022), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Honoring our PACT Act (2022), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Inflation Reduction Act (2022), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Respect for Marriage Act (2022), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Fiscal Responsibility Act (2023), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Ukraine, we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: aid to Israel and humanitarian aid for Gaza, we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: Indo-Pacific and Taiwan, we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For April 2024: TikTok divest-or-ban, and sanctions, we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Social Security Fairness Act (2025), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The Laken Riley Act (2025), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The One Big Beautiful Bill Act (2025), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The GENIUS Act (2025), we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "For The shutdown and the 2026 appropriations that ended it, we hold the House roll call but no sourced position for Analilia Mejia. This does not establish that they did not vote."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Analilia Mejia. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Analilia Mejia. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 2,
+        "candidateContactSourceUrlsUnrecorded": 1,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 2,
+        "keyVotePositionsUnresolved": 17,
+        "billSummariesReturned": 6,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 72,
+      "traceRecordCount": 72,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S4NJ00532",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nj-morris:us-senate:murphy"
+      ],
+      "target": "ballot-nj-morris:us-senate:murphy",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nj"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nj-morris:us-senate:murphy",
+            "name": "Justin MURPHY",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nj-morris:us-senate:murphy",
+        "name": "Justin MURPHY",
+        "office": "Member of the United States Senate"
+      },
+      "expectedRecordIds": [
+        "fec:S4NJ00532"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S4NJ00532",
+          "canonicalSubjectId": "S4NJ00532",
+          "text": "This campaign has raised $27,000 in the 2025–26 election cycle and spent $26,000. It has $123 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S4NJ00532"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S4NJ00532",
+          "subjectId": "ballot-nj-morris:us-senate:murphy",
+          "canonicalSubjectId": "S4NJ00532",
+          "text": "This campaign has raised $27,000 in the 2025–26 election cycle and spent $26,000. It has $123 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "c752231c53733b2f597d10d6047ef018d1632b9aebff22f3e55ad3eaee31c71e",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Justin MURPHY, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Justin MURPHY. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Justin MURPHY. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 1,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 18,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 27,
+      "traceRecordCount": 27,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6NJ11211",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nj-morris:us-house-11:hathaway"
+      ],
+      "target": "ballot-nj-morris:us-house-11:hathaway",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nj/cd:11"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nj-morris:us-house-11:hathaway",
+            "name": "Joe HATHAWAY",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nj-morris:us-house-11:hathaway",
+        "name": "Joe HATHAWAY",
+        "office": "Member of the House of Representatives (11th Congressional District)"
+      },
+      "expectedRecordIds": [
+        "fec:H6NJ11211"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6NJ11211",
+          "canonicalSubjectId": "H6NJ11211",
+          "text": "This campaign has raised $658,000 in the 2025–26 election cycle and spent $653,000. It has $5,036 on hand. About 11% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6NJ11211"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6NJ11211",
+          "subjectId": "ballot-nj-morris:us-house-11:hathaway",
+          "canonicalSubjectId": "H6NJ11211",
+          "text": "This campaign has raised $658,000 in the 2025–26 election cycle and spent $653,000. It has $5,036 on hand. About 11% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "471ffe554dc0052c9d181479d25e6343d94c53a3303bb3dee894fedfece88636",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Joe HATHAWAY, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Joe HATHAWAY. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Joe HATHAWAY. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 2,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 1,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 10,
+      "traceRecordCount": 10,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6AZ06099",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-az-pima:us-house-6:mendoza-joanna",
+        "ballot-az-pima:us-house-6|JoAnna Mendoza"
+      ],
+      "target": "ballot-az-pima:us-house-6:mendoza-joanna",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:az/cd:6"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-az-pima:us-house-6:mendoza-joanna",
+            "name": "JoAnna Mendoza",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-az-pima:us-house-6|JoAnna Mendoza",
+        "name": "JoAnna Mendoza",
+        "office": "U.S. Representative, District 6"
+      },
+      "expectedRecordIds": [
+        "fec:H6AZ06099"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6AZ06099",
+          "canonicalSubjectId": "H6AZ06099",
+          "text": "This campaign has raised $7.4 million in the 2025–26 election cycle and spent $4.1 million. It has $3.3 million on hand. About 38% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6AZ06099"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6AZ06099",
+          "subjectId": "ballot-az-pima:us-house-6|JoAnna Mendoza",
+          "canonicalSubjectId": "H6AZ06099",
+          "text": "This campaign has raised $7.4 million in the 2025–26 election cycle and spent $4.1 million. It has $3.3 million on hand. About 38% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "c853879994edc0d031ec30564533bcd82761c35f6d6ddff90495ca595198b5c0",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for JoAnna Mendoza, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about JoAnna Mendoza. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about JoAnna Mendoza. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 5,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 11,
+      "traceRecordCount": 11,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H0AZ02216",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-az-pima:us-house-6:bah-iman"
+      ],
+      "target": "ballot-az-pima:us-house-6:bah-iman",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:az/cd:6"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-az-pima:us-house-6:bah-iman",
+            "name": "Iman Bah",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-az-pima:us-house-6:bah-iman",
+        "name": "Iman Bah",
+        "office": "U.S. Representative, District 6"
+      },
+      "expectedRecordIds": [
+        "fec:H0AZ02216"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H0AZ02216",
+          "canonicalSubjectId": "H0AZ02216",
+          "text": "This campaign has raised $195 in the 2025–26 election cycle and spent $75. It has $225 on hand. About $195 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H0AZ02216"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H0AZ02216",
+          "subjectId": "ballot-az-pima:us-house-6:bah-iman",
+          "canonicalSubjectId": "H0AZ02216",
+          "text": "This campaign has raised $195 in the 2025–26 election cycle and spent $75. It has $225 on hand. About $195 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "8c3dcad2da47f43121755b6781810efcbbe117bcdb29336429f4698f29eea88c",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Iman Bah, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Iman Bah. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Iman Bah. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 2,
+      "traceRecordCount": 2,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6AZ06214",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-az-pima:us-house-6:peters-jereme-lance",
+        "ballot-az-pima:us-house-6|Jereme Lance Peters"
+      ],
+      "target": "ballot-az-pima:us-house-6:peters-jereme-lance",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:az/cd:6"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-az-pima:us-house-6:peters-jereme-lance",
+            "name": "Jereme Lance Peters",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-az-pima:us-house-6|Jereme Lance Peters",
+        "name": "Jereme Lance Peters",
+        "office": "U.S. Representative, District 6"
+      },
+      "expectedRecordIds": [
+        "fec:H6AZ06214"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6AZ06214",
+          "canonicalSubjectId": "H6AZ06214",
+          "text": "This campaign has raised $11,000 in the 2025–26 election cycle and spent $11,000. It has $0 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6AZ06214"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6AZ06214",
+          "subjectId": "ballot-az-pima:us-house-6|Jereme Lance Peters",
+          "canonicalSubjectId": "H6AZ06214",
+          "text": "This campaign has raised $11,000 in the 2025–26 election cycle and spent $11,000. It has $0 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "0be3c923a42853f46ded3e61109aa792c3b99acc94a3723537ff5d0f31b1d37d",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Jereme Lance Peters, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Jereme Lance Peters. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Jereme Lance Peters. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 0,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 0,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 5,
+      "traceRecordCount": 5,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H4AZ07134",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+        "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr."
+      ],
+      "target": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:az/cd:7"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+            "name": "Daniel Francis Butierez Sr.",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
+        "name": "Daniel Francis Butierez Sr.",
+        "office": "U.S. Representative, District 7"
+      },
+      "expectedRecordIds": [
+        "fec:H4AZ07134"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H4AZ07134",
+          "canonicalSubjectId": "H4AZ07134",
+          "text": "This campaign has raised $224,000 in the 2025–26 election cycle and spent $214,000. It has $11,000 on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H4AZ07134"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H4AZ07134",
+          "subjectId": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
+          "canonicalSubjectId": "H4AZ07134",
+          "text": "This campaign has raised $224,000 in the 2025–26 election cycle and spent $214,000. It has $11,000 on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "00547d910fbe5d9b81136de00e6b84f61780fe3370dc552e775ab41d8e23f18a",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Daniel Francis Butierez Sr., so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Daniel Francis Butierez Sr.. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Daniel Francis Butierez Sr.. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 0,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 0,
+        "candidateContactSourceUrlsUnrecorded": 0,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 2,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S6NH00182",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-senate:manzur-karishma"
+      ],
+      "target": "ballot-nh-merrimack:us-senate:manzur-karishma",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-senate:manzur-karishma",
+            "name": "Karishma Manzur",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-senate:manzur-karishma",
+        "name": "Karishma Manzur",
+        "office": "United States Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S6NH00182"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S6NH00182",
+          "canonicalSubjectId": "S6NH00182",
+          "text": "This campaign has raised $415,000 in the 2025–26 election cycle and spent $311,000. It has $104,000 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S6NH00182"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S6NH00182",
+          "subjectId": "ballot-nh-merrimack:us-senate:manzur-karishma",
+          "canonicalSubjectId": "S6NH00182",
+          "text": "This campaign has raised $415,000 in the 2025–26 election cycle and spent $311,000. It has $104,000 on hand. About 27% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "fbd9994927ea02e71af20e3ef314c5541c611bd5732f0d01aa03cc97a65cd731",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Karishma Manzur, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Karishma Manzur. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Karishma Manzur. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 3,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S6NH00141",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-senate:pappas-chris"
+      ],
+      "target": "ballot-nh-merrimack:us-senate:pappas-chris",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-senate:pappas-chris",
+            "name": "Chris Pappas",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-senate:pappas-chris",
+        "name": "Chris Pappas",
+        "office": "United States Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S6NH00141"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S6NH00141",
+          "canonicalSubjectId": "S6NH00141",
+          "text": "This campaign has raised $15 million in the 2025–26 election cycle and spent $12 million. It has $4.3 million on hand. About 31% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S6NH00141"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S6NH00141",
+          "subjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
+          "canonicalSubjectId": "S6NH00141",
+          "text": "This campaign has raised $15 million in the 2025–26 election cycle and spent $12 million. It has $4.3 million on hand. About 31% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "34fca6a88b01f78be2c2a4af3f55a464b22cdd38296394b5ef36692b7217b6e1",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not recorded any actions in office for Chris Pappas."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Chris Pappas. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Chris Pappas. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 2,
+        "candidateContactSourceUrlsUnrecorded": 2,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 3,
+        "officeholderRecords": 1,
+        "actionRecordsHeld": 0,
+        "actionRecordsInAskedWindow": 0,
+        "officeholderSeatsMatched": 1,
+        "rollCallsHeldForTheirChamber": 20,
+        "rollCallVotesRecorded": 20,
+        "rollCallVotesShown": 20,
+        "keyVoteContextsReturned": 36,
+        "keyVotePositionsReturned": 19,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 6,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 1,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 94,
+      "traceRecordCount": 94,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S6NH00166",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-senate:brown-scott-p-"
+      ],
+      "target": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+            "name": "Scott P. Brown",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+        "name": "Scott P. Brown",
+        "office": "United States Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S6NH00166"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S6NH00166",
+          "canonicalSubjectId": "S6NH00166",
+          "text": "This campaign has raised $2.2 million in the 2025–26 election cycle and spent $1.7 million. It has $417,000 on hand. About 29% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S6NH00166"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S6NH00166",
+          "subjectId": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+          "canonicalSubjectId": "S6NH00166",
+          "text": "This campaign has raised $2.2 million in the 2025–26 election cycle and spent $1.7 million. It has $417,000 on hand. About 29% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "3dd42d090c2dfba88c222f41045752ffe388ce602d54537b31d533e36f35add7",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Scott P. Brown, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Scott P. Brown. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Scott P. Brown. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 3,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "S6NH00208",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-senate:sununu-john-e-"
+      ],
+      "target": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+            "name": "John E. Sununu",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+        "name": "John E. Sununu",
+        "office": "United States Senator"
+      },
+      "expectedRecordIds": [
+        "fec:S6NH00208"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:S6NH00208",
+          "canonicalSubjectId": "S6NH00208",
+          "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.1 million. It has $3.1 million on hand. About 12% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:S6NH00208"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:S6NH00208",
+          "subjectId": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+          "canonicalSubjectId": "S6NH00208",
+          "text": "This campaign has raised $4.2 million in the 2025–26 election cycle and spent $1.1 million. It has $3.1 million on hand. About 12% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "74687ceef411c29d729a74b884eb936d1b3c0d30418b9717004b0c7ac76997f0",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for John E. Sununu, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about John E. Sununu. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about John E. Sununu. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 3,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6NH02261",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-house-2:beauchemin-paige"
+      ],
+      "target": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh/cd:2"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+            "name": "Paige Beauchemin",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+        "name": "Paige Beauchemin",
+        "office": "Representative in Congress, District 2"
+      },
+      "expectedRecordIds": [
+        "fec:H6NH02261"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6NH02261",
+          "canonicalSubjectId": "H6NH02261",
+          "text": "This campaign has raised $44,000 in the 2025–26 election cycle and spent $39,000. It has $4,793 on hand. About 58% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6NH02261"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6NH02261",
+          "subjectId": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+          "canonicalSubjectId": "H6NH02261",
+          "text": "This campaign has raised $44,000 in the 2025–26 election cycle and spent $39,000. It has $4,793 on hand. About 58% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "3638e482b8344dea845ef0c6d7bb5bf2f4e38e5001517e4dae06320e85a190b6",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Paige Beauchemin, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Paige Beauchemin. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Paige Beauchemin. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 2,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 1,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 9,
+      "traceRecordCount": 9,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6NH02295",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-house-2:nicholson-dan"
+      ],
+      "target": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh/cd:2"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+            "name": "Dan Nicholson",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+        "name": "Dan Nicholson",
+        "office": "Representative in Congress, District 2"
+      },
+      "expectedRecordIds": [
+        "fec:H6NH02295"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6NH02295",
+          "canonicalSubjectId": "H6NH02295",
+          "text": "This campaign has raised $475 in the 2025–26 election cycle and spent $315. It has $160 on hand. About $175 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6NH02295"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6NH02295",
+          "subjectId": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+          "canonicalSubjectId": "H6NH02295",
+          "text": "This campaign has raised $475 in the 2025–26 election cycle and spent $315. It has $160 on hand. About $175 came from small unitemized gifts — people who gave under $200 in total. On a raise this small we don't state a percentage: it would read like a finding when it's a handful of cheques.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "595ec3a8d81a71ab515de2347e25debb19b82fa44cdddbc3185064df46c55376",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Dan Nicholson, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Dan Nicholson. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Dan Nicholson. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 0,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 3,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 7,
+      "traceRecordCount": 7,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H6NH02287",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-house-2:orlando-victor"
+      ],
+      "target": "ballot-nh-merrimack:us-house-2:orlando-victor",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh/cd:2"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-house-2:orlando-victor",
+            "name": "Victor Orlando",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-house-2:orlando-victor",
+        "name": "Victor Orlando",
+        "office": "Representative in Congress, District 2"
+      },
+      "expectedRecordIds": [
+        "fec:H6NH02287"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H6NH02287",
+          "canonicalSubjectId": "H6NH02287",
+          "text": "This campaign has raised $171,000 in the 2025–26 election cycle and spent $170,000. It has $9,596 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H6NH02287"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H6NH02287",
+          "subjectId": "ballot-nh-merrimack:us-house-2:orlando-victor",
+          "canonicalSubjectId": "H6NH02287",
+          "text": "This campaign has raised $171,000 in the 2025–26 election cycle and spent $170,000. It has $9,596 on hand. About 0% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "100cf05e55b35db74e8709219175f5c79564ebdaea355767cad20eed8d79df99",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Victor Orlando, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Victor Orlando. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Victor Orlando. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 3,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    },
+    {
+      "nativeId": "H2NH02260",
+      "nativeKind": "candidate",
+      "targets": [
+        "ballot-nh-merrimack:us-house-2:tang-williams-lily"
+      ],
+      "target": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+      "executionLevel": "REAL_ROUTE_HANDLER",
+      "request": {
+        "question": "What campaign money has this person raised and spent, and what federal filing records do we hold?",
+        "surface": "BALLOT",
+        "ocdIds": [
+          "ocd-division/country:us/state:nh/cd:2"
+        ],
+        "activeSubjects": [
+          {
+            "id": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+            "name": "Lily Tang Williams",
+            "kind": "PERSON",
+            "focused": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "mode": "STRUCTURED_GROUNDED",
+      "resolvedSubject": {
+        "kind": "PERSON",
+        "id": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+        "name": "Lily Tang Williams",
+        "office": "Representative in Congress, District 2"
+      },
+      "expectedRecordIds": [
+        "fec:H2NH02260"
+      ],
+      "expectedRecords": [
+        {
+          "id": "fec:H2NH02260",
+          "canonicalSubjectId": "H2NH02260",
+          "text": "This campaign has raised $1.2 million in the 2025–26 election cycle and spent $701,000. It has $628,000 on hand. About 54% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "returnedRecordIds": [
+        "fec:H2NH02260"
+      ],
+      "returnedRecords": [
+        {
+          "kind": "FINANCE_SUMMARY",
+          "id": "fec:H2NH02260",
+          "subjectId": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+          "canonicalSubjectId": "H2NH02260",
+          "text": "This campaign has raised $1.2 million in the 2025–26 election cycle and spent $701,000. It has $628,000 on hand. About 54% of the money came from small donors — people who gave under $200 in total.",
+          "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
+          "sourceOrg": "Federal Election Commission",
+          "retrievedAt": "2026-09-15"
+        }
+      ],
+      "payloadSha256": "de08294e8fa5e06c272708ad86e9dbb571b7591d6a1cdfbb018fe48b56f0f98c",
+      "gaps": [
+        {
+          "whose": "OURS",
+          "statement": "We have not established a canonical voting-office identity for Lily Tang Williams, so no other person's voting record has been attached."
+        },
+        {
+          "whose": "OURS",
+          "statement": "County filings: no applicable county filing was resolved for this answer about Lily Tang Williams. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "State filings: we have not linked a verified state filing to this answer about Lily Tang Williams. That does not establish that none exists."
+        },
+        {
+          "whose": "OURS",
+          "statement": "Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source."
+        }
+      ],
+      "denominators": {
+        "ballotLoaderFailures": 0,
+        "meetingCanonicalProjectionReads": 1,
+        "meetingBootstrapProjectionReads": 0,
+        "meetingStoreUnavailableReads": 0,
+        "candidateCardsRead": 1,
+        "candidateLinkProfilesRead": 1,
+        "candidateBiosReturned": 1,
+        "candidateLinksReturned": 1,
+        "candidateContactsReturned": 3,
+        "candidateContactSourceUrlsUnrecorded": 3,
+        "candidateProfileFieldsWithheld": 0,
+        "meetingLoaderFailures": 0,
+        "officeholderLoaderFailures": 0,
+        "filingRecordsForThisCandidate": 1,
+        "sourcedPositionPassages": 0,
+        "keyVoteContextsReturned": 0,
+        "keyVotePositionsReturned": 0,
+        "keyVotePositionsUnresolved": 0,
+        "billSummariesReturned": 0,
+        "stateFinanceRecordsReturned": 0,
+        "federalFinanceRecordsReturned": 1,
+        "financeIdentityUnresolved": 0,
+        "financeRegimesNamed": 3,
+        "contactsExcludedOffSubject": 0,
+        "verifiedContacts": 0,
+        "recordsExcludedOffSubject": 0
+      },
+      "modelAnswer": null,
+      "countAgrees": true,
+      "synthesisReceivesEveryRecord": true,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
+      "missing": [],
+      "unexpected": [],
+      "status": "PROVEN"
+    }
+  ]
+}

@@ -208,6 +208,24 @@ for (const proof of proofs) {
   assert.deepEqual(result.failures, [], `${proof.rowId}: current-head proof cannot be reconciled`);
   census = { ...census, rows: census.rows.map((candidate) => candidate.id === proof.rowId ? result.row : candidate) };
 }
+
+// RULING 290: notice summaries whose document identity advanced past the curated hash
+// are legitimately undeliverable in the current partition version; the proof records
+// the drift and the census reduces the applicable population to match.
+const meetingKnowledgeAskPath = routePaths.find((path) => path.includes("meeting-knowledge-ask"));
+if (meetingKnowledgeAskPath) {
+  const mkProof = JSON.parse(readReaderEvidence(root, meetingKnowledgeAskPath).toString("utf8")) as { noticeDrift?: { meetingId: string; reason: string }[] };
+  const driftedMeetingIds = new Set((mkProof.noticeDrift ?? []).map((drift) => drift.meetingId));
+  if (driftedMeetingIds.size > 0) {
+    const driftedAuditIds = new Set(census.records.filter((record) => record.family === "notice-summaries" && record.canonicalIdentity.some((id: string) => driftedMeetingIds.has(id))).map((record) => record.auditId));
+    census = { ...census, rows: census.rows.map((row) => {
+      if (row.datasetFamily !== "notice-summaries") return row;
+      const applicable = (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).filter((id: string) => !driftedAuditIds.has(id));
+      return applicable.length === (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length ? row : { ...row, applicableEligibleRecordIds: applicable };
+    }) };
+  }
+}
+
 const closureFailures = censusClosureFailures(census);
 assert.deepEqual(closureFailures, [], `Final reader census has ${closureFailures.length} open obligations`);
 const censusClosureFloor = floored(

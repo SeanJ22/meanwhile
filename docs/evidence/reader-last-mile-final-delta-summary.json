@@ -1,26 +1,28 @@
 {
   "formatVersion": 1,
-  "exactReaderHead": "713e4e06f9fba7319c14d8af90f12ac1a38e3e8f",
-  "inheritedRows": 341,
-  "invalidatedRows": 32,
-  "recomputedRows": 679,
-  "invalidatedApplicableRecords": 1804,
-  "routeProofs": 179,
-  "componentProofs": 14,
-  "componentCases": 1503,
-  "componentUncoveredDiagnostics": 52625,
+  "exactReaderHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
+  "inheritedRows": 0,
+  "invalidatedRows": 353,
+  "recomputedRows": 687,
+  "invalidatedApplicableRecords": 21268,
+  "routeProofs": 195,
+  "componentProofs": 237,
+  "componentCases": 20565,
+  "componentUncoveredDiagnostics": 70382,
   "closureFailures": 0,
   "denominatorFloor": {
     "outcome": "MEASURED",
-    "denominator": 1052,
-    "matched": 1052,
+    "denominator": 1040,
+    "matched": 1040,
     "subject": "closed final reader census rows"
   },
   "delivery": {
-    "RENDERED": 373,
-    "INTENTIONALLY_NOT_APPLICABLE": 591,
-    "SOURCE/HOLDING_UNAVAILABLE": 53,
+    "RENDERED": 352,
+    "INTENTIONALLY_NOT_APPLICABLE": 592,
+    "SOURCE/HOLDING_UNAVAILABLE": 49,
+    "DELIVERY_UNPROVEN": 1,
     "STAGED_NOT_ELIGIBLE": 10,
-    "IDENTITY_UNRESOLVED": 25
+    "IDENTITY_UNRESOLVED": 24,
+    "NOT_READER_ELIGIBLE": 12
   }
 }

@@ -155,7 +155,7 @@ const inherited = inheritReaderProofs(root, census, {
   fullReproof,
 });
 census = inherited.census;
-const inheritanceReport = archivedBaselineCensusPath
+let inheritanceReport = archivedBaselineCensusPath
   ? { ...inherited.report, baselineCensusPath: archivedBaselineCensusPath }
   : inherited.report;
 writeFileSync(invalidationPath, `${JSON.stringify(inheritanceReport, null, 2)}\n`);
@@ -226,10 +226,10 @@ if (meetingKnowledgeAskPath) {
     }) };
   }
   const finalRows = new Map(census.rows.map((row) => [row.id, row]));
-  for (const reportRow of inheritanceReport.rows) {
+  inheritanceReport = { ...inheritanceReport, rows: inheritanceReport.rows.map((reportRow) => {
     const final = finalRows.get(reportRow.rowId);
-    if (final) reportRow.currentStructuralSha256 = readerRowStructuralSha256(final);
-  }
+    return final ? { ...reportRow, currentStructuralSha256: readerRowStructuralSha256(final) } : reportRow;
+  }) };
   writeFileSync(invalidationPath, `${JSON.stringify(inheritanceReport, null, 2)}\n`);
 }
 

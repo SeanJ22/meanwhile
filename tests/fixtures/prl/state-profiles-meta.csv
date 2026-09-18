@@ -1,0 +1,39 @@
+COLUMN_NAME,DATA_TYPE,DESCRIPTION
+openstates_id,varchar,OpenStates unique identifier for the state legislator
+name,varchar,Full name
+first_name,varchar,First name
+last_name,varchar,Last name
+state,varchar,Two-letter state code
+party,varchar,Political party
+position,varchar,Legislative chamber (upper or lower)
+district,varchar,Legislative district identifier
+gender,varchar,Gender
+title,varchar,Official title
+email,varchar,Official email address
+government_website,varchar,Official government website URL
+campaign_website,varchar,Campaign website URL
+twitter_handle,varchar,Twitter/X handle
+facebook,varchar,Facebook page
+instagram,varchar,Instagram handle
+youtube,varchar,YouTube channel
+linkedin,varchar,LinkedIn profile
+birthday,date,Date of birth
+communication_source,text,Source of classified text (all)
+communication_count,bigint,Total number of classified text snippets
+communication_party,text,Political party (from rhetoric table)
+communication_state,text,State (from rhetoric table)
+communication_attack_personal_sum,bigint,Total number of personal attack classifications
+communication_attack_personal_mean,float,Mean rate of personal attack classifications (0-100)
+communication_attack_personal_rank,float,Within-state rank for personal attacks (1 = highest)
+communication_attack_policy_sum,bigint,Total number of policy criticism classifications
+communication_attack_policy_mean,float,Mean rate of policy criticism classifications (0-100)
+communication_attack_policy_rank,float,Within-state rank for policy criticism (1 = highest)
+communication_outcome_creditclaiming_sum,float,Total credit claiming classifications
+communication_outcome_creditclaiming_mean,float,Mean rate of credit claiming classifications (0-100)
+communication_outcome_creditclaiming_rank,float,Within-state rank for credit claiming (1 = highest)
+communication_outcome_bipartisanship_sum,float,Total bipartisanship classifications
+communication_outcome_bipartisanship_mean,float,Mean rate of bipartisanship classifications (0-100)
+communication_outcome_bipartisanship_rank,float,Within-state rank for bipartisanship (1 = highest)
+communication_policy_sum,float,Total policy discussion classifications
+communication_policy_mean,float,Mean rate of policy discussion classifications (0-100)
+communication_policy_rank,float,Within-state rank for policy discussion (1 = highest)

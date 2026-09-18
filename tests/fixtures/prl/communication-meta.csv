@@ -1,0 +1,23 @@
+COLUMN_NAME,DATA_TYPE,DESCRIPTION
+source,varchar,Source table where the data was pulled from
+source_id,int,Original id from the source table (can be used to see which text snippets came from the same entry
+bioguide_id,varchar,Unique identifier for each member of Congress
+text,mediumtext,The text that was classified
+policy,bigint,"Whether or not the text is considered ""policy discussion"""
+policy_area,mediumtext,Specific policy area (if applicable)
+policy_explanation,mediumtext,Model's explanation of why this item was or was not classified as policy
+attack_personal,bigint,"Whether the text leverages a personal attack on someone's character or reputation (as opposed to substantive policy discussion). Our final ""personal attack"" measure is based on both `attack_personal` and `attack` being TRUE"
+attack_policy,bigint,Whether the text attacks policy or legislation (as opposed to a personal attack)
+attack_target,mediumtext,The target of the attack (if applicable)
+attack_explanation,mediumtext,Model's explanation of why this item was or was not classified as attack
+outcome_bipartisanship,bigint,Whether or not the text contains mention of bipartisanship or working across the aisle
+outcome_creditclaiming,bigint,Whether or not the text contains an example of taking credit for some accomplishment
+date,date,Date that the original text source was published (based on original online source)
+bipartisanship_explanation,mediumtext,
+creditclaiming_explanation,mediumtext,
+source_url,varchar,
+classified,tinyint,
+attack_type,mediumtext,
+extreme_label,mediumtext,
+last_updated,timestamp,
+extreme_target,varchar,

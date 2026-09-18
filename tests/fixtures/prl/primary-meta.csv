@@ -1,0 +1,23 @@
+COLUMN_NAME,DATA_TYPE,DESCRIPTION
+candidate_id,varchar,FEC candidate ID
+source,varchar,Source type (tweets_challengers)
+text,text,Text chunk classified by the model
+date,date,Date of the original tweet
+name,varchar,Candidate full name
+party,varchar,"Candidate party (REP, DEM, etc.)"
+state,varchar,Two-letter state code
+office_full,varchar,"Office sought (House, Senate)"
+district,varchar,Congressional district number
+incumbent_challenge,char,"C=challenger, I=incumbent, O=open seat"
+attack_personal,tinyint,1 if text contains a personal attack
+attack_type,varchar,"Type of personal attack (character, integrity, etc.)"
+attack_target,varchar,Target of personal attack
+attack_policy,tinyint,1 if text contains a policy criticism
+outcome_bipartisanship,tinyint,1 if text expresses bipartisanship
+outcome_creditclaiming,tinyint,1 if text claims credit for an accomplishment
+policy,tinyint,1 if text discusses a policy area
+policy_area,text,JSON array of policy areas discussed
+extreme_label,varchar,1 if text uses an extremist label
+extreme_target,varchar,Target of extremist labeling
+tweet_id,varchar,Original tweet ID
+url,varchar,URL to the original tweet

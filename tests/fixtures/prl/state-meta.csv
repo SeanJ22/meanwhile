@@ -1,0 +1,27 @@
+COLUMN_NAME,DATA_TYPE,DESCRIPTION
+openstates_id,varchar,OpenStates unique identifier for the state legislator
+source,varchar,Source type (tweets_state)
+text,mediumtext,The text snippet classified by the model (blanked for tweets)
+date,date,Date the original text was published
+name,varchar,Legislator full name
+state,varchar,Two-letter state code
+party,varchar,Political party
+position,varchar,Legislative chamber (upper or lower)
+district,varchar,Legislative district identifier
+classified,tinyint,Classification status flag
+attack_personal,bigint,1 if text contains a personal attack on character or reputation
+attack_type,mediumtext,"Type of personal attack (character, integrity, etc.)"
+attack_target,mediumtext,Target of the personal attack
+attack_explanation,mediumtext,Model explanation for attack classification
+attack_policy,bigint,1 if text contains policy criticism
+outcome_bipartisanship,bigint,1 if text contains mention of bipartisanship
+bipartisanship_explanation,mediumtext,Model explanation for bipartisanship classification
+outcome_creditclaiming,bigint,1 if text claims credit for an accomplishment
+creditclaiming_explanation,mediumtext,Model explanation for credit claiming classification
+policy,bigint,1 if text discusses a policy area
+policy_area,mediumtext,JSON array of policy areas discussed
+policy_explanation,mediumtext,Model explanation for policy classification
+extreme_label,mediumtext,1 if text uses an extremist label
+extreme_target,varchar,Target of extremist labeling
+tweet_id,varchar,Original tweet ID
+url,varchar,URL to the original tweet

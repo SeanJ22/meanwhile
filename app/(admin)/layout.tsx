@@ -750,6 +750,123 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .two-clock code { color: var(--ce-fg); }
 .admin .two-clock-gap { padding: .1rem .5rem; border-radius: .25rem; background: color-mix(in srgb, var(--ce-text-warn) 15%, transparent); color: var(--ce-text-warn); font-weight: 500; }
 
+/* ============================================================ Fleet triage rework (BUILD.md §0–§G) */
+.admin.fleet-console { --ft-mono: var(--font-app-mono, ui-monospace, monospace); }
+.admin .fleet-header { display: grid; gap: .5rem; margin: 0 0 1rem; }
+.admin .fleet-header h1 { font-size: 1.6rem; letter-spacing: -.02em; margin: 0; }
+.admin .fleet-read-clock { display: grid; gap: .2rem; }
+.admin .frc-line { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0; font-size: .95rem; }
+.admin .frc-dot { width: 8px; height: 8px; border-radius: 999px; border: 1.5px dashed #6fa8a5; }
+.admin .frc-age { font-family: var(--ft-mono); color: var(--ce-fg); }
+.admin .frc-again { font-size: .8rem; padding: .25rem .7rem; }
+.admin .frc-note { margin: 0; font-size: .82rem; color: var(--ce-muted); max-width: 70ch; }
+
+.admin .fleet-bands { display: grid; gap: 6px; margin: 0 0 1rem; }
+.admin .fleet-band { --band: var(--ce-muted); display: grid; grid-template-columns: 14px 1fr auto; gap: .75rem; align-items: center; padding: .7rem .9rem; border-radius: 10px; background: var(--ce-panel); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--band) 40%, transparent); color: inherit; text-decoration: none; }
+.admin .fleet-band:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--band, #888) 78%, transparent); }
+.admin .fleet-band-chip { width: 14px; height: 14px; border-radius: 3px; background: var(--band, #888); }
+.admin .fleet-band-chip-dashed { background: transparent; border: 1.5px dashed var(--band, #6fa8a5); }
+.admin .fleet-band-body { display: grid; grid-template-columns: auto 1fr; gap: .1rem .6rem; align-items: baseline; }
+.admin .fleet-band-count { grid-row: span 2; font-family: var(--ft-mono); font-size: 1.2rem; color: var(--band); align-self: center; }
+.admin .fleet-band-label { font-size: .95rem; }
+.admin .fleet-band-reason { grid-column: 2; font-size: .82rem; color: var(--ce-muted); }
+.admin .fleet-band-go { font-family: var(--ft-mono); font-size: .8rem; color: var(--ce-muted); }
+
+.admin .fleet-tabs { display: flex; flex-wrap: wrap; gap: .3rem; border-bottom: 1px solid var(--ce-hairline); margin: 0 0 1.25rem; }
+.admin .fleet-tab-link { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .8rem; border-radius: 7px 7px 0 0; color: var(--ce-muted); text-decoration: none; font-size: .9rem; }
+.admin .fleet-tab-link:hover { color: var(--ce-fg); }
+.admin .fleet-tab-active { color: var(--ce-fg); background: var(--ce-panel); box-shadow: inset 0 1px 0 var(--ce-hairline), inset 1px 0 0 var(--ce-hairline), inset -1px 0 0 var(--ce-hairline); }
+.admin .fleet-tab-badge { font-family: var(--ft-mono); font-size: .72rem; padding: .05rem .35rem; border-radius: 999px; background: var(--ce-panel-raised); color: var(--ce-muted); }
+
+.admin .fleet-tab { display: grid; gap: 1rem; }
+.admin .fleet-tab-head { display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+.admin .fleet-tab h2 { font-size: 1.15rem; margin: 0 0 .2rem; }
+.admin .ft-accent { color: var(--ce-muted); font-weight: 500; }
+.admin .ft-toggle { font-size: .8rem; }
+.admin .ft-mono { font-family: var(--ft-mono); overflow-wrap: anywhere; }
+
+.admin .ft-group-header { display: grid; grid-template-columns: 11px auto 1fr; gap: .5rem; align-items: center; margin: .5rem 0 .1rem; }
+.admin .ft-chip { width: 11px; height: 11px; border-radius: 3px; background: #4c9a5a; }
+.admin .ft-chip-dashed { background: transparent; border: 1.5px dashed #6fa8a5; }
+.admin .ft-group-label { font-family: var(--ft-mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); }
+.admin .ft-rule { height: 1px; background: var(--ce-hairline); }
+
+.admin .ft-lede { font-size: .95rem; color: var(--ce-fg); margin: 0; }
+.admin .ft-red-cards { display: grid; gap: .75rem; }
+.admin .ft-finding { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem; padding: 1rem; border-radius: 14px; background: var(--ce-panel); box-shadow: var(--ce-shadow-card); }
+.admin .ft-finding-red { box-shadow: inset 0 0 0 1px rgba(204,75,75,.45), 0 0 0 1px rgba(204,75,75,.16), var(--ce-shadow-card); }
+.admin .ft-finding-main { display: grid; gap: .5rem; align-content: start; }
+.admin .ft-badge-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+.admin .ft-kind-badge { font-family: var(--ft-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; padding: .15rem .45rem; border-radius: 4px; background: color-mix(in srgb, #cc4b4b 18%, transparent); color: #ff8a8a; }
+.admin .ft-verdict { font-size: 1.05rem; font-weight: 600; margin: 0; }
+.admin .ft-explain { max-width: 74ch; }
+.admin .ft-arith dl { display: grid; gap: .1rem; margin: .3rem 0 0; }
+.admin .ft-arith dl > div { display: grid; grid-template-columns: 1fr auto; gap: .75rem; padding: .3rem .5rem; background: rgba(11,21,30,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+.admin .ft-arith dt { color: var(--ce-muted); font-size: .82rem; }
+.admin .ft-arith dd { margin: 0; font-family: var(--ft-mono); font-size: .82rem; }
+.admin .ft-arith-inference { border-top: 1px solid var(--ce-hairline); }
+.admin .ft-arith-inference dd { font-family: inherit; }
+.admin .ft-action-stack { display: grid; gap: .25rem; align-content: start; min-width: 190px; }
+.admin .ft-action-disabled { cursor: not-allowed; opacity: .5; }
+.admin .ft-action-caption { font-family: var(--ft-mono); font-size: .72rem; color: var(--ce-muted); }
+
+.admin .ft-ledger-head { font-size: 1rem; margin: .5rem 0 0; }
+.admin .ft-ledger-grid, .admin .ft-panels-grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.admin .ft-panel-card { display: grid; gap: .4rem; align-content: start; padding: .8rem .9rem; border-radius: 12px; background: var(--ce-panel); box-shadow: var(--ce-shadow-card); }
+.admin .ft-panel-card-dashed { background: transparent; box-shadow: none; border: 1.5px dashed #6fa8a5; }
+.admin .ft-panel-head { display: flex; gap: .5rem; align-items: baseline; justify-content: space-between; }
+.admin .ft-status { font-family: var(--ft-mono); font-size: .72rem; }
+.admin .ft-status-wired { color: #6fcf8f; }
+.admin .ft-status-partial { color: #eec779; }
+.admin .ft-inline-link { font-size: .82rem; color: #4fc9e8; }
+.admin .ft-no-producer-lede { max-width: 76ch; }
+.admin .ft-panel-caveat { border-top: 1px solid var(--ce-hairline); padding-top: .4rem; }
+.admin .ft-panels-footer { font-family: var(--ft-mono); font-size: .74rem; }
+.admin .ft-spend { display: grid; gap: .25rem; margin: 0; }
+.admin .ft-spend > div { display: grid; grid-template-columns: 1fr auto; gap: .5rem; }
+.admin .ft-spend dt { color: var(--ce-muted); font-size: .85rem; }
+.admin .ft-spend dd { margin: 0; font-family: var(--ft-mono); }
+.admin .ft-warn { color: #d99a3a; }
+
+.admin .ft-summary-grid { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.admin .ft-summary-card { display: grid; gap: .2rem; padding: .7rem .8rem; border-radius: 12px; background: transparent; box-shadow: inset 0 0 0 1px var(--ce-hairline); }
+.admin .ft-summary-count { font-family: var(--ft-mono); font-size: 1.1rem; }
+.admin .ft-worked { display: grid; gap: .3rem; padding: .8rem .9rem; border-radius: 12px; background: var(--ce-panel); box-shadow: var(--ce-rim); }
+.admin .ft-worked h3 { margin: 0; font-size: 1rem; }
+.admin .ft-correction { padding: .7rem .9rem; border-radius: 10px; border: 1.5px dashed #6fa8a5; }
+
+.admin .ft-exceptions { display: grid; gap: .75rem; }
+.admin .ft-exceptions .ft-finding { grid-template-columns: minmax(0,1fr); }
+.admin .ft-fieldrows { display: grid; gap: .2rem; margin: 0; }
+.admin .ft-fieldrows > div { display: grid; grid-template-columns: 130px 1fr; gap: .5rem; }
+.admin .ft-fieldrows dt { font-family: var(--ft-mono); font-size: .74rem; text-transform: uppercase; color: var(--ce-muted); }
+.admin .ft-fieldrows dd { margin: 0; }
+.admin .ft-subhead { font-size: 1rem; margin: 0 0 .3rem; }
+.admin .ft-shape { display: grid; gap: .4rem; }
+.admin .ft-shape-row { display: grid; grid-template-columns: 1fr auto auto; gap: .75rem; align-items: center; padding: .5rem .7rem; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--ce-hairline); }
+.admin .ft-shape-name { display: grid; gap: .1rem; }
+.admin .ft-nocount { font-family: var(--ft-mono); font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; border: 1px dashed rgba(111,168,165,.5); color: var(--ce-muted); }
+.admin .ft-shape-foot { max-width: 78ch; }
+.admin .ft-samples { margin: .3rem 0 0; padding-left: 1rem; }
+
+.admin .ft-blindspots { display: grid; gap: .5rem; }
+.admin .ft-blindspot { display: grid; gap: .35rem; padding: .8rem .9rem; border-radius: 11px; background: var(--ce-panel); box-shadow: inset 0 0 0 1px var(--ce-hairline); }
+.admin .ft-blindspot-red { box-shadow: inset 0 0 0 1px rgba(204,75,75,.4); }
+.admin .ft-blindspot-amber { box-shadow: inset 0 0 0 1px rgba(217,154,58,.4); }
+.admin .ft-blindspot-dashed { box-shadow: none; border: 1.5px dashed #6fa8a5; }
+.admin .ft-blindspot-head { display: flex; gap: .5rem; align-items: baseline; justify-content: space-between; }
+.admin .ft-blindspot-title { font-size: .95rem; font-weight: 600; }
+.admin .ft-copy { font-size: .78rem; }
+.admin .ft-copy-result { color: #6fcf8f; }
+.admin .ft-blindspot-summary { max-width: 78ch; }
+.admin .ft-blindspot-paths { font-family: var(--ft-mono); font-size: .72rem; color: var(--ce-muted); overflow-wrap: anywhere; margin: 0; }
+.admin .ft-blindspot-order { max-width: 80ch; margin-top: .5rem; }
+
+@media (max-width: 640px) {
+  .admin .ft-finding { grid-template-columns: minmax(0,1fr); }
+  .admin .ft-action-stack { min-width: 0; }
+}
+
 /* ============================================================ Admin C — the command centre strip (ADM-C1) */
 .admin .cc { margin: 0 0 1.5rem; }
 .admin .cc-next { margin: .25rem 0 .75rem; padding: .6rem .8rem; border-radius: .4rem; background: var(--ce-panel-raised); box-shadow: var(--ce-rim); }

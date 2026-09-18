@@ -255,6 +255,92 @@ export async function readFleetOperations(repos: ControlPlaneRepositories, input
     receiptSource: input.receiptStore ? { ...receiptSource, freshness: fullyRead ? "FRESH" : "UNKNOWN" } : receiptSource, coverageGaps, ownerDecisions };
 }
 
+/** What the panels tab (BUILD.md §F) reads. Receipts, coverage and spend all
+ *  live on the owner snapshot, so this reads ONLY the snapshot — never the
+ *  fleet-activity scan `readAutonomousActivity` runs. That scan is the render's
+ *  one unbounded cost and belongs to the work tab alone (§0); reading it for a
+ *  panel of aggregates would defeat the point. This is the targeted read the
+ *  read fix asks for: exactly what the panels need. */
+export interface FleetPanelsReading {
+  readonly observedAt: string;
+  readonly deliveryFreshness: "FRESH" | "STALE" | "UNKNOWN";
+  readonly receiptLoading: FleetReceiptLoading;
+  readonly receiptSource: FleetOperationsReport["receiptSource"];
+  readonly coverageGaps: FleetOperationsReport["coverageGaps"];
+  readonly spending: NonNullable<OwnerSnapshot["costSummary"]> | null;
+}
+
+export async function readFleetPanels(
+  repos: ControlPlaneRepositories,
+  input: { readonly observedAt: string },
+): Promise<FleetPanelsReading> {
+  return projectFleetPanels(await readSnapshot(repos), input.observedAt);
+}
+
+/** Pure projection so the shell can read the snapshot once and share it across
+ *  the panels, the decision queue and the pulse revision (BUILD.md §0). */
+export function projectFleetPanels(snapshot: ReadOutcome<OwnerSnapshot>, observedAt: string): FleetPanelsReading {
+  if (!Number.isFinite(Date.parse(observedAt))) throw new Error("FLEET_OPERATIONS_CLOCK_INVALID");
+  const input = { observedAt };
+  const stored = snapshot.kind === "HELD"
+    ? readFleetReceiptSnapshot(snapshot.value.fleetReceipts, input.observedAt)
+    : { observedAt: null, freshness: "UNKNOWN" as const, loading: snapshot };
+  let receiptLoading: FleetReceiptLoading = { kind: "NOT_RECORDED", detail: "No receipt reading was available from the owner snapshot." };
+  const { loading } = stored;
+  if (loading.kind === "HELD") {
+    const { receipts: _loaded, ...metadata } = loading.value;
+    receiptLoading = { kind: "HELD", value: metadata };
+  } else {
+    receiptLoading = loading;
+  }
+  const receiptSource: FleetOperationsReport["receiptSource"] = {
+    kind: "OWNER_SNAPSHOT", observedAt: stored.observedAt, authority: "HISTORICAL_PROMOTER_1",
+    freshness: stored.freshness, permanentAuthority: "NOT_CONNECTED", permanentAuthorityPromotions: [],
+  };
+  const coverageGaps: FleetOperationsReport["coverageGaps"] = snapshot.kind === "HELD"
+    ? { kind: "HELD", value: { publishedAt: snapshot.value.publishedAt, zipRows: snapshot.value.zipRows } }
+    : snapshot;
+  const fullyLoaded = receiptLoading.kind === "HELD"
+    && receiptLoading.value.truncated === 0
+    && receiptLoading.value.entries.every((e) => e.state === "LOADED");
+  return {
+    observedAt: input.observedAt,
+    deliveryFreshness: fullyLoaded ? stored.freshness : "UNKNOWN",
+    receiptLoading,
+    receiptSource,
+    coverageGaps,
+    spending: snapshot.kind === "HELD" ? snapshot.value.costSummary ?? null : null,
+  };
+}
+
+/** The Needs-Sean queue the decisions tab (BUILD.md §E) mounts, read WITHOUT
+ *  the fleet-activity scan: the cards live on the owner snapshot, and whether
+ *  each is still open is the decision log. This is the same filter
+ *  `readFleetOperations` applies to `ownerDecisions`, as a targeted read the
+ *  four non-work tabs can share (BUILD.md §0). */
+export interface FleetDecisionQueueReading {
+  readonly available: boolean;
+  readonly cards: readonly OwnerDecisionCard[];
+}
+
+export async function readFleetDecisionQueue(repos: ControlPlaneRepositories): Promise<FleetDecisionQueueReading> {
+  const [snapshotOut, decisionsOut] = await Promise.all([readSnapshot(repos), readDecisions(repos)]);
+  return projectFleetDecisionQueue(snapshotOut, decisionsOut);
+}
+
+/** Pure projection so the shell can reuse its one snapshot + decision-log read. */
+export function projectFleetDecisionQueue(
+  snapshotOut: ReadOutcome<OwnerSnapshot>,
+  decisionsOut: Awaited<ReturnType<typeof readDecisions>>,
+): FleetDecisionQueueReading {
+  if (snapshotOut.kind !== "HELD" || decisionsOut.kind !== "HELD") return { available: false, cards: [] };
+  const decisions = decisionsOut.value;
+  const cards = snapshotOut.value.decisionCards.filter((card) =>
+    decisionCardKind(card) === "DECISION" && card.verifiability === "NOT_MACHINE_VERIFIABLE" &&
+    card.whyNoMachineCanDecide.trim() && latestDecisionFor(decisions, card.rowId) === null);
+  return { available: true, cards };
+}
+
 /** Delivery freshness only, using Admin's existing pulse tolerance; never certifies source data. */
 export function fleetReadFreshness(lastSuccessfulReadAt: string | null, now: string): "FRESH" | "STALE" | "UNKNOWN" {
   const current = Date.parse(now), read = lastSuccessfulReadAt === null ? NaN : Date.parse(lastSuccessfulReadAt);

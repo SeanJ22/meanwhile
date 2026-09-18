@@ -231,8 +231,12 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
   // on live `main`. A view can be freshly generated, byte-reproducible, and
   // still say nothing that resolves — freshness is not validity.
   //
-  // So the content is checked: every `RULING n` heading must name a real
-  // numeric record, and every numeric record must appear.
+  // So the content is checked: every `RULING n` row must name a real numeric
+  // record, and every numeric record must appear.
+  //
+  // The view is a one-line-per-ruling index now, not one section per ruling, so
+  // the subject is a table ROW (`| RULING n | ...`) rather than an `## RULING n`
+  // heading. The invariant is unchanged; only where the number is read moved.
   check("compatibility-view-content");
   const rulingsPath = join(root, "docs", "rulings.md");
   if (existsSync(rulingsPath)) {
@@ -240,30 +244,30 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
 
     const undef = (text.match(/RULING undefined/g) ?? []).length;
     if (undef > 0) {
-      bad("docs/rulings.md", "ruling-undefined", `${undef} heading(s) render as "RULING undefined"`);
+      bad("docs/rulings.md", "ruling-undefined", `${undef} row(s) render as "RULING undefined"`);
     }
 
-    const headings = [...text.matchAll(/^## RULING (.+?) —/gm)].map((m) => m[1].trim());
+    const rows = [...text.matchAll(/^\| RULING (.+?) \|/gm)].map((m) => m[1].trim());
     const numericIds = new Set(
       records.filter((r) => /^R-0*\d+$/.test(r.id)).map((r) => String(Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))),
     );
-    const seenHeading = new Set<string>();
-    for (const h of headings) {
+    const seenRow = new Set<string>();
+    for (const h of rows) {
       if (!/^\d+$/.test(h)) {
-        bad("docs/rulings.md", "malformed-ruling-heading", `"## RULING ${h}" is not a ruling number`);
+        bad("docs/rulings.md", "malformed-ruling-row", `"| RULING ${h} |" is not a ruling number`);
         continue;
       }
-      seenHeading.add(String(Number(h)));
+      seenRow.add(String(Number(h)));
       if (!numericIds.has(String(Number(h)))) {
         bad(
           "docs/rulings.md",
-          "heading-without-record",
-          `"## RULING ${h}" resolves to no canonical numeric record`,
+          "row-without-record",
+          `"| RULING ${h} |" resolves to no canonical numeric record`,
         );
       }
     }
     for (const id of numericIds) {
-      if (!seenHeading.has(id)) {
+      if (!seenRow.has(id)) {
         bad(
           `R-${id.padStart(4, "0")}`,
           "record-omitted-from-compatibility-view",

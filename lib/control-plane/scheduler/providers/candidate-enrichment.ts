@@ -88,7 +88,6 @@
  * corpus, which is the exact opposite of RULING 229's invariant.
  */
 
-import { WIKI_API_DISALLOWED } from "../../../hunt/wikipedia.ts";
 import { currentExtraction, type CandidateCorpus } from "../../../candidates/corpus.ts";
 import {
   ENRICHMENT_FIELDS,
@@ -138,6 +137,26 @@ function identifiedHeaders(): Record<string, string> {
   };
 }
 
+/**
+ * Identification the Wikimedia API policy requires: a descriptive User-Agent
+ * WITH a contact. A generic User-Agent is throttled to the lowest global
+ * rate-limit tier (Wikimedia enforced global API rate limits in 2026), so this
+ * is a functional requirement, not decoration — and it is identification, never
+ * evasion (the transparency mandate forbids spoofing, not being named).
+ */
+function wikimediaHeaders(): Record<string, string> {
+  const from = process.env.INGEST_CONTACT_EMAIL;
+  const agent =
+    "we-the-people-civic/1.0 (https://github.com/SeanJ22/meanwhile; civic public-records product; contact via repository)";
+  return {
+    "user-agent": agent,
+    "api-user-agent": agent,
+    "x-purpose": "civic candidate record discovery for a public-records product",
+    accept: "application/json",
+    ...(from ? { from } : {}),
+  };
+}
+
 function displayName(c: CanonicalCandidacy): string {
   return `${c.givenName} ${c.familyName}`.replace(/\s+/g, " ").trim();
 }
@@ -162,72 +181,64 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
 }
 
 /**
- * **THE WIKIPEDIA SEARCH API IS DISALLOWED, AND THIS ROW SAYS SO.**
- * (Measured 2026-09-01, lane C, before the workers were left running.)
+ * **WIKIPEDIA VIA THE WIKIMEDIA REST API — A LIVE, ROBOTS-COMPLIANT DISCOVERY ROUTE.**
+ * (Reclassified 2026-09-17. Supersedes the 2026-09-01 NOT_MACHINE_EXECUTABLE reading.)
  *
- * This route was FIRST REGISTERED AS AN OPENABLE HTTP GET against
- * `https://en.wikipedia.org/w/api.php?action=query&list=search&…`, on the
- * strength of `docs/sources.md`'s Wikipedia row — Tier A, WIRED, identified
- * User-Agent, spaced. **That was a route built without reading the host's
- * `robots.txt`, and the robots.txt refuses it.** Read verbatim on 2026-09-01:
+ * The 2026-09-01 reading checked the article/API paths and found `Disallow: /w/`
+ * covering the site's own search API path — real, still honoured, and kept out
+ * of the tree (WIKI_API_DISALLOWED; tests/wikipedia-permission.test.ts). But it
+ * stopped there and marked the WHOLE route NOT_MACHINE_EXECUTABLE, which left
+ * Marginalia as the ONLY live discovery route per candidate — so one dead index
+ * stranded the record. RULING 248 ("if a public record exists, get it — find
+ * every avenue") points the other way: Wikimedia runs a public API built for
+ * automated access, on a DIFFERENT host, and it is robots-permitted.
  *
- * ```
- *   User-agent: *
- *   Allow: /w/api.php?action=mobileview&
- *   Allow: /w/load.php?
- *   Allow: /api/rest_v1/?doc
- *   Allow: /w/rest.php/site/v1/sitemap
- *   Disallow: /w/
- *   Disallow: /api/
- * ```
+ * Measured 2026-09-17 with the identified User-Agent in `wikimediaHeaders()`:
+ *   - `api.wikimedia.org/robots.txt` carries no rule against `/core/v1/` (allowed).
+ *   - `GET /core/v1/wikipedia/en/search/page?q=<q>&limit=5` -> HTTP 200
+ *     `application/json` with a populated `pages` array (the yield contract below).
  *
- * `Disallow: /w/` covers `/w/api.php`, and the only two `Allow:` exceptions are
- * `action=mobileview` and `load.php`. A search query is the disallowed form.
+ * The access discipline Wikimedia's 2026 API policy requires is honoured, and
+ * the deterministic executor already provides most of it: a descriptive
+ * User-Agent WITH a contact (a generic one is throttled to the lowest global
+ * rate-limit tier, so it is functional, not decorative); per-host spacing
+ * (`hostSpacer`, 1.5 s) keeps concurrency well under the 3-request guideline; and
+ * a 429 is a WALL_STATUS, so a rate-limit answer disposes BLOCKED_CURRENTLY and
+ * backs the route off on its next-due rather than being retried in-cycle.
  *
- * **A DISALLOW IS NOT A WALL.** A wall is a host refusing us; it carries a date
- * and RULING 53 sends a session back to re-walk it. A disallow is a host
- * telling us not to ask, and re-testing it on a clock would be asking the same
- * question after being told no. So this row is NOT_MACHINE_EXECUTABLE, it
- * carries the operative line verbatim, and nothing schedules a retry of it.
- *
- * The compliant route to the same information exists and is a DISCOVERY step
- * rather than a fetch: the Wikimedia REST API on `api.wikimedia.org`, whose
- * `/robots.txt` answered HTTP 301 to a documentation page on 2026-09-01 — no
- * robots document, which is an absence of restrictions and never a grant, and
- * is recorded as `CANNOT_TELL` rather than resolved by fetching.
+ * DISCOVERY ONLY, exactly as RULING 87 governs it: a result may POINT at a
+ * candidate's own page; the record is proved at the origin and is never taken
+ * from the index. Each discovery route is still its own scheduled unit on its
+ * own clock, so a 200 here neither marks Marginalia worked nor the reverse.
  */
-function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
+export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
   return {
     routeId: "candidate-wikipedia-api",
-    label: `${displayName(c)} — Wikipedia search API, DISALLOWED by robots.txt`,
-    executorClass: "BOUNDED_MODEL_WORKER",
+    label: `${displayName(c)} — Wikipedia via the Wikimedia REST search API, DISCOVERY ONLY`,
+    executorClass: "DETERMINISTIC",
     executorReason:
-      "no deterministic client may open this path, because the host's own robots.txt refuses it. " +
-      "Finding the compliant route to the same facts is a scout's job",
+      "the Wikimedia REST search API is a documented public endpoint built for automated access; " +
+      "replaying a search with a fixed shape is deterministic and spends no model",
     open: {
-      kind: "NOT_MACHINE_EXECUTABLE",
-      target: WIKI_API_DISALLOWED,
-      reason:
-        "DISALLOWED BY THE HOST'S OWN robots.txt, read 2026-09-01. `User-agent: *` carries " +
-        "`Disallow: /w/` with exactly two exceptions — `Allow: /w/api.php?action=mobileview&` and " +
-        "`Allow: /w/load.php?` — and a search query is neither. THIS IS NOT A WALL: the host is not " +
-        "refusing us, it is telling us not to ask, and RULING 53's re-walk clock applies to walls and " +
-        "never to disallows. The compliant route to the same facts is the Wikimedia REST API on " +
-        "api.wikimedia.org, whose /robots.txt answered HTTP 301 to a documentation page on 2026-09-01 " +
-        "— NO ROBOTS DOCUMENT, which is an absence of restrictions and never a grant, recorded " +
-        "CANNOT_TELL under RULING 182 and owed a permission reading before it is opened.",
+      kind: "HTTP_GET",
+      url: `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${encodeURIComponent(query(c))}&limit=5`,
+      headers: wikimediaHeaders(),
+    },
+    yieldContract: {
+      describe: "a Wikimedia REST search response carrying a pages array",
+      requireAll: ["pages"],
+      rowsAt: "pages",
     },
     citation:
-      "https://en.wikipedia.org/robots.txt read 2026-09-01; docs/sources.md — Wikipedia, Tier A, " +
-      "RULING 87 DISCOVERY ONLY. NOTE FOR THE INTEGRATION OWNER: docs/sources.md records this host " +
-      "as WIRED at the disallowed API path, and that row's permission claim is falsified by the " +
-      "line above. ANSWERED 2026-09-01 by the integration owner: two existing routes used it — " +
-      "lib/hunt/wikipedia.ts and lib/hunt/wiki-graph.ts — and both now read " +
-      "/wiki/<Title>?action=raw, which carries no Disallow. tests/wikipedia-permission.test.ts " +
-      "refuses the path repo-wide.",
-    awaitingAdapter:
-      "a permission reading of api.wikimedia.org, then an adapter for its REST search — the compliant " +
-      "route to the same discovery facts",
+      "api.wikimedia.org/core/v1/wikipedia/en/search/page, permission read + walked 2026-09-17: " +
+      "api.wikimedia.org/robots.txt permits /core/v1/ (no matching Disallow for `User-agent: *`), and " +
+      "the endpoint answered HTTP 200 application/json with a populated `pages` array to the identified " +
+      "User-Agent. The en.wikipedia.org search API path stays robots-Disallowed and unused " +
+      "(WIKI_API_DISALLOWED; tests/wikipedia-permission.test.ts); this is Wikimedia's published " +
+      "automated door on a separate host. CC BY-SA — facts are not copyrightable (RULING 87), and this " +
+      "route is DISCOVERY ONLY: it points at a page and is never a source of record. Wikimedia 2026 API " +
+      "policy honoured: descriptive User-Agent with contact (generic UAs are throttled to the lowest " +
+      "tier), per-host spacing under the 3-request guideline, and a 429 backs off via WALL_STATUSES.",
   };
 }
 

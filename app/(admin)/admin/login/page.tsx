@@ -27,8 +27,14 @@ import {
   BREAK_GLASS_FLAG_VAR,
   BREAK_GLASS_MAX_ATTEMPTS_PER_WINDOW,
   BREAK_GLASS_WINDOW_SECONDS,
+  SESSION_LIFETIME_SECONDS,
   isBreakGlassEnabled,
 } from "@/lib/control-plane/admin-auth.ts";
+
+/** The session length the console states, derived from the enforced constant so
+ *  the two can never drift (the footer once hard-coded "12 H" while the code
+ *  enforced eight). */
+const SESSION_HOURS = Math.round(SESSION_LIFETIME_SECONDS / 3600);
 import { OAUTH_START_PATH, googleSignInReadiness } from "@/lib/control-plane/admin-google.ts";
 import { Logo } from "@/components/brand/logo.tsx";
 import { GoogleG } from "@/components/brand/google-g.tsx";
@@ -127,10 +133,12 @@ function stateFor(why: string | undefined): SignInState | null {
   if (!why) return null;
   if (why === "NO_COOKIE") {
     return {
-      eyebrow: "WHY=NO_COOKIE",
-      title: "Sign-in needs a cookie.",
-      body: "The browser dropped the session cookie before Google could hand it back. Allow cookies for this host, then sign in again.",
-      action: "Try again",
+      eyebrow: "Not signed in",
+      title: "No session on this device.",
+      body:
+        `The control center found no sign-in session, so it sent you here. Sign in with Google to start one — ` +
+        `sessions last ${SESSION_HOURS} hours, and after that you sign in again.`,
+      action: "Continue with Google",
     };
   }
   if (why === "WRONG_EMAIL") {
@@ -200,7 +208,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
           <div className="signin-foot">
             <p className="signin-note">This host serves the owner control center only. Every admin route returns 404 on the public site.</p>
             <p className="signin-facts">
-              <span>SESSION &middot; 12 H</span>
+              <span>SESSION &middot; {SESSION_HOURS} H</span>
               <span>COOKIE &middot; DEVICE-BOUND</span>
               <span>AUDIT &middot; ON</span>
             </p>

@@ -2459,3 +2459,32 @@ list.
 **This session stopped short of the end of the brief's own list, and says so in
 those words.** Under RULING 170 that list was a floor and not a ceiling, so
 stopping before its end is stopping early twice over.
+
+---
+
+## 2026-09-17 — the Polarization Research Lab re-walked, full inventory (PRL ingestion)
+
+The g20 entry above read four elite files on 2026-08-19. The site has grown: the
+Open Data page now publishes **fifteen** files across a federal and a state tab.
+The full inventory was read off the rendered SPA (its download links are in the
+DOM once the two elite tabs are clicked), and `robots.txt` was read directly.
+
+- **`robots.txt`** — `User-agent: * / Allow: / / Disallow: /admin/`. Every
+  `/data/elite/*` path is permitted; only `/admin/` is refused. Permission is
+  settled by that plus the CC BY 4.0 licence plus the explicit author directive.
+- **The fifteen files**, all under `https://americaspoliticalpulse.com/data/elite/`:
+  five dictionaries (`communication-meta.csv`, `profiles-meta.csv`,
+  `primary-meta.csv`, `state-meta.csv`, `state-profiles-meta.csv`); three
+  aggregate profiles (`profiles.zip`, `profiles-all-national.zip`,
+  `state-profiles.zip`); and seven large sets (`rhetoric-all.zip`,
+  `rhetoric-all-national.zip`, `primary-rhetoric.zip`, `state-rhetoric-all.zip`,
+  `newsletters-fulltext.zip`, `statements-fulltext.zip`, `floor-fulltext.zip`).
+  The typed registry is `lib/sources/prl/inventory.ts`.
+- **Read off the files, not the labels.** The classified-statement and state
+  rhetoric sets carry a `last_updated` distinct from the publication `date` and
+  years later than it — PRL reclassifies old statements — so their incremental
+  cursor is `last_updated`, not `date`. State legislators key by `openstates_id`,
+  primary candidates by FEC `candidate_id`, federal by `bioguide_id`. The site's
+  "262K rows" label for `primary-rhetoric.zip` is stale; the file parses to
+  572,451 — which is exactly why the ingestion counts the file, never the label.
+  The full account is `docs/prl-ingestion.md`.

@@ -240,6 +240,7 @@
     "predev": "node scripts/check-port.mjs && node --experimental-strip-types scripts/state-holdings-project.mts && node scripts/build-map-worker.mjs",
     "press:surface": "tsx scripts/press-surface-0825.mts",
     "prl:fetch": "node scripts/installed-runtime-command.mjs manual-promote --contract=prl",
+    "prl:refresh": "node --env-file-if-exists=.env.local --experimental-strip-types scripts/prl-refresh.mts",
     "probe:a07": "tsx scripts/probe-a07.mts",
     "probe:alarm": "tsx scripts/probe-write-alarm.mts",
     "probe:m139": "tsx scripts/probe-m139.mts",

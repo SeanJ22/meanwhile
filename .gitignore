@@ -202,3 +202,6 @@ data/photos/staged/
 # reader snapshot beside it for a deterministic reversal. The receipt itself is
 # small and stays; the byte copy is a whole snapshot per promotion and does not.
 /data/health/promotion-receipts/*.before.json
+
+# PRL raw archive rows land in object storage (or the runner local twin); never committed
+data/prl/archive/

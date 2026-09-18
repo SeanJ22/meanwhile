@@ -1,0 +1,51 @@
+COLUMN_NAME,DATA_TYPE,DESCRIPTION
+bioguide_id,text,Unique identifier for each member of Congress
+ideology_ideology,float,"Ideology score (based on Duck-Mayr & Montgomery, 2022)"
+ideology_ideology_rank_lib,float,Ordinal rank for a particular member of congress (how liberal they rank)
+ideology_ideology_rank_con,text,Ordinal rank for a particular member of congress (how conservative they rank)
+ideology_ideology_percentile_lib,float,Percentile rank for a particular member of congress (how liberal they rank)
+ideology_ideology_percentile_con,text,Percentile rank for a particular member of congress (how conservative they rank)
+ideology_propublica,json,"Attributes for a given legislator (taken from propublica); format: ```{""id"": ***,""fax"": ***,""url"": ***,""geoid"": ***,""party"": ***,""phone"": ***,""state"": ***,""title"": ***,""crp_id"": ***,""gender"": ***,""ocd_id"": ***,""office"": ***,""suffix"": ***,""api_uri"": ***,""rss_url"": ***,""at_large"": ***,""cook_pvi"": ***,""cspan_id"": ***,""district"": ***,""icpsr_id"": ***,""in_office"": ***,""last_name"": ***,""seniority"": ***,""first_name"": ***,""dw_nominate"": ***,""govtrack_id"": ***,""ideal_point"": ***,""middle_name"": ***,""short_title"": ***,""total_votes"": ***,""contact_form"": ***,""last_updated"": ***,""missed_votes"": ***,""votesmart_id"": ***,""date_of_birth"": ***,""next_election"": ***,""total_present"": ***,""leadership_role"": ***,""twitter_account"": ***,""youtube_account"": ***,""facebook_account"": ***,""fec_candidate_id"": ***,""google_entity_id"": ***,""missed_votes_pct"": ***,""votes_with_party_pct"": ***,""votes_against_party_pct"": ***}```"
+ideology_last_update,timestamp,
+ideology_rank,float,
+ideology_percentile,float,
+ideology_rank_max,float,
+efficacy_sponsored,json,"JSON object based on bills sponsored by a member of congress; format: ```{""signed"": ###,""introduced"": ###,""signed-avg"": ###,""passed_house"": ###,""to_president"": ###,""passed_senate"": ###,""introduced-avg"": ###,""passed_house-avg"": ###,""to_president-avg"": ###,""passed_senate-avg"": ###}```"
+efficacy_cosponsored,json,"JSON object based on bills co-sponsored by a member of congress; format: ```{""signed"": ###,""introduced"": ###,""signed-avg"": ###,""passed_house"": ###,""to_president"": ###,""passed_senate"": ###,""introduced-avg"": ###,""passed_house-avg"": ###,""to_president-avg"": ###,""passed_senate-avg"": ###}```"
+efficacy_topics,json,"List of topics and # of bills that that legislator sponsored or cosponsored; format: ```{TOPIC: ###, ...}```"
+efficacy_last_update,timestamp,
+attendance_total,bigint,Total number of votes cast by a particular member of congress
+attendance_max,bigint,Max number of votes they could have made
+attendance_avg,bigint,Number of votes cast averaged across members of congress (as a comparison)
+attendance_last_update,timestamp,
+money_total_money,bigint,Total money raised for a particular member of Congress
+money_total_money_avg,float,Average total money raised across congress (for the member's chamber). This value will repeat across rows for the Senate and House (there's redundancy but it makes later processing easier)
+money_total_ind_don,bigint,Total number of individual donors for a particular member of Congress
+money_total_ind_don_avg,bigint,Average total number of donors across congress (for the member's chamber). This value will repeat across rows for the Senate and House (there's redundancy but it makes later processing easier)
+money_instate_total,bigint,Total amount of money raised from donors who reside in the same state that the legislator represents
+money_instate_count,bigint,Total number of donors from donors who reside in the same state that the legislator represents
+money_outstate_total,bigint,Total amount of money raised from donors who reside outside of the state that the legislator represents
+money_outstate_count,bigint,Total number of donors from donors who reside outside of the state that the legislator represents
+money_state_map,json,JSON object that contains the amount of money raised by a candidate in each US state
+money_total_money_rank,float,How a member ranks in terms of total money raised
+money_total_ind_don_rank,float,How a member ranks in terms of total number of donors
+money_last_update,timestamp,
+communication_count,bigint,Total number of classified text snippets for 
+communication_attack_personal_sum,bigint,Total number of classifications labeled personal attack
+communication_outcome_creditclaiming_sum,float,Total number of classifications labeled credit claiming
+communication_policy_sum,float,Total number of classifications labeled policy
+communication_outcome_bipartisanship_sum,float,Total number of classifications labeled bipartisanship
+communication_attack_personal_mean,float,Mean number of classifications labeled attack
+communication_outcome_creditclaiming_mean,float,Mean number of classifications labeled credit claiming
+communication_policy_mean,float,Mean number of classifications labeled policy discussion
+communication_outcome_bipartisanship_mean,float,Mean number of classifications labeled bipartisanship
+communication_party,text,Political Party of the Legislator
+communication_attack_personal_rank,float,Ranking based on the mean number of classifications labeled attack; higher means have lower ranks (highest mean has a rank of 1)
+communication_outcome_creditclaiming_rank,float,Ranking based on the mean number of classifications labeled credit claiming; higher means have lower ranks (highest mean has a rank of 1)
+communication_policy_rank,float,Ranking based on the mean number of classifications labeled policy discussion; higher means have lower ranks (highest mean has a rank of 1)
+communication_outcome_bipartisanship_rank,float,Ranking based on the mean number of classifications labeled bipartisanship; higher means have lower ranks (highest mean has a rank of 1)
+communication_source,text,source of the text
+communication_attack_policy_sum,float,Total number of classifications labeled policy criticism
+communication_attack_policy_mean,float,Mean number of classifications labeled policy criticism
+communication_attack_policy_rank,float,Ranking based on the number of classifications labeled policy criticism; higher means have lower ranks (highest mean has a rank of 1)
+communication_last_update,timestamp,

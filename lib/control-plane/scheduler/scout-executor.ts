@@ -492,6 +492,84 @@ export function withCacheBreakpoints(
   });
 }
 
+/**
+ * **THE PER-ATTEMPT CONTEXT BOUND — WHAT MAY ACCUMULATE IN ONE SCOUT'S MESSAGES.**
+ * (2026-09-17. The scout PAYLOAD_BYTE_CEILING fix.)
+ *
+ * Every turn re-sends the whole conversation, and `FleetSafetyController` counts
+ * each re-send's bytes against the cycle's payload budget
+ * (`FLEET_SAFETY_BOUNDS.maxPayloadBytesPerCycle`, 16 MiB). Left unbounded, a
+ * scout that fetched a few large pages grew its conversation until one turn's
+ * projected request crossed the ceiling and the Attempt ABORTED with
+ * PAYLOAD_BYTE_CEILING — which is what stopped every scout that ran from
+ * 2026-09-15 on. `fitRepresentation` bounds a SINGLE tool result; nothing
+ * bounded their ACCUMULATION across turns.
+ *
+ * So the tool-result representations are held under a byte budget here,
+ * newest-first, and everything older is elided in place to a compact pointer
+ * that keeps the rung header and the vaulted artifact id(s). The model reasons
+ * over its own rung notes or cites the artifact id; it never re-fetches (a
+ * re-read is refused by the executor's `guard`). The newest result is always
+ * kept whole, so the model always sees what it just retrieved. Elision is
+ * monotonic — oldest first, and an elided block stays elided — so the cached
+ * prefix restabilises after each elision rather than churning turn over turn.
+ *
+ * This is a NEW floor on context, never a raised cap: with tool results held
+ * under ~100 KB a scout request is ~150-200 KB, so both concurrent scouts across
+ * the full turn bound stay well under the cycle's payload ceiling and leave room
+ * for the deterministic lane.
+ */
+export const SCOUT_CONTEXT_TOOL_RESULT_BUDGET = 100_000;
+
+/** The sentinel a stub carries, so an already-elided block is left alone on later turns. */
+export const SCOUT_CONTEXT_ELISION_MARK = "[REPRESENTATION ELIDED to bound this cycle's payload";
+
+function elideToolResult(content: string, artifactIds: readonly string[]): string {
+  const firstLine = content.split("\n", 1)[0]?.slice(0, 300) ?? "";
+  return (
+    `${firstLine}\n${SCOUT_CONTEXT_ELISION_MARK}; the vaulted artifact(s) ` +
+    `${artifactIds.join(", ") || "(none recorded)"} hold the full representation. Reason over your ` +
+    "rung notes or cite the artifact id — do not re-fetch it (a re-read is refused).]"
+  );
+}
+
+/**
+ * Elide the OLDEST tool-result representations, in place, until the retained
+ * tool-result content is within `budgetBytes`. The newest result is always kept
+ * whole. A `tool_use` id absent from `artifactIdsByToolUse` (a finish or
+ * record_rung result) is never elided — those are small and carry no
+ * representation to point at.
+ */
+export function boundToolResultContext(
+  messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[],
+  budgetBytes: number,
+  artifactIdsByToolUse: ReadonlyMap<string, readonly string[]>,
+): void {
+  const results: Record<string, unknown>[] = [];
+  for (const m of messages) {
+    if (m.role !== "user" || !Array.isArray(m.content)) continue;
+    for (const b of m.content as Record<string, unknown>[]) {
+      if (b && b.type === "tool_result" && typeof b.content === "string" && typeof b.tool_use_id === "string") {
+        results.push(b);
+      }
+    }
+  }
+  let kept = 0;
+  for (let i = results.length - 1; i >= 0; i -= 1) {
+    const block = results[i];
+    const content = block.content as string;
+    if (content.includes(SCOUT_CONTEXT_ELISION_MARK)) continue; // already a stub; nothing to reclaim
+    const id = block.tool_use_id as string;
+    const size = Buffer.byteLength(content, "utf8");
+    const newest = i === results.length - 1;
+    if (newest || kept + size <= budgetBytes || !artifactIdsByToolUse.has(id)) {
+      kept += size;
+      continue;
+    }
+    block.content = elideToolResult(content, artifactIdsByToolUse.get(id) ?? []);
+  }
+}
+
 /** The tool list with the breakpoint on its LAST definition, so tools + system cache as one prefix. */
 export function withToolBreakpoint(specs: readonly ScoutToolSpec[]): ScoutToolSpec[] {
   return specs.map((s, i) => {
@@ -718,6 +796,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const overruns: ScoutRepresentationOverrun[] = [];
       /** (tool | normalized url) -> artifact ids vaulted by it this Attempt. The no-re-read set. */
       const vaultedByCall = new Map<string, string[]>();
+      /** tool_use id -> artifact ids it vaulted, so the context bound's stubs can point at the evidence (2026-09-17). */
+      const artifactIdsByToolUse = new Map<string, string[]>();
       /** The API's cache TTL for the writes this lane asks for; the aggregate fallback prices at it. */
       const requestedTtl = SCOUT_CACHE_POLICY.ttl;
       let turns = 0;
@@ -973,6 +1053,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             }
             /* RULING 244: the representation is sized to the step, never a raw document. */
             const ids = call.artifacts.map((a) => a.artifactId);
+            artifactIdsByToolUse.set(use.id, ids);
             const fit = fitRepresentation(use.name, `${header}${call.forModel}`, ids);
             if (fit.truncated) overruns.push({ tool: use.name, target: rawUrl || use.name, bytes: fit.bytes, budget: fit.budget, artifactIds: ids });
             const shownBytes = Math.min(fit.bytes, fit.budget);
@@ -985,6 +1066,12 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           results.push({ type: "tool_result", tool_use_id: use.id, is_error: true, content: `unknown tool ${use.name}` });
         }
         messages.push({ role: "user", content: results });
+        /*
+         * Bound the accumulated tool-result context so this turn's re-sent
+         * conversation cannot drive the cycle's PAYLOAD_BYTE_CEILING (2026-09-17).
+         * Newest results stay whole; older ones become artifact-id pointers.
+         */
+        boundToolResultContext(messages, SCOUT_CONTEXT_TOOL_RESULT_BUDGET, artifactIdsByToolUse);
       }
 
       /* ---------------------------------------------------- the result */

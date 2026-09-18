@@ -4193,7 +4193,7 @@
     },
     "tests/hotfix-audit.test.ts": {
       "names": [
-        "FINDING 1 — every RULING n heading names a real numeric record, and none is omitted",
+        "FINDING 1 — every RULING n row names a real numeric record, and none is omitted",
         "FINDING 1 — the compatibility view contains no RULING undefined",
         "FINDING 1 — un-numbered records keep their namespace and are not dropped",
         "FINDING 2 — RULING 99's dual-write clause is no longer current, and R99 is preserved",

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 652,
-    "named": 6661,
+    "files": 653,
+    "named": 6668,
     "dynamic": 27
   },
   "files": {
@@ -790,6 +790,18 @@
         "SEEDED FAILURE: text with no artifact behind it is a CONTRADICTION, not an EXTRACTED",
         "an orthogonal downstream pass is UNCREDITED and named, never a violation",
         "the rendered table carries all seven stages and no headline percentage"
+      ],
+      "dynamic": 0
+    },
+    "tests/append-only-log-pagination.test.ts": {
+      "names": [
+        "read() of an absent key is one empty bounded page",
+        "read() pages a log larger than one response and returns every record in position order",
+        "readAll() pages the whole table in (log_key, position) order",
+        "readRecent() returns the newest N, newest first, bounded",
+        "readWhere() of a value with no match is an empty result, not an error",
+        "readWhere() refuses an unsafe JSON path segment rather than building SQL from it",
+        "readWhere() returns EVERY match by content, paged, regardless of position"
       ],
       "dynamic": 0
     },
@@ -4161,7 +4173,7 @@
     },
     "tests/hotfix-audit.test.ts": {
       "names": [
-        "FINDING 1 — every RULING n heading names a real numeric record, and none is omitted",
+        "FINDING 1 — every RULING n row names a real numeric record, and none is omitted",
         "FINDING 1 — the compatibility view contains no RULING undefined",
         "FINDING 1 — un-numbered records keep their namespace and are not dropped",
         "FINDING 2 — RULING 99's dual-write clause is no longer current, and R99 is preserved",

@@ -223,7 +223,7 @@ test("public redirects are counted as separate provider requests under one byte 
   assert.equal(controller.snapshot(NIGHT).cycle.payloadBytes, 8);
 });
 
-test("concurrent public reads cannot both reserve the same remaining byte allowance", async () => {
+test("an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds", async () => {
   const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   let release!: () => void;
   const gate = new Promise<void>((resolve) => { release = resolve; });
@@ -240,12 +240,92 @@ test("concurrent public reads cannot both reserve the same remaining byte allowa
   });
   const firstPending = first({ url: "https://example.test/one", method: "GET", headers: {}, timeoutMs: 1_000 });
   await new Promise<void>((resolve) => setImmediate(resolve));
+  // While the first read is in flight it holds only its bounded reservation, not
+  // the whole remaining budget, so the second read is admitted and runs to 200
+  // instead of being refused PAYLOAD_BYTE_CEILING at turn 0.
   const secondResult = await second({ url: "https://example.test/two", method: "GET", headers: {}, timeoutMs: 1_000 });
-  assert.match(secondResult.transportError ?? "", /PAYLOAD_BYTE_CEILING/);
-  assert.equal(secondCalls, 0);
+  assert.equal(secondResult.status, 200);
+  assert.equal(secondResult.body, "two");
+  assert.equal(secondCalls, 1);
   release();
   assert.equal((await firstPending).status, 200);
   assert.equal(firstCalls, 1);
+  assert.equal(controller.snapshot(NIGHT).cycle.payloadBytes, 6);
+});
+
+test("a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)", async () => {
+  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  const read = controller.guardedOpenOne("public-web", "deterministic-read", async () => {
+    await gate;
+    return new Response("body", { status: 200 });
+  });
+  const pending = read({ url: "https://example.test/big", method: "GET", headers: {}, timeoutMs: 1_000 });
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  // The deterministic read holds its (now bounded) reservation. A concurrent
+  // Scout model request must not be refused for payload bytes before its first
+  // turn — this is the contention that darkened the Scout lane in 2026-09.
+  const scoutRequest: ModelRequest = {
+    model: "claude-opus-5",
+    max_tokens: 8_192,
+    system: [{ type: "text", text: "scout" }],
+    tools: [],
+    messages: [{ role: "user", content: "scout turn 0" }],
+  };
+  const reservation = controller.reserveModelRequest("anthropic", "scout-turn-0", scoutRequest);
+  assert.ok(reservation.usd > 0);
+  controller.settleModelRequest(reservation, {
+    model: "claude-opus-5",
+    stop_reason: "end_turn",
+    content: [{ type: "text", text: "ok" }],
+    usage: { input_tokens: 10, output_tokens: 20 },
+  });
+  release();
+  assert.equal((await pending).status, 200);
+});
+
+test("the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations", async () => {
+  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const scoutRequest: ModelRequest = {
+    model: "claude-opus-5",
+    max_tokens: 8_192,
+    system: [{ type: "text", text: "scout" }],
+    tools: [],
+    messages: [{ role: "user", content: "scout" }],
+  };
+  // The two concurrent Scouts each hold a model reservation…
+  controller.reserveModelRequest("anthropic", "scout-a", scoutRequest);
+  controller.reserveModelRequest("anthropic", "scout-b", scoutRequest);
+  // …and each is mid-fetch, holding a bounded payload reservation.
+  const gates: Array<() => void> = [];
+  const holdOpen = (work: string): Promise<unknown> => {
+    const gate = new Promise<void>((resolve) => gates.push(resolve));
+    const open = controller.guardedOpenOne("public-web", work, async () => {
+      await gate;
+      return new Response("x", { status: 200 });
+    });
+    return open({ url: "https://example.test/scout", method: "GET", headers: {}, timeoutMs: 1_000 });
+  };
+  const a = holdOpen("scout-read-a");
+  const b = holdOpen("scout-read-b");
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  // Now the serial deterministic lane opens the largest recurring record. Its
+  // honest per-fetch stream budget (the Range ceiling) must still clear the
+  // 9,396,218-byte record even with the whole Scout lane holding reservations.
+  let rangeEnd = 0;
+  const big = controller.guardedOpenOne("public-web", "nh-cfs-filing-entity-details", async (_input, init) => {
+    const range = (init?.headers as Record<string, string> | undefined)?.range ?? "";
+    rangeEnd = Number(/bytes=0-(\d+)/.exec(range)?.[1] ?? "-1") + 1;
+    return new Response("record", { status: 200 });
+  });
+  await big({ url: "https://example.test/nh-cfs", method: "GET", headers: {}, timeoutMs: 1_000 });
+  assert.ok(
+    rangeEnd >= 9_396_218,
+    `the stream budget (${rangeEnd} bytes) must clear the 9,396,218-byte recurring record`,
+  );
+  for (const releaseGate of gates) releaseGate();
+  await Promise.all([a, b]);
 });
 
 test("a hard Neon response is host-latched before any second database probe", async () => {

@@ -182,8 +182,13 @@ export interface ZipRow {
   readonly bodyCount: number;
   /** The level tag: a coverage-tier label, or the named gap when the tier is UNKNOWN. */
   readonly level: Held<string>;
-  /** worst-of readiness across overlapping bodies (R-F), with its denominator. */
-  readonly completeness: Measured;
+  /**
+   * Progress across overlapping bodies (R-F), with its denominator — or the named
+   * gap "not measured" when NO body's readiness has been walked for this zip.
+   * All-NOT_WALKED is unknown, not 0%: rendering it as a measured zero asserts
+   * "no body is ready" where the truth is "no body has been checked."
+   */
+  readonly completeness: Held<Measured>;
   /** The single worst state across the zip's bodies. */
   readonly worstState: CellState;
   /** The single worst gap, in plain language, e.g. "school board agendas". */

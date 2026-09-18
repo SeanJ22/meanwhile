@@ -50,7 +50,9 @@ function renderedNumbers(snapshot: ReadinessStateSnapshot): RenderedNumber[] {
   if (snapshot.summary.populationInCompleteZip.held) {
     push("population in a complete zip", snapshot.summary.populationInCompleteZip.value);
   }
-  for (const z of snapshot.zips) push(`zip completeness ${z.zip}`, z.completeness);
+  for (const z of snapshot.zips) {
+    if (z.completeness.held) push(`zip completeness ${z.zip}`, z.completeness.value);
+  }
   // ADM-41: the per-ZIP population is rendered on every row and was NOT audited
   // before — a wrong population passed the R-D audit untouched, which is exactly
   // how a stale vintage and a bare "0 people" reached the owner's screen.

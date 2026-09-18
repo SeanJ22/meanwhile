@@ -188,6 +188,22 @@ export interface ResearchLanes {
   readonly scoutLeaseTtlMs: number;
   /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
   readonly scoutWallMs: number;
+  /**
+   * **THE SCOUT LANE'S OWN ADMISSION DEADLINE — A FLOOR THE RESERVE CANNOT ZERO.**
+   * (2026-09-18. Two clean cycles deferred every scout for BUDGET.)
+   *
+   * `budget.deadlineMs` is reduced by the downstream reserve (`fleetReserveMs`)
+   * to cap the always-full DETERMINISTIC refresh queue. That reserve exists to
+   * protect the fleet from the refresh queue — but applied to the SHARED
+   * `budget.deadlineMs` it starved the very Scouts it should protect: the model
+   * lane starts after the pre-dispatch phases, and the reserved deadline minus a
+   * Scout's wall left no window, so every Scout deferred BUDGET while the cycle
+   * finished at half the hard wall. The Scout lane admits against THIS deadline
+   * — the hard dispatch wall, which already keeps the finalization reserve — so
+   * the downstream reserve caps deterministic dispatch alone. Absent, the Scout
+   * lane falls back to `budget.deadlineMs` (the pre-2026-09-18 behaviour).
+   */
+  readonly scoutDeadlineMs?: number;
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
   /**
    * **THE PRE-WARM.** (2026-09-06.) Called ONCE per cycle, before the first
@@ -610,12 +626,27 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
         return;
       }
-      const deadline = input.budget?.deadlineMs;
+      /*
+       * The Scout lane admits against its OWN deadline (`scoutDeadlineMs`,
+       * floored to the hard dispatch wall), NOT the reserve-reduced deterministic
+       * deadline. `budgetSpent()` is deliberately not consulted here: it reads
+       * the reduced `budget.deadlineMs`, which is the shared value the downstream
+       * reserve shrank — and gating Scouts on it is what starved them. A Scout
+       * with an open occurrence runs while it can still finish before the wall.
+       */
+      const scoutDeadline = research.scoutDeadlineMs ?? input.budget?.deadlineMs;
       if (
-        budgetSpent() ||
-        (deadline !== undefined && input.budget !== undefined && input.budget.now() + research.scoutWallMs >= deadline)
+        scoutDeadline !== undefined &&
+        input.budget !== undefined &&
+        input.budget.now() + research.scoutWallMs >= scoutDeadline
       ) {
-        deferForBudget(row);
+        deferred.push({
+          obligationId: row.obligation.id,
+          why:
+            `the cycle's dispatch budget was spent at ${new Date(scoutDeadline).toISOString()} before ` +
+            `this Scout could finish inside its ${Math.round(research.scoutWallMs / 1000)}s wall. It keeps ` +
+            "its next-due and is dispatched by a later cycle.",
+        });
         modelDeferred += 1;
         deferredBy.BUDGET = (deferredBy.BUDGET ?? 0) + 1;
         return;

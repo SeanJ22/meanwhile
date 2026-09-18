@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 656,
-    "named": 6673,
+    "files": 658,
+    "named": 6679,
     "dynamic": 27
   },
   "files": {
@@ -329,7 +329,7 @@
         "parseCacheControlMaxAge reads the directive and nothing else",
         "the JWKS resolver honours Cache-Control max-age and refetches ONCE on an unknown kid",
         "the OAuth cookie is __Host-, HttpOnly, Secure, Path=/, Lax, and has no Domain",
-        "the authorization URL is Google's, with PKCE S256, openid email, state and nonce — and no login_hint",
+        "the authorization URL is Google's, with PKCE S256, openid email, state and nonce — and no login_hint or prompt",
         "the break-glass route's security sequence, in order, from its source",
         "the enrolled address is matched case-insensitively and nothing else is",
         "the exchange posts the code, the verifier and the client secret to Google's token endpoint",
@@ -8187,6 +8187,15 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-context-bound.test.ts": {
+      "names": [
+        "a result with no artifact mapping (finish / record_rung) is never elided",
+        "elision is stable: a second pass changes nothing",
+        "nothing is elided when the whole conversation fits",
+        "older tool results are elided until the retained content is within budget"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-lane.test.ts": {
       "names": [
         "1. SEEDED: a route declared DETERMINISTIC never consumes a model",
@@ -9511,6 +9520,13 @@
         "no committed source composes a URL on Wikipedia's disallowed /w/ path",
         "the guard is looking at something — the disallowed literal is still in the tree",
         "the replacement route is under /wiki/, which carries no blanket Disallow"
+      ],
+      "dynamic": 0
+    },
+    "tests/wikipedia-route.test.ts": {
+      "names": [
+        "the Wikipedia route is a live deterministic HTTP GET on the permitted Wikimedia REST host",
+        "the Wikipedia route's yield contract makes an empty search a FAILED extraction"
       ],
       "dynamic": 0
     },

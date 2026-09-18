@@ -219,7 +219,7 @@ test("PKCE: the verifier is inside RFC 7636's length and the challenge is S256 o
   assert.notEqual(mintPkceVerifier(), verifier, "verifiers do not repeat");
 });
 
-test("the authorization URL is Google's, with PKCE S256, openid email, state and nonce — and no login_hint", () => {
+test("the authorization URL is Google's, with PKCE S256, openid email, state and nonce — and no login_hint or prompt", () => {
   const url = new URL(
     buildAuthorizationUrl({
       clientId: CLIENT_ID,
@@ -240,6 +240,9 @@ test("the authorization URL is Google's, with PKCE S256, openid email, state and
   assert.equal(url.searchParams.get("nonce"), "nn");
   // The enrolled address is not put in a query string; `hd` is a chooser hint only.
   assert.equal(url.searchParams.get("login_hint"), null);
+  // Never prompt=none: with no session, Google must show the normal sign-in
+  // prompt, not fail silently and bounce the owner back (owner directive 2026-09-18).
+  assert.equal(url.searchParams.get("prompt"), null);
   assert.ok(!url.toString().includes(encodeURIComponent(OWNER_ADMIN_EMAIL)) && !url.toString().includes(OWNER_LOCAL_PART));
 });
 

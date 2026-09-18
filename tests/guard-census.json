@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 653,
-    "named": 6668,
+    "files": 658,
+    "named": 6679,
     "dynamic": 27
   },
   "files": {
@@ -329,7 +329,7 @@
         "parseCacheControlMaxAge reads the directive and nothing else",
         "the JWKS resolver honours Cache-Control max-age and refetches ONCE on an unknown kid",
         "the OAuth cookie is __Host-, HttpOnly, Secure, Path=/, Lax, and has no Domain",
-        "the authorization URL is Google's, with PKCE S256, openid email, state and nonce — and no login_hint",
+        "the authorization URL is Google's, with PKCE S256, openid email, state and nonce — and no login_hint or prompt",
         "the break-glass route's security sequence, in order, from its source",
         "the enrolled address is matched case-insensitively and nothing else is",
         "the exchange posts the code, the verifier and the client secret to Google's token endpoint",
@@ -707,6 +707,14 @@
         "SEEDED: a hand edit inside the mirror is STALE, by line",
         "the Next.js block survives regeneration byte-for-byte, including one next dev just rewrote",
         "the mirror says it is not an authority, names the canonical store, and says who wins"
+      ],
+      "dynamic": 0
+    },
+    "tests/aggregate-list-pagination.test.ts": {
+      "names": [
+        "list() of an empty table is one empty bounded page",
+        "list() of exactly one full page still terminates on the short second page",
+        "list() pages an aggregate larger than one response and returns every row in id order"
       ],
       "dynamic": 0
     },
@@ -3668,7 +3676,7 @@
       "names": [
         "a full Fleet backlog renders a bounded first page with every page reachable",
         "fleetItemLane derives one lane per item from task state, in strict precedence",
-        "the map renders a real producer report as lanes, work items and honestly-labelled panels"
+        "the work tab renders a real producer report as lanes, exceptions and the flat work item — panels live on their own tab"
       ],
       "dynamic": 0
     },
@@ -3698,6 +3706,12 @@
         "projection failures retain typed unavailable outcomes and independent sections",
         "read service distinguishes empty, unavailable and unrecorded without writing",
         "recorded funnel preserves append order of tied refusal times without claiming publication"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-panels-tab.test.ts": {
+      "names": [
+        "the panels tab splits by producer and keeps every panel's honesty"
       ],
       "dynamic": 0
     },
@@ -3780,6 +3794,12 @@
         "Admin joins the exact Scout denial backoff without authorizing the missing transport",
         "Scout continuation reporting uses the coordinator's family backoff and actual continuation identity",
         "Scout-shaped prose and unrelated route tasks do not earn autonomous admission evidence"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-tabs-smoke.test.ts": {
+      "names": [
+        "the header, bands, triage, decisions and blind-spots components render"
       ],
       "dynamic": 0
     },
@@ -8167,6 +8187,15 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-context-bound.test.ts": {
+      "names": [
+        "a result with no artifact mapping (finish / record_rung) is never elided",
+        "elision is stable: a second pass changes nothing",
+        "nothing is elided when the whole conversation fits",
+        "older tool results are elided until the retained content is within budget"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-lane.test.ts": {
       "names": [
         "1. SEEDED: a route declared DETERMINISTIC never consumes a model",
@@ -9491,6 +9520,13 @@
         "no committed source composes a URL on Wikipedia's disallowed /w/ path",
         "the guard is looking at something — the disallowed literal is still in the tree",
         "the replacement route is under /wiki/, which carries no blanket Disallow"
+      ],
+      "dynamic": 0
+    },
+    "tests/wikipedia-route.test.ts": {
+      "names": [
+        "the Wikipedia route is a live deterministic HTTP GET on the permitted Wikimedia REST host",
+        "the Wikipedia route's yield contract makes an empty search a FAILED extraction"
       ],
       "dynamic": 0
     },

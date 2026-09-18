@@ -137,16 +137,27 @@ export function computeZipRow(input: ZipInput): ZipRow {
   // belongs and cannot be averaged away: the Level tag is the worst-of tier floor,
   // and `worstState`/`worstGap` name the single least-ready body, so the operator
   // sees both how complete the zip is AND exactly where to point effort.
+  // All-NOT_WALKED is UNKNOWN, never 0%: a zip whose bodies have no walked
+  // readiness is "not measured", not "0% of bodies are ready". Rendering the
+  // measured zero was the defect that put 0% on every AZ zip while the snapshot
+  // deliberately defers per-body status to the canonical civic-data receipts.
+  const anyWalked = input.bodies.some((b) => b.state !== "NOT_WALKED");
   const progress =
     total === 0 ? 0 : input.bodies.reduce((sum, b) => sum + rankOf(b.state) / 5, 0) / total;
-  const completeness = measured(
-    Math.round(progress * 100),
-    100,
-    "share of this zip's governing bodies that are ready, weighted by how ready each is — a progress measure; the Level tag is the worst-of floor and the worst gap names the least-ready body",
-    total === 0
-      ? "no overlapping body resolved"
-      : "zip → governing-body overlap (registry coverage status)",
-  );
+  const completeness: Held<Measured> =
+    total === 0 || !anyWalked
+      ? gap(
+          "OURS",
+          "not measured — no governing body's readiness has been walked for this zip; body status is shown from the canonical civic-data receipts, not duplicated in this readiness snapshot",
+        )
+      : held(
+          measured(
+            Math.round(progress * 100),
+            100,
+            "share of this zip's governing bodies that are ready, weighted by how ready each is — a progress measure; the Level tag is the worst-of floor and the worst gap names the least-ready body",
+            "zip → governing-body overlap (registry coverage status)",
+          ),
+        );
 
   const level: Held<string> =
     input.tierLabel === null

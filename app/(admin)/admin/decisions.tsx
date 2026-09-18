@@ -114,6 +114,7 @@ export function DecisionQueue({
   returnTo,
   stateVersion,
   heading,
+  defaultOpen,
 }: {
   readonly groups: readonly PriorityGroupView[];
   readonly total: number;
@@ -130,9 +131,13 @@ export function DecisionQueue({
    */
   readonly stateVersion: string;
   readonly heading?: string;
+  /** The dedicated /admin/fleet?tab=decisions surface mounts this queue as the
+   *  whole tab, so it opens expanded there. The control centre keeps its
+   *  collapsed-by-default (ADM-31) behaviour by leaving this unset. */
+  readonly defaultOpen?: boolean;
 }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen ?? false);
 
   /**
    * OPEN WHEN THIS IS WHERE HE WAS SENT. (9.6.26 owner feedback, ACLOSE-6.)

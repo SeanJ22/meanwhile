@@ -59,9 +59,9 @@ function renderMap(state: FleetConsumerState, scratchDir: string): string {
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { readFileSync } from 'node:fs';
-    import { FleetOperationsMap } from './components/admin/fleet-operations-map.tsx';
+    import { FleetWorkTab } from './components/admin/fleet-operations-map.tsx';
     const state = JSON.parse(readFileSync(${JSON.stringify(stateFile)}, 'utf8'));
-    console.log(renderToStaticMarkup(createElement(FleetOperationsMap, { initialState: state })));
+    console.log(renderToStaticMarkup(createElement(FleetWorkTab, { initialState: state })));
   `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 16_000_000 });
 }
 
@@ -92,7 +92,7 @@ test("a full Fleet backlog renders a bounded first page with every page reachabl
   assert.ok(!html.includes("Operation 2663"), "later rows remain in the report without thousands of hidden DOM cards");
 });
 
-test("the map renders a real producer report as lanes, work items and honestly-labelled panels", async (t) => {
+test("the work tab renders a real producer report as lanes, exceptions and the flat work item — panels live on their own tab", async (t) => {
   const dir = await mkdtemp(join(tmpdir(), "fleet-map-"));
   t.after(async () => {
     const target = resolve(dir);
@@ -112,23 +112,18 @@ test("the map renders a real producer report as lanes, work items and honestly-l
 
   const html = renderMap(state, dir);
 
-  // Contract line + the four lanes.
-  assert.match(html, /fleet-operations\/v1 · extensions\/1 · fleet-delivery\/v1 · fleet-receipt-loading\/v1/);
+  // The four lane tiles, by label.
   for (const l of FLEET_LANES) assert.ok(html.includes(l.label), `lane label: ${l.label}`);
-  // The work item is present, and its state/path are shown (not a fabricated progress bar).
+  // The work item is present in the flat list, with its state/path (not a fabricated progress bar).
   assert.match(html, /Pima County Board of Supervisors/);
-
-  // Every panel is present with its producer label; no-producer panels are named, not faked.
-  for (const p of ["Promotion receipts", "Served publication", "Spending", "Coverage gaps", "Throughput over time", "Reader demand"]) {
-    assert.ok(html.includes(p), `panel: ${p}`);
-  }
-  assert.match(html, /No producer/i);
-  assert.match(html, /publication\.status/i);
-  assert.match(html, /UNKNOWN/);
-  // Receipts NOT_RECORDED without a store or snapshot; permanent authority not connected.
-  assert.match(html, /No receipt reading is available|NOT_RECORDED|no historical-receipt extension/i);
-  assert.match(html, /permanent receipt authority NOT CONNECTED/i);
-  // Spending never prints a bare $0 total: the total is either measured or "unknown".
-  assert.match(html, /Total[\s\S]{0,120}(unknown|\$0\.00 measured|\$)/i);
-  assert.ok(!/Server-Only|SESSION/i.test(html) === true || true); // no secret markers (report carries none)
+  assert.match(html, /The flat list, as shipped/);
+  // The exceptions framing and the residual shape lead, before the flat list.
+  assert.match(html, /Nothing is needed from you/i);
+  assert.match(html, /Here is their shape/i);
+  assert.match(html, /— no count/);
+  // Per-item spending is honest: never a bare $0, so "Not measured" when unknown.
+  assert.match(html, /spending[\s\S]{0,80}(Not measured|\$)/i);
+  // The panels no longer render on this tab — they moved to ?tab=panels.
+  assert.ok(!html.includes("Throughput over time"), "panels are not on the work tab");
+  assert.ok(!html.includes("Reader demand"), "panels are not on the work tab");
 });

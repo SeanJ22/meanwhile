@@ -560,21 +560,30 @@ function ZipTable(props: {
                 </div>
               </td>
               <td>
-                <div className="rq-barwrap">
-                  <div className="rq-bartrack">
-                    <div
-                      className={`rq-bar ${barClass(fraction(z.completeness))}`}
-                      style={{ width: `${Math.round(fraction(z.completeness) * 100)}%` }}
-                    />
-                  </div>
-                  <span
-                    className="rq-pct"
-                    title={`${z.completeness.value} of ${z.completeness.denominator} — ${z.completeness.contract}; denominator from ${z.completeness.denominatorSource}`}
-                  >
-                    {Math.round(fraction(z.completeness) * 100)}%
-                  </span>
-                </div>
-                <div className="rq-worstgap">how far along, weighted by readiness</div>
+                {z.completeness.held ? (
+                  <>
+                    <div className="rq-barwrap">
+                      <div className="rq-bartrack">
+                        <div
+                          className={`rq-bar ${barClass(fraction(z.completeness.value))}`}
+                          style={{ width: `${Math.round(fraction(z.completeness.value) * 100)}%` }}
+                        />
+                      </div>
+                      <span
+                        className="rq-pct"
+                        title={`${z.completeness.value.value} of ${z.completeness.value.denominator} — ${z.completeness.value.contract}; denominator from ${z.completeness.value.denominatorSource}`}
+                      >
+                        {Math.round(fraction(z.completeness.value) * 100)}%
+                      </span>
+                    </div>
+                    <div className="rq-worstgap">how far along, weighted by readiness</div>
+                  </>
+                ) : (
+                  <>
+                    <span className="rq-pct" title={z.completeness.gap.says}>not measured</span>
+                    <div className="rq-worstgap">body readiness is not walked in this snapshot</div>
+                  </>
+                )}
               </td>
               <td className="rq-next">
                 <NextStep zip={z} residentComplete={residentComplete} stateCode={props.stateCode} stateName={props.stateName} />
@@ -818,17 +827,22 @@ function sortZips(zips: readonly ZipRow[], sort: ZipSort): ZipRow[] {
     case "population":
       return arr.sort((a, b) => popValue(b) - popValue(a)); // largest first, gaps last
     case "gap":
-      return arr.sort((a, b) => fraction(a.completeness) - fraction(b.completeness)); // biggest gap first
+      return arr.sort((a, b) => completenessValue(a) - completenessValue(b)); // biggest gap first
     case "readiness":
     default:
       // Most-complete first (progress), then least-ready floor as the tiebreak.
       return arr.sort(
-        (a, b) => fraction(b.completeness) - fraction(a.completeness) || rank[b.worstState] - rank[a.worstState],
+        (a, b) => completenessValue(b) - completenessValue(a) || rank[b.worstState] - rank[a.worstState],
       );
   }
 }
 function popValue(z: ZipRow): number {
   return z.population.held ? z.population.value.value : -1;
+}
+/** Sort key for completeness: its fraction when measured, -1 when "not measured"
+ *  so unmeasured zips sort last, the same way `popValue` treats a population gap. */
+function completenessValue(z: ZipRow): number {
+  return z.completeness.held ? fraction(z.completeness.value) : -1;
 }
 function shortDate(iso: string): string {
   const d = new Date(iso);

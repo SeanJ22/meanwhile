@@ -255,6 +255,39 @@ test("R-F: a zip with an UNKNOWN tier renders a named gap for its level, never L
   assert.equal(row.worstState, "NOT_WALKED");
 });
 
+test("R-F: completeness is 'not measured' when no body is walked, a measured progress when one is", () => {
+  // All-NOT_WALKED is UNKNOWN, not 0%: it renders as a named gap, never a measured
+  // zero — the defect that put 0% on every Arizona zip while the snapshot defers
+  // per-body status to the canonical civic-data receipts.
+  const unwalked = computeZipRow({
+    zip: "85122",
+    place: held("Casa Grande"),
+    population: noPop("population not on file"),
+    populationBasis: "NO_TABULATION_AREA" as const,
+    populationMargin: null,
+    tierLabel: "TIER_1",
+    bodies: [body("NOT_WALKED", "no source walked")],
+  });
+  assert.equal(unwalked.completeness.held, false);
+  if (!unwalked.completeness.held) assert.match(unwalked.completeness.gap.says, /not measured/i);
+
+  // One walked body makes completeness a real, held progress measure out of 100.
+  const walked = computeZipRow({
+    zip: "85701",
+    place: held("Tucson"),
+    population: noPop("population not on file"),
+    populationBasis: "NO_TABULATION_AREA" as const,
+    populationMargin: null,
+    tierLabel: "TIER_2",
+    bodies: [body("CURRENT", "county"), body("NOT_WALKED", "school board")],
+  });
+  assert.equal(walked.completeness.held, true);
+  if (walked.completeness.held) {
+    assert.equal(walked.completeness.value.denominator, 100);
+    assert.ok(walked.completeness.value.value > 0, "a walked body yields non-zero progress");
+  }
+});
+
 test("R-10: the four pilot zips are identifiable at a glance", () => {
   for (const z of ["85701", "85641", "07866", "03255"]) {
     const row = computeZipRow({

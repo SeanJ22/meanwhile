@@ -179,7 +179,25 @@ function parseValue<T>(raw: unknown, where: string): T {
   }
 }
 
-function pgAggregateRepository<T>(
+/**
+ * How many aggregate rows one `list()` statement fetches.
+ *
+ * The Neon serverless (HTTP) driver caps a single response at 64 MiB. An
+ * aggregate table grows without bound — one row per work item, attempt, lease,
+ * transition subject — and `readAutonomousActivity` lists FOUR of them
+ * (`workItems`, `routeTasks`, `attempts`, `leases`) on every `/admin/fleet`
+ * render. A single unbounded `SELECT ... ORDER BY id` therefore threw
+ * `NeonDbError: response is too large` once the fleet's aggregates crossed the
+ * cap, surfacing as STORE_UNREACHABLE and collapsing the whole operations
+ * report — the same failure the append-only log had (see
+ * {@link APPEND_ONLY_LOG_READ_PAGE}), one layer up. `list()` keyset-pages
+ * instead. `id` is the primary key and the ASC order key, so `id > $1` is an
+ * index range scan and the page concatenation is byte-identical to the old
+ * single statement.
+ */
+export const AGGREGATE_LIST_READ_PAGE = 100;
+
+export function pgAggregateRepository<T>(
   sql: Sql,
   kind: string,
   table: string,
@@ -284,15 +302,37 @@ function pgAggregateRepository<T>(
     },
 
     async list() {
-      const rows = (await sql.query(
-        `SELECT id, revision, updated_at, value FROM ${table} ORDER BY id ASC`,
-      )) as Record<string, unknown>[];
-      return rows.map((row) => ({
-        id: String(row.id),
-        revision: Number(row.revision),
-        updatedAt: new Date(row.updated_at as string).toISOString(),
-        value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-      }));
+      /* Keyset-paged by id so no one response can exceed the driver's 64 MiB
+         cap (see AGGREGATE_LIST_READ_PAGE). `id > $1` on the primary key is an
+         index range scan; the concatenation equals the old single statement. */
+      const out: Persisted<T>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const rows = (afterId === null
+          ? await sql.query(
+              `SELECT id, revision, updated_at, value FROM ${table}
+               ORDER BY id ASC
+               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+            )
+          : await sql.query(
+              `SELECT id, revision, updated_at, value FROM ${table}
+               WHERE id > $1
+               ORDER BY id ASC
+               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+              [afterId],
+            )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+        afterId = String(rows[rows.length - 1].id);
+      }
+      return out;
     },
   };
 }

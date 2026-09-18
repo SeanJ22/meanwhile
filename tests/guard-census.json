@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 658,
-    "named": 6679,
+    "files": 663,
+    "named": 6706,
     "dynamic": 27
   },
   "files": {
@@ -3777,14 +3777,16 @@
         "402 and quota refusals hard-latch one provider without probing or substitution",
         "Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and CIRCUIT BROKEN",
         "Saturday operational night is an explicit SCHEDULED BLACKOUT",
+        "a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)",
         "a hard Neon response is host-latched before any second database probe",
         "a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work",
         "aggregate model admission stops at cycle, operational-night, and rolling-24-hour ceilings",
+        "an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds",
         "an unmetered Scout cost row fails closed instead of disappearing from aggregate spend",
-        "concurrent public reads cannot both reserve the same remaining byte allowance",
         "public redirects are counted as separate provider requests under one byte ceiling",
         "request, payload-byte, dispatch, and wall ceilings fail closed with named deferral",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
+        "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
       ],
       "dynamic": 0
@@ -6607,6 +6609,47 @@
       ],
       "dynamic": 0
     },
+    "tests/prl-archive-store.test.ts": {
+      "names": [
+        "LocalFileArchiveStore round-trips put / get / head / list",
+        "object keys refuse traversal and absolute paths",
+        "signatureV4 reproduces the published AWS SigV4 get-vanilla vector"
+      ],
+      "dynamic": 0
+    },
+    "tests/prl-ingest-engine.test.ts": {
+      "names": [
+        "a future-dated row is stored but never advances the mark (the 2027 hazard)",
+        "archive incremental writes only rows whose cursor beats the stored mark",
+        "archive initial load writes every row and marks the newest cursor (capped at now)",
+        "state profiles ingest carries precomputed percentages and touches no bucket",
+        "the receipt round-trips through the store and drives a zero-write restart"
+      ],
+      "dynamic": 0
+    },
+    "tests/prl-ingest.test.ts": {
+      "names": [
+        "a single future-dated row never advances the high-water mark",
+        "advanceWatermark holds the previous mark when every new row is future",
+        "isNewerThanMark drives the incremental take",
+        "parsePrlInstant reads both PRL cursor widths and refuses junk",
+        "streaming CSV flushes a final row with no trailing newline",
+        "streaming CSV survives embedded commas, newlines and escaped quotes",
+        "streaming JSON yields objects despite braces/commas/newlines in strings",
+        "the committed dictionaries still list every column the ingestion reads",
+        "the inventory encodes the revise-vs-append finding as the cursor",
+        "the inventory keys each dataset to the identity it actually carries"
+      ],
+      "dynamic": 0
+    },
+    "tests/prl-precompute.test.ts": {
+      "names": [
+        "primary rhetoric: per-candidate shares are our aggregate of PRL's 0/1 labels",
+        "state profiles: a within-state rank column in the read set is refused",
+        "state profiles: openstates-keyed, means kept, zero-statement and bad-id dropped"
+      ],
+      "dynamic": 0
+    },
     "tests/prl.test.ts": {
       "names": [
         "D62: PRL's race-competitiveness rating is not in this build",
@@ -7438,6 +7481,7 @@
         "R-D: coverage never fakes a denominator; the special-districts total is the cited 327",
         "R-F: a zip with an UNKNOWN tier renders a named gap for its level, never Level 0",
         "R-F: a zip's state is worst-of its bodies, even when the worst differs from the modal body",
+        "R-F: completeness is 'not measured' when no body is walked, a measured progress when one is",
         "R-K: every stated N equals its rendered row count across the snapshot",
         "a complete, fresh capability is all-CURRENT and rowIsCurrent"
       ],
@@ -8174,6 +8218,14 @@
         "full 614 deterministic / 1840 Scout backlog leaves slots for discovery and downstream work",
         "phase timing reports actual repository calls without arguments",
         "unchanged full-size registry synchronization uses one read and never rewrites provider or runtime state"
+      ],
+      "dynamic": 0
+    },
+    "tests/scout-admission-floor.test.ts": {
+      "names": [
+        "CONTROL: without a scout floor, the reduced deterministic deadline defers the Scout for BUDGET",
+        "FIX: scoutDeadlineMs floors admission to the hard wall, so the same Scout is admitted",
+        "the floor still stops a Scout that genuinely cannot finish before the hard wall"
       ],
       "dynamic": 0
     },

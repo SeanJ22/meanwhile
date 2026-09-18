@@ -228,8 +228,33 @@ interface Reservation {
   released: boolean;
 }
 
+/**
+ * The per-fetch payload RESERVATION — the byte hold released when a fetch
+ * settles — is deliberately bounded, and distinct from the per-response stream
+ * budget below. A single in-flight fetch must never reserve the whole remaining
+ * cycle budget: when it did, a concurrent request (a Scout's model call, or
+ * another lane's fetch) was refused PAYLOAD_BYTE_CEILING at turn 0, before it
+ * had consumed a single byte — observed 2026-09, Scouts aborting with the cycle
+ * at under 0.1% of its 16 MiB budget.
+ *
+ * 2 MiB is chosen from the observed distribution of 1004 fetched responses
+ * (p95 = 246 KiB, p99 = 1.74 MiB), so it covers ~99% of fetches with headroom
+ * over the bulk rather than tracking the single largest response ever seen. It
+ * is also the largest hold under which the largest RECURRING legitimate record —
+ * nh-cfs-filing-entity-details, about 9.2 MiB, re-read on its schedule — still
+ * fits alongside a full two-Scout lane inside the 16 MiB ceiling: two reads at
+ * 2 MiB, two Scout model reserves at about 0.5 MiB, and the 9.2 MiB record sum
+ * to 14.8 MiB. Under-reserving a rarer large response is safe: the honest
+ * per-fetch stream budget (the reservation's `streamCapBytes`) and
+ * `recordInboundBytes` at settle both still enforce the hard cycle ceiling.
+ */
+const PAYLOAD_RESERVATION_BYTES = 2 * 1024 * 1024;
+
 interface PayloadReservation {
-  readonly responseBytes: number;
+  /** The pool hold released on settle — bounded, so concurrent fetches coexist. */
+  readonly reservedBytes: number;
+  /** The honest per-fetch read budget: the Range ceiling and the streamed-byte cap. */
+  readonly streamCapBytes: number;
   readonly work: string;
   released: boolean;
 }
@@ -331,19 +356,25 @@ export class FleetSafetyController {
   }
 
   private reservePayloadRequest(provider: string, work: string, outboundPayloadBytes = 0): PayloadReservation {
-    const responseBytes = this.admitProviderRequest(provider, work, outboundPayloadBytes, 1);
-    this.reservedBytes += responseBytes;
-    return { responseBytes, work, released: false };
+    // The admission check returns the budget genuinely available to this fetch
+    // (all remaining, minus what others already hold). That is the honest stream
+    // budget — the most this one response may read without breaching the cycle.
+    // The POOL HOLD, though, is bounded: a fetch reserves only its likely slice,
+    // so a concurrent request is not refused before it has consumed anything.
+    const streamCapBytes = this.admitProviderRequest(provider, work, outboundPayloadBytes, 1);
+    const reservedBytes = Math.min(PAYLOAD_RESERVATION_BYTES, streamCapBytes);
+    this.reservedBytes += reservedBytes;
+    return { reservedBytes, streamCapBytes, work, released: false };
   }
 
   private settlePayloadReservation(reservation: PayloadReservation, bytes: number | null): void {
     if (reservation.released) return;
     reservation.released = true;
-    this.reservedBytes -= reservation.responseBytes;
-    // A stream that crossed the bound has already transferred data we cannot
-    // unreceive. Charge the entire reservation so the cycle closes to further
-    // network work instead of under-reporting the failed transfer.
-    this.recordInboundBytes(reservation.work, bytes === null ? reservation.responseBytes : bytes);
+    this.reservedBytes -= reservation.reservedBytes;
+    // A stream that crossed its per-fetch budget has already transferred data we
+    // cannot unreceive. Charge the full stream budget so the cycle closes to
+    // further network work instead of under-reporting the failed transfer.
+    this.recordInboundBytes(reservation.work, bytes === null ? reservation.streamCapBytes : bytes);
   }
 
   reserveModelRequest(provider: string, work: string, request: ModelRequest): Reservation {
@@ -483,10 +514,10 @@ export class FleetSafetyController {
               method: currentMethod,
               signal: abort.signal,
               redirect: "manual",
-              headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.responseBytes - 1)}` },
+              headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
               ...(currentBody === undefined ? {} : { body: currentBody }),
             });
-            merged = await this.readBoundedResponse(response, reservation.responseBytes, work);
+            merged = await this.readBoundedResponse(response, reservation.streamCapBytes, work);
             this.settlePayloadReservation(reservation, merged.byteLength);
           } catch (error) {
             this.settlePayloadReservation(reservation, error instanceof FleetSafetyRefusal ? null : 0);
@@ -545,9 +576,9 @@ export class FleetSafetyController {
               method: "GET",
               signal: abort.signal,
               redirect: "manual",
-              headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.responseBytes - 1)}` },
+              headers: { ...headers, range: `bytes=0-${Math.max(0, reservation.streamCapBytes - 1)}` },
             });
-            merged = await this.readBoundedResponse(response, reservation.responseBytes, work);
+            merged = await this.readBoundedResponse(response, reservation.streamCapBytes, work);
             this.settlePayloadReservation(reservation, merged.byteLength);
           } catch (error) {
             this.settlePayloadReservation(reservation, error instanceof FleetSafetyRefusal ? null : 0);

@@ -79,11 +79,13 @@ export const ADMIN_SESSION_COOKIE = "__Host-wtp-admin";
  * How long a session lasts.
  *
  * Bounded because an unbounded admin session is a permanent credential sitting
- * in a browser profile. Eight hours is one working day: long enough that the
- * owner is not retyping a secret all afternoon, short enough that a laptop left
- * open overnight is not still authenticated in the morning.
+ * in a browser profile. Twelve hours by owner directive (2026-09-18): long
+ * enough for a working day without re-proving identity, and after it the owner
+ * signs in again. (Supersedes the earlier eight-hour "one working day" bound.)
+ * The login page derives the hours it shows the operator from THIS constant, so
+ * the stated length and the enforced length can never drift.
  */
-export const SESSION_LIFETIME_SECONDS = 8 * 60 * 60;
+export const SESSION_LIFETIME_SECONDS = 12 * 60 * 60;
 
 /** The minimum secret length that will be accepted at all. */
 export const MIN_SECRET_LENGTH = 24;

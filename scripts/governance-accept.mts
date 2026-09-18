@@ -206,17 +206,19 @@ const C: Criterion[] = [
     key: "compatibility-view validity",
     check: () => {
       // CONTENT, not freshness. The old criterion asked only whether the view
-      // was generated and registered, and it passed while 24 headings rendered
-      // as "RULING undefined" on live main.
+      // was generated and registered, and it passed while 24 rows rendered
+      // as "RULING undefined" on live main. The view is a one-line-per-ruling
+      // index now, so the subject is a table ROW (`| RULING n | ...`) rather
+      // than an `## RULING n` heading; the invariant is the same.
       const text = readFileSync(join(ROOT, "docs/rulings.md"), "utf8");
       const undef = (text.match(/RULING undefined/g) ?? []).length;
-      const headings = [...text.matchAll(/^## RULING (.+?) —/gm)].map((m) => m[1].trim());
+      const rows = [...text.matchAll(/^\| RULING (.+?) \|/gm)].map((m) => m[1].trim());
       const numericIds = new Set(
         records.filter((r) => /^R-0*\d+$/.test(r.id)).map((r) => String(Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))),
       );
-      const malformed = headings.filter((h) => !/^\d+$/.test(h));
-      const orphan = headings.filter((h) => /^\d+$/.test(h) && !numericIds.has(String(Number(h))));
-      const seen = new Set(headings.map((h) => String(Number(h))));
+      const malformed = rows.filter((h) => !/^\d+$/.test(h));
+      const orphan = rows.filter((h) => /^\d+$/.test(h) && !numericIds.has(String(Number(h))));
+      const seen = new Set(rows.map((h) => String(Number(h))));
       const omitted = [...numericIds].filter((id) => !seen.has(id));
       const unnumberedDropped = records
         .filter((r) => !/^R-0*\d+$/.test(r.id))
@@ -231,7 +233,7 @@ const C: Criterion[] = [
         detail:
           `RULING undefined ${undef} · malformed ${malformed.length} · orphan ${orphan.length} · ` +
           `omitted ${omitted.length} · un-numbered dropped ${unnumberedDropped.length} · ` +
-          `${headings.length} numbered rulings represented`,
+          `${rows.length} numbered rulings represented`,
       };
     },
   },

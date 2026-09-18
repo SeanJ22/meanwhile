@@ -200,6 +200,13 @@ const rul: string[] = [
   "- **Current non-law decisions are `docs/governance/current-decisions.md`.**",
   "- **Full rationale is `docs/governance/history.md`.**",
   "",
+  "**This is an index — one line per ruling, not the rulings themselves.** It",
+  "once carried every ruling's full body, superseded ones included, which is how",
+  "a session came to read a superseded rule here — with nothing making its status",
+  "louder than its text — and take dead law for current law. The body now lives",
+  "only in `docs/governance/history.md`. Here `Status` is a column of its own, and",
+  "`Successor` names the ruling that replaced one that is no longer current.",
+  "",
   "**Numbering is GLOBAL and IMMUTABLE** (RULING 176). The header this file",
   "carried until 2026-08-26 said numbering was per-brief and that two briefs",
   "could both have a RULING 7. That was already untrue when it was read: the",
@@ -212,12 +219,6 @@ const rul: string[] = [
 /*
  * THE `RULING n` SPACE HOLDS NUMBERED RULINGS AND NOTHING ELSE.
  *
- * This loop used to skip `R-X-*` and then assume everything remaining was
- * numeric, so all 24 `R-C-*` records — the constitution's un-numbered law —
- * rendered as `## RULING undefined`. That is worse than either alternative it
- * sat between: it neither preserved the un-numbered namespace nor minted a
- * number, it just produced a heading that resolves to nothing.
- *
  * Un-numbered records are NOT given numbers. They were never rulings, and
  * spending immutable ids on them is the collision the amendment procedure
  * exists to refuse. They are listed in their own section below, under their own
@@ -227,23 +228,60 @@ const rul: string[] = [
 const numbered = records.filter((r) => /^R-0*\d+$/.test(r.id));
 const unnumbered = records.filter((r) => !/^R-0*\d+$/.test(r.id));
 
+/*
+ * THE NUMBERED RULINGS, ONE ROW EACH — AN INDEX, NEVER THE BODIES.
+ *
+ * This file was 13,244 lines because this loop wrote every ruling's full body
+ * into it, superseded ones included. That is what made a recent bad call
+ * possible: a session read a superseded rule's whole text here, with nothing in
+ * the line making its status louder than the rule itself, and treated dead law
+ * as current. The body of every ruling — active or not — lives in
+ * `docs/governance/history.md`; the operative current text lives in `CLAUDE.md`
+ * and `docs/governance/policies/`. Here each numbered ruling is a single row,
+ * `Status` is a column of its own so a superseded rule cannot read as a standing
+ * one, and `Successor` names what replaced it.
+ *
+ * `Successor` is the REVERSE of supersession: a newer ruling carries the
+ * `supersedes_full` / `supersedes_clause` / `amends` relation pointing back at
+ * the ruling it retired, so the successor of X is every record that supersedes
+ * or amends X. (A clause-level amendment can leave X itself ACTIVE — its status
+ * says so, and the successor column still names the ruling that narrowed it.)
+ */
+const successorsOf = new Map<string, string[]>();
+for (const r of records) {
+  for (const rel of r.relations) {
+    if (rel.kind === "supersedes_full" || rel.kind === "supersedes_clause" || rel.kind === "amends") {
+      const list = successorsOf.get(rel.target) ?? [];
+      list.push(r.id);
+      successorsOf.set(rel.target, list);
+    }
+  }
+}
+const rulingRef = (id: string): string => {
+  const n = /^R-0*(\d+)$/.exec(id)?.[1];
+  return n ? `RULING ${n}` : `\`${id}\``;
+};
+
+rul.push(
+  "## The numbered rulings",
+  "",
+  "Every adopted ruling, one row. **`Status` is the column that governs** — a row",
+  "that is not `ACTIVE` (or `AMENDED`, still in force wherever the amendment did",
+  "not reach) is history: it explains, it does not govern, and `Successor` names",
+  "the ruling that replaced it. The full body of every ruling, current or not, is",
+  "in `docs/governance/history.md`.",
+  "",
+  "| Ruling | Status | Domain | Title | Successor |",
+  "| --- | --- | --- | --- | --- |",
+);
 for (const r of numbered) {
   const n = /^R-0*(\d+)$/.exec(r.id)?.[1];
-  rul.push(`## RULING ${n} — ${stripLeader(r.title)}`, "");
-  rul.push(`*${r.kind} · ${r.status} · adopted ${r.adopted ?? "no date recorded"}*`, "");
-  if (!CURRENT_STATUSES.includes(r.status)) {
-    rul.push(`> **This is ${r.status}.** It is history. It explains; it does not govern.`, "");
-  } else if (r.operativePolicy) {
-    rul.push(`> Operative current text: \`${r.operativePolicy}\`.`, "");
-  }
-  for (const rel of r.relations) {
-    rul.push(`- **${rel.kind}** → \`${rel.target}\``);
-    if (rel.changed) rul.push(`  - what changed: ${rel.changed}`);
-    if (rel.survives) rul.push(`  - what survives: ${rel.survives}`);
-  }
-  if (r.relations.length) rul.push("");
-  rul.push(currentHoldingPaths(r.body), "", ...renderVariants(r));
+  const successor = (successorsOf.get(r.id) ?? []).map(rulingRef).join(", ") || "—";
+  rul.push(
+    `| RULING ${n} | ${r.status} | ${r.domain} | ${escapePipes(stripLeader(r.title))} | ${successor} |`,
+  );
 }
+rul.push("");
 
 /*
  * The un-numbered governance records, listed as what they are.

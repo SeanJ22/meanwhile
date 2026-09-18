@@ -48,12 +48,15 @@ test("FINDING 1 — the compatibility view contains no RULING undefined", () => 
   );
 });
 
-test("FINDING 1 — every RULING n heading names a real numeric record, and none is omitted", () => {
+test("FINDING 1 — every RULING n row names a real numeric record, and none is omitted", () => {
   const index = loadIndex();
   const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
 
-  const headings = [...text.matchAll(/^## RULING (.+?) —/gm)].map((m) => m[1].trim());
-  assert.ok(headings.length > 150, `read ${headings.length} headings — the guard has lost its subject`);
+  // The view is a one-line-per-ruling index now, so a ruling is a table ROW
+  // (`| RULING n | ...`) rather than an `## RULING n` heading. The property is
+  // the same: every numbered ruling appears exactly once and resolves.
+  const rows = [...text.matchAll(/^\| RULING (.+?) \|/gm)].map((m) => m[1].trim());
+  assert.ok(rows.length > 150, `read ${rows.length} rows — the guard has lost its subject`);
 
   const numericIds = new Set(
     index.records
@@ -61,15 +64,15 @@ test("FINDING 1 — every RULING n heading names a real numeric record, and none
       .map((r) => String(Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))),
   );
 
-  for (const h of headings) {
-    assert.match(h, /^\d+$/, `"## RULING ${h}" is not a ruling number`);
-    assert.ok(numericIds.has(String(Number(h))), `"## RULING ${h}" resolves to no canonical record`);
+  for (const h of rows) {
+    assert.match(h, /^\d+$/, `"| RULING ${h} |" is not a ruling number`);
+    assert.ok(numericIds.has(String(Number(h))), `"| RULING ${h} |" resolves to no canonical record`);
   }
   // Every numbered ruling must be represented, or a legacy reference breaks.
-  const seen = new Set(headings.map((h) => String(Number(h))));
+  const seen = new Set(rows.map((h) => String(Number(h))));
   const missing = [...numericIds].filter((id) => !seen.has(id));
   assert.deepEqual(missing, [], `numbered rulings absent from the compatibility view: ${missing.join(", ")}`);
-  assert.equal(headings.length, numericIds.size);
+  assert.equal(rows.length, numericIds.size);
 });
 
 test("FINDING 1 — un-numbered records keep their namespace and are not dropped", () => {

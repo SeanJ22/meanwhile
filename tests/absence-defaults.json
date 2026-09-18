@@ -1,6 +1,11 @@
 {
   "entries": [
     {
+      "file": "components/admin/fleet-operations-map.tsx",
+      "text": "not measured",
+      "reason": "The failing-item card prints lastActivity.at; when the read did not carry it the field is genuinely absent, so the default names the gap as 'not measured' rather than 0. On this page that distinction is the load-bearing invariant (BUILD.md/WIRING.md §6b): 0 would assert the work was owed nothing, the opposite of an unread timestamp. It is a neutral field-gap on an owner-facing console surface, never a claim about a government."
+    },
+    {
       "file": "components/ballot/candidate-card.tsx",
       "text": "official site",
       "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."

@@ -1475,6 +1475,14 @@ const cycle = await runCycle({
     maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
     scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
     scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
+    /*
+     * The Scout lane admits against the HARD dispatch wall, not the reserve-reduced
+     * deadline the deterministic lane runs under (2026-09-18). `fleetReserveMs` caps
+     * the always-full refresh queue so it cannot starve the fleet; passing it as the
+     * Scout deadline too was starving the Scouts instead — two clean cycles deferred
+     * every Scout for BUDGET while the cycle finished at half the hard wall.
+     */
+    scoutDeadlineMs: DISPATCH_DEADLINE_MS,
     /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
     ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {

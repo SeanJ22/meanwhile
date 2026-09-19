@@ -455,6 +455,26 @@ export class FleetSafetyController {
     };
   }
 
+  /**
+   * Whether the rolling-24h ceiling is already reached for one more model
+   * dispatch — the CYCLE-START / PRE-ADMISSION read of the same inequality
+   * `reserveModelRequest` enforces (`historicalRollingUsd + cycleUsd +
+   * reservedUsd + reserve > ceiling`), with `worstCaseUsd` standing in for a
+   * dispatch's worst-case reserve. The lane header promises "paused over it";
+   * an admission gate that reads this pauses the whole lane instead of admitting
+   * dispatch after dispatch for the per-request guard to refuse in a busy-loop.
+   * Read-only: it reserves nothing and never refuses. Unmeasured spend returns
+   * `reached: false` (the caller's ledger-unreadable check owns that case).
+   */
+  rollingCeilingReached(
+    worstCaseUsd = 0,
+  ): { readonly reached: boolean; readonly spentUsd: number | null; readonly capUsd: number } {
+    const capUsd = this.bounds.rolling24HourModelUsd;
+    if (this.historicalRollingUsd === null) return { reached: false, spentUsd: null, capUsd };
+    const projected = this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + worstCaseUsd;
+    return { reached: projected > capUsd, spentUsd: this.historicalRollingUsd + this.cycleUsd, capUsd };
+  }
+
   private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
     // FAIL LOUD ON TRUNCATION — never hand up a partial document, because a
     // truncated CSV still parses. We send `Range: bytes=0-(cap-1)`, so a

@@ -134,7 +134,10 @@ function registeredMutationContract(candidate: RoutineCandidate): RegisteredMuta
     .filter((contract) =>
       contract.sourceId === candidate.sourceId &&
       contract.recordClass === candidate.recordClass &&
-      contract.scope === candidate.scope
+      // A fan-out contract owns a scope family — its per-state marker at the
+      // contract scope plus one bounded member at `<sourceId>:<officeholderId>`.
+      (contract.scope === candidate.scope ||
+        ("fanOut" in contract && contract.fanOut === true && candidate.scope.startsWith(`${contract.sourceId}:`)))
     )
     .map((contract) => ({
       id: contract.id,

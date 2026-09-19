@@ -199,6 +199,77 @@ export async function processRegisteredRoutineCandidate(
   );
 }
 
+/**
+ * A fan-out contract owns a scope family, not a single scope: its own per-state
+ * marker at the contract scope, plus one bounded per-member candidate at
+ * `<sourceId>:<officeholderId>`. The runner still enumerates and clocks exactly
+ * one contract per state; the family lives inside the child. Every member and
+ * the marker still pass the identical GOOD contract, authority, and typed
+ * per-contract verification below — only the one-scope equality is widened to
+ * the declared family.
+ */
+function routineCandidateFanOutContractIssue(
+  contract: RoutineSourceContract,
+  candidate: RoutineCandidate,
+): string | null {
+  const task = routineTaskFromContract(contract);
+  if (candidate.sourceId !== task.sourceId) return `source ${candidate.sourceId} does not equal ${task.sourceId}`;
+  if (candidate.recordClass !== task.recordClass) return `record class ${candidate.recordClass} does not equal ${task.recordClass}`;
+  if (candidate.scope !== task.scope && !candidate.scope.startsWith(`${task.sourceId}:`)) {
+    return `scope ${candidate.scope} is outside the ${task.sourceId} fan-out family (${task.scope} or ${task.sourceId}:*)`;
+  }
+  if (candidate.normalization.parserVersion !== task.parserVersion) return `parser ${candidate.normalization.parserVersion} does not equal ${task.parserVersion}`;
+  if (candidate.bootstrapImport) return "a fan-out member candidate does not accept trusted-LKG import";
+  if (candidate.retrieval.succeeded || candidate.retrieval.requestedUrl !== "") {
+    const authority = authorityFor(task.sourceId, task.recordClass, candidate.retrieval.requestedUrl);
+    if (!authority.ok) return `${authority.code}: ${authority.detail}`;
+  }
+  return null;
+}
+
+/**
+ * Promote one candidate of a state's per-legislator fan-out — its per-state
+ * marker or one member — through the exact registered fan-out contract. Each
+ * call is one bounded write; the caller promotes the marker and every changed
+ * member, and re-promotes only members whose votes changed this cycle.
+ */
+export async function processRegisteredFanOutCandidate(
+  store: RoutineDataStore,
+  contractId: string,
+  candidate: RoutineCandidate,
+  now: string = new Date().toISOString(),
+  expectedBaseVersionId: string | null | undefined = undefined,
+): Promise<PromotionOutcome> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const contract = requiredRoutineContract(contractId);
+  if (contract.fanOut !== true) throw new Error(`FANOUT_CONTRACT_NOT_DECLARED:${contractId}`);
+  if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
+    throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
+  }
+  const issue = routineCandidateFanOutContractIssue(contract, boundedCandidate);
+  if (issue !== null) throw new Error(`FANOUT_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
+  const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
+    contract,
+    boundedCandidate,
+    sourceProjectionObservedAt(store, now),
+    null,
+  );
+  return appendTypedReaderProjectionReadback(
+    store,
+    contract,
+    await processRoutineCandidate(
+      store,
+      boundedCandidate,
+      now,
+      expectedBaseVersionId,
+      REGISTERED_PRODUCTION_DOOR,
+      sourceProjectionVerification,
+    ),
+    now,
+  );
+}
+
 /** A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract. */
 export async function processRegisteredMeetingPartitionCandidate(
   store: RoutineDataStore,

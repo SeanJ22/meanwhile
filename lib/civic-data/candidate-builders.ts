@@ -4,7 +4,14 @@ import type { FundingSnapshot } from "../funding/types.ts";
 import type { AcsFetch, AcsPopulationRow } from "../sources/census-acs-population/index.ts";
 import { BASE as CENSUS_ACS_BASE, VINTAGE_YEAR, normalize as normalizeAcs } from "../sources/census-acs-population/index.ts";
 import type { MembersExtraction } from "../../scripts/nh-gencourt-members.mts";
-import type { StateMemberVote, StateRollCall, StateVotesSnapshot } from "../sources/legiscan/types.ts";
+import type {
+  StateLegislatorVotePosition,
+  StateLegislatorVotes,
+  StateLegislatorVotesSessionMarker,
+  StateMemberVote,
+  StateRollCall,
+  StateVotesSnapshot,
+} from "../sources/legiscan/types.ts";
 import type { NhCurrentMemberIdentityCrosswalk } from "../sources/nh-general-court/official-data.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import {
@@ -333,6 +340,60 @@ export function trustedNhMembersImportIdentityEvidence(
 }
 
 /**
+ * The raw roster/participant authority a state-vote acquisition cites, before
+ * it is reduced to the digest-bearing evidence shape the read models carry.
+ */
+export interface OfficialStateIdentityAuthorityInputs {
+  readonly contractId: string;
+  readonly versionId: string;
+  readonly currentOfficeholderIds: readonly string[];
+  readonly sessionParticipantIds: readonly string[];
+  readonly sessionParticipantSourceVersion: string;
+  readonly sessionParticipantAudit?: {
+    readonly historyParticipantCount: number;
+    readonly legislatorsIdentityCount: number;
+    readonly enrichedParticipantCount: number;
+    readonly historyOnlyParticipantCount: number;
+    readonly historyOnlyPersonIds: readonly string[];
+  };
+}
+
+/**
+ * Reduce a state-vote acquisition's cited roster/participant authority to the
+ * exact digest-bearing evidence shape every state-vote read model carries. One
+ * assembly, shared by the whole-chamber roll-call candidate and the per-member
+ * fan-out, so the fan-out computes the roster and participant digests once and
+ * every member candidate and the marker cite byte-identical authority.
+ */
+export function officialStateIdentityAuthorityEvidence(input: {
+  readonly sourceId: OfficialStateRollCallSourceId;
+  readonly jurisdiction: OfficialStateVoteScope;
+  readonly term: string;
+  readonly session: string;
+  readonly identityAuthority: OfficialStateIdentityAuthorityInputs;
+}): NonNullable<StateVotesSnapshot["officialIdentityAuthority"]> {
+  const rosterIdsSorted = [...new Set(input.identityAuthority.currentOfficeholderIds)].sort();
+  const participantIdsSorted = [...new Set(input.identityAuthority.sessionParticipantIds)].sort();
+  return {
+    contractId: input.identityAuthority.contractId,
+    sourceId: input.sourceId,
+    scope: input.jurisdiction,
+    versionId: input.identityAuthority.versionId,
+    currentOfficeholderIdsSha256: sha256(canonical(rosterIdsSorted)),
+    sessionParticipantSet: {
+      term: input.term,
+      session: input.session,
+      sourceVersion: input.identityAuthority.sessionParticipantSourceVersion,
+      count: participantIdsSorted.length,
+      officeholderIdsSha256: sha256(canonical(participantIdsSorted)),
+      ...(input.identityAuthority.sessionParticipantAudit
+        ? { audit: input.identityAuthority.sessionParticipantAudit }
+        : {}),
+    },
+  };
+}
+
+/**
  * Official state roll calls use state publisher ids end to end. LegiScan may
  * still discover a lead, but its ids are not accepted by this constructor.
  */
@@ -387,7 +448,6 @@ export function officialStateRollCallsCandidate(input: {
   const rollIds = new Set(input.rolls.map((roll) => roll.id));
   const people = new Set(input.positions.map((position) => position.officialPersonId));
   const rosterIds = new Set(input.identityAuthority.currentOfficeholderIds);
-  const rosterIdsSorted = [...rosterIds].sort();
   const participantIds = new Set(input.identityAuthority.sessionParticipantIds);
   const participantIdsSorted = [...participantIds].sort();
   const violations: string[] = [];
@@ -583,23 +643,13 @@ export function officialStateRollCallsCandidate(input: {
     generatedAt: input.retrievedAt,
     ...(input.sourceReconciliation ? { officialSourceReconciliation: input.sourceReconciliation } : {}),
     ...(input.horizonAudit ? { officialHorizonAudit: input.horizonAudit } : {}),
-    officialIdentityAuthority: {
-      contractId: input.identityAuthority.contractId,
+    officialIdentityAuthority: officialStateIdentityAuthorityEvidence({
       sourceId: input.sourceId,
-      scope: input.jurisdiction,
-      versionId: input.identityAuthority.versionId,
-      currentOfficeholderIdsSha256: sha256(canonical(rosterIdsSorted)),
-      sessionParticipantSet: {
-        term: input.term,
-        session: input.session,
-        sourceVersion: input.identityAuthority.sessionParticipantSourceVersion,
-        count: participantIds.size,
-        officeholderIdsSha256: sha256(canonical(participantIdsSorted)),
-        ...(input.identityAuthority.sessionParticipantAudit
-          ? { audit: input.identityAuthority.sessionParticipantAudit }
-          : {}),
-      },
-    },
+      jurisdiction: input.jurisdiction,
+      term: input.term,
+      session: input.session,
+      identityAuthority: input.identityAuthority,
+    }),
     datasets: [{ state: input.jurisdiction.slice(-2), sessionId: 0, sessionName: `${input.term} ${input.session}`, datasetHash: rawHash, datasetDate: input.retrievedAt.slice(0, 10), downloadedAt: input.retrievedAt }],
     identifierMatch: {
       peopleSeen: people.size,
@@ -654,6 +704,203 @@ export function officialStateRollCallsCandidate(input: {
       },
     ],
     normalizedPayload,
+    readModel,
+  };
+}
+
+/**
+ * One state legislator's votes across a term (`STATE_LEGISLATOR_VOTES`), scoped
+ * to their exact officeholder id. Its write is bounded by the member's own
+ * tenure, never the chamber times every year, so a state's acquisition fan-out
+ * promotes one small candidate per member and re-promotes only the members
+ * whose votes changed this cycle. Roll metadata is joined from the per-state
+ * roll index; only the member's positions live here.
+ */
+export function officialStateLegislatorVotesCandidate(input: {
+  readonly sourceId: OfficialStateRollCallSourceId;
+  readonly jurisdiction: OfficialStateVoteScope;
+  readonly officeholderId: string;
+  readonly chamber: StateRollCall["chamber"] | null;
+  readonly term: string;
+  readonly session: string;
+  readonly positions: readonly StateLegislatorVotePosition[];
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly retrievedAt: string;
+  readonly identityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
+}): RoutineCandidate {
+  // The roster mints a source-namespaced officeholder id (`<sourceId>:<personId>`),
+  // which is already globally unique and distinct from the marker's jurisdiction
+  // scope, so it is the per-member scope verbatim — never re-prefixed.
+  const scope = input.officeholderId;
+  const positions = [...input.positions].sort((left, right) => left.rollCallId.localeCompare(right.rollCallId));
+  const parserVersion = input.sourceId === "nh-general-court" ? "nh-general-court/3" : `${input.sourceId}/2`;
+  // The candidate id is a content address over this member's own sorted votes,
+  // so an unchanged member yields the same id and never re-promotes.
+  const rawHash = sha256(canonical({ officeholderId: input.officeholderId, positions }));
+  const readModel: StateLegislatorVotes = {
+    generatedAt: input.retrievedAt,
+    officeholderId: input.officeholderId,
+    sourceId: input.sourceId,
+    jurisdiction: input.jurisdiction,
+    chamber: input.chamber,
+    term: input.term,
+    session: input.session,
+    positions,
+    officialIdentityAuthority: input.identityAuthority,
+  };
+  const normalizedPayload = { officeholderId: input.officeholderId, term: input.term, session: input.session, positionCount: positions.length };
+  const throughDate = positions.map((position) => position.date).filter(Boolean).sort().at(-1) ?? input.retrievedAt.slice(0, 10);
+  const violations: string[] = [];
+  if (!input.officeholderId.startsWith(`${input.sourceId}:`)) violations.push("The member id is not source-namespaced to its publisher authority.");
+  if (new Set(positions.map((position) => position.rollCallId)).size !== positions.length) violations.push("A member records two positions on the same roll call.");
+  const succeeded = positions.length > 0 && input.httpStatus >= 200 && input.httpStatus < 300;
+  return {
+    id: candidateId(input.sourceId, scope, rawHash, input.retrievedAt),
+    sourceId: input.sourceId,
+    recordClass: "STATE_LEGISLATOR_VOTES",
+    scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(input.sourceId, "STATE_LEGISLATOR_VOTES", scope),
+    retrieval: {
+      succeeded,
+      requestedUrl: input.requestedUrl,
+      finalUrl: input.finalUrl,
+      httpStatus: input.httpStatus,
+      retrievedAt: input.retrievedAt,
+      rawHash: succeeded ? rawHash : null,
+      failureDetail: succeeded ? undefined : "No official positions were acquired for this member.",
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion,
+      schemaVersion: `state-legislator-votes:${input.term}:${input.session}:v1`,
+      normalizedHash: normalizedHash(readModel),
+      normalizedPayloadHash: normalizedHash(normalizedPayload),
+      inputRecords: positions.length,
+      outputRecords: positions.length,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
+    identities: [{
+      subjectId: input.officeholderId,
+      jurisdiction: input.jurisdiction,
+      identifiers: { officeholderId: input.officeholderId },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+    }],
+    temporal: { version: input.term, expectedVersion: input.term, sourceThrough: throughDate, staleAtRetrieval: false },
+    semantics: { factKind: "one state legislator's recorded roll-call positions across a term", violations },
+    horizon: {
+      kind: "BOUNDED",
+      query: `${input.sourceId} ${input.officeholderId} ${input.term} ${input.session} recorded positions`,
+      returnedRecords: positions.length,
+      declaredTotal: positions.length,
+      paginationComplete: true,
+      claimsComplete: true,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [{
+      consumer: "app/api/votes/route.ts per-member record",
+      passed: violations.length === 0,
+      detail: `${positions.length} recorded positions for ${input.officeholderId}.`,
+    }],
+    normalizedPayload,
+    readModel,
+  };
+}
+
+/**
+ * The per-state fan-out marker the standing runner's clock reads
+ * (`STATE_LEGISLATOR_VOTES`, scope = jurisdiction). A watermark over one term's
+ * acquisition carrying a single civic record so it promotes GOOD; it holds no
+ * positions and is at a distinct scope from the reader's
+ * `STATE_ROLL_CALL:<jurisdiction>` pointer, so a promoted marker never renders
+ * as a false "no votes" for any member.
+ */
+export function officialStateLegislatorVotesSessionMarker(input: {
+  readonly sourceId: OfficialStateRollCallSourceId;
+  readonly jurisdiction: OfficialStateVoteScope;
+  readonly term: string;
+  readonly session: string;
+  readonly requestedUrl: string;
+  readonly finalUrl: string;
+  readonly httpStatus: number;
+  readonly retrievedAt: string;
+  readonly throughRollId: string | null;
+  readonly throughDate: string | null;
+  readonly rollCount: number;
+  readonly legislatorCount: number;
+  readonly positionCount: number;
+  readonly sourceDocumentsSha256: string;
+  readonly identityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
+}): RoutineCandidate {
+  const scope = input.jurisdiction;
+  const parserVersion = input.sourceId === "nh-general-court" ? "nh-general-court/3" : `${input.sourceId}/2`;
+  const readModel: StateLegislatorVotesSessionMarker = {
+    generatedAt: input.retrievedAt,
+    jurisdiction: input.jurisdiction,
+    sourceId: input.sourceId,
+    term: input.term,
+    session: input.session,
+    throughRollId: input.throughRollId,
+    throughDate: input.throughDate,
+    rollCount: input.rollCount,
+    legislatorCount: input.legislatorCount,
+    positionCount: input.positionCount,
+    sourceDocumentsSha256: input.sourceDocumentsSha256,
+    officialIdentityAuthority: input.identityAuthority,
+  };
+  const rawHash = sha256(canonical(readModel));
+  return {
+    id: candidateId(input.sourceId, `${scope}:session-marker`, rawHash, input.retrievedAt),
+    sourceId: input.sourceId,
+    recordClass: "STATE_LEGISLATOR_VOTES",
+    scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(input.sourceId, "STATE_LEGISLATOR_VOTES", scope),
+    retrieval: {
+      succeeded: true,
+      requestedUrl: input.requestedUrl,
+      finalUrl: input.finalUrl,
+      httpStatus: input.httpStatus,
+      retrievedAt: input.retrievedAt,
+      rawHash,
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion,
+      schemaVersion: `state-legislator-votes-marker:${input.term}:${input.session}:v1`,
+      normalizedHash: normalizedHash(readModel),
+      normalizedPayloadHash: normalizedHash(readModel),
+      inputRecords: 1,
+      outputRecords: 1,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
+    identities: [{
+      subjectId: `${input.sourceId}:${input.jurisdiction}:${input.term}:${input.session}`,
+      jurisdiction: input.jurisdiction,
+      identifiers: { jurisdiction: input.jurisdiction },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+    }],
+    temporal: { version: input.term, expectedVersion: input.term, sourceThrough: input.throughDate ?? input.retrievedAt.slice(0, 10), staleAtRetrieval: false },
+    semantics: { factKind: "per-state fan-out acquisition marker for one term's state legislator votes", violations: [] },
+    horizon: {
+      kind: "BOUNDED",
+      query: `${input.sourceId} ${input.jurisdiction} ${input.term} ${input.session} acquisition watermark`,
+      returnedRecords: 1,
+      declaredTotal: 1,
+      paginationComplete: true,
+      claimsComplete: true,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [{
+      consumer: "standing runner per-state clock",
+      passed: true,
+      detail: `Watermark through ${input.throughRollId ?? "no rolls"}; ${input.legislatorCount} member(s) carry ${input.positionCount} position(s).`,
+    }],
+    normalizedPayload: readModel,
     readModel,
   };
 }

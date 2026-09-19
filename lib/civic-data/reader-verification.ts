@@ -26,6 +26,14 @@ interface VerificationOptions {
   readonly store: RoutineDataStore;
   readonly now: string;
   readonly expectedVersionId: string;
+  /**
+   * The exact promoted scope to verify. Only a fan-out contract needs it: its
+   * per-member candidates each read back their own `<sourceId>:<officeholderId>`
+   * projection during promotion, while the runner's once-per-contract readback
+   * omits it and falls back to the contract's per-state marker scope — so the
+   * readback never iterates every member scope.
+   */
+  readonly scope?: string;
 }
 
 type ReaderContract = RoutineSourceContract | ManualProductionSourceContract;
@@ -65,8 +73,8 @@ function verifierIdFor(contract: ReaderContract): string {
     case "az-state-legislators":
     case "nj-state-legislators": return "lib/state-rollcalls/legislators.ts#readOfficialStateLegislatorsProjection";
     case "az-state-rollcalls":
-    case "nh-state-rollcalls":
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
+    case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
     case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "congress-bulk-roster": return "lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection";
@@ -140,7 +148,6 @@ export async function verifyRoutineReaderProjection(
         );
       }
       case "az-state-rollcalls":
-      case "nh-state-rollcalls":
       case "nj-state-rollcalls": {
         const [{ readOfficialStateVotesProjection }, { officialStateRollCallTargetByContract }] = await Promise.all([
           import("../sources/legiscan/snapshot.ts"),
@@ -159,6 +166,33 @@ export async function verifyRoutineReaderProjection(
           options.expectedVersionId,
           `${target.state} official-state-roll-call`,
         );
+      }
+      case "nh-state-rollcalls": {
+        // The per-legislator fan-out: verify the exact promoted projection at
+        // the candidate's own scope (a member record or the per-state marker),
+        // never iterating every member. The runner's per-contract readback
+        // omits scope and falls back to the marker at the contract scope.
+        const { readPromotedCivicData } = await import("./read-model.ts");
+        const scope = options.scope ?? contract.scope;
+        const result = await readPromotedCivicData("STATE_LEGISLATOR_VOTES", scope, {
+          store: options.store,
+          now: options.now,
+          bypassCache: true,
+        });
+        if (result.kind !== "PROMOTED" || result.metadata.versionId !== options.expectedVersionId) {
+          return fail(
+            verifierId,
+            `Expected promoted ${options.expectedVersionId}; STATE_LEGISLATOR_VOTES ${scope} returned ${result.kind}:${result.metadata.versionId ?? "none"}.`,
+          );
+        }
+        const payload = result.value as { officeholderId?: unknown; positions?: unknown; throughRollId?: unknown } | undefined;
+        const shaped = payload !== undefined && (
+          (typeof payload.officeholderId === "string" && Array.isArray(payload.positions)) ||
+          "throughRollId" in payload
+        );
+        return shaped
+          ? pass(verifierId, `The STATE_LEGISLATOR_VOTES projection at ${scope} read canonical version ${options.expectedVersionId}.`)
+          : fail(verifierId, `The STATE_LEGISLATOR_VOTES projection at ${scope} is neither a member record nor a session marker.`);
       }
       case "census-acs-population": {
         const { readPopulationProjection } = await import("../reference/acs-population.ts");
@@ -285,7 +319,11 @@ export async function recordRoutineReaderProjectionReadback(
 ): Promise<ReaderProjectionReadbackReceipt | null> {
   if (contract.readerProjection === null) return null;
   const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
-  const pointerReadback = await readPromotedCivicData(contract.recordClass, contract.scope, {
+  // Read back exactly the scope just promoted. For a single-scope contract this
+  // is the contract scope; for a fan-out it is the member or marker scope this
+  // promotion wrote, so the readback verifies that write and never assumes the
+  // per-state marker scope for a member.
+  const pointerReadback = await readPromotedCivicData(contract.recordClass, promoted.scope, {
     store,
     now: observedAt,
     bypassCache: true,
@@ -305,6 +343,7 @@ export async function recordRoutineReaderProjectionReadback(
         store,
         now: observedAt,
         expectedVersionId: promoted.versionId,
+        scope: promoted.scope,
       });
   return appendReaderProjectionReadback(
     store,
@@ -339,7 +378,11 @@ async function appendReaderProjectionReadback(
     contractId: contract.id,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
-    scope: contract.scope,
+    // The exact promoted scope this readback observed. For a single-scope
+    // contract it equals the contract scope; for a fan-out it is the member or
+    // marker scope just promoted, and it must equal the promoted candidate's
+    // scope so the durable evidence binds to the row it actually read.
+    scope: promoted.scope,
     projectionId: contract.readerProjection.id,
     versionId: promoted.versionId,
     pointerKey: promoted.key,

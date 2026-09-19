@@ -236,3 +236,62 @@ export interface StateVotesSnapshot {
   rollCalls: StateRollCall[];
   positions: StateMemberVote[];
 }
+
+/** One member's own recorded position on one roll, in the per-legislator
+ *  projection. Roll metadata (title, motion, result) is joined from the
+ *  per-state roll index rather than repeated on every member. */
+export interface StateLegislatorVotePosition {
+  rollCallId: string;
+  position: StateVotePosition;
+  /** `YYYY-MM-DD`, carried so the member's page can order votes without the
+   *  roll index; every other roll field is joined, never duplicated here. */
+  date: string;
+}
+
+/**
+ * **THE PER-LEGISLATOR VOTING RECORD (`STATE_LEGISLATOR_VOTES`).**
+ *
+ * One member's votes across a term, scoped to their exact officeholder id. Its
+ * write is bounded by the member's own tenure — never the whole chamber times
+ * every year — so the largest state we will ever load promotes one bounded
+ * candidate per member and re-promotes only members whose votes changed.
+ */
+export interface StateLegislatorVotes {
+  generatedAt: string;
+  officeholderId: string;
+  sourceId: "az-legislature" | "nh-general-court" | "nj-legislature";
+  jurisdiction: string;
+  chamber: StateRollCall["chamber"] | null;
+  term: string;
+  session: string;
+  positions: readonly StateLegislatorVotePosition[];
+  officialIdentityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
+}
+
+/**
+ * The per-state fan-out marker the standing runner's clock reads: a watermark
+ * over one term's acquisition. It carries no positions and is promoted at a
+ * distinct scope from the reader's `STATE_ROLL_CALL:<jurisdiction>` pointer, so
+ * a promoted marker never renders as a false "no votes" for any member.
+ */
+export interface StateLegislatorVotesSessionMarker {
+  generatedAt: string;
+  jurisdiction: string;
+  sourceId: "az-legislature" | "nh-general-court" | "nj-legislature";
+  term: string;
+  session: string;
+  throughRollId: string | null;
+  throughDate: string | null;
+  rollCount: number;
+  legislatorCount: number;
+  positionCount: number;
+  /**
+   * Digest of the exact source documents this acquisition fetched, over
+   * `sha256(bodies.map(sha256).join("\n"))` — the whole-session candidate's own
+   * raw fingerprint, kept on the marker so the fan-out retains source
+   * provenance without duplicating raw bytes onto every member. The bytes
+   * themselves move to object storage in a later pass, as PRL already does.
+   */
+  sourceDocumentsSha256: string;
+  officialIdentityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
+}

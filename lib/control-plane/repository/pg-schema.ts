@@ -72,8 +72,19 @@
  * reads exactly as it did and the three new tables are created when the next
  * exact installed STANDING_PARENT runtime opens the durable repository. There
  * is no arbitrary-checkout production bootstrap command.
+ *
+ * ## What version 11 adds, and why (the field manual, 2026-09-19)
+ *
+ * `cp_field_manual` — one aggregate, id "live" — is the single growing store of
+ * learned discovery knowledge every model-driven worker reads (as a projection)
+ * before it walks and writes back to when it finds something, with no human
+ * graduation step. It consolidates knowledge that was scattered across
+ * `data/method/knowledge.json`, `cp_method_candidates`, `lib/hunt/branch-manifest.ts`
+ * and the hunt dossiers, each entry keeping its original shape so nothing is
+ * lost. Additive: no existing table, column or statement moved, and the one new
+ * table is created when the next installed runtime opens the durable repository.
  */
-export const BOOTSTRAP_VERSION = 10;
+export const BOOTSTRAP_VERSION = 11;
 
 /**
  * The tables, and the shape each one carries.
@@ -175,6 +186,20 @@ export const AGGREGATE_KINDS = [
    *                 made.
    */
   "admin_config",
+  /*
+   * THE FIELD MANUAL. (Owner directive 2026-09-19 — version 11.)
+   *
+   *   field_manual  one aggregate, id "live" — the single growing store of
+   *                 learned discovery knowledge. Every model-driven worker reads
+   *                 a PROJECTION of it (narrowed to its role and jurisdiction, so
+   *                 it costs cents cached rather than the whole store's ~70K
+   *                 tokens) before it walks, and writes what it learned straight
+   *                 back with no human admission step. An AGGREGATE because the
+   *                 question is "what do we know that applies here, now"; it only
+   *                 ever grows (an entry is refreshed, never removed) so a
+   *                 consolidation that keeps every meaning cannot shrink it.
+   */
+  "field_manual",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

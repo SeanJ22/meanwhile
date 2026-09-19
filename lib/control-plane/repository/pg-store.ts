@@ -66,6 +66,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -675,6 +676,11 @@ export async function createPgRepositories(
       sql,
       "ReadinessStateSnapshot",
       "cp_readiness_snapshots",
+    ),
+    fieldManual: pgAggregateRepository<FieldManualStore>(
+      sql,
+      "FieldManual",
+      "cp_field_manual",
     ),
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,

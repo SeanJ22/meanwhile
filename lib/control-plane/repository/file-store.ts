@@ -86,6 +86,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -711,6 +712,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       resolved,
       "ReadinessStateSnapshot",
       "readiness-snapshots",
+    ),
+    fieldManual: fileAggregateRepository<FieldManualStore>(
+      resolved,
+      "FieldManual",
+      "field-manual",
     ),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
       resolved,

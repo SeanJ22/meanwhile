@@ -41,6 +41,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
@@ -252,6 +253,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
     readinessSnapshots: memoryAggregateRepository<ReadinessStateSnapshot>("ReadinessStateSnapshot"),
+    fieldManual: memoryAggregateRepository<FieldManualStore>("FieldManual"),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),

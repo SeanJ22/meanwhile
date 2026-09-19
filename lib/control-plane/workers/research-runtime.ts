@@ -16,6 +16,8 @@ import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { runAcquirer } from "./acquirer.ts";
 import { runDetective } from "./detective.ts";
 import { runEngineeringWorker } from "./engineering.ts";
+import { researchLearningEntries } from "./field-manual-learnings.ts";
+import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { assertFleetResult, type FleetResult, type WorkerUsage } from "./types.ts";
 import { evidenceProjection, FLEET_POLICY_VERSION, type FleetRuntime } from "./runtime.ts";
@@ -103,6 +105,13 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
           supportingEvidence:await Promise.all(spec.engineering.supportingArtifactIds.map(async id => evidenceProjection(await runtime.readEvidence(id))))});
       }
       assertFleetResult(result,spec.role,attemptId);
+      // Redirect what a detective or engineer just LEARNED into the one growing field manual, live —
+      // the write-with-no-read gap the scouts had, now closed one role up (owner directive 2026-09-19).
+      // A write-back never fails a worker whose result already stands.
+      try {
+        const learnings = researchLearningEntries(result, tools.now());
+        if (learnings.length > 0) await writeFieldManualDiscoveries(tools.repos, learnings, tools.now());
+      } catch { /* field-manual write-back is best-effort; the worker result is authoritative */ }
       const cost = {...ZERO_COST,durationMs:Math.round(performance.now()-started),requestCount,bytesFetched};
       const ids = result.artifactIds;
       return {kind:"RESULT_RECORDED",ranAs:"DETERMINISTIC",cost,detail:`${spec.role} ${result.verdict}; research result only; promotion OFF`,

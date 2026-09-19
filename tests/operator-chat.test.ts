@@ -21,6 +21,7 @@ import { createRouteTask } from "@/lib/control-plane/route-task.ts";
 import { createWorkItem, type WorkItem } from "@/lib/control-plane/work-item.ts";
 import { held, measured, type Held, type OwnerDecisionIntent, type OwnerSnapshot, type RunnerHeartbeat } from "@/lib/control-plane/owner-surface.ts";
 import type { FleetSafetySnapshot } from "@/lib/control-plane/fleet-safety.ts";
+import { FLEET_SAFETY_BOUNDS } from "@/lib/control-plane/fleet-safety.ts";
 import type { ResearchIntent, ResearchState } from "@/lib/control-plane/scheduler/research-policy.ts";
 
 import {
@@ -129,11 +130,7 @@ const ITEM_OWNER: WorkItem = {
 const SAFETY: FleetSafetySnapshot = {
   formatVersion: 1,
   status: "ACTIVE",
-  bounds: {
-    rolling24HourModelUsd: 100,
-    maxDownloadBytes: 24 * 1024 * 1024,
-    maxWallMsPerCycle: 15 * 60_000,
-  },
+  bounds: FLEET_SAFETY_BOUNDS,
   cycle: {
     startedAt: "2026-09-06T17:30:00.000Z",
     modelUsd: 0.44,

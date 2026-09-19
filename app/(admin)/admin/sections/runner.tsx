@@ -20,6 +20,7 @@ import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 
 import { Band, Said, When } from "../../console-ui.tsx";
 import { Bar, NeedsYouLine } from "../../status-ui.tsx";
+import { FleetSpendCeilingControl } from "../fleet-spend-ceiling.tsx";
 
 export interface RunnerSectionProps {
   readonly standing: RunnerStanding;
@@ -197,27 +198,12 @@ export function RunnerSection(props: RunnerSectionProps) {
               {usdCents(sc.settingUsd)} at the start of its next cycle.
             </p>
           )}
-          <form method="post" action={props.actionRoute} className="runner-control">
-            <input type="hidden" name="type" value="config.setFleetSpendCeiling" />
-            <input type="hidden" name="returnTo" value={props.returnTo} />
-            <label htmlFor="fleet-spend-ceiling" className="spend-ceiling-label">
-              New rolling 24-hour ceiling ($)
-            </label>
-            <input
-              id="fleet-spend-ceiling"
-              type="number"
-              name="rollingCeilingUsd"
-              min={1}
-              max={FLEET_SPEND_CEILING_MAX_USD}
-              step="1"
-              inputMode="decimal"
-              defaultValue={sc.settingUsd}
-              aria-label="New rolling 24-hour spend ceiling in US dollars"
-            />
-            <button type="submit" className="primary">
-              Set the spend ceiling
-            </button>
-          </form>
+          <FleetSpendCeilingControl
+            actionRoute={props.actionRoute}
+            returnTo={props.returnTo}
+            currentUsd={sc.settingUsd}
+            maxUsd={FLEET_SPEND_CEILING_MAX_USD}
+          />
         </div>
 
         {/* Circuit breakers, always a sentence (ADM-27) */}

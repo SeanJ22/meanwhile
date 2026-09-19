@@ -127,6 +127,8 @@ import {
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
+import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
+import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
   STANDING_NEON_REQUEST_DEADLINE_MS,
   installNeonRequestDeadline,
@@ -263,11 +265,21 @@ const canary = argv.includes("--canary");
 const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
 const FALLBACK = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
+/**
+ * The last-resort hang watchdog (scripts/runner-hang-watchdog.mts). The relaunch
+ * trigger only recovers a DEAD process; a hung-but-alive event loop stays down
+ * until a human kills it. This Worker-thread watchdog force-terminates the
+ * process if the main thread stops pinging, so the trigger can restart it in
+ * minutes instead of hours. Started here so it also covers the startup awaits
+ * (release reconcile, method authority) before the first cycle.
+ */
+let hangWatchdog: HangWatchdog | null = null;
 if (provider === "postgres") {
   // Install transport cancellation first; the circuit breaker composes around
   // it and therefore cannot reintroduce an unbounded owner-receipt request.
   installNeonRequestDeadline();
   installNeonCircuitBreaker(ROOT);
+  if (!canary && !hangWatchdogDisabled()) hangWatchdog = startHangWatchdog();
 }
 /**
  * Emergency recovery only: if Neon itself refuses billing/quota, it cannot
@@ -951,6 +963,46 @@ async function runIntakeRuntime(): Promise<void> {
 
 /* -------------------------------------------------------------- the loop --- */
 
+/**
+ * (a) A FAILED cycle must still advance the heartbeat. `freshness-shadow` writes
+ * the beat with `lastCycleOk: true` only when it reaches the end of a healthy
+ * cycle, so a crash, a 15-minute wall kill, or a provider circuit break returns
+ * here with `beatAt` frozen at the last SUCCESS — which reads as a dead runner
+ * and cost real time on 2026-09-18. This records a beat on the non-success
+ * outcome so `beatAt` tracks LIVENESS (with `lastCycleOk: false`), not just
+ * success. Best effort: a beat that cannot be written never takes down the loop.
+ */
+async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
+  if (provider !== "postgres") return;
+  try {
+    const repos = await ownerRepositories();
+    if (repos === null) return;
+    const finishedAt = new Date().toISOString();
+    let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
+    try {
+      codeIdentity = readCodeIdentity({ cwd: ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: finishedAt, fetch: false });
+    } catch {
+      /* a beat that cannot read git still says the cycle ran; keep codeIdentity null */
+    }
+    const current = await repos.runnerHeartbeat.read(RUNNER_ID);
+    const next = cycleLivenessBeat(current?.value ?? null, {
+      cycleStartedAt,
+      finishedAt,
+      ok: false,
+      testedSha: RUNNING_CODE_SHA,
+      host: hostname(),
+      intervalMin: INTERVAL_MIN,
+      codeIdentity,
+    });
+    if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, finishedAt);
+    else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, finishedAt);
+  } catch (error) {
+    console.error(
+      `  the failed-cycle liveness beat could not be written (${error instanceof Error ? error.message : String(error)}); the cycle outcome above stands`,
+    );
+  }
+}
+
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 /**
@@ -1607,6 +1659,8 @@ while (cycle < CYCLES) {
     const delivered = deliver(digest, headline);
     console.error(`  ${headline}`);
     console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
+    /* (a) A circuit-broken cycle did not run a healthy cycle; still beat liveness. */
+    await writeFailedCycleBeat(startedAt);
     const releaseExit = await reconcileRuntimeReleaseAtBoundary();
     if (releaseExit !== null) {
       handoffExitCode = releaseExit;
@@ -1701,6 +1755,10 @@ while (cycle < CYCLES) {
   console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
   console.log(`  ${headline}`);
 
+  /* (a) On a NON-ok cycle the child did not write a beat; advance beatAt here so a
+     failed cycle reads as "alive, last cycle did not pass", not as a dead runner. */
+  if (!result.ok) await writeFailedCycleBeat(startedAt);
+
   /* ADM-1: the console is published by the machine after every digest, succeeded or failed. */
   await publishConsole();
 
@@ -1716,6 +1774,7 @@ while (cycle < CYCLES) {
 }
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
+if (hangWatchdog !== null) await hangWatchdog.stop();
 await standingRuntimeScheduler.waitForIdle();
 await PILOT_PROCESS_LEASE.release();
 if (handoffExitCode === null) {

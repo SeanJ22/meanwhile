@@ -811,6 +811,19 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       let nudges = 0;
       let earlyAbsenceRefusedAtRungs: number | null = null;
       let representationBytesThisTurn = 0;
+      /*
+       * EARLY STOP (2026-09-19). A walk that has cleared the minRungs floor and
+       * then adds no new distinct evidence-backed rung for STALL_TURNS turns is
+       * spinning on walls: it has read what the openable routes hold and the rest
+       * are known disallows/challenges. ~83% of authored-site walks are correct
+       * negatives (RULING 52), and paying the full turn bound to re-confirm one
+       * is the waste being ended. At >= minRungs the model may legitimately
+       * conclude an absence, so this converts a proven negative into a finished
+       * result instead of a bound timeout.
+       */
+      const STALL_TURNS = 3;
+      let evidenceHigh = 0;
+      let stallTurns = 0;
 
       /*
        * RULING 244, SEEDED (v): a route the decision rule sent to the
@@ -902,7 +915,16 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             max_tokens: bound.maxOutputTokensPerTurn,
             system: prefix.system,
             tools: prefix.tools,
-            tool_choice: boundNotice !== null ? { type: "tool", name: "finish" } : { type: "auto" },
+            /*
+             * Always `auto` — never a forced-tool bound turn. Forcing
+             * `tool_choice` to `finish` invalidates the messages cache (measured
+             * 2026-09-06), so the bound turn re-read only the static prefix and
+             * re-wrote the whole conversation (~16-24K tokens, ~$0.10-0.15 an
+             * Attempt). The BOUND-REACHED / EARLY-STOP instruction plus the
+             * research-tool refusal below drive the finish under `auto` at no
+             * cache cost.
+             */
+            tool_choice: { type: "auto" },
             output_config: { effort: step.effort },
             messages: withCacheBreakpoints(messages),
             ...(SCOUT_CACHE_POLICY.movingBreakpoint === "TOP_LEVEL" ? { cache_control: SCOUT_CACHE_POLICY.cacheControl } : {}),
@@ -1072,6 +1094,38 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
          * Newest results stay whole; older ones become artifact-id pointers.
          */
         boundToolResultContext(messages, SCOUT_CONTEXT_TOOL_RESULT_BUDGET, artifactIdsByToolUse);
+
+        /*
+         * EARLY STOP: once the minRungs floor is met, if STALL_TURNS consecutive
+         * turns add no new distinct evidence-backed rung, the field is exhausted
+         * — ask for the typed result now instead of paying to the bound. The
+         * finish path (research tools refused, `auto` tool_choice, the message
+         * below) runs exactly as it does for a real bound.
+         */
+        if (boundNotice === null) {
+          const evidenceNow = distinctEvidenceRungs(rungs);
+          if (evidenceNow > evidenceHigh) {
+            evidenceHigh = evidenceNow;
+            stallTurns = 0;
+          } else {
+            stallTurns += 1;
+          }
+          if (evidenceNow >= minRungs && stallTurns >= STALL_TURNS) {
+            stoppedBy = "BOUND";
+            boundNotice = `no new evidence-backed rung in ${STALL_TURNS} turns past ${evidenceNow} distinct evidence-backed rung(s); the remaining routes are known walls`;
+            messages.push({
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text:
+                    `EARLY STOP: ${boundNotice}. Call finish NOW with the outcome your evidence supports, ` +
+                    "rungsWalked covering every rung index, and nextRungs naming what a later Attempt should try. No further research tools will run.",
+                },
+              ] satisfies UserContent,
+            });
+          }
+        }
       }
 
       /* ---------------------------------------------------- the result */

@@ -137,6 +137,7 @@ export function standing(
     nextDueAt: null,
     occurrenceCount: 0,
     openOccurrenceId: null,
+    absentUntil: obligation.absentUntil ?? null,
     updatedAt: now,
   };
 }
@@ -155,6 +156,9 @@ const RUNTIME_OWNED = [
   "occurrenceCount",
   "openOccurrenceId",
   "lastWorkedAt",
+  /* A recorded expiring absence (RULING 52/53) is runtime state a scout produced,
+     not a corpus signal; a registration pass must never reset it. */
+  "absentUntil",
 ] as const;
 
 /**
@@ -245,6 +249,7 @@ export async function syncObligations(
       occurrenceCount: held.occurrenceCount,
       openOccurrenceId: held.openOccurrenceId,
       lastWorkedAt: held.lastWorkedAt,
+      absentUntil: held.absentUntil,
       updatedAt: now,
     };
 
@@ -467,7 +472,9 @@ export async function closeOccurrence(
     {
       ...obligationRow.value,
       openOccurrenceId: null,
-      ...(input.disposition !== null ? { lastWorkedAt: input.now } : {}),
+      /* A productive disposition also clears any standing absence: a record that
+         was argued absent and is now found is no longer absent (RULING 52/53). */
+      ...(input.disposition !== null ? { lastWorkedAt: input.now, absentUntil: null } : {}),
       updatedAt: input.now,
     },
     input.now,
@@ -486,6 +493,33 @@ export async function recordNextDue(
     row.id,
     row.revision,
     { ...row.value, nextDueAt: input.nextDueAt, updatedAt: input.now },
+    input.now,
+  );
+}
+
+/**
+ * Record an EXPIRING absence against the durable row (RULING 52/53).
+ *
+ * A scout that walked the field and argued the record absent sets `absentUntil`;
+ * `scheduleObligation` then owes the next reading THEN rather than on the
+ * ordinary cadence, so a proven negative is not re-walked every cycle. This is
+ * NOT a debt (debt is a failed reading that retries fast); it is a completed,
+ * correct negative that rechecks on a clock and is visible as a scheduled row,
+ * never an incident. The next productive disposition clears it (disposeRouteTask).
+ */
+export async function recordArguedAbsence(
+  repos: ControlPlaneRepositories,
+  input: { readonly obligationId: string; readonly absentUntil: string; readonly now: string },
+): Promise<void> {
+  const row = await repos.obligations.mustRead(input.obligationId);
+  if (row.value.absentUntil === input.absentUntil && row.value.nextDueAt === input.absentUntil) return;
+  await repos.obligations.compareAndSet(
+    row.id,
+    row.revision,
+    /* Advance the stored next-due to the expiry too, so the durable due-query
+       (`dueByStoredTime`) and the derived schedule agree at once rather than at
+       the next cycle's re-derivation. */
+    { ...row.value, absentUntil: input.absentUntil, nextDueAt: input.absentUntil, updatedAt: input.now },
     input.now,
   );
 }

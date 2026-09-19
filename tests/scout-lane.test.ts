@@ -255,11 +255,13 @@ function executorWith(
     bound?: Partial<typeof RESEARCH_BOUNDS.perDispatch>;
     inherited?: InheritedEvidence;
     decision?: "DETERMINISTIC" | "BOUNDED_MODEL_WORKER";
+    minRungs?: number;
   } = {},
 ) {
   const results: ScoutResult[] = [];
   const exec = scoutExecutor({
     transport,
+    ...(opts.minRungs !== undefined ? { minRungs: opts.minRungs } : {}),
     toolkitFor: (_ctx: ScoutToolContext) => toolkit,
     contextFor: () => ({
       route: null,
@@ -476,7 +478,59 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
   assert.deepEqual(r.nextRungs, ["open-data-portal", "alternate-official-host-or-mirror"]);
   assert.equal(r.rungs[1].note, "sitemap");
   const last = transport.requests.at(-1)!;
-  assert.deepEqual(last.tool_choice, { type: "tool", name: "finish" }, "after the bound only finish is offered");
+  assert.deepEqual(last.tool_choice, { type: "auto" }, "the bound turn stays auto — no cache-invalidating forced-finish rewrite; the BOUND-REACHED message and tool refusal drive the finish");
+});
+
+/* -------------------------------------------------------------- 5b (early stop) */
+
+test("EARLY STOP: a walk that stalls past minRungs finishes early instead of running to the turn bound", async () => {
+  const { repos, task } = await registered();
+  const toolkit = fakeToolkit();
+  /*
+   * Two distinct evidence rungs, then the model keeps re-reading a walked URL
+   * (guard-refused, no new evidence). The transport finishes only once it is told
+   * to (BOUND/EARLY STOP), so the turn count reveals whether early-stop fired:
+   * a handful of turns with it, the full 20-turn bound without.
+   */
+  let call = 0;
+  const transport = Object.assign(
+    async (request: ModelRequest): Promise<ModelResponse> => {
+      transport.requests.push(request);
+      call += 1;
+      const told = /EARLY STOP|BOUND REACHED/.test(JSON.stringify(request.messages));
+      const content = told
+        ? [finish("f", "NO_PROGRESS", { rungsWalked: [{ index: 0, note: "home" }, { index: 1, note: "sitemap" }], nextRungs: ["open-data-portal"] })]
+        : call === 1
+          ? [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "start" })]
+          : call === 2
+            ? [toolUse("u2", "fetch_public", { url: "https://a.gov/sitemap.xml", rung: "site-search-or-sitemap", why: "map" })]
+            : [toolUse(`re${call}`, "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "recheck" })];
+      return {
+        model: "claude-opus-5",
+        stop_reason: content.some((b) => b.type === "tool_use") ? "tool_use" : "end_turn",
+        content,
+        usage: { input_tokens: 1000, output_tokens: 100, cache_read_input_tokens: 500, cache_creation_input_tokens: 0 },
+      } satisfies ModelResponse;
+    },
+    { requests: [] as ModelRequest[] },
+  ) as ModelTransport & { requests: ModelRequest[] };
+  const { exec, results } = executorWith(transport, toolkit, { minRungs: 2, bound: { maxTurns: 20, maxToolCalls: 20 } });
+  await dispatchOne(repos, {
+    obligation: scheduled(),
+    routeTaskId: task.id,
+    holder: "t",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    maturity: () => "UNGRADUATED",
+    executor: exec,
+  });
+  assert.equal(results[0].distinctEvidenceRungs, 2);
+  assert.equal(results[0].stoppedBy, "BOUND", "the stall bounds the walk");
+  assert.ok(
+    transport.requests.length <= 7,
+    `early-stop ended the walk in ${transport.requests.length} turns rather than the 20-turn bound`,
+  );
+  assert.deepEqual(transport.requests.at(-1)!.tool_choice, { type: "auto" }, "the finish turn is offered auto, not a forced-finish rewrite");
 });
 
 /* ---------------------------------------------------------------------- 6 */

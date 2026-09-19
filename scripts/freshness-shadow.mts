@@ -98,6 +98,7 @@ import { REGISTERED_STATES } from "../lib/control-plane/scheduler/providers/loca
 import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
+import { ABSENCE_EXPIRY_DAYS, absenceExpiry, isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
@@ -122,6 +123,7 @@ import {
   resumeOpenOccurrence,
   persistDebts,
   recordNextDue,
+  recordArguedAbsence,
   retireObligationsByPrefix,
   syncObligations,
 } from "../lib/control-plane/scheduler/durable.ts";
@@ -1515,6 +1517,35 @@ finishPhase("occurrence-and-debt-commit");
 console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
 );
+
+/*
+ * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
+ * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
+ * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
+ * absence, so the obligation is not re-walked until it lapses (~30 days) instead
+ * of every cycle. This is NOT a debt — it is a proven negative that rechecks on
+ * a clock; a later cycle's productive disposition clears it. Best effort: an
+ * absence that cannot be written leaves the obligation to re-walk next cycle,
+ * never dropped.
+ */
+if (!dry && !canary) {
+  const until = absenceExpiry(NOW);
+  let absencesRecorded = 0;
+  for (const r of scoutResultsThisCycle) {
+    if (!isArguedAbsence(r, MIN_DISTINCT_RUNGS)) continue;
+    try {
+      await recordArguedAbsence(repos, { obligationId: r.obligationId, absentUntil: until, now: NOW });
+      absencesRecorded += 1;
+    } catch (error) {
+      console.error(
+        `  argued absence not recorded for ${r.obligationId} (${error instanceof Error ? error.message : String(error)}); it re-walks next cycle`,
+      );
+    }
+  }
+  if (absencesRecorded > 0) {
+    console.log(`  argued absences recorded: ${absencesRecorded} (each rechecks in ${ABSENCE_EXPIRY_DAYS} days; RULING 52/53)`);
+  }
+}
 
 // Registered autonomous plans use the same dispatcher, vault, host spacing and
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.

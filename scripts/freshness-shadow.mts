@@ -1520,11 +1520,13 @@ console.log(
 
 /*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
- * concluding NO_PROGRESS/BLOCKED) records an EXPIRING absence, so the obligation
- * is not re-walked until it lapses (~30 days) instead of every cycle. This is
- * NOT a debt — it is a proven negative that rechecks on a clock; a later cycle's
- * productive disposition clears it. Best effort: an absence that cannot be
- * written leaves the obligation to re-walk next cycle, never dropped.
+ * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
+ * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
+ * absence, so the obligation is not re-walked until it lapses (~30 days) instead
+ * of every cycle. This is NOT a debt — it is a proven negative that rechecks on
+ * a clock; a later cycle's productive disposition clears it. Best effort: an
+ * absence that cannot be written leaves the obligation to re-walk next cycle,
+ * never dropped.
  */
 if (!dry && !canary) {
   const until = absenceExpiry(NOW);

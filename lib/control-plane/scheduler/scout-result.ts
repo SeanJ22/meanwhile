@@ -333,6 +333,17 @@ export interface ScoutResult {
   readonly inheritedFieldManual?: number;
   /** RouteIds this walk proposed that the manual ALREADY held: rebuilding an existing door is a reported defect, not neutral progress. */
   readonly rebuiltExistingRoutes?: readonly string[];
+  /**
+   * The exact field-manual entry ids projected into this walk's brief — the
+   * inherited doors HANDED to the scout at dispatch. This is the captured input
+   * for a knowledge-delivery audit: it is recorded when the brief is built, so a
+   * later reader checks what the scout actually received rather than recomputing
+   * what the projection would return now (the store grows between runs). Absent
+   * on results recorded before this capture (2026-09-19).
+   */
+  readonly inheritedFieldManualEntryIds?: readonly string[];
+  /** The exact rendered field-manual brief lines that led this walk's inherited context, captured at dispatch alongside `inheritedFieldManualEntryIds`. Absent on older results. */
+  readonly inheritedFieldManualLines?: readonly string[];
 }
 
 /* ------------------------------------------------------------- validation */

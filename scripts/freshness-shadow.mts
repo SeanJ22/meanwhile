@@ -1036,6 +1036,8 @@ const priorDispositionsByObligation = new Map<string, { disposition: string; per
 let fieldManual: FieldManualStore = emptyFieldManual();
 let fieldManualKnown: ReadonlySet<string> = new Set<string>();
 const inheritedFieldManualCounts = new Map<string, number>();
+/** The exact projected doors handed to each obligation's scout at dispatch — captured input for the delivery audit, keyed by obligation id. */
+const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
 if (modelLaneEnabled && dueModel.length > 0) {
   try {
     const priorResults = canary
@@ -1160,6 +1162,8 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   });
   inheritedFieldManualCounts.set(id, projection.entryIds.length);
   const manualLines = fieldManualBriefLines(projection);
+  // Capture the EXACT projected doors handed to this scout, at dispatch, for the delivery audit.
+  inheritedFieldManualDoors.set(id, { entryIds: projection.entryIds, lines: manualLines });
   return {
     artifactIds: [...new Set(prior.flatMap((r) => r.artifactIds))],
     summary: [...manualLines, ...lines].join("\n"),
@@ -1477,7 +1481,13 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
          * this cycle — no human method:learn step in between.
          */
         const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, fieldManualKnown);
-        amended = { ...amended, inheritedFieldManual: pair.inheritedCount, rebuiltExistingRoutes: pair.rebuiltExisting };
+        const doors = inheritedFieldManualDoors.get(result.obligationId);
+        amended = {
+          ...amended,
+          inheritedFieldManual: pair.inheritedCount,
+          rebuiltExistingRoutes: pair.rebuiltExisting,
+          ...(doors ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines } : {}),
+        };
         if (result.refusal === null && result.candidates.length > 0) {
           const written = await writeFieldManualDiscoveries(
             repos,

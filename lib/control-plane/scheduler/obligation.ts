@@ -58,6 +58,13 @@ export const CADENCE_SOURCES = [
   "DEFAULT_NO_SIGNAL",
   /** The obligation names its own interval — a statutory or published cycle. */
   "DECLARED_CYCLE",
+  /**
+   * A scout argued this record absent (RULING 52: an empty branch is one
+   * measurement on one date, never a verdict; RULING 53: recorded absences
+   * expire on a clock). The next reading is owed when the absence expires, not
+   * on the ordinary cadence — so a proven negative is not re-walked every cycle.
+   */
+  "ARGUED_ABSENT",
 ] as const;
 export type CadenceSource = (typeof CADENCE_SOURCES)[number];
 
@@ -104,6 +111,13 @@ export interface FreshnessObligation {
   readonly declaredCycleHours?: number | null;
   /** The last time this obligation was actually worked to a disposition. */
   readonly lastWorkedAt: string | null;
+  /**
+   * A recorded, EXPIRING absence (RULING 52/53). Set when a scout argued the
+   * record absent after a proper walk; the obligation is not re-walked until
+   * this time, then it comes due again on its ordinary cadence. Null/absent
+   * means no standing absence. Runtime-owned and durable.
+   */
+  readonly absentUntil?: string | null;
 }
 
 /** An obligation with a next-due, and the derivation that produced it. */
@@ -222,6 +236,29 @@ export function scheduleObligation(
   }
 
   const cadenceHours = clamp(hours);
+
+  /*
+   * A RECORDED, UNEXPIRED ABSENCE HOLDS THE CLOCK (RULING 52/53). A scout that
+   * walked the field and argued the record absent set `absentUntil`; until it
+   * passes, the next reading is owed THEN, not on the ordinary cadence — so a
+   * proven negative (≈83% of authored-site walks) is re-confirmed on the
+   * absence's expiry clock, never every cycle. When it passes, this branch does
+   * nothing and the row comes due on its cadence again, which is the expiry.
+   */
+  const absentUntilMs = obligation.absentUntil ? Date.parse(obligation.absentUntil) : NaN;
+  if (Number.isFinite(absentUntilMs) && absentUntilMs > nowMs) {
+    return {
+      obligation,
+      nextDueAt: new Date(absentUntilMs).toISOString(),
+      cadenceHours,
+      cadenceSource: "ARGUED_ABSENT",
+      basis:
+        `a scout argued this record absent; the absence stands until ${obligation.absentUntil} ` +
+        "(RULING 52: one measurement on one date; RULING 53: absences expire), so the next reading " +
+        "is owed then rather than on the ordinary cadence, and the proven negative is not re-walked meanwhile",
+    };
+  }
+
   /*
    * From the last WORK, not from now. Scheduling from `now` on every pass makes
    * the interval restart every time the scheduler looks at the row, so a row

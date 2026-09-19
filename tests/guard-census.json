@@ -118,7 +118,7 @@
         "ADM-25 · no constant the owner photographed renders with an underscore",
         "ADM-25 · text that is not a machine constant is left alone",
         "ADM-26 · dollars render to the cent, never to four places",
-        "ADM-26 · the spend windows are a three-row table to the cent, each defined",
+        "ADM-26 · the spend windows are a three-row table to the cent, each framed against the one daily ceiling",
         "ADM-27 · deferred work is a count and a sentence, never a list of thousands",
         "ADM-28 · the three headline words are defined once, in plain English",
         "ADM-29 · Arizona ballot campaign finance is Arizona, not 'other'",
@@ -3780,12 +3780,13 @@
         "a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)",
         "a hard Neon response is host-latched before any second database probe",
         "a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work",
-        "aggregate model admission stops at cycle, operational-night, and rolling-24-hour ceilings",
         "an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds",
         "an unmetered Scout cost row fails closed instead of disappearing from aggregate spend",
+        "model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it",
+        "no per-cycle request or dispatch ceiling remains; the cycle wall still fails closed",
         "public redirects are counted as separate provider requests under one byte ceiling",
-        "request, payload-byte, dispatch, and wall ceilings fail closed with named deferral",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
+        "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
       ],
@@ -8215,7 +8216,6 @@
       "names": [
         "2454 never-worked obligations retain their owed time instead of causing 4908 preparation round trips",
         "277 unchanged debts consume one bulk read and no write; changed and discharged debts persist",
-        "full 614 deterministic / 1840 Scout backlog leaves slots for discovery and downstream work",
         "phase timing reports actual repository calls without arguments",
         "unchanged full-size registry synchronization uses one read and never rewrites provider or runtime state"
       ],

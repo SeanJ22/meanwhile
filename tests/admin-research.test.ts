@@ -648,7 +648,7 @@ test("spend at or over the ceiling renders as a number over its ceiling; the lan
   // live. Deferred work is owed with its next-due, and the page must say so
   // even though there is no failing condition to list.
   const view = buildResearchView(
-    healthyInput({ spend: heldOut({ windowUsd: 26.5, measured: 9, unmeasured: 0, windowHours: 24, asOf: NOW }) }),
+    healthyInput({ spend: heldOut({ windowUsd: 106.5, measured: 9, unmeasured: 0, windowHours: 24, asOf: NOW }) }),
   );
   assert.equal(view.verdict, "ACTIVE");
   assert.equal(view.reading.capDeferred, true);
@@ -659,7 +659,7 @@ test("spend at or over the ceiling renders as a number over its ceiling; the lan
   assert.equal(buildResearchView(healthyInput()).spend.capDeferredNote, null);
   assert.ok(view.spend.windowUsd.held, "an over-ceiling spend is a fact, not a gap");
   if (view.spend.windowUsd.held) {
-    assert.equal(view.spend.windowUsd.value.value, 26.5);
+    assert.equal(view.spend.windowUsd.value.value, 106.5);
     assert.equal(view.spend.windowUsd.value.denominator, RESEARCH_BOUNDS.dailyCeilingUsd);
   }
   assert.equal(auditRenderedNumbers(renderedNumbersOf(view)).ok, true);

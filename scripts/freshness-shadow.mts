@@ -4,7 +4,7 @@ import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
-import { cycleLaneSlots, observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { readRelaunchTriggerVerification } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
@@ -342,20 +342,22 @@ const boundedNumber = (raw: string | undefined, fallback: number, maximum: numbe
   const parsed = raw === undefined ? fallback : Number(raw);
   return Number.isFinite(parsed) && parsed >= 0 ? Math.min(parsed, maximum) : fallback;
 };
+/*
+ * `--max=` and `--scout-max=` are DIAGNOSTIC overrides for proof runs (one or a
+ * few units at a time). There is NO per-cycle dispatch or Scout ceiling by
+ * default: the cycle wall and the rolling daily spend ceiling are the only
+ * limits, and each lane opens work in step with what it can dispatch before the
+ * wall. A canary is pinned to one of each.
+ */
 const ceilingArg = argv.find((a) => a.startsWith("--max="));
-const requestedMaxDispatches = boundedNumber(
-  ceilingArg?.slice("--max=".length),
-  FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
-  FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
-);
 const MAX_DISPATCHES = canary
   ? 1
-  : Math.min(requestedMaxDispatches, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle);
+  : boundedNumber(ceilingArg?.slice("--max=".length), Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
 const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
 const SCOUT_MAX = boundedNumber(
   scoutMaxArg?.slice("--scout-max=".length),
-  canary ? 1 : RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,
-  canary ? 1 : RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,
+  canary ? 1 : Number.POSITIVE_INFINITY,
+  canary ? 1 : Number.POSITIVE_INFINITY,
 );
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
@@ -597,8 +599,6 @@ const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string
 const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
 let openedModel = 0;
-/** Due obligations this cycle deliberately did not START. Never silent. */
-let deferredForCeiling = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
 let resumedCount = 0;
 /** Obligations whose open/resume threw and were isolated. Never silent. */
@@ -824,11 +824,6 @@ const heldWorkIds = new Set(canary || scheduledBlackout ? [] : (await repos.rout
       (row.value.state === "RESULT_RECORDED" && row.value.workerTask.role !== "ADVERSARIAL_AUDITOR")))
   .map(row => row.value.workItemId));
 const downstreamWorkCount = plannedWork.length + heldWorkIds.size;
-const fleetScoutReserve = !dry && !canary && plannedWork.length ? Math.min(1, SCOUT_MAX) : 0;
-const slots = cycleLaneSlots({ maximum: canary ? 1 : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
-  deterministic: Math.min(MAX_DISPATCHES, dueDeterministic),
-  scouts: Math.min(SCOUT_MAX - fleetScoutReserve, dueModel.length), planned: dry ? 0 : downstreamWorkCount });
-const openingOrder = [...scoutOrder.map((b) => b.row.entry), ...dueDeterministicRows];
 finishPhase("schedule-and-intents");
 if (dispatchOrdering !== null) {
   console.log(
@@ -836,69 +831,48 @@ if (dispatchOrdering !== null) {
       `(canonical obligation reader impact plus release-pinned pilot jurisdictions)` +
       (dispatchPriority.size > 0 ? ` · owner dispatch first: ${scoutOrder.filter((b) => dispatchPriority.has(b.row.id)).length} of them` : ""),
   );
-  for (const b of scoutOrder.slice(0, SCOUT_MAX)) {
+  for (const b of scoutOrder.slice(0, 12)) {
     console.log(`      ${dispatchPriority.has(b.row.id) ? "DISPATCH" : `band ${b.band}`}  ${b.row.id}  — ${b.why}`);
   }
 }
 
-for (const { obligation: o, nextDueAt } of openingOrder) {
-  const row = { nextDueAt };
-  /*
-   * **DO NOT OPEN AN OCCURRENCE THIS CYCLE CANNOT DISPATCH.** Each lane opens
-   * at most its own ceiling, in the dispatcher's own order — what is opened is
-   * what is oldest in that lane.
-   */
-  const lane = decisionFor(o.id, o.routeId).kind;
-  const opened = lane === "BOUNDED_MODEL_WORKER" ? openedModel : openedDeterministic;
-  const laneCeiling = lane === "BOUNDED_MODEL_WORKER" ? slots.scouts : slots.deterministic;
-  const aggregateOpeningCeiling = canary ? 1 : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle;
-  if (scheduledBlackout || opened >= laneCeiling || openedDeterministic + openedModel >= aggregateOpeningCeiling) {
-    deferredForCeiling += 1;
-    continue;
-  }
+/*
+ * **OPEN IN STEP WITH DISPATCH (2026-09-18).** Nothing is pre-opened. Each lane
+ * calls this the moment it is about to dispatch a row — after the wall and
+ * admission gates have passed — so the runner opens exactly what it can
+ * dispatch before the wall, never the whole backlog, and there is no per-cycle
+ * open ceiling to size. A resume picks up an occurrence an earlier cycle opened
+ * and did not reach; a fresh open otherwise. A throw is isolated by name and the
+ * row keeps its next-due. Returns whether the occurrence is now open.
+ */
+const standingById = new Map(sync.all.map((o) => [o.id, o]));
+const openOccurrenceInStep = async (row: ScheduledObligation): Promise<boolean> => {
+  const id = row.obligation.id;
+  if (occurrenceByObligation.has(id)) return true;
+  if (scheduledBlackout) return false;
+  // The dispatcher hands a FreshnessObligation; opening needs the fuller
+  // StandingObligation (occurrence count, open-occurrence id), looked up by id.
+  const obligation = standingById.get(id);
+  if (obligation === undefined) return false;
   try {
-    const resumed = await resumeOpenOccurrence(repos, o);
+    const resumed = await resumeOpenOccurrence(repos, obligation);
     if (resumed !== null) {
-      occurrenceByObligation.set(o.id, resumed);
+      occurrenceByObligation.set(id, resumed);
       resumedCount += 1;
     } else {
-      const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
-      if (occ === null) continue;
-      occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
+      const occ = await openOccurrence(repos, { obligation, dueAt: row.nextDueAt, now: NOW });
+      if (occ === null) return false;
+      occurrenceByObligation.set(id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     }
-    if (lane === "BOUNDED_MODEL_WORKER") openedModel += 1;
+    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
     else openedDeterministic += 1;
+    return true;
   } catch (error) {
-    preOpenSkipped.push({
-      obligationId: o.id,
-      why: error instanceof Error ? error.message : String(error),
-    });
+    preOpenSkipped.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
+    return false;
   }
-}
-console.log(
-  `  occurrences opened this cycle: ${openedDeterministic + openedModel} (deterministic ${openedDeterministic}, ` +
-    `Scout ${openedModel}; each with its OWN WorkItem and RouteTask)` +
-    (resumedCount > 0
-      ? ` — ${resumedCount} of them RESUMED from an earlier cycle that opened them and did not reach them`
-      : ""),
-);
+};
 finishPhase("open-occurrences");
-if (deferredForCeiling > 0) {
-  console.log(
-    `  ${deferredForCeiling} due obligation(s) got NO occurrence this cycle: the stated ceilings are ` +
-      `${MAX_DISPATCHES} deterministic and ${SCOUT_MAX} Scout, and opening a WorkItem the dispatcher will not reach ` +
-      "leaves an occurrence nothing works. They keep their next-due and are opened by a later cycle — " +
-      "the obligation is not discharged, only unstarted.",
-  );
-}
-if (preOpenSkipped.length > 0) {
-  console.log(
-    `  ${preOpenSkipped.length} obligation(s) threw while opening/resuming and were ISOLATED so the ` +
-      "rest of the phase could proceed; each keeps its next-due and is retried by a later cycle:",
-  );
-  for (const s of preOpenSkipped.slice(0, 5)) console.log(`      ${s.obligationId} — ${s.why}`);
-  if (preOpenSkipped.length > 5) console.log(`      … and ${preOpenSkipped.length - 5} more`);
-}
 
 /* -------------------------------------------------- LEVEL 1 — RESEARCH --- */
 
@@ -1222,7 +1196,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       context: `standing runner child process (freshness-shadow) on ${HOST}, env via node --env-file`,
     },
     model: SCOUT_MODEL,
-    bounds: { ...RESEARCH_BOUNDS, maxScoutDispatchesPerCycle: SCOUT_MAX },
+    bounds: RESEARCH_BOUNDS,
     spend: {
       windowUsd: window,
       measuredAttempts: measuredSpend.measured,
@@ -1449,8 +1423,8 @@ const cycle = await runCycle({
     state: "NOT_READY",
     reason: "not computed by this run; the truth contract is the control set's to state",
   },
-  maxDispatches: slots.deterministic,
-  requireOpenOccurrence: true,
+  maxDispatches: MAX_DISPATCHES,
+  openOccurrence: openOccurrenceInStep,
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
@@ -1467,7 +1441,7 @@ const cycle = await runCycle({
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
       const cap = ceilingPermits(window, RESEARCH_BOUNDS.dailyCeilingUsd);
       if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
-      if (scoutsAdmittedThisCycle >= SCOUT_MAX - fleetScoutReserve) return { admit: false, code: "CYCLE_MAX", why: `this cycle's Scout allowance is allocated (${fleetScoutReserve} reserved for registered autonomous discovery; total maximum ${SCOUT_MAX})` };
+      if (Number.isFinite(SCOUT_MAX) && scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `the diagnostic --scout-max cap of ${SCOUT_MAX} for this cycle is reached` };
       scoutsAdmittedThisCycle += 1;
       return { admit: true };
     },
@@ -1575,7 +1549,9 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
     const legacy = [...heldFirst];
-    const remaining = Math.max(0, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle - fleetSafety.snapshot().cycle.dispatches);
+    // No per-cycle dispatch cap: the held-worker loop runs until the wall
+    // (checked in the loop condition) or until no held work remains.
+    const remaining = Number.POSITIVE_INFINITY;
     for (let slot = 0; slot < remaining && Date.now() + 150_000 < DISPATCH_DEADLINE_MS; slot += 1) {
       const next = await runHeldWorkerFleetCycle(ROOT, fleet, true, {
         maximumDispatches: 1, admitDispatch: work => fleetSafety.admitDispatch(work),
@@ -1797,11 +1773,10 @@ const safety = finalState.fleetSafety!;
 const researchLines = [
   "FLEET SAFETY",
   `  state              ${safety.status}`,
-  `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} / $${safety.bounds.cycleModelUsd.toFixed(2)} · ` +
-    `operational night ${safety.operationalNight.modelUsd === null ? "UNMEASURED" : `$${safety.operationalNight.modelUsd.toFixed(4)}`} / $${safety.bounds.operationalNightModelUsd.toFixed(2)} · ` +
-    `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)}`,
-  `  aggregate          requests ${safety.cycle.requests}/${safety.bounds.maxProviderRequestsPerCycle} · payload bytes ${safety.cycle.payloadBytes}/${safety.bounds.maxPayloadBytesPerCycle} · ` +
-    `dispatches ${safety.cycle.dispatches}/${safety.bounds.maxDispatchesPerCycle} · wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+  `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} · ` +
+    `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
+  `  aggregate          dispatches ${safety.cycle.dispatches} · requests ${safety.cycle.requests} · payload bytes ${safety.cycle.payloadBytes} · ` +
+    `per-download cap ${safety.bounds.maxDownloadBytes} · wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
   `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`,
   `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`,
   `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`,
@@ -1809,10 +1784,10 @@ const researchLines = [
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · per cycle ${SCOUT_MAX} · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
+  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${RESEARCH_BOUNDS.dailyCeilingUsd}/day + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
-    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not opened (Scout ceiling ${SCOUT_MAX})` : ""),
+    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),
   `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${RESEARCH_BOUNDS.dailyCeilingUsd} ceiling ` +
     `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle) · this cycle $${spentThisCycle.toFixed(4)}`,
   `  results            ${scoutResultsThisCycle.length} typed result(s)${outcomeCounts.size > 0 ? ` — ${[...outcomeCounts].map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}` +

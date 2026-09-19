@@ -689,8 +689,12 @@ export interface SpendWindowRow {
 
 /** The ceilings, taken structurally so this module never imports the admission controller. */
 export interface SpendCeilings {
-  readonly cycleModelUsd: number;
-  readonly operationalNightModelUsd: number;
+  /**
+   * The one spend ceiling. Every spend window is framed against it now that the
+   * per-cycle and operational-night model-spend caps are retired — a number
+   * still gets a denominator (RULING: no bare number), and that denominator is
+   * the only limit that stands.
+   */
   readonly rolling24HourModelUsd: number;
 }
 
@@ -702,7 +706,8 @@ export function spendWindowRows(input: {
   readonly rolling24HourUsd: number | null;
   readonly ceilings: SpendCeilings;
 }): readonly SpendWindowRow[] {
-  const row = (window: string, spentUsd: number | null, ceilingUsd: number, defines: string | null): SpendWindowRow => ({
+  const ceilingUsd = input.ceilings.rolling24HourModelUsd;
+  const row = (window: string, spentUsd: number | null, defines: string | null): SpendWindowRow => ({
     window,
     spentUsd,
     ceilingUsd,
@@ -711,14 +716,13 @@ export function spendWindowRows(input: {
     defines,
   });
   return [
-    row("Current cycle", input.cycleUsd, input.ceilings.cycleModelUsd, "One pass of the runner through the work that is due."),
+    row("Current cycle", input.cycleUsd, "One pass of the runner through the work that is due. No per-cycle spend cap — the rolling daily ceiling is the limit."),
     row(
       "Operational night",
       input.operationalNightUsd,
-      input.ceilings.operationalNightModelUsd,
-      "The overnight working window: 6pm to 6am Phoenix time, the stretch in which the runner is allowed to do paid model work.",
+      "The overnight working window: 6pm to 6am Phoenix time, the stretch in which the runner does paid model work.",
     ),
-    row("Last 24 hours", input.rolling24HourUsd, input.ceilings.rolling24HourModelUsd, "A sliding day ending now, not a calendar day."),
+    row("Last 24 hours", input.rolling24HourUsd, "A sliding day ending now, not a calendar day — the one spend ceiling."),
   ];
 }
 

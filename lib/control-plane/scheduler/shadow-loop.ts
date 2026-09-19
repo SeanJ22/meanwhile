@@ -74,6 +74,18 @@ export interface CycleInput {
   readonly routeTaskFor: (obligationId: string) => string | null;
   /** The standing runner opens only its bounded lane slots, retaining all other due rows. */
   readonly requireOpenOccurrence?: boolean;
+  /**
+   * **OPEN IN STEP WITH DISPATCH, NOT AHEAD OF IT.** (2026-09-18.)
+   *
+   * When present, each lane opens an obligation's occurrence just-in-time —
+   * only after the row has passed the wall and admission gates and is about to
+   * dispatch — and defers it by name when opening fails. Nothing is pre-opened,
+   * so the runner opens exactly what it can dispatch before the wall instead of
+   * the whole backlog, and there is no per-cycle open ceiling to size. Returns
+   * whether the occurrence is now open (so `routeTaskFor` resolves it). Absent,
+   * `requireOpenOccurrence` governs and the caller pre-opens.
+   */
+  readonly openOccurrence?: (row: ScheduledObligation) => Promise<boolean>;
   /** Observability only; recovery still completes before any worker is admitted. */
   readonly onRecoveryComplete?: () => void;
   readonly maturity: MethodMaturity;
@@ -559,11 +571,27 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     return false;
   };
 
+  /*
+   * Open in step with dispatch when the caller supplies `openOccurrence`:
+   * nothing is pre-opened, so a lane opens only the rows it is about to run, and
+   * the wall — not a per-cycle open ceiling — bounds how many it opens. Absent,
+   * the pre-open path stands and this is a no-op; the early `requireOpenOccurrence`
+   * check governs instead.
+   */
+  const tryOpen = async (row: ScheduledObligation): Promise<boolean> => {
+    if (input.openOccurrence === undefined) return true;
+    try {
+      return await input.openOccurrence(row);
+    } catch {
+      return false;
+    }
+  };
+
   /* THE DETERMINISTIC LANE — the serial queue, exactly as before. */
   const deterministicLane = async (): Promise<void> => {
     let admitted = 0;
     for (const row of deterministicRows) {
-      if (input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
+      if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         continue;
       }
@@ -580,6 +608,10 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             "continues to age — a ceiling that dropped them silently would report the same number " +
             "whatever the backlog was",
         });
+        continue;
+      }
+      if (!(await tryOpen(row))) {
+        deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
         continue;
       }
       if (!aggregateAdmits(row)) continue;
@@ -620,7 +652,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
     await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
-      if (input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
+      if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
         modelDeferred += 1;
         deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
@@ -659,6 +691,12 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         });
         modelDeferred += 1;
         deferredBy[admit.code] = (deferredBy[admit.code] ?? 0) + 1;
+        return;
+      }
+      if (!(await tryOpen(row))) {
+        deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
+        modelDeferred += 1;
+        deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
         return;
       }
       if (!aggregateAdmits(row)) {

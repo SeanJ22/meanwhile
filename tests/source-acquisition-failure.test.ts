@@ -435,6 +435,35 @@ test("source parsers brand publisher evidence while a missing credential remains
   );
 });
 
+test("dotgov refuses a registry CSV cut short of its declared length", async () => {
+  // acquireDotGov reads the pinned SHA then the raw CSV through the global
+  // fetch, so the completeness check is exercised by standing in a truncated
+  // transfer whose row count would otherwise still have to clear the floor.
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (input: RequestInfo | URL) => {
+    const url = String(input);
+    if (url.includes("api.github.com")) {
+      return new Response(JSON.stringify([{ sha: "a".repeat(40) }]), { status: 200 });
+    }
+    return new Response("Domain name,Domain type\nwhitehouse.gov,Federal Agency - Executive\n", {
+      status: 200,
+      headers: { "content-length": "5000000" },
+    });
+  }) as typeof fetch;
+  try {
+    const { acquireDotGov } = await import("../scripts/fetch-dotgov.mts");
+    await assert.rejects(
+      acquireDotGov(),
+      (error: unknown) =>
+        isSourceAcquisitionFailure(error) &&
+        error.code === "PUBLISHER_RESPONSE_REFUSED" &&
+        /short read/.test(error.message),
+    );
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
+
 test("each standing single-route entrypoint uses the source-aware durable failure door", () => {
   for (const path of [
     "scripts/fetch-fec.mts",

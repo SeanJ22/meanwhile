@@ -3,8 +3,10 @@ import { test } from "node:test";
 import { isOfficialHost } from "../lib/officials/verification.ts";
 
 import {
+  CONGRESS_ROSTER_FLOOR,
   congressSource,
   houseOcdId,
+  parseCongressRoster,
   stateOcdId,
   type CongressLegislator,
 } from "../lib/sources/congress/index.ts";
@@ -218,6 +220,19 @@ test("a House term with no district is reported rather than guessed at", () => {
   assert.equal(set.divisions.length, 0);
   assert.equal(set.unmatched.length, 1);
   assert.match(set.unmatched[0].reason, /no district number/);
+});
+
+test("the bulk roster refuses a short, non-array, or non-JSON body", () => {
+  // A truncated-but-valid JSON array parses cleanly and would read as a
+  // Congress with almost no members — that is the silent-partial the floor
+  // refuses, not an empty branch of government.
+  const tiny = JSON.stringify(Array.from({ length: 10 }, (_, i) => ({ id: { bioguide: `X${i}` } })));
+  assert.throws(() => parseCongressRoster(tiny), /below the floor of 500/);
+  assert.throws(() => parseCongressRoster("{}"), /not the roster array/);
+  assert.throws(() => parseCongressRoster("<html>503</html>"), /not JSON/);
+  // A full roster passes and is returned intact — the current Congress is 539.
+  const full = Array.from({ length: CONGRESS_ROSTER_FLOOR + 39 }, (_, i) => ({ id: { bioguide: `X${i}` } }));
+  assert.equal(parseCongressRoster(JSON.stringify(full)).length, 539);
 });
 
 test("party is carried for display and is the only evaluative-looking field", () => {

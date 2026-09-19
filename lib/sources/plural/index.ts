@@ -5,6 +5,7 @@ import type {
 } from "../../officials/types.ts";
 
 import { notADocument, sourceUserAgent } from "../http.ts";
+import { shortTransfer } from "../bulk-completeness.ts";
 
 /**
  * State legislators, from Plural Open (ex-Open States). Phase 5.2 tier 2,
@@ -231,6 +232,42 @@ export function resetRequestCount(): void {
   requestCount.graphql = 0;
 }
 
+/** The columns `rowsToPeople` reads to build a legislator; a header without them is not the roster. */
+export const PLURAL_REQUIRED_COLUMNS = ["id", "name", "current_chamber", "current_district"] as const;
+
+/**
+ * The floor below which a state's CSV is not a complete roster. Every chamber
+ * across the three configured states seats far more — AZ 90, NJ 120, NH 424 —
+ * so a modest floor refuses a truncated file or an error page without risking a
+ * false red on a real, vacancy-thinned roster.
+ */
+export const PLURAL_ROSTER_FLOOR = 40;
+
+/**
+ * Is this 200 body actually a Plural roster, and the whole of it? Returns the
+ * reason it is not, or null.
+ *
+ * The `,` blank-check `fetchState` runs first cannot catch the real failure: an
+ * HTML error page served at 200 contains commas, so it passes, and then parses
+ * to a table whose header is not the roster's — `rowsToPeople` finds no `id`
+ * column and returns ZERO people, a state's whole legislature reading as absent
+ * with no error at all. The header check refuses that; the floor refuses a
+ * file truncated to a handful of rows. Kept pure so it is tested directly.
+ */
+export function pluralRosterIssue(csv: string): string | null {
+  const rows = parseCsv(csv);
+  const header = rows[0] ?? [];
+  const missing = PLURAL_REQUIRED_COLUMNS.filter((column) => !header.includes(column));
+  if (missing.length > 0) {
+    return `a CSV whose header is missing ${missing.join(", ")} — a truncated file or an error page, not the roster`;
+  }
+  const dataRows = rows.length - 1;
+  if (dataRows < PLURAL_ROSTER_FLOOR) {
+    return `${dataRows} data row(s), below the floor of ${PLURAL_ROSTER_FLOOR} — refusing a truncated roster`;
+  }
+  return null;
+}
+
 async function fetchState(state: string): Promise<string> {
   const url = bulkUrl(state);
   const MAX_ATTEMPTS = 4;
@@ -246,10 +283,15 @@ async function fetchState(state: string): Promise<string> {
       const text = await response.text();
       // A status is not a document (NH Hunt 3, 2026-08-21). This adapter hand-
       // rolls its own backoff rather than using the shared client, so it gets
-      // the shared client's check by hand — a 200 with a blank body here is a
-      // state's whole legislature reading as empty.
+      // the shared client's checks by hand — a 200 with a blank body, a
+      // transfer cut short of its declared length, or an error page that parses
+      // to zero people here is a state's whole legislature reading as empty.
       const notDoc = notADocument(text, { label: "a bulk CSV", marker: "," });
       if (notDoc !== null) throw new Error(`${url} returned HTTP 200 with ${notDoc}`);
+      const short = shortTransfer(response.headers, text);
+      if (short !== null) throw new Error(`${url} returned HTTP 200 with ${short}`);
+      const issue = pluralRosterIssue(text);
+      if (issue !== null) throw new Error(`${url} returned HTTP 200 with ${issue}`);
       return text;
     }
 

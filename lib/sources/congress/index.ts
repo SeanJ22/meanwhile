@@ -6,6 +6,7 @@ import type {
 } from "../../officials/types.ts";
 
 import { notADocument, sourceUserAgent } from "../http.ts";
+import { shortTransfer } from "../bulk-completeness.ts";
 
 /**
  * The US Congress roster. Phase 5.2 tier 1, tracker **D02**.
@@ -104,6 +105,39 @@ function displayName(person: CongressLegislator): string {
   );
 }
 
+/**
+ * The current Congress is 539 people. A truncated-but-valid JSON array, or an
+ * error object served as JSON, parses cleanly and would read as a Congress with
+ * almost no members — the silent-partial "correct first" forbids (CLAUDE.md,
+ * RULING 273). The floor is set well below the real roster and far above zero,
+ * the same shape as the dotgov thin-guard; verified at 539 on 2026-09-18.
+ */
+export const CONGRESS_ROSTER_FLOOR = 500;
+
+/**
+ * Parse the bulk roster and refuse a short one. Separated from `fetch` so the
+ * completeness contract is exercised directly rather than only over the
+ * network — the bulk adapter uses a bare `fetch` on purpose (one file, its own
+ * backoff), so its floor cannot lean on the shared client.
+ */
+export function parseCongressRoster(text: string): CongressLegislator[] {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error(`${BULK_URL} returned HTTP 200 with a body that is not JSON`);
+  }
+  if (!Array.isArray(parsed)) {
+    throw new Error(`${BULK_URL} returned HTTP 200 with a body that is not the roster array`);
+  }
+  if (parsed.length < CONGRESS_ROSTER_FLOOR) {
+    throw new Error(
+      `${BULK_URL} returned ${parsed.length} legislator(s), below the floor of ${CONGRESS_ROSTER_FLOOR} — the current Congress is ~539; refusing a truncated roster`,
+    );
+  }
+  return parsed as CongressLegislator[];
+}
+
 export const congressSource: OfficialSource<CongressLegislator> = {
   name: SOURCE_NAME,
 
@@ -125,12 +159,15 @@ export const congressSource: OfficialSource<CongressLegislator> = {
       if (response.ok) {
         // A status is not a document (NH Hunt 3, 2026-08-21). This adapter
         // hand-rolls its own backoff rather than using the shared client, so
-        // it gets the shared client's check by hand: a 200 with a blank body
-        // here is every member of Congress reading as absent.
+        // it gets the shared client's checks by hand: a 200 with a blank body,
+        // a transfer cut short of its declared length, or a truncated-but-valid
+        // roster here is every member of Congress reading as absent.
         const text = await response.text();
         const notDoc = notADocument(text, { label: "a bulk JSON file", marker: "[" });
         if (notDoc !== null) throw new Error(`${BULK_URL} returned HTTP 200 with ${notDoc}`);
-        return JSON.parse(text) as CongressLegislator[];
+        const short = shortTransfer(response.headers, text);
+        if (short !== null) throw new Error(`${BULK_URL} returned HTTP 200 with ${short}`);
+        return parseCongressRoster(text);
       }
 
       lastStatus = response.status;

@@ -76,6 +76,7 @@ import {
   withPublisherAcquisitionDeadline,
 } from "../lib/civic-data/source-acquisition-failure.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
+import { shortTransfer } from "../lib/sources/bulk-completeness.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
@@ -215,6 +216,17 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
   }
   const csv = await readPublisherBody("CISA dotgov registry", () => response.text());
   signal?.throwIfAborted();
+  // Before the row count is trusted, ask whether the whole file arrived. The
+  // thin-guard below refuses a body too SHORT to be the registry; this refuses
+  // a transfer cut short of the length the server declared — a truncation that
+  // dropped the tail of the file could still clear the row floor.
+  const short = shortTransfer(response.headers, csv);
+  if (short !== null) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_RESPONSE_REFUSED",
+      `dotgov: ${csvUrl} answered ${response.status} with ${short}`,
+    );
+  }
   const lines = csv.split(/\r?\n/).filter((line) => line.trim().length > 0);
   const header = cells(lines[0] ?? "");
   if (header[0] !== "Domain name" || header[1] !== "Domain type") {

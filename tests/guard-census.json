@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 663,
-    "named": 6706,
+    "files": 669,
+    "named": 6736,
     "dynamic": 27
   },
   "files": {
@@ -1875,6 +1875,16 @@
       ],
       "dynamic": 0
     },
+    "tests/bulk-completeness.test.ts": {
+      "names": [
+        "acsTableTooShort refuses a table below its scope floor and passes a complete one",
+        "shortTransfer names an identity transfer cut short of its declared length",
+        "shortTransfer never fires on a compressed body — Content-Length is the WIRE size there",
+        "shortTransfer passes a transfer that reconciles, and one with no declared length",
+        "the census promotion wires the floor into its acquisition, not the reader-bound adapter"
+      ],
+      "dynamic": 0
+    },
     "tests/cache-defects.test.ts": {
       "names": [
         "PC-12: a zero read over an identical prefix is the second signature, counted apart",
@@ -3559,6 +3569,27 @@
       ],
       "dynamic": 0
     },
+    "tests/field-manual-scout.test.ts": {
+      "names": [
+        "a projection never exceeds its limit — a worker inherits a page, not the whole store",
+        "compoundingPair flags a rebuilt-existing route as a defect (RULING 63)",
+        "scoutDiscoveryEntries turns grounded candidates into YIELDED field-manual entries",
+        "scoutStateHint reads the state from an OCD subject and from an obligation id",
+        "writeFieldManualDiscoveries writes live and is grow-only across a second walk"
+      ],
+      "dynamic": 0
+    },
+    "tests/field-manual.test.ts": {
+      "names": [
+        "fieldManualEntryId is deterministic per (source,key) and namespaced",
+        "fieldManualLine renders a compact one-liner with the door and jurisdiction",
+        "projectFieldManual narrows to role + jurisdiction and caps the count",
+        "projectFieldManual ranks yielded, jurisdiction-specific, fresher first",
+        "upsertEntries keeps the prior scalar when the incoming observation is older",
+        "upsertEntries only grows: a re-import updates in place and never removes"
+      ],
+      "dynamic": 0
+    },
     "tests/filed-address.test.ts": {
       "names": [
         "a filed address is never a bare number — the PO-box truncation cannot return",
@@ -3785,6 +3816,7 @@
         "model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it",
         "no per-cycle request or dispatch ceiling remains; the cycle wall still fails closed",
         "public redirects are counted as separate provider requests under one byte ceiling",
+        "rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
@@ -5884,6 +5916,7 @@
         "normalize attaches senators to the state and reps to the district",
         "party is carried for display and is the only evaluative-looking field",
         "seats that matched nothing are reported, not silently dropped",
+        "the bulk roster refuses a short, non-array, or non-JSON body",
         "the division link is many-to-many, which is why it is a join table",
         "the roster carries no score, rank, or ordering by fit"
       ],
@@ -6461,6 +6494,7 @@
         "New Hampshire House districts index by designation, not by number",
         "New Jersey's lower chamber members are Assemblymembers",
         "a district outside the clipped coverage is reported, not dropped silently",
+        "a roster with the wrong header or too few rows is refused, not read as empty",
         "a state with no chamber-title entry reports rather than inventing one",
         "all four target-zip seat types are now named",
         "an Arizona legislative district returns one senator and two representatives",
@@ -8089,6 +8123,14 @@
       ],
       "dynamic": 0
     },
+    "tests/runner-liveness.test.ts": {
+      "names": [
+        "a failed cycle advances beatAt and records lastCycleOk=false without erasing the intake receipt",
+        "the hang watchdog terminates only when the ping is stale past the threshold",
+        "with no prior heartbeat and a null interval there is no nextCycleDueAt and no invented intake"
+      ],
+      "dynamic": 0
+    },
     "tests/runner-owner-intents.test.ts": {
       "names": [
         "POSITIVE CONTROL: a cycle that reads intents after the sort, or drops the dispatcher's placeFirst, fails the checker",
@@ -8221,6 +8263,15 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-absence.test.ts": {
+      "names": [
+        "a standing (future) absence holds the next reading to the expiry, not the ordinary cadence",
+        "an EXPIRED absence is ignored — the row comes due on its ordinary cadence again (RULING 53)",
+        "isArguedAbsence: only a finished, floor-clearing NO_PROGRESS is an absence; BLOCKED, a refusal, a find, or a thin walk is not",
+        "recordArguedAbsence sets absentUntil and advances the stored next-due to the expiry"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-admission-floor.test.ts": {
       "names": [
         "CONTROL: without a scout floor, the reduced deterministic deadline defers the Scout for BUDGET",
@@ -8269,6 +8320,7 @@
         "7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is DERIVED",
         "8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt",
         "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open",
+        "EARLY STOP: a walk that stalls past minRungs finishes early instead of running to the turn bound",
         "full-size due queue dispatches an opened Scout before its deadline and never charges unopened rows"
       ],
       "dynamic": 0
@@ -8558,6 +8610,7 @@
         "a registered source failure is one durable attempt with retry clock and unchanged LKG",
         "all five single-route adapters can persist a well-formed source-scoped failure receipt",
         "an unavailable canonical store remains an operational failure and emits no synthetic receipt",
+        "dotgov refuses a registry CSV cut short of its declared length",
         "each standing single-route entrypoint uses the source-aware durable failure door",
         "every registered meeting capability carries the composite's exact abort signal to transport",
         "narrow publisher transport boundaries brand failures without leaking the thrown message",
@@ -8912,6 +8965,13 @@
         "source-namespaced identity mismatch is refused instead of joining a vendor id",
         "the manual registry pointer and official state-roster contracts have no overlapping subject authority",
         "the standing state-roll door accepts one exact state and no tracked-output mode"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-rollcalls-write-resilience.test.ts": {
+      "names": [
+        "a durable write/transport failure is caught as a source-neutral held failure, never an uncaught crash",
+        "durableWriteFailureDiagnostic names our gap, carries the cause, and never blames the source"
       ],
       "dynamic": 0
     },

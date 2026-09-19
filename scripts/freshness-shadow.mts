@@ -371,6 +371,11 @@ const SCOUT_MAX = boundedNumber(
   canary ? 1 : Number.POSITIVE_INFINITY,
   canary ? 1 : Number.POSITIVE_INFINITY,
 );
+/* A dispatch's worst-case model reserve, used only to PAUSE the scout lane before
+   the rolling ceiling rather than admit scouts the per-request guard then refuses
+   in a busy-loop. Sized a little above the observed ~$0.45/attempt so the lane
+   pauses once it could not afford even one scout. */
+const SCOUT_WORST_CASE_USD = 0.6;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -1499,6 +1504,18 @@ const cycle = await runCycle({
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
       const cap = ceilingPermits(window, RESEARCH_BOUNDS.dailyCeilingUsd);
       if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
+      /* The BINDING ceiling is FleetSafety's rolling-24h one, which admitScout did
+         not read — so scouts were admitted here and then refused one-by-one by the
+         per-request guard, a $0 busy-loop that re-dispatched every cycle. Reading it
+         here pauses the whole lane when it is reached (RULING: paused over it). */
+      const rolling = fleetSafety.rollingCeilingReached(SCOUT_WORST_CASE_USD);
+      if (rolling.reached) {
+        return {
+          admit: false,
+          code: "CEILING",
+          why: `rolling 24h model spend ${rolling.spentUsd === null ? "unmeasured" : `$${rolling.spentUsd.toFixed(2)}`} of $${rolling.capUsd.toFixed(2)} reached — the scout lane is paused this cycle rather than busy-loop the ceiling`,
+        };
+      }
       if (Number.isFinite(SCOUT_MAX) && scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `the diagnostic --scout-max cap of ${SCOUT_MAX} for this cycle is reached` };
       scoutsAdmittedThisCycle += 1;
       return { admit: true };

@@ -17,7 +17,7 @@ import {
   officialStateRollCallsCandidate,
   officialStateRollCallHorizonRefusalCandidate,
 } from "../lib/civic-data/candidate-builders.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
@@ -28,7 +28,8 @@ import {
   sourceAcquisitionFailure,
   withPublisherAcquisitionDeadline,
 } from "../lib/civic-data/source-acquisition-failure.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
+import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
@@ -109,6 +110,53 @@ export function parseStateRollCallArguments(args: readonly string[]): StateRollC
   const target = officialStateRollCallTargetByState(stateArgs[0]!.slice("--state=".length));
   if (!target) throw new Error("STATE_ROLL_CALL_STATE_UNSUPPORTED");
   return { state: target.state };
+}
+
+/**
+ * The single durable-write seam shared by every state's roll-call promotion.
+ *
+ * By the time this runs the source is already acquired; each branch records an
+ * acquisition failure inline before reaching here. The only thing left that can
+ * fail is OUR durable civic-data write/promotion — and a transport or database
+ * error on it (for example a candidate that exceeds the write path; sizing the
+ * write for California and Texas is separate capacity work) must never escape as
+ * an uncaught exception. An uncaught child crash reaches the supervisor as a
+ * bare process/protocol failure with a Node stack and no attribution. Here it is
+ * caught and returned as an honest, source-neutral persistence failure: the
+ * caller emits no receipt, the prior canonical pointer is untouched, and the
+ * child exits 2 cleanly. This holds for every state, at any size.
+ */
+export type StateRollCallPersistResult =
+  | { readonly kind: "PERSISTED"; readonly outcome: PromotionOutcome }
+  | { readonly kind: "WRITE_FAILED"; readonly diagnostic: string };
+
+/** An honest, source-neutral account of a failure to durably persist an
+ *  already-acquired candidate. It names our gap and never blames the source. */
+export function durableWriteFailureDiagnostic(contractId: string, error: unknown): string {
+  const cause = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  return (
+    `state-rollcalls ${contractId}: DURABLE_PERSISTENCE_FAILED — the source was acquired, but the durable ` +
+    `civic-data record could not be persisted (${cause}). This is a failure on our side, not source ` +
+    `unavailability; no candidate was written and the prior canonical pointer is unchanged. Emitting no ` +
+    `receipt and exiting 2 rather than crashing.`
+  );
+}
+
+export async function persistAcquiredStateRollCall(
+  store: RoutineDataStore,
+  contractId: string,
+  candidate: RoutineCandidate,
+  retrievedAt: string,
+): Promise<StateRollCallPersistResult> {
+  try {
+    return { kind: "PERSISTED", outcome: await processRegisteredRoutineCandidate(store, contractId, candidate, retrievedAt) };
+  } catch (error) {
+    // A genuine source-acquisition failure is the caller's to record before it
+    // ever reaches persistence; if one arrives here it is re-thrown rather than
+    // silently reclassified as our persistence failure.
+    if (isSourceAcquisitionFailure(error)) throw error;
+    return { kind: "WRITE_FAILED", diagnostic: durableWriteFailureDiagnostic(contractId, error) };
+  }
 }
 
 async function main(): Promise<void> {
@@ -216,12 +264,13 @@ async function main(): Promise<void> {
         sessionParticipantAudit: projection.participantAudit,
       },
     });
-    const outcome = await processRegisteredRoutineCandidate(
-      store,
-      target.contractId,
-      candidate,
-      retrievedAt,
-    );
+    const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, retrievedAt);
+    if (persisted.kind === "WRITE_FAILED") {
+      console.error(persisted.diagnostic);
+      process.exitCode = 2;
+      return;
+    }
+    const outcome = persisted.outcome;
     console.log("RCD_RECEIPT=" + JSON.stringify({
       source: target.contractId,
       candidateId: candidate.id,
@@ -439,7 +488,13 @@ async function main(): Promise<void> {
         sessionParticipantSourceVersion: acquired.projection.participantSourceVersion,
       },
     });
-    const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, acquired.retrievedAt);
+    const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, acquired.retrievedAt);
+    if (persisted.kind === "WRITE_FAILED") {
+      console.error(persisted.diagnostic);
+      process.exitCode = 2;
+      return;
+    }
+    const outcome = persisted.outcome;
     console.log("RCD_RECEIPT=" + JSON.stringify({
       source: target.contractId,
       candidateId: candidate.id,
@@ -516,12 +571,13 @@ async function main(): Promise<void> {
     rawBody: body,
     detail: AZ_HORIZON_GAP,
   });
-  const outcome = await processRegisteredRoutineCandidate(
-    store,
-    target.contractId,
-    candidate,
-    retrievedAt,
-  );
+  const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, retrievedAt);
+  if (persisted.kind === "WRITE_FAILED") {
+    console.error(persisted.diagnostic);
+    process.exitCode = 2;
+    return;
+  }
+  const outcome = persisted.outcome;
   if (outcome.promoted || outcome.candidate.state !== "HORIZON_UNRESOLVED") {
     throw new Error(
       `STATE_ROLL_CALL_HORIZON_REFUSAL_BROKEN:${target.contractId}:${outcome.candidate.state}`,
@@ -541,4 +597,17 @@ async function main(): Promise<void> {
 }
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/state-rollcalls.mts");
-if (invokedDirectly) await main();
+if (invokedDirectly) {
+  // Last-resort backstop: no unexpected error may escape as an uncaught crash.
+  // The durable-write seam already reports persistence failures as receipts-less
+  // held failures; this catches anything else (bad arguments, a broken
+  // invariant) as a clean exit-2 with an honest line, so the supervisor never
+  // sees a bare Node stack for this child, for any state.
+  await main().catch((error) => {
+    console.error(
+      `state-rollcalls: unexpected error; exiting 2 without an uncaught crash — ` +
+        `${error instanceof Error ? `${error.name}: ${error.message}` : String(error)}`,
+    );
+    process.exitCode = 2;
+  });
+}

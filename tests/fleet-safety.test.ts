@@ -72,6 +72,37 @@ test("model admission accumulates cycle spend with no per-cycle cap; only the ro
     error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
 
+test("rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals", () => {
+  const cap = FLEET_SAFETY_BOUNDS.rolling24HourModelUsd;
+  const recent = "2026-09-05T02:00:00.000Z"; // within 24h of NIGHT
+
+  // Well under: not reached, even allowing a worst-case scout.
+  const under = new FleetSafetyController({ now: NIGHT, costs: [cost(cap - 10, recent)], clock: () => Date.parse(NIGHT) });
+  assert.deepEqual(under.rollingCeilingReached(0.6), { reached: false, spentUsd: cap - 10, capUsd: cap });
+
+  // Over the ceiling — the observed flood ($26 > $25): reached even with no worst-case margin.
+  const over = new FleetSafetyController({ now: NIGHT, costs: [cost(cap + 1, recent)], clock: () => Date.parse(NIGHT) });
+  assert.equal(over.rollingCeilingReached(0).reached, true);
+  assert.equal(over.rollingCeilingReached(0).spentUsd, cap + 1);
+  // The per-request guard would refuse this same dispatch — the pre-read matches it.
+  assert.throws(() => over.reserveModelRequest("anthropic", "would-refuse", REQUEST), (e: unknown) =>
+    e instanceof FleetSafetyRefusal && e.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
+
+  // Boundary: just under, but a worst-case scout would tip over — pause with the margin, fit without it.
+  const boundary = new FleetSafetyController({ now: NIGHT, costs: [cost(cap - 0.2, recent)], clock: () => Date.parse(NIGHT) });
+  assert.equal(boundary.rollingCeilingReached(0.6).reached, true, "a scout that cannot afford its worst case is not admitted");
+  assert.equal(boundary.rollingCeilingReached(0).reached, false, "the spent total itself is still under the ceiling");
+
+  // Unmeasured spend: reached=false — the caller's ledger-unreadable check owns that case.
+  const nullRow = cost(null, recent);
+  const unmeasured = new FleetSafetyController({
+    now: NIGHT,
+    costs: [{ ...nullRow, role: "SCOUT", cost: { ...nullRow.cost, inputTokens: null, outputTokens: null, usd: null } }],
+    clock: () => Date.parse(NIGHT),
+  });
+  assert.deepEqual(unmeasured.rollingCeilingReached(0.6), { reached: false, spentUsd: null, capUsd: cap });
+});
+
 test("an unmetered Scout cost row fails closed instead of disappearing from aggregate spend", () => {
   const row = cost(null, "2026-09-05T02:00:00.000Z");
   const unmeteredScout: CostEntry = {

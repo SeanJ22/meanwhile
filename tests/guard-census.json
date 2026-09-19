@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 670,
-    "named": 6746,
+    "named": 6747,
     "dynamic": 27
   },
   "files": {
@@ -3816,6 +3816,7 @@
         "model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it",
         "no per-cycle request or dispatch ceiling remains; the cycle wall still fails closed",
         "public redirects are counted as separate provider requests under one byte ceiling",
+        "rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",

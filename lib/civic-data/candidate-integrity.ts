@@ -272,5 +272,6 @@ export async function verifySourceScopedCandidateProjection(
     store,
     now: observedAt,
     expectedVersionId: candidate.id,
+    scope: candidate.scope,
   });
 }

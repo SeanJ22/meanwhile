@@ -14,11 +14,20 @@
  */
 
 import {
+  officialStateIdentityAuthorityEvidence,
+  officialStateLegislatorVotesCandidate,
+  officialStateLegislatorVotesSessionMarker,
   officialStateRollCallsCandidate,
   officialStateRollCallHorizonRefusalCandidate,
+  sha256,
 } from "../lib/civic-data/candidate-builders.ts";
-import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import {
+  processRegisteredFanOutCandidate,
+  processRegisteredRoutineCandidate,
+  type PromotionOutcome,
+} from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { readPromotedCivicDataBatch } from "../lib/civic-data/read-model.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
   isSourceAcquisitionFailure,
@@ -30,6 +39,7 @@ import {
 } from "../lib/civic-data/source-acquisition-failure.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
+import type { StateLegislatorVotePosition, StateLegislatorVotes, StateRollCall } from "../lib/sources/legiscan/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
@@ -142,14 +152,12 @@ export function durableWriteFailureDiagnostic(contractId: string, error: unknown
   );
 }
 
-export async function persistAcquiredStateRollCall(
-  store: RoutineDataStore,
+async function persistWithDurableResilience(
   contractId: string,
-  candidate: RoutineCandidate,
-  retrievedAt: string,
+  promote: () => Promise<PromotionOutcome>,
 ): Promise<StateRollCallPersistResult> {
   try {
-    return { kind: "PERSISTED", outcome: await processRegisteredRoutineCandidate(store, contractId, candidate, retrievedAt) };
+    return { kind: "PERSISTED", outcome: await promote() };
   } catch (error) {
     // A genuine source-acquisition failure is the caller's to record before it
     // ever reaches persistence; if one arrives here it is re-thrown rather than
@@ -157,6 +165,33 @@ export async function persistAcquiredStateRollCall(
     if (isSourceAcquisitionFailure(error)) throw error;
     return { kind: "WRITE_FAILED", diagnostic: durableWriteFailureDiagnostic(contractId, error) };
   }
+}
+
+export async function persistAcquiredStateRollCall(
+  store: RoutineDataStore,
+  contractId: string,
+  candidate: RoutineCandidate,
+  retrievedAt: string,
+): Promise<StateRollCallPersistResult> {
+  return persistWithDurableResilience(contractId, () =>
+    processRegisteredRoutineCandidate(store, contractId, candidate, retrievedAt));
+}
+
+/**
+ * Persist one candidate of a per-legislator fan-out (a member or the per-state
+ * marker) with the identical durable-failure resilience: a genuine source
+ * acquisition error still propagates to the caller's recorder, and a durable
+ * write failure becomes a diagnostic rather than an uncaught crash that would
+ * take down the whole runner cycle mid-fan-out.
+ */
+async function persistFanOutStateRollCall(
+  store: RoutineDataStore,
+  contractId: string,
+  candidate: RoutineCandidate,
+  retrievedAt: string,
+): Promise<StateRollCallPersistResult> {
+  return persistWithDurableResilience(contractId, () =>
+    processRegisteredFanOutCandidate(store, contractId, candidate, retrievedAt));
 }
 
 async function main(): Promise<void> {
@@ -240,21 +275,14 @@ async function main(): Promise<void> {
         pointerPayload.identities.every((row) => typeof row.officeholderId === "string")
       ? pointerPayload.identities.map((row) => row.officeholderId as string)
       : [];
-    const candidate = officialStateRollCallsCandidate({
+    // The whole chamber's roster/participant authority, reduced once to its
+    // digest evidence so every member candidate and the marker cite byte-identical
+    // authority rather than each re-hashing the roster.
+    const identityAuthority = officialStateIdentityAuthorityEvidence({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
-      rawBodies: documents.map((document) => document.body),
-      requestedUrl: NH_ROLL_SUMMARY_URL,
-      finalUrl: documents[0]!.finalUrl,
-      httpStatus: documents.every((document) => document.httpStatus === 200) ? 200 : 0,
-      retrievedAt,
       term: "2026",
-      expectedTerm: "2026",
       session: "regular",
-      rolls: projection.rolls,
-      positions: projection.positions,
-      declaredRollTotal: projection.rolls.length,
-      sourceReconciliation: projection.tallyAudit,
       identityAuthority: {
         contractId: "nh-members",
         versionId: rosterPointer?.versionId ?? "missing-canonical-nh-members-pointer",
@@ -264,24 +292,125 @@ async function main(): Promise<void> {
         sessionParticipantAudit: projection.participantAudit,
       },
     });
-    const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, retrievedAt);
-    if (persisted.kind === "WRITE_FAILED") {
-      console.error(persisted.diagnostic);
+
+    // Fan the whole-session position matrix out into one bounded record per
+    // member: the write that crashed the runner was the entire chamber times
+    // every roll in one Neon statement, and each member's own votes are a small,
+    // tenure-bounded fraction of it. Roll date is joined from the roll index so
+    // the member page can order votes without it; every other roll field stays
+    // in the per-state roll index (PR 2), never duplicated onto each member.
+    const httpStatus = documents.every((document) => document.httpStatus === 200) ? 200 : 0;
+    const rollById = new Map(projection.rolls.map((roll) => [roll.id, roll] as const));
+    const positionsByMember = new Map<string, StateLegislatorVotePosition[]>();
+    const chamberByMember = new Map<string, StateRollCall["chamber"] | null>();
+    for (const position of projection.positions) {
+      const roll = rollById.get(position.rollCallId);
+      const positions = positionsByMember.get(position.officeholderId) ?? [];
+      positions.push({ rollCallId: position.rollCallId, position: position.position, date: roll?.date ?? retrievedAt.slice(0, 10) });
+      positionsByMember.set(position.officeholderId, positions);
+      if (!chamberByMember.has(position.officeholderId)) {
+        chamberByMember.set(position.officeholderId, roll?.chamber ?? null);
+      }
+    }
+
+    // Sorted per-member entries; each member's record is scoped to its own
+    // source-namespaced officeholder id.
+    const memberEntries = [...positionsByMember.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([officeholderId, positions]) => ({
+        officeholderId,
+        chamber: chamberByMember.get(officeholderId) ?? null,
+        positions: [...positions].sort((left, right) => left.rollCallId.localeCompare(right.rollCallId)),
+      }));
+
+    // One batched read of every member's current promotion. An unchanged member
+    // is a content no-op we skip, so the per-cycle write cost is one marker plus
+    // only the members whose votes actually changed — never the whole chamber
+    // every cycle. (candidateId folds in retrievedAt, so re-promoting an
+    // unchanged member would otherwise mint a fresh version each cycle.)
+    const currentByScope = new Map(
+      (await readPromotedCivicDataBatch<StateLegislatorVotes>(
+        "STATE_LEGISLATOR_VOTES",
+        memberEntries.map(({ officeholderId }) => officeholderId),
+        { store, now: retrievedAt, bypassCache: true },
+      )).map((result, index) => [memberEntries[index]!.officeholderId, result] as const),
+    );
+    const positionsFingerprint = (positions: readonly StateLegislatorVotePosition[]): string =>
+      positions.map((position) => `${position.rollCallId} ${position.position} ${position.date}`).join("");
+
+    const throughRoll = [...projection.rolls].sort((left, right) => left.date.localeCompare(right.date)).at(-1) ?? null;
+    const marker = officialStateLegislatorVotesSessionMarker({
+      sourceId: target.sourceId,
+      jurisdiction: target.jurisdiction,
+      term: "2026",
+      session: "regular",
+      requestedUrl: NH_ROLL_SUMMARY_URL,
+      finalUrl: documents[0]!.finalUrl,
+      httpStatus,
+      retrievedAt,
+      throughRollId: throughRoll?.id ?? null,
+      throughDate: throughRoll?.date ?? null,
+      rollCount: projection.rolls.length,
+      legislatorCount: positionsByMember.size,
+      positionCount: projection.positions.length,
+      sourceDocumentsSha256: sha256(documents.map((document) => sha256(document.body)).join("\n")),
+      identityAuthority,
+    });
+
+    // Promote only changed members, then advance the per-state marker last. A
+    // durable write failure part-way through leaves the clock's watermark
+    // unmoved, so the next cycle re-promotes only what did not land.
+    let promotedMembers = 0;
+    let unchangedMembers = 0;
+    for (const { officeholderId, chamber, positions } of memberEntries) {
+      const current = currentByScope.get(officeholderId);
+      if (current?.kind === "PROMOTED" && positionsFingerprint(current.value.positions) === positionsFingerprint(positions)) {
+        unchangedMembers += 1;
+        continue;
+      }
+      const memberCandidate = officialStateLegislatorVotesCandidate({
+        sourceId: target.sourceId,
+        jurisdiction: target.jurisdiction,
+        officeholderId,
+        chamber,
+        term: "2026",
+        session: "regular",
+        positions,
+        requestedUrl: NH_ROLL_SUMMARY_URL,
+        finalUrl: documents[0]!.finalUrl,
+        httpStatus,
+        retrievedAt,
+        identityAuthority,
+      });
+      const persistedMember = await persistFanOutStateRollCall(store, target.contractId, memberCandidate, retrievedAt);
+      if (persistedMember.kind === "WRITE_FAILED") {
+        console.error(persistedMember.diagnostic);
+        process.exitCode = 2;
+        return;
+      }
+      if (persistedMember.outcome.promoted) promotedMembers += 1;
+      else unchangedMembers += 1;
+    }
+
+    const persistedMarker = await persistFanOutStateRollCall(store, target.contractId, marker, retrievedAt);
+    if (persistedMarker.kind === "WRITE_FAILED") {
+      console.error(persistedMarker.diagnostic);
       process.exitCode = 2;
       return;
     }
-    const outcome = persisted.outcome;
+    const outcome = persistedMarker.outcome;
     console.log("RCD_RECEIPT=" + JSON.stringify({
       source: target.contractId,
-      candidateId: candidate.id,
+      candidateId: marker.id,
       acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
       state: outcome.candidate.state,
       decision: outcome.candidate.receipt?.decision ?? null,
       promotedVersion: outcome.promoted?.versionId ?? null,
       lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+      fanOut: { members: memberEntries.length, promoted: promotedMembers, unchanged: unchangedMembers },
       structuralReleaseContract: ZERO_RELEASE_EVENTS,
     }));
-    if (!outcome.promoted) process.exitCode = 2;
+    if (!outcome.promoted && promotedMembers === 0) process.exitCode = 2;
     return;
   }
 

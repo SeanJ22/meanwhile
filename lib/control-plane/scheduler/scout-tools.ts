@@ -120,6 +120,37 @@ export const SCOUT_TOOL_SPECS: readonly ScoutToolSpec[] = [
   },
 ];
 
+/**
+ * The `search` spec, APPENDED to the toolkit's specs only when a search seam is
+ * configured (a provider key is present). A runtime with no key never offers it,
+ * so the tool is fully inert without configuration.
+ */
+export const SEARCH_TOOL_SPEC: ScoutToolSpec = {
+  name: "search",
+  description:
+    "Look up a query in the compliant paid search indexes (Brave and Exa) and return POINTERS ONLY — a " +
+    "ranked list of result URLs and titles, no page content. Use it when direct routes are walled, or to " +
+    "discover a candidate's own publication: the \"<name> for <office>\" committee phrasing surfaces campaign " +
+    "sites well. It fetches nothing itself — open any promising hit with fetch_public or browse, which read " +
+    "permission and vault the evidence. A hit is a lead, never proof, and may be a prior cycle's site.",
+  input_schema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "The search query. A specific candidate / office / place phrase works best." },
+      rung: RUNG_SCHEMA,
+      why: WHY_SCHEMA,
+      includeDomains: {
+        type: "array",
+        items: { type: "string" },
+        description:
+          "Optional: restrict results to these domains (e.g. [\"*.gov\",\"*.us\"]) when the target is an " +
+          "official publisher rather than a candidate's own site.",
+      },
+    },
+    required: ["query", "rung", "why"],
+  },
+};
+
 /* ------------------------------------------------------------ transport */
 
 /** The runtime's bytes opener. One request; text is decoded by the toolkit. */
@@ -1033,6 +1064,49 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return { ok: true, forModel: text, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
   }
 
+  async function search(
+    input: ParsedInput,
+    query: string,
+    includeDomains: readonly string[] | undefined,
+  ): Promise<ScoutToolCallResult> {
+    if (ctx.search === undefined) return refusal("search is not configured in this runtime (no provider key).");
+    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
+    let res;
+    try {
+      res = await ctx.search({ query, includeDomains });
+    } catch (error) {
+      return refusal(`search failed at transport: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    acc.requests = res.requestCount;
+    acc.bytes = res.bytesFetched;
+    requestCount += res.requestCount;
+    bytesFetched += res.bytesFetched;
+    const answered = res.providersUsed.length > 0;
+    const errNote = res.errors.length > 0 ? ` [providers erroring: ${res.errors.join("; ")}]` : "";
+    const header = !answered
+      ? `SEARCH "${query}" reached no provider${errNote}`
+      : res.hits.length === 0
+        ? `SEARCH "${query}" — no pointers from ${res.providersUsed.join(", ")}. A search index finding nothing is a real (not failed) negative for this query.${errNote}`
+        : `SEARCH "${query}" — ${res.hits.length} pointer(s) from ${res.providersUsed.join(", ")}. LEADS, not evidence: open a promising one with fetch_public or browse (which read permission and vault). A hit may be a prior cycle's site.${errNote}`;
+    const forModel =
+      res.hits.length === 0
+        ? header
+        : `${header}\n${DATA_BEGIN}\n${res.hits.map((h, i) => `${i + 1}. ${h.url}  [${h.provider}]  ${h.title}`).join("\n")}\n${DATA_END}`;
+    const rung: Rung = {
+      rung: input.rung,
+      tool: "search",
+      target: query,
+      observed: `${res.hits.length} pointer(s) from ${res.providersUsed.join("+") || "none"}${res.errors.length > 0 ? `; ${res.errors.length} provider error(s)` : ""}`,
+      artifactIds: [],
+      transport: answered ? "REACHABLE" : "OTHER_NAMED_FAILURE",
+      httpStatus: null,
+      returnedCount: res.hits.length,
+      applicableBecause: input.why,
+      nextHopUrls: res.hits.map((h) => h.url),
+    };
+    return result(answered, forModel, rung, acc);
+  }
+
   /* -------------------------------------------------------------- call */
 
   async function call(name: string, input: unknown, rungLabel: string | null): Promise<ScoutToolCallResult> {
@@ -1047,7 +1121,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     }
     toolCalls += 1;
     const tool = name as ScoutResearchTool;
-    const parsed = parseInput(input, rungLabel, tool !== "read_inherited");
+    const needsUrl = tool === "read_permission" || tool === "fetch_public" || tool === "browse";
+    const parsed = parseInput(input, rungLabel, needsUrl);
     if (!parsed.ok) return refusal(parsed.why);
     switch (tool) {
       case "read_permission":
@@ -1058,11 +1133,20 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return await browse(parsed.value);
       case "read_inherited":
         return readInherited();
+      case "search": {
+        const o = (input !== null && typeof input === "object" ? input : {}) as Record<string, unknown>;
+        const query = typeof o.query === "string" ? o.query.trim() : "";
+        if (query === "") return refusal("input.query is required: a search phrase (a candidate / office / place).");
+        const includeDomains = Array.isArray(o.includeDomains)
+          ? o.includeDomains.filter((d): d is string => typeof d === "string")
+          : undefined;
+        return await search(parsed.value, query, includeDomains);
+      }
     }
   }
 
   return {
-    specs: SCOUT_TOOL_SPECS,
+    specs: ctx.search ? [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC] : SCOUT_TOOL_SPECS,
     call,
     get vaultedArtifactIds(): ReadonlySet<string> {
       return vaulted;

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 669,
-    "named": 6736,
+    "files": 670,
+    "named": 6747,
     "dynamic": 27
   },
   "files": {
@@ -8334,6 +8334,17 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-search.test.ts": {
+      "names": [
+        "Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers",
+        "Exa request: POST, Bearer auth, type fast, numResults, and NO contents / outputSchema / answer",
+        "an empty query returns an empty result without calling any provider",
+        "combined: both providers queried, results deduped by URL, errors named without failing the call",
+        "combined: one provider erroring is named, the other's hits still return",
+        "makeScoutSearch is null when neither key is set — the tool stays inert"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-tools.test.ts": {
       "names": [
         "POSITIVE CONTROL for (a): with an accepting vault the same body DOES reach the model, inside the DATA wrapper",
@@ -8357,9 +8368,14 @@
         "robots: longest match decides, Allow winning a tie (Wikipedia's exact shape)",
         "robots: our product token's group outranks `*`, and `*` applies when we are not named",
         "robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTML-200 are CANNOT_TELL",
+        "search is offered ONLY when a search seam is configured (inert without a key)",
+        "search returns POINTERS as untrusted DATA, vaults nothing, and records a lead rung",
+        "search: a provider index finding nothing is a real negative (ok), not a refusal",
+        "search: an empty query is refused before any provider call",
+        "search: when no provider answers it is a named transport failure, not a false absence",
         "the permission read counts toward the cap: at cap-1 it consumes the last slot and the GET is refused by name",
         "the tool-call bound refuses the (N+1)th call and names it; read_inherited counts as a call",
-        "the toolkit exposes exactly the four research tools, each requiring rung and why"
+        "the toolkit exposes exactly the research tools, each requiring rung and why"
       ],
       "dynamic": 1
     },

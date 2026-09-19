@@ -33,7 +33,15 @@ export function absenceExpiry(now: string): string {
  * All four must hold:
  *  - it FINISHED (no refusal): a transport failure or a no-finish is debt/retry,
  *    never a recorded absence;
- *  - the outcome is NO_PROGRESS or BLOCKED (an argued negative, not a find);
+ *  - the outcome is NO_PROGRESS — the ladder was walked and nothing is there.
+ *    Only NO_PROGRESS: it alone writes a NULL disposition and so keeps the
+ *    obligation owed with debt (dispositionForScout), which is the re-walk this
+ *    ends. BLOCKED is deliberately EXCLUDED — a wall is an obstruction, not an
+ *    absence (RULING 250), it already writes BLOCKED_CURRENTLY and reschedules
+ *    on the ordinary cadence, and a wall can lift long before an absence would
+ *    expire; holding it silent for the absence window would hide a record that
+ *    became reachable. An empty branch is the correct negative (RULING 52); a
+ *    wall is a fact about the route, retried, never a recorded absence.
  *  - it ended by the model's own judgment or at the bound, not mid-flight;
  *  - it cleared the distinct-evidence-rung floor — RULING 52's "argued, never
  *    asserted": the floor is what makes an absence argued rather than assumed.
@@ -48,7 +56,7 @@ export function isArguedAbsence(
   minRungs: number,
 ): boolean {
   if (result.refusal !== null && result.refusal !== undefined) return false;
-  if (result.outcome !== "NO_PROGRESS" && result.outcome !== "BLOCKED") return false;
+  if (result.outcome !== "NO_PROGRESS") return false;
   if (result.stoppedBy !== "MODEL" && result.stoppedBy !== "BOUND") return false;
   return result.distinctEvidenceRungs >= minRungs;
 }

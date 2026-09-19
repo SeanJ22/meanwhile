@@ -328,6 +328,11 @@ export interface ScoutResult {
   readonly representationOverruns?: readonly ScoutRepresentationOverrun[];
   /** How many prior rungs the brief listed as the resume cursor. */
   readonly resumedFromRungs?: number;
+  /* ---- RULING 63 compounding pair (the field manual, 2026-09-19). Absent on results before it. ---- */
+  /** How many field-manual doors were projected into this walk's brief — the INHERITED half of the pair. */
+  readonly inheritedFieldManual?: number;
+  /** RouteIds this walk proposed that the manual ALREADY held: rebuilding an existing door is a reported defect, not neutral progress. */
+  readonly rebuiltExistingRoutes?: readonly string[];
 }
 
 /* ------------------------------------------------------------- validation */

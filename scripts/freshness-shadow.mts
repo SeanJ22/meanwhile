@@ -166,6 +166,16 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { emptyFieldManual, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
+import {
+  compoundingPair,
+  fieldManualBriefLines,
+  knownRouteIds,
+  scoutDiscoveryEntries,
+  scoutFieldManualProjection,
+  scoutStateHint,
+  writeFieldManualDiscoveries,
+} from "../lib/control-plane/scheduler/field-manual-scout.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { readMethodStore } from "../lib/method/candidate.ts";
@@ -974,6 +984,10 @@ if (ledgerUnreadable !== null) {
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
 const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
+/* THE FIELD MANUAL a Scout inherits this cycle, read ONCE and projected per obligation. */
+let fieldManual: FieldManualStore = emptyFieldManual();
+let fieldManualKnown: ReadonlySet<string> = new Set<string>();
+const inheritedFieldManualCounts = new Map<string, number>();
 if (modelLaneEnabled && dueModel.length > 0) {
   try {
     const priorResults = canary
@@ -986,6 +1000,15 @@ if (modelLaneEnabled && dueModel.length > 0) {
     }
   } catch (error) {
     runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  try {
+    const fm = await repos.fieldManual.read("live");
+    if (fm) {
+      fieldManual = fm.value;
+      fieldManualKnown = knownRouteIds(fm.value);
+    }
+  } catch (error) {
+    runtimeConditions.push(`the field manual could not be read: ${error instanceof Error ? error.message : String(error)}`);
   }
   try {
     const routeTaskToObligation = new Map<string, string>();
@@ -1075,9 +1098,23 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
       }
     }
   }
+  /*
+   * RULING 63: open by inheriting the field manual. Project it to this
+   * obligation's jurisdiction and record class and put the known doors at the
+   * TOP of the brief, so the Scout walks what already worked before novelty and
+   * does not rebuild a door already listed. The count is the inherited half of
+   * the reported pair, stashed for onResult.
+   */
+  const projection = scoutFieldManualProjection(fieldManual, {
+    subjectId: row.obligation.subjectId,
+    obligationId: row.obligation.id,
+    recordClass: row.obligation.recordClass,
+  });
+  inheritedFieldManualCounts.set(id, projection.entryIds.length);
+  const manualLines = fieldManualBriefLines(projection);
   return {
     artifactIds: [...new Set(prior.flatMap((r) => r.artifactIds))],
-    summary: lines.join("\n"),
+    summary: [...manualLines, ...lines].join("\n"),
     provenance,
     priorRungs,
     nextRungs: all.at(-1)?.nextRungs ?? [],
@@ -1378,6 +1415,25 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
               ...result,
               unverified: [...result.unverified, `method candidate proposal failed: ${error instanceof Error ? error.message : String(error)}`],
             };
+          }
+        }
+        /*
+         * RULING 63 reported pair + live write-back. The inherited count is what
+         * the brief projected; a candidate whose routeId the manual already held
+         * is a rebuilt-existing defect. Grounded discoveries are written straight
+         * back into the field manual so the NEXT Scout of any role inherits them
+         * this cycle — no human method:learn step in between.
+         */
+        const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, fieldManualKnown);
+        amended = { ...amended, inheritedFieldManual: pair.inheritedCount, rebuiltExistingRoutes: pair.rebuiltExisting };
+        if (result.refusal === null && result.candidates.length > 0) {
+          const written = await writeFieldManualDiscoveries(
+            repos,
+            scoutDiscoveryEntries(result, scoutStateHint(result.subjectId, result.obligationId)),
+            nowIso(),
+          );
+          if (written.error) {
+            amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
           }
         }
         await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());

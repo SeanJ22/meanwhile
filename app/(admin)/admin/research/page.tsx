@@ -2,6 +2,7 @@ import { readWorkerFleet } from "@/lib/control-plane/workers/readback.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { ConsoleNav } from "../../console-nav.tsx";
 import { WorkerFleetPanel } from "./worker-fleet-panel";
+import { FieldManualSection } from "../sections/field-manual.tsx";
 /**
  * **RESEARCH — WHAT THE FLEET IS DOING RIGHT NOW, IN ENGLISH.**
  * (Level 1 activation, 2026-09-01. RULING 240, RULING 241, RULING 268;
@@ -911,6 +912,9 @@ export default async function ResearchPage() {
           <p className="note">{methodAuthority.detail}</p>
         </details>
       </section>
+
+      {/* THE FIELD MANUAL — the consolidation of the method knowledge above, and the compounding number (RULING 63) */}
+      <FieldManualSection />
 
       {/* LAST NIGHTLY WINDOW (RULING 242) — one line, one picture, the rest behind a disclosure (ADM-13) */}
       <h2>

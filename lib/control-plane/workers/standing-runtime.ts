@@ -11,6 +11,16 @@ import { computeRouteFloor } from "../preflight.ts";
 import { readMethodStore } from "../../method/candidate.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
+import { emptyFieldManual, type FieldManualStore } from "../field-manual.ts";
+import {
+  compoundingPair,
+  fieldManualBriefLines,
+  knownRouteIds,
+  scoutDiscoveryEntries,
+  scoutFieldManualProjection,
+  scoutStateHint,
+  writeFieldManualDiscoveries,
+} from "../scheduler/field-manual-scout.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
@@ -32,6 +42,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     input.repos.scoutResults.readAll(), readCompletedWorkerResults(input.repos),
   ]);
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
+  const fmRead = await input.repos.fieldManual.read("live").catch(() => null);
+  const fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
+  const fieldManualKnown = knownRouteIds(fieldManual);
+  const inheritedFieldManualCounts = new Map<string, number>();
   const heldRuntime = standingFleetRuntime(input);
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   await consumePlanRepairs({ repos: input.repos, scouts: prior, now: now(),
@@ -55,8 +69,13 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const floor=computeRouteFloor({knowledge,jurisdiction:{state:plan.jurisdiction.toLowerCase(),...(plan.contract.schemaVersion===2?{publisher:plan.contract.sourceScope.sourceId}:{})},
           fields:plan.contract.schemaVersion===2?methodFields(plan.capability,plan.contract):["meeting","agenda"],
           adapterRoutes:plan.sources.map(source=>({routeId:source.id,label:source.applicableBecause,target:source.url}))});
+        // RULING 63: inherit the one growing field manual too, projected to this jurisdiction.
+        const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
+        inheritedFieldManualCounts.set(item.id,manualProjection.entryIds.length);
+        const manualLines=fieldManualBriefLines(manualProjection);
         return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
           inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds)])],summary:[
+            ...manualLines,
             `Inherited method version ${knowledge.version}. Walk applicable known methods before novelty; the fourteen retrieval rungs are a floor, never a completion ceiling.`,
             ...floor.routes.map(r=>`${r.routeId}: ${r.obligation}; ${r.proof}; ${r.label}; target ${r.target}; applicability ${r.grade}`),
             ...workers.map(w=>{
@@ -84,6 +103,13 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
            */
           recorded={...result,unverified:[...result.unverified,
             `Method candidates were not proposed: ${error instanceof Error?error.message:String(error)}`]};
+        }
+        // RULING 63 reported pair + live write-back (no human method:learn step).
+        const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,fieldManualKnown);
+        recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting};
+        if(result.refusal===null&&result.candidates.length>0){
+          const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
+          if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};
         }
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
         return recorded;

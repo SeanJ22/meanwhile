@@ -377,7 +377,7 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
-  assert.equal(BOOTSTRAP_VERSION, 10, "PDC adds the canonical method-candidate aggregate after the Action Gateway schema");
+  assert.equal(BOOTSTRAP_VERSION, 11, "the field manual adds one aggregate (cp_field_manual) after the method-candidate aggregate");
   for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
@@ -400,6 +400,8 @@ test("schema v10 places live method candidates in every canonical provider", asy
     const repos = await provider.open();
     assert.equal(typeof repos.methodCandidates?.compareAndSet, "function", `${provider.name} bundle lacks methodCandidates`);
     assert.equal(await repos.methodCandidates.read("live"), null);
+    assert.equal(typeof repos.fieldManual?.compareAndSet, "function", `${provider.name} bundle lacks fieldManual`);
+    assert.equal(await repos.fieldManual.read("live"), null);
   }
 });
 

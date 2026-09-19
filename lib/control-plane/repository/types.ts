@@ -95,6 +95,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { FieldManualStore } from "../field-manual.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
@@ -601,6 +602,8 @@ export interface ControlPlaneRepositories {
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
   /** The readiness control panel's data plane — one snapshot per state, keyed by two-letter state code; derived, never authored. */
   readonly readinessSnapshots: AggregateRepository<ReadinessStateSnapshot>;
+  /** The field manual — one aggregate, id "live": the growing store of learned discovery knowledge every model-driven worker reads (as a projection) and writes back to, no human step. */
+  readonly fieldManual: AggregateRepository<FieldManualStore>;
   /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */
   readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
   /** The H1 waiver's standing check — a counter reaching first non-zero. */

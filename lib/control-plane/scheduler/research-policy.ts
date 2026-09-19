@@ -5,9 +5,12 @@
  * Three things live here because a page and a runner must agree on them:
  *
  * ```
- *   BOUNDS     how many Scouts at once, how many per cycle, how much per
- *              Attempt, how much per rolling day — stated once, recorded on
- *              every cycle's research state, never implied
+ *   BOUNDS     how many Scouts at once, how much per Attempt, how much per
+ *              rolling day — stated once, recorded on every cycle's research
+ *              state, never implied. There is no per-cycle dispatch cap: the
+ *              cycle wall and the rolling daily ceiling are the only limits
+ *              (RULING 241, the per-cycle guardrails retired once caching made
+ *              an Attempt a twelfth of its pre-caching cost)
  *   STATE      the record the runner WRITES each cycle and the page READS.
  *              Every field is a measurement or a named condition; nothing on
  *              it is a verdict
@@ -57,16 +60,20 @@ export interface ScoutBound {
 
 export interface ResearchBounds {
   readonly maxConcurrentScouts: number;
-  readonly maxScoutDispatchesPerCycle: number;
   readonly perDispatch: ScoutBound;
-  /** The rolling daily model-spend ceiling. TEMPORARY, an owner safety ceiling (RULING 241). */
+  /**
+   * The rolling daily model-spend ceiling — the ONE spend limit standing
+   * between the fleet and running flat out (RULING 241). The per-cycle
+   * dispatch, spend and request caps were retired once prompt caching made an
+   * Attempt about a twelfth of its pre-caching cost; the cycle wall and this
+   * daily ceiling are what remain.
+   */
   readonly dailyCeilingUsd: number;
   readonly windowHours: number;
 }
 
 export const RESEARCH_BOUNDS: ResearchBounds = {
-  maxConcurrentScouts: 2,
-  maxScoutDispatchesPerCycle: 3,
+  maxConcurrentScouts: 4,
   perDispatch: {
     maxTurns: 18,
     maxToolCalls: 16,
@@ -75,7 +82,7 @@ export const RESEARCH_BOUNDS: ResearchBounds = {
     maxRequestsPerHost: 10,
     maxOutputTokensPerTurn: 8_192,
   },
-  dailyCeilingUsd: 25,
+  dailyCeilingUsd: 100,
   windowHours: 24,
 };
 

@@ -16,20 +16,30 @@ import type { OpenOne } from "./scheduler/route-executor.ts";
 export const FLEET_ZONE = "America/Phoenix";
 
 /**
- * Conservative aggregate bounds for the standing runner.
+ * Aggregate safety bounds for the standing runner.
  *
- * Existing observations showed one public response as large as 2,951,626
- * bytes. Sixteen MiB leaves room for several such readings without preserving
- * the old effective 100-dispatch cycle. Scout-specific bounds remain additional
- * constraints and are intentionally not duplicated here.
+ * The per-cycle guardrails — a dispatch count, a per-cycle model-spend ceiling,
+ * a provider-request count, a per-cycle payload total — were retired once prompt
+ * caching cut an Attempt to about a twelfth of its pre-caching cost and those
+ * numbers, set when a cycle's cost was unknown, became the throttle on the work
+ * the fleet most needs at speed. What remains is deliberately small:
+ *
+ *   rolling24HourModelUsd  the ONE spend limit — flat out under it, paused over it
+ *   maxDownloadBytes       a per-DOWNLOAD memory cap on the guarded fetch seam,
+ *                          NOT a per-cycle total: a single response never reads
+ *                          more than this into memory. It clears the largest
+ *                          record the seam legitimately pulls (a ~9.2 MiB
+ *                          campaign-finance page) with headroom; a bulk file
+ *                          cannot reach this seam — bulk ingestion has its own
+ *                          full-read, integrity-checked path and never rides here
+ *   maxWallMsPerCycle      a cycle still has to finish — about work, not spend
+ *
+ * The Saturday operational-night blackout is a separate courtesy toward the
+ * public sites we depend on and is kept (`scheduledBlackoutAt`).
  */
 export const FLEET_SAFETY_BOUNDS = {
-  cycleModelUsd: 2,
-  operationalNightModelUsd: 10,
-  rolling24HourModelUsd: 25,
-  maxProviderRequestsPerCycle: 24,
-  maxPayloadBytesPerCycle: 16 * 1024 * 1024,
-  maxDispatchesPerCycle: 10,
+  rolling24HourModelUsd: 100,
+  maxDownloadBytes: 24 * 1024 * 1024,
   maxWallMsPerCycle: 15 * 60_000,
 } as const;
 
@@ -222,41 +232,30 @@ export class FleetSafetyRefusal extends Error {
 
 interface Reservation {
   readonly usd: number;
-  readonly responseBytes: number;
   readonly provider: string;
   readonly work: string;
   released: boolean;
 }
 
-/**
- * The per-fetch payload RESERVATION — the byte hold released when a fetch
- * settles — is deliberately bounded, and distinct from the per-response stream
- * budget below. A single in-flight fetch must never reserve the whole remaining
- * cycle budget: when it did, a concurrent request (a Scout's model call, or
- * another lane's fetch) was refused PAYLOAD_BYTE_CEILING at turn 0, before it
- * had consumed a single byte — observed 2026-09, Scouts aborting with the cycle
- * at under 0.1% of its 16 MiB budget.
- *
- * 2 MiB is chosen from the observed distribution of 1004 fetched responses
- * (p95 = 246 KiB, p99 = 1.74 MiB), so it covers ~99% of fetches with headroom
- * over the bulk rather than tracking the single largest response ever seen. It
- * is also the largest hold under which the largest RECURRING legitimate record —
- * nh-cfs-filing-entity-details, about 9.2 MiB, re-read on its schedule — still
- * fits alongside a full two-Scout lane inside the 16 MiB ceiling: two reads at
- * 2 MiB, two Scout model reserves at about 0.5 MiB, and the 9.2 MiB record sum
- * to 14.8 MiB. Under-reserving a rarer large response is safe: the honest
- * per-fetch stream budget (the reservation's `streamCapBytes`) and
- * `recordInboundBytes` at settle both still enforce the hard cycle ceiling.
- */
-const PAYLOAD_RESERVATION_BYTES = 2 * 1024 * 1024;
-
 interface PayloadReservation {
-  /** The pool hold released on settle — bounded, so concurrent fetches coexist. */
-  readonly reservedBytes: number;
-  /** The honest per-fetch read budget: the Range ceiling and the streamed-byte cap. */
+  /** The per-download read cap: the `Range` ceiling and the streamed-byte limit. */
   readonly streamCapBytes: number;
   readonly work: string;
   released: boolean;
+}
+
+/**
+ * The total size of the resource a `Content-Range` header describes, or null
+ * when it is absent, unknown (`*`), or malformed. Used to tell a 206 that
+ * delivered a whole small resource from one that truncated a large one to the
+ * byte range we asked for.
+ */
+export function parseContentRangeTotal(header: string | null): number | null {
+  if (header === null) return null;
+  const match = /\/\s*(\d+)\s*$/.exec(header.trim());
+  if (match === null) return null;
+  const total = Number(match[1]);
+  return Number.isFinite(total) ? total : null;
 }
 
 export class FleetSafetyController {
@@ -276,7 +275,6 @@ export class FleetSafetyController {
   private reservedUsd = 0;
   private requests = 0;
   private bytes = 0;
-  private reservedBytes = 0;
   private dispatches = 0;
   private lastSuccessfulActivity: string | null;
 
@@ -325,12 +323,13 @@ export class FleetSafetyController {
     };
     if (scheduledBlackoutAt(new Date(nowMs).toISOString())) return deny("SCHEDULED_BLACKOUT", "Saturday 18:00 through Sunday 06:00 America/Phoenix permits no billable or network research");
     if (nowMs - this.startedMs >= this.bounds.maxWallMsPerCycle) return deny("WALL_CLOCK_CEILING", `cycle reached ${this.bounds.maxWallMsPerCycle}ms`);
-    if (this.dispatches >= this.bounds.maxDispatchesPerCycle) return deny("DISPATCH_CEILING", `cycle reached ${this.bounds.maxDispatchesPerCycle} dispatches`);
+    // No per-cycle dispatch ceiling: the wall above and the rolling daily spend
+    // ceiling are the limits. `dispatches` is still counted, for the admin panel.
     this.dispatches += 1;
     return { admit: true };
   }
 
-  admitProviderRequest(provider: string, work: string, outboundPayloadBytes = 0, minimumResponseBytes = 0): number {
+  admitProviderRequest(provider: string, work: string, outboundPayloadBytes = 0): number {
     if (scheduledBlackoutAt(new Date(this.clock()).toISOString())) this.refuse(work, "SCHEDULED_BLACKOUT", "network/provider execution is disabled during the Saturday operational-night blackout");
     const circuit = this.circuits.get(provider);
     if (circuit) {
@@ -341,39 +340,34 @@ export class FleetSafetyController {
       this.refuse(work, "PROVIDER_CIRCUIT_BROKEN", `${provider} is latched until ${circuit.eligibleAt}: ${circuit.condition}`);
     }
     if (this.clock() - this.startedMs >= this.bounds.maxWallMsPerCycle) this.refuse(work, "WALL_CLOCK_CEILING", `cycle reached ${this.bounds.maxWallMsPerCycle}ms`);
-    if (this.requests >= this.bounds.maxProviderRequestsPerCycle) this.refuse(work, "PROVIDER_REQUEST_CEILING", `cycle reached ${this.bounds.maxProviderRequestsPerCycle} requests`);
-    if (outboundPayloadBytes + minimumResponseBytes > this.bounds.maxPayloadBytesPerCycle - this.bytes - this.reservedBytes) this.refuse(work, "PAYLOAD_BYTE_CEILING", `provider exchange would exceed ${this.bounds.maxPayloadBytesPerCycle} bytes`);
+    // No per-cycle request or payload-total ceiling. The per-DOWNLOAD cap
+    // (`maxDownloadBytes`, enforced while streaming in `readBoundedResponse`) is
+    // the memory bound; requests and bytes are still counted for the admin panel.
     this.requests += 1;
     this.bytes += outboundPayloadBytes;
-    return this.bounds.maxPayloadBytesPerCycle - this.bytes - this.reservedBytes;
+    return this.bounds.maxDownloadBytes;
   }
 
-  recordInboundBytes(work: string, count: number): void {
-    if (!Number.isFinite(count) || count < 0 || this.bytes + this.reservedBytes + count > this.bounds.maxPayloadBytesPerCycle) {
-      this.refuse(work, "PAYLOAD_BYTE_CEILING", `provider payload would exceed ${this.bounds.maxPayloadBytesPerCycle} bytes`);
-    }
-    this.bytes += count;
+  recordInboundBytes(_work: string, count: number): void {
+    // Accumulate the already-capped bytes for the admin panel. The per-download
+    // limit is enforced while streaming in `readBoundedResponse`; there is no
+    // per-cycle payload total to refuse against.
+    if (Number.isFinite(count) && count > 0) this.bytes += count;
   }
 
   private reservePayloadRequest(provider: string, work: string, outboundPayloadBytes = 0): PayloadReservation {
-    // The admission check returns the budget genuinely available to this fetch
-    // (all remaining, minus what others already hold). That is the honest stream
-    // budget — the most this one response may read without breaching the cycle.
-    // The POOL HOLD, though, is bounded: a fetch reserves only its likely slice,
-    // so a concurrent request is not refused before it has consumed anything.
-    const streamCapBytes = this.admitProviderRequest(provider, work, outboundPayloadBytes, 1);
-    const reservedBytes = Math.min(PAYLOAD_RESERVATION_BYTES, streamCapBytes);
-    this.reservedBytes += reservedBytes;
-    return { reservedBytes, streamCapBytes, work, released: false };
+    // The per-download cap is a fixed memory bound, identical for every fetch —
+    // not a slice of a shared cycle budget — so there is no pool hold to reserve
+    // and no way for one in-flight fetch to starve a concurrent one.
+    const streamCapBytes = this.admitProviderRequest(provider, work, outboundPayloadBytes);
+    return { streamCapBytes, work, released: false };
   }
 
   private settlePayloadReservation(reservation: PayloadReservation, bytes: number | null): void {
     if (reservation.released) return;
     reservation.released = true;
-    this.reservedBytes -= reservation.reservedBytes;
-    // A stream that crossed its per-fetch budget has already transferred data we
-    // cannot unreceive. Charge the full stream budget so the cycle closes to
-    // further network work instead of under-reporting the failed transfer.
+    // A stream that crossed the per-download cap has already transferred data we
+    // cannot unreceive; charge the cap so the count reflects the failed transfer.
     this.recordInboundBytes(reservation.work, bytes === null ? reservation.streamCapBytes : bytes);
   }
 
@@ -387,29 +381,21 @@ export class FleetSafetyController {
     const worstInput = (bodyBytes / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation;
     const worstOutput = (request.max_tokens / 1_000_000) * rate.outputUsdPerMillion;
     const reserve = worstInput + worstOutput;
-    const responseBytes = request.max_tokens * 32 + 256 * 1024;
-    if (bodyBytes + responseBytes > this.bounds.maxPayloadBytesPerCycle - this.bytes - this.reservedBytes) {
-      this.refuse(work, "PAYLOAD_BYTE_CEILING", `worst-case model response would exceed ${this.bounds.maxPayloadBytesPerCycle} payload bytes`);
-    }
+    // The rolling 24-hour ceiling is the only spend limit now — no per-cycle or
+    // operational-night model-spend cap. A model response's size is bounded by
+    // its own `max_tokens`, so it needs no per-cycle payload check.
     const pending = this.cycleUsd + this.reservedUsd + reserve;
-    if (pending > this.bounds.cycleModelUsd) this.refuse(work, "CYCLE_MODEL_SPEND_CEILING", `worst-case request would put cycle spend at $${pending.toFixed(4)} over $${this.bounds.cycleModelUsd.toFixed(2)}`);
-    if (this.night.active && (this.historicalNightUsd === null || this.historicalNightUsd + pending > this.bounds.operationalNightModelUsd)) {
-      if (this.historicalNightUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "operational-night model spend is unmeasured");
-      this.refuse(work, "OPERATIONAL_NIGHT_MODEL_SPEND_CEILING", `worst-case request would exceed $${this.bounds.operationalNightModelUsd.toFixed(2)} for the operational night`);
-    }
     if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
-    if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the absolute $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+    if (this.historicalRollingUsd + pending > this.bounds.rolling24HourModelUsd) this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `worst-case request would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
     this.admitProviderRequest(provider, work, bodyBytes);
     this.reservedUsd += reserve;
-    this.reservedBytes += responseBytes;
-    return { usd: reserve, responseBytes, provider, work, released: false };
+    return { usd: reserve, provider, work, released: false };
   }
 
   private releaseReservation(reservation: Reservation): void {
     if (reservation.released) return;
     reservation.released = true;
     this.reservedUsd -= reservation.usd;
-    this.reservedBytes -= reservation.responseBytes;
   }
 
   settleModelRequest(reservation: Reservation, response: ModelResponse): void {
@@ -465,11 +451,26 @@ export class FleetSafetyController {
     };
   }
 
-  private async readBoundedResponse(response: Response, remaining: number, work: string): Promise<Uint8Array> {
+  private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
+    // FAIL LOUD ON TRUNCATION — never hand up a partial document, because a
+    // truncated CSV still parses. We send `Range: bytes=0-(cap-1)`, so a
+    // range-honoring server answers 206: accept it only when `Content-Range`
+    // proves the WHOLE resource fit within the cap. A larger resource, or a
+    // total the server would not state, is a truncation and throws.
+    if (response.status === 206) {
+      const total = parseContentRangeTotal(response.headers.get("content-range"));
+      if (total === null || total > cap) {
+        await response.body?.cancel();
+        throw new FleetSafetyRefusal(
+          "PAYLOAD_BYTE_CEILING",
+          `${work}: HTTP 206 partial content ${total === null ? "with no stated resource total" : `for a ${total}-byte resource`} exceeds the ${cap}-byte per-download cap — refusing a truncated body`,
+        );
+      }
+    }
     const declared = Number(response.headers.get("content-length"));
-    if (Number.isFinite(declared) && declared > remaining) {
+    if (Number.isFinite(declared) && declared > cap) {
       await response.body?.cancel();
-      throw new FleetSafetyRefusal("PAYLOAD_BYTE_CEILING", `${work}: response declares ${declared} bytes with ${remaining} remaining`);
+      throw new FleetSafetyRefusal("PAYLOAD_BYTE_CEILING", `${work}: response declares ${declared} bytes over the ${cap}-byte per-download cap`);
     }
     const reader = response.body?.getReader();
     const chunks: Uint8Array[] = [];
@@ -478,9 +479,9 @@ export class FleetSafetyController {
       while (true) {
         const next = await reader.read();
         if (next.done) break;
-        if (received + next.value.byteLength > remaining) {
+        if (received + next.value.byteLength > cap) {
           await reader.cancel();
-          throw new FleetSafetyRefusal("PAYLOAD_BYTE_CEILING", `${work}: streamed response exceeded ${remaining} remaining bytes`);
+          throw new FleetSafetyRefusal("PAYLOAD_BYTE_CEILING", `${work}: streamed response exceeded the ${cap}-byte per-download cap`);
         }
         chunks.push(next.value);
         received += next.value.byteLength;

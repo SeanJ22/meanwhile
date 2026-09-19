@@ -130,12 +130,8 @@ const SAFETY: FleetSafetySnapshot = {
   formatVersion: 1,
   status: "ACTIVE",
   bounds: {
-    cycleModelUsd: 2,
-    operationalNightModelUsd: 10,
-    rolling24HourModelUsd: 25,
-    maxProviderRequestsPerCycle: 24,
-    maxPayloadBytesPerCycle: 16 * 1024 * 1024,
-    maxDispatchesPerCycle: 10,
+    rolling24HourModelUsd: 100,
+    maxDownloadBytes: 24 * 1024 * 1024,
     maxWallMsPerCycle: 15 * 60_000,
   },
   cycle: {

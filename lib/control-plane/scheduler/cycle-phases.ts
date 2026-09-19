@@ -38,11 +38,3 @@ export function observeCyclePhases(repos: ControlPlaneRepositories, now: () => n
     },
   };
 }
-
-/** Slots are reserved before occurrences open, so the first lane cannot consume them all. */
-export function cycleLaneSlots(input: { maximum: number; deterministic: number; scouts: number; planned: number }) {
-  const autonomous = Math.min(input.planned, 3, Math.max(0, input.maximum - Math.min(1, input.scouts)));
-  const scouts = Math.min(input.scouts, Math.max(0, input.maximum - autonomous));
-  const deterministic = Math.min(input.deterministic, Math.max(0, input.maximum - autonomous - scouts));
-  return { autonomous, scouts, deterministic };
-}

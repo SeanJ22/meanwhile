@@ -667,9 +667,9 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
         dispatchedThisCycle: count(
           "Scouts dispatched this cycle",
           state.queue.modelClassDispatchedThisCycle,
-          bounds.maxScoutDispatchesPerCycle,
-          "Scout dispatches in the current cycle, against the per-cycle bound",
-          `${boundsSource}: maxScoutDispatchesPerCycle`,
+          state.queue.modelClassDue,
+          "Scout dispatches in the current cycle, of the model-class units due — no per-cycle cap; the cycle wall and the rolling daily ceiling bound it",
+          queueSource,
         ),
         deferredForCeiling: count(
           "deferred for the ceiling",

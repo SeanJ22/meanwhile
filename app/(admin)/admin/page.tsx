@@ -255,11 +255,7 @@ export default async function AdminPage() {
         cycleUsd: fleetSafety.cycle.modelUsd,
         operationalNightUsd: fleetSafety.operationalNight.modelUsd,
         rolling24HourUsd: fleetSafety.rolling24Hours.modelUsd,
-        ceilings: {
-          cycleModelUsd: fleetSafety.bounds.cycleModelUsd,
-          operationalNightModelUsd: fleetSafety.bounds.operationalNightModelUsd,
-          rolling24HourModelUsd: fleetSafety.bounds.rolling24HourModelUsd,
-        },
+        ceilings: { rolling24HourModelUsd: fleetSafety.bounds.rolling24HourModelUsd },
       })
     : [];
 
@@ -288,15 +284,17 @@ export default async function AdminPage() {
     }
   };
   if (fleetSafety) {
+    const dailyCeiling = fleetSafety.bounds.rolling24HourModelUsd;
+    // Fleet requests, dispatches and payload bytes no longer have a per-cycle
+    // cap; they render as plain activity counts in the Runner card, not as
+    // audited "N of M" gauges. Every audited number keeps a real denominator:
+    // the cycle wall (the clock) and the $/day rolling ceiling (the one spend limit).
     numbers.push(
-      { label: "Fleet requests", value: fleetSafety.cycle.requests, denominator: fleetSafety.bounds.maxProviderRequestsPerCycle, contract: "Public/provider requests admitted this cycle against the hard ceiling." },
-      { label: "Fleet payload bytes", value: fleetSafety.cycle.payloadBytes, denominator: fleetSafety.bounds.maxPayloadBytesPerCycle, contract: "Application payload bytes sent and consumed this cycle against the hard ceiling." },
-      { label: "Fleet dispatches", value: fleetSafety.cycle.dispatches, denominator: fleetSafety.bounds.maxDispatchesPerCycle, contract: "Fleet work dispatches admitted this cycle against the hard ceiling." },
-      { label: "Fleet wall time", value: fleetSafety.cycle.elapsedMs, denominator: fleetSafety.bounds.maxWallMsPerCycle, contract: "Elapsed Fleet cycle wall time against the hard ceiling." },
+      { label: "Fleet wall time", value: fleetSafety.cycle.elapsedMs, denominator: fleetSafety.bounds.maxWallMsPerCycle, contract: "Elapsed Fleet cycle wall time against the cycle wall — a cycle still has to finish." },
     );
-    if (fleetSafety.cycle.modelUsd !== null) numbers.push({ label: "Fleet cycle spend", value: fleetSafety.cycle.modelUsd, denominator: fleetSafety.bounds.cycleModelUsd, contract: "Measured model spend admitted in this cycle against its hard ceiling." });
-    if (fleetSafety.operationalNight.modelUsd !== null) numbers.push({ label: "Fleet operational-night spend", value: fleetSafety.operationalNight.modelUsd, denominator: fleetSafety.bounds.operationalNightModelUsd, contract: "Measured model spend in the Phoenix operational night against its hard ceiling." });
-    if (fleetSafety.rolling24Hours.modelUsd !== null) numbers.push({ label: "Fleet rolling spend", value: fleetSafety.rolling24Hours.modelUsd, denominator: fleetSafety.bounds.rolling24HourModelUsd, contract: "Measured model spend in the rolling 24-hour window against the absolute ceiling." });
+    if (fleetSafety.cycle.modelUsd !== null) numbers.push({ label: "Fleet cycle spend", value: fleetSafety.cycle.modelUsd, denominator: dailyCeiling, contract: "Measured model spend in this cycle, against the $/day rolling ceiling it draws from." });
+    if (fleetSafety.operationalNight.modelUsd !== null) numbers.push({ label: "Fleet operational-night spend", value: fleetSafety.operationalNight.modelUsd, denominator: dailyCeiling, contract: "Measured model spend in tonight's 6pm–6am Phoenix window, against the $/day rolling ceiling." });
+    if (fleetSafety.rolling24Hours.modelUsd !== null) numbers.push({ label: "Fleet rolling spend", value: fleetSafety.rolling24Hours.modelUsd, denominator: dailyCeiling, contract: "Measured model spend in the rolling 24-hour window against the absolute daily ceiling." });
   }
   if (snapshot) {
     for (const row of snapshot.obligationsByState) {

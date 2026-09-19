@@ -55,23 +55,19 @@ function cost(usd: number | null, recordedAt: string): CostEntry {
   };
 }
 
-test("aggregate model admission stops at cycle, operational-night, and rolling-24-hour ceilings", () => {
+test("model admission accumulates cycle spend with no per-cycle cap; only the rolling ceiling stops it", () => {
   const cycle = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
-  for (const work of ["one", "two"]) {
+  // Three requests settle with no per-cycle or operational-night refusal — those
+  // caps are retired, so cycle spend simply accumulates.
+  for (const work of ["one", "two", "three"]) {
     const reservation = cycle.reserveModelRequest("anthropic", work, REQUEST);
     cycle.settleModelRequest(reservation, RESPONSE);
   }
   const cycleUsd = cycle.snapshot(NIGHT).cycle.modelUsd;
-  assert.ok(cycleUsd !== null && Math.abs(cycleUsd - 1.951) < 1e-9);
-  assert.throws(() => cycle.reserveModelRequest("anthropic", "cycle-third", REQUEST), (error: unknown) =>
-    error instanceof FleetSafetyRefusal && error.code === "CYCLE_MODEL_SPEND_CEILING");
-  assert.equal(cycle.snapshot(NIGHT).deferred.at(-1)?.work, "cycle-third");
+  assert.ok(cycleUsd !== null && cycleUsd > 2, `cycle spend ${cycleUsd} accumulates past the retired $2 per-cycle cap`);
 
-  const overnight = new FleetSafetyController({ now: NIGHT, costs: [cost(9.5, "2026-09-05T02:00:00.000Z")], clock: () => Date.parse(NIGHT) });
-  assert.throws(() => overnight.reserveModelRequest("anthropic", "night-next", REQUEST), (error: unknown) =>
-    error instanceof FleetSafetyRefusal && error.code === "OPERATIONAL_NIGHT_MODEL_SPEND_CEILING");
-
-  const rolling = new FleetSafetyController({ now: NIGHT, costs: [cost(24.5, "2026-09-04T04:00:00.000Z")], clock: () => Date.parse(NIGHT) });
+  // The rolling 24-hour ceiling ($100) is the one spend limit that still fires.
+  const rolling = new FleetSafetyController({ now: NIGHT, costs: [cost(99.5, "2026-09-04T04:00:00.000Z")], clock: () => Date.parse(NIGHT) });
   assert.throws(() => rolling.reserveModelRequest("anthropic", "day-next", REQUEST), (error: unknown) =>
     error instanceof FleetSafetyRefusal && error.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING");
 });
@@ -106,32 +102,58 @@ test("a provider response with incomplete usage makes cycle spend UNMEASURED and
   );
 });
 
-test("request, payload-byte, dispatch, and wall ceilings fail closed with named deferral", () => {
+test("no per-cycle request or dispatch ceiling remains; the cycle wall still fails closed", () => {
   const nowMs = Date.parse(NIGHT);
   const requests = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => nowMs });
-  for (let i = 0; i < FLEET_SAFETY_BOUNDS.maxProviderRequestsPerCycle; i += 1) requests.admitProviderRequest("public-web", `request-${i}`);
-  assert.throws(() => requests.admitProviderRequest("public-web", "request-over"), (error: unknown) =>
-    error instanceof FleetSafetyRefusal && error.code === "PROVIDER_REQUEST_CEILING");
+  // No per-cycle request cap: far more than the retired 24 are all admitted.
+  for (let i = 0; i < 100; i += 1) requests.admitProviderRequest("public-web", `request-${i}`);
+  assert.equal(requests.snapshot(NIGHT).cycle.requests, 100);
 
+  // No per-cycle payload total: recording bytes past the retired 16 MiB never refuses.
   const bytes = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => nowMs });
-  bytes.recordInboundBytes("large-response", FLEET_SAFETY_BOUNDS.maxPayloadBytesPerCycle);
-  assert.throws(() => bytes.recordInboundBytes("byte-over", 1), (error: unknown) =>
-    error instanceof FleetSafetyRefusal && error.code === "PAYLOAD_BYTE_CEILING");
+  bytes.recordInboundBytes("large-response", 64 * 1024 * 1024);
+  bytes.recordInboundBytes("more", 1);
+  assert.equal(bytes.snapshot(NIGHT).cycle.payloadBytes, 64 * 1024 * 1024 + 1);
 
   const dispatch = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => nowMs });
-  for (let i = 0; i < FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle; i += 1) assert.equal(dispatch.admitDispatch(`dispatch-${i}`).admit, true);
-  assert.deepEqual(dispatch.admitDispatch("dispatch-over"), {
-    admit: false,
-    code: "DISPATCH_CEILING",
-    why: `cycle reached ${FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle} dispatches`,
-  });
-  assert.equal(dispatch.snapshot(NIGHT).deferred.at(-1)?.work, "dispatch-over");
+  // No per-cycle dispatch cap: far more than the retired 10 are all admitted.
+  for (let i = 0; i < 100; i += 1) assert.equal(dispatch.admitDispatch(`dispatch-${i}`).admit, true);
+  assert.equal(dispatch.snapshot(NIGHT).cycle.dispatches, 100);
 
   let clock = nowMs;
   const wall = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => clock });
   clock += FLEET_SAFETY_BOUNDS.maxWallMsPerCycle;
   assert.equal(wall.admitDispatch("wall-deferred").admit, false);
   assert.equal(wall.snapshot(new Date(clock).toISOString()).deferred[0]?.code, "WALL_CLOCK_CEILING");
+});
+
+test("the guarded fetch fails loud on a truncated 206 rather than handing up a partial document", async () => {
+  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const cap = FLEET_SAFETY_BOUNDS.maxDownloadBytes;
+
+  // A 206 whose Content-Range total exceeds the per-download cap is a truncation:
+  // refuse it (PAYLOAD_BYTE_CEILING), never return the partial body.
+  const truncated = controller.guardedOpenBytes("public-web", "bulk-csv", async () =>
+    new Response(new Uint8Array(1024), {
+      status: 206,
+      headers: { "content-range": `bytes 0-1023/${cap * 4}`, "content-length": "1024" },
+    }),
+  );
+  const truncatedResult = await truncated({ url: "https://example.test/huge.csv", headers: {}, timeoutMs: 1_000 });
+  assert.equal(truncatedResult.status, null, "a truncating 206 must not be returned as a successful read");
+  assert.equal(truncatedResult.bytes.byteLength, 0);
+  assert.equal(controller.snapshot(NIGHT).deferred.at(-1)?.code, "PAYLOAD_BYTE_CEILING");
+
+  // A 206 that delivered the whole (small) resource within the cap is accepted.
+  const complete = controller.guardedOpenBytes("public-web", "small-page", async () =>
+    new Response(new Uint8Array([1, 2, 3]), {
+      status: 206,
+      headers: { "content-range": "bytes 0-2/3", "content-length": "3" },
+    }),
+  );
+  const completeResult = await complete({ url: "https://example.test/small", headers: {}, timeoutMs: 1_000 });
+  assert.equal(completeResult.status, 206);
+  assert.equal(completeResult.bytes.byteLength, 3);
 });
 
 test("scheduler aggregate refusal leaves the exact registered obligation durably owed", async () => {

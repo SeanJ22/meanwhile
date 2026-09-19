@@ -69,9 +69,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       obligations,
       obligationsRead,
       ceilings: {
-        cycleModelUsd: FLEET_SAFETY_BOUNDS.cycleModelUsd,
         rolling24HourModelUsd: FLEET_SAFETY_BOUNDS.rolling24HourModelUsd,
-        maxDispatchesPerCycle: FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
       },
     }),
     { headers: { "cache-control": "no-store" } },

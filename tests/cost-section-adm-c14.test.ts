@@ -50,7 +50,7 @@ import { ROOT, codeOf } from "./read-code.ts";
 const SECTION = "app/(admin)/admin/sections/cost.tsx";
 const src = (...parts: string[]): string => readFileSync(join(ROOT, ...parts), "utf8");
 
-const CEILINGS = { cycleModelUsd: 2, operationalNightModelUsd: 10, rolling24HourModelUsd: 25 };
+const CEILINGS = { rolling24HourModelUsd: 25 };
 
 function entry(
   attemptId: string,
@@ -218,7 +218,9 @@ test("ADM-33: a model attempt with no dollars is 'Not measured'; rows predating 
 test("ADM-26: the three windows render as the brief's own rows, to the cent, and an unmeasured window is never $0.00", () => {
   const rows = spendWindowRows({ cycleUsd: 0, operationalNightUsd: 0, rolling24HourUsd: 0.4404, ceilings: CEILINGS });
   assert.deepEqual(rows.map((r) => r.window), ["Current cycle", "Operational night", "Last 24 hours"]);
-  assert.deepEqual(rows.map((r) => r.shown), ["$0.00 of $2.00", "$0.00 of $10.00", "$0.44 of $25.00"]);
+  // Every window is framed against the one rolling daily ceiling now; the
+  // per-cycle and operational-night caps are retired.
+  assert.deepEqual(rows.map((r) => r.shown), ["$0.00 of $25.00", "$0.00 of $25.00", "$0.44 of $25.00"]);
   assert.ok(rows[1].defines?.includes("6pm to 6am"), "the one window whose name does not explain itself is defined");
   assert.ok(rows.every((r) => !r.unmeasured));
 
@@ -234,14 +236,14 @@ test("ADM-26: the three windows render as the brief's own rows, to the cent, and
 
 test("§9A.4: the capacity sentence is computed from the ledger and matches the owner's shape; an unmeasured window says so", () => {
   const now = "2026-09-06T18:00:00.000Z";
-  /* Six hunts at $0.3164 each: $25 / 0.3164 = 79.01 -> 79. */
+  /* Six hunts at $0.3164 each: $100 / 0.3164 = 316.05 -> 316. */
   const costs = Array.from({ length: 6 }, (_, i) => entry(`s${i}`, "SCOUT", 0.3164, "2026-09-06T12:00:00.000Z"));
   const panel = buildCostPanel({ costs, attempts: [], cacheByRole: null, share: null, verifiedRecords: null, nowIso: now });
   assert.equal(
     capacitySentence(panel.capacity),
-    "At the current average cost, the $25.00 daily limit buys about 79 hunts at roughly $0.32 each.",
+    "At the current average cost, the $100.00 daily limit buys about 316 hunts at roughly $0.32 each.",
   );
-  assert.equal(DEFAULT_DAILY_CEILING_USD, 25);
+  assert.equal(DEFAULT_DAILY_CEILING_USD, 100);
 
   const quiet = buildCostPanel({
     costs: [entry("s9", "SCOUT", null, "2026-09-06T12:00:00.000Z")],

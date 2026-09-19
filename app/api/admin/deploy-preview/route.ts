@@ -18,7 +18,8 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { deployPreview } from "@/lib/control-plane/deploy-preview.ts";
-import { FLEET_SAFETY_BOUNDS } from "@/lib/control-plane/fleet-safety.ts";
+import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
+import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 
@@ -49,6 +50,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
    */
   let obligations: { id: string; subjectId: string }[] = [];
   let obligationsRead = false;
+  // The ceiling the preview quotes is the one IN FORCE — the owner's override
+  // read live, or the fallback — never the compile-time constant, so a raised
+  // dial is not contradicted by a preview quoting the old default. A read that
+  // fails leaves the fallback, which is a real ceiling.
+  let effectiveCeilingUsd = resolveRollingCeiling(null).rollingCeilingUsd;
   const opened = await openControlPlane();
   if (opened.ok) {
     try {
@@ -61,6 +67,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     } catch {
       obligationsRead = false;
     }
+    try {
+      const cfg = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
+      const override = cfg !== null && isAdminConfig(cfg.value) ? fleetSpendCeilingOverrideUsd(cfg.value) : null;
+      effectiveCeilingUsd = resolveRollingCeiling(override).rollingCeilingUsd;
+    } catch {
+      /* keep the fallback ceiling */
+    }
   }
 
   return NextResponse.json(
@@ -69,7 +82,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       obligations,
       obligationsRead,
       ceilings: {
-        rolling24HourModelUsd: FLEET_SAFETY_BOUNDS.rolling24HourModelUsd,
+        rolling24HourModelUsd: effectiveCeilingUsd,
       },
     }),
     { headers: { "cache-control": "no-store" } },

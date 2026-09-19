@@ -29,6 +29,7 @@ import {
   defaultAdminConfig,
   type AdminConfig,
 } from "@/lib/control-plane/gateway/admin-config.ts";
+import { FLEET_SAFETY_BOUNDS, FLEET_SPEND_CEILING_MAX_USD } from "@/lib/control-plane/fleet-safety.ts";
 import { AGENT_JOB_LOG_KEY, liveJobCount, type AgentJobRecord } from "@/lib/control-plane/gateway/agent-job.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import { DECISION_LOG_KEY, RUNNER_ID, SNAPSHOT_ID } from "@/lib/control-plane/admin-data.ts";
@@ -112,12 +113,12 @@ function ask(over: Partial<ActionRequest> = {}): ActionRequest {
 test("ADM-C6: the registry is closed and every entry carries a full definition", () => {
   const definitions = actionDefinitions();
   /*
-   * THE DENOMINATOR. Eleven actions are registered today. Pinning the count is
+   * THE DENOMINATOR. Twelve actions are registered today. Pinning the count is
    * what makes the loop below a sweep rather than a coincidence: an entry
    * silently dropped in a refactor would otherwise leave every assertion
    * passing over a smaller population.
    */
-  assert.equal(definitions.length, 11, "the registry no longer holds the eleven actions this pass declared");
+  assert.equal(definitions.length, 12, "the registry no longer holds the twelve actions this pass declared");
   assert.deepEqual(
     [...ACTION_TYPES],
     [
@@ -130,6 +131,7 @@ test("ADM-C6: the registry is closed and every entry carries a full definition",
       "fleet.retryWorkItem",
       "fleet.requestReadback",
       "config.setApiFallback",
+      "config.setFleetSpendCeiling",
       "review.decide",
       "prohibited.promotionOn",
     ],
@@ -663,6 +665,70 @@ test("§9A.22: a corrupt policy row reads as the default, which is OFF", async (
   assert.equal(outcome.ok, true, outcome.receipt.says);
   const stored = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   assert.equal(stored?.value.apiFallback.enabled, false);
+});
+
+/* ==========================================================================
+ * THE FLEET SPEND CEILING — the console dial for the rolling-24h model spend
+ * ======================================================================= */
+
+test("the Fleet spend ceiling is recorded durably, names who/when/previous, and its absence reads as the fallback", async () => {
+  const repos = createMemoryRepositories();
+  const fallback = FLEET_SAFETY_BOUNDS.rolling24HourModelUsd;
+  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "a fresh store carries no override");
+
+  const first = await submit(
+    ask({ type: "config.setFleetSpendCeiling", subject: "fleet spend ceiling", input: { rollingCeilingUsd: "250" }, idempotencyKey: "ceiling-key-01" }),
+    deps(repos),
+  );
+  assert.equal(first.ok, true, first.receipt.says);
+  const afterFirst = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.equal(afterFirst?.value.fleetSpendCeiling?.rollingCeilingUsd, 250);
+  assert.equal(afterFirst?.value.fleetSpendCeiling?.previousUsd, fallback, "the previous value with no prior override is the fallback");
+  assert.equal(afterFirst?.value.fleetSpendCeiling?.decidedBy, "adm_test-session", "the record names who changed it");
+  assert.equal(
+    afterFirst?.value.fleetSpendCeiling?.receiptId,
+    receiptIdFor("config.setFleetSpendCeiling", "ceiling-key-01"),
+    "the override points at the receipt that changed it",
+  );
+  /* Setting API fallback separately must not erase the ceiling override, and vice versa. */
+  assert.equal(afterFirst?.value.apiFallback.enabled, false, "the ceiling write preserves the untouched apiFallback default");
+
+  const second = await submit(
+    ask({ type: "config.setFleetSpendCeiling", subject: "fleet spend ceiling", input: { rollingCeilingUsd: "400" }, idempotencyKey: "ceiling-key-02" }),
+    deps(repos),
+  );
+  assert.equal(second.ok, true, second.receipt.says);
+  assert.match(second.receipt.says, /was \$250\.00/, "the receipt names the previous ceiling");
+  const afterSecond = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.equal(afterSecond?.value.fleetSpendCeiling?.rollingCeilingUsd, 400);
+  assert.equal(afterSecond?.value.fleetSpendCeiling?.previousUsd, 250, "the previous value is the prior override, not the fallback");
+  assert.equal(afterSecond?.revision, 2, "the row was compare-and-set, not duplicated");
+});
+
+test("the Fleet spend ceiling refuses a non-number, a non-positive amount, and anything above the max, and writes nothing", async () => {
+  const repos = createMemoryRepositories();
+  for (const [raw, key] of [["abc", "ceiling-bad-01"], ["0", "ceiling-bad-02"], ["-5", "ceiling-bad-03"], [String(FLEET_SPEND_CEILING_MAX_USD + 1), "ceiling-bad-04"]] as const) {
+    const outcome = await submit(
+      ask({ type: "config.setFleetSpendCeiling", subject: "fleet spend ceiling", input: { rollingCeilingUsd: raw }, idempotencyKey: key }),
+      deps(repos),
+    );
+    assert.equal(outcome.ok, false, `"${raw}" should be refused`);
+    assert.equal(outcome.receipt.refusal, "INVALID_INPUT");
+  }
+  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "no refused request wrote a policy row");
+});
+
+test("the Fleet spend ceiling rounds to whole cents and a corrupt policy row reads as the fallback previous", async () => {
+  const repos = createMemoryRepositories();
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { nonsense: true } as unknown as AdminConfig, NOW);
+  const outcome = await submit(
+    ask({ type: "config.setFleetSpendCeiling", subject: "fleet spend ceiling", input: { rollingCeilingUsd: "123.456" }, idempotencyKey: "ceiling-round-01" }),
+    deps(repos),
+  );
+  assert.equal(outcome.ok, true, outcome.receipt.says);
+  const stored = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.equal(stored?.value.fleetSpendCeiling?.rollingCeilingUsd, 123.46, "a fraction of a cent is rounded away");
+  assert.equal(stored?.value.fleetSpendCeiling?.previousUsd, FLEET_SAFETY_BOUNDS.rolling24HourModelUsd, "a corrupt prior row reads as the fallback, never as no ceiling");
 });
 
 /* ==========================================================================

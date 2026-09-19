@@ -81,7 +81,36 @@ export interface AdminConfig {
     /** The gateway receipt that carries the decision. Null while there is none. */
     readonly receiptId: string | null;
   };
+  /**
+   * The owner's override of the Fleet's rolling-24h model-spend ceiling, or null
+   * when none stands and the built-in fallback in
+   * `FLEET_SAFETY_BOUNDS.rolling24HourModelUsd` governs. Optional only because a
+   * config written before this field existed carries no override — which reads
+   * as the fallback, exactly as its absence should. "A ceiling that disappears
+   * must not become no ceiling": the resolver in `fleet-safety.ts` supplies the
+   * fallback, and this module stays free of that constant.
+   */
+  readonly fleetSpendCeiling?: FleetSpendCeilingDecision | null;
   readonly updatedAt: string;
+}
+
+/**
+ * One owner decision about the Fleet's rolling-24h model-spend ceiling.
+ *
+ * `previousUsd` is the ceiling in force the instant before this change — a prior
+ * override, or the fallback — so the console can show what it was without a
+ * second read, and the record answers "who changed it, when, and from what".
+ */
+export interface FleetSpendCeilingDecision {
+  /** The rolling 24-hour model-spend ceiling the owner set, in USD. Always finite and > 0. */
+  readonly rollingCeilingUsd: number;
+  readonly decidedAt: string;
+  /** The admin session reference that decided it. Never a person's name. */
+  readonly decidedBy: string;
+  /** The gateway receipt that carries the decision. */
+  readonly receiptId: string;
+  /** The ceiling in force immediately before this change: a prior override, or the fallback. */
+  readonly previousUsd: number;
 }
 
 /**
@@ -125,6 +154,53 @@ export function withApiFallback(
     },
     updatedAt: change.decidedAt,
   };
+}
+
+/**
+ * The next policy after an owner sets the Fleet spend ceiling.
+ *
+ * Pure, exactly like {@link withApiFallback}: the caller reads, this computes,
+ * the caller compare-and-sets. `previousUsd` is passed in rather than derived
+ * here because the fallback ceiling lives in `fleet-safety.ts` and this module
+ * stays free of it — the caller resolves override-or-fallback and hands the
+ * result in.
+ */
+export function withFleetSpendCeiling(
+  current: AdminConfig,
+  change: {
+    readonly rollingCeilingUsd: number;
+    readonly previousUsd: number;
+    readonly decidedAt: string;
+    readonly decidedBy: string;
+    readonly receiptId: string;
+  },
+): AdminConfig {
+  return {
+    ...current,
+    formatVersion: ADMIN_CONFIG_FORMAT_VERSION,
+    fleetSpendCeiling: {
+      rollingCeilingUsd: change.rollingCeilingUsd,
+      decidedAt: change.decidedAt,
+      decidedBy: change.decidedBy,
+      receiptId: change.receiptId,
+      previousUsd: change.previousUsd,
+    },
+    updatedAt: change.decidedAt,
+  };
+}
+
+/**
+ * The override ceiling a config carries, or null when none stands.
+ *
+ * Null also for a malformed value — a non-finite or non-positive override is no
+ * override, so the caller's resolver falls back to a real ceiling rather than
+ * letting a corrupt row read as "spend nothing" or "spend without limit".
+ */
+export function fleetSpendCeilingOverrideUsd(config: AdminConfig | null): number | null {
+  const override = config?.fleetSpendCeiling;
+  if (override === null || override === undefined) return null;
+  const usd = override.rollingCeilingUsd;
+  return typeof usd === "number" && Number.isFinite(usd) && usd > 0 ? usd : null;
 }
 
 /** A stored value that is not a config at all reads as no config, never as ON. */

@@ -215,9 +215,11 @@ import { DIGEST_LOG_KEY } from "../lib/control-plane/admin-data.ts";
 import {
   FLEET_SAFETY_BOUNDS,
   FleetSafetyController,
+  resolveRollingCeiling,
   scheduledBlackoutAt,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
+import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -990,6 +992,30 @@ try {
 } catch (error) {
   runtimeConditions.push(`prior Fleet safety state could not be read: ${error instanceof Error ? error.message : String(error)}`);
 }
+/*
+ * THE ROLLING CEILING IN FORCE — the owner's console override, read at cycle
+ * start from the control plane (`AdminConfig.fleetSpendCeiling`), or the built-in
+ * fallback when no override stands or the row cannot be read. Read HERE, not at
+ * module import, so a change Sean makes in the console governs this very cycle
+ * with no deploy and no restart. One number drives BOTH scout-admission gates —
+ * the FleetSafety rolling ceiling (`rollingCeilingReached`, which admitScout
+ * reads) and the research daily ceiling (`ceilingPermits`) — and the per-request
+ * reservation through the controller's bounds, so a lane paused at the old
+ * ceiling resumes on this cycle and there is no second ceiling that silently
+ * binds when the dial is raised.
+ */
+let ceilingOverrideUsd: number | null = null;
+try {
+  const cfg = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  ceilingOverrideUsd = cfg !== null && isAdminConfig(cfg.value) ? fleetSpendCeilingOverrideUsd(cfg.value) : null;
+} catch (error) {
+  runtimeConditions.push(
+    `the Fleet spend-ceiling override could not be read (${error instanceof Error ? error.message : String(error)}); the built-in fallback $${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)} governs this cycle`,
+  );
+}
+const rollingCeiling = resolveRollingCeiling(ceilingOverrideUsd);
+const effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
+
 const fleetSafety = new FleetSafetyController({
   now: NOW,
   costs: costLedger,
@@ -997,6 +1023,7 @@ const fleetSafety = new FleetSafetyController({
   paused: intents.runnerPause.paused,
   circuits: priorCircuits,
   lastSuccessfulActivity: priorLastSuccessfulActivity,
+  rollingCeilingUsd: effectiveCeilingUsd,
 });
 if (ledgerUnreadable !== null) {
   fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
@@ -1256,7 +1283,11 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       context: `standing runner child process (freshness-shadow) on ${HOST}, env via node --env-file`,
     },
     model: SCOUT_MODEL,
-    bounds: RESEARCH_BOUNDS,
+    // The daily ceiling the page and `deriveLevel1` read is the value IN FORCE
+    // (the owner's override, or the fallback) — the same number the admission
+    // gates below use — never the compile-time RESEARCH_BOUNDS default, so the
+    // console can never show a ceiling that is not the one being enforced.
+    bounds: { ...RESEARCH_BOUNDS, dailyCeilingUsd: effectiveCeilingUsd },
     spend: {
       windowUsd: window,
       measuredAttempts: measuredSpend.measured,
@@ -1518,12 +1549,17 @@ const cycle = await runCycle({
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
       if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
-      const cap = ceilingPermits(window, RESEARCH_BOUNDS.dailyCeilingUsd);
+      // The scout daily ceiling is the value IN FORCE (the owner's override, or
+      // the fallback), not the RESEARCH_BOUNDS default — so raising the dial above
+      // the old default does not leave this gate silently binding at 100 while the
+      // console shows a higher number.
+      const cap = ceilingPermits(window, effectiveCeilingUsd);
       if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
       /* The BINDING ceiling is FleetSafety's rolling-24h one, which admitScout did
          not read — so scouts were admitted here and then refused one-by-one by the
          per-request guard, a $0 busy-loop that re-dispatched every cycle. Reading it
-         here pauses the whole lane when it is reached (RULING: paused over it). */
+         here pauses the whole lane when it is reached (RULING: paused over it). It
+         reads the SAME `effectiveCeilingUsd` through the controller's bounds. */
       const rolling = fleetSafety.rollingCeilingReached(SCOUT_WORST_CASE_USD);
       if (rolling.reached) {
         return {
@@ -1785,7 +1821,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   cacheThisCycle = cacheHitRateByRole({ costs: costsNow, results, sinceIso: NOW, untilIso: at });
   return {
     computedAt: at,
-    capacity: scoutCapacity({ costs: costsNow, nowIso: at, windowHours: RESEARCH_BOUNDS.windowHours, ceilingUsd: RESEARCH_BOUNDS.dailyCeilingUsd }),
+    capacity: scoutCapacity({ costs: costsNow, nowIso: at, windowHours: RESEARCH_BOUNDS.windowHours, ceilingUsd: effectiveCeilingUsd }),
     ordering: dispatchOrdering,
     funnel: graduationFunnel({
       results,
@@ -1904,11 +1940,11 @@ const researchLines = [
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${RESEARCH_BOUNDS.dailyCeilingUsd}/day + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
+  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · no per-cycle cap ($${effectiveCeilingUsd}/day ${rollingCeiling.source.toLowerCase()} + wall) · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
   `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
     `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
     (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not reached before the wall` : ""),
-  `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${RESEARCH_BOUNDS.dailyCeilingUsd} ceiling ` +
+  `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
     `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle) · this cycle $${spentThisCycle.toFixed(4)}`,
   `  results            ${scoutResultsThisCycle.length} typed result(s)${outcomeCounts.size > 0 ? ` — ${[...outcomeCounts].map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}` +
     ` · ${scoutDispatches.filter((d) => d.dispositionCommitted).length} disposition(s) committed`,

@@ -36,6 +36,7 @@ import type { Attempt } from "./attempt.ts";
 import type { RouteTask } from "./route-task.ts";
 import type { WorkItem } from "./work-item.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "./scheduler/research-policy.ts";
+import { ADMIN_CONFIG_ID, type AdminConfig } from "./gateway/admin-config.ts";
 import {
   assertAggregateOnly,
   type CacheObservationRecord,
@@ -282,6 +283,16 @@ export async function readFleetInputs(repos: ControlPlaneRepositories): Promise<
 /** One targeted aggregate read for the runner's current safety projection. */
 export async function readFleetSafety(repos: ControlPlaneRepositories): Promise<ReadOutcome<ResearchState>> {
   return readAggregate(repos, "the Fleet safety state", () => repos.researchState.read(RESEARCH_STATE_ID));
+}
+
+/**
+ * The owner's operational policy — the API-fallback toggle and the Fleet
+ * spend-ceiling override. `NOT_RECORDED` is the ordinary state (a console that
+ * has never had a policy written reads as the defaults), and the caller resolves
+ * a missing override to the built-in ceiling fallback.
+ */
+export async function readAdminConfig(repos: ControlPlaneRepositories): Promise<ReadOutcome<AdminConfig>> {
+  return readAggregate(repos, "the owner operational policy", () => repos.adminConfig.read(ADMIN_CONFIG_ID));
 }
 
 export async function readDecisions(

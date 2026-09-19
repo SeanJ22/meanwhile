@@ -60,10 +60,13 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import {
   ADMIN_CONFIG_ID,
   defaultAdminConfig,
+  fleetSpendCeilingOverrideUsd,
   isAdminConfig,
   withApiFallback,
+  withFleetSpendCeiling,
   API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
+import { FLEET_SPEND_CEILING_MAX_USD, resolveRollingCeiling } from "../fleet-safety.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /* ------------------------------------------------------------------ deps */
@@ -615,6 +618,77 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin",
         undo: enabled ? "Set it back to not allowed." : "Allow it again, with an explicit confirmation.",
+      };
+    },
+  },
+
+  /* ---------------------------------------------- config.setFleetSpendCeiling */
+  {
+    definition: {
+      type: "config.setFleetSpendCeiling",
+      label: "Set the Fleet spend ceiling",
+      does:
+        "Records the rolling 24-hour model-spend ceiling the Fleet runs under, durably, so a restart cannot lose it. The runner reads it at the start of its next cycle.",
+      doesNot:
+        "Does not start a cycle, deploy, restart, or spend anything by itself — it moves the ceiling the next cycle runs under. A lane paused at the old ceiling resumes on that cycle.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "how much the Fleet may spend in a rolling day",
+      // The record-level compare-and-set on the config row is the version check
+      // this write inherits; there is no rendered card whose words can go stale
+      // between draw and click, so a page-level staleness quote would only add
+      // the quoted-vs-current mismatch that refuses good clicks, not safety.
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const raw = input.rollingCeilingUsd;
+      const parsed = typeof raw === "number" ? raw : typeof raw === "string" ? Number(raw.trim()) : Number.NaN;
+      if (!Number.isFinite(parsed)) return bad("say the new ceiling as a dollar amount");
+      if (parsed <= 0) {
+        return bad("the ceiling has to be more than $0 — to stop the Fleet, pause the runner instead");
+      }
+      if (parsed > FLEET_SPEND_CEILING_MAX_USD) {
+        return bad(`that ceiling is above the $${FLEET_SPEND_CEILING_MAX_USD} maximum this control allows`);
+      }
+      // Whole cents; a fraction of a cent is a typo, not a budget.
+      return { ok: true, value: { rollingCeilingUsd: Math.round(parsed * 100) / 100 } };
+    },
+    async execute(deps, context, input) {
+      const rollingCeilingUsd = Number(input.rollingCeilingUsd);
+      const at = context.at;
+      // The ceiling in force the instant before this change — a prior override,
+      // or the fallback — captured before the write so the receipt and undo name
+      // what it WAS, not what it now is.
+      let previousUsd: number;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        // A stored value that is not a config reads as the default — which
+        // carries no override, so the previous ceiling is the built-in fallback.
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
+        previousUsd = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(current)).rollingCeilingUsd;
+        const next = withFleetSpendCeiling(current, {
+          rollingCeilingUsd,
+          previousUsd,
+          decidedAt: at,
+          decidedBy: context.request.actorRef,
+          receiptId: context.receiptId,
+        });
+        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+      } catch (error) {
+        return storeRefusal("your Fleet spend ceiling", error);
+      }
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: "fleet spend ceiling",
+        says:
+          `Recorded: the Fleet spend ceiling is now $${rollingCeilingUsd.toFixed(2)} (was $${previousUsd.toFixed(2)}), and that survives a restart. ` +
+          "The runner reads it at the start of its next cycle — no deploy, no restart — and a lane paused at the old ceiling resumes on that cycle. " +
+          "Raising the ceiling removes a brake; it does not start a run.",
+        openedWork: [],
+        readBackAt: "/admin",
+        undo: `Set it back to $${previousUsd.toFixed(2)}.`,
       };
     },
   },

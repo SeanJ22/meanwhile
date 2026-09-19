@@ -10,7 +10,7 @@
  */
 import { codeIdentityLine } from "@/lib/control-plane/code-identity.ts";
 import { bytesText, durationText, spendWindowRows } from "@/lib/control-plane/cost-panel.ts";
-import type { FleetSafetySnapshot } from "@/lib/control-plane/fleet-safety.ts";
+import { FLEET_SPEND_CEILING_MAX_USD, type FleetSafetySnapshot } from "@/lib/control-plane/fleet-safety.ts";
 import type { RunnerHeartbeat } from "@/lib/control-plane/owner-surface.ts";
 import { count, plainCode, usdCents } from "@/lib/control-plane/plain-words.ts";
 import { runnerFace, stopMomentIn } from "@/lib/control-plane/runner-plain.ts";
@@ -34,6 +34,24 @@ export interface RunnerSectionProps {
   readonly returnTo: string;
   /** The research-intent route the pause/resume control posts to. */
   readonly intentRoute: string;
+  /** The gateway route the spend-ceiling control posts to (`/api/admin/action`). */
+  readonly actionRoute: string;
+  /**
+   * The spend ceiling in force per the owner's SETTING (an override, or the
+   * fallback), with its source and provenance. Read live from the policy row, so
+   * it shows a change at once; the runner card compares it to what the snapshot
+   * says the runner is ENFORCING to show whether the controller has picked it up.
+   */
+  readonly spendCeiling: {
+    readonly settingUsd: number;
+    readonly source: "OVERRIDE" | "FALLBACK";
+    readonly fallbackUsd: number;
+    readonly setAt: string | null;
+    readonly setBy: string | null;
+    readonly previousUsd: number | null;
+    /** False when the policy row could not be read; the card then does not assert a source. */
+    readonly readable: boolean;
+  };
   readonly noteMaxChars: number;
 }
 
@@ -60,6 +78,16 @@ export function RunnerSection(props: RunnerSectionProps) {
         ceilings: { rolling24HourModelUsd: safety.bounds.rolling24HourModelUsd },
       })
     : [];
+
+  /*
+   * The ceiling SET (the owner's override or the fallback) vs the ceiling the
+   * runner is ENFORCING (the value on the last published snapshot). When they
+   * agree, the controller has read the setting — which is the proof a read-back
+   * of the row alone cannot give. `enforcedUsd` is null when no snapshot exists.
+   */
+  const sc = props.spendCeiling;
+  const enforcedUsd = safety ? safety.bounds.rolling24HourModelUsd : null;
+  const ceilingPending = sc.readable && enforcedUsd !== null && Math.abs(enforcedUsd - sc.settingUsd) > 0.005;
 
   return (
     <>
@@ -138,6 +166,59 @@ export function RunnerSection(props: RunnerSectionProps) {
             </tbody>
           </table>
         )}
+
+        {/*
+          The spend ceiling, and the dial for it — right beside the rows it caps.
+          It shows the value IN FORCE and its source (a live override apart from
+          the fallback), who set it and when, and — when the runner has not yet
+          picked up a fresh change — what it is still enforcing until its next
+          cycle. Posts to the one gateway door, which records it durably; the
+          runner reads it at the start of its next cycle, with no deploy or restart.
+        */}
+        <div className="spend-ceiling">
+          <p className="spend-ceiling-now">
+            <strong>Spend ceiling: {usdCents(sc.settingUsd)}</strong>{" "}
+            {!sc.readable ? (
+              <span className="gap-inline">
+                its setting could not be read just now — the runner enforces whatever was last written
+              </span>
+            ) : sc.source === "OVERRIDE" ? (
+              <span className="note">
+                — you set this{sc.setAt ? <> <When iso={sc.setAt} /></> : null}
+                {sc.previousUsd !== null ? ` (was ${usdCents(sc.previousUsd)})` : ""}. The built-in fallback is {usdCents(sc.fallbackUsd)}.
+              </span>
+            ) : (
+              <span className="note">— the built-in fallback; no override is set.</span>
+            )}
+          </p>
+          {ceilingPending && enforcedUsd !== null && (
+            <p className="note spend-ceiling-pending">
+              The runner is still enforcing {usdCents(enforcedUsd)} from before this change; it applies{" "}
+              {usdCents(sc.settingUsd)} at the start of its next cycle.
+            </p>
+          )}
+          <form method="post" action={props.actionRoute} className="runner-control">
+            <input type="hidden" name="type" value="config.setFleetSpendCeiling" />
+            <input type="hidden" name="returnTo" value={props.returnTo} />
+            <label htmlFor="fleet-spend-ceiling" className="spend-ceiling-label">
+              New rolling 24-hour ceiling ($)
+            </label>
+            <input
+              id="fleet-spend-ceiling"
+              type="number"
+              name="rollingCeilingUsd"
+              min={1}
+              max={FLEET_SPEND_CEILING_MAX_USD}
+              step="1"
+              inputMode="decimal"
+              defaultValue={sc.settingUsd}
+              aria-label="New rolling 24-hour spend ceiling in US dollars"
+            />
+            <button type="submit" className="primary">
+              Set the spend ceiling
+            </button>
+          </form>
+        </div>
 
         {/* Circuit breakers, always a sentence (ADM-27) */}
         <p className="runner-circuits">{face.circuits}</p>

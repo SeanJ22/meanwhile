@@ -198,7 +198,46 @@ export interface ScoutToolContext {
    */
   readonly openBytes?: OpenBytes;
   readonly timeoutMs?: number;
+  /**
+   * The search seam (2026-09-19). Present only when a compliant search-index
+   * key is configured; absent leaves the `search` tool out of the toolkit's
+   * specs entirely, so a runtime with no key never offers it. It returns
+   * POINTERS ONLY — the model opens each hit with fetch_public/browse, which
+   * enforce robots and vault with provenance. The tool itself fetches no page
+   * content and vaults nothing.
+   */
+  readonly search?: ScoutSearch;
 }
+
+/** One pointer a search index returned. A URL and its title, never page content. */
+export interface SearchHit {
+  readonly url: string;
+  readonly title: string;
+  readonly provider: "brave" | "exa";
+}
+
+/** What one `search` call produced, across every configured provider. */
+export interface SearchProvidersResult {
+  readonly hits: readonly SearchHit[];
+  readonly requestCount: number;
+  readonly bytesFetched: number;
+  /** The providers that answered, e.g. ["brave","exa"]. */
+  readonly providersUsed: readonly string[];
+  /** Per-provider transport/HTTP failures, named. A provider erroring is not the call failing. */
+  readonly errors: readonly string[];
+}
+
+/**
+ * A compliant search-index lookup returning POINTERS ONLY. It is authorized API
+ * access (a key we pay for), not a crawl, so it does not pass through the robots
+ * gate — but nothing it returns is opened here: the model must fetch_public or
+ * browse each hit, and THOSE enforce robots and vault with provenance. No page
+ * content is requested from any provider (Exa's `contents` is omitted; Brave's
+ * default pointer response carries nothing to strip).
+ */
+export type ScoutSearch = (
+  input: { readonly query: string; readonly includeDomains?: readonly string[] },
+) => Promise<SearchProvidersResult>;
 
 export interface ScoutToolkit {
   readonly specs: readonly ScoutToolSpec[];
@@ -216,7 +255,7 @@ export interface ScoutToolkit {
 }
 
 /** The research tool names. `finish` and `record_rung` are the executor's own. */
-export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited"] as const;
+export const SCOUT_RESEARCH_TOOLS = ["read_permission", "fetch_public", "browse", "read_inherited", "search"] as const;
 export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */

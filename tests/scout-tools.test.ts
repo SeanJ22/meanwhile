@@ -14,7 +14,8 @@ import {
   type ScoutToolContext,
   type VaultBytes,
 } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { SCOUT_TOOL_SPECS, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import type { ScoutSearch } from "../lib/control-plane/scheduler/scout-contract.ts";
 
 /**
  * THE SEEDED FAILURE SUITE — the Scout's research tools.
@@ -170,13 +171,71 @@ test("robots: transport shapes — 404 is NO_ROBOTS; 403/429/3xx/5xx/timeout/HTM
 
 /* ======================================================== the specs */
 
-test("the toolkit exposes exactly the four research tools, each requiring rung and why", () => {
-  assert.deepEqual(SCOUT_TOOL_SPECS.map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
-  for (const spec of SCOUT_TOOL_SPECS) {
+test("the toolkit exposes exactly the research tools, each requiring rung and why", () => {
+  assert.deepEqual([...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), [...SCOUT_RESEARCH_TOOLS]);
+  for (const spec of [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC]) {
     const required = (spec.input_schema as { required: string[] }).required;
     assert.ok(required.includes("rung") && required.includes("why"), `${spec.name} must require rung and why`);
-    if (spec.name !== "read_inherited") assert.ok(required.includes("url"), `${spec.name} must require url`);
+    if (spec.name === "search") assert.ok(required.includes("query"), "search must require query, not url");
+    else if (spec.name !== "read_inherited") assert.ok(required.includes("url"), `${spec.name} must require url`);
   }
+});
+
+/* ============================================= the search tool (2026-09-19) */
+
+const fakeSearch = (hits: { url: string; title: string; provider: "brave" | "exa" }[], extra: Partial<Awaited<ReturnType<ScoutSearch>>> = {}): ScoutSearch =>
+  async () => ({ hits, requestCount: 2, bytesFetched: 1234, providersUsed: ["brave", "exa"], errors: [], ...extra });
+
+test("search is offered ONLY when a search seam is configured (inert without a key)", () => {
+  const open = fakeTransport({}).open;
+  const without = buildScoutToolkit(context({ openOne: open }));
+  assert.ok(!without.specs.some((s) => s.name === "search"), "no key -> the search tool is not in the specs at all");
+  const withSearch = buildScoutToolkit(context({ openOne: open, search: fakeSearch([]) }));
+  assert.ok(withSearch.specs.some((s) => s.name === "search"), "a seam -> search is offered");
+});
+
+test("search returns POINTERS as untrusted DATA, vaults nothing, and records a lead rung", async () => {
+  const open = fakeTransport({}).open;
+  const kit = buildScoutToolkit(context({ openOne: open, search: fakeSearch([
+    { url: "https://rogersforcountyattorney.com/", title: "Rogers for County Attorney", provider: "brave" },
+    { url: "https://www.meg-for-merrimack.com/", title: "Meg for Merrimack", provider: "exa" },
+  ]) }));
+  const res = await kit.call("search", { query: "Sarah Rogers for Merrimack County Attorney", rung: "compliant-alternate-route", why: "find the candidate's own site" }, "compliant-alternate-route");
+  assert.equal(res.ok, true);
+  assert.ok(res.forModel.includes("rogersforcountyattorney.com"), "the pointer is shown");
+  assert.ok(res.forModel.includes("BEGIN PUBLIC SOURCE DATA"), "pointers are wrapped as untrusted DATA");
+  assert.ok(/LEADS, not evidence/i.test(res.forModel), "the model is told a hit is a lead, not proof");
+  assert.equal(res.artifacts.length, 0, "search vaults nothing — evidence comes from fetch_public/browse");
+  assert.equal(res.rung?.tool, "search");
+  assert.equal(res.rung?.returnedCount, 2);
+  assert.deepEqual(res.rung?.nextHopUrls, ["https://rogersforcountyattorney.com/", "https://www.meg-for-merrimack.com/"]);
+});
+
+test("search: a provider index finding nothing is a real negative (ok), not a refusal", async () => {
+  const open = fakeTransport({}).open;
+  const kit = buildScoutToolkit(context({ openOne: open, search: fakeSearch([], { providersUsed: ["brave", "exa"] }) }));
+  const res = await kit.call("search", { query: "Jane Bradstreet Register of Probate", rung: "compliant-alternate-route", why: "is there any site at all" }, "compliant-alternate-route");
+  assert.equal(res.ok, true, "the search ran and found nothing — a real negative, not a failure");
+  assert.ok(/no pointers/i.test(res.forModel));
+  assert.equal(res.rung?.returnedCount, 0);
+});
+
+test("search: when no provider answers it is a named transport failure, not a false absence", async () => {
+  const open = fakeTransport({}).open;
+  const kit = buildScoutToolkit(context({ openOne: open, search: fakeSearch([], { providersUsed: [], errors: ["brave: HTTP 429", "exa: HTTP 500"] }) }));
+  const res = await kit.call("search", { query: "x", rung: "compliant-alternate-route", why: "y" }, "compliant-alternate-route");
+  assert.equal(res.ok, false, "no provider answered -> not a negative about the record");
+  assert.ok(res.forModel.includes("HTTP 429") && res.forModel.includes("HTTP 500"), "the provider errors are named");
+});
+
+test("search: an empty query is refused before any provider call", async () => {
+  const open = fakeTransport({}).open;
+  let called = false;
+  const kit = buildScoutToolkit(context({ openOne: open, search: async () => { called = true; return { hits: [], requestCount: 0, bytesFetched: 0, providersUsed: [], errors: [] }; } }));
+  const res = await kit.call("search", { query: "   ", rung: "compliant-alternate-route", why: "y" }, "compliant-alternate-route");
+  assert.equal(res.ok, false);
+  assert.ok(res.forModel.includes("query is required"));
+  assert.equal(called, false, "no provider is called for an empty query");
 });
 
 /* ============================== SEEDED (a): the network-to-model boundary */

@@ -58,26 +58,15 @@ export function startHangWatchdog(options: { readonly killAfterMs?: number; read
   const pinger = setInterval(beat, pingMs);
   pinger.unref();
 
-  // The worker mirrors hangShouldTerminate() from lib/control-plane/runner-liveness.ts.
-  // It must be self-contained (eval worker: no imports), so the one-line rule is inline.
-  const source = `
-    const { workerData } = require('node:worker_threads');
-    const view = new BigInt64Array(workerData.sab);
-    const killAfterMs = workerData.killAfterMs;
-    const checkMs = Math.max(1000, Math.floor(workerData.pingMs));
-    if (Number.isFinite(killAfterMs) && killAfterMs > 0) {
-      const timer = setInterval(() => {
-        const last = Number(Atomics.load(view, 0));
-        if (Number.isFinite(last) && last > 0 && Date.now() - last > killAfterMs) {
-          const staleS = Math.round((Date.now() - last) / 1000);
-          try { console.error('[hang-watchdog] pilot-runner main thread unresponsive for ' + staleS + 's (threshold ' + Math.round(killAfterMs / 1000) + 's); terminating pid ' + process.pid + ' so the relaunch trigger restarts it'); } catch (e) {}
-          try { process.kill(process.pid, 'SIGKILL'); } catch (e) { try { process.exit(137); } catch (e2) {} }
-        }
-      }, checkMs);
-      timer.unref?.();
-    }
-  `;
-  const worker = new Worker(source, { eval: true, execArgv: [], workerData: { sab, killAfterMs, pingMs } });
+  // The check runs in a separate ESM module (no eval string, so no CommonJS
+  // `require` — RULING 46), loaded by URL beside this file. It mirrors
+  // hangShouldTerminate() from lib/control-plane/runner-liveness.ts. execArgv is
+  // pinned to the one flag it needs to load a .mts, dropping any inherited
+  // --env-file the watchdog has no use for.
+  const worker = new Worker(new URL("./runner-hang-watchdog-worker.mts", import.meta.url), {
+    execArgv: ["--experimental-strip-types"],
+    workerData: { sab, killAfterMs, pingMs },
+  });
   // The watchdog must never keep the runner alive on its own, nor crash it if it dies.
   worker.unref();
   worker.on("error", () => {

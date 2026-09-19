@@ -37,15 +37,58 @@ export const FLEET_ZONE = "America/Phoenix";
  * The Saturday operational-night blackout is a separate courtesy toward the
  * public sites we depend on and is kept (`scheduledBlackoutAt`).
  */
+/**
+ * The aggregate safety bounds, as a widening of {@link FLEET_SAFETY_BOUNDS}:
+ * `rolling24HourModelUsd` is a plain `number`, not the literal constant, because
+ * the value IN FORCE is the owner's console override read at runtime
+ * (`AdminConfig.fleetSpendCeiling`, resolved by {@link resolveRollingCeiling}),
+ * and the constant below is only the fallback.
+ */
+export interface FleetSafetyBounds {
+  readonly rolling24HourModelUsd: number;
+  readonly maxDownloadBytes: number;
+  readonly maxWallMsPerCycle: number;
+}
+
 export const FLEET_SAFETY_BOUNDS = {
-  // Interim brake, 2026-09-19: dropped from $100 to $25 while the scout early-stop
-  // fix lands. ~83% of scout spend was buying walks that ran to the rung bound and
-  // aborted SCOUT_NO_PROGRESS with no result; the ceiling is not paying full rate
-  // for that. Raise it back once walks conclude with a result (proven by numbers).
-  rolling24HourModelUsd: 25,
+  // The FALLBACK rolling 24-hour model-spend ceiling. The value in force is the
+  // owner's console override (`AdminConfig.fleetSpendCeiling`), read at the start
+  // of every cycle through `resolveRollingCeiling`; this constant governs only
+  // when no override stands or the row cannot be read — "a ceiling that
+  // disappears must not become no ceiling". Restored to $100 (the pre-2026-09-19
+  // value) now the console dial can move it with no deploy and no restart; the
+  // interim $25 brake is retired into the dial.
+  rolling24HourModelUsd: 100,
   maxDownloadBytes: 24 * 1024 * 1024,
   maxWallMsPerCycle: 15 * 60_000,
 } as const;
+
+/**
+ * The largest ceiling the owner's console control accepts. Not a spend cap on
+ * its own — the runtime bounds above still hold — but a typo guard, so a missing
+ * decimal cannot turn $100 into an order of magnitude nobody meant.
+ */
+export const FLEET_SPEND_CEILING_MAX_USD = 10_000;
+
+/**
+ * The rolling 24-hour model-spend ceiling in force, given the owner's override
+ * (or null when none stands / it could not be read).
+ *
+ * The fallback is the built-in {@link FLEET_SAFETY_BOUNDS} value, so a missing or
+ * unreadable override is still a real ceiling and never "no ceiling". A
+ * non-positive or non-finite override is treated as no override, for the same
+ * reason — a corrupt row must not read as "spend nothing" or "spend without
+ * limit". `source` lets a surface show a live override apart from the fallback.
+ */
+export function resolveRollingCeiling(
+  overrideUsd: number | null | undefined,
+): { readonly rollingCeilingUsd: number; readonly source: "OVERRIDE" | "FALLBACK"; readonly fallbackUsd: number } {
+  const fallbackUsd = FLEET_SAFETY_BOUNDS.rolling24HourModelUsd;
+  if (overrideUsd === null || overrideUsd === undefined || !Number.isFinite(overrideUsd) || overrideUsd <= 0) {
+    return { rollingCeilingUsd: fallbackUsd, source: "FALLBACK", fallbackUsd };
+  }
+  return { rollingCeilingUsd: overrideUsd, source: "OVERRIDE", fallbackUsd };
+}
 
 export type FleetSafetyStatus = "ACTIVE" | "PAUSED" | "SCHEDULED BLACKOUT" | "CIRCUIT BROKEN";
 export type FleetStopCode =
@@ -85,7 +128,7 @@ export interface FleetNamedDeferral {
 export interface FleetSafetySnapshot {
   readonly formatVersion: 1;
   readonly status: FleetSafetyStatus;
-  readonly bounds: typeof FLEET_SAFETY_BOUNDS;
+  readonly bounds: FleetSafetyBounds;
   readonly cycle: {
     readonly startedAt: string;
     readonly modelUsd: number | null;
@@ -263,7 +306,16 @@ export function parseContentRangeTotal(header: string | null): number | null {
 }
 
 export class FleetSafetyController {
-  readonly bounds = FLEET_SAFETY_BOUNDS;
+  /**
+   * The bounds THIS cycle runs under. `rolling24HourModelUsd` is the owner's
+   * console override when the caller passed one (read at cycle start from the
+   * control plane, not this module's import), and the fallback otherwise —
+   * assigned here rather than initialised to the constant so a live change
+   * governs the very next reservation with no deploy and no restart. Both the
+   * per-request guard (`reserveModelRequest`) and the pre-admission read
+   * (`rollingCeilingReached`) read it, so moving this one value moves both.
+   */
+  readonly bounds: FleetSafetyBounds;
   readonly startedAt: string;
   private readonly startedMs: number;
   private readonly historicalNightUsd: number | null;
@@ -289,8 +341,20 @@ export class FleetSafetyController {
     readonly circuits?: readonly ProviderCircuit[];
     readonly lastSuccessfulActivity?: string | null;
     readonly costLedgerReadable?: boolean;
+    /**
+     * The owner's rolling-24h ceiling override in USD, or undefined/null to run
+     * under the built-in fallback. A non-finite or non-positive value is
+     * defended here too and falls back — a disappeared ceiling is never no
+     * ceiling.
+     */
+    readonly rollingCeilingUsd?: number | null;
     readonly clock?: () => number;
   }) {
+    const ceiling = resolveRollingCeiling(input.rollingCeilingUsd);
+    this.bounds =
+      ceiling.source === "OVERRIDE"
+        ? { ...FLEET_SAFETY_BOUNDS, rolling24HourModelUsd: ceiling.rollingCeilingUsd }
+        : FLEET_SAFETY_BOUNDS;
     this.startedAt = input.now;
     this.startedMs = Date.parse(input.now);
     this.night = operationalNightAt(input.now);

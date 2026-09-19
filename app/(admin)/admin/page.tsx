@@ -59,6 +59,7 @@ import { cookies } from "next/headers";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import {
   openControlPlane,
+  readAdminConfig,
   readCacheObservation,
   readDecisions,
   readDigests,
@@ -68,6 +69,8 @@ import {
   readSnapshot,
   type ReadOutcome,
 } from "@/lib/control-plane/admin-data.ts";
+import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
+import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { costSectionNumbers, spendWindowRows } from "@/lib/control-plane/cost-panel.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
 import { groupWaiting, ownerTypeOf, waitingCardView, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
@@ -212,7 +215,7 @@ export default async function AdminPage() {
    * the runner, the obligations and the decision queue behind it. It streams in
    * its own component now (`sections/fleet.tsx`), which audits its own numbers.
    */
-  const [snapshotOut, heartbeatOut, digestsOut, maptilerDigestsOut, decisionsOut, cacheOut, intentsOut, fleetSafetyOut] = await Promise.all([
+  const [snapshotOut, heartbeatOut, digestsOut, maptilerDigestsOut, decisionsOut, cacheOut, intentsOut, fleetSafetyOut, adminConfigOut] = await Promise.all([
     readSnapshot(opened.repos),
     readHeartbeat(opened.repos),
     readDigests(opened.repos),
@@ -221,6 +224,7 @@ export default async function AdminPage() {
     readCacheObservation(opened.repos),
     readResearchIntents(opened.repos),
     readFleetSafety(opened.repos),
+    readAdminConfig(opened.repos),
   ]);
 
   const snapshot: OwnerSnapshot | null = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
@@ -258,6 +262,26 @@ export default async function AdminPage() {
         ceilings: { rolling24HourModelUsd: fleetSafety.bounds.rolling24HourModelUsd },
       })
     : [];
+  /*
+   * THE SPEND CEILING, AND WHETHER IT IS AN OVERRIDE OR THE FALLBACK. Read live
+   * from the owner's policy row so a change Sean just made shows at once with its
+   * source and provenance — reading the row back proves the WRITE. The value the
+   * runner is actually enforcing rides on the snapshot (`fleetSafety.bounds`); the
+   * runner card compares the two, and their agreement is what proves the
+   * controller READ the change on its next cycle. A row that could not be read is
+   * said so, never asserted as the fallback.
+   */
+  const adminConfig = adminConfigOut.kind === "HELD" ? adminConfigOut.value : null;
+  const ceilingResolved = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(adminConfig));
+  const spendCeiling = {
+    settingUsd: ceilingResolved.rollingCeilingUsd,
+    source: ceilingResolved.source,
+    fallbackUsd: ceilingResolved.fallbackUsd,
+    setAt: adminConfig?.fleetSpendCeiling?.decidedAt ?? null,
+    setBy: adminConfig?.fleetSpendCeiling?.decidedBy ?? null,
+    previousUsd: adminConfig?.fleetSpendCeiling?.previousUsd ?? null,
+    readable: adminConfigOut.kind !== "STORE_UNREACHABLE",
+  };
 
   const cards = snapshot ? snapshot.decisionCards : [];
   const collapsedDecisions = collapseDecisionLog(decisions);
@@ -516,6 +540,8 @@ export default async function AdminPage() {
         safetyNote={outcomeNote(fleetSafetyOut)}
         returnTo={HERE}
         intentRoute={INTENT_ROUTE}
+        actionRoute={ACTION_ROUTE}
+        spendCeiling={spendCeiling}
         noteMaxChars={INTENT_NOTE_MAX_CHARS}
       />
 

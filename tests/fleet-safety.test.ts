@@ -103,6 +103,42 @@ test("rollingCeilingReached is the PRE-admission read of the ceiling — so the 
   assert.deepEqual(unmeasured.rollingCeilingReached(0.6), { reached: false, spentUsd: null, capUsd: cap });
 });
 
+test("the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates", () => {
+  const recent = "2026-09-05T02:00:00.000Z";
+  const fallback = FLEET_SAFETY_BOUNDS.rolling24HourModelUsd;
+
+  // No override → the fallback governs the bounds, the snapshot, and both reads.
+  const def = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  assert.equal(def.bounds.rolling24HourModelUsd, fallback);
+  assert.equal(def.snapshot(NIGHT).bounds.rolling24HourModelUsd, fallback);
+
+  // An override of $300 governs. $200 already spent is OVER the $100 fallback but
+  // UNDER the override — the dial, not the constant, is what admits it, and the
+  // pre-admission read and the per-request reservation agree.
+  const raised = new FleetSafetyController({ now: NIGHT, costs: [cost(200, recent)], rollingCeilingUsd: 300, clock: () => Date.parse(NIGHT) });
+  assert.equal(raised.bounds.rolling24HourModelUsd, 300);
+  assert.equal(raised.rollingCeilingReached(0.6).reached, false, "under the raised ceiling the lane is not paused");
+  assert.doesNotThrow(
+    () => raised.reserveModelRequest("anthropic", "under-raised-ceiling", REQUEST),
+    "the per-request guard agrees with the pre-admission read",
+  );
+
+  // Lowering the override below the spend pauses the lane at the dial, not the fallback.
+  const lowered = new FleetSafetyController({ now: NIGHT, costs: [cost(200, recent)], rollingCeilingUsd: 150, clock: () => Date.parse(NIGHT) });
+  assert.equal(lowered.rollingCeilingReached(0).reached, true);
+  assert.equal(lowered.rollingCeilingReached(0).capUsd, 150);
+  assert.throws(
+    () => lowered.reserveModelRequest("anthropic", "over-lowered-ceiling", REQUEST),
+    (e: unknown) => e instanceof FleetSafetyRefusal && e.code === "ROLLING_24_HOUR_MODEL_SPEND_CEILING",
+  );
+
+  // A disappeared or malformed ceiling is never NO ceiling: it falls back.
+  for (const bad of [0, -10, Number.NaN, Number.POSITIVE_INFINITY]) {
+    const c = new FleetSafetyController({ now: NIGHT, costs: [], rollingCeilingUsd: bad, clock: () => Date.parse(NIGHT) });
+    assert.equal(c.bounds.rolling24HourModelUsd, fallback, `an override of ${bad} falls back to the built-in ceiling`);
+  }
+});
+
 test("an unmetered Scout cost row fails closed instead of disappearing from aggregate spend", () => {
   const row = cost(null, "2026-09-05T02:00:00.000Z");
   const unmeteredScout: CostEntry = {

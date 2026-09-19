@@ -1,0 +1,54 @@
+/**
+ * **A RECORDED, EXPIRING ABSENCE FOR THE SCOUT LANE.** (RULING 52/53, 2026-09-19.)
+ *
+ * RULING 52: an empty branch is one measurement on one date, never a verdict.
+ * RULING 53: a recorded absence expires on a clock, so an exhausted field is
+ * re-walked later rather than either re-walked forever or dropped for good.
+ *
+ * The law already exists for coverage (`lib/hunt` ARGUED_ABSENT, RULING 94/144);
+ * this enforces it for the control-plane scout scheduler, which did not. ~83% of
+ * `candidate-authored-awaits-site` walks are correct negatives — a New Jersey
+ * township candidate usually has no site. Re-walking that proven negative every
+ * cycle at model cost is the waste this ends: a scout that argues the record
+ * absent records it (`recordArguedAbsence` in durable.ts), and the obligation is
+ * not re-walked until the absence expires (`scheduleObligation` honours it).
+ *
+ * This is NOT a debt. Debt is a reading that FAILED and retries fast; an absence
+ * is a reading that SUCCEEDED at establishing nothing is there and rechecks
+ * slowly. It is visible as an ordinary scheduled row, never an incident.
+ */
+
+/** How long a proven absence stands before the record is re-walked. RULING 53. */
+export const ABSENCE_EXPIRY_DAYS = 30;
+
+/** The instant an absence recorded `now` expires and the record is owed again. */
+export function absenceExpiry(now: string): string {
+  return new Date(Date.parse(now) + ABSENCE_EXPIRY_DAYS * 86_400_000).toISOString();
+}
+
+/**
+ * Whether a finished scout result is an ARGUED absence — a correct negative that
+ * should hold the obligation on the absence clock rather than re-walk it.
+ *
+ * All four must hold:
+ *  - it FINISHED (no refusal): a transport failure or a no-finish is debt/retry,
+ *    never a recorded absence;
+ *  - the outcome is NO_PROGRESS or BLOCKED (an argued negative, not a find);
+ *  - it ended by the model's own judgment or at the bound, not mid-flight;
+ *  - it cleared the distinct-evidence-rung floor — RULING 52's "argued, never
+ *    asserted": the floor is what makes an absence argued rather than assumed.
+ */
+export function isArguedAbsence(
+  result: {
+    readonly outcome: string;
+    readonly stoppedBy: string;
+    readonly distinctEvidenceRungs: number;
+    readonly refusal: unknown;
+  },
+  minRungs: number,
+): boolean {
+  if (result.refusal !== null && result.refusal !== undefined) return false;
+  if (result.outcome !== "NO_PROGRESS" && result.outcome !== "BLOCKED") return false;
+  if (result.stoppedBy !== "MODEL" && result.stoppedBy !== "BOUND") return false;
+  return result.distinctEvidenceRungs >= minRungs;
+}

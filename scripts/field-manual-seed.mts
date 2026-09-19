@@ -35,6 +35,8 @@ import { MANIFEST_ROUTES } from "../lib/hunt/branch-manifest.ts";
 import { KNOWN_PLATFORMS } from "../lib/hunt/platform-tenancy.ts";
 import { DESCENT_SEEDS } from "../lib/hunt/descent-seeds.ts";
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
+import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
+import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
@@ -81,6 +83,54 @@ function bestOutcome(outcomes: readonly { readonly outcome?: unknown }[] | undef
 function latestDate(...values: (string | null | undefined)[]): string | null {
   const dates = values.filter((v): v is string => typeof v === "string" && /\d{4}-\d{2}-\d{2}/.test(v));
   return dates.length === 0 ? null : dates.sort().at(-1)!;
+}
+
+/** The first bare http(s) URL in a block of prose, trailing punctuation trimmed. A route sitting in a sentence. */
+function firstUrl(text: string): string | null {
+  const m = /\bhttps?:\/\/[^\s)>\]"'`]+/.exec(text);
+  return m ? m[0].replace(/[.,;:]+$/, "") : null;
+}
+
+const PLATFORM_TOKENS: readonly [RegExp, string][] = [
+  [/legistar[- ]?insite/i, "legistar-insite"], [/legistar/i, "legistar"], [/civicclerk/i, "civicclerk"],
+  [/civicplus/i, "civicplus"], [/granicus/i, "granicus"], [/novus\s?agenda|novus/i, "novusagenda"],
+  [/boardbook/i, "boardbook"], [/primegov/i, "primegov"], [/onbase|hyland/i, "onbase"],
+  [/apptegy|thrillshare/i, "apptegy"], [/diligent/i, "diligent"], [/revize/i, "revize"], [/escribe/i, "escribe"],
+];
+/** Vendor platforms named in a heading or line. A platform hint sharpens a platform-scoped query and never hides an entry from the scout path, which does not filter on it. */
+function platformHints(text: string): string[] {
+  const out = new Set<string>();
+  for (const [re, id] of PLATFORM_TOKENS) if (re.test(text)) out.add(id);
+  return [...out];
+}
+
+/**
+ * Split a Markdown doc into its `##`/`###` sections (the `#` title is skipped),
+ * fence-aware so a `##` inside a ``` block is never read as a heading. The unit
+ * a worker inherits from the per-state dossiers and the playbook: one titled,
+ * queryable finding rather than a 292 KB file behind a filename.
+ */
+function splitMarkdownSections(text: string): { level: number; heading: string; body: string }[] {
+  const out: { level: number; heading: string; body: string }[] = [];
+  let cur: { level: number; heading: string; body: string[] } | null = null;
+  let inFence = false;
+  for (const line of text.split(/\r?\n/)) {
+    if (/^\s*```/.test(line)) inFence = !inFence;
+    const m = inFence ? null : /^(#{2,3})\s+(.*\S)\s*$/.exec(line);
+    if (m) {
+      if (cur) out.push({ level: cur.level, heading: cur.heading, body: cur.body.join("\n").trim() });
+      cur = { level: m[1]!.length, heading: m[2]!.trim(), body: [] };
+    } else if (cur) {
+      cur.body.push(line);
+    }
+  }
+  if (cur) out.push({ level: cur.level, heading: cur.heading, body: cur.body.join("\n").trim() });
+  return out;
+}
+
+function firstProseLine(body: string): string {
+  return body.split("\n").find((l) => l.trim() && !/^[|>`#-]/.test(l.trim()))?.replace(/\s+/g, " ").trim()
+    ?? body.split("\n").find((l) => l.trim())?.replace(/\s+/g, " ").trim() ?? "";
 }
 
 /* ------------------------------------------------------------- importers --- */
@@ -259,6 +309,8 @@ function fromDocs(): FieldManualEntry[] {
         title: `${state.toUpperCase()} ${name === "NOTES" ? "dossier — jurisdiction-specific walls, vendor quirks, statutes" : name === "sources" ? "source register & filing-officer statute shape" : "platform-tenancy evidence"}`,
       });
     }
+    docs.push({ path: `states/${state}/descent.md`, kind: "DESCENT_NOTE", role: "SHARED", states: [state], title: `${state.toUpperCase()} descent narrative — the tier walk, per level found/followed/yielded/barren` });
+    docs.push({ path: `states/${state}/descent-candidates.md`, kind: "DESCENT_NOTE", role: "SHARED", states: [state], title: `${state.toUpperCase()} descent candidates — harvested bodies not yet matched to the registry` });
   }
   const entries: FieldManualEntry[] = [];
   for (const doc of docs) {
@@ -290,6 +342,228 @@ function fromDocs(): FieldManualEntry[] {
   return collect("markdown-docs", entries);
 }
 
+/**
+ * The vendor TENANT registries — the single most reusable thing in the whole
+ * inventory and the one that was not even pointed to: a bodyId → tenant slug →
+ * exact API URL. Read only the scalar wiring; never the `venues` getter, which
+ * resolves against the promoted projection at runtime and is not this seed's to
+ * touch.
+ */
+function fromTenantRegistries(): FieldManualEntry[] {
+  const entries: FieldManualEntry[] = [];
+  const legistarSrc = "lib/sources/legistar/client-registry.ts";
+  for (const c of LEGISTAR_CLIENTS) {
+    entries.push({
+      id: fieldManualEntryId(legistarSrc, c.bodyId),
+      role: "SHARED",
+      kind: "VENDOR_TENANT",
+      title: `Legistar tenant "${c.slug}" — ${c.jurisdiction}`,
+      summary: `bodyId ${c.bodyId} → https://webapi.legistar.com/v1/${c.slug}/events${c.insiteHost ? `; portal ${c.insiteHost}` : ""}`,
+      states: stateOf(c.ocdId),
+      recordClasses: ["meetings"],
+      platforms: ["legistar"],
+      outcome: "YIELDED",
+      url: `https://webapi.legistar.com/v1/${c.slug}/events`,
+      source: legistarSrc,
+      observedAt: c.insiteFeed?.observedAt ?? null,
+      tier: null,
+      payload: { slug: c.slug, ocdId: c.ocdId, bodyId: c.bodyId, jurisdiction: c.jurisdiction, publishingOrg: c.publishingOrg, timeZone: c.timeZone, insiteHost: c.insiteHost ?? null, insiteFeed: c.insiteFeed ?? null },
+    });
+  }
+  const insiteSrc = "lib/sources/legistar-insite/tenant-registry.ts";
+  for (const t of INSITE_TENANTS) {
+    entries.push({
+      id: fieldManualEntryId(insiteSrc, t.bodyId),
+      role: "SHARED",
+      kind: "VENDOR_TENANT",
+      title: `Legistar InSite portal "${t.slug}" — ${t.jurisdiction}`,
+      summary: `bodyId ${t.bodyId} → portal https://${t.host}/Calendar.aspx; bodies ${t.bodyNames.join(", ")}`,
+      states: stateOf(t.ocdId ?? ""),
+      recordClasses: ["meetings"],
+      platforms: ["legistar-insite"],
+      outcome: "YIELDED",
+      url: `https://${t.host}/Calendar.aspx`,
+      source: insiteSrc,
+      observedAt: null,
+      tier: null,
+      payload: { slug: t.slug, host: t.host, ocdId: t.ocdId, bodyId: t.bodyId, bodyNames: t.bodyNames, bodyName: t.bodyName, jurisdiction: t.jurisdiction, publishingOrg: t.publishingOrg, timeZone: t.timeZone, clerkScheduleUrl: t.clerkScheduleUrl },
+    });
+  }
+  return collect("vendor-tenant-registries", entries);
+}
+
+/** The tier vocabulary table — a tier this product has no word for is a tier it will not look for. One entry per (state, tier) cell. */
+function fromTiers(): FieldManualEntry[] {
+  const path = "states/TIERS.md";
+  let text: string;
+  try { text = readFileSync(join(ROOT, path), "utf8"); } catch { return collect(path, []); }
+  const stateCols = ["nj", "nh", "az"]; // the table's column order: New Jersey | New Hampshire | Arizona
+  const entries: FieldManualEntry[] = [];
+  for (const line of text.split(/\r?\n/)) {
+    const m = /^\|\s*(\d+)\s*·\s*([^|]+?)\s*\|(.+)\|\s*$/.exec(line.trim());
+    if (!m) continue;
+    const tierNum = m[1]!;
+    const tierName = m[2]!.trim();
+    const cells = m[3]!.split("|").map((c) => c.replace(/\*\*/g, "").trim());
+    cells.slice(0, 3).forEach((cell, i) => {
+      if (!cell || cell === "—") return;
+      const state = stateCols[i]!;
+      entries.push({
+        id: fieldManualEntryId(path, `${state}:tier${tierNum}`),
+        role: "SHARED",
+        kind: "TIER_VOCAB",
+        title: `${state.toUpperCase()} tier ${tierNum} — ${tierName}`,
+        summary: `${state.toUpperCase()} calls its tier-${tierNum} (${tierName}) bodies: ${cell}`,
+        states: [state],
+        recordClasses: [],
+        platforms: [],
+        outcome: "REFERENCE",
+        url: null,
+        source: path,
+        observedAt: "2026-08-26",
+        tier: tierNum,
+        payload: { state, tier: tierNum, tierName, vocabulary: cell },
+      });
+    });
+  }
+  return collect(path, entries);
+}
+
+/** The descent RESULTS — the harvested candidate bodies per tier, per state. One entry per tier walked, the whole level (declined doors and all) kept in payload. */
+function fromDescentResults(): FieldManualEntry[] {
+  const entries: FieldManualEntry[] = [];
+  for (const state of ["az", "nh", "nj"]) {
+    const path = `states/${state}/descent.json`;
+    let doc: { startedOn?: unknown; levels?: unknown };
+    try { doc = JSON.parse(readFileSync(join(ROOT, path), "utf8")); } catch { continue; }
+    const levels = Array.isArray(doc.levels) ? (doc.levels as Record<string, unknown>[]) : [];
+    for (const lvl of levels) {
+      const tier = String(lvl.tier ?? "");
+      const yielded = Number(lvl.yielded ?? 0);
+      const newCand = Number(lvl.candidatesNew ?? 0);
+      const vocab = strings(lvl.vocabulary);
+      entries.push({
+        id: fieldManualEntryId(path, tier),
+        role: "SHARED",
+        kind: "DESCENT_RESULT",
+        title: `${state.toUpperCase()} ${tier} descent${doc.startedOn ? ` (${String(doc.startedOn)})` : ""}`,
+        summary: `found ${lvl.found}, followed ${lvl.followed}, yielded ${yielded}, barren ${lvl.barren}; ${newCand} new candidate bodies; vocabulary ${vocab.join("/") || "none"}`,
+        states: [state],
+        recordClasses: [],
+        platforms: [],
+        outcome: yielded > 0 ? "YIELDED" : newCand > 0 ? "REFERENCE" : "ZERO",
+        url: null,
+        source: path,
+        observedAt: typeof lvl.walkedOn === "string" ? lvl.walkedOn : (typeof doc.startedOn === "string" ? doc.startedOn : null),
+        tier,
+        payload: lvl,
+      });
+    }
+  }
+  return collect("states/*/descent.json", entries);
+}
+
+/** The citation ledger — a proven officeholder source cannot delete a person from a reader's page. One entry per distinct confirming URL, its people kept in payload. */
+function fromCitationConfirmations(): FieldManualEntry[] {
+  const path = "data/states/nj/hunt/citation-confirmations.json";
+  let doc: { rows?: unknown };
+  try { doc = JSON.parse(readFileSync(join(ROOT, path), "utf8")); } catch { return collect(path, []); }
+  const rows = Array.isArray(doc.rows) ? (doc.rows as Record<string, unknown>[]) : [];
+  const byUrl = new Map<string, { url: string; source: string; last: string; persons: { person: string; firstConfirmedOn: string; lastConfirmedOn: string }[] }>();
+  for (const r of rows) {
+    const url = typeof r.url === "string" ? r.url : "";
+    if (!url) continue;
+    const person = String(r.person ?? "").replace(/^[\s:*]+/, "").replace(/\s+/g, " ").trim();
+    const last = String(r.lastConfirmedOn ?? "");
+    const g = byUrl.get(url) ?? { url, source: String(r.source ?? ""), last: "", persons: [] };
+    g.persons.push({ person, firstConfirmedOn: String(r.firstConfirmedOn ?? ""), lastConfirmedOn: last });
+    if (last > g.last) g.last = last;
+    byUrl.set(url, g);
+  }
+  const entries: FieldManualEntry[] = [];
+  for (const g of byUrl.values()) {
+    let host = g.url;
+    try { host = new URL(g.url).hostname; } catch { /* keep the raw string */ }
+    entries.push({
+      id: fieldManualEntryId(path, g.url),
+      role: "SHARED",
+      kind: "CITATION_SOURCE",
+      title: `NJ officeholder source — ${host}`,
+      summary: `a confirmed source for ${g.persons.length} officeholder(s); last confirmed ${g.last || "?"}`,
+      states: ["nj"],
+      recordClasses: [],
+      platforms: [],
+      outcome: "YIELDED",
+      url: g.url,
+      source: path,
+      observedAt: g.last || null,
+      tier: null,
+      payload: { url: g.url, source: g.source, persons: g.persons },
+    });
+  }
+  return collect(path, entries);
+}
+
+/** The per-state dossiers, section by section — each `##`/`###` finding (a wall, a vendor quirk, a statute, a route in prose) as its own queryable entry, the full section kept in payload. */
+function fromStateNotes(): FieldManualEntry[] {
+  const entries: FieldManualEntry[] = [];
+  for (const state of ["az", "nh", "nj"]) {
+    const path = `states/${state}/NOTES.md`;
+    let text: string;
+    try { text = readFileSync(join(ROOT, path), "utf8"); } catch { continue; }
+    for (const sec of splitMarkdownSections(text)) {
+      if (!sec.body) continue;
+      const lead = firstProseLine(sec.body);
+      entries.push({
+        id: fieldManualEntryId(path, sec.heading),
+        role: "SHARED",
+        kind: "STATE_NOTE",
+        title: `${state.toUpperCase()} — ${sec.heading}`.slice(0, 200),
+        summary: (lead || sec.heading).slice(0, 300),
+        states: [state],
+        recordClasses: [],
+        platforms: platformHints(`${sec.heading}\n${sec.body.slice(0, 600)}`),
+        outcome: "REFERENCE",
+        url: firstUrl(sec.body),
+        source: path,
+        observedAt: latestDate(sec.heading, ...sec.body.split("\n").slice(0, 8)),
+        tier: null,
+        payload: { heading: sec.heading, level: sec.level, body: sec.body },
+      });
+    }
+  }
+  return collect("states/*/NOTES.md", entries);
+}
+
+/** The ZIP playbook, indexed — every `##`/`###` rung/recipe as a queryable entry (the "what to try for a township clerk" index). The 292 KB of prose stays the pointer entry; the index is what a worker can actually reach. */
+function fromPlaybookIndex(): FieldManualEntry[] {
+  const path = "docs/zip-playbook.md";
+  const src = `${path}#index`;
+  let text: string;
+  try { text = readFileSync(join(ROOT, path), "utf8"); } catch { return collect(src, []); }
+  const entries: FieldManualEntry[] = [];
+  for (const sec of splitMarkdownSections(text)) {
+    const lead = firstProseLine(sec.body);
+    entries.push({
+      id: fieldManualEntryId(src, sec.heading),
+      role: "SHARED",
+      kind: "PLAYBOOK_RUNG",
+      title: sec.heading.slice(0, 200),
+      summary: (lead || sec.heading).slice(0, 300),
+      states: stateOf(sec.heading, lead),
+      recordClasses: [],
+      platforms: platformHints(`${sec.heading}\n${lead}`),
+      outcome: "REFERENCE",
+      url: null,
+      source: path,
+      observedAt: latestDate(sec.heading, lead),
+      tier: null,
+      payload: { heading: sec.heading, level: sec.level, lead, doc: path },
+    });
+  }
+  return collect(src, entries);
+}
+
 /* ------------------------------------------------------------------ main --- */
 
 async function main(): Promise<void> {
@@ -313,6 +587,12 @@ async function main(): Promise<void> {
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
     ...fromDocs(),
+    ...fromTenantRegistries(),
+    ...fromTiers(),
+    ...fromDescentResults(),
+    ...fromCitationConfirmations(),
+    ...fromStateNotes(),
+    ...fromPlaybookIndex(),
   ];
 
   // RULING 159 floor: a seed that consolidated NOTHING did not read the stores —

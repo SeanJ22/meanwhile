@@ -146,6 +146,7 @@ import {
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { SCOUT_LOOP_STEP, SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { SCOUT_TOOL_SPECS, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
@@ -892,6 +893,21 @@ finishPhase("open-occurrences");
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
 const credentialConfigured = workerKey.length > 0;
 
+/* Compliant search-index discovery (RULING 248: find every avenue). Null when
+   neither BRAVE_SEARCH_API_KEY nor EXA_API_KEY is set — the `search` tool is
+   then left out of the toolkit entirely and the lane behaves exactly as before.
+   Pointers only: the model still opens each hit with fetch_public/browse, which
+   enforce robots and vault. */
+const scoutSearch = makeScoutSearch({
+  braveKey: process.env.BRAVE_SEARCH_API_KEY,
+  exaKey: process.env.EXA_API_KEY,
+});
+if (scoutSearch !== null) {
+  console.log(
+    `  scout search: ENABLED (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}) — pointers only, robots enforced downstream`,
+  );
+}
+
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
@@ -1378,7 +1394,7 @@ const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
 const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? scoutExecutor({
       transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
-      toolkitFor: buildScoutToolkit,
+      toolkitFor: (toolCtx) => buildScoutToolkit(scoutSearch !== null ? { ...toolCtx, search: scoutSearch } : toolCtx),
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
         providerId: registry.providerOf(row.obligation.id),

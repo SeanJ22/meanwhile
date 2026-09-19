@@ -199,6 +199,8 @@ export const REPRESENTATION_BUDGETS: Readonly<Record<string, number>> = {
   browse: 96_000,
   read_permission: 12_000,
   read_inherited: 48_000,
+  // A ranked pointer list (URLs + titles), no page content — small by construction.
+  search: 12_000,
 };
 
 /** The budget for a tool, or the smallest budget when the tool is not named (never unbounded). */

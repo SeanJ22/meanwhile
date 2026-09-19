@@ -1,5 +1,6 @@
 /** Direct Census ACS retrieval/validation/promotion; writes no repository file. */
 import { fetch as acsFetch, KEY_VAR } from "../lib/sources/census-acs-population/index.ts";
+import { acsTableTooShort } from "../lib/sources/bulk-completeness.ts";
 import { censusAcsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -9,6 +10,7 @@ import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
   isSourceAcquisitionFailure,
   recordRegisteredSourceAcquisitionFailure,
+  sourceAcquisitionFailure,
   withPublisherAcquisitionDeadline,
 } from "../lib/civic-data/source-acquisition-failure.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
@@ -41,6 +43,14 @@ async function main(): Promise<void> {
         return [settled[0].value, settled[1].value] as const;
       },
     );
+    // A truncated-but-valid table parses cleanly and would promote a country
+    // with almost no ZCTAs. The adapter's own JSON.parse refuses an error page;
+    // this refuses a short table, the completeness half the adapter cannot see
+    // from one call. Kept here rather than in the reader-bound census adapter.
+    for (const fetched of [zcta, state]) {
+      const short = acsTableTooShort(fetched.scope, fetched.rows.length - 1);
+      if (short !== null) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", short);
+    }
     candidate = censusAcsCandidate(zcta, state);
   } catch (error) {
     // A missing key stays a configuration failure. Only the source module's

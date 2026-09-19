@@ -11,6 +11,7 @@ import {
   indexDivisions,
   normalize,
   parseCsv,
+  pluralRosterIssue,
   requestCount,
   resetRequestCount,
   rowsToPeople,
@@ -119,6 +120,25 @@ test("rows without an id are skipped", () => {
   );
   assert.equal(people.length, 1);
   assert.equal(people[0].name, "Real Person");
+});
+
+test("a roster with the wrong header or too few rows is refused, not read as empty", () => {
+  // An HTML error page served at 200 passes the comma blank-check and parses to
+  // a table whose header is not the roster's — rowsToPeople would then find no
+  // id column and return zero people, a whole legislature reading as absent.
+  assert.match(pluralRosterIssue("<html>error, error</html>") ?? "", /missing id/);
+
+  const header =
+    "id,name,current_party,current_district,current_chamber,email,image,capitol_voice,district_voice,links,sources\n";
+  // The right header but a handful of rows is a truncated file.
+  assert.match(pluralRosterIssue(header + "ocd-person/a,A,,19,upper,,,,,,\n") ?? "", /below the floor/);
+
+  // A full roster passes.
+  const rows = Array.from(
+    { length: 60 },
+    (_, i) => `ocd-person/${i},Name ${i},D,19,upper,,,,,,`,
+  ).join("\n");
+  assert.equal(pluralRosterIssue(header + rows + "\n"), null);
 });
 
 test("provenance names the bulk file the row was read from", () => {

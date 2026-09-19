@@ -576,7 +576,7 @@ test("7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is D
   assert.equal(paused.verdict, "INACTIVE");
   assert.ok(paused.reasons.some((r) => /paused/.test(r)));
 
-  const capped = deriveLevel1({ nowIso: NOW, heartbeat: { ...staleBeat, beatAt: NOW }, state, intents: [], spendWindowUsd: 25, spendUnmeasuredAttempts: 0 });
+  const capped = deriveLevel1({ nowIso: NOW, heartbeat: { ...staleBeat, beatAt: NOW }, state, intents: [], spendWindowUsd: 100, spendUnmeasuredAttempts: 0 });
   assert.equal(capped.verdict, "ACTIVE", "cap-deferred is a legitimate ACTIVE state");
   assert.equal(capped.capDeferred, true);
 });

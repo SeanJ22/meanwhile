@@ -246,11 +246,8 @@ const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : 60;
+// No standing per-cycle dispatch cap; `--max` is a diagnostic pass-through only.
 const maxArg = argv.find((a) => a.startsWith("--max="));
-const requestedMax = maxArg ? Number(maxArg.slice("--max=".length)) : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle;
-const MAX = String(Number.isFinite(requestedMax) && requestedMax >= 0
-  ? Math.min(requestedMax, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle)
-  : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle);
 const onlyArg = argv.find((a) => a.startsWith("--only="));
 const idsArg = argv.find((a) => a.startsWith("--ids="));
 const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
@@ -397,10 +394,10 @@ async function runOneCycle(): Promise<{
     "--import", "./scripts/register-test-loader.mjs",
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
-    `--max=${MAX}`,
     `--budget-min=${BUDGET_MIN}`,
     /* So the child's heartbeat can state when the next cycle is due. */
     `--interval=${INTERVAL_MIN}`,
+    ...(maxArg ? [maxArg] : []),
     ...(onlyArg ? [onlyArg] : []),
     ...(idsArg ? [idsArg] : []),
     ...(scoutMaxArg ? [scoutMaxArg] : []),
@@ -466,11 +463,10 @@ function laneShare(record: RunRecord): string[] {
   } else {
     out.push(
       `- state: **${safety.status}**`,
-      `- model spend: cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} / $${safety.bounds.cycleModelUsd.toFixed(2)}; ` +
-        `operational night ${safety.operationalNight.modelUsd === null ? "UNMEASURED" : `$${safety.operationalNight.modelUsd.toFixed(4)}`} / $${safety.bounds.operationalNightModelUsd.toFixed(2)}; ` +
-        `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)}`,
-      `- aggregate: requests ${safety.cycle.requests}/${safety.bounds.maxProviderRequestsPerCycle}; payload bytes ${safety.cycle.payloadBytes}/${safety.bounds.maxPayloadBytesPerCycle}; ` +
-        `dispatches ${safety.cycle.dispatches}/${safety.bounds.maxDispatchesPerCycle}; wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+      `- model spend: cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`}; ` +
+        `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)`,
+      `- aggregate: dispatches ${safety.cycle.dispatches}; requests ${safety.cycle.requests}; payload bytes ${safety.cycle.payloadBytes}; ` +
+        `per-download cap ${safety.bounds.maxDownloadBytes}; wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
       `- stopped because: ${safety.stoppedBecause.join("; ") || "no ceiling or circuit stopped work"}`,
       `- provider circuits: ${safety.providerCircuits.map(c => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ") || "none"}`,
       `- last successful Fleet activity: ${safety.lastSuccessfulActivity ?? "none recorded"}`,

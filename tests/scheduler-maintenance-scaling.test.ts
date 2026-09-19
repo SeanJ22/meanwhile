@@ -3,7 +3,7 @@ import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { persistDebts, syncObligations } from "../lib/control-plane/scheduler/durable.ts";
-import { cycleLaneSlots, observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 
 const NOW = "2026-09-15T15:00:00.000Z";
@@ -57,16 +57,6 @@ test("277 unchanged debts consume one bulk read and no write; changed and discha
   assert.deepEqual(await persistDebts(repos, [changed, ...debts.slice(2)], NOW), { written: 1, cleared: ["ob-1"] });
   assert.equal((await repos.debts.mustRead("ob-1")).value.consecutiveFailures, 0);
   assert.equal((await repos.debts.mustRead("ob-0")).value.detail, changed.detail);
-});
-
-test("full 614 deterministic / 1840 Scout backlog leaves slots for discovery and downstream work", () => {
-  assert.deepEqual(cycleLaneSlots({ maximum: 10, deterministic: 614, scouts: 2, planned: 7 }),
-    { autonomous: 3, scouts: 2, deterministic: 5 });
-  assert.deepEqual(cycleLaneSlots({ maximum: 1, deterministic: 1, scouts: 0, planned: 0 }),
-    { autonomous: 0, scouts: 0, deterministic: 1 });
-  const slots = cycleLaneSlots({ maximum: 2, deterministic: 614, scouts: 3, planned: 7 });
-  assert.equal(slots.autonomous + slots.scouts + slots.deterministic, 2);
-  assert.equal(slots.scouts, 1);
 });
 
 test("phase timing reports actual repository calls without arguments", async () => {

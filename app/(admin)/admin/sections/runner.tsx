@@ -57,11 +57,7 @@ export function RunnerSection(props: RunnerSectionProps) {
         cycleUsd: safety.cycle.modelUsd,
         operationalNightUsd: safety.operationalNight.modelUsd,
         rolling24HourUsd: safety.rolling24Hours.modelUsd,
-        ceilings: {
-          cycleModelUsd: safety.bounds.cycleModelUsd,
-          operationalNightModelUsd: safety.bounds.operationalNightModelUsd,
-          rolling24HourModelUsd: safety.bounds.rolling24HourModelUsd,
-        },
+        ceilings: { rolling24HourModelUsd: safety.bounds.rolling24HourModelUsd },
       })
     : [];
 
@@ -201,15 +197,14 @@ export function RunnerSection(props: RunnerSectionProps) {
           {safety && (
             <>
               <p className="note">
-                Cycle ceilings — requests {safety.cycle.requests} of {safety.bounds.maxProviderRequestsPerCycle}; downloaded{" "}
-                <span title={`${safety.cycle.payloadBytes} of ${safety.bounds.maxPayloadBytesPerCycle} bytes`}>
-                  {bytesText(safety.cycle.payloadBytes)} of {bytesText(safety.bounds.maxPayloadBytesPerCycle)}
-                </span>
-                ; jobs started {safety.cycle.dispatches} of {safety.bounds.maxDispatchesPerCycle}; running time{" "}
+                This cycle — requests {safety.cycle.requests}; downloaded{" "}
+                <span title={`${safety.cycle.payloadBytes} bytes`}>{bytesText(safety.cycle.payloadBytes)}</span>
+                ; jobs started {safety.cycle.dispatches}; running time{" "}
                 <span title={`${safety.cycle.elapsedMs} of ${safety.bounds.maxWallMsPerCycle} ms`}>
                   {durationText(safety.cycle.elapsedMs)} of {durationText(safety.bounds.maxWallMsPerCycle)}
-                </span>
-                .
+                </span>{" "}
+                (the cycle wall — the one per-cycle limit; per download,{" "}
+                <span title={`${safety.bounds.maxDownloadBytes} bytes`}>{bytesText(safety.bounds.maxDownloadBytes)}</span>).
               </p>
               {face.stopReasons.length > 0 && (
                 <ul className="note">

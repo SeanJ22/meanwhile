@@ -323,19 +323,17 @@ const windowsOf = (safety: FleetSafetySnapshot) =>
     cycleUsd: safety.cycle.modelUsd,
     operationalNightUsd: safety.operationalNight.modelUsd,
     rolling24HourUsd: safety.rolling24Hours.modelUsd,
-    ceilings: {
-      cycleModelUsd: safety.bounds.cycleModelUsd,
-      operationalNightModelUsd: safety.bounds.operationalNightModelUsd,
-      rolling24HourModelUsd: safety.bounds.rolling24HourModelUsd,
-    },
+    ceilings: { rolling24HourModelUsd: safety.bounds.rolling24HourModelUsd },
   });
 
-test("ADM-26 · the spend windows are a three-row table to the cent, each defined", () => {
+test("ADM-26 · the spend windows are a three-row table to the cent, each framed against the one daily ceiling", () => {
   const rows = windowsOf(SAFETY);
   assert.equal(rows.length, 3);
-  assert.equal(rows[0].shown, "$0.00 of $2.00");
-  assert.equal(rows[1].shown, "$0.00 of $10.00");
-  assert.equal(rows[2].shown, "$0.44 of $25.00");
+  // Every window is now framed against the single rolling daily ceiling ($100);
+  // the per-cycle and operational-night caps are retired.
+  assert.equal(rows[0].shown, "$0.00 of $100.00");
+  assert.equal(rows[1].shown, "$0.00 of $100.00");
+  assert.equal(rows[2].shown, "$0.44 of $100.00");
   assert.ok(rows[1].defines?.toLowerCase().includes("overnight"), "an operational night must be defined");
   for (const r of rows) assert.ok(!/\.\d{3}/.test(r.shown), `four decimal places survived: ${r.shown}`);
 });

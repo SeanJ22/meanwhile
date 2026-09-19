@@ -288,7 +288,10 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[];
   const maximum=Math.min(options.maximum??3,20); const concurrency=Math.min(options.concurrency??2,2);
-  const maxScoutDispatches=Math.min(options.maxScoutDispatches??RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,RESEARCH_BOUNDS.maxScoutDispatchesPerCycle);
+  // No standing per-cycle Scout cap: the coordinator's own `maximum` (and the
+  // wall) bound autonomous Scouts. A caller may still pass a finite diagnostic
+  // sub-cap; an unbounded value clamps to `maximum`.
+  const maxScoutDispatches=Math.min(options.maxScoutDispatches??maximum,maximum);
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
   const minimumDispatchWallMs=Math.min(WORKER_MAX_WALL_MS,RESEARCH_BOUNDS.perDispatch.maxWallMs);
   const hasDispatchTime=()=>Date.now()+minimumDispatchWallMs<=(options.deadlineMs??Infinity);

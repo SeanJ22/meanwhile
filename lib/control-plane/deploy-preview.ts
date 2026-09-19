@@ -95,8 +95,8 @@ export interface DeployPreviewInput {
    */
   readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
   readonly obligationsRead: boolean;
-  /** The runner's own ceilings, so the preview quotes the real numbers. */
-  readonly ceilings: { readonly cycleModelUsd: number; readonly rolling24HourModelUsd: number; readonly maxDispatchesPerCycle: number };
+  /** The runner's own ceiling, so the preview quotes the real number. */
+  readonly ceilings: { readonly rolling24HourModelUsd: number };
 }
 
 export function deployPreview(input: DeployPreviewInput): DeployPreview {
@@ -128,7 +128,7 @@ export function deployPreview(input: DeployPreviewInput): DeployPreview {
       measured: true,
     });
     creates.push({
-      says: `The runner starts at most ${count(input.ceilings.maxDispatchesPerCycle)} of them per cycle, so this is an ordering instruction rather than a batch — the rest keep their place behind them.`,
+      says: `The runner has no per-cycle dispatch cap — it starts as many as fit before the cycle wall — so this is an ordering instruction rather than a batch: the rest keep their place behind them.`,
       measured: true,
     });
   }
@@ -146,7 +146,7 @@ export function deployPreview(input: DeployPreviewInput): DeployPreview {
     willNot: DEPLOY_WILL_NOT,
     after: DEPLOY_AFTER,
     roles: "Hunters find and fetch, Detectives and Parsers read what came back, Validators check it, Auditors try to break it.",
-    ceilings: `Up to ${usdCents(input.ceilings.cycleModelUsd)} of paid model work in one cycle, inside a rolling ${usdCents(input.ceilings.rolling24HourModelUsd)} a day. Nothing here raises either.`,
+    ceilings: `Paid model work runs under one ceiling — a rolling ${usdCents(input.ceilings.rolling24HourModelUsd)} a day — with no per-cycle cap. Nothing here raises it.`,
     matchesNothing: input.obligationsRead && matched === 0,
     // A dispatch needs nothing from the owner beyond the instruction itself.
     needsYou: false,

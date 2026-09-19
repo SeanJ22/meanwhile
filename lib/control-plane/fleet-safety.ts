@@ -38,7 +38,11 @@ export const FLEET_ZONE = "America/Phoenix";
  * public sites we depend on and is kept (`scheduledBlackoutAt`).
  */
 export const FLEET_SAFETY_BOUNDS = {
-  rolling24HourModelUsd: 100,
+  // Interim brake, 2026-09-19: dropped from $100 to $25 while the scout early-stop
+  // fix lands. ~83% of scout spend was buying walks that ran to the rung bound and
+  // aborted SCOUT_NO_PROGRESS with no result; the ceiling is not paying full rate
+  // for that. Raise it back once walks conclude with a result (proven by numbers).
+  rolling24HourModelUsd: 25,
   maxDownloadBytes: 24 * 1024 * 1024,
   maxWallMsPerCycle: 15 * 60_000,
 } as const;

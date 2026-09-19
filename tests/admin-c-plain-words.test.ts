@@ -329,11 +329,13 @@ const windowsOf = (safety: FleetSafetySnapshot) =>
 test("ADM-26 · the spend windows are a three-row table to the cent, each framed against the one daily ceiling", () => {
   const rows = windowsOf(SAFETY);
   assert.equal(rows.length, 3);
-  // Every window is now framed against the single rolling daily ceiling ($100);
-  // the per-cycle and operational-night caps are retired.
-  assert.equal(rows[0].shown, "$0.00 of $100.00");
-  assert.equal(rows[1].shown, "$0.00 of $100.00");
-  assert.equal(rows[2].shown, "$0.44 of $100.00");
+  // Every window is framed against the single rolling daily ceiling; the per-cycle
+  // and operational-night caps are retired. The ceiling is read from the constant
+  // so this holds whether it is $25 (the 2026-09-19 interim brake), $100, or another cap.
+  const ceiling = usdCents(FLEET_SAFETY_BOUNDS.rolling24HourModelUsd);
+  assert.equal(rows[0].shown, `$0.00 of ${ceiling}`);
+  assert.equal(rows[1].shown, `$0.00 of ${ceiling}`);
+  assert.equal(rows[2].shown, `$0.44 of ${ceiling}`);
   assert.ok(rows[1].defines?.toLowerCase().includes("overnight"), "an operational night must be defined");
   for (const r of rows) assert.ok(!/\.\d{3}/.test(r.shown), `four decimal places survived: ${r.shown}`);
 });

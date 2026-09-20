@@ -19,12 +19,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { neonConfig } from "@neondatabase/serverless";
+
 import {
   CONTROL_PLANE_CONNECT_BASE_BACKOFF_MS,
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   isTransientControlPlaneConnectError,
   withControlPlaneConnectRetry,
 } from "../lib/control-plane/repository/connect-retry.ts";
+import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 
 /** The shape @neondatabase/serverless throws: name "NeonDbError", a message,
     an optional SQLSTATE `code`, and a `sourceError` for a transport failure. */
@@ -197,4 +200,57 @@ test("backoff is capped and jittered by the injected random", async () => {
 
 test("the default attempt budget is a small, bounded number", () => {
   assert.ok(CONTROL_PLANE_CONNECT_MAX_ATTEMPTS >= 2 && CONTROL_PLANE_CONNECT_MAX_ATTEMPTS <= 8);
+});
+
+/*
+ * WIRING PROOF, NOT JUST THE HELPER. The tests above prove the retry recovers a
+ * transient throw; this proves the retry is actually installed around the real
+ * cycle-start connect. It drives the production `createPgRepositories` with a
+ * fault injected at the driver's own fetch seam (`neonConfig.fetchFunction`, the
+ * same seam installNeonRequestDeadline/installNeonCircuitBreaker compose on):
+ * the first two connect fetches throw the driver's exact transport error, and
+ * every fetch after answers with an empty, valid result so the idempotent
+ * bootstrap completes. Before this fix that first throw aborted the whole cycle;
+ * here createPgRepositories returns a live repository set instead.
+ *
+ * The global hook is saved and restored so it cannot leak into another test in
+ * the shared suite process.
+ */
+test("createPgRepositories survives a transient connect fault at the real bootstrap (wiring)", async () => {
+  const originalFetch = neonConfig.fetchFunction;
+  let fetchCalls = 0;
+  let transientThrows = 0;
+  try {
+    neonConfig.fetchFunction = (async (_input: unknown, _init: unknown) => {
+      fetchCalls += 1;
+      if (fetchCalls <= 2) {
+        transientThrows += 1;
+        // Exactly what @neondatabase/serverless throws when the transport fails.
+        const err = new Error("Error connecting to database: TypeError: fetch failed");
+        err.name = "NeonDbError";
+        (err as { sourceError?: Error }).sourceError = new TypeError("fetch failed");
+        throw err;
+      }
+      // A non-returning statement (every bootstrap DDL + the version upsert): an
+      // empty result the driver accepts, so the retried bootstrap can complete.
+      return new Response(
+        JSON.stringify({ command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    }) as typeof neonConfig.fetchFunction;
+
+    const repos = await createPgRepositories(
+      "postgresql://user:pass@ep-connect-retry-proof.us-east-2.aws.neon.tech/neondb",
+      "2026-09-19T00:00:00.000Z",
+    );
+
+    assert.ok(repos, "createPgRepositories returned a repository set despite the transient connect");
+    assert.equal(transientThrows, 2, "the first two connect attempts threw the driver's transport error");
+    assert.ok(
+      fetchCalls > 2,
+      `bootstrap ran after the retries (saw ${fetchCalls} fetches — 2 failed connects then the DDL)`,
+    );
+  } finally {
+    neonConfig.fetchFunction = originalFetch;
+  }
 });

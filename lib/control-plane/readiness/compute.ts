@@ -139,8 +139,8 @@ export function computeZipRow(input: ZipInput): ZipRow {
   // sees both how complete the zip is AND exactly where to point effort.
   // All-NOT_WALKED is UNKNOWN, never 0%: a zip whose bodies have no walked
   // readiness is "not measured", not "0% of bodies are ready". Rendering the
-  // measured zero was the defect that put 0% on every AZ zip while the snapshot
-  // deliberately defers per-body status to the canonical civic-data receipts.
+  // measured zero would be the defect of putting 0% on a zip whose bodies simply
+  // have not been walked — a fact absent, not a readiness of zero.
   const anyWalked = input.bodies.some((b) => b.state !== "NOT_WALKED");
   const progress =
     total === 0 ? 0 : input.bodies.reduce((sum, b) => sum + rankOf(b.state) / 5, 0) / total;
@@ -148,7 +148,7 @@ export function computeZipRow(input: ZipInput): ZipRow {
     total === 0 || !anyWalked
       ? gap(
           "OURS",
-          "not measured — no governing body's readiness has been walked for this zip; body status is shown from the canonical civic-data receipts, not duplicated in this readiness snapshot",
+          "not measured — no governing body's readiness has been walked for this zip",
         )
       : held(
           measured(

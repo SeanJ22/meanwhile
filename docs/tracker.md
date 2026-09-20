@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-09-15 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-19 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **410 open**, 544 resolved.
+- **411 open**, 544 resolved.
 - **76 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -562,7 +562,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**100 open · 123 resolved.**
+**101 open · 123 resolved.**
 
 ### P1
 
@@ -635,6 +635,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH314** — R6 of the 2026-09-02 session is NOT MET on its live half only: the Scout lane now caches its stable prefix under four explicit breakpoints, routes each step through a typed registry, budgets every representation, refuses re-reads and re-walks, sets effort per role and records per-step tokens and cost (tests 11-19 of tests/scout-lane.test.ts prove the five seeded failures), and the baseline over 23 persisted Attempts is committed at data/ops/scout-efficiency-baseline.json (84.2% of all input was repeated prefix; $10.68 of $27.11 would have been cache reads). The live proof — two real Attempts under the new lane measured beside the baseline — could not run because ceilingPermits read $27.11 of the $25 rolling ceiling at 16:20Z; at the $1.2323 measured mean the window next permits one Attempt at about 07:01Z and two at about 07:08Z the following morning (the next-permits time is computed from the measured mean; read ceilingPermits before running). The deferral is recorded by name in data/ops/scout-efficiency-after.json. RESUME: in the idle window once the ceiling permits, run node --env-file=C:/Users/seanj/dev/we-the-people/.env.local --experimental-strip-types scripts/freshness-shadow.mts --provider=postgres "--ids=freshness:jurisdiction:az:city:city-of-avondale#meetings-1,freshness:jurisdiction:az:city:city-of-benson#meetings-1" --scout-max=2 --max=0 (both carry prior results, so the resume-from-rungs path is exercised), then pnpm scout:readback --last=5 (10 proof conditions, cache read on every later turn) and scripts/scout-efficiency-baseline.mts --label=after --since=<cycle start>; the two must show cache reads > 0 on every turn after the first and a cost per outcome beside the baseline. The cap is not raised.
 
 **NH315** — Found while re-deriving the seven VALIDATED method candidates under RULING 243: the repository's ArtifactRecord (the attribution row the control plane keeps for every vaulted artifact) records neither the permission verdict the retrieval was made under nor its retrievedAt, so the machine could derive the permission verdict only where a same-host read_permission rung exists in the Scout result. For five candidates (bensonaz agenda RSS and sitemap, cochise DocumentCenter PDF, the two Avondale routes) the honest machine statement is OPENED — the tools open only ALLOWED or NO_ROBOTS hosts, but the verdict itself was never persisted. FIX SHAPE: add permission and retrievedAt to ArtifactRecord as additive fields written by the dispatcher from the Artifact the worker handed back (both exist on the Artifact), backfill nothing (a backfilled verdict is a guess), and make provenance derivation read the record rather than the rung list. Related: RULING 244 names the Haiku model as claude-haiku-4-5-20251001 while the claude-api reference names claude-haiku-4-5; lib/control-plane/model-cost.ts carries the alias, and the owner should settle the spelling in a later ruling amendment.
+
+**NH328** — In the State Readiness admin panel, a ZIP's body count and completeness percentage are scoped by data/derived/zip-division-ids.json, a precomputed 'every division whose territory overlaps the ZIP's area' map. The public reader instead scopes its 'bodies here' by the ZIP's centroid. Where a body-rich city sits next to an unincorporated ZIP, admin over-counts: 85641 (Vail) reads 66 bodies / 62% in admin but 10 on the reader, because the area-overlap map pulls in all 58 City of Tucson bodies a Vail resident is not governed by. 85701 (downtown Tucson) matches the reader at 65. Roughly 27 AZ ZIPs carry Tucson via area-overlap; the inflated ones are those whose centroid falls outside Tucson. NH and NJ are unaffected. Pre-existing since the panel shipped (Sept 4-5), not introduced by the Sept-19 producer restore.
 
 **NH46** — One of the three coverageNotes in data/states/nh/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 
@@ -1166,9 +1168,9 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 
 [job-watch:dispatch-delay:refresh-daily.yml@2026-09-11T09:11:00.000Z]
 
-**JOB79** — AUDITED SLOT: 2026-09-12T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-09-12T17:48:40.014Z. Run 34697204278 was created 182.3 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+**JOB79** — AUDITED SLOT: 2026-09-12T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-09-12T17:48:40.014Z. Run 34697204278 was created 182.3 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt.
 
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed.
 
 ENVELOPE USED: envelope 263 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (263 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
 
@@ -1178,9 +1180,9 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 
 [job-watch:dispatch-delay:intake-tripwire.yml@2026-09-12T10:41:00.000Z]
 
-**JOB80** — AUDITED SLOT: 2026-09-12T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-09-12T17:48:40.014Z. Run 34709307262 was created 128.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+**JOB80** — AUDITED SLOT: 2026-09-12T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-09-12T17:48:40.014Z. Run 34709307262 was created 128.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt.
 
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded 
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded
 
 ENVELOPE USED: envelope 263 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (263 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
 
@@ -1190,9 +1192,9 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 
 [job-watch:dispatch-delay:job-watch.yml@2026-09-12T15:40:00.000Z]
 
-**JOB81** — AUDITED SLOT: 2026-09-12T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-09-12T17:48:40.014Z. Run 34694727326 was created 218.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+**JOB81** — AUDITED SLOT: 2026-09-12T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-09-12T17:48:40.014Z. Run 34694727326 was created 218.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt.
 
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_FAILED — failed at: (steps were not read). No log text was read, so a push rejection cannot be ruled out — this is "not shown to be a push rejection", not "shown not to be one". 
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_FAILED — failed at: (steps were not read). No log text was read, so a push rejection cannot be ruled out — this is "not shown to be a push rejection", not "shown not to be one".
 
 ENVELOPE USED: envelope 263 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (263 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
 

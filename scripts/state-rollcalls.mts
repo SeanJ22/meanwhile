@@ -336,7 +336,7 @@ async function main(): Promise<void> {
       )).map((result, index) => [memberEntries[index]!.officeholderId, result] as const),
     );
     const positionsFingerprint = (positions: readonly StateLegislatorVotePosition[]): string =>
-      positions.map((position) => `${position.rollCallId} ${position.position} ${position.date}`).join("");
+      positions.map((position) => `${position.rollCallId}\u0000${position.position}\u0000${position.date}`).join("");
 
     const throughRoll = [...projection.rolls].sort((left, right) => left.date.localeCompare(right.date)).at(-1) ?? null;
     const marker = officialStateLegislatorVotesSessionMarker({
@@ -480,7 +480,12 @@ async function main(): Promise<void> {
                   () => fetch(request.url, {
                     headers: {
                       "user-agent": UA,
-                      accept: request.kind === "MEMBER" ? "application/json" : "application/zip,application/octet-stream",
+                      // pub.njleg.gov serves the OLS ZIP archives as
+                      // application/x-zip-compressed and 406s an Accept that names
+                      // only zip/octet-stream; a trailing */* makes that IIS host
+                      // answer 200 with the archive. The member API on
+                      // njleg.state.nj.us is plain JSON and is unaffected.
+                      accept: request.kind === "MEMBER" ? "application/json" : "application/zip,application/octet-stream,*/*",
                     },
                     redirect: "follow",
                     signal: requestSignal,

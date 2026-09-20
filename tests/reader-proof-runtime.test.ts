@@ -424,6 +424,10 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: null })), expected), /promoted meeting partition has no version/);
   // RULING 290: a different versionId on a promoted partition is allowed (runner advances versions).
   assert.equal(requireReaderProofMeetingsProjection(meetingProofInput(changed(promotedIndex, { versionId: "runner-advanced-version" })), expected), input.value);
+  // RULING 290 history note: a GAIN (import NOT_RECORDED -> now PROMOTED = a runner-promoted new
+  // meeting) is ACCEPTED and counted; the census proves the gained partition (counts follow the
+  // gain: 84 promoted / 40 not-recorded against the frozen 83/41).
+  assert.equal(requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "PROMOTED", versionId: "runner-promoted-gain" })), expected), input.value);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { versionId: "forged-version" })), expected), /NOT_RECORDED meeting partition names a version/);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "BOOTSTRAP" })), expected), /meeting partition is BOOTSTRAP/);
   assert.throws(() => requireReaderProofMeetingsProjection(meetingProofInput(changed(notRecordedIndex, { kind: "STORE_UNREACHABLE" })), expected), /meeting partition is STORE_UNREACHABLE/);
@@ -433,7 +437,7 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
       meetingProofInput(changed(promotedIndex, { kind: "NOT_RECORDED", versionId: null })),
       expected,
     ),
-    /disposition differs from phase import authority: expected PROMOTED, got NOT_RECORDED/,
+    /regressed from the phase import authority: expected PROMOTED, got NOT_RECORDED/,
   );
 
   const swapped = rows.map((row, index) => {
@@ -443,9 +447,12 @@ test("meeting proof identity rejects incomplete, ambiguous, or unreadable partit
   });
   assert.equal(swapped.filter(({ kind }) => kind === "PROMOTED").length, expected.meetingPartitionsWithLkg);
   assert.equal(swapped.filter(({ kind }) => kind === "NOT_RECORDED").length, expected.meetingPartitionsWithoutLkg);
+  // A swap keeps the 83/41 counts but disguises a LOSS with a compensating gain; the loss is
+  // still a hard failure (a promoted partition may not lose its LKG), even though the gain alone
+  // would now be accepted.
   assert.throws(
     () => requireReaderProofMeetingsProjection(meetingProofInput(swapped), expected),
-    /disposition differs from phase import authority/,
+    /regressed from the phase import authority/,
   );
 
   // RULING 290: runner reorganizes data during promotion; aggregate comparison dropped.

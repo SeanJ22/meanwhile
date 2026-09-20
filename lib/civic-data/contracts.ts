@@ -47,6 +47,13 @@ export interface RoutineSourceContract {
   };
   readonly lkgBehavior: string;
   readonly autoPromotable: boolean;
+  /**
+   * A fan-out contract owns a scope family: its per-state marker at `scope`
+   * plus one bounded per-member candidate at `<sourceId>:<officeholderId>`. The
+   * runner still enumerates and clocks exactly this one contract; the family
+   * lives inside the acquisition child. Verification stays per-contract.
+   */
+  readonly fanOut?: boolean;
   readonly classification: RoutineDataClassification;
   /** Bundled inputs are seed/test material only; never a store-error fallback. */
   readonly bootstrapFixturePaths: readonly string[];
@@ -158,40 +165,51 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       classification: "RUNTIME_CIVIC_DATA",
       bootstrapFixturePaths: [],
     })),
-  ...OFFICIAL_STATE_ROLL_CALL_TARGETS.map((target): RoutineSourceContract => ({
-    id: target.contractId,
-    sourceId: target.sourceId,
-    recordClass: "STATE_ROLL_CALL",
-    scope: target.jurisdiction,
-    acquisitionFailureDomain: `routine-source:${target.sourceId}`,
-    acquisitionAdapter: {
-      authorityMode: "REGISTERED_SOURCE_ROUTES",
-      command: ["scripts/state-rollcalls.mts", "--promote", `--state=${target.state}`],
-    },
-    parserNormalizerVersion: target.state === "NH" ? "nh-general-court/3" : `${target.sourceId}/2`,
-    cadence: { description: "daily and after each legislative sitting", defaultEveryMs: DAY },
-    retry: { afterMs: HOUR, description: "one hour after a failed or incomplete official horizon attempt" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: target.sourceId },
-    validationContract: CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: {
-      id: `${target.state.toLowerCase()}-official-state-rollcalls`,
-      consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"],
-    },
-    lkgBehavior:
-      `Only ${target.publisher} evidence may move ${target.jurisdiction}. An unavailable or incomplete horizon leaves that state's prior GOOD pointer live and cannot affect another state.`,
-    autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA",
-    // The retained LegiScan aggregate is research/test evidence, never a
-    // bootstrap or store-error fallback for an official production pointer.
-    bootstrapFixturePaths: [],
-    ...(target.state === "AZ" ? {
-      liveAcceptance: {
-        kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT" as const,
-        acceptedStates: ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"] as const,
+  ...OFFICIAL_STATE_ROLL_CALL_TARGETS.map((target): RoutineSourceContract => {
+    // New Hampshire promotes through the per-legislator fan-out — one contract,
+    // one per-state clock, bounded per-member writes — so the largest
+    // legislature we will ever load never exceeds the write path. Arizona and
+    // New Jersey keep the per-jurisdiction STATE_ROLL_CALL path until they are
+    // migrated the same way.
+    const fanOut = target.state === "NH";
+    return {
+      id: target.contractId,
+      sourceId: target.sourceId,
+      recordClass: fanOut ? "STATE_LEGISLATOR_VOTES" : "STATE_ROLL_CALL",
+      scope: target.jurisdiction,
+      acquisitionFailureDomain: `routine-source:${target.sourceId}`,
+      acquisitionAdapter: {
+        authorityMode: "REGISTERED_SOURCE_ROUTES",
+        command: ["scripts/state-rollcalls.mts", "--promote", `--state=${target.state}`],
       },
-    } : {}),
-  })),
+      parserNormalizerVersion: target.state === "NH" ? "nh-general-court/3" : `${target.sourceId}/2`,
+      cadence: { description: "daily and after each legislative sitting", defaultEveryMs: DAY },
+      retry: { afterMs: HOUR, description: "one hour after a failed or incomplete official horizon attempt" },
+      authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: target.sourceId },
+      validationContract: CHECKS,
+      canonicalProductionStore: STORE,
+      readerProjection: {
+        id: fanOut
+          ? `${target.state.toLowerCase()}-official-state-legislator-votes`
+          : `${target.state.toLowerCase()}-official-state-rollcalls`,
+        consumers: ["app/api/votes/route.ts", "lib/ask/votes.ts", "Ask", "map", "ballot", "Admin"],
+      },
+      lkgBehavior:
+        `Only ${target.publisher} evidence may move ${target.jurisdiction}. An unavailable or incomplete horizon leaves that state's prior GOOD pointer live and cannot affect another state.`,
+      autoPromotable: true,
+      ...(fanOut ? { fanOut: true as const } : {}),
+      classification: "RUNTIME_CIVIC_DATA",
+      // The retained LegiScan aggregate is research/test evidence, never a
+      // bootstrap or store-error fallback for an official production pointer.
+      bootstrapFixturePaths: [],
+      ...(target.state === "AZ" ? {
+        liveAcceptance: {
+          kind: "AUTHENTICATED_FAIL_CLOSED_ATTEMPT" as const,
+          acceptedStates: ["SOURCE_BLOCKED", "HORIZON_UNRESOLVED"] as const,
+        },
+      } : {}),
+    };
+  }),
   {
     id: "census-acs-population",
     sourceId: "census-data-api",

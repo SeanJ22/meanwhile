@@ -1,6 +1,6 @@
 {
-  "exactHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
-  "buildId": "xZVwHdCi-RZ5tyeL4fVyV",
+  "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+  "buildId": "nmJIGEAY6VrlKX8yvoeE4",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -320,7 +320,7 @@
     },
     {
       "path": "components/map/popup/official-popup.tsx",
-      "sha256": "5cffe97fe5bc7250633560867733df9b4136ccdbb72adab37968ef6a44a89c98"
+      "sha256": "3266ab30e45e43851339592a2f8878956f0a21a292aa7e9710a7ba9f57a8725d"
     },
     {
       "path": "components/map/popup/popup-card.tsx",
@@ -1736,15 +1736,15 @@
     },
     {
       "path": "lib/civic-data/candidate-builders.ts",
-      "sha256": "491775c31d53e6dba95f195b26caa6fb06d631048f9b77657d370467c1534977"
+      "sha256": "3234ec46df0b61b8bfe70f0a62a96ca2670b44e84e7688f349871e60f6b0fa40"
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "f7875534845d0abd0e68bb101f28685fdbc5d4a564cf1928e6b13c9101e96cba"
+      "sha256": "d9588b414dd875e074bc1f7406e97ae155dd6fed0fb08b028aea1129def53133"
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "b4c1aa5434f2a56afc5ba4250b1c41f9dc2e37ac422a171097c67b78c9a38c15"
+      "sha256": "16b15b59a7eb93bdd404ec22d044fa0d8381663f9dc277641a746a677012934a"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -1800,7 +1800,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "ad5f8a2439332a6289636acba97c227c4832db038ab5ec0dd689120355183a25"
+      "sha256": "1a48d005f7653ce8adee4cfd8c08fad6ed17e017d8747a166a83f7876fa33e49"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -1808,7 +1808,7 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "2cf05b0a75866a3e74b4d597522bc527b1562145cb19ea542e9c5bf660b70b3c"
+      "sha256": "5424e744ba2021d1820a93fa163d02b4d48daa1039a45b35e72389d0ac9bdeed"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
@@ -1816,7 +1816,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "5f810efd4516177c71f072121b5b7d1a34f170a2fa0009e3219e74bcc057f69c"
+      "sha256": "4e3ff4243a950f9c3b7dcd57e63c058d6866ccb1952fa289e81520ebe44cd003"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2132,7 +2132,7 @@
     },
     {
       "path": "lib/meetings/edge-store.ts",
-      "sha256": "99931a45fc1921c55abb601323e8af58de11cde92f098256b2bbc983b5082206"
+      "sha256": "c600f9dac25ff1aae841a68c8b98aceae796016ee8e43d2f7f8ec35cde1ad94a"
     },
     {
       "path": "lib/meetings/freshness.ts",
@@ -2196,7 +2196,7 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "e08ddbaf86655a07b8b25a9be6987ae10dc9b43897094daac44112572292de58"
+      "sha256": "987f58dc1cee6b81dd3ef922eaa11073b02e544dea0ff6ff060589bab46495c8"
     },
     {
       "path": "lib/meetings/status-marks.ts",
@@ -2664,7 +2664,7 @@
     },
     {
       "path": "lib/sources/legiscan/types.ts",
-      "sha256": "c271dc67fccd92c1f06af3e11f337c0221eea264372a09c48ee7929f385b9911"
+      "sha256": "0ec9e72dd5cbae930d3b6faf9d74c931ddcad8b65ae8b1b272cf853f3efbab4d"
     },
     {
       "path": "lib/sources/legistar-insite/calendar.ts",
@@ -2777,6 +2777,10 @@
     {
       "path": "lib/state-rollcalls/legislators.ts",
       "sha256": "438d0fce3e92ee5997a759a8649f70f83b1b9e37ac9fc4342e710001d855a341"
+    },
+    {
+      "path": "lib/state-rollcalls/reader-vote-visibility.ts",
+      "sha256": "048a2f528f76226d361c747dab51f177fd1d9873ba20dbe0978e96758ea6735c"
     },
     {
       "path": "lib/state/browser-key.ts",
@@ -2908,7 +2912,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "42bfb153f83801994a6983d713694202966fae9146ff078384cd742520de22bb"
+      "sha256": "9fa427152ede1db9347b86e81ab5d0f306cfb2d25d3cacc0e1b10b56be21550f"
     },
     {
       "path": "pnpm-lock.yaml",

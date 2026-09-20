@@ -31,6 +31,12 @@ const dispositions = snapshot.meetings.filter(meeting => !expected.includes(meet
 const points = [...new Map(snapshot.meetings.flatMap(meeting => meeting.location ? [[`${meeting.location.lat},${meeting.location.lng}`, { lat: meeting.location.lat, lng: meeting.location.lng }] as const] : [])).values()];
 const seen = new Set<string>();
 const records: unknown[] = [];
+// RULING 290: the standing runner re-collects meetings live, so provenance.collectedAt (a
+// collection timestamp, never shown to a reader) legitimately differs between the server's
+// served snapshot and a fresh projection read. Compare meeting CONTENT exactly and exclude
+// that one volatile timestamp, so the route proof does not fail merely because the fleet is
+// working (the same reason version/aggregate drift is already tolerated above).
+const stripCollectedAt = (m: Meeting) => { const c = JSON.parse(JSON.stringify(m)); if (c && c.provenance) delete c.provenance.collectedAt; return c; };
 for (let start = 0; start < points.length; start += 4) await Promise.all(points.slice(start, start + 4).map(async point => {
   const request = `/api/meetings?${new URLSearchParams({ lat: String(point.lat), lng: String(point.lng), radiusKm: "150" })}`;
   const response = await fetch(`${base}${request}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-meeting-routes" } });
@@ -42,7 +48,7 @@ for (let start = 0; start < points.length; start += 4) await Promise.all(points.
   for (const row of actual.meetings) {
     const held: Meeting | undefined = snapshot.meetings.find(meeting => meeting.id === row.id); assert.ok(held, `Unheld meeting ${row.id}`);
     const currentStatus: Meeting["status"] = held.status === "CANCELED" ? "CANCELED" : Date.parse(held.startsAt) < asOf.getTime() ? "CONCLUDED" : "SCHEDULED";
-    assert.deepEqual(row, JSON.parse(JSON.stringify({ ...held, status: currentStatus })), `Canonical meeting payload ${row.id}`);
+    assert.deepEqual(stripCollectedAt(row), stripCollectedAt({ ...held, status: currentStatus }), `Canonical meeting payload ${row.id} (provenance.collectedAt excluded — volatile collection time)`);
     seen.add(row.id);
   }
   records.push({ surface: "meetings/map", request, point, returnedCount: actual.meetings.length, identities: actual.meetings.map(row => ({ id: row.id, bodyId: row.bodyId })), listingIdentity: actual.listingIdentity, listingIdentityAgrees: true, payloadSha256: hash(JSON.stringify(actual)), tier: actual.tier, radiusKm: actual.radiusKm });

@@ -58,7 +58,12 @@ const cases: Record<string, [string, string[]]> = {
   "shuffled-facts": ["85641-phone-dark", ["about-area"]],
   "polling-lookup-fallback": ["85701-phone-dark", ["ballot-voting-outside-coverage", "ballot-voting-outside-coverage-last"]],
   "meeting-popup": ["85701-phone-dark", ["meeting-popup"]],
-  "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "diligent-tusd1-493-publication-index"]],
+  // tusd1:493 moved from ACQUIRED_IS_PUBLICATION_INDEX to READ_NO_ITEMS_EXTRACTED
+  // when the runner re-collected its agenda (document held, 0 items extracted), so
+  // the reader now sees raw agenda text; this known-answer witness tracks that
+  // -agenda-text surface. Publication-index stays proven by apptegy:vail:60703698
+  // (85641) and diligent:newburynh:3367 (03255), both still in that state.
+  "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "diligent-tusd1-493-agenda-text"]],
   "state-money-section": ["85701-desktop-light", ["map-money", "ballot-money"]],
   "candidate-contact": ["07866-desktop-dark", ["ballot-filed-contact"]],
   "funding-section": ["85641-phone-dark", ["map-federal-money", "ballot-federal-money"]],
@@ -114,7 +119,7 @@ const witnesses = requirements.filter(row => row.importReach).flatMap(row => {
     assert.equal(participation.sourceUrl, access.sourceUrl);
     assert.ok(final.screenshots.some((shot) => shot.path === participation.screenshot.path && shot.sha256 === participation.screenshot.sha256));
     assert.equal(hash(participation.screenshot.path), participation.screenshot.sha256);
-    return [{ ...row, exactHead: head, evidencePath: path, evidenceSha256: hash(path), resultPointer: `/results/${index}`, screenshots: [...screenshots, participation.screenshot], status: "PROVEN", boundary: "Actual current future-sitting participation instructions and source link, plus the executed minutes and publication-index screenshots. Exhaustive native-record and actual-leaf proofs remain required." }];
+    return [{ ...row, exactHead: head, evidencePath: path, evidenceSha256: hash(path), resultPointer: `/results/${index}`, screenshots: [...screenshots, participation.screenshot], status: "PROVEN", boundary: "Actual current future-sitting participation instructions and source link, plus the executed minutes and agenda-text screenshots. Exhaustive native-record and actual-leaf proofs remain required." }];
   }
   const listingSuffixes = leaf === "meeting-popup" ? canonicalListingGroups.map((_, index) => `listing-popup-${index + 1}`) : leaf === "meeting-panel" ? ["listing-count", "listing-overlay", "listing-venue"] : leaf === "entity-modal" ? ["listing-full-meeting"] : [];
   const listingCase = listingSuffixes.length ? report.results.find(result => result.label === "03255-phone-dark") : null;

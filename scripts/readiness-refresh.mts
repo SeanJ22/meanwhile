@@ -99,8 +99,21 @@ interface Division {
   readonly state?: string;
   readonly provenance?: { readonly collectedAt?: string };
 }
+/** One governing body as the registry commits it. `coverageStatus` is the same
+ *  discovery-time field the live reader coverage reads (lib/registry/coverage.ts):
+ *  LIVE = a meeting source is located, KNOWN_UNCOVERED = walked and none found,
+ *  NOT_ATTEMPTED = nobody has looked. Not routine held-agenda status — that stays
+ *  with canonical Admin. */
+interface Body {
+  readonly ocdId?: string;
+  readonly name?: string;
+  readonly bodyClass?: string;
+  readonly coverageStatus?: string;
+  readonly alsoServesOcdIds?: readonly string[];
+}
 interface Registry {
   readonly divisions: readonly Division[];
+  readonly bodies: readonly Body[];
 }
 interface ZipDivisionIds {
   readonly zips?: Record<string, readonly string[]>;
@@ -279,12 +292,41 @@ function zipPopulationCell(): { population: ZipInput["population"]; basis: ZipIn
   };
 }
 
+/**
+ * Map a registry body's `coverageStatus` to a readiness cell state. This is the
+ * SAME discovery-time signal the live reader coverage reads (lib/registry/
+ * coverage.ts), so a zip row here agrees with the reader's "bodies here" by
+ * reading one source, never a second one. It is source-wiring readiness, not the
+ * routine held-agenda freshness that belongs to canonical Admin.
+ */
+function bodyCellState(coverageStatus: string | undefined) {
+  switch (coverageStatus) {
+    case "LIVE":
+      return "CURRENT" as const;
+    case "MANUAL":
+      return "PARTIAL_OR_STALE" as const;
+    case "KNOWN_UNCOVERED":
+    case "NO_SOURCE_FOUND":
+      return "BLOCKED" as const;
+    default:
+      return "NOT_WALKED" as const;
+  }
+}
+
 /** A zip row derived from REAL committed data: its overlapping registry bodies. */
 function realZip(zip: string): ZipInput {
-  const bodyInputs = [{
-    state: "NOT_WALKED" as const,
-    gap: "Routine meeting coverage is shown from canonical civic-data receipts; this readiness snapshot does not copy tracked body status.",
-  }];
+  const ocdIds = ZIP_DIVISION_IDS.zips?.[zip] ?? [];
+  const idSet = new Set<string>(ocdIds);
+  const bodies = REGISTRY.bodies.filter(
+    (b) => (b.ocdId ? idSet.has(b.ocdId) : false) || (b.alsoServesOcdIds ?? []).some((x) => idSet.has(x)),
+  );
+  const bodyInputs = bodies.map((b) => ({
+    state: bodyCellState(b.coverageStatus),
+    gap: b.name ?? `${b.bodyClass ?? "body"} (${b.coverageStatus})`,
+  }));
+  if (bodyInputs.length === 0) {
+    bodyInputs.push({ state: "NOT_WALKED" as const, gap: "no governing body enumerated for this zip" });
+  }
   const tier = coverageTierForZip(zip);
   const population = zipPopulationCell();
   return {

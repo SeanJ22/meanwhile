@@ -353,7 +353,10 @@ test("AZ, NH, and NJ are three independent permanent routine authorities", () =>
     assert.ok(contract);
     assert.equal(contract.sourceId, target.sourceId);
     assert.equal(contract.scope, target.jurisdiction);
-    assert.equal(contract.recordClass, "STATE_ROLL_CALL");
+    // NH promotes its votes as a per-legislator fan-out; AZ and NJ still promote
+    // the whole chamber as one STATE_ROLL_CALL record.
+    assert.equal(contract.recordClass, target.state === "NH" ? "STATE_LEGISLATOR_VOTES" : "STATE_ROLL_CALL");
+    assert.equal(contract.fanOut === true, target.state === "NH");
     assert.deepEqual(contract.bootstrapFixturePaths, []);
     assert.deepEqual(
       contract.acquisitionAdapter.command,
@@ -534,7 +537,10 @@ test("an incomplete official horizon is durable refusal and cannot move or erase
 test("one state's refusal cannot change either sibling disposition", async () => {
   const store = new MemoryRoutineDataStore();
   const pointers = new Map<string, string>();
-  for (const target of OFFICIAL_STATE_ROLL_CALL_TARGETS) {
+  // The whole-chamber STATE_ROLL_CALL family is AZ and NJ; NH promotes a
+  // per-legislator fan-out and its isolation is proved in the fan-out test.
+  const rollCallTargets = OFFICIAL_STATE_ROLL_CALL_TARGETS.filter(({ state }) => state !== "NH");
+  for (const target of rollCallTargets) {
     const roster = await seedOfficialRoster(store, target, "baseline");
     const outcome = await processRegisteredRoutineCandidate(store, target.contractId, goodCandidate(target, "baseline", roster), T0);
     assert.equal(outcome.candidate.state, "PROMOTED");
@@ -558,7 +564,7 @@ test("one state's refusal cannot change either sibling disposition", async () =>
     T1,
   );
   assert.equal(refused.candidate.state, "HORIZON_UNRESOLVED");
-  for (const target of OFFICIAL_STATE_ROLL_CALL_TARGETS) {
+  for (const target of rollCallTargets) {
     const pointer = await store.readPromotion("STATE_ROLL_CALL", target.jurisdiction);
     assert.equal(pointer?.versionId, pointers.get(target.jurisdiction), target.jurisdiction);
     assert.equal(pointer?.lastKnownGoodVersionId, pointers.get(target.jurisdiction), target.jurisdiction);
@@ -594,7 +600,9 @@ test("official state identities determine one scope before a Reader opens", () =
 });
 
 test("grounded Ask reaches an exact official state identity without a Plural roster", { concurrency: false }, async () => {
-  const target = OFFICIAL_STATE_ROLL_CALL_TARGETS[1];
+  // Exercises the whole-chamber STATE_ROLL_CALL reader on AZ; NH promotes a
+  // per-legislator fan-out whose Reader join lands in the follow-on pass.
+  const target = OFFICIAL_STATE_ROLL_CALL_TARGETS[0];
   const store = new MemoryRoutineDataStore();
   const roster = await seedOfficialRoster(store, target, "ask");
   const candidate = goodCandidate(target, "ask", roster);
@@ -602,7 +610,7 @@ test("grounded Ask reaches an exact official state identity without a Plural ros
   assert.equal(outcome.candidate.state, "PROMOTED");
   await refreshStateVotesFromPromoted(target.jurisdiction, { store, now: T0, bypassCache: true });
   const member = roster.officeholderIds[0]!;
-  const evidence = voteEvidenceFor("Official NH Member", { officeholderId: member, withinStates: [target.state] });
+  const evidence = voteEvidenceFor("Official AZ Member", { officeholderId: member, withinStates: [target.state] });
   assert.equal(evidence.identity.kind, "JOINED");
   assert.equal(evidence.records.length, 1);
   assert.equal(evidence.records[0]?.sourceOrg, target.publisher);

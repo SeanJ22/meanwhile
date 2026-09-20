@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **411 open**, 544 resolved.
+- **412 open**, 544 resolved.
 - **76 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -562,7 +562,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**101 open · 123 resolved.**
+**102 open · 123 resolved.**
 
 ### P1
 
@@ -727,6 +727,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH322** — The offline registry builder reproduces all 2267 divisions and 1998 bodies but omits held canonical OCD reconciliation metadata. Define and prove the offline preservation contract before using its output as a replacement registry.
 
 **NH323** — Independent state-holdings and visual-feedback worktrees both emitted data/ops/gate-runs/2026-09-02-10.json. Preserve unique run identity across parallel worktrees while retaining deterministic latest-run selection. Both observed records were preserved during integration; no gate result was overwritten or discarded.
+
+**NH329** — SUPERSEDES NH328 (framing correction). NH328 itself is left untouched: RULING 41 protects a row this session did not open, and a row's title is not amendable in place anyway, so the correction is recorded here. Owner determination: NOT A DEFECT. NH328 called the State Readiness panel's per-ZIP body set an 'over-count'; it is not. Those per-ZIP bodies come from data/derived/zip-division-ids.json, the INTENTIONAL 'could-govern' breadth (every division whose territory overlaps the ZIP's area), which is the reader's could-govern model. So 85641 (Vail) showing 66 bodies with Tucson-area bodies included is correct could-govern breadth, not inflation, and matches how the reader scopes bodies. Round 2 (regrouping per-ZIP bodies by a ZCTA-centroid point-in-polygon) was investigated and killed by the PR #337 session. No code change is owed here. Do not reopen NH328.
 
 **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt.
 

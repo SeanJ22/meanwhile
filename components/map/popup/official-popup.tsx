@@ -22,6 +22,7 @@ import {
 import { votedCount } from "@/lib/votes/participation";
 import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
 import type { BillSummary } from "@/lib/votes/bill-summaries";
+import { officialStateVotesRenderToReader } from "@/lib/state-rollcalls/reader-vote-visibility";
 
 import { PopupCard, PopupSectionLabel } from "./popup-card";
 
@@ -136,15 +137,19 @@ export type VoteAttribution = {
 };
 
 /**
- * Whether this holder has a roll-call store at all.
+ * Whether this holder has a roll-call store we render at all.
  *
- * `congress:` — the chambers' XML (5). `plural:` — a state legislator, from
- * LegiScan (D49, 2026-08-15). Anything else, a county commissioner or a
- * selectboard member, has no roll-call store, and the section renders nothing
- * rather than an empty heading.
+ * `congress:` — the chambers' XML (5). `plural:` — a state legislator, from the
+ * retired LegiScan fixture (test only). Official state legislators
+ * (`officialStateVotesRenderToReader`) render their votes through `/api/votes` →
+ * the promoted STATE_ROLL_CALL projection — currently NJ; AZ (a filed named
+ * source gap) and NH (a mid-flight per-legislator fan-out) are deliberately
+ * excluded there, never a silent "no votes". Anything else — a county
+ * commissioner, a selectboard member — has no roll-call store, and the section
+ * renders nothing rather than an empty heading.
  */
 function hasVoteRecord(id: string): boolean {
-  return id.startsWith("congress:") || id.startsWith("plural:");
+  return id.startsWith("congress:") || id.startsWith("plural:") || officialStateVotesRenderToReader(id);
 }
 
 export function RecentVotes(props: {
@@ -182,6 +187,11 @@ function RecentVotesInner({
   const [chamber, setChamber] = useState<"house" | "senate" | null>(null);
   const [keyVotes, setKeyVotes] = useState<KeyVoteRow[]>([]);
   const [failed, setFailed] = useState(false);
+  // An official state record that is not live yet renders no section at all
+  // (set in the fetch's catch), distinct from `failed`, which is the transient
+  // line federal/fixture ids keep. Reset on holder change by the key on
+  // RecentVotesInner.
+  const [absent, setAbsent] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
@@ -204,15 +214,24 @@ function RecentVotesInner({
         setChamber(payload.chamber ?? null);
         setKeyVotes(payload.keyVotes ?? []);
       } catch {
-        if (!controller.signal.aborted) setFailed(true);
+        if (controller.signal.aborted) return;
+        // An official state legislator whose promoted STATE_ROLL_CALL record is
+        // not live yet (e.g. before the standing runner's first promotion)
+        // renders NOTHING — never "couldn't load", which would announce our own
+        // failure (RULING 254). The section simply does not appear until the
+        // record is live. Federal/fixture ids keep the transient line.
+        if (officialStateVotesRenderToReader(holder.id)) setAbsent(true);
+        else setFailed(true);
       }
     })();
     return () => controller.abort();
   }, [holder.id]);
 
   // A holder with no vote store renders nothing here — never an empty
-  // "Recent votes" heading, which reads as "this person does not vote".
-  if (!hasVoteRecord(holder.id)) return null;
+  // "Recent votes" heading, which reads as "this person does not vote". An
+  // official state record that isn't live yet (absent, from the fetch's catch)
+  // renders the same nothing rather than a self-referential failure line.
+  if (!hasVoteRecord(holder.id) || absent) return null;
 
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
   const recent = <>

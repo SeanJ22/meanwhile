@@ -1002,6 +1002,10 @@ export function requireReaderProofMeetingsProjection(
   }
   let promoted = 0;
   let notRecorded = 0;
+  // RULING 290 history note (2026-09-20): partitions the frozen cutover import recorded
+  // NOT_RECORDED that the standing runner has since PROMOTED are accepted gains. They are
+  // collected and reported below so a drift of one cannot silently become two hundred.
+  const gained: string[] = [];
   for (const partition of result.partitions) {
     const contract = registered.get(partition.contractId)!;
     if (
@@ -1022,20 +1026,32 @@ export function requireReaderProofMeetingsProjection(
     }
     const expected = expectedById.get(partition.contractId)!;
     if (partition.kind !== expected.kind) {
-      throw new Error(
-        `${partition.contractId} meeting partition disposition differs from phase import authority: ` +
-          `expected ${expected.kind}, got ${partition.kind}.`,
-      );
+      // RULING 290: the standing runner is the sole freshness clock and advances past the
+      // frozen cutover import. A GAIN (import NOT_RECORDED -> now PROMOTED = a newly acquired
+      // meeting) is accepted — the census reads current production, so the gained partition is
+      // PROVEN here, not skipped, and coverage grows. A LOSS (PROMOTED -> NOT_RECORDED = data
+      // disappearing) stays a hard failure. Version drift on an already-promoted partition is
+      // likewise accepted (exact version match not required, above).
+      if (expected.kind === "NOT_RECORDED" && partition.kind === "PROMOTED") {
+        gained.push(partition.contractId);
+      } else {
+        throw new Error(
+          `${partition.contractId} meeting partition regressed from the phase import authority: ` +
+            `expected ${expected.kind}, got ${partition.kind} (a promoted partition may not lose its LKG).`,
+        );
+      }
     }
-    // RULING 290: the standing runner advances versions past the import receipt.
-    // Partition must still be promoted with some version; exact version match not required.
-
+  }
+  if (gained.length > 0) {
+    console.error(
+      `[reader-proof] RULING 290: accepted ${gained.length} runner-promoted meeting partition gain(s) past the frozen import: ${[...gained].sort().join(", ")}`,
+    );
   }
   if (
-    promoted !== expectedAuthority!.meetingPartitionsWithLkg ||
-    notRecorded !== expectedAuthority!.meetingPartitionsWithoutLkg
+    promoted !== expectedAuthority!.meetingPartitionsWithLkg + gained.length ||
+    notRecorded !== expectedAuthority!.meetingPartitionsWithoutLkg - gained.length
   ) {
-    throw new Error("Meeting Reader proof authority counts differ from the exact phase import denominator.");
+    throw new Error("Meeting Reader proof authority counts are inconsistent with the phase import denominator plus accepted runner-promoted gains.");
   }
   return result.value;
 }

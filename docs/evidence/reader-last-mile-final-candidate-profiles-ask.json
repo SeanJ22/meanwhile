@@ -1,5 +1,5 @@
 {
-  "exactHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
+  "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
@@ -180,7 +180,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "7700a985ce80209fc64287b1b20d531584e4c84adcd59c51c192e251012a1899",
+      "payloadSha256": "11a0fad524fc98a8b6c3ff5f48e652ced193dfa5bb74bfb5364923f0d01296d6",
       "status": "PROVEN"
     },
     {
@@ -332,7 +332,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "2b9603bf18b7a51596c30f0875ef5d6fb44261a73628737bd5c543faf39196fb",
+      "payloadSha256": "3af8f63f2f788337667593596b3bde09c39a9d80ff51a908557c4551eb1b09f4",
       "status": "PROVEN"
     },
     {
@@ -495,7 +495,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "278112cd1748b17a16b2b2dc9c01a48471ca71b27a8991970d46b6d27a6547af",
+      "payloadSha256": "ae3ff0ce7c0a0fccfaad90e2f5acdb98998ada37b3c40295d0ddeb6087a7c462",
       "status": "PROVEN"
     },
     {
@@ -681,7 +681,7 @@
       "actualRecordCount": 93,
       "traceRecordCount": 93,
       "countAgrees": true,
-      "payloadSha256": "68d129f0fc6d29d80be992e388438bddc07ae5cc69efaf8f404058e96478b000",
+      "payloadSha256": "2d570e99f7aa34cb74eaadd25dd913f156876c2246ef7b2e50aee7884cd26280",
       "status": "PROVEN"
     },
     {
@@ -920,7 +920,7 @@
       "actualRecordCount": 62,
       "traceRecordCount": 62,
       "countAgrees": true,
-      "payloadSha256": "d8100e945e2554e1f1b95c81e09899983a21f91d081f0e230527edc764f7944c",
+      "payloadSha256": "cab76bb3e08f329c07f42c702b0ddb2c2dae5b3072e0b68f877bc4d948be39b2",
       "status": "PROVEN"
     },
     {
@@ -1033,7 +1033,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "e6f43a332a1ce1dc60248d74e77d25f11bbbc39751e2625f5734de3867b1b78e",
+      "payloadSha256": "f88bfb3c2d4b824f215bd66239a53c45c1feea8c883eb6b85b3197706ab05c6b",
       "status": "PROVEN"
     },
     {
@@ -1141,7 +1141,7 @@
       "actualRecordCount": 19,
       "traceRecordCount": 19,
       "countAgrees": true,
-      "payloadSha256": "3b815cd9e995c08b4019a65bfba53d16e8372d317ab03c333587967382eda654",
+      "payloadSha256": "6e00ec761688531e0fbce53d0c9b6192acb20b427207333adeca2b943888504f",
       "status": "PROVEN"
     },
     {
@@ -1257,7 +1257,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "b23f489521bbbf2626e57470526c846acbd3cdaa8c496fa670c26dfb989bcf75",
+      "payloadSha256": "9e54b31173ab4191fc173b1ed520768512333f60149b1b017bd7af87bb084d65",
       "status": "PROVEN"
     },
     {
@@ -1409,7 +1409,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "ccaaf06c440c13487643ca3f7a55b0c869a2f2896935aa20a96c31f83a9499f6",
+      "payloadSha256": "405aa3f4fce7d0032bc8d6f8319b311c84d452eb433b9e7cea0819e32884144d",
       "status": "PROVEN"
     },
     {
@@ -1558,7 +1558,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "63d5c05e23ac4bdff21c1137cf39793d057f2f71a918bfd3c91217245ad6a847",
+      "payloadSha256": "98512633bd3aefee962c777217afa4699f95156326e29262ea0b96b989d01c58",
       "status": "PROVEN"
     },
     {
@@ -1703,7 +1703,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "f1514631ab936893d7e24eeebfaeabe8e45e827849c8c287328c5f283425a653",
+      "payloadSha256": "af9bc8e83d16bd9b1fbaeee09bb2a3653c9c1076bb1f98298eebaebcec19b9d1",
       "status": "PROVEN"
     },
     {
@@ -1834,7 +1834,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "0bcc18d0f33af6cf6bf30e6efab6b722e966bf37afe1704f51b24606b79a4614",
+      "payloadSha256": "b07db3b93f55b4297c93479bf8c4985accaf63405ac80557c3d4ca1326a097ad",
       "status": "PROVEN"
     },
     {
@@ -1947,7 +1947,7 @@
       "actualRecordCount": 15,
       "traceRecordCount": 15,
       "countAgrees": true,
-      "payloadSha256": "702e68c395627f9adf73bffb21307101e86f3feee15d60127f994629ed338859",
+      "payloadSha256": "0c4daaacd05e21560dbe3a8f3c243f5eefaa0127d313250cedc8804862c0e905",
       "status": "PROVEN"
     },
     {
@@ -2078,7 +2078,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "0bcc18d0f33af6cf6bf30e6efab6b722e966bf37afe1704f51b24606b79a4614",
+      "payloadSha256": "f5d5a3300f9d2a88042330268e4a5b09e0ceed2c7380cc4f674bcd20225538a0",
       "status": "PROVEN"
     },
     {
@@ -2241,7 +2241,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "1d30b458704549a9fbc04100eafcb6dd88a6d2c6efa665061aa9e22dfc76858b",
+      "payloadSha256": "a791eb1d0c5228cad4768b79423712268fd6f7ab6acdbf57c7438d679de721e6",
       "status": "PROVEN"
     },
     {
@@ -2386,7 +2386,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "357bfb83ee34e98ac4760f9e2abdcc94fb85f1d64538a88c5e7fcd9cdb787ff7",
+      "payloadSha256": "f8d86d9e440b1a0ab37421fc48e6df1eae3257f0a93b9c5e795c25e9c8d5464b",
       "status": "PROVEN"
     },
     {
@@ -2549,7 +2549,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "10eb150ed7d273b70ac04c4ebd7edc6fe3a5f5a204c7a3b9f26a924d02e79a14",
+      "payloadSha256": "357bfb83ee34e98ac4760f9e2abdcc94fb85f1d64538a88c5e7fcd9cdb787ff7",
       "status": "PROVEN"
     },
     {
@@ -2662,7 +2662,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "5fbb70887f8df537f434f9d85ff2b2027109734f53319a0a7b0d6a284602d669",
+      "payloadSha256": "5565439a452a8d3f967e3f05f7f419e48a2ab9cefff8d7f7e544ef7f4b02539d",
       "status": "PROVEN"
     },
     {
@@ -2793,7 +2793,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "43c4a8cdc5607fce18e9312dc3e976a45d340b0c7d07e9cf90e31a19630a7b4c",
+      "payloadSha256": "90eb13a79a29c221c3f8d124ccf1cda09009e8f76ed8cfa40523d957a24726ed",
       "status": "PROVEN"
     },
     {
@@ -2905,7 +2905,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "a6680c10ba7ef5449b8cf39da23a87078ea8ed74847cf7c20382928717d16fc9",
+      "payloadSha256": "33015532255ee0dcab14a3d22d62ef6833f4fc251a6a3dd8d28b8948cb8455f6",
       "status": "PROVEN"
     },
     {
@@ -3036,7 +3036,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "43c4a8cdc5607fce18e9312dc3e976a45d340b0c7d07e9cf90e31a19630a7b4c",
+      "payloadSha256": "981d2be042672dab1ee2dcfeecf088045c3e97311d266e82a49fe4e85aca79a1",
       "status": "PROVEN"
     },
     {
@@ -3181,7 +3181,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "7d90eed3ded0da73248ea0523103c72327b534e89f1072bfc826a8ebb5318e36",
+      "payloadSha256": "5cfb57057eab816559251c0ca4b3d232cb27cc7ba490809af4b65453b6fb03b8",
       "status": "PROVEN"
     },
     {
@@ -3344,7 +3344,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "7d90eed3ded0da73248ea0523103c72327b534e89f1072bfc826a8ebb5318e36",
+      "payloadSha256": "c5ddb52b8453bde4d55ad5239a5b5faa1e555c885010e2b2b6f7a5e1d588f0c8",
       "status": "PROVEN"
     },
     {
@@ -3457,7 +3457,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "5a47b0fb84decf6b32b369b9373596a606473f26d15ce8872211c08bbbf5fdef",
+      "payloadSha256": "bd4ec6fecf85db2ef5ae0af996db27b2a56ea3606d7593882d2588ed95d10132",
       "status": "PROVEN"
     },
     {
@@ -3570,7 +3570,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "5ed6469523d94e71a1a6abd814f06e28b5aaea8abf1eb9fffafc6ecaf8b8037d",
+      "payloadSha256": "05223e6e6bfaa5ebb2bbe2b1aa595fb045e74f8c086bc97b3fbf5815c1934ea2",
       "status": "PROVEN"
     },
     {
@@ -3722,7 +3722,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "916c803cb218a984c0c42baeeb1ba511dd57e9c640fe292d6f72cc41dee7bfd6",
+      "payloadSha256": "acd5dd560d3a0c1f6e38db42fdb1b705b16981ddb6fcf9f96f6d0092e79017c0",
       "status": "PROVEN"
     },
     {
@@ -3831,7 +3831,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "1e74709cd67d3e17b3184fb30348c6fe9c25c365f90a65d8af557349754caad2",
+      "payloadSha256": "fdb3bc11b812a47a9e5300572c52c32f0223dda6619c13abddbc49e654158cfd",
       "status": "PROVEN"
     },
     {
@@ -3939,7 +3939,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "c4cbda8a5200ef4888383eb0f7d390363f24cfb64a860d98fc4853cc59d2e477",
+      "payloadSha256": "ccb1b4bcac8f9d2b363b9c060b2b915383709b04eb5c1d85cbfbfe017b38b337",
       "status": "PROVEN"
     },
     {
@@ -4048,7 +4048,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "fbbe30b2c63c79ebbc8d39923945f839a9bc546dba013bcdcfa1ef4504630652",
+      "payloadSha256": "6cea18a09b259e93c7f58b8c4371cfd1be8baffdd2c729d202beb626a0c8d75b",
       "status": "PROVEN"
     },
     {
@@ -4228,7 +4228,7 @@
       "actualRecordCount": 86,
       "traceRecordCount": 86,
       "countAgrees": true,
-      "payloadSha256": "602dd0df6ad94fe2aa2a00ff3142001ad16a30675a911149040b1fc2bdd6ef3b",
+      "payloadSha256": "9c8e261b2c99acaab0376f2b320be46bb7bc48e9b4a710606fc1ebdaf200e4c3",
       "status": "PROVEN"
     },
     {
@@ -4444,7 +4444,7 @@
       "actualRecordCount": 82,
       "traceRecordCount": 82,
       "countAgrees": true,
-      "payloadSha256": "6b6bc89f681e8688ef4c13427a066494b1a83fbda05fa48baa2aa671e374e62e",
+      "payloadSha256": "91341592f31014dcad538317122d76b819acec9b9bf6e8b0e9b9571243b1f699",
       "status": "PROVEN"
     },
     {
@@ -4557,7 +4557,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "d20a6b906103fb06d33f57bfe97da167cd4c03267fa7b72d961437b1ac5aff29",
+      "payloadSha256": "39d39b6ff5bf0a2dbc2d3db29858b7eb93707cf2bbd8fba89b4020702b879241",
       "status": "PROVEN"
     },
     {
@@ -5003,7 +5003,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "b06ae698eadaa4e8f2c5e5335818089d734521b98b2d4a7cb3eef937be624aea",
+      "payloadSha256": "562ca14b4ab88c6ec37accea8113752c614bfac89ab9f96d6604438067d6684f",
       "status": "PROVEN"
     },
     {
@@ -5487,7 +5487,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "ebbaea3fdfad45885b86c19b27085e26417e75bc779438ad46d3863c1a31dcd8",
+      "payloadSha256": "efa1d50fecfb96b3c341a60e13a072b63bb6c3a94e933b3b01995a3e2018d694",
       "status": "PROVEN"
     },
     {
@@ -5602,7 +5602,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "8f1bacc1f403bf130301611216ab6c7491c667a18ebbfefbc4339e0f0a0a7479",
+      "payloadSha256": "51996e22bde5510a4f1a3f8e7bf921c27923723f0c31eb5540abaf8a67106b1c",
       "status": "PROVEN"
     },
     {
@@ -5982,7 +5982,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "4fc69134230a600cde96e3daab09191ed39e88895f6d1a1437ff98ffccabbf4c",
+      "payloadSha256": "7f949135e043e017930d710d9f39ea5172f4be6bde66df9806313783dad9adfb",
       "status": "PROVEN"
     },
     {
@@ -6097,7 +6097,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "b85226c102778d78c279e1c6d1f693c2f96e9a0d608f3c6bb231646fa4630f0c",
+      "payloadSha256": "0c887fac0d41650894b28209a4ba5c42b51b2dff8727fd551a1062fa1fb3da68",
       "status": "PROVEN"
     },
     {
@@ -6320,7 +6320,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "311612792234a6c28564b7fcacce3cf74dcb27202ab2b21de2af40cbfd574764",
+      "payloadSha256": "edd309beb48d5a3cc1dc2ee909e43f39d5511676bc95716e50a398346aeaebc8",
       "status": "PROVEN"
     },
     {
@@ -6505,7 +6505,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "48443bc210aed925b88ffbc142b0382eeadb82583b1ad9d4a68ff33ebf4d695c",
+      "payloadSha256": "a23bec0ed85f42dcc7c132a9effaadda9305907b7abdeed9ef9e8b1321fcb98a",
       "status": "PROVEN"
     },
     {
@@ -6690,7 +6690,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "6eb15ff34fa43a0f4a3c5223bc70e10230214e871eb8326e42bc341a2b89c169",
+      "payloadSha256": "dffbfaec977d803c99babaea8439fb4791f44883c7aeb8dcb9647aed04b7eeea",
       "status": "PROVEN"
     },
     {
@@ -6805,7 +6805,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "76c794cb64f223543fd0404f6c185e87a1afe4054e1cf573bd20230faee82f4c",
+      "payloadSha256": "e4f3b61edd3627a6358bdf966fe2aa163eb9aeccb9aba8810c18bfeb3fe1fcc4",
       "status": "PROVEN"
     },
     {
@@ -7217,7 +7217,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "54e0b50db40b217fa520f682efbd6e5abd4a20a28b858ce4d2de8d0347adafe3",
+      "payloadSha256": "cbcde0e51c1e0ea1611ff258ca9aa3f249149c471379d6d2982bb293d66dd59c",
       "status": "PROVEN"
     },
     {
@@ -7555,7 +7555,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "f0886803f9baa49b82e5c762d4928ae81134e640b4c42c080693efe447466501",
+      "payloadSha256": "b85241411a16af10d96185c8f4682d5c2ea66ed9d4741e371e781f23145f719b",
       "status": "PROVEN"
     },
     {
@@ -7821,7 +7821,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "30cf0387e8a114981d01105f5bca2f8dfd4d12f521fabdc4b8052979a52e21ee",
+      "payloadSha256": "592363a107b1ad9ff59f3da8d68522200f6ea534fe254d787d6ba3fbdd029ee8",
       "status": "PROVEN"
     },
     {
@@ -8044,7 +8044,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "4650edf59329c5307c6030e771da11c2989a94b523f6824366a204cdb9a29df5",
+      "payloadSha256": "d07e45d1e2c613e65810c84da2f81ae317bd335a03692ff578d0e5cae8b8f13a",
       "status": "PROVEN"
     },
     {
@@ -8159,7 +8159,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "837c307e7980d7d3d2f358dbf79099a03a5b876b93a42f162c17e8d8bfc404c7",
+      "payloadSha256": "944c582e103fa0f2dff553ee5938c5fdacf7f7f26a66531327da49f1d42d7356",
       "status": "PROVEN"
     },
     {
@@ -8382,7 +8382,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "78232d6612efb1d3d975c8878f9654a15edfa98b2732cdc41251e0fe1b2fed67",
+      "payloadSha256": "98805adb5ea74a44cdfee81e55eab07383bb12a251b0cf8381831ef6a23b193f",
       "status": "PROVEN"
     },
     {
@@ -8497,7 +8497,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "1eb5170878f1232b3838cb16e6f3c707b37a2a6616f88a214e8405c8583fc13a",
+      "payloadSha256": "a1edd81cbbd46087f9cca3a81d0c2f9fb83b848dcecc6ffd3d8cb7a7116333a4",
       "status": "PROVEN"
     },
     {
@@ -8875,7 +8875,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "e37a89d1bf3d08672cd5c226010c4383cda651831c7ab0014ce86af6096d68d6",
+      "payloadSha256": "2229c9ce3422247f656004d72ffd9b4769e45d9c46f5d05d72d6db2454631f50",
       "status": "PROVEN"
     },
     {
@@ -9105,7 +9105,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "132b86584d2799baf2f3d6d35bb37222f95ff3f68cee28a2ff0e663f0a0a95c5",
+      "payloadSha256": "98ea8703cad5afd7f8bbddb210207bcb0c8dc8f57939208399a47470400eaf3b",
       "status": "PROVEN"
     },
     {
@@ -9220,7 +9220,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "77f57fb04a8082c64bc2a891d4641d9b89b2d24345dae98a15b45a127a68dfda",
+      "payloadSha256": "2b10dbdd41e3f1d988a13905dc5fccbcaae865823883bc3d19174466636ba7da",
       "status": "PROVEN"
     },
     {
@@ -9513,7 +9513,7 @@
       "actualRecordCount": 40,
       "traceRecordCount": 40,
       "countAgrees": true,
-      "payloadSha256": "46007943364ecf6fc25df9cd406ecd34d19f6017e9ae868b28945816d3ef462c",
+      "payloadSha256": "e737c07000b36f88d5db1da543fb4a1f7629d4bf41a8f117e1ddf02da1c753a6",
       "status": "PROVEN"
     },
     {
@@ -10322,7 +10322,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "db885e83b883aa62209c49425dc1be5042b06ba8a849f8d3560971bb93280210",
+      "payloadSha256": "2fadb3bbec38811cb95527b73ba51b28ab53917a941b4cb32349fcb28d6e3847",
       "status": "PROVEN"
     },
     {
@@ -10437,7 +10437,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "64a200d713bfd650e445ac00b30da909b12a76b53d0f9765de66e56e3e4f34e4",
+      "payloadSha256": "d954734cf6eea09288a05669352124d3e2cfdc208f453416b2bd10c4bce0c28f",
       "status": "PROVEN"
     },
     {
@@ -10978,7 +10978,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "3a208c27e3681f2264cc819f69a262cae0ffa9dd58f8583b563975304052f6dc",
+      "payloadSha256": "1ed43b2d52fedd3816c09fd8795e8bcf5325daf972e08d4c2f6dceb58f6442af",
       "status": "PROVEN"
     },
     {
@@ -11239,7 +11239,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "1bd4fb13e93b104bb7f39716c397dd8ffc58e5c3a5aef9ff39b91eedd3a08b85",
+      "payloadSha256": "dd68ed6eb99f60a42c97ccdc8dcda2344a026924b2af58d5e2bec7792ca03ed7",
       "status": "PROVEN"
     },
     {
@@ -11500,7 +11500,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "4dad69942858deac39acd598a99930fd382444565132e3d30100a87822d06079",
+      "payloadSha256": "770e9ce84853724d807ed4a74f6bcb329f19a0c9241bdcd9157bb92d413ab27a",
       "status": "PROVEN"
     },
     {
@@ -11685,7 +11685,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "cdbbaa64442707b4d9d42b6c07aaf9adb2fa5d0eccea6763e121bbe8aa7c0e62",
+      "payloadSha256": "6fc73f975c65c420706ce8bb178b2e3b1fe3e48c56b0adc9346cf6b7299c11a3",
       "status": "PROVEN"
     },
     {
@@ -11942,7 +11942,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "b06dd0ef2120701141b52446f3dbeb2d7d36e785a01e19d17153e03a5197e6a7",
+      "payloadSha256": "b37cecb24a18c089fb535e4e0a0e89cdd3b4da23c3ba541e688e6421340debf0",
       "status": "PROVEN"
     },
     {
@@ -12203,7 +12203,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "797d0247e71954b2fc221735f634f6126f9309813ce4b6776f2855b0f6ca4aa8",
+      "payloadSha256": "036a461d6ea888f87e570f9773c4fac67a62bb01f9812166163dfcc283cb1bf7",
       "status": "PROVEN"
     },
     {
@@ -12579,7 +12579,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "d4bc3426338e4e86bccc327017f38e40419732b206c43be5688bd73857a5db0b",
+      "payloadSha256": "e8967e205656fcaab2d62f729bdfaf538b53bbaee3f3d19368d07558df482345",
       "status": "PROVEN"
     },
     {
@@ -12998,7 +12998,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "9d0613d042bd27781ecdbf61119f52d87bea44b0c8aac1b10269270399a873ab",
+      "payloadSha256": "bddcd9441d741ad039cf70fc0503dc074794491b9970ee85c877cc62314a0dc0",
       "status": "PROVEN"
     },
     {
@@ -13260,7 +13260,7 @@
       "actualRecordCount": 96,
       "traceRecordCount": 96,
       "countAgrees": true,
-      "payloadSha256": "2833eb1c58533ee9378de38636322d25a44de648ec7e81855bea4a7d9c592310",
+      "payloadSha256": "677df8718dfb56a3fd4764aad8e644720fff91df4699cf1e7ade9367f55cb3bb",
       "status": "PROVEN"
     },
     {
@@ -13521,7 +13521,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "f6f1bdfb05101e6b26fdbaf601eac78a02e37a12ab04cb21ea6585069152f11a",
+      "payloadSha256": "03e097929bbe04388859b7db450fbe41e91fe725e7265833c2544765e48f375e",
       "status": "PROVEN"
     },
     {
@@ -13636,7 +13636,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "df3a7a5c82848cb99bac92a1bbcc454f441689b13d5533d0b95c2b8e6e60a92c",
+      "payloadSha256": "61c385375585360a750ba4d2fe5fd7a5a2c194620a4c11f700a425d2817b220c",
       "status": "PROVEN"
     },
     {
@@ -13897,7 +13897,7 @@
       "actualRecordCount": 7,
       "traceRecordCount": 7,
       "countAgrees": true,
-      "payloadSha256": "37f656c6532cc777aa741642c3fe15ecb27460c8c5cc1beef798128de9630866",
+      "payloadSha256": "efa4af187561a144b17e1b32524d2c50debf69aef6eedadf7479b5b3060bbbab",
       "status": "PROVEN"
     },
     {
@@ -14120,7 +14120,7 @@
       "actualRecordCount": 6,
       "traceRecordCount": 6,
       "countAgrees": true,
-      "payloadSha256": "25a3d58d199b6786dac865c68f7228d4b3b0f1dc79e404bf109f3245c97404a5",
+      "payloadSha256": "14dcfa79df75f4e212e2014a3af3517a3e4bb96d9bd5d25f4dd206ea1957302e",
       "status": "PROVEN"
     },
     {
@@ -14233,7 +14233,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "ea6d0c049e3c72b5acbd01177eea931e13e1bf69bd965a989fa07cdbb275886e",
+      "payloadSha256": "3fb2417aad4a30b46a6bf60f20099d7b4c173dea7af2f8f2406bee55a875c523",
       "status": "PROVEN"
     },
     {
@@ -14381,7 +14381,7 @@
       "actualRecordCount": 80,
       "traceRecordCount": 80,
       "countAgrees": true,
-      "payloadSha256": "7eef537d1b814bf2379d14653ac53745fc5fea911678460b6893e9964a2d68d8",
+      "payloadSha256": "48c1c2326b8dc57e2820ded1ee038749afce5bd3914b334004287a1b81f7f478",
       "status": "PROVEN"
     },
     {
@@ -14493,7 +14493,7 @@
       "actualRecordCount": 3,
       "traceRecordCount": 3,
       "countAgrees": true,
-      "payloadSha256": "3913f91716c191dcc194b8ca5c5863fce4fbfb5fc7f5f95e9b74c24a7ee8c5a7",
+      "payloadSha256": "1e1c549eeb1779cacdd87926543eb757e77ee25daa7c19dca279bd69f61057fb",
       "status": "PROVEN"
     },
     {
@@ -14606,7 +14606,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "b3e88cf7c706ae4c3f48363692d0d0ebca77d49d29e1008bd48097813f38da7e",
+      "payloadSha256": "2b0e7376f975bf160aaba74c62038c5f0251ca48e54daec01ca8e2a73464bf6d",
       "status": "PROVEN"
     },
     {
@@ -14764,7 +14764,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "868ca0ae6d1a89ec31cb512de7dc3b1ae2e23b6148bb07e8629f0e82273f7739",
+      "payloadSha256": "dc43fe6efc6e2e200e0e65d620a06d9b99f8e71341e5de33b7e91320f6385fa4",
       "status": "PROVEN"
     },
     {
@@ -14922,7 +14922,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "fb427fe9f246f2adcb4883d07ec60429233984e7780bec096016eea7d0708478",
+      "payloadSha256": "979db6dfc0e141bc7c00e3df296f16845a6dbec17afb4d9638953f26a0a50801",
       "status": "PROVEN"
     },
     {
@@ -15035,7 +15035,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "a36a30384979fbfa4156b41ccbb482465b12b375e6d260d5ed451d4f1045487a",
+      "payloadSha256": "ecf11627cc352c9d9539a842fb5c02272094eb687e4355dd6ca33810df43c269",
       "status": "PROVEN"
     },
     {
@@ -15155,7 +15155,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "e6f83f09012f6bec5da55c386d7dd7716b6bfe04eb59457e02089bbc19739c0b",
+      "payloadSha256": "0653d2e0a8729f83b086875adeeff345583446c6afdc3d3a2acfe5b7e3413bac",
       "status": "PROVEN"
     },
     {
@@ -15193,7 +15193,7 @@
           "text": "Recorded email: info@morrisdems.org",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "info@morrisdems.org",
@@ -15251,7 +15251,7 @@
           "text": "Recorded email: info@morrisdems.org",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "info@morrisdems.org",
@@ -15351,7 +15351,7 @@
       "actualRecordCount": 15,
       "traceRecordCount": 15,
       "countAgrees": true,
-      "payloadSha256": "04dd3cee5ca34d10cbde671195193cd44da9046d17ceb1479fac14843708b5b1",
+      "payloadSha256": "d0ab8bf3921908ded100b32fbc0fed877fd6236169224219945f528fe368f326",
       "status": "PROVEN"
     },
     {
@@ -15406,7 +15406,7 @@
           "text": "Recorded email: selentayfun@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "selentayfun@gmail.com",
@@ -15499,7 +15499,7 @@
           "text": "Recorded email: selentayfun@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "selentayfun@gmail.com",
@@ -15613,7 +15613,7 @@
       "actualRecordCount": 20,
       "traceRecordCount": 20,
       "countAgrees": true,
-      "payloadSha256": "4d4cb3fbb7ff5dad246ec8086a5bb5b291c410f9fd0595082bd67e3d2bd10868",
+      "payloadSha256": "6bf83ac244882a17677e5a6c6e9aa7a30f810e66d279ff2455cecc652034fcd4",
       "status": "PROVEN"
     },
     {
@@ -15726,7 +15726,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "92f0274fbb5e1600d6055082cc920f5ed4285210123b6918eb37879caf66f863",
+      "payloadSha256": "150908aec3ae009156c3831b87fc3f28fe27f51227c2f7df7ad0c8ba57228360",
       "status": "PROVEN"
     },
     {
@@ -15846,7 +15846,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "8f02221103716944f100832d87415889a1b1d0f1afadb0d72e86308d9b4bf413",
+      "payloadSha256": "9f22d5d6855634c0163875e06e3d5255de2329970714abfd7df643ba70d7485d",
       "status": "PROVEN"
     },
     {
@@ -15966,7 +15966,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "57b4970cbdebb2b6b66c3e033036e2ee06ded63a3bad9face4021f864e947f21",
+      "payloadSha256": "7bac49bf0b3c646f48ad8412590e8b2d706a4e43f49e2649333709a948f2f63a",
       "status": "PROVEN"
     },
     {
@@ -16079,7 +16079,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "a32651e1e18b8749fc418302286cfbf55f1f0b867ad681651f36cfe0b6390c42",
+      "payloadSha256": "ceaf3eccbb6528e1e490c6fee9b3c3a2554cb37d267f07c0f3aa59b9b512dc15",
       "status": "PROVEN"
     },
     {
@@ -16192,7 +16192,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "008e6060f4c1f326489c0a5aee8c1a3f1c9f0611b7b9951f574c151073058e07",
+      "payloadSha256": "73de6e25f5c0345a12baf677ddee9ab4705e60d0d912d29f817ca3d32d2c88d2",
       "status": "PROVEN"
     },
     {
@@ -16343,7 +16343,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "0cb058443b43fd146e36ed5fb8b0ca6e60f51f58678d724e6b9a8b22c91d660f",
+      "payloadSha256": "c7c43cb28e3195ed1496926e6bfaed265ec5c580f8a96c1b9d9506e15886004c",
       "status": "PROVEN"
     },
     {
@@ -16501,7 +16501,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "9e9b6c1fade0797a7de46ddc46e00efdf1ef73cb8e789913c1688f8f4bf21b03",
+      "payloadSha256": "923705a6388cb6d95b4a37e761220a2534a657b17ff52bcb2d5bc38457d7ad14",
       "status": "PROVEN"
     },
     {
@@ -16621,7 +16621,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "49d08f212f114db07def155a0359cc78b9f06188d599c7479beee9dbca1bd1d2",
+      "payloadSha256": "70a5739dd35b1c298cf0d2bdaeedf931617b8f6db2d93e2d17902cf8a09c77de",
       "status": "PROVEN"
     },
     {
@@ -16741,7 +16741,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "1faa14d37c86fda4f07991b522db6f8f4d777f63de541fdbb40a4ed9b05045cc",
+      "payloadSha256": "fda1ebedf59ad54cb3dfbd35c74e65edc98bbdb9925d489c35f60e1b55040652",
       "status": "PROVEN"
     },
     {
@@ -16854,7 +16854,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "bbf4415245ecc0e4e54df99c385644cde430539bcebbe9383abad29e620ac013",
+      "payloadSha256": "bb0b96e2ed2047386bdd790b4f5d92ba08e8c85b53f352675742cb5de064626c",
       "status": "PROVEN"
     },
     {
@@ -16967,7 +16967,7 @@
       "actualRecordCount": 10,
       "traceRecordCount": 10,
       "countAgrees": true,
-      "payloadSha256": "d4c9ce88cf476a6fdfe9a98b3c7b34cdbeeb0f7120d2c78ca43332819f5d4f14",
+      "payloadSha256": "242f621a09465b55055bce6c53c3cd48de4b2ce959b0249bbe6614432482990f",
       "status": "PROVEN"
     },
     {
@@ -17080,7 +17080,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "7dd4c4230b8a8ea35381c9b256475019601b5e15e8dc96eed816f1fdc1dfcab2",
+      "payloadSha256": "af934a4bd0cdc539fa0f7a3f1dba39ca51cf180c788fe93224f5034614d399f2",
       "status": "PROVEN"
     },
     {
@@ -17193,7 +17193,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "1955145326c87bb5441d24d6ca02480ff5a6ba274251a9bb42d1e4fef34ef997",
+      "payloadSha256": "cfc7d8c0ea2cfbb52ce263593298c0635b3448d66f1507d8ec77727ecca22418",
       "status": "PROVEN"
     },
     {
@@ -17306,7 +17306,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "cc428d5ca04c37eb88b6f87b5c98cdb8ad0b3028c278aefa81fd7b444a9e6f40",
+      "payloadSha256": "a50620161c6f34f469ff4f70b8b3719b9c5cdb2c753f3e8301fdfdae416e8de0",
       "status": "PROVEN"
     },
     {
@@ -17419,7 +17419,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "340581cdd1ae25db7db6db52c1f4cb5b9b85b27763db7b0bf0a5d6a9eda84c96",
+      "payloadSha256": "d8b2c2ada8de8aacd38c483daa64638df28a926e55337745bb7bd3194b49c4a9",
       "status": "PROVEN"
     },
     {
@@ -17532,7 +17532,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "5d11bd650f870afbace8133940b36a3ebcbf2fc869a8bbcef9f95772b75cfff4",
+      "payloadSha256": "f51f8f9d10fd3ffed1de3222ed84773ce1518a729b1cbd7a9cae5ae8a567e2e2",
       "status": "PROVEN"
     },
     {
@@ -17645,7 +17645,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "dc2e9c3d1976378af1b2dfb0b8fabbada92a7d48b8769ff4ccc75f18215c5908",
+      "payloadSha256": "f2b255eec8ba84931a1623b4ba2358de52f4219c374870f534b0d85dc78c5ca4",
       "status": "PROVEN"
     },
     {
@@ -17758,7 +17758,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "acb727d705521c9835106bb7c3d5d0bb64b0783d4296284260b31bd57c30bed1",
+      "payloadSha256": "226e288b3b5805c2d67094a11dac2f156e49a9d2dbf0747183bf427f5327af45",
       "status": "PROVEN"
     },
     {
@@ -17796,7 +17796,7 @@
           "text": "Recorded email: broach@joineei.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "broach@joineei.com",
@@ -17836,7 +17836,7 @@
           "text": "Recorded email: broach@joineei.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "broach@joineei.com",
@@ -17911,7 +17911,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "ef4dbd9472aea3d80b9c2a7b5a332ca2c842e7c636806b58347eee65214f35db",
+      "payloadSha256": "ec1d204147320ab5be7ab9a53b9d90a882c63a402b581e7e4fb72f992f17ef63",
       "status": "PROVEN"
     },
     {
@@ -17949,7 +17949,7 @@
           "text": "Recorded email: wserafin@mhrd.org",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "wserafin@mhrd.org",
@@ -17989,7 +17989,7 @@
           "text": "Recorded email: wserafin@mhrd.org",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "wserafin@mhrd.org",
@@ -18064,7 +18064,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "97f5fcbe64c6ac3cbfa34b7a5e6bbbf71831ac58b16503c382b74a8f07d4f130",
+      "payloadSha256": "8f03cca841f30dab483fd170b819fffe75e60edaaa8d3f5cde94b097f1e5681c",
       "status": "PROVEN"
     },
     {
@@ -18222,7 +18222,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "1d93cc67a12d25cb8d0b70721f212e5b94611ec90e4e0d4b758c00c295ed1704",
+      "payloadSha256": "a0c61ed5dedf1f65f61fbd8638523230cebcc8712047a61fd56e6116e83fd8a1",
       "status": "PROVEN"
     },
     {
@@ -18335,7 +18335,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "7c70012a820cd1731aea1f09105314ce6e85840fcafc2e32b822a548926a1dd2",
+      "payloadSha256": "7cc057089a37ae54e77fd94a8a3b88a723b0c5076c47077732fcb0c9285a72f8",
       "status": "PROVEN"
     },
     {
@@ -18448,7 +18448,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "348f2e72446efe3e9a6b8757256c53fa786caa0dab530bf64f2b00cd0a417bad",
+      "payloadSha256": "bd17d915f0f79d8f20e719243f902869e8d4e47689a2671a511c2f2b3e0740e2",
       "status": "PROVEN"
     },
     {
@@ -18561,7 +18561,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "f1ccbb6421b7b5bb525fb30515a2b33db2f082c5c69dc71b147e8a8c0c8abfca",
+      "payloadSha256": "2c07be65b3e8d4f2f75052335aa0353fb91503dc7c9baa2db796afd0531260fc",
       "status": "PROVEN"
     },
     {
@@ -18674,7 +18674,7 @@
       "actualRecordCount": 9,
       "traceRecordCount": 9,
       "countAgrees": true,
-      "payloadSha256": "1d50e383c26f4a7fcd82a4bd40b283a132242f014bbc5f00523b2da9c4f545a3",
+      "payloadSha256": "9e4fe52bb54e47c6ff44dac55286bde44b21d4aa4b24f6c8b0c99b72d0f5b93e",
       "status": "PROVEN"
     },
     {
@@ -18787,7 +18787,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "58a3f5dd0878aa410be9289b9496156c8020b33aa45087faa85a7959dbbf3e22",
+      "payloadSha256": "1f2004ce19e18b385d58355c5c794a0a4fc7d46e2f94479e39273597d7ca0fa0",
       "status": "PROVEN"
     },
     {
@@ -18938,7 +18938,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "dad22eac0ca0b3f29d027c3bfb0b1d4c0353d69b5795be05cb5b9549140e967f",
+      "payloadSha256": "d4801066344c82fab4c3206fb72d64927ade67f2561a499f9928b8a9af7654a9",
       "status": "PROVEN"
     },
     {
@@ -19051,7 +19051,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "6878838f4820a3d47ae7509544ab70cf945f0a6c8d33ef6816ba72efe6aa9a81",
+      "payloadSha256": "64dc697034dbbc8fe2ceed44cb91a88c291bc8e529effd9e5c39e5d6966c2f22",
       "status": "PROVEN"
     },
     {
@@ -19164,7 +19164,7 @@
       "actualRecordCount": 4,
       "traceRecordCount": 4,
       "countAgrees": true,
-      "payloadSha256": "a4d60b850fec5cfee60beb5d21d37c1b63f174e7115c8630c6ed793b7b163c6a",
+      "payloadSha256": "d3b65f46848bafff566b8a98793ab7d4c9b11e671e1d5d25a77e47c4a55db449",
       "status": "PROVEN"
     },
     {
@@ -19360,7 +19360,7 @@
       "actualRecordCount": 15,
       "traceRecordCount": 15,
       "countAgrees": true,
-      "payloadSha256": "89d4e22a136545b67d48480a07c77c9029f89fdf78b97cf1aff4d1fe00b919cc",
+      "payloadSha256": "ea29e199cdd4c7154e7b3df0062dcbc9ab0b485d9d1bdd3c39e00a28323645ed",
       "status": "PROVEN"
     },
     {
@@ -19518,7 +19518,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "30ccdc4c566c7acf3a3cacd25cd6f6db4eec547e75b2445f76dd724e19c974dd",
+      "payloadSha256": "9aa1654614235dfd6b2664e16c2050b416d8e51e1f55abc22a5288ec5d8e6de6",
       "status": "PROVEN"
     },
     {
@@ -19556,7 +19556,7 @@
           "text": "Recorded email: oborno@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "oborno@gmail.com",
@@ -19596,7 +19596,7 @@
           "text": "Recorded email: oborno@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "oborno@gmail.com",
@@ -19671,7 +19671,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "681de1adf8f595da3925d52c6e2de10dd1cd5fa79031296e0ab750535e6feeb7",
+      "payloadSha256": "17eab89690415d5de95239fdcb74d7444306b05155d6b1d6cf51ab44ae06cb8b",
       "status": "PROVEN"
     },
     {
@@ -19709,7 +19709,7 @@
           "text": "Recorded email: monirrockaway@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "monirrockaway@gmail.com",
@@ -19749,7 +19749,7 @@
           "text": "Recorded email: monirrockaway@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "monirrockaway@gmail.com",
@@ -19824,7 +19824,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "2bda2cb35f4a4994fe35c955149900ecdd53bb8a4965010643abe2ebdfc135d8",
+      "payloadSha256": "216d982e9d6ea1db5c25947c1eca0ca9876b7e65182c27f20fc7b87867d60506",
       "status": "PROVEN"
     },
     {
@@ -19862,7 +19862,7 @@
           "text": "Recorded email: lisa.mezik@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "lisa.mezik@gmail.com",
@@ -19902,7 +19902,7 @@
           "text": "Recorded email: lisa.mezik@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "lisa.mezik@gmail.com",
@@ -19984,7 +19984,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "31ce60869455e828ad3131245677adda97eb3b2755f9b50bc119e84e583c4e27",
+      "payloadSha256": "d0d58eb627188ab30bf0a4738519652d82b3cdb8235e114c65e081575100e8a7",
       "status": "PROVEN"
     },
     {
@@ -20022,7 +20022,7 @@
           "text": "Recorded email: russellnydegger@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "russellnydegger@gmail.com",
@@ -20062,7 +20062,7 @@
           "text": "Recorded email: russellnydegger@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "russellnydegger@gmail.com",
@@ -20137,7 +20137,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "843f000661d370b79966cfaf38b7eefd5838878c32c6ed2ba28523cbfe8cd5d4",
+      "payloadSha256": "7e6dbd10664edcf5a8072c9c715e1935a01f6bb8eb85f65d6fba4bcb90027064",
       "status": "PROVEN"
     },
     {
@@ -20175,7 +20175,7 @@
           "text": "Recorded email: abondhopefortomorrow@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "abondhopefortomorrow@gmail.com",
@@ -20215,7 +20215,7 @@
           "text": "Recorded email: abondhopefortomorrow@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "abondhopefortomorrow@gmail.com",
@@ -20290,7 +20290,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "7f93f27063f3c863c208dc6a1ada92b4789e53c5c569a770745ddffd0f510deb",
+      "payloadSha256": "84366d848093fd66479b5d982e5ddaf75544954e1aa3a13854dbe726ff140718",
       "status": "PROVEN"
     },
     {
@@ -20345,7 +20345,7 @@
           "text": "Recorded email: info@joehathawayforcongress.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "info@joehathawayforcongress.com",
@@ -20438,7 +20438,7 @@
           "text": "Recorded email: info@joehathawayforcongress.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "info@joehathawayforcongress.com",
@@ -20545,7 +20545,7 @@
       "actualRecordCount": 12,
       "traceRecordCount": 12,
       "countAgrees": true,
-      "payloadSha256": "d38962abbd5ef7022155f1c107a9bc1f5d0a476ae65818caa076238d50b279ff",
+      "payloadSha256": "ffde453beae76eaf2908845358fd88f8540c1d992862fff8dd56aaff47dec7f2",
       "status": "PROVEN"
     },
     {
@@ -20875,7 +20875,7 @@
       "actualRecordCount": 90,
       "traceRecordCount": 90,
       "countAgrees": true,
-      "payloadSha256": "9d007708e888a19184fcaf7ebd65c6fb6bc9e74a897d84f6c25b52af9abdfa8b",
+      "payloadSha256": "9a90f9a6a433fe9d9be54d0b6c9dce8d55717751f0ee834107eba5856c8b964c",
       "status": "PROVEN"
     },
     {
@@ -20930,7 +20930,7 @@
           "text": "Recorded email: bookerteam@corybooker.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "bookerteam@corybooker.com",
@@ -21023,7 +21023,7 @@
           "text": "Recorded email: bookerteam@corybooker.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "bookerteam@corybooker.com",
@@ -21137,7 +21137,7 @@
       "actualRecordCount": 107,
       "traceRecordCount": 107,
       "countAgrees": true,
-      "payloadSha256": "b8a536f01b15f910d9eedf6ff76fe3cf79a69279c96615ae70c823ed6dd4fc02",
+      "payloadSha256": "a5fabc880fd922d04fb6c2fd1c959f88c8b03e33965f9b3e26b5cfc189fc1008",
       "status": "PROVEN"
     },
     {
@@ -21192,7 +21192,7 @@
           "text": "Recorded email: info@veronicaforsenate.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "info@veronicaforsenate.com",
@@ -21267,7 +21267,7 @@
           "text": "Recorded email: info@veronicaforsenate.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "info@veronicaforsenate.com",
@@ -21356,7 +21356,7 @@
       "actualRecordCount": 8,
       "traceRecordCount": 8,
       "countAgrees": true,
-      "payloadSha256": "d7658c016c6f885f2315a4d6d74692a3b106f0ebbd9e1422c27283f89be42eb7",
+      "payloadSha256": "e70d05de2e72aafc3b358a8c65662bcce04f99aa913989b5c684d3c79f849f47",
       "status": "PROVEN"
     },
     {
@@ -21394,7 +21394,7 @@
           "text": "Recorded email: njswpcampaign@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "njswpcampaign@gmail.com",
@@ -21434,7 +21434,7 @@
           "text": "Recorded email: njswpcampaign@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "njswpcampaign@gmail.com",
@@ -21509,7 +21509,7 @@
       "actualRecordCount": 5,
       "traceRecordCount": 5,
       "countAgrees": true,
-      "payloadSha256": "a23f9ac42196e032e6e5aaef68fdf0e2dc924290bc42c351900cfc0f9c58144d",
+      "payloadSha256": "b43f4fa6d0941faa221eafce20bdeedebeb5ab2e19204a2d01e4ec5d7d915bd8",
       "status": "PROVEN"
     },
     {
@@ -21564,7 +21564,7 @@
           "text": "Recorded email: jerseyjustin4senate@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "jerseyjustin4senate@gmail.com",
@@ -21658,7 +21658,7 @@
           "text": "Recorded email: jerseyjustin4senate@gmail.com",
           "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
           "sourceOrg": "Morris County Clerk",
-          "retrievedAt": "2026-09-15",
+          "retrievedAt": "2026-09-18",
           "candidateProfile": {
             "field": "email",
             "value": "jerseyjustin4senate@gmail.com",
@@ -21766,7 +21766,7 @@
       "actualRecordCount": 32,
       "traceRecordCount": 32,
       "countAgrees": true,
-      "payloadSha256": "a66369b013dec32237b4c12ee3553bb8d53ea8b850ce3dd4ab6894ab7bd5b0bb",
+      "payloadSha256": "c8a9e940b824907e5d43b50d397cea424951654b15dc62ddb9d9722f126e7898",
       "status": "PROVEN"
     },
     {
@@ -21879,7 +21879,7 @@
       "actualRecordCount": 11,
       "traceRecordCount": 11,
       "countAgrees": true,
-      "payloadSha256": "692c58499d1e5c74e115ad293eba05e43d91409d5ad038884c657ebe49bf7549",
+      "payloadSha256": "0293ccd532d480484653d5ad89aff04172a450bd1194c7908fb5b8d19882cf79",
       "status": "PROVEN"
     },
     {
@@ -22037,7 +22037,7 @@
       "actualRecordCount": 14,
       "traceRecordCount": 14,
       "countAgrees": true,
-      "payloadSha256": "a1b347d6d0e447cb68c1e9821c97a49109ca115ae941e363f17a2895c47f33b9",
+      "payloadSha256": "243388174862f3252c51e93260d305fa1f9fe466dfac649fa344159318f2fb44",
       "status": "PROVEN"
     }
   ],

@@ -1,10 +1,11 @@
 {
-  "holdingsDigest": "cebb03adf036068ae424898091a6b53e23b8d33b0d4fb56431abbea59550d48e",
+  "holdingsDigest": "b7de603d086e5b3f68bc911f708e0f4af918b0436776a54d4b1e1821489fd9ce",
   "records": [
     {
       "auditId": "data/candidates/corpus-2026.json#/documents/1",
       "snapshotId": "ballot-az-pima:attorney-general|Kris Mayes@8e58da83b2f14301d34f1b07f29a3a5f6074839fb0792b23d3149566d8f7d2f9",
       "subjectId": "ballot-az-pima:attorney-general|Kris Mayes",
+      "sourceUrl": "https://www.azag.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -431,6 +432,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/2",
       "snapshotId": "ballot-az-pima:attorney-general|Kris Mayes@a596a2b0cba1a401d3c28557196c978ae8e3c443a5e7a3344a406087e7bf6e44",
       "subjectId": "ballot-az-pima:attorney-general|Kris Mayes",
+      "sourceUrl": "https://www.krismayes.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -857,6 +859,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/4",
       "snapshotId": "ballot-az-pima:attorney-general|Warren Petersen@73db6c3ad8e2b48990c36e7ef2e423c03f5353798308432b2685fb7fd1d14505",
       "subjectId": "ballot-az-pima:attorney-general|Warren Petersen",
+      "sourceUrl": "https://www.petersenforag.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -884,10 +887,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions housing costs and homebuilding. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions housing costs and homebuilding. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -913,10 +916,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions health care and prescription costs. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions health care and prescription costs. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -941,10 +944,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions schools and education funding. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions schools and education funding. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -969,10 +972,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions taxes. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions taxes. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -997,10 +1000,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions immigration and the border. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions immigration and the border. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1024,10 +1027,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions abortion and reproductive rights. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions abortion and reproductive rights. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1061,10 +1064,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions guns, in their own words below. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions guns, in their own words below. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1090,10 +1093,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions energy and the climate. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions energy and the climate. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1118,10 +1121,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions water. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions water. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1144,10 +1147,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions veterans. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions veterans. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1170,10 +1173,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions Social Security and retirement. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions Social Security and retirement. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -1199,10 +1202,10 @@
                   "retrievedAt": "2026-08-19T15:47:49.195Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions jobs and wages. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions jobs and wages. We hold 2 more we couldn't read, so they aren't included."
         }
       ],
       "sourceSnapshot": {
@@ -1223,6 +1226,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/6",
       "snapshotId": "ballot-az-pima:governor|Andy Biggs@2b16a66b183861edc71d9e25a4fdefc914e599c5c08acae2cc14f32bd3e78907",
       "subjectId": "ballot-az-pima:governor|Andy Biggs",
+      "sourceUrl": "https://biggs.house.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -1640,6 +1644,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/8",
       "snapshotId": "ballot-az-pima:governor|Andy Biggs@a7e8f65fb2442b3787fbd178ecb14985d6fae6c87dd3033aeb13e65a77150528",
       "subjectId": "ballot-az-pima:governor|Andy Biggs",
+      "sourceUrl": "https://biggsforarizona.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -2057,6 +2062,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/11",
       "snapshotId": "ballot-az-pima:governor|Katie Hobbs@b77927d187092f65f8dca088415929b2c981a8ea8f12e1a1bb920ecb2a398a23",
       "subjectId": "ballot-az-pima:governor|Katie Hobbs",
+      "sourceUrl": "https://katiehobbs.org",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -2483,6 +2489,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/13",
       "snapshotId": "ballot-az-pima:governor|Katie Hobbs@f203f93f845519e214ee8586f4df09911bb39d87dc974eae13f0f902bc415b19",
       "subjectId": "ballot-az-pima:governor|Katie Hobbs",
+      "sourceUrl": "https://azgovernor.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -2909,6 +2916,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/16",
       "snapshotId": "ballot-az-pima:governor|Teri Ann Hourihan@302e1d83328c053be95c932d90133428339b9174464e10e7e0264ca0a7cfc043",
       "subjectId": "ballot-az-pima:governor|Teri Ann Hourihan",
+      "sourceUrl": "https://teriann4azgov.org",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -3341,6 +3349,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/17",
       "snapshotId": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk@e4a8446994168c761748cc44345b1116ab95d701a15c783698c4730cafc223a0",
       "subjectId": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
+      "sourceUrl": "https://lespresmyk.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -3714,6 +3723,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/18",
       "snapshotId": "ballot-az-pima:secretary-of-state|Adrian Fontes@1aacf8aeffbb8321baf4bc7b79e3aac1c1d633daa436acf5d4734ca7ebad51c7",
       "subjectId": "ballot-az-pima:secretary-of-state|Adrian Fontes",
+      "sourceUrl": "https://azsos.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -4131,6 +4141,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/19",
       "snapshotId": "ballot-az-pima:secretary-of-state|Adrian Fontes@6017f010dac1b3be4402f83270f74477993ef2f08d6d1f5927386e21814f49e8",
       "subjectId": "ballot-az-pima:secretary-of-state|Adrian Fontes",
+      "sourceUrl": "https://www.adrianfontes.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -4548,6 +4559,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/23",
       "snapshotId": "ballot-az-pima:secretary-of-state|Alexander Kolodin@c2086be8f0fe6a764063c6a544fd01d875ed83a2996c199795dcd82428286a98",
       "subjectId": "ballot-az-pima:secretary-of-state|Alexander Kolodin",
+      "sourceUrl": "https://www.alexforaz.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -4905,6 +4917,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/26",
       "snapshotId": "ballot-az-pima:state-house-19|Aiden Nicholette Swallow@dc455aac3bd696630dbf2344997e7fe1848be52fb8c46fa32cfd6fc34787e090",
       "subjectId": "ballot-az-pima:state-house-19|Aiden Nicholette Swallow",
+      "sourceUrl": "https://aswallowforaz.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -5340,6 +5353,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/30",
       "snapshotId": "ballot-az-pima:state-house-19|Lupe Diaz@72cfe08450999c8e3370af6032a89df64b0379d01e17a9505cfc1a0cf071486f",
       "subjectId": "ballot-az-pima:state-house-19|Lupe Diaz",
+      "sourceUrl": "https://lupediazaz.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -5367,10 +5381,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions housing costs and homebuilding. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions housing costs and homebuilding. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5396,10 +5410,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions health care and prescription costs. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions health care and prescription costs. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5424,10 +5438,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions schools and education funding. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions schools and education funding. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5452,10 +5466,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions taxes. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions taxes. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5489,10 +5503,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. 1 passage mentions immigration and the border, in their own words below. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. 1 passage mentions immigration and the border, in their own words below. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5516,10 +5530,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions abortion and reproductive rights. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions abortion and reproductive rights. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5544,10 +5558,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions guns. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions guns. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5573,10 +5587,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions energy and the climate. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions energy and the climate. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5601,10 +5615,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions water. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions water. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5627,10 +5641,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions veterans. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions veterans. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5653,10 +5667,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions Social Security and retirement. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. Nothing in them mentions Social Security and retirement. We hold 3 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5691,10 +5705,10 @@
                   "retrievedAt": "2026-08-20T02:19:21.698Z"
                 }
               ],
-              "unreadable": 2
+              "unreadable": 3
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-20. 1 passage mentions jobs and wages, in their own words below. We hold 2 more we couldn't read, so they aren't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-20. 1 passage mentions jobs and wages, in their own words below. We hold 3 more we couldn't read, so they aren't included."
         }
       ],
       "sourceSnapshot": {
@@ -5715,6 +5729,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/33",
       "snapshotId": "ballot-az-pima:state-house-20|Betty Villegas@5470bfbc3f4cb7a3186e52da8811d1febb41bdd68ac3b5aabb83be781bb2fae1",
       "subjectId": "ballot-az-pima:state-house-20|Betty Villegas",
+      "sourceUrl": "https://bettyvillegasaz.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -5751,10 +5766,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions housing costs and homebuilding, in their own words below. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions housing costs and homebuilding, in their own words below. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5780,10 +5795,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions health care and prescription costs. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions health care and prescription costs. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5817,10 +5832,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions schools and education funding, in their own words below. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions schools and education funding, in their own words below. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5845,10 +5860,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions taxes. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions taxes. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5873,10 +5888,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions immigration and the border. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions immigration and the border. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5900,10 +5915,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions abortion and reproductive rights. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions abortion and reproductive rights. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5928,10 +5943,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions guns. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions guns. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5957,10 +5972,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions energy and the climate. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions energy and the climate. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -5985,10 +6000,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions water. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions water. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6011,10 +6026,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions veterans. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions veterans. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6037,10 +6052,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions Social Security and retirement. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions Social Security and retirement. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6066,10 +6081,10 @@
                   "retrievedAt": "2026-08-19T15:48:09.098Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions jobs and wages. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions jobs and wages. We hold 2 more we couldn't read, so they aren't included."
         }
       ],
       "sourceSnapshot": {
@@ -6090,6 +6105,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/37",
       "snapshotId": "ballot-az-pima:state-senate-19|Bob Karp@a5a4397d781a1f84977ec1531b5d09c2173cbcab59b4ad704837c7ce31b03742",
       "subjectId": "ballot-az-pima:state-senate-19|Bob Karp",
+      "sourceUrl": "https://www.rwkarp.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -6447,6 +6463,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/41",
       "snapshotId": "ballot-az-pima:state-senate-20|Alma Hernandez@9bb951bea7187cd09862790c0016f86bd471e05a0627016e7d4bb4c851207f2b",
       "subjectId": "ballot-az-pima:state-senate-20|Alma Hernandez",
+      "sourceUrl": "https://www.almaforarizona.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -6483,10 +6500,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions housing costs and homebuilding, in their own words below. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions housing costs and homebuilding, in their own words below. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6521,10 +6538,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions health care and prescription costs, in their own words below. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions health care and prescription costs, in their own words below. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6558,10 +6575,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions schools and education funding, in their own words below. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. 1 passage mentions schools and education funding, in their own words below. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6586,10 +6603,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions taxes. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions taxes. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6614,10 +6631,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions immigration and the border. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions immigration and the border. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6641,10 +6658,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions abortion and reproductive rights. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions abortion and reproductive rights. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6669,10 +6686,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions guns. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions guns. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6698,10 +6715,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions energy and the climate. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions energy and the climate. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6726,10 +6743,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions water. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions water. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6752,10 +6769,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions veterans. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions veterans. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6778,10 +6795,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions Social Security and retirement. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions Social Security and retirement. We hold 2 more we couldn't read, so they aren't included."
         },
         {
           "issue": {
@@ -6807,10 +6824,10 @@
                   "retrievedAt": "2026-08-19T15:47:57.608Z"
                 }
               ],
-              "unreadable": 1
+              "unreadable": 2
             }
           },
-          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions jobs and wages. We hold 1 more we couldn't read, so it isn't included."
+          "sentence": "We searched the one page we hold from them, read 2026-08-19. Nothing in them mentions jobs and wages. We hold 2 more we couldn't read, so they aren't included."
         }
       ],
       "sourceSnapshot": {
@@ -6831,6 +6848,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/42",
       "snapshotId": "ballot-az-pima:state-treasurer|Elijah Norton@4b504d6944e057a0212d9fd71d65598a2991c67f5e59056510ed97ab0059126f",
       "subjectId": "ballot-az-pima:state-treasurer|Elijah Norton",
+      "sourceUrl": "https://nortonforaz.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -7197,6 +7215,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/44",
       "snapshotId": "ballot-az-pima:state-treasurer|Nick Mansour@61904e763c8fcfb39eb85a9a077b6d91f2416e8336150db93fc59354f52f51d4",
       "subjectId": "ballot-az-pima:state-treasurer|Nick Mansour",
+      "sourceUrl": "https://mansourforarizona.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -7554,6 +7573,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/46",
       "snapshotId": "ballot-az-pima:superintendent|Kimberly Yee@c7342133e401bd75792894b31efa7f069f5e6a13ea440dc1ae4687cdbcadd5e3",
       "subjectId": "ballot-az-pima:superintendent|Kimberly Yee",
+      "sourceUrl": "https://www.kimberlyyee.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -7987,6 +8007,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/48",
       "snapshotId": "ballot-az-pima:superintendent|Kimberly Yee@edcd98930dfee01a6be5da04b1b370c337c0454701c6a1039267d492173017f7",
       "subjectId": "ballot-az-pima:superintendent|Kimberly Yee",
+      "sourceUrl": "https://www.aztreasury.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -8420,6 +8441,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/49",
       "snapshotId": "ballot-az-pima:superintendent|Teresa Leyba Ruiz@9e4cc50b52417bf37127a71bf706b690503eb105ea0fb358c5a66b1c89b2af44",
       "subjectId": "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+      "sourceUrl": "https://www.drruizforarizona.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -8793,6 +8815,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/51",
       "snapshotId": "ballot-az-pima:us-house-6|Gary Swing@81c35990921e938673ae0112144015d7126a580eae56a4e7b529128d9826b8e3",
       "subjectId": "ballot-az-pima:us-house-6|Gary Swing",
+      "sourceUrl": "https://theswingvote.wixsite.com/unity",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -9175,6 +9198,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/52",
       "snapshotId": "ballot-az-pima:us-house-6|JoAnna Mendoza@70830914ebe8633d2b8dff184d158ab60935307e17d44c39639ae4d3d480a718",
       "subjectId": "ballot-az-pima:us-house-6|JoAnna Mendoza",
+      "sourceUrl": "https://www.joannamendoza.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -9575,6 +9599,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/54",
       "snapshotId": "ballot-az-pima:us-house-6|Juan Ciscomani@72efdcf7b26d811626eadd0d93da0c601ef732ecb7512f6cb05ccc7d0123d6e3",
       "subjectId": "ballot-az-pima:us-house-6|Juan Ciscomani",
+      "sourceUrl": "https://juanciscomani.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -9950,6 +9975,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/56",
       "snapshotId": "ballot-az-pima:us-house-7|Adelita Grijalva@0782bb039c63e10c46f23c23fd42d226493b46939d06fe8bb4fb98a88b3af2f6",
       "subjectId": "ballot-az-pima:us-house-7|Adelita Grijalva",
+      "sourceUrl": "https://www.adelitaforcongress.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -10367,6 +10393,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/58",
       "snapshotId": "ballot-az-pima:us-house-7|Adelita Grijalva@dbf9709f311e6b5302352bed3379b5437269b4c8c015019857ccc12621ceecf9",
       "subjectId": "ballot-az-pima:us-house-7|Adelita Grijalva",
+      "sourceUrl": "https://grijalva.house.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -10784,6 +10811,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/59",
       "snapshotId": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.@3fd4e49c4d8b8caf79cbf116e6b385100460f3c051753bf798794dfccfdd2559",
       "subjectId": "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
+      "sourceUrl": "https://butierezforcongress.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -11159,6 +11187,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/60",
       "snapshotId": "ballot-nh-merrimack:executive-council-2:liot-hill-karen@9566bb0b9239975471b595e2cf1d4cf68df8bfca7cfdecf2482fbed67fcc5d46",
       "subjectId": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
+      "sourceUrl": "https://www.karenliothill.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -11516,6 +11545,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/62",
       "snapshotId": "ballot-nh-merrimack:governor:ayotte-kelly@c03ee4a5f55dca7b3bfbea52a1f306cd1b8b4750e40e40b23a88d8ea3c2655e0",
       "subjectId": "ballot-nh-merrimack:governor:ayotte-kelly",
+      "sourceUrl": "https://kellyfornh.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -11873,6 +11903,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/63",
       "snapshotId": "ballot-nh-merrimack:governor:warmington-cinde@d38b61de8c9d2208e36465e1dd75c1c50ed1928593905c1fae315a42daf55c8c",
       "subjectId": "ballot-nh-merrimack:governor:warmington-cinde",
+      "sourceUrl": "https://www.cindewarmington.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -12294,6 +12325,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/64",
       "snapshotId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-@2433d93f72d1b08884799e50d7f6acef8c1a04271cfa775286691e40e2022f14",
       "subjectId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
+      "sourceUrl": "https://gregforrep.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -12813,6 +12845,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/66",
       "snapshotId": "ballot-nh-merrimack:state-senate-7:harned-rebecca@189d0e39f7d708adb741f6c920aad381b25003a985fb13474bc3a08b7b59331d",
       "subjectId": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
+      "sourceUrl": "https://www.rebeccafornh.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -13170,6 +13203,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/67",
       "snapshotId": "ballot-nh-merrimack:us-house-2:beauchemin-paige@bbbd8b81c671c9c95547d05850fbdbfc9195d845758f6851f12b1fab9438e5de",
       "subjectId": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "sourceUrl": "https://gc.nh.gov/house/members/member.aspx?pid=11100",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -13527,6 +13561,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/70",
       "snapshotId": "ballot-nh-merrimack:us-house-2:goodlander-maggie@85be3bb1f0fe18e4a9583c722efda73233afed6608c8bb6f7e8bb6878da77716",
       "subjectId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+      "sourceUrl": "https://goodlander.house.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -13944,6 +13979,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/71",
       "snapshotId": "ballot-nh-merrimack:us-house-2:goodlander-maggie@896adcebc161c16d09dbbf8cb0dff37d78ca1cb6b9ac0ece1f04c9e9dbb77f88",
       "subjectId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+      "sourceUrl": "https://maggiefornh.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -14361,6 +14397,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/72",
       "snapshotId": "ballot-nh-merrimack:us-house-2:tang-williams-lily@36e833f73bc3ec2246b48a81d2f57804583d9f0e2353b1a79dbd652601405158",
       "subjectId": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
+      "sourceUrl": "https://www.lilytangwilliams.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -14718,6 +14755,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/74",
       "snapshotId": "ballot-nh-merrimack:us-senate:brown-scott-p-@ee3c110f65963b038f7b48c5a927153cc2f47fc75920ec24b6c3ba7b8415002d",
       "subjectId": "ballot-nh-merrimack:us-senate:brown-scott-p-",
+      "sourceUrl": "https://scottbrown.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -15075,6 +15113,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/75",
       "snapshotId": "ballot-nh-merrimack:us-senate:pappas-chris@3bc980ccafa08d96ca1b2155e3b1db125499e006ea18a12516d3c811c75f5f4f",
       "subjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
+      "sourceUrl": "https://chrispappas.org",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -15519,6 +15558,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/76",
       "snapshotId": "ballot-nh-merrimack:us-senate:pappas-chris@652d9c7595ae75409b0c58eda328808efa13b922956fdcf44a8ad0cd94e6ce89",
       "subjectId": "ballot-nh-merrimack:us-senate:pappas-chris",
+      "sourceUrl": "https://pappas.house.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -15963,6 +16003,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/78",
       "snapshotId": "ballot-nh-merrimack:us-senate:sununu-john-e-@0c15ad592ecd5d76970156c7915f38c638485075cb06a1b15543d2f3b13395bc",
       "subjectId": "ballot-nh-merrimack:us-senate:sununu-john-e-",
+      "sourceUrl": "https://www.sununusenator.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -16320,6 +16361,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/80",
       "snapshotId": "ballot-nj-morris:county-commissioner:selen@4a08209929658b753feacbad6464feda37019bca18ef67e300effe79ef96a435",
       "subjectId": "ballot-nj-morris:county-commissioner:selen",
+      "sourceUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -16753,6 +16795,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/82",
       "snapshotId": "ballot-nj-morris:county-commissioner:selen@cf521fbee83128271a8080617185118a593d57887eca3c23b2310aa405d7348c",
       "subjectId": "ballot-nj-morris:county-commissioner:selen",
+      "sourceUrl": "https://www.selenformorriscounty.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -17186,6 +17229,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/83",
       "snapshotId": "ballot-nj-morris:us-house-11:hathaway@b8b9fffc9786883783e912e439eb3ebe34d5cb4d7118854737d22f6fa72da626",
       "subjectId": "ballot-nj-morris:us-house-11:hathaway",
+      "sourceUrl": "https://www.joehathawayforcongress.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -17552,6 +17596,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/84",
       "snapshotId": "ballot-nj-morris:us-house-11:mejia@232b73a29b12d33ec546ce4056fec6af8abd6bdea6249ec6ba37a4ae3d7e6d55",
       "subjectId": "ballot-nj-morris:us-house-11:mejia",
+      "sourceUrl": "https://www.analiliafornj.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -17978,6 +18023,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/86",
       "snapshotId": "ballot-nj-morris:us-house-11:mejia@ba7255b9f4bd1ba07fefa28fd57ee081095c8df7b55869bad5596ef8330c3d7d",
       "subjectId": "ballot-nj-morris:us-house-11:mejia",
+      "sourceUrl": "https://mejia.house.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -18404,6 +18450,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/88",
       "snapshotId": "ballot-nj-morris:us-senate:booker@254d0cceeab19591c9de0ebbd1f4eac1e19429069cb41c1ad1d136da1a0edb2e",
       "subjectId": "ballot-nj-morris:us-senate:booker",
+      "sourceUrl": "https://www.booker.senate.gov",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -18761,6 +18808,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/93",
       "snapshotId": "ballot-nj-morris:us-senate:fernandez@63257be248c6b417ec6814a1c2d0d84a0f3ffaec7f038e0e9ef2138e6cb510ac",
       "subjectId": "ballot-nj-morris:us-senate:fernandez",
+      "sourceUrl": "https://veronicaforsenate.com",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {
@@ -19118,6 +19166,7 @@
       "auditId": "data/candidates/corpus-2026.json#/documents/95",
       "snapshotId": "ballot-nj-morris:us-senate:murphy@23c6cb8dec680ff8128c9228994cc21bf47c161c22dde6c9c50afcf4c10d857d",
       "subjectId": "ballot-nj-morris:us-senate:murphy",
+      "sourceUrl": "https://jerseyjustin4senate.org",
       "selector": "positionsFor(subjectId), or PositionsQuestion /api/positions subject query",
       "curated": [
         {

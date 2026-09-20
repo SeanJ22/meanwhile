@@ -90,6 +90,19 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           return { key: `position:${roll && person ? `${roll}:${person}` : `row-${index}`}`, record };
         }),
       ];
+    case "STATE_LEGISLATOR_VOTES":
+      // One record class, one per-state fan-out contract, two payload shapes:
+      // a per-legislator record keys each of that member's positions (bounded
+      // by the member's tenure, never the chamber), and the per-state session
+      // marker the runner's clock reads keys its own watermark. Only the
+      // per-legislator record carries positions.
+      return typeof root.officeholderId === "string" && root.officeholderId
+        ? array(root.positions).map((record, index) => {
+            const row = object(record) ?? {};
+            const roll = textKey(row, ["rollCallId", "officialRollCallId"]);
+            return { key: `position:${root.officeholderId as string}:${roll ?? `row-${index}`}`, record };
+          })
+        : [{ key: `session-marker:${textKey(root, ["jurisdiction"]) ?? "state"}`, record: root }];
     case "FEDERAL_ROLL_CALL": {
       const snapshot = object(root.snapshot) ?? root;
       const billSummaries = object(root.billSummaries) ?? {};

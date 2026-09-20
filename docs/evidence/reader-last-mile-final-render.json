@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "79e71a98f5cf58e0602951fec18ede19e90c829f",
-  "buildId": "xZVwHdCi-RZ5tyeL4fVyV",
+  "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+  "buildId": "nmJIGEAY6VrlKX8yvoeE4",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-17T05:18:18.905Z",
+  "runId": "reader-last-mile-final-render@2026-09-20T05:40:10.646Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -323,7 +323,7 @@
     },
     {
       "path": "components/map/popup/official-popup.tsx",
-      "sha256": "5cffe97fe5bc7250633560867733df9b4136ccdbb72adab37968ef6a44a89c98"
+      "sha256": "3266ab30e45e43851339592a2f8878956f0a21a292aa7e9710a7ba9f57a8725d"
     },
     {
       "path": "components/map/popup/popup-card.tsx",
@@ -1739,15 +1739,15 @@
     },
     {
       "path": "lib/civic-data/candidate-builders.ts",
-      "sha256": "491775c31d53e6dba95f195b26caa6fb06d631048f9b77657d370467c1534977"
+      "sha256": "3234ec46df0b61b8bfe70f0a62a96ca2670b44e84e7688f349871e60f6b0fa40"
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "f7875534845d0abd0e68bb101f28685fdbc5d4a564cf1928e6b13c9101e96cba"
+      "sha256": "d9588b414dd875e074bc1f7406e97ae155dd6fed0fb08b028aea1129def53133"
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "b4c1aa5434f2a56afc5ba4250b1c41f9dc2e37ac422a171097c67b78c9a38c15"
+      "sha256": "16b15b59a7eb93bdd404ec22d044fa0d8381663f9dc277641a746a677012934a"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -1803,7 +1803,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "ad5f8a2439332a6289636acba97c227c4832db038ab5ec0dd689120355183a25"
+      "sha256": "1a48d005f7653ce8adee4cfd8c08fad6ed17e017d8747a166a83f7876fa33e49"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -1811,7 +1811,7 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "2cf05b0a75866a3e74b4d597522bc527b1562145cb19ea542e9c5bf660b70b3c"
+      "sha256": "5424e744ba2021d1820a93fa163d02b4d48daa1039a45b35e72389d0ac9bdeed"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
@@ -1819,7 +1819,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "5f810efd4516177c71f072121b5b7d1a34f170a2fa0009e3219e74bcc057f69c"
+      "sha256": "4e3ff4243a950f9c3b7dcd57e63c058d6866ccb1952fa289e81520ebe44cd003"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2135,7 +2135,7 @@
     },
     {
       "path": "lib/meetings/edge-store.ts",
-      "sha256": "99931a45fc1921c55abb601323e8af58de11cde92f098256b2bbc983b5082206"
+      "sha256": "c600f9dac25ff1aae841a68c8b98aceae796016ee8e43d2f7f8ec35cde1ad94a"
     },
     {
       "path": "lib/meetings/freshness.ts",
@@ -2199,7 +2199,7 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "e08ddbaf86655a07b8b25a9be6987ae10dc9b43897094daac44112572292de58"
+      "sha256": "987f58dc1cee6b81dd3ef922eaa11073b02e544dea0ff6ff060589bab46495c8"
     },
     {
       "path": "lib/meetings/status-marks.ts",
@@ -2667,7 +2667,7 @@
     },
     {
       "path": "lib/sources/legiscan/types.ts",
-      "sha256": "c271dc67fccd92c1f06af3e11f337c0221eea264372a09c48ee7929f385b9911"
+      "sha256": "0ec9e72dd5cbae930d3b6faf9d74c931ddcad8b65ae8b1b272cf853f3efbab4d"
     },
     {
       "path": "lib/sources/legistar-insite/calendar.ts",
@@ -2780,6 +2780,10 @@
     {
       "path": "lib/state-rollcalls/legislators.ts",
       "sha256": "438d0fce3e92ee5997a759a8649f70f83b1b9e37ac9fc4342e710001d855a341"
+    },
+    {
+      "path": "lib/state-rollcalls/reader-vote-visibility.ts",
+      "sha256": "048a2f528f76226d361c747dab51f177fd1d9873ba20dbe0978e96758ea6735c"
     },
     {
       "path": "lib/state/browser-key.ts",
@@ -2911,7 +2915,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "42bfb153f83801994a6983d713694202966fae9146ff078384cd742520de22bb"
+      "sha256": "9fa427152ede1db9347b86e81ab5d0f306cfb2d25d3cacc0e1b10b56be21550f"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -7772,8 +7776,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-15",
-                "collectedAt": "2026-09-15"
+                "verifiedAt": "2026-09-19",
+                "collectedAt": "2026-09-19"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -7864,8 +7868,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-15",
-                "collectedAt": "2026-09-15"
+                "verifiedAt": "2026-09-19",
+                "collectedAt": "2026-09-19"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -7977,7 +7981,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-15"
+          "collectedAt": "2026-09-19"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -7985,19 +7989,19 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-ecb0ed0c9a89ea75fdb93d8a6eb518ab",
-          "lastKnownGoodVersionId": "cv-ecb0ed0c9a89ea75fdb93d8a6eb518ab",
+          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-15T20:06:09.392Z",
-          "promotedAt": "2026-09-15T20:06:09.584Z",
+          "retrievedAt": "2026-09-20T04:17:33.222Z",
+          "promotedAt": "2026-09-20T04:17:33.473Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-22T20:06:09.392Z"
+          "staleAt": "2026-09-27T04:17:33.222Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 15th, 2026",
-      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 15th, 2026",
+      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 19th, 2026",
+      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 19th, 2026",
       "componentReadback": {
         "contacts": 7,
         "committees": 0,
@@ -8011,7 +8015,7 @@
       "candidacyId": "ballot-nj-morris:us-house-11:mejia",
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/07866-filed-contact.png",
-        "sha256": "c337352b019a05eeb7f94c50da31cca3a86098ecb98cb5cf67173394cca62fbf"
+        "sha256": "6e18fc45d787da4d6af33b3c262683905de9959a02f25560dfa0536d4a9dbc85"
       }
     },
     {
@@ -8034,14 +8038,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42306",
               "verifiedAt": null,
-              "collectedAt": "2026-09-15T20:42:31.460Z"
+              "collectedAt": "2026-09-19T22:33:49.092Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43886.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43886",
               "verifiedAt": null,
-              "collectedAt": "2026-09-15T20:42:31.460Z"
+              "collectedAt": "2026-09-19T22:33:49.092Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8062,24 +8066,24 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42321",
               "verifiedAt": null,
-              "collectedAt": "2026-09-15T20:42:31.460Z"
+              "collectedAt": "2026-09-19T22:33:49.092Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43901",
               "verifiedAt": null,
-              "collectedAt": "2026-09-15T20:42:31.460Z"
+              "collectedAt": "2026-09-19T22:33:49.092Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
         }
       ],
-      "renderedListingRows": 276,
+      "renderedListingRows": 285,
       "failedRefreshDisclosure": {
         "carried": {
-          "count": 9,
-          "lead": "9 calendar listings are older than that:",
+          "count": 10,
+          "lead": "10 calendar listings are older than that:",
           "form": "EACH_ON_ITS_OWN",
           "reached": "each one says when we last reached it",
           "lastFreshAt": null
@@ -8093,26 +8097,26 @@
     {
       "id": "current-participation",
       "result": "PASS",
-      "meetingId": "diligent:tusd1:502",
-      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
-      "startsAt": "2026-09-17T13:00:00-07:00",
+      "meetingId": "onbase:tucson:1948",
+      "bodyId": "ocd-division/country:us/state:az/place:tucson#governing",
+      "startsAt": "2026-09-22T11:00:00-07:00",
       "expectedLines": [
-        "Call to the Audience. The comment period is 45 minutes at regular meetings and 20 minutes at special meetings, and is extended only by the Board's approval. Speakers whose comments relate to an item on the agenda are taken first; the rest are taken in the order their forms arrived.",
-        "Up to three minutes per speaker, or per written comment read aloud. The presiding officer may shorten it when many people have signed up, and speakers may not give their time to someone else.",
-        "Complete a Request to Address Board form and give it to Board staff — electronically to the Board office by noon on the day of the meeting, or in person at the meeting any time before Call to the Audience closes. The form must name the speaker and the topic, and say whether the comments relate to an agenda item.",
-        "The same form asks whether you want to speak in person or have your comments read into the record by the Governing Board Clerk. All written comments go to Board members whether or not they are read aloud."
+        "Call to the Audience, scheduled for 30 minutes of the meeting.",
+        "3 minutes per speaker.",
+        "Complete a speaker's card in its entirety and hand it to City Clerk staff, from 5:00 PM until the start of Call to the Audience. Cards are not accepted for someone not present in the Chambers.",
+        "Mayor and Council Chambers, 255 W. Alameda St (City Hall); seating first-come, first-served, with security screening. Meetings stream live on the City's YouTube channel."
       ],
       "renderedLines": [
-        "Call to the Audience. The comment period is 45 minutes at regular meetings and 20 minutes at special meetings, and is extended only by the Board's approval. Speakers whose comments relate to an item on the agenda are taken first; the rest are taken in the order their forms arrived.",
-        "Up to three minutes per speaker, or per written comment read aloud. The presiding officer may shorten it when many people have signed up, and speakers may not give their time to someone else.",
-        "Complete a Request to Address Board form and give it to Board staff — electronically to the Board office by noon on the day of the meeting, or in person at the meeting any time before Call to the Audience closes. The form must name the speaker and the topic, and say whether the comments relate to an agenda item.",
-        "The same form asks whether you want to speak in person or have your comments read into the record by the Governing Board Clerk. All written comments go to Board members whether or not they are read aloud."
+        "Call to the Audience, scheduled for 30 minutes of the meeting.",
+        "3 minutes per speaker.",
+        "Complete a speaker's card in its entirety and hand it to City Clerk staff, from 5:00 PM until the start of Call to the Audience. Cards are not accepted for someone not present in the Chambers.",
+        "Mayor and Council Chambers, 255 W. Alameda St (City Hall); seating first-come, first-served, with security screening. Meetings stream live on the City's YouTube channel."
       ],
-      "sourceUrl": "https://govboard.tusd1.org/Policy-Code-BEDH",
-      "verifiedAt": "2026-08-18",
+      "sourceUrl": "https://www.tucsonaz.gov/files/sharedassets/public/v/1/clerks/documents/agenda-committee/mc-meeting-public-participation_may-2024_final.pdf",
+      "verifiedAt": "2026-08-13",
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-        "sha256": "7797813ea1a97dec14cf630d41e10fd36add7df8c772f32abe9a47d6a0490ad1"
+        "sha256": "9a7b50eade1d2bfdd4ed339d2c305d7d692e8996ed0745418543b6b975c884e1"
       }
     }
   ],
@@ -8127,7 +8131,7 @@
     },
     {
       "path": "screenshots/reader-last-mile/final/07866-filed-contact.png",
-      "sha256": "c337352b019a05eeb7f94c50da31cca3a86098ecb98cb5cf67173394cca62fbf"
+      "sha256": "6e18fc45d787da4d6af33b3c262683905de9959a02f25560dfa0536d4a9dbc85"
     },
     {
       "path": "screenshots/reader-last-mile/final/03255-newbury-unresolved-listings.png",
@@ -8135,7 +8139,7 @@
     },
     {
       "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-      "sha256": "7797813ea1a97dec14cf630d41e10fd36add7df8c772f32abe9a47d6a0490ad1"
+      "sha256": "9a7b50eade1d2bfdd4ed339d2c305d7d692e8996ed0745418543b6b975c884e1"
     }
   ],
   "denominatorFloors": [

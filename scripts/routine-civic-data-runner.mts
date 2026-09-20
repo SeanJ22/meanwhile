@@ -72,6 +72,7 @@ import {
   controlPlaneUrlFromEnv,
   createPgRepositories,
 } from "../lib/control-plane/repository/pg-store.ts";
+import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
@@ -192,11 +193,22 @@ async function latestUnreceiptedSupervisorAttempts(): Promise<RoutineSupervisorA
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
   assertDurableRepositories(repos, "routine civic-data provider-frontier history");
   const taskIds = new Set(ROUTINE_SOURCE_TASKS.map(({ id }) => id));
-  return routineUnreceiptedSupervisorAttemptHistory(
+  /* skipBootstrap does no I/O, so this read is the supervisor's first connect;
+     a transient Neon connect blip here would otherwise abort the whole routine
+     civic-data pass at its start. The read is idempotent, so retry it — same
+     resilience the schema bootstrap gets. See connect-retry.ts. */
+  const supervisorOutcomes = await withControlPlaneConnectRetry(
     /* Only supervisor outcomes matter here; fetch them by kind, not the whole log. */
-    await repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR"),
-    taskIds,
+    () => repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR"),
+    {
+      onRetry: ({ attempt, delayMs, error }) =>
+        console.warn(
+          `routine civic-data supervisor-history connect: transient failure on attempt ${attempt}; ` +
+            `retrying in ${delayMs}ms — ${error instanceof Error ? error.message : String(error)}`,
+        ),
+    },
   );
+  return routineUnreceiptedSupervisorAttemptHistory(supervisorOutcomes, taskIds);
 }
 
 function newestConsideredAt(

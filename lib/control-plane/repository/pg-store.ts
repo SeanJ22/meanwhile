@@ -97,6 +97,10 @@ import {
   recordVersionStatement,
 } from "./pg-schema.ts";
 import {
+  CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
+  withControlPlaneConnectRetry,
+} from "./connect-retry.ts";
+import {
   AppendOnlyViolation,
   ConcurrentModification,
   CorruptPersistedState,
@@ -642,7 +646,24 @@ export async function createPgRepositories(
     );
   }
   const sql = neon(connectionString);
-  if (!options.skipBootstrap) await bootstrap(sql, nowIso);
+  if (!options.skipBootstrap) {
+    /* The schema bootstrap is this process's first Neon I/O, so its first query
+       IS the connect. Under host load that connect can fail transiently
+       (`NeonDbError: Error connecting to database: fetch failed`); before this
+       wrapper that single throw aborted a whole standing-runner cycle at its
+       start — the per-cycle child died ~2s in having dispatched nothing.
+       bootstrap is idempotent (it records the version it reaches), so retrying
+       the transient connect is safe. A latched circuit or a real SQL/status
+       error is not retried; see connect-retry.ts. */
+    await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso), {
+      onRetry: ({ attempt, delayMs, error }) =>
+        console.warn(
+          `control-plane bootstrap connect: transient failure on attempt ${attempt} of ` +
+            `${CONTROL_PLANE_CONNECT_MAX_ATTEMPTS}; retrying in ${delayMs}ms — ` +
+            (error instanceof Error ? error.message : String(error)),
+        ),
+    });
+  }
   const locks = pgLockManager(sql);
 
   return {

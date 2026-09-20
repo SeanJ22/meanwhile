@@ -490,7 +490,13 @@ test("ADM-2: the console header navigates inside a transition, shows the choice 
   assert.match(nav, /aria-busy=/);
   assert.match(src("lib/control-plane/admin-data.ts"), /skipBootstrap: true/);
   assert.match(src("lib/control-plane/readiness/read.ts"), /skipBootstrap: true/);
-  assert.match(src("lib/control-plane/repository/pg-store.ts"), /if \(!options\.skipBootstrap\) await bootstrap\(/);
+  // The bootstrap call is now wrapped in a bounded connect-retry (connect-retry.ts)
+  // so a transient Neon fetch failure at cycle start does not abort the cycle, but it
+  // stays gated by !skipBootstrap, so the admin read path still skips it entirely.
+  assert.match(
+    src("lib/control-plane/repository/pg-store.ts"),
+    /if \(!options\.skipBootstrap\) \{[\s\S]*?bootstrap\(sql, nowIso\)/,
+  );
 });
 
 test("ADM-9: the map's own ThemeToggle is mounted in the console header, and the research page carries the header too", () => {

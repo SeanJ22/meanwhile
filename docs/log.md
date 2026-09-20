@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-19 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **192 sessions.**
+Newest first. **193 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## state-legislative-votes · 2026-09-19
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH329** — SUPERSEDES NH328 (framing correction). NH328 itself is left untouched: RULING 41 protects a row this session did not open, and a row's title is not amendable in place anyway, so the correction is recorded here. Owner determination: NOT A DEFECT. NH328 called the State Readiness panel's per-ZIP body set an 'over-count'; it is not. Those per-ZIP bodies come from data/derived/zip-division-ids.json, the INTENTIONAL 'could-govern' breadth (every division whose territory overlaps the ZIP's area), which is the reader's could-govern model. So 85641 (Vail) showing 66 bodies with Tucson-area bodies included is correct could-govern breadth, not inflation, and matches how the reader scopes bodies. Round 2 (regrouping per-ZIP bodies by a ZCTA-centroid point-in-polygon) was investigated and killed by the PR #337 session. No code change is owed here. Do not reopen NH328. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## Restore the State Readiness producer · 2026-09-19
 

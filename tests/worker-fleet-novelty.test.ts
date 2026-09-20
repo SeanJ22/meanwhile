@@ -8,6 +8,7 @@ import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinat
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { unknownApplicability, type MethodKnowledge } from "../lib/method/knowledge.ts";
 import type { ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { emptyFieldManual, fieldManualEntryId, upsertEntries } from "../lib/control-plane/field-manual.ts";
 
 test("the actual Scout request inherits a learned method and the failed Hunter route before novelty",async t=>{
   const h=await autonomousHarness({response:{transportError:"socket timeout"}});
@@ -21,6 +22,15 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
     applicability:unknownApplicability("Recorded test method; applicability is offered, never assumed"),outcomes:[],subBranches:[],origin:"Recorded test control",learnedAtVersion:55,learnedOn:"2026-09-02"}]};
   await mkdir(join(root,"data","method"),{recursive:true});
   await writeFile(join(root,"data","method","knowledge.json"),JSON.stringify(method));
+  // Seed one portable field-manual door so the projection surfaces it for this
+  // obligation regardless of its jurisdiction, then assert the walk both READS it
+  // in the request and RECORDS it as captured input on the result.
+  const doorId=fieldManualEntryId("test-seed","novelty-door");
+  await h.repos.fieldManual.put("live",upsertEntries(emptyFieldManual(),[{
+    id:doorId,role:"SHARED",kind:"VENDOR_TENANT",title:"Seeded test door",
+    summary:"a portable inherited door for the capture assertion",states:[],recordClasses:[],
+    platforms:[],outcome:"YIELDED",url:"https://seeded.example/door",source:"test-seed",
+    observedAt:"2026-09-19",tier:null,payload:{}}],h.now()),h.now());
   const requests:ModelRequest[]=[];
   const runtime=await autonomousStandingRuntime({root,repos:h.repos,now:h.now,transport:async request=>{
     requests.push(request);
@@ -36,7 +46,10 @@ test("the actual Scout request inherits a learned method and the failed Hunter r
   assert.match(request,/fourteen retrieval rungs are a floor/);
   assert.ok(request.includes(FIXTURE_URL));
   assert.match(request,/timeout/);
+  assert.match(request,/seeded\.example\/door/,"the seeded field-manual door reaches the scout's request brief");
   const result=(await h.repos.scoutResults.readAll()).at(-1)!;
+  assert.ok(result.inheritedFieldManualEntryIds?.includes(doorId),"the result records the exact projected door id (captured input)");
+  assert.ok(result.inheritedFieldManualLines?.some(l=>l.includes("https://seeded.example/door")),"the result records the exact rendered door line handed to the scout");
   const attempt=(await h.repos.attempts.mustRead(result.attemptId)).value;
   assert.ok(Date.parse(attempt.endedAt!)>=Date.parse(result.recordedAt),"Completion must use the actual post-provider clock, not dispatch admission time.");
   assert.deepEqual(await h.repos.workerResults.readAll(),before,"a Scout transport failure cannot rewrite the prior Hunter evidence");

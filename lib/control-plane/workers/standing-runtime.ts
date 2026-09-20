@@ -46,6 +46,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   const fieldManual: FieldManualStore = fmRead?.value ?? emptyFieldManual();
   const fieldManualKnown = knownRouteIds(fieldManual);
   const inheritedFieldManualCounts = new Map<string, number>();
+  const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
   const heldRuntime = standingFleetRuntime(input);
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
   await consumePlanRepairs({ repos: input.repos, scouts: prior, now: now(),
@@ -73,6 +74,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         const manualProjection=scoutFieldManualProjection(fieldManual,{subjectId:plan.jurisdiction,obligationId:item.id});
         inheritedFieldManualCounts.set(item.id,manualProjection.entryIds.length);
         const manualLines=fieldManualBriefLines(manualProjection);
+        inheritedFieldManualDoors.set(item.id,{entryIds:manualProjection.entryIds,lines:manualLines});
         return {route:null,providerId:null,reason:`${task.routeLabel}. Resolve ${item.obligation}. Canonical registry references: ${plan.sourceRegistryReferences.join(", ")}. Seed URLs are leads until observed: ${plan.seedUrls.join(", ")}. ${planRepairBrief(plan)}`,
           inherited:{artifactIds:[...new Set([...history.flatMap(p=>p.artifactIds),...walks.flatMap(w=>w.artifactIds)])],summary:[
             ...manualLines,
@@ -106,7 +108,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         }
         // RULING 63 reported pair + live write-back (no human method:learn step).
         const pair=compoundingPair(inheritedFieldManualCounts.get(result.workItemId)??0,result,fieldManualKnown);
-        recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting};
+        const doors=inheritedFieldManualDoors.get(result.workItemId);
+        recorded={...recorded,inheritedFieldManual:pair.inheritedCount,rebuiltExistingRoutes:pair.rebuiltExisting,
+          ...(doors?{inheritedFieldManualEntryIds:doors.entryIds,inheritedFieldManualLines:doors.lines}:{})};
         if(result.refusal===null&&result.candidates.length>0){
           const written=await writeFieldManualDiscoveries(input.repos,scoutDiscoveryEntries(result,scoutStateHint(result.subjectId,result.obligationId)),result.recordedAt);
           if(written.error) recorded={...recorded,unverified:[...recorded.unverified,`field manual write-back failed: ${written.error}`]};

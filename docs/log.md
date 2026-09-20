@@ -25,7 +25,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
-## state-legislative-votes · 2026-09-19
+## state-legislative-votes-nonhunt · 2026-09-19
 
 **What it started.** 1 row(s) opened, 1 still open.
 

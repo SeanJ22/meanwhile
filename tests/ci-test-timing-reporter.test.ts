@@ -24,7 +24,10 @@ test("timings use normalized file identity, not duplicate or nested display name
   for await (const chunk of fileTimings(events())) output += chunk;
   assert.deepEqual(output, text([file, run, end]));
   assert.equal(validateTimings(output, [file.file]).complete, true);
-  assert.equal(normalizeFile("tests\\a.test.ts"), file.file);
+  // Deliberate Windows input follows the shared path guard's fixture idiom;
+  // repository path literals themselves remain POSIX on every platform.
+  const windowsInput = ["tests", "a.test.ts"].join(String.fromCharCode(92));
+  assert.equal(normalizeFile(windowsInput), file.file);
   assert.equal(normalizeFile(pathToFileURL(join(process.cwd(), file.file)).href), file.file);
   assert.equal(normalizeFile("../outside.test.ts"), null);
 });

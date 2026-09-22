@@ -361,9 +361,16 @@ export interface AgendaPublicationReading {
   readonly alternateSearchOpen: boolean;
   /** The version the reading was taken over. Null when nothing is held. */
   readonly currentDocumentUrl: string | null;
-  /** Earlier versions of the same sitting's agenda, newest first. */
+  /**
+   * Earlier DISTINCT versions of the sitting's own agenda, newest first — see
+   * `readerAgendaDocuments`. A re-fetch of identical content is not a version,
+   * and a publication index is never a version of a sitting's agenda.
+   */
   readonly supersededDocumentUrls: readonly string[];
-  /** True when we hold more than one version: the agenda was amended. */
+  /**
+   * True only when we hold two or more distinct contents of the sitting's own
+   * document: the agenda was amended. Never true from fetch count alone.
+   */
   readonly revised: boolean;
   readonly items: readonly string[];
 }
@@ -491,6 +498,171 @@ export function agendaDocumentRepresentation(document: AgendaDocumentLike):
   return "TEXT";
 }
 
+/** Corpus context shared by the publication reading and the reader document projection. */
+export interface AgendaCorpusContext {
+  readonly documentsAcrossCorpus: readonly AgendaDocumentLike[];
+  readonly meetingsAcrossCorpus?: readonly { id: string; ocdId: string | null }[];
+}
+
+interface HeldDocumentReading {
+  readonly representation: "TEXT" | "PUBLICATION_PORTAL" | "UNREADABLE";
+  readonly sharedAcrossGovernments: boolean;
+  readonly items: readonly string[];
+  /** The body's publication index (portal, listing page, shared landing page), not a sitting's own document. */
+  readonly publicationIndex: boolean;
+}
+
+/**
+ * **ONE READING OF ONE HELD DOCUMENT, used by every question asked of it.**
+ *
+ * The publication reading asks it of the sitting's newest shown document; the
+ * reader projection asks it of every held row. One implementation, so the card
+ * can never call a page an index while the version count calls it a revision.
+ */
+function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocumentLike) => HeldDocumentReading {
+  const governmentByMeeting = new Map((context.meetingsAcrossCorpus ?? []).map((meeting) => [meeting.id, meeting.ocdId]));
+  const meetingsByUrl = new Map<string, Set<string>>();
+  for (const document of context.documentsAcrossCorpus) {
+    const meetings = meetingsByUrl.get(document.documentUrl) ?? new Set<string>();
+    meetings.add(document.meetingId);
+    meetingsByUrl.set(document.documentUrl, meetings);
+  }
+  const memo = new Map<string, HeldDocumentReading>();
+  return (document) => {
+    const memoKey = `${document.documentUrl}\u0000${document.extraction}\u0000${document.text ?? "\u0001null"}`;
+    const known = memo.get(memoKey);
+    if (known) return known;
+    const holders = meetingsByUrl.get(document.documentUrl) ?? new Set<string>();
+    const sharedWith = holders.size;
+    const representation = agendaDocumentRepresentation(document);
+    const sharedAcrossGovernments = new Set(
+      [...holders].map((meetingId) => governmentByMeeting.get(meetingId)).filter((id): id is string => Boolean(id)),
+    ).size > 1;
+    const items = !sharedAcrossGovernments && representation === "TEXT" && document.text ? agendaItems(document.text) : [];
+    const reading: HeldDocumentReading = {
+      representation,
+      sharedAcrossGovernments,
+      items,
+      // Unreadable bytes are named as unreadable first, exactly as the
+      // publication reading orders it; an index needs readable evidence.
+      publicationIndex: representation !== "UNREADABLE" &&
+        (sharedAcrossGovernments || representation === "PUBLICATION_PORTAL" || (sharedWith > 1 && items.length === 0)),
+    };
+    memo.set(memoKey, reading);
+    return reading;
+  };
+}
+
+function retrievedAtOrder(left: AgendaDocumentLike & { readonly id?: string }, right: AgendaDocumentLike & { readonly id?: string }): number {
+  const leftAt = Date.parse(left.retrievedAt);
+  const rightAt = Date.parse(right.retrievedAt);
+  if (Number.isFinite(leftAt) && Number.isFinite(rightAt) && leftAt !== rightAt) return rightAt - leftAt;
+  if (left.retrievedAt !== right.retrievedAt) return left.retrievedAt < right.retrievedAt ? 1 : -1;
+  return (left.id ?? left.documentUrl).localeCompare(right.id ?? right.documentUrl);
+}
+
+/** Readable text compared as text: whitespace runs are layout, never content. */
+function contentText(document: AgendaDocumentLike): string | null {
+  const text = document.text?.replace(/\s+/g, " ").trim();
+  return text ? text : null;
+}
+
+export interface ReaderAgendaDocumentProjection<T> {
+  /**
+   * Exactly the documents a reader is shown for this sitting, newest first:
+   * ONE row per distinct content (the newest stored row carrying it). Every
+   * stored row stays in the holding as provenance; this is a reading of it.
+   */
+  readonly documents: readonly T[];
+  /** True when `documents` are the sitting's own documents; false when only publication-index pages are held. */
+  readonly sittingSpecific: boolean;
+  /** Stored rows held for this sitting. */
+  readonly heldRows: number;
+  /** Held rows not shown because their content is identical to a shown row: re-fetches, not versions. */
+  readonly identicalContentRows: number;
+  /** Held publication-index rows not shown because the sitting's own document is held. */
+  readonly publicationIndexRowsSetAside: number;
+}
+
+/**
+ * **WHAT A READER IS SHOWN FOR ONE SITTING'S AGENDA, AND HOW MANY VERSIONS THAT IS.**
+ * (2026-09-22.)
+ *
+ * The meeting card said "89 versions on file — a revised agenda is itself news"
+ * for Tucson Unified sitting 499, which had never been revised: 88 re-fetches of
+ * one page whose extracted text never changed, plus the board's site root the
+ * sitting was attached to before its own page was acquired. A fetch count is a
+ * fact about our schedule; a version is a fact about the government's document.
+ *
+ * - **A version is a distinct content.** Rows whose extracted text is identical
+ *   (whitespace aside), or whose bytes hash identically, are one version however
+ *   many times or on whatever days they were read. The newest row speaks for it.
+ * - **A publication index is not a version of the sitting's agenda.** Once any
+ *   held row is the sitting's own document, index rows (a shared landing page,
+ *   a portal shell, a page held for another government's meeting) are set aside
+ *   rather than counted. A sitting holding ONLY index pages shows them, for what
+ *   they are, and they are never a sitting's versions.
+ *
+ * Nothing is deleted and nothing is rewritten: every stored row remains the
+ * holding's provenance, and the rows not shown are stated as counts, so the
+ * three numbers — shown, identical re-fetches, set-aside index pages — always
+ * reconcile to the rows held.
+ */
+export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly id?: string; readonly contentHash?: string }>(
+  documentsForMeeting: readonly T[],
+  context: AgendaCorpusContext,
+): ReaderAgendaDocumentProjection<T> {
+  const read = heldDocumentReader(context);
+  const newestFirst = [...documentsForMeeting].sort(retrievedAtOrder);
+  const sittingRows = newestFirst.filter((document) => !read(document).publicationIndex);
+  const sittingSpecific = sittingRows.length > 0;
+  const candidates = sittingSpecific ? sittingRows : newestFirst;
+
+  // Same content is transitive across either identity: a row sharing text with
+  // one version and bytes with another joins them into one version.
+  const parent = candidates.map((_, index) => index);
+  const find = (index: number): number => {
+    let root = index;
+    while (parent[root] !== root) root = parent[root]!;
+    while (parent[index] !== root) {
+      const next = parent[index]!;
+      parent[index] = root;
+      index = next;
+    }
+    return root;
+  };
+  const union = (left: number, right: number) => {
+    const a = find(left);
+    const b = find(right);
+    // The newest row (lowest index) always remains the representative.
+    if (a !== b) parent[Math.max(a, b)] = Math.min(a, b);
+  };
+  const byHash = new Map<string, number>();
+  const byText = new Map<string, number>();
+  candidates.forEach((document, index) => {
+    const hash = typeof document.contentHash === "string" && document.contentHash ? document.contentHash : null;
+    if (hash !== null) {
+      const seen = byHash.get(hash);
+      if (seen === undefined) byHash.set(hash, index);
+      else union(seen, index);
+    }
+    const text = contentText(document);
+    if (text !== null) {
+      const seen = byText.get(text);
+      if (seen === undefined) byText.set(text, index);
+      else union(seen, index);
+    }
+  });
+  const documents = candidates.filter((_, index) => find(index) === index);
+  return {
+    documents,
+    sittingSpecific,
+    heldRows: documentsForMeeting.length,
+    identicalContentRows: candidates.length - documents.length,
+    publicationIndexRowsSetAside: sittingSpecific ? newestFirst.length - sittingRows.length : 0,
+  };
+}
+
 /**
  * **The reading. This is the only place `whose: "THEIRS"` can be produced for
  * an agenda, and it is produced from an observation or not at all.**
@@ -522,25 +694,18 @@ export function classifyAgendaPublication(
         : "REPORTS_AVAILABLE";
 
   /* ── our axis ────────────────────────────────────────────────────────── */
-  const versions = [...documentsForMeeting].sort((a, b) =>
-    a.retrievedAt < b.retrievedAt ? 1 : -1,
-  );
-  const newest = versions[0] ?? null;
-  const superseded = versions.slice(1).map((d) => d.documentUrl);
-  const sharedWith = newest
-    ? new Set(
-        documentsAcrossCorpus
-          .filter((d) => d.documentUrl === newest.documentUrl)
-          .map((d) => d.meetingId),
-      ).size
-    : 0;
-  const representation = newest ? agendaDocumentRepresentation(newest) : null;
-  const governmentByMeeting = new Map(meetingsAcrossCorpus.map(meeting => [meeting.id, meeting.ocdId]));
-  const documentSharedAcrossGovernments = newest ? new Set(documentsAcrossCorpus
-    .filter(document => document.documentUrl === newest.documentUrl)
-    .map(document => governmentByMeeting.get(document.meetingId))
-    .filter((id): id is string => Boolean(id))).size > 1 : false;
-  const items = !documentSharedAcrossGovernments && representation === "TEXT" && newest?.text ? agendaItems(newest.text) : [];
+  // The reading is taken over exactly what a reader is shown for this sitting:
+  // one row per distinct content, the sitting's own document ahead of any
+  // publication index it was once attached to (`readerAgendaDocuments`).
+  const context: AgendaCorpusContext = { documentsAcrossCorpus, meetingsAcrossCorpus };
+  const shown = readerAgendaDocuments(documentsForMeeting, context);
+  const newest = shown.documents[0] ?? null;
+  const sittingVersions = shown.sittingSpecific ? shown.documents : [];
+  const superseded = sittingVersions.slice(1).map((d) => d.documentUrl);
+  const reading = newest ? heldDocumentReader(context)(newest) : null;
+  const representation = reading?.representation ?? null;
+  const documentSharedAcrossGovernments = reading?.sharedAcrossGovernments ?? false;
+  const items = reading?.items ?? [];
   const attempts = routeAttempts.filter((a) => a.meetingId === meetingId);
   const blocked = attempts.some((a) => a.outcome === "BLOCKED" || a.outcome === "FAILED");
 
@@ -552,7 +717,7 @@ export function classifyAgendaPublication(
         : "NOT_ACQUIRED"
     : representation === "UNREADABLE"
       ? "ACQUIRED_NOT_READABLE"
-      : documentSharedAcrossGovernments || representation === "PUBLICATION_PORTAL" || (sharedWith > 1 && items.length === 0)
+      : reading?.publicationIndex
         ? "ACQUIRED_IS_PUBLICATION_INDEX"
         : items.length === 0
           ? "READ_NO_ITEMS_EXTRACTED"
@@ -574,7 +739,7 @@ export function classifyAgendaPublication(
     alternateSearchOpen: obligationOpen,
     currentDocumentUrl: newest?.documentUrl ?? null,
     supersededDocumentUrls: superseded,
-    revised: versions.length > 1,
+    revised: sittingVersions.length > 1,
     items,
   };
 }

@@ -23,6 +23,8 @@ import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
  */
 
 interface AgendaDocumentView {
+  /** Present on every row `/api/agenda` returns; optional for hand-built views. */
+  id?: string;
   documentUrl: string;
   contentHash: string;
   retrievedAt: string;
@@ -185,6 +187,46 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
   </details>;
 }
 
+/**
+ * **THE VERSIONS LINE STATES THE ROWS IT RENDERS.** (2026-09-22.)
+ *
+ * `documents` is `/api/agenda`'s reader projection: one row per DISTINCT
+ * content of the sitting's own document, newest first. It used to be every
+ * stored fetch, and the card told readers Tucson Unified sitting 499 had "89
+ * versions on file — a revised agenda is itself news" when its page had never
+ * changed. So the count is the length of the list below it, each version is a
+ * rendered row, and the revision wording needs two or more distinct contents
+ * that the publication reading also calls revised — never a fetch count.
+ *
+ * An earlier version read at the SAME address is not linked: that address now
+ * serves the newer content, and a link would hand the reader the wrong
+ * version. Every distinct address is linked exactly where its version is.
+ */
+function VersionsOnFile({ documents, publication }: {
+  documents: readonly AgendaDocumentView[]; publication?: AgendaPublicationReading | null;
+}) {
+  if (documents.length < 2) return null;
+  const latestUrl = documents[0].documentUrl;
+  const linked = new Set([latestUrl]);
+  const revised = publication?.revised !== false;
+  return <span data-agenda-versions={documents.length}>
+    {revised
+      ? ` · ${documents.length} versions on file — a revised agenda is itself news: `
+      : ` · ${documents.length} documents on file: `}
+    {documents.map((document, index) => {
+      const label = `${index === 0 ? "current" : "earlier"} version read ${formatDateMDY(document.retrievedAt.slice(0, 10))}`;
+      const link = !linked.has(document.documentUrl);
+      if (link) linked.add(document.documentUrl);
+      return <span key={document.id ?? `${document.contentHash}:${document.retrievedAt}`} data-agenda-version={document.id ?? document.contentHash}>
+        {index > 0 && ", "}
+        {link
+          ? <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">{label}</a>
+          : label}
+      </span>;
+    })}
+  </span>;
+}
+
 export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
   publication?: AgendaPublicationReading | null;
@@ -192,9 +234,19 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
   const latest = documents[0] ?? null;
 
   if (latest && publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
+    // Only publication-index pages are held for this sitting. They are shown
+    // for what they are — listing pages, never versions of its agenda — and a
+    // second distinct listing page is linked rather than counted as a revision.
+    const otherListingPages = documents.filter((document, index, all) =>
+      document.documentUrl !== latest.documentUrl &&
+      all.findIndex((candidate) => candidate.documentUrl === document.documentUrl) === index);
     return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
       <p>{publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</a>.</p>
-      <p className="mt-1 text-[0.625rem]">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.</p>
+      <p className="mt-1 text-[0.625rem]">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
+        {otherListingPages.map((document) => <span key={document.documentUrl} data-agenda-listing-page={document.id ?? document.documentUrl}>
+          {" "}Also held: <a href={document.documentUrl} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-signal">another listing page, read {formatDateMDY(document.retrievedAt.slice(0, 10))}</a>.
+        </span>)}
+      </p>
     </div>;
   }
 
@@ -241,7 +293,8 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
         >
           Open the document
         </a>
-        . From {latest.sourceOrg} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
+        . From {latest.sourceOrg} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
+        <VersionsOnFile documents={documents} publication={publication} />.
       </p>
     );
   }
@@ -332,8 +385,7 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
           the {latest.sourceOrg} document
         </a>{" "}
         · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}
-        {documents.length > 1 &&
-          ` · ${documents.length} versions on file — a revised agenda is itself news`}
+        <VersionsOnFile documents={documents} publication={publication} />
       </p>
     </div>
   );

@@ -147,9 +147,19 @@ election. So `cd120` is **opt-in** (built via `--only=…,cd120`; not in
 DEFAULT_SCOPES) and is intended to refresh at a **lower cadence** than the monthly
 tab20 refresh — the owner picks the cadence (recommendation: quarterly/on-demand).
 `acquireDataset({ only: ["cd120"], states })` state-filters the download.
-`grf.ts`'s `GrfTarget` is generic, so the current (2026) State Senate / State House
-districts (`SLDUST`/`SLDLST`, grfn `LSY=2026`) build the same way for the same
-version-clarity check against the tab20 2024 plan — a planned follow-on.
+
+**State Senate / State House 2026 version clarity (determined from Census data).**
+The grf/2026 `SLDUST`/`SLDLST` (grfn `LSY=2026`) are the current legislative
+districts. Comparing each ZCTA's dominant district between grf‑2026 and the tab20
+2024 plan nationally (2.90 GB): **state-leg maps are stable 2024→2026 except
+Michigan's State Senate (7.4% of ZCTAs moved — a real 2026 redraw) and, borderline,
+South Dakota (~5–7%, both chambers).** ("Nebraska State House 100%" is an
+artifact — Nebraska's legislature is unicameral, so it has no SLDL.) So the shipped
+`sldu:2024`/`sldl:2024` accurately cover the 2026 election for 48+ states; Michigan's
+Senate is the one clear place they differ. `grf.ts`'s `GrfTarget` is generic, so
+`sldu:2026`/`sldl:2026` build from the SAME grf pass as cd:120 (one ~2.9 GB
+download yields all three) — recommended to bundle into the upcoming-election build
+when the owner activates it, for full 2026 correctness including Michigan's Senate.
 
 ## Verification
 

@@ -49,6 +49,17 @@ import {
 
 const CHECK_ONLY = process.argv.includes("--check");
 
+// R291: workspace creation uses the same startup bookend. It does not run the
+// old preview checks against main or stop another session's preview.
+const workspaceAt = process.argv.indexOf("--workspace");
+if (workspaceAt !== -1) {
+  const config = process.argv[workspaceAt + 1];
+  if (!config) throw new Error("--workspace requires an explicit start-config JSON path");
+  const { start } = await import("./session-workspace.mjs");
+  console.log(JSON.stringify(start(JSON.parse(readFileSync(config, "utf8"))), null, 2));
+  process.exit(0);
+}
+
 const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
 
 const results = [];

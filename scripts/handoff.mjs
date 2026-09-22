@@ -1901,7 +1901,7 @@ const warned = results.filter((r) => r.level === "warn");
 
 console.log("");
 if (failed.length === 0 && warned.length === 0) {
-  console.log("All five surfaces agree. Safe to end the session.\n");
+  console.log("Delivery surfaces agree. Physical workspace closeout is still required (RULING 291): leave the checkout and run its external session-workspace helper. Until verified, report implementation complete; cleanup blocked. See docs/session-closeout.md.\n");
   process.exit(0);
 }
 

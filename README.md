@@ -25,6 +25,7 @@ On Sean's Windows computer, the current locations are:
 | Main project | `C:\Users\seanj\dev\we-the-people` | Start here for the repository and its instructions. |
 | Automatic runner | `C:\Users\seanj\dev\wtp-production-runtime` | Leave this clean checkout to the scheduled runner. Do development elsewhere. |
 | New temporary worktrees | `C:\Users\seanj\dev\meanwhile-worktrees` | Give each work session one named subfolder and branch. |
+| Internal proof images | `C:\Users\seanj\dev\meanwhile-evidence\reader-last-mile` | Hash-bound historical screenshots; distinct from product portraits and assets. |
 | Existing Claude worktrees | `we-the-people\.claude\worktrees` | Leave active or unconfirmed sessions in their assigned folders. |
 | Scout verification and unfinished evidence | `C:\Users\seanj\wtp-scout-fieldmanual-verification` | Preserve the evidence and follow-up notes; these are not application code. |
 | Private recovery and cleanup record | `D:\Meanwhile Recovery\2026-09-19` | Recovery only; the cleanup report is in `approved-local-cleanup`. |
@@ -34,6 +35,11 @@ working locations**. Their move depends on session releases and verified path
 updates. A folder's age, an idle session or a merged PR does not release it.
 
 ## Read the current instructions
+
+Every Claude Code or Codex task uses one named temporary worktree and finishes
+with [session workspace closeout](docs/session-closeout.md). That procedure
+preserves useful deliverables, removes eligible temporary files and task branches,
+and verifies the result. A release note alone is not completed cleanup.
 
 Start with [CLAUDE.md](CLAUDE.md), the root constitution, and follow its policy
 links. [AGENTS.md](AGENTS.md) gives Codex the generated mirror; it is not a

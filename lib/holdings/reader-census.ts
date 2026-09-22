@@ -5,6 +5,7 @@ import { isRenderable, stateMoneyRecordsForDisplay } from "../funding/state-mone
  * are separate facts; a declaration/import does not certify the next seam.
  */
 import { createHash } from "node:crypto";
+import { relocatedImageBytes } from "./evidence-location.ts";
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import * as fs from "node:fs";
@@ -69,6 +70,8 @@ const string = (value: unknown) => typeof value === "string" ? value : "";
 export const sha256 = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
 
 export function readReaderEvidence(root: string, path: string): Buffer {
+  const relocated = relocatedImageBytes(root, path);
+  if (relocated) return relocated;
   const actualPath = existsSync(join(root,path)) ? path : `${path}.gz`;
   const bytes = readFileSync(join(root, actualPath));
   return actualPath.endsWith(".gz") ? gunzipSync(bytes) : bytes;

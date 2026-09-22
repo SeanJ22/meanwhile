@@ -184,6 +184,20 @@ function parseValue<T>(raw: unknown, where: string): T {
   }
 }
 
+/* The `#>>` path is a fixed literal built from CODE-PROVIDED segments, never a
+   query value; validate each segment so it can never carry SQL, then embed it
+   (the extracted VALUE is the parameter). Shared by the log `readWhere` and the
+   aggregate `listWhere`, so there is one validator, not two. */
+function jsonPathLiteral(table: string, path: readonly string[]): string {
+  if (path.length === 0) throw new Error(`${table}: an empty JSON path cannot select a field`);
+  for (const segment of path) {
+    if (!/^[A-Za-z0-9_]+$/.test(segment)) {
+      throw new Error(`${table}: unsafe JSON path segment ${JSON.stringify(segment)}`);
+    }
+  }
+  return `{${path.join(",")}}`;
+}
+
 /**
  * How many aggregate rows one `list()` statement fetches.
  *
@@ -339,6 +353,45 @@ export function pgAggregateRepository<T>(
       }
       return out;
     },
+
+    async listWhere(path, value) {
+      /* `list()` filtered IN THE DATABASE: the same ORDER BY id and keyset
+         paging, with the content filter in the WHERE clause, so only matching
+         rows cross the wire and the result equals `list()` filtered, row for
+         row and in order. One RouteTask's Attempts is one bounded round trip
+         here, where `list()` is every page of cp_attempts (44 on 2026-09-22). */
+      const jsonPath = jsonPathLiteral(table, path);
+      const out: Persisted<T>[] = [];
+      let afterId: string | null = null;
+      for (;;) {
+        const rows = (afterId === null
+          ? await sql.query(
+              `SELECT id, revision, updated_at, value FROM ${table}
+               WHERE value #>> '${jsonPath}' = $1
+               ORDER BY id ASC
+               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+              [value],
+            )
+          : await sql.query(
+              `SELECT id, revision, updated_at, value FROM ${table}
+               WHERE value #>> '${jsonPath}' = $1 AND id > $2
+               ORDER BY id ASC
+               LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+              [value, afterId],
+            )) as Record<string, unknown>[];
+        for (const row of rows) {
+          out.push({
+            id: String(row.id),
+            revision: Number(row.revision),
+            updatedAt: new Date(row.updated_at as string).toISOString(),
+            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
+          });
+        }
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+        afterId = String(rows[rows.length - 1].id);
+      }
+      return out;
+    },
   };
 }
 
@@ -367,19 +420,6 @@ export const APPEND_ONLY_LOG_READ_PAGE = 100;
 
 export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<T> {
   const table = `cp_log_${log}`;
-
-  /* The `#>>` path is a fixed literal built from CODE-PROVIDED segments, never a
-     query value; validate each segment so it can never carry SQL, then embed it
-     (the extracted VALUE is the parameter). */
-  const jsonPathLiteral = (path: readonly string[]): string => {
-    if (path.length === 0) throw new Error(`${table}: an empty JSON path cannot select a field`);
-    for (const segment of path) {
-      if (!/^[A-Za-z0-9_]+$/.test(segment)) {
-        throw new Error(`${table}: unsafe JSON path segment ${JSON.stringify(segment)}`);
-      }
-    }
-    return `{${path.join(",")}}`;
-  };
 
   return {
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -505,7 +545,7 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
          matching rows (bounded by the page), so a selective filter over a log
          far larger than the 64 MiB cap still returns every match. The cursor
          advances by the last match's position, skipping non-matching rows. */
-      const jsonPath = jsonPathLiteral(path);
+      const jsonPath = jsonPathLiteral(table, path);
       const out: T[] = [];
       let afterPosition = -1;
       for (;;) {

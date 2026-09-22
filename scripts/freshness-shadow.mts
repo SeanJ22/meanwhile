@@ -220,7 +220,9 @@ import {
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
+import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
+import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
+import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -447,8 +449,28 @@ const finishPhase = (name: string) => {
   console.log(`  phase ${phase.name}: ${phase.durationMs}ms; ${phase.repositoryCalls} repository calls`);
 };
 
+/*
+ * Both startup authority reads are idempotent, and one failed read must not
+ * cost the hour: on 2026-09-22 at 21:34:53Z a single STORE_READ_FAILED on the
+ * operational reference crashed the cycle 17 s in, and the store answered
+ * again minutes later. A failed read is re-read within the connect-retry
+ * bounds, never while the Neon circuit is latched; a persistent failure still
+ * reaches the named failure below unchanged.
+ */
+const startupReadRetry = {
+  circuitLatched: () => readNeonCircuit(ROOT, nowIso()) !== null,
+  onRetry: ({ attempt, delayMs, error }: { readonly attempt: number; readonly delayMs: number; readonly error: unknown }) =>
+    console.error(
+      `freshness:shadow · startup read retry ${attempt} in ${delayMs}ms: ${error instanceof Error ? error.message : String(error)}`,
+    ),
+};
+
 if (wantsPostgres) {
-  const methodAuthority = await readMethodCandidateAuthorityStatus(repos);
+  const methodAuthority = await retryStartupRead(
+    () => readMethodCandidateAuthorityStatus(repos),
+    (status) => (status.state === "STORE_UNREACHABLE" ? status.detail : null),
+    startupReadRetry,
+  );
   if (methodAuthority.state !== "ADOPTED") {
     throw new Error(
       `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
@@ -462,7 +484,11 @@ if (wantsPostgres) {
  * authority as Admin. A missing/unreachable pointer is a named failed cycle;
  * the retired tracked jurisdiction projections are never a silent fallback.
  */
-await preloadOperationalReferenceBundle({ bypassCache: true });
+await retryStartupRead(
+  () => preloadOperationalReferenceBundle({ bypassCache: true }),
+  () => null,
+  startupReadRetry,
+);
 await preloadCandidateEnrichmentAuthorities();
 
 /*
@@ -929,29 +955,22 @@ if (scoutSearch !== null) {
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-const laneDisabledCode = scheduledBlackout
-  ? "SCHEDULED_BLACKOUT"
-  : dry
-  ? "LANE_DISABLED"
-  : noModel
-    ? "LANE_DISABLED"
-    : !credentialConfigured
-      ? "LANE_DISABLED"
-      : intents.paused
-        ? "PAUSED"
-        : null;
-const laneDisabledReason = scheduledBlackout
-  ? "SCHEDULED BLACKOUT: Saturday 18:00 through Sunday 06:00 America/Phoenix permits no model or network research"
-  : dry
-  ? "--dry: no retrieval of any kind runs, so no Scout runs"
-  : noModel
-    ? "--no-model: the Scout lane is held closed for this diagnostic cycle"
-    : !credentialConfigured
-      ? `${WORKER_CREDENTIAL_VAR} is not set in this process, so no model can be invoked`
-      : intents.paused
-        ? `paused by owner intent ${intents.pauseIntentId ?? "(id unrecorded)"}`
-        : null;
-const modelLaneEnabled = laneDisabledReason === null;
+/* One ordered answer for why the model lane is closed (model-lane.ts). It also
+   closes the lane while no delivery path is open: with promotion off, paid
+   Scout and auditor output could only accumulate unread (owner, 2026-09-22). */
+const laneClosure = modelLaneClosure({
+  scheduledBlackout,
+  dry,
+  noModel,
+  credentialConfigured,
+  credentialVar: WORKER_CREDENTIAL_VAR,
+  activation: readActivationGate(ROOT),
+  paused: intents.paused,
+  pauseIntentId: intents.pauseIntentId ?? null,
+});
+const laneDisabledCode = laneClosure?.code ?? null;
+const laneDisabledReason = laneClosure?.reason ?? null;
+const modelLaneEnabled = laneClosure === null;
 
 /*
  * THE LANE PAUSE / RESUME GETS ITS HONORED RECORD. (9.4.26 admin feedback.)

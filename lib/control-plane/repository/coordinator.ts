@@ -371,15 +371,21 @@ export async function beginAttemptFor(
   return outcome.persisted;
 }
 
-/** Every Attempt against one RouteTask, oldest first. */
+/**
+ * Every Attempt against one RouteTask, oldest first.
+ *
+ * A FILTERED read, never the whole table (2026-09-22). This listed every
+ * Attempt and filtered in process: 44 sequential 100-row pages over 4,324 rows
+ * on the production control plane, once per expired lease the sweep walked.
+ * `listWhere` returns exactly `list()` filtered, in the same id order, so the
+ * sort below sees the same input and returns the same rows in the same order.
+ */
 export async function attemptsForRouteTask(
   repos: ControlPlaneRepositories,
   routeTaskId: string,
 ): Promise<readonly Persisted<Attempt>[]> {
-  const all = await repos.attempts.list();
-  return all
-    .filter((row) => row.value.routeTaskId === routeTaskId)
-    .sort((a, b) => (a.value.startedAt < b.value.startedAt ? -1 : 1));
+  const mine = await repos.attempts.listWhere(["routeTaskId"], routeTaskId);
+  return [...mine].sort((a, b) => (a.value.startedAt < b.value.startedAt ? -1 : 1));
 }
 
 /** ---------------------------------------------------- artifact metadata */
@@ -456,6 +462,12 @@ export async function artifactsForAttempt(
 export interface ReclaimOutcome {
   readonly task: Persisted<RouteTask>;
   readonly closed: readonly Persisted<Attempt>[];
+  /**
+   * True when the RouteTask was ALREADY DISPOSED. Nothing was returned to the
+   * pool and no Attempt was read or closed: the only write was releasing the
+   * dead lease. A caller must not count this as a reclaim.
+   */
+  readonly settled: boolean;
 }
 
 /**
@@ -487,6 +499,38 @@ export async function reclaimRouteTask(
       lease.value.expiresAt,
       input.now,
     );
+  }
+
+  /*
+   * **A DEAD LEASE ON A SETTLED ROUTE IS RELEASED, AND NOTHING ELSE MOVES.**
+   * (2026-09-22.)
+   *
+   * `reclaim()` refuses to reopen a disposed RouteTask, and must: a dead
+   * Attempt cannot unsettle a settled route. But that refusal fired inside the
+   * loop below, BEFORE the lease release at the end of this function, so an
+   * expired lease on a disposed task was never released and
+   * `sweepExpiredLeases` walked it again every cycle. The production control
+   * plane held 65 of them (disposed tasks re-claimed by a later dispatch whose
+   * own write was then refused), and walking them took 348 s of a 417 s
+   * pre-dispatch, so every due deterministic item was deferred.
+   *
+   * On a settled route the lease is the only dead state. The disposition, the
+   * Attempts, the cost ledger and the debt are history this path does not
+   * read or write: it performs exactly the release the disposition path
+   * performs (`applyDispositionCommit`), one compare-and-set of the lease to
+   * `released`, which is how every release is recorded. A lease re-claimed
+   * since it was read loses that compare-and-set and is left alone. "Disposed"
+   * is `reclaim()`'s own test (`disposition !== null`), so this fires only
+   * where that refusal would, and only when there is a lease left to release.
+   */
+  if (task.value.disposition !== null && lease !== null && !lease.value.released) {
+    await repos.leases.compareAndSet(
+      input.routeTaskId,
+      lease.revision,
+      releaseLease(lease.value),
+      input.now,
+    );
+    return { task, closed: [], settled: true };
   }
 
   const attempts = await attemptsForRouteTask(repos, input.routeTaskId);
@@ -528,7 +572,7 @@ export async function reclaimRouteTask(
     );
   }
 
-  return { task: persistedTask, closed };
+  return { task: persistedTask, closed, settled: false };
 }
 
 /**

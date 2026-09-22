@@ -21,6 +21,7 @@ import {
   AGGREGATE_LIST_READ_PAGE,
   pgAggregateRepository,
 } from "../lib/control-plane/repository/pg-store.ts";
+import { jsonTextAtPath } from "../lib/control-plane/repository/types.ts";
 
 interface Row {
   readonly id: string;
@@ -43,6 +44,18 @@ function fakeAggregateSql(rows: readonly Row[]) {
       }
       const limit = Number(litLimit[1]);
       const project = (r: Row) => ({ id: r.id, revision: r.revision, updated_at: r.updated_at, value: r.value });
+      // listWhere(): WHERE value #>> '{path}' = $1, next pages add AND id > $2
+      const filter = /value #>> '\{([^}]*)\}' = \$1/.exec(text);
+      if (filter !== null) {
+        const [value, after] = params as [string, string | undefined];
+        const path = filter[1].split(",");
+        const paged = /AND\s+id\s*>\s*\$2/i.test(text);
+        return rows
+          .filter((r) => jsonTextAtPath(r.value, path) === value && (!paged || r.id > String(after)))
+          .sort(byId)
+          .slice(0, limit)
+          .map(project);
+      }
       // list() next page: WHERE id > $1
       if (/WHERE\s+id\s*>\s*\$1/i.test(text)) {
         const [after] = params as [string];
@@ -94,4 +107,45 @@ test("list() of exactly one full page still terminates on the short second page"
   // One full page forces a second (empty) page to confirm the end.
   assert.equal(calls.length, 2);
   assert.ok(calls.every((c) => /LIMIT/i.test(c)));
+});
+
+/* `listWhere()` (2026-09-22): the lease sweep's per-task Attempt read moved off
+   a full `list()` onto this, so it must be `list()` filtered, bounded, and
+   filtered by the DATABASE with the value as a parameter. */
+const tagged = (n: number, wanted: (seq: number) => boolean) =>
+  seq(n).map((r) => ({ ...r, value: { seq: r.value.seq, routeTaskId: wanted(r.value.seq) ? "rt-want" : "rt-other" } }));
+
+test("listWhere() pages a large match set and equals list() filtered, row for row in id order", async () => {
+  const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE * 3 + 7, (i) => i % 3 === 0));
+  const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "Attempt", "cp_attempts");
+
+  const expected = (await repo.list()).filter((r) => r.value.routeTaskId === "rt-want");
+  const before = calls.length;
+  const out = await repo.listWhere(["routeTaskId"], "rt-want");
+  const statements = calls.slice(before);
+  assert.ok(expected.length > AGGREGATE_LIST_READ_PAGE, "the match set spans more than one page");
+  assert.deepEqual(out, expected);
+  assert.equal(statements.length, 2, "two bounded pages for 103 matches");
+  assert.ok(
+    statements.every((c) => /LIMIT/i.test(c) && /value #>> '\{routeTaskId\}' = \$1/.test(c)),
+    "every statement is bounded and filtered in the database",
+  );
+  assert.ok(statements.every((c) => !c.includes("rt-want")), "the value is a parameter, never SQL text");
+});
+
+test("listWhere() of a selective filter is ONE bounded statement where list() pages the whole table", async () => {
+  const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE * 4, (i) => i === 7 || i === 391));
+  const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "Attempt", "cp_attempts");
+  const out = await repo.listWhere(["routeTaskId"], "rt-want");
+  assert.deepEqual(out.map((r) => r.value.seq), [7, 391], "a match near the start and one near the end");
+  assert.equal(calls.length, 1, "one round trip");
+  assert.deepEqual(await repo.listWhere(["routeTaskId"], "rt-absent"), [], "no match is an empty answer");
+});
+
+test("listWhere() refuses an unsafe JSON path segment rather than building SQL from it", async () => {
+  const { sql, calls } = fakeAggregateSql([]);
+  const repo = pgAggregateRepository<{ seq: number }>(sql, "Attempt", "cp_attempts");
+  await assert.rejects(() => repo.listWhere(["routeTaskId'); drop table cp_attempts; --"], "x"), /unsafe JSON path/);
+  await assert.rejects(() => repo.listWhere([], "x"), /empty JSON path/);
+  assert.equal(calls.length, 0, "refused before any statement was sent");
 });

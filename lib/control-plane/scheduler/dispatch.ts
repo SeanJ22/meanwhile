@@ -961,6 +961,12 @@ export async function dispatchOne(
  */
 export interface ReclaimSweep {
   readonly reclaimed: readonly string[];
+  /**
+   * Expired leases on RouteTasks that were ALREADY DISPOSED, released as dead
+   * state (2026-09-22). Nothing was reopened, and a released lease is skipped by
+   * every later sweep, so each appears here once.
+   */
+  readonly releasedSettled: readonly string[];
   readonly stillLive: readonly string[];
   readonly refused: readonly { readonly routeTaskId: string; readonly why: string }[];
 }
@@ -972,6 +978,7 @@ export async function sweepExpiredLeases(
   // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
   await reconcileWorkerCompletions(repos);
   const reclaimed: string[] = [];
+  const releasedSettled: string[] = [];
   const stillLive: string[] = [];
   const refused: { routeTaskId: string; why: string }[] = [];
 
@@ -983,12 +990,12 @@ export async function sweepExpiredLeases(
       continue;
     }
     try {
-      await reclaimRouteTask(repos, {
+      const outcome = await reclaimRouteTask(repos, {
         routeTaskId: lease.routeTaskId,
         now: input.now,
         observedBy: input.observedBy,
       });
-      reclaimed.push(lease.routeTaskId);
+      (outcome.settled ? releasedSettled : reclaimed).push(lease.routeTaskId);
     } catch (error) {
       /* NothingToReclaim is the honest case where a lease expired before any
          Attempt opened. Recorded, never swallowed. */
@@ -998,5 +1005,5 @@ export async function sweepExpiredLeases(
       });
     }
   }
-  return { reclaimed, stillLive, refused };
+  return { reclaimed, releasedSettled, stillLive, refused };
 }

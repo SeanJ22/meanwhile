@@ -33,11 +33,13 @@ interface Step {
   readonly run?: string;
 }
 
-function jobs(): Record<string, { name?: string; steps: Step[] }> {
+interface Job { name?: string; if?: string; needs?: string[]; steps: Step[]; strategy?: { "fail-fast"?: boolean; matrix?: Record<string, unknown[]> } }
+
+function jobs(): Record<string, Job> {
   const parsed = parse(readFileSync(WORKFLOW, "utf8")) as {
-    jobs: Record<string, { name?: string; steps?: Step[] }>;
+    jobs: Record<string, Job>;
   };
-  return Object.fromEntries(Object.entries(parsed.jobs).map(([k, v]) => [k, { name: v.name, steps: v.steps ?? [] }]));
+  return Object.fromEntries(Object.entries(parsed.jobs).map(([k, v]) => [k, { ...v, steps: v.steps ?? [] }]));
 }
 
 const label = (s: Step) => s.name ?? s.uses ?? "(unnamed)";
@@ -60,143 +62,78 @@ test("the certified suite executes owner-facing TSX projection contracts", () =>
 /* The shape of the change                                                     */
 /* -------------------------------------------------------------------------- */
 
-test("every required job runs the preflight before it buys anything", () => {
-  for (const [id, job] of Object.entries(jobs())) {
-    const at = job.steps.findIndex((s) => s.id === "preflight");
-    assert.ok(at >= 0, `job ${id} does not run the preflight at all`);
-    assert.match(job.steps[at].run ?? "", /node scripts\/preflight\.mjs/);
+test("one admission runs the bare preflight before dependency installation", () => {
+  const all = jobs();
+  assert.deepEqual(Object.entries(all).filter(([, job]) => job.steps.some((s) => s.id === "preflight")).map(([id]) => id), ["admission"]);
+  const steps = all.admission.steps;
+  const at = steps.findIndex((s) => s.id === "preflight");
+  assert.match(steps[at].run ?? "", /^node scripts\/preflight\.mjs$/);
+  assert.deepEqual(steps.slice(0, at).filter((s) => EXPENSIVE.test(label(s))).map(label), []);
+  assert.ok(!steps.slice(0, at).some((s) => /corepack|pnpm install/i.test(s.run ?? "")));
+});
 
-    // Nothing expensive may precede it. Checkout, setup-node and the classifier
-    // are the only things that legitimately come first.
-    const before = job.steps.slice(0, at).map(label);
-    const spent = before.filter((n) => EXPENSIVE.test(n));
-    assert.deepEqual(
-      spent,
-      [],
-      `job ${id} spends on ${JSON.stringify(spent)} before the preflight has said anything. ` +
-        "The whole point is that the cheap answer arrives before the expensive one is bought.",
-    );
+test("one admission decides the tier and all consuming jobs depend on it", () => {
+  const all = jobs();
+  assert.deepEqual(Object.entries(all).filter(([, job]) => job.steps.some((s) => s.id === "tier")).map(([id]) => id), ["admission"]);
+  const decision = all.admission.steps.find((s) => s.id === "tier");
+  for (const part of ["pr_tier.outputs.tier", "certified.outputs.certified", "preflight.outcome"]) {
+    assert.ok(decision?.run?.includes(`steps.${part}`));
+  }
+  assert.doesNotMatch(decision?.run ?? "", /steps\.cost|no-cheap/);
+  for (const id of ["verify", "test", "build", "gates"]) assert.ok(all[id].needs?.includes("admission"));
+  for (const id of ["verify", "test"]) {
+    assert.match(all[id].if ?? "", /needs\.admission\.outputs\.tier == 'yes'/);
+    assert.doesNotMatch(all[id].if ?? "", /always\(\)/);
+  }
+  for (const step of all.build.steps.filter((s) => EXPENSIVE.test(label(s)))) {
+    assert.match(step.if ?? "", /needs\.admission\.outputs\.tier == 'yes'|== 'draft'|== 'no-preflight'/);
   }
 });
 
-test("the preflight needs no dependency install — it runs on the bare checkout", () => {
-  for (const [id, job] of Object.entries(jobs())) {
-    const at = job.steps.findIndex((s) => s.id === "preflight");
-    const before = job.steps.slice(0, at).map((s) => `${label(s)} ${s.run ?? ""}`);
-    assert.ok(
-      !before.some((s) => /corepack|pnpm install/i.test(s)),
-      `job ${id} enables corepack or installs before the preflight, so the preflight is not cheap in that job`,
-    );
-    // And it is invoked with bare `node`, not through a package manager.
-    const step = job.steps[at];
-    assert.match(step.run ?? "", /^\s*node scripts\/preflight\.mjs\s*$/);
-  }
+test("expired live integrity blocks admission before the suite or builds, with final verification retained", () => {
+  const all = jobs();
+  const early = all.admission.steps.find((s) => s.name === "Early release integrity prerequisite");
+  assert.equal(early?.run, "corepack pnpm exec tsx scripts/release-freeze-gate.mts");
+  assert.match(early?.if ?? "", /success\(\).*expensive == 'yes'/);
+  const final = all.gates.steps.find((s) => s.name?.startsWith("Release freeze"));
+  assert.equal(final?.run, early?.run);
+  assert.match(final?.if ?? "", /success\(\).*tier == 'yes'/);
 });
 
-test("one step decides whether the expensive tier runs, and every expensive step asks it", () => {
-  for (const [id, job] of Object.entries(jobs())) {
-    const decision = job.steps.find((s) => s.id === "tier");
-    assert.ok(decision, `job ${id} has no tier decision`);
-    // One table. The decision reads only PR state, exact-tree reuse, and the
-    // preflight; the retired runtime-path cost classifier cannot waive CI.
-    assert.match(decision.run ?? "", /steps\.pr_tier\.outputs\.tier/);
-    assert.match(decision.run ?? "", /steps\.certified\.outputs\.certified/);
-    assert.doesNotMatch(decision.run ?? "", /steps\.cost|no-cheap/);
-    assert.match(decision.run ?? "", /steps\.preflight\.outcome/);
-
-    /*
-     * A step is held back from a red preflight in one of two ways, and both
-     * count. GitHub ANDs an implicit `success()` into any `if` that names no
-     * status function, and into a step with no `if` at all — so a step that
-     * asks nothing is already skipped once the preflight has failed. What is
-     * NOT safe is `always()` without the tier condition: that runs regardless.
-     */
-    const unguarded = job.steps
-      .filter((s) => s.id !== "preflight" && s.id !== "tier")
-      .filter((s) => EXPENSIVE.test(label(s)))
-      .filter((s) => {
-        const cond = s.if ?? "";
-        if (cond.includes("steps.tier.outputs.expensive")) return false;
-        return /always\(\)/.test(cond) || cond === "" ? /always\(\)/.test(cond) : false;
-      })
-      .map(label);
-    assert.deepEqual(
-      unguarded,
-      [],
-      `job ${id} runs ${JSON.stringify(unguarded)} without asking the tier decision, so a red preflight would still buy it.`,
-    );
-  }
+test("a refused admission makes required build and final contexts fail loudly", () => {
+  const all = jobs();
+  assert.equal(all.build.if, "always()");
+  assert.equal(all.gates.if, "always()");
+  assert.equal(all.build.steps.find((s) => s.name === "Require successful admission")?.run, 'test "$ADMISSION_RESULT" = success');
+  assert.deepEqual(all.gates.needs, ["admission", "verify", "test", "build"]);
+  const verdict = all.gates.steps.find((s) => s.run === "node scripts/ci-verdict.mjs");
+  assert.ok(verdict);
+  assert.equal(verdict.if, undefined, "reducer must run even for a refused admission");
 });
 
-test("a red preflight makes every required job fail loudly, and skips nothing into looking green", () => {
-  for (const [id, job] of Object.entries(jobs())) {
-    const red = job.steps.filter((s) => (s.if ?? "").includes("'no-preflight'"));
-    assert.equal(red.length, 1, `job ${id} has ${red.length} step(s) for the red-preflight path; it needs exactly one`);
-    assert.match(red[0].run ?? "", /exit 1/, `job ${id}'s red-preflight step does not fail the job`);
-    assert.match(
-      red[0].if ?? "",
-      /always\(\)/,
-      `job ${id}'s red-preflight step is not always() — a failed earlier step would skip it and the job would end in nothing but skips`,
-    );
-  }
+test("the existing required contexts remain and auxiliary jobs feed the final verdict", () => {
+  const all = jobs();
+  const produced = [all.gates.name, ...["standalone", "default"].map((mode) => all.build.name?.replace("${{ matrix.mode }}", mode))];
+  assert.deepEqual(produced.sort(), [...REQUIRED_CONTEXTS].sort());
+  for (const id of Object.keys(all).filter((id) => id !== "gates")) assert.ok(all.gates.needs?.includes(id));
 });
 
-test("the three required contexts are exactly what the workflow still produces", () => {
-  const produced = Object.values(jobs()).flatMap((j) => {
-    const n = j.name ?? "";
-    return n.includes("${{ matrix.mode }}")
-      ? ["standalone", "default"].map((m) => n.replace("${{ matrix.mode }}", m))
-      : [n];
-  });
-  for (const required of REQUIRED_CONTEXTS) {
-    assert.ok(produced.includes(required), `branch protection requires ${required} and the workflow no longer produces it`);
+test("independent structural checks all report before the browser and full suite are bought", () => {
+  const all = jobs();
+  assert.deepEqual(all.verify.strategy?.matrix?.group, ["lint", "types", "governance"]);
+  assert.equal(all.verify.strategy?.["fail-fast"], false);
+  assert.ok(all.test.needs?.includes("verify"));
+  assert.doesNotMatch(all.test.if ?? "", /always\(\)/);
+  for (const name of ["Lint", "Types", "Governance", "Orchestration", "Method", "Canonical state holdings", "Generated state manifests"]) {
+    const step = all.verify.steps.find((s) => label(s).startsWith(name));
+    assert.ok(step, `${name} was lost`);
+    assert.match(step.if ?? "", /always\(\)/);
   }
-  assert.equal(produced.length, REQUIRED_CONTEXTS.length, `the workflow produces ${JSON.stringify(produced)}`);
-});
-
-/* -------------------------------------------------------------------------- */
-/* CIE-5 — the gates job runs cheap before expensive                           */
-/* -------------------------------------------------------------------------- */
-
-test("the gates job runs the cheap checks before it fetches a browser or runs the suite", () => {
-  const steps = jobs().gates.steps.map(label);
-  const at = (needle: string) => steps.findIndex((s) => s.includes(needle));
-
-  const browser = at("Install the browser");
-  const suite = at("Test");
-  assert.ok(browser > 0 && suite > 0);
-
-  for (const cheap of ["Lint", "Types", "Governance", "Orchestration", "Method", "Canonical state holdings", "Generated state manifests"]) {
-    const i = at(cheap);
-    assert.ok(i >= 0, `the gates job no longer runs ${cheap}`);
-    assert.ok(
-      i < browser && i < suite,
-      `${cheap} runs at step ${i}, after the browser (${browser}) or the suite (${suite}). ` +
-        "scripts/gates.mjs orders the cheap checks first for a measured reason; CI is supposed to match it.",
-    );
-  }
-});
-
-test("the browser and the suite are bought only on a head whose cheap tier is green", () => {
-  const gates = jobs().gates.steps;
   for (const name of ["Install the browser the suite needs", "Prove the browser is actually there", "Test"]) {
-    const step = gates.find((s) => label(s) === name);
-    assert.ok(step, `the gates job no longer has ${name}`);
-    assert.match(
-      step.if ?? "",
-      /success\(\)/,
-      `${name} runs on always(), so a failed lint or type check still buys it. ` +
-        "RULING 279: the expensive tier is not bought on a head the cheap tier already refused.",
-    );
-  }
-  // And the cheap tier keeps always() among itself, so all of it still reports.
-  for (const name of ["Lint", "Types (fresh checkout, no build)", "Governance ledger and its generated views"]) {
-    const step = gates.find((s) => label(s) === name);
-    assert.match(
-      step?.if ?? "",
-      /always\(\)/,
-      `${name} lost always(); every cheap check must still report even after one of them fails (RULING 155)`,
-    );
+    const step = all.test.steps.find((s) => label(s) === name);
+    assert.ok(step, `${name} was lost`);
+    assert.match(step.if ?? "", /success\(\)/);
+    assert.match(step.if ?? "", /needs\.admission\.outputs\.tier == 'yes'/);
   }
 });
 

@@ -41,7 +41,8 @@ import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";
 import { withTreeLock } from "./tree-lock.ts";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { proveGeneratedArtifacts } from "./helpers/generated-artifact-proof.ts";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -168,50 +169,11 @@ test("RULING 92: a file declaring itself GENERATED is registered here", () => {
 test("RULING 92: a PURE generator's artifact is byte-identical to what it produces now", () => withTreeLock(
   "regenerate every pure artifact in place and compare it to the committed bytes",
   () => {
-  const checked = new Set<string>();
-  for (const a of GENERATED.filter((x) => x.pure)) {
-    if (a.checkCommand) {
-      if (!checked.has(a.checkCommand)) execSync(a.checkCommand, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
-      checked.add(a.checkCommand);
-      continue;
-    }
-    const full = join(ROOT, a.path);
-    const committed = readFileSync(full, "utf8");
-    try {
-      execSync(a.command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
-      const regenerated = readFileSync(full, "utf8");
-      if (regenerated === committed) continue;
-
-      /* Re-derive once, from the committed bytes, before believing it. */
-      writeFileSync(full, committed, "utf8");
-      execSync(a.command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
-      const second = readFileSync(full, "utf8");
-
-      if (second === committed) {
-        throw new Error(
-          `${a.path} differed from \`${a.command}\` on the first derivation and ` +
-            "matched on the second, with nothing changed in between. That is a " +
-            "CONCURRENCY OBSERVATION, not a byte difference: this is the only test " +
-            "that rewrites the working tree, and the rest of the suite reads these " +
-            "same artifacts while it runs. It is reported rather than retried away " +
-            "because a test that retried until green would hide a real drift — and " +
-            "it is not passed off as a generator defect, because that is what sent " +
-            "two sessions hunting something that was not there.",
-        );
-      }
-
-      assert.equal(
-        second,
-        committed,
-        `${a.path} differs from what \`${a.command}\` produces, and the difference ` +
-          "REPRODUCED on a second derivation — so it is real, not a race. " +
-          "RULING 92: fix the GENERATOR and regenerate — never hand-correct the artifact.",
-      );
-    } finally {
-      // Never leave the tree changed by a test, whatever the outcome.
-      writeFileSync(full, committed, "utf8");
-    }
-  }
+    // Snapshot every output before generation, then compare every sibling
+    // against its original. One compile must not repair the next comparison.
+    proveGeneratedArtifacts(ROOT, GENERATED, (command) => {
+      execSync(command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
+    });
   },
 ));
 

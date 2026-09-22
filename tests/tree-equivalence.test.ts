@@ -27,6 +27,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { parse } from "yaml";
 
 import {
   EQUIVALENCE_VERDICTS,
@@ -359,54 +360,26 @@ test("the tier decision has a no-certified branch, and it reads the certified st
   );
 });
 
-test("no expensive step in either job runs on an attested head", () => {
-  const text = workflow();
-  /*
-   * Every step that installs, downloads a browser, builds or runs the suite is
-   * named here BY ITS COMMAND, read from the shipped workflow. A new expensive
-   * step added without a guard fails this — which is the point: the guard is on
-   * the workflow, not on a promise about it.
-   */
+test("no expensive step runs on an attested head", () => {
+  const parsed = parse(workflow());
   const expensive = [
     "corepack pnpm install --frozen-lockfile",
     "playwright install --with-deps chromium",
-    "corepack pnpm test",
+    "node scripts/ci-tests.mjs",
     "corepack pnpm lint",
     "corepack pnpm run build",
   ];
-  const lines = text.split("\n");
   for (const command of expensive) {
-    const hits = lines
-      .map((line, i) => ({ line, i }))
-      .filter(({ line }) => line.includes(command));
-    assert.ok(hits.length > 0, `${command} is no longer in the workflow — has it been renamed?`);
-    for (const { i } of hits) {
-      /*
-       * Walk back to this step's own `if:`. A step is guarded when its `if:`
-       * requires `expensive == 'yes'` — which excludes no-certified and
-       * no-preflight together — or when it explicitly excludes
-       * no-certified.
-       */
-      let guarded = false;
-      for (let j = i; j >= 0 && j > i - 25; j -= 1) {
-        const line = lines[j];
-        if (/^\s{6}- (name|uses):/.test(line) && j !== i) {
-          // reached the start of this step without finding a guard
-          break;
-        }
-        if (/^\s{8}if:/.test(line)) {
-          guarded =
-            line.includes("expensive == 'yes'") || line.includes("!= 'no-certified'");
-          break;
-        }
+    let found = 0;
+    for (const job of Object.values(parsed.jobs) as { if?: string; steps: { run?: string; if?: string }[] }[]) {
+      for (const step of job.steps.filter((step) => step.run?.includes(command))) {
+        found++;
+        const guard = `${job.if ?? ""} ${step.if ?? ""}`;
+        assert.match(guard, /(?:expensive|tier) == 'yes'/, `${command} could run on reused certification`);
+        assert.doesNotMatch(guard, /== 'no-certified'/);
       }
-      assert.equal(
-        guarded,
-        true,
-        `line ${i + 1} runs ${command} without a guard that excludes an attested head; an ` +
-          "attestation that still installs and builds has saved nothing",
-      );
     }
+    assert.ok(found > 0, `${command} disappeared from the workflow`);
   }
 });
 

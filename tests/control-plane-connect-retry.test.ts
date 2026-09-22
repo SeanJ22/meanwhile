@@ -303,10 +303,12 @@ test("createPgRepositories survives a transient connect fault at the real bootst
  * was the lone standing-runner cycle child missing this install; routine-civic-
  * data-runner.mts had it. Both open the control plane at cycle start, so both
  * MUST install the deadline. This is a source tripwire, deliberately strict.
+ * The console publisher joined the list when it began reading every record the
+ * assignment view joins: one hung request there stalls the whole publish.
  */
 test("every standing-runner cycle child that bootstraps the control plane also installs the per-attempt Neon deadline", () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  for (const child of ["scripts/freshness-shadow.mts", "scripts/routine-civic-data-runner.mts"]) {
+  for (const child of ["scripts/freshness-shadow.mts", "scripts/routine-civic-data-runner.mts", "scripts/publish-owner-snapshot.mts"]) {
     const src = readFileSync(join(root, child), "utf8");
     assert.match(src, /createPgRepositories\s*\(/, `${child} is expected to open the control plane at cycle start`);
     assert.match(

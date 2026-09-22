@@ -333,7 +333,7 @@ export function AssignmentDetail({
             <ul className="plain">
               {v.refusedFinishes.map((r) => (
                 <li key={r.attemptId}>
-                  <code>{r.attemptId}</code>: {r.codes.map(plainCode).join(", ")} — <Said text={plainText(r.says)} />
+                  <code>{r.attemptId}</code>, refused <When iso={r.at} />: {r.codes.map(plainCode).join(", ")} — <Said text={plainText(r.says)} />
                 </li>
               ))}
             </ul>

@@ -193,7 +193,7 @@ function printRow(label: string, row: AssignmentRow): void {
   for (const c of v.checks) indent(`  · ${c.who} ${c.verdict} ${when(c.at)} — ${c.says} [${c.resultId}]`);
   if (v.refusedFinishCount > 0) {
     indent(`hunter finishes refused by the executor: ${v.refusedFinishCount}`);
-    for (const r of v.refusedFinishes) indent(`  · ${r.attemptId}: ${r.codes.join(", ")} — ${r.says}`);
+    for (const r of v.refusedFinishes) indent(`  · ${r.attemptId} (refused ${r.at}): ${r.codes.join(", ")} — ${r.says}`);
   }
 
   line("  5 PROMOTED vs PUBLICLY AVAILABLE");

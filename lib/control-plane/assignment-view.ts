@@ -316,7 +316,12 @@ export interface AssignmentVerification {
   }>;
   readonly checks: readonly AssignmentCheck[];
   readonly moreChecks: number;
-  readonly refusedFinishes: readonly { readonly attemptId: string; readonly codes: readonly string[]; readonly says: string }[];
+  /**
+   * Each refusal carries WHEN it was recorded: a refusal's own text states the
+   * limit in force at that time (a 2026-09-19 refusal quotes a $25 ceiling that
+   * is no longer the ceiling), so an undated line would read as current.
+   */
+  readonly refusedFinishes: readonly { readonly attemptId: string; readonly at: string; readonly codes: readonly string[]; readonly says: string }[];
   readonly refusedFinishCount: number;
 }
 
@@ -1698,6 +1703,7 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
     moreChecks: listedChecks.more,
     refusedFinishes: listedRefused.items.map((s) => ({
       attemptId: s.attemptId,
+      at: s.recordedAt,
       codes: (s.refusal ?? []).map((i) => i.code),
       says: clip((s.refusal ?? [])[0]?.detail, clips.text),
     })),

@@ -38,6 +38,7 @@ import {
 } from "../lib/health/contracts.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { loadJsonArray } from "../lib/health/json-store.ts";
 import {
   appendMapTilerUsageCollectionDigest,
@@ -691,6 +692,10 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
     );
   }
   if (!DRY_RUN) assertRuntimeAuthority({ capabilities: ["CONSOLE_PUBLISHER"] });
+  // Bound each Neon request. This child reads every record the assignment view
+  // joins, several hundred pages; without a deadline one hung request holds it
+  // until the runner's 5-minute publisher ceiling kills the whole publish.
+  installNeonRequestDeadline();
   return createPgRepositories(url, NOW_ISO);
 }
 

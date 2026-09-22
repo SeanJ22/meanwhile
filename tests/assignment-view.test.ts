@@ -758,6 +758,15 @@ test("an unmeasured cost (usd null on model work) is a named gap in the row, the
   assert.match(h.stateSays, /model provider did not answer/);
 });
 
+test("a refused hunter finish carries when it was refused, so a refusal quoting an old limit never reads as current", () => {
+  const h = rowOf(buildAssignments(world()), "loe-lou");
+  assert.equal(h.verification.refusedFinishCount, 1);
+  assert.deepEqual(
+    h.verification.refusedFinishes.map((r) => [r.attemptId, r.at, r.codes]),
+    [["at-h1", "2026-09-22T10:00:00.000Z", ["SCOUT_TRANSPORT_FAILED"]]],
+  );
+});
+
 test("an Attempt with no model recorded says 'model not recorded' — never an assumed model", () => {
   const i = rowOf(buildAssignments(world()), "moe-mia");
   assert.ok(i.what.workers.held);

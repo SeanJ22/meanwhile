@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 690,
-    "named": 6885,
+    "files": 691,
+    "named": 6906,
     "dynamic": 28
   },
   "files": {
@@ -1322,6 +1322,32 @@
         "RULING 20: no NEW portrait or PDF binary is committed to the repo",
         "RULING 20: reference data and provenance stay in git",
         "RULING 20: the sweep actually reaches the binaries it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/assignment-view.test.ts": {
+      "names": [
+        "a Scout that says only a person can move it is BLOCKED on you, though the runner committed it as a wall",
+        "a parser attempt that aborted without a result is a failed parse run, counted — never 'no parse has run'",
+        "a refused hunter finish carries when it was refused, so a refusal quoting an old limit never reads as current",
+        "a retry is work repeated after a failure — a scheduled re-reading after a discharged round is not one",
+        "a shared cost (the Scout pre-warm) is named as shared, joined to no assignment, and never split",
+        "an Attempt with no model recorded says 'model not recorded' — never an assumed model",
+        "an unmeasured cost (usd null on model work) is a named gap in the row, the list row and the summary — never $0",
+        "eligibility is the later of the next-due and the backoff retry",
+        "every number the view draws carries a denominator and a contract, and every stated N equals the rows",
+        "failed: a Scout that found nothing and a wall at the source read FAILED; REQUIRES_NEW_ADAPTER reads BLOCKED on engineering",
+        "routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered",
+        "routine counts the projector could not state stay unknown — never replaced by a list length or a zero",
+        "succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded, needs-more-evidence counted, a guard refusal is not a rejection",
+        "succeeded (plain code, INGESTED with a document): downloads counted, the parse gap named, the cost plain code — never $0",
+        "the byte budget is spent one rank at a time across groups, so a large group never crowds out a small one",
+        "the jurisdiction of a candidacy is named through the one display projection; anything else passes through",
+        "the obligation provider prefixes are each provider's own scheduledId template",
+        "the published list is bounded, fair across groups, and states exactly what it left out",
+        "the published view is aggregate-only and its unknowns stay unknown",
+        "waiting: overdue, in failure backoff, with a named blocker and the owner of the next step",
+        "working, worker lost, retired, created and proof: each lands in its own state and lane"
       ],
       "dynamic": 0
     },

@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "64fa684ee53e1999",
+  "snapshot": "c0d5ac508726e6cc",
   "counts": {
-    "records": 327,
-    "current": 52,
-    "law": 37,
+    "records": 328,
+    "current": 53,
+    "law": 38,
     "decisions": 15,
     "historical": 275
   },
@@ -7862,6 +7862,34 @@
       ],
       "uncertain": [],
       "sourceRef": "Author explicit ruling during PRODUCTION-lineage closure session, 2026-09-16"
+    },
+    {
+      "id": "R-0291",
+      "aliases": [
+        "RULING 291",
+        "R291",
+        "R-291"
+      ],
+      "title": "RULING 291 — organized session workspaces and verified automatic physical closeout",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-21",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0288"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0273"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author: Finish consolidation and make automatic cleanup part of every future session"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

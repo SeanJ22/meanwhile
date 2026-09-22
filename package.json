@@ -39,6 +39,7 @@
     "chrome:sweep": "tsx scripts/chrome-sweep.mts",
     "class:sweep": "tsx scripts/class-stamp-sweep.mts",
     "closeout": "node scripts/close-out.mjs",
+    "session:workspace": "node scripts/session-workspace.mjs",
     "code-identity:readback": "node --env-file=.env.local --experimental-strip-types scripts/code-identity-readback.mts",
     "congress:corpus": "tsx scripts/congress-corpus-walk.mts",
     "congress:fetch": "node scripts/installed-runtime-command.mjs manual-promote --contract=congress-bulk-roster",

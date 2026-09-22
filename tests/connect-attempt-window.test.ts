@@ -43,7 +43,11 @@ test("install sets this process's default and the environment children inherit",
 
 test("a child started with that environment runs with the window before its own code", () => {
   const env = { ...process.env, NODE_OPTIONS: nodeOptionsWithConnectWindow(undefined, 2_500) };
-  const seen = execFileSync(process.execPath, ["-e", "process.stdout.write(String(require('node:net').getDefaultAutoSelectFamilyAttemptTimeout()))"], {
+  const seen = execFileSync(process.execPath, [
+    "--input-type=module",
+    "-e",
+    "import { getDefaultAutoSelectFamilyAttemptTimeout } from 'node:net'; process.stdout.write(String(getDefaultAutoSelectFamilyAttemptTimeout()));",
+  ], {
     env,
     encoding: "utf8",
   });

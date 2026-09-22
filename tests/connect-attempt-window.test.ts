@@ -31,7 +31,7 @@ test("the window is appended once, replaces an earlier value, and leaves other o
 
 test("install sets this process's default and the environment children inherit", () => {
   const before = getDefaultAutoSelectFamilyAttemptTimeout();
-  const env: NodeJS.ProcessEnv = { NODE_OPTIONS: "--trace-warnings" };
+  const env: { NODE_OPTIONS?: string } = { NODE_OPTIONS: "--trace-warnings" };
   try {
     installConnectAttemptWindow(2_500, env);
     assert.equal(getDefaultAutoSelectFamilyAttemptTimeout(), 2_500);

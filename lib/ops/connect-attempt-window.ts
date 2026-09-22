@@ -35,7 +35,7 @@ export function nodeOptionsWithConnectWindow(existing: string | undefined, ms: n
 /** Apply the window to this process and to every child spawned from its environment. */
 export function installConnectAttemptWindow(
   ms: number = CONNECT_ATTEMPT_WINDOW_MS,
-  env: NodeJS.ProcessEnv = process.env,
+  env: { NODE_OPTIONS?: string | undefined } = process.env,
 ): void {
   setDefaultAutoSelectFamilyAttemptTimeout(ms);
   env.NODE_OPTIONS = nodeOptionsWithConnectWindow(env.NODE_OPTIONS, ms);

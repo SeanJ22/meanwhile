@@ -67,7 +67,7 @@
  * this number is entitled to conclude. It is not a label and not a unit.
  */
 import type { CodeIdentity } from "./code-identity.ts";
-import type { CacheCallerHealth, MeteringCounts, MonthlySpendView } from "./cost-panel.ts";
+import type { CacheCallerHealth, MeteringCounts, MonthlySpendView, SpendByPlaceView } from "./cost-panel.ts";
 import type { ScoutCapacity } from "./research-metrics.ts";
 import type { FleetReceiptSnapshot } from "./fleet-receipt-snapshot.ts";
 import type { MapTilerUsageAttempt, MapTilerUsageSnapshot } from "./maptiler/types.ts";
@@ -1510,6 +1510,15 @@ export interface OwnerSnapshot {
    * attempt count beside it. Absent before the field existed.
    */
   readonly spendByDay?: readonly { readonly day: string; readonly usd: number; readonly attempts: number }[];
+
+  /**
+   * Spend rolled up by place — state, then the jurisdictions under it — over
+   * the whole ledger (MW-013, "what did we spend at Pima County?"). Absent on a
+   * snapshot published before the field existed, which the section renders as
+   * the specific missing wire rather than an empty place list that looks
+   * measured.
+   */
+  readonly spendByPlace?: SpendByPlaceView;
 
   /**
    * **Panel 8 — the map provider's bill** (MAPQ-5 and MAPQ-6, 2026-09-07).

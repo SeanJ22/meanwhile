@@ -1033,6 +1033,142 @@ export function buildMonthlySpend(input: {
   };
 }
 
+/* ================================================================== *
+ * SPEND BY PLACE — "WHAT DID WE SPEND AT PIMA COUNTY?" (MW-013)
+ *
+ * The section already answers by role and by model. It could not answer the
+ * owner's own question — what a given government or place cost — because the
+ * ledger keys spend to a source/jurisdiction id, not to a place the owner
+ * names. This rolls those ids up: state, then the jurisdictions under it, over
+ * the WHOLE ledger (the cumulative "what have we ever spent here"; the month
+ * has its own panel). Same honesty as every other total here: an unmeasured
+ * row is counted out, never as a zero, and a charge whose source names no
+ * place (a scout pre-warm, a bare api.anthropic.com call) lands in a named
+ * bucket rather than being dropped or hidden inside a state.
+ * ================================================================== */
+
+/** A charge's source/jurisdiction id parsed to a state and the jurisdiction under it, or null when it names no place. */
+function placeIdOf(entry: CostEntry): { readonly state: string; readonly place: string } | null {
+  const raw = entry.source ?? entry.jurisdiction;
+  if (raw === null) return null;
+  const parts = raw.split(":");
+  /* The civic id shape is `<st>:<yyyy>:<jurisdiction>:<office>:<subject>`; anything else is overhead, not a place. */
+  if (parts.length >= 3 && /^[a-z]{2}$/.test(parts[0]) && /^\d{4}$/.test(parts[1]) && parts[2].length > 0) {
+    return { state: parts[0], place: parts[2] };
+  }
+  return null;
+}
+
+/** The jurisdiction segment as words: `state-nh-county-merrimack` under NH reads "county merrimack". */
+function placeLabel(state: string, place: string): string {
+  const stripped = place.replace(new RegExp(`^state-${state}-`), "");
+  const words = stripped.replace(/-/g, " ").trim();
+  return words.length > 0 ? words : place;
+}
+
+/** The bucket for charges whose source names no place. Named, never folded into a state. */
+export const NOT_A_PLACE_KEY = "(not attributed to a place)";
+
+export interface SpendByPlaceRow {
+  /** The raw jurisdiction segment, e.g. `state-nh-county-merrimack`. */
+  readonly key: string;
+  readonly label: string;
+  /** Measured dollars, or null when no charge under this place reported one. Never 0-for-unknown. */
+  readonly usd: number | null;
+  readonly measuredRows: number;
+  readonly unmeasuredRows: number;
+  readonly attempts: number;
+}
+
+export interface SpendByStateRow {
+  /** A two-letter state code, or {@link NOT_A_PLACE_KEY}. */
+  readonly state: string;
+  readonly label: string;
+  readonly usd: number | null;
+  readonly measuredRows: number;
+  readonly unmeasuredRows: number;
+  readonly attempts: number;
+  /** The jurisdictions under this state, most-spent first. Empty for the overhead bucket. */
+  readonly places: readonly SpendByPlaceRow[];
+}
+
+export interface SpendByPlaceView {
+  /** The whole-ledger total, measured/unmeasured split kept. */
+  readonly total: MeasuredTotal;
+  /** States most-spent first, then the overhead bucket last. */
+  readonly states: readonly SpendByStateRow[];
+}
+
+/**
+ * Roll the whole cost ledger up by place: state, then jurisdiction. PURE.
+ *
+ * Whole-ledger on purpose — the by-role and by-model tables beside it are
+ * whole-ledger too, and "what have we spent at this county" is a cumulative
+ * question, not a this-month one. Every dollar is `round`ed to the cent and
+ * every bucket keeps its measured/unmeasured counts, so a place all of whose
+ * charges were deterministic shows $0.00 with its attempt count rather than
+ * vanishing.
+ */
+export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceView {
+  const total = sumMetric(entries, "usd");
+  const byState = new Map<string, Map<string, CostEntry[]>>();
+  const overhead: CostEntry[] = [];
+  for (const e of entries) {
+    const p = placeIdOf(e);
+    if (p === null) {
+      overhead.push(e);
+      continue;
+    }
+    const places = byState.get(p.state) ?? new Map<string, CostEntry[]>();
+    places.set(p.place, [...(places.get(p.place) ?? []), e]);
+    byState.set(p.state, places);
+  }
+
+  const stateRow = (
+    state: string,
+    label: string,
+    places: readonly SpendByPlaceRow[],
+    rows: readonly CostEntry[],
+  ): SpendByStateRow => {
+    const t = sumMetric(rows, "usd");
+    return {
+      state,
+      label,
+      usd: t.total === null ? null : round(t.total),
+      measuredRows: t.measured,
+      unmeasuredRows: t.unmeasured,
+      attempts: rows.length,
+      places,
+    };
+  };
+
+  const states: SpendByStateRow[] = [...byState.entries()]
+    .map(([state, places]) => {
+      const placeRows: SpendByPlaceRow[] = [...places.entries()]
+        .map(([place, rows]) => {
+          const pt = sumMetric(rows, "usd");
+          return {
+            key: place,
+            label: placeLabel(state, place),
+            usd: pt.total === null ? null : round(pt.total),
+            measuredRows: pt.measured,
+            unmeasuredRows: pt.unmeasured,
+            attempts: rows.length,
+          };
+        })
+        .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
+      const stateEntries = [...places.values()].flat();
+      return stateRow(state, state.toUpperCase(), placeRows, stateEntries);
+    })
+    .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.state.localeCompare(b.state));
+
+  if (overhead.length > 0) {
+    states.push(stateRow(NOT_A_PLACE_KEY, "Not attributed to a place (pre-warm, bare API calls, misc)", [], overhead));
+  }
+
+  return { total: { ...total, total: total.total === null ? null : round(total.total) }, states };
+}
+
 /**
  * A by-model key as the owner reads it (ADM-33). `modelName` handles the model
  * ids and the deterministic bucket; the join gap is named here because it is a

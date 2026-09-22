@@ -220,7 +220,8 @@ import {
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
+import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
+import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -447,8 +448,28 @@ const finishPhase = (name: string) => {
   console.log(`  phase ${phase.name}: ${phase.durationMs}ms; ${phase.repositoryCalls} repository calls`);
 };
 
+/*
+ * Both startup authority reads are idempotent, and one failed read must not
+ * cost the hour: on 2026-09-22 at 21:34:53Z a single STORE_READ_FAILED on the
+ * operational reference crashed the cycle 17 s in, and the store answered
+ * again minutes later. A failed read is re-read within the connect-retry
+ * bounds, never while the Neon circuit is latched; a persistent failure still
+ * reaches the named failure below unchanged.
+ */
+const startupReadRetry = {
+  circuitLatched: () => readNeonCircuit(ROOT, nowIso()) !== null,
+  onRetry: ({ attempt, delayMs, error }: { readonly attempt: number; readonly delayMs: number; readonly error: unknown }) =>
+    console.error(
+      `freshness:shadow · startup read retry ${attempt} in ${delayMs}ms: ${error instanceof Error ? error.message : String(error)}`,
+    ),
+};
+
 if (wantsPostgres) {
-  const methodAuthority = await readMethodCandidateAuthorityStatus(repos);
+  const methodAuthority = await retryStartupRead(
+    () => readMethodCandidateAuthorityStatus(repos),
+    (status) => (status.state === "STORE_UNREACHABLE" ? status.detail : null),
+    startupReadRetry,
+  );
   if (methodAuthority.state !== "ADOPTED") {
     throw new Error(
       `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
@@ -462,7 +483,11 @@ if (wantsPostgres) {
  * authority as Admin. A missing/unreachable pointer is a named failed cycle;
  * the retired tracked jurisdiction projections are never a silent fallback.
  */
-await preloadOperationalReferenceBundle({ bypassCache: true });
+await retryStartupRead(
+  () => preloadOperationalReferenceBundle({ bypassCache: true }),
+  () => null,
+  startupReadRetry,
+);
 await preloadCandidateEnrichmentAuthorities();
 
 /*

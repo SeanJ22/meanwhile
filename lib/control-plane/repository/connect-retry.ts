@@ -129,6 +129,12 @@ export interface ControlPlaneConnectRetryOptions {
     readonly delayMs: number;
     readonly error: unknown;
   }) => void;
+  /**
+   * Replaces isTransientControlPlaneConnectError for a caller whose read names
+   * its own failure (startup-read-retry.ts). The attempt bound and backoff are
+   * unchanged, and the caller owns refusing a latched circuit.
+   */
+  readonly isRetryable?: (error: unknown) => boolean;
 }
 
 const defaultSleep = (ms: number): Promise<void> =>
@@ -150,12 +156,13 @@ export async function withControlPlaneConnectRetry<T>(
   const cap = Math.max(base, options.maxBackoffMs ?? CONTROL_PLANE_CONNECT_MAX_BACKOFF_MS);
   const sleep = options.sleep ?? defaultSleep;
   const random = options.random ?? Math.random;
+  const isRetryable = options.isRetryable ?? isTransientControlPlaneConnectError;
 
   for (let attempt = 1; ; attempt += 1) {
     try {
       return await fn();
     } catch (error) {
-      if (attempt >= maxAttempts || !isTransientControlPlaneConnectError(error)) throw error;
+      if (attempt >= maxAttempts || !isRetryable(error)) throw error;
       const ceiling = Math.min(cap, base * 2 ** (attempt - 1));
       const delayMs = Math.round(random() * ceiling);
       options.onRetry?.({ attempt, delayMs, error });

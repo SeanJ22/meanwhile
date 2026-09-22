@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 688,
-    "named": 6867,
+    "files": 689,
+    "named": 6879,
     "dynamic": 28
   },
   "files": {
@@ -2673,6 +2673,7 @@
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
+        "a caller's own classifier replaces the transport classifier; the bound and backoff are unchanged",
         "a latched circuit is a HARD refusal and is never transient",
         "a latched circuit throws immediately with no retry",
         "a non-transient error throws immediately with no retry",
@@ -5751,6 +5752,7 @@
         "POSITIVE CONTROL — a Fable model is refused",
         "POSITIVE CONTROL — an unrated (unapproved) model is refused",
         "every routable class is within the ceiling (and importing the module already proved it)",
+        "legacy Opus 5 is now priced ABOVE the cheaper Opus 5.5 ceiling, so nothing may route to it",
         "the ceiling is Opus",
         "the ceiling model and the cheaper classes each pass; none is a Fable"
       ],
@@ -5758,6 +5760,8 @@
     },
     "tests/model-cost-metered.test.ts": {
       "names": [
+        "Opus 5.5: the known usage prices at the verified $4/$20 rates and is cheaper than legacy Opus 5",
+        "Opus 5.5: the non-standard 0.05× cache-read multiplier is wired end to end (charge + saving = uncached price)",
         "PC-10: a known usage with a 5m/1h split prices to known dollars at Claude Opus 5's multipliers",
         "PC-10: an unmeasured base count or an unpriced model is null, never zero",
         "PC-10: the aggregate cache_creation_input_tokens contributes NOTHING on top of its split",
@@ -8996,6 +9000,19 @@
         "ignoreTopLevel drops a run-accounting block only at the top",
         "key order is not a fact; array order is",
         "writeStampStable leaves unchanged facts byte-identical and records the observation; changed facts write"
+      ],
+      "dynamic": 0
+    },
+    "tests/startup-read-retry.test.ts": {
+      "names": [
+        "a deterministic refusal fails on the first read",
+        "a persistent failed read throws the last error unchanged",
+        "a persistent unreachable status is returned unchanged after the bounded attempts",
+        "an unreachable status is re-read and the recovered status returned",
+        "freshness-shadow routes both startup authority reads through retryStartupRead",
+        "nothing is retried while the Neon circuit is latched",
+        "only a failed read is retryable; deterministic store refusals are not",
+        "the 21:34:53Z crash, reproduced: one failed store read, then the bundle loads"
       ],
       "dynamic": 0
     },

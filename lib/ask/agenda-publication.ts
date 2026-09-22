@@ -75,6 +75,7 @@
  * supplies `now`), no disk, no network.
  */
 
+import { agendaContentGroups } from "../meetings/agenda-content.ts";
 import { agendaItems, type AgendaDocumentLike } from "../routing/agenda-search.ts";
 import type { EvidenceGap } from "./evidence.ts";
 
@@ -561,12 +562,6 @@ function retrievedAtOrder(left: AgendaDocumentLike & { readonly id?: string }, r
   return (left.id ?? left.documentUrl).localeCompare(right.id ?? right.documentUrl);
 }
 
-/** Readable text compared as text: whitespace runs are layout, never content. */
-function contentText(document: AgendaDocumentLike): string | null {
-  const text = document.text?.replace(/\s+/g, " ").trim();
-  return text ? text : null;
-}
-
 export interface ReaderAgendaDocumentProjection<T> {
   /**
    * Exactly the documents a reader is shown for this sitting, newest first:
@@ -594,9 +589,11 @@ export interface ReaderAgendaDocumentProjection<T> {
  * sitting was attached to before its own page was acquired. A fetch count is a
  * fact about our schedule; a version is a fact about the government's document.
  *
- * - **A version is a distinct content.** Rows whose extracted text is identical
- *   (whitespace aside), or whose bytes hash identically, are one version however
- *   many times or on whatever days they were read. The newest row speaks for it.
+ * - **A version is a distinct content** (`sameAgendaContent`, the one rule the
+ *   ingest store and the promotion change set also use). Rows whose extracted
+ *   text is identical (whitespace aside), or whose bytes hash identically, are
+ *   one version however many times or on whatever days they were read. The
+ *   newest row speaks for it.
  * - **A publication index is not a version of the sitting's agenda.** Once any
  *   held row is the sitting's own document, index rows (a shared landing page,
  *   a portal shell, a page held for another government's meeting) are set aside
@@ -617,43 +614,8 @@ export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly 
   const sittingRows = newestFirst.filter((document) => !read(document).publicationIndex);
   const sittingSpecific = sittingRows.length > 0;
   const candidates = sittingSpecific ? sittingRows : newestFirst;
-
-  // Same content is transitive across either identity: a row sharing text with
-  // one version and bytes with another joins them into one version.
-  const parent = candidates.map((_, index) => index);
-  const find = (index: number): number => {
-    let root = index;
-    while (parent[root] !== root) root = parent[root]!;
-    while (parent[index] !== root) {
-      const next = parent[index]!;
-      parent[index] = root;
-      index = next;
-    }
-    return root;
-  };
-  const union = (left: number, right: number) => {
-    const a = find(left);
-    const b = find(right);
-    // The newest row (lowest index) always remains the representative.
-    if (a !== b) parent[Math.max(a, b)] = Math.min(a, b);
-  };
-  const byHash = new Map<string, number>();
-  const byText = new Map<string, number>();
-  candidates.forEach((document, index) => {
-    const hash = typeof document.contentHash === "string" && document.contentHash ? document.contentHash : null;
-    if (hash !== null) {
-      const seen = byHash.get(hash);
-      if (seen === undefined) byHash.set(hash, index);
-      else union(seen, index);
-    }
-    const text = contentText(document);
-    if (text !== null) {
-      const seen = byText.get(text);
-      if (seen === undefined) byText.set(text, index);
-      else union(seen, index);
-    }
-  });
-  const documents = candidates.filter((_, index) => find(index) === index);
+  // Newest first in, so the newest row of each distinct content speaks for it.
+  const documents = agendaContentGroups(candidates).map((group) => group[0]!);
   return {
     documents,
     sittingSpecific,

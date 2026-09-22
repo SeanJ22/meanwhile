@@ -236,8 +236,10 @@ test("PDC-8 meetings: changed rows promote with exact added/changed/removed/held
   const promoted = await processRoutineCandidate(store, next, SECOND);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(changes(promoted).outcome, "CHANGED");
+  // A sitting's held agenda is one record keyed by the sitting (2026-09-22):
+  // new sitting c brings its agenda record `agenda-document:calendar:c`.
   assert.deepEqual(changeKeys(changes(promoted)), {
-    added: ["meeting:calendar:c", "agenda-document:agenda:c"],
+    added: ["meeting:calendar:c", "agenda-document:calendar:c"],
     changed: ["meeting:calendar:a"],
     removed: ["meeting:calendar:b"],
     held: [],

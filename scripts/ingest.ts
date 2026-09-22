@@ -39,6 +39,7 @@ import {
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
 import { failedAcquisitionCandidate, meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import {
   processRegisteredMeetingPartitionCandidate,
   type PromotionOutcome,
@@ -580,10 +581,11 @@ export function reconcileSuccessfulMeetingPartition(input: {
         upperBound,
         priorStartsAt: prior.startsAt,
       });
-      for (const document of input.previous?.agendaDocuments ?? []) {
-        if (document.meetingId !== prior.id) continue;
+      // A sitting's held agenda is ONE civic record however many stored
+      // versions it has (`agendaDocumentRecordKey`), so it is named once.
+      if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
         removalEvidence.push({
-          key: `agenda-document:${document.id}`,
+          key: agendaDocumentRecordKey({ meetingId: prior.id }),
           code: "OUTSIDE_REGISTERED_SERVING_WINDOW",
           windowContract: window.contract,
           lowerBound,

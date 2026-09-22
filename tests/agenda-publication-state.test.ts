@@ -559,8 +559,14 @@ test("an amended agenda is CURRENT plus SUPERSEDED, never one flat document", ()
    * reading names which version it was taken over and keeps the earlier ones
    * addressable rather than dropping them.
    */
+  // An amendment is a change of CONTENT (2026-09-22): the same words at a
+  // second address, or re-read on a later day, are one version, not two.
   const first = doc({ documentUrl: "https://example.gov/a-v1.pdf", retrievedAt: "2026-08-20T12:00:00.000Z" });
-  const amended = doc({ documentUrl: "https://example.gov/a-v2.pdf", retrievedAt: "2026-08-27T12:00:00.000Z" });
+  const amended = doc({
+    documentUrl: "https://example.gov/a-v2.pdf",
+    retrievedAt: "2026-08-27T12:00:00.000Z",
+    text: "1. Call to order\n2. Approval of minutes\n3. Rezoning of parcel 44\n4. Road salt contract\n5. Adjournment",
+  });
   const reading = classifyAgendaPublication({
     bodyName: "Town Board",
     meetingId: "m1",

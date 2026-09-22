@@ -33,7 +33,8 @@ test("PDC · the observer has no Git feedback hop", () => {
 test("PDC · Build Check has no runtime-path cost exception", () => {
   const build = readFileSync(join(ROOT, ".github", "workflows", "build-check.yml"), "utf8");
   assert.doesNotMatch(build, /ci-cost|OPS_ONLY|no-cheap|classifyCommitCost/);
-  assert.equal(readFileSync(join(ROOT, "scripts", "deploy-classify.mjs"), "utf8").includes("classifyDeploy"), true);
+  assert.match(readFileSync(join(ROOT, "scripts", "deploy-classify.mjs"), "utf8"), /observationScope/);
+  assert.match(readFileSync(join(ROOT, "scripts", "deploy-observation-scope.mjs"), "utf8"), /classifyDeploy/);
   assert.equal(classifyDeploy(["app/page.tsx"]).verdict, "build");
 });
 

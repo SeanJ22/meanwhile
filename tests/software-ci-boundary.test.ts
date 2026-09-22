@@ -57,11 +57,14 @@ test("push/main/manual triggers remain and no workflow hides behind a path filte
   }
 });
 
-test("post-deploy classifies only deploy possibility, before installing", () => {
+test("post-deploy classifies complete software observation after installing its canonical reader", () => {
   const source = readFileSync(POST_DEPLOY_PATH, "utf8");
   const classifyAt = source.indexOf("node scripts/deploy-classify.mjs");
   const installAt = source.indexOf("corepack pnpm install --frozen-lockfile");
-  assert.ok(classifyAt > 0 && installAt > classifyAt);
+  assert.ok(installAt > 0 && classifyAt > installAt);
+  assert.match(source, /WTP_CONTROL_PLANE_DATABASE_URL_READONLY/);
+  assert.match(source, /fetch-depth: 0/);
+  assert.match(source, /filter: blob:none/);
   assert.doesNotMatch(source, /scripts\/ci-cost|classifyCommitCost|OPS_ONLY/);
   assert.match(source, /steps\.deploy\.outputs\.deploy != 'cancel'/);
   assert.match(source, /contents:\s*read/);

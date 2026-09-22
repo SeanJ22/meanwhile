@@ -101,58 +101,43 @@ jobs:
           # later release's contracts while attributing the outcome to this
           # trigger, exactly the cross-subsystem evidence mix PDC forbids.
           ref: ${{ inputs.sha || github.sha }}
-          # `scripts/post-deploy-observer.mts` asks `classifyDeploy` whether the
-          # exact requested commit could change what production serves, which needs the
-          # commit's own changed-path list — and `git show --name-only` needs a
-          # parent. Depth 2 is the smallest checkout that has one. If it still
-          # cannot be read the observer treats the commit as a release and
-          # observes anyway, because a skip we cannot justify is an unobserved
-          # deploy.
-          fetch-depth: 2
+          # Documentary merges can accumulate since the last deployed commit.
+          # Full history makes that complete ancestor range provable instead
+          # of repeatedly paying the ten-minute poll for a missing parent.
+          # Blobless history avoids downloading old file contents; --no-renames
+          # path proofs need commit/tree objects, plus the checked-out files.
+          # Missing/unknown ancestry still cannot authorize a skip.
+          fetch-depth: 0
+          filter: blob:none
 
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
 
-      # ══ CLASSIFY FIRST, SPEND SECOND (RULING 278) ══
-      #
-      # `scripts/post-deploy-observer.mts` has always asked `classifyDeploy`
-      # whether the pushed commit could change what production serves, and has
-      # always exited NOT_A_RELEASE when it could not. It asked AFTER the install
-      # — so the observer's own bookkeeping commit still cost a checkout, a
-      # corepack bootstrap and a full `pnpm install` before it could say the one
-      # thing it already knew.
-      #
-      # The same canonical answer, from the same table, now arrives before any
-      # of that: `scripts/deploy-classify.mjs` prints `deploy=` from
-      # `classifyDeploy`. This is only the DEPLOY question, because the observer
-      # must skip exactly the commits Netlify was told to cancel and no others.
-      # Build Check has no path-cost classifier. `cannot-tell` observes, so an
-      # unreadable commit still fails closed.
-      - name: Could this commit have deployed at all?
-        id: deploy
-        run: node scripts/deploy-classify.mjs --sha=${{ inputs.sha || github.sha }}
-
-      # A main push whose paths are non-shipping cannot have caused a Netlify
-      # deploy, so no post-deploy observation is owed. This classification is
-      # about the incoming SOFTWARE commit; the observer itself creates none.
-      - name: Non-shipping commit — no deployment can result
-        if: steps.deploy.outputs.deploy == 'cancel'
-        run: |
-          echo "NOT_A_RELEASE — the canonical deploy predicate returned cancel."
-          echo "Every changed path is non-shipping, so Netlify cancels this build and production"
-          echo "cannot move. No deploy is owed for this commit, so no post-deploy reading is owed"
-          echo "either: nothing is recorded and the previous reading stands unchanged."
-          echo "No install was run and no production poll or durable outcome was started."
-
+      # A documentary merge can include earlier software not yet observed.
+      # Prove the complete served-to-candidate range and its canonical receipt
+      # before cancelling observation. This read-only proof needs dependencies;
+      # a small install replaces the measured 580-second unnecessary poll.
       - name: Enable corepack (pnpm pinned by packageManager)
-        if: steps.deploy.outputs.deploy != 'cancel'
         run: corepack enable
 
       - name: Install
-        if: steps.deploy.outputs.deploy != 'cancel'
         run: corepack pnpm install --frozen-lockfile
+
+      - name: Is another production observation owed?
+        id: deploy
+        env:
+          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
+          WTP_RUN_ID: post-deploy-scope-${{ github.run_id }}
+        run: node scripts/deploy-classify.mjs --sha=${{ inputs.sha || github.sha }}
+
+      - name: Non-shipping range — existing production observation is current
+        if: steps.deploy.outputs.deploy == 'cancel'
+        run: |
+          echo "NOT_A_RELEASE — the first-parent and complete served-to-candidate differences"
+          echo "are non-shipping, and a fresh canonical HELD receipt covers the served commit."
+          echo "No deploy poll or durable write is owed. No new receipt was fabricated."
 
       # THE OBSERVATION AND THE READING, IN ONE STEP.
       #
@@ -183,6 +168,7 @@ jobs:
         timeout-minutes: 15
         env:
           WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
+          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
           WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL: ${{ secrets.WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL }}
           WTP_RUN_ID: post-deploy-observer-${{ github.run_id }}
         run: |
@@ -222,11 +208,8 @@ jobs:
       # credential that stopped resolving — and those are exactly the failures
       # nobody should have to reconstruct from a bare exit code the next morning.
       #
-      # `steps.observe.outcome != 'skipped'` (RULING 278): on the cheap path
-      # there is no install, so `pnpm diagnose` could not run — and a diagnoser
-      # that turns a red run into a differently-red run hides the cause it
-      # exists to name. It diagnoses the observation, so it runs only when the
-      # observation was attempted.
+      # `steps.observe.outcome != 'skipped'` (RULING 278): it diagnoses the
+      # observation, so it runs only when the observation was attempted.
       - name: Name the cause
         if: failure() && steps.observe.outcome != 'skipped'
         env:

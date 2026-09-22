@@ -113,6 +113,7 @@ import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
 // freshness rule turns on.
 import { sameCommit } from "../lib/ops/production-integrity.ts";
 import { git } from "./production-integrity.mts";
+import { isDocumentaryAdvance, observationScope } from "./deploy-observation-scope.mjs";
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
@@ -245,6 +246,8 @@ export async function pollUntilServed(input: {
   attempts?: number;
   intervalSeconds?: number;
   maxTotalWaitSeconds?: number;
+  /** Production-only, bounded by the previously proved documentary range. */
+  documentaryRange?: { root: string; originallyServedSha: string; candidateSha: string };
 }): Promise<PollResult> {
   /* The bound is a CEILING. A caller asking for more gets the ceiling. */
   const maxAttempts = Math.max(1, Math.min(input.attempts ?? POLL_BOUND.maxAttempts, POLL_BOUND.maxAttempts));
@@ -261,13 +264,18 @@ export async function pollUntilServed(input: {
   for (let i = 0; i < maxAttempts; i += 1) {
     attempts += 1;
     last = await input.probe(attempts);
-    if (sameCommit(last.sha, input.expectedSha)) {
+    const exact = sameCommit(last.sha, input.expectedSha);
+    const range = input.documentaryRange;
+    const documentaryAdvance = !exact && last.sha !== null && range !== undefined &&
+      isDocumentaryAdvance(range.root, range.originallyServedSha, range.candidateSha, last.sha);
+    if (exact || documentaryAdvance) {
       return {
         outcome: "SERVING_EXPECTED",
         servedSha: last.sha,
         attempts,
         waitedSeconds: waited,
-        detail: `production serves ${last.sha} on attempt ${attempts} (${last.how})`,
+        detail: `production serves ${last.sha} on attempt ${attempts} (${last.how})` +
+          (documentaryAdvance ? "; fresh Git proof places the served commit inside the scoped non-shipping range" : ""),
       };
     }
     if (i === maxAttempts - 1 || waited + interval > maxWait) break;
@@ -363,8 +371,17 @@ async function main(): Promise<void> {
     return;
   }
 
-  const scope = isRelease(expected);
-  if (!scope.release) {
+  const scope = await observationScope(ROOT, expected, {
+    observe: () => fetchServedCommit(baseUrl),
+    // Load the production-only reader when a documentary range needs it.
+    // Staging imports the synchronous observer helpers without this adapter.
+    readAuthority: async () => (await import("./production-integrity-authority.mts")).readIntegrityAuthority(),
+    // A manual observer invocation is an explicit request for a new reading.
+    // Workflow dispatch keeps that behavior even for documentary commits.
+    force: process.env.GITHUB_EVENT_NAME !== "push",
+  });
+  console.log(`  observation scope: ${scope.reason}`);
+  if (scope.action === "skip") {
     console.log(`NOT_A_RELEASE — ${scope.reason}`);
     console.log("No deploy is owed for this commit, so no post-deploy reading is owed either.");
     console.log("Nothing was recorded, and the previous reading stands unchanged.");
@@ -373,7 +390,10 @@ async function main(): Promise<void> {
   }
 
   const result = await pollUntilServed({
-    expectedSha: expected,
+    expectedSha: scope.sha,
+    ...(scope.action === "observe-served" ? {
+      documentaryRange: { root: ROOT, originallyServedSha: scope.sha, candidateSha: expected },
+    } : {}),
     attempts,
     probe: async (attempt) => {
       const seen = await fetchServedCommit(baseUrl, { runId: process.env.WTP_RUN_ID ?? "post-deploy-observer" });
@@ -408,9 +428,10 @@ async function main(): Promise<void> {
 
   /*
    * The reading is taken against the SERVED sha rather than against `--expect`.
-   * They match here by construction, and taking it against the observed value
-   * keeps the record a statement about what was measured rather than about what
-   * was asked for.
+   * It matches the scoped observation target by construction. A documentary
+   * candidate can scope to the already-served software when the complete Git
+   * range proves identical software/schema inputs. The receipt still names
+   * what was measured, never a documentary commit that was not deployed.
    */
   const sha = result.servedSha as string;
   console.log("");

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 681,
-    "named": 6817,
+    "files": 686,
+    "named": 6854,
     "dynamic": 27
   },
   "files": {
@@ -2204,6 +2204,7 @@
         "independent structural checks all report before the browser and full suite are bought",
         "one admission decides the tier and all consuming jobs depend on it",
         "one admission runs the bare preflight before dependency installation",
+        "production observation classification runs only after its frozen dependency install",
         "the certified suite executes owner-facing TSX projection contracts",
         "the closure walk actually follows a dynamic import",
         "the duplicate check reuses the one census and agrees with the suite's baseline",
@@ -2228,10 +2229,26 @@
       "names": [
         "a hosted SHA different from the checked-out commit cannot certify a shard",
         "a terminated test process cannot become a successful shard",
+        "actual reporter and hint code changes invalidate the recorded configuration hash",
         "an affected TSX assertion is selected, executed and propagates failure with durable diagnostics",
         "canonical TS and TSX discovery is covered exactly once with balanced deterministic partitions",
         "canonical command drift and an empty shard are refused",
+        "file processes stay serial within a checkout so root-mutating fixtures cannot race readers",
+        "lexical dispatch modeling rejects an LPT regression and bounded swaps cannot worsen round-robin",
+        "measured longest-first hints balance file counts without omitting new or unmeasured files",
+        "missing and invalid hints fall back to deterministic complete count balancing",
         "missing, invalid and out-of-range shard configuration fails closed"
+      ],
+      "dynamic": 0
+    },
+    "tests/ci-test-timing-reporter.test.ts": {
+      "names": [
+        "canonical TS/TSX loader retains spec failures and reports incomplete bootstrap, import and termination timings",
+        "same",
+        "same",
+        "same",
+        "timing gaps, duplicate files and malformed records remain explicit and unusable",
+        "timings use normalized file identity, not duplicate or nested display names"
       ],
       "dynamic": 0
     },
@@ -2882,6 +2899,16 @@
       ],
       "dynamic": 0
     },
+    "tests/cost-by-place.test.ts": {
+      "names": [
+        "a charge whose source names no place lands in a named overhead bucket, last",
+        "a place with only unmeasured charges shows null spend, not 0.00",
+        "an empty ledger is empty, with a null total",
+        "an unmeasured charge is counted out of the total, never as zero",
+        "rolls up by state then jurisdiction, states most-spent first"
+      ],
+      "dynamic": 0
+    },
     "tests/cost-section-adm-c14.test.ts": {
       "names": [
         "ADM-26: the three windows render as the brief's own rows, to the cent, and an unmeasured window is never $0.00",
@@ -3179,6 +3206,23 @@
         "RULING 159: a measured population reports both numbers",
         "RULING 159: a zero denominator with no stated reason THROWS",
         "RULING 159: an empty population WITH a reason is COULD_NOT_ASSERT, never a pass"
+      ],
+      "dynamic": 0
+    },
+    "tests/deploy-observation-scope.test.ts": {
+      "names": [
+        "a canonical receipt must match its complete envelope and exact embedded record",
+        "a documentary merge skips only when the complete range and fresh canonical receipt agree",
+        "a documentary tip cannot suppress earlier software not yet deployed",
+        "blobless full history proves paths and ancestry without hydrating old file contents",
+        "deployment paths enumerate ordinary, root and documentary merge commits",
+        "fresh receipt proof rejects future timestamps, incomplete success and wrong subjects",
+        "manual revalidation cannot reuse even a fresh receipt",
+        "owed receipts reread the served software instead of waiting for an omitted documentary deploy",
+        "production advances only inside a freshly proven equivalent documentary range",
+        "shipping merges, deletions and renames retain every potentially shipping path",
+        "unknown commits, missing parents and unproved ancestry never become empty proof",
+        "unreadable production or Git evidence remains observation rather than a skip"
       ],
       "dynamic": 0
     },
@@ -5677,6 +5721,16 @@
         "PC-8: results are JSON Lines keyed by custom_id in any order; an errored, canceled or expired request throws by name",
         "PC-8: the comparison seam routes through the batch only under the option, and reports the route on its outcome",
         "PC-8: the submission is one POST to /v1/messages/batches carrying {requests: [{custom_id, params}]} with the Messages headers"
+      ],
+      "dynamic": 0
+    },
+    "tests/model-ceiling.test.ts": {
+      "names": [
+        "POSITIVE CONTROL — a Fable model is refused",
+        "POSITIVE CONTROL — an unrated (unapproved) model is refused",
+        "every routable class is within the ceiling (and importing the module already proved it)",
+        "the ceiling is Opus",
+        "the ceiling model and the cheaper classes each pass; none is a Fable"
       ],
       "dynamic": 0
     },
@@ -8705,7 +8759,7 @@
     "tests/software-ci-boundary.test.ts": {
       "names": [
         "Build Check has no transitional path-cost or OPS_ONLY tier",
-        "post-deploy classifies only deploy possibility, before installing",
+        "post-deploy classifies complete software observation after installing its canonical reader",
         "push/main/manual triggers remain and no workflow hides behind a path filter",
         "the repository inventory does not project current operational health from retired Git state",
         "the single admission defaults non-draft, non-reused work to full certification",
@@ -9237,6 +9291,14 @@
         "every serving source tenant binds to exactly one registry body",
         "no adapter carries a body id outside the serving-tenant denominator",
         "the printed table lists every tenant, bound or faulted"
+      ],
+      "dynamic": 0
+    },
+    "tests/test-alias-loader.test.ts": {
+      "names": [
+        "actual transitive JSX",
+        "canonical isolated loader preserves transitive JSX, aliases, bare resolution, CSS/JSON and real failures",
+        "ordinary modules delegate without loading the TSX compiler and preserve loader errors"
       ],
       "dynamic": 0
     },

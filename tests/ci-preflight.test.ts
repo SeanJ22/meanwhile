@@ -226,10 +226,9 @@ test("the preflight firewall supplies both production contract registries instea
  * ## Two things this guard could not see, and both cost a real run
  *
  * **It walked only STATIC imports.** `scripts/certified-tree.mjs` reaches its
- * `.ts` modules through `await import(…)`, exactly as `scripts/deploy-classify.mjs`
- * does, so its whole closure was invisible here.
+ * `.ts` modules through `await import(…)`, so its whole closure was invisible here.
  *
- * **It watched one script.** Four now run before the install.
+ * **It watched one script.** All actual preinstall entries need this proof.
  *
  * Run 34160631768, 2026-09-07 — the first main-side run of the tree-equivalence
  * check — printed `the predicate would not load (Cannot find package 'yaml'
@@ -247,10 +246,6 @@ const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
     why: "RULING 279's cheap tier — it answers from the tree before anything is bought",
   },
   {
-    script: "scripts/deploy-classify.mjs",
-    why: "RULING 278's classifier — it decides how much the rest of the job may spend",
-  },
-  {
     script: "scripts/pr-ci-tier.mjs",
     why: "the draft/full event classifier — it must answer before a draft installs anything",
   },
@@ -259,6 +254,15 @@ const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
     why: "RULING 281's tree-equivalence adapter — it decides whether the expensive tier runs at all",
   },
 ];
+
+test("production observation classification runs only after its frozen dependency install", () => {
+  const raw = readFileSync(join(ROOT, ".github/workflows/post-deploy-integrity.yml"), "utf8");
+  const steps = (parse(raw) as { jobs: { observe: { steps: { run?: string; if?: string }[] } } }).jobs.observe.steps;
+  const classifier = steps.findIndex((step) => step.run?.includes("scripts/deploy-classify.mjs"));
+  const install = steps.findIndex((step) => step.run?.includes("corepack pnpm install --frozen-lockfile"));
+  assert.ok(install >= 0 && classifier > install, "the canonical reader needs installed dependencies");
+  assert.equal(steps[install].if, undefined, "installation cannot be skipped before classification");
+});
 
 for (const { script, why } of BEFORE_INSTALL) {
   test(`nothing ${script} imports needs node_modules`, () => {

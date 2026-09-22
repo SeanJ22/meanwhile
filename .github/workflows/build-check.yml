@@ -1,38 +1,19 @@
-# Execution, retry safety and measured costs: docs/ci-efficiency.md.
-name: Build check
+# REHEARSAL ONLY. Never merge this workflow.
+name: CI expired-receipt rehearsal (never merge)
 on:
   push:
     branches:
-      - main
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
-  workflow_dispatch:
-    inputs:
-      schema_smoke:
-        description: Force the schema gate to READ production on this unchanged commit (one SELECT, read-only, nothing applied).
-        type: boolean
-        default: false
-      schema_moment:
-        description: Which side of the deploy to ask from.
-        type: choice
-        options:
-          - pre-deploy
-          - post-deploy
-        default: pre-deploy
+      - codex/ci-expiry-proof
 permissions:
   contents: read
   checks: read
   pull-requests: read
 concurrency:
-  group: build-check-${{ github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
+  group: ci-expiry-proof-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   admission:
-    name: admission (preflight and integrity)
+    name: rehearsal / admission (preflight and integrity)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -81,6 +62,9 @@ jobs:
           else
             echo "expensive=yes" >> "$GITHUB_OUTPUT"
           fi
+      - name: Synthetic expired receipt refuses admission (intentional failure)
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        run: node --experimental-strip-types scripts/ci-expiry-rehearsal.mjs
       - name: Enable corepack (pnpm pinned by packageManager)
         if: steps.tier.outputs.expensive == 'yes'
         run: corepack enable
@@ -110,7 +94,7 @@ jobs:
           CI_TIER: ${{ steps.tier.outputs.expensive }}
         run: node scripts/ci-selection-summary.mjs
   verify:
-    name: verify (${{ matrix.group }})
+    name: rehearsal / verify (${{ matrix.group }})
     needs:
       - admission
     if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
@@ -186,7 +170,7 @@ jobs:
         mode:
           - standalone
           - default
-    name: build (${{ matrix.mode }})
+    name: rehearsal / build (${{ matrix.mode }})
     steps:
       - uses: actions/checkout@v7
         with:
@@ -264,7 +248,7 @@ jobs:
       - admission
     if: always()
   test:
-    name: test (${{ matrix.shard }}/4)
+    name: rehearsal / test (${{ matrix.shard }}/4)
     needs:
       - admission
       - verify
@@ -353,7 +337,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
   gates:
-    name: gates (test · lint · tsc)
+    name: rehearsal / gates (test · lint · tsc)
     needs:
       - admission
       - verify

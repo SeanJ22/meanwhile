@@ -6,7 +6,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { AgendaDocuments } from "../../components/map/popup/agenda-section.tsx";
 import { readSnapshot } from "../../lib/meetings/snapshot.ts";
-import { agendaDocumentRepresentation, classifyAgendaPublication } from "../../lib/ask/agenda-publication.ts";
+import { agendaDocumentRepresentation, classifyAgendaPublication, readerAgendaDocuments, type ReaderAgendaDocumentProjection } from "../../lib/ask/agenda-publication.ts";
+import type { AgendaDocument } from "../../lib/meetings/agenda-documents.ts";
 import { agendaTopicEvidence } from "../../lib/ask/agenda-topic.ts";
 import { AGENDA_TOPICS, agendaItems } from "../../lib/routing/agenda-search.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
@@ -26,18 +27,38 @@ export async function agendaRepresentationProof() {
   const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-agenda-representation" };
   const representations = [];
   for (const meetingId of new Set(documents.map(row => row.meetingId))) {
-    const expected = documents.filter(row => row.meetingId === meetingId).sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt));
+    const held = documents.filter(row => row.meetingId === meetingId).sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt));
+    // What the reader is shown: one document per distinct content, and no
+    // publication-index page once the sitting's own document is held.
+    const shown: ReaderAgendaDocumentProjection<AgendaDocument> = readerAgendaDocuments(held, { documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings });
+    const expected: readonly AgendaDocument[] = shown.documents;
     const latest = expected[0];
     const response = await GET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(meetingId)}`));
     const raw = await response.text();
     const payload = JSON.parse(raw);
     const markup = renderToStaticMarkup(createElement(AgendaDocuments, { documents: payload.documents, meetingId, agendaUrl: latest.documentUrl, agendaSentence: "", publication: payload.publication }));
-    const reading = classifyAgendaPublication({ meetingId, bodyName: latest.sourceOrg, documentsForMeeting: expected, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, now: Date.now() });
+    const reading = classifyAgendaPublication({ meetingId, bodyName: latest.sourceOrg, documentsForMeeting: held, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, now: Date.now() });
     const isPortal = reading.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
     const unreadable = reading.acquisition === "ACQUIRED_NOT_READABLE";
     assert.equal(response.status, 200);
     assert.equal(payload.publication.acquisition, reading.acquisition);
+    assert.equal(payload.publication.revised, reading.revised);
     assert.equal(payload.documentCount, expected.length);
+    assert.equal(payload.documentCount, payload.documents.length);
+    assert.equal(shown.heldRows, expected.length + shown.identicalContentRows + shown.publicationIndexRowsSetAside, meetingId);
+    assert.deepEqual(payload.documentAccounting, {
+      heldRows: held.length,
+      shown: expected.length,
+      identicalContentRows: shown.identicalContentRows,
+      publicationIndexRowsSetAside: shown.publicationIndexRowsSetAside,
+      sittingSpecific: shown.sittingSpecific,
+    }, meetingId);
+    // Every document the route returns is reachable from what the reader sees.
+    for (const document of payload.documents as { documentUrl: string }[]) {
+      assert.ok(markup.includes(`href="${document.documentUrl.replaceAll("&", "&amp;")}"`), `${meetingId}: ${document.documentUrl} is returned but not linked`);
+    }
+    // The revision claim needs two or more distinct contents of the sitting's own document.
+    assert.equal(markup.includes("a revised agenda is itself news"), reading.revised && !isPortal, meetingId);
     const listingIdentity: MeetingListingIdentityReadback = meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback;
     assert.deepEqual(payload.listingIdentity, listingIdentity);
     assert.deepEqual(payload.documents.map((row: { contentHash: string; text: string | null }) => [row.contentHash, row.text]), expected.map(row => [row.contentHash, row.text]));
@@ -61,7 +82,8 @@ export async function agendaRepresentationProof() {
       assert.ok(markup.includes("not been verified as this body"));
       assert.ok(!markup.includes(`From ${latest.sourceOrg}`));
     }
-    representations.push({ meetingId, nativeIds: expected.map(row => row.id), documents: expected,
+    representations.push({ meetingId, heldNativeIds: held.map(row => row.id), nativeIds: expected.map(row => row.id), documents: expected,
+      accounting: payload.documentAccounting,
       representation: agendaDocumentRepresentation(latest), acquisition: reading.acquisition,
       publication: payload.publication, listingIdentity, markupSha256: hash(markup), actualMarkup: markup,
       payloadSha256: hash(raw), returnedIds: payload.documents.map((row: { id: string }) => row.id),
@@ -114,7 +136,8 @@ export async function agendaRepresentationProof() {
   const heldReference = reference.records.filter(row => documents.some(document => document.meetingId === row.meetingId));
   assert.ok(heldReference.length > 60, "The independent item-ready source reference must remain substantive");
   for (const row of heldReference) {
-    const latest = documents.filter(document => document.meetingId === row.meetingId).sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
+    // The document the reader is shown first for that sitting.
+    const latest: AgendaDocument = readerAgendaDocuments(documents.filter(document => document.meetingId === row.meetingId), { documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings }).documents[0]!;
     assert.equal(latest.id, row.documentId, `${row.meetingId}: changed native document needs source review`);
     assert.equal(latest.contentHash, row.contentHash, `${row.meetingId}: changed content needs source review`);
   }
@@ -124,10 +147,12 @@ export async function agendaRepresentationProof() {
     assert.equal(row.legacyPayload.items.length, count, meetingId);
     assert.ok(row.actualMarkup.includes(row.legacyPayload.items.at(-1)!.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;")), `${meetingId}: final item must render`);
   }
-  const paths = ["data/meetings-snapshot.json", "lib/ask/agenda-publication.ts", "lib/ask/agenda-topic.ts", "lib/ask/meeting-knowledge.ts", "lib/meetings/listing-identity.ts", "lib/routing/agenda-search.ts", "app/api/ask/grounded/route.ts", "app/api/ask/agenda/route.ts", "app/api/agenda/route.ts", "components/map/popup/agenda-section.tsx", "scripts/lib/reader-agenda-representation-proof.ts", referencePath];
+  const paths = ["data/meetings-snapshot.json", "lib/ask/agenda-publication.ts", "lib/meetings/agenda-content.ts", "lib/ask/held-agenda.ts", "lib/ask/agenda-topic.ts", "lib/ask/meeting-knowledge.ts", "lib/meetings/listing-identity.ts", "lib/routing/agenda-search.ts", "app/api/ask/grounded/route.ts", "app/api/ask/agenda/route.ts", "app/api/agenda/route.ts", "components/map/popup/agenda-section.tsx", "scripts/lib/reader-agenda-representation-proof.ts", referencePath];
   return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER_AND_REAL_COMPONENT_SSR", modelDisabled: true,
     sourceHashes: paths.map(path => ({ path, sha256: hash(readFileSync(path)) })),
-    documentDenominator: documents.length, representations, topics,
+    documentDenominator: documents.length,
+    readerVisibleDocuments: representations.reduce((n, row) => n + row.nativeIds.length, 0),
+    representations, topics,
     itemReadyReference: { sourceHead: reference.sourceHead, sourceArtifactSha256: reference.sourceArtifactSha256, held: heldReference, retired: reference.records.filter(row => !heldReference.includes(row)) },
     negativeControls: { numberedPortalNavigationWithheld: true, portalTopicNavigationWithheld: true, realHtmlAgendaPreserved: true, threeUnnumberedHeldAgendasPreserved: true } };
 }

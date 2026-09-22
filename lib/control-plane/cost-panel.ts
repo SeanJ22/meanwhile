@@ -872,6 +872,24 @@ export interface MonthlyBreakdownRow {
    * across the month can hide one model re-sending its whole prompt).
    */
   readonly tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
+  /**
+   * Cache hit rate for this key alone: cache-read input tokens out of every
+   * input token it sent (reads + writes + uncached), the SAME denominator
+   * `cacheHitRateByCaller` uses. Carried, not recomputed in the render — a
+   * second derivation is a second answer waiting to disagree. A gap (never a
+   * 0%) when the key's rows carried no cache metering, so a model that predates
+   * the fields does not read as a cache miss.
+   */
+  readonly cacheHitRate: Held<Measured>;
+  /**
+   * What this key's cache reads saved against sending the same tokens uncached
+   * at list price (`cacheSavingUsd` in model-cost.ts). Non-null only where the
+   * key is itself a priced model — a per-model saving needs a model's rate, so
+   * it is null on the by-provider and by-role groupings and on any key with no
+   * priced cache read. The month's aggregate saving stays `cacheSavingUsd` on
+   * the view.
+   */
+  readonly cacheSavingUsd: number | null;
 }
 
 export interface MonthComparison {
@@ -899,6 +917,12 @@ export interface MonthlySpendView {
    */
   readonly cacheSavingUsd: number | null;
   readonly cacheSavingRows: number;
+  /**
+   * The month's cache hit rate across every model: cache-read input tokens out
+   * of every input token (reads + writes + uncached). The "All models" figure
+   * beside the per-model column, carried rather than recomputed in the render.
+   */
+  readonly cacheHitRate: Held<Measured>;
   /**
    * What the Batches API's 50% saved. A batched row was charged half, so what
    * it saved equals what it cost. Null when no row went through batching.
@@ -931,7 +955,40 @@ function tokenTotals(rows: readonly CostEntry[]): Readonly<Record<MonthlyTokenMe
   return Object.fromEntries(MONTHLY_TOKEN_METRICS.map((m) => [m, sumMetric(rows, m)])) as Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
 }
 
-function breakdown(entries: readonly CostEntry[], keyOf: (e: CostEntry) => string): readonly MonthlyBreakdownRow[] {
+/**
+ * Cache hit rate from a token breakdown: reads / (reads + writes + uncached) —
+ * the same denominator `cacheHitRateByCaller` states, so the two never
+ * disagree. A gap (never a 0%) when any of the three is unmeasured, so a group
+ * that predates the cache fields reads as our named gap rather than a cache
+ * miss; and a gap when the group sent no input at all.
+ */
+function hitRateFromTokens(tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>): Held<Measured> {
+  const read = tokens.cacheReadInputTokens.total;
+  const write = tokens.cacheCreationInputTokens.total;
+  const uncached = tokens.uncachedInputTokens.total;
+  if (read === null || write === null || uncached === null) {
+    return gap<Measured>("OURS", "these rows carried no cache metering — they predate the fields, or the provider reported none.");
+  }
+  const denominator = read + write + uncached;
+  if (denominator === 0) {
+    return gap<Measured>("OURS", "these rows sent no input tokens.");
+  }
+  return held(
+    measured(
+      read,
+      denominator,
+      "cache-read input tokens, out of every input token (cache reads + cache writes + uncached)",
+      "cp_log_costs metering, summed over the month's rows for this key",
+    ),
+  );
+}
+
+function breakdown(
+  entries: readonly CostEntry[],
+  keyOf: (e: CostEntry) => string,
+  /** Per-key cache saving, supplied only where the key is itself a priced model. */
+  savingFor?: (key: string, tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>) => number | null,
+): readonly MonthlyBreakdownRow[] {
   const grouped = new Map<string, CostEntry[]>();
   for (const e of entries) {
     const key = keyOf(e);
@@ -941,6 +998,7 @@ function breakdown(entries: readonly CostEntry[], keyOf: (e: CostEntry) => strin
     .map(([key, rows]) => {
       const total = sumMetric(rows, "usd");
       const metering = meteringOf(rows);
+      const tokens = tokenTotals(rows);
       return {
         key,
         usd: total.total === null ? null : round(total.total),
@@ -948,7 +1006,9 @@ function breakdown(entries: readonly CostEntry[], keyOf: (e: CostEntry) => strin
         unmeasuredRows: total.unmeasured,
         predatesFieldRows: metering.predatesFields,
         batchedRows: metering.batched,
-        tokens: tokenTotals(rows),
+        tokens,
+        cacheHitRate: hitRateFromTokens(tokens),
+        cacheSavingUsd: savingFor ? savingFor(key, tokens) : null,
       };
     })
     .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
@@ -1015,19 +1075,34 @@ export function buildMonthlySpend(input: {
     });
   }
 
+  const monthTokens = tokenTotals(rows);
   return {
     window,
     asOf: input.nowIso,
     total: { ...total, total: total.total === null ? null : round(total.total) },
     byProvider: breakdown(rows, (e) => providerOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD),
-    byModel: breakdown(rows, (e) => modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD),
+    byModel: breakdown(
+      rows,
+      (e) => modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD,
+      /* Per-model saving needs the model's own list price; `cacheSavingUsd`
+         returns null for an unpriced or unknown key, so a stray non-model key
+         yields null rather than a wrong number. */
+      (key, tokens) => {
+        if (key === ATTEMPT_NOT_ON_RECORD || key === NO_MODEL_KEY) return null;
+        const read = tokens.cacheReadInputTokens.total;
+        if (read === null || read <= 0) return null;
+        const saved = cacheSavingUsd(read, key);
+        return saved === null ? null : round(saved);
+      },
+    ),
     byRole: breakdown(rows, (e) => e.role),
     cacheSavingUsd: cacheSavingRows === 0 ? null : round(cacheSaving),
     cacheSavingRows,
+    cacheHitRate: hitRateFromTokens(monthTokens),
     batchSavingUsd: batchRows === 0 ? null : round(batchSaving),
     batchRows,
     unmeasured: { predatesFields, providerReportedNothing, noDollarFigure: total.unmeasured },
-    tokens: tokenTotals(rows),
+    tokens: monthTokens,
     history,
     ledgerBeginsAt,
   };

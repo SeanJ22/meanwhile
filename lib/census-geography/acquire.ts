@@ -12,6 +12,7 @@ import type { GeographyType, GeographyVersion } from "./contract.ts";
 import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
 import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
+import { acquireGrfScope, GRF_CD120 } from "./grf.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
 
@@ -227,9 +228,9 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
   // applied at assembly, so a CBSA can still fold up a whole multi-state metro).
   const builtByKey = new Map<string, BuiltScope>();
   for (const key of keys) {
-    if (key === "cbsa") continue;
+    if (key === "cbsa" || key === "cd120") continue;
     const src = CENSUS_GEO_SOURCES[key];
-    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa`);
+    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa, cd120`);
     builtByKey.set(key, await buildScope(src, fetchImpl, options.signal));
   }
 
@@ -246,12 +247,24 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
     cbsaScope = buildCbsaScope(countyFull, delineation, cbsaVersionMeta(countyFull, CBSA_DELINEATION.url, sha256));
   }
 
+  // cd:120 — the UPCOMING-ELECTION (120th Congress / 2026) congressional map,
+  // sourced from the Census grf/2026 block files. Opt-in (not in DEFAULT_SCOPES):
+  // the block download is large (~2.9 GB national), and the map is stable until
+  // the election, so it is intended to refresh at a lower cadence than the monthly
+  // tab20 refresh. State-filtered during acquisition to bound the download.
+  let cd120Scope: BuiltScope | undefined;
+  if (keys.includes("cd120")) {
+    cd120Scope = await acquireGrfScope(GRF_CD120, { fetchImpl, states: options.states, signal: options.signal });
+  }
+
   // Assemble output scopes in requested order, applying any state filter.
   const scopes: BuiltScope[] = [];
   for (const key of keys) {
-    let scope = key === "cbsa" ? cbsaScope : builtByKey.get(key);
+    let scope = key === "cbsa" ? cbsaScope : key === "cd120" ? cd120Scope : builtByKey.get(key);
     if (scope === undefined) continue;
-    if (options.states) {
+    // cd:120 is already state-filtered during acquisition; tab20 scopes are built
+    // unfiltered and filtered here.
+    if (options.states && key !== "cd120") {
       scope = key === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states);
     }
     scopes.push(scope);

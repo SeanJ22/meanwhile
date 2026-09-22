@@ -11,6 +11,8 @@ network; the data business is the company. Hard deadline: 2026-11-03. <!-- expec
 
 ## How to read this file
 
+- **Session organization and physical closeout (RULING 291):** Claude Code and Codex use one registered temporary worktree, consolidate useful material and verified references into existing permanent homes, leave the checkout, and complete the guarded external closeout before reporting fully done; see the shipping policy and [procedure](docs/session-closeout.md). Unresolved ownership, runtime, knowledge or approval dependencies block only the affected resources.
+
 **This file is current cross-cutting law and nothing else.** One line per rule,
 citing the ruling that carries it. The rule itself lives in the policy; the
 reason it exists lives in history. Nothing is written in two places.

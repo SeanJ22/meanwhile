@@ -374,6 +374,16 @@ test("Q: May the standing autonomous system perform bounded public-source scouti
   assert.ok(r215 && ["ACTIVE", "AMENDED"].includes(r215.status), "RULING 215 stopped being current");
 });
 
+test("Q: Does a release note finish physical session cleanup for Claude Code or Codex?", () => {
+  const rule = index.resolve("RULING 291");
+  assert.equal(rule?.status, "ACTIVE");
+  assert.match(flat(law), /release note alone is not done/i);
+  assert.match(flat(law), /Claude Code and Codex/);
+  assert.match(flat(law), /Move the agent, terminal, helper and other execution outside/);
+  assert.match(flat(law), /eligible local and remote task branches/);
+  assert.match(flat(law), /implementation complete; cleanup blocked/);
+});
+
 test("answering a CURRENT question never requires the history files", () => {
   // The bar: if answering a current-rule question still requires reading the
   // chronology, the remediation is not finished. So the history is measured

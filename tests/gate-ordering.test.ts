@@ -101,6 +101,12 @@ test("no gate reads tracked-only repository state", () => {
        *   the two differ. It is the check, not an instance of the defect.
        */
       if (full.endsWith(join("scripts", "preflight.mjs"))) continue;
+      // The closeout helper compares a complete filesystem inventory (INCLUDING
+      // ignored/untracked files) to the tracked set to require explicit treatment
+      // of every extra. It is not using the index as the population of a gate.
+      // session-workspace.test.ts plants an unpreserved ignored file and proves
+      // removal is refused. Widening this list by a glob would hide real gates.
+      if (full.endsWith(join("scripts", "session-workspace.mjs"))) continue;
       read++;
       // Prose about the defect is not the defect. Strip comments first.
       const body = stripComments(readFileSync(full, "utf8"));

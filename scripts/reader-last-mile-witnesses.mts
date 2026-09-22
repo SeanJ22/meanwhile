@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
+import { relocatedImageBytes } from "../lib/holdings/evidence-location.ts";
 import { relative } from "node:path";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import type { BillSummary } from "../lib/votes/bill-summaries.ts";
@@ -33,7 +34,7 @@ interface RenderedReaderReport {
   screenshots: string[];
 }
 
-const hash = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");
+const hash = (path: string) => createHash("sha256").update(relocatedImageBytes(process.cwd(), path) ?? readFileSync(path)).digest("hex");
 const reportPath = "docs/evidence/reader-last-mile-render.json";
 const federalPath = "docs/evidence/reader-last-mile-render-federal-money.json";
 const report = JSON.parse(readFileSync(reportPath, "utf8")) as RenderedReaderReport;

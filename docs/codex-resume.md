@@ -14,6 +14,11 @@ older comments or session notes.
 
 ## First commands, in order
 
+Create and register your named workspace using the
+[session workspace bookend](session-closeout.md) before starting new work.
+Keep the returned external helper path for physical closeout. Existing active
+workspaces stay protected until their own dependencies are resolved.
+
 ```bash
 pnpm session:start --check                     # stale main, CLAUDE.md intact, port 3000, hooks
 git fetch origin && git rev-parse origin/main  # the exact current main SHA

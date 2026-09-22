@@ -2,9 +2,15 @@
  * **THE METERED PRICE, FROM EXACTLY FIVE TOKEN QUANTITIES.** (Prompt-caching
  * session, 2026-09-06. Acceptance rows PC-9 and PC-10.)
  *
- * Claude Opus 5 list prices: $5 / MTok base input, $6.25 5-minute cache write
- * (1.25×), $10 1-hour cache write (2×), $0.50 cache read (0.1×), $25 output;
- * the Batches API halves every one of them, once.
+ * Claude Opus 5 (now LEGACY, kept to price historical billing) list prices:
+ * $5 / MTok base input, $6.25 5-minute cache write (1.25×), $10 1-hour cache
+ * write (2×), $0.50 cache read (0.1×), $25 output; the Batches API halves every
+ * one of them, once.
+ *
+ * Claude Opus 5.5 (the CURRENT frontier; verified platform.claude.com 2026-09-22)
+ * is cheaper: $4 / MTok base input, $5 5-minute cache write (1.25×), $8 1-hour
+ * cache write (2×), $0.20 cache read — a NON-STANDARD 0.05× where every other
+ * model reads at 0.1× — $20 output; minimum cacheable prefix 512.
  */
 
 import assert from "node:assert/strict";
@@ -99,6 +105,32 @@ test("§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced mo
   assert.ok(Math.abs(charged + (cacheSavingUsd(2_000_000, "claude-opus-5") ?? 0) - 10) < 1e-9, "charged plus saved is the uncached price");
 });
 
+/**
+ * Opus 5.5 through the SAME priced fields, at the verified rates. The load-
+ * bearing new fact is the 0.05× cache-read multiplier: legacy Opus 5 and every
+ * other model read at 0.1×, so a flat multiplier would over-charge Opus 5.5
+ * reads by 2×. Same `known` usage; only the model id changes.
+ */
+const KNOWN_USD_55 = 4 + 1 + 0.8 + 0.4 + 2; // 1M×$4 + 200k×$5 + 100k×$8 + 2M×$0.20 + 100k×$20 = $8.20
+
+test("Opus 5.5: the known usage prices at the verified $4/$20 rates and is cheaper than legacy Opus 5", () => {
+  const priced = priceMeteredUsage("claude-opus-5-5", known, "5m");
+  assert.ok(Math.abs((priced.usd ?? 0) - KNOWN_USD_55) < 1e-9, `expected $${KNOWN_USD_55}, priced $${priced.usd}`);
+  assert.equal(priced.cacheWritePricedFrom, "SPLIT");
+  assert.ok(KNOWN_USD_55 < KNOWN_USD, "Opus 5.5 prices the identical tokens below legacy Opus 5");
+  /* Batch still halves the whole, once. */
+  assert.ok(Math.abs((priceMeteredUsage("claude-opus-5-5", { ...known, batch: true }, "5m").usd ?? 0) - KNOWN_USD_55 * 0.5) < 1e-9);
+});
+
+test("Opus 5.5: the non-standard 0.05× cache-read multiplier is wired end to end (charge + saving = uncached price)", () => {
+  /* 2,000,000 read tokens on Opus 5.5: $4/MTok × 2 × (1 − 0.05) = $7.60 saved. */
+  assert.equal(cacheSavingUsd(2_000_000, "claude-opus-5-5"), 7.6);
+  const readsOnly: MeteredUsage = { uncachedInputTokens: 0, outputTokens: 0, cacheReadInputTokens: 2_000_000, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, batch: false };
+  const charged = priceMeteredUsage("claude-opus-5-5", readsOnly, "5m").usd ?? 0;
+  assert.ok(Math.abs(charged - 0.4) < 1e-9, "reads charged at 0.05×: $0.40, not the $0.80 a 0.1× model would charge on $4/MTok");
+  assert.ok(Math.abs(charged + (cacheSavingUsd(2_000_000, "claude-opus-5-5") ?? 0) - 8) < 1e-9, "charged plus saved is the uncached price at $4/MTok");
+});
+
 test("PC-9: the parser reads the API's usage block, the split included, and never infers from the request", () => {
   const usage = readMeteredUsage({
     input_tokens: 77,
@@ -154,6 +186,7 @@ test("PC-9: a ledger row predating the fields reads UNMEASURED by name; a null r
  */
 test("per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null", () => {
   assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5"), 512);
+  assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5-5"), 512, "Opus 5.5 keeps the 512 minimum");
   assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5"), 1024);
   assert.equal(minimumCacheablePrefixTokensFor("claude-haiku-4-5"), 4096);
   /* THE LOAD-BEARING PROPERTY: the cheapest model's minimum is the HIGHEST, so

@@ -40,7 +40,7 @@ import {
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import type { ScoutResult, ScoutStep } from "../lib/control-plane/scheduler/scout-result.ts";
-import { MODEL_RATES, CACHE_RATE_MULTIPLIERS, rateFor } from "../lib/control-plane/model-cost.ts";
+import { MODEL_RATES, MODEL_WORKER_MODEL, CACHE_RATE_MULTIPLIERS, cacheReadMultiplierFor, rateFor } from "../lib/control-plane/model-cost.ts";
 import { cacheHitRateByRole, costPerUsefulOutcome } from "../lib/control-plane/research-metrics.ts";
 import { RESEARCH_BOUNDS, ceilingPermits, scoutSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
@@ -317,11 +317,11 @@ const tRepeat = sum((x) => x.repeatedPrefix.tokens);
 const tRepeatUncached = sum((x) => x.repeatedPrefix.uncachedRepeat);
 const totalInputAll = tUncached + tRead + tWrite;
 /* The counterfactual: every uncached repeat becomes a cache read at the frontier rate. */
-const frontier = rateFor("claude-opus-5");
+const frontier = rateFor(MODEL_WORKER_MODEL);
 const usdIfPrefixCached =
   frontier === null
     ? null
-    : tUsd - (tRepeatUncached / 1e6) * frontier.inputUsdPerMillion * (1 - CACHE_RATE_MULTIPLIERS.cacheRead);
+    : tUsd - (tRepeatUncached / 1e6) * frontier.inputUsdPerMillion * (1 - cacheReadMultiplierFor(MODEL_WORKER_MODEL));
 
 const classes = [...new Set(rows.map((x) => (x.refused ? "REFUSED" : x.outcome)))].sort();
 const costPerOutcomeClass = classes.map((outcome) => {

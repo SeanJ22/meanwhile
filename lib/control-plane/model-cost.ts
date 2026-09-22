@@ -30,8 +30,12 @@
  * thousand more of them.*
  */
 
-/** The model a bounded worker's FRONTIER step runs. Stated once; the proof asserts it. */
-export const MODEL_WORKER_MODEL = "claude-opus-5";
+/**
+ * The model a bounded worker's FRONTIER step runs. Stated once; the proof
+ * asserts it. Opus 5.5 replaced Opus 5 here on 2026-09-22 (owner directive):
+ * it is cheaper ($4/$20 vs $5/$25) and its cache read is 0.05x, not 0.1x.
+ */
+export const MODEL_WORKER_MODEL = "claude-opus-5-5";
 
 export interface ModelRate {
   readonly model: string;
@@ -44,10 +48,10 @@ export interface ModelRate {
 
 export const MODEL_WORKER_RATES: ModelRate = {
   model: MODEL_WORKER_MODEL,
-  inputUsdPerMillion: 5.0,
-  outputUsdPerMillion: 25.0,
-  statedOn: "2026-08-31",
-  source: "Anthropic first-party API rates, read from the claude-api reference",
+  inputUsdPerMillion: 4.0,
+  outputUsdPerMillion: 20.0,
+  statedOn: "2026-09-22",
+  source: "Anthropic first-party API rates, read from platform.claude.com (Claude Opus 5.5)",
 };
 
 /**
@@ -59,6 +63,17 @@ export const MODEL_WORKER_RATES: ModelRate = {
  */
 export const MODEL_RATES: readonly ModelRate[] = [
   MODEL_WORKER_RATES,
+  {
+    // LEGACY. Claude Opus 5 was replaced by Opus 5.5 as the frontier on
+    // 2026-09-22 (owner directive) and is no longer selected. Its rate is kept
+    // so cost math over historical Opus-5 ledger rows stays accurate — this
+    // change governs future execution, never the past bill.
+    model: "claude-opus-5",
+    inputUsdPerMillion: 5.0,
+    outputUsdPerMillion: 25.0,
+    statedOn: "2026-08-31",
+    source: "Anthropic first-party API rates, read from the claude-api reference (Opus 5, legacy)",
+  },
   {
     model: "claude-sonnet-5",
     inputUsdPerMillion: 2.0,
@@ -109,6 +124,7 @@ export function rateFor(model: string): ModelRate | null {
  */
 export const MODEL_CACHE_MINIMUMS = {
   values: {
+    "claude-opus-5-5": 512,
     "claude-opus-5": 512,
     "claude-sonnet-5": 1024,
     "claude-haiku-4-5": 4096,
@@ -116,6 +132,18 @@ export const MODEL_CACHE_MINIMUMS = {
   statedOn: "2026-09-22",
   source: "Anthropic first-party prompt-caching reference (per-model minimum cacheable prefix)",
 } as const;
+
+/**
+ * **THE CACHE-READ MULTIPLIER, PER MODEL — data with a date.** A cache hit
+ * normally bills at 0.1x the base input rate (`CACHE_RATE_MULTIPLIERS.cacheRead`),
+ * but Claude Opus 5.5 reads at 0.05x ($0.20/MTok on its $4 base). A model with
+ * no row here uses the standard 0.1x. Read from platform.claude.com's pricing
+ * page on the date stated; the WRITE multipliers (1.25x / 2x) are unchanged, so
+ * only the read differs.
+ */
+export const MODEL_CACHE_READ_MULTIPLIER: Readonly<Record<string, number>> = {
+  "claude-opus-5-5": 0.05,
+};
 
 /** The minimum cacheable prefix for a model id (aliases resolved), or null when no row states one. */
 export function minimumCacheablePrefixTokensFor(model: string): number | null {
@@ -125,21 +153,30 @@ export function minimumCacheablePrefixTokensFor(model: string): number | null {
 
 /**
  * The prompt-cache rates, as multiples of the input rate. (Level 1 activation,
- * 2026-09-01.) A cache WRITE is billed at 1.25x input and a cache READ at 0.1x,
- * read from the claude-api reference on that date. Stated as data beside the
- * base rate so a later session can check both against the same price list.
+ * 2026-09-01.) A cache WRITE is billed at 1.25x input (5m) / 2x (1h) — the same
+ * across current models. A cache READ is 0.1x for MOST models, but not all, so
+ * `cacheRead` here is the DEFAULT and `cacheReadMultiplierFor` overrides it per
+ * model (Opus 5.5 is 0.05x). Stated as data beside the base rate so a later
+ * session can check both against the same price list.
  */
 export const CACHE_RATE_MULTIPLIERS = {
   /** A 5-minute cache write. */
   cacheCreation: 1.25,
   /** A 1-hour cache write (2026-09-06; the reference's prompt-caching page: "2× for 1-hour TTL"). */
   cacheCreation1h: 2,
+  /** The DEFAULT cache-read multiplier; `cacheReadMultiplierFor` overrides it per model (e.g. Opus 5.5 = 0.05x). */
   cacheRead: 0.1,
   /** The Message Batches API: 50% of standard prices on every token category (2026-09-06). */
   batch: 0.5,
   statedOn: "2026-09-06",
   source: "Anthropic first-party API rates, read from the claude-api reference (prompt caching; Message Batches)",
 } as const;
+
+/** The cache-read multiplier for a model id (aliases resolved); the standard 0.1x default unless the model states its own (Opus 5.5 = 0.05x). */
+export function cacheReadMultiplierFor(model: string): number {
+  const id = MODEL_ID_ALIASES[model] ?? model;
+  return MODEL_CACHE_READ_MULTIPLIER[id] ?? CACHE_RATE_MULTIPLIERS.cacheRead;
+}
 
 /* -------------------------------------------------- the metered usage (2026-09-06) */
 
@@ -255,7 +292,7 @@ export function priceMeteredUsage(
   const full =
     usage.uncachedInputTokens * base +
     writes +
-    read * base * CACHE_RATE_MULTIPLIERS.cacheRead +
+    read * base * cacheReadMultiplierFor(rate.model) +
     (usage.outputTokens / 1_000_000) * rate.outputUsdPerMillion;
   return { usd: usage.batch ? full * CACHE_RATE_MULTIPLIERS.batch : full, cacheWritePricedFrom: pricedFrom, aggregateTtl };
 }
@@ -264,9 +301,10 @@ export function priceMeteredUsage(
  * **WHAT READING A TOKEN FROM THE CACHE SAVED, IN DOLLARS.** (§9A.23, the
  * monthly spend window, 2026-09-06.)
  *
- * A cache read bills at 0.1× the base input rate, so every token read from the
- * cache cost 0.9 of the base rate LESS than sending it uncached would have.
- * That is the whole arithmetic, and it is a counterfactual rather than a
+ * A cache read bills at its model's read multiplier (0.1× for most, 0.05× on
+ * Opus 5.5) of the base input rate, so every token read from the cache cost
+ * (1 − that multiplier) of the base rate LESS than sending it uncached would
+ * have. That is the whole arithmetic, and it is a counterfactual rather than a
  * measurement: it says what the alternative would have cost at the same list
  * price, not what any invoice says.
  *
@@ -277,7 +315,7 @@ export function priceMeteredUsage(
 export function cacheSavingUsd(cacheReadInputTokens: number, model: string, rateOverride: ModelRate | null = null): number | null {
   const rate = rateOverride ?? rateFor(model);
   if (rate === null || !Number.isFinite(cacheReadInputTokens)) return null;
-  return (cacheReadInputTokens / 1_000_000) * rate.inputUsdPerMillion * (1 - CACHE_RATE_MULTIPLIERS.cacheRead);
+  return (cacheReadInputTokens / 1_000_000) * rate.inputUsdPerMillion * (1 - cacheReadMultiplierFor(rate.model));
 }
 
 /** The six ledger fields, from one metered usage. The shape `AttemptCost` carries. */

@@ -478,7 +478,7 @@ test("a paid run that DOES happen is recorded in the ledger before the job is cl
       // A DETERMINISTIC STUB. The overnight brief forbids proving this with real
       // money, and a stub proves the wiring: the ledger call happens, and the
       // job carries the cost it reported.
-      runPaid: async () => ({ raw: "the billed answer", usd: 0.42, model: "claude-opus-5" }),
+      runPaid: async () => ({ raw: "the billed answer", usd: 0.42, model: "claude-opus-5-5" }),
       recordSpend: async (o) => {
         recorded.push(o);
       },
@@ -588,7 +588,7 @@ test("a paid call whose ledger write fails is still reported as spent", async ()
       runSubscription: async () => {
         throw new Error("not the paid path");
       },
-      runPaid: async () => ({ raw: "the billed answer", usd: 0.42, model: "claude-opus-5" }),
+      runPaid: async () => ({ raw: "the billed answer", usd: 0.42, model: "claude-opus-5-5" }),
       recordSpend: async () => {
         throw new Error("the cost ledger was unreachable");
       },

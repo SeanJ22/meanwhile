@@ -43,7 +43,7 @@ const API_MESSAGE =
   "Note that blocks are processed in the following order: `tools`, `system`, `messages`.";
 
 test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder", () => {
-  const input = { model: "claude-opus-5", effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
+  const input = { model: "claude-opus-5-5", effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const request = scoutPrewarmRequest(input);
   const prefix = scoutStaticPrefix(input);
   assert.equal(request.max_tokens, 0);
@@ -65,7 +65,7 @@ test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 
 test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {
   assert.equal(SCOUT_CACHE_POLICY.ttl, "5m");
   assert.match(SCOUT_CACHE_POLICY.ttl === "5m" ? String((SCOUT_CACHE_POLICY as { movingBreakpoint: string }).movingBreakpoint) : "", /TOP_LEVEL|LAST_BLOCK/);
-  const input = { model: "claude-opus-5", effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
+  const input = { model: "claude-opus-5-5", effort: "medium" as const, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS };
   const good = scoutPrewarmRequest(input);
   /* A 1h system marker with a 5m tool marker before it: exactly the planted request the API refused. */
   const planted: ModelRequest = { ...good, system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
@@ -115,7 +115,7 @@ async function cycleWith(input: { readonly rows: number; readonly admit: boolean
   };
   const scout: DeclaredExecutor = {
     lane: "BOUNDED_MODEL_WORKER",
-    workerFor: ({ holder }) => ({ role: "SCOUT", provider: "anthropic", version: "claude-opus-5", instance: holder }),
+    workerFor: ({ holder }) => ({ role: "SCOUT", provider: "anthropic", version: "claude-opus-5-5", instance: holder }),
     run: async ({ obligation: row }) => {
       started.push({ id: row.obligation.id, at: Date.now() });
       return { ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "test scout", endedAt: NOW, artifacts: [] } as never;

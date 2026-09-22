@@ -82,7 +82,7 @@ const result = (candidates: ScoutCandidate[]): ScoutResult => ({
   nextRungs: [],
   unverified: [],
   narrative: "n",
-  worker: { provider: "anthropic", model: "claude-opus-5", modelReported: "claude-opus-5" },
+  worker: { provider: "anthropic", model: "claude-opus-5-5", modelReported: "claude-opus-5-5" },
   usage: { inputTokens: 1, outputTokens: 1, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, turns: 1, toolCalls: 1 },
   usd: 0.01,
   elapsedMs: 1,

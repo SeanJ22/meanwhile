@@ -55,7 +55,7 @@ function result(over: Partial<ScoutResult> & { readonly attemptId: string }): Sc
     nextRungs: [],
     unverified: [],
     narrative: "n",
-    worker: { provider: "anthropic", model: "claude-opus-5", modelReported: "claude-opus-5" },
+    worker: { provider: "anthropic", model: "claude-opus-5-5", modelReported: "claude-opus-5-5" },
     usage: { inputTokens: 1000, outputTokens: 100, cacheReadInputTokens: 500, cacheCreationInputTokens: 100, turns: 2, toolCalls: 1 },
     usd: 1,
     elapsedMs: 1,
@@ -68,7 +68,7 @@ function result(over: Partial<ScoutResult> & { readonly attemptId: string }): Sc
   };
 }
 
-const modelStep = (turn: number, cacheRead: number): ScoutStep => ({ step: "scout-research-loop", kind: "MODEL", turn, model: "claude-opus-5", effort: "medium", tokens: { cacheRead, cacheWrite: 0, uncachedInput: 100, output: 10 }, usd: 0.01, representationBytes: 0, count: 1 });
+const modelStep = (turn: number, cacheRead: number): ScoutStep => ({ step: "scout-research-loop", kind: "MODEL", turn, model: "claude-opus-5-5", effort: "medium", tokens: { cacheRead, cacheWrite: 0, uncachedInput: 100, output: 10 }, usd: 0.01, representationBytes: 0, count: 1 });
 
 test("capacity: Attempts per day the ceiling supports at the measured mean, with unmeasured counted beside and the window honoured", () => {
   const c = scoutCapacity({
@@ -213,7 +213,7 @@ test("cache hit rate by role reads the COST LEDGER: a row predating the cache fi
   assert.equal(scout.repeatedPrefixTurns, 2);
   assert.equal(scout.repeatedPrefixMisses, 1);
   assert.equal(scout.stationaryTurns, 1);
-  assert.ok(Math.abs((scout.savedUsd ?? 0) - (1200 / 1_000_000) * 5 * 0.9) < 1e-12, "read tokens × (base − read price) at claude-opus-5's rate");
+  assert.ok(Math.abs((scout.savedUsd ?? 0) - (1200 / 1_000_000) * 4 * 0.95) < 1e-12, "read tokens × (base − read price) at claude-opus-5-5's rate ($4/MTok in, 0.05x cache read)");
   const audit = measured.find((r) => r.role === "ADVERSARIAL_AUDITOR")!;
   assert.equal(audit.aggregatePricedRows, 1, "a row with the aggregate and no split is counted by name");
   assert.equal(audit.hitRate, 0.5);

@@ -41,7 +41,7 @@ export type ModelClass = (typeof MODEL_CLASSES)[number];
 export const MODEL_FOR_CLASS: Readonly<Record<ModelClass, string>> = {
   haiku: "claude-haiku-4-5",
   sonnet: "claude-sonnet-5",
-  frontier: "claude-opus-5",
+  frontier: "claude-opus-5-5",
 };
 
 export type ModelEffort = "low" | "medium" | "high";
@@ -367,13 +367,13 @@ export const SCOUT_CACHE_POLICY = {
   /** Provider limit; the three above leave one slot spare. */
   maxBreakpoints: 4,
   /**
-   * The frontier (claude-opus-5) minimum, kept as this lane's default and
+   * The frontier (claude-opus-5-5) minimum, kept as this lane's default and
    * fallback. The provider silently never caches below it; tools + system alone
-   * exceed it (4,586 tokens measured 2026-09-06). The cache-defect detector is
-   * fed the ATTEMPT's own model minimum via `minimumCacheablePrefixTokensFor`
-   * (model-cost.ts) — a cheaper class's minimum is HIGHER (Sonnet 1024, Haiku
-   * 4096), so this single scalar serves only the frontier and the unrated
-   * fallback, never a cheaper class.
+   * exceed it (4,586 tokens measured 2026-09-06; Opus 5.5's minimum is also
+   * 512). The cache-defect detector is fed the ATTEMPT's own model minimum via
+   * `minimumCacheablePrefixTokensFor` (model-cost.ts) — a cheaper class's
+   * minimum is HIGHER (Sonnet 1024, Haiku 4096), so this single scalar serves
+   * only the frontier and the unrated fallback, never a cheaper class.
    */
   minimumCacheablePrefixTokens: 512,
 } as const;

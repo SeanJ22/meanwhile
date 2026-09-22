@@ -1,12 +1,12 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "c0d5ac508726e6cc",
+  "snapshot": "5a0afe21f3ce9176",
   "counts": {
-    "records": 328,
-    "current": 53,
+    "records": 329,
+    "current": 54,
     "law": 38,
-    "decisions": 15,
+    "decisions": 16,
     "historical": 275
   },
   "records": [
@@ -4302,7 +4302,7 @@
       ],
       "title": "RULING 215 — activation Level 5 is removed from the architecture; Level 4 automatic publishing is deferred",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "AMENDED",
       "provenance": "author_explicit",
       "domain": "business",
       "adopted": "2026-08-30",
@@ -6250,7 +6250,7 @@
       ],
       "title": "RULING 261 — what is sold, to whom, and the four constraints that carry neutrality",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "AMENDED",
       "provenance": "author_explicit",
       "domain": "business",
       "adopted": "2026-09-03",
@@ -7890,6 +7890,46 @@
       ],
       "uncertain": [],
       "sourceRef": "Author: Finish consolidation and make automatic cleanup part of every future session"
+    },
+    {
+      "id": "R-0292",
+      "aliases": [
+        "RULING 292",
+        "R292",
+        "R-292"
+      ],
+      "title": "RULING 292 — Level 4 automatic publishing is authorized; verified data auto-publishes through the PDC",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": "2026-09-21",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0215",
+          "changed": "the deferral of Level 4 automatic publishing is lifted; Level 4 automatic publishing is authorized now — information that passes the existing verification and publication requirements publishes automatically through the established production data plane (PDC), and genuine official .gov sources qualify for automatic processing and publication once their data passes the required checks, of which census-geography-overlaps is one qualifying routine contract",
+          "survives": "Activation Level 5 (external workflows: records requests and external communications executed by agents) remains removed from the architecture and is not restored; every validation, source-evidence, identity, runtime-authority and publication safeguard and audit record remains in force, and a discovered URL or promising lead is not itself verified publishable data"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0282"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0283"
+        },
+        {
+          "kind": "amends",
+          "target": "R-0261",
+          "changed": "the trailing activation cross-reference in RULING 261's final paragraph is brought current: it no longer states Level 4 automatic publishing as deferred, and now records that RULING 215's deferral is lifted and that this ruling authorizes Level 4 automatic publishing through the production data plane",
+          "survives": "the whole of RULING 261's selling law is unchanged and in force: what is licensed, the campaign-finance wall, the four neutrality constraints (equal solicitation, published uniform rates, never exclusive, no off-catalog bespoke cuts), the confidence-mix export requirement, and moderation before export"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "Author: automatic publishing is authorized now — verified data must auto-publish through the established PDC"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

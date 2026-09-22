@@ -323,7 +323,13 @@ export async function claimRouteTask(
   // Disposed while this claim raced for the slot: give back the lease just won
   // and refuse, exactly as the worker refusal above does. The task is not written.
   if (!current.value.workerTask && current.value.disposition !== null) {
-    await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
+    try {
+      await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
+    } catch (error) {
+      // The disposition path releases whatever lease holds the slot; if it
+      // already released this one, the refusal is still the settled route.
+      if (!(error instanceof ConcurrentModification)) throw error;
+    }
     throw new RouteTaskSettled(input.routeTaskId, current.value.disposition.disposition);
   }
   const claimed: RouteTask = { ...current.value, state: "CLAIMED" };

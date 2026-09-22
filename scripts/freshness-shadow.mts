@@ -925,8 +925,11 @@ const openOccurrenceInStep = async (
   try {
     const resumed = await resumeOpenOccurrence(repos, obligation);
     if (resumed?.kind === "SETTLED") {
-      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
-      else openedDeterministic += 1;
+      /* The model lane admits a row before opening it; a recovery runs no Scout, so it hands its admission back. */
+      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") {
+        openedModel += 1;
+        scoutsAdmittedThisCycle = Math.max(0, scoutsAdmittedThisCycle - 1);
+      } else openedDeterministic += 1;
       return { settled: resumed.settled };
     }
     if (resumed !== null) {

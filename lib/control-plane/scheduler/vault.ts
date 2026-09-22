@@ -124,8 +124,6 @@ export function cycleVault(vaultRoot: string): CycleVault {
 
   let heldKeys: Promise<string[]> | null = null;
   const readHeld: CycleVault["readHeld"] = async (record) => {
-    const known = ledger.get(record.artifactId);
-    if (known !== undefined) return readBack(known.key);
     /* A failed listing is not cached: the next recovered artifact asks again. */
     heldKeys ??= store.list(`project/${FRESHNESS_PROJECT}/`).catch((error: unknown) => {
       heldKeys = null;

@@ -37,6 +37,14 @@ function lexicalCost(indices, costs, workers, removed = -1, added = -1) {
   return Math.max(...loads);
 }
 
+/**
+ * @param {{file: string, shard: number, hintDurationMs: number | null, schedulingCost: number}[]} roundRobin
+ * @param {{file: string, shard: number, hintDurationMs: number | null, schedulingCost: number}[]} longestFirst
+ * @param {number[]} costs
+ * @param {number} count
+ * @param {number} workers
+ * @param {boolean} canOptimize
+ */
 function chooseSchedule(roundRobin, longestFirst, costs, count, workers, canOptimize) {
   const groupsFor = (assignments) => {
     const groups = Array.from({ length: count }, () => []);

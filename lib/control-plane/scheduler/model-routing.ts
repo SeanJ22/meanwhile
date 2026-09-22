@@ -366,6 +366,14 @@ export const SCOUT_CACHE_POLICY = {
   ],
   /** Provider limit; the three above leave one slot spare. */
   maxBreakpoints: 4,
-  /** Below this the provider silently never caches (claude-opus-5, per the reference). Tools + system alone exceed it (4,586 tokens measured 2026-09-06). */
+  /**
+   * The frontier (claude-opus-5) minimum, kept as this lane's default and
+   * fallback. The provider silently never caches below it; tools + system alone
+   * exceed it (4,586 tokens measured 2026-09-06). The cache-defect detector is
+   * fed the ATTEMPT's own model minimum via `minimumCacheablePrefixTokensFor`
+   * (model-cost.ts) — a cheaper class's minimum is HIGHER (Sonnet 1024, Haiku
+   * 4096), so this single scalar serves only the frontier and the unrated
+   * fallback, never a cheaper class.
+   */
   minimumCacheablePrefixTokens: 512,
 } as const;

@@ -18,6 +18,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { parse } from "yaml";
 
 import {
   REQUIRED_CONTEXTS,
@@ -42,17 +43,24 @@ test("every required context is a check the workflow actually produces", () => {
   );
 });
 
-test("the workflow produces no check outside the required set", () => {
+test("every auxiliary context feeds the fail-closed required final status", () => {
+  const parsed = parse(source());
   const produced = contextsProducedByWorkflow(source());
   const extra = produced.filter((c) => !REQUIRED_CONTEXTS.includes(c));
-  assert.deepEqual(
-    extra,
-    [],
-    `${REQUIRED_CHECKS_WORKFLOW} produces ${JSON.stringify(extra)}, which branch ` +
-      `protection does not require. A gate that runs and cannot block is a gate ` +
-      `nobody has to pass. Register it on the branch and add it to ` +
-      `REQUIRED_CONTEXTS, or fold it into an existing job.`,
-  );
+  assert.deepEqual(extra.sort(), [
+    "admission (preflight and integrity)", "verify (lint)", "verify (types)", "verify (governance)",
+    "test (1/4)", "test (2/4)", "test (3/4)", "test (4/4)",
+  ].sort(), "unrecognized auxiliary checks require an explicit aggregation contract");
+  assert.deepEqual(parsed.jobs.gates.needs, ["admission", "verify", "test", "build"]);
+  assert.equal(parsed.jobs.gates.if, "always()");
+  const reducer = parsed.jobs.gates.steps.find((s: { run?: string }) => s.run === "node scripts/ci-verdict.mjs");
+  assert.ok(reducer);
+  assert.equal(reducer.if, undefined);
+  assert.equal(reducer.env.CI_NEEDS, "${{ toJSON(needs) }}");
+  assert.notEqual(reducer["continue-on-error"], true);
+  for (const name of ["admission", "verify", "test", "build", "gates"]) {
+    assert.notEqual(parsed.jobs[name]["continue-on-error"], true);
+  }
 });
 
 /**
@@ -78,7 +86,7 @@ test("a renamed gates job is caught", () => {
 });
 
 test("a renamed matrix leg is caught", () => {
-  const renamed = source().replace("mode: [standalone, default]", "mode: [standalone, plain]");
+  const renamed = source().replace(/(mode:\s*\n\s*- standalone\s*\n\s*- )default/, "$1plain");
   assert.notEqual(renamed, source(), "the plant did not apply — the matrix has moved");
   const produced = contextsProducedByWorkflow(renamed);
   assert.ok(

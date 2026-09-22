@@ -73,8 +73,8 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    6,
-    `expected 6 Node-runtime action pins across the active workflow set, found ${pins}`,
+    12, // five isolated CI job definitions plus the post-deploy observer, two pins each
+    `expected 12 Node-runtime action pins across the active workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,

@@ -351,7 +351,7 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
    * THE READER IS HELD TO READING (2026-08-28).
    *
    * `build-check.yml` runs on every pull request, so a credential in it is
-   * reachable by any change. Its ONE database step must resolve the read-only
+   * reachable by any change. Its early and final database checks must resolve the read-only
    * variable by name and nothing else: no bare `DATABASE_URL`, no
    * `WTP_PRODUCTION_DATABASE_URL_WRITE`, and no sanction — `lib/db/write-handle.ts`
    * refuses the READONLY string for writing, and `scripts/apply-migrations.mts`
@@ -362,8 +362,8 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
   const databaseNames = [...buildCheck.matchAll(/[A-Z_]*DATABASE_URL[A-Z_]*/g)].map((m) => m[0]);
   assert.ok(databaseNames.length > 0, "the reader found no database variable to check at all");
   assert.deepEqual(
-    [...new Set(databaseNames)],
-    ["WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY"],
+    [...new Set(databaseNames)].sort(),
+    ["WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY"].sort(),
     "build-check.yml may name only the read-only serving and control-plane variables. " +
       "A write-capable string here is reachable from any change.",
   );

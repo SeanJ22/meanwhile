@@ -114,7 +114,8 @@ test("granting actions: read did not weaken anything else", () => {
    */
   assert.deepEqual(
     permissions,
-    { contents: "read", checks: "read" },
+    // The final retry guard reads the current PR head/base/tier; no write scope.
+    { contents: "read", checks: "read", "pull-requests": "read" },
     "build-check.yml deploys nothing and pushes nothing; its token stays read-only",
   );
   for (const [scope, level] of Object.entries(permissions ?? {})) {

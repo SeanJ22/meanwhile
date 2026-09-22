@@ -1,204 +1,51 @@
-# The build Netlify runs, run where the log is readable (R51, 2026-08-18, g16).
-#
-# TWO FAILURES IN SEQUENCE PRODUCED THIS FILE.
-#
-# First, Netlify started no build at all for g15's two PR merges — no queued,
-# building or failed deploy behind a healthy current one. Then a build did
-# fire, and `scripts/check-build-output.mjs` refused it: server trace
-# cardinality 1138 against the ceiling of 1050. Both times, production kept
-# serving a build from before the session and the only record of why lived in
-# a build log behind the author's Netlify login.
-#
-# A gate whose verdict nobody in the session can read is a gate that stops the
-# work and explains nothing. So the same command Netlify runs — the literal
-# string from `netlify.toml` — runs here on every push, on ubuntu, on the
-# runner image class Netlify builds on. When the budget refuses, the refusal
-# is in a log this repo's own tooling can fetch with `gh run view`.
-#
-# It also answers the platform question the refusal raised and could not
-# settle: a Windows build and a Linux build trace different node_modules, and
-# `scripts/trace-census.mjs` prints the per-manifest, per-package breakdown on
-# both, so "which files joined" is a diff rather than a guess. The census runs
-# whether the build passed or failed — a refused build is exactly when its
-# numbers are wanted.
-#
-# This does not deploy anything. `pnpm build` needs no secret: every data file
-# it reads is committed, and the database is not touched at build time.
-#
-# ONE STEP IN THE `gates` JOB NOW HOLDS ONE, and the exception is stated here
-# rather than discovered in a diff (2026-08-28, the schema-drift incident).
-# `Schema shipping gate` reads production's applied-migration list through
-# `WTP_PRODUCTION_DATABASE_URL_READONLY` — a READ-ONLY role, one SELECT, and
-# only when the change touches `lib/db/migrations/` or `lib/db/schema.ts`. It
-# cannot apply anything: applying resolves a different variable through
-# `lib/db/write-handle.ts`, which refuses this one by name. Every other step in
-# this file still runs with no secret at all.
-
+# Execution, retry safety and measured costs: docs/ci-efficiency.md.
 name: Build check
-
-# RULING 78 (2026-08-22, NJ Hunt 4 item 2) — CI runs where it earns its cost.
-#
-# This used to read `push:` with no branch filter, which meant ONE merge cost
-# THREE runs of the same check plus a Netlify deploy each: the branch push, the
-# pull request, and the merge to `main`. Together with the since-retired
-# scheduled refreshes, that exhausted the Actions balance; an exhausted balance does not fail loudly —
-# it produced completed jobs with zero steps recorded, which read as a broken
-# tree for a whole session (`NS04`, RULING 81).
-#
-# NOTHING STOPS GATING. Every branch that matters becomes a pull request, and
-# every merge lands on `main`. Close-out records ship inside their software PR,
-# and RULING 75 requires the resulting `main` tip to go green, which is this
-# check on the `main` push. The two surviving triggers cover everything the third did.
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-  # THE SMOKE INPUT — a credential proof that invents no schema change.
-  # (2026-08-28, the audit of the schema gate written the same day.)
-  #
-  # The schema shipping gate below is SCOPED: it opens no connection unless the
-  # change touches lib/db/migrations/ or lib/db/schema.ts. That is correct, and
-  # it means the credential is exercised only when a schema change happens to
-  # come along — so a wrong, expired or absent secret would be discovered by the
-  # very pull request that most needs the gate working.
-  #
-  # This input forces the gate to contact production on a commit that changed
-  # nothing. It issues the SAME single read-only SELECT and nothing else, prints
-  # the role, host and row count, and applies nothing.
-  #
-  # THE ROUTE REJECTED, so it is not re-litigated: passing the gate a fake
-  # `--paths=` naming a migration would also reach the database, and it would
-  # put a false statement about what the change touched into a log somebody
-  # reads later. The flag overrides the EXIT, never the finding — the run still
-  # prints its honest NOT APPLICABLE first.
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
   workflow_dispatch:
     inputs:
       schema_smoke:
-        description: "Force the schema gate to READ production on this unchanged commit (one SELECT, read-only, nothing applied)."
+        description: Force the schema gate to READ production on this unchanged commit (one SELECT, read-only, nothing applied).
         type: boolean
         default: false
-      # THE SECOND READING. A pre-merge answer is true about the moment it was
-      # taken and does not stay true — a merge is not a deploy here, and the
-      # applier has always been a person at a terminal. `post-deploy` is the
-      # moment where BOTH phases are owed, so it is the one that fails on a
-      # CONTRACT migration that pre-deploy deliberately allows.
-      #
-      # Manual dispatch remains useful for an exact re-read. The automatic
-      # post-deploy measurement runs in post-deploy-integrity.yml after a
-      # shipping main push has been observed at /api/build.
       schema_moment:
-        description: "Which side of the deploy to ask from."
+        description: Which side of the deploy to ask from.
         type: choice
-        options: [pre-deploy, post-deploy]
+        options:
+          - pre-deploy
+          - post-deploy
         default: pre-deploy
-
 permissions:
   contents: read
-  # CHECKS READ — the tree-equivalence step asks what the required contexts
-  # reported at the candidate head (FCP-9C).
-  #
-  # Declaring `permissions:` at all switches the token from the repository
-  # default to exactly what is listed, so every scope not named here is `none`.
-  # With `contents: read` alone, `GET /repos/{owner}/{repo}/commits/{sha}/
-  # check-runs` answers 403 — and `scripts/certified-tree.mjs` would read that
-  # as CANNOT_TELL and take the full proof. Safe, and permanently useless: the
-  # attestation could never fire and nobody would see why, because the failure
-  # looks exactly like a head that did not qualify.
-  #
-  # This is the minimum that endpoint needs. Nothing else is widened, and the
-  # token still cannot write anything.
   checks: read
-
-# NO COMMIT ON `main` MAY END WITH A CANCELLED CHECK. (2026-08-26.)
-#
-# **Measured, not argued.** On 2026-08-26 between 17:54 and 17:56 the eight
-# then-scheduled pushers were dispatched to prove the deploy key. Five landed commits
-# inside two minutes — `1bf635d`, `a9fb8cc`, `3be63c6`, `48ebed9`, `b85f572` —
-# and **every one of their build checks was CANCELLED by the next push**. Those
-# five commits sit on `main` in a state that is not passed and not failed. The
-# sixth, `de75436`, was the only one that ran to completion.
-#
-# **This is the #288 shape arriving from the other side.** Branch protection
-# governs PULL REQUESTS; these are direct pushes that bypass it by design under
-# RULING 165's deploy-key bypass. So the ruleset cannot see them, and the only
-# thing that could say whether they were sound was a check that got killed
-# halfway. With eight pushers on schedules this is most nights, not an edge.
-#
-# **THE ROUTE CHOSEN, and the one rejected, stated so it is not re-litigated.**
-#
-# REJECTED — *skip build-check for bot pushes that touch only `data/`.* It is
-# tempting: a data commit cannot break lint or types. But it CAN break the
-# build, because `pnpm build` reads the committed data at build time — that is
-# the whole reason `next.config.ts` names those files for tracing. A malformed
-# snapshot would then land on `main` unchecked, which is the exact outcome this
-# fix exists to prevent, arriving through the door labelled convenience.
-#
-# CHOSEN — **a push to `main` gets its own concurrency group, keyed on the
-# COMMIT.** Two different commits can no longer cancel one another; a re-run or
-# a duplicate event on the SAME commit still supersedes, which is correct
-# because it is the same question asked twice. Pull requests keep the old
-# behaviour unchanged: a PR merges one head, so a superseded run on an older
-# head is genuinely irrelevant, and that is where RULING 78's cost saving
-# actually came from.
-#
-# THE COST, STATED. N pushes to `main` now cost N runs instead of one. Under
-# RULING 124 a normal night is ONE orchestrated commit; the five above were a
-# manual fleet proof. The bound is the number of commits, and every one of them
-# is a commit somebody chose to make.
-#
-# AND THAT COST CAME DUE (RULING 278, 2026-09-05). Three post-deploy readings
-# landed on `main` on one afternoon and bought 12m 09s, 9m 57s and 12m 01s of
-# shipping-grade proof each, for commits carrying the old tracked post-deploy
-# reading and its generated view. PDC deletes that transition rather than
-# preserving a cheaper version of it: runtime outcomes append to the standing
-# control-plane log and create no Git commit. Consequently Build Check has no
-# runtime-path classifier at all. Draft pull requests alone receive the bounded
-# deterministic tier below; every ready PR and every ordinary push receives the
-# normal software proof (subject only to exact-tree certification reuse).
+  pull-requests: read
 concurrency:
   group: build-check-${{ github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
-
 jobs:
-  build:
+  admission:
+    name: admission (preflight and integrity)
     runs-on: ubuntu-latest
-    # F25: the platform default is 360 minutes. Runs #25 and #26 sat at the
-    # gate until GitHub killed them at six hours and reported no step name. A
-    # job that overruns this fails loudly, named, while a human is awake.
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        # BOTH MODES, because the deploy builds in one of them and every
-        # developer builds in the other, and on 2026-08-18 the budget was only
-        # ever measured in the one that does not ship. `standalone` is what
-        # Netlify's Next runtime plugin sets in its own onPreBuild; `default`
-        # is a plain `pnpm build`. Each is compared against its own committed
-        # baseline in scripts/bundle-budget.json — never across modes.
-        mode: [standalone, default]
-    name: build (${{ matrix.mode }})
+    timeout-minutes: 10
+    outputs:
+      tier: ${{ steps.tier.outputs.expensive }}
     steps:
-      # Preflight and certification both inspect historical evidence and ancestry.
-      # Materialize history before either consumer runs; a fixed shallow depth
-      # becomes invalid whenever another commit is added to a branch.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      # v7 targets Node 24 natively; package-manager-cache off because pnpm is
-      # not on PATH until corepack enable.
-      #
-      # It also has to come before the dependency-free PR-tier and exact-tree
-      # adapters, which import type-strippable local modules.
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
-
-      # Draft pull requests prove the deterministic contract before buying a
-      # build. The adapter fails closed to `full`, and `ready_for_review` is an
-      # explicit full-certification event even when the head SHA did not move.
       - name: Classify the pull request certification tier
         id: pr_tier
         if: github.event_name == 'pull_request'
@@ -207,66 +54,15 @@ jobs:
           WTP_EVENT_ACTION: ${{ github.event.action }}
           WTP_PR_DRAFT: ${{ github.event.pull_request.draft }}
         run: node scripts/pr-ci-tier.mjs
-
-      # ══ IS THIS THE TREE THAT ALREADY PASSED? (FCP-9C) ══
-      #
-      # RULING 278 asks what CHANGED. This asks a second question the SHA hides:
-      # has this exact tree already been certified?
-      #
-      # Run #807 of 2026-09-07 is why. It bought a full shipping-grade proof of
-      # merge commit 0251d145, whose tree is dc3bee39 — the identical git object
-      # run #806 had certified on be6e41ff minutes earlier. Same bytes, different
-      # commit SHA, seventeen more billed minutes and another slice of the
-      # forty-five the owner spent unable to proceed.
-      #
-      # `scripts/certified-tree.mjs` is an adapter; the relation lives in
-      # lib/control-plane/shipping/tree-equivalence.ts and
-      # there is no second table here. It answers `yes` only when the pushed head
-      # is a two-parent merge, main's tip is an ancestor of the candidate, the
-      # trees are the same object, and every required context is GREEN at the
-      # candidate. Every unanswerable question answers `no` and the full proof
-      # runs. It needs no install — bare node, git, and one `gh api` call.
       - name: Is this the tree that already passed? (FCP-9C)
         id: certified
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/certified-tree.mjs
-
-      # THE CHEAP TIER, BEFORE ANYTHING IS BOUGHT. (RULING 279.)
-      #
-      # Bare `node` on the bare checkout: no corepack, no pnpm store, no
-      # install, no browser, no build. `scripts/preflight.mjs` and everything it
-      # reaches import only node builtins and type-strippable local modules, so
-      # this runs here and costs seconds.
-      #
-      # Run 34097010100 is why it is here. A committed duplicate helper — two
-      # seconds to detect — surfaced 8m46s into the test step, after a browser
-      # install it never used, and the job then ran three more minutes past a
-      # failure it already knew about. Seventeen billed runner-minutes for an
-      # answer this step has before the first dependency is fetched.
-      #
-      # It is skipped only when this exact tree already has the required green
-      # certification. Runtime writers can no longer create a Git commit that
-      # needs a special path-cost exception.
       - name: Preflight — the cheap deterministic checks (RULING 279)
         id: preflight
         if: github.event_name == 'pull_request' || steps.certified.outputs.certified != 'yes'
         run: node scripts/preflight.mjs
-
-      # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
-      # SECOND TABLE. Four outcomes, and every later step reads
-      # this one output rather than re-deriving the decision from its parts:
-      #
-      #   yes            verify this head fully
-      #   draft          run the deterministic PR tier; certify fully when ready
-      #   no-certified   this exact tree already passed; attest and stop (FCP-9C)
-      #   no-preflight   a cheap check failed; fail loudly and buy nothing more
-      #
-      # Pull-request state is resolved first. A draft must run its deterministic
-      # tier even for a non-shipping diff, and a ready PR must buy a fresh full
-      # certification on ready_for_review/open/synchronize rather than reusing
-      # the same head's earlier draft contexts. Non-PR ordering remains
-      # exact-tree reuse, preflight, then full proof.
       - name: Decide whether the expensive tier runs
         id: tier
         if: always()
@@ -285,113 +81,170 @@ jobs:
           else
             echo "expensive=yes" >> "$GITHUB_OUTPUT"
           fi
-
       - name: Enable corepack (pnpm pinned by packageManager)
         if: steps.tier.outputs.expensive == 'yes'
         run: corepack enable
-
-      # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
-      #
-      # `package-manager-cache: false` above is correct and stays: pnpm is not
-      # on PATH until corepack enables it, so setup-node cannot find the store
-      # to cache. That left every run downloading the whole dependency tree.
-      #
-      # Resolving the path here and caching it by lockfile hash is the same
-      # thing setup-node would have done, at the only point in the job where
-      # the question can be answered.
       - name: Where is the pnpm store
         id: pnpm-store
         if: steps.tier.outputs.expensive == 'yes'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-
       - uses: actions/cache@v4
         if: steps.tier.outputs.expensive == 'yes'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          # A lockfile change invalidates the key and this restores the nearest
-          # previous store, so a one-package bump re-downloads one package
-          # rather than all of them.
+          key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
-
+            pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
       - name: Install
         if: steps.tier.outputs.expensive == 'yes'
         run: corepack pnpm install --frozen-lockfile
-
-      # P-006 · Next's own build cache. The build log read "No build cache
-      # found" on every run, so every compile was cold: 13.2 s of compile and
-      # 16.8 s of TypeScript, measured, on every one of the two matrix legs.
-      #
-      # `.next/cache` ONLY, never `.next` — the emitted output is what the
-      # budget check reads, and restoring a previous build's output would make
-      # that check report on bytes this run did not produce, which is precisely
-      # the shape RULING 113 exists to catch. The cache is keyed per MODE
-      # because the two legs compile differently and sharing one key would have
-      # them evict each other every run.
+      - name: Early release integrity prerequisite
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        timeout-minutes: 5
+        env:
+          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
+        run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
+      - name: Explain selected verification
+        if: always()
+        env:
+          CI_TIER: ${{ steps.tier.outputs.expensive }}
+        run: node scripts/ci-selection-summary.mjs
+  verify:
+    name: verify (${{ matrix.group }})
+    needs:
+      - admission
+    if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - lint
+          - types
+          - governance
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Enable corepack (pnpm pinned by packageManager)
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        run: corepack enable
+      - name: Where is the pnpm store
+        id: pnpm-store
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
-        if: steps.tier.outputs.expensive == 'yes'
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
+      - name: Install
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
+        run: corepack pnpm install --frozen-lockfile
+      - name: Lint
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'lint'
+        timeout-minutes: 10
+        run: corepack pnpm lint
+      - name: Types (fresh checkout, no build)
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'types'
+        timeout-minutes: 10
+        run: corepack pnpm exec tsc --noEmit
+      - name: Governance ledger and its generated views
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        timeout-minutes: 10
+        run: corepack pnpm governance:check
+      - name: Orchestration plans (RULING 190)
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        timeout-minutes: 5
+        run: corepack pnpm orchestration:check
+      - name: Method knowledge store
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        timeout-minutes: 5
+        run: corepack pnpm method:check
+      - name: Canonical state holdings and residual paths
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        timeout-minutes: 5
+        run: corepack pnpm state-holdings:check
+      - name: Generated state manifests against committed observations
+        if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
+        timeout-minutes: 5
+        run: corepack pnpm state-manifest --check
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        mode:
+          - standalone
+          - default
+    name: build (${{ matrix.mode }})
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Require successful admission
+        env:
+          ADMISSION_RESULT: ${{ needs.admission.result }}
+        run: test "$ADMISSION_RESULT" = success
+      - name: Enable corepack (pnpm pinned by packageManager)
+        if: needs.admission.outputs.tier == 'yes'
+        run: corepack enable
+      - name: Where is the pnpm store
+        id: pnpm-store
+        if: needs.admission.outputs.tier == 'yes'
+        run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        if: needs.admission.outputs.tier == 'yes'
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
+      - name: Install
+        if: needs.admission.outputs.tier == 'yes'
+        run: corepack pnpm install --frozen-lockfile
+      - uses: actions/cache@v4
+        if: needs.admission.outputs.tier == 'yes'
         with:
           path: ${{ github.workspace }}/.next/cache
-          key: next-${{ runner.os }}-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: next-${{ runner.os }}-${{ runner.arch }}-node24-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml', 'package.json', 'next.config.ts', 'tsconfig.json', 'postcss.config.mjs') }}-${{ github.sha }}
           restore-keys: |
-            next-${{ runner.os }}-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml') }}-
-            next-${{ runner.os }}-${{ matrix.mode }}-
-
-      # The literal command from netlify.toml's [build] section, minus the
-      # `corepack enable` already done above. If these two ever drift apart
-      # this job stops standing in for the deploy, so they are named together
-      # here and in netlify.toml's header.
+            next-${{ runner.os }}-${{ runner.arch }}-node24-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml', 'package.json', 'next.config.ts', 'tsconfig.json', 'postcss.config.mjs') }}-
       - name: Build (the command netlify.toml gives Netlify)
-        if: steps.tier.outputs.expensive == 'yes'
+        if: needs.admission.outputs.tier == 'yes'
         env:
-          # Netlify's @netlify/plugin-nextjs sets this in its onPreBuild, so a
-          # deploy is always a standalone build even though netlify.toml never
-          # says the word. Setting it here is what makes this job stand in for
-          # the deploy rather than resemble it.
           NEXT_PRIVATE_STANDALONE: ${{ matrix.mode == 'standalone' && 'true' || '' }}
         run: corepack pnpm run build
-
-      # THE ONE CHECK THE GATES JOB CANNOT RUN (Prompt C item 1b, 2026-08-20).
-      #
-      # `tests/feedback.test.ts`'s bundle half scans the BUILT client chunks for
-      # a personal address (R40). With no `.next/static` it reports CANNOT RUN
-      # and skips — correctly, because a check that cannot reach its subject
-      # must never print like a passing one. That is the whole of the 1377/1376
-      # gap between a developer's machine, where `.next` is lying around, and
-      # the gates job, which deliberately never builds.
-      #
-      # The gap was honest and it was also a check not running on Linux. It
-      # runs here instead, on the build this job just produced, so the counts
-      # differ for a stated reason and the guard is actually executed. It is
-      # the same file the gates job already ran; the one test that skipped
-      # there is the one that matters here.
       - name: Bundle-scanning checks (need the build above)
-        if: matrix.mode == 'default' && steps.tier.outputs.expensive == 'yes'
+        if: matrix.mode == 'default' && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 10
         run: corepack pnpm run test:bundle
-
       - name: Trace census
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && needs.admission.outputs.tier == 'yes'
         run: node scripts/trace-census.mjs --files trace-files.txt
-
       - name: Keep the trace list
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: always() && needs.admission.outputs.tier == 'yes'
         uses: actions/upload-artifact@v5
         with:
           name: trace-files-${{ matrix.mode }}-${{ github.sha }}
           path: trace-files.txt
           if-no-files-found: warn
-
-# THE RED PATH SAYS WHY, IN THIS JOB'S OWN LOG. (RULING 279.)
-      #
-      # The preflight step has already failed the job by this point — this adds
-      # no gate, it adds the sentence. Without it the build log ends in a run
-      # of skipped steps, and "skipped" is what a job that had nothing to do
-      # looks like too. A required check must never be ambiguous about which of
-      # those happened.
       - name: Preflight was red — nothing expensive was bought
-        if: always() && steps.tier.outputs.expensive == 'no-preflight'
+        if: always() && needs.admission.outputs.tier == 'no-preflight'
         run: |
           echo "The cheap preflight failed on this head, so the browser install, the" >&2
           echo "full suite and the builds were not run for it. Nothing is waived: fix" >&2
@@ -399,360 +252,61 @@ jobs:
           echo "verification before it may ship. Run it yourself with:" >&2
           echo "    node scripts/preflight.mjs" >&2
           exit 1
-
       - name: Draft pull request — full build waits for ready for review
-        if: steps.tier.outputs.expensive == 'draft'
+        if: needs.admission.outputs.tier == 'draft'
         run: |
           echo "Draft preflight passed. This required build context still reports, while"
           echo "the two production builds wait for the ready_for_review certification run."
-
-      # THE REQUIRED CONTEXT STILL ARRIVES, AND IT SAYS WHAT IT REUSED.
-      # (FCP-9C. RULING 156: a required check that does not report disarms
-      # protection rather than blocking it, so this job runs, reports
-      # `build (<mode>)` and states its receipt.) Nothing is waived: the proof
-      # that ran is the proof for these exact bytes.
       - name: Certified tree reused — this tree already passed
-        if: steps.tier.outputs.expensive == 'no-certified'
+        if: needs.admission.outputs.tier == 'no-certified'
         run: node scripts/certified-tree.mjs --attest=build
-
-  # ---------------------------------------------------------------------------
-  # THE SUITE, ON LINUX, ON EVERY READY PR (Prompt B item 1c, 2026-08-20).
-  #
-  # A draft proves the deterministic tier below. Marking it ready emits the
-  # explicitly subscribed `ready_for_review` event and runs this full suite on
-  # the same head before that pull request can ship.
-  #
-  # RULING 13: a green build check did not mean the tests ran. This file ran
-  # `pnpm build` and the bundle budgets and never `pnpm test`, so the four
-  # scheduled refresh gates were this repo's ONLY Linux runner of the suite.
-  # `tests/coverage-manifest.test.ts` shipped on 2026-08-18 passing on Windows
-  # and failing on every Linux runner, and the way the repo found out was the
-  # meetings snapshot going stale for two days — not a red PR check. Every
-  # green build check on PRs #73 through #115 was silent about tests on Linux.
-  #
-  # Its own job rather than a step in the matrix: the matrix builds twice, by
-  # mode, and the suite is mode-independent. Running it once is the honest
-  # amount of work, and a separate job names itself in the checks list, so
-  # "the tests ran" is readable without opening a log.
-  #
-  # Chromium because tests/beacon-guard.test.ts proves the synthetic-run guard
-  # by driving a real browser. No routine refresh gate survives.
-  gates:
-    name: gates (test · lint · tsc)
+    needs:
+      - admission
+    if: always()
+  test:
+    name: test (${{ matrix.shard }}/4)
+    needs:
+      - admission
+      - verify
+    if: needs.admission.outputs.tier == 'yes'
     runs-on: ubuntu-latest
     timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - 1
+          - 2
+          - 3
+          - 4
     steps:
-      # Use the same complete history as the build jobs and local certification.
-      # Proof heads are preserved historical commits, not a fixed number of
-      # parents behind GitHub's synthetic merge commit.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      # Setup Node precedes the dependency-free PR-tier and exact-tree adapters,
-      # which import type-strippable local modules. The holdings fetch is git
-      # only and does not care where it sits.
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
-
-      # One dependency-free classifier owns the draft/full event table. Unknown
-      # payloads, pushes and dispatches all answer full.
-      - name: Classify the pull request certification tier
-        id: pr_tier
-        if: github.event_name == 'pull_request'
-        env:
-          WTP_EVENT_NAME: ${{ github.event_name }}
-          WTP_EVENT_ACTION: ${{ github.event.action }}
-          WTP_PR_DRAFT: ${{ github.event.pull_request.draft }}
-        run: node scripts/pr-ci-tier.mjs
-
-      # ══ IS THIS THE TREE THAT ALREADY PASSED? (FCP-9C) ══
-      #
-      # RULING 278 asks what CHANGED. This asks a second question the SHA hides:
-      # has this exact tree already been certified?
-      #
-      # Run #807 of 2026-09-07 is why. It bought a full shipping-grade proof of
-      # merge commit 0251d145, whose tree is dc3bee39 — the identical git object
-      # run #806 had certified on be6e41ff minutes earlier. Same bytes, different
-      # commit SHA, seventeen more billed minutes and another slice of the
-      # forty-five the owner spent unable to proceed.
-      #
-      # `scripts/certified-tree.mjs` is an adapter; the relation lives in
-      # lib/control-plane/shipping/tree-equivalence.ts and
-      # there is no second table here. It answers `yes` only when the pushed head
-      # is a two-parent merge, main's tip is an ancestor of the candidate, the
-      # trees are the same object, and every required context is GREEN at the
-      # candidate. Every unanswerable question answers `no` and the full proof
-      # runs. It needs no install — bare node, git, and one `gh api` call.
-      - name: Is this the tree that already passed? (FCP-9C)
-        id: certified
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/certified-tree.mjs
-
-      # THE CHEAP TIER, BEFORE ANYTHING IS BOUGHT. (RULING 279.)
-      #
-      # Bare `node` on the bare checkout: no corepack, no pnpm store, no
-      # install, no browser, no build. `scripts/preflight.mjs` and everything it
-      # reaches import only node builtins and type-strippable local modules, so
-      # this runs here and costs seconds.
-      #
-      # Run 34097010100 is why it is here. A committed duplicate helper — two
-      # seconds to detect — surfaced 8m46s into the test step, after a browser
-      # install it never used, and the job then ran three more minutes past a
-      # failure it already knew about. Seventeen billed runner-minutes for an
-      # answer this step has before the first dependency is fetched.
-      #
-      # It is skipped only when this exact tree already has the required green
-      # certification. Runtime outcomes never enter Git, so no runtime path can
-      # waive this software proof.
-      - name: Preflight — the cheap deterministic checks (RULING 279)
-        id: preflight
-        if: github.event_name == 'pull_request' || steps.certified.outputs.certified != 'yes'
-        run: node scripts/preflight.mjs
-
-      # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
-      # SECOND TABLE. Four outcomes, and every later step reads
-      # this one output rather than re-deriving the decision from its parts:
-      #
-      #   yes            verify this head fully
-      #   draft          run the deterministic PR tier; certify fully when ready
-      #   no-certified   this exact tree already passed; attest and stop (FCP-9C)
-      #   no-preflight   a cheap check failed; fail loudly and buy nothing more
-      #
-      # Pull-request state is resolved first. A draft must run its deterministic
-      # tier even for a non-shipping diff, and a ready PR must buy a fresh full
-      # certification on ready_for_review/open/synchronize rather than reusing
-      # the same head's earlier draft contexts. Non-PR ordering remains
-      # exact-tree reuse, preflight, then full proof.
-      - name: Decide whether the expensive tier runs
-        id: tier
-        if: always()
-        shell: bash
-        run: |
-          if [ -n "${{ steps.pr_tier.outputs.tier }}" ] && [ "${{ steps.preflight.outcome }}" != "success" ]; then
-            echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.pr_tier.outputs.tier }}" = "draft" ]; then
-            echo "expensive=draft" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then
-            echo "expensive=yes" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then
-            echo "expensive=no-certified" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
-            echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
-          else
-            echo "expensive=yes" >> "$GITHUB_OUTPUT"
-          fi
-
-      # Exact historical data equality is a migration proof, not a live-source query.
-      # Fetch the frozen base and the pinned integration source; keep checkout shallow.
       - name: Enable corepack (pnpm pinned by packageManager)
-        # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. Drafts install for their deterministic contract checks.
-        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
         run: corepack enable
-
-      # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
-      #
-      # `package-manager-cache: false` above is correct and stays: pnpm is not
-      # on PATH until corepack enables it, so setup-node cannot find the store
-      # to cache. That left every run downloading the whole dependency tree.
-      #
-      # Resolving the path here and caching it by lockfile hash is the same
-      # thing setup-node would have done, at the only point in the job where
-      # the question can be answered.
       - name: Where is the pnpm store
         id: pnpm-store
-        # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. Drafts install for their deterministic contract checks.
-        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-
       - uses: actions/cache@v4
-        # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. Drafts install for their deterministic contract checks.
-        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          # A lockfile change invalidates the key and this restores the nearest
-          # previous store, so a one-package bump re-downloads one package
-          # rather than all of them.
+          key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            pnpm-${{ runner.os }}-
-
+            pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
       - name: Install
-        # A certified tree (FCP-9C) needs none of this: the attestation is bare
-        # node. Drafts install for their deterministic contract checks.
-        if: steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft'
+        if: needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft'
         run: corepack pnpm install --frozen-lockfile
-
-      # P-006 · the browser, cached. This install carries a 15-minute timeout
-      # because it is the longest step in the job.
-      #
-      # A cached BROWSER is the kind of cache that usually deserves suspicion —
-      # a stale or half-restored one would be exactly the "step reported
-      # success with its product unchecked" failure RULING 113 was adopted
-      # over. It is safe here for one specific reason: the step immediately
-      # below asks whether the binary is actually there, compares our
-      # resolution against Playwright's own `executablePath()`, and has no
-      # skip flag. The cache cannot lie past it.
-      #
-      # `--with-deps` still runs regardless: the system libraries are not in
-      # the cache and are cheap.
-      #
-      # THE KEY IS THE LOCKFILE HASH, AND THERE IS NO STEP TO GET WRONG.
-      #
-      # Two versions of this were wrong before it was this simple, and both
-      # failures are the argument for the simplicity.
-      #
-      # The first read `node_modules/playwright-core`, which pnpm does not
-      # hoist — the direct dependency is `playwright`. The version came back
-      # EMPTY and the key resolved to the bare prefix, which run 32794320409
-      # states outright: "Cache not found for input keys: playwright-Linux-".
-      # Worse than a miss — the post-step would then save under a version-less
-      # key and restore a stale browser after every upgrade.
-      #
-      # The second read the right package and nested a double-quoted `node -p`
-      # argument inside a double-quoted command substitution. It reached node
-      # with its inner quotes gone: `SyntaxError: Unexpected token '.'`, run
-      # 32794831139, and it took `main` red.
-      #
-      # So: no step at all. `hashFiles('pnpm-lock.yaml')` moves whenever
-      # Playwright's version moves, because a version bump IS a lockfile
-      # change. It also moves when any other dependency does, which throws the
-      # browser cache away more often than strictly necessary — and that is the
-      # direction to be wrong in. A key that invalidates too eagerly costs one
-      # download; a key that invalidates too rarely serves a stale browser.
-      - name: Lint
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 10
-        run: corepack pnpm lint
-
-      # THE TYPE CHECK RUNS HERE, ON A CHECKOUT THAT HAS NEVER BEEN BUILT
-      # (Prompt C item 1a, 2026-08-20).
-      #
-      # It lived in the build job for one day, after the first run of this job
-      # failed with "app/layout.tsx: error TS2304: Cannot find name
-      # 'LayoutProps'" — a type Next generates into .next/types, picked up by
-      # tsconfig.json's include. Moving the check behind a build made it pass
-      # and made it worthless: it could then only ever be measured on a tree
-      # carrying generated files, which is the same condition that hid the
-      # defect on developer machines for months.
-      #
-      # app/layout.tsx now writes its own props type, so nothing in the tree
-      # depends on a generated global, and the check belongs where it proves
-      # something: a fresh checkout, no build, no cached .next. This job
-      # deliberately does NOT build — tests/draft-pr-ci.test.ts and
-      # tests/gate-parity.test.ts assert that, so
-      # a future "just add a build step" cannot quietly restore the old lie.
-      - name: Types (fresh checkout, no build)
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 10
-        run: corepack pnpm exec tsc --noEmit
-
-      # THE THREE CANONICAL AUTHORITIES, RUN RATHER THAN IMPLIED (2026-08-29).
-      #
-      # `governance:check`, `orchestration:check` and `method:check` were
-      # enforced only INDIRECTLY here, by tests that assert things about their
-      # subject matter. That is not the same as running them, and the gap is the
-      # RO04 shape precisely: a session runs every gate it knows about, reports
-      # all of them green truthfully, and merges a ledger whose generated views
-      # are stale.
-      #
-      # EACH WAS CLASSIFIED BY READING THE SCRIPT. All three are PURE CHECKERS —
-      # they read canonical state, write nothing under the repository, and exit
-      # non-zero on a violation. `governance:check` regenerates every view into a
-      # `mkdtemp` COPY of the tree rather than into the tree, for the reason its
-      # own comment gives: a validator that repairs what it measures cannot
-      # report a failure.
-      #
-      # THE MUTATING NEIGHBOURS ARE EXCLUDED BY NAME, so a later reader does not
-      # take the omission for an oversight: `governance:compile` is the
-      # GENERATOR (running it here would repair the staleness this catches and
-      # go green having destroyed the evidence — RULING 102); `method:ingest`
-      # rebuilds the method store from the legacy manifest and once shrank it
-      # from 88 routes to 62 while reporting success; `orchestration:closeout` is
-      # this same script with `--closeout`, and it reconciles against artifacts
-      # only the running session can observe — fed CI's empty list it would
-      # manufacture findings about a session that is not running.
-      #
-      # `if: always()` on all three, so one red gate does not hide the others.
-      # `scripts/gates.mjs` carries the same three, and
-      # `tests/gate-parity.test.ts` fails if this file and that one ever drift.
-      - name: Governance ledger and its generated views
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 10
-        run: corepack pnpm governance:check
-
-      - name: Orchestration plans (RULING 190)
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 5
-        run: corepack pnpm orchestration:check
-
-      - name: Method knowledge store
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 5
-        run: corepack pnpm method:check
-
-      - name: Canonical state holdings and residual paths
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 5
-        run: corepack pnpm state-holdings:check
-
-      - name: Generated state manifests against committed observations
-        if: always() && (steps.tier.outputs.expensive == 'yes' || steps.tier.outputs.expensive == 'draft')
-        timeout-minutes: 5
-        run: corepack pnpm state-manifest --check
-
-      - name: Draft pull request — deterministic tier complete
-        if: success() && steps.tier.outputs.expensive == 'draft'
-        run: |
-          echo "Draft certification completed preflight, install, lint, types, governance,"
-          echo "generated-state and state-holdings integrity. Browser and full-suite proof"
-          echo "run when this exact head receives ready_for_review."
-
-      # THE SHIPPING INVARIANT — ASKED BEFORE THE MERGE, NOT THE MORNING AFTER.
-      # (2026-08-28, the P0 schema drift. Intake tripwire run 33211710028.)
-      #
-      # `0021_mixed_red_ghost` and `0022_adorable_hemingway` merged and deployed
-      # while production's schema stood at 20. `ask_interactions` did not exist,
-      # every insert naming it failed, the route caught the error and served the
-      # page — and the only thing that asked was the DAILY tripwire, the next
-      # morning. Nothing in this repository has ever applied a migration
-      # automatically: `git log -S` over `.github/` and `netlify.toml` returns no
-      # commit that ever ran `db:apply`, `drizzle-kit migrate` or
-      # `apply-migrations` anywhere in CI or in the deploy.
-      #
-      # This job is where the answer can still change what happens. It runs on
-      # every ready pull request and on every push to `main`, so the question is
-      # asked of the EXACT head that is about to ship. Drafts defer this
-      # shipping-only question until their `ready_for_review` run.
-      #
-      # SCOPED, so a docs-only pull request is not gated on a database round
-      # trip: the gate reads the changed paths first and exits NOT APPLICABLE
-      # without opening a connection unless `lib/db/migrations/` or
-      # `lib/db/schema.ts` moved.
-      #
-      # PHASE-AWARE, because migrate-always-first is wrong half the time. An
-      # EXPAND migration must be applied BEFORE its code deploys; a CONTRACT
-      # migration must NOT be — `lib/db/migrations/0013` and `0014` are that
-      # pair, split on purpose, and a gate that demanded everything be applied
-      # would have refused them. `lib/db/migration-phases.ts`.
-      #
-      # READ-ONLY, by variable name. A gate that could apply what it finds would
-      # run unreviewed SQL from a pull request against production.
-      #
-      # `if: always()` for the same reason as lint and types above: a session
-      # gets every answer from one run rather than one merge at a time.
-      #
-      # Exit 2 is COULD NOT TELL — no credential, or an unreadable migrations
-      # table — and it fails the step. An unreadable answer must never print
-      # like a passing one (RULING 24).
       - name: Frozen holdings base for extraction proofs
-        if: success() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         shell: bash
         run: |
           holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")
@@ -766,155 +320,96 @@ jobs:
           [[ "$pdc_frozen_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json" 2>/dev/null || git fetch --no-tags --depth=1 origin "$pdc_frozen_base"
           git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"
-
       - name: Reader closure proof ancestry
-        if: success() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         shell: bash
         run: node scripts/reader-proof-history.mjs
-
-      # `if: always()` on the two that follow, so one red gate does not hide
-      # the verdict of the others. A PR author gets all three answers from one
-      # run rather than three round trips.
       - uses: actions/cache@v4
-        if: steps.tier.outputs.expensive == 'yes'
+        if: needs.admission.outputs.tier == 'yes'
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
+          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install the browser the suite needs
-        if: success() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 15
         run: corepack pnpm exec playwright install --with-deps chromium
-
-      # WHERE A STEP'S PRODUCT CAN BE OBSERVED, OBSERVE IT AT THE STEP
-      # (`NH106`, RULING 113, 2026-08-23).
-      #
-      # The step above reported SUCCESS IN 27 SECONDS at `3d453fd` and the suite
-      # then failed four times on `NO CHROMIUM INSTALLED ... searched
-      # /home/runner/.cache/ms-playwright` — a directory the install log, two
-      # screens earlier, said it had downloaded Chromium into. The install was
-      # fine; `lib/ops/chromium-pin.ts` was looking for the binary at the legacy
-      # `chrome-linux/chrome` while Chrome for Testing puts it at
-      # `chrome-linux64/chrome`.
-      #
-      # Eighty seconds and a 2,000-line suite stood between the install exiting
-      # and anyone learning that. This asks the question at the step: it lists
-      # the browsers root, every build directory in it and the contents of each,
-      # compares our resolution against Playwright's own `executablePath()`, and
-      # exits non-zero on either an absence or a disagreement.
-      #
-      # It has NO skip flag. An escape hatch on a gate is how the gate stops
-      # meaning anything, and letting the guard pass with no browser is the one
-      # "fix" `scripts/browser.mts` forbids in as many words.
       - name: Prove the browser is actually there
-        if: success() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 5
         run: corepack pnpm run assert:browser
-
-      # The final reader receipt may deliberately sit behind documentary-only
-      # commits. Keep the checkout shallow, but deepen this one ref until Git
-      # can prove that the receipt's executed head is really in HEAD's history.
       - name: Test
-        if: success() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 60
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-        run: corepack pnpm test
-
+          CI_TEST_SHARD: ${{ matrix.shard }}/4
+        run: node scripts/ci-tests.mjs
+      - name: Keep test diagnostics and partition manifest
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: test-${{ matrix.shard }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: .scratch/ci/
+          if-no-files-found: warn
+          retention-days: 7
+  gates:
+    name: gates (test · lint · tsc)
+    needs:
+      - admission
+      - verify
+      - test
+      - build
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Require every selected verification result
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: node scripts/ci-verdict.mjs
+      - name: Require the original PR and workflow inputs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/ci-retry-identity.mjs
+      - name: Enable corepack (pnpm pinned by packageManager)
+        if: success() && needs.admission.outputs.tier == 'yes'
+        run: corepack enable
+      - name: Where is the pnpm store
+        id: pnpm-store
+        if: success() && needs.admission.outputs.tier == 'yes'
+        run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        if: success() && needs.admission.outputs.tier == 'yes'
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-${{ runner.os }}-${{ runner.arch }}-node24-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-${{ runner.arch }}-node24-
+      - name: Install
+        if: success() && needs.admission.outputs.tier == 'yes'
+        run: corepack pnpm install --frozen-lockfile
       - name: Schema shipping gate (only when the schema contract moved)
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 5
-      #
-      # AN ESTABLISHED MIGRATION IS IMMUTABLE, and that half runs with NO
-      # CREDENTIAL AT ALL (2026-08-28, the audit). Before the gate asks
-      # production anything it compares this head against the MERGE BASE and
-      # refuses a modification, deletion or rename of any migration that
-      # already exists there — correction is a new migration. It also holds the
-      # journal to append-only and requires the journal and the .sql files on
-      # disk to correspond exactly. None of that needs a secret, so it runs on a
-      # fork pull request and on a laptop with no .env.local.
-      #
-      # The workflow supplies complete history before any checker runs. The
-      # schema gate still uses the event's exact base and retains its bounded
-      # fetch fallback for standalone use in a shallow checkout. Never infer
-      # a source timestamp from an incomplete per-file history.
-      #
-      # WTP_SCHEMA_GATE_SMOKE is empty on every push and every pull request —
-      # the `inputs` context is empty outside workflow_dispatch — so the gate's
-      # scope is unchanged unless a person deliberately dispatches the proof.
         env:
           WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
           WTP_SCHEMA_GATE_SMOKE: ${{ inputs.schema_smoke }}
           WTP_SCHEMA_GATE_MOMENT: ${{ inputs.schema_moment }}
         run: corepack pnpm exec tsx scripts/db-shipping-gate.mts
-
-      # THE RELEASE FREEZE — GITHUB GREEN IS NOT PRODUCTION TRUTH (NH273).
-      #
-      # The step above asks whether production holds the migrations THIS change
-      # ships. This one asks whether the last post-deploy reading of production
-      # came back red, and refuses a production-changing release while it did.
-      # The author's decision, 2026-08-28: a red reading does NOT roll production
-      # back — the database may already have advanced, and rolling code back
-      # underneath an advanced schema manufactures a second incompatibility. It
-      # marks state DEGRADED, alerts, and blocks the next release until a
-      # re-check passes.
-      #
-      # THE AUTHORITY IS THE CANONICAL CONTROL-PLANE LOG, READ-ONLY. The role in
-      # `WTP_CONTROL_PLANE_DATABASE_URL_READONLY` can SELECT the existing
-      # software-release outcome log and cannot append, mutate Git or touch the
-      # serving database. Missing/unreachable/NOT_RECORDED all become
-      # NOT_ASSESSED and freeze a software-bearing pull request; there is no
-      # tracked-file fallback.
-      #
-      # IT DOES MAKE ONE NETWORK CALL, AND IT NEEDS NO CREDENTIAL EITHER
-      # (2026-08-29). Rule 4 — a healthy reading must still cover the production
-      # it is about — turns on WHAT PRODUCTION SERVES RIGHT NOW, so the gate asks
-      # `GET https://meanwhileusa.com/api/build`, which returns the deployed
-      # commit from a build-time constant. That route writes nothing: no database
-      # handle, no search-log row, so a gate that runs on every pull request
-      # cannot contaminate the store this product sells. The synthetic-run header
-      # travels with the request regardless. Three bounded attempts separate a
-      # dropped connection from a wall; a wall is PRODUCTION_UNOBSERVABLE, which
-      # FREEZES a production-changing release rather than passing (RULING 24).
-      #
-      # SCOPED BY `classifyDeploy` — the same predicate scripts/netlify-ignore.mjs
-      # gives Netlify — so a docs-only close-out is not treated as a production
-      # release and follows ordinary shipping law.
-      #
-      # WHY HERE AND NOT IN A WORKFLOW OF ITS OWN, measured rather than assumed:
-      # `gh api repos/:owner/:repo/deployments` returns 0 for this repository.
-      # Netlify creates no GitHub Deployment, so no `deployment_status` event has
-      # ever fired here and a workflow listening for one would never run. A gate
-      # that never executes reports nothing and reads as covered.
       - name: Release freeze (refuses a release on a DEGRADED production reading)
-        if: always() && steps.tier.outputs.expensive == 'yes'
+        if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 5
         env:
           WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
         run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
-
-      - name: Preflight was red — nothing expensive was bought
-        if: always() && steps.tier.outputs.expensive == 'no-preflight'
-        run: |
-          echo "The cheap preflight failed on this head, so the browser install, the" >&2
-          echo "full suite and the builds were not run for it. Nothing is waived: fix" >&2
-          echo "what preflight named, push again, and the corrected head runs the whole" >&2
-          echo "verification before it may ship. Run it yourself with:" >&2
-          echo "    node scripts/preflight.mjs" >&2
-          exit 1
-
-# THE RED PATH SAYS WHY, IN THIS JOB'S OWN LOG. (RULING 279.)
-      #
-      # The preflight step has already failed the job by this point — this adds
-      # no gate, it adds the sentence. Without it the gates log ends in a run
-      # of skipped steps, and "skipped" is what a job that had nothing to do
-      # looks like too. A required check must never be ambiguous about which of
-      # those happened.
-      # THE REQUIRED CONTEXT STILL ARRIVES, AND IT SAYS WHAT IT REUSED.
-      # (FCP-9C. RULING 156: a required check that does not report disarms
-      # protection rather than blocking it, so this job runs, reports
-      # `gates (test · lint · tsc)` and states its receipt.) The suite that ran
-      # on the candidate ran on these exact bytes; no check is waived.
       - name: Certified tree reused — this tree already passed
-        if: steps.tier.outputs.expensive == 'no-certified'
+        if: success() && needs.admission.outputs.tier == 'no-certified'
         run: node scripts/certified-tree.mjs --attest=gates

@@ -7,9 +7,11 @@
  */
 import { createHash } from "node:crypto";
 
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { GeographyType, GeographyVersion } from "./contract.ts";
 import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
+import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
 
@@ -58,8 +60,26 @@ export const CENSUS_GEO_SOURCES: Record<string, Source> = {
   },
 };
 
-/** The default published coverage: Admin's four available primary groupings. */
-export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "sldu", "sldl"];
+/**
+ * The OMB metropolitan/micropolitan delineation. Census publishes it ONLY as
+ * xlsx and provides no direct ZCTA↔CBSA relationship; we derive ZCTA↔CBSA from
+ * this (which counties → which CBSA, metro vs micro) joined to the ZCTA↔county
+ * scope. 2023 is the current delineation vintage.
+ */
+export const CBSA_DELINEATION = {
+  version: "cbsa:2023",
+  plan: "2023 OMB CBSA delineation",
+  effectiveFor: "current metropolitan/micropolitan statistical areas (2023 OMB delineation)",
+  url: "https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx",
+} as const;
+
+/**
+ * The default published coverage: Admin's FIVE primary groupings — congressional
+ * district, county, CBSA (metro/micro), state upper and state lower. `place` and
+ * `county_subdivision` are additional national coverage this lane also builds but
+ * are not among Admin's five, so they are opt-in via `only`.
+ */
+export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "cbsa", "sldu", "sldl"];
 
 export interface AcquireOptions {
   /** Which source keys to build (default DEFAULT_SCOPES). */
@@ -104,6 +124,18 @@ async function streamLines(
   return { bytes, sha256: hash.digest("hex"), lastModified };
 }
 
+/** Fetch a whole file into memory (for the xlsx delineation), with its sha256. */
+async function fetchBytes(
+  url: string,
+  fetchImpl: typeof fetch,
+  signal?: AbortSignal,
+): Promise<{ bytes: Buffer; sha256: string; lastModified: string | null }> {
+  const res = await fetchImpl(url, { headers: { "user-agent": userAgent() }, signal });
+  if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
+  const bytes = Buffer.from(await res.arrayBuffer());
+  return { bytes, sha256: createHash("sha256").update(bytes).digest("hex"), lastModified: res.headers.get("last-modified") };
+}
+
 async function buildScope(src: Source, fetchImpl: typeof fetch, signal?: AbortSignal): Promise<BuiltScope> {
   const filename = src.url.split("/").pop() ?? src.url;
   const state: { acc: ScopeAccumulator | null } = { acc: null };
@@ -146,18 +178,85 @@ function filterScopeByStates(scope: BuiltScope, states: ReadonlySet<string>): Bu
   };
 }
 
+function filterCbsaByStates(scope: BuiltScope, states: ReadonlySet<string>): BuiltScope {
+  const postals = new Set<string>();
+  for (const f of states) {
+    const p = FIPS_TO_STATE[f]?.postal;
+    if (p) postals.add(p);
+  }
+  const groupings = scope.groupings.filter((g) => g.memberStates.some((p) => postals.has(p)));
+  return {
+    ...scope,
+    groupings,
+    instanceCount: groupings.length,
+    zctaEdgeCount: groupings.reduce((n, g) => n + g.overlaps.length, 0),
+  };
+}
+
+function cbsaVersionMeta(countyScope: BuiltScope, xlsxUrl: string, xlsxSha: string): GeographyVersion {
+  const countyProv = countyScope.versionMeta.provenance;
+  return {
+    key: CBSA_DELINEATION.version,
+    type: "cbsa",
+    plan: CBSA_DELINEATION.plan,
+    zctaTabulation: "2020",
+    effectiveFor: CBSA_DELINEATION.effectiveFor,
+    provenance: {
+      sourceUrls: [xlsxUrl, ...countyProv.sourceUrls],
+      sourceDataset: "OMB_CBSA_DELINEATION_2023+CENSUS_TAB20_REL2020",
+      sourceFiles: [xlsxUrl.split("/").pop() ?? xlsxUrl, ...countyProv.sourceFiles],
+      sourceChecksums: [xlsxSha, ...countyProv.sourceChecksums],
+      method:
+        "ZCTA↔CBSA derived as the whole-county union of the 2023 OMB delineation " +
+        "(list1_2023.xlsx; metro=Metropolitan Statistical Area, micro=Micropolitan Statistical Area) joined " +
+        "to the Census 2020 ZCTA↔county relationship (tab20). A ZCTA is an edge if it shares land with any " +
+        "county of the CBSA; area share = Σ AREALAND_PART over the CBSA's counties / AREALAND_ZCTA5_20 " +
+        "(no population weight).",
+      computedAt: new Date().toISOString(),
+    },
+  };
+}
+
 /** Fetch + build the dataset in memory. Never writes a file. */
 export async function acquireDataset(options: AcquireOptions = {}): Promise<BuiltDataset> {
   const keys = options.only ?? DEFAULT_SCOPES;
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
+  const wantCbsa = keys.includes("cbsa");
+
+  // Build every requested tab20 scope once, UNFILTERED (the state filter is
+  // applied at assembly, so a CBSA can still fold up a whole multi-state metro).
+  const builtByKey = new Map<string, BuiltScope>();
+  for (const key of keys) {
+    if (key === "cbsa") continue;
+    const src = CENSUS_GEO_SOURCES[key];
+    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa`);
+    builtByKey.set(key, await buildScope(src, fetchImpl, options.signal));
+  }
+
+  // CBSA is derived from the full national ZCTA↔county scope + the OMB
+  // delineation. Build county if it was not itself requested.
+  let cbsaScope: BuiltScope | undefined;
+  if (wantCbsa) {
+    let countyFull = builtByKey.get("county");
+    if (countyFull === undefined) {
+      countyFull = await buildScope(CENSUS_GEO_SOURCES.county, fetchImpl, options.signal);
+    }
+    const { bytes, sha256 } = await fetchBytes(CBSA_DELINEATION.url, fetchImpl, options.signal);
+    const delineation = parseCbsaDelineation(bytes);
+    cbsaScope = buildCbsaScope(countyFull, delineation, cbsaVersionMeta(countyFull, CBSA_DELINEATION.url, sha256));
+  }
+
+  // Assemble output scopes in requested order, applying any state filter.
   const scopes: BuiltScope[] = [];
   for (const key of keys) {
-    const src = CENSUS_GEO_SOURCES[key];
-    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}`);
-    let scope = await buildScope(src, fetchImpl, options.signal);
-    if (options.states) scope = filterScopeByStates(scope, options.states);
+    let scope = key === "cbsa" ? cbsaScope : builtByKey.get(key);
+    if (scope === undefined) continue;
+    if (options.states) {
+      scope = key === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states);
+    }
     scopes.push(scope);
   }
+
   const zctaUniverse = new Set<string>();
   for (const s of scopes) for (const g of s.groupings) for (const o of g.overlaps) zctaUniverse.add(o.zcta5);
   const coverage = options.states

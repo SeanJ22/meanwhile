@@ -1,0 +1,74 @@
+name: CI documentary observation rehearsal
+
+on:
+  push:
+    branches: [codex/ci-documentary-proof]
+
+permissions:
+  contents: read
+
+jobs:
+  prove-documentary-skip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Prove only the isolated rehearsal workflow differs
+        env:
+          CERTIFIED_BASE_SHA: 5f9c212f82369d120ce78f4114bcaddf194db76e
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD^1)" = "$CERTIFIED_BASE_SHA"
+          test "$(git rev-list --parents -n 1 HEAD | wc -w)" -eq 3
+          test "$(git rev-list --parents -n 1 HEAD^2 | wc -w)" -eq 2
+          test "$(git rev-parse HEAD^2^1)" = "$CERTIFIED_BASE_SHA"
+          test "$(git rev-parse HEAD^2^{tree})" = "$(git rev-parse HEAD^{tree})"
+          test "$(git diff --no-renames --name-only HEAD^1 HEAD)" = ".github/workflows/ci-documentary-proof.yml"
+          git diff --exit-code HEAD^1 HEAD -- scripts lib package.json pnpm-lock.yaml tsconfig.json
+          echo "Test subject: $(git rev-parse HEAD)"
+          echo "Unchanged certified source: $(git rev-parse HEAD^1)"
+          echo "Source tree: $(git rev-parse HEAD^{tree})"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Is another production observation owed?
+        id: deploy
+        env:
+          WTP_CONTROL_PLANE_DATABASE_URL_READONLY: ${{ secrets.WTP_CONTROL_PLANE_DATABASE_URL_READONLY }}
+          WTP_RUN_ID: post-deploy-scope-${{ github.run_id }}
+        run: node scripts/deploy-classify.mjs --sha=${{ github.sha }}
+
+      - name: Require a justified documentary skip
+        env:
+          DEPLOY_VERDICT: ${{ steps.deploy.outputs.deploy }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$DEPLOY_VERDICT" = cancel
+          echo "The merged production classifier proved the complete non-shipping range and a fresh canonical HELD receipt for the exact served commit."
+          echo "No observer poll, receipt write, application build, test-result reuse, deployment or merge was performed by this rehearsal."
+          {
+            echo "### Documentary observation rehearsal"
+            echo "- The only candidate change is this isolated workflow harness."
+            echo "- All classifier, observer, policy, dependency and application bytes match the certified first parent."
+            echo "- The actual push event and two-parent merge topology exercise the documentary path."
+            echo "- The real canonical receipt was read using the existing read-only role."
+            echo "- Missing, stale or incompatible evidence would fail this rehearsal; no substitute receipt is supplied."
+            echo "- This is a controlled branch rehearsal, not a claim that a production documentary merge has occurred."
+          } >> "$GITHUB_STEP_SUMMARY"

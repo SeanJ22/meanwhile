@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 680,
-    "named": 6810,
+    "files": 681,
+    "named": 6817,
     "dynamic": 27
   },
   "files": {
@@ -2146,6 +2146,18 @@
         "the four Pima seats are identified, because their terms end together",
         "the seats are NONPARTISAN by statute, and no party is invented",
         "the statute's own composition rule matches the roster we read"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-geography.test.ts": {
+      "names": [
+        "build: a header missing a needed column fails loudly",
+        "build: parses whole/partial overlaps, skips the no-ZCTA remainder, keeps split relationships",
+        "lookup: AZ-06 returns 79 ZCTAs (verified Census tab20 CD119), stated N == rows",
+        "lookup: enumerates Arizona's 9 congressional districts",
+        "lookup: postal reconciliation distinguishes a ZCTA from a non-ZCTA ZIP",
+        "lookup: reverse ZCTA -> groupings spans the parallel types, never nested",
+        "lookup: unknown ZCTA and unknown geography are typed absence, never zero"
       ],
       "dynamic": 0
     },

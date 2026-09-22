@@ -22,6 +22,18 @@ Local warm-installed Windows measurement for the generation check: comparable ta
 
 ## Execution and failure behavior
 
+The first hosted full run, [35683872583 attempt 1](https://github.com/SeanJ22/meanwhile/actions/runs/35683872583/attempts/1), completed required checks in **18m16s** including 91s before admission started. Summed runner time was **46m42s**, or **52 rounded minutes / $0.312** at the Linux list rate. This is about 54% less elapsed time than the 39m34s baseline median, with six more rounded minutes ($0.036, about 13%) than the 46-minute baseline median. Extra isolated job setup and per-job rounding explain the increase; invoice charges remain unknown.
+
+| Job | Elapsed runner time |
+| --- | --- |
+| Admission | 1m10s |
+| Default / standalone build | 2m19s / 2m00s |
+| Types / lint / governance | 1m45s / 1m37s / 2m22s |
+| Test partitions 1 / 2 / 3 / 4 | 7m56s / 12m06s / 6m10s / 8m23s |
+| Final integrity gates | 54s |
+
+All 681 discovered test files appeared exactly once across the four successful manifests, with the same clean tested merge commit, tree, configuration and suite hashes. The slowest test step itself took 10m46s. This was a **mixed-cache** measurement: pnpm had hits; the new Next build-cache keys missed. It is not a fully warm or fully cold benchmark. The unequal partition times remain an optimization opportunity. No test was omitted.
+
 1. Admission runs dependency-free deterministic preflight once. If full verification is needed, a bounded install enables the existing read-only release-integrity gate before any application build, browser or test suite starts. This network prerequisite is separate from the dependency-free preflight definition.
 2. Lint, fresh-checkout types and governance/evidence checks run in independent checkouts. The test jobs wait for their successful completion. Both original application configurations retain their distinct caches and bundle budgets.
 3. Four test runners partition the canonical test command's complete TS and TSX file set, deterministically, with no changed-file omissions. Each uploads its exact assignment, commit/tree/configuration hashes, complete output and exit status. Equal file counts are an initial distribution; use measured shard elapsed times to assess balance.
@@ -40,6 +52,10 @@ If **only the final integrity verdict fails**, refresh the receipt through the e
 Reuse is refused for changed PR head, merge base, draft/ready policy, missing/non-green prerequisite jobs or checkout identity mismatch. Source, dependency lockfile, test/configuration and repository policy inputs remain bound to the same workflow tree. Repository protection still enforces current required contexts and up-to-date main. A changed base requires a new full run. No cross-run step-log inference, stale-result acceptance, or rerun of another session is authorized by this procedure.
 
 An admission failure is different: no expensive proof exists yet. After refreshing its prerequisite, retry the failed workflow so all previously withheld verification runs. A code/test failure requires correction and new full verification.
+
+Measured same-input terminal revalidation in [attempt 2](https://github.com/SeanJ22/meanwhile/actions/runs/35683872583/attempts/2) took **48s runner time**, about 56s from request, and one additional rounded minute ($0.006). All ten prerequisite jobs retained their original execution timestamps. The final job read a real CURRENT/HELD receipt again. By comparison, cleanup's old final-job retry took **28m04s**, including **24m16s repeating tests**. The new rehearsal did not deliberately expire production's receipt: it proves safe job-boundary reuse, while the historical cleanup incident supplies the real expired-receipt case.
+
+An isolated failure-only [expiry rehearsal](https://github.com/SeanJ22/meanwhile/actions/runs/35683927305) used the unchanged expiry evaluator with a synthetic 39.9-hour receipt. Admission failed, no dependency-install/browser/test/build step ran, and the required final reducer failed. It took 2m27s elapsed / four rounded runner minutes ($0.024). Production receipts and the 24-hour policy were unchanged. This synthetic negative proof is separate from a real observer refresh measurement.
 
 ## Check selection rollout
 

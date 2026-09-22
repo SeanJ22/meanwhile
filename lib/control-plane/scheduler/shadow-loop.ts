@@ -327,7 +327,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    * of latency rather than a lease TTL every cycle forever.
    */
   const reclaim = input.skipReclaim
-    ? { reclaimed: [], stillLive: [], refused: [] }
+    ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }
     : await sweepExpiredLeases(input.repos, {
         now: input.now,
         observedBy: input.holder,
@@ -842,6 +842,7 @@ export function digestLines(cycle: CycleResult): string[] {
   }
   out.push(
     `  leases             ${cycle.reclaim.reclaimed.length} reclaimed · ` +
+      `${cycle.reclaim.releasedSettled.length} released on an already-disposed route · ` +
       `${cycle.reclaim.stillLive.length} still live · ${cycle.reclaim.refused.length} refused`,
   );
   out.push(`  freshness debt     ${cycle.debts.length} row(s) across ${cycle.incidents.length} incident(s)`);

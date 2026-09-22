@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 686,
-    "named": 6854,
-    "dynamic": 27
+    "files": 688,
+    "named": 6867,
+    "dynamic": 28
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -717,7 +717,10 @@
       "names": [
         "list() of an empty table is one empty bounded page",
         "list() of exactly one full page still terminates on the short second page",
-        "list() pages an aggregate larger than one response and returns every row in id order"
+        "list() pages an aggregate larger than one response and returns every row in id order",
+        "listWhere() of a selective filter is ONE bounded statement where list() pages the whole table",
+        "listWhere() pages a large match set and equals list() filtered, row for row in id order",
+        "listWhere() refuses an unsafe JSON path segment rather than building SQL from it"
       ],
       "dynamic": 0
     },
@@ -2666,7 +2669,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 8
+      "dynamic": 9
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -2679,6 +2682,7 @@
         "classifies raw transport errors (and the deadline abort) as transient",
         "classifies the driver's connect-transport failure as transient",
         "createPgRepositories survives a transient connect fault at the real bootstrap (wiring)",
+        "every standing-runner cycle child that bootstraps the control plane also installs the per-attempt Neon deadline",
         "exhausts a bounded number of attempts then rethrows the transient error",
         "follows the sourceError / cause chain",
         "returns the value on the first try without sleeping or retrying",
@@ -3147,6 +3151,16 @@
       ],
       "dynamic": 0
     },
+    "tests/dead-lease-sweep.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: a sweep over N dead settled leases makes zero full Attempt listings, and the same counter does see one",
+        "SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once, nothing else moves, and the next sweep does not walk it",
+        "a LIVE task's expired lease is still reclaimed and the task reopened, in the same sweep that releases a settled one",
+        "an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released",
+        "attemptsForRouteTask's filtered read returns exactly what the old full-list filter returned, row for row and in order, on memory and file"
+      ],
+      "dynamic": 0
+    },
     "tests/deferred-census.test.ts": {
       "names": [
         "a binary mirror entry is compared as bytes, never as trimmed text",
@@ -3163,6 +3177,14 @@
         "the run refuses rather than shipping a header that disagrees with its body",
         "the size cap names what would be cut instead of truncating",
         "the split moves rows and cannot alter one"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-trail.test.ts": {
+      "names": [
+        "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
+        "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
+        "empty pipeline: every stage is a named gap, the blockers are named, promotions empty"
       ],
       "dynamic": 0
     },
@@ -5744,6 +5766,7 @@
         "PC-9: a ledger row predating the fields reads UNMEASURED by name; a null row reads UNREPORTED; a measured row reads its numbers",
         "PC-9: the parser reads the API's usage block, the split included, and never infers from the request",
         "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured",
+        "per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null",
         "§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess"
       ],
       "dynamic": 0

@@ -356,6 +356,35 @@ export function fileAggregateRepository<T>(
     return row;
   };
 
+  const list = async (): Promise<readonly Persisted<T>[]> => {
+    const names = (await listDirectory(root, dir)).filter((n) => n.endsWith(".json"));
+    const latestByBase = new Map<string, number>();
+    for (const name of names) {
+      const match = /^(.*)\.r(\d+)\.json$/.exec(name);
+      if (match === null) continue;
+      const [, base, revision] = match;
+      const current = latestByBase.get(base);
+      if (current === undefined || Number(revision) > current) {
+        latestByBase.set(base, Number(revision));
+      }
+    }
+    const rows: Persisted<T>[] = [];
+    for (const [base, revision] of [...latestByBase.entries()].sort()) {
+      const file = path.join(dir, `${base}.r${revision}.json`);
+      const row = await readJsonFile<Persisted<T>>(file, (parsed) =>
+        validateEnvelope<T>(file, kind, parsed),
+      );
+      if (row === null) {
+        throw new CorruptPersistedState(
+          file,
+          "the file was listed in this directory and then could not be read",
+        );
+      }
+      rows.push(row);
+    }
+    return rows.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  };
+
   return {
     read,
 
@@ -419,34 +448,12 @@ export function fileAggregateRepository<T>(
       throw new ConcurrentModification(kind, id, expectedRevision, winner?.revision ?? null);
     },
 
-    list: async (): Promise<readonly Persisted<T>[]> => {
-      const names = (await listDirectory(root, dir)).filter((n) => n.endsWith(".json"));
-      const latestByBase = new Map<string, number>();
-      for (const name of names) {
-        const match = /^(.*)\.r(\d+)\.json$/.exec(name);
-        if (match === null) continue;
-        const [, base, revision] = match;
-        const current = latestByBase.get(base);
-        if (current === undefined || Number(revision) > current) {
-          latestByBase.set(base, Number(revision));
-        }
-      }
-      const rows: Persisted<T>[] = [];
-      for (const [base, revision] of [...latestByBase.entries()].sort()) {
-        const file = path.join(dir, `${base}.r${revision}.json`);
-        const row = await readJsonFile<Persisted<T>>(file, (parsed) =>
-          validateEnvelope<T>(file, kind, parsed),
-        );
-        if (row === null) {
-          throw new CorruptPersistedState(
-            file,
-            "the file was listed in this directory and then could not be read",
-          );
-        }
-        rows.push(row);
-      }
-      return rows.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-    },
+    list,
+
+    /* `list()` filtered, so the two can never disagree on rows or order. A
+       directory has no index to ask, so this reads what `list()` reads. */
+    listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
+      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
   };
 }
 

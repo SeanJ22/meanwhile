@@ -365,6 +365,18 @@ export interface AggregateRepository<T> {
   ): Promise<Persisted<T>>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
+  /**
+   * The aggregates whose JSON value at `path` (a scalar `#>>` text extraction,
+   * the same reading as `AppendOnlyRepository.readWhere`) equals `value`.
+   *
+   * EXACTLY `list()` FILTERED: the same rows, in the same id order, on every
+   * provider. A caller moves from a full listing to this for cost, never for a
+   * different answer. Postgres asks the database for the matching rows only
+   * (bounded keyset pages, like `list()`); the file and memory providers filter
+   * their own `list()`. An empty result means nothing matches; a failed read
+   * THROWS and is never an empty list.
+   */
+  listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
 }
 
 /**

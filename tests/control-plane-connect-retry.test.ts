@@ -18,6 +18,9 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { neonConfig } from "@neondatabase/serverless";
 
@@ -252,5 +255,28 @@ test("createPgRepositories survives a transient connect fault at the real bootst
     );
   } finally {
     neonConfig.fetchFunction = originalFetch;
+  }
+});
+
+/*
+ * REGRESSION GUARD (2026-09-22). The retry above composes safely ONLY when each
+ * attempt is bounded by installNeonRequestDeadline (see connect-retry.ts header).
+ * Without it, a hung/faulting TLS connect is re-established with no per-attempt
+ * deadline and Node 24 crashes natively in OpenSSL cert verification at cycle
+ * start — the ~2-day "0 providers / 0 units" crash-loop. freshness-shadow.mts
+ * was the lone standing-runner cycle child missing this install; routine-civic-
+ * data-runner.mts had it. Both open the control plane at cycle start, so both
+ * MUST install the deadline. This is a source tripwire, deliberately strict.
+ */
+test("every standing-runner cycle child that bootstraps the control plane also installs the per-attempt Neon deadline", () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  for (const child of ["scripts/freshness-shadow.mts", "scripts/routine-civic-data-runner.mts"]) {
+    const src = readFileSync(join(root, child), "utf8");
+    assert.match(src, /createPgRepositories\s*\(/, `${child} is expected to open the control plane at cycle start`);
+    assert.match(
+      src,
+      /installNeonRequestDeadline\s*\(\s*\)/,
+      `${child} must installNeonRequestDeadline() to bound each connect attempt — without it the bootstrap connect-retry re-establishes an unbounded faulting TLS handshake (Node 24 native OpenSSL crash)`,
+    );
   }
 });

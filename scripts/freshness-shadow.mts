@@ -221,6 +221,7 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
@@ -414,6 +415,16 @@ const scheduledBlackout = scheduledBlackoutAt(NOW);
 let repos: ControlPlaneRepositories;
 if (wantsPostgres) {
   installNeonCircuitBreaker(ROOT, nowIso);
+  // Bound EACH Neon connect/query attempt (2026-09-22). Without this, the
+  // bootstrap connect-retry (052b26e8) re-established a faulting TLS handshake
+  // with no per-attempt deadline, driving Node 24 into a native OpenSSL
+  // (X509) stack overflow at cycle start — the ~2-day cycle crash-loop that
+  // read as "0 providers / 0 units". connect-retry.ts's header names this as
+  // the required composition; routine-civic-data-runner already installs it,
+  // and freshness-shadow was the lone Neon caller missing it. A bounded
+  // attempt aborts a hung/faulting connect into a retryable transient, and a
+  // persistent failure then fails FAST (clean exit) instead of crashing.
+  installNeonRequestDeadline();
   const url = controlPlaneUrlFromEnv();
   if (url === null) {
     console.error(

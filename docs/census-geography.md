@@ -107,42 +107,49 @@ districts across 14 states (AZ, CA, CO, FL, IA, MI, NJ, NY, OH, PA, TX, VA, WA,
 WI); the shipped types cover their congressional, county, metro/micro, and both
 state-legislative-chamber overlaps.
 
-### The one genuine remaining source decision: upcoming-election CD boundaries (cd:120)
+### Upcoming-election CD boundaries (cd:120) — Census source found (grf/2026)
 
 Current-office vs upcoming-election boundaries are **distinguished, never
 conflated**:
 
-- **cd:119** is labelled `effectiveFor: "current representation (119th
-  Congress, 2025–2027)"`. It is the *current office* map.
-- **cd:120** (the boundaries for the **2026 general election**) is **not
-  published**, and the lookup returns `NOT_YET_PUBLISHED` for it — never a
-  cd:119 answer wearing a cd:120 label. The distinction is enforced by the
-  version key + typed status, not by substitution.
+- **cd:119** (`effectiveFor: "current representation (119th Congress, 2025–2027)"`)
+  is the current-office map, from the tab20 relationship file.
+- **cd:120** (`effectiveFor: "2026 general election (120th Congress)"`) is the
+  upcoming-election map, from the Census grf/2026 source below. Until a cd:120
+  build is promoted, the lookup returns `NOT_YET_PUBLISHED` for it — never a
+  cd:119 answer wearing a cd:120 label.
 
-Why cd:120 is unavailable, and the alternatives investigated (RULING 248/250):
+**The source (an original Census input; no policy exception, no state files).**
+A one-URL 404 was not the whole story. Census's tab20/TIGER/GENZ products are all
+still the 119th (`tab20_cd12020` is a 404; TIGER through TIGER2025/CD and GENZ2025
+ship `cd119`; rel2020/2022/2024 have no cd120 — verified 2026-09-22). But the
+**block-level current geographic reference** files —
+`https://www2.census.gov/geo/docs/maps-data/data/grf/2026/public_grfc_cur26_<st>.txt`
+(updated 2026-08-10) — carry, per 2020 tabulation block, **`CDCURFP` = the current
+congressional district**, and the names file's `CDSESSN` is **120** (the 120th
+Congress / 2026 election; `CDDECFP` is the old 116th). They also carry `SLDUST`,
+`SLDLST`, `ZCTA5CE`, and `AREALAND`. So ZCTA↔CD:120 is derived by the same
+area-share method — a ZCTA's share of a district = Σ its blocks' `AREALAND` in that
+district ÷ its total block land — from `lib/census-geography/grf.ts`. Validated:
+AZ‑06 CD:120 = 80 ZCTAs (43 whole) vs the tab20 119th's 79 (AZ did not redraw; the
++1 is a block-resolution sliver).
 
-- **Census has no 120th-Congress geography at all.**
-  `tab20_cd12020_zcta520_natl.txt` is a 404; the entire `rel2020/cd-sld/`
-  directory carries only CD118 and CD119; `rel2024/` is Connecticut-only and is
-  still the 119th (`cd11924`). Verified 2026-09-21.
-- **For states whose 2026 map is unchanged**, the 2026 boundary equals cd:119 —
-  but *confirming the unchanged set* is itself the open question, so we do not
-  assert it per state.
-- **The official alternative** for a state that redrew mid-decade is that
-  state's own redistricting authority's **enacted-plan block-equivalency file**
-  (2020 census block → new district). Building ZCTA↔new-CD from it requires
-  joining that BEF to a block↔ZCTA crosswalk (the 1.06 GB
-  `tab20_zcta520_tabblock20_natl.txt`, or the per-state block relationship) —
-  a per-state, multi-format, block-level effort, materially larger than reading
-  one national Census file.
+**Which states differ (determined from Census data, not guessed).** Comparing each
+ZCTA's dominant CD between grf‑120 and tab20‑119 nationally (2.90 GB processed,
+40,402 cd:120 edges), **ten states have redrawn 2026 congressional maps: UT, TN,
+LA, TX, FL, CA, MO, OH, AL, NC** (10–65% of each state's ZCTAs move district). The
+other 40 states + PR are unchanged (2026 = 119th). Single-district states are
+at-large and cannot redraw; small diffs there are encoding artifacts, not redraws.
 
-**The decision for the owner** (surfaced, not silently resolved): (a) the
-authoritative list of states whose 2026 congressional map differs from the
-119th (confirmed, not guessed — mid-decade redraws are still moving), and
-(b) whether to build cd:120 now from per-state enacted-plan BEFs (block-level
-effort) or to wait for a national Census cd120 relationship. Until this is
-decided, cd:120 stays `NOT_YET_PUBLISHED`. This is the only geography source
-question outstanding; the other five primary groupings are complete.
+**Cost, cadence, and status.** The grf block files are large (~55 MB/state, ~2.9 GB
+nationally) versus ~6 MB for a tab20 CD file, while the 2026 map is stable until the
+election. So `cd120` is **opt-in** (built via `--only=…,cd120`; not in
+DEFAULT_SCOPES) and is intended to refresh at a **lower cadence** than the monthly
+tab20 refresh — the owner picks the cadence (recommendation: quarterly/on-demand).
+`acquireDataset({ only: ["cd120"], states })` state-filters the download.
+`grf.ts`'s `GrfTarget` is generic, so the current (2026) State Senate / State House
+districts (`SLDUST`/`SLDLST`, grfn `LSY=2026`) build the same way for the same
+version-clarity check against the tab20 2024 plan — a planned follow-on.
 
 ## Verification
 

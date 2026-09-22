@@ -14,8 +14,11 @@ import { ZERO_COST, type AttemptCost } from "../lib/control-plane/attempt.ts";
 import { COST_METRICS, cacheMeteringOf, sumMetric, type CostEntry } from "../lib/control-plane/cost.ts";
 import {
   CACHE_RATE_MULTIPLIERS,
+  MODEL_CACHE_MINIMUMS,
+  MODEL_RATES,
   cacheSavingUsd,
   meteredCostFields,
+  minimumCacheablePrefixTokensFor,
   priceMeteredUsage,
   readMeteredUsage,
   sumMeteredUsage,
@@ -140,4 +143,37 @@ test("PC-9: a ledger row predating the fields reads UNMEASURED by name; a null r
   for (const metric of ["cacheReadInputTokens", "cacheCreationInputTokens", "cacheCreation5mInputTokens", "cacheCreation1hInputTokens", "uncachedInputTokens"] as const) {
     assert.ok((COST_METRICS as readonly string[]).includes(metric), `${metric} is a ledger metric`);
   }
+});
+
+/**
+ * The minimum cacheable prefix is a PER-MODEL, NON-MONOTONIC fact: the cheapest
+ * model (Haiku 4.5) has the HIGHEST minimum. A cache-defect detector fed one
+ * Opus-sized scalar (512) would read a cheaper model's legitimately-uncacheable
+ * prefix increment as a stationary-breakpoint defect — so the lane must look it
+ * up by the attempt's own model.
+ */
+test("per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null", () => {
+  assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5"), 512);
+  assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5"), 1024);
+  assert.equal(minimumCacheablePrefixTokensFor("claude-haiku-4-5"), 4096);
+  /* THE LOAD-BEARING PROPERTY: the cheapest model's minimum is the HIGHEST, so
+     a single scalar cannot serve a lane that may route to a cheaper class. */
+  assert.ok(
+    minimumCacheablePrefixTokensFor("claude-haiku-4-5")! > minimumCacheablePrefixTokensFor("claude-opus-5")!,
+    "Haiku's minimum exceeds Opus's — a per-model lookup is mandatory, not a convenience",
+  );
+  /* RULING 244's dated Haiku spelling resolves to the reference id, one minimum. */
+  assert.equal(
+    minimumCacheablePrefixTokensFor("claude-haiku-4-5-20251001"),
+    minimumCacheablePrefixTokensFor("claude-haiku-4-5"),
+  );
+  /* An unrated model has an UNKNOWN minimum — null, never a guessed neighbour's. */
+  assert.equal(minimumCacheablePrefixTokensFor("some-unlisted-model"), null);
+  /* Every model with a rate row also states a cache minimum, so no routed model is unmeasurable. */
+  for (const rate of MODEL_RATES) {
+    assert.equal(typeof minimumCacheablePrefixTokensFor(rate.model), "number", `${rate.model} must state a cache minimum`);
+  }
+  /* The table carries its own dated provenance, like every rate fact in this file. */
+  assert.match(MODEL_CACHE_MINIMUMS.source, /prompt-caching/i);
+  assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(MODEL_CACHE_MINIMUMS.statedOn), "the minimum table is data with a date");
 });

@@ -94,6 +94,36 @@ export function rateFor(model: string): ModelRate | null {
 }
 
 /**
+ * **THE MINIMUM CACHEABLE PREFIX, PER MODEL — data with a date.**
+ *
+ * Below this many tokens the provider silently ignores a `cache_control`
+ * breakpoint and nothing caches (no error, `cache_creation_input_tokens: 0`).
+ * It is a per-model property and it is NON-MONOTONIC: Haiku 4.5's 4096 is the
+ * HIGHEST of the three, above Sonnet 5's 1024 and Opus 5's 512. So a lane that
+ * may route a step to a cheaper class cannot apply one scalar — an Opus-sized
+ * 512 would read a legitimately-uncacheable cheaper-model prefix increment (up
+ * to that model's higher minimum) as a STATIONARY-breakpoint cache defect. The
+ * step must look this up by the model its ATTEMPT actually ran. Read from the
+ * claude-api reference's prompt-caching page on the date stated; a model with
+ * no row here has an UNKNOWN minimum, never a guessed neighbour's.
+ */
+export const MODEL_CACHE_MINIMUMS = {
+  values: {
+    "claude-opus-5": 512,
+    "claude-sonnet-5": 1024,
+    "claude-haiku-4-5": 4096,
+  } as Readonly<Record<string, number>>,
+  statedOn: "2026-09-22",
+  source: "Anthropic first-party prompt-caching reference (per-model minimum cacheable prefix)",
+} as const;
+
+/** The minimum cacheable prefix for a model id (aliases resolved), or null when no row states one. */
+export function minimumCacheablePrefixTokensFor(model: string): number | null {
+  const id = MODEL_ID_ALIASES[model] ?? model;
+  return MODEL_CACHE_MINIMUMS.values[id] ?? null;
+}
+
+/**
  * The prompt-cache rates, as multiples of the input rate. (Level 1 activation,
  * 2026-09-01.) A cache WRITE is billed at 1.25x input and a cache READ at 0.1x,
  * read from the claude-api reference on that date. Stated as data beside the

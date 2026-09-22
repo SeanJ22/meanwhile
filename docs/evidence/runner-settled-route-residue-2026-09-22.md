@@ -134,8 +134,8 @@ R1 and R4. The guarded statement below is preferred because it refuses any drift
 
 ### R2 — close the 8 never-closed Attempts as `LEASE_EXPIRED` (recommended)
 
-Each worker process died without closing its Attempt, its lease stopped being renewed, and a later
-claim replaced that lease. `LEASE_EXPIRED` is the closure `reclaimRouteTask` gives exactly this
+Each Attempt was opened during 2026-09-01/02 and never closed; its lease stopped being renewed, and
+a later claim replaced that lease. `LEASE_EXPIRED` is the closure `reclaimRouteTask` gives exactly this
 case, observed from outside. Nothing else can close them: the sweep keys on the current lease slot
 and never reads an Attempt on a settled route.
 
@@ -220,8 +220,8 @@ WITH closed AS (
            'outcome', 'LEASE_EXPIRED',
            'endedAt', $2::text,
            'abortReason',
-             'The worker process that opened this Attempt at ' || (a.value->>'startedAt') ||
-             ' died without closing it (the 2026-09-01/02 crash loop). Its lease ' || (a.value->>'leaseId') ||
+             'Opened at ' || (a.value->>'startedAt') ||
+             ' during 2026-09-01/02 and never closed. Its lease ' || (a.value->>'leaseId') ||
              ' stopped being renewed and a later claim replaced it. Its RouteTask had already been disposed ' ||
              (rt.value->'disposition'->>'disposition') || ' by Attempt ' || (rt.value->'disposition'->>'attemptId') ||
              ', so this Attempt reached no conclusion and none is recorded. No artifact or cost was attributed ' ||

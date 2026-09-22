@@ -842,7 +842,7 @@ test("T4 intermediary bytes remain research-only and cannot auto-promote", async
 
 test("all standing routine-source destructive classes are enumerated by the contract", () => {
   const covered = new Set<RoutineRecordClass>([
-    "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE",
+    "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
     "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
     "STATE_LEGISLATOR_VOTES",
   ]);

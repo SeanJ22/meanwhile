@@ -90,9 +90,10 @@ export function start({ repo, home, name, branch, owner, purpose, base = 'origin
 /** Capture every regular file, including ignored files. Classification is an owner duty, not an ignore rule. */
 export function prepare(handoff) {
   const r = json(handoff);
+  const tracked = new Set(git(r.root, 'ls-files', '-z').split('\0'));
   return { version: 1, handoff: { path: resolve(handoff), sha256: HASH(readFileSync(handoff)) }, head: git(r.root, 'rev-parse', 'HEAD'),
     reviewedAt: null, release: null, dependencyReview: null, delivery: null, recovery: null,
-    dependencies: r.dependencies, processes: r.processes, files: inventory(r.root).filter(f => !git(r.root, 'ls-files', '--', f.path)), deliverables: [] };
+    dependencies: r.dependencies, processes: r.processes, files: inventory(r.root).filter(f => !tracked.has(f.path)), deliverables: [] };
 }
 
 function branchProof(r, head, main, prs) {

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 685,
-    "named": 6851,
+    "files": 686,
+    "named": 6854,
     "dynamic": 27
   },
   "files": {
@@ -9291,6 +9291,14 @@
         "every serving source tenant binds to exactly one registry body",
         "no adapter carries a body id outside the serving-tenant denominator",
         "the printed table lists every tenant, bound or faulted"
+      ],
+      "dynamic": 0
+    },
+    "tests/test-alias-loader.test.ts": {
+      "names": [
+        "actual transitive JSX",
+        "canonical isolated loader preserves transitive JSX, aliases, bare resolution, CSS/JSON and real failures",
+        "ordinary modules delegate without loading the TSX compiler and preserve loader errors"
       ],
       "dynamic": 0
     },

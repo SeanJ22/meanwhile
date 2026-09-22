@@ -1,6 +1,6 @@
 # CI verification and merge efficiency
 
-This document describes the CI execution and retry contract. [PR #344](https://github.com/SeanJ22/meanwhile/pull/344) records rollout status and the measured hosted run evidence; its run links distinguish completed proof from pending work. Hosted measurements are required before claiming a speedup. The existing required contexts remain `build (default)`, `build (standalone)` and `gates (test · lint · tsc)`; repository settings are unchanged.
+This document describes the CI execution and retry contract. [PR #344](https://github.com/SeanJ22/meanwhile/pull/344) and [PR #347](https://github.com/SeanJ22/meanwhile/pull/347) record the merged implementation and measured hosted evidence; their run links distinguish completed proof from pending work. Hosted measurements are required before claiming a speedup. The existing required contexts remain `build (default)`, `build (standalone)` and `gates (test · lint · tsc)`; repository settings are unchanged.
 
 ## Measured starting point
 
@@ -21,6 +21,20 @@ The suite includes exhaustive real-route Reader proofs. The largest single obser
 Local warm-installed Windows measurement for the generation check: comparable targeted runs were 89.17s before and 67.15s after. A later complete-file validation measured 101.26s for the regeneration body under different host load. The compiler-call reduction is proven; these variable local timings are not a stable hosted end-to-end speedup claim.
 
 ## Execution and failure behavior
+
+The latest combined full certification, [35698919960](https://github.com/SeanJ22/meanwhile/actions/runs/35698919960), passed in **14m43s**, compared with the baseline median **39m34s**. Summed runner use was **46m06s / 50 rounded minutes / $0.300**, versus the baseline median 46 rounded minutes / $0.276. That is 62.8% less elapsed time with $0.024 more estimated compute (8.7%). Compared with the first parallel warm run below, it saved 64 seconds and four rounded minutes ($0.024). These are comparable updated-base runs, not an identical-tree experiment or proof that one optimization caused the entire difference.
+
+| Latest job | Runner time |
+| --- | --- |
+| Admission | 1m20s |
+| Default / standalone build | 1m34s / 1m30s |
+| Types / lint / governance | 1m52s / 1m34s / 2m16s |
+| Tests 1 / 2 / 3 / 4 | 9m56s / 5m45s / 9m37s / 9m45s |
+| Final live integrity gates | 57s |
+
+The first runner started after 4s; individual jobs queued for 3–4s. pnpm, Playwright and both Next compiler caches were warm. Fresh default/standalone compilation still ran in 9.6s/9.3s. No fully cold-cache run is claimed. All **687 files** appeared exactly once across 172/172/172/171 assignments; independent Git-object hashing matched the configuration and suite digests. Hosted assertions reported 6,958 passes, eight existing conditional skips, no failures or cancellations. File timing streams were complete; balance still varies, and hints never authorize omissions. Full local verification also passed all 687 files. Final integrity read the exact served production commit with a CURRENT/HELD receipt 1.1 hours old against the unchanged 24-hour limit.
+
+PR #347 merged normally as `5f9c212f82369d120ce78f4114bcaddf194db76e`, with the identical certified tree. [Main attestation 35700468397](https://github.com/SeanJ22/meanwhile/actions/runs/35700468397) finished in 2m11s elapsed / four rounded minutes without repeating install, builds or tests. [Production observer 35700468418](https://github.com/SeanJ22/meanwhile/actions/runs/35700468418) took 1m30s elapsed / two rounded minutes and durably recorded/read back HELD/CURRENT for that served merge. An independent public build read confirmed its deployment identity. This is production integrity proof, not a browser or Admin/Census integration walkthrough.
 
 The first hosted full run, [35683872583 attempt 1](https://github.com/SeanJ22/meanwhile/actions/runs/35683872583/attempts/1), completed required checks in **18m16s** including 91s before admission started. Summed runner time was **46m42s**, or **52 rounded minutes / $0.312** at the Linux list rate. This is about 54% less elapsed time than the 39m34s baseline median, with six more rounded minutes ($0.036, about 13%) than the 46-minute baseline median. Extra isolated job setup and per-job rounding explain the increase; invoice charges remain unknown.
 
@@ -113,7 +127,9 @@ A documentary range can skip another observation only when the canonical read-on
 
 When a documentary tip was not deployed but still owes an integrity reading, the observer reads the actually served equivalent software immediately. Manual refresh always requests a new reading. If production advances during polling, a new exact ancestry and non-shipping proof must place that observed commit inside the already-scoped range before it can be accepted. The receipt names the freshly observed commit, never an undeployed documentary candidate. Default/staging polling remains exact, and the release-freeze evaluator and 24-hour bound are unchanged.
 
-Real Git fixtures cover merges, renames/deletions, shallow and blobless history, accumulated software, invalid receipt provenance and production moving during polling. Hosted runtime and cost for the documentary skip remain pending until its rollout evidence records an actual measurement; local fixture success alone is not a deployed speedup claim.
+Real Git fixtures cover merges, renames/deletions, shallow and blobless history, accumulated software, invalid receipt provenance and production moving during polling. A controlled read-only [hosted rehearsal 35735110779](https://github.com/SeanJ22/meanwhile/actions/runs/35735110779) passed in **1m02s elapsed / 58s runner time / one rounded minute / $0.006**, compared with the historical 10m43s wasted documentary observation above. Its isolated two-parent merge differed from the certified, live `5f9c212f` first parent only by the harness workflow. Explicit assertions bound both parents, source tree and checkout identity. The unchanged production classifier proved the full non-shipping range and read the actual canonical HELD receipt for the exact served commit, approximately six hours old within the 24-hour bound, before returning `deploy=cancel observation=skip`.
+
+The rehearsal performed no observation poll, receipt write, deployment, build, test-result reuse or merge. Its fresh checkout and locked install did not restore a dependency cache. This is an actual hosted measurement using real production evidence, but **not a production documentation merge** or a fully cold infrastructure benchmark. The isolated proof ref is marked NEVER MERGE and its history is preserved; a skipped observation is justified by the named receipt, never represented as a newly recorded reading.
 
 Sources: [runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing), [job retries retain the original SHA/ref](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs), [merge queue availability](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/merging-a-pull-request-with-a-merge-queue).
 

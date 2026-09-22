@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 683,
-    "named": 6841,
+    "files": 684,
+    "named": 6846,
     "dynamic": 27
   },
   "files": {
@@ -2896,6 +2896,16 @@
         "no artifact class claims a field it cannot answer",
         "staleness is null when it cannot be told, never false",
         "the contract asks different things of RETRIEVED, DERIVED and CURATED"
+      ],
+      "dynamic": 0
+    },
+    "tests/cost-by-place.test.ts": {
+      "names": [
+        "a charge whose source names no place lands in a named overhead bucket, last",
+        "a place with only unmeasured charges shows null spend, not 0.00",
+        "an empty ledger is empty, with a null total",
+        "an unmeasured charge is counted out of the total, never as zero",
+        "rolls up by state then jurisdiction, states most-spent first"
       ],
       "dynamic": 0
     },

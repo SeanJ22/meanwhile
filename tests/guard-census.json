@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 682,
-    "named": 6830,
+    "files": 683,
+    "named": 6841,
     "dynamic": 27
   },
   "files": {
@@ -2229,10 +2229,26 @@
       "names": [
         "a hosted SHA different from the checked-out commit cannot certify a shard",
         "a terminated test process cannot become a successful shard",
+        "actual reporter and hint code changes invalidate the recorded configuration hash",
         "an affected TSX assertion is selected, executed and propagates failure with durable diagnostics",
         "canonical TS and TSX discovery is covered exactly once with balanced deterministic partitions",
         "canonical command drift and an empty shard are refused",
+        "file concurrency explicitly uses at most two available CPUs without disabling process isolation",
+        "lexical dispatch modeling rejects an LPT regression and bounded swaps cannot worsen round-robin",
+        "measured longest-first hints balance file counts without omitting new or unmeasured files",
+        "missing and invalid hints fall back to deterministic complete count balancing",
         "missing, invalid and out-of-range shard configuration fails closed"
+      ],
+      "dynamic": 0
+    },
+    "tests/ci-test-timing-reporter.test.ts": {
+      "names": [
+        "canonical TS/TSX loader retains spec failures and reports incomplete bootstrap, import and termination timings",
+        "same",
+        "same",
+        "same",
+        "timing gaps, duplicate files and malformed records remain explicit and unusable",
+        "timings use normalized file identity, not duplicate or nested display names"
       ],
       "dynamic": 0
     },

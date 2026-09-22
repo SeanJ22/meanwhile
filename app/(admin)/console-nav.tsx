@@ -38,7 +38,8 @@ export type ConsoleView =
   | "reader"
   | "feedback"
   | "agents"
-  | "chat";
+  | "chat"
+  | "assignments";
 
 /** The path each view lives at. The readiness view is per state. */
 function pathFor(view: ConsoleView, state: string): string {
@@ -47,6 +48,8 @@ function pathFor(view: ConsoleView, state: string): string {
       return `/readiness/${state}`;
     case "research":
       return "/admin/research";
+    case "assignments":
+      return "/admin/assignments";
     case "release-review":
       return "/admin/release-review";
     case "fleet":
@@ -83,6 +86,7 @@ const VIEW_LABEL: Record<ConsoleView, string> = {
   feedback: "Feedback",
   agents: "Delegated work",
   chat: "Ask the console",
+  assignments: "Assignments, end to end",
 };
 
 export function ConsoleNav(props: {
@@ -146,6 +150,7 @@ export function ConsoleNav(props: {
           <option value="research">{VIEW_LABEL.research}</option>
           <option value="release-review">{VIEW_LABEL["release-review"]}</option>
           <option value="fleet">{VIEW_LABEL.fleet}</option>
+          <option value="assignments">{VIEW_LABEL.assignments}</option>
           <option value="system-map">{VIEW_LABEL["system-map"]}</option>
         </select>
       </label>

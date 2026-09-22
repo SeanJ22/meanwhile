@@ -78,6 +78,7 @@ export const SWEPT_PATHS: readonly string[] = [
    * a new admin page belongs on it the day it ships; this is that debt paid.
    */
   "admin/release-review",
+  "admin/assignments",
 ];
 
 /** One kind of thing that must not reach the face, with how to find it. */

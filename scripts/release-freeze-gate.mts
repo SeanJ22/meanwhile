@@ -65,7 +65,6 @@ import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import {
   MAX_READING_AGE_HOURS,
-  NEVER_CHECKED,
   classifyEquivalenceRange,
   evaluateReleaseFreeze,
   explainFreeze,
@@ -74,13 +73,7 @@ import {
   type ProductionObservation,
 } from "../lib/ops/production-integrity.ts";
 import { PRODUCTION_INTEGRITY_LOG_KEY } from "../lib/control-plane/software-release-review.ts";
-import {
-  CONTROL_PLANE_INTEGRITY_READ_URL_VAR,
-  readLatestProductionIntegrity,
-  type ProductionIntegrityRead,
-} from "../lib/ops/production-integrity-data-plane.ts";
-import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { assertDurableRepositories } from "../lib/control-plane/repository/types.ts";
+import { readIntegrityAuthority } from "./production-integrity-authority.mts";
 // `git` comes from the reader beside it rather than being written out again —
 // RULING 103. The two copies were identical, and this mechanism turns on the
 // difference between "the answer is no" and "there was no answer".
@@ -115,30 +108,6 @@ async function observeProduction(baseUrl: string): Promise<{ sha: string | null;
     if (attempt < 3) await new Promise((r) => setTimeout(r, 10_000));
   }
   return last;
-}
-
-/**
- * Read the one canonical post-deploy history through a read-only control-plane
- * role. Missing configuration and connection failure remain distinct details,
- * but both produce NEVER_CHECKED for the pure evaluator and therefore freeze a
- * software-bearing release. There is no tracked-file fallback.
- */
-async function readIntegrityAuthority(): Promise<ProductionIntegrityRead> {
-  const connection = process.env[CONTROL_PLANE_INTEGRITY_READ_URL_VAR]?.trim() ?? "";
-  if (connection === "") {
-    const detail = `${CONTROL_PLANE_INTEGRITY_READ_URL_VAR} is not set, so the canonical post-deploy outcome log was not read.`;
-    return { kind: "STORE_UNREACHABLE", record: { ...NEVER_CHECKED, detail }, detail };
-  }
-  try {
-    const repos = await createPgRepositories(connection, new Date().toISOString(), { skipBootstrap: true });
-    assertDurableRepositories(repos, "release-freeze post-deploy readback");
-    return await readLatestProductionIntegrity(repos.softwareReleaseReviews);
-  } catch (error) {
-    const detail =
-      `The canonical post-deploy outcome log could not be opened ` +
-      `(${error instanceof Error ? error.name : "error"}).`;
-    return { kind: "STORE_UNREACHABLE", record: { ...NEVER_CHECKED, detail }, detail };
-  }
 }
 
 /**

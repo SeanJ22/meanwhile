@@ -157,6 +157,15 @@ test("the executable workflow has no Git mutation or deploy/build feedback loop"
   assert.doesNotMatch(executable, /push-main\.mjs|git\s+(?:add|commit|push)|status:ledger/);
   assert.match(executable, /--expect=\$\{\{ inputs\.sha \|\| github\.sha \}\}/);
   assert.match(executable, /WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL/);
+  assert.match(executable, /WTP_CONTROL_PLANE_DATABASE_URL_READONLY/);
+
+  const observer = readFileSync(join(ROOT, "scripts", "post-deploy-observer.mts"), "utf8");
+  assert.match(observer, /await observationScope\(ROOT, expected,/);
+  assert.match(observer, /force: process\.env\.GITHUB_EVENT_NAME !== "push"/);
+  assert.match(observer, /expectedSha: scope\.sha/);
+  assert.match(observer, /scope\.action === "observe-served" \? \{\s*documentaryRange:/);
+  assert.match(observer, /const sha = result\.servedSha as string/);
+  assert.match(observer, /`--sha=\$\{sha\}`/);
 
   const recorder = readFileSync(join(ROOT, "scripts", "production-integrity.mts"), "utf8");
   assert.match(recorder, /appendProductionIntegrity/);
@@ -164,8 +173,13 @@ test("the executable workflow has no Git mutation or deploy/build feedback loop"
   assert.match(recorder, /TRACKED_PRODUCTION_INTEGRITY_WRITE_RETIRED/);
 
   const freeze = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
-  assert.match(freeze, /readLatestProductionIntegrity/);
-  assert.match(freeze, /CONTROL_PLANE_INTEGRITY_READ_URL_VAR/);
+  assert.match(freeze, /import \{ readIntegrityAuthority \} from "\.\/production-integrity-authority\.mts"/);
+  assert.match(freeze, /await readIntegrityAuthority\(\)/);
+  const authority = readFileSync(join(ROOT, "scripts", "production-integrity-authority.mts"), "utf8");
+  assert.match(authority, /readLatestProductionIntegrity/);
+  assert.match(authority, /CONTROL_PLANE_INTEGRITY_READ_URL_VAR/);
+  assert.match(authority, /skipBootstrap: true/);
+  assert.doesNotMatch(authority, /appendProductionIntegrity|CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR/);
   assert.match(
     readFileSync(join(ROOT, "lib", "ops", "production-integrity-data-plane.ts"), "utf8"),
     /WTP_CONTROL_PLANE_DATABASE_URL_READONLY/,

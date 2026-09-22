@@ -387,7 +387,7 @@ test("g13 audit: GitHub workflows have no production write handle or runtime san
   assert.ok(observerNames.length > 0, "the observer found no database variable to check at all");
   assert.deepEqual(
     [...new Set(observerNames)],
-    ["WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL"],
+    ["WTP_CONTROL_PLANE_DATABASE_URL_READONLY", "WTP_PRODUCTION_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL"],
     "post-deploy-integrity.yml may read serving production and append only its exact outcome " +
       "through the separately provisioned control-plane role.",
   );

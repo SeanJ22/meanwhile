@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 670,
-    "named": 6747,
+    "files": 677,
+    "named": 6801,
     "dynamic": 27
   },
   "files": {
@@ -101,6 +101,9 @@
         "ADM-C6: the review decision refuses by name when nothing is wired to record it",
         "ADM-C6: the route is one door — a no-JS form and a JSON fetch build the same request",
         "ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions",
+        "the Fleet spend ceiling is recorded durably, names who/when/previous, and its absence reads as the fallback",
+        "the Fleet spend ceiling refuses a non-number, a non-positive amount, and anything above the max, and writes nothing",
+        "the Fleet spend ceiling rounds to whole cents and a corrupt policy row reads as the fallback previous",
         "§9A.22: a corrupt policy row reads as the default, which is OFF",
         "§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothing has written",
         "§9A.22: turning paid API fallback on needs an explicit confirmation, and is recorded durably"
@@ -2187,6 +2190,7 @@
         "a red preflight makes every required job fail loudly, and skips nothing into looking green",
         "every required job runs the preflight before it buys anything",
         "one step decides whether the expensive tier runs, and every expensive step asks it",
+        "production observation classification runs only after its frozen dependency install",
         "the browser and the suite are bought only on a head whose cheap tier is green",
         "the certified suite executes owner-facing TSX projection contracts",
         "the closure walk actually follows a dynamic import",
@@ -2604,6 +2608,24 @@
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
       "dynamic": 8
+    },
+    "tests/control-plane-connect-retry.test.ts": {
+      "names": [
+        "a latched circuit is a HARD refusal and is never transient",
+        "a latched circuit throws immediately with no retry",
+        "a non-transient error throws immediately with no retry",
+        "a real SQL / status error is not a connect transient",
+        "a run of transient connect failures then a success returns the value",
+        "backoff is capped and jittered by the injected random",
+        "classifies raw transport errors (and the deadline abort) as transient",
+        "classifies the driver's connect-transport failure as transient",
+        "createPgRepositories survives a transient connect fault at the real bootstrap (wiring)",
+        "exhausts a bounded number of attempts then rethrows the transient error",
+        "follows the sourceError / cause chain",
+        "returns the value on the first try without sleeping or retrying",
+        "the default attempt budget is a small, bounded number"
+      ],
+      "dynamic": 0
     },
     "tests/control-plane-contract.test.ts": {
       "names": [
@@ -3118,6 +3140,23 @@
       ],
       "dynamic": 0
     },
+    "tests/deploy-observation-scope.test.ts": {
+      "names": [
+        "a canonical receipt must match its complete envelope and exact embedded record",
+        "a documentary merge skips only when the complete range and fresh canonical receipt agree",
+        "a documentary tip cannot suppress earlier software not yet deployed",
+        "blobless full history proves paths and ancestry without hydrating old file contents",
+        "deployment paths enumerate ordinary, root and documentary merge commits",
+        "fresh receipt proof rejects future timestamps, incomplete success and wrong subjects",
+        "manual revalidation cannot reuse even a fresh receipt",
+        "owed receipts reread the served software instead of waiting for an omitted documentary deploy",
+        "production advances only inside a freshly proven equivalent documentary range",
+        "shipping merges, deletions and renames retain every potentially shipping path",
+        "unknown commits, missing parents and unproved ancestry never become empty proof",
+        "unreadable production or Git evidence remains observation rather than a skip"
+      ],
+      "dynamic": 0
+    },
     "tests/deploy-paths.test.ts": {
       "names": [
         "POSITIVE CONTROL (NH289): the observer commit alone cancels — the filter was never the defect",
@@ -3410,6 +3449,13 @@
       ],
       "dynamic": 0
     },
+    "tests/evidence-location.test.ts": {
+      "names": [
+        "ambiguous mappings and traversal are rejected; JSON proof bytes cannot be redirected",
+        "historical image aliases resolve exact bytes after the original is gone, without rewriting hash-bound reports"
+      ],
+      "dynamic": 0
+    },
     "tests/executor-identity.test.ts": {
       "names": [
         "SEEDED W3.E: a worker CONTRADICTING its own declaration is REFUSED, not reconciled",
@@ -3566,6 +3612,17 @@
         "the sidebar's Feedback link points at the in-app route, not a mail client",
         "the surface enum is closed, and the store's column matches it",
         "the transparency page discloses the store in the same commit as the form"
+      ],
+      "dynamic": 0
+    },
+    "tests/field-manual-learnings.test.ts": {
+      "names": [
+        "a CONTRADICTED detective result is a dead door, kept as FAILED",
+        "a SUPPORTED detective conclusion becomes a SHARED, YIELDED resolution keyed by the question id",
+        "a failed engineering proof is a FAILED dead door, not silently dropped",
+        "a proved engineering candidate becomes an ENGINEER pointer — the paths, never the file bytes",
+        "a role that emits no learned artifact yields no entry",
+        "an UNRESOLVED detective learning stays in the detective lane, as a reference"
       ],
       "dynamic": 0
     },
@@ -3820,6 +3877,7 @@
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
+        "the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
       ],
       "dynamic": 0
@@ -4147,6 +4205,7 @@
         "Q: Can a state complete without teaching the project anything new?",
         "Q: Can the next session resume the exact descent frontier without recrawling seeds?",
         "Q: Does a new route learned in state 44 become available to state 45?",
+        "Q: Does a release note finish physical session cleanup for Claude Code or Codex?",
         "Q: If the current client cannot fetch robots.txt, what exactly is known about permission?",
         "Q: Is an entity candidate the same thing as a body in the registry?",
         "Q: Is the current route manifest complete?",
@@ -8486,6 +8545,18 @@
       ],
       "dynamic": 0
     },
+    "tests/session-workspace.test.ts": {
+      "names": [
+        "active dependency and existing process each prevent removal",
+        "another registered session overrides a mistaken no-consumer declaration",
+        "changed preservation copy and stale review do not pass",
+        "external closeout removes one merged workspace and both branches; deliverable and private bytes survive",
+        "ignored unique material is not disposable merely because Git ignores it",
+        "squash merge content is recognized without guessing from branch ancestry",
+        "tracked unmerged work and a new open PR prevent removal"
+      ],
+      "dynamic": 0
+    },
     "tests/shared-notes.test.ts": {
       "names": [
         "F01 11.1: a note carried by many contests moves to the foot, once",
@@ -8599,7 +8670,7 @@
       "names": [
         "Build Check has no transitional path-cost or OPS_ONLY tier",
         "every Build Check job defaults non-draft, non-reused work to full certification",
-        "post-deploy classifies only deploy possibility, before installing",
+        "post-deploy classifies complete software observation after installing its canonical reader",
         "push/main/manual triggers remain and no workflow hides behind a path filter",
         "the repository inventory does not project current operational health from retired Git state",
         "the surviving software-staging promoter cannot advertise the retired runtime bypass"
@@ -8981,6 +9052,24 @@
         "source-namespaced identity mismatch is refused instead of joining a vendor id",
         "the manual registry pointer and official state-roster contracts have no overlapping subject authority",
         "the standing state-roll door accepts one exact state and no tracked-output mode"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-rollcalls-fanout.test.ts": {
+      "names": [
+        "a changed member re-promotes to a new version; the plane does not content-dedupe",
+        "a member scope and the marker scope never collide",
+        "every member and the per-state marker promote GOOD at their own bounded scope",
+        "the NH state-roll contract is a per-legislator fan-out over STATE_LEGISLATOR_VOTES",
+        "the fan-out door refuses a candidate scope outside the state's family"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-rollcalls-reader-visibility.test.ts": {
+      "names": [
+        "AZ (WAF-blocked, argued named gap) and NH (mid-flight fan-out) are excluded",
+        "NJ official ids render; federal and other ids do not",
+        "reader render gate equals the plain STATE_ROLL_CALL contracts"
       ],
       "dynamic": 0
     },

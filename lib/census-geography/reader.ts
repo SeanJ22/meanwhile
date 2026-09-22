@@ -78,14 +78,49 @@ export async function readCensusGeographyProjection(
   });
 }
 
+/**
+ * Which data actually backs a lookup, made explicit so a consumer can never
+ * mistake a non-production fixture for live coverage:
+ *   - "published"   — the promoted production pointer (verified, live).
+ *   - "bootstrap"   — the committed AZ bootstrap. NON-PRODUCTION ONLY; the
+ *                     read-model's fixture gate (`allowUnconfiguredBootstrap`)
+ *                     is off when NODE_ENV === "production", so deployed Admin
+ *                     never sees this.
+ *   - "unavailable" — no promoted pointer yet (or the store could not be
+ *                     reached): the lookup reports NOT_YET_PUBLISHED. This is
+ *                     what production returns before the first promotion.
+ */
+export type PublishedLookupSource = "published" | "bootstrap" | "unavailable";
+
+export interface PublishedLookupState {
+  readonly lookup: CensusGeographyLookup;
+  readonly source: PublishedLookupSource;
+  readonly versionId: string;
+}
+
+/**
+ * Load the lookup AND state which source backs it. Production serves only
+ * "published" or (before activation) "unavailable" — never "bootstrap".
+ */
+export async function loadPublishedLookupState(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<PublishedLookupState> {
+  const result = await readCensusGeographyProjection(options);
+  if (result.kind === "PROMOTED") {
+    const versionId = result.metadata.versionId ?? "PROMOTED";
+    return { lookup: createLookup(result.value, versionId), source: "published", versionId };
+  }
+  if (result.kind === "BOOTSTRAP") {
+    const versionId = result.metadata.versionId ?? "bootstrap:census-geography:az";
+    return { lookup: createLookup(result.value, versionId), source: "bootstrap", versionId };
+  }
+  return { lookup: notYetPublishedLookup(result.kind), source: "unavailable", versionId: result.kind };
+}
+
 export async function loadPublishedLookup(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CensusGeographyLookup> {
-  const result = await readCensusGeographyProjection(options);
-  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
-    return createLookup(result.value, result.metadata.versionId ?? result.kind);
-  }
-  return notYetPublishedLookup(result.kind);
+  return (await loadPublishedLookupState(options)).lookup;
 }
 
 /**

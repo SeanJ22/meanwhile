@@ -598,6 +598,7 @@ export default async function AdminPage() {
           spendWindows={spendWindows}
           capacity={snapshot.costCapacity ?? null}
           monthly={snapshot.monthlySpend ?? null}
+          spendByPlace={snapshot.spendByPlace ?? null}
           subscriptionJobs={null}
           cacheLine={cacheLine}
           cacheNote={outcomeNote(cacheOut)}

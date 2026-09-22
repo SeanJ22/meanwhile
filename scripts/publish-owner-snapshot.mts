@@ -71,7 +71,7 @@ import {
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
-import { buildCostPanel } from "../lib/control-plane/cost-panel.ts";
+import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
 import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
@@ -516,6 +516,7 @@ function buildSnapshot(
     decisionCards: cards,
     candidateNames: candidateNames(),
     spendByDay: spendByDay(reads),
+    spendByPlace: reads ? buildSpendByPlace(reads.costs) : undefined,
     maptiler,
 
     obligationsByState: obligationsByState(reads),

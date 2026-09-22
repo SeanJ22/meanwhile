@@ -56,6 +56,7 @@ import {
   type CacheCallerHealth,
   type CostRowLike,
   type MonthlySpendView,
+  type SpendByPlaceView,
   type NonDollarMeasures,
   type SpendWindowRow,
   type SubscriptionJobRow,
@@ -116,6 +117,8 @@ export interface CostSectionProps {
   readonly capacity?: ScoutCapacity | null;
   /** The UTC calendar month (§9A.23). Null when the publisher passed no clock. */
   readonly monthly?: MonthlySpendView | null;
+  /** Spend by place — state, then the governments under it — over the whole ledger (MW-013). Null before the field existed. */
+  readonly spendByPlace?: SpendByPlaceView | null;
   /** The Agent Bridge job log. Null while no such log exists to read. */
   readonly subscriptionJobs?: readonly SubscriptionJobRow[] | null;
   /** The organic reader-path cache observation, as the page already renders it. */
@@ -398,6 +401,79 @@ function MonthlySpend({ monthly, returnTo }: { monthly: MonthlySpendView | null;
   );
 }
 
+/** MW-013 — "what did we spend at Pima County?": the whole ledger by state, then the governments under it. */
+function SpendByPlace({ view }: { view: SpendByPlaceView | null }) {
+  if (view === null) {
+    return (
+      <p className="note gap">
+        Spend by place is not on this snapshot yet &mdash; republish to fill it. It is not zero.
+      </p>
+    );
+  }
+  if (view.states.length === 0) {
+    return (
+      <>
+        <h3>What we spent, by place</h3>
+        <p className="note">No spend has been attributed to a place yet.</p>
+      </>
+    );
+  }
+  const { total } = view;
+  return (
+    <>
+      <h3>What we spent, by place</h3>
+      <p className="note">
+        All recorded model spend, rolled up by state and the governments under it &mdash; the answer to &ldquo;what did we
+        spend at this county or district?&rdquo;{" "}
+        {total.total === null ? (
+          "No charge reported a dollar figure."
+        ) : (
+          <>
+            <strong>{usdCents(total.total)}</strong> measured across {count(total.measured)} charge
+            {total.measured === 1 ? "" : "s"}
+            {total.unmeasured > 0
+              ? `; ${count(total.unmeasured)} more reported no dollar figure and are counted out, not as zero.`
+              : "."}
+          </>
+        )}
+      </p>
+      <div className="scroll-x">
+        <table className="cost by-place">
+          <thead>
+            <tr>
+              <th>State / place</th>
+              <th className="n">Spend</th>
+              <th className="n">Charges measured / not</th>
+            </tr>
+          </thead>
+          <tbody>
+            {view.states.flatMap((s) => [
+              <tr key={`state-${s.state}`} className="group-head">
+                <th>{s.label}</th>
+                <th className="n">{s.usd === null ? <span className="gap">not measured</span> : usdCents(s.usd)}</th>
+                <th className="n">
+                  {count(s.measuredRows)} / {count(s.unmeasuredRows)}
+                </th>
+              </tr>,
+              ...s.places.map((p) => (
+                <tr key={`place-${s.state}-${p.key}`}>
+                  <td>
+                    <span title={p.key}>{p.label}</span>
+                  </td>
+                  <td className="n">{p.usd === null ? <span className="gap">not measured</span> : usdCents(p.usd)}</td>
+                  <td className="n">
+                    {count(p.measuredRows)} / {count(p.unmeasuredRows)}
+                  </td>
+                </tr>
+              )),
+            ])}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
 /** ADM-C14 — subscription jobs, never inside the API totals. */
 function SubscriptionBlock({ jobs, returnTo }: { jobs: readonly SubscriptionJobRow[] | null; returnTo: string }) {
   const reading = subscriptionJobsReading(jobs);
@@ -496,6 +572,9 @@ export function CostSection(props: CostSectionProps) {
 
       {/* 3 — §9A.23: the owner's own billing period */}
       <MonthlySpend monthly={props.monthly ?? null} returnTo={props.returnTo} />
+
+      {/* 3b — MW-013: what we spent, by place */}
+      <SpendByPlace view={props.spendByPlace ?? null} />
 
       {/* 4 — POS-12: the two charts he likes, unchanged in shape, coloured by role (ADM-36) */}
       <div className="chart-row">

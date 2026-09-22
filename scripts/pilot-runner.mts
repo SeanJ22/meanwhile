@@ -188,6 +188,14 @@ import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
+import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.ts";
+
+/* Before anything connects: a per-address connect window that fits this host,
+   for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
+installConnectAttemptWindow();
+
+/** How much of a failed cycle's stderr the digest carries (see runOneCycle). */
+const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
 const argv = process.argv.slice(2);
@@ -441,7 +449,10 @@ async function runOneCycle(): Promise<{
     ok: run.status === 0,
     recordPath: match ? match[1].trim() : null,
     stdout,
-    stderrTail: stderrLines.slice(-12).join("\n"),
+    /* 40, not 12: a native abort prints its fatal line ("Assertion failed: …",
+       "FATAL ERROR: …") above a stack trace longer than 12 frames, and the
+       22:55Z cycle on c61dbc2d kept only frames 6–13 (2026-09-22). */
+    stderrTail: stderrLines.slice(-STDERR_TAIL_LINES).join("\n"),
     signal: run.signal ?? null,
     circuit,
   };

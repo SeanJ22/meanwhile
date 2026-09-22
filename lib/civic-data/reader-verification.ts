@@ -286,6 +286,10 @@ export async function verifyRoutineReaderProjection(
         const { readEverydayRoutingProjection } = await import("../routing/everyday-data-plane.ts");
         return verifyExactVersion(verifierId, await readEverydayRoutingProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
+      case "census-geography-overlaps": {
+        const { readCensusGeographyProjection } = await import("../census-geography/reader.ts");
+        return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "census-geography");
+      }
       default: {
         if (contract.recordClass === "MEETING") {
           const { readMeetingsProjection } = await import("../meetings/snapshot.ts");

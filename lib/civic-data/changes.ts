@@ -218,6 +218,26 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...keyed("zcta", array(root.zcta), ["code"]),
         ...keyed("state", array(root.state), ["code"]),
       ];
+    case "CENSUS_GEOGRAPHY": {
+      // One civic record per geography instance (a grouping), carrying its ZCTA
+      // overlaps. Keyed by type + plan/version + Census GEOID — never row order.
+      const members: CivicRecordMember[] = [];
+      for (const scope of array(root.scopes)) {
+        const s = object(scope);
+        if (!s) continue;
+        const type = typeof s.type === "string" ? s.type : "";
+        const version = typeof s.version === "string" ? s.version : "";
+        for (const grouping of array(s.groupings)) {
+          const g = object(grouping);
+          const geoid = g && typeof g.geoid === "string" ? g.geoid : "";
+          members.push({
+            key: type && version && geoid ? `geography:${type}:${version}:${geoid}` : "",
+            record: grouping,
+          });
+        }
+      }
+      return members.sort((left, right) => left.key.localeCompare(right.key));
+    }
     case "MEETING":
       return [
         ...keyed("meeting", array(root.meetings), ["id"]),

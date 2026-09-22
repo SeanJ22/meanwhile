@@ -11,6 +11,7 @@ import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { getMeetingSource } from "../lib/meetings/registry.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
@@ -237,8 +238,9 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
     freshAgendaDocuments: [],
     previous: priorPartition,
   });
+  // The sitting's held agenda is one record, keyed by the sitting (2026-09-22).
   assert.deepEqual(reconciliation.removalEvidence.map(({ key }) => key).sort(), [
-    `agenda-document:${document.id}`,
+    agendaDocumentRecordKey(document),
     `meeting:${old.id}`,
   ].sort());
 
@@ -273,7 +275,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
   }, [], validReconciliation.removalEvidence);
   assert.equal(promoted.outcome.candidate.state, "PROMOTED");
   assert.deepEqual(promoted.outcome.candidate.candidate.changeSet?.removed.map(({ key }) => key).sort(), [
-    `agenda-document:${document.id}`,
+    agendaDocumentRecordKey(document),
     `meeting:${old.id}`,
   ].sort());
 });

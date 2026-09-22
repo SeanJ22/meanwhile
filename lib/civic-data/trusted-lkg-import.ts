@@ -3,7 +3,8 @@ import { createHash } from "node:crypto";
 import {
   candidateChangeSet,
   canonicalCivicDataJson,
-  civicRecordsFor,
+  ROW_KEYED_CIVIC_CHANGE_CONTRACT,
+  rowKeyedCivicRecordsFor,
 } from "./changes.ts";
 import {
   NH_MEMBER_CHAMBER_FLOORS,
@@ -222,7 +223,9 @@ function trustedLkgFirstSeedEvidenceIssue(
     new Set(heldKeys).size !== heldKeys.length ||
     heldKeys.some((key) => records.some((record) => record.key === key))
   ) return "the import has a missing, duplicate, serving, or non-exact held fact";
-  const projectedRecords = civicRecordsFor(candidate.recordClass, candidate.readModel);
+  // Transfers were written under the row-keyed member contract; they are
+  // re-proved against exactly that contract (see `rowKeyedCivicRecordsFor`).
+  const projectedRecords = rowKeyedCivicRecordsFor(candidate.recordClass, candidate.readModel);
   if (canonicalCivicDataJson(records) !== canonicalCivicDataJson(projectedRecords)) {
     return "the import civic-record members do not exactly equal the members derived from its bound Reader projection";
   }
@@ -231,7 +234,7 @@ function trustedLkgFirstSeedEvidenceIssue(
   const expectedFirstPointerChangeSet = candidateChangeSet({
     ...candidate,
     civicRecords: projectedRecords,
-  }, expectedBase);
+  }, expectedBase, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
   if (
     !changeSet ||
     changeSet.outcome !== "CHANGED" ||
@@ -484,7 +487,7 @@ function trustedLkgPimaOutcomeUnionEvidenceIssue(
     (prior.normalization.normalizedPayloadHash !== undefined &&
       prior.normalization.normalizedPayloadHash !== priorNormalizedPayloadSha256)
   ) return "the Pima outcome predecessor payload is not bound by its durable normalization evidence";
-  const priorDerivedRecords = civicRecordsFor(prior.recordClass, prior.readModel);
+  const priorDerivedRecords = rowKeyedCivicRecordsFor(prior.recordClass, prior.readModel);
   if (prior.civicRecords !== undefined && !canonicallyEqual(prior.civicRecords, priorDerivedRecords)) {
     return "the Pima outcome predecessor civic members conflict with its exact Reader projection";
   }
@@ -1037,7 +1040,7 @@ export function trustedLkgReattestationEvidenceIssue(
     candidate.sourceProjectionEvidence.recordClass !== candidate.recordClass ||
     candidate.sourceProjectionEvidence.scope !== candidate.scope
   ) return "the re-attested successor lacks exact source-scoped projection evidence";
-  const derivedRecords = civicRecordsFor(candidate.recordClass, candidate.readModel);
+  const derivedRecords = rowKeyedCivicRecordsFor(candidate.recordClass, candidate.readModel);
   if (!candidate.civicRecords || !canonicallyEqual(candidate.civicRecords, derivedRecords)) {
     return "the re-attested successor civic members differ from its exact Reader projection";
   }
@@ -1113,7 +1116,7 @@ export function trustedLkgReattestationEvidenceIssue(
     predecessor.candidate.normalization.normalizedPayloadHash !== undefined &&
     predecessor.candidate.normalization.normalizedPayloadHash !== predecessorNormalizedPayloadSha256
   ) return "the predecessor carries a present but incorrect normalized-payload hash";
-  const predecessorDerivedRecords = civicRecordsFor(
+  const predecessorDerivedRecords = rowKeyedCivicRecordsFor(
     predecessor.candidate.recordClass,
     predecessor.candidate.readModel,
   );
@@ -1154,7 +1157,7 @@ export function trustedLkgReattestationEvidenceIssue(
     return "the exact predecessor pointer cannot be reconstructed from its immutable row and captured promotion instant";
   }
   const changeSet = candidate.changeSet;
-  const expected = candidateChangeSet(candidate, predecessor.candidate.readModel);
+  const expected = candidateChangeSet(candidate, predecessor.candidate.readModel, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
   if (
     !changeSet || changeSet.outcome !== "UNCHANGED" ||
     changeSet.added.length !== 0 || changeSet.changed.length !== 0 || changeSet.removed.length !== 0 ||

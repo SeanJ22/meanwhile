@@ -10,6 +10,7 @@ import { createHash } from "node:crypto";
 
 import { readableContent } from "../extract/html-content.ts";
 import type { Meeting, OcdId } from "../sources/types.ts";
+import { sameAgendaContent } from "./agenda-content.ts";
 import { sourceUserAgent } from "../sources/http.ts";
 import { repairMojibake } from "../text/mojibake.ts";
 
@@ -88,14 +89,22 @@ export class AgendaDocumentStore {
   private byMeeting = new Map<string, AgendaDocument[]>();
 
   /**
-   * Append a version unless the latest stored version has the same hash.
-   * Returns whether anything was stored and whether it superseded a prior
-   * version — the second is the "silent revision" signal worth surfacing.
+   * Append a version unless the latest stored version, read from the same
+   * address, carries the same content (`sameAgendaContent`: identical bytes,
+   * or identical readable text whose bytes differ — a page that stamps each
+   * response anew is re-read, not revised). Returns whether anything was
+   * stored and whether it superseded a prior version — the second is the
+   * "silent revision" signal worth surfacing.
+   *
+   * (2026-09-22.) This compared bytes alone, and Tucson Unified's meeting page
+   * never answers with the same bytes twice: sitting 499 gained 88 stored
+   * "versions" in four days with one unchanged text. Rows already stored stay
+   * exactly as they are.
    */
   append(doc: AgendaDocument): { stored: boolean; revised: boolean } {
     const versions = this.byMeeting.get(doc.meetingId) ?? [];
     const latest = versions[versions.length - 1];
-    if (latest && latest.contentHash === doc.contentHash) {
+    if (latest && latest.documentUrl === doc.documentUrl && sameAgendaContent(latest, doc)) {
       return { stored: false, revised: false };
     }
     versions.push(doc);

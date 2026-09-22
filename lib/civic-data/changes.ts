@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 
+import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
 import type {
   CivicRecordMember,
   RoutineCandidate,
@@ -61,6 +62,73 @@ function keyedObservations(prefix: string, values: readonly unknown[], keys: rea
     occurrences.set(base, occurrence);
     return { key: `${base}:occurrence-${occurrence}`, record };
   });
+}
+
+/**
+ * **A SITTING'S HELD AGENDA IS ONE CIVIC RECORD, KEYED BY THE SITTING.**
+ * (2026-09-22.)
+ *
+ * Stored agenda rows are append-only versions whose ids embed a per-fetch
+ * byte hash (`<meetingId>@<contentHash>`). Keyed by that id, a publisher page
+ * whose bytes change on every request (Tucson Unified `tusd1:497-502`, Pima
+ * Community College `pcc:698-707`) was "added" to the change set every hour
+ * under a new key while its words never changed. The record is now the
+ * sitting's agenda: its key is the vendor-namespaced meeting id, and its value
+ * is each DISTINCT content held for it (`sameAgendaContent`), earliest read
+ * first. A re-fetch of the same words changes nothing; a revision of the words
+ * is a CHANGE of this one record, never an add/remove pair. Every stored row
+ * stays in the read model untouched; this is only the unit the delta counts.
+ */
+export function agendaDocumentRecordKey(document: { readonly meetingId: string }): string {
+  return `agenda-document:${document.meetingId}`;
+}
+
+function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] {
+  const byMeeting = new Map<string, Record<string, unknown>[]>();
+  const unkeyed: CivicRecordMember[] = [];
+  for (const value of values) {
+    const row = object(value);
+    const meetingId = textKey(row, ["meetingId"]);
+    // No sitting, no durable identity: the empty key makes the validator
+    // refuse the candidate rather than guess which record this row belongs to.
+    if (row === null || meetingId === null) {
+      unkeyed.push({ key: "", record: value });
+      continue;
+    }
+    byMeeting.set(meetingId, [...(byMeeting.get(meetingId) ?? []), row]);
+  }
+  const retrievedAt = (row: Record<string, unknown>) => typeof row.retrievedAt === "string" ? row.retrievedAt : "";
+  const idOf = (row: Record<string, unknown>) => typeof row.id === "string" ? row.id : "";
+  return [
+    ...[...byMeeting].map(([meetingId, rows]) => {
+      const earliestFirst = [...rows].sort((left, right) =>
+        retrievedAt(left).localeCompare(retrievedAt(right)) || idOf(left).localeCompare(idOf(right)));
+      const versions = agendaContentGroups(earliestFirst as unknown as AgendaContentRow[])
+        .map((group) => group[0] as unknown as Record<string, unknown>);
+      return { key: agendaDocumentRecordKey({ meetingId }), record: { id: meetingId, meetingId, versions } };
+    }),
+    ...unkeyed,
+  ];
+}
+
+/**
+ * **WHAT DECIDES A CHANGE: THE FACTS, NEVER THE OBSERVATION STAMPS.**
+ * (2026-09-22.)
+ *
+ * Every fetch stamps each meeting row's `provenance.collectedAt` with its own
+ * read instant. Compared whole, every unchanged meeting was "changed" on every
+ * run — Rockaway Township's Board of Adjustment re-promoted 23 times in 24 hours
+ * with no new fact — so a validated no-change could never be recorded. The
+ * stamp stays on the stored record and in the persisted before/after as
+ * provenance; it only stops deciding whether a fact moved.
+ */
+export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass !== "MEETING" || !member.key.startsWith("meeting:")) return member.record;
+  const meeting = object(member.record);
+  const provenance = object(meeting?.provenance);
+  if (meeting === null || provenance === null) return member.record;
+  const { collectedAt: _collectedAt, ...factualProvenance } = provenance;
+  return { ...meeting, provenance: factualProvenance };
 }
 
 /** Exact civic member projection shared by promotion receipts and Admin. */
@@ -221,7 +289,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
     case "MEETING":
       return [
         ...keyed("meeting", array(root.meetings), ["id"]),
-        ...keyed("agenda-document", array(root.agendaDocuments), ["id"]),
+        ...agendaDocumentMembers(array(root.agendaDocuments)),
       ];
     case "BALLOT_FILING": {
       const ballot = object(root.ballot) ?? root;
@@ -372,20 +440,63 @@ export function canonicalCivicDataJson(value: unknown): string {
     .join(",")}}`;
 }
 
-export function candidateChangeSet(candidate: RoutineCandidate, previousPayload: unknown | null): RoutineChangeSet {
+/**
+ * The member projection and fact comparison a durable delta was derived under.
+ * A delta is re-derived only to verify evidence, and evidence is verified
+ * against the contract that wrote it.
+ */
+export interface CivicChangeContract {
+  readonly members: (recordClass: RoutineRecordClass, payload: unknown) => readonly CivicRecordMember[];
+  readonly facts: (recordClass: RoutineRecordClass, member: CivicRecordMember) => unknown;
+}
+
+/** Every live candidate's delta: sitting-keyed agenda records, fact-only comparison. */
+export const CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
+  members: civicRecordsFor,
+  facts: civicRecordFacts,
+};
+
+/**
+ * The projection before 2026-09-22: one member per stored agenda row, keyed by
+ * its `<meetingId>@<contentHash>` id, compared whole. The PDC-v2 trusted-LKG
+ * transfers were written under it and still serve as some partitions' pointers,
+ * so their persisted members and deltas are re-proved against exactly it on
+ * every read — never against a later contract they could not have followed.
+ */
+export function rowKeyedCivicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
+  if (recordClass !== "MEETING") return civicRecordsFor(recordClass, payload);
+  const root = object(payload) ?? {};
+  return [
+    ...keyed("meeting", array(root.meetings), ["id"]),
+    ...keyed("agenda-document", array(root.agendaDocuments), ["id"]),
+  ];
+}
+
+export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
+  members: rowKeyedCivicRecordsFor,
+  facts: (_recordClass, member) => member.record,
+};
+
+export function candidateChangeSet(
+  candidate: RoutineCandidate,
+  previousPayload: unknown | null,
+  contract: CivicChangeContract = CIVIC_CHANGE_CONTRACT,
+): RoutineChangeSet {
   // A caller-supplied member list is evidence to validate, never authority for
   // the durable delta. Derive Admin's exact changed/removed records from the
   // same Reader projection that the canonical pointer will serve.
-  const next = civicRecordsFor(candidate.recordClass, candidate.readModel);
-  const prior = previousPayload === null ? [] : civicRecordsFor(candidate.recordClass, previousPayload);
-  const priorByKey = new Map(prior.map((member) => [member.key, member.record]));
+  const next = contract.members(candidate.recordClass, candidate.readModel);
+  const prior = previousPayload === null ? [] : contract.members(candidate.recordClass, previousPayload);
+  const priorByKey = new Map(prior.map((member) => [member.key, member]));
   const nextByKey = new Map(next.map((member) => [member.key, member.record]));
+  const facts = (member: CivicRecordMember) => canonicalCivicDataJson(contract.facts(candidate.recordClass, member));
   const added = next
     .filter((member) => !priorByKey.has(member.key))
     .map((member) => ({ key: member.key, before: null, after: member.record }));
+  // The persisted before/after stay the exact records; only facts decide.
   const changed = next
-    .filter((member) => priorByKey.has(member.key) && canonicalCivicDataJson(priorByKey.get(member.key)) !== canonicalCivicDataJson(member.record))
-    .map((member) => ({ key: member.key, before: priorByKey.get(member.key) ?? null, after: member.record }));
+    .filter((member) => priorByKey.has(member.key) && facts(priorByKey.get(member.key)!) !== facts(member))
+    .map((member) => ({ key: member.key, before: priorByKey.get(member.key)?.record ?? null, after: member.record }));
   const removed = prior
     .filter((member) => !nextByKey.has(member.key))
     .map((member) => ({ key: member.key, before: member.record, after: null }));

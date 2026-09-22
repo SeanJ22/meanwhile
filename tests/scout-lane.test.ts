@@ -224,7 +224,7 @@ function scriptedTransport(turns: readonly ModelResponse["content"][]): ModelTra
     const content = turns[Math.min(i, turns.length - 1)];
     i += 1;
     return {
-      model: "claude-opus-5",
+      model: "claude-opus-5-5",
       stop_reason: content.some((b) => b.type === "tool_use") ? "tool_use" : "end_turn",
       content,
       usage: { input_tokens: 1000, output_tokens: 100, cache_read_input_tokens: 500, cache_creation_input_tokens: 0 },
@@ -506,7 +506,7 @@ test("EARLY STOP: a walk that stalls past minRungs finishes early instead of run
             ? [toolUse("u2", "fetch_public", { url: "https://a.gov/sitemap.xml", rung: "site-search-or-sitemap", why: "map" })]
             : [toolUse(`re${call}`, "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "recheck" })];
       return {
-        model: "claude-opus-5",
+        model: "claude-opus-5-5",
         stop_reason: content.some((b) => b.type === "tool_use") ? "tool_use" : "end_turn",
         content,
         usage: { input_tokens: 1000, output_tokens: 100, cache_read_input_tokens: 500, cache_creation_input_tokens: 0 },
@@ -599,7 +599,7 @@ test("7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is D
     pausedByOwner: false,
     pauseIntentId: null,
     workerCredential: { name: "WTP_WORKERS_ANTHROPIC_API_KEY", configured: true, provider: "anthropic", context: "test" },
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     bounds: RESEARCH_BOUNDS,
     spend: { windowUsd: 1, measuredAttempts: 1, unmeasuredAttempts: 0, asOf: NOW },
     queue: { registeredUnits: 1, modelClassUnits: 1, modelClassDue: 1, modelClassDispatchedThisCycle: 1, modelClassDeferredForCeiling: 0, modelClassDeferredForCycleMax: 0, modelClassDeferredForLane: 0, deterministicDue: 0, deterministicDispatchedThisCycle: 0 },
@@ -671,7 +671,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(attempt.outcome, "COMPLETED");
   assert.equal(attempt.worker.role, "SCOUT");
   assert.equal(attempt.worker.provider, "anthropic");
-  assert.equal(attempt.worker.version, "claude-opus-5");
+  assert.equal(attempt.worker.version, "claude-opus-5-5");
   assert.equal(attempt.cost.inputTokens, 3 * 1500, "input tokens include cache reads, summed over turns");
   assert.equal(attempt.cost.outputTokens, 300);
   assert.ok((attempt.cost.usd ?? 0) > 0);
@@ -691,7 +691,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   const r = results[0];
   assert.equal(r.outcome, "ROUTE_CANDIDATE");
   assert.equal(r.rungs[1].note, "meetings page", "the model's per-rung note travels; the rung itself is machine-derived");
-  assert.equal(r.worker.modelReported, "claude-opus-5");
+  assert.equal(r.worker.modelReported, "claude-opus-5-5");
   assert.equal(r.usage.turns, 3);
   assert.equal(r.usage.toolCalls, 2);
   const commit = (await repos.dispositions.readAll()).at(-1)!;
@@ -797,7 +797,7 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   const failsSecond: ModelTransport = async () => {
     n += 1;
     if (n === 2) throw new Error("HTTP 529: overloaded");
-    return { model: "claude-opus-5", stop_reason: "tool_use", content: [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "w" })], usage: { input_tokens: 100, output_tokens: 10 } };
+    return { model: "claude-opus-5-5", stop_reason: "tool_use", content: [toolUse("u1", "fetch_public", { url: "https://a.gov/", rung: "primary-site-navigation", why: "w" })], usage: { input_tokens: 100, output_tokens: 10 } };
   };
   const second = await registered();
   const { exec: exec2, results: results2 } = executorWith(failsSecond, fakeToolkit());
@@ -932,7 +932,7 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
       { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 5000 },
       { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 5000, cache_creation_input_tokens: 1000 },
     ][i - 1];
-    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage };
+    return { model: "claude-opus-5-5", stop_reason: "tool_use", content, usage };
   };
   const { exec, results } = executorWith(coldOnTurnTwo, toolkit);
   const { result } = await dispatchScout(exec);
@@ -948,7 +948,7 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   const warm: ModelTransport = async () => {
     const content = turns[Math.min(w, turns.length - 1)];
     w += 1;
-    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage: { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: w === 1 ? 0 : 4000 + 1500 * (w - 2), cache_creation_input_tokens: w === 1 ? 4000 : 1500 } };
+    return { model: "claude-opus-5-5", stop_reason: "tool_use", content, usage: { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: w === 1 ? 0 : 4000 + 1500 * (w - 2), cache_creation_input_tokens: w === 1 ? 4000 : 1500 } };
   };
   const { exec: exec2, results: results2 } = executorWith(warm, fakeToolkit());
   await dispatchScout(exec2);
@@ -963,7 +963,7 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   const stationary: ModelTransport = async () => {
     const content = turns[Math.min(k, turns.length - 1)];
     k += 1;
-    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage: { input_tokens: [6000, 14000, 25000][k - 1], output_tokens: 300, cache_read_input_tokens: k === 1 ? 0 : 4082, cache_creation_input_tokens: k === 1 ? 4082 : 0 } };
+    return { model: "claude-opus-5-5", stop_reason: "tool_use", content, usage: { input_tokens: [6000, 14000, 25000][k - 1], output_tokens: 300, cache_read_input_tokens: k === 1 ? 0 : 4082, cache_creation_input_tokens: k === 1 ? 4082 : 0 } };
   };
   const { exec: exec3, results: results3 } = executorWith(stationary, fakeToolkit());
   await dispatchScout(exec3);
@@ -1004,7 +1004,7 @@ test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED
   assert.throws(() => assertStepMayInvokeModel("date-parsing"), DeterministicStepInvokedModel);
   assert.throws(() => assertStepMayInvokeModel("made-up-step"), UnknownStepInvokedModel);
   const loop = assertStepMayInvokeModel("scout-research-loop");
-  assert.deepEqual(loop, { model: "claude-opus-5", modelClass: "frontier", effort: "medium", role: "SCOUT" });
+  assert.deepEqual(loop, { model: "claude-opus-5-5", modelClass: "frontier", effort: "medium", role: "SCOUT" });
   const extraction = assertStepMayInvokeModel("extraction");
   assert.deepEqual(extraction, { model: "claude-haiku-4-5", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
   const escalated = assertStepMayInvokeModel("extraction", true);
@@ -1109,7 +1109,7 @@ test("19. every turn is a recorded step: model, effort, tokens by category and c
   assert.equal(model.length, 3);
   for (const [i, s] of model.entries()) {
     assert.equal(s.turn, i + 1);
-    assert.equal(s.model, "claude-opus-5");
+    assert.equal(s.model, "claude-opus-5-5");
     assert.equal(s.effort, "medium");
     assert.deepEqual(s.tokens, { cacheRead: 500, cacheWrite: 0, uncachedInput: 1000, output: 100 });
     assert.ok((s.usd ?? 0) > 0);

@@ -32,7 +32,7 @@
 
 import { cacheMeteringOf, type CostEntry } from "./cost.ts";
 import type { WorkerRole } from "./attempt.ts";
-import { CACHE_RATE_MULTIPLIERS, rateFor } from "./model-cost.ts";
+import { cacheReadMultiplierFor, rateFor } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 
@@ -309,8 +309,8 @@ export function modelShareTrend(input: {
  * guessed rate.
  */
 export const ROLE_MODEL: Readonly<Partial<Record<WorkerRole, string>>> = {
-  SCOUT: "claude-opus-5",
-  ADVERSARIAL_AUDITOR: "claude-opus-5",
+  SCOUT: "claude-opus-5-5",
+  ADVERSARIAL_AUDITOR: "claude-opus-5-5",
 };
 
 export interface CacheHitRate {
@@ -437,7 +437,7 @@ export function cacheHitRateByRole(input: {
       unreportedRows: a.unreported,
       uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
       batchShare: a.requests === 0 ? null : a.batched / a.requests,
-      savedUsd: rate === null ? null : (a.read / 1_000_000) * rate.inputUsdPerMillion * (1 - CACHE_RATE_MULTIPLIERS.cacheRead),
+      savedUsd: rate === null ? null : (a.read / 1_000_000) * rate.inputUsdPerMillion * (1 - cacheReadMultiplierFor(rate.model)),
       aggregatePricedRows: a.aggregatePriced,
       denominator:
         `cacheRead over cacheRead + cacheWrite + uncachedInput across ${a.measured} measured ${role} ledger row(s) of ${a.attempts} in the window` +

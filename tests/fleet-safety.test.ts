@@ -27,14 +27,14 @@ import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 const NIGHT = "2026-09-05T03:00:00.000Z"; // Friday 20:00 Phoenix.
 const REQUEST: ModelRequest = {
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 40_000,
   system: [{ type: "text", text: "bounded" }],
   tools: [],
   messages: [{ role: "user", content: "one bounded task" }],
 };
 const RESPONSE: ModelResponse = {
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   stop_reason: "end_turn",
   content: [{ type: "text", text: "done" }],
   usage: { input_tokens: 100, output_tokens: 39_000 },
@@ -356,7 +356,7 @@ test("a Scout model request is admitted while a public read is in flight (the tu
   // Scout model request must not be refused for payload bytes before its first
   // turn — this is the contention that darkened the Scout lane in 2026-09.
   const scoutRequest: ModelRequest = {
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 8_192,
     system: [{ type: "text", text: "scout" }],
     tools: [],
@@ -365,7 +365,7 @@ test("a Scout model request is admitted while a public read is in flight (the tu
   const reservation = controller.reserveModelRequest("anthropic", "scout-turn-0", scoutRequest);
   assert.ok(reservation.usd > 0);
   controller.settleModelRequest(reservation, {
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     stop_reason: "end_turn",
     content: [{ type: "text", text: "ok" }],
     usage: { input_tokens: 10, output_tokens: 20 },
@@ -377,7 +377,7 @@ test("a Scout model request is admitted while a public read is in flight (the tu
 test("the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations", async () => {
   const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
   const scoutRequest: ModelRequest = {
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 8_192,
     system: [{ type: "text", text: "scout" }],
     tools: [],

@@ -127,6 +127,7 @@ test("ADM-26 · dollars render to the cent, never to four places", () => {
 
 test("ADM-33 · a model id renders as a name", () => {
   assert.equal(modelName("claude-opus-5"), "Claude Opus 5");
+  assert.equal(modelName("claude-opus-5-5"), "Claude Opus 5.5", "the current frontier renders its minor version, not 'Opus 5 5'");
   assert.equal(modelName("claude-haiku-4-5-20251001"), "Claude Haiku 4.5");
   assert.equal(modelName("claude-sonnet-5"), "Claude Sonnet 5");
   assert.equal(modelName("no model (deterministic work)"), "No model — plain code");

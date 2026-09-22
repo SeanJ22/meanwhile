@@ -60,7 +60,7 @@ function state(hostSupervision: HostSupervision | null | undefined, extra: Recor
     pausedByOwner: false,
     pauseIntentId: null,
     workerCredential: { name: "WTP_WORKERS_ANTHROPIC_API_KEY", configured: true, provider: "anthropic", context: "test" },
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     bounds: RESEARCH_BOUNDS,
     spend: { windowUsd: 1, measuredAttempts: 1, unmeasuredAttempts: 0, asOf: NOW },
     queue: { registeredUnits: 1, modelClassUnits: 1, modelClassDue: 1, modelClassDispatchedThisCycle: 1, modelClassDeferredForCeiling: 0, modelClassDeferredForCycleMax: 0, modelClassDeferredForLane: 0, deterministicDue: 0, deterministicDispatchedThisCycle: 0 },

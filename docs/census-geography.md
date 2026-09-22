@@ -108,6 +108,23 @@ classified as a **method difference, not a coverage gap or version gap**:
 Our build is a strict subset of `zccd` for AZ-06 (mine-only = 0). The count 87
 is not forced; the authoritative Census area-overlap answer is 79.
 
+**Further checks (from the tab20 build):**
+- **Pima County** (GEOID 04019, `county:2020`): 56 ZCTAs (46 whole, 10 partial).
+- **AZ State Senate District 19** (`sldu:2024`) and **State House District 19**
+  (`sldl:2024`): 43 ZCTAs each — identical because Arizona's 30 legislative
+  districts each elect one senator and two representatives, so the upper and
+  lower chambers share district geometry. The contract keeps them as parallel
+  types with identical overlaps rather than merging them; some states differ, so
+  a consumer must not assume the two chambers coincide.
+- The `county:2020` scope spans **33,791 distinct ZCTAs** — the full 2020 ZCTA
+  universe (every ZCTA lies in some county), which is what `reconcilePostalZips`
+  checks a USPS ZIP against.
+- **Redraw handling:** the toss-up states CA/FL/OH/TX carry `REDRAWN_2026` in the
+  comparison. `cd:119` is their current representation and ships now; `cd:120`
+  (the 2026 map) is a Census 404 for every state, so it is a real gap for the
+  redrawn states and equals `cd:119` only for unchanged states — never
+  substituted. Tucson metro (a CBSA) is deferred with the rest of CBSA.
+
 ## Using the lookup (Admin)
 
 Import `@/lib/census-geography/contract` for the types and

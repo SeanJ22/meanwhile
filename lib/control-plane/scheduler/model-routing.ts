@@ -31,6 +31,8 @@
  * can run anywhere.
  */
 
+import { MODEL_WORKER_MODEL, rateFor } from "../model-cost.ts";
+
 /** The model classes a step may route to. Cheapest first. */
 export const MODEL_CLASSES = ["haiku", "sonnet", "frontier"] as const;
 export type ModelClass = (typeof MODEL_CLASSES)[number];
@@ -179,6 +181,82 @@ export function assertStepMayInvokeModel(
   const modelClass = escalated && route.escalateTo !== null ? route.escalateTo : route.modelClass;
   return { model: MODEL_FOR_CLASS[modelClass], modelClass, effort: ROLE_EFFORT[route.role], role: route.role };
 }
+
+/* ------------------------------------------------------- the model ceiling */
+
+/**
+ * **OPUS IS THE CEILING, AND NO MODEL NAMED "FABLE" EVER ROUTES.** (MW-034;
+ * owner rule, 2026-09-21.)
+ *
+ * The ladder tops out at the frontier class (`escalateTo: null`), so structurally
+ * nothing escalates past it. That was true by construction and by nothing else —
+ * a one-character edit to `MODEL_FOR_CLASS` could point any class at a costlier
+ * model or at a Fable, and only a human noticing would have caught it. This makes
+ * the ceiling a GUARD: a pure predicate, run as a module-load invariant over
+ * `MODEL_FOR_CLASS`, so a routing edit that breaches the ceiling throws at import —
+ * in tests, and at boot — before any step can route to it.
+ *
+ * "Above the ceiling" is read from the rate table (`model-cost.ts`): a class whose
+ * model is priced above the frontier's input OR output rate is above the ceiling.
+ * A model with no rate row is UNAPPROVED — it cannot be certified within the
+ * ceiling, so it is refused rather than waved through.
+ */
+export const MODEL_CEILING = MODEL_WORKER_MODEL;
+
+export class ModelAboveCeiling extends Error {
+  readonly modelClass: string;
+  readonly model: string;
+  constructor(modelClass: string, model: string, why: string) {
+    super(
+      `MODEL CEILING REFUSED: class "${modelClass}" resolves to "${model}" — ${why}. ` +
+        `Opus (${MODEL_CEILING}) is the ceiling and no model named "fable" may route (owner rule, MW-034).`,
+    );
+    this.name = "ModelAboveCeiling";
+    this.modelClass = modelClass;
+    this.model = model;
+  }
+}
+
+/**
+ * Why a model id breaches the ceiling, or `null` when it is within it. Pure.
+ * Refuses a Fable model, an unrated (unapproved) model, and any model priced
+ * above the frontier on either the input or the output rate.
+ */
+export function modelCeilingViolation(model: string): string | null {
+  if (/fable/i.test(model)) return 'a model named "fable" is denied by owner rule';
+  const rate = rateFor(model);
+  if (rate === null) {
+    return "no rate row is stated, so it is unapproved and cannot be certified within the ceiling";
+  }
+  const ceiling = rateFor(MODEL_CEILING);
+  if (ceiling === null) return "the ceiling model itself has no rate row (control-plane misconfiguration)";
+  if (rate.inputUsdPerMillion > ceiling.inputUsdPerMillion || rate.outputUsdPerMillion > ceiling.outputUsdPerMillion) {
+    return (
+      `it is priced above the ceiling (${rate.inputUsdPerMillion}/${rate.outputUsdPerMillion} vs ` +
+      `${ceiling.inputUsdPerMillion}/${ceiling.outputUsdPerMillion} USD per million in/out)`
+    );
+  }
+  return null;
+}
+
+/**
+ * Assert every routable class is within the ceiling. Called once at module load
+ * (below) so a breaching edit fails before anything can route; also callable
+ * from a test with the real map.
+ */
+export function assertModelClassesWithinCeiling(
+  map: Readonly<Record<ModelClass, string>> = MODEL_FOR_CLASS,
+): void {
+  for (const modelClass of MODEL_CLASSES) {
+    const model = map[modelClass];
+    const violation = modelCeilingViolation(model);
+    if (violation !== null) throw new ModelAboveCeiling(modelClass, model, violation);
+  }
+}
+
+// The invariant. A routing edit that points a class above Opus or at a Fable
+// fails at import — in every test and at boot — not in production.
+assertModelClassesWithinCeiling();
 
 /* -------------------------------------------------- representation budgets */
 

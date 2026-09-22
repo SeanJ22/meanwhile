@@ -14,6 +14,8 @@ import { GET } from "@/app/api/census-geography/zctas/route";
 interface RouteBody {
   readonly ok: boolean;
   readonly error?: string;
+  readonly source?: "published" | "bootstrap" | "unavailable";
+  readonly activePublishedVersion?: string;
   readonly result?: GroupingZctaResult;
 }
 
@@ -65,4 +67,15 @@ test("route: a well-formed but absent geoid is typed NOT_IN_COVERAGE, never zero
   assert.equal(body.ok, true);
   assert.equal(body.result?.status.kind, "NOT_IN_COVERAGE");
   assert.equal(body.result?.count, 0);
+});
+
+test("route: states its data source, so a fixture is never mistaken for live coverage", async () => {
+  const { body } = await call("?type=cbsa&geoid=38060&version=cbsa:2023");
+  // In tests (non-production, no store configured) the source is the AZ
+  // bootstrap. In production the read-model's fixture gate is off, so this is
+  // only ever "published" or (before activation) "unavailable" — never
+  // "bootstrap". Admin treats anything but "published" as not-yet-live.
+  assert.equal(body.source, "bootstrap");
+  assert.ok(["published", "bootstrap", "unavailable"].includes(body.source ?? ""));
+  assert.equal(typeof body.activePublishedVersion, "string");
 });

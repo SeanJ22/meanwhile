@@ -21,7 +21,7 @@
  * nothing and is never cached (a promotion can change the answer at any time).
  */
 import { isGeographyType, type GeographyType } from "@/lib/census-geography/contract";
-import { loadPublishedLookup } from "@/lib/census-geography/reader";
+import { loadPublishedLookupState } from "@/lib/census-geography/reader";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -62,7 +62,11 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const narrowedType: GeographyType = type;
-  const lookup = await loadPublishedLookup();
+  // `source` is explicit so Admin never mistakes a fixture for live coverage:
+  // in production it is only ever "published" or (pre-activation) "unavailable",
+  // never "bootstrap" (the read-model gates the fixture off when NODE_ENV is
+  // production). Admin should treat anything but "published" as not-yet-live.
+  const { lookup, source, versionId } = await loadPublishedLookupState();
 
   // Resolve the version: honor the one asked for, else the type's published
   // version. An unresolved version flows through as a typed NOT_YET_PUBLISHED.
@@ -73,5 +77,5 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const result = await lookup.zctasForGrouping({ type: narrowedType, geoid, version: resolvedVersion });
-  return Response.json({ ok: true, result }, { headers: NO_STORE });
+  return Response.json({ ok: true, source, activePublishedVersion: versionId, result }, { headers: NO_STORE });
 }

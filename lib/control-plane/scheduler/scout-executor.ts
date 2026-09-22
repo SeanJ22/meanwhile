@@ -80,7 +80,7 @@
 
 import type { AttemptCost } from "../attempt.ts";
 import { describeCacheDefects, detectCacheDefects } from "../cache-defects.ts";
-import { meteredCostFields, priceMeteredUsage, readMeteredUsage, sumMeteredUsage, type MeteredUsage } from "../model-cost.ts";
+import { meteredCostFields, minimumCacheablePrefixTokensFor, priceMeteredUsage, readMeteredUsage, sumMeteredUsage, type MeteredUsage } from "../model-cost.ts";
 import type { Disposition, PermissionState, TransportState } from "../../workstate/types.ts";
 import type { DeclaredExecutor, ExecutorKind, WorkArtifact, WorkDisposition, WorkOutcome } from "./dispatch.ts";
 import type { ScheduledObligation } from "./obligation.ts";
@@ -1194,7 +1194,10 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const defectReading = usage.reported
         ? detectCacheDefects(
             modelSteps.map((s) => ({ turn: s.turn ?? 0, uncachedInput: s.tokens.uncachedInput, cacheRead: s.tokens.cacheRead, cacheWrite: s.tokens.cacheWrite })),
-            SCOUT_CACHE_POLICY.minimumCacheablePrefixTokens,
+            /* Per the ATTEMPT's model, not one Opus-sized scalar: a cheaper class
+               has a HIGHER minimum, so 512 would read its legitimately-uncacheable
+               prefix increment as a stationary-breakpoint defect (model-cost.ts). */
+            minimumCacheablePrefixTokensFor(model) ?? SCOUT_CACHE_POLICY.minimumCacheablePrefixTokens,
           )
         : null;
       if (defectReading) defectTurns.push(...defectReading.turns);

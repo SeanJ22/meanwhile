@@ -32,8 +32,8 @@ test("Build Check has no transitional path-cost or OPS_ONLY tier", () => {
   assert.doesNotMatch(readFileSync(join(ROOT, "lib", "ops", "deploy-paths.ts"), "utf8"), /classifyCommitCost|OPS_ONLY_ARTIFACTS|CHEAP_PATH_PROOFS/);
 });
 
-test("every Build Check job defaults non-draft, non-reused work to full certification", () => {
-  for (const [jobId, job] of Object.entries(workflow(BUILD_PATH).jobs)) {
+test("the single admission defaults non-draft, non-reused work to full certification", () => {
+  for (const [jobId, job] of Object.entries(workflow(BUILD_PATH).jobs).filter(([id]) => id === "admission")) {
     const tier = job.steps.find((step) => step.id === "tier");
     const certified = job.steps.find((step) => step.id === "certified");
     const preflight = job.steps.find((step) => step.id === "preflight");

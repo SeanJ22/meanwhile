@@ -48,6 +48,13 @@ const WORKFLOW = ".github/workflows/build-check.yml";
 const CANONICAL_AUTHORITY_GATES = ["governance:check", "orchestration:check", "method:check"];
 
 const NOT_A_GATE = [
+  // These interpret upstream outcomes or explain routing; they do not replace
+  // any local tree check. ci-verdict's refusal matrix is tested separately.
+  "node scripts/ci-verdict.mjs",
+  // Same-run retry identity is a live workflow/PR relation, not a local tree gate.
+  "node scripts/ci-retry-identity.mjs",
+  "node scripts/ci-selection-summary.mjs",
+  'test "$ADMISSION_RESULT" = success',
   "corepack enable",
   "corepack pnpm install --frozen-lockfile",
   "corepack pnpm exec playwright install --with-deps chromium",
@@ -176,6 +183,9 @@ test("gate parity · block commands cannot consume later steps or turn comments 
 /** `corepack pnpm run build` and `pnpm run build` are the same gate. */
 function normalise(command: string): string {
   return command
+    // ci-tests partitions the entire pnpm test file universe; its disjoint and
+    // exhaustive denominator is independently tested in ci-tests.test.ts.
+    .replace(/^node scripts\/ci-tests\.mjs$/, "pnpm test")
     .replace(/^corepack\s+/, "")
     .replace(/\bpnpm run\b/, "pnpm")
     .trim();
@@ -239,14 +249,15 @@ test("gate parity · each canonical authority is in BOTH the local set and the r
    * would say nothing at all if a future edit dropped a step from BOTH files at
    * once, which is exactly how lint fell out of the local set and stayed out.
    *
-   * The workflow's `gates` job is the anchor because it is the required context
-   * branch protection names. A step added to the `build` job instead would pass
-   * the generic test and leave these unrun on the job that gates a merge.
+   * The required final gates job must consume the verify matrix. These commands
+   * run in verify exactly once; a failed matrix leg must block the final verdict.
    */
   const src = readFileSync(WORKFLOW, "utf8");
-  const gatesAt = src.indexOf("  gates:");
-  assert.ok(gatesAt > 0, "the gates job is gone from the workflow");
-  const gatesJob = src.slice(gatesAt);
+  const parsed = parse(src);
+  assert.ok(parsed.jobs.gates.needs.includes("verify"), "the required final verdict must consume structural verification");
+  const gatesAt = src.indexOf("  verify:");
+  assert.ok(gatesAt > 0, "the verification job is gone from the workflow");
+  const gatesJob = src.slice(gatesAt, src.indexOf("  build:"));
 
   const local = GATES.map((g) => normalise(g.command));
   for (const id of CANONICAL_AUTHORITY_GATES) {
@@ -260,7 +271,7 @@ test("gate parity · each canonical authority is in BOTH the local set and the r
     );
     assert.ok(
       gatesJob.includes(`run: corepack pnpm ${id}`),
-      `\`${id}\` runs in \`pnpm gates\` and NOT in build-check.yml's gates job — a gate the ` +
+      `\`${id}\` runs in \`pnpm gates\` and NOT in build-check.yml's verification dependency — a gate the ` +
         "local door runs and CI does not is a gate nothing enforces on a merge",
     );
   }
@@ -273,7 +284,7 @@ test("gate parity · every wired canonical authority names a bound and does not 
    * until the platform kills the job at six hours (F25).
    */
   const src = readFileSync(WORKFLOW, "utf8");
-  const gatesJob = src.slice(src.indexOf("  gates:"));
+  const gatesJob = src.slice(src.indexOf("  verify:"), src.indexOf("  build:"));
   for (const id of CANONICAL_AUTHORITY_GATES) {
     const at = gatesJob.indexOf(`run: corepack pnpm ${id}`);
     assert.ok(at > 0, `\`${id}\` is not in the gates job`);
@@ -328,15 +339,17 @@ test("gate parity · every gate names the CI job it stands in for", () => {
 
 test("PDC hosted setup fetches the exact frozen bridge before the unchanged full suite", () => {
   const workflow = parse(readFileSync(WORKFLOW, "utf8"));
-  const gates = workflow.jobs.gates;
+  const gates = workflow.jobs.test;
   const fixture = gates.steps.find((step: { name?: string }) => step.name === "Frozen holdings base for extraction proofs");
   const full = gates.steps.find((step: { name?: string }) => step.name === "Test");
   assert.ok(gates.steps.indexOf(fixture) < gates.steps.indexOf(full));
   assert.ok(fixture.run.includes('git fetch --no-tags --depth=1 origin "$pdc_frozen_base"'));
   assert.ok(fixture.run.trim().endsWith('git cat-file -e "${pdc_frozen_base}:lib/funding/official-candidacies.json"'));
-  assert.equal(full.run, "corepack pnpm test");
+  assert.equal(full.run, "node scripts/ci-tests.mjs");
+  assert.deepEqual(gates.strategy.matrix.shard, [1, 2, 3, 4]);
+  assert.equal(gates.strategy["fail-fast"], false);
   assert.equal(full["timeout-minutes"], 60);
-  assert.deepEqual(full.env, { NODE_OPTIONS: "--max-old-space-size=4096" });
+  assert.deepEqual(full.env, { NODE_OPTIONS: "--max-old-space-size=4096", CI_TEST_SHARD: "${{ matrix.shard }}/4" });
   assert.equal(gates["timeout-minutes"], 75);
 });
 

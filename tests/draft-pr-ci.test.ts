@@ -24,6 +24,7 @@ interface Step {
 interface Job {
   readonly name: string;
   readonly if?: string;
+  readonly needs?: string[];
   readonly steps: Step[];
 }
 
@@ -77,8 +78,8 @@ test("ready_for_review is an explicit trigger and the existing shipping triggers
   assert.ok(buildCheck.on.workflow_dispatch !== undefined, "manual shipping certification disappeared");
 });
 
-test("every required job consumes the one draft/full classifier before preflight", () => {
-  for (const [jobId, job] of Object.entries(workflow().jobs)) {
+test("admission alone classifies draft/full before preflight", () => {
+  for (const [jobId, job] of Object.entries(workflow().jobs).filter(([id]) => id === "admission")) {
     assert.equal(job.if, undefined, `${jobId} is job-gated, so a required context can disappear`);
     const classifier = job.steps.find((step) => step.id === "pr_tier");
     const preflight = job.steps.find((step) => step.id === "preflight");
@@ -103,10 +104,10 @@ test("every required job consumes the one draft/full classifier before preflight
 });
 
 test("draft runs install and every named deterministic gate", () => {
-  const gates = workflow().jobs.gates;
+  const gates = workflow().jobs.verify;
   const install = named(gates, "Install");
-  assert.match(install.if ?? "", /expensive == 'draft'/, "the gates install no longer admits the draft tier");
-  assert.match(install.if ?? "", /expensive == 'yes'/, "the gates install no longer admits the full tier");
+  assert.match(install.if ?? "", /tier == 'draft'/, "the gates install no longer admits the draft tier");
+  assert.match(install.if ?? "", /tier == 'yes'/, "the gates install no longer admits the full tier");
   assert.doesNotMatch(install.if ?? "", /no-preflight/, "a refused preflight still buys the dependency install");
 
   const deterministic = [
@@ -121,8 +122,8 @@ test("draft runs install and every named deterministic gate", () => {
   for (const name of deterministic) {
     const condition = named(gates, name).if ?? "";
     assert.match(condition, /always\(\)/, `${name} no longer reports after a sibling deterministic gate fails`);
-    assert.match(condition, /expensive == 'draft'/, `${name} is missing from draft certification`);
-    assert.match(condition, /expensive == 'yes'/, `${name} is missing from full certification`);
+    assert.match(condition, /tier == 'draft'/, `${name} is missing from draft certification`);
+    assert.match(condition, /tier == 'yes'/, `${name} is missing from full certification`);
   }
 });
 
@@ -145,19 +146,19 @@ test("draft cannot buy builds, browsers, the full suite, or shipping-only gates"
   for (const name of fullOnly) {
     const step = Object.values(buildCheck.jobs).flatMap((job) => job.steps).find((candidate) => label(candidate) === name);
     assert.ok(step, `${name} disappeared rather than remaining a full-certification gate`);
-    assert.match(step.if ?? "", /expensive == 'yes'/, `${name} is no longer confined to full certification`);
-    assert.doesNotMatch(step.if ?? "", /expensive == 'draft'/, `${name} runs on draft pull requests`);
+    assert.match(step.if ?? "", /tier == 'yes'/, `${name} is no longer confined to full certification`);
+    assert.doesNotMatch(step.if ?? "", /tier == 'draft'/, `${name} runs on draft pull requests`);
   }
 
-  const browserCache = buildCheck.jobs.gates.steps.find((step) => step.with?.path === "~/.cache/ms-playwright");
+  const browserCache = buildCheck.jobs.test.steps.find((step) => step.with?.path === "~/.cache/ms-playwright");
   assert.ok(browserCache, "the Playwright cache step disappeared");
-  assert.match(browserCache.if ?? "", /expensive == 'yes'/);
-  assert.doesNotMatch(browserCache.if ?? "", /expensive == 'draft'/);
+  assert.match(browserCache.if ?? "", /tier == 'yes'/);
+  assert.doesNotMatch(browserCache.if ?? "", /tier == 'draft'/);
 });
 
 test("required contexts, read-only permissions, and the exact-head rerun stay intact", () => {
   const buildCheck = workflow();
-  const produced = Object.values(buildCheck.jobs).flatMap((job) =>
+  const produced = [buildCheck.jobs.gates, buildCheck.jobs.build].flatMap((job) =>
     job.name.includes("${{ matrix.mode }}")
       ? ["standalone", "default"].map((mode) => job.name.replace("${{ matrix.mode }}", mode))
       : [job.name],
@@ -173,7 +174,7 @@ test("required contexts, read-only permissions, and the exact-head rerun stay in
   });
   assert.equal(ready.tier, "full", "the exact unchanged head could reuse draft certification after becoming ready");
 
-  for (const [jobId, job] of Object.entries(buildCheck.jobs)) {
+  for (const [jobId, job] of Object.entries(buildCheck.jobs).filter(([id]) => id === "admission")) {
     const decision = named(job, "Decide whether the expensive tier runs").run ?? "";
     const fullAt = decision.indexOf('steps.pr_tier.outputs.tier }}" = "full"');
     const reuseAt = decision.indexOf('steps.certified.outputs.certified }}" = "yes"');

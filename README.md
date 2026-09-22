@@ -49,6 +49,7 @@ separate authority. The current authority order is in CLAUDE.md.
 - [Current decisions](docs/governance/current-decisions.md): active author decisions.
 - [Governance system](docs/governance/README.md): the ledger and generated views.
 - [Agent session commands](docs/codex-resume.md): opening, resuming and handing off work.
+- [CI verification and merge efficiency](docs/ci-efficiency.md): check selection, integrity retries, timings and merge windows.
 
 Governing instructions and learned research have different homes. Source
 playbooks, state notes and evidence stay in their linked locations below.

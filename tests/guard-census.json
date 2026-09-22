@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 677,
-    "named": 6801,
+    "files": 682,
+    "named": 6830,
     "dynamic": 27
   },
   "files": {
@@ -2149,6 +2149,18 @@
       ],
       "dynamic": 0
     },
+    "tests/census-geography.test.ts": {
+      "names": [
+        "build: a header missing a needed column fails loudly",
+        "build: parses whole/partial overlaps, skips the no-ZCTA remainder, keeps split relationships",
+        "lookup: AZ-06 returns 79 ZCTAs (verified Census tab20 CD119), stated N == rows",
+        "lookup: enumerates Arizona's 9 congressional districts",
+        "lookup: postal reconciliation distinguishes a ZCTA from a non-ZCTA ZIP",
+        "lookup: reverse ZCTA -> groupings spans the parallel types, never nested",
+        "lookup: unknown ZCTA and unknown geography are typed absence, never zero"
+      ],
+      "dynamic": 0
+    },
     "tests/census-join-key.test.ts": {
       "names": [
         "item 3: census_id_gidid appears in no join, key, lookup or foreign-key position",
@@ -2187,25 +2199,56 @@
     },
     "tests/ci-preflight.test.ts": {
       "names": [
-        "a red preflight makes every required job fail loudly, and skips nothing into looking green",
-        "every required job runs the preflight before it buys anything",
-        "one step decides whether the expensive tier runs, and every expensive step asks it",
+        "a refused admission makes required build and final contexts fail loudly",
+        "expired live integrity blocks admission before the suite or builds, with final verification retained",
+        "independent structural checks all report before the browser and full suite are bought",
+        "one admission decides the tier and all consuming jobs depend on it",
+        "one admission runs the bare preflight before dependency installation",
         "production observation classification runs only after its frozen dependency install",
-        "the browser and the suite are bought only on a head whose cheap tier is green",
         "the certified suite executes owner-facing TSX projection contracts",
         "the closure walk actually follows a dynamic import",
         "the duplicate check reuses the one census and agrees with the suite's baseline",
-        "the gates job runs the cheap checks before it fetches a browser or runs the suite",
+        "the existing required contexts remain and auxiliary jobs feed the final verdict",
         "the local door runs the preflight before the gate loop, and refuses rather than continuing",
         "the preflight checks are cheap, named, and both report",
         "the preflight firewall supplies both production contract registries instead of failing as an instrument",
         "the preflight is declared as something the local door runs, not exempted from parity",
-        "the preflight needs no dependency install — it runs on the bare checkout",
         "the preflight never stages, commits or otherwise mutates the tree",
-        "the three required contexts are exactly what the workflow still produces",
         "visible-tree passes on a tree whose files are all tracked, and names the ones that are not"
       ],
       "dynamic": 1
+    },
+    "tests/ci-retry-identity.test.ts": {
+      "names": [
+        "changed head, combined base, tier, closed PR or missing identity requires full proof",
+        "receipt-only refresh retains an unchanged PR input identity"
+      ],
+      "dynamic": 0
+    },
+    "tests/ci-test-shards.test.ts": {
+      "names": [
+        "a hosted SHA different from the checked-out commit cannot certify a shard",
+        "a terminated test process cannot become a successful shard",
+        "an affected TSX assertion is selected, executed and propagates failure with durable diagnostics",
+        "canonical TS and TSX discovery is covered exactly once with balanced deterministic partitions",
+        "canonical command drift and an empty shard are refused",
+        "missing, invalid and out-of-range shard configuration fails closed"
+      ],
+      "dynamic": 0
+    },
+    "tests/ci-verdict.test.ts": {
+      "names": [
+        "CLI fails with an explicit cause for invalid JSON and a selected failing test",
+        "a missing job or result fails even when its work is deliberately unneeded",
+        "an affected failing test remains selected and blocks the full PR verdict",
+        "certified-tree reuse allows explicit skips only after successful admission",
+        "draft explicitly defers tests and builds while requiring structural verification",
+        "full certification requires successful verification, tests and both aggregated build legs",
+        "import is side-effect free and does not execute the CLI",
+        "malformed input and missing or unexpected tier fail closed even with otherwise green jobs",
+        "unneeded work that failed or was cancelled is never described as a safe omission"
+      ],
+      "dynamic": 0
     },
     "tests/civic-data-bootstrap-callers.test.ts": {
       "names": [
@@ -3389,10 +3432,10 @@
     },
     "tests/draft-pr-ci.test.ts": {
       "names": [
+        "admission alone classifies draft/full before preflight",
         "draft cannot buy builds, browsers, the full suite, or shipping-only gates",
         "draft runs install and every named deterministic gate",
         "draft/full classifier is fail-closed for the complete pull-request event matrix",
-        "every required job consumes the one draft/full classifier before preflight",
         "ready_for_review is an explicit trigger and the existing shipping triggers remain",
         "required contexts, read-only permissions, and the exact-head rerun stay intact"
       ],
@@ -4089,6 +4132,17 @@
         "every gate-run correction names a record that exists",
         "every record a correction cites as evidence exists on disk",
         "the corrections directory is invisible to the gate-run readers"
+      ],
+      "dynamic": 0
+    },
+    "tests/generated-artifact-proof.test.ts": {
+      "names": [
+        "generated proof cannot hide drift by rewriting another command's output",
+        "generated proof deduplicates check commands without conflating distinct checks",
+        "generated proof fails on a stale sibling even when generation repairs it first",
+        "generated proof keeps a non-reproducing mismatch red",
+        "generated proof restores outputs after a generator fails midway",
+        "generated proof runs a shared generator once and compares every output"
       ],
       "dynamic": 0
     },
@@ -7813,8 +7867,8 @@
         "a renamed gates job is caught",
         "a renamed matrix leg is caught",
         "an unresolvable job name is refused rather than dropped",
-        "every required context is a check the workflow actually produces",
-        "the workflow produces no check outside the required set"
+        "every auxiliary context feeds the fail-closed required final status",
+        "every required context is a check the workflow actually produces"
       ],
       "dynamic": 0
     },
@@ -8669,10 +8723,10 @@
     "tests/software-ci-boundary.test.ts": {
       "names": [
         "Build Check has no transitional path-cost or OPS_ONLY tier",
-        "every Build Check job defaults non-draft, non-reused work to full certification",
         "post-deploy classifies complete software observation after installing its canonical reader",
         "push/main/manual triggers remain and no workflow hides behind a path filter",
         "the repository inventory does not project current operational health from retired Git state",
+        "the single admission defaults non-draft, non-reused work to full certification",
         "the surviving software-staging promoter cannot advertise the retired runtime bypass"
       ],
       "dynamic": 0
@@ -9383,7 +9437,7 @@
         "both required jobs still report on the attested path",
         "every declared verdict and reason is reachable from the matrix above",
         "main's tip was an ancestor of the candidate, which is what collapses the three trees",
-        "no expensive step in either job runs on an attested head",
+        "no expensive step runs on an attested head",
         "reuse is unreachable for any event other than a push to the integration ref",
         "the 2026-09-07 merge and the head run #806 certified are the SAME git tree",
         "the certified step costs nothing on a pull request — it short-circuits before git",

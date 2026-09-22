@@ -13,13 +13,9 @@ import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
 import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 import { acquireGrfScope, GRF_CD120 } from "./grf.ts";
+import { censusGeographyUserAgent } from "./http.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
-
-function userAgent(): string {
-  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
-  return `we-the-people census-geography importer (${contact ? `contact: ${contact}` : "https://github.com/SeanJ22/we-the-people"})`;
-}
 
 interface Source extends Tab20Spec {
   readonly url: string;
@@ -100,7 +96,7 @@ async function streamLines(
 ): Promise<{ bytes: number; sha256: string; lastModified: string | null }> {
   const hash = createHash("sha256");
   let bytes = 0;
-  const res = await fetchImpl(url, { headers: { "user-agent": userAgent() }, signal });
+  const res = await fetchImpl(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal });
   if (!res.ok || !res.body) throw new Error(`HTTP ${res.status} fetching ${url}`);
   const lastModified = res.headers.get("last-modified");
   const reader = res.body.getReader();
@@ -131,7 +127,7 @@ async function fetchBytes(
   fetchImpl: typeof fetch,
   signal?: AbortSignal,
 ): Promise<{ bytes: Buffer; sha256: string; lastModified: string | null }> {
-  const res = await fetchImpl(url, { headers: { "user-agent": userAgent() }, signal });
+  const res = await fetchImpl(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal });
   if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
   const bytes = Buffer.from(await res.arrayBuffer());
   return { bytes, sha256: createHash("sha256").update(bytes).digest("hex"), lastModified: res.headers.get("last-modified") };

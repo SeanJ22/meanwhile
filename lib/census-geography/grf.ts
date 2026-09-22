@@ -28,6 +28,7 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { GeographyType, GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
+import { censusGeographyUserAgent } from "./http.ts";
 
 const GRF_BASE = "https://www2.census.gov/geo/docs/maps-data/data/grf/2026";
 
@@ -172,11 +173,6 @@ export class GrfAccumulator {
   }
 }
 
-function userAgent(): string {
-  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
-  return `we-the-people census-geography importer (${contact ? `contact: ${contact}` : "https://github.com/SeanJ22/we-the-people"})`;
-}
-
 export interface AcquireGrfOptions {
   readonly fetchImpl?: typeof fetch;
   /** Restrict to these 2-digit state FIPS (default: all of GRF_STATE_FIPS). */
@@ -198,7 +194,7 @@ export async function acquireGrfScope(target: GrfTarget, options: AcquireGrfOpti
 
   for (const st of states) {
     const url = `${GRF_BASE}/public_grfc_cur26_${st}.txt`;
-    const res = await fetchImpl(url, { headers: { "user-agent": userAgent() }, signal: options.signal });
+    const res = await fetchImpl(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal: options.signal });
     if (!res.ok || !res.body) throw new Error(`HTTP ${res.status} fetching ${url}`);
     sourceFiles.push(url.split("/").pop() ?? url);
     const reader = res.body.getReader();

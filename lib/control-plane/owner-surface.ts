@@ -1521,6 +1521,17 @@ export interface OwnerSnapshot {
   readonly spendByPlace?: SpendByPlaceView;
 
   /**
+   * The delivery trail (MW-053, MW-054): fleet-wide acquisition → validation →
+   * publication → public availability, the refusals between the stages, the
+   * blockers that hold a stage at zero, the trail's cost, and the promotion
+   * history. Absent on a snapshot published before the field existed, which the
+   * section renders as the specific missing wire rather than a zeroed trail that
+   * looks measured. An inline type import: `delivery-trail.ts` imports the
+   * honesty helpers from this file, so a value import here would be circular.
+   */
+  readonly deliveryTrail?: import("./delivery-trail.ts").DeliveryTrailView | null;
+
+  /**
    * **Panel 8 — the map provider's bill** (MAPQ-5 and MAPQ-6, 2026-09-07).
    *
    * The first MapTiler billing period closed at 101,863 requests against a

@@ -72,6 +72,7 @@ import {
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { costSectionNumbers, spendWindowRows } from "@/lib/control-plane/cost-panel.ts";
+import { deliveryTrailRenderedNumbers } from "@/lib/control-plane/delivery-trail.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
 import { groupWaiting, ownerTypeOf, waitingCardView, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
 import { splitDecided } from "@/lib/control-plane/decision-receipt.ts";
@@ -119,6 +120,7 @@ import { LatestDigestStatus } from "../digest-status.tsx";
 import { DeployFleet } from "./deploy-fleet.tsx";
 import { DecisionQueue, type PriorityGroupView, type WaitingCardView } from "./decisions.tsx";
 import { CostSection } from "./sections/cost.tsx";
+import { DeliverySection } from "./sections/delivery-trail.tsx";
 import { MapTilerSection } from "./sections/maptiler.tsx";
 import { DecidedSection, FixQueueSection } from "./sections/decided.tsx";
 import { HealthSection, type HealthCardView } from "./sections/health.tsx";
@@ -352,6 +354,8 @@ export default async function AdminPage() {
    * them and they are audited with the rest.
    */
   numbers.push(...costSectionNumbers({ monthly: snapshot?.monthlySpend ?? null, windows: spendWindows, capacity: snapshot?.costCapacity ?? null }));
+  // The delivery trail draws its own stage counts; they go through the same audit as every other figure.
+  if (snapshot?.deliveryTrail) numbers.push(...deliveryTrailRenderedNumbers(snapshot.deliveryTrail));
 
   /*
    * THE MAP PROVIDER'S FIGURES GO THROUGH THE SAME DOOR AS EVERY OTHER PANEL'S.
@@ -605,6 +609,9 @@ export default async function AdminPage() {
           returnTo={HERE}
         />
       )}
+
+      {/* 6c — DELIVERY TRAIL (MW-053/054): acquired -> validated -> approved -> publicly available */}
+      {snapshot && <DeliverySection view={snapshot.deliveryTrail ?? null} />}
 
       {/* 6b — THE MAP PROVIDER'S BILL (MAPQ-6) */}
       <MapTilerSection

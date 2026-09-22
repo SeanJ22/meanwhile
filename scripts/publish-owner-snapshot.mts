@@ -72,7 +72,9 @@ import {
 } from "../lib/control-plane/owner-surface.ts";
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
 import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
+import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
 import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
+import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
 import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
@@ -405,6 +407,8 @@ interface ControlPlaneReads {
   readonly cacheByRole: Parameters<typeof buildCostPanel>[0]["cacheByRole"];
   readonly share: Parameters<typeof buildCostPanel>[0]["share"];
   readonly verifiedRecords: number | null;
+  /** The full pipeline states, kept for the delivery trail (not thrown away after the VERIFIED count). */
+  readonly pipelineStates: Awaited<ReturnType<typeof readPipelineStates>>;
 }
 
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
@@ -415,10 +419,12 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
     repos.researchState.read(RESEARCH_STATE_ID),
   ]);
   let verifiedRecords: number | null = null;
+  let pipelineStates: Awaited<ReturnType<typeof readPipelineStates>> = [];
   try {
-    verifiedRecords = stageCounts(await readPipelineStates(repos)).byStage.VERIFIED;
+    pipelineStates = await readPipelineStates(repos);
+    verifiedRecords = stageCounts(pipelineStates).byStage.VERIFIED;
   } catch (error) {
-    log(`the promotion pipeline could not be read (${(error as Error).message}) — cost per verified record is a gap`);
+    log(`the promotion pipeline could not be read (${(error as Error).message}) — cost per verified record and the delivery trail are gaps`);
   }
   const metrics = research?.value.metrics ?? null;
   return {
@@ -428,6 +434,7 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
     cacheByRole: metrics?.cacheByRole ?? null,
     share: metrics?.share ?? null,
     verifiedRecords,
+    pipelineStates,
   };
 }
 
@@ -517,6 +524,16 @@ function buildSnapshot(
     candidateNames: candidateNames(),
     spendByDay: spendByDay(reads),
     spendByPlace: reads ? buildSpendByPlace(reads.costs) : undefined,
+    deliveryTrail: reads
+      ? buildDeliveryTrail(reads.pipelineStates, {
+          activation: readActivationGate(process.cwd()),
+          // No served-reader readback producer is wired yet (the witness bridge);
+          // the trail renders public availability as its named gap, never a zero.
+          servedReader: null,
+          costSummary: cost ? cost.summary : null,
+          costPerVerifiedRecord: cost ? cost.costPerVerifiedRecord : notOpened,
+        })
+      : undefined,
     maptiler,
 
     obligationsByState: obligationsByState(reads),

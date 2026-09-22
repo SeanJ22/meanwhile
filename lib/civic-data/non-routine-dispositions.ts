@@ -263,6 +263,7 @@ export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "fec-open-api", contractIds: ["fec-funding"], contractSourceId: "fec-open-api" },
   { inventorySourceId: "nh-general-court", contractIds: ["nh-members"], contractSourceId: "nh-general-court" },
   { inventorySourceId: "census-acs-api", contractIds: ["census-acs-population"], contractSourceId: "census-data-api" },
+  { inventorySourceId: "census-geography-relationships", contractIds: ["census-geography-overlaps"], contractSourceId: "census-geography-relationships" },
 ] as const satisfies readonly RoutineInventoryBinding[];
 
 export interface ManualProductionInventoryBinding {

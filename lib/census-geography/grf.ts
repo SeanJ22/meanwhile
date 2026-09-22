@@ -32,13 +32,16 @@ import { censusGeographyUserAgent } from "./http.ts";
 
 const GRF_BASE = "https://www2.census.gov/geo/docs/maps-data/data/grf/2026";
 
-/** State FIPS whose grf/2026 file we read: the 50 states + DC + Puerto Rico. */
-export const GRF_STATE_FIPS: readonly string[] = [
-  "01", "02", "04", "05", "06", "08", "09", "10", "11", "12", "13", "15", "16", "17", "18", "19",
-  "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35",
-  "36", "37", "38", "39", "40", "41", "42", "44", "45", "46", "47", "48", "49", "50", "51", "53",
-  "54", "55", "56", "72",
-];
+/**
+ * Every 2-digit Census state/territory FIPS, derived from the authoritative
+ * `FIPS_TO_STATE` registry — never a hand-kept state list (the coverage-manifest
+ * guard forbids re-enumerating the covered states outside lib/coverage). A
+ * jurisdiction whose grf/2026 block file does not exist (e.g. an outlying
+ * territory) 404s and is skipped by the acquisition below.
+ */
+export const GRF_STATE_FIPS: readonly string[] = Object.keys(FIPS_TO_STATE)
+  .filter((fips) => /^\d{2}$/.test(fips))
+  .sort();
 
 export interface GrfTarget {
   readonly type: GeographyType;
@@ -195,6 +198,7 @@ export async function acquireGrfScope(target: GrfTarget, options: AcquireGrfOpti
   for (const st of states) {
     const url = `${GRF_BASE}/public_grfc_cur26_${st}.txt`;
     const res = await fetchImpl(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal: options.signal });
+    if (res.status === 404) continue; // a jurisdiction with no grf/2026 block file (e.g. an outlying territory)
     if (!res.ok || !res.body) throw new Error(`HTTP ${res.status} fetching ${url}`);
     sourceFiles.push(url.split("/").pop() ?? url);
     const reader = res.body.getReader();

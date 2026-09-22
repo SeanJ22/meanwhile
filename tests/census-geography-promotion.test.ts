@@ -13,6 +13,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { SOURCE_AUTHORITIES, officialGovAutoQualifies } from "../lib/civic-data/source-authority.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
 import {
@@ -28,6 +29,14 @@ const NOW = "2026-09-21T12:00:00.000Z";
 function azDataset(): BuiltDataset {
   return JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
 }
+
+test("census-geography-relationships is an official .gov source that auto-qualifies (owner policy)", () => {
+  const auth = SOURCE_AUTHORITIES["census-geography-relationships"];
+  assert.ok(auth, "the census-geography-relationships source authority exists");
+  assert.equal(officialGovAutoQualifies(auth), true, "every final host is an official .gov host");
+  // Auto-qualifies for automatic publication — no per-import manual approval.
+  assert.equal(auth.routineAutoPromotion, true);
+});
 
 test("the routine contract auto-publishes and matches the publication identity", () => {
   const c = requiredRoutineContract(CENSUS_GEO_CONTRACT_ID);

@@ -9,6 +9,30 @@ import {
  * The one authority/competence registry for routine civic data. An adapter may
  * add parser mechanics, but it may not invent trusted hosts or competent facts.
  */
+
+/**
+ * OWNER POLICY (Sean, 2026-09-21) — official-government auto-qualification.
+ *
+ * An official government publisher qualifies BY DEFAULT for automatic ingestion
+ * and publication through the authorized routine pipeline: a newly encountered
+ * `.gov` (or otherwise approved official) host does not need per-source manual
+ * approval. Every normal check is preserved — successful retrieval, correct
+ * identity, geographic/date version, parsing, required completeness, and runtime
+ * authority — and passing records proceed automatically while a failure records
+ * its specific reason. A source that is deliberately research/corroboration only
+ * sets `routineAutoPromotion: false` with a stated reason; being outside `.gov`
+ * does not by itself disqualify an otherwise approved official source. This is
+ * shared logic, never a per-source exception for any one publisher.
+ */
+export function isOfficialGovHost(host: string): boolean {
+  return /(^|\.)gov$/i.test(host.trim().replace(/:\d+$/, ""));
+}
+
+/** True when every final host of a source authority is an official `.gov` host. */
+export function officialGovAutoQualifies(source: { readonly allowedFinalHosts: readonly string[] }): boolean {
+  return source.allowedFinalHosts.length > 0 && source.allowedFinalHosts.every(isOfficialGovHost);
+}
+
 export const SOURCE_AUTHORITIES = {
   "federal-legislative-records": {
     id: "federal-legislative-records",

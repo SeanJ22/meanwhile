@@ -300,6 +300,12 @@ function MonthlySpend({ monthly, returnTo }: { monthly: MonthlySpendView | null;
           ? "— nothing went through the Batches API this month, so there is no batch discount to report."
           : `${usdCents(monthly.batchSavingUsd)} across ${count(monthly.batchRows)} request(s), which are billed at half of list.`}
       </p>
+      <p className="note">
+        <strong>Cache hit rate this month</strong>{" "}
+        {monthly.cacheHitRate.held
+          ? `${Math.round((monthly.cacheHitRate.value.value / Math.max(monthly.cacheHitRate.value.denominator, 1)) * 100)}% of input tokens were served from the cache, across every model; the per-model split is in the billed detail below.`
+          : "— not measured this month: no row carried cache metering, so this is our named gap, not 0%."}
+      </p>
       {blind > 0 && (
         <p className="note">
           Kept out of every figure above: {count(unmeasured.predatesFields)} row(s) written before cache and batch use were
@@ -393,9 +399,46 @@ function MonthlySpend({ monthly, returnTo }: { monthly: MonthlySpendView | null;
                 ))}
                 <td className="n">{count(monthly.batchRows)}</td>
               </tr>
+              <tr className="cache-rate">
+                <td>Cache hit rate</td>
+                {monthly.byModel.map((m) => (
+                  <td key={m.key} className="n">
+                    {m.cacheHitRate.held ? (
+                      `${Math.round((m.cacheHitRate.value.value / Math.max(m.cacheHitRate.value.denominator, 1)) * 100)}%`
+                    ) : (
+                      <span className="gap">not measured</span>
+                    )}
+                  </td>
+                ))}
+                <td className="n">
+                  {monthly.cacheHitRate.held ? (
+                    `${Math.round((monthly.cacheHitRate.value.value / Math.max(monthly.cacheHitRate.value.denominator, 1)) * 100)}%`
+                  ) : (
+                    <span className="gap">not measured</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>Caching saved (vs the same tokens uncached)</td>
+                {monthly.byModel.map((m) => (
+                  <td key={m.key} className="n">
+                    {m.cacheSavingUsd === null ? <span className="gap">&mdash;</span> : usdCents(m.cacheSavingUsd)}
+                  </td>
+                ))}
+                <td className="n">
+                  {monthly.cacheSavingUsd === null ? <span className="gap">&mdash;</span> : usdCents(monthly.cacheSavingUsd)}
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+        <p className="note">
+          Cache hit rate is cache-read input tokens as a share of every input token sent (reads + writes + uncached), by
+          model and for the month &mdash; a <em>token</em> share, not a request share, so a single request can be a partial
+          hit and a busy model and a quiet one are never collapsed into one number. A model whose rows predate the cache
+          fields shows a named gap, never a 0%. &ldquo;Caching saved&rdquo; prices each model&rsquo;s cache reads against
+          sending the same tokens uncached at list price; a model with no priced cache read shows &mdash;, not a zero.
+        </p>
       </details>
     </>
   );

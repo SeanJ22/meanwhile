@@ -335,6 +335,7 @@ test("§9A.23: an empty month is a month with nothing measured, never a month th
   assert.equal(view.total.measured, 0);
   assert.deepEqual(view.byProvider, []);
   assert.equal(view.cacheSavingUsd, null);
+  assert.equal(view.cacheHitRate.held, false, "an empty month has no hit rate — a gap, never a 0%");
   assert.equal(view.batchSavingUsd, null);
   assert.equal(view.ledgerBeginsAt, null);
   assert.deepEqual(view.history.map((h) => h.label), ["September 2026"], "no ledger history means no months to compare");
@@ -386,6 +387,25 @@ test("§9A.23: the month totals by provider, model and role, prices the savings 
   assert.equal(haiku.batchedRows, 1);
   assert.equal(opus.batchedRows, 0);
   assert.equal(view.byModel.find((r) => r.key === NO_MODEL_KEY)!.tokens.inputTokens.total, null, "the deterministic rows reported no prompt at all");
+
+  /* ADM-C14: per-model cache hit rate and per-model saving, carried on the row, not recomputed in the render. */
+  assert.ok(
+    opus.cacheHitRate.held && opus.cacheHitRate.value.value === 40_000 && opus.cacheHitRate.value.denominator === 46_000,
+    "Opus hit rate is cache reads / (reads + writes + uncached) = 40000 / 46000",
+  );
+  assert.equal(opus.cacheSavingUsd, 0.18, "Opus saved 0.18 on its 40k cache reads, the per-model half of the aggregate");
+  assert.ok(
+    haiku.cacheHitRate.held && haiku.cacheHitRate.value.value === 0 && haiku.cacheHitRate.value.denominator === 6_000,
+    "Haiku read nothing from the cache: a real, measured 0% — not a gap",
+  );
+  assert.equal(haiku.cacheSavingUsd, null, "no cache read means no per-model saving to price, which is not a zero");
+  const noModel = view.byModel.find((r) => r.key === NO_MODEL_KEY)!;
+  assert.equal(noModel.cacheHitRate.held, false, "the deterministic rows carry no metering, so the hit rate is our named gap");
+  assert.equal(noModel.cacheSavingUsd, null);
+  assert.ok(
+    view.cacheHitRate.held && view.cacheHitRate.value.value === 40_000 && view.cacheHitRate.value.denominator === 52_000,
+    "the month's aggregate hit rate sums every model's input: 40000 / (40000 + 10000 + 2000)",
+  );
 
   assert.equal(view.tokens.cacheReadInputTokens.total, 40_000);
   assert.equal(view.tokens.requestCount.total, 5, "1 + 1 + 2 + 1 across the four September rows");
@@ -511,6 +531,12 @@ test("the cost section renders dollars to the cent, keeps both charts, and no lo
   assert.match(code, /Resets \{utcStamp\(monthly\.window\.resetsAt\)\}/);
   assert.match(code, /Nothing in this block is part of any dollar figure above/);
   assert.match(code, /<NeedsYouLine/, "every card states whether it needs him");
+
+  /* ADM-C14: per-model cache hit rate and per-model saving are on the face, carried not recomputed, with the token-vs-request disclaimer. */
+  assert.match(code, /Cache hit rate/, "the per-model cache hit rate row is rendered");
+  assert.match(code, /Caching saved \(vs the same tokens uncached\)/, "and the per-model saving beside it");
+  assert.match(code, /m\.cacheHitRate\.held/, "the hit rate is read from the carried field, not recomputed from tokens in the render");
+  assert.match(code, /not a request share/, "the token-vs-request disclaimer is stated");
 
   /* PURE: it reads no store, no clock and no environment. */
   for (const forbidden of ["openControlPlane", "process.env", "Date.now()", "readFileSync", "fetch("]) {

@@ -1,6 +1,6 @@
 # CI verification and merge efficiency
 
-This document describes the proposed CI efficiency change. Hosted after measurements and coordinated integration are required before claiming a speedup. The existing required contexts remain `build (default)`, `build (standalone)` and `gates (test · lint · tsc)`; repository settings are unchanged.
+This document describes the CI execution and retry contract. [PR #344](https://github.com/SeanJ22/meanwhile/pull/344) records rollout status and the measured hosted run evidence; its run links distinguish completed proof from pending work. Hosted measurements are required before claiming a speedup. The existing required contexts remain `build (default)`, `build (standalone)` and `gates (test · lint · tsc)`; repository settings are unchanged.
 
 ## Measured starting point
 
@@ -54,6 +54,8 @@ Before enabling impact selection, classify:
 | Full suite | Shared libraries, database/schema contracts, package/lock/config/workflow changes, canonical governance and generated-source changes, unknown paths, dynamic dependencies that cannot be bounded, classifier changes or missing diff/history |
 
 Documents are not inherently harmless: governance, templates, evidence and generation inputs often affect execution. Compare proposed selection with historical full-suite results, exercise important dependency cases, and inject an affected failing test before activation. Keep a full ready-PR backstop for risky shared changes and a regular complete verification backstop. A post-merge check cannot be the first meaningful proof of a risky shared change.
+
+Initial historical review compared full successful runs for the two-path documentation PR #340 (35525230618), shared Postgres retry PR #339 (35500727348), and broad Reader/contracts PR #338 (35498027335). The latter two require the full suite. The first is only a potential narrow prose case; no omission is authorized by that retrospective classification. RULING 290's exact-head run 35189398507 failed prerequisites and skipped tests despite successful builds, so it cannot count as successful full-suite comparison. Dynamic filesystem reads, Reader fingerprints, generated geography traces and governance compilation require explicit dependency coverage before any selector is activated.
 
 ## Merge process and cost
 

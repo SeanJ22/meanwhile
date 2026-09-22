@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 684,
-    "named": 6846,
+    "files": 685,
+    "named": 6851,
     "dynamic": 27
   },
   "files": {
@@ -5721,6 +5721,16 @@
         "PC-8: results are JSON Lines keyed by custom_id in any order; an errored, canceled or expired request throws by name",
         "PC-8: the comparison seam routes through the batch only under the option, and reports the route on its outcome",
         "PC-8: the submission is one POST to /v1/messages/batches carrying {requests: [{custom_id, params}]} with the Messages headers"
+      ],
+      "dynamic": 0
+    },
+    "tests/model-ceiling.test.ts": {
+      "names": [
+        "POSITIVE CONTROL — a Fable model is refused",
+        "POSITIVE CONTROL — an unrated (unapproved) model is refused",
+        "every routable class is within the ceiling (and importing the module already proved it)",
+        "the ceiling is Opus",
+        "the ceiling model and the cheaper classes each pass; none is a Fable"
       ],
       "dynamic": 0
     },

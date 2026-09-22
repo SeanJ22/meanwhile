@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 691,
-    "named": 6907,
+    "files": 692,
+    "named": 6912,
     "dynamic": 28
   },
   "files": {
@@ -2567,6 +2567,16 @@
         "the join is by BIOGUIDE, never by name",
         "the provenance tag names the PROJECT, not official records",
         "the snapshot is SHA-pinned, never main"
+      ],
+      "dynamic": 0
+    },
+    "tests/connect-attempt-window.test.ts": {
+      "names": [
+        "a child started with that environment runs with the window before its own code",
+        "install sets this process's default and the environment children inherit",
+        "pilot-runner installs the connect window before its singleton, handoff or any read",
+        "the window fits the measured handshake and stays inside the per-request deadline",
+        "the window is appended once, replaces an earlier value, and leaves other options alone"
       ],
       "dynamic": 0
     },

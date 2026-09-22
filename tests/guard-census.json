@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 689,
-    "named": 6879,
+    "files": 690,
+    "named": 6885,
     "dynamic": 28
   },
   "files": {
@@ -5772,6 +5772,17 @@
         "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured",
         "per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null",
         "§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess"
+      ],
+      "dynamic": 0
+    },
+    "tests/model-lane.test.ts": {
+      "names": [
+        "freshness-shadow derives modelLaneEnabled from modelLaneClosure and the activation gate",
+        "promotion on with no record class open is still no delivery path",
+        "reasons are ordered: blackout, dry, no-model, credential, delivery, owner pause",
+        "the lane is open only when nothing closes it and a delivery path is open",
+        "the real activation gate decides: the lane is open exactly when a delivery path is",
+        "with promotion off, the lane closes and says why, and what keeps running"
       ],
       "dynamic": 0
     },

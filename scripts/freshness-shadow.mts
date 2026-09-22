@@ -222,6 +222,7 @@ import {
 import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
+import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -954,29 +955,22 @@ if (scoutSearch !== null) {
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-const laneDisabledCode = scheduledBlackout
-  ? "SCHEDULED_BLACKOUT"
-  : dry
-  ? "LANE_DISABLED"
-  : noModel
-    ? "LANE_DISABLED"
-    : !credentialConfigured
-      ? "LANE_DISABLED"
-      : intents.paused
-        ? "PAUSED"
-        : null;
-const laneDisabledReason = scheduledBlackout
-  ? "SCHEDULED BLACKOUT: Saturday 18:00 through Sunday 06:00 America/Phoenix permits no model or network research"
-  : dry
-  ? "--dry: no retrieval of any kind runs, so no Scout runs"
-  : noModel
-    ? "--no-model: the Scout lane is held closed for this diagnostic cycle"
-    : !credentialConfigured
-      ? `${WORKER_CREDENTIAL_VAR} is not set in this process, so no model can be invoked`
-      : intents.paused
-        ? `paused by owner intent ${intents.pauseIntentId ?? "(id unrecorded)"}`
-        : null;
-const modelLaneEnabled = laneDisabledReason === null;
+/* One ordered answer for why the model lane is closed (model-lane.ts). It also
+   closes the lane while no delivery path is open: with promotion off, paid
+   Scout and auditor output could only accumulate unread (owner, 2026-09-22). */
+const laneClosure = modelLaneClosure({
+  scheduledBlackout,
+  dry,
+  noModel,
+  credentialConfigured,
+  credentialVar: WORKER_CREDENTIAL_VAR,
+  activation: readActivationGate(ROOT),
+  paused: intents.paused,
+  pauseIntentId: intents.pauseIntentId ?? null,
+});
+const laneDisabledCode = laneClosure?.code ?? null;
+const laneDisabledReason = laneClosure?.reason ?? null;
+const modelLaneEnabled = laneClosure === null;
 
 /*
  * THE LANE PAUSE / RESUME GETS ITS HONORED RECORD. (9.4.26 admin feedback.)

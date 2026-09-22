@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 692,
-    "named": 6912,
+    "files": 693,
+    "named": 6920,
     "dynamic": 28
   },
   "files": {
@@ -8719,6 +8719,19 @@
         "ignored unique material is not disposable merely because Git ignores it",
         "squash merge content is recognized without guessing from branch ancestry",
         "tracked unmerged work and a new open PR prevent removal"
+      ],
+      "dynamic": 0
+    },
+    "tests/settled-occurrence-recovery.test.ts": {
+      "names": [
+        "SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease",
+        "SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, and a dead lease on one is left for the sweep",
+        "a recovered INGESTED occurrence keeps its bytes eligible for parsing, verification and staging",
+        "a recovered INGESTED occurrence with a normalizer stages PROMOTION-READY from bytes an earlier cycle vaulted",
+        "a recovered WALKED_NO_YIELD discharges this period's reading only: the obligation comes due again under a new RouteTask",
+        "a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask",
+        "an aborted or interrupted occurrence is still resumed and dispatched, and its earlier Attempt and partial evidence are kept",
+        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won"
       ],
       "dynamic": 0
     },

@@ -37,6 +37,7 @@
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { putArtifact } from "../evidence/store.ts";
 import type { Artifact } from "../evidence/artifact.ts";
+import type { ArtifactRecord } from "../repository/types.ts";
 
 import { FRESHNESS_PROJECT } from "./durable.ts";
 import type { VaultPut } from "./route-executor.ts";
@@ -67,6 +68,20 @@ export interface CycleVault {
   readonly ledger: ReadonlyMap<string, VaultLedgerEntry>;
   /** Read a stored body back. Null when the key holds nothing. */
   readBack(key: string): Promise<string | null>;
+  /**
+   * Read back the body of an artifact an EARLIER cycle vaulted. (2026-09-22.)
+   *
+   * `ledger` holds only this cycle's puts. A settled occurrence recovered from
+   * an interrupted cycle reaches the promotion tail with bytes that cycle
+   * vaulted, and without this its INGESTED record would stage as though nothing
+   * had been retrieved. The key embeds the work item and the content hash, so
+   * the store is listed at most once per cycle and a key is read only when its
+   * stored metadata names the artifact record's own Attempt, URL and tier. Null
+   * when no key matches; the tail then stages the record as still owed.
+   */
+  readHeld(
+    record: Pick<ArtifactRecord, "artifactId" | "workItemId" | "attemptId" | "contentHash" | "canonicalUrl" | "tier">,
+  ): Promise<string | null>;
 }
 
 /**
@@ -101,14 +116,40 @@ export function cycleVault(vaultRoot: string): CycleVault {
   const put: VaultPut = async (artifact: Artifact, body: string) =>
     putBytes(artifact, Buffer.from(body, "utf8"));
 
-  return {
-    put,
-    putBytes,
-    ledger,
-    async readBack(key: string): Promise<string | null> {
-      const object = await store.get(key);
-      if (object === null) return null;
-      return Buffer.from(object.bytes).toString("utf8");
-    },
+  const readBack = async (key: string): Promise<string | null> => {
+    const object = await store.get(key);
+    if (object === null) return null;
+    return Buffer.from(object.bytes).toString("utf8");
   };
+
+  let heldKeys: Promise<string[]> | null = null;
+  const readHeld: CycleVault["readHeld"] = async (record) => {
+    const known = ledger.get(record.artifactId);
+    if (known !== undefined) return readBack(known.key);
+    /* A failed listing is not cached: the next recovered artifact asks again. */
+    heldKeys ??= store.list(`project/${FRESHNESS_PROJECT}/`).catch((error: unknown) => {
+      heldKeys = null;
+      throw error;
+    });
+    const suffix = `/${record.workItemId}/${record.contentHash}.`;
+    for (const key of await heldKeys) {
+      if (!key.includes(suffix)) continue;
+      const meta = await store.head(key);
+      const custom = meta?.custom;
+      if (
+        !meta ||
+        !custom ||
+        meta.contentHash !== record.contentHash ||
+        custom.attemptId !== record.attemptId ||
+        custom.canonicalUrl !== record.canonicalUrl ||
+        custom.tier !== record.tier
+      ) {
+        continue;
+      }
+      return readBack(key);
+    }
+    return null;
+  };
+
+  return { put, putBytes, ledger, readBack, readHeld };
 }

@@ -573,7 +573,9 @@ export async function dispatchOne(
       ttlMs: input.leaseTtlMs,
     });
   } catch (error) {
-    /* A live foreign lease. The other worker has it; this one moves on. */
+    /* A live foreign lease — the other worker has it — or a settled route the
+       coordinator refuses (`RouteTaskSettled`). Either way nothing was claimed,
+       no Attempt opens, and this one moves on. */
     return {
       obligationId,
       routeTaskId: input.routeTaskId,

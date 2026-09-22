@@ -189,7 +189,7 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
   /* The list: the published rows and the routine rows, filtered by the URL. */
   const listed = [...(view?.rows ?? []), ...routineRows];
   const shown = listed.filter((r) => matches(r, filter));
-  const counts = combinedCounts(view, routineRows);
+  const counts = combinedCounts(view, routineRows, routineRead.kind === "HELD" ? null : routineRead.detail);
 
   /* ---------------- THE PAGE'S AUDIT OF ITSELF ---------------- */
   const numbers: RenderedNumber[] = [];
@@ -342,8 +342,9 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
       </h2>
       {shown.length === 0 ? (
         <p className="note">
-          No listed assignment matches this filter. The counts above are over every assignment; the list carries a bounded set, and any assignment opens
-          by its id.
+          {view === null
+            ? "Nothing is listed until the assignment view is published, so this is not a count of the work. Any assignment still opens by its id."
+            : "No listed assignment matches this filter. The counts above are over every assignment; the list carries a bounded set, and any assignment opens by its id."}
         </p>
       ) : (
         <AssignmentTable rows={shown} nowIso={nowIso} />

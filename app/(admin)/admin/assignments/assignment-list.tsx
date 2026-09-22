@@ -39,8 +39,17 @@ function filterHref(next: AssignmentFilter): string {
   return s === "" ? ASSIGNMENTS_PATH : `${ASSIGNMENTS_PATH}?${s}`;
 }
 
-/** The counts by state and lane as filter tabs, each badge a count the page audits. */
+/**
+ * The counts by state and lane as filter tabs, each badge a count the page
+ * audits. While a half of the universe is unknown (`counts.missing`), a badge
+ * shows "—" and says why: a sum over what could be read is not a count.
+ */
 export function AssignmentFilters({ counts, filter }: { counts: AssignmentCounts; filter: AssignmentFilter }) {
+  const unknown = counts.missing.length > 0 ? `not known yet: ${counts.missing.join("; ")}` : null;
+  const badge = (m: { readonly value: number }) => (
+    <span className="fleet-tab-badge" title={unknown ?? undefined}>{unknown === null ? count(m.value) : "—"}</span>
+  );
+  const tally = (m: { readonly value: number; readonly denominator: number }) => (unknown === null ? ` (${m.value} of ${m.denominator})` : ` (${unknown})`);
   return (
     <>
       <nav className="fleet-tabs" aria-label="Assignments by state">
@@ -53,10 +62,10 @@ export function AssignmentFilters({ counts, filter }: { counts: AssignmentCounts
             href={filterHref({ ...filter, state: s })}
             className={`fleet-tab-link${filter.state === s ? " fleet-tab-active" : ""}`}
             aria-current={filter.state === s ? "page" : undefined}
-            title={`${STATE_WORDS[s].means} (${m.value} of ${m.denominator})`}
+            title={`${STATE_WORDS[s].means}${tally(m)}`}
           >
             {STATE_WORDS[s].label}
-            <span className="fleet-tab-badge">{count(m.value)}</span>
+            {badge(m)}
           </a>
         ))}
       </nav>
@@ -70,10 +79,10 @@ export function AssignmentFilters({ counts, filter }: { counts: AssignmentCounts
             href={filterHref({ ...filter, lane: l })}
             className={`fleet-tab-link${filter.lane === l ? " fleet-tab-active" : ""}`}
             aria-current={filter.lane === l ? "page" : undefined}
-            title={`${LANE_WORDS[l].means} (${m.value} of ${m.denominator})`}
+            title={`${LANE_WORDS[l].means}${tally(m)}`}
           >
             {LANE_WORDS[l].label}
-            <span className="fleet-tab-badge">{count(m.value)}</span>
+            {badge(m)}
           </a>
         ))}
         <a

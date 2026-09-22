@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 691,
-    "named": 6906,
+    "named": 6907,
     "dynamic": 28
   },
   "files": {
@@ -1337,6 +1337,7 @@
         "eligibility is the later of the next-due and the backoff retry",
         "every number the view draws carries a denominator and a contract, and every stated N equals the rows",
         "failed: a Scout that found nothing and a wall at the source read FAILED; REQUIRES_NEW_ADAPTER reads BLOCKED on engineering",
+        "filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero",
         "routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered",
         "routine counts the projector could not state stay unknown — never replaced by a list length or a zero",
         "succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded, needs-more-evidence counted, a guard refusal is not a rejection",

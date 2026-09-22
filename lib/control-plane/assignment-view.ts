@@ -2675,6 +2675,13 @@ export interface AssignmentCounts {
   readonly total: number;
   readonly byState: readonly { readonly state: AssignmentState; readonly count: Measured }[];
   readonly byLane: readonly { readonly lane: AssignmentLane; readonly count: Measured }[];
+  /**
+   * Why these counts are NOT the whole universe, in words; empty when they
+   * are. A half that was not published or could not be read is unknown, so a
+   * page must not draw these sums as counts while this is non-empty: an
+   * unknown never reads as zero.
+   */
+  readonly missing: readonly string[];
 }
 
 /**
@@ -2685,10 +2692,16 @@ export interface AssignmentCounts {
 export function combinedCounts(
   view: AssignmentView | null,
   routine: readonly { readonly state: AssignmentState; readonly lane: AssignmentLane }[],
+  routineUnreadBecause: string | null = null,
 ): AssignmentCounts {
   const total = (view?.summary.total ?? 0) + routine.length;
   const source = `${view ? "the published assignment view" : "no published assignment view"} plus ${routine.length} routine contract(s) read live`;
+  const missing = [
+    ...(view === null ? ["the assignment view is not on the published snapshot yet"] : []),
+    ...(routineUnreadBecause === null ? [] : [`routine contracts could not be read (${routineUnreadBecause})`]),
+  ];
   return {
+    missing,
     total,
     byState: ASSIGNMENT_STATES.map((state) => ({
       state,
@@ -2751,6 +2764,8 @@ export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: re
 /** The combined filter counts, for `auditRenderedNumbers`. */
 export function combinedCountNumbers(counts: AssignmentCounts): RenderedNumber[] {
   const out: RenderedNumber[] = [];
+  // Incomplete counts are not drawn as numbers (AssignmentFilters), so there is nothing to audit.
+  if (counts.missing.length > 0) return out;
   for (const s of counts.byState) pushMeasured(out, `assignments on this page · ${STATE_WORDS[s.state].label}`, s.count);
   for (const l of counts.byLane) pushMeasured(out, `assignments on this page · ${LANE_WORDS[l.lane].label}`, l.count);
   return out;

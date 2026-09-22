@@ -1150,6 +1150,19 @@ test("routine contracts: a healthy one succeeds with public availability OBSERVE
   assert.ok(ASSIGNMENT_STATES.includes(listRowOf(retrying).state));
 });
 
+test("filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero", () => {
+  // Found rendering the page locally on 2026-09-22: before the first publish every
+  // state and lane badge read "0" beside the "not on the published snapshot yet" note.
+  const unpublished = combinedCounts(null, []);
+  assert.deepEqual(unpublished.missing, ["the assignment view is not on the published snapshot yet"]);
+  assert.deepEqual(combinedCountNumbers(unpublished), [], "incomplete counts are not drawn, so they are not audited as numbers");
+  const view = buildAssignmentView(world());
+  const whole = combinedCounts(view, []);
+  assert.deepEqual(whole.missing, []);
+  assert.ok(combinedCountNumbers(whole).length > 0);
+  assert.deepEqual(combinedCounts(view, [], "Error").missing, ["routine contracts could not be read (Error)"]);
+});
+
 test("routine counts the projector could not state stay unknown — never replaced by a list length or a zero", () => {
   const uncounted = routineAssignmentRow(routineContract({ operationalState: "HEALTHY", attemptCount: "UNKNOWN" }), NOW);
   assert.ok(uncounted.what.workers.held);

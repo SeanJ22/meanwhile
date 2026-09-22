@@ -76,7 +76,7 @@ test("measured longest-first hints balance file counts without omitting new or u
   assert.equal(plan.assignments.find((row) => row.file === files[6])?.hintDurationMs, null);
   assert.equal(plan.assignments.find((row) => row.file === files[6])?.schedulingCost, 100);
   assert.equal(plan.scheduling.estimateBasis, "measured-p95-with-1ms-floor");
-  const known = partitionTests(files.slice(0, 4), 2, hints);
+  const known = partitionTests(files.slice(0, 4), 2, hints, 2);
   assert.deepEqual(known.assignments.map((row) => row.shard), [1, 2, 1, 2], "equal lexical makespans deterministically retain round-robin");
 });
 
@@ -94,14 +94,14 @@ test("lexical dispatch modeling rejects an LPT regression and bounded swaps cann
   const files = values.map((_, index) => `tests/${String.fromCharCode(97 + index)}.test.ts`);
   const hints = { formatVersion: 1, source: "synthetic lexical-dispatch regression fixture",
     durationMsByFile: Object.fromEntries(files.map((file, index) => [file, values[index]])) };
-  const plan = partitionTests(files, 2, hints);
+  const plan = partitionTests(files, 2, hints, 2);
   assert.equal(plan.scheduling.model.roundRobinMakespanCost, 14);
   assert.equal(plan.scheduling.model.longestFirstMakespanCost, 15);
   assert.equal(plan.scheduling.model.initialPlan, "round-robin");
   assert.equal(plan.scheduling.model.selectedMakespanCost, simulate(plan.assignments, 2, 2));
   assert.ok(plan.scheduling.model.selectedMakespanCost <= 14);
   assert.equal(plan.scheduling.model.label, "ESTIMATE");
-  assert.deepEqual(plan, partitionTests([...files].reverse(), 2, hints));
+  assert.deepEqual(plan, partitionTests([...files].reverse(), 2, hints, 2));
   assert.deepEqual(plan.assignments.map((row) => row.file), files);
   assert.deepEqual([1, 2].map((shard) => plan.assignments.filter((row) => row.shard === shard).length), [4, 4]);
   for (const workers of [1, 2]) {
@@ -134,11 +134,12 @@ test("missing and invalid hints fall back to deterministic complete count balanc
   assert.throws(() => partitionTests([files[0], files[0]], 2, empty), /unique/);
 });
 
-test("file concurrency explicitly uses at most two available CPUs without disabling process isolation", () => {
-  assert.deepEqual([1, 2, 3, 32].map(testFileConcurrency), [1, 2, 2, 2]);
+test("file processes stay serial within a checkout so root-mutating fixtures cannot race readers", () => {
+  assert.deepEqual([1, 2, 3, 32].map(testFileConcurrency), [1, 1, 1, 1]);
   for (const available of [0, -1, Infinity, 1.5]) assert.throws(() => testFileConcurrency(available));
   const plan = planTests(ROOT, "1/4");
-  assert.equal(plan.concurrency.effective, Math.min(2, plan.concurrency.available));
+  assert.equal(plan.concurrency.effective, 1);
+  assert.equal(plan.scheduling.model.workers, 1);
   assert.ok(!plan.args.some((arg) => /force-exit|isolation=none|test-name-pattern/.test(arg)));
 });
 
@@ -218,7 +219,7 @@ test("an affected TSX assertion is selected, executed and propagates failure wit
     assert.deepEqual(manifest.timing.files.map((row: { file: string }) => row.file), [affected]);
     assert.ok(manifest.configInputs.includes("scripts/ci-test-timing-reporter.mjs"));
     assert.ok(manifest.configInputs.includes("scripts/ci-test-scheduling-hints.mjs"));
-    assert.ok(manifest.invocationArgs.includes(`--test-concurrency=${Math.min(2, manifest.concurrency.available)}`));
+    assert.ok(manifest.invocationArgs.includes("--test-concurrency=1"));
     assert.equal(manifest.runner.platform, process.platform);
     assert.equal(manifest.runner.arch, process.arch);
     assert.ok(manifest.runner.totalMemoryBytes > 0);

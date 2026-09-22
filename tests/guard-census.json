@@ -2233,7 +2233,7 @@
         "an affected TSX assertion is selected, executed and propagates failure with durable diagnostics",
         "canonical TS and TSX discovery is covered exactly once with balanced deterministic partitions",
         "canonical command drift and an empty shard are refused",
-        "file concurrency explicitly uses at most two available CPUs without disabling process isolation",
+        "file processes stay serial within a checkout so root-mutating fixtures cannot race readers",
         "lexical dispatch modeling rejects an LPT regression and bounded swaps cannot worsen round-robin",
         "measured longest-first hints balance file counts without omitting new or unmeasured files",
         "missing and invalid hints fall back to deterministic complete count balancing",

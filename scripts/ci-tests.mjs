@@ -16,7 +16,10 @@ const EXECUTION_INPUTS = ["ci-tests.mjs", "ci-test-timing-reporter.mjs", "ci-tes
 
 export function testFileConcurrency(available) {
   if (!Number.isSafeInteger(available) || available < 1) throw new Error("Available parallelism must be a positive integer.");
-  return Math.min(2, available);
+  // Generator/tracker fixtures temporarily mutate this checkout, and their
+  // readers do not all acquire the tree lock. Parallelism belongs between
+  // isolated runner checkouts until those fixtures have complete isolation.
+  return 1;
 }
 
 // Node's CLI sorts file arguments lexically before dispatch. Model that order,
@@ -114,7 +117,7 @@ function chooseSchedule(roundRobin, longestFirst, costs, count, workers, canOpti
  * @param {unknown} hints
  * @param {number} workers
  */
-export function partitionTests(files, count, hints = SCHEDULING_HINTS, workers = 2) {
+export function partitionTests(files, count, hints = SCHEDULING_HINTS, workers = 1) {
   if (!Number.isSafeInteger(count) || count < 1 || files.length < count || new Set(files).size !== files.length) {
     throw new Error("Test discovery must assign unique files and leave no empty shard.");
   }

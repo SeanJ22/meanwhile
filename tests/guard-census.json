@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 707,
-    "named": 7007,
+    "files": 708,
+    "named": 7018,
     "dynamic": 28
   },
   "files": {
@@ -2960,6 +2960,16 @@
       ],
       "dynamic": 0
     },
+    "tests/control-plane-worker-vault-resolver.test.ts": {
+      "names": [
+        "a later record of the same artifact is read when the first record's bytes were never vaulted",
+        "a partial capture is never read; a complete record of the same bytes is",
+        "an admitted record the vault does not hold under its own identity is not in the vault",
+        "only an acquiring role may hand bytes to a worker, and a refusal still names why",
+        "the first held record still wins, in log order"
+      ],
+      "dynamic": 0
+    },
     "tests/control-query.test.ts": {
       "names": [
         "a CONFIRMED identifier may be a HIT",
@@ -4556,7 +4566,13 @@
         "DATA-1 negative control: civic prose is not keyword-deleted",
         "DATA-1: a div-soup page with no landmarks drops its menu and keeps its notice",
         "DATA-1: an empty page extracts as empty, never as invented content",
-        "DATA-1: entity decoding and mojibake repair still run after the region pass"
+        "DATA-1: entity decoding and mojibake repair still run after the region pass",
+        "a WebForms page is not deleted with its server form: the page's own content survives",
+        "a form nested inside the page form is still a control and goes whole",
+        "a hidden field can never leak into text, even when its value holds a '>'",
+        "negative control: a WebForms form holding a sliver of the page is a control and goes whole",
+        "negative control: a form that is not a WebForms server form is removed whole, however much it holds",
+        "the kept server form still loses its controls: no page state, no sign-in panel, no buttons"
       ],
       "dynamic": 0
     },

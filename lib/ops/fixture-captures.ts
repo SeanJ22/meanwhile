@@ -75,6 +75,38 @@ export const SANITIZED_CAPTURES: readonly FixtureCapture[] = [
       "the `event-tip` month-grid shape: one town-wide calendar carrying eleven boards, " +
       "concerts and transfer-station hours, from which one board's sittings are separated",
   },
+  /*
+   * The two Diligent Community meeting pages below were read by the session
+   * that diagnosed the Diligent agenda-extraction defect. Before this record
+   * was taken, their ASP.NET page state (`__VIEWSTATE`, `__EVENTVALIDATION`),
+   * the Telerik combined-script token and the WebResource/ScriptResource
+   * identifiers were replaced by fixed placeholders, so `rawSha256` below is
+   * the hash of that page-state-blanked page. The SHA-256 of each page exactly
+   * as served is stated in its `capturedBy`.
+   */
+  {
+    path: "tests/fixtures/diligent/meeting-information-tusd-502.html",
+    sourceUrl:
+      "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
+    capturedOn: "2026-09-23",
+    capturedBy:
+      "the Diligent agenda-extraction diagnosis session, one GET with the project user agent " +
+      "(as served: sha256 7b3c0ee092bbec2d27a334415a3ba47290097c2f3cbfcb482cc33c45248894cc)",
+    provesWhat:
+      "an ASP.NET WebForms page whose one server form wraps the whole page: removed whole, it " +
+      "left 62 characters of skip links that were stored as Tucson Unified sitting 502's agenda",
+  },
+  {
+    path: "tests/fixtures/diligent/meeting-information-pcc-698.html",
+    sourceUrl: "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+    capturedOn: "2026-09-23",
+    capturedBy:
+      "the Diligent agenda-extraction diagnosis session, one GET with the project user agent " +
+      "(as served: sha256 b8117e8cc4d25c18413e33ef6a888c82ca02b793130f917d2c34b8100edcb9cc)",
+    provesWhat:
+      "a second Diligent tenant's meeting page of the same WebForms shape, whose sitting's " +
+      "agenda is a linked document rather than anything the page itself carries",
+  },
 ];
 
 /** The declaration for a path, or `null` when none has been made. */

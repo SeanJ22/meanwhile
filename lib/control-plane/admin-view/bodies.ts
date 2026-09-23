@@ -189,9 +189,15 @@ export interface BodyView {
   readonly activity: readonly BodyActivity[];
   readonly escalationNote: string;
   readonly contractIds: readonly string[];
-  /** Meetings in the version we hold, or null when nothing was ever published. */
+  /**
+   * Meetings in the version we hold, or null when nothing was ever published.
+   * Read through more than one source, the largest source's count: a floor,
+   * since the sources may list the same sitting under different keys.
+   */
   readonly records: number | null;
-  /** Meetings in a version the typed Reader read back. */
+  /** How many of the body's sources hold a published version; more than one makes `records` a floor. */
+  readonly recordSources: number;
+  /** Meetings in a version the typed Reader read back (the largest such, read through more than one source). */
   readonly readerVisible: number | null;
   readonly held: number | null;
   readonly noAgendaLink: number | null;
@@ -531,8 +537,17 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   else status = "WORKING";
   const statusTone: ViewTone = status === "WORKING" ? "teal" : status === "STUCK" ? "amber" : status === "NOT READ YET" ? "slate" : "gold";
 
-  const records = version ? version.meetings : null;
-  const readerVisible = version && readback?.passed ? version.meetings : null;
+  /*
+   * A body read through two sources holds a version from each, and both may
+   * list the same sitting under different keys, so neither the newest one
+   * alone (an undercount: Pima's Board of Supervisors holds 12 through InSite
+   * and 15 through Legistar) nor their sum is right. The larger is shown, and
+   * `recordSources` tells every total over it that it is a floor.
+   */
+  const heldVersions = withVersion.flatMap((x) => (x.v === null ? [] : [x.v]));
+  const records = heldVersions.length === 0 ? null : Math.max(...heldVersions.map((v) => v.meetings));
+  const readBack = heldVersions.filter((v) => l.readbackByCandidate.get(v.versionId)?.passed === true);
+  const readerVisible = readBack.length === 0 ? null : Math.max(...readBack.map((v) => v.meetings));
   const source = sourceWords(contract.meetingSource);
 
   /* ---------------------------------------------------------------- summary */
@@ -747,6 +762,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     escalationNote: "No model runs on this lane, so nothing here escalates; a failed read records its state and is retried on the clock.",
     contractIds: g.contracts.map((c) => c.id),
     records,
+    recordSources: heldVersions.length,
     readerVisible,
     held: version ? version.held : null,
     noAgendaLink: version ? version.noAgendaLink : null,
@@ -807,6 +823,8 @@ export interface NowFigures {
   /** The share of revisions carried by the three bodies with the most, so the page can say where they concentrate. */
   readonly revisionsTopThree: { readonly count: number; readonly bodies: readonly string[] } | null;
   readonly records: number;
+  /** Bodies read through more than one source count their largest source, so the records total is a floor. */
+  readonly recordsFloor: boolean;
   readonly readerVisible: number;
   readonly held: number;
   readonly noAgendaLink: number;
@@ -833,6 +851,7 @@ export function nowFigures(views: readonly BodyView[]): NowFigures {
     revisionsTopThree:
       byRevisions.length === 0 ? null : { count: byRevisions.reduce((n, v) => n + v.day!.changed, 0), bodies: byRevisions.map((v) => v.name) },
     records: views.reduce((n, v) => n + (v.records ?? 0), 0),
+    recordsFloor: views.some((v) => v.recordSources > 1),
     readerVisible: views.reduce((n, v) => n + (v.readerVisible ?? 0), 0),
     held: views.reduce((n, v) => n + (v.held ?? 0), 0),
     noAgendaLink: views.reduce((n, v) => n + (v.noAgendaLink ?? 0), 0),

@@ -30,6 +30,8 @@ import { Pool } from "@neondatabase/serverless";
 
 import { CONTROL_PLANE_URL_VAR } from "@/lib/control-plane/repository/pg-store.ts";
 
+import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
+
 export const SPEND_STORE_STATEMENT_TIMEOUT_MS = 6_000;
 
 export interface OutcomeRow {
@@ -286,40 +288,54 @@ export async function readLearningFacts(connection: string, nowIso: string): Pro
 }
 
 export type LearningRead = { readonly kind: "HELD"; readonly facts: LearningFacts } | { readonly kind: "UNREAD"; readonly detail: string };
-let learningMemo: { readonly at: number; readonly read: LearningRead } | null = null;
+
+/*
+ * A minute fresh, five minutes recent (see shared-read.ts): while the paid lane
+ * is closed these do not move at all, and when it is open they move once a
+ * cycle. Every page names the time its figures were read.
+ */
+const learningShared = sharedRead<LearningRead>({
+  freshMs: 60_000,
+  staleMs: 5 * 60_000,
+  deadlineMs: ADMIN_READ_DEADLINE_MS,
+  keep: (r) => r.kind === "HELD",
+  late: (ms) => ({ kind: "UNREAD", detail: lateWords("The Scout result aggregate", ms) }),
+});
 
 export async function loadLearningFacts(nowIso: string): Promise<LearningRead> {
-  if (learningMemo && Date.now() - learningMemo.at < TTL_MS) return learningMemo.read;
-  const connection = process.env[CONTROL_PLANE_URL_VAR]?.trim() ?? "";
-  if (connection === "") return { kind: "UNREAD", detail: "This Admin runtime has no connection to the control plane, so the Scout results were not read." };
-  try {
-    const read: LearningRead = { kind: "HELD", facts: await readLearningFacts(connection, nowIso) };
-    learningMemo = { at: Date.now(), read };
-    return read;
-  } catch (error) {
-    console.error("[admin learning] the Scout result aggregate could not be read:", error instanceof Error ? error.message.replace(/postgres(ql)?:\/\/\S+/g, "<connection>") : "unknown error");
-    return { kind: "UNREAD", detail: "The Scout results could not be read just now, so the readings that depend on them are not shown." };
-  }
+  return learningShared.read(async () => {
+    const connection = process.env[CONTROL_PLANE_URL_VAR]?.trim() ?? "";
+    if (connection === "") return { kind: "UNREAD", detail: "This Admin runtime has no connection to the control plane, so the Scout results were not read." };
+    try {
+      return { kind: "HELD", facts: await readLearningFacts(connection, nowIso) };
+    } catch (error) {
+      console.error("[admin learning] the Scout result aggregate could not be read:", error instanceof Error ? error.message.replace(/postgres(ql)?:\/\/\S+/g, "<connection>") : "unknown error");
+      return { kind: "UNREAD", detail: "The Scout results could not be read just now, so the readings that depend on them are not shown." };
+    }
+  });
 }
 
 export type SpendRead = { readonly kind: "HELD"; readonly facts: SpendFacts } | { readonly kind: "UNREAD"; readonly detail: string };
 
-/* A minute: while the paid lane is closed this does not move at all, and when it is open it moves once a cycle. */
-const TTL_MS = 60_000;
-let memo: { readonly at: number; readonly read: SpendRead } | null = null;
+const spendShared = sharedRead<SpendRead>({
+  freshMs: 60_000,
+  staleMs: 5 * 60_000,
+  deadlineMs: ADMIN_READ_DEADLINE_MS,
+  keep: (r) => r.kind === "HELD",
+  late: (ms) => ({ kind: "UNREAD", detail: lateWords("The Scout result aggregate", ms) }),
+});
 
 export async function loadSpendFacts(nowIso: string): Promise<SpendRead> {
-  if (memo && Date.now() - memo.at < TTL_MS) return memo.read;
-  const connection = process.env[CONTROL_PLANE_URL_VAR]?.trim() ?? "";
-  if (connection === "") {
-    return { kind: "UNREAD", detail: "This Admin runtime has no connection to the control plane, so the Scout results were not read. That is not the same as nothing spent." };
-  }
-  try {
-    const read: SpendRead = { kind: "HELD", facts: await readSpendFacts(connection, nowIso) };
-    memo = { at: Date.now(), read };
-    return read;
-  } catch (error) {
-    console.error("[admin money] the Scout result aggregate could not be read:", error instanceof Error ? error.message.replace(/postgres(ql)?:\/\/\S+/g, "<connection>") : "unknown error");
-    return { kind: "UNREAD", detail: "The Scout results could not be read just now, so what the paid work produced is not shown. Nothing here is a zero." };
-  }
+  return spendShared.read(async () => {
+    const connection = process.env[CONTROL_PLANE_URL_VAR]?.trim() ?? "";
+    if (connection === "") {
+      return { kind: "UNREAD", detail: "This Admin runtime has no connection to the control plane, so the Scout results were not read. That is not the same as nothing spent." };
+    }
+    try {
+      return { kind: "HELD", facts: await readSpendFacts(connection, nowIso) };
+    } catch (error) {
+      console.error("[admin money] the Scout result aggregate could not be read:", error instanceof Error ? error.message.replace(/postgres(ql)?:\/\/\S+/g, "<connection>") : "unknown error");
+      return { kind: "UNREAD", detail: "The Scout results could not be read just now, so what the paid work produced is not shown. Nothing here is a zero." };
+    }
+  });
 }

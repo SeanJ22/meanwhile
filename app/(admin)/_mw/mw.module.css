@@ -396,6 +396,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 .row {
   display: flex;
@@ -912,6 +913,9 @@
   gap: 12px;
   align-items: baseline;
   flex-wrap: wrap;
+  /* A receipt hash or a URL is one 64-character word; it breaks rather than widening the page. */
+  min-width: 0;
+  overflow-wrap: anywhere;
   background: var(--mw-control);
   border: 1px solid var(--mw-rule);
   border-radius: 9px;
@@ -1164,6 +1168,20 @@
   }
   .cells5 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* A long status ("RECORDED · CLOSED IN THE TRACKER · WORK OPENED") wraps on a phone instead of widening the page. */
+  .pill {
+    white-space: normal;
+  }
+  /* A figure over its words on a phone: side by side, a wide figure ("at least 3,968") left the words one per line. */
+  .figGrid,
+  .figGridTight {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+  }
+  .figGrid > .contents > :last-child,
+  .figGridTight > .contents > :last-child {
+    margin-bottom: 12px;
   }
   .headerRight {
     margin-left: 0;

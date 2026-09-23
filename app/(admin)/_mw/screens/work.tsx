@@ -43,13 +43,16 @@ import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
 import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
 import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
+import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { PILOT_ZIPS } from "@/lib/health/owner-corpus-compile.ts";
 import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
 import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../blocks.tsx";
 import { Composer, type GeoOption } from "../composer.tsx";
+import { censusEntryOf } from "../data/census-universe.ts";
 import { listContainers } from "../data/geography.ts";
 import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { paidLaneOf } from "../data/research-lane.ts";
@@ -103,7 +106,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   }
 
   /* ------------------------------------------------------------ what the composer offers */
-  const composerState = (param(sp, "st") ?? (base.scope.kind === "all" ? "az" : base.scope.state)).toLowerCase();
+  const composerState = (param(sp, "st") ?? (base.scope.kind === "all" ? REGISTERED_STATE_CODES[0] ?? US_STATES[0].code : base.scope.state)).toLowerCase();
   const geoParam = param(sp, "geo");
   const initialGeo = (() => {
     if (!geoParam) {
@@ -201,8 +204,13 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const ca = checkStatedEqualsRendered(claims);
 
   const here = (extra: Record<string, string | null>) => withScope(path, base.scope, { st: param(sp, "st"), geo: geoParam, show, ...extra });
+  /* Every state and territory can be chosen — the Census lookup behind the geographies covers them all — registered ones first. */
   const stateHref: Record<string, string> = {};
-  for (const code of new Set([...REGISTERED_STATE_CODES, composerState])) stateHref[code] = withScope(path, base.scope, { st: code });
+  for (const { code } of US_STATES) stateHref[code] = withScope(path, base.scope, { st: code });
+  const composerStates = [
+    ...REGISTERED_STATE_CODES.map((code) => ({ code, name: stateName(code) })),
+    ...US_STATES.filter((st) => !REGISTERED_STATE_CODES.includes(st.code)).map((st) => ({ code: st.code, name: `${st.name} — nothing registered` })),
+  ];
   const selected: Record<string, { priority: number; budgetUsd: number }> = {};
   for (const d of base.selected) selected[`${d.geography.type}|${d.geography.geoid}`] = { priority: d.priority, budgetUsd: d.budgetUsd };
 
@@ -228,19 +236,11 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
 
   return (
     <MwShell {...shellProps} extraStrip={[{ label: "LIST PUBLISHED", value: snapshotOut.kind === "HELD" ? formatEastern(snapshotOut.value.publishedAt) : "not read", warn: snapshotOut.kind !== "HELD" }]}>
-      {base.scope.kind !== "all" && !base.shell.registered ? <EmptyScope name={stateName(base.scope.state)} scope={base.scope} /> : null}
-      {props.area === "fleet" && (
-        <RunnerCard
-          standing={runnerStanding(heartbeatOut.kind === "HELD" ? heartbeatOut.value : null, intentsOut.kind === "HELD" ? intentsOut.value : [], base.nowIso, research?.fleetSafety ?? null)}
-          heartbeat={heartbeatOut.kind === "HELD" ? heartbeatOut.value : null}
-          safety={research?.fleetSafety ?? null}
-          digest={digestsOut && digestsOut.kind === "HELD" && digestsOut.value.length > 0 ? digestsOut.value[0] : null}
-          digestNote={digestsOut && digestsOut.kind !== "HELD" ? digestsOut.detail : null}
-          returnTo={base.here}
-        />
-      )}
+      {base.scope.kind !== "all" && !base.shell.registered ? (
+        <EmptyScope name={stateName(base.scope.state)} scope={base.scope} census={censusUniverseWords(stateName(base.scope.state), censusEntryOf(base.scope.state))} />
+      ) : null}
       <Composer
-        states={[...new Set([...REGISTERED_STATE_CODES, composerState])].map((code) => ({ code, name: stateName(code) }))}
+        states={composerStates}
         stateCode={composerState}
         geographies={geographies}
         geographiesGap={containers.kind === "UNREAD" ? containers.detail : null}
@@ -345,6 +345,17 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
             <Refusal title={`${opened.id} could not be opened.`}>{opened.says}</Refusal>
           )}
         </div>
+      )}
+      {/* The runner is not drawn in the design; it follows the design's own sections so Work leads with the instruction, as the design does. */}
+      {props.area === "fleet" && (
+        <RunnerCard
+          standing={runnerStanding(heartbeatOut.kind === "HELD" ? heartbeatOut.value : null, intentsOut.kind === "HELD" ? intentsOut.value : [], base.nowIso, research?.fleetSafety ?? null)}
+          heartbeat={heartbeatOut.kind === "HELD" ? heartbeatOut.value : null}
+          safety={research?.fleetSafety ?? null}
+          digest={digestsOut && digestsOut.kind === "HELD" && digestsOut.value.length > 0 ? digestsOut.value[0] : null}
+          digestNote={digestsOut && digestsOut.kind !== "HELD" ? digestsOut.detail : null}
+          returnTo={base.here}
+        />
       )}
       {props.area === "fleet" && (
         <DeliveryTrailCard

@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
+
+import { censusUniverseWords, type CensusStateEntry } from "@/lib/control-plane/admin-view/census-universe.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 
 import type { BillingFact } from "@/lib/control-plane/billing-facts.ts";
 import { buildBodyViews, nowFigures, type BodyStoreFacts, type PublicZip, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
@@ -335,6 +340,29 @@ test("a shared read loads once for every caller at once, serves a recent read wh
   const failed = await reader.read(async () => ({ kind: "UNREAD", detail: "down" }) as R);
   assert.equal(failed.kind, "UNREAD");
   assert.deepEqual(await reader.read(slow(6, 5)), { kind: "HELD", n: 6 }, "the next caller reads again");
+});
+
+test("a state nobody has registered reads as what the Census knows is there, never as zeros, and every state and territory has one", () => {
+  const ohio: CensusStateEntry = {
+    governments: {
+      COUNTY: { total: 88, onAZip: 88 },
+      MUNICIPAL: { total: 926, onAZip: 926 },
+      TOWNSHIP: { total: 1_308, onAZip: 1_308 },
+      "SPECIAL DISTRICT": { total: 949, onAZip: 0 },
+      "SCHOOL DISTRICT": { total: 665, onAZip: 452 },
+    },
+    zips: 1_234,
+  };
+  assert.equal(
+    censusUniverseWords("Ohio", ohio),
+    "The Census lists 3,936 governments in Ohio — 88 counties, 926 municipalities, 1,308 townships, 665 school districts and 949 special districts — across 1,234 ZIP codes.",
+  );
+  assert.equal(censusUniverseWords("Puerto Rico", { governments: {}, zips: 132 }), "The Census of Governments does not survey Puerto Rico; its 132 ZIP codes are known.");
+  assert.equal(censusUniverseWords("Guam", null), "The Census figures for Guam are not on file here.");
+
+  const file = JSON.parse(readFileSync(join(import.meta.dirname, "..", "app", "(admin)", "_mw", "data", "state-census-denominators.json"), "utf8")) as { states: Record<string, CensusStateEntry> };
+  for (const st of US_STATES) assert.ok(file.states[st.code.toUpperCase()], `${st.name} has a Census row`);
+  assert.equal(file.states.OH.zips, 1_234);
 });
 
 test("the scope travels in the URL and an unreadable scope is everywhere, never a guess", () => {

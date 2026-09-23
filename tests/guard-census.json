@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 714,
-    "named": 7054,
+    "named": 7055,
     "dynamic": 27
   },
   "files": {
@@ -410,6 +410,7 @@
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
         "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline",
+        "a state nobody has registered reads as what the Census knows is there, never as zeros, and every state and territory has one",
         "an entered figure fills its provider's row with its kind, period and provenance, and the bill is never added to the ledger",
         "every provider with no reading renders as NO READING with its manual path — never a number, never zero",
         "paid outcomes narrow by state without borrowing another state's refusals",

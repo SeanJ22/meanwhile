@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 
@@ -17,7 +18,11 @@ export function routineRefreshSelection(args: readonly string[]): { contractId: 
   if (contracts.length !== 1 || attempts.length > 1 || args.length !== contracts.length + attempts.length) throw new Error("OWNER_REFRESH_EXACT_SELECTION_REQUIRED");
   const contractId = contracts[0].slice("--contract=".length);
   const maximumAttempts = attempts.length ? Number(attempts[0].slice("--attempts=".length)) : 1;
-  if (!MEETING_PARTITION_CONTRACTS.some(contract => contract.id === contractId)) throw new Error("OWNER_REFRESH_REGISTERED_PARTITION_REQUIRED");
+  // Exactly one REGISTERED routine task: a meeting partition or a routine source
+  // contract. Either way the standing parent launches it through its own
+  // routine child, so the request never becomes a second clock or door.
+  const registered = [...MEETING_PARTITION_CONTRACTS, ...ROUTINE_SOURCE_CONTRACTS].some(contract => contract.id === contractId);
+  if (!registered) throw new Error("OWNER_REFRESH_REGISTERED_CONTRACT_REQUIRED");
   if (!Number.isSafeInteger(maximumAttempts) || maximumAttempts < 1 || maximumAttempts > 2) throw new Error("OWNER_REFRESH_ATTEMPT_BOUND");
   return { contractId, maximumAttempts };
 }

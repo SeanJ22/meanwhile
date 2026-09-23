@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 693,
-    "named": 6920,
+    "named": 6923,
     "dynamic": 28
   },
   "files": {
@@ -8724,6 +8724,8 @@
     },
     "tests/settled-occurrence-recovery.test.ts": {
       "names": [
+        "BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lane neither recovers it twice nor walks it",
+        "BEFORE DISPATCH: every settled occurrence is recovered with no dispatch capacity at all (a zero ceiling, a debt backoff, a closed Scout lane) and nothing is walked",
         "SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease",
         "SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, and a dead lease on one is left for the sweep",
         "a recovered INGESTED occurrence keeps its bytes eligible for parsing, verification and staging",
@@ -8731,7 +8733,8 @@
         "a recovered WALKED_NO_YIELD discharges this period's reading only: the obligation comes due again under a new RouteTask",
         "a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask",
         "an aborted or interrupted occurrence is still resumed and dispatched, and its earlier Attempt and partial evidence are kept",
-        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won"
+        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won",
+        "findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read"
       ],
       "dynamic": 0
     },

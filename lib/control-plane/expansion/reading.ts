@@ -12,15 +12,18 @@
  *
  * ## Membership, in one sentence
  *
- * A piece of work is IN a scope when the territory of the government it is
- * about overlaps at least one of the scope's ZCTAs. ZCTAs are the Census
- * Bureau's ZIP-code tabulation areas, compared by AREA share — not USPS ZIP
- * codes, and not a claim about which residents a government serves. A
- * government's territory comes from the Census of Governments unit it was
- * enumerated from (`data/derived/census-unit-zips.json`, area-sampled overlap
- * of the ZCTA polygons with county, place, county-subdivision and
- * school-district boundaries). Statewide work (the state's own records) is in
- * no sub-state scope: it serves every scope in the state alike.
+ * A piece of work is IN a scope when the government it is about certainly
+ * overlaps the scope inside at least one ZCTA: it touches a ZCTA lying wholly
+ * inside the scope, or inside one ZCTA its area share and the scope's sum past
+ * the whole (`membership.ts` has the rule and the margin). Merely sharing a
+ * border ZCTA is not enough — that is how neighbouring counties would leak in.
+ * ZCTAs are the Census Bureau's ZIP-code tabulation areas, compared by AREA
+ * share — not USPS ZIP codes, and not a claim about which residents a
+ * government serves. A government's territory comes from the Census of
+ * Governments unit it was enumerated from (`data/derived/census-unit-zips.json`
+ * and the sampled overlap behind it, `data/derived/zip-governments.json`).
+ * Statewide work (the state's own records) is in no sub-state scope: it serves
+ * every scope in the state alike.
  *
  * Every count here is either a real count or null, and null renders as the
  * named reason it is null — never as zero.
@@ -32,8 +35,10 @@ export const EXPANSION_READING_FORMAT_VERSION = 1;
 
 /** How membership is decided, in the words the page prints beside every count. */
 export const MEMBERSHIP_METHOD =
-  "In this scope means: the government the work is about has territory overlapping at least one of the scope's ZCTAs " +
-  "(Census ZIP-code tabulation areas, by area share — not USPS ZIP codes). Statewide work is in no single scope.";
+  "In this geography means: the government the work is about certainly overlaps it inside at least one ZCTA (Census ZIP-code " +
+  "tabulation areas, compared by area share — not USPS ZIP codes). Either the government reaches a ZCTA lying wholly inside the " +
+  "geography, or inside one ZCTA the government's share and the geography's share add up to more than the whole. Sharing a " +
+  "border ZCTA is not enough, so a neighbouring county is not pulled in. Statewide work is in no single geography.";
 
 /** At most this many names travel in a list; the count beside it is always the whole count. */
 export const READING_LIST_CAP = 25;

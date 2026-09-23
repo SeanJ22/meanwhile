@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
@@ -14,12 +16,15 @@ import {
   registryIdForUnit,
   scopeMembers,
   withCycleCounts,
+  certainlyOverlaps,
+  unitShareKey,
   type BudgetScope,
   type CensusUnitTerritory,
   type ResolvedScope,
+  type ScopeZctas,
 } from "@/lib/control-plane/expansion/membership.ts";
 import { isExpansionCycleReading, MEMBERSHIP_METHOD } from "@/lib/control-plane/expansion/reading.ts";
-import { loadExpansionPlan, resolveScopes } from "@/lib/control-plane/expansion/runner-load.ts";
+import { loadExpansionPlan, readTerritoryIndex, resolveScopes } from "@/lib/control-plane/expansion/runner-load.ts";
 import {
   expansionScopesOf,
   orderScopes,
@@ -84,10 +89,25 @@ function decision(geography: ExpansionScopeGeography, priority: number, budgetUs
 }
 
 async function zctasOf(g: ExpansionScopeGeography): Promise<string[]> {
+  return [...(await geometryOf(g)).zctas];
+}
+
+/** A geography's ZCTAs as the overlap rule reads them: all, the wholly-inside ones, and each partial share. */
+async function geometryOf(g: ExpansionScopeGeography): Promise<ScopeZctas> {
   const lookup = loadBootstrapLookup();
   const result = await lookup.zctasForGrouping({ type: g.type, geoid: g.geoid, version: g.version });
   assert.equal(result.status.kind, "OK", `${g.label} resolves in the bootstrap fixture`);
-  return result.overlaps.map((o) => o.zcta5);
+  const fractions = new Map<string, number>();
+  for (const o of result.overlaps) if (!o.whole && o.fraction !== null) fractions.set(o.zcta5, o.fraction);
+  return {
+    zctas: new Set(result.overlaps.map((o) => o.zcta5)),
+    whole: new Set(result.overlaps.filter((o) => o.whole).map((o) => o.zcta5)),
+    fractions,
+  };
+}
+
+async function resolved(d: ExpansionScopeDecision): Promise<ResolvedScope> {
+  return { kind: "RESOLVED", decision: d, ...(await geometryOf(d.geography)), states: ["AZ"] };
 }
 
 function registry(state: string, jurisdictions: JurisdictionRegistry["jurisdictions"]): JurisdictionRegistry {
@@ -249,8 +269,48 @@ test("registry governments join their Census unit territory by the generator's o
   assert.deepEqual([...(index.bySubject.get("nj:city:township-of-washington-202")?.zctas ?? [])], ["07840"]);
   assert.equal(index.unregisteredUnitsByState.get("OH")?.length, 1, "a state no registry covers keeps its Census units for the gap count");
 
-  const members = scopeMembers(new Set(pimaZctas), ["az:county:county-of-pima", "az:city:city-of-tucson", "az:state:arizona", "az:city:town-of-nowhere"], index);
+  const members = scopeMembers(await geometryOf(PIMA), ["az:county:county-of-pima", "az:city:city-of-tucson", "az:state:arizona", "az:city:town-of-nowhere"], index);
   assert.deepEqual([...members].sort(), ["az:city:city-of-tucson", "az:county:county-of-pima"], "statewide and unplaced work is never guessed into a scope");
+});
+
+test("sharing a border ZCTA is not membership: only a certain overlap inside a ZCTA places a government", async () => {
+  const pima = await geometryOf(PIMA);
+  const border = [...pima.fractions.entries()].find(([, f]) => f > 0.8 && f < 0.95);
+  assert.ok(border !== undefined, "the fixture carries a Pima ZCTA that is mostly, not wholly, inside the county");
+  const [zcta, pimaShare] = border;
+  const neighbour = { zctas: new Set([zcta, "99999"]), shares: new Map([[zcta, 1 - pimaShare]]) };
+  assert.equal(certainlyOverlaps(neighbour, pima), false, "a neighbour holding only the rest of a border ZCTA is not in the scope");
+  const noShare = { zctas: new Set([zcta]), shares: new Map<string, number>() };
+  assert.equal(certainlyOverlaps(noShare, pima), false, "without a share, only a wholly-inside ZCTA can place a government");
+  const straddler = { zctas: new Set([zcta]), shares: new Map([[zcta, 0.5]]) };
+  assert.equal(certainlyOverlaps(straddler, pima), true, "half the ZCTA plus Pima's share cannot fit outside Pima");
+  const whole = [...pima.whole][0];
+  assert.equal(certainlyOverlaps({ zctas: new Set([whole]), shares: new Map() }, pima), true, "touching a wholly-inside ZCTA is inside");
+  assert.equal(unitShareKey({ method: "county GEOID 04019" }), "county:04019");
+  assert.equal(unitShareKey({ method: "place GEOID 0477000" }), "place:0477000");
+  assert.equal(unitShareKey({ method: "unsd GEOID 0403950 via the NCES crosswalk" }), "unsd:0403950");
+  assert.equal(unitShareKey({ method: "cousub GEOID" }), null);
+  assert.equal(unitShareKey({ method: "TIGER publishes NO special-district boundaries at any vintage" }), null);
+});
+
+test("on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans", async () => {
+  const root = join(import.meta.dirname, "..");
+  const registries = ["az", "nh", "nj"].map(
+    (s) => JSON.parse(readFileSync(join(root, "data", "states", s, "jurisdictions", `${s}.json`), "utf8")) as JurisdictionRegistry,
+  );
+  const index = readTerritoryIndex(root, registries);
+  const counties = (scope: ScopeZctas) =>
+    [...index.bySubject.values()].filter((t) => t.govClass === "COUNTY" && t.stateCode === "AZ" && certainlyOverlaps(t, scope)).map((t) => t.subjectId).sort();
+
+  const pima = await geometryOf(PIMA);
+  assert.deepEqual(counties(pima), ["az:county:county-of-pima"], "Maricopa, Pinal, Cochise and Santa Cruz share border ZCTAs with Pima and are not in it");
+  assert.ok(certainlyOverlaps(index.bySubject.get("az:city:city-of-tucson")!, pima), "Tucson is in Pima County");
+  assert.ok(!certainlyOverlaps(index.bySubject.get("az:city:city-of-phoenix")!, pima), "Phoenix is not");
+
+  const cd6 = counties(await geometryOf(CD6));
+  for (const inside of ["az:county:county-of-pima", "az:county:county-of-cochise"]) assert.ok(cd6.includes(inside), `${inside} lies partly in CD 6`);
+  assert.ok(!cd6.includes("az:county:county-of-maricopa"), "Maricopa is not in CD 6");
+  assert.ok(index.bySubject.get("az:county:county-of-pima")!.shares.size > 0, "a registered county carries its sampled ZCTA shares");
 });
 
 test("the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope", () => {
@@ -323,7 +383,6 @@ test("unmeasured spend, an unresolved scope and an unreadable scope list all hol
 
 async function pimaPlanInput() {
   const pimaZctas = await zctasOf(PIMA);
-  const cd6Zctas = await zctasOf(CD6);
   const units: CensusUnitTerritory[] = [
     { pid6: "100", name: "COUNTY OF PIMA", type: "COUNTY", state: "AZ", zips: pimaZctas },
     { pid6: "101", name: "CITY OF TUCSON", type: "MUNICIPAL", state: "AZ", zips: pimaZctas.slice(0, 10) },
@@ -340,10 +399,7 @@ async function pimaPlanInput() {
     ],
     units,
   );
-  const scopes: ResolvedScope[] = [
-    { kind: "RESOLVED", decision: decision(CD6, 1, 2), zctas: new Set(cd6Zctas), states: ["AZ"] },
-    { kind: "RESOLVED", decision: decision(PIMA, 2, 0.8), zctas: new Set(pimaZctas), states: ["AZ"] },
-  ];
+  const scopes: ResolvedScope[] = [await resolved(decision(CD6, 1, 2)), await resolved(decision(PIMA, 2, 0.8))];
   const obligations = [
     { id: "freshness:jurisdiction:az:county:county-of-pima#r1", subjectId: "az:county:county-of-pima" },
     { id: "freshness:jurisdiction:az:city:city-of-tucson#r1", subjectId: "az:city:city-of-tucson" },

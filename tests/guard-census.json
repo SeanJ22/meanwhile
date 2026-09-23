@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 698,
-    "named": 6958,
+    "named": 6960,
     "dynamic": 28
   },
   "files": {
@@ -3653,9 +3653,11 @@
         "a piece of work's subject and state are read from its own id, never guessed",
         "a scope budget admits within it, reserves the worst case, and refuses by name past it",
         "a scope's geography, priority, budget, note and key are validated before anything is written",
+        "on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans",
         "registry governments join their Census unit territory by the generator's own id rule",
         "resolving against the lookup names every failure and never returns an empty scope as a resolved one",
         "setting a scope is an upsert that keeps the previous decision, and removing one leaves the rest",
+        "sharing a border ZCTA is not membership: only a certain overlap inside a ZCTA places a government",
         "the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and the verdict in words",
         "the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope",
         "the page shows a runner reading only for the decision it measured, and counts listed assignments in scope",

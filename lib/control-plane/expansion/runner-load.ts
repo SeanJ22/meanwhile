@@ -12,7 +12,10 @@
  *   the Census unit territories   data/derived/census-unit-zips.json — the
  *                                 committed ZCTA territory of every Census of
  *                                 Governments unit, joined to the registries
- *                                 in `membership.ts`
+ *                                 in `membership.ts` — with each registered
+ *                                 unit's share of each ZCTA from the sampled
+ *                                 overlap it was built from
+ *                                 (data/derived/zip-governments.json)
  * ```
  *
  * SERVER-ONLY (node:fs and the production data plane). Never imported by a
@@ -26,9 +29,11 @@ import { loadPublishedLookupState, type PublishedLookupSource } from "../../cens
 import { requiredOperationalReferenceBundle } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   buildTerritoryIndex,
   planExpansion,
+  unitShareKey,
   type CensusUnitTerritory,
   type ExpansionPlan,
   type ResolvedScope,
@@ -39,6 +44,51 @@ import { expansionScopesOf, type ExpansionScopeDecision } from "./scopes.ts";
 
 /** Where the committed Census unit territories live, relative to the repository root. */
 export const CENSUS_UNIT_TERRITORY_PATH = ["data", "derived", "census-unit-zips.json"] as const;
+/** The sampled ZCTA-to-government overlap those territories were built from. */
+export const ZCTA_GOVERNMENT_SAMPLES_PATH = ["data", "derived", "zip-governments.json"] as const;
+
+/**
+ * Each wanted government's share of each of its ZCTAs, from the sampled
+ * overlap: the government's lattice samples in the ZCTA over the ZCTA's
+ * samples across the county layer (counties tile the land, so that is every
+ * sample in the ZCTA). Only the keys asked for are kept.
+ */
+export function readZctaShares(root: string, wanted: ReadonlySet<string>): Map<string, Map<string, number>> {
+  const path = join(root, ...ZCTA_GOVERNMENT_SAMPLES_PATH);
+  const parsed = JSON.parse(readFileSync(path, "utf8")) as {
+    readonly zips?: Readonly<Record<string, readonly { readonly layer: string; readonly id: string; readonly samples: number }[]>>;
+  };
+  if (parsed.zips === undefined || Object.keys(parsed.zips).length === 0) {
+    throw new Error(`${ZCTA_GOVERNMENT_SAMPLES_PATH.join("/")} carries no ZCTAs — a failed read, never a country with no overlap`);
+  }
+  const out = new Map<string, Map<string, number>>();
+  for (const [zcta, edges] of Object.entries(parsed.zips)) {
+    const total = edges.filter((e) => e.layer === "county").reduce((n, e) => n + e.samples, 0);
+    if (total <= 0) continue;
+    for (const edge of edges) {
+      const key = `${edge.layer}:${edge.id}`;
+      if (!wanted.has(key)) continue;
+      const shares = out.get(key) ?? new Map<string, number>();
+      shares.set(zcta, Math.min(1, edge.samples / total));
+      out.set(key, shares);
+    }
+  }
+  return out;
+}
+
+/** The territory index the runner uses: the preloaded registries, the committed units, and their sampled shares. */
+export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[]): TerritoryIndex {
+  const units = readCensusUnitTerritories(root);
+  const registered = new Set(registries.map((r) => r.stateCode.toUpperCase()));
+  const wanted = new Set<string>();
+  for (const unit of units) {
+    if (!registered.has(unit.state.toUpperCase())) continue;
+    const key = unitShareKey(unit);
+    if (key !== null) wanted.add(key);
+  }
+  const shares = readZctaShares(root, wanted);
+  return buildTerritoryIndex(registries, units, (key) => shares.get(key));
+}
 
 /** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
 export function readCensusUnitTerritories(root: string): readonly CensusUnitTerritory[] {
@@ -104,7 +154,16 @@ export async function resolveScopes(
         continue;
       }
       const states = [...new Set([g.stateAbbr, ...result.geography.memberStates].map((s) => s.toUpperCase()))];
-      scopes.push({ kind: "RESOLVED", decision, zctas: new Set(result.overlaps.map((o) => o.zcta5)), states });
+      const fractions = new Map<string, number>();
+      for (const o of result.overlaps) if (!o.whole && o.fraction !== null) fractions.set(o.zcta5, o.fraction);
+      scopes.push({
+        kind: "RESOLVED",
+        decision,
+        zctas: new Set(result.overlaps.map((o) => o.zcta5)),
+        whole: new Set(result.overlaps.filter((o) => o.whole).map((o) => o.zcta5)),
+        fractions,
+        states,
+      });
     } catch (error) {
       scopes.push({
         kind: "UNRESOLVED",
@@ -177,10 +236,7 @@ export async function loadExpansionPlan(input: {
   let territoryDetail: string | null = null;
   if (decisions.length > 0) {
     try {
-      territory = (input.loadTerritory ?? (() => buildTerritoryIndex(
-        Object.values(requiredOperationalReferenceBundle().registries),
-        readCensusUnitTerritories(input.root),
-      )))();
+      territory = (input.loadTerritory ?? (() => readTerritoryIndex(input.root, Object.values(requiredOperationalReferenceBundle().registries))))();
     } catch (error) {
       territoryDetail = error instanceof Error ? error.message : String(error);
       conditions.push(`the expansion territory index could not be built (${territoryDetail}); no work is placed in a scope this cycle`);

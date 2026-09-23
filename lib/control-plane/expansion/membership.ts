@@ -2,23 +2,36 @@
  * **WHICH WORK IS IN WHICH SCOPE, IN WHAT ORDER, AND WHETHER ITS BUDGET ALLOWS
  * ONE MORE PAID SCOUT.** (Expansion controls, 2026-09-23.)
  *
- * ## Membership is by ZCTA overlap
+ * ## Membership is by CERTAIN overlap inside a shared ZCTA
  *
- * A scope is a set of ZCTAs (the Census geography lookup's `zctasForGrouping`,
- * every ZCTA wholly or partly inside it). A piece of standing work is about one
- * subject — the obligation's `subjectId`, which is also the `jurisdiction` on
- * every cost-ledger row it produced. The subject is IN the scope when the
- * territory of that government overlaps at least one of the scope's ZCTAs.
+ * A scope is a set of ZCTAs (the Census geography lookup's `zctasForGrouping`:
+ * every ZCTA wholly or partly inside it, each with its area share). A piece of
+ * standing work is about one subject — the obligation's `subjectId`, which is
+ * also the `jurisdiction` on every cost-ledger row it produced.
+ *
+ * Touching a common ZCTA is NOT enough: counties tile a state, so a county
+ * shares every border ZCTA with its neighbours, and "Pima County" would
+ * otherwise pull in Maricopa, Pinal, Cochise and Santa Cruz (measured on the
+ * committed data). So a government is IN the scope only when the two must
+ * overlap inside at least one ZCTA:
+ *
+ * ```
+ *   the government touches a ZCTA that lies WHOLLY inside the scope, or
+ *   inside one ZCTA, the government's share + the scope's share > 1 + margin
+ *   (two parts of one ZCTA whose shares sum past the whole cannot be disjoint;
+ *   the margin absorbs the difference between sampled and exact area)
+ * ```
  *
  * A government's territory is the ZCTA set of the Census of Governments unit it
- * was enumerated from (`data/derived/census-unit-zips.json`: area-sampled
- * overlap of ZCTA polygons with the county, place, county-subdivision and
- * school-district layers). The registry ids are joined to those units by the
- * registry generator's own id rule (`scripts/enumerate-jurisdictions.mts`:
- * `<state>:<class prefix>:<slug of the Census name>`, `-<pid6>` on a name
- * collision) — the same Census file, the same derivation, never a fuzzy name
- * match. A subject the join cannot place is UNPLACED and counted as such; it is
- * never guessed into a scope and never reported as outside one.
+ * was enumerated from (`data/derived/census-unit-zips.json`), with its share of
+ * each ZCTA from the same sampled overlap that built it
+ * (`data/derived/zip-governments.json`, lattice samples per layer GEOID). The
+ * registry ids are joined to those units by the registry generator's own id
+ * rule (`scripts/enumerate-jurisdictions.mts`: `<state>:<class prefix>:<slug of
+ * the Census name>`, `-<pid6>` on a name collision) — the same Census file, the
+ * same derivation, never a fuzzy name match. A subject the join cannot place is
+ * UNPLACED and counted as such; it is never guessed into a scope and never
+ * reported as outside one.
  *
  * ZCTAs are not USPS ZIP codes, and overlap by area share is not a statement
  * about which residents a government serves. The page says both.
@@ -67,6 +80,8 @@ export interface CensusUnitTerritory {
   readonly type: string;
   readonly state: string;
   readonly zips: readonly string[];
+  /** How its ZCTAs were derived, e.g. `county GEOID 04019`, `place GEOID 0477000`. */
+  readonly method?: string;
 }
 
 /** A registered government whose territory is known. */
@@ -76,6 +91,27 @@ export interface Territory {
   readonly govClass: string;
   readonly stateCode: string;
   readonly zctas: ReadonlySet<string>;
+  /** The government's share (0..1) of each of its ZCTAs, where the sampled overlap records one. */
+  readonly shares: ReadonlyMap<string, number>;
+}
+
+/**
+ * The margin a partial-ZCTA overlap must clear to count as certain: the
+ * government's sampled share plus the scope's exact area share must exceed the
+ * whole ZCTA by this much. Sampled and exact areas differ by a few percent at
+ * a border; 5% keeps neighbours that merely share a border ZCTA out.
+ */
+export const OVERLAP_CERTAINTY_MARGIN = 0.05;
+
+/**
+ * The sampled-overlap key a unit's ZCTAs were derived from (`county:04019`,
+ * `place:0477000`, `unsd:…`), or null when its method names no single layer
+ * GEOID (a county subdivision without one, a special district TIGER does not
+ * publish).
+ */
+export function unitShareKey(unit: Pick<CensusUnitTerritory, "method">): string | null {
+  const m = /^(county|place|cousub|unsd|elsd|scsd) GEOID (\d+)/.exec(unit.method ?? "");
+  return m === null ? null : `${m[1]}:${m[2]}`;
 }
 
 /** The registry generator's own class and prefix rules, restated for the join (see the header). */
@@ -132,10 +168,13 @@ export interface TerritoryIndex {
  * `registries` are the promoted operational-reference registries the runner
  * already preloaded; `units` are every Census unit (any state), so a scope in
  * a state no registry covers can still say which governments it holds.
+ * `sharesFor` answers a unit's per-ZCTA share by its `unitShareKey`; a unit
+ * with none still joins, and can then only be placed by a whole-inside ZCTA.
  */
 export function buildTerritoryIndex(
   registries: readonly JurisdictionRegistry[],
   units: readonly CensusUnitTerritory[],
+  sharesFor: (key: string) => ReadonlyMap<string, number> | undefined = () => undefined,
 ): TerritoryIndex {
   const registeredStates = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const unitsByKey = new Map<string, CensusUnitTerritory[]>();
@@ -185,12 +224,14 @@ export function buildTerritoryIndex(
         unplaced.set(j.id, "its Census unit carries no ZCTA territory");
         continue;
       }
+      const key = unitShareKey(unit);
       bySubject.set(j.id, {
         subjectId: j.id,
         name: j.name,
         govClass: j.govClass,
         stateCode: j.stateCode.toUpperCase(),
         zctas: new Set(unit.zips),
+        shares: (key === null ? undefined : sharesFor(key)) ?? new Map<string, number>(),
       });
     }
   }
@@ -204,7 +245,12 @@ export type ResolvedScope =
   | {
       readonly kind: "RESOLVED";
       readonly decision: ExpansionScopeDecision;
+      /** Every ZCTA wholly or partly inside the geography. */
       readonly zctas: ReadonlySet<string>;
+      /** The ZCTAs lying wholly inside it. */
+      readonly whole: ReadonlySet<string>;
+      /** Each partial ZCTA's area share inside it, where the lookup states one. */
+      readonly fractions: ReadonlyMap<string, number>;
       /** States the geography spans (the lookup's memberStates), upper-case. */
       readonly states: readonly string[];
     }
@@ -215,22 +261,38 @@ export type ResolvedScope =
       readonly states: readonly string[];
     };
 
-function overlaps(a: ReadonlySet<string>, b: ReadonlySet<string>): boolean {
-  const [small, large] = a.size <= b.size ? [a, b] : [b, a];
-  for (const z of small) if (large.has(z)) return true;
+/** The scope geometry the overlap rule reads. */
+export type ScopeZctas = Pick<Extract<ResolvedScope, { kind: "RESOLVED" }>, "zctas" | "whole" | "fractions">;
+
+/**
+ * Whether a government CERTAINLY overlaps the scope inside some ZCTA (the rule
+ * in the header): it touches a ZCTA wholly inside the scope, or inside one
+ * shared ZCTA its share and the scope's share sum past the whole by the margin.
+ */
+export function certainlyOverlaps(
+  territory: { readonly zctas: ReadonlySet<string>; readonly shares: ReadonlyMap<string, number> },
+  scope: ScopeZctas,
+): boolean {
+  for (const z of territory.zctas) {
+    if (!scope.zctas.has(z)) continue;
+    if (scope.whole.has(z)) return true;
+    const mine = territory.shares.get(z);
+    const theirs = scope.fractions.get(z);
+    if (mine !== undefined && theirs !== undefined && mine + theirs > 1 + OVERLAP_CERTAINTY_MARGIN) return true;
+  }
   return false;
 }
 
-/** The subjects (of those given) whose territory overlaps the scope's ZCTAs. */
+/** The subjects (of those given) whose government certainly overlaps the scope. */
 export function scopeMembers(
-  zctas: ReadonlySet<string>,
+  scope: ScopeZctas,
   subjects: Iterable<string>,
   index: TerritoryIndex,
 ): Set<string> {
   const members = new Set<string>();
   for (const subject of subjects) {
     const territory = index.bySubject.get(subject);
-    if (territory !== undefined && overlaps(territory.zctas, zctas)) members.add(subject);
+    if (territory !== undefined && certainlyOverlaps(territory, scope)) members.add(subject);
   }
   return members;
 }
@@ -441,24 +503,31 @@ function countBy<T>(items: Iterable<T>, keyOf: (item: T) => string): Record<stri
   return out;
 }
 
+/**
+ * What the scope holds: the registered governments that certainly overlap it,
+ * which of them carry standing work, the scope ZCTAs a government with work
+ * touches, and the rest (the gap). Census units in a state no registry covers
+ * are counted by the whole-inside rule alone — their shares were not loaded.
+ */
 function coverageOf(
-  zctas: ReadonlySet<string>,
+  scope: ScopeZctas,
   states: readonly string[],
   index: TerritoryIndex,
   subjectsWithWork: ReadonlySet<string>,
 ): ScopeCoverageReading {
   const registered: Territory[] = [];
   for (const territory of index.bySubject.values()) {
-    if (overlaps(territory.zctas, zctas)) registered.push(territory);
+    if (certainlyOverlaps(territory, scope)) registered.push(territory);
   }
   const withWork = registered.filter((t) => subjectsWithWork.has(t.subjectId));
   const covered = new Set<string>();
-  for (const t of withWork) for (const z of t.zctas) if (zctas.has(z)) covered.add(z);
-  const gap = [...zctas].filter((z) => !covered.has(z)).sort();
+  for (const t of withWork) for (const z of t.zctas) if (scope.zctas.has(z)) covered.add(z);
+  const gap = [...scope.zctas].filter((z) => !covered.has(z)).sort();
   const notRegistered: CensusUnitTerritory[] = [];
+  const noShares = new Map<string, number>();
   for (const state of states) {
     for (const unit of index.unregisteredUnitsByState.get(state) ?? []) {
-      if (unit.zips.some((z) => zctas.has(z))) notRegistered.push(unit);
+      if (certainlyOverlaps({ zctas: new Set(unit.zips), shares: noShares }, scope)) notRegistered.push(unit);
     }
   }
   return {
@@ -502,7 +571,7 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
           : `the territory index could not be built (${input.territoryDetail ?? "no detail"}), so nothing can be placed in it`;
       return { kind: "UNRESOLVED" as const, decision: scope.decision, why, states: scope.states, members: new Set<string>() };
     }
-    return { ...scope, members: scopeMembers(scope.zctas, subjectsWithWork, input.territory) };
+    return { ...scope, members: scopeMembers(scope, subjectsWithWork, input.territory) };
   });
   const placementOf = placementIndex(scopes.map((s) => ({ members: s.members })));
   const placedSubjects = new Set<string>();
@@ -544,7 +613,7 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
         scoutAdmitted: null,
       },
       spend: null,
-      coverage: input.territory === null ? null : coverageOf(scope.zctas, scope.states, input.territory, subjectsWithWork),
+      coverage: input.territory === null ? null : coverageOf(scope, scope.states, input.territory, subjectsWithWork),
       budgetSays: "Spend in this scope has not been read yet this cycle.",
     };
   });

@@ -3,10 +3,13 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { allSeatHolders } from "../../lib/registry/server.ts";
 import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-rosters.ts";
+import { heldOfficialStateLegislators } from "../../lib/state-rollcalls/legislators.ts";
+import { officialStateVoteScopeForOfficeholderId } from "../../lib/state-rollcalls/authority.ts";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "../../lib/votes/snapshot.ts";
 import {
   readAvailableOfficialStateVotes,
   type AvailableOfficialStateVotes,
+  type OfficialStateVoteScope,
 } from "../../lib/sources/legiscan/snapshot.ts";
 import { bodyIdentityIndex } from "../../lib/ask/body-identity.ts";
 import { snapshotEntities, titleCaseName } from "../../lib/ask/inventory.ts";
@@ -109,6 +112,26 @@ export async function exhaustiveAskProof(
     rollCalls: stateSnapshots.flatMap((snapshot) => snapshot.rollCalls),
     positions: stateSnapshots.flatMap((snapshot) => snapshot.positions),
   };
+  // State legislators live in per-jurisdiction promoted projections, not the
+  // federal-only allSeatHolders() roster (lib/registry/server.ts admits the
+  // federal roster only; state legislators remain in a separate projection).
+  // Resolve every promoted state-vote subject through the same authority the
+  // live reader uses — officialStateVoteScopeForOfficeholderId ->
+  // heldOfficialStateLegislators, mirroring officialStateVoteSeat in
+  // lib/ask/votes.ts — so the join below proves against what production serves.
+  // A subject absent from BOTH the federal set and its scope's promoted roster
+  // still trips the guard: this widens the holder universe, it does not stop checking.
+  const stateLegislatorScopes = [
+    ...new Set(
+      state.positions
+        .map((position) => officialStateVoteScopeForOfficeholderId(position.officeholderId))
+        .filter((scope): scope is OfficialStateVoteScope => scope !== null),
+    ),
+  ];
+  for (const scope of stateLegislatorScopes) {
+    const roster = await heldOfficialStateLegislators(scope);
+    for (const seat of roster?.seats ?? []) holders.set(seat.id, seat);
+  }
   const federalById = new Map(federal.votes.map((vote) => [vote.id, vote]));
   const stateById = new Map(state.rollCalls.map((vote) => [vote.id, vote]));
   const votingIds = [...new Set([...federal.positions, ...state.positions].map((position) => position.officeholderId))].sort();

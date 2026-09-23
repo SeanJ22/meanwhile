@@ -522,6 +522,23 @@
       "migration_status": "KEEP_GIT_WITH_EXPLICIT_IMMUTABILITY"
     },
     {
+      "source_id": "census-geography-relationships",
+      "record_class": "CENSUS_GEOGRAPHY",
+      "authority": "U.S. Census Bureau tab20 ZCTA relationship files and OMB CBSA delineation",
+      "current_writer": "scripts/census-geography-refresh.mts (in-memory acquire; writes no tracked file)",
+      "current_scheduler": "standing routine civic-data runner",
+      "current_canonical_store": "Postgres promotion pointer",
+      "tracked_paths": [],
+      "runtime_readers": ["lib/census-geography/reader.ts", "Admin scope preview", "Admin collection assignments", "Admin geographic reporting"],
+      "current_promotion_door": "atomic processRegisteredRoutineCandidate",
+      "cadence": "30 days against a named relationship-file vintage",
+      "retry": "6 hours",
+      "LKG_behavior": "durable DB pointer; the prior promoted version stays live on any failed, empty, or invalid refresh",
+      "classification": "OPERATIONAL_REFERENCE_DATA",
+      "target_plane": "operational-reference candidate/version store",
+      "migration_status": "ROUTINE_AUTO_PROMOTED_UNDER_RULING_292"
+    },
+    {
       "source_id": "registry-static-identities",
       "record_class": "CURATED_BODY_DIVISION_SCHEMA_IDENTITY",
       "authority": "cited legal and official identity sources",

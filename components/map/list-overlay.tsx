@@ -282,7 +282,6 @@ export function ListOverlay({
         </button>
       </div>
 
-      {listingCount.unresolved && <div className="px-4"><MeetingListingNotice groups={listingCount.groups} /></div>}
       <div className="al-overlay-controls">
         <select
           className="scope-select"
@@ -319,6 +318,13 @@ export function ListOverlay({
       </div>
 
       <div className="al-overlay-body">
+        {/* The unresolved-listing notice lives in this scrolling body, not
+            between the pinned header and controls: it grows one line per
+            listing group, and outside the scroll region a long one can take
+            the panel's whole height cap (`.al-panel` is `overflow: hidden`),
+            leaving the rows below it zero height. Same defect, and same fix,
+            as the venue panel (components/map/meeting-panel.tsx). */}
+        {listingCount.unresolved && <div className="px-4"><MeetingListingNotice groups={listingCount.groups} /></div>}
         {sorted.length === 0 && (
           <p className="al-empty">
             Nothing matches the current filters.

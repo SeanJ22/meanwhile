@@ -54,8 +54,8 @@ test("the PDC-7 frozen denominator accounts for every source row and all 42 hold
   const problems = validatePdc7DispositionRegistry(inventory.rows, DATASET_FAMILIES.map((family) => family.id));
   assert.deepEqual(problems, []);
 
-  assert.equal(inventory.rows.length, 36);
-  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 6);
+  assert.equal(inventory.rows.length, 37);
+  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 7);
   assert.equal(NON_ROUTINE_DISPOSITIONS.length, 11);
   assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 18);
   assert.equal(PDC7_RESOLVED_SPLIT_BINDINGS.length, 1);
@@ -207,19 +207,27 @@ test("LegiScan is immutable research evidence, not a production fallback or muta
 });
 
 test("Census geometry has one reviewed immutable authority and no competing runtime promotion door", () => {
+  // The tracked static GIS / boundary-identity files remain a reviewed immutable
+  // version adoption. RULING 292 does not change this authority; the static files
+  // still never auto-promote.
   const row = NON_ROUTINE_DISPOSITIONS.find(({ sourceId }) => sourceId === "census-geography");
   assert.equal(row?.disposition, "EXPLICIT_VERSION_ADOPTION");
   assert.equal(row?.execution.readerUse, "ADOPTED_VERSION");
   assert.ok(row?.execution.forbidden.includes("AUTOMATIC_PRODUCTION_PROMOTION"));
+  assert.ok(row?.trackedPaths.includes("public/geo/**"), "the static-GIS authority still governs the tracked geography files");
 
-  const registry = readFileSync(new URL("../lib/registry/server.ts", import.meta.url), "utf8");
-  const readModel = readFileSync(new URL("../lib/civic-data/read-model.ts", import.meta.url), "utf8");
-  const builders = readFileSync(new URL("../lib/civic-data/candidate-builders.ts", import.meta.url), "utf8");
-  const types = readFileSync(new URL("../lib/civic-data/types.ts", import.meta.url), "utf8");
-  assert.doesNotMatch(registry, /promotedReadModel|CENSUS_GEOGRAPHY|reader-resolver/);
-  assert.doesNotMatch(readModel, /function promotedReadModel/);
-  assert.doesNotMatch(builders, /censusGeographyCandidate|PromotedCensusGeography|CENSUS_GEOGRAPHY/);
-  assert.doesNotMatch(types, /"CENSUS_GEOGRAPHY"/);
+  // RULING 292 authorizes automatic Level-4 publication for qualifying official
+  // sources. The ZCTA-to-geography OVERLAP dataset (census-geography-overlaps) is a
+  // SEPARATE authorized routine authority built live from the Census tab20
+  // relationship files: it writes no tracked file and neither adopts nor promotes
+  // the static GIS files, so it is not a competing door for that immutable authority.
+  const overlaps = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "census-geography-overlaps");
+  assert.equal(overlaps?.recordClass, "CENSUS_GEOGRAPHY");
+  assert.equal(overlaps?.sourceId, "census-geography-relationships");
+  assert.equal(overlaps?.autoPromotable, true);
+  assert.notEqual(overlaps?.sourceId, row?.sourceId, "the overlap authority is a distinct source from the static GIS files");
+  const binding = ROUTINE_INVENTORY_BINDINGS.find(({ contractIds }) => contractIds.some((contractId) => contractId === "census-geography-overlaps"));
+  assert.equal(binding?.contractSourceId, "census-geography-relationships");
 });
 
 test("Plural/OpenStates is research evidence only: production has no state-roster Reader or tracked writer", () => {

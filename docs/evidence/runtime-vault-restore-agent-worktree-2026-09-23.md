@@ -7,7 +7,7 @@
 - **16:12:17Z, safe-point check:** no runner or research process was alive. The previous runner had exited at 16:04:12Z on a failed release check (`DEPLOYED_SHA_UNRESOLVED`); that was not a handoff. The last research cycle had finished at 15:45:13Z on `756f3317`.
 - **16:14:25.254Z–16:14:29.938Z:** all 46 restored files were written, going by their own write times.
 - **16:15:06Z:** the Scheduled Task's own trigger relaunched the runner (PID 23124). That was inside the tool's run, but 36 s after the last write. Only the tool's read-only resolver readback and the after-snapshot ran after it.
-- **After the relaunch:** the after-snapshot shows no file added or changed beyond the 46 planned. As of 16:22:50Z, no worker Attempt or result has named any of the 23 artifacts, and no Attempt has aborted on a vault miss. So nothing could have looked one up before it landed.
+- **After the relaunch:** the after-snapshot shows no file added or changed beyond the 46 planned. The relaunched runner's first research cycle ran 16:18:00Z–16:27:51Z (ok, on `756f3317`). As of 16:30:13Z, no worker Attempt or result since the relaunch has named any of the 23 artifacts, and no Attempt has aborted on a vault miss. So nothing could have looked one up before it landed.
 
 This finishes the item that [`runtime-vault-restore-2026-09-22.md`](runtime-vault-restore-2026-09-22.md) left for its own review and yes.
 

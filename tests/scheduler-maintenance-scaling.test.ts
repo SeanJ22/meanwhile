@@ -51,10 +51,10 @@ test("277 unchanged debts consume one bulk read and no write; changed and discha
   await persistDebts(repos, debts, NOW);
   const observed = observeCyclePhases(repos, () => 0);
   const unchanged = await persistDebts(observed.repos, structuredClone(debts), NOW);
-  assert.deepEqual(unchanged, { written: 0, cleared: [] });
+  assert.deepEqual(unchanged, { written: 0, cleared: [], clearedAsRetired: [] });
   assert.equal(observed.finish("debt").repositoryCalls, 1);
   const changed = { ...debts[0], detail: "new retained error evidence" };
-  assert.deepEqual(await persistDebts(repos, [changed, ...debts.slice(2)], NOW), { written: 1, cleared: ["ob-1"] });
+  assert.deepEqual(await persistDebts(repos, [changed, ...debts.slice(2)], NOW), { written: 1, cleared: ["ob-1"], clearedAsRetired: [] });
   assert.equal((await repos.debts.mustRead("ob-1")).value.consecutiveFailures, 0);
   assert.equal((await repos.debts.mustRead("ob-0")).value.detail, changed.detail);
 });

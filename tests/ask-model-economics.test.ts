@@ -125,36 +125,37 @@ test("H2: both candidates' rates carry a date and a source", () => {
   }
 });
 
-test("the published rate ratio is 2.5x — and the arms are back where they started", () => {
+test("the standing comparison is the one still owed: Opus 5 against Opus 5.5, never a model against itself", () => {
   /*
-   * ITEM K, 2026-09-01, and this assertion has now been written twice in one
-   * day, which is worth recording rather than tidying away.
+   * The history is kept because each earlier version of this assertion was
+   * written on purpose.
    *
-   * It asserted 2.5x with incumbent Opus / challenger Sonnet. The switch landed
-   * and both constants moved, so it was rewritten to 0.4x — the reciprocal —
-   * precisely to prove the two had swapped TOGETHER rather than one being
-   * changed and the other forgotten. Then RULING 234's reversibility clause
-   * fired on the weather question and both moved back.
+   * - ITEM K, 2026-09-01: it asserted 2.5x with incumbent Opus 5 and challenger
+   *   Sonnet 5. The switch landed and both constants moved, so it was
+   *   rewritten to 0.4x, the reciprocal, to prove the two had swapped TOGETHER.
+   * - The same day, RULING 234's reversibility clause fired on the weather
+   *   question, and both moved back to 2.5x.
+   * - 2026-09-23: the challenger was re-pointed. RULING 236 had settled Sonnet
+   *   5, and the comparison still owed is the owner's 2026-09-22 Opus 5.5
+   *   directive, which the 2026-09-23 run left NOT_MEASURED (see the
+   *   constant's comment). A flagless `pnpm ask:model-compare` now measures it.
    *
-   * So the number is 2.5x again, and the mechanism did its job in both
-   * directions: the ratio cannot read correctly unless both arms agree about
-   * which model is which.
-   *
-   * `rateRatio` is incumbent-over-challenger: 5/2 and 25/10 = 2.5. The product
-   * runs the DEARER of the two arms per token, deliberately — the cheaper one
-   * answers a weather question, and cost was never the reason for the switch.
+   * `rateRatio` is incumbent over challenger: 5/4 and 25/20 = 1.25. It is
+   * recorded, not decisive. RULING 230 switches only on held questions, and
+   * `switchVerdict` never reads a price.
    */
+  assert.equal(ASK_CHALLENGER_MODEL, "claude-opus-5-5");
+  assert.notEqual(
+    ASK_CHALLENGER_MODEL,
+    ASK_INCUMBENT_MODEL,
+    "a flagless run must never grade a model against itself",
+  );
   const ratio = rateRatio(
     ASK_MODEL_RATES[ASK_INCUMBENT_MODEL],
     ASK_MODEL_RATES[ASK_CHALLENGER_MODEL],
   );
-  assert.equal(ratio.input, 2.5);
-  assert.equal(ratio.output, 2.5);
-  assert.ok(
-    ratio.input > 1,
-    "the incumbent is the DEARER arm per token, and deliberately: the cheaper one " +
-      "answers a weather question at all four pilot ZIPs",
-  );
+  assert.equal(ratio.input, 1.25);
+  assert.equal(ratio.output, 1.25);
 });
 
 /* ── the verdict ─────────────────────────────────────────────────────────── */

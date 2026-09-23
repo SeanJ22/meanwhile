@@ -124,6 +124,9 @@ import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   findSettledOccurrences,
+  planRetiredResidue,
+  planSupersededRetirement,
+  settleRetirements,
   settledRouteTaskIds,
   loadDebts,
   openOccurrence,
@@ -668,6 +671,76 @@ let canonicalCandidateCounts = await candidateStoreCounts(repos);
 if (canonicalCandidateCounts === null) {
   runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
 }
+
+/*
+ * **WHAT THE REGISTRY NO LONGER EMITS IS RETIRED, AND A RETIRED ROW HOLDS
+ * NOTHING OPEN.** (2026-09-23.)
+ *
+ * Two planners over the rows `syncObligations` read outside the corpus, and
+ * one apply (`settleRetirements`):
+ *
+ * - **A row the registry stopped emitting** is retired only when its provider
+ *   read cleanly and the drop stays inside the bound
+ *   (`planSupersededRetirement`). Otherwise it is held back by name.
+ * - **An already-retired row that still points at an open occurrence** has that
+ *   occurrence closed (`planRetiredResidue`).
+ *
+ * Each open occurrence closes unresolved, never with a disposition, and a
+ * retired row's debt is tombstoned as retired by `persistDebts`. The judgement
+ * is always made against the FULL registry, never a filtered one. Only a full
+ * standing cycle writes; a --dry, --canary, --only/--ids or blackout cycle
+ * prints the plan and writes nothing. A failure is named in the digest and the
+ * run record, and the cycle continues: the rows stay as they were and are
+ * planned again next cycle.
+ */
+const retirementWrites = !dry && !canary && !scheduledBlackout;
+const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
+const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
+const supersededPlan =
+  retirementOutside === null
+    ? null
+    : planSupersededRetirement({
+        outside: retirementOutside,
+        corpus: allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id })),
+        providers: registry.byProvider,
+      });
+const supersededHolds = (supersededPlan?.heldBack ?? []).reduce<Record<string, number>>(
+  (m, h) => ((m[h.code] = (m[h.code] ?? 0) + 1), m),
+  {},
+);
+let retirementApplied: Awaited<ReturnType<typeof settleRetirements>> | null = null;
+let retirementError: string | null = null;
+/** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
+const retiredDebtReasons = new Map<string, string>();
+if (supersededPlan !== null && retirementOutside !== null) {
+  const items = [...residueItems, ...supersededPlan.retire];
+  console.log(
+    `  retirement: ${supersededPlan.retire.length} superseded, ${residueItems.length} retired row(s) still holding an occurrence` +
+      (supersededPlan.heldBack.length > 0 ? `; held back ${JSON.stringify(supersededHolds)}` : "") +
+      (retirementWrites ? "" : " (plan only: this cycle writes nothing)"),
+  );
+  if (retirementWrites) {
+    if (items.length > 0) {
+      try {
+        retirementApplied = await settleRetirements(repos, { items, now: NOW });
+        console.log(
+          `  retirement: ${retirementApplied.retired.length} obligation(s) retired, ` +
+            `${retirementApplied.occurrencesClosed.length} open occurrence(s) closed unresolved` +
+            (retirementApplied.failed.length > 0 ? `, ${retirementApplied.failed.length} did not complete and are planned again` : ""),
+        );
+      } catch (error) {
+        retirementError = error instanceof Error ? error.message : String(error);
+        console.error(`  retirement could not run (${retirementError}); the rows are planned again next cycle`);
+      }
+    }
+    for (const row of retirementOutside) {
+      if (!row.active) retiredDebtReasons.set(row.id, row.retirementReason ?? "RETIRED: this obligation was retired");
+    }
+    const reasonOf = new Map(items.map((item) => [item.obligationId, item.reason]));
+    for (const id of retirementApplied?.retired ?? []) retiredDebtReasons.set(id, reasonOf.get(id) ?? "RETIRED");
+  }
+}
+finishPhase("retirement");
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
@@ -678,11 +751,13 @@ let resumedCount = 0;
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
 
-const debtsIn = canary
+/* A retired obligation owes no freshness: its debt stays out of the cycle, and `persistDebts` tombstones it as retired (2026-09-23). */
+const debtsIn = (canary
   ? (await Promise.all(corpus.map((obligation) => repos.debts.read(obligation.id))))
       .filter((row) => row !== null)
       .map((row) => row.value)
-  : await loadDebts(repos);
+  : await loadDebts(repos)
+).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
@@ -1823,10 +1898,17 @@ await closeCycleOccurrences(repos, {
   now: NOW,
 });
 
-const persisted = await persistDebts(repos, cycle.debts, NOW, canary ? corpus.map((obligation) => obligation.id) : null);
+const persisted = await persistDebts(
+  repos,
+  cycle.debts,
+  NOW,
+  canary ? corpus.map((obligation) => obligation.id) : null,
+  retiredDebtReasons,
+);
 finishPhase("occurrence-and-debt-commit");
 console.log(
-  `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
+  `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared` +
+    (persisted.clearedAsRetired.length > 0 ? `, ${persisted.clearedAsRetired.length} tombstoned as retired` : ""),
 );
 
 /*
@@ -2207,6 +2289,16 @@ const researchLines = [
 
 const lines = [
   ...digestLines(cycle),
+  ...(supersededPlan === null
+    ? []
+    : [
+        `  retired            ${retirementApplied?.retired.length ?? 0} of ${supersededPlan.retire.length} planned obligation(s) the registry no longer emits · ` +
+          `${retirementApplied?.occurrencesClosed.length ?? 0} open occurrence(s) closed unresolved · ` +
+          `${persisted.clearedAsRetired.length} debt(s) tombstoned as retired` +
+          (supersededPlan.heldBack.length > 0 ? ` · held back ${JSON.stringify(supersededHolds)}` : "") +
+          ((retirementApplied?.failed.length ?? 0) > 0 ? ` · ${retirementApplied?.failed.length} did not complete, planned again` : "") +
+          (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
+      ]),
   "",
   ...researchLines,
   "",
@@ -2271,6 +2363,19 @@ const runRecord = {
         artifactIds: r.disposition.artifactIds,
         discharged: r.discharged,
       })),
+      /* Rows the registry no longer emits: what was planned, held back by code, and actually written (2026-09-23). */
+      retirement:
+        supersededPlan === null
+          ? null
+          : {
+              superseded: supersededPlan.retire.map((item) => item.obligationId),
+              residue: residueItems.map((item) => item.obligationId),
+              heldBackByCode: supersededHolds,
+              heldBackExamples: supersededPlan.heldBack.slice(0, 25),
+              applied: retirementApplied,
+              error: retirementError,
+              debtsTombstonedAsRetired: persisted.clearedAsRetired,
+            },
       simulated: cycle.simulated,
       dispositions: cycle.dispatched
         .filter((d) => d.dispositionCommitted)

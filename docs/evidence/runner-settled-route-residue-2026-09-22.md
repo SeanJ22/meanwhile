@@ -1,8 +1,11 @@
-# Runner: settled-route residue, and the repair awaiting owner approval (2026-09-22)
+# Runner: settled-route residue, and its owner-approved repair (2026-09-22)
 
-**Status: NOT EXECUTED.** Every production write below waits for the owner's explicit yes.
-The readback it rests on was one `READ ONLY` Postgres transaction against the production
-control plane at 2026-09-22T22:33:21Z; its rows are in
+**Status: R1–R3 EXECUTED 2026-09-23T00:34:14Z**, after the owner approved R1, R2 and R3 and Admin <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+reviewed the exact transaction. R4 and R3b were not approved and were not run. The execution record
+is [below](#execution-record-2026-09-23). <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+
+The plan rested on one `READ ONLY` Postgres transaction against the production control plane at
+2026-09-22T22:33:21Z; its rows are in
 [`runner-settled-route-residue-2026-09-22.json`](runner-settled-route-residue-2026-09-22.json).
 
 ## In plain terms
@@ -257,3 +260,89 @@ SELECT 1 / (CASE WHEN count(*) = 1 THEN 1 ELSE 0 END) AS r3 FROM released;
 
 Approve **R1**, **R2** and **R3** as written, to run after this branch is deployed? R4 comes along
 as a guarded no-op, and **R3b** runs only if you ask for it. Each item can be approved on its own.
+
+**Answered 2026-09-22.** The owner approved R1, R2 and R3, conditional on Admin reviewing the actual
+transaction against that scope. It was to run only after deployment, at a safe point between cycles,
+with protection against concurrent change, exact expected rows, and rollback on any difference. The
+approval covered no other rows or repairs, so R4 was dropped: its precondition became "the deployed
+sweep has already released all 65 leases", which the pre-check confirmed.
+
+## Execution record (2026-09-23) <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+
+**Deployment first.** The prevention shipped as PR #358, merged at 00:11:33Z as `37d330db`. Its PR
+run (full certification) was 11/11 green; its main run was Build check `35800950259`. The
+post-deploy observer (run `35800950252`) reported meanwhileusa.com serving `37d330db` (outcome
+SERVING_EXPECTED; integrity HELD, 29/29 migrations; receipt
+`production-integrity:37d330db…:2026-09-23T00:13:00.022Z`). The runner's runtime checkout switched <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+to `37d330db` at the 00:23Z handoff. The one cycle that ran the sweep without the prevention
+(00:07:31Z, on `c61dbc2d`) started 21 Attempts, and 0 of them were on an already-settled task.
+
+**Transaction 1 — R1, R2 and R3, at 00:34:14Z.**
+
+- **Guard.** It ran under the `nightly-window` lease, held by `residue-repair@29412` and released
+  afterwards, in a slot Admin confirmed. The pre-checks passed immediately before it: 65 / 0
+  unreleased leases / 8 / 1, and no CLAIMED-but-disposed row outside the 65.
+- **Result.** `[window_held 1, r1 1, r2 1, r3 1]`: exactly 65, 8 and 1 rows.
+- **Post-check.** r1 = 65: every task is now at revision 5 and byte-equal to its committed
+  `disposedTask`. r3 = 1. Commits on the 65 tasks: 65, unchanged.
+- **Images.** Before: `runner-settled-route-residue-before-2026-09-22.json`, sha256 `f13266b4…`.
+  After: `runner-settled-route-residue-after-2026-09-22.json`, sha256 `e14ac09a…`.
+- **Field diff between the two images.** 65 tasks changed `state` only. The 65 leases and 65
+  commits are unchanged. The 8 Attempts changed only `outcome`, `endedAt` and `abortReason`. The
+  proof lease changed only `released`.
+
+**Transaction 2 — R2 format correction, at 00:37Z.**
+
+- **The defect.** R2's timestamp parameter was also cast `::timestamptz` in the same statement, so
+  Postgres typed it as a timestamp. The 8 Attempts therefore stored `endedAt` as
+  `2026-09-23 00:34:14.194+00`, not the ISO `2026-09-23T00:34:14.194Z` that `endAttempt` writes, and <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+  their `abortReason` repeated the same text. The instant was right; the representation was not.
+- **The fix.** A second transaction, reviewed by Admin as inside R2's scope, rewrote only that
+  representation on exactly those 8 rows. It bound the ISO string as its own text parameter, was
+  guarded by revision 2 and the exact bad value, and ran under the window lease.
+- **Result.** `[window_held 1, r2_iso 1]`.
+- **Post-check.** 8 of 8 rows are at revision 3 with an ISO-Z `endedAt`, and no `+00` remains in any
+  `abortReason`.
+- **Class-wide check.** Before the fix, the only non-ISO-Z values in `cp_attempts` (`startedAt` and
+  `endedAt`), `cp_route_tasks` (`disposition.at`) and `cp_leases` (`expiresAt`, `claimedAt`,
+  `heartbeatAt`) were those 8. After it, all are 0.
+- **Image.** `runner-settled-route-residue-after-iso-2026-09-22.json`, sha256 `edadc555…`. Against
+  the transaction-1 after-image, only `endedAt` and that timestamp text changed, on the same instant.
+
+**The executors that ran are preserved verbatim.** Files:
+`runner-settled-route-residue-executor-2026-09-22.mts.txt` (sha256 `d965913d…`) and
+`runner-settled-route-residue-r2-iso-executor-2026-09-22.mts.txt` (sha256 `e1ec1b8d…`). Nothing was
+deleted. No disposition, artifact, cost, debt or occurrence was written by either transaction.
+
+**The first cycle on `37d330db`**, 01:27:03Z–01:38:07Z. It ended not-OK and wrote no cycle record.
+
+- It started 25 Attempts (17 COMPLETED), and **0 were on an already-settled task**.
+- Afterwards: 0 CLAIMED-but-disposed tasks, 0 open Attempts, 0 unreleased expired leases.
+
+**The 62 occurrences are pending, not yet recovered.** At 01:46Z all 62 were still open, each with
+1 Attempt and a released lease: none re-walked, none recovered. They recover when their rows are
+admitted, and the due queue is long. Their ranks among ~2,865 eligible due obligations, oldest
+first, are:
+
+| Route | Rows | Rank |
+| --- | --- | --- |
+| Marginalia | 11 | 655–826 |
+| Wikipedia | 32 | 643–2621 |
+| Authored-site | 19 | 17–2618, on the Scout lane, which is closed while no delivery path is open |
+
+Admin's per-cycle check watches for their recovery signature: the occurrence closed `INGESTED`
+(11) or unresolved "already disposed …" (51), still 1 Attempt, and an unchanged lease revision.
+
+**What recovery will and will not move for the 11 INGESTED records.** Their bytes (Marginalia search
+results) are held only in the main checkout's vault, not the runtime vault. The fixed runner will
+stage them as acquired but still owed.
+
+- No parser or verifier exists for this discovery-only class: `NORMALIZERS` has none, and
+  `advanceHeldWorkerFleet` queues only held meeting-event contracts.
+- None of them is verified or published, and nothing reaches a reader.
+
+**Follow-ups, recorded and not blocking.**
+
+1. The runner never reconciles an *unapplied* disposition commit. Production had 0 at every read.
+2. The runtime can't read vault objects written before the runtime checkout existed. This is the
+   same gap as the 11 records above.

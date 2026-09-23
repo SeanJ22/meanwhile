@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 697,
-    "named": 6937,
+    "files": 698,
+    "named": 6943,
     "dynamic": 28
   },
   "files": {
@@ -8355,6 +8355,17 @@
         "the standing parent durably accounts for a routine child killed outside source attribution",
         "the standing portfolio invokes data-plane scripts only",
         "the standing scheduler advances a free lane on a later tick without overlapping a hung lane"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-clock-narrow-read.test.ts": {
+      "names": [
+        "both stores' clocks read through the narrowed view, never a whole row",
+        "the clock view names exactly the fields the clock proves; widening it is a visible cost decision",
+        "the memory store's clock, read through the view, keeps its attempt and success instants",
+        "the narrowed view decides exactly what the whole candidate decides",
+        "the routine clock builds its candidate view in Postgres; the payload and read model never leave the database",
+        "the routine clock reads a pointer's identity and proof, never its promoted payload"
       ],
       "dynamic": 0
     },

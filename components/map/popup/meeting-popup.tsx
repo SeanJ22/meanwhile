@@ -16,7 +16,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { relativeAge } from "@/lib/meetings/freshness";
-import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
+import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor, type JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
@@ -187,8 +187,10 @@ export function MeetingPopup({
         <PopupRow label="Where">
           {/* MTG-14: the sentence lives in lib/meetings/online.ts now. It was
               written out here and again in map-entry.tsx, which is two places
-              for one claim about a government's meeting. */}
-          {ONLINE_ONLY_LINE}
+              for one claim about a government's meeting. 2026-09-23: the
+              online sentence only where the body published an online access;
+              otherwise our own named gap for a place we do not hold. */}
+          {placelessWhereLine(meeting)}
         </PopupRow>
       )}
 

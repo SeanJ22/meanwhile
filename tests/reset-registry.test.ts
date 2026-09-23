@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { bodyScopeKey } from "../lib/state/body-scope.ts";
 import { INITIAL_STATE } from "../lib/state/defaults.ts";
 import { uiReducer as reducer } from "../lib/state/reducer.ts";
 import {
@@ -61,7 +62,7 @@ test("the default state has zero active controls, and reset returns to it", () =
     ...INITIAL_STATE,
     tiers: ["local"],
     jurisdiction: "ocd-division/country:us/state:az/place:tucson",
-    body: "ocd-division/country:us/state:az/place:tucson|Planning Commission",
+    body: bodyScopeKey({ ocdId: "ocd-division/country:us/state:az/place:tucson", bodyName: "Planning Commission" }),
     filters: {
       bodyTypes: ["council"],
       statuses: ["SCHEDULED"],

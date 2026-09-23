@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 713,
-    "named": 7050,
+    "files": 714,
+    "named": 7053,
     "dynamic": 27
   },
   "files": {
@@ -7892,6 +7892,14 @@
         "source renewal accepts an exact removed dependency only beside current execution and complete graph absence",
         "source-only reader renewal cannot inherit a changed canonical identity or eligibility projection",
         "successive source renewal inherits only byte-identical already-classified dependencies"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-upcoming-meetings.test.ts": {
+      "names": [
+        "every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts",
+        "the district card's door opens exactly the rows its count counted, never a Body scope",
+        "the recorded rows are the owner's case: scheduled, no agenda, no building"
       ],
       "dynamic": 0
     },

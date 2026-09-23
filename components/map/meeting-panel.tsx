@@ -30,7 +30,16 @@ import { projectedCommentAccessFor } from "@/lib/registry/comment-access-client"
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
+import {
+  hasPhysicalLocation,
+  isOnlineOnly,
+  isPlaceUnrecorded,
+  joinLine,
+  onlineAccessFor,
+  PLACE_UNRECORDED_LINE,
+} from "@/lib/meetings/online";
 
+import { MeetingStatusPill } from "./meeting-status-pill";
 import { CalendarLinks } from "./popup/calendar-links";
 
 /**
@@ -43,17 +52,32 @@ import { CalendarLinks } from "./popup/calendar-links";
 
 interface MeetingPanelProps {
   venue: Venue;
+  /**
+   * **The same bodies' sittings that have no building** (2026-09-23) —
+   * `placelessSittingsOfVenueBodies`. Online sittings and sittings whose place
+   * we have not recorded. They get no pin, so without this a panel headed
+   * "Tucson Unified School District" listed eight concluded sittings and none
+   * of the district's three upcoming online committee meetings. Rendered in the
+   * same reading groups, each marked as not held in this building.
+   */
+  placeless?: readonly Meeting[];
   onClose: () => void;
   /** Opens the meeting popup. Omitted leaves the rows inert. */
   onOpenMeeting?: (meeting: Meeting) => void;
 }
 
-export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProps) {
+export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: MeetingPanelProps) {
   // One `now` per mount, never read during render (item 11's rule): a clock
   // read in a render body would let a meeting crossing the 30-day line
   // reshuffle the list under a reader mid-scroll.
   const [now] = useState(() => Date.now());
-  const groups = groupMeetingsForReading(venue.meetings, now);
+  // Every row this panel renders: the building's sittings, then the same
+  // bodies' sittings with no building. The groups below order them together,
+  // so an upcoming online sitting leads a card whose room saw only past ones.
+  const rows = [...venue.meetings, ...placeless];
+  const onlineCount = placeless.filter(isOnlineOnly).length;
+  const unrecordedCount = placeless.filter(isPlaceUnrecorded).length;
+  const groups = groupMeetingsForReading(rows, now);
   // Markers follow RENDER order, so the groups are flattened in group order
   // before the notes are built — not `venue.meetings`, which is the order the
   // reader no longer sees.
@@ -76,11 +100,28 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
   // `basis` so the card and its entries cannot disagree about whether the body
   // has already been named.
   const cardTitle = venueBodyTitle(venue.meetings, venue.name);
-  const listingCount = readerMeetingCount(venue.meetings, venue.listingIdentity);
+  const listingCount = readerMeetingCount(rows, venue.listingIdentity);
+  /*
+   * Stated N equals rendered rows: the eyebrow's first number is every row
+   * below, and where some of them are not in this building the split is said
+   * on the same line, so "8 public meetings" beside this address can never be
+   * read as the count of a panel that also lists online sittings.
+   */
+  const elsewhere = [
+    onlineCount > 0 ? `${onlineCount} online` : null,
+    unrecordedCount > 0 ? `${unrecordedCount} with no place recorded yet` : null,
+  ].filter((part): part is string => part !== null);
+  const eyebrow = listingCount.unresolved
+    ? `${listingCount.count} ${listingCount.unit}`
+    : rows.length === 1
+      ? "Public meeting"
+      : `${rows.length} public meetings`;
+  const split =
+    elsewhere.length > 0 ? ` · ${venue.meetings.length} at this building · ${elsewhere.join(" · ")}` : "";
 
   return (
     <aside
-      aria-label={`${listingCount.heading} at ${venue.name}`}
+      aria-label={`${listingCount.heading} at ${venue.name}${elsewhere.length > 0 ? `, and ${elsewhere.join(" and ")} from the same body` : ""}`}
       className="panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
@@ -106,10 +147,9 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
                 identity via `tierForMeeting`, never the body name. */}
             <LevelTag tier={first ? tierForMeeting(first) : null} />
           </h2>
-          <p className="notice-eyebrow mt-1.5">
-            {listingCount.unresolved ? `${listingCount.count} ${listingCount.unit}` : venue.meetings.length === 1
-              ? "Public meeting"
-              : `${venue.meetings.length} public meetings`}
+          <p className="notice-eyebrow mt-1.5" data-venue-panel-count={rows.length}>
+            {eyebrow}
+            {split}
           </p>
           {/* MTG-6: venue name and address, in gray, beneath — the Parks and
               Recreation pattern the author named as the reference. Where the
@@ -334,6 +374,14 @@ function MeetingEntry({
         />
       </p>
 
+      {/*
+        2026-09-23: a row with no building says where it is instead — this
+        panel's header names a building, and a sitting listed under it without
+        a word would read as held there. Online: the mark and what the body
+        published. Place not recorded: our own named gap, never "online".
+      */}
+      {!hasPhysicalLocation(meeting) && <PlacelessWhere meeting={meeting} />}
+
       <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
         <div className="flex gap-2">
           <dt className="sr-only">Date</dt>
@@ -447,6 +495,44 @@ function MeetingEntry({
         </p>
       </footer>
     </article>
+  );
+}
+
+/**
+ * Where a sitting with no building is held, on a panel whose header names one.
+ *
+ * Every string comes from `lib/meetings/online.ts`: the online mark and the
+ * body's own published label (with the join-link gap when there is no link),
+ * or `PLACE_UNRECORDED_LINE` when the body published neither a room nor an
+ * online access.
+ */
+function PlacelessWhere({ meeting }: { meeting: Meeting }) {
+  const access = onlineAccessFor(meeting);
+  return (
+    <p
+      className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 pl-4 text-[0.75rem] leading-snug text-muted"
+      data-meeting-where={access ? "online" : "unrecorded"}
+    >
+      {access ? (
+        <>
+          <MeetingStatusPill status="online" />
+          {access.joinUrl ? (
+            <a
+              href={access.joinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-b border-signal-dim text-signal hover:border-signal"
+            >
+              {access.label}
+            </a>
+          ) : (
+            <span>{joinLine(access)}</span>
+          )}
+        </>
+      ) : (
+        <span>{PLACE_UNRECORDED_LINE}</span>
+      )}
+    </p>
   );
 }
 

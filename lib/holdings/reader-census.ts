@@ -51,7 +51,7 @@ import {
   type RosterReaderDisposition,
 } from "../registry/body-rosters.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
-import { agendaDocumentRepresentation, classifyAgendaPublication } from "../ask/agenda-publication.ts";
+import { agendaDocumentRepresentation, classifyAgendaPublication, readerAgendaDocuments } from "../ask/agenda-publication.ts";
 import type { AgendaDocumentLike } from "../routing/agenda-search.ts";
 import type { ReaderProofMeetingsExpectedAuthority } from "../meetings/snapshot.ts";
 import {
@@ -2765,8 +2765,17 @@ export async function projectCanonicalReaderRecords(
         const meeting = snapshot.meetings.find((meeting) => meeting.id === (record.unit === "meetings" ? raw.id : raw.meetingId));
         if (meeting && !currentMeetingWindow(meeting)) for (const surface of record.unit === "meetings" ? ["meetings", "map"] as const : ["map"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "searchMeetings / CONCLUDED_LOOKBACK_DAYS / UPCOMING_HORIZON_DAYS", reason: `Event ${meeting.id} starts ${meeting.startsAt}, outside the canonical calendar window ${CONCLUDED_LOOKBACK_DAYS} days back / ${UPCOMING_HORIZON_DAYS} days ahead at ${asOf.toISOString()}. This is a current-calendar scope, not unheld data or publisher absence. Held historical records retain applicable dated Ask/agenda obligations.` };
         if (record.unit === "agendaDocuments") {
-          const latest = snapshot.agendaDocuments?.filter((doc) => doc.meetingId === raw.meetingId).sort((a,b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
-          if (latest && latest.id !== raw.id) for (const surface of ["map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: surface === "map" ? "GET /api/agenda newest-first → AgendaDocuments documents[0]" : "canonical meeting evidence → latest held agenda revision", reason: `This is an earlier document revision. The current meeting question selects the latest held revision ${latest.id}; the historical revision remains directly returned by the agenda endpoint and cannot be presented as the current agenda. The map also displays the full version count.` };
+          // What a reader is shown for this sitting is readerAgendaDocuments over the LIVE rows: one row per
+          // distinct content (the newest row carrying it), no publication-index page once the sitting's own
+          // document is held. /api/agenda, the meeting card and Ask all serve exactly that projection.
+          const heldLive = snapshot.agendaDocuments?.filter((doc) => doc.meetingId === raw.meetingId) ?? [];
+          const shown = readerAgendaDocuments(heldLive, { documentsAcrossCorpus: snapshot.agendaDocuments ?? [], meetingsAcrossCorpus: snapshot.meetings }).documents;
+          const latest = shown[0];
+          if (heldLive.some((doc) => doc.id === raw.id) && !shown.some((doc) => doc.id === raw.id)) {
+            // Held live and not shown: an identical re-fetch of a shown row, or an index page set aside. A row
+            // missing from the live rows altogether is NOT excused here; it stays an obligation the proof checks.
+            for (const surface of ["agenda", "map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "readerAgendaDocuments (GET /api/agenda, the meeting card, Ask)", reason: `Held and not shown on its own. Its content is identical to a newer row shown for this sitting (a re-fetch, not a version), or it is a publication-index page set aside because the sitting's own document is held${latest ? `; the sitting shows ${shown.length} distinct document${shown.length === 1 ? "" : "s"}, newest ${latest.id}` : ""}. The stored row remains provenance.` };
+          } else if (latest && latest.id !== raw.id) for (const surface of ["map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: surface === "map" ? "GET /api/agenda newest-first → AgendaDocuments documents[0]" : "canonical meeting evidence → latest shown agenda version", reason: `This is an earlier distinct version. The current meeting question selects the latest shown version ${latest.id}; this version remains directly returned by the agenda endpoint and cannot be presented as the current agenda. The map also displays the distinct version count.` };
         }
       }
       if (record.family === "body-compositions") inputFor(["civic-routing"], "The exact verified legal composition constrains membersOfBody before contact routing. Its member count was checked by this adapter. Contact records are person/office facts rather than an extra legal-composition answer; the composition itself remains a direct map obligation.");
@@ -3357,7 +3366,7 @@ export async function registerReaderRenderHooks(root: string): Promise<void> {
   });
 }
 
-export async function renderCanonicalReaderComponents(root: string, census: ReaderCensus): Promise<{ formatVersion: 1; exactHead: string; holdingsDigest: string; sourceHashes: ReaderSourceHash[]; rule: string; cases: ReaderComponentCase[]; failures: string[] }> {
+export async function renderCanonicalReaderComponents(root: string, census: ReaderCensus): Promise<{ formatVersion: 1; exactHead: string; holdingsDigest: string; sourceHashes: ReaderSourceHash[]; rule: string; cases: ReaderComponentCase[]; failures: string[]; servingWindowRemovals: { auditId: string; meetingId: string; startsAt: string; lowerBound: string; contract: string }[] }> {
   await registerReaderRenderHooks(root);
   const [{ createElement, Fragment }, { renderToStaticMarkup }, { StateMoneySection }, { CandidateContact }, { MeetingRecords }, { ShuffledFacts }, finance, contacts, outcomes, meetingReader, area, { PublicStatementsProfileContent }, prl, { PersonIdentity, IdentityPortrait }, { ContactPills }, registry, rosters, { CandidateCard }, cards, sites, ballot, { MeetingPopup }, { DistrictPopup }, { EntityModal }, { DataProvider }, snapshotSource, meetingFormat, meetingLinks, memberships, minutes, { HowToBeHeard }, commentAccess, stateLabels] = await Promise.all([
     import("react"), import("react-dom/server"), import("../../components/funding/state-money-section.tsx"),
@@ -3380,6 +3389,30 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   const applicableReaderRecords = new Set(
     census.rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds),
   );
+  // A held meeting the live projection no longer carries fails this render, with one
+  // exception: its adapter stopped listing it after prepare because it had passed the
+  // serving window's lower bound (MEETING_READER_SERVING_WINDOW_V1). That is the runner
+  // working correctly, which RULING 290 says must never be the proof's failure mode. Only
+  // then does the leaf render use the census's own held record, and each such render is
+  // reported. A meeting inside the window, or one whose agenda documents are still
+  // applicable (their path reads the live route), still fails.
+  const { CONCLUDED_LOOKBACK_DAYS, MEETING_READER_SERVING_WINDOW_CONTRACT } = await import("../meetings/constants.ts");
+  const heldMeetingsById = new Map([...sourceRows.entries()]
+    .filter(([auditId, raw]) => auditId.startsWith("data/meetings-snapshot.json#/meetings/") && typeof raw.value?.id === "string")
+    .map(([, raw]) => [string(raw.value.id), raw.value] as const));
+  const applicableAgendaMeetingIds = new Set(census.records
+    .filter((record) => record.family === "meetings" && record.unit === "agendaDocuments" && applicableReaderRecords.has(record.auditId))
+    .map((record) => string(sourceRows.get(record.auditId)?.value?.meetingId)));
+  const servingWindowRemovals: { auditId: string; meetingId: string; startsAt: string; lowerBound: string; contract: string }[] = [];
+  const servingWindowRemoved = (auditId: string, meetingId: string) => {
+    const held = heldMeetingsById.get(meetingId);
+    if (!held || applicableAgendaMeetingIds.has(meetingId)) return undefined;
+    const lowerBound = Date.now() - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+    if (!(Date.parse(string(held.startsAt)) < lowerBound)) return undefined;
+    const [normalized] = source.normalize([held as unknown as Parameters<typeof source.normalize>[0][number]], new Date());
+    servingWindowRemovals.push({ auditId, meetingId, startsAt: string(held.startsAt), lowerBound: new Date(lowerBound).toISOString(), contract: MEETING_READER_SERVING_WINDOW_CONTRACT });
+    return normalized;
+  };
   const registryDivisionsById = new Map<string, ObjectRow>();
   for (const record of census.records) {
     if (record.holdingPath !== "lib/registry/registry.json" || record.unit !== "divisions") continue;
@@ -3645,7 +3678,8 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
         [selected.sourceUrl, ...(selected.commentPeriod === "UNKNOWN" ? ["We don't know this body's public-comment rules yet"] : [selected.commentPeriodDetail, selected.timeLimit, selected.signup, selected.writtenComment, selected.attend])].filter((value): value is string => Boolean(value)));
     } else if ((record.family === "meetings" && record.unit === "meetings" || record.family === "minutes-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
       if (record.family === "meetings" && !applicableReaderRecords.has(record.auditId)) continue;
-      const selected = normalizedMeetings.get(string(record.family === "minutes-summaries" ? raw.meetingId : raw.id));
+      const meetingId = string(record.family === "minutes-summaries" ? raw.meetingId : raw.id);
+      const selected = normalizedMeetings.get(meetingId) ?? servingWindowRemoved(record.auditId, meetingId);
       if (!selected) throw new Error(`SSR could not normalize ${record.auditId}`);
       const representation = memberships.membersOfBody(selected.bodyId ?? null).members;
       const listingGroup = listingMultiplicityForSource(listingIdentity, selected.id);
@@ -3736,5 +3770,5 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       }
     }
   }
-  return { formatVersion: 1, exactHead: execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim(), holdingsDigest: census.holdingsDigest, sourceHashes: readerSourceFingerprint(root), rule: "Every named case executes the product component with the canonical selector's payload and reads its emitted HTML. This proves the leaf output only; deployed routing, API grounding and in-situ browser evidence remain separate required proofs. Empty, staged and wrong-identity controls must stay absent.", cases, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)) };
+  return { formatVersion: 1, exactHead: execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim(), holdingsDigest: census.holdingsDigest, sourceHashes: readerSourceFingerprint(root), rule: "Every named case executes the product component with the canonical selector's payload and reads its emitted HTML. This proves the leaf output only; deployed routing, API grounding and in-situ browser evidence remain separate required proofs. Empty, staged and wrong-identity controls must stay absent.", cases, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)), servingWindowRemovals };
 }

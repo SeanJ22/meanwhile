@@ -409,7 +409,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 132,
+      "recordObligations": 110,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],

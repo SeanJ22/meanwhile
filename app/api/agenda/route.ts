@@ -1,6 +1,6 @@
 import { readMeetingsProjection } from "@/lib/meetings/snapshot";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
-import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor } from "@/lib/ask/agenda-publication";
+import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { refreshOutcomeSnapshotFromPromoted } from "@/lib/outcomes/store";
 import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
@@ -16,6 +16,14 @@ import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-
  * Newest version first. A document whose extraction failed is returned with
  * its note and null text — the surface says so honestly and links the
  * document rather than pretending nothing exists.
+ *
+ * **`documents` is exactly what the reader is shown, and each row is a VERSION**
+ * (2026-09-22): one row per distinct content, and no publication-index page
+ * once the sitting's own document is held — `readerAgendaDocuments`. Tucson
+ * Unified sitting 499 held 89 stored rows (88 identical re-fetches of its own
+ * page plus the board's site root) and the card called that 89 versions of a
+ * revised agenda. The stored rows are untouched provenance; the rows not shown
+ * are stated in `documentAccounting`, which reconciles to the rows held.
  */
 
 export const runtime = "nodejs";
@@ -116,9 +124,11 @@ export async function GET(request: Request) {
     now: Date.now(),
   }) : null;
 
-  const documents = snapshot.agendaDocuments
-    .filter((doc) => doc.meetingId === meetingId)
-    .sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))
+  const shown = readerAgendaDocuments(heldDocuments, {
+    documentsAcrossCorpus: snapshot.agendaDocuments ?? [],
+    meetingsAcrossCorpus: snapshot.meetings,
+  });
+  const documents = shown.documents
     .map((doc) => ({
       id: doc.id,
       documentUrl: doc.documentUrl,
@@ -133,6 +143,13 @@ export async function GET(request: Request) {
     }));
 
   return Response.json({ meetingId, documents, documentCount: documents.length,
+    documentAccounting: {
+      heldRows: shown.heldRows,
+      shown: documents.length,
+      identicalContentRows: shown.identicalContentRows,
+      publicationIndexRowsSetAside: shown.publicationIndexRowsSetAside,
+      sittingSpecific: shown.sittingSpecific,
+    },
     holdingStatus: "HELD", dataState: read.kind, dataMetadata: read.metadata,
     supportingHoldingStatus: support.supportingHoldingStatus,
     unavailableAuthorities: support.unavailableAuthorities,

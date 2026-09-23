@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 707,
-    "named": 7007,
+    "files": 708,
+    "named": 7012,
     "dynamic": 28
   },
   "files": {
@@ -2957,6 +2957,16 @@
         "a record held only in the source vault is copied verbatim and then read by the runtime's own resolvers",
         "a target key already holding a different object is a conflict, and is never overwritten",
         "an altered plan, or a vault restored from itself, is refused before anything is read or written"
+      ],
+      "dynamic": 0
+    },
+    "tests/control-plane-worker-vault-resolver.test.ts": {
+      "names": [
+        "a later record of the same artifact is read when the first record's bytes were never vaulted",
+        "a partial capture is never read; a complete record of the same bytes is",
+        "an admitted record the vault does not hold under its own identity is not in the vault",
+        "only an acquiring role may hand bytes to a worker, and a refusal still names why",
+        "the first held record still wins, in log order"
       ],
       "dynamic": 0
     },

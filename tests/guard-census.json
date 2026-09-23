@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 708,
-    "named": 7021,
+    "named": 7023,
     "dynamic": 28
   },
   "files": {
@@ -4619,12 +4619,14 @@
     },
     "tests/ical-occurrence-identity.test.ts": {
       "names": [
+        "ICAL-OCC · Warner's 8 September record is replaced by the edited sitting: not duplicated, not carried",
         "ICAL-OCC · Warner's Zoning Board: the master is out of window and each in-window override is its own sitting",
         "ICAL-OCC · a series record is replaced only by an occurrence holding its fact",
         "ICAL-OCC · a series record whose fact no current occurrence holds is carried, never removed",
+        "ICAL-OCC · an edited sitting belongs to its series' body, and replaces the series' own copy of it",
+        "ICAL-OCC · an edited sitting is never claimed by a body its own title happens to name",
         "ICAL-OCC · an event outside any series keeps its id exactly",
         "ICAL-OCC · an occurrence stamp is the slot in UTC, or the date of an all-day slot",
-        "ICAL-OCC · an override of a series' first sitting replaces it, whichever is listed first",
         "ICAL-OCC · every sitting of the Conservation Commission series is its own record",
         "ICAL-OCC · the first read under occurrence identity replaces the series record: no ghost, no false reschedule",
         "ICAL-OCC · the parser reads the recurrence fields it keys on",

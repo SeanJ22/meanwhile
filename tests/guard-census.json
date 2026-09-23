@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 695,
-    "named": 6933,
+    "named": 6935,
     "dynamic": 28
   },
   "files": {
@@ -8325,6 +8325,8 @@
       "names": [
         "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
         "a read that runs past its statement limit is a named store failure, never an empty or zero outcome",
+        "any other read failure stays an untyped store failure",
+        "the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it",
         "the research cycle never makes the unbounded observability read",
         "the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed",
         "the statement limit is validated before any connection is opened"

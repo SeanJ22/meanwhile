@@ -48,7 +48,29 @@ test("a read that runs past its statement limit is a named store failure, never 
     readRows: async () => { throw new RoutineObservabilityReadTimedOut(1_500, Object.assign(new Error("canceling statement due to statement timeout"), { code: "57014" })); },
   });
   assert.equal(read.kind, "STORE_UNREACHABLE");
-  assert.match(read.kind === "STORE_UNREACHABLE" ? read.detail : "", /RoutineObservabilityReadTimedOut[\s\S]*no empty or zero outcome/);
+  assert.equal(read.kind === "STORE_UNREACHABLE" ? read.cause : null, "READ_TIMED_OUT", "a timeout is typed, not a lost connection");
+  assert.match(read.kind === "STORE_UNREACHABLE" ? read.detail : "", /RoutineObservabilityReadTimedOut[\s\S]*store itself answered[\s\S]*no empty or zero outcome/i);
+});
+
+test("any other read failure stays an untyped store failure", async () => {
+  const read = await projectRoutineDataObservabilityRead({
+    now: "2026-09-23T02:40:00.000Z",
+    connected: true,
+    readRows: async () => { throw Object.assign(new Error("fetch failed"), { name: "NeonDbError" }); },
+  });
+  assert.equal(read.kind, "STORE_UNREACHABLE");
+  assert.equal(read.kind === "STORE_UNREACHABLE" ? read.cause : "x", undefined);
+});
+
+test("the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it", () => {
+  const panel = readFileSync("app/(admin)/admin/sources/routine-data-panel.tsx", "utf8");
+  const timedOut = panel.indexOf('outcome.cause === "READ_TIMED_OUT"');
+  const generic = panel.indexOf('if (outcome.kind === "STORE_UNREACHABLE") {');
+  assert.ok(timedOut > 0 && generic > timedOut, "the typed timeout is answered before the generic store failure");
+  const branch = panel.slice(timedOut, generic);
+  assert.match(branch, /needsYou=\{\{ needed: false \}\}/);
+  assert.match(branch, /Nothing is wrong with the store connection/);
+  assert.doesNotMatch(branch, /restore the production routine-data store connection/);
 });
 
 test("the statement limit is validated before any connection is opened", async () => {

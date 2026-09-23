@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 708,
-    "named": 7024,
+    "named": 7028,
     "dynamic": 28
   },
   "files": {
@@ -2444,7 +2444,9 @@
         "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
         "Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
+        "a Postgres transition moves the candidate envelope once and returns it with the written columns",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
+        "a candidate summary is every row column but the envelope and identity set",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
         "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
         "a promotion's RETURNING names the moved pointer and never carries its dataset",
@@ -8355,6 +8357,7 @@
         "a normalized payload whose declared digest names different bytes is refused before LKG moves",
         "a pointer whose LKG candidate is missing cannot bless a replacement",
         "a pre-parser source failure is one durable terminal event with a validation receipt",
+        "a promotion reports its durable record without reading the promoted envelope back again",
         "a registered production candidate must bind its normalized evidence, not only its Reader payload",
         "a state member whose chamber and term contradict the normalized seat is refused",
         "a supplied civic-member projection cannot hide or replace the members derived from Reader",
@@ -8429,6 +8432,7 @@
         "standing routine data and intake launch together and one failure cannot suppress the other",
         "standing task construction enforces every declarative authority and validation field",
         "the Neon transport deadline aborts underlying I/O instead of abandoning a promise",
+        "the durable receipt check proves exactly one pointer through the full proof and reads nothing else whole",
         "the fixed pool caps host load and drains queued siblings after timeout and launcher failure",
         "the pilot awaits independently bounded routine and intake children without overlapping ticks",
         "the pilot outer bound contains the one-per-provider frontier, not a failed provider tail",

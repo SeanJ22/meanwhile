@@ -11,6 +11,7 @@ import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
+  candidateSummaryRead,
   MemoryRoutineDataStore,
   PostgresRoutineDataStore,
   PROMOTED_POINTER_COLUMNS,
@@ -966,6 +967,79 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     payload: value.readModel,
     receipt: persisted,
   });
+});
+
+test("a candidate summary is every row column but the envelope and identity set", () => {
+  const select = selectList(candidateSummaryRead(drizzle.mock({ schema }), "cv-example"));
+  assert.doesNotMatch(select, /"candidate"|"identity"/);
+  for (const column of ["id", "source_id", "record_class", "scope", "state", "acquisition_succeeded", "validation_receipt", "promoted_version_id", "last_known_good_version_id", "failure_code", "failure_detail"]) {
+    assert.match(select, new RegExp(`"${column}"`), `the summary must still carry ${column}`);
+  }
+});
+
+test("a Postgres transition moves the candidate envelope once and returns it with the written columns", async () => {
+  // A transition read the whole row before its compare-and-set and again
+  // after it: two copies of the envelope per step, 47.3 MB for one NJ
+  // roll-call step on 2026-09-23. The envelope is written once at create and
+  // never updated, so the pre-read's copy is the durable one.
+  const value = candidate("postgres-transition-narrow");
+  const at = "2026-09-08T12:00:00.000Z";
+  const wholeRow: readonly (readonly [NeonColumn, unknown])[] = [
+    [["id", "text"], value.id],
+    [["source_id", "text"], value.sourceId],
+    [["record_class", "text"], value.recordClass],
+    [["scope", "text"], value.scope],
+    [["state", "text"], "FETCHED"],
+    [["acquisition_succeeded", "bool"], true],
+    [["raw_hash", "text"], value.retrieval.rawHash],
+    [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
+    [["source_through", "text"], value.temporal.sourceThrough],
+    [["parser_version", "text"], value.normalization.parserVersion],
+    [["identity", "jsonb"], value.identities],
+    [["candidate", "jsonb"], value],
+    [["validation_receipt", "jsonb"], null],
+    [["promoted_version_id", "text"], null],
+    [["last_known_good_version_id", "text"], null],
+    [["failure_code", "text"], null],
+    [["failure_detail", "text"], null],
+  ];
+  const summaryRow = wholeRow
+    .filter(([[name]]) => !["raw_hash", "normalized_hash", "retrieved_at", "source_through", "parser_version", "identity", "candidate"].includes(name))
+    .map(([column, cell]) => [column, column[0] === "state" ? "NORMALIZED" : cell] as const);
+  const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
+    columns: cells.map(([column]) => column),
+    rows: [cells.map(([, cell]) => cell)],
+  });
+  const result = await withCannedNeon((statement) => {
+    const text = statement.query;
+    if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
+    if (text.startsWith("with ")) {
+      return {
+        columns: [["id", "text"], ["candidate_id", "text"], ["sequence", "text"], ["state", "text"], ["at", "timestamptz"], ["detail", "text"]],
+        rows: [["00000000-0000-4000-8000-000000000001", value.id, "2", "NORMALIZED", "2026-09-08 12:00:00+00", "normalized"]],
+      };
+    }
+    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) {
+      return selectList({ toSQL: () => ({ sql: text }) }).includes(`"candidate"`) ? answer(wholeRow) : answer(summaryRow);
+    }
+    throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
+  }, async (store, sent) => {
+    const record = await store.transition(value.id, "NORMALIZED", at, "normalized");
+    const candidateReads = sent.filter(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_candidates"`));
+    assert.equal(candidateReads.length, 2, "the pre-read and the post-write read");
+    assert.match(selectList({ toSQL: () => ({ sql: candidateReads[0]!.query }) }), /"candidate"/, "the pre-read is the one envelope read");
+    assert.doesNotMatch(
+      selectList({ toSQL: () => ({ sql: candidateReads[1]!.query }) }),
+      /"candidate"|"identity"/,
+      "the post-write read carries the row's columns, never the envelope again",
+    );
+    assert.ok(sent.some(({ query }) => /^with "updated_candidate" as \(update "civic_data_candidates"/.test(query)), "the compare-and-set CTE is unchanged");
+    return record;
+  });
+  assert.equal(result.state, "NORMALIZED");
+  assert.deepEqual(result.candidate, value, "the returned record carries the durable envelope");
+  assert.equal(result.receipt, null);
 });
 
 test("every Postgres candidate-event allocator is serialized inside its Neon batch", () => {

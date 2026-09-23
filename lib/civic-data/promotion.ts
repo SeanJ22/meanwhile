@@ -523,7 +523,7 @@ export async function processRoutineCandidate(
     });
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt);
+  const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt);
   let promoted: PromotedProjection;
   try {
     promoted = await store.promote(candidate.id, validated.receipt, transitionAt);
@@ -538,5 +538,11 @@ export async function processRoutineCandidate(
     const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  return { candidate: (await store.readCandidate(candidate.id))!, promoted, readerReadback: null };
+  // The promoted row's columns, read after the move; its envelope is the
+  // durable one the VALIDATED transition returned (written once at create,
+  // never updated), so the dataset is not read back a further time.
+  const summary = await store.readCandidateSummary(candidate.id);
+  if (summary === null) throw new Error(`CANDIDATE_NOT_FOUND:${candidate.id}`);
+  const { candidate: _sameRow, ...promotedColumns } = summary;
+  return { candidate: { ...promotedColumns, candidate: validatedRecord.candidate }, promoted, readerReadback: null };
 }

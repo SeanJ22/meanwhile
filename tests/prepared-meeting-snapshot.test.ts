@@ -41,6 +41,7 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     events: async () => [],
     clock: async () => ({}),
     readCandidate: async () => null,
+    readCandidateSummary: async () => null,
     readCandidates: async () => [],
     readPromotion: async () => null,
     readPromotions: async () => [],

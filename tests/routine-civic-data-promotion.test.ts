@@ -558,6 +558,27 @@ test("a Reader readback moves identity around the typed Reader, never another co
   );
 });
 
+test("a promotion reports its durable record without reading the promoted envelope back again", async () => {
+  class CountingStore extends MemoryRoutineDataStore {
+    readonly wholeCandidateReads: string[] = [];
+
+    override async readCandidate(candidateId: string) {
+      this.wholeCandidateReads.push(candidateId);
+      return super.readCandidate(candidateId);
+    }
+  }
+  const store = new CountingStore();
+  const exact = candidate("promotion-outcome-no-reread", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const outcome = await processRoutineCandidate(store, exact, NOW);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  assert.deepEqual(store.wholeCandidateReads.filter((id) => id === exact.id), [], "the promoted candidate is never read whole again");
+  assert.deepEqual(outcome.candidate, await store.readCandidate(exact.id), "the reported record is exactly the durable one");
+});
+
 test("the identity readback records a failed pointer read as evidence and refuses a pointer that moved", async () => {
   class FlakyIdentityStore extends MemoryRoutineDataStore {
     failNextIdentityRead = false;

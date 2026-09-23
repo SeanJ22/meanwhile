@@ -40,6 +40,17 @@ export function projectionKey(recordClass: RoutineRecordClass, scope: string): s
   return `${recordClass}:${scope}`;
 }
 
+/**
+ * A candidate row's own columns: identity, disposition, receipt and version
+ * pointers. Never the envelope (normalized payload, read model, change set) or
+ * the identity set, which carry the dataset: 23.7 MB on the wire for NJ roll
+ * calls on 2026-09-23. The identity columns equal the envelope's by CHECK
+ * (`civic_data_candidates_envelope_identity_coherent`).
+ */
+export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> & {
+  readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
+};
+
 /** Preserve the SQL row identity even when its untrusted JSON body is corrupt. */
 export interface CandidateVersionReadback {
   readonly candidateId: string;
@@ -95,6 +106,8 @@ export interface RoutineDataStore {
     failure?: { code: string; detail: string },
   ) => Promise<CandidateVersionRecord>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
+  /** A candidate's disposition without its dataset: every column but the envelope and identity set. */
+  readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
   /** Set-oriented Reader door; production composition must not fan out per authority. */
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
@@ -623,6 +636,15 @@ export function proofConsistentSuccess(
   return typeof observedAt === "string" && Number.isFinite(Date.parse(observedAt)) ? observedAt : undefined;
 }
 
+/** A whole candidate record narrowed to exactly its summary; the memory twin of the Postgres column read. */
+export function candidateVersionSummary(record: CandidateVersionRecord): CandidateVersionSummary {
+  const { candidate, ...columns } = record;
+  return {
+    ...columns,
+    candidate: { id: candidate.id, sourceId: candidate.sourceId, recordClass: candidate.recordClass, scope: candidate.scope },
+  };
+}
+
 /** Name a pointer without its dataset or receipt; a whole projection narrows to exactly this. */
 export function promotedPointerIdentity(pointer: PromotedPointerIdentity): PromotedPointerIdentity {
   return {
@@ -688,6 +710,11 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
     return row ? structuredClone(row) : null;
+  }
+
+  async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
+    const row = this.candidates.get(candidateId);
+    return row ? candidateVersionSummary(structuredClone(row)) : null;
   }
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
@@ -1022,6 +1049,41 @@ function postgresPromotionRowToProjection<T = unknown>(
   };
 }
 
+/** Every candidate column but the envelope and identity set; see `CandidateVersionSummary`. */
+const CANDIDATE_SUMMARY_COLUMNS = {
+  id: civicDataCandidates.id,
+  sourceId: civicDataCandidates.sourceId,
+  recordClass: civicDataCandidates.recordClass,
+  scope: civicDataCandidates.scope,
+  state: civicDataCandidates.state,
+  acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
+  validationReceipt: civicDataCandidates.validationReceipt,
+  promotedVersionId: civicDataCandidates.promotedVersionId,
+  lastKnownGoodVersionId: civicDataCandidates.lastKnownGoodVersionId,
+  failureCode: civicDataCandidates.failureCode,
+  failureDetail: civicDataCandidates.failureDetail,
+} as const;
+
+/** A candidate's disposition without its dataset (see `CandidateVersionSummary`). */
+export function candidateSummaryRead(db: RoutineClockDb, candidateId: string) {
+  return db.select(CANDIDATE_SUMMARY_COLUMNS).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+}
+
+type PostgresCandidateSummaryRow = Pick<typeof civicDataCandidates.$inferSelect, keyof typeof CANDIDATE_SUMMARY_COLUMNS>;
+
+function postgresCandidateSummary(row: PostgresCandidateSummaryRow): CandidateVersionSummary {
+  return {
+    candidate: { id: row.id, sourceId: row.sourceId, recordClass: row.recordClass as RoutineRecordClass, scope: row.scope },
+    state: row.state as CandidateState,
+    acquisitionSucceeded: row.acquisitionSucceeded,
+    receipt: row.validationReceipt as ValidationReceipt | null,
+    promotedVersion: row.promotedVersionId,
+    lastKnownGoodVersion: row.lastKnownGoodVersionId,
+    failureCode: row.failureCode,
+    failureDetail: row.failureDetail,
+  };
+}
+
 /**
  * The Reader-evidence door's candidate read: identity, transfer marker, and
  * state. Never the candidate envelope, which carries the whole normalized
@@ -1208,10 +1270,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         from ${updatedCandidate}
       `)
       .returning();
-    const updatedCandidateRead = this.db.select()
-      .from(civicDataCandidates)
-      .where(eq(civicDataCandidates.id, candidateId))
-      .limit(1);
+    // The row's columns after the write, never its envelope again: the
+    // envelope and identity set are written once at create and no statement
+    // updates them, so the pre-read's copy is the durable one.
+    const updatedCandidateRead = candidateSummaryRead(this.db, candidateId);
     const [, eventRows, updatedRows] = await this.db.batch([
       this.candidateEventLock(candidateId),
       transitionWrite,
@@ -1225,12 +1287,18 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       if (!current) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
       throw new Error(`CANDIDATE_TRANSITION_INVALID:${candidateId}:${current.state}:${state}`);
     }
-    return rowToCandidate(updatedRows[0]);
+    const { candidate: _sameRow, ...columns } = postgresCandidateSummary(updatedRows[0]);
+    return { ...columns, candidate: prior.candidate };
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
     return row ? rowToCandidate(row) : null;
+  }
+
+  async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
+    const [row] = await candidateSummaryRead(this.db, candidateId);
+    return row ? postgresCandidateSummary(row) : null;
   }
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {

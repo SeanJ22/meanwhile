@@ -148,5 +148,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
    * of the form body — and falls back to the decision queue.
    */
   const destination = consoleReturnPath(String(form.get("returnTo") ?? ""), "/admin");
-  return NextResponse.redirect(new URL(`${destination}#recorded`, request.url), 303);
+  return NextResponse.redirect(new URL(`${destination}#recorded`, ADMIN_ORIGIN), 303);
 }

@@ -67,7 +67,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 function backToLogin(request: NextRequest, why: string): NextResponse {
-  return NextResponse.redirect(new URL(loginPathFor(why), request.url), 303);
+  return NextResponse.redirect(new URL(loginPathFor(why), ADMIN_ORIGIN), 303);
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     { sid, iat, exp: iat + SESSION_LIFETIME_SECONDS, via: "break-glass" },
     sessionKey,
   );
-  const response = NextResponse.redirect(new URL("/admin", request.url), 303);
+  const response = NextResponse.redirect(new URL("/admin", ADMIN_ORIGIN), 303);
   response.headers.append(
     "set-cookie",
     `${ADMIN_SESSION_COOKIE}=${cookie}; ${sessionCookieAttributes(SESSION_LIFETIME_SECONDS)}`,

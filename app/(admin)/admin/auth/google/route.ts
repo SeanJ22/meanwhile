@@ -44,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const clientId = process.env[GOOGLE_CLIENT_ID_VAR];
   const sessionKey = process.env[ADMIN_SESSION_KEY_VAR];
   if (!readiness.ready || !clientId || !sessionKey) {
-    return NextResponse.redirect(new URL(loginPathFor("NOT_CONFIGURED"), request.url), 303);
+    return NextResponse.redirect(new URL(loginPathFor("NOT_CONFIGURED"), ADMIN_ORIGIN), 303);
   }
 
   const verifier = mintPkceVerifier();

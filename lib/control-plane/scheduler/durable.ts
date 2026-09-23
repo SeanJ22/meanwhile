@@ -44,12 +44,13 @@
  * from the durable obligation row.
  */
 
-import { createRouteTask, type RouteTask } from "../route-task.ts";
+import { createRouteTask, type RouteDisposition, type RouteTask } from "../route-task.ts";
 import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 
 import type { FreshnessDebt } from "./debt.ts";
+import { DISCHARGING_DISPOSITIONS } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 
 /** The project every freshness WorkItem is filed under. One string, one place. */
@@ -345,11 +346,29 @@ export async function retireObligationsByPrefix(
  *
  * So a cycle RESUMES what is open before it opens anything. Returns null when
  * there is nothing open, which is the normal case and the one that opens.
+ *
+ * ## An OPEN occurrence can hold a SETTLED RouteTask
+ * (2026-09-22.)
+ *
+ * A dispatch commits its disposition while it runs; the cycle closes the
+ * occurrence afterwards, in its occurrence-and-debt phase. A cycle that ends
+ * between the two (a supervisor kill, a crash) leaves the occurrence open on a
+ * RouteTask that is already disposed. Every disposition a cycle commits carries
+ * that cycle's start time, so the production residue came in batches sharing
+ * one timestamp: 83 dispositions at 2026-09-01T19:36:07.092Z from a cycle that
+ * left no cycle record, 62 of whose occurrences were still open on 2026-09-22.
+ *
+ * Returning such an occurrence for dispatch walked the settled route again. The
+ * claim overwrote DISPOSED with CLAIMED, a second Attempt opened, its
+ * disposition was refused as a second one, and its lease was left behind. So a
+ * settled occurrence comes back as SETTLED, carrying the disposition the
+ * RouteTask holds, verbatim, and the caller closes it with
+ * `closeSettledOccurrence` instead of dispatching it.
  */
 export async function resumeOpenOccurrence(
   repos: ControlPlaneRepositories,
   obligation: StandingObligation,
-): Promise<{ readonly id: string; readonly routeTaskId: string } | null> {
+): Promise<ResumedOccurrence | null> {
   if (obligation.openOccurrenceId === null) return null;
   const held = await repos.occurrences.read(obligation.openOccurrenceId);
   if (held === null) return null;
@@ -357,8 +376,44 @@ export async function resumeOpenOccurrence(
      RouteTask carries a committed disposition, and re-opening it would attach a
      second Attempt to a settled task. */
   if (held.value.closedAt !== null) return null;
-  return { id: held.value.id, routeTaskId: held.value.routeTaskId };
+  const task = await repos.routeTasks.read(held.value.routeTaskId);
+  /* `disposition !== null` is the test `reclaim` and `disposeRoute` apply, and it
+     is read rather than `state`: 65 production tasks carry a disposition under a
+     state a later claim overwrote. */
+  if (task !== null && task.value.disposition !== null) {
+    return {
+      kind: "SETTLED",
+      settled: {
+        occurrenceId: held.value.id,
+        obligationId: held.value.obligationId,
+        routeTaskId: held.value.routeTaskId,
+        workItemId: held.value.workItemId,
+        disposition: task.value.disposition,
+      },
+    };
+  }
+  return { kind: "OPEN", id: held.value.id, routeTaskId: held.value.routeTaskId };
 }
+
+/**
+ * An open occurrence whose RouteTask already carries a committed disposition.
+ * Recovered by closing it with that disposition; never dispatched again.
+ */
+export interface SettledOccurrence {
+  readonly occurrenceId: string;
+  readonly obligationId: string;
+  readonly routeTaskId: string;
+  readonly workItemId: string;
+  /** The disposition the RouteTask carries, verbatim. Never re-derived and never replaced. */
+  readonly disposition: RouteDisposition;
+}
+
+/** What resuming an obligation's open occurrence found. */
+export type ResumedOccurrence =
+  /** Owed work: the RouteTask carries no disposition yet, so the occurrence is dispatched. */
+  | { readonly kind: "OPEN"; readonly id: string; readonly routeTaskId: string }
+  /** The route was already settled by the cycle that walked it. */
+  | { readonly kind: "SETTLED"; readonly settled: SettledOccurrence };
 
 /**
  * Open the next occurrence of a due obligation, with its own WorkItem and
@@ -444,6 +499,11 @@ export async function openOccurrence(
  * move: an occurrence that was abandoned is not work, and advancing the anchor
  * on it would push the next check further out for having failed, which is the
  * one direction a freshness clock must never drift.
+ *
+ * `workedAt` is when the reading happened, when that was not `now`. A settled
+ * occurrence recovered after an interrupted cycle was worked by that cycle, and
+ * its anchor is the committed disposition's time: exactly what that cycle would
+ * have written. Absent, the anchor is `now`, the cycle that worked it closing it.
  */
 export async function closeOccurrence(
   repos: ControlPlaneRepositories,
@@ -452,6 +512,7 @@ export async function closeOccurrence(
     readonly disposition: string | null;
     readonly unresolvedReason: string | null;
     readonly now: string;
+    readonly workedAt?: string;
   },
 ): Promise<FreshnessOccurrence> {
   const row = await repos.occurrences.mustRead(input.occurrenceId);
@@ -474,12 +535,69 @@ export async function closeOccurrence(
       openOccurrenceId: null,
       /* A productive disposition also clears any standing absence: a record that
          was argued absent and is now found is no longer absent (RULING 52/53). */
-      ...(input.disposition !== null ? { lastWorkedAt: input.now, absentUntil: null } : {}),
+      ...(input.disposition !== null
+        ? { lastWorkedAt: input.workedAt ?? input.now, absentUntil: null }
+        : {}),
       updatedAt: input.now,
     },
     input.now,
   );
   return closed;
+}
+
+/**
+ * **CLOSE A SETTLED OCCURRENCE WITHOUT WALKING ITS ROUTE AGAIN.** (2026-09-22.)
+ *
+ * The disposition the RouteTask already carries is judged by the rule a
+ * dispatch's own disposition is judged by (`DISCHARGING_DISPOSITIONS`, which
+ * `dischargesObligation` reads):
+ *
+ * ```
+ *   INGESTED, WALKED_NO_YIELD   a reading of the record happened. The occurrence
+ *                               closes DISCHARGED; the anchor is the reading's
+ *                               own time, `disposition.at`, not now.
+ *   anything else               a fact about the route, not a reading. The
+ *                               occurrence closes UNRESOLVED, the anchor does not
+ *                               move, and the obligation stays due.
+ * ```
+ *
+ * ## What discharge closes, and what it leaves owed
+ *
+ * It closes THIS OCCURRENCE: `closedAt` and `disposition` on the occurrence,
+ * and on the obligation `openOccurrenceId` cleared, `lastWorkedAt` moved and
+ * any argued absence (`absentUntil`) cleared; the cycle clears the freshness
+ * debt beside it. That is all. The standing obligation never completes — it
+ * recurs from the moved anchor. The RouteTask, its Attempts, the disposition
+ * commit and the artifact records are neither read for a decision nor written
+ * here, so the retrieved bytes stay where the held-evidence workers and the
+ * promotion tail read them: their parsing, verification and publication are
+ * owed exactly as before. A WALKED_NO_YIELD discharges this period's reading of
+ * this one route; the record is not thereby absent, and the next occurrence
+ * walks again.
+ */
+export async function closeSettledOccurrence(
+  repos: ControlPlaneRepositories,
+  input: { readonly settled: SettledOccurrence; readonly now: string },
+): Promise<FreshnessOccurrence> {
+  const { disposition } = input.settled;
+  const discharged = DISCHARGING_DISPOSITIONS.includes(disposition.disposition);
+  return closeOccurrence(repos, {
+    occurrenceId: input.settled.occurrenceId,
+    disposition: discharged ? disposition.disposition : null,
+    unresolvedReason: discharged ? null : settledUnresolvedReason(disposition),
+    now: input.now,
+    ...(discharged ? { workedAt: disposition.at } : {}),
+  });
+}
+
+/** Why a settled occurrence closed without discharge, in the words its debt row carries. */
+export function settledUnresolvedReason(disposition: RouteDisposition): string {
+  return (
+    `the route was already disposed ${disposition.disposition} (committed ${disposition.at} by ` +
+    `Attempt ${disposition.attemptId}), which closes the RouteTask and is not a reading of the ` +
+    "record. The occurrence was closed without walking the settled route again, and the " +
+    "obligation stays owed"
+  );
 }
 
 /** Record the derived next-due against the durable row, so a query can use it. */

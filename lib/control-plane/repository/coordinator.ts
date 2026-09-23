@@ -166,6 +166,39 @@ export class NothingToReclaim extends Error {
   }
 }
 
+/**
+ * A claim reached a RouteTask that already carries a disposition.
+ *
+ * (2026-09-22.) `claimRouteTask` refused only WORKER tasks outside PENDING and
+ * RECLAIMABLE, so a settled civic route could be claimed again. The claim
+ * overwrote its state from DISPOSED to CLAIMED, and the dispatch behind it
+ * opened an Attempt that no disposition could close (`disposeRoute` refuses a
+ * second one) and no reclaim could return (`reclaim` refuses a settled route),
+ * leaving its lease for the sweep. Production held 65 such tasks.
+ *
+ * Settled is a fact about this ROUTE, not about the obligation. What the
+ * obligation still owes — parsing, verifying and publishing what the route
+ * retrieved, or another route when this one returned nothing — is carried by
+ * the durable evidence and by the obligation's next occurrence, never by
+ * walking a settled route again.
+ */
+export class RouteTaskSettled extends Error {
+  readonly routeTaskId: string;
+  readonly disposition: string;
+
+  constructor(routeTaskId: string, disposition: string) {
+    super(
+      `RouteTask ${routeTaskId} is already disposed as ${disposition} and cannot be claimed. ` +
+        "A claim on a settled route opens an Attempt no disposition can close and no reclaim " +
+        "can return. The committed disposition stands; the obligation's remaining work belongs " +
+        "to its evidence and to a new occurrence with its own RouteTask.",
+    );
+    this.name = "RouteTaskSettled";
+    this.routeTaskId = routeTaskId;
+    this.disposition = disposition;
+  }
+}
+
 /** ------------------------------------------------------------ registration */
 
 /** Idempotently persist a WorkItem. A re-put of the identical item is a no-op. */
@@ -222,6 +255,11 @@ export interface ClaimOutcome {
  * storage layer's vocabulary to understand that it lost a claim, and translating
  * keeps the losing path identical whether the loser was beaten to an empty slot
  * (`IdentityCollision`) or beaten to an expired one (`ConcurrentModification`).
+ *
+ * A RouteTask that already carries a disposition is refused with
+ * `RouteTaskSettled`, and the refusal writes nothing: it is checked before the
+ * lease slot is touched, so neither the task nor its lease moves. A dead lease
+ * already on that slot stays where the sweep releases it.
  */
 export async function claimRouteTask(
   repos: ControlPlaneRepositories,
@@ -234,7 +272,12 @@ export async function claimRouteTask(
 ): Promise<ClaimOutcome> {
   // Refuses with UnknownAggregate if the task is not persisted: claiming a task
   // that does not exist would create a lease nothing can ever reclaim.
-  await repos.routeTasks.mustRead(input.routeTaskId);
+  const held = await repos.routeTasks.mustRead(input.routeTaskId);
+  // `disposition !== null` is the test `reclaim` and `disposeRoute` apply. A
+  // worker task carries no civic disposition and keeps its own state rule below.
+  if (!held.value.workerTask && held.value.disposition !== null) {
+    throw new RouteTaskSettled(input.routeTaskId, held.value.disposition.disposition);
+  }
 
   const existing = await repos.leases.read(input.routeTaskId);
   // The DOMAIN decides whether this claim is permitted. `claim` throws
@@ -276,6 +319,18 @@ export async function claimRouteTask(
   if (current.value.workerTask && !["PENDING", "RECLAIMABLE"].includes(current.value.state)) {
     await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
     throw new AttemptContract("WORKER_TASK_NOT_DISPATCHABLE");
+  }
+  // Disposed while this claim raced for the slot: give back the lease just won
+  // and refuse, exactly as the worker refusal above does. The task is not written.
+  if (!current.value.workerTask && current.value.disposition !== null) {
+    try {
+      await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
+    } catch (error) {
+      // The disposition path releases whatever lease holds the slot; if it
+      // already released this one, the refusal is still the settled route.
+      if (!(error instanceof ConcurrentModification)) throw error;
+    }
+    throw new RouteTaskSettled(input.routeTaskId, current.value.disposition.disposition);
   }
   const claimed: RouteTask = { ...current.value, state: "CLAIMED" };
   const task =

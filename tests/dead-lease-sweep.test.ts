@@ -11,10 +11,14 @@
  * walk listed EVERY Attempt (44 pages on production) to find one task's.
  *
  * The settled fixture is built with the same coordinator calls the dispatcher
- * makes, in the order production made them: a task is walked to a disposition,
- * a later dispatch re-claims it (`claimRouteTask` does not refuse a disposed
- * task, and flips its state to CLAIMED), and that dispatch's abandonment is
- * refused by `reclaim()`, leaving an unreleased lease on a settled route.
+ * made, in the order production made them: a task is walked to a disposition,
+ * a later dispatch re-claims it, and that dispatch's abandonment is refused by
+ * `reclaim()`, leaving an unreleased lease on a settled route. The re-claim is
+ * the one step no longer reachable: `claimRouteTask` now refuses a disposed
+ * task (`RouteTaskSettled`, tests/settled-occurrence-recovery.test.ts), so
+ * `legacyReclaim` asserts that refusal and then writes the two things the old
+ * claim wrote — the domain's `claim()` lease and the CLAIMED state — the way it
+ * wrote them. The residue the sweep meets on production is exactly that shape.
  *
  * Every test runs on the in-memory double AND the durable file store.
  */
@@ -25,8 +29,9 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { ZERO_COST, type Attempt, type WorkerRef } from "../lib/control-plane/attempt.ts";
+import { ZERO_COST, claim, type Attempt, type WorkerRef } from "../lib/control-plane/attempt.ts";
 import {
+  RouteTaskSettled,
   abandonAttempt,
   attemptsForRouteTask,
   beginAttemptFor,
@@ -83,6 +88,25 @@ async function registered(repos: ControlPlaneRepositories, subject: string): Pro
   return task;
 }
 
+/**
+ * The re-claim of a settled task, as `claimRouteTask` performed it before it
+ * refused one: the domain's `claim()` over the slot, then the task's state
+ * overwritten to CLAIMED. The modern claim's refusal is asserted first.
+ */
+async function legacyReclaim(repos: ControlPlaneRepositories, routeTaskId: string, holder: string, now: string) {
+  await assert.rejects(claimRouteTask(repos, { routeTaskId, holder, now, ttlMs: TTL }), RouteTaskSettled);
+  const slot = await repos.leases.mustRead(routeTaskId);
+  const lease = await repos.leases.compareAndSet(
+    routeTaskId,
+    slot.revision,
+    claim(routeTaskId, holder, now, TTL, slot.value),
+    now,
+  );
+  const task = await repos.routeTasks.mustRead(routeTaskId);
+  await repos.routeTasks.compareAndSet(routeTaskId, task.revision, { ...task.value, state: "CLAIMED" }, now);
+  return { lease };
+}
+
 /** A disposed RouteTask carrying an unreleased lease, built the way production built 65 of them. */
 async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: string) {
   const task = await registered(repos, subject);
@@ -130,8 +154,8 @@ async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: st
     T0,
   );
 
-  /* The later dispatch: the claim is admitted on the settled task... */
-  const again = await claimRouteTask(repos, { routeTaskId: task.id, holder: "walker-b", now: T1, ttlMs: TTL });
+  /* The later dispatch: the claim was admitted on the settled task... */
+  const again = await legacyReclaim(repos, task.id, "walker-b", T1);
   const redundant = await beginAttemptFor(repos, {
     routeTaskId: task.id,
     workItemId: task.workItemId,

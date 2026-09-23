@@ -68,6 +68,7 @@ import {
   type OwnerDecisionIntent,
 } from "@/lib/control-plane/owner-surface.ts";
 import { count } from "@/lib/control-plane/plain-words.ts";
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 
 import { DECISION_ROUTE, QueueButton, QueueForm, Said, When } from "../../console-ui.tsx";
 import { DefinedTile, NeedsYouLine, StatusBlock, StackBar } from "../../status-ui.tsx";
@@ -274,8 +275,8 @@ function IntakeRuntimePanel({
         what="Production intake activity and maintenance, read from the live stores by the standing runner."
         happened={
           <>
-            <strong>{observation.outcome}</strong> at <When iso={observation.observedAt} />. {observation.detail}
-            {projectionIssue === null ? null : <> <strong>Latest-projection gap:</strong> {projectionIssue}</>}
+            <strong>{observation.outcome}</strong> at <When iso={observation.observedAt} />. <Said text={observation.detail} />
+            {projectionIssue === null ? null : <> <strong>Latest-projection gap:</strong> <Said text={projectionIssue} /></>}
           </>
         }
         next={
@@ -505,7 +506,7 @@ export default async function FeedbackInboxPage() {
         JSON.stringify(projected) !== JSON.stringify(intakeRuntime)
       ) {
         intakeRuntimeProjectionIssue =
-          `The heartbeat projects ${projected.observedAt}, but append-only history says the latest exact observation is ${intakeRuntime.observedAt}.`;
+          `The heartbeat projects ${formatEastern(projected.observedAt)}, but append-only history says the latest exact observation is ${formatEastern(intakeRuntime.observedAt)}.`;
       }
     } else if (intakeRuntime !== null) {
       intakeRuntimeProjectionIssue = heartbeatOutcome.detail;

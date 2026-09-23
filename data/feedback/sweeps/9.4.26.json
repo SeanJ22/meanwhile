@@ -166,5 +166,12 @@
       "checkResult": "GREEN — one component, one key; the research page joins the console header. Verified on the local build: the toggle flips data-theme and the choice survives a reload; /admin, /readiness/az and /admin/research IMAGE-verified in both themes; the argued-absent swatch and the violation ring no longer rely on a white or light-only grey.",
       "blocker": null
     }
+  ],
+  "checkDebt": [
+    {
+      "itemId": "ADM-9",
+      "reason": "Withdrawn, not verified. The Meanwhile Admin design (the owner's spec, 2026-09-23) is dark-first and writes no theme — its prototype says the design system ships no light theme of its own — so the header's light/dark toggle went with the old header and the console is always dark. The design ships light values so a port has somewhere to land; whether the toggle returns over them is the owner's call, recorded on the redesign checklist.",
+      "since": "2026-09-23"
+    }
   ]
 }

@@ -379,6 +379,44 @@ test("the route's security sequence is the decision route's, in order", () => {
   assert.doesNotMatch(source, /export (async )?function GET/, "POST only");
 });
 
+/* ================================================================== *
+ * THE JSON ANSWER — the console's controls, refused before anything is written
+ * ================================================================== */
+
+test("SEEDED: a JSON request that is unauthenticated or cross-origin is refused before the store is opened, so nothing is appended", async () => {
+  // The control-plane variable names a store that cannot exist: had any of
+  // these requests got past the refusals to the open, the answer would be 503.
+  // A 401 or 403 therefore proves the handler stopped before opening the store,
+  // and the sequence test below proves the append comes after the open.
+  await withAdminSessionKey(() =>
+    withEnv(CONTROL_PLANE_URL_VAR, "postgres://nobody:nothing@127.0.0.1:1/none", async () => {
+      const json = { accept: "application/json" };
+      const noSession = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, ...json }));
+      assert.equal(noSession.status, 401, "no session cookie: refused before the open");
+      const cookie = await adminSessionCookie();
+      const crossSite = await POST(post(ADMIN_HOST, "action=RESUME_RUNNER", { origin: PUBLIC_SITE_ORIGIN, cookie, ...json }));
+      assert.equal(crossSite.status, 403, "the public origin: refused before the open");
+      const noOrigin = await POST(post(ADMIN_HOST, "action=PAUSE_RUNNER", { cookie, ...json }));
+      assert.equal(noOrigin.status, 403, "a missing Origin: refused before the open");
+      const publicHost = await POST(post(PUBLIC_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, cookie, ...json }));
+      assert.equal(publicHost.status, 404, "the public host: refused before anything");
+      for (const r of [noSession, crossSite, noOrigin]) {
+        assert.equal(r.headers.get("location"), null, "a refusal is never a redirect");
+      }
+    }),
+  );
+});
+
+test("the JSON answer comes after the append and before the redirect, and returns a body rather than a redirect", () => {
+  const source = readFileSync(join(ROOT, "app", "api", "admin", "research", "route.ts"), "utf8");
+  const append = source.lastIndexOf("appendResearchIntent(");
+  const json = source.indexOf('includes("application/json")');
+  const redirect = source.lastIndexOf("NextResponse.redirect(");
+  assert.ok(append >= 0 && json > append, "the JSON branch runs only after the intent is appended");
+  assert.ok(redirect > json, "the no-JS form path keeps its redirect, after the JSON branch");
+  assert.match(source.slice(json, redirect), /NextResponse\.json\(/, "the JSON branch answers with a body");
+});
+
 test("parseResearchIntentAction accepts exactly the intent actions", () => {
   for (const action of RESEARCH_INTENT_ACTIONS) {
     assert.equal(parseResearchIntentAction(action), action);
@@ -732,13 +770,16 @@ test("the page reads no environment and posts both intents to the research route
   assert.match(source, /export const revalidate = 0/);
   assert.match(source, /auditRenderedNumbers\(/);
   assert.match(source, /checkStatedEqualsRendered\(/);
-  assert.match(source, /name="action"/);
-  assert.match(source, /value="RUN_CYCLE_NOW"/);
-  assert.match(source, /value=\{view\.pauseAction\}/);
-  assert.match(source, /"\/api\/admin\/research"/);
-  // The control centre links here.
-  const centre = readFileSync(join(ROOT, "app", "(admin)", "admin", "page.tsx"), "utf8");
-  assert.match(centre, /href="\/admin\/research"/);
+  // Both intents post through the one JSON control, to the research route (Admin redesign).
+  assert.match(source, /<IntentButton\s+action=\{view\.pauseAction\}/);
+  assert.match(source, /<IntentButton action="RUN_CYCLE_NOW"/);
+  const control = readFileSync(join(ROOT, "app", "(admin)", "_mw", "intent-control.tsx"), "utf8");
+  assert.match(control, /INTENT_ROUTE = "\/api\/admin\/research"/);
+  assert.match(control, /accept: "application\/json"/, "the control asks for JSON, never the redirect");
+  assert.match(control, /new URLSearchParams\(\{ action: props\.action, returnTo: props\.returnTo \}\)/, "the same fields the form posted");
+  // The control centre links here, from the Other pages menu every screen carries.
+  const header = readFileSync(join(ROOT, "app", "(admin)", "_mw", "header-controls.tsx"), "utf8");
+  assert.match(header, /href: "\/admin\/research"/);
 });
 
 /* ================================================================== *

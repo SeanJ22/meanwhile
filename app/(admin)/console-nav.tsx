@@ -1,37 +1,32 @@
 "use client";
 
 /**
- * **THE ONE HEADER ON EVERY CONTROL-CENTRE PAGE.** (Unified console, 2026-09-04;
- * selection acknowledgement and the theme switch added for the 9.4.26 feedback.)
+ * **THE HEADER ON A PAGE THE DESIGN DOES NOT DRAW.** (Admin redesign,
+ * 2026-09-23 — replacing the unified console's View / State header.)
  *
- * Three dropdown views, present everywhere, so the whole control centre is one
- * surface on the admin host and nothing is a "different site":
- *   - View: Pilot health (the fleet) ⇄ State readiness ⇄ Research detail.
- *   - State: every state/DC/territory; picking one shows its readiness inline.
+ * The redesign has one way to move around: the header every screen carries —
+ * the lockup, the Fleet | Readiness areas, the scope, and "Other pages" — with
+ * the area's tabs beneath it. The pages the design package does not draw
+ * (runner and research detail, sources, release review, shipping, readers,
+ * feedback, delegated work, the console chat, the system map) keep their own
+ * content, and this component gives them the same header, so there is no
+ * second navigation: the old View and State dropdowns and the theme switch are
+ * gone (the control centre is always dark, as the design is).
  *
- * Switching is a CLIENT navigation (`router.push`) inside a transition
- * (ADM-2): the chosen value shows the instant it is chosen, a status line says
- * what is loading, and the current page stays on screen until the server has
- * rendered the new one. Before this, nothing changed for the whole server
- * round trip, which read as broken. History belongs to the router; this never
- * touches it directly.
- *
- * The theme switch (ADM-9) is the map's own `ThemeToggle` — one component, one
- * storage key, one pre-paint script — so the choice persists exactly as it
- * does on the reader surfaces.
+ * The name and props are kept so each of those pages changes nothing but the
+ * header it draws. `currentState` and `states` are accepted and ignored — a
+ * state is chosen with the scope, on Readiness.
  */
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import Link from "next/link";
 
 import { Logo } from "@/components/brand/logo";
-import { ThemeToggle } from "@/components/theme-toggle";
+
+import { OtherPages } from "./_mw/header-controls.tsx";
+import s from "./_mw/mw.module.css";
 
 export type ConsoleView =
-  | "pilot-health"
-  | "readiness"
   | "research"
   | "release-review"
-  | "fleet"
   | "system-map"
   | "steward"
   | "sources"
@@ -39,49 +34,11 @@ export type ConsoleView =
   | "feedback"
   | "agents"
   | "chat"
-  | "assignments"
-  | "expansion";
+  | "fleet";
 
-/** The path each view lives at. The readiness view is per state. */
-function pathFor(view: ConsoleView, state: string): string {
-  switch (view) {
-    case "readiness":
-      return `/readiness/${state}`;
-    case "research":
-      return "/admin/research";
-    case "assignments":
-      return "/admin/assignments";
-    case "expansion":
-      return "/admin/expansion";
-    case "release-review":
-      return "/admin/release-review";
-    case "fleet":
-      return "/admin/fleet";
-    case "system-map":
-      return "/admin/system-map";
-    case "steward":
-      return "/admin/steward";
-    case "sources":
-      return "/admin/sources";
-    case "reader":
-      return "/admin/reader";
-    case "feedback":
-      return "/admin/feedback";
-    case "agents":
-      return "/admin/agents";
-    case "chat":
-      return "/admin/chat";
-    default:
-      return "/admin";
-  }
-}
-
-const VIEW_LABEL: Record<ConsoleView, string> = {
-  "pilot-health": "Pilot health",
-  readiness: "State readiness",
-  research: "Research detail",
+const VIEW_LABEL: Readonly<Record<ConsoleView, string>> = {
+  research: "Runner and research detail",
   "release-review": "Software release review",
-  fleet: "Fleet operations",
   "system-map": "System map",
   steward: "Shipping and integration",
   sources: "Sources and APIs",
@@ -89,110 +46,42 @@ const VIEW_LABEL: Record<ConsoleView, string> = {
   feedback: "Feedback",
   agents: "Delegated work",
   chat: "Ask the console",
-  assignments: "Assignments, end to end",
-  expansion: "Expansion controls",
+  fleet: "Fleet operations map",
 };
 
 export function ConsoleNav(props: {
   view: ConsoleView;
-  /** The state the readiness view is showing, or null on the other views. */
-  currentState: string | null;
-  states: readonly { readonly code: string; readonly name: string }[];
+  currentState?: string | null;
+  states?: readonly { readonly code: string; readonly name: string }[];
 }) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  /*
-   * What the owner just chose, shown at once. It is stamped with the props it
-   * was chosen under, so it applies only until the router delivers a page
-   * with different props — no effect, no setState-in-render: a stale choice is
-   * simply ignored by comparison.
-   */
-  const signature = `${props.view}|${props.currentState ?? ""}`;
-  const [choice, setChoice] = useState<{
-    view: ConsoleView;
-    state: string | null;
-    under: string;
-  } | null>(null);
-  const chosen = choice !== null && choice.under === signature && isPending ? choice : null;
-
-  const view = chosen?.view ?? props.view;
-  const currentState = chosen ? chosen.state : props.currentState;
-  const stateForReadiness = currentState ?? props.currentState ?? "az";
-  const chosenStateName = chosen?.state ? props.states.find((s) => s.code === chosen.state)?.name : undefined;
-  const loadingLabel =
-    chosen === null
-      ? null
-      : chosen.view === "readiness"
-        ? chosenStateName
-          ? `Loading ${chosenStateName}…`
-          : "Loading…"
-        : `Loading ${VIEW_LABEL[chosen.view]}…`;
-
-  function go(next: ConsoleView, state: string | null) {
-    const target = pathFor(next, state ?? stateForReadiness);
-    if (target === pathFor(props.view, props.currentState ?? "az")) return;
-    setChoice({ view: next, state, under: signature });
-    startTransition(() => {
-      router.push(target);
-    });
-  }
-
   return (
-    <nav className="console-nav" aria-label="Control centre" aria-busy={chosen !== null}>
-      <label>
-        View
-        <select
-          value={view}
-          aria-label="Choose a view"
-          onChange={(e) => {
-            const next = e.target.value as ConsoleView;
-            go(next, next === "readiness" ? stateForReadiness : null);
-          }}
-        >
-          <option value="pilot-health">{VIEW_LABEL["pilot-health"]}</option>
-          <option value="readiness">{VIEW_LABEL.readiness}</option>
-          <option value="research">{VIEW_LABEL.research}</option>
-          <option value="release-review">{VIEW_LABEL["release-review"]}</option>
-          <option value="fleet">{VIEW_LABEL.fleet}</option>
-          <option value="assignments">{VIEW_LABEL.assignments}</option>
-          <option value="expansion">{VIEW_LABEL.expansion}</option>
-          <option value="system-map">{VIEW_LABEL["system-map"]}</option>
-        </select>
-      </label>
-
-      <label>
-        State
-        <select
-          value={currentState ?? ""}
-          aria-label="Choose a state"
-          onChange={(e) => {
-            if (e.target.value) go("readiness", e.target.value);
-          }}
-        >
-          {view !== "readiness" && <option value="">— select a state —</option>}
-          {props.states.map((s) => (
-            <option key={s.code} value={s.code}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      {loadingLabel && (
-        <span className="console-nav-pending" role="status" aria-live="polite">
-          {loadingLabel}
+    <div className={s.frame}>
+      <header className={s.header}>
+        <Link href="/admin" className={s.brand} aria-label="Control centre home">
+          <Logo variant="wordmark" size={20} decorative />
+        </Link>
+        <nav className={s.areaToggle} aria-label="Area">
+          <Link href="/admin" className={s.areaBtn}>
+            Fleet
+          </Link>
+          <Link href="/readiness" className={s.areaBtn}>
+            Readiness
+          </Link>
+        </nav>
+        <div className={s.headerRight}>
+          <span className={s.scopeLabel}>Other page</span>
+          <OtherPages scope="all" />
+        </div>
+      </header>
+      <div className={s.strip}>
+        <span>
+          PAGE <span className={s.stripVal}>{VIEW_LABEL[props.view]}</span>
         </span>
-      )}
-
-      {/* Admin parity (design handoff 2026-09-13): the admin shell consumes the
-          same Logo lockup as the reader shell — "Meanwhile" is never inline
-          display text in Admin either, and --mark stays scoped to the Logo.
-          "Control centre" stays as the surface-context caption beside it. */}
-      <span className="console-nav-brand">
-        <Logo variant="wordmark" size={18} />
-        <span className="console-nav-context">Control centre</span>
-      </span>
-      <ThemeToggle className="shrink-0" />
-    </nav>
+        <span aria-hidden="true">·</span>
+        <span>
+          Not part of Fleet or Readiness — back to <Link href="/admin">Fleet · Now</Link>
+        </span>
+      </div>
+    </div>
   );
 }

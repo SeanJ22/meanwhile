@@ -1,686 +1,387 @@
 /**
- * **THE OWNER COMMAND CENTRE.** (Admin Pass C, ADM-C1, 2026-09-06 — rebuilt on
- * the 9.6.26 owner feedback, ADM-24 through ADM-39.)
+ * **FLEET · NOW.** (Admin redesign, 2026-09-23 — the design package's first
+ * screen, replacing the long Pilot health page.)
  *
- * Reachable only on `ADMIN_ORIGIN`, only with a valid session — both enforced
- * upstream in `middleware.ts`, which returns 404 for this path on the public
- * host and redirects an unauthenticated request to the login page before this
- * component is ever invoked.
+ * Three cards (what is working, what isn't, where to put effort), the
+ * decisions only the owner can make, and every body we watch — each card's
+ * figures derived from the lists drawn beneath it, so no card can claim what
+ * its list does not show.
  *
- * ## The test every line on this page has to pass
+ * ```
+ *   the bodies       every public body with a registered meeting source, read
+ *                    narrowly from the production data plane (body-store.ts)
+ *   the decisions    the published decision cards, minus those already decided
+ *                    on the owner's decision log
+ *   the scope        everywhere, a state, or a selected geography; a scope with
+ *                    nothing registered answers in sentences
+ * ```
  *
- * The owner's own, from the 9.6.26 dictation:
- *
- * > *"Think of someone: I'm not an engineer and I'm not a coder at all. When I
- * > come into this what I want to see is: what is it that I'm looking at? What
- * > needs to be taken action on? Give me very simple plain-English definitions
- * > or explanations of what is going on."*
- *
- * So every section leads with four things — what this is, what happened, does
- * this need you, what happens next — and the machine's own words are one
- * disclosure down. Nothing was deleted to achieve that; it was demoted.
- *
- * ## What moved out of this file
- *
- * The page used to be 1,236 lines with every section's JSX inline. The sections
- * are now components under `./sections/`, each owning one panel and each taking
- * already-audited values. This file keeps the three things that must stay in
- * one place: the reads, the self-audit, and the composition.
- *
- * ## Everything here comes from the durable control plane
- *
- * No filesystem read, no Drive mirror, no process table, no agent output.
- * `next.config.ts` documents at length what a `process.cwd()` read does in a
- * Netlify standalone bundle when nobody traced it: returns nothing, the catch
- * returns null, and the surface renders its own gap wording — which is
- * indistinguishable from honest missing data. So the data plane is Postgres and
- * this page reads it.
- *
- * ## The page checks itself before it shows anything
- *
- * Two audits run against what is about to be rendered, not against the code
- * that produced it: every number carries a denominator and an interpretation
- * contract, and every stated N equals the number of rows actually rendered. A
- * failure replaces the numbers with a refusal.
- *
- * ## And it keeps itself current (ADM-34)
- *
- * `LiveRefresh` polls a cheap pulse endpoint and asks the router for a fresh
- * render only when the pulse says something moved. The owner asked *"do I have
- * to manually refresh the site?"*; the header answers it.
+ * The page audits itself before it shows anything: every figure carries a
+ * denominator and a stated meaning, and every stated count equals the rows
+ * drawn. A failed audit replaces the numbers with the reason.
  */
-
-import { Suspense } from "react";
-import { ResearchProgress } from "@/components/admin/research-progress.tsx";
-import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
-
-import { cookies } from "next/headers";
-
-import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
-import {
-  openControlPlane,
-  readAdminConfig,
-  readCacheObservation,
-  readDecisions,
-  readDigests,
-  readFleetSafety,
-  readHeartbeat,
-  readMapTilerUsageDigests,
-  readSnapshot,
-  type ReadOutcome,
-} from "@/lib/control-plane/admin-data.ts";
-import { resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
-import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
-import { costSectionNumbers, spendWindowRows } from "@/lib/control-plane/cost-panel.ts";
-import { deliveryTrailRenderedNumbers } from "@/lib/control-plane/delivery-trail.ts";
+import { readDecisions, readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { nowFigures, type BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
-import { groupWaiting, ownerTypeOf, waitingCardView, waitingSummary } from "@/lib/control-plane/decision-queue.ts";
-import { splitDecided } from "@/lib/control-plane/decision-receipt.ts";
-import { fixQueueView } from "@/lib/control-plane/fix-queue.ts";
-import { dispatchHistory } from "@/lib/control-plane/fleet-view.ts";
-import type { CommandCentreInput } from "@/lib/control-plane/command-centre.ts";
-import { groupIncidents } from "@/lib/control-plane/incident-groups.ts";
-import { pulseRevision } from "@/lib/control-plane/live-pulse.ts";
+import { SYNC_CADENCE, receiptHeadline, splitDecided } from "@/lib/control-plane/decision-receipt.ts";
+import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
+import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import {
   auditRenderedNumbers,
   checkStatedEqualsRendered,
-  countClaimsFor,
-  pilotHealthView,
-  renderCacheObservation,
+  decisionCardKind,
   type CountClaim,
-  type Held,
-  type Measured,
   type OwnerDecisionCard,
-  type OwnerSnapshot,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
-import {
-  maptilerHistoryNumbers,
-  maptilerSectionNumbers,
-  projectMapTilerAttemptHistory,
-  projectPanel,
-} from "@/lib/control-plane/maptiler/usage.ts";
-import {
-  MAPTILER_USAGE_FORMAT_VERSION,
-  type MapTilerUsageSnapshot,
-} from "@/lib/control-plane/maptiler/types.ts";
-import { plainContract, plainOverall } from "@/lib/control-plane/plain-health.ts";
-import { count, plainCode, plainText } from "@/lib/control-plane/plain-words.ts";
-import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
-import { runnerNeeds } from "@/lib/control-plane/runner-plain.ts";
-import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
-import { INTENT_NOTE_MAX_CHARS } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+import { routineAssignmentId } from "@/lib/control-plane/assignment-routine.ts";
 
-import { ConsoleNav } from "../console-nav.tsx";
-import { GapNote, LevelLegend, QueueForm, Said, When, agoText } from "../console-ui.tsx";
-import { LiveRefresh } from "../live-refresh.tsx";
-import { RevealTarget } from "../reveal.tsx";
-import { NeedsYouLine } from "../status-ui.tsx";
-import { LatestDigestStatus } from "../digest-status.tsx";
-import { DeployFleet } from "./deploy-fleet.tsx";
-import { DecisionQueue, type PriorityGroupView, type WaitingCardView } from "./decisions.tsx";
-import { CostSection } from "./sections/cost.tsx";
-import { DeliverySection } from "./sections/delivery-trail.tsx";
-import { MapTilerSection } from "./sections/maptiler.tsx";
-import { DecidedSection, FixQueueSection } from "./sections/decided.tsx";
-import { HealthSection, type HealthCardView } from "./sections/health.tsx";
-import { ObligationsSection } from "./sections/obligations.tsx";
-import { CommandCentre } from "./sections/command-centre.tsx";
-import { FleetLoading, FleetSection } from "./sections/fleet.tsx";
-import { RunnerSection } from "./sections/runner.tsx";
+import { BodyList } from "../_mw/body-list.tsx";
+import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
+import { divisionsOf, loadContainer } from "../_mw/data/geography.ts";
+import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
+import { stateName } from "../_mw/load-shell.ts";
+import { NextSteps, type StepCard } from "../_mw/next-steps.tsx";
+import { openPage, type SearchParams } from "../_mw/page-base.ts";
+import { withScope } from "../_mw/scope.ts";
+import { MwShell } from "../_mw/shell.tsx";
+import { Dash, FigList, Pill, Refusal, Section, mw as s, type FigLine } from "../_mw/ui.tsx";
 
-/**
- * Never statically rendered, never cached.
- *
- * A cached admin page is a stale admin page, and a stale health reading is the
- * thing this whole surface exists to replace. It is also the one page whose
- * output depends on a cookie, so caching it would be a correctness bug before
- * it was a freshness one.
- */
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const runtime = "nodejs";
 
-const INTENT_ROUTE = "/api/admin/research";
 const ACTION_ROUTE = "/api/admin/action";
-const HERE = "/admin";
+const LIVE_ROUTE = "/api/admin/live";
+const PRIORITY_ORDER: Readonly<Record<string, number>> = { P0: 0, P1: 1, P2: 2, P3: 3 };
 
-/**
- * **A SNAPSHOT PUBLISHED BEFORE THE MAP PANEL EXISTED IS NOT A ZERO BILL**
- * (MAPQ-6, 2026-09-07).
- *
- * `maptiler` is optional on `OwnerSnapshot`, exactly as every other field
- * added after the record shipped. An absent field means the publisher had no
- * reading — not that the provider counted nothing — and on a quota panel a
- * zero reads as headroom, which is the most expensive wrong answer this
- * surface could give. So the absence renders as the unasked question it is.
- */
-function notConnectedMapTiler(): MapTilerUsageSnapshot {
-  return {
-    formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
-    collectedAt: new Date().toISOString(),
-    publisher: "the admin console",
-    connection: "NOT_CONNECTED",
-    detail:
-      "NOT CONNECTED — the published snapshot carries no MapTiler reading, so nobody has asked " +
-      "the provider what this account spent. That is not the same as spending nothing.",
-    period: "current_billing_period",
-    since: null,
-    until: null,
-    allowance: null,
-    allowanceIsAssumed: true,
-    days: [],
-    provenance: [],
-    actors: null,
+function stepsFrom(waiting: readonly OwnerDecisionCard[]): StepCard[] {
+  const kindOrder = { DECISION: 0, ACKNOWLEDGE: 1, BLOCKED_WHILE: 2 } as const;
+  return [...waiting]
+    .sort(
+      (a, b) =>
+        kindOrder[decisionCardKind(a)] - kindOrder[decisionCardKind(b)] ||
+        (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9) ||
+        (b.ageDays ?? -1) - (a.ageDays ?? -1) ||
+        a.rowId.localeCompare(b.rowId),
+    )
+    .map((c, i) => {
+      const kind = decisionCardKind(c);
+      return {
+        rowId: c.rowId,
+        rank: i + 1,
+        title: c.title,
+        whatIsNeeded: c.whatIsNeeded,
+        why: c.whyNoMachineCanDecide,
+        options: kind === "BLOCKED_WHILE" ? [] : c.options,
+        priority: c.priority,
+        ageDays: c.ageDays,
+        kind,
+        blocker: c.blocker ?? null,
+        ownWords: kind === "DECISION",
+      };
+    });
+}
+
+export default async function FleetNowPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const sp = await searchParams;
+  const base = await openPage("/admin", sp);
+  const shellProps = {
+    area: "fleet" as const,
+    tab: "now" as const,
+    scope: base.scope,
+    scopeLabel: base.shell.label,
+    scopeGroups: base.shell.groups,
+    here: base.here,
+    observedAt: base.nowIso,
+    standard: null,
   };
-}
 
-function outcomeNote<T>(outcome: ReadOutcome<T>): string | null {
-  if (outcome.kind === "HELD") return null;
-  return outcome.detail;
-}
-
-/** Flatten a published card into what the decision island renders. */
-const waitingView: (card: OwnerDecisionCard) => WaitingCardView = waitingCardView;
-
-/* ------------------------------------------------------------------ *
- * THE PAGE
- * ------------------------------------------------------------------ */
-
-export default async function AdminPage() {
-  // Read the session only to stamp decisions; middleware already proved it.
-  const jar = await cookies();
-  const hasSession = jar.has("__Host-wtp-admin");
-
-  // The one console header, shared with State readiness (unified console, 2026-09-04).
-  const nav = <ConsoleNav view="pilot-health" currentState={null} states={US_STATES} />;
-
-  const opened = await openControlPlane();
-  if (!opened.ok) {
+  if (!base.shell.registered) {
+    const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
-      <main className="admin console-page">
-        {nav}
-        <h1>Pilot health</h1>
-        <p className="refusal">
-          <strong>We could not ask.</strong> {opened.detail}
-        </p>
-        <p className="note">
-          Nothing below is missing — nothing below has been checked. Those are different facts and this page will not print one as the other.
-        </p>
-      </main>
+      <MwShell {...shellProps}>
+        <EmptyScope name={name} scope={base.scope} />
+      </MwShell>
+    );
+  }
+  if (base.repos === null) {
+    return (
+      <MwShell {...shellProps}>
+        <NotAsked detail={base.controlPlaneGap} />
+      </MwShell>
     );
   }
 
-  /*
-   * ADM-38: the fleet read is not in this round. Measured 2026-09-06 against
-   * the live control plane, `readFleetInputs` is 1,225 ms and 6.62 MB — five
-   * times everything else here put together — and it used to hold pilot health,
-   * the runner, the obligations and the decision queue behind it. It streams in
-   * its own component now (`sections/fleet.tsx`), which audits its own numbers.
-   */
-  const [snapshotOut, heartbeatOut, digestsOut, maptilerDigestsOut, decisionsOut, cacheOut, intentsOut, fleetSafetyOut, adminConfigOut] = await Promise.all([
-    readSnapshot(opened.repos),
-    readHeartbeat(opened.repos),
-    readDigests(opened.repos),
-    readMapTilerUsageDigests(opened.repos),
-    readDecisions(opened.repos),
-    readCacheObservation(opened.repos),
-    readResearchIntents(opened.repos),
-    readFleetSafety(opened.repos),
-    readAdminConfig(opened.repos),
+  const repos = base.repos;
+  const container = base.scope.kind === "geo" ? loadContainer(base.scope.type, base.scope.geoid) : null;
+  const [snapshotOut, decisionsOut, pulse, bodiesRead, containerRead] = await Promise.all([
+    readSnapshot(repos),
+    readDecisions(repos),
+    readPulse(repos, base.nowIso),
+    loadWatchedBodies(base.nowIso),
+    container,
   ]);
 
-  const snapshot: OwnerSnapshot | null = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
-  const nowIso = new Date().toISOString();
-  const maptilerHistory = maptilerDigestsOut.kind === "HELD"
-    ? projectMapTilerAttemptHistory(maptilerDigestsOut.value, nowIso)
-    : null;
-  const intentLog = intentsOut.kind === "HELD" ? intentsOut.value : [];
-  const decisions = decisionsOut.kind === "HELD" ? decisionsOut.value : [];
-  const candidateNames = snapshot?.candidateNames;
+  /* ------------------------------------------------------------ the scope's bodies */
+  let bodies: readonly BodyView[] = [];
+  let scopeNote: string | null = null;
+  if (bodiesRead.kind === "HELD") {
+    if (base.scope.kind === "all") bodies = bodiesRead.views.filter((b) => b.stateCode !== null);
+    else if (base.scope.kind === "state") {
+      const st = base.scope.state;
+      bodies = bodiesRead.views.filter((b) => b.stateCode === st);
+    } else if (containerRead && containerRead.kind === "HELD") {
+      const divisions = divisionsOf(containerRead.value.zctas);
+      bodies = bodiesRead.views.filter((b) => b.ocdId !== null && divisions.has(b.ocdId));
+      const outside = containerRead.value.zctas.filter((z) => !z.indexed).length;
+      if (outside > 0) {
+        scopeNote = `${outside} of this geography's ${containerRead.value.zctas.length} ZCTAs are outside the ZIP index this repository has geometry for, so bodies reaching only those codes are not listed — the list is a floor.`;
+      }
+    } else {
+      scopeNote = containerRead?.kind === "UNREAD" ? containerRead.detail : "This geography could not be resolved, so no body is placed in it.";
+    }
+  }
+  const figures = nowFigures(bodies);
 
-  // The compact, act-on-it projection of pilot health (pure; changes presentation,
-  // never the health truth). GREEN/AMBER/RED/UNKNOWN + one reason + three cards.
-  const health = pilotHealthView(snapshot, nowIso);
-  const plain = health.cards.map((card) => {
-    const reading = snapshot?.contracts.find((c) => c.contract === card.contract);
-    return reading ? plainContract(card, reading) : null;
-  });
-  const deployments = dispatchHistory(intentLog);
-  const fleetSafety = fleetSafetyOut.kind === "HELD" ? fleetSafetyOut.value.fleetSafety ?? null : null;
-  const researchProgress = researchProgressHealth(fleetSafetyOut.kind === "HELD" ? fleetSafetyOut.value : null, nowIso);
-  const heartbeat = heartbeatOut.kind === "HELD" ? heartbeatOut.value : null;
-  const standing = runnerStanding(heartbeat, intentLog, nowIso, fleetSafety);
-  /*
-   * The three enforced spend windows, built ONCE from the fleet-safety snapshot
-   * and rendered by both the runner card and the Cost section (RULING 103). An
-   * unread safety snapshot yields no rows, and the Cost section says the
-   * ceilings were not read rather than drawing three zeroes.
-   */
-  const spendWindows = fleetSafety
-    ? spendWindowRows({
-        cycleUsd: fleetSafety.cycle.modelUsd,
-        operationalNightUsd: fleetSafety.operationalNight.modelUsd,
-        rolling24HourUsd: fleetSafety.rolling24Hours.modelUsd,
-        ceilings: { rolling24HourModelUsd: fleetSafety.bounds.rolling24HourModelUsd },
-      })
-    : [];
-  /*
-   * THE SPEND CEILING, AND WHETHER IT IS AN OVERRIDE OR THE FALLBACK. Read live
-   * from the owner's policy row so a change Sean just made shows at once with its
-   * source and provenance — reading the row back proves the WRITE. The value the
-   * runner is actually enforcing rides on the snapshot (`fleetSafety.bounds`); the
-   * runner card compares the two, and their agreement is what proves the
-   * controller READ the change on its next cycle. A row that could not be read is
-   * said so, never asserted as the fallback.
-   */
-  const adminConfig = adminConfigOut.kind === "HELD" ? adminConfigOut.value : null;
-  const ceilingResolved = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(adminConfig));
-  const spendCeiling = {
-    settingUsd: ceilingResolved.rollingCeilingUsd,
-    source: ceilingResolved.source,
-    fallbackUsd: ceilingResolved.fallbackUsd,
-    setAt: adminConfig?.fleetSpendCeiling?.decidedAt ?? null,
-    setBy: adminConfig?.fleetSpendCeiling?.decidedBy ?? null,
-    previousUsd: adminConfig?.fleetSpendCeiling?.previousUsd ?? null,
-    readable: adminConfigOut.kind !== "STORE_UNREACHABLE",
-  };
+  /* ------------------------------------------------------------ decisions */
+  const snapshot = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
+  const decisionLog = decisionsOut.kind === "HELD" ? decisionsOut.value : null;
+  const split = snapshot && decisionLog ? splitDecided(snapshot.decisionCards, collapseDecisionLog(decisionLog)) : null;
+  const waiting = split ? split.waiting : [];
+  // What he decided, newest first, with the three-leg receipt the gateway's answer promises ("the card will say when that has happened").
+  const decided = split ? split.decided : [];
+  const DECIDED_SHOWN = 8;
+  const steps = stepsFrom(waiting);
+  const decisionCount = steps.filter((c) => c.kind === "DECISION").length;
+  const optionalCount = steps.filter((c) => c.kind === "ACKNOWLEDGE").length;
+  const wallCount = steps.filter((c) => c.kind === "BLOCKED_WHILE").length;
 
-  const cards = snapshot ? snapshot.decisionCards : [];
-  const collapsedDecisions = collapseDecisionLog(decisions);
-
-  /*
-   * ADM-16: a card with a recorded decision is DECIDED and leaves "waiting on
-   * you" at once; what the sync has done since is the receipt on the decided
-   * card. ADM-20: queued gaps are their own list.
-   */
-  const { waiting, decided } = splitDecided(cards, collapsedDecisions);
-  const queue = fixQueueView(collapsedDecisions);
-
-  /* ---------------------------------------------------------------- *
-   * THE PAGE'S AUDIT OF ITSELF.
-   *
-   * Built from the values about to be rendered. `numbers` collects every
-   * numeric the page emits; `claims` collects every "N of something"
-   * headline against the rows that actually exist.
-   * ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------ the page's audit */
   const numbers: RenderedNumber[] = [];
-  const push = (label: string, m: Held<Measured>) => {
-    if (m.held) {
-      numbers.push({ label, value: m.value.value, denominator: m.value.denominator, contract: m.value.contract });
+  const claims: CountClaim[] = [];
+  const bodiesHeld = bodiesRead.kind === "HELD";
+  if (bodiesHeld) {
+    numbers.push({ label: "bodies that got in", value: figures.gotIn, denominator: Math.max(figures.bodies, figures.gotIn), contract: "watched bodies whose own last read got in, of every watched body in scope" });
+    // The card draws could-not-get-in and not-read-in-seven-days as one figure, so the audit declares that figure.
+    numbers.push({ label: "bodies we could not get into or have not read", value: figures.couldNot + figures.notRead, denominator: Math.max(figures.bodies, figures.couldNot + figures.notRead), contract: "watched bodies whose own last read could not get in, or with no read in seven days, of every watched body in scope" });
+    numbers.push({ label: "records held", value: figures.records, denominator: figures.records, contract: "meetings in the versions held for the bodies in scope, now" });
+    numbers.push({ label: "records a reader can open", value: figures.readerVisible, denominator: figures.records, contract: "meetings in versions the typed Reader read back, of all meetings held" });
+    numbers.push({ label: "past meetings with no agenda", value: figures.noAgendaLink, denominator: figures.records, contract: "past meetings carrying neither an agenda link nor an attached agenda, of all meetings held" });
+    if (figures.day) {
+      const total = figures.day.added + figures.day.changed + figures.day.removed;
+      numbers.push({ label: "changes in 24 hours", value: total, denominator: total, contract: "records added, revised or removed in versions promoted in the last 24 hours" });
     }
-  };
-  if (fleetSafety) {
-    const dailyCeiling = fleetSafety.bounds.rolling24HourModelUsd;
-    // Fleet requests, dispatches and payload bytes no longer have a per-cycle
-    // cap; they render as plain activity counts in the Runner card, not as
-    // audited "N of M" gauges. Every audited number keeps a real denominator:
-    // the cycle wall (the clock) and the $/day rolling ceiling (the one spend limit).
-    numbers.push(
-      { label: "Fleet wall time", value: fleetSafety.cycle.elapsedMs, denominator: fleetSafety.bounds.maxWallMsPerCycle, contract: "Elapsed Fleet cycle wall time against the cycle wall — a cycle still has to finish." },
-    );
-    if (fleetSafety.cycle.modelUsd !== null) numbers.push({ label: "Fleet cycle spend", value: fleetSafety.cycle.modelUsd, denominator: dailyCeiling, contract: "Measured model spend in this cycle, against the $/day rolling ceiling it draws from." });
-    if (fleetSafety.operationalNight.modelUsd !== null) numbers.push({ label: "Fleet operational-night spend", value: fleetSafety.operationalNight.modelUsd, denominator: dailyCeiling, contract: "Measured model spend in tonight's 6pm–6am Phoenix window, against the $/day rolling ceiling." });
-    if (fleetSafety.rolling24Hours.modelUsd !== null) numbers.push({ label: "Fleet rolling spend", value: fleetSafety.rolling24Hours.modelUsd, denominator: dailyCeiling, contract: "Measured model spend in the rolling 24-hour window against the absolute daily ceiling." });
+    claims.push({ label: "bodies", stated: bodies.length, rendered: bodies.length });
   }
-  if (snapshot) {
-    for (const row of snapshot.obligationsByState) {
-      numbers.push({ label: `obligations ${row.state}`, value: row.count.value, denominator: row.count.denominator, contract: row.count.contract });
-    }
-    for (const row of snapshot.obligationsByProvider) {
-      numbers.push({ label: `provider ${row.provider}`, value: row.count.value, denominator: row.count.denominator, contract: row.count.contract });
-    }
-    push("freshness debt rows", snapshot.freshnessDebtRows);
-    push("deterministic share", snapshot.deterministicShare);
-    push("cost per verified record", snapshot.costPerVerifiedRecord);
-    push("intake items found", snapshot.intakeItemsFound);
-    push("intake items processed", snapshot.intakeItemsProcessed);
-    push("intake unidentifiable", snapshot.intakeUnidentifiable);
-    for (const c of snapshot.costByRole) push(`cost by role ${c.key}`, c.usd);
-    for (const c of snapshot.costByModel) push(`cost by model ${c.key}`, c.usd);
-    for (const c of snapshot.cacheHitRateByCaller) push(`cache hit rate ${c.callerKey}`, c.hitRate);
-    for (const d of snapshot.spendByDay ?? []) {
-      numbers.push({
-        label: `spend on ${d.day}`,
-        value: d.usd,
-        denominator: Math.max(snapshot.costSummary?.measuredUsd ?? d.usd, d.usd),
-        contract: "measured dollars recorded on this Eastern day, of all measured dollars in the ledger",
-      });
-    }
-  }
-  /*
-   * The Cost section draws figures of its own — the three windows, the UTC
-   * month, the capacity reading. A section that drew numbers outside this list
-   * would sit outside the guarantee the whole page rests on, so it declares
-   * them and they are audited with the rest.
-   */
-  numbers.push(...costSectionNumbers({ monthly: snapshot?.monthlySpend ?? null, windows: spendWindows, capacity: snapshot?.costCapacity ?? null }));
-  // The delivery trail draws its own stage counts; they go through the same audit as every other figure.
-  if (snapshot?.deliveryTrail) numbers.push(...deliveryTrailRenderedNumbers(snapshot.deliveryTrail));
-
-  /*
-   * THE MAP PROVIDER'S FIGURES GO THROUGH THE SAME DOOR AS EVERY OTHER PANEL'S.
-   *
-   * Projected ONCE, here, and handed to both the audit and the component — two
-   * projections would let the page audit one set of numbers and render another,
-   * which is the shape of the failure this audit exists to catch. The panel
-   * shipped bypassing this and was caught at integration; a section emitting
-   * numbers outside `auditRenderedNumbers` is a parallel version of a rule the
-   * console already has.
-   */
-  const maptilerPanel = projectPanel({ snapshot: snapshot?.maptiler ?? notConnectedMapTiler() });
-  numbers.push(...maptilerSectionNumbers(maptilerPanel));
-  if (maptilerHistory) numbers.push(...maptilerHistoryNumbers(maptilerHistory));
-
+  numbers.push({ label: "decisions only you can make", value: decisionCount, denominator: steps.length, contract: "decision cards waiting on the owner, of every card waiting" });
+  numbers.push({ label: "optional items", value: optionalCount, denominator: steps.length, contract: "acknowledgement cards waiting, of every card waiting" });
+  claims.push({ label: "suggested next steps", stated: steps.length, rendered: steps.length });
   const numberAudit = auditRenderedNumbers(numbers);
-
-  const claims: CountClaim[] = snapshot ? [...countClaimsFor(snapshot)] : [];
-  claims.push({ label: "decision cards by kind", stated: cards.length, rendered: waiting.length + decided.filter((d) => d.card !== null).length });
-  claims.push({ label: "decided", stated: decided.length, rendered: decided.length });
-  claims.push({ label: "fix queue", stated: queue.items.length, rendered: queue.items.length });
-  /* The panel states a per-key breakdown and renders one row each; the count
-   * the headline implies and the rows beneath it must be the same number. */
-  claims.push({ label: "map provider keys", stated: maptilerPanel.byKey.length, rendered: maptilerPanel.byKey.length });
-  claims.push({ label: "map provider services", stated: maptilerPanel.byService.length, rendered: maptilerPanel.byService.length });
-  if (maptilerHistory) {
-    const thirtyDays = maptilerHistory.windows.find((window) => window.id === "30d");
-    claims.push({
-      label: "map provider exact 30-day attempts",
-      stated: thirtyDays?.attempts ?? 0,
-      rendered: maptilerHistory.attempts.length,
-    });
-  }
-  claims.push({ label: "deployments", stated: deployments.length, rendered: deployments.length });
-  if (digestsOut.kind === "HELD") {
-    claims.push({ label: "digest history", stated: digestsOut.value.length, rendered: digestsOut.value.length });
-  }
   const countAudit = checkStatedEqualsRendered(claims);
 
   if (!numberAudit.ok || !countAudit.ok) {
     return (
-      <main className="admin console-page">
-        {nav}
-        <h1>Pilot health</h1>
-        <p className="refusal">
-          <strong>This page refused to render its own numbers.</strong>
-        </p>
-        {!numberAudit.ok && <p className="note">{numberAudit.detail}</p>}
-        {!countAudit.ok && <p className="note">{countAudit.detail}</p>}
-        <p className="note">
-          A number without a denominator, or a headline that disagrees with the rows beneath it, is worse than a blank page: you would act on it.
-        </p>
-      </main>
+      <MwShell {...shellProps}>
+        <Refusal title="This page refused to draw its own numbers.">
+          {!numberAudit.ok && <p>{numberAudit.detail}</p>}
+          {!countAudit.ok && <p>{countAudit.detail}</p>}
+          <p>A number without a denominator, or a headline that disagrees with the rows beneath it, is worse than a blank page: you would act on it.</p>
+        </Refusal>
+      </MwShell>
     );
   }
 
-  const cacheLine = renderCacheObservation(cacheOut.kind === "HELD" ? cacheOut.value : null);
-  const revision = pulseRevision({
-    beatAt: heartbeat?.beatAt ?? null,
-    snapshotRevision: snapshot ? (snapshot.publishedAt ? Date.parse(snapshot.publishedAt) : null) : null,
-    decisionCount: decisions.length,
-    researchRevision: fleetSafety ? Date.parse(fleetSafety.cycle.startedAt) : null,
-    receiptCount: null,
-  });
-
-  const healthCards: readonly HealthCardView[] = health.cards.map((card, i) => {
-    const reading = snapshot?.contracts.find((c) => c.contract === card.contract);
-    return {
-      plain: plain[i] ?? { contract: card.contract, level: card.level, what: "", status: card.headline, why: card.reason, next: "" },
-      score: card.denominator.held ? `${card.denominator.value.value} of ${card.denominator.value.denominator}` : null,
-      proofAge: card.proofAge,
-      instrument: card.reason,
-      provenance: reading
-        ? `Proof class ${plainCode(reading.proofClass)}; run ${reading.runSha ? reading.runSha.slice(0, 8) : "unrecorded"}${reading.runAt ? ` at ${reading.runAt}` : ""}.`
-        : null,
-    };
-  });
-
-  const priorityGroups: readonly PriorityGroupView[] = groupWaiting(waiting).map((g) => ({
-    priority: g.priority,
-    count: g.count,
-    types: g.types.map((t) => ({ type: t.type, cards: t.cards.map(waitingView) })),
-  }));
-
+  /* ------------------------------------------------------------ the three cards */
+  const floor = figures.floor;
+  const unreadable = figures.couldNot + figures.notRead;
+  const dayTotal = figures.day ? figures.day.added + figures.day.changed + figures.day.removed : null;
+  const working: FigLine[] = bodiesHeld
+    ? [
+        {
+          key: "got-in",
+          fig: String(figures.gotIn),
+          tone: "gold",
+          text: `of ${figures.bodies} ${figures.bodies === 1 ? "body" : "bodies"} got in when they last looked — each at its own last read`,
+        },
+        {
+          key: "changes",
+          fig: dayTotal === null ? null : dayTotal.toLocaleString("en-US"),
+          unknown: "NOT READ IN 24H",
+          floor: floor && dayTotal !== null,
+          tone: "text",
+          text:
+            figures.day === null
+              ? "changes: no body in scope was read in the last 24 hours"
+              : `changes caught in the last 24 hours${unreadable > 0 ? `, not counting ${unreadable} ${unreadable === 1 ? "body" : "bodies"} we could not read` : ""}`,
+        },
+        {
+          key: "held",
+          fig: figures.records.toLocaleString("en-US"),
+          tone: "accent",
+          text: `records held as of now; ${figures.readerVisible.toLocaleString("en-US")} of them in versions a reader was confirmed able to open`,
+        },
+      ]
+    : [];
   /*
-   * ADM-C1: the eight questions, answered at the top. Every fact here is either
-   * one this page already read, or a NAMED GAP that says which surface would
-   * carry it — never a blank and never a zero (§15).
+   * The breakdown of the 24-hour figure, and what its size says. Revisions many
+   * times the records held can only be the same records re-issued on repeated
+   * reads, so the page says so — from the two figures, not from a belief.
    */
-  const stuckIncidents = groupIncidents(snapshot?.incidents ?? []).find((g) => g.key === "NEEDS_YOU")?.incidents.length ?? 0;
-  const centre: CommandCentreInput = {
-    runner: { state: plainCode(standing.state), level: standing.level, needsYou: runnerNeeds(standing, fleetSafety).needed, action: runnerNeeds(standing, fleetSafety).action },
-    researchProgress,
-    code: heartbeat?.codeIdentity
-      ? { rawMain: heartbeat.codeIdentity.rawMainSha, executable: heartbeat.codeIdentity.effectiveExecutableSha, verdict: heartbeat.codeIdentity.verdict }
-      : null,
-    // Read by the shipping surface, not by this page. A gap until it is wired.
-    production: null,
-    staging: null,
-    steward: null,
-    /*
-     * NOT a reading: promotion to readers is OFF by law until a governed
-     * activation session turns it on, and no such session has run (PR #293
-     * built the readiness machinery and deliberately left promotion off).
-     */
-    promotionOn: false,
-    openRecordClasses: 0,
-    decisionsWaiting: waiting.length,
-    stuckIncidents,
-    latestReceipt: null,
-    receiptGap: "The console's own receipt log has not been read on this page yet.",
-  };
+  let revisionsNote = "";
+  if (figures.day) {
+    const d = figures.day;
+    revisionsNote = ` The 24 hours: ${d.added.toLocaleString("en-US")} added, ${d.changed.toLocaleString("en-US")} revised, ${d.removed.toLocaleString("en-US")} removed.`;
+    const perRecord = figures.records > 0 ? d.changed / figures.records : 0;
+    if (perRecord >= 2) {
+      revisionsNote += ` ${d.changed.toLocaleString("en-US")} revisions against ${figures.records.toLocaleString("en-US")} records held is about ${Math.round(perRecord)} per record in a day, so most are the same records re-issued on repeated reads, not new facts.`;
+    }
+  }
+  const isnt: FigLine[] = bodiesHeld
+    ? [
+        {
+          key: "could-not",
+          fig: String(unreadable),
+          tone: unreadable > 0 ? "amber" : "muted",
+          text: unreadable > 0 ? "bodies we could not get into or have not read in seven days, so we do not know what we are missing" : "bodies we could not get into",
+        },
+        {
+          key: "disagrees",
+          fig: null,
+          unknown: "NOT CHECKED",
+          text: "records that disagree with something else we hold — nothing checks this for meetings yet, so it is unknown, not zero",
+        },
+        {
+          key: "gaps",
+          fig: figures.noAgendaLink.toLocaleString("en-US"),
+          floor,
+          tone: figures.noAgendaLink > 0 ? "gold" : "muted",
+          text: `past meetings we hold with no agenda attached${figures.held > 0 ? `, and ${figures.held} ${figures.held === 1 ? "record" : "records"} held back by a check` : ""}${floor ? ", before counting the bodies we could not read" : ""}`,
+        },
+      ]
+    : [];
+
+  const stateNames: Record<string, string> = Object.fromEntries(US_STATES.map((st) => [st.code, st.name]));
+  const workHref: Record<string, string> = {};
+  for (const b of bodies) for (const id of b.contractIds) workHref[id] = withScope(`/admin/work?open=${encodeURIComponent(routineAssignmentId(id))}`, base.scope);
 
   return (
-    <main className="admin console-page">
-      {nav}
-      <div className="console-strip">
-        <LiveRefresh renderedAt={nowIso} revision={revision} />
-      </div>
-      <QueueForm returnTo={HERE} />
-
-      {/* 0 — THE EIGHT QUESTIONS, ANSWERED AT THE TOP (ADM-C1) */}
-      <CommandCentre input={centre} />
-
-      {/* 1 — PILOT HEALTH */}
-      <HealthSection
-        overall={health.overall}
-        overallSays={plainOverall(health.overall, plain.filter((p) => p !== null))}
-        cards={healthCards}
-        publishedAt={snapshot?.publishedAt ?? null}
-        publisher={snapshot?.publisher ?? null}
-        publishedFromSha={snapshot?.publishedFromSha ?? null}
-        snapshotNote={outcomeNote(snapshotOut)}
-        intentRoute={INTENT_ROUTE}
-        returnTo={HERE}
-      />
-
-      {/* 2 — THE FLEET */}
-      <h2 id="fleet">The fleet — what the workers are doing</h2>
-      <p className="note">
-        Five groups, each named for what it does. Counts are read live from the control plane.{" "}
-        <a href="/admin/research">The research detail page</a> has every attempt and every number behind these.
-      </p>
-      <LevelLegend />
-      <DeployFleet returnTo={HERE} maxChars={INTENT_NOTE_MAX_CHARS} actionRoute={ACTION_ROUTE} />
-      <Suspense fallback={<FleetLoading />}>
-        <FleetSection candidateNames={candidateNames} />
-      </Suspense>
-
-      <h3>Where you have sent the fleet — {count(deployments.length)}</h3>
-      {outcomeNote(intentsOut) && <p className="note">{outcomeNote(intentsOut)}</p>}
-      {deployments.length === 0 ? (
-        <p className="note">None sent yet. Deploy fleet above records the first.</p>
+    <MwShell {...shellProps} extraStrip={[{ label: "BODIES READ", value: bodiesRead.kind === "HELD" ? formatEastern(bodiesRead.asOf) : "not read", warn: bodiesRead.kind !== "HELD" }]}>
+      {bodiesRead.kind === "UNREAD" ? (
+        <Refusal title="The bodies could not be read just now.">{bodiesRead.detail}</Refusal>
       ) : (
-        <ul className="deployments">
-          {deployments.map((d) => (
-            <li key={d.intentId}>
-              <strong>{d.target}</strong> — sent {agoText(d.requestedAt, nowIso)} by {d.by}.{" "}
-              {d.status === "HONORED" ? (
-                <span>
-                  <span className="state-green">Started</span> {agoText(d.honoredAt, nowIso)}
-                  {d.honoredBy ? ` by ${d.honoredBy}` : ""}: <Said text={d.detail} />
-                </span>
-              ) : (
-                <span className="state-amber">
-                  Waiting for the runner to look
-                  {standing.state === "PAUSED" || standing.state === "SILENT" || standing.state === "NEVER_BEAT"
-                    ? ` — the runner is ${standing.headline.toLowerCase()}, so this waits until it runs`
-                    : " (it looks once a minute while running)"}
-                  .
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
+        <div className={s.gridAuto320} style={{ marginBottom: 32 }}>
+          <div className={s.card}>
+            <h2 className={s.h2Card}>What is working</h2>
+            <FigList lines={working} />
+            <p className={s.footnote}>
+              Three different windows: the first line is each body&rsquo;s own last read, the second is the last 24 hours, the third is how things stand right now.
+              They are not one number and are never added together.{revisionsNote}
+            </p>
+          </div>
+          <div className={s.card}>
+            <h2 className={s.h2Card}>What isn&rsquo;t</h2>
+            <FigList lines={isnt} />
+            <p className={s.footnote}>
+              Could not get into is not the same as nothing wrong. Where a body could not be read, the figures above are floors — the real number can only be higher.
+            </p>
+          </div>
+          <div className={s.card}>
+            <h2 className={s.h2Card}>Where to put effort</h2>
+            <FigList
+              lines={[
+                { key: "decisions", fig: String(decisionCount), tone: "gold", text: "decisions only you can make, each one listed below" },
+                { key: "minutes", fig: null, unknown: "NOT ESTIMATED", text: "minutes of your time — no card records how long it takes" },
+                { key: "optional", fig: String(optionalCount), tone: "muted", text: "optional items, counted apart so they never inflate the number needing you" },
+              ]}
+            />
+            <p className={s.footnote}>
+              Every figure here is counted from the list below, so this card cannot claim a decision the list does not offer.
+              {wallCount > 0 ? ` ${wallCount} more ${wallCount === 1 ? "card waits" : "cards wait"} on a check the machine reruns, not on you; they close on their own.` : ""}
+              {base.scope.kind !== "all" ? " Decisions are not tied to a place, so this list is the same in every scope." : ""}
+            </p>
+          </div>
+        </div>
       )}
 
-      {/* 3 — THE RUNNER */}
-      <ResearchProgress reading={researchProgress} />
-      <RunnerSection
-        standing={standing}
-        heartbeat={heartbeat}
-        safety={fleetSafety}
-        didThisCycle={null}
-        heartbeatNote={outcomeNote(heartbeatOut)}
-        safetyNote={outcomeNote(fleetSafetyOut)}
-        returnTo={HERE}
-        intentRoute={INTENT_ROUTE}
-        actionRoute={ACTION_ROUTE}
-        spendCeiling={spendCeiling}
-        noteMaxChars={INTENT_NOTE_MAX_CHARS}
+      <Section
+        title="Suggested next steps"
+        lede="Ranked by kind, then priority, then how long each has waited — nothing records what each one unblocks or how long it takes you, so neither is used. Anything the system can settle itself never appears here."
       />
-
-      {/*
-        4 and 5 — WHAT THE SYSTEM OWES, WHY SOME OF IT IS HELD UP, AND THE
-        DECISIONS WAITING ON HIM. ONE DESTINATION, because the command centre
-        counts them as one thing: "What is blocked?" says `77 decisions and 27
-        stuck sources`, and its Open must land somewhere both are visible
-        (9.6.26 owner feedback, ACLOSE-6). `RevealTarget` is the anchor that
-        card points at; it scrolls here, takes focus, and opens the disclosures
-        inside — the stuck-source groups are closed `<details>` and the decision
-        queue opens collapsed by design (ADM-31), so arriving is not the same as
-        being able to read it.
-      */}
-      {/* `decisions` and `incidents` are the names other surfaces already use
-          for the two halves of this region, so both land here. `receipts` is
-          deliberately NOT one of them: that content is the Decided section
-          below, and an alias that sent it here would be a wrong answer rather
-          than a missing one. */}
-      <RevealTarget id="blocked" also={["decisions", "incidents"]}>
-        {snapshot && (
-          <ObligationsSection
-            freshnessDebtRows={snapshot.freshnessDebtRows}
-            incidents={snapshot.incidents}
-            obligationsByState={snapshot.obligationsByState}
-            obligationsByProvider={snapshot.obligationsByProvider}
-            candidateNames={candidateNames}
-          />
-        )}
-
-        {outcomeNote(decisionsOut) && <p className="note">{outcomeNote(decisionsOut)}</p>}
-        <DecisionQueue
-          groups={priorityGroups}
-          total={waiting.length}
-          summary={waitingSummary(groupWaiting(waiting))}
-          actionRoute={ACTION_ROUTE}
-          returnTo={HERE}
-          stateVersion={revision}
-        />
-      </RevealTarget>
-      <DecidedSection decided={decided} />
-      <FixQueueSection items={queue.items} counts={queue.counts} lastGo={queue.lastGo} returnTo={HERE} />
-
-      {/* 6 — COST */}
-      {snapshot && (
-        <CostSection
-          costSummary={snapshot.costSummary}
-          costByRole={snapshot.costByRole}
-          costByModel={snapshot.costByModel}
-          cacheHitRateByCaller={snapshot.cacheHitRateByCaller}
-          deterministicShare={snapshot.deterministicShare}
-          costPerVerifiedRecord={snapshot.costPerVerifiedRecord}
-          spendByDay={snapshot.spendByDay ?? []}
-          spendWindows={spendWindows}
-          capacity={snapshot.costCapacity ?? null}
-          monthly={snapshot.monthlySpend ?? null}
-          spendByPlace={snapshot.spendByPlace ?? null}
-          subscriptionJobs={null}
-          cacheLine={cacheLine}
-          cacheNote={outcomeNote(cacheOut)}
-          returnTo={HERE}
-        />
+      {snapshotOut.kind !== "HELD" ? (
+        <p className={s.note} style={{ marginBottom: 36 }}>
+          {snapshotOut.detail} The decisions waiting on you are unknown until it is read — not zero.
+        </p>
+      ) : decisionsOut.kind !== "HELD" ? (
+        <p className={s.note} style={{ marginBottom: 36 }}>
+          {decisionsOut.detail} Without the decision log, a card you already answered would be offered again, so none is shown.
+        </p>
+      ) : steps.length === 0 ? (
+        <p className={s.note} style={{ marginBottom: 36 }}>
+          Nothing is waiting on you: every published card has a recorded decision.
+        </p>
+      ) : (
+        <NextSteps cards={steps} renderedRevision={pulse.revision} actionRoute={ACTION_ROUTE} liveRoute={LIVE_ROUTE} returnTo={base.here} firstShown={6} />
       )}
 
-      {/* 6c — DELIVERY TRAIL (MW-053/054): acquired -> validated -> approved -> publicly available */}
-      {snapshot && <DeliverySection view={snapshot.deliveryTrail ?? null} />}
-
-      {/* 6b — THE MAP PROVIDER'S BILL (MAPQ-6) */}
-      <MapTilerSection
-        panel={maptilerPanel}
-        history={maptilerHistory}
-        historyGap={outcomeNote(maptilerDigestsOut)}
-      />
-
-      {/* 7 — READER SUITE BY ZIP */}
-      <h2 id="reader-suite">Can a reader get a right answer, ZIP by ZIP?</h2>
-      <p className="note">
-        The reader check asks the live site the questions a resident would ask about a pilot ZIP and scores each answer. This table would show that score
-        per ZIP, which is how a ZIP earns the right to be called ready.
-      </p>
-      {snapshot &&
-        (snapshot.zipRows.held ? (
-          <ul className="zip-rows">
-            {snapshot.zipRows.value.map((row) => (
-              <li key={row.zip}>
-                <strong>{row.zip}</strong> — {count(row.green)} right, {count(row.red)} wrong, {count(row.notEvaluable)} not scoreable
-                {row.failureClasses.length > 0 ? `; ${row.failureClasses.join(", ")}` : ""}.
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="note">
-            <GapNote gap={snapshot.zipRows.gap} where="Reader check · by ZIP" returnTo={HERE} />
-          </p>
-        ))}
-
-      {/* 8 — OWNER INTAKE */}
-      <h2 id="intake">Your feedback folders</h2>
-      {snapshot && (
+      {decided.length > 0 && (
         <>
-          <p className="plain">
-            {snapshot.intakeFolder.held ? (
-              <>
-                Your <strong>{snapshot.intakeFolder.value}</strong> folder was picked up
-                {snapshot.intakeItemsFound.held && snapshot.intakeItemsProcessed.held ? (
-                  <>
-                    {" "}
-                    — all {count(snapshot.intakeItemsProcessed.value.value)} of {count(snapshot.intakeItemsFound.value.denominator)} files were processed
-                    {snapshot.intakeUnidentifiable.held && snapshot.intakeUnidentifiable.value.value > 0
-                      ? `, and ${count(snapshot.intakeUnidentifiable.value.value)} could not be identified`
-                      : ""}
-                    .
-                  </>
-                ) : (
-                  "."
-                )}
-              </>
-            ) : (
-              <GapNote gap={snapshot.intakeFolder.gap} where="Owner intake · folder" returnTo={HERE} />
-            )}
-          </p>
-          <NeedsYouLine needs={{ needed: false }} />
-          {outcomeNote(digestsOut) && <p className="note">{outcomeNote(digestsOut)}</p>}
-          {digestsOut.kind === "HELD" && digestsOut.value.length > 0 && (
-            <LatestDigestStatus digest={digestsOut.value[0]} />
-          )}
+          <Section
+            title="What you decided"
+            lede={`Newest first${decided.length > DECIDED_SHOWN ? `, the latest ${DECIDED_SHOWN} of ${decided.length}` : ""}. Each one is recorded at once; ${SYNC_CADENCE}, and each line below says how far it has got.`}
+          />
+          <div className={s.stack10} style={{ marginBottom: 36 }}>
+            {decided.slice(0, DECIDED_SHOWN).map((entry) => (
+              <details key={entry.decision.intentId} className={`${s.card} ${s.cardSlim}`}>
+                <summary className={s.row10} style={{ cursor: "pointer" }}>
+                  <Pill tone={receiptHeadline(entry.steps).includes("refused") ? "amber" : receiptHeadline(entry.steps).includes("work opened") ? "teal" : "cyan"}>
+                    {receiptHeadline(entry.steps).toUpperCase()}
+                  </Pill>
+                  <span className={`${s.text14} ${s.grow}`}>{entry.card ? entry.card.title : entry.decision.subjectId}</span>
+                  <span className={s.note}>{formatEastern(entry.decision.decidedAt)}</span>
+                </summary>
+                <div className={s.stack6} style={{ marginTop: 10 }}>
+                  {entry.steps.map((step) => (
+                    <p key={step.key} className={s.text14}>
+                      <span className={s.strong}>{step.label}: </span>
+                      {step.says}
+                    </p>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
         </>
       )}
 
-      <hr />
-      <p className="note audit-footer">
-        {numbers.length} rendered number(s) checked; each carries a denominator and an interpretation contract. {claims.length} count claim(s) checked;
-        every stated number equals its rendered row count. Read at <When iso={nowIso} />.
-        {hasSession ? "" : " No admin session cookie was present on this render."}
-      </p>
-    </main>
+      <Section
+        title="Every body we watch"
+        lede={
+          bodiesRead.kind === "HELD" ? (
+            <>
+              {bodies.length} {bodies.length === 1 ? "body" : "bodies"}
+              {base.scope.kind === "all" ? "" : ` in ${base.shell.label}`}. Each shows where it stands on the six things we are always trying to find out, as of its own
+              last read. Open one to see everything happening to it.{scopeNote ? ` ${scopeNote}` : ""}
+            </>
+          ) : (
+            "The bodies could not be read, so none is listed — that is not an empty list."
+          )
+        }
+      />
+      {bodiesRead.kind === "HELD" &&
+        (bodies.length === 0 ? (
+          <div className={s.dashedCard}>
+            <div className={s.row}>
+              <Dash large>NONE REGISTERED HERE</Dash>
+              <span className={s.note}>No body with a registered meeting source sits in this scope. That is a fact about what is registered, not about what governs here.</span>
+            </div>
+          </div>
+        ) : (
+          <BodyList bodies={bodies} stateNames={stateNames} workHref={workHref} firstShown={12} initiallyOpen={typeof sp.body === "string" ? sp.body : null} />
+        ))}
+
+      <AuditFooter numbers={numbers} claims={claims} readAt={formatEastern(base.nowIso, { year: true })} />
+    </MwShell>
   );
 }

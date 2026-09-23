@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 708,
-    "named": 7018,
+    "named": 7024,
     "dynamic": 28
   },
   "files": {
@@ -553,13 +553,19 @@
     "tests/agenda-documents.test.ts": {
       "names": [
         "a PDF that cannot be parsed records the failure and keeps the link",
+        "a PDF with no text layer is a failed read, and the note names why",
         "a meeting with no agenda link yields null, not a fabricated fetch",
+        "a one-line notice is a document, not a failure: no length threshold decides",
         "a revised agenda appends beside the old version, never over it",
+        "an HTML page with no readable text is a failed read, and the note names why",
         "an unchanged document is not stored twice",
         "binary Office bytes retain their URL/hash but never become Reader text or JSONB NULs",
         "contentHashOf is stable for identical bytes",
         "extractHtmlText strips markup and scripts, keeps the words",
-        "retrieveAgendaDocument extracts HTML text and records provenance"
+        "negative controls: a re-read of the same sitting, another host, and a shared joint agenda stay documents",
+        "retrieveAgendaDocument extracts HTML text and records provenance",
+        "the recorded Diligent page read beside a same-type sitting's page is the publisher's page",
+        "the same words another sitting's page says are the publisher's page: failed, witness named"
       ],
       "dynamic": 0
     },

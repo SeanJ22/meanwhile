@@ -269,6 +269,7 @@ export type BlockedCode =
   | "NO_JURISDICTION_REGISTRY"
   | "NOT_IN_REGISTRY"
   | "REGISTRY_NOT_READ"
+  | "NO_GOVERNMENT_PLACED"
   | "NO_STATE_NAMED";
 
 /** Governments a target holds that no dataset can give requirements to, and the dataset that is missing. */
@@ -389,6 +390,19 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
     0,
   );
   const unplaced = unplacedRegistered + unplacedCensus;
+  /* RULING 251: a zero where the territory should have named governments is a gap in the data, never an empty geography. */
+  if (placed.length === 0 && blocked.length === 0) {
+    blocked.push({
+      code: "NO_GOVERNMENT_PLACED",
+      dataset: DATASET.territory,
+      why:
+        `the resolved geography's ${scope.zctas.size} ZCTA(s) place no Census of Governments unit, registered or not, by the certain-overlap rule, ` +
+        "so no government in it can be named — a gap in the territory data, never a geography with no government",
+      units: null,
+      states: scope.states,
+      sample: [],
+    });
+  }
   return { placed, blocked, unplaced };
 }
 
@@ -785,6 +799,9 @@ export function dispatchWorkReading(
     if (capped > 0) says.push(`${capped} are beyond this geography's cap of ${plan.cap}; send a smaller geography to reach them.`);
     if (held > 0) says.push(`${held} machine-openable meetings route(s) are held: ${DATASET.wiring} could not be read, and a second meetings clock is never risked.`);
     for (const b of t.units.blocked) says.push(`Blocked (${b.dataset}): ${b.why}.`);
+    if (t.target.kind === "DISPATCH" && t.units.placed.length === 0 && t.units.blocked.length === 0) {
+      says.push(`No registered government in ${t.target.target.stateNames.join(", ")} carries these words, so nothing was created; the words still put matching work first.`);
+    }
     if (t.units.unplaced > 0) {
       says.push(
         `${t.units.unplaced} government(s) in ${t.target.kind === "SCOPE" ? t.target.scope.states.join(", ") : "these states"} cannot be placed in or out of ` +

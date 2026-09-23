@@ -437,6 +437,22 @@ test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with
   assert.equal(t.blocked[0].code, "NOT_IN_REGISTRY");
   assert.deepEqual(t.blocked[0].sample, ["TOWN OF SOMEWHERE"]);
   assert.equal(t.units.blocked, 1);
+
+  /* RULING 251: ZCTAs that place no government at all are a gap in the territory data, never an empty geography. */
+  const nowhere: PlannedScope = { ...scope, zctas: new Set(["99999"]), whole: new Set(["99999"]) };
+  const [empty] = dispatchWorkReading(planDispatchWork({ targets: [scopeWorkTarget(nowhere)], world }), null, CONTEXT).targets;
+  assert.equal(empty.blocked[0].code, "NO_GOVERNMENT_PLACED");
+  assert.equal(empty.units.blocked, null, "the count is unknown, never zero");
+  assert.match(empty.blocked[0].why, /never a geography with no government/);
+
+  /* A DISPATCH whose words match no registered government says so, and creates nothing. */
+  const [words] = dispatchWorkReading(
+    planDispatchWork({ targets: [dispatchWorkTarget({ intentId: "i-z", note: "Arizona zzqx", requestedAt: T0 })], world }),
+    null,
+    CONTEXT,
+  ).targets;
+  assert.equal(words.requirements.defined, 0);
+  assert.match(words.says.join(" "), /No registered government in Arizona carries these words, so nothing was created/);
 });
 
 /* ======================================================================= *

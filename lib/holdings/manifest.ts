@@ -50,7 +50,7 @@ export interface FrozenInputs {
 }
 /**
  * A frozen static holding replaced in the repository by a successor holding —
- * as the three-state ZIP index was by one shard per ZIP3 for every ZIP code
+ * as the three-state ZIP index was by one shard per ZIP prefix for every ZIP code
  * (2026-09-23). Its exact frozen bytes stay in Git at a test baseline that the
  * successor's build and tests compare against, and the successor's files are
  * current datasets in their own right.
@@ -441,8 +441,8 @@ export function loadManifestContext(root: string): ManifestContext {
     for (const member of array(row.members)) addIdentity(string(member.id), states);
     if (d.family === "meetings" && typeof row.id === "string" && row.id.split(":").length >= 3) addIdentity(`sourceTenant:${row.id.split(":").slice(0, 2).join(":")}`, states);
   }
-  // The national ZIP index, one shard per ZIP3: each shard lists its divisions once and its ZIPs refer to them by position.
-  for (const d of datasets.filter((d) => /^data\/derived\/zip-divisions\/\d{3}\.json$/.test(d.path))) {
+  // The national ZIP index, one shard per two-digit ZIP prefix: each shard lists its divisions once and its ZIPs refer to them by position.
+  for (const d of datasets.filter((d) => /^data\/derived\/zip-divisions\/\d{2}\.json$/.test(d.path))) {
     const shard = asRow(d.value);
     const divisions = Array.isArray(shard.divisions) ? shard.divisions.map(String) : [];
     for (const [zip, refs] of Object.entries(asRow(shard.zips))) {

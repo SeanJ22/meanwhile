@@ -1928,7 +1928,7 @@
       "disposition": "SUPERSEDED_BY_SUCCESSOR_HOLDING",
       "successorDirectory": "data/derived/zip-divisions",
       "baselinePath": "tests/fixtures/zip-division-ids-three-state.json",
-      "reason": "The three-state ZIP index named a government for a ZIP only where this repository had committed its polygon, so it held 279 ZIPs in three states. Sean's direction (2026-09-23) is to track every area without a code change: the national index built by scripts/build-zip-division-shards.mts carries every division reaching each of the country's 33,791 ZIP codes, one shard per ZIP3, and every reader of the old file now reads it. The exact frozen bytes are kept as the baseline that build and tests/zip-division-shards.test.ts compare against, so no ZIP loses a division the committed geometry still carries."
+      "reason": "The three-state ZIP index named a government for a ZIP only where this repository had committed its polygon, so it held 279 ZIPs in three states. Sean's direction (2026-09-23) is to track every area without a code change: the national index built by scripts/build-zip-division-shards.mts carries every division reaching each of the country's 33,791 ZIP codes, one shard per two-digit ZIP prefix, and every reader of the old file now reads it. The exact frozen bytes are kept as the baseline that build and tests/zip-division-shards.test.ts compare against, so no ZIP loses a division the committed geometry still carries."
     }
   ],
   "rule": "Finite session denominator: exact base SHA plus these committed external readback bytes. Later discoveries create future manifest obligations; they do not enlarge this session's denominator unless they falsify A1/A2 or are introduced regressions.",

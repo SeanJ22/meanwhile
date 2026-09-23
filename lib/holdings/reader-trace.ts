@@ -1,5 +1,7 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
+
+import { zipShardFiles } from "../geo/zip-division-index.ts";
 
 export interface ReaderTraceRequirement { route: string; loader: string; files: string[] }
 /** Input contracts, independently checked against Next's emitted deployment manifests. */
@@ -14,7 +16,7 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
   if (geometry.files.length === 0) throw new Error("Reader trace denominator is empty");
   // The national ZIP index is read one shard per request, and any ZIP can be asked for, so every shard must be traced.
   const shardDir = join(root, "data", "derived", "zip-divisions");
-  const zipShards = readdirSync(shardDir).filter((f) => /^\d{3}\.json$/.test(f)).sort().map((f) => `data/derived/zip-divisions/${f}`);
+  const zipShards = zipShardFiles(shardDir).map((f) => `data/derived/zip-divisions/${f}`);
   if (zipShards.length === 0) throw new Error("Reader trace denominator is empty: no ZIP index shard");
   const zipArea = [
     "data/derived/zip-coverage-tiers-runtime.json",

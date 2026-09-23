@@ -2,10 +2,11 @@
  * **THE ZIP INDEX, READ ONE SHARD AT A TIME.** (2026-09-23.)
  *
  * Every division whose territory reaches each ZIP code in the country, built by
- * `scripts/build-zip-division-shards.mts` into one shard per ZIP3 under
- * `data/derived/zip-divisions/`. A request reads only the shard its ZIP sits in
- * — a few kilobytes — and keeps the last few in memory; a script that needs
- * every ZIP reads them all with `readAllZipDivisions`.
+ * `scripts/build-zip-division-shards.mts` into one shard per two-digit ZIP
+ * prefix under `data/derived/zip-divisions/`. A request reads only the shard
+ * its ZIP sits in — about a hundred kilobytes — and keeps the last few in
+ * memory; a script that needs every ZIP reads them all with
+ * `readAllZipDivisions`.
  *
  * It replaces the three-state index (kept as the frozen baseline
  * `tests/fixtures/zip-division-ids-three-state.json`), which named a government
@@ -15,8 +16,14 @@
  * them), `partial` is those covering only part of its sampled area (RULING 71),
  * `samples` the lattice points inside the ZCTA.
  *
- * Read through `process.cwd()`, which Next cannot trace, so every route that
- * reaches it names `./data/derived/zip-divisions/*.json` in `next.config.ts`.
+ * **Every request-path read names the folder in literal segments** (R23). A
+ * path the bundler cannot scope — a spread constant, a variable root — makes
+ * Turbopack trace the whole project into every route that imports this; with
+ * the folder spelled out it traces exactly the shards into each of them, and
+ * the postbuild reader-trace check fails the build if a reader route lacks
+ * one. The folder is ~100 files, not one per ZIP3, so the traced file count
+ * stays near the bundle budget's.
+ *
  * A shard that cannot be read is OUR gap: it answers null and is not cached, so
  * a transient failure never becomes permanent for the process.
  */
@@ -41,24 +48,27 @@ interface Shard {
 }
 
 export const ZIP_DIVISIONS_DIR = ["data", "derived", "zip-divisions"] as const;
-const SHARDS_KEPT = 64;
+/** A shard's name: the ZIP's first two digits. */
+export const zipShardOf = (zip: string): string => zip.slice(0, 2);
+const SHARD_FILE = /^\d{2}\.json$/;
+const SHARDS_KEPT = 24;
 const shards = new Map<string, Promise<Shard | null>>();
 
-function shardFor(zip3: string): Promise<Shard | null> {
-  const held = shards.get(zip3);
+function shardFor(name: string): Promise<Shard | null> {
+  const held = shards.get(name);
   if (held !== undefined) {
     // Most recently used last, so the oldest is the one let go.
-    shards.delete(zip3);
-    shards.set(zip3, held);
+    shards.delete(name);
+    shards.set(name, held);
     return held;
   }
-  const read = readFile(join(process.cwd(), ...ZIP_DIVISIONS_DIR, `${zip3}.json`), "utf8")
+  const read = readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")
     .then((text) => JSON.parse(text) as Shard)
     .catch(() => {
-      shards.delete(zip3);
+      shards.delete(name);
       return null;
     });
-  shards.set(zip3, read);
+  shards.set(name, read);
   while (shards.size > SHARDS_KEPT) {
     const oldest = shards.keys().next().value;
     if (oldest === undefined) break;
@@ -80,7 +90,7 @@ function entryOf(shard: Shard, zip: string): ZipDivisionEntry | null {
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
 export async function zipDivisionEntry(zip: string | null): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;
-  const shard = await shardFor(zip.slice(0, 3));
+  const shard = await shardFor(zipShardOf(zip));
   return shard === null ? null : entryOf(shard, zip);
 }
 
@@ -96,13 +106,12 @@ export function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, 
   const st = state.toUpperCase();
   const held = lowestByState.get(st);
   if (held !== undefined) return held;
-  const dir = join(process.cwd(), ...ZIP_DIVISIONS_DIR);
-  const read = readFile(join(dir, "index.json"), "utf8")
+  const read = readFile(join(process.cwd(), "data", "derived", "zip-divisions", "index.json"), "utf8")
     .then(async (text) => {
       const names = (JSON.parse(text) as { statesToShards: Record<string, readonly string[]> }).statesToShards[st] ?? [];
       const out = new Map<string, string>();
-      for (const zip3 of [...names].sort()) {
-        const shard = JSON.parse(await readFile(join(dir, `${zip3}.json`), "utf8")) as Shard;
+      for (const name of [...names].sort()) {
+        const shard = JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as Shard;
         for (const zip of Object.keys(shard.zips).sort()) {
           for (const i of shard.zips[zip]) {
             const division = shard.divisions[i];
@@ -123,8 +132,8 @@ export function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, 
 /** Every indexed ZIP, read synchronously from a repository root: for scripts and build-time checks, never a request path. */
 export function readAllZipDivisions(root: string): Map<string, ZipDivisionEntry> {
   const out = new Map<string, ZipDivisionEntry>();
-  const dir = join(root, ...ZIP_DIVISIONS_DIR);
-  for (const file of readdirSync(dir).filter((f) => /^\d{3}\.json$/.test(f)).sort()) {
+  const dir = join(/* turbopackIgnore: true */ root, "data", "derived", "zip-divisions");
+  for (const file of readdirSync(dir).filter((f) => SHARD_FILE.test(f)).sort()) {
     const shard = JSON.parse(readFileSync(join(dir, file), "utf8")) as Shard;
     for (const zip of Object.keys(shard.zips)) {
       const entry = entryOf(shard, zip);
@@ -132,4 +141,9 @@ export function readAllZipDivisions(root: string): Map<string, ZipDivisionEntry>
     }
   }
   return out;
+}
+
+/** The shard files of an index directory, by name: for trace and manifest checks. */
+export function zipShardFiles(dir: string): string[] {
+  return readdirSync(/* turbopackIgnore: true */ dir).filter((f) => SHARD_FILE.test(f)).sort();
 }

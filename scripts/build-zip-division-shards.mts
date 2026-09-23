@@ -37,12 +37,15 @@
  *
  * ## What is written
  *
- * One shard per ZIP3 under `data/derived/zip-divisions/`, each holding its
- * ZIPs' divisions once and referring to them by position, and an `index.json`
- * naming every shard with its sha256, ZIP count and states. One national file
- * would be ~34 MB — too large to trace into a function or parse per request; a
- * shard is a few kilobytes. A ZCTA's states come from its county edges, so a
- * code that crosses a state line is listed under each state it reaches.
+ * One shard per two-digit ZIP prefix under `data/derived/zip-divisions/`, each
+ * holding its ZIPs' divisions once and referring to them by position, and an
+ * `index.json` naming every shard with its sha256, ZIP count and states. One
+ * national file would be ~34 MB — too large to parse per request; a shard is
+ * about a hundred kilobytes. One per ZIP3 would be ~900 files, each traced
+ * into every route that can be asked for any ZIP, which is what the bundle
+ * budget's file count exists to catch (R23); ~100 keeps it near its baseline.
+ * A ZCTA's states come from its county edges, so a code that crosses a state
+ * line is listed under each state it reaches.
  *
  * Two assertions, and the build refuses on either: no two governments share an
  * id (bar the one shared id the committed geometry already holds, carried and
@@ -51,7 +54,8 @@
  * three-state baseline and against the previous build. An id the baseline kept
  * after the geometry re-minted it is stale there, and printed as corrected.
  *
- * Measured 2026-09-23: 33,791 ZIPs in 896 shards (~9.7 MB), 85,541 governments,
+ * Measured 2026-09-23: 33,791 ZIPs in 99 shards (~8.7 MB, the largest 256 KB;
+ * ZIP for ZIP identical to the first, one-per-ZIP3 layout), 85,541 governments,
  * every edge given an id; 278 name collisions, 16 of whose committed sides kept
  * their ids; one inherited shared id (New Jersey's Union Township unified and
  * elementary school districts); one stale id corrected (New Jersey's Washington
@@ -63,7 +67,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { basename, join } from "node:path";
 
 import { readBoundaryAttributes } from "../lib/geo/shapefile.ts";
-import { readAllZipDivisions, type ZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
+import { readAllZipDivisions, zipShardOf, type ZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import { geometryFiles } from "../lib/holdings/files.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { countyIdentity, placeIdentity, schoolIdentity, subdivisionIdentity, type DivisionIdentity } from "../lib/ocd/divisions.ts";
@@ -207,7 +211,7 @@ for (const [zip, list] of Object.entries(zipGov.zips)) {
   }
   if (total === 0) noCountyEdge++;
   if (ids.size === 0) continue;
-  const shard = zip.slice(0, 3);
+  const shard = zipShardOf(zip);
   const map = byShard.get(shard) ?? new Map<string, ZipEntry>();
   map.set(zip, { ids: [...ids].sort(), partial: [...partial].sort(), samples: total, states });
   byShard.set(shard, map);
@@ -235,7 +239,7 @@ const losses: string[] = [];
 const corrected = new Set<string>();
 let changedSincePrevious = 0;
 function compare(zip: string, before: readonly string[], beforePartial: readonly string[], fromBaseline: boolean): void {
-  const now = byShard.get(zip.slice(0, 3))?.get(zip);
+  const now = byShard.get(zipShardOf(zip))?.get(zip);
   const ids = new Set(now?.ids ?? []);
   const partial = new Set(now?.partial ?? []);
   for (const id of before) {
@@ -288,7 +292,7 @@ writeFileSync(
       generatedAt: today(),
       source: "data/derived/zip-governments.json (national TIGER lattice sampling), with each government's OCD id built from the Census names by lib/ocd/divisions.ts",
       note:
-        "Every division whose territory reaches each ZCTA, one shard per ZIP3. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area (RULING 71). Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
+        "Every division whose territory reaches each ZCTA, one shard per two-digit ZIP prefix. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area (RULING 71). Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
       counts: {
         zips: zipsWritten,
         shards: Object.keys(index).length,

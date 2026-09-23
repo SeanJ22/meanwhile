@@ -161,7 +161,7 @@ function installSupersededZipIndex(root: string, overrides: Record<string, unkno
     disposition: "SUPERSEDED_BY_SUCCESSOR_HOLDING",
     successorDirectory: "data/derived/zip-divisions",
     baselinePath: ZIP_INDEX_BASELINE,
-    reason: "The same fact for every ZIP code, one shard per ZIP3.",
+    reason: "The same fact for every ZIP code, one shard per ZIP prefix.",
     ...overrides,
   }];
   writeFileSync(join(root, INPUT_PATH), JSON.stringify(input));
@@ -170,7 +170,7 @@ function installSupersededZipIndex(root: string, overrides: Record<string, unkno
   writeFileSync(join(root, PLAN_PATH), JSON.stringify(plan));
   mkdirSync(dirname(join(root, ZIP_INDEX_BASELINE)), { recursive: true });
   writeFileSync(join(root, ZIP_INDEX_BASELINE), baselineBytes);
-  const shard = "data/derived/zip-divisions/078.json";
+  const shard = "data/derived/zip-divisions/07.json";
   fixtureConsumers(root, shard);
   mkdirSync(dirname(join(root, shard)), { recursive: true });
   writeFileSync(join(root, shard), JSON.stringify({ formatVersion: 1, divisions: ["ocd-division/country:us/state:nj/county:morris"], zips: { "07866": [0] }, partial: {}, zipSamples: { "07866": 1 } }));
@@ -181,7 +181,7 @@ test("a superseded holding leaves current holdings while its frozen bytes stay a
   installSupersededZipIndex(root);
   const context = loadManifestContext(root);
   assert.equal(canonicalDatasetPaths(root).includes(ZIP_INDEX_PATH), false);
-  assert.ok(canonicalDatasetPaths(root).includes("data/derived/zip-divisions/078.json"), "the successor is a current holding");
+  assert.ok(canonicalDatasetPaths(root).includes("data/derived/zip-divisions/07.json"), "the successor is a current holding");
   assert.equal(context.supersededHoldings.length, 1);
   const az = expectedManifests(context).get("docs/states/az.md")!;
   assert.match(az, /Tracked holdings superseded by a successor holding/);

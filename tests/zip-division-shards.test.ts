@@ -10,9 +10,9 @@ import test from "node:test";
  *
  * Sean's direction is to track everywhere without a code change. These pin the
  * index that makes a code's governments known anywhere: every ZCTA the national
- * lattice sampled is in exactly its ZIP3 shard, each shard is what the index
- * says it is, and the three-state index's ZIPs keep every division the
- * committed geometry still carries.
+ * lattice sampled is in exactly the shard of its two-digit prefix, each shard
+ * is what the index says it is, and the three-state index's ZIPs keep every
+ * division the committed geometry still carries.
  */
 
 const ROOT = join(import.meta.dirname, "..");
@@ -41,11 +41,11 @@ for (const file of readdirSync(DIR)) {
   shards.set(file.replace(/\.json$/, ""), JSON.parse(readFileSync(join(DIR, file), "utf8")) as Shard);
 }
 function divisionsOf(zip: string): string[] {
-  const shard = shards.get(zip.slice(0, 3));
+  const shard = shards.get(zip.slice(0, 2));
   return (shard?.zips[zip] ?? []).map((i) => shard!.divisions[i]);
 }
 
-test("every ZIP the national lattice sampled is in exactly its ZIP3 shard, and every shard is what the index says", () => {
+test("every ZIP the national lattice sampled is in exactly its prefix's shard, and every shard is what the index says", () => {
   const national = JSON.parse(readFileSync(join(ROOT, "data", "derived", "zip-governments.json"), "utf8")) as { zips: Record<string, unknown> };
   const expected = Object.keys(national.zips);
   assert.equal(expected.length, 33_791);
@@ -61,7 +61,7 @@ test("every ZIP the national lattice sampled is in exactly its ZIP3 shard, and e
     assert.equal(Object.keys(shard.zips).length, index.shards[name].zips);
     assert.equal(new Set(shard.divisions).size, shard.divisions.length, `${name}.json holds each division once`);
     for (const [zip, refs] of Object.entries(shard.zips)) {
-      assert.equal(zip.slice(0, 3), name, `${zip} sits in its own ZIP3 shard`);
+      assert.equal(zip.slice(0, 2), name, `${zip} sits in its own prefix's shard`);
       assert.ok(!seen.has(zip), `${zip} appears once`);
       seen.add(zip);
       assert.ok(refs.length > 0 && refs.every((i) => Number.isInteger(i) && i >= 0 && i < shard.divisions.length), `${zip}'s references are in range`);

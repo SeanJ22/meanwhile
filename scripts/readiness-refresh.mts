@@ -134,7 +134,7 @@ function readJsonIf<T>(rel: string): T | null {
 }
 
 const REGISTRY = readJson<Registry>("lib/registry/registry.json");
-// The national ZIP index (every ZIP code in the country, one shard per ZIP3); a test overlay may carry its own.
+// The national ZIP index (every ZIP code in the country, one shard per ZIP prefix); a test overlay may carry its own.
 const ZIP_DIVISIONS = readAllZipDivisions(
   FIXTURE_INPUT_OVERLAY !== null && existsSync(join(FIXTURE_INPUT_OVERLAY, ...ZIP_DIVISIONS_DIR)) ? FIXTURE_INPUT_OVERLAY : ROOT,
 );

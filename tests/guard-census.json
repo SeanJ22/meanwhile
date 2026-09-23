@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 717,
-    "named": 7108,
+    "named": 7106,
     "dynamic": 29
   },
   "files": {
@@ -2484,11 +2484,9 @@
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
         "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
         "a promotion's RETURNING names the moved pointer and never carries its dataset",
-        "a success is clocked in the attempt clock's own units, so the cadence, not the retry, schedules the next read",
         "a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof",
         "a terminal transition requires exact non-GOOD receipt evidence and is immutable",
         "an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG",
-        "any nonzero acquisition time leaves a success on its cadence, not its retry clock",
         "append-only Reader evidence must be a receipt for the exact promoted contract and version",
         "candidate creation refuses a mismatched first event before persisting either half",
         "candidate event time is a bounded local clock and never moves backward by sequence",
@@ -2498,7 +2496,6 @@
         "production NODE_ENV alone cannot open the permanent routine-data writer",
         "promotion accepts only the exact persisted GOOD receipt",
         "terminal store exposes no one-time import or aggregate retirement door",
-        "the Postgres clock reports success from the pointed candidate's first event, in the attempt clock's units",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
         "the Reader-evidence door's narrow read decides authority exactly as the whole envelope does",
@@ -5725,6 +5722,20 @@
       ],
       "dynamic": 0
     },
+    "tests/meetings-discovery-gap-ledger.test.ts": {
+      "names": [
+        "PLAN: a meetings row retires only when the ledger lists its jurisdiction; every other one is held back by name",
+        "PLAN: an unreadable ledger or a provider that did not read cleanly retires nothing",
+        "PLAN: the superseded planner never sees a meetings row, so a moved need does not trip the bound",
+        "RECORD: a jurisdiction is owed meetings discovery until a MEETINGS source it carries is anything but DISCOVERY_OWED",
+        "RECORD: anything short of a well-formed ledger is unreadable, never an empty list",
+        "RECORD: the committed ledger reads, and lists the jurisdictions the runner will retire against",
+        "SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, its occurrence closes unresolved, and nothing else is written",
+        "SEEDED: a spent budget defers the rest untouched, in order, and the next cycle retires them",
+        "SEEDED: while the ledger cannot be read, no meetings row retires and its occurrence stays open"
+      ],
+      "dynamic": 0
+    },
     "tests/method-candidate-authority.test.ts": {
       "names": [
         "a malformed adopted aggregate is a broken lineage, not a store outage or an empty population",
@@ -8393,7 +8404,6 @@
     },
     "tests/routine-civic-data-observability.test.ts": {
       "names": [
-        "Admin shows a succeeding source's next read at the runner's own instant, one lead ahead of its cadence",
         "PDC meetings observability enumerates every source/body authority and excludes the retired aggregate",
         "PDC-13: 24h, 7d, and 30d histories use exact attempt/event members",
         "PDC-13: LKG serving is based on candidate chronology, not pointer-write timestamp",
@@ -8584,18 +8594,6 @@
         "the Sources page reads the three sources together and shows the narrow panel before the proof-based one",
         "the narrow read selects no payload and never touches the candidate JSON",
         "with nothing recorded, every contract is NOT_PUBLISHED with no attempt, never a pass"
-      ],
-      "dynamic": 0
-    },
-    "tests/routine-reread-lead.test.ts": {
-      "names": [
-        "Admin's next-due and the runner read one function",
-        "a failed later attempt keeps its retry clock exactly; the lead applies only to a success",
-        "a source that succeeds on every attempt never reads older than its Reader maxAge",
-        "a succeeding meeting partition is re-read at 23 h, one hour ahead of its daily maxAge",
-        "the daily-then-weekly switch on 2026-11-04 never yields a negative or skipped re-read instant",
-        "the lead is the contract's retry, never under 15 minutes, never over half the cadence",
-        "the old on-the-cadence rule fails the same property (negative control)"
       ],
       "dynamic": 0
     },

@@ -120,6 +120,11 @@ export interface RoutineDataStore {
     input: PreparedReaderProjectionInput,
     expectedSequence: number | null,
   ) => Promise<{ readonly published: boolean; readonly sequence: number }>;
+  /**
+   * Move the pointer to a VALIDATED candidate. The returned projection's
+   * payload is that candidate's own read model, already in hand: a store
+   * never ships the promoted dataset back over the wire to report the move.
+   */
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string) => Promise<PromotedProjection>;
   /** Append non-disposition evidence without changing the candidate's state. */
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
@@ -966,6 +971,15 @@ export function promotedPointerIdentityRead(
     .where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.scope, [...scopes])));
 }
 
+/**
+ * What a promotion's RETURNING carries back: the moved pointer's identity and
+ * receipt. Never its payload; see `PostgresRoutineDataStore.promote`.
+ */
+export const PROMOTED_POINTER_COLUMNS = {
+  ...PROMOTED_POINTER_IDENTITY_COLUMNS,
+  validationReceipt: civicDataPromotions.validationReceipt,
+} as const;
+
 type PostgresPromotedPointerIdentityRow = Pick<
   typeof civicDataPromotions.$inferSelect,
   keyof typeof PROMOTED_POINTER_IDENTITY_COLUMNS
@@ -1343,6 +1357,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async promote(candidateId: string, receipt: ValidationReceipt, at: string): Promise<PromotedProjection> {
     this.assertMutationAuthority();
+    // Whole row: its read model is the payload the insert below copies and the
+    // payload of the projection returned, so the batch never ships it back.
     const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
     const record = row ? rowToCandidate(row) : null;
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
@@ -1351,7 +1367,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertCandidateMutationAuthority(record.candidate);
     const candidate = record.candidate;
     const key = projectionKey(candidate.recordClass, candidate.scope);
-    const [prior] = await this.db.select().from(civicDataPromotions).where(eq(civicDataPromotions.key, key)).limit(1);
+    // The prior pointer is read for its version id alone, never its payload.
+    const [prior] = await this.db.select({ currentVersionId: civicDataPromotions.currentVersionId })
+      .from(civicDataPromotions)
+      .where(eq(civicDataPromotions.key, key))
+      .limit(1);
     const expectedVersionId = record.lastKnownGoodVersion;
     const receiptJson = JSON.stringify(persistedReceipt);
     const eligibility = sql`
@@ -1402,7 +1422,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         setWhere: expectedVersionId === null
           ? sql`false`
           : eq(civicDataPromotions.currentVersionId, expectedVersionId),
-      }).returning();
+      }).returning(PROMOTED_POINTER_COLUMNS);
     const pointerOwnsCandidate = sql`exists (
       select 1 from ${civicDataPromotions}
       where ${civicDataPromotions.key} = ${key}
@@ -1419,7 +1439,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       validationReceipt: persistedReceipt,
       promotedVersionId: candidateId,
       lastKnownGoodVersionId: candidateId,
-    }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning();
+    }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning({ candidateId: civicDataCandidates.id });
     const [, promotedRows, , updatedRows] = await this.db.batch([
       this.candidateEventLock(candidateId),
       promotionWrite,
@@ -1436,7 +1456,20 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
-    return postgresPromotionRowToProjection(promotedRows[0]);
+    /*
+     * The batch returns the moved pointer's identity and receipt, never its
+     * payload or the candidate envelope. Both carry the promoted dataset, so
+     * one HTTP response held it twice: 75.84 MB for census geography before
+     * PR #363 compacted it, 33.5 MB for NJ roll calls on 2026-09-23. The
+     * pointer's payload is, by the insert above, `candidate->'readModel'` of
+     * this exact eligible row; that read model is already in hand, so the
+     * projection is built from it and the dataset never crosses back.
+     */
+    return {
+      ...postgresPromotedPointerIdentity(promotedRows[0]),
+      payload: candidate.readModel,
+      receipt: promotedRows[0].validationReceipt as ValidationReceipt,
+    };
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {

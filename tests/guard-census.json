@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 707,
-    "named": 7011,
+    "named": 7013,
     "dynamic": 28
   },
   "files": {
@@ -2440,12 +2440,14 @@
     },
     "tests/civic-data-store-integrity.test.ts": {
       "names": [
+        "Postgres promotion ships no dataset back and returns the pointer with the read model it copied",
         "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
         "Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
         "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
+        "a promotion's RETURNING names the moved pointer and never carries its dataset",
         "a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof",
         "a terminal transition requires exact non-GOOD receipt evidence and is immutable",
         "an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG",

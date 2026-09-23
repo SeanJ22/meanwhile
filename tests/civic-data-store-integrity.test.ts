@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import test from "node:test";
 
+import { neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import * as schema from "../lib/db/schema.ts";
@@ -11,6 +12,8 @@ import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
   MemoryRoutineDataStore,
+  PostgresRoutineDataStore,
+  PROMOTED_POINTER_COLUMNS,
   promotedPointerIdentityRead,
   readerEvidenceCandidateRead,
   readerEvidenceRowToRecord,
@@ -773,6 +776,195 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
   assert.match(promote, /validationReceipt: persistedReceipt/);
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
+  // The same transaction, answered without its dataset: the pointer write
+  // returns identity and receipt, the candidate write its id, and the
+  // projection's payload is the read model already in hand (which the
+  // insert copies as the pointer's payload).
+  assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
+  assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);
+  assert.match(promote, /update\(civicDataCandidates\)[\s\S]*\.returning\(\{ candidateId: civicDataCandidates\.id \}\)/);
+  assert.match(promote, /\$\{civicDataCandidates\.candidate\}->'readModel'/);
+  assert.match(promote, /payload: candidate\.readModel,/);
+  assert.doesNotMatch(promote, /select\(\)\.from\(civicDataPromotions\)/, "the prior pointer is read for its version id alone");
+});
+
+test("a promotion's RETURNING names the moved pointer and never carries its dataset", () => {
+  const mock = drizzle.mock({ schema });
+  const returning = (text: string) => text.slice(text.lastIndexOf(" returning ") + " returning ".length);
+  const pointer = returning(mock.update(schema.civicDataPromotions)
+    .set({ scope: "moved" })
+    .returning(PROMOTED_POINTER_COLUMNS)
+    .toSQL().sql);
+  assert.doesNotMatch(pointer, /"payload"/);
+  for (const column of [
+    "key",
+    "source_id",
+    "record_class",
+    "scope",
+    "current_version_id",
+    "last_known_good_version_id",
+    "promoted_at",
+    "validation_receipt",
+  ]) {
+    assert.match(pointer, new RegExp(`"${column}"`), `the promotion RETURNING must still name ${column}`);
+  }
+});
+
+/** Postgres type OIDs the canned Neon HTTP answers below declare. */
+const NEON_TYPE = { text: 25, bool: 16, jsonb: 3802, timestamptz: 1184, void: 2278 } as const;
+type NeonColumn = readonly [name: string, type: keyof typeof NEON_TYPE];
+interface NeonAnswer {
+  readonly columns: readonly NeonColumn[];
+  readonly rows: readonly (readonly unknown[])[];
+}
+interface NeonStatement {
+  readonly query: string;
+  readonly params: readonly unknown[];
+}
+
+/**
+ * Drive the real PostgresRoutineDataStore through the Neon driver's own fetch
+ * seam: every statement is recorded and answered from canned rows in the
+ * driver's raw-text array protocol. No network, no database.
+ */
+async function withCannedNeon<T>(
+  answer: (statement: NeonStatement) => NeonAnswer,
+  run: (store: PostgresRoutineDataStore, sent: NeonStatement[]) => Promise<T>,
+): Promise<T> {
+  const originalFetch = neonConfig.fetchFunction;
+  const originalUrl = process.env.DATABASE_URL;
+  const sent: NeonStatement[] = [];
+  neonConfig.fetchFunction = (async (_endpoint: unknown, init: { readonly body: string }) => {
+    const body = JSON.parse(init.body) as { query?: string; params?: unknown[]; queries?: NeonStatement[] };
+    const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
+    const results = statements.map((statement) => {
+      sent.push(statement);
+      const { columns, rows } = answer(statement);
+      return {
+        command: "SELECT",
+        rowCount: rows.length,
+        rowAsArray: true,
+        fields: columns.map(([name, type]) => ({ name, dataTypeID: NEON_TYPE[type] })),
+        rows: rows.map((row) => row.map((value) =>
+          value === null ? null
+            : typeof value === "boolean" ? (value ? "t" : "f")
+              : typeof value === "string" ? value
+                : JSON.stringify(value))),
+      };
+    });
+    return new Response(JSON.stringify(body.queries ? { results } : results[0]), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  }) as typeof neonConfig.fetchFunction;
+  process.env.DATABASE_URL = "postgresql://canned:canned@ep-canned-store-proof.us-east-2.aws.neon.tech/neondb";
+  try {
+    const store = new PostgresRoutineDataStore();
+    // The installed-runtime attestation is its own suite's subject; this proof
+    // enters with the exact contract authority a registered FEC child holds.
+    Object.assign(store as unknown as Record<string, unknown>, {
+      writeAuthority: {
+        repo: ROOT,
+        sha: "1".repeat(40),
+        capability: "ROUTINE_CONTRACT",
+        contract: "fec-funding",
+        parentPid: 123,
+        nonce: "2".repeat(64),
+      } satisfies RuntimeAuthorityEnvelope,
+    });
+    return await run(store, sent);
+  } finally {
+    neonConfig.fetchFunction = originalFetch;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = originalUrl;
+  }
+}
+
+/** The RETURNING list of a statement, or null when it has none. */
+function returningList(query: string): string | null {
+  const at = query.lastIndexOf(" returning ");
+  return at < 0 ? null : query.slice(at + " returning ".length);
+}
+
+test("Postgres promotion ships no dataset back and returns the pointer with the read model it copied", async () => {
+  const value = candidate("postgres-promotion-returning", "2026-09-08T12:00:00.000Z", "fec-open-api");
+  const persisted = receiptFor(value);
+  const promotedAt = "2026-09-08T12:01:00.000Z";
+  const candidateRow: readonly (readonly [NeonColumn, unknown])[] = [
+    [["id", "text"], value.id],
+    [["source_id", "text"], value.sourceId],
+    [["record_class", "text"], value.recordClass],
+    [["scope", "text"], value.scope],
+    [["state", "text"], "VALIDATED"],
+    [["acquisition_succeeded", "bool"], true],
+    [["raw_hash", "text"], value.retrieval.rawHash],
+    [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
+    [["source_through", "text"], value.temporal.sourceThrough],
+    [["parser_version", "text"], value.normalization.parserVersion],
+    [["identity", "jsonb"], value.identities],
+    [["candidate", "jsonb"], value],
+    [["validation_receipt", "jsonb"], persisted],
+    [["promoted_version_id", "text"], null],
+    [["last_known_good_version_id", "text"], null],
+    [["failure_code", "text"], null],
+    [["failure_detail", "text"], null],
+  ];
+  const pointerRow: readonly (readonly [NeonColumn, unknown])[] = [
+    [["key", "text"], `${value.recordClass}:${value.scope}`],
+    [["source_id", "text"], value.sourceId],
+    [["record_class", "text"], value.recordClass],
+    [["scope", "text"], value.scope],
+    [["current_version_id", "text"], value.id],
+    [["last_known_good_version_id", "text"], value.id],
+    [["promoted_at", "timestamptz"], "2026-09-08 12:01:00+00"],
+    [["validation_receipt", "jsonb"], persisted],
+  ];
+  const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
+    columns: cells.map(([column]) => column),
+    rows: [cells.map(([, cell]) => cell)],
+  });
+  const none: NeonAnswer = { columns: [], rows: [] };
+
+  const promoted = await withCannedNeon((statement) => {
+    const text = statement.query;
+    if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
+    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(candidateRow);
+    if (text.startsWith("select") && text.includes(`from "civic_data_promotions"`)) return none;
+    if (text.startsWith(`insert into "civic_data_promotions"`)) return answer(pointerRow);
+    if (text.startsWith(`insert into "civic_data_candidate_events"`)) return none;
+    if (text.startsWith(`update "civic_data_candidates"`)) return { columns: [["id", "text"]], rows: [[value.id]] };
+    throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
+  }, async (store, sent) => {
+    // Judge the statements sent before the answer is mapped, so a whole-row
+    // RETURNING fails on what it asked for, not on the canned reply's shape.
+    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt)
+      .then((result) => ({ result }), (error: unknown) => ({ error }));
+
+    const priorRead = sent.find(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_promotions"`));
+    assert.match(priorRead?.query ?? "", /^select "current_version_id" from "civic_data_promotions"/, "the prior pointer is read for its version id alone");
+    const pointerWrite = sent.find(({ query }) => query.startsWith(`insert into "civic_data_promotions"`));
+    assert.match(pointerWrite?.query ?? "", /"candidate"->'readModel'/, "the pointer's payload is still copied server-side from the candidate");
+    const pointerReturning = returningList(pointerWrite?.query ?? "");
+    assert.ok(pointerReturning !== null, "the pointer write still reports the moved pointer");
+    assert.doesNotMatch(pointerReturning ?? "", /"payload"/, "the promoted payload is not shipped back");
+    const candidateWrite = sent.find(({ query }) => query.startsWith(`update "civic_data_candidates"`));
+    assert.equal(returningList(candidateWrite?.query ?? ""), `"id"`, "the candidate write returns its id, never the envelope");
+    if ("error" in settled) throw settled.error;
+    return settled.result;
+  });
+
+  assert.deepEqual(promoted, {
+    key: `${value.recordClass}:${value.scope}`,
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    versionId: value.id,
+    lastKnownGoodVersionId: value.id,
+    promotedAt,
+    payload: value.readModel,
+    receipt: persisted,
+  });
 });
 
 test("every Postgres candidate-event allocator is serialized inside its Neon batch", () => {

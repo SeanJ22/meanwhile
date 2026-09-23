@@ -2,9 +2,9 @@
   {
     "surface": "map",
     "component": "components/funding/state-money-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/final/85701-hobbs-map-money.png",
@@ -15,9 +15,9 @@
   {
     "surface": "ballot",
     "component": "components/funding/state-money-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/final/85701-hobbs-ballot-money.png",
@@ -28,9 +28,9 @@
   {
     "surface": "state-money",
     "component": "components/funding/state-money-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/final/85701-hobbs-map-money.png",
@@ -45,185 +45,185 @@
   {
     "surface": "map",
     "component": "components/funding/funding-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/funding/funding-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/person-identity.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/contact-pills.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/member-directory.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/map/popup/entity-modal.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/map/popup/district-popup.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/map/popup/official-popup.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/key-votes-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/official-term-note.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/roster-completeness-gap.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/official-actions.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/officials/public-statements-profile.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/map/voting-sites-panel.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/officials/person-identity.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/officials/contact-pills.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/officials/member-directory.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/map/popup/official-popup.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/officials/key-votes-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/officials/official-actions.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/officials/public-statements-profile.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/ballot/candidate-card.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-ballot.json",
-    "evidenceSha256": "cbd68971cdd42ab6ca6972844243c8d0d9a9abd0062115ab2c8778672f30a0f8",
+    "evidenceSha256": "a82a8d037ce600e5f15076ceaca0a9d727bf0ef23773e960a3528cec1e89cadb",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/ballot/candidate-contact.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/final/07866-filed-contact.png",
@@ -234,67 +234,67 @@
   {
     "surface": "ballot",
     "component": "components/ballot/polling-lookup-fallback.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "ballot",
     "component": "components/map/voting-sites-panel.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "about-area",
     "component": "components/area/shuffled-facts.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/map/popup/meeting-popup.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/final/03255-newbury-unresolved-listings.png",
-        "sha256": "9f548c20edd6951a9967e64eddba91a492c0daec4a2cdc02e060b5c9d928bc35"
+        "sha256": "faf4a07d79dd3d575bb737668c4c19e40f82348061572dc8115f8d0b07e3793a"
       }
     ]
   },
   {
     "surface": "map",
     "component": "components/map/popup/agenda-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-        "sha256": "9a7b50eade1d2bfdd4ed339d2c305d7d692e8996ed0745418543b6b975c884e1"
+        "sha256": "e427ed7c773e0b8773c5918bb89d424e16590e41b26645396837dfcfa680cc75"
       }
     ]
   },
   {
     "surface": "map",
     "component": "components/map/meeting-panel.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   },
   {
     "surface": "map",
     "component": "components/map/popup/meeting-records.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "screenshots": []
   }
 ]

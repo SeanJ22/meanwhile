@@ -10,14 +10,14 @@
       "areaFactsForState → ShuffledFacts"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/9",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-phone-dark-about-area.png",
-        "sha256": "3096455a601a7d93653ec2a50748cf570fabbcf3f573a1bad4e256971162f79e"
+        "sha256": "9150069b83a9e242ea6914dd0205cc31bb63e084df556fece01d895ac7a390c0"
       }
     ],
     "status": "PROVEN",
@@ -26,9 +26,9 @@
   {
     "surface": "ballot",
     "component": "components/ballot/candidate-card.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-ballot.json",
-    "evidenceSha256": "cbd68971cdd42ab6ca6972844243c8d0d9a9abd0062115ab2c8778672f30a0f8"
+    "evidenceSha256": "a82a8d037ce600e5f15076ceaca0a9d727bf0ef23773e960a3528cec1e89cadb"
   },
   {
     "surface": "ballot",
@@ -42,9 +42,9 @@
       "candidateContactForCandidacy → CandidateContact"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/2",
     "screenshots": [
       {
@@ -66,9 +66,9 @@
       "pollingPlaceLinkFor → PollingLookupFallback"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/8",
     "screenshots": [
       {
@@ -94,14 +94,14 @@
       "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render-federal-money.json",
-    "evidenceSha256": "39d6dcaecb76e8829c4c1b80cc813acce22ab233b71f84fbaf93f2fa264c2c47",
+    "evidenceSha256": "b992ced2e66b3e652e1918694008e43a39e95affbc766d7da73e47d56be2a28b",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-federal-money.png",
-        "sha256": "8cf201c6dc6a1d1401877603d12a6175f66b3ae8509ecb7e4346d9b3ec4d8c83"
+        "sha256": "14b0fd6cb01a77e438ec7a871d83acc7a6bac2addb2a08b2679a23a59f07cec1"
       }
     ],
     "status": "PROVEN",
@@ -118,14 +118,14 @@
       "stateMoneyForTarget → StateMoneySection"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",
-        "sha256": "a3b3818280bf3c961cc4231fe18805a26928edbb9bc4965e6cd93ff35d96d815"
+        "sha256": "67b9afa3eb6aaf354e56a45ec5dc5124bc4c6c7835d420ebd59d9d9765d6f689"
       }
     ],
     "status": "PROVEN",
@@ -159,9 +159,9 @@
       "visible": true
     },
     "gesture": "Open Voting Record; verify all recent rows and the visible held plain-language bill summary, opening its disclosure if necessary.",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -187,9 +187,9 @@
       "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
@@ -217,14 +217,14 @@
       "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",
-        "sha256": "a3b3818280bf3c961cc4231fe18805a26928edbb9bc4965e6cd93ff35d96d815"
+        "sha256": "67b9afa3eb6aaf354e56a45ec5dc5124bc4c6c7835d420ebd59d9d9765d6f689"
       }
     ],
     "status": "PROVEN",
@@ -242,9 +242,9 @@
       "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -270,9 +270,9 @@
       "actual GET /api/directory → DirectoryRecordsContent"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -298,18 +298,18 @@
       "officialActionsForTarget → OfficialActionsContent"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions.png",
-        "sha256": "022de1c932728d68e4056043eb7f7e69ddc99c65c51ad47663042959ebf7aece"
+        "sha256": "70780ae8b690fe33b9f1a15cbfaa3e55344a46e0f27fd99bcd094bb6f869ad12"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions-last.png",
-        "sha256": "e04878584ca7d7900bb17a0c5bdf67958dffa6bda1262940bf4102fd60ae370b"
+        "sha256": "78544dc141036ff689266aeb27fedede969b095c95840621c26dbdd94a654d50"
       }
     ],
     "status": "PROVEN",
@@ -329,14 +329,14 @@
       "canonical person/card portrait → IdentityPortrait"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",
-        "sha256": "a3b3818280bf3c961cc4231fe18805a26928edbb9bc4965e6cd93ff35d96d815"
+        "sha256": "67b9afa3eb6aaf354e56a45ec5dc5124bc4c6c7835d420ebd59d9d9765d6f689"
       }
     ],
     "status": "PROVEN",
@@ -345,9 +345,9 @@
   {
     "surface": "ballot",
     "component": "components/officials/positions-section.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-positions.json",
-    "evidenceSha256": "214f46d3f76f6a0fb3024418a1c2be0ab404b2f22943971347dafcc68574b5b7"
+    "evidenceSha256": "ba590a2a860e8dd402fda603636662a55aa1893c9d63edb6200c7bd21690823a"
   },
   {
     "surface": "ballot",
@@ -360,9 +360,9 @@
       "prlProfileForSubject → PublicStatementsProfileContent"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
@@ -376,9 +376,9 @@
   {
     "surface": "civic-routing",
     "component": "components/ask/ask-box.tsx",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-civic.json",
-    "evidenceSha256": "39574cc53cf445bb460659e8d31e43d29f0beae3a5b2c3f9a51c072792accba8"
+    "evidenceSha256": "1ff58f3d9197fbcc9f093ee1dd3beeb22244e36e7a4428bcf6e8c180cd9864cf"
   },
   {
     "surface": "map",
@@ -391,14 +391,14 @@
       "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render-federal-money.json",
-    "evidenceSha256": "39d6dcaecb76e8829c4c1b80cc813acce22ab233b71f84fbaf93f2fa264c2c47",
+    "evidenceSha256": "b992ced2e66b3e652e1918694008e43a39e95affbc766d7da73e47d56be2a28b",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-phone-dark-map-federal-money.png",
-        "sha256": "47777753994da5382c80f56ee41cff37d73c60fe1497c73873e02545b7e07da4"
+        "sha256": "240566a7f3ff0aaaaf4674ac41fccf3bf272c845b73bee3a61eeabee21c6edac"
       }
     ],
     "status": "PROVEN",
@@ -415,14 +415,14 @@
       "stateMoneyForTarget → StateMoneySection"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "4e1ab1d67d85cbabfcb72cdf1d4ce856e28dde1019d05a423a95784c089a98f3"
+        "sha256": "f32286631410ce59a0e41c9ad350d304f5a73323e4be1fa2a30dd9835b14d698"
       }
     ],
     "status": "PROVEN",
@@ -440,7 +440,7 @@
     ],
     "importReach": true,
     "listingMultiplicity": {
-      "renderedListingCount": 285,
+      "renderedListingCount": 294,
       "groups": [
         {
           "sourceIds": [
@@ -459,30 +459,93 @@
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
           "sourceListingCount": 2,
           "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
         }
       ]
     },
     "listingResultPointer": "/results/11",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/8",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-phone-dark-venue-meeting-panel.png",
-        "sha256": "0868a7931c1611fcaeaa9baeb9409f332969724d50c6ee99ec48afcc2a9dc30b"
+        "sha256": "84799b68cd24c1d945a56ab5875fa20be1b97131057aa55860fedc640bffa061"
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-count.png",
-        "sha256": "0a50bc9cac284f7399104c3a44d6abef04d29308b2f239948c93f1f9943102af"
+        "sha256": "829ebeda3575b4cc89ab1f57de985559ca7c575fefc060323010cbce300b099d"
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-overlay.png",
-        "sha256": "bbe9c3b8fcfedadf4031f2673674c211b301f894b3bbb50ed04cf2f45d74f136"
+        "sha256": "f1f9d33e61fb534ed61f56d2dbb15e260859fec869157fa4d0685efd26c07003"
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-venue.png",
-        "sha256": "b86f2524183858273b7b762384bd15a41c9a80d6351aacfc44c0182428c0bd7c"
+        "sha256": "9f2ccbb31567274507e4b4b060dbcead68b5619e1861d8bc63f83f06bdcc5a66"
       }
     ],
     "status": "PROVEN",
@@ -495,27 +558,27 @@
       "notice-summaries",
       "meetings"
     ],
-    "recordObligations": 78,
+    "recordObligations": 72,
     "selectorClasses": [
       "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-final-render.json",
-    "evidenceSha256": "9c0c75b3de958ba101fed96226c229c48d4c1932a235ed8e31708af8f6181623",
+    "evidenceSha256": "f822edb0835c35ca178fb3aa557132383d7fab6fa212d80433881c1b0ed8308b",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-minutes.png",
-        "sha256": "030c3644debb2d38af1163845929c34de2bf2d7f03e68621dafaac66fc30178c"
+        "sha256": "81ccf631824649b8247d4520784a07b580e24299e82d6148857796eaeed06215"
       },
       {
         "path": "screenshots/reader-last-mile/85701-phone-dark-diligent-tusd1-493-agenda-text.png",
-        "sha256": "0bbd5a97ea653946b3b14ae17048d5e5ea9f76c8d28673b636e178861a442e63"
+        "sha256": "b4ed5538ed1953be05b53d2f7b7770294225539a647c686db34d66d41c9b69c1"
       },
       {
         "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-        "sha256": "9a7b50eade1d2bfdd4ed339d2c305d7d692e8996ed0745418543b6b975c884e1"
+        "sha256": "e427ed7c773e0b8773c5918bb89d424e16590e41b26645396837dfcfa680cc75"
       }
     ],
     "status": "PROVEN",
@@ -533,14 +596,14 @@
       "canonical registry division → seatHoldersForDivision → actual DistrictPopup"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-district-popup.png",
-        "sha256": "e073db645f1b0ec0bad1f5723656c37197e2249144b4ce8b22f33575865358df"
+        "sha256": "dd2a4fa6fa73bb7be9b8fdea752fb6049d3bcdb161604e1a909654f2ca57e5b5"
       }
     ],
     "status": "PROVEN",
@@ -563,7 +626,7 @@
     ],
     "importReach": true,
     "listingMultiplicity": {
-      "renderedListingCount": 285,
+      "renderedListingCount": 294,
       "groups": [
         {
           "sourceIds": [
@@ -582,26 +645,89 @@
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
           "sourceListingCount": 2,
           "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
         }
       ]
     },
     "listingResultPointer": "/results/11",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster.png",
-        "sha256": "03548fb7b21ff5d8665328e426127dc2ee6024f54bfdeff9fc934222a12f1a62"
+        "sha256": "4b1d11b5fecfdfa25d4309350f42f5194b293e924d4b8718fe4e0e148185b729"
       },
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster-last-member.png",
-        "sha256": "13f6152fd8bc4741c2aabe67c820c8108749153b352dfeee6dd35ceceebb22a3"
+        "sha256": "8e6d158ec1e6db612f3e2008896b18941fc989481e433b9f3464ffa4fb8b07f9"
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-full-meeting.png",
-        "sha256": "dedc88f4f46d0a4a95b0c85c3bad01257c618a4e892eb1194fa5a61275d66cc0"
+        "sha256": "1ba414003ab0f11f2533e921cad2dec081166787b2732b97399e933451663d24"
       }
     ],
     "status": "PROVEN",
@@ -614,13 +740,13 @@
       "minutes-summaries",
       "meetings"
     ],
-    "recordObligations": 527,
+    "recordObligations": 511,
     "selectorClasses": [
       "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
     ],
     "importReach": true,
     "listingMultiplicity": {
-      "renderedListingCount": 285,
+      "renderedListingCount": 294,
       "groups": [
         {
           "sourceIds": [
@@ -639,26 +765,117 @@
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
           "sourceListingCount": 2,
           "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
+        },
+        {
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe.",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null
         }
       ]
     },
     "listingResultPointer": "/results/11",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/8",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-phone-dark-meeting-popup.png",
-        "sha256": "35be20da067f4301207aaa818e596f7c8b80fca8f9906e7428385c13560106b5"
+        "sha256": "47d486a1c677b1390da34b8d88bbb8bb4dbf65639f49e0bc46c3884db61f0b5f"
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-1.png",
-        "sha256": "aad30300a553f925d7d354d38581af8b6d1b0f08340716061d34fc15b4e98b7f"
+        "sha256": "3a97f28f5dca59ad77898e9a6cd32b4d794cf7b71c6c410ea5520c9b8b69e315"
       },
       {
         "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-2.png",
-        "sha256": "7472ab17f939441fe1e250c5e1e0b67af60b243fa74225b2e286072bfc93102a"
+        "sha256": "358fbd6c0fcc77e00f9839ae537051465411fecfa68492cbf675a817ab625bd4"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-3.png",
+        "sha256": "361e27a9ea7f85210b2710e4fc6b6b8617a9ebf377937ea63da432fc1f54187d"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-4.png",
+        "sha256": "26b4c96def8335dcc028ffc4b0f13732cb70d27dc438401534c717cc42182a8b"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-5.png",
+        "sha256": "9853f972c59d321686c10f728bb9a3c0c10dfb1f411506bcb0838a8de01c0f20"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-6.png",
+        "sha256": "5931d6b6355d5d3fa4d0222a046338d16c1602d1603d814b1a996b5baf287f83"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-7.png",
+        "sha256": "c7b5e0058f045e778ec0729c95c9bc2bb700fc8b1cb9c6b7381554f9b817309c"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-8.png",
+        "sha256": "eeac73ef5c8c0d6e66fa4763080d28df1265c314ccda3db6ebb48df8ee08ccfe"
+      },
+      {
+        "path": "screenshots/reader-last-mile/03255-phone-dark-listing-popup-9.png",
+        "sha256": "564b246de1e7e562509ee29b17bc5434f56a481209a67311931a9422baa13c34"
       }
     ],
     "status": "PROVEN",
@@ -675,9 +892,9 @@
       "meetingReaderRecords → MeetingRecords"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/8",
     "screenshots": [
       {
@@ -724,18 +941,18 @@
       "visible": true
     },
     "gesture": "Open Voting Record; verify all recent rows and the visible held plain-language bill summary, opening its disclosure if necessary.",
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes.png",
-        "sha256": "21d14db4c82efa25f27d6424981081be1e63362a25f98e5109c149bc5405ddff"
+        "sha256": "90ef958c4331b189ee984775bd195d4e0a5ae5ab99b2215b27abfd23a2866b12"
       },
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes-last.png",
-        "sha256": "36842a603db4e29ce11f4021095e5f86123dc0b4b86bb301536eb3cc7ff54bf1"
+        "sha256": "c29e6b1537eca884340a995988fd16c331515d4969555bf0a990df893242b74f"
       }
     ],
     "status": "PROVEN",
@@ -752,18 +969,18 @@
       "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-voting-sites.png",
-        "sha256": "00b7e0ff957187abf37c317f8d9c6470a9c42eedea8a4e782c772be48361100e"
+        "sha256": "5918a332d7b5a3fbc7ebb68794497af3c22af77154c6e7bf6f9a11fd033d7995"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-voting-sites-source.png",
-        "sha256": "a594e7042708498c95f02e6a1de6e1d79b9753b6840e138949ed76970d262c56"
+        "sha256": "431da688961db03c738386d74c0c54816d398bf7a72646884cda206c3700b25b"
       }
     ],
     "status": "PROVEN",
@@ -783,14 +1000,14 @@
       "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "4e1ab1d67d85cbabfcb72cdf1d4ce856e28dde1019d05a423a95784c089a98f3"
+        "sha256": "f32286631410ce59a0e41c9ad350d304f5a73323e4be1fa2a30dd9835b14d698"
       }
     ],
     "status": "PROVEN",
@@ -808,18 +1025,18 @@
       "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-key-votes.png",
-        "sha256": "c781cced18faecb3f899476a33f4644752e5a946ebb36f8dab736ea912abd97c"
+        "sha256": "dc6f40940c5c118914110b0317513c4ff9e41c6f2457823e7f4f8ffb6043dc35"
       },
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-key-votes-last.png",
-        "sha256": "032a0c5289323d5cf476d86a5078aad2f9630809dee2dbdf0b6023b83a2d70de"
+        "sha256": "23fc6d3bd9b0e7848d1f361fee9005a89be67b717e603b1ccac16cc96a614abf"
       }
     ],
     "status": "PROVEN",
@@ -836,18 +1053,18 @@
       "actual GET /api/directory → DirectoryRecordsContent"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-committees.png",
-        "sha256": "5b668709b7b21f360494e7e710f576a19a1e60c849cbaa1e92354462fd498b18"
+        "sha256": "05507c8a17bbfb59148fc4a61580dd5198af0d81d7906d9d2ae1bfef7197882c"
       },
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-offices.png",
-        "sha256": "279d382bea509ec2c516732f4a432147d724c890c7d59674e43d26f28a4b58bd"
+        "sha256": "fc3909e87556027ee7dd0fb622351761a6a0016d06e06925998d4089a183f1ed"
       }
     ],
     "status": "PROVEN",
@@ -864,18 +1081,18 @@
       "officialActionsForTarget → OfficialActionsContent"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-official-actions.png",
-        "sha256": "a21fc0de53d9c18e8ec572886390d2310b8271d9f5b54cd0c0d79cc7bb4ae421"
+        "sha256": "8e501e53db94c1e04573c6b9c037f82b74e3eda6b0a76a0c4bb41c27bd2b9138"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-official-actions-last.png",
-        "sha256": "705eb3cb5daf23ea07c9ccb1beb7632a9b322c35acb2b71165817cdba1f45c69"
+        "sha256": "b26ba3bc2706d4a8e76f4433bd99bfaf562c628c35f20704ab522fa7c7a7b579"
       }
     ],
     "status": "PROVEN",
@@ -892,14 +1109,14 @@
       "rosterHoldersForBody → OfficialTermNote"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/9",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-phone-dark-official-term-note.png",
-        "sha256": "59c12a8e474be2f9b20ba2041f6589bf29ae9200c94351ae779328b3a3ef3ba1"
+        "sha256": "6a83cfb1b71faac79b2ee37436ae843655ea079c61398f006891b871b40b5ee7"
       }
     ],
     "status": "PROVEN",
@@ -920,14 +1137,14 @@
       "canonical person/card portrait → IdentityPortrait"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "4e1ab1d67d85cbabfcb72cdf1d4ce856e28dde1019d05a423a95784c089a98f3"
+        "sha256": "f32286631410ce59a0e41c9ad350d304f5a73323e4be1fa2a30dd9835b14d698"
       }
     ],
     "status": "PROVEN",
@@ -944,14 +1161,14 @@
       "prlProfileForSubject → PublicStatementsProfileContent"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/1",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85641-desktop-dark-map-profile.png",
-        "sha256": "2b6a7d2fa332aa33ff0d140ed721db964be4da9d3a6485fbc6a4db1b6af2284c"
+        "sha256": "95e09cafc82805ac6e8a81e6a5524f226ebab3a30ec10b5193713d7ebc604b79"
       }
     ],
     "status": "PROVEN",
@@ -968,18 +1185,18 @@
       "rosterGapForBody → RosterCompletenessGaps"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/2",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-incomplete-roster.png",
-        "sha256": "03548fb7b21ff5d8665328e426127dc2ee6024f54bfdeff9fc934222a12f1a62"
+        "sha256": "4b1d11b5fecfdfa25d4309350f42f5194b293e924d4b8718fe4e0e148185b729"
       },
       {
         "path": "screenshots/reader-last-mile/07866-desktop-dark-district-popup.png",
-        "sha256": "e073db645f1b0ec0bad1f5723656c37197e2249144b4ce8b22f33575865358df"
+        "sha256": "dd2a4fa6fa73bb7be9b8fdea752fb6049d3bcdb161604e1a909654f2ca57e5b5"
       }
     ],
     "status": "PROVEN",
@@ -996,18 +1213,18 @@
       "stateMoneyForTarget → StateMoneySection"
     ],
     "importReach": true,
-    "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
+    "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
     "evidencePath": "docs/evidence/reader-last-mile-render.json",
-    "evidenceSha256": "33931317060ddbd2a81d61c43d000cbe7df6fcf231de91e7196b618ce2d10538",
+    "evidenceSha256": "a6f89e5d15e1a88e4099c406e6cdb6b3ab270e35318b7cfb1c07bb41011e879c",
     "resultPointer": "/results/4",
     "screenshots": [
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
-        "sha256": "4e1ab1d67d85cbabfcb72cdf1d4ce856e28dde1019d05a423a95784c089a98f3"
+        "sha256": "f32286631410ce59a0e41c9ad350d304f5a73323e4be1fa2a30dd9835b14d698"
       },
       {
         "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",
-        "sha256": "a3b3818280bf3c961cc4231fe18805a26928edbb9bc4965e6cd93ff35d96d815"
+        "sha256": "67b9afa3eb6aaf354e56a45ec5dc5124bc4c6c7835d420ebd59d9d9765d6f689"
       }
     ],
     "status": "PROVEN",

@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
-  "buildId": "nmJIGEAY6VrlKX8yvoeE4",
+  "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
+  "buildId": "E1cg0vwcuRVHV8-HjriQj",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-20T05:40:10.646Z",
+  "runId": "reader-last-mile-final-render@2026-09-23T02:51:35.104Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -263,7 +263,7 @@
     },
     {
       "path": "components/map/list-overlay.tsx",
-      "sha256": "1fc947b40af3ed2d3eaece202b33061c65ec5fa6f8e46202d2c1edaa5f05bcaa"
+      "sha256": "707e70fc5597d95cf79e10acf0e5dede0f1a407c7fe3db6e7a7d22dab7df2e4d"
     },
     {
       "path": "components/map/map-canvas.tsx",
@@ -283,7 +283,7 @@
     },
     {
       "path": "components/map/meeting-panel.tsx",
-      "sha256": "dcae4ddfcdf98e466eea61f4cfaeecf067dc8cd9f6471681cc1a57660e398cb3"
+      "sha256": "6bdf6440af7ccfc09c8a973efc09a795cc1705e38bbba27f17aaf86e58a5fd6f"
     },
     {
       "path": "components/map/meeting-status-pill.tsx",
@@ -1743,11 +1743,11 @@
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "d9588b414dd875e074bc1f7406e97ae155dd6fed0fb08b028aea1129def53133"
+      "sha256": "2dae4c6a7b5fedcd7da0d88e1b3d684e4dd557118942ddd1680c5720e388ba38"
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "16b15b59a7eb93bdd404ec22d044fa0d8381663f9dc277641a746a677012934a"
+      "sha256": "40793eb5763b7c2c06f939e63d769d944b74ddf51eaf786275c3f507f496803f"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -1803,7 +1803,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "1a48d005f7653ce8adee4cfd8c08fad6ed17e017d8747a166a83f7876fa33e49"
+      "sha256": "e1bc0d808aeb14b193db24c32a2f5a7eb49c68ef9347bd20b5dc73d3f89bb4fc"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -1819,7 +1819,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "4e3ff4243a950f9c3b7dcd57e63c058d6866ccb1952fa289e81520ebe44cd003"
+      "sha256": "5e045e2b5e843d9d88585934183fa2eb3b4263d929b6b14dd29b1360984d8105"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2915,7 +2915,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "9fa427152ede1db9347b86e81ab5d0f306cfb2d25d3cacc0e1b10b56be21550f"
+      "sha256": "cb3213543216b98b67f26fbddda7f599259b9c54ae139f640d2949d67f53390a"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -7776,8 +7776,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -7868,8 +7868,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -7981,7 +7981,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -7989,19 +7989,19 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 19th, 2026",
-      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 19th, 2026",
+      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 22nd, 2026",
+      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 22nd, 2026",
       "componentReadback": {
         "contacts": 7,
         "committees": 0,
@@ -8038,14 +8038,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42306",
               "verifiedAt": null,
-              "collectedAt": "2026-09-19T22:33:49.092Z"
+              "collectedAt": "2026-09-22T23:40:37.613Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43886.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43886",
               "verifiedAt": null,
-              "collectedAt": "2026-09-19T22:33:49.092Z"
+              "collectedAt": "2026-09-20T11:36:48.211Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8066,24 +8066,220 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42321",
               "verifiedAt": null,
-              "collectedAt": "2026-09-19T22:33:49.092Z"
+              "collectedAt": "2026-09-22T23:40:37.613Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43901",
               "verifiedAt": null,
-              "collectedAt": "2026-09-19T22:33:49.092Z"
+              "collectedAt": "2026-09-22T23:40:37.613Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2026-10-26T22:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.42976.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/42976",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44076",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2026-11-09T23:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.42981.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/42981",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44081",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2026-11-23T23:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.42986.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/42986",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44086",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2026-12-07T23:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.42991.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/42991",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44091",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2026-12-21T23:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.42996.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/42996",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44096",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2027-01-04T23:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.43001.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/43001",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44101",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            }
+          ],
+          "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
+        },
+        {
+          "kind": "UNRESOLVED_MULTIPLICITY",
+          "canonicalBodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing",
+          "startsAt": "2027-01-18T23:00:00.000Z",
+          "sourceListingCount": 2,
+          "uniqueMeetingCount": null,
+          "sourceIds": [
+            "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
+            "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov"
+          ],
+          "sources": [
+            {
+              "id": "ical:newbury-ical-governing:calendar.43006.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/43006",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
+            },
+            {
+              "id": "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov",
+              "sourceOrg": "Town of Newbury",
+              "sourceUrl": "https://www.newbury.nh.gov/home/events/44106",
+              "verifiedAt": null,
+              "collectedAt": "2026-09-23T02:28:41.662Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
         }
       ],
-      "renderedListingRows": 285,
+      "renderedListingRows": 294,
       "failedRefreshDisclosure": {
         "carried": {
-          "count": 10,
-          "lead": "10 calendar listings are older than that:",
+          "count": 11,
+          "lead": "11 calendar listings are older than that:",
           "form": "EACH_ON_ITS_OWN",
           "reached": "each one says when we last reached it",
           "lastFreshAt": null
@@ -8091,32 +8287,32 @@
       },
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/03255-newbury-unresolved-listings.png",
-        "sha256": "9f548c20edd6951a9967e64eddba91a492c0daec4a2cdc02e060b5c9d928bc35"
+        "sha256": "faf4a07d79dd3d575bb737668c4c19e40f82348061572dc8115f8d0b07e3793a"
       }
     },
     {
       "id": "current-participation",
       "result": "PASS",
-      "meetingId": "onbase:tucson:1948",
-      "bodyId": "ocd-division/country:us/state:az/place:tucson#governing",
-      "startsAt": "2026-09-22T11:00:00-07:00",
+      "meetingId": "clerksboards:63:2026-09-23",
+      "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-parks-and-recreation-commission",
+      "startsAt": "2026-09-23T15:30:00-07:00",
       "expectedLines": [
-        "Call to the Audience, scheduled for 30 minutes of the meeting.",
-        "3 minutes per speaker.",
-        "Complete a speaker's card in its entirety and hand it to City Clerk staff, from 5:00 PM until the start of Call to the Audience. Cards are not accepted for someone not present in the Chambers.",
-        "Mayor and Council Chambers, 255 W. Alameda St (City Hall); seating first-come, first-served, with security screening. Meetings stream live on the City's YouTube channel."
+        "Call to the Audience, early on the agenda: any member of the public may address the Commission. The Commission may not discuss or act on what is raised there, but may put it on a future agenda.",
+        "Three minutes per speaker.",
+        "Email TPRC@tucsonaz.gov or call 520-837-8162 with your full name, mailing address, phone number and topic, by 5:00 PM the day before the meeting. Attending virtually, you may instead use the chat or Raise your hand during the meeting.",
+        "In person, or by the hybrid link and dial-in published on each meeting's agenda."
       ],
       "renderedLines": [
-        "Call to the Audience, scheduled for 30 minutes of the meeting.",
-        "3 minutes per speaker.",
-        "Complete a speaker's card in its entirety and hand it to City Clerk staff, from 5:00 PM until the start of Call to the Audience. Cards are not accepted for someone not present in the Chambers.",
-        "Mayor and Council Chambers, 255 W. Alameda St (City Hall); seating first-come, first-served, with security screening. Meetings stream live on the City's YouTube channel."
+        "Call to the Audience, early on the agenda: any member of the public may address the Commission. The Commission may not discuss or act on what is raised there, but may put it on a future agenda.",
+        "Three minutes per speaker.",
+        "Email TPRC@tucsonaz.gov or call 520-837-8162 with your full name, mailing address, phone number and topic, by 5:00 PM the day before the meeting. Attending virtually, you may instead use the chat or Raise your hand during the meeting.",
+        "In person, or by the hybrid link and dial-in published on each meeting's agenda."
       ],
-      "sourceUrl": "https://www.tucsonaz.gov/files/sharedassets/public/v/1/clerks/documents/agenda-committee/mc-meeting-public-participation_may-2024_final.pdf",
-      "verifiedAt": "2026-08-13",
+      "sourceUrl": "https://assets.tucsonaz.gov/share/bcc/42521.pdf",
+      "verifiedAt": "2026-08-18",
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-        "sha256": "9a7b50eade1d2bfdd4ed339d2c305d7d692e8996ed0745418543b6b975c884e1"
+        "sha256": "e427ed7c773e0b8773c5918bb89d424e16590e41b26645396837dfcfa680cc75"
       }
     }
   ],
@@ -8135,11 +8331,11 @@
     },
     {
       "path": "screenshots/reader-last-mile/final/03255-newbury-unresolved-listings.png",
-      "sha256": "9f548c20edd6951a9967e64eddba91a492c0daec4a2cdc02e060b5c9d928bc35"
+      "sha256": "faf4a07d79dd3d575bb737668c4c19e40f82348061572dc8115f8d0b07e3793a"
     },
     {
       "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-      "sha256": "9a7b50eade1d2bfdd4ed339d2c305d7d692e8996ed0745418543b6b975c884e1"
+      "sha256": "e427ed7c773e0b8773c5918bb89d424e16590e41b26645396837dfcfa680cc75"
     }
   ],
   "denominatorFloors": [

@@ -3,11 +3,17 @@ import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import test from "node:test";
 
+import { drizzle } from "drizzle-orm/neon-http";
+
+import * as schema from "../lib/db/schema.ts";
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
   MemoryRoutineDataStore,
+  promotedPointerIdentityRead,
+  readerEvidenceCandidateRead,
+  readerEvidenceRowToRecord,
   routineDataStoreCandidateAuthorityIssue,
 } from "../lib/civic-data/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
@@ -666,6 +672,91 @@ test("a contract-A runtime envelope cannot mutate contract B through the public 
     ) ?? "",
     /routine supervisor cannot mutate source candidate fec-funding/,
   );
+});
+
+/** The SELECT list of a query, before its FROM clause. */
+function selectList(query: { toSQL(): { sql: string } }): string {
+  const text = query.toSQL().sql;
+  return text.slice(0, text.indexOf(" from "));
+}
+
+test("Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it", () => {
+  // Measured against production on 2026-09-23: the NJ roll-call payload is
+  // 9.8 MB on the wire and its candidate row 23.7 MB. The readback once read
+  // the payload to inspect, again to check the pointer, and the candidate to
+  // append evidence, around the typed Reader's own read of both.
+  const pointer = selectList(promotedPointerIdentityRead(drizzle.mock({ schema }), "STATE_ROLL_CALL", ["US-NJ"]));
+  assert.doesNotMatch(pointer, /"payload"|"validation_receipt"/);
+  for (const column of ["key", "source_id", "record_class", "scope", "current_version_id", "last_known_good_version_id", "promoted_at"]) {
+    assert.match(pointer, new RegExp(`"${column}"`), `the identity read must still carry ${column}`);
+  }
+
+  const evidence = selectList(readerEvidenceCandidateRead(drizzle.mock({ schema }), "cv-example"));
+  assert.doesNotMatch(evidence, /"candidate"(?!\s*(?:->|\?))/, "the candidate envelope is never selected whole");
+  assert.doesNotMatch(evidence, /"identity"|"validation_receipt"/);
+  for (const column of ["id", "source_id", "record_class", "scope", "state"]) {
+    assert.match(evidence, new RegExp(`"${column}"`), `the evidence read must still carry ${column}`);
+  }
+
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  const append = postgres.slice(postgres.indexOf("  async appendEvidence("), postgres.indexOf("  async promote("));
+  assert.match(append, /readerEvidenceCandidateRead\(this\.db, candidateId\)/);
+  assert.doesNotMatch(append, /\.select\(\)/, "a whole-row read here moves the candidate envelope on every recorded readback");
+
+  const verification = readFileSync(join(ROOT, "lib", "civic-data", "reader-verification.ts"), "utf8");
+  assert.doesNotMatch(
+    verification,
+    /store\.readPromotions?\(|store\.readCandidates?\(/,
+    "readback evidence reads identity; only the typed Reader reads and proves the dataset",
+  );
+  assert.match(verification, /store\.readPromotionIdentity\(contract\.recordClass, contract\.scope\)/);
+  assert.match(verification, /store\.readPromotionIdentities\("MEETING", scopes\)/);
+});
+
+test("the Reader-evidence door's narrow read decides authority exactly as the whole envelope does", () => {
+  const value = candidate("evidence-authority-parity");
+  const contractAuthority = {
+    repo: ROOT,
+    sha: "1".repeat(40),
+    capability: "ROUTINE_CONTRACT" as const,
+    contract: "fec-funding",
+    parentPid: 123,
+    nonce: "2".repeat(64),
+  };
+  const supervisor = { ...contractAuthority, capability: "ROUTINE_SUPERVISOR" as const, contract: null };
+  const envelopes: Array<[string, RoutineCandidate]> = [
+    ["no marker", value],
+    ["a present null marker", { ...value, bootstrapImport: null } as unknown as RoutineCandidate],
+    ["a transfer marker", {
+      ...value,
+      bootstrapImport: { kind: "TRUSTED_LKG_IMPORT", contractId: "fec-funding" },
+    } as unknown as RoutineCandidate],
+  ];
+  for (const [label, whole] of envelopes) {
+    const hasBootstrapImport = Object.prototype.hasOwnProperty.call(whole, "bootstrapImport");
+    // Postgres answers SQL NULL for an absent key and JSON null for a null
+    // one; the driver parses both to null, and the key test tells them apart.
+    const narrow = readerEvidenceRowToRecord({
+      id: whole.id,
+      sourceId: whole.sourceId,
+      recordClass: whole.recordClass,
+      scope: whole.scope,
+      state: "PROMOTED",
+      hasBootstrapImport,
+      bootstrapImport: hasBootstrapImport ? whole.bootstrapImport ?? null : null,
+    });
+    assert.equal(narrow.state, "PROMOTED");
+    for (const envelope of [contractAuthority, supervisor]) {
+      for (const operation of ["candidate", "reader-evidence"] as const) {
+        assert.equal(
+          routineDataStoreCandidateAuthorityIssue(narrow.candidate, envelope, operation),
+          routineDataStoreCandidateAuthorityIssue(whole, envelope, operation),
+          `${label}: ${envelope.capability} ${operation}`,
+        );
+      }
+    }
+  }
 });
 
 test("the Postgres promotion transaction is selected from the exact persisted proof", () => {

@@ -6,7 +6,12 @@ import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import { readMeetingPartitionProjection } from "../meetings/snapshot.ts";
 import { verifyRoutineReaderProjection, type RoutineReaderVerification } from "./reader-verification.ts";
-import { projectionKey, type CandidateVersionReadback, type RoutineDataStore } from "./store.ts";
+import {
+  projectionKey,
+  promotedPointerIdentity,
+  type CandidateVersionReadback,
+  type RoutineDataStore,
+} from "./store.ts";
 import {
   VALIDATION_CHECKS,
   type CandidateEvent,
@@ -139,6 +144,14 @@ function candidateReadOnlyStore(
     readPromotions: async <T>(recordClass: RoutineRecordClass, scopes: readonly string[]) =>
       recordClass === candidate.recordClass && scopes.includes(candidate.scope)
         ? [projection as PromotedProjection<T>]
+        : [],
+    readPromotionIdentity: async (recordClass, scope) =>
+      recordClass === candidate.recordClass && scope === candidate.scope
+        ? promotedPointerIdentity(projection)
+        : null,
+    readPromotionIdentities: async (recordClass, scopes) =>
+      recordClass === candidate.recordClass && scopes.includes(candidate.scope)
+        ? [promotedPointerIdentity(projection)]
         : [],
     events: async (_candidateId): Promise<readonly CandidateEvent[]> => [],
     clock: async () => ({}),

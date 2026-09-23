@@ -44,6 +44,8 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     readCandidates: async () => [],
     readPromotion: async () => null,
     readPromotions: async () => [],
+    readPromotionIdentity: async () => null,
+    readPromotionIdentities: async () => [],
     readPreparedReaderProjection: async () => null,
     writePreparedReaderProjection: async () => ({ published: false, sequence: 0 }),
     ...overrides,

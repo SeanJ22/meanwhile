@@ -8,6 +8,7 @@ import {
   type CandidateEvent,
   type CandidateState,
   type CandidateVersionRecord,
+  type PromotedPointerIdentity,
   type PromotedProjection,
   type RoutineCandidate,
   type RoutineRecordClass,
@@ -98,6 +99,13 @@ export interface RoutineDataStore {
   /** Set-oriented Reader door; production composition must not fan out per authority. */
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
+  /**
+   * The pointer named, never carried: identity columns only. Reader-delivery
+   * evidence names and compares the current version through this door; only
+   * the typed Reader itself reads (and proves) the payload.
+   */
+  readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
+  readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** Read the single derived reader-serving projection for a record class + scope (one query). Null before the first is published. */
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
   /**
@@ -129,7 +137,16 @@ type RegisteredMutationContract = {
   readonly readerProjectionId: string | null;
 };
 
-function registeredMutationContract(candidate: RoutineCandidate): RegisteredMutationContract | null {
+/**
+ * The candidate fields every mutation-authority and Reader-evidence decision
+ * reads: its contract identity and any authority-transfer marker. Never its
+ * normalized payload or read model.
+ */
+export type CandidateAuthorityIdentity = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport">;
+
+function registeredMutationContract(
+  candidate: Pick<RoutineCandidate, "sourceId" | "recordClass" | "scope">,
+): RegisteredMutationContract | null {
   const routine = [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS]
     .filter((contract) =>
       contract.sourceId === candidate.sourceId &&
@@ -162,7 +179,7 @@ function registeredMutationContract(candidate: RoutineCandidate): RegisteredMuta
 
 /** Pure exact-contract check layered behind the installed-runtime attestation. */
 export function routineDataStoreCandidateAuthorityIssue(
-  candidate: RoutineCandidate,
+  candidate: CandidateAuthorityIdentity,
   authority: RuntimeAuthorityEnvelope,
   operation: "candidate" | "reader-evidence",
 ): string | null {
@@ -466,7 +483,7 @@ function assertPromotionTime(
 }
 
 function assertReaderEvidenceInput(
-  record: CandidateVersionRecord,
+  record: { readonly state: CandidateState; readonly candidate: CandidateAuthorityIdentity },
   state: CandidateState,
   at: string,
   detail: string,
@@ -596,6 +613,19 @@ export function proofConsistentSuccess(
   return record.candidate.retrieval.retrievedAt;
 }
 
+/** Name a pointer without its dataset or receipt; a whole projection narrows to exactly this. */
+export function promotedPointerIdentity(pointer: PromotedPointerIdentity): PromotedPointerIdentity {
+  return {
+    key: pointer.key,
+    sourceId: pointer.sourceId,
+    recordClass: pointer.recordClass,
+    scope: pointer.scope,
+    versionId: pointer.versionId,
+    lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
+    promotedAt: pointer.promotedAt,
+  };
+}
+
 /** Deterministic store used by destructive/failure tests. */
 export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
@@ -662,6 +692,21 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return scopes.flatMap((scope) => {
       const row = this.promotions.get(projectionKey(recordClass, scope));
       return row ? [structuredClone(row) as PromotedProjection<T>] : [];
+    });
+  }
+
+  async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
+    const row = this.promotions.get(projectionKey(recordClass, scope));
+    return row ? promotedPointerIdentity(row) : null;
+  }
+
+  async readPromotionIdentities(
+    recordClass: RoutineRecordClass,
+    scopes: readonly string[],
+  ): Promise<readonly PromotedPointerIdentity[]> {
+    return scopes.flatMap((scope) => {
+      const row = this.promotions.get(projectionKey(recordClass, scope));
+      return row ? [promotedPointerIdentity(row)] : [];
     });
   }
 
@@ -893,9 +938,40 @@ function routineClockRowToRecord(row: Awaited<ReturnType<typeof routineClockCand
   };
 }
 
-function postgresPromotionRowToProjection<T = unknown>(
-  row: typeof civicDataPromotions.$inferSelect,
-): PromotedProjection<T> {
+/** The promotion columns that name a pointer. The payload (the Reader's dataset) and receipt are not among them. */
+const PROMOTED_POINTER_IDENTITY_COLUMNS = {
+  key: civicDataPromotions.key,
+  sourceId: civicDataPromotions.sourceId,
+  recordClass: civicDataPromotions.recordClass,
+  scope: civicDataPromotions.scope,
+  currentVersionId: civicDataPromotions.currentVersionId,
+  lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+  promotedAt: civicDataPromotions.promotedAt,
+} as const;
+
+/**
+ * Reader-delivery evidence's pointer read: identity only. The readback once
+ * read each whole row, payload included, on every 5-minute supervisor pass
+ * for every Reader contract merely to learn which version to verify: 55.1 MB
+ * per pass against production on 2026-09-23, before any typed Reader ran.
+ */
+export function promotedPointerIdentityRead(
+  db: RoutineClockDb,
+  recordClass: RoutineRecordClass,
+  scopes: readonly string[],
+) {
+  return db
+    .select(PROMOTED_POINTER_IDENTITY_COLUMNS)
+    .from(civicDataPromotions)
+    .where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.scope, [...scopes])));
+}
+
+type PostgresPromotedPointerIdentityRow = Pick<
+  typeof civicDataPromotions.$inferSelect,
+  keyof typeof PROMOTED_POINTER_IDENTITY_COLUMNS
+>;
+
+function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow): PromotedPointerIdentity {
   return {
     key: row.key,
     sourceId: row.sourceId,
@@ -904,8 +980,57 @@ function postgresPromotionRowToProjection<T = unknown>(
     versionId: row.currentVersionId,
     lastKnownGoodVersionId: row.lastKnownGoodVersionId,
     promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
+  };
+}
+
+function postgresPromotionRowToProjection<T = unknown>(
+  row: typeof civicDataPromotions.$inferSelect,
+): PromotedProjection<T> {
+  return {
+    ...postgresPromotedPointerIdentity(row),
     payload: row.payload as T,
     receipt: row.validationReceipt as ValidationReceipt,
+  };
+}
+
+/**
+ * The Reader-evidence door's candidate read: identity, transfer marker, and
+ * state. Never the candidate envelope, which carries the whole normalized
+ * dataset and read model (23.7 MB on the wire for NJ roll calls). The row's
+ * identity columns equal the envelope's by CHECK
+ * (`civic_data_candidates_envelope_identity_coherent`).
+ */
+export function readerEvidenceCandidateRead(db: RoutineClockDb, candidateId: string) {
+  return db
+    .select({
+      id: civicDataCandidates.id,
+      sourceId: civicDataCandidates.sourceId,
+      recordClass: civicDataCandidates.recordClass,
+      scope: civicDataCandidates.scope,
+      state: civicDataCandidates.state,
+      // An absent marker and a JSON-null marker both read back as null; the
+      // key test keeps a present-but-null marker a marker, exactly as the
+      // whole envelope's own-property check decides.
+      hasBootstrapImport: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
+      bootstrapImport: sql<unknown>`${civicDataCandidates.candidate}->'bootstrapImport'`,
+    })
+    .from(civicDataCandidates)
+    .where(eq(civicDataCandidates.id, candidateId))
+    .limit(1);
+}
+
+export function readerEvidenceRowToRecord(
+  row: Awaited<ReturnType<typeof readerEvidenceCandidateRead>>[number],
+): { readonly state: CandidateState; readonly candidate: CandidateAuthorityIdentity } {
+  return {
+    state: row.state as CandidateState,
+    candidate: {
+      id: row.id,
+      sourceId: row.sourceId,
+      recordClass: row.recordClass as RoutineRecordClass,
+      scope: row.scope,
+      ...(row.hasBootstrapImport ? { bootstrapImport: row.bootstrapImport as RoutineCandidate["bootstrapImport"] } : {}),
+    },
   };
 }
 
@@ -959,7 +1084,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   private assertCandidateMutationAuthority(
-    candidate: RoutineCandidate,
+    candidate: CandidateAuthorityIdentity,
     operation: "candidate" | "reader-evidence" = "candidate",
   ): void {
     const issue = routineDataStoreCandidateAuthorityIssue(
@@ -1096,6 +1221,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map((row) => postgresPromotionRowToProjection<T>(row));
   }
 
+  async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
+    // (record_class, scope) is unique, so this names at most one pointer.
+    const [row] = await promotedPointerIdentityRead(this.db, recordClass, [scope]).limit(1);
+    return row ? postgresPromotedPointerIdentity(row) : null;
+  }
+
+  async readPromotionIdentities(
+    recordClass: RoutineRecordClass,
+    scopes: readonly string[],
+  ): Promise<readonly PromotedPointerIdentity[]> {
+    if (scopes.length === 0) return [];
+    const rows = await promotedPointerIdentityRead(this.db, recordClass, scopes);
+    return rows.map(postgresPromotedPointerIdentity);
+  }
+
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
     const [row] = await this.db.select().from(civicDataReaderProjections).where(and(
       eq(civicDataReaderProjections.recordClass, recordClass),
@@ -1161,9 +1301,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
     const authority = this.assertMutationAuthority();
-    const [candidateRow] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+    // Identity, marker, and state only: evidence never needs the candidate
+    // envelope, and the typed Reader has already read and proved the dataset.
+    const [candidateRow] = await readerEvidenceCandidateRead(this.db, candidateId);
     if (!candidateRow) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
-    const record = rowToCandidate(candidateRow);
+    const record = readerEvidenceRowToRecord(candidateRow);
     this.assertCandidateMutationAuthority(record.candidate, "reader-evidence");
     assertReaderEvidenceInput(record, state, at, detail, authority);
     const nextSequence = this.nextCandidateEventSequence(candidateId);

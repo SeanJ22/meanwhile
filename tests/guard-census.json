@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 707,
-    "named": 7007,
+    "named": 7011,
     "dynamic": 28
   },
   "files": {
@@ -2441,6 +2441,7 @@
     "tests/civic-data-store-integrity.test.ts": {
       "names": [
         "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
+        "Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
@@ -2459,6 +2460,7 @@
         "terminal store exposes no one-time import or aggregate retirement door",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
+        "the Reader-evidence door's narrow read decides authority exactly as the whole envelope does",
         "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt"
       ],
       "dynamic": 0
@@ -8338,6 +8340,7 @@
         "a FEC period that regresses behind the class LKG is refused",
         "a Reader code-version change re-verifies the same LKG immediately without source reacquisition",
         "a Reader projection whose declared digest names different bytes is refused before LKG moves",
+        "a Reader readback moves identity around the typed Reader, never another copy of the dataset",
         "a delayed older acquisition cannot overwrite a newer source-scoped LKG",
         "a future-dated acquisition cannot replace LKG with a pointer the Reader will refuse",
         "a malformed typed Reader projection is refused before it can replace LKG",
@@ -8367,6 +8370,7 @@
         "registered promotion durably reads back the exact Reader projection instead of inferring delivery",
         "registered promotion snapshots one durable candidate before any async store step",
         "the generic transition driver cannot write a production store outside an exact registered contract door",
+        "the identity readback records a failed pointer read as evidence and refuses a pointer that moved",
         "the standing promotion door binds adapter output to its exact registered contract",
         "wrong Census schema is refused",
         "wrong Census vintage is refused",

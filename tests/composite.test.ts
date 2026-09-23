@@ -93,7 +93,9 @@ test("one child failing never blanks the map, and the failure is reported", asyn
   const composite = new CompositeSource([
     stubChild("good", {
       rows: [1, 2],
-      meetings: (raw) => raw.map((_, i) => meetingOf(`good:m${i}`)),
+      // Two different sittings. Two listings identical in every detail would
+      // be one sitting listed twice, which the composite now shows once.
+      meetings: (raw) => raw.map((_, i) => ({ ...meetingOf(`good:m${i}`), startsAt: `2026-09-0${i + 1}T19:00:00.000-07:00` })),
     }),
     stubChild("broken", { failFetch: true }),
   ]);

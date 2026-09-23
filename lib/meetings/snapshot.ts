@@ -768,7 +768,12 @@ export async function readMeetingsProjection(
         ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
       });
     }
-    const collapsed = collapseDuplicateSittings(meetings);
+    // One sitting, one row: the count below is derived from exactly these rows,
+    // and every merged listing rides on its row (`Meeting.listings`).
+    const documentHolders = new Set(agendaDocuments.map((document) => document.meetingId));
+    const collapsed = collapseDuplicateSittings(meetings, {
+      holdsDocuments: (meetingId) => documentHolders.has(meetingId),
+    });
     const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
     const retainedDocuments = agendaDocuments.filter((document) => retainedIds.has(document.meetingId));
     const generatedAt = promoted.map(({ result }) => result.value.generatedAt).sort().at(-1) ?? now;

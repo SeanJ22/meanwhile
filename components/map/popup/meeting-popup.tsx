@@ -22,7 +22,7 @@ import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor, type JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
-import { MeetingListingNotice } from "../meeting-listing-notice";
+import { MeetingListingNotice, MergedListingsNotice } from "../meeting-listing-notice";
 import type { Meeting } from "@/lib/sources/types";
 
 import { CalendarLinks } from "./calendar-links";
@@ -218,6 +218,7 @@ export function MeetingPopup({
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
       <MeetingListingNotice groups={listingCount.groups} />
+      <MergedListingsNotice listings={meeting.listings} />
 
       {/*
         hotfix-0817 (2026-08-17): a carried row does not inherit the snapshot's

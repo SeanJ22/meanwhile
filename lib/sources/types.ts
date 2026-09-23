@@ -107,6 +107,22 @@ export interface CarriedForward {
 }
 
 /**
+ * One publisher listing of a sitting, kept when the Reader composition shows
+ * several listings as one sitting (`collapseDuplicateSittings`). Every listing
+ * keeps its own native id, its own title and agenda link as published, and its
+ * own provenance, so each remains openable and attributable.
+ */
+export interface MeetingListing {
+  /** The listing's own source-namespaced id. */
+  id: string;
+  /** How THIS listing named the sitting. */
+  title: string;
+  agendaUrl: string | null;
+  provenance: Provenance;
+  carried?: CarriedForward;
+}
+
+/**
  * Where a meeting physically happens.
  *
  * `lat`/`lng` are the pin. A meeting with no resolvable coordinates cannot be
@@ -316,6 +332,15 @@ export interface Meeting {
    * `lib/meetings/snapshot.ts` refuses a snapshot that breaks it.
    */
   actingBodies?: MeetingBody[];
+  /**
+   * **EVERY LISTING THIS ONE ROW STANDS FOR** (2026-09-22). Present only on a
+   * Reader-composed row that merged two or more publisher listings of one
+   * sitting — this row's own listing first, then each absorbed one by id.
+   * Absent means the row is the only listing. Never written by an adapter or a
+   * partition: merging is a Reader composition, and the partitions keep every
+   * listing as its own row.
+   */
+  listings?: MeetingListing[];
 }
 
 /**

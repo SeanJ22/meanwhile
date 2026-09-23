@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 695,
-    "named": 6924,
+    "files": 696,
+    "named": 6929,
     "dynamic": 28
   },
   "files": {
@@ -5492,6 +5492,16 @@
         "production membership and scopes are one-to-one and the global disposition is absent",
         "the batched Reader bounds database calls and isolates a corrupt partition",
         "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-sitting-merge.test.ts": {
+      "names": [
+        "Newbury: two calendar series listing one Selectboard sitting are ONE row carrying BOTH listings",
+        "different meetings at the same hour stay separate: a different title or status is a different sitting",
+        "the cross-source merge now carries the listing it absorbs instead of dropping it silently",
+        "the merge never drops a carried row, a date-only row, or one of two document-holding listings",
+        "the reader composition states one row per sitting, and the rows it states are the rows it serves"
       ],
       "dynamic": 0
     },

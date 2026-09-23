@@ -2,6 +2,7 @@ import { isZeroRowExtraction, totalDropped } from "../normalize-account.ts";
 import type {
   DuplicateIdentityCounts,
   Meeting,
+  MeetingListing,
   MeetingQuery,
   MeetingSource,
   NormalizeDropCounts,
@@ -217,13 +218,26 @@ export interface CompositeOptions {
  * A body with a null `ocdId` keys on its `jurisdiction` instead, so two
  * division-less bodies in different places cannot collide.
  *
- * **And it collapses ACROSS SOURCES ONLY.** Two rows from the SAME source at
- * the same instant are that source's own catalogue and are left alone: a board
- * that publishes a Regular Session and an Executive Session both at 18:00 is
- * publishing two meetings, and one adapter reading its own portal is the thing
- * that knows the difference. Cross-source is where the duplication this exists
- * for actually lives, and restricting it there is what stops the merge
- * deleting a real second sitting to tidy up a first.
+ * **Within ONE source it merges only an exact duplicate listing.** Two rows
+ * from the same source at the same instant are that source's own catalogue: a
+ * board that publishes a Regular Session and an Executive Session both at 18:00
+ * is publishing two meetings, and one adapter reading its own portal is the
+ * thing that knows the difference — so a different title, status, venue,
+ * agenda link or any other recorded detail keeps two rows. (2026-09-22.) What
+ * the source's catalogue cannot mean is the same sitting listed twice with
+ * every recorded detail identical: Newbury's town calendar gained a second
+ * recurring series, calendar.44076–44106 repeating calendar.42976–43006, and
+ * every Selectboard sitting from October to January rendered twice. Rows that
+ * differ ONLY in their listing identity (id, listing page, read stamps) are
+ * one sitting. That merge never drops a carried row (its count is owed to its
+ * source's carry accounting), never merges a date-only row (its midnight is an
+ * ordering artifact, not a time), and never merges two listings that each
+ * hold agenda documents (either could hold a version the other does not).
+ *
+ * **Every merge carries every listing.** The kept row names each listing it
+ * stands for in `listings` — its own first, then the absorbed ones by id —
+ * with each listing's own id, title, agenda link and provenance, so a merged
+ * listing stays visible and attributable instead of vanishing into a count.
  *
  * ## Which row wins, and why it is never arbitrary
  *
@@ -236,12 +250,26 @@ export interface CompositeOptions {
  *   5. failing all of that, the first one seen, which is source-registration
  *      order and is stable across runs.
  *
+ * Of two identical listings from one source, the one holding agenda documents
+ * stands for the sitting, else the lower id — feed order never flips which id
+ * a reader's link resolves to.
+ *
  * **The count is reported, never silent.** `duplicateSittingsCollapsed` rides
  * on the composite's own report, so "fewer meetings than the reader would
  * otherwise have seen" is a stated number with a reason — the same rule every
  * drop counter in this file exists to satisfy.
  */
-export function collapseDuplicateSittings(rows: Meeting[]): {
+export function collapseDuplicateSittings(
+  rows: Meeting[],
+  options: {
+    /**
+     * Whether a listing holds agenda documents in the composition. Two
+     * identical listings that BOTH hold documents are not merged, and of two
+     * where one does, that one is kept, so no held document loses its sitting.
+     */
+    readonly holdsDocuments?: (meetingId: string) => boolean;
+  } = {},
+): {
   rows: Meeting[];
   collapsed: number;
   /**
@@ -260,8 +288,14 @@ export function collapseDuplicateSittings(rows: Meeting[]): {
     (m.actingBodies && m.actingBodies.length > 0 ? 4 : 0) +
     (m.location ? 2 : 0) +
     (m.carried ? 0 : 1);
+  const holdsDocuments = options.holdsDocuments ?? (() => false);
 
-  const best = new Map<string, Meeting>();
+  /** Kept-row index of the row a later source is compared against, per sitting key. */
+  const best = new Map<string, number>();
+  /** Every kept-row index at a sitting key, for the same-source identity check. */
+  const atKey = new Map<string, number[]>();
+  /** Listings absorbed into each kept-row index. */
+  const absorbed = new Map<number, Meeting[]>();
   let collapsed = 0;
 
   /** The source that minted an id, which namespaces it by contract. */
@@ -285,28 +319,118 @@ export function collapseDuplicateSittings(rows: Meeting[]): {
       m.bodyName,
       Number.isNaN(instant) ? m.startsAt : String(instant),
     ].join("|");
-    const held = best.get(key);
-    if (!held) {
-      best.set(key, m);
+    const indices = atKey.get(key) ?? [];
+
+    // One source listing one sitting twice, every recorded detail identical.
+    const twin = indices.find((index) =>
+      sourceOf(kept[index]!) === sourceOf(m) &&
+      identicalListing(kept[index]!, m) &&
+      !(holdsDocuments(kept[index]!.id) && holdsDocuments(m.id)));
+    if (twin !== undefined) {
+      collapsed += 1;
+      const incumbent = kept[twin]!;
+      const winner = preferredListing(incumbent, m, holdsDocuments);
+      const loser = winner === incumbent ? m : incumbent;
+      kept[twin] = winner;
+      dropped.push(loser);
+      absorbed.set(twin, [...(absorbed.get(twin) ?? []), loser]);
+      continue;
+    }
+
+    const heldIndex = best.get(key);
+    if (heldIndex === undefined) {
+      best.set(key, kept.length);
+      atKey.set(key, [...indices, kept.length]);
       kept.push(m);
       continue;
     }
+    const held = kept[heldIndex]!;
     if (sourceOf(m) === sourceOf(held)) {
-      // Same source, same instant: its own catalogue, and not ours to merge.
+      // Same source, same instant, a different listing: its own catalogue.
+      atKey.set(key, [...indices, kept.length]);
       kept.push(m);
       continue;
     }
     collapsed += 1;
     if (informativeness(m) > informativeness(held)) {
-      kept[kept.indexOf(held)] = m;
-      best.set(key, m);
+      kept[heldIndex] = m;
       dropped.push(held);
+      absorbed.set(heldIndex, [...(absorbed.get(heldIndex) ?? []), held]);
     } else {
       dropped.push(m);
+      absorbed.set(heldIndex, [...(absorbed.get(heldIndex) ?? []), m]);
     }
   }
 
-  return { rows: kept, collapsed, dropped };
+  return {
+    rows: kept.map((row, index) => {
+      const others = absorbed.get(index);
+      if (!others?.length) return row;
+      const [own, ...rest] = listingsOf(row);
+      const seen = new Set([own!.id]);
+      const absorbedListings: MeetingListing[] = [];
+      for (const listing of [...rest, ...others.flatMap(listingsOf)]) {
+        if (seen.has(listing.id)) continue;
+        seen.add(listing.id);
+        absorbedListings.push(listing);
+      }
+      absorbedListings.sort((a, b) => a.id.localeCompare(b.id));
+      return { ...row, listings: [own!, ...absorbedListings] };
+    }),
+    collapsed,
+    dropped,
+  };
+}
+
+/** One listing's identity, as the kept row records it. */
+function listingOf(m: Meeting): MeetingListing {
+  return {
+    id: m.id,
+    title: m.title,
+    agendaUrl: m.agendaUrl,
+    provenance: m.provenance,
+    ...(m.carried ? { carried: m.carried } : {}),
+  };
+}
+
+/** A row's listings, its own first: a row composed once already keeps what it carries. */
+function listingsOf(m: Meeting): MeetingListing[] {
+  return m.listings?.length ? m.listings : [listingOf(m)];
+}
+
+function orderedKeys(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(orderedKeys);
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value as Record<string, unknown>)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, child]) => [key, orderedKeys(child)]));
+  }
+  return value;
+}
+
+/**
+ * Every recorded detail of the sitting, without the listing's own identity
+ * (id, listing page, read stamps, carry mark, prior listings). The same
+ * separation `meetingListingIdentity` draws, applied where rows are counted.
+ */
+function sittingDetails(m: Meeting): string {
+  const { id: _id, provenance, carried: _carried, listings: _listings, startsAt, ...civic } = m;
+  const { sourceUrl: _sourceUrl, collectedAt: _collectedAt, verifiedAt: _verifiedAt, ...sourceAuthority } = provenance;
+  return JSON.stringify(orderedKeys({ ...civic, instant: Date.parse(startsAt), sourceAuthority }));
+}
+
+function identicalListing(left: Meeting, right: Meeting): boolean {
+  if (left.carried || right.carried) return false;
+  if (left.startPrecision === "DAY" || right.startPrecision === "DAY") return false;
+  if (!Number.isFinite(Date.parse(left.startsAt)) || !Number.isFinite(Date.parse(right.startsAt))) return false;
+  return sittingDetails(left) === sittingDetails(right);
+}
+
+/** The listing that stands for identical twins: the one holding documents, else the lowest id. */
+function preferredListing(left: Meeting, right: Meeting, holdsDocuments: (meetingId: string) => boolean): Meeting {
+  const leftHolds = holdsDocuments(left.id);
+  if (leftHolds !== holdsDocuments(right.id)) return leftHolds ? left : right;
+  return left.id.localeCompare(right.id) <= 0 ? left : right;
 }
 
 export class CompositeSource implements MeetingSource<TaggedRaw> {

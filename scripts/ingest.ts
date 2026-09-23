@@ -182,7 +182,7 @@ function documentUrlFor(meeting: Meeting): string | null {
   return distinct.size === 1 ? (onDivision[0].noticeUrl ?? null) : null;
 }
 
-async function retrieveAgendas(meetings: Meeting[]) {
+export async function retrieveAgendas(meetings: Meeting[]) {
   const withAgenda = meetings.filter((m) => documentUrlFor(m));
   // Meetings with no stored document yet go first: the cap is politeness per
   // run, and the store is seeded from the previous snapshot, so over repeated
@@ -199,6 +199,8 @@ async function retrieveAgendas(meetings: Meeting[]) {
   let landingPages = 0;
   let unchanged = 0;
   let failed = 0;
+  /* Failed reads kept off a sitting that already holds a version (RULING 269). */
+  let failedOverHeld = 0;
 
   for (const meeting of capped) {
     try {
@@ -246,6 +248,20 @@ async function retrieveAgendas(meetings: Meeting[]) {
         continue;
       }
 
+      /*
+       * **A FAILED READ IS NEVER A NEW VERSION OVER ONE WE HOLD.** (RULING 269,
+       * 2026-09-23.) It is reported above and counted below, and nothing is
+       * stored: the store compares a failed row by its bytes alone, so a page
+       * whose bytes change on every request (Diligent's ViewState) would add a
+       * "version" every hour, and a failed read stored newest would stand in
+       * front of the text a reader was being shown. A sitting that holds
+       * nothing yet still records the failed read, so the gap is named.
+       */
+      if (doc.extraction === "failed" && agendaDocumentStore.latestFor(doc.meetingId)) {
+        failedOverHeld++;
+        continue;
+      }
+
       const result = agendaDocumentStore.append(doc);
       if (!result.stored) unchanged++;
       else {
@@ -261,7 +277,8 @@ async function retrieveAgendas(meetings: Meeting[]) {
   console.log(
     `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
-      `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed`,
+      `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
+      `${failedOverHeld} failed read(s) not stored over a held version`,
   );
 }
 

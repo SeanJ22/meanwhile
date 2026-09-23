@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 708,
-    "named": 7024,
+    "files": 709,
+    "named": 7028,
     "dynamic": 28
   },
   "files": {
@@ -4742,6 +4742,15 @@
         "4: a key the snapshot never heard of resolves null, not an error",
         "4: an incumbent House rep on a House ballot resolves (Grijalva, AZ-7)",
         "4: challengers get no link — never a wrong one"
+      ],
+      "dynamic": 0
+    },
+    "tests/ingest-agenda-failed-reads.test.ts": {
+      "names": [
+        "a failed read is not stored over a version the sitting already holds",
+        "a readable revision over a held version is still stored beside it",
+        "a sitting that holds nothing still records its failed read, so the gap is named",
+        "the recorded Diligent page, read for a sitting already holding its skip links, adds nothing"
       ],
       "dynamic": 0
     },

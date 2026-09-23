@@ -133,7 +133,10 @@ test("RECORD: a jurisdiction is owed meetings discovery until a MEETINGS source 
 });
 
 test("RECORD: anything short of a well-formed ledger is unreadable, never an empty list", () => {
-  const need = (jurisdictionId: string) => ({ jurisdictionId });
+  const need = (jurisdictionId: string) => ({
+    jurisdictionId, stateCode: "AZ", name: jurisdictionId.toUpperCase(), govClass: "CITY_OR_TOWN",
+    ownWebAddress: null, basis: "NO_MEETINGS_SOURCE_RECORDED", sources: [],
+  });
   const readable = recordedMeetingsDiscovery({ meetingsDiscovery: { counts: { enumerated: 2 }, needs: [need(AVONDALE), need(BENSON)] } });
   assert.ok("jurisdictionIds" in readable);
   assert.deepEqual([...readable.jurisdictionIds], [AVONDALE, BENSON]);
@@ -145,6 +148,8 @@ test("RECORD: anything short of a well-formed ledger is unreadable, never an emp
     [{ meetingsDiscovery: { counts: { enumerated: 1 }, needs: [{ name: "x" }] } }, /a need with no jurisdictionId/],
     [{ meetingsDiscovery: { counts: { enumerated: 2 }, needs: [need(BENSON), need(BENSON)] } }, /lists az:city:city-of-benson twice/],
     [{ meetingsDiscovery: { counts: { enumerated: 3 }, needs: [need(AVONDALE), need(BENSON)] } }, /counts 3 needs and lists 2/],
+    [{ meetingsDiscovery: { counts: { enumerated: 1 }, needs: [{ ...need(AVONDALE), basis: "WIRED" }] } }, /malformed need for az:city:city-of-avondale/],
+    [{ meetingsDiscovery: { counts: { enumerated: 1 }, needs: [{ ...need(AVONDALE), ownWebAddress: 7 }] } }, /malformed need/],
   ];
   for (const [ledger, why] of unreadable) {
     const answer = recordedMeetingsDiscovery(ledger);

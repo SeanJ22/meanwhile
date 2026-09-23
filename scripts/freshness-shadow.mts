@@ -123,6 +123,7 @@ import {
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
+import { runMeetingsDiscovery, type MeetingsDiscoveryPass } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import {
   closeAbandonedOccurrences,
   planMovedToGapLedger,
@@ -705,17 +706,19 @@ const retirementWrites = !dry && !canary && !scheduledBlackout;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
-/* The committed gap ledger is the only evidence on which a jurisdiction meetings row retires; unreadable retires none. */
-const gapLedger =
-  retirementOutside === null
-    ? null
-    : (() => {
-        try {
-          return recordedMeetingsDiscovery(JSON.parse(readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8")));
-        } catch (error) {
-          return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
-        }
-      })();
+/*
+ * The committed gap ledger, read once. It is the only evidence on which a
+ * jurisdiction meetings row retires (an unreadable ledger retires none), and
+ * the only list the meetings-discovery phase walks.
+ */
+const gapLedgerRead = (() => {
+  try {
+    return recordedMeetingsDiscovery(JSON.parse(readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8")));
+  } catch (error) {
+    return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
+  }
+})();
+const gapLedger = retirementOutside === null ? null : gapLedgerRead;
 const movedPlan =
   retirementOutside === null || gapLedger === null
     ? null
@@ -1994,6 +1997,84 @@ console.log(
 );
 
 /*
+ * **THE UNPAID MEETINGS-DISCOVERY EXECUTOR.** (2026-09-23.)
+ *
+ * Walks the gap ledger's meetings-discovery needs: robots first on every host,
+ * no model, a find confirmed by content and recorded as a candidate
+ * (`lib/control-plane/discovery/meetings-discovery-executor.ts`). OFF unless
+ * WTP_MEETINGS_DISCOVERY is "on": it is a new production writer and new
+ * outbound traffic, so it is inert until the owner's go.
+ *
+ * It spends at most MEETINGS_DISCOVERY_BUDGET_MS, walks at most
+ * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle
+ * with that much of the admission window left. It opens on its own FleetSafety
+ * provider key, `discovery-web`, so a latch it trips never stops the routine
+ * lanes, and shares the cycle's host spacing and vault.
+ */
+const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY === "on";
+const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
+const MEETINGS_DISCOVERY_MAX_WALKS = 12;
+let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
+let meetingsDiscoveryState: string;
+if (!MEETINGS_DISCOVERY_ENABLED) {
+  meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY is not \"on\"; activation waits for the owner's go";
+} else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
+  meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
+} else if ("unreadable" in gapLedgerRead) {
+  meetingsDiscoveryState = `not run: ${gapLedgerRead.unreadable}`;
+} else if (Date.now() + MEETINGS_DISCOVERY_BUDGET_MS > DISPATCH_DEADLINE_MS) {
+  meetingsDiscoveryState = "not run: less of the cycle's admission window remains than the discovery budget";
+} else {
+  const discoveryStartedMs = Date.now();
+  const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
+  try {
+    meetingsDiscovery = await runMeetingsDiscovery(repos, {
+      needs: gapLedgerRead.needs,
+      cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
+      maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
+      /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
+      firstIds: new Set(sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:")).map((o) => o.subjectId)),
+      skipIds: new Set(
+        sync.all.filter((o) => o.id.startsWith("freshness:meetings-discovery:") && o.openOccurrenceId !== null).map((o) => o.subjectId),
+      ),
+      runtime: {
+        open: async ({ url, headers, timeoutMs }) => {
+          const got = await openDiscovery({ url, headers, timeoutMs });
+          return {
+            status: got.status,
+            body: new TextDecoder().decode(got.bytes),
+            bytes: got.bytes.byteLength,
+            contentType: got.contentType,
+            location: got.location ?? null,
+            transportError: got.transportError,
+          };
+        },
+        spaceOut: spacer,
+        vault: vault.put,
+        now: nowIso,
+        budget: { spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS },
+      },
+    });
+    meetingsDiscoveryState = "ran";
+  } catch (error) {
+    meetingsDiscoveryState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
+    runtimeConditions.push(`meetings discovery ${meetingsDiscoveryState}`);
+  }
+}
+const meetingsDiscoveryByOutcome = (meetingsDiscovery?.walked ?? []).reduce<Record<string, number>>(
+  (m, a) => ((m[a.outcome] = (m[a.outcome] ?? 0) + 1), m),
+  {},
+);
+console.log(
+  `  meetings discovery: ${meetingsDiscoveryState}` +
+    (meetingsDiscovery === null
+      ? ""
+      : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
+        `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)`),
+);
+finishPhase("meetings-discovery");
+
+/*
  * RULING 52/53: a scout that argued a record absent this cycle (a proper walk
  * concluding NO_PROGRESS — a ladder walked to the floor with nothing there, not
  * a BLOCKED wall, which reschedules on its own cadence) records an EXPIRING
@@ -2384,6 +2465,14 @@ const lines = [
           ((retirementApplied?.deferred.length ?? 0) > 0 ? ` · ${retirementApplied?.deferred.length} deferred to the next cycle (budget)` : "") +
           (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
       ]),
+  `  discovery          meetings: ${meetingsDiscoveryState}` +
+    (meetingsDiscovery === null
+      ? ` · ${"unreadable" in gapLedgerRead ? "the gap ledger could not be read" : `${gapLedgerRead.needs.filter((n) => n.basis === "SOURCE_DISCOVERY_OWED").length} site(s) owed discovery in the gap ledger`}`
+      : ` · ${meetingsDiscovery.walked.length} walked (${meetingsDiscoveryByOutcome.FOUND ?? 0} found, ${meetingsDiscoveryByOutcome.LEAD ?? 0} lead, ` +
+        `${meetingsDiscoveryByOutcome.NOTHING_DETECTED ?? 0} nothing detected, ${meetingsDiscoveryByOutcome.BLOCKED ?? 0} blocked, ` +
+        `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
+        `${meetingsDiscovery.deferred.length} deferred (budget)` +
+        (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "")),
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -2458,6 +2547,24 @@ const runRecord = {
       })),
       /* Open occurrences their obligation moved past without closing (2026-09-23). */
       abandonedOccurrences: { found: abandonedOccurrences, applied: abandonedClosed },
+      /* The unpaid meetings-discovery phase: whether it ran, and every walk it made (2026-09-23). */
+      meetingsDiscovery: {
+        enabled: MEETINGS_DISCOVERY_ENABLED,
+        state: meetingsDiscoveryState,
+        walked: (meetingsDiscovery?.walked ?? []).map((a) => ({
+          jurisdictionId: a.jurisdictionId,
+          attemptId: a.attemptId,
+          outcome: a.outcome,
+          found: a.found.map((f) => ({ vendor: f.vendor, url: f.url, count: f.count })),
+          leads: a.leads.length,
+          requestCount: a.requestCount,
+          recheckAfter: a.recheckAfter,
+        })),
+        notDue: meetingsDiscovery?.notDue ?? [],
+        deferred: meetingsDiscovery?.deferred ?? [],
+        appendFailures: meetingsDiscovery?.appendFailures ?? [],
+        fieldManual: meetingsDiscovery?.fieldManual ?? null,
+      },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:
         movedPlan === null || supersededPlan === null || gapLedger === null

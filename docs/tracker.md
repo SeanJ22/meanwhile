@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-09-19 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-23 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **412 open**, 544 resolved.
-- **76 waiting on Sean** — the first section below.
+- **413 open**, 544 resolved.
+- **77 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
@@ -36,7 +36,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**76 open · 77 resolved.**
+**77 open · 77 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -99,6 +99,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS22** — The reader-answerability suite (RULING 210) shipped this session and runs today with an honest zero state: '0 questions loaded — awaiting owner corpus'. It evaluates YOUR questions against the rendered DOM of the four pilot ZIPs (85701, 85641, 07866, 03255) and turns every red into a typed diagnostic WorkItem. What it cannot do is invent the corpus: the questions are the owner's definition of what a reader must be able to learn, and a session writing them would be grading its own homework. Templates like 'When does [BODY] meet next?' instantiate mechanically from the registry; hand-authored adversarial literals are a distinct class that guards against an incorrectly small generated universe. The file is data/health/reader-questions.json; the schema is lib/health/reader-question.ts; 'pnpm reader:suite' shows the zero state. THE QUESTION: how do you want to author the corpus? Options: (a) you write questions in plain language (a sentence each is enough) and a session formalizes them into the schema for your review; (b) a session drafts a candidate corpus and you strike, amend and approve each question; (c) you dictate a handful of seed questions per ZIP now and the corpus grows continuously as RULING 210 expects.
 
 **NS23** — The permanent control set (RULING 211) needs roughly 40-60 OWNER-VERIFIED facts across the four pilot ZIPs — both known-present facts and known-absence negative controls carrying their authority, period and verified-through scope — weighted toward the dangerous failure modes (a denied present fact; an asserted absent one). Controls are injected unlabeled into normal flow; only the scoring harness may read control identity (the isolation is proven by a seeded-failure test shipped this session). A session cannot verify these facts for you without the set measuring the session instead of the system. The file is data/health/control-facts.json; the schema is lib/health/control-fact.ts; 'pnpm truth:controls --prove-fixture' demonstrates the whole plumbing on synthetic data and deletes it after. THE QUESTION: how do you want to build the answer key? Options: (a) a session proposes candidate facts with their sources and you verify or strike each one — your verification is what makes them controls; (b) you name facts you already know cold (meetings you attended, filings you read) and a session formalizes them; (c) a mix, starting with the negative controls since false presence is the costlier failure.
+
+**NS28** — 1,975 governments in AZ, NH and NJ have a known website whose meeting calendar nobody has looked for; the gap ledger lists them. A free, model-free executor now exists that walks those sites (robots.txt first on every host, identified requests, no paid research) and records what it finds for wiring. It is built and switched off. Turning it on is your call because it sends new outbound requests to government sites every cycle.
 
 **NW11** — RULING 242: the nightly window promotes only APPROVED items of record classes the activation gate has opened. The open set is EMPTY and opening a class is the owner's decision. The candidates named as low-risk in lib/control-plane/promotion/activation-gate.ts are meeting-times, agendas, published-minutes and routine-filings; candidate-positions, campaign-finance, candidate-enrichment, ballot and votes stay closed until approved by name. This decision cannot take effect until READER, TRUTH and FRESHNESS are GREEN and INDEPENDENTLY_REPRODUCED, so it is not urgent; it is recorded now so the list exists when the gate can open.
 

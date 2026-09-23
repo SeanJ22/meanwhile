@@ -48,6 +48,7 @@ import { resolveRollingCeiling } from "../lib/control-plane/fleet-safety.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import {
   UNREAD_MEETING_PARTITIONS,
+  promotedRegistries,
   trackedStatesFromOperationalReference,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
@@ -134,7 +135,10 @@ try {
       .filter((r) => r.active === "true" && !String(r.id).startsWith("freshness:jurisdiction:") && !String(r.id).startsWith("freshness:meetings-discovery:") && !emitted.has(String(r.id)))
       .map((r) => ({ id: String(r.id), subjectId: (/^freshness:[^:]+:([^#]+)#/.exec(String(r.id))?.[1] ?? String(r.id)) })),
   ];
-  const registries = new Map(Object.entries(bundle.registries).map(([state, reg]) => [state.toLowerCase(), reg] as const));
+  /* The registries the standing providers read, through their one accessor, exactly as the runner reads them. */
+  const promoted = promotedRegistries();
+  if ("unreadable" in promoted) throw new Error(`the promoted registries could not be read (${promoted.unreadable})`);
+  const registries = promoted.registries;
   const territory = readTerritoryIndex(ROOT, [...registries.values()]);
 
   /* ------------------------------------------------------- the geographies, planned */
@@ -172,7 +176,7 @@ try {
 
   const plan = planDispatchWork({
     targets,
-    world: { registries, territory, territoryDetail: null, corpus, durable, meetingPartitions: UNREAD_MEETING_PARTITIONS },
+    world: { registries, territory, territoryDetail: null, corpus, durable, meetingPartitions: UNREAD_MEETING_PARTITIONS, refusedRegistries: promoted.refused },
   });
   const reading = dispatchWorkReading(plan, null, {
     at: NOW,

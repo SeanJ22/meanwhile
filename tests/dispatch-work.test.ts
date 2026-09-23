@@ -53,6 +53,7 @@ import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
+  promotedRegistries,
   trackedStatesFrom,
   trackedStatesFromOperationalReference,
   type MaterializedReading,
@@ -376,6 +377,30 @@ test("a geography in a state with no promoted registry is blocked by name, and n
   assert.equal(words.blocked[0].code, "NO_STATE_NAMED");
   assert.equal(d.writes.length, 0);
   assert.equal(ownerDispatchWorkOf(dispatchWorkReading(d, null, CONTEXT), "i-il")?.blocked[0]?.code, "NO_JURISDICTION_REGISTRY");
+});
+
+test("a promoted registry the runtime's reader refuses is named as that, never used and never called missing", async () => {
+  const promoted = promotedRegistries();
+  assert.ok("registries" in promoted);
+  if (!("registries" in promoted)) return;
+  assert.deepEqual([...promoted.registries.keys()], ["az", "nh", "nj"], "every promoted registry, read through the providers' own accessor");
+  assert.equal(promoted.refused.size, 0);
+
+  const repos = createMemoryRepositories();
+  const { world } = await cycleWorld(repos, T0);
+  const refused = new Map([["az", "OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:az"]]);
+  const readable = new Map([["nh", REGISTRIES.nh], ["nj", REGISTRIES.nj]]);
+  const plan = planDispatchWork({
+    targets: [scopeWorkTarget(await planned(decision(PIMA))), dispatchWorkTarget({ intentId: "i-az", note: "Arizona", requestedAt: T0 })],
+    world: { ...world, territory: readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj]), registries: readable, refusedRegistries: refused },
+  });
+  const [dispatch, scope] = dispatchWorkReading(plan, null, CONTEXT).targets;
+  for (const t of [scope, dispatch]) {
+    assert.equal(t.blocked[0].code, "REGISTRY_NOT_READ", `${t.label}: a refused registry is not a missing one`);
+    assert.match(t.blocked[0].dataset, /operational-reference registry reader/);
+    assert.match(t.blocked[0].why, /OPERATIONAL_REFERENCE_STATE_NOT_REGISTERED:az/);
+  }
+  assert.equal(plan.writes.length, 0, "nothing is planned from a registry the providers could not keep in the corpus");
 });
 
 test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with the registry named", () => {

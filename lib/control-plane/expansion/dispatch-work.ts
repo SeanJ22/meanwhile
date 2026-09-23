@@ -145,6 +145,7 @@ export const DATASET = {
   unitTerritory: "data/derived/census-unit-zips.json (no ZCTA territory: TIGER publishes no boundary for it)",
   wiring: "the promoted meeting-partition source wiring",
   instruction: "a geography in the instruction (a state named in the words, or a geography sent from the Census lookup)",
+  reader: "the operational-reference registry reader (lib/civic-data/operational-references.ts, the states it reads)",
 } as const;
 
 /* ----------------------------------------------------------------- targets */
@@ -195,6 +196,8 @@ export interface DispatchWorkWorld {
   readonly meetingPartitions: MeetingPartitionOwnership;
   /** Census units by state (upper), for a DISPATCH to a state with no registry. Null when not read. */
   readonly censusUnitsByState?: ReadonlyMap<string, number> | null;
+  /** Registries the promoted bundle carries that the runtime's reader refuses, by lower-case state, with the reason. */
+  readonly refusedRegistries?: ReadonlyMap<string, string>;
 }
 
 /* ---------------------------------------------------------- requirements */
@@ -265,6 +268,7 @@ export type BlockedCode =
   | "TERRITORY_UNREADABLE"
   | "NO_JURISDICTION_REGISTRY"
   | "NOT_IN_REGISTRY"
+  | "REGISTRY_NOT_READ"
   | "NO_STATE_NAMED";
 
 /** Governments a target holds that no dataset can give requirements to, and the dataset that is missing. */
@@ -339,7 +343,19 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
   const sharesOf = index.unitShares ?? (() => undefined);
   for (const state of scope.states) {
     const unregistered = unitsCertainlyIn(scope, index.unregisteredUnitsByState.get(state) ?? [], sharesOf).sort(byName);
-    if (unregistered.length > 0) {
+    const refusedWhy = world.refusedRegistries?.get(state.toLowerCase()) ?? null;
+    if (unregistered.length > 0 && refusedWhy !== null) {
+      blocked.push({
+        code: "REGISTRY_NOT_READ",
+        dataset: DATASET.reader,
+        why:
+          `${unregistered.length} Census of Governments unit(s) in ${state} lie in this geography. ${state}'s registry is promoted, and this ` +
+          `runtime's registry reader refuses it (${refusedWhy}), so nothing it defines can be scheduled yet`,
+        units: unregistered.length,
+        states: [state],
+        sample: unregistered.slice(0, READING_LIST_CAP).map((u) => u.name),
+      });
+    } else if (unregistered.length > 0) {
       blocked.push({
         code: "NO_JURISDICTION_REGISTRY",
         dataset: DATASET.registry(state),
@@ -401,6 +417,20 @@ function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): Target
     const reg = world.registries.get(code);
     if (reg === undefined) {
       const count = world.censusUnitsByState?.get(code.toUpperCase()) ?? null;
+      const refusedWhy = world.refusedRegistries?.get(code) ?? null;
+      if (refusedWhy !== null) {
+        blocked.push({
+          code: "REGISTRY_NOT_READ",
+          dataset: DATASET.reader,
+          why:
+            `${code.toUpperCase()}'s registry is promoted, and this runtime's registry reader refuses it (${refusedWhy}), ` +
+            "so nothing it defines can be scheduled yet",
+          units: count,
+          states: [code.toUpperCase()],
+          sample: [],
+        });
+        continue;
+      }
       blocked.push({
         code: "NO_JURISDICTION_REGISTRY",
         dataset: DATASET.registry(code),

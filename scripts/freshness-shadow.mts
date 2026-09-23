@@ -117,6 +117,7 @@ import { meetingsDiscoveryProvider, paidDiscoveryHold } from "../lib/control-pla
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
+  promotedRegistries,
   trackedStatesFromOperationalReference,
   type MaterializedReading,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
@@ -141,7 +142,7 @@ import {
   RESEARCH_CYCLE_MEETINGS_RECEIPT,
   type PermanentMeetingsReceipt,
 } from "../lib/control-plane/promotion/fact-freshness.ts";
-import { preloadOperationalReferenceBundle, requiredOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   closeAbandonedOccurrences,
@@ -264,7 +265,7 @@ import {
   withCycleCounts,
 } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
-import { loadExpansionPlan, readCensusUnitTerritories } from "../lib/control-plane/expansion/runner-load.ts";
+import { loadExpansionPlan, readCensusUnitTerritories, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -964,11 +965,24 @@ for (const pending of intents.pendingDispatch) {
  * never adds, skips or makes due a row, and never opens the paid lane; what a
  * scope is missing is created by the MW-028 step below, bounded and counted.
  */
+/*
+ * The promoted registries, read through the one accessor the standing providers
+ * use (MW-028): the territory index, the scope placement and the work a Send
+ * creates all see exactly the registries the providers can keep in the corpus.
+ * A registry the reader refuses is named, never used.
+ */
+const promoted = promotedRegistries();
+if ("refused" in promoted) {
+  for (const [state, why] of promoted.refused) {
+    runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
+  }
+}
 const expansionLoad = await loadExpansionPlan({
   repos,
   root: ROOT,
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
+  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...promoted.registries.values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1340,9 +1354,8 @@ const dispatchTargets: DispatchWorkTarget[] = [];
 let dispatchWork: DispatchWorkReading | null = null;
 if (dispatchTargets.length > 0) {
   try {
-    const registries = new Map(
-      Object.entries(requiredOperationalReferenceBundle().registries).map(([state, reg]) => [state.toLowerCase(), reg] as const),
-    );
+    if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
+    const registries = promoted.registries;
     let censusUnitsByState: Map<string, number> | null = null;
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
@@ -1367,6 +1380,7 @@ if (dispatchTargets.length > 0) {
         durable,
         meetingPartitions: UNREAD_MEETING_PARTITIONS,
         censusUnitsByState,
+        refusedRegistries: promoted.refused,
       },
     });
     const applied = dispatchWorkWrites

@@ -38,7 +38,11 @@
  * runner already preloaded (no I/O of its own).
  */
 
-import { requiredOperationalReferenceBundle } from "../../civic-data/operational-references.ts";
+import {
+  requiredOperationalJurisdictionRegistry,
+  requiredOperationalReferenceBundle,
+} from "../../civic-data/operational-references.ts";
+import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 
 /* ----------------------------------------------------------- tracked states */
 
@@ -80,6 +84,36 @@ export function trackedStatesFromOperationalReference(): TrackedStatesSource {
       }
     },
   };
+}
+
+/**
+ * Every jurisdiction registry the promoted bundle carries, each read through
+ * the ONE accessor the standing providers read it through
+ * (`requiredOperationalJurisdictionRegistry`), and each one that accessor
+ * refuses, with its reason. Planning work from a registry the providers cannot
+ * read would create rows nothing keeps in the corpus, so a refused registry is
+ * named — "promoted, and not read by this runtime" — never used and never
+ * silently dropped. Keyed by lower-case state code.
+ */
+export function promotedRegistries():
+  | { readonly registries: ReadonlyMap<string, JurisdictionRegistry>; readonly refused: ReadonlyMap<string, string> }
+  | { readonly unreadable: string } {
+  let states: string[];
+  try {
+    states = normalized(Object.keys(requiredOperationalReferenceBundle().registries));
+  } catch (error) {
+    return { unreadable: error instanceof Error ? error.message : String(error) };
+  }
+  const registries = new Map<string, JurisdictionRegistry>();
+  const refused = new Map<string, string>();
+  for (const state of states) {
+    try {
+      registries.set(state, requiredOperationalJurisdictionRegistry(state));
+    } catch (error) {
+      refused.set(state, error instanceof Error ? error.message : String(error));
+    }
+  }
+  return { registries, refused };
 }
 
 /**

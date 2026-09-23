@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 716,
-    "named": 7075,
+    "files": 717,
+    "named": 7081,
     "dynamic": 27
   },
   "files": {
@@ -5692,6 +5692,17 @@
         "SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, its occurrence closes unresolved, and nothing else is written",
         "SEEDED: a spent budget defers the rest untouched, in order, and the next cycle retires them",
         "SEEDED: while the ledger cannot be read, no meetings row retires and its occurrence stays open"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-recipes.test.ts": {
+      "names": [
+        "A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here",
+        "OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded",
+        "PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here",
+        "RETRIEVAL: by body class and state; state-specific before portable, then successes, then recency",
+        "SUBSTITUTION: a template is filled from the government's identity; a missing slot leaves the query unsent",
+        "THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes it back; cycle 2 reads it and applies it in another state"
       ],
       "dynamic": 0
     },

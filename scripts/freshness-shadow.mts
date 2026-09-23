@@ -124,6 +124,7 @@ import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
 import { runMeetingsDiscovery, type MeetingsDiscoveryPass } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import {
   closeAbandonedOccurrences,
   planMovedToGapLedger,
@@ -2028,6 +2029,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
   const discoveryStartedMs = Date.now();
   const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
   try {
+    /* The saved methods live in the field manual; the runner consults them on every walk. */
+    const manual = await repos.fieldManual.read("live");
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: gapLedgerRead.needs,
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
@@ -2053,6 +2056,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         vault: vault.put,
         now: nowIso,
         budget: { spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS },
+        recipes: knownRecipes(manual?.value.entries ?? []),
       },
     });
     meetingsDiscoveryState = "ran";
@@ -2471,7 +2475,7 @@ const lines = [
       : ` · ${meetingsDiscovery.walked.length} walked (${meetingsDiscoveryByOutcome.FOUND ?? 0} found, ${meetingsDiscoveryByOutcome.LEAD ?? 0} lead, ` +
         `${meetingsDiscoveryByOutcome.NOTHING_DETECTED ?? 0} nothing detected, ${meetingsDiscoveryByOutcome.BLOCKED ?? 0} blocked, ` +
         `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
-        `${meetingsDiscovery.deferred.length} deferred (budget)` +
+        `${meetingsDiscovery.deferred.length} deferred (budget) · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
         (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "")),
   ...(abandonedOccurrences.length === 0
     ? []
@@ -2562,6 +2566,8 @@ const runRecord = {
         })),
         notDue: meetingsDiscovery?.notDue ?? [],
         deferred: meetingsDiscovery?.deferred ?? [],
+        recipesApplied: meetingsDiscovery?.recipeApplications ?? 0,
+        recipesUpdated: meetingsDiscovery?.recipesUpdated ?? [],
         appendFailures: meetingsDiscovery?.appendFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
       },

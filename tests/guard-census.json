@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 709,
-    "named": 7028,
+    "files": 710,
+    "named": 7033,
     "dynamic": 28
   },
   "files": {
@@ -637,7 +637,7 @@
     },
     "tests/agenda-version-projection.test.ts": {
       "names": [
-        "Tucson Unified 499: 88 identical re-fetches plus the board's site root are ONE version, never a revision",
+        "Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version",
         "a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording",
         "a revision at the same address is still two versions, and the old address is not offered as the old text",
         "a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision",
@@ -3419,6 +3419,16 @@
       ],
       "dynamic": 0
     },
+    "tests/diligent-portal-reading.test.ts": {
+      "names": [
+        "a read recorded as the publisher's page is the portal; a read with no text stays unreadable",
+        "negative controls: the rule reads the portal's own furniture on the portal's own address, nothing wider",
+        "regression control: every Diligent portal page in the committed holding is still read as the portal",
+        "the fixed extractor's reading of the recorded pages is the portal too",
+        "the stored skip-link rows of all three Diligent tenants read as the portal, not as an agenda we could not read"
+      ],
+      "dynamic": 0
+    },
     "tests/discovery-tree.test.ts": {
       "names": [
         "RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale",
@@ -4474,9 +4484,9 @@
     },
     "tests/grounded-agenda-projection.test.ts": {
       "names": [
-        "one reading per sitting: Tucson Unified 499's 89 stored rows are ONE shown document, the newest read of its own page",
+        "one reading per sitting: Tucson Unified 499's 89 stored rows are its two index pages, the portal page's newest read first",
         "the document every agenda item cites is the one the reading was taken over, never a newer index page",
-        "the real grounded route hands the answer model ONE Tucson Unified 499 document, the projection's newest, and cites Pima items to the agenda"
+        "the real grounded route hands the answer model Tucson Unified 499's two index pages, the projection's, and cites Pima items to the agenda"
       ],
       "dynamic": 0
     },
@@ -4518,7 +4528,7 @@
     },
     "tests/held-agenda-projection.test.ts": {
       "names": [
-        "Ask, Tucson Unified 499: 89 stored rows (88 identical re-reads plus the site root) are ONE agenda record with no revision language",
+        "Ask, Tucson Unified 499: 89 stored rows (88 re-reads of its portal page plus the site root) are two index records with no revision language",
         "Ask, a real revision: two distinct contents are two agenda records, each with its own source",
         "Ask, a sitting holding only the site root: its listing pages are named as publication indexes, never as an agenda"
       ],

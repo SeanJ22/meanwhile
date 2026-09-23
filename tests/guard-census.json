@@ -1,11 +1,21 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 712,
-    "named": 7042,
+    "files": 713,
+    "named": 7048,
     "dynamic": 27
   },
   "files": {
+    "tests/abandoned-occurrences.test.ts": {
+      "names": [
+        "SEEDED: an occurrence 1 its obligation moved past, on a never-claimed RouteTask, is closed unresolved and nothing else is written",
+        "a live pointer survives: closing an abandoned occurrence never clears the obligation's own open occurrence",
+        "never abandoned: the occurrence it points at, its latest occurrence even with the pointer lost, and one whose RouteTask was claimed",
+        "openOccurrence refuses while its obligation points at an open occurrence, and writes nothing",
+        "the close re-reads every condition at write time and skips, by name, anything that changed"
+      ],
+      "dynamic": 0
+    },
     "tests/absence-defaults.test.ts": {
       "names": [
         "a single-token type default is not a claim and is not flagged",
@@ -397,6 +407,7 @@
         "a fraction of a cent per attempt says so instead of rounding to a free-looking $0.00",
         "a ledger place key reads as the place, from its own parts",
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
+        "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "an entered figure fills its provider's row with its kind, period and provenance, and the bill is never added to the ledger",
         "every provider with no reading renders as NO READING with its manual path — never a number, never zero",
         "paid outcomes narrow by state without borrowing another state's refusals",

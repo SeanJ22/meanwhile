@@ -123,7 +123,8 @@ import {
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
-  findSettledOccurrences,
+  closeAbandonedOccurrences,
+  scanOccurrences,
   planRetiredResidue,
   planSupersededRetirement,
   settleRetirements,
@@ -136,6 +137,7 @@ import {
   recordArguedAbsence,
   retireObligationsByPrefix,
   syncObligations,
+  type AbandonedOccurrence,
   type SettledOccurrence,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
@@ -1014,7 +1016,7 @@ const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.li
 // A held Parser/Validator chain has no autonomous acquisition plan. Its next
 // stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
 // reserve downstream time until that pass can inspect their retained evidence.
-const [heldWorkIds, settledTaskIds] = await (async () => {
+const [heldWorkIds, settledTaskIds, neverClaimedTaskIds] = await (async () => {
   const listing = canary || scheduledBlackout ? [] : await repos.routeTasks.list();
   return [
     new Set(listing
@@ -1024,6 +1026,8 @@ const [heldWorkIds, settledTaskIds] = await (async () => {
       .map(row => row.value.workItemId)),
     /* The same read names the settled RouteTasks the pre-dispatch recovery starts from (2026-09-23). Only ids outlive it. */
     settledRouteTaskIds(listing),
+    /* And the freshness RouteTasks never claimed, which an abandoned occurrence must sit on (2026-09-23). */
+    new Set(listing.filter(row => row.value.state === "PENDING" && !row.value.workerTask).map(row => row.id)),
   ] as const;
 })();
 const downstreamWorkCount = plannedWork.length + heldWorkIds.size;
@@ -1741,13 +1745,39 @@ finishPhase("worker-context");
  * costs latency and never correctness.
  */
 let settledOccurrences: readonly SettledOccurrence[] = [];
+/*
+ * The same pass finds ABANDONED occurrences (2026-09-23): open, unreferenced,
+ * with the obligation moved past them and a RouteTask never claimed. Only a full
+ * standing cycle closes them; the rest print them. Each close writes only the
+ * occurrence, unresolved, and is named in the digest and the run record.
+ */
+let abandonedOccurrences: readonly AbandonedOccurrence[] = [];
+let abandonedClosed: Awaited<ReturnType<typeof closeAbandonedOccurrences>> | null = null;
 if (!canary && !scheduledBlackout) {
   try {
-    settledOccurrences = await findSettledOccurrences(repos, { obligations: sync.all, settledRouteTaskIds: settledTaskIds });
+    const scan = await scanOccurrences(repos, {
+      obligations: sync.all,
+      settledRouteTaskIds: settledTaskIds,
+      neverClaimedRouteTaskIds: neverClaimedTaskIds,
+    });
+    settledOccurrences = scan.settled;
+    abandonedOccurrences = scan.abandoned;
   } catch (error) {
     runtimeConditions.push(
       `settled occurrences could not be found before dispatch (${error instanceof Error ? error.message : String(error)}); a lane recovers any it reaches`,
     );
+  }
+  if (abandonedOccurrences.length > 0) {
+    if (dry || ONLY !== null || IDS !== null) {
+      console.log(`  abandoned occurrences: ${abandonedOccurrences.length} found (plan only: this cycle writes nothing)`);
+    } else {
+      abandonedClosed = await closeAbandonedOccurrences(repos, { abandoned: abandonedOccurrences, now: NOW });
+      console.log(
+        `  abandoned occurrences: ${abandonedOccurrences.length} found, ${abandonedClosed.closed.length} closed unresolved` +
+          (abandonedClosed.skipped.length > 0 ? `, ${abandonedClosed.skipped.length} skipped` : "") +
+          (abandonedClosed.failed.length > 0 ? `, ${abandonedClosed.failed.length} failed and are found again next cycle` : ""),
+      );
+    }
   }
 }
 finishPhase("settled-occurrence-scan");
@@ -2299,6 +2329,14 @@ const lines = [
           ((retirementApplied?.failed.length ?? 0) > 0 ? ` · ${retirementApplied?.failed.length} did not complete, planned again` : "") +
           (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
       ]),
+  ...(abandonedOccurrences.length === 0
+    ? []
+    : [
+        `  abandoned          ${abandonedOccurrences.length} open occurrence(s) their obligation moved past, on RouteTasks never claimed · ` +
+          (abandonedClosed === null
+            ? "plan only: this cycle wrote nothing"
+            : `${abandonedClosed.closed.length} closed unresolved, ${abandonedClosed.skipped.length} skipped, ${abandonedClosed.failed.length} failed`),
+      ]),
   "",
   ...researchLines,
   "",
@@ -2364,6 +2402,8 @@ const runRecord = {
         discharged: r.discharged,
       })),
       /* Rows the registry no longer emits: what was planned, held back by code, and actually written (2026-09-23). */
+      /* Open occurrences their obligation moved past without closing (2026-09-23). */
+      abandonedOccurrences: { found: abandonedOccurrences, applied: abandonedClosed },
       retirement:
         supersededPlan === null
           ? null

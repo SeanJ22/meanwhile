@@ -186,7 +186,7 @@ const worker = workerVaultResolver(repos, cached, "freshness");
 const research = researchVaultResolver(repos, cached, "freshness");
 
 const verdict = (error: unknown) => (error instanceof Error ? `${error.name === "Error" ? "" : `${error.name}: `}${error.message}` : String(error)).slice(0, 160);
-const readback: { recordId: string; artifactId: string; readHeld: string; workerVaultResolver: string; researchVaultResolver: string }[] = [];
+const readback: { logKey: string; recordId: string; artifactId: string; readHeld: string; workerVaultResolver: string; researchVaultResolver: string }[] = [];
 for (const record of restoredRecords) {
   const row = artifactRecords.find((r) => r.attemptId === record.attemptId && r.artifactId === record.artifactId && r.workItemId === record.workItemId)!;
   let held: string;
@@ -210,7 +210,7 @@ for (const record of restoredRecords) {
   } catch (error) {
     researchRead = verdict(error);
   }
-  readback.push({ recordId: record.recordId, artifactId: record.artifactId, readHeld: held, workerVaultResolver: workerRead, researchVaultResolver: researchRead });
+  readback.push({ logKey: record.logKey, recordId: record.recordId, artifactId: record.artifactId, readHeld: held, workerVaultResolver: workerRead, researchVaultResolver: researchRead });
 }
 const tallyBy = (field: "readHeld" | "workerVaultResolver" | "researchVaultResolver") =>
   readback.reduce((m, r) => ((m[r[field]] = (m[r[field]] ?? 0) + 1), m), {} as Record<string, number>);

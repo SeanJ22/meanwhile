@@ -167,6 +167,13 @@ const componentCensus = { ...census, records: census.records.filter((record) => 
 const components = await renderCanonicalReaderComponents(root, componentCensus);
 writeFileSync(componentPath, `${JSON.stringify(components, null, 2)}\n`);
 assert.deepEqual(components.failures, [], "An invalidated canonical component payload failed to render");
+if (components.servingWindowRemovals.length) {
+  console.log(
+    `[reader-proof] RULING 290: ${components.servingWindowRemovals.length} held meeting(s) left the live projection after prepare, ` +
+      `past the ${components.servingWindowRemovals[0]!.contract} lower bound; rendered from the census's own holding: ` +
+      components.servingWindowRemovals.map((removal) => removal.meetingId).join(", "),
+  );
+}
 
 const bundleEvidence = readerBundleEvidence(root, census, buildReceiptPath, portraitProofPath);
 writeFileSync(bundlePath, `${JSON.stringify(bundleEvidence, null, 2)}\n`);

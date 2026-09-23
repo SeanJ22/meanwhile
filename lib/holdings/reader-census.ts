@@ -3357,7 +3357,7 @@ export async function registerReaderRenderHooks(root: string): Promise<void> {
   });
 }
 
-export async function renderCanonicalReaderComponents(root: string, census: ReaderCensus): Promise<{ formatVersion: 1; exactHead: string; holdingsDigest: string; sourceHashes: ReaderSourceHash[]; rule: string; cases: ReaderComponentCase[]; failures: string[] }> {
+export async function renderCanonicalReaderComponents(root: string, census: ReaderCensus): Promise<{ formatVersion: 1; exactHead: string; holdingsDigest: string; sourceHashes: ReaderSourceHash[]; rule: string; cases: ReaderComponentCase[]; failures: string[]; servingWindowRemovals: { auditId: string; meetingId: string; startsAt: string; lowerBound: string; contract: string }[] }> {
   await registerReaderRenderHooks(root);
   const [{ createElement, Fragment }, { renderToStaticMarkup }, { StateMoneySection }, { CandidateContact }, { MeetingRecords }, { ShuffledFacts }, finance, contacts, outcomes, meetingReader, area, { PublicStatementsProfileContent }, prl, { PersonIdentity, IdentityPortrait }, { ContactPills }, registry, rosters, { CandidateCard }, cards, sites, ballot, { MeetingPopup }, { DistrictPopup }, { EntityModal }, { DataProvider }, snapshotSource, meetingFormat, meetingLinks, memberships, minutes, { HowToBeHeard }, commentAccess, stateLabels] = await Promise.all([
     import("react"), import("react-dom/server"), import("../../components/funding/state-money-section.tsx"),
@@ -3380,6 +3380,30 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   const applicableReaderRecords = new Set(
     census.rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds),
   );
+  // A held meeting the live projection no longer carries fails this render, with one
+  // exception: its adapter stopped listing it after prepare because it had passed the
+  // serving window's lower bound (MEETING_READER_SERVING_WINDOW_V1). That is the runner
+  // working correctly, which RULING 290 says must never be the proof's failure mode. Only
+  // then does the leaf render use the census's own held record, and each such render is
+  // reported. A meeting inside the window, or one whose agenda documents are still
+  // applicable (their path reads the live route), still fails.
+  const { CONCLUDED_LOOKBACK_DAYS, MEETING_READER_SERVING_WINDOW_CONTRACT } = await import("../meetings/constants.ts");
+  const heldMeetingsById = new Map([...sourceRows.entries()]
+    .filter(([auditId, raw]) => auditId.startsWith("data/meetings-snapshot.json#/meetings/") && typeof raw.value?.id === "string")
+    .map(([, raw]) => [string(raw.value.id), raw.value] as const));
+  const applicableAgendaMeetingIds = new Set(census.records
+    .filter((record) => record.family === "meetings" && record.unit === "agendaDocuments" && applicableReaderRecords.has(record.auditId))
+    .map((record) => string(sourceRows.get(record.auditId)?.value?.meetingId)));
+  const servingWindowRemovals: { auditId: string; meetingId: string; startsAt: string; lowerBound: string; contract: string }[] = [];
+  const servingWindowRemoved = (auditId: string, meetingId: string) => {
+    const held = heldMeetingsById.get(meetingId);
+    if (!held || applicableAgendaMeetingIds.has(meetingId)) return undefined;
+    const lowerBound = Date.now() - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+    if (!(Date.parse(string(held.startsAt)) < lowerBound)) return undefined;
+    const [normalized] = source.normalize([held as unknown as Parameters<typeof source.normalize>[0][number]], new Date());
+    servingWindowRemovals.push({ auditId, meetingId, startsAt: string(held.startsAt), lowerBound: new Date(lowerBound).toISOString(), contract: MEETING_READER_SERVING_WINDOW_CONTRACT });
+    return normalized;
+  };
   const registryDivisionsById = new Map<string, ObjectRow>();
   for (const record of census.records) {
     if (record.holdingPath !== "lib/registry/registry.json" || record.unit !== "divisions") continue;
@@ -3645,7 +3669,8 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
         [selected.sourceUrl, ...(selected.commentPeriod === "UNKNOWN" ? ["We don't know this body's public-comment rules yet"] : [selected.commentPeriodDetail, selected.timeLimit, selected.signup, selected.writtenComment, selected.attend])].filter((value): value is string => Boolean(value)));
     } else if ((record.family === "meetings" && record.unit === "meetings" || record.family === "minutes-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
       if (record.family === "meetings" && !applicableReaderRecords.has(record.auditId)) continue;
-      const selected = normalizedMeetings.get(string(record.family === "minutes-summaries" ? raw.meetingId : raw.id));
+      const meetingId = string(record.family === "minutes-summaries" ? raw.meetingId : raw.id);
+      const selected = normalizedMeetings.get(meetingId) ?? servingWindowRemoved(record.auditId, meetingId);
       if (!selected) throw new Error(`SSR could not normalize ${record.auditId}`);
       const representation = memberships.membersOfBody(selected.bodyId ?? null).members;
       const listingGroup = listingMultiplicityForSource(listingIdentity, selected.id);
@@ -3736,5 +3761,5 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       }
     }
   }
-  return { formatVersion: 1, exactHead: execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim(), holdingsDigest: census.holdingsDigest, sourceHashes: readerSourceFingerprint(root), rule: "Every named case executes the product component with the canonical selector's payload and reads its emitted HTML. This proves the leaf output only; deployed routing, API grounding and in-situ browser evidence remain separate required proofs. Empty, staged and wrong-identity controls must stay absent.", cases, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)) };
+  return { formatVersion: 1, exactHead: execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim(), holdingsDigest: census.holdingsDigest, sourceHashes: readerSourceFingerprint(root), rule: "Every named case executes the product component with the canonical selector's payload and reads its emitted HTML. This proves the leaf output only; deployed routing, API grounding and in-situ browser evidence remain separate required proofs. Empty, staged and wrong-identity controls must stay absent.", cases, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)), servingWindowRemovals };
 }

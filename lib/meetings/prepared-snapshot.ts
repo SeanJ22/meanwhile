@@ -18,6 +18,7 @@ import {
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
+import { activeReaderProofMeetingPin } from "./proof-pin.ts";
 
 /**
  * **The prepared reader snapshot (PDC-8b, 2026-09-15).**
@@ -191,6 +192,20 @@ export async function readPreparedMeetingsProjection(
     prepared = null;
   }
   if (prepared === null) {
+    return readMeetingsProjection(options);
+  }
+  // Proof-only (lib/meetings/proof-pin.ts; null in every deployed build): the
+  // serving copy is served only when it was composed from exactly the pinned
+  // versions. Otherwise the composing reader serves the pinned versions.
+  const pin = activeReaderProofMeetingPin();
+  if (
+    pin !== null &&
+    couplingFingerprint(prepared.composedFrom) !== couplingFingerprint(
+      pin.partitions.flatMap(({ contractId, kind, versionId }) =>
+        kind === "PROMOTED" && versionId !== null ? [{ contractId, versionId }] : []
+      ),
+    )
+  ) {
     return readMeetingsProjection(options);
   }
   const partitions = partitionsFromCoupling(prepared.composedFrom);

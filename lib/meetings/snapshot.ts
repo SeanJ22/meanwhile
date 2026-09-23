@@ -7,12 +7,15 @@ import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts"
 import {
   CivicDataStoreUnavailableError,
   mayUseTestFixture,
+  readPinnedPromotedCivicDataBatch,
   readPromotedCivicDataBatch,
   readPromotedCivicData,
+  type CivicDataPinnedReadStore,
   type CivicDataReadMetadata,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
+import { activeReaderProofMeetingPin } from "./proof-pin.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
 import {
   MEETING_PARTITION_CONTRACTS,
@@ -688,16 +691,31 @@ export async function readMeetingsProjection(
   const allowUnconfiguredBootstrap =
     process.env.NODE_ENV !== "production" &&
     (options.allowUnconfiguredBootstrap ?? mayUseTestFixture());
-  const partitionResults = await readPromotedCivicDataBatch<MeetingsSnapshot>(
-    MEETINGS_RECORD_CLASS,
-    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
-    {
-      ...(options.store ? { store: options.store } : {}),
-      now,
-      maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
-      bypassCache: options.bypassCache,
-    },
-  );
+  const readOptions = {
+    ...(options.store ? { store: options.store } : {}),
+    now,
+    maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
+    bypassCache: options.bypassCache,
+  };
+  // Proof-only (lib/meetings/proof-pin.ts): null in every deployed build and
+  // outside the Reader proof harness, which leaves this read exactly as it was.
+  const pin = activeReaderProofMeetingPin();
+  const partitionResults = pin === null
+    ? await readPromotedCivicDataBatch<MeetingsSnapshot>(
+        MEETINGS_RECORD_CLASS,
+        MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+        readOptions,
+      )
+    : await readPinnedPromotedCivicDataBatch<MeetingsSnapshot>(
+        MEETINGS_RECORD_CLASS,
+        pin.partitions.map(({ scope, versionId }) => ({ scope, versionId })),
+        {
+          now: readOptions.now,
+          maxAgeMs: readOptions.maxAgeMs,
+          bypassCache: readOptions.bypassCache,
+          ...(options.store ? { store: options.store as CivicDataPinnedReadStore } : {}),
+        },
+      );
   const reads = MEETING_PARTITION_CONTRACTS.map((partition, index) => ({
     partition,
     result: validateMeetingPartitionProjection(partition, partitionResults[index]!),
@@ -809,7 +827,7 @@ export async function readMeetingsProjection(
         staleAt: null,
       },
       partitions: partitionReadbacks,
-      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.`,
+      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.${pin === null ? "" : ` Reader proof meeting pin ${pin.partitionsSha256.slice(0, 12)} (captured ${pin.capturedAt}) selected every version.`}`,
     };
   }
 

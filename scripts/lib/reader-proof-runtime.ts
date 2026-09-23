@@ -35,6 +35,7 @@ import {
   requireReaderProofMeetingsProjection,
   type ReaderProofMeetingsExpectedAuthority,
 } from "../../lib/meetings/snapshot.ts";
+import { readerProofMeetingPinAdmission } from "../../lib/meetings/proof-pin.ts";
 import {
   readerClosureExecutionAuthorityAdmission,
   readerClosureExecutionAuthorityPaths,
@@ -505,6 +506,12 @@ function prepareReaderProofRuntimeFor(options: ReaderProofRuntimeOptions): Promi
   }
   if (!preparation) {
     try {
+      // A pin the harness asked for but the reader refused would silently put
+      // this process back on live, mixed-version meeting reads. Refuse it here.
+      const pinAdmission = readerProofMeetingPinAdmission(process.env);
+      if (pinAdmission.state === "REFUSED") {
+        throw new Error(`Reader proof meeting pin was requested but refused: ${pinAdmission.reason}.`);
+      }
       const authority = loadReaderProofMeetingsExpectedAuthorityFor(process.cwd(), process.env, options);
       preparationKey = nextKey;
       preparation = runReaderProofRuntimeLoaders(productionLoaders(authority)).then((result) => {

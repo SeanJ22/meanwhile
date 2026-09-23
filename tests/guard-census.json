@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 713,
-    "named": 7050,
+    "files": 714,
+    "named": 7056,
     "dynamic": 27
   },
   "files": {
@@ -7819,6 +7819,17 @@
         "production history validates the exact approved documentary-main receipt without relabeling importer ancestry",
         "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone",
         "the documentary-main exception rejects near-miss and unbound lineage even when all enclosing hashes are recomputed"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-proof-meeting-pin.test.ts": {
+      "names": [
+        "a deployed build, a function runtime, or a process outside the harness never admits the pin",
+        "a mid-run promotion splits the unpinned harness's two reads, and the pin holds both on the captured version",
+        "a pinned store failure stays a failure and a pinned absence stays absent",
+        "an admitted pin that is malformed or edited is refused loudly, never read as no pin",
+        "the pinned read still refuses an unverified version: never promoted, or tampered after promotion",
+        "the proof server's prepared row serves only when it was composed from exactly the pinned versions"
       ],
       "dynamic": 0
     },

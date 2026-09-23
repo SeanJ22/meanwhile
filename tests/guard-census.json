@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 696,
-    "named": 6939,
+    "files": 699,
+    "named": 6958,
     "dynamic": 28
   },
   "files": {
@@ -2179,14 +2179,47 @@
       ],
       "dynamic": 0
     },
+    "tests/census-geography-grf.test.ts": {
+      "names": [
+        "grf: a header missing a needed column fails loudly",
+        "grf: aggregates ZCTA↔CDCURFP overlaps by block land (whole vs partial), skips water/unassigned"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-geography-promotion.test.ts": {
+      "names": [
+        "a valid dataset auto-promotes through the routine door and the pointer serves the lookup",
+        "an empty dataset is refused and never promotes (fail closed)",
+        "census-geography-relationships is an official .gov source that auto-qualifies (owner policy)",
+        "the routine contract auto-publishes and matches the publication identity"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-geography-route.test.ts": {
+      "names": [
+        "route: AZ-06 returns 79 ZCTAs, each carrying the wholly/partly flag",
+        "route: a malformed geoid is a 400",
+        "route: a metropolitan CBSA returns its overlaps and its cbsaClass",
+        "route: a well-formed but absent geoid is typed NOT_IN_COVERAGE, never zero",
+        "route: an unknown geography type is a 400, never a false empty",
+        "route: states its data source, so a fixture is never mistaken for live coverage",
+        "route: version is optional and resolves the published version for the type"
+      ],
+      "dynamic": 0
+    },
     "tests/census-geography.test.ts": {
       "names": [
         "build: a header missing a needed column fails loudly",
         "build: parses whole/partial overlaps, skips the no-ZCTA remainder, keeps split relationships",
         "lookup: AZ-06 returns 79 ZCTAs (verified Census tab20 CD119), stated N == rows",
+        "lookup: Phoenix metro (CBSA 38060) returns every overlapping ZCTA, whole and partial, area basis",
+        "lookup: a micropolitan CBSA is kept distinct from a metropolitan one",
         "lookup: enumerates Arizona's 9 congressional districts",
+        "lookup: enumerates Arizona's metro AND micro CBSAs, class always present",
         "lookup: postal reconciliation distinguishes a ZCTA from a non-ZCTA ZIP",
+        "lookup: reverse ZCTA -> groupings includes the parallel CBSA layer",
         "lookup: reverse ZCTA -> groupings spans the parallel types, never nested",
+        "lookup: the manifest publishes all five of Admin's primary groupings",
         "lookup: unknown ZCTA and unknown geography are typed absence, never zero"
       ],
       "dynamic": 0
@@ -6400,6 +6433,7 @@
       "names": [
         "a crash after reservation cannot restart the same attempt indefinitely",
         "owner refresh accepts one exact registered partition and at most two attempts; no direct source child",
+        "owner refresh also takes one exact registered routine source contract, never an unregistered id",
         "standing parent consumes durable bounded refresh requests independently of ordinary source due time"
       ],
       "dynamic": 0

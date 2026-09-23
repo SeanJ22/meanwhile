@@ -45,8 +45,6 @@ import {
   disposeRouteTask,
   recordArtifactMetadata,
 } from "../lib/control-plane/repository/coordinator.ts";
-import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { dispatchOne, sweepExpiredLeases, type RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
@@ -81,6 +79,7 @@ import {
   operationalReferenceBundle,
 } from "../lib/civic-data/operational-references.ts";
 import type { ContractReading } from "../lib/health/contracts.ts";
+import { eachStore } from "./control-plane-fixtures.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 /* The held-evidence workers resolve the Avondale feed's subject through the operational registry. */
@@ -98,13 +97,6 @@ const READER: ContractReading = { contract: "READER", state: "NOT_READY", reason
 const TRUTH: ContractReading = { contract: "TRUTH", state: "NOT_READY", reason: "fixture" };
 const AVONDALE = "az:city:city-of-avondale";
 const AVONDALE_EVENTS = "https://avondaleaz.api.civicclerk.com/v1/Events";
-
-async function eachStore(): Promise<Array<readonly [string, ControlPlaneRepositories]>> {
-  return [
-    ["memory", createMemoryRepositories()],
-    ["file", await createFileRepositories(mkdtempSync(join(tmpdir(), "wtp-settled-")))],
-  ];
-}
 
 function obligation(id: string, over: Partial<FreshnessObligation> = {}): FreshnessObligation {
   return {
@@ -296,7 +288,7 @@ async function routeState(repos: ControlPlaneRepositories, routeTaskId: string, 
 }
 
 test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     /* Two occurrences a single dying cycle disposed, like the 62 production still held: a reading and a route fact. */
     const read = await interrupted(repos, obligation("ob-ingested"), ingests(vaultRoot, "https://example.gov/feed.json", '{"rows":[1]}'));
@@ -378,7 +370,7 @@ test("SEEDED: an open occurrence on an already-disposed RouteTask is recovered, 
 });
 
 test("SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, and a dead lease on one is left for the sweep", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const walked = await interrupted(repos, obligation("ob-settled"), disposes("WALKED_NO_YIELD"));
     const before = await routeState(repos, walked.routeTaskId, walked.workItemId);
 
@@ -444,7 +436,7 @@ test("SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, an
 });
 
 test("claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     await repos.obligations.put("ob-race", standing(obligation("ob-race"), T0), T0);
     const opened = await openOccurrence(repos, {
       obligation: (await repos.obligations.mustRead("ob-race")).value,
@@ -531,7 +523,7 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing, veri
       categoryId: 26, eventCategoryName: "City Council", isPublished: true,
     }],
   });
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     const held = await interrupted(
       repos,
@@ -607,7 +599,7 @@ test("a recovered INGESTED occurrence with a normalizer stages PROMOTION-READY f
     open: { kind: "HTTP_GET", url: "https://seethemoney.az.gov/Reporting/GetNEWTableData/" },
     citation: "fixture",
   };
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     const held = await interrupted(
       repos,
@@ -637,7 +629,7 @@ test("a recovered INGESTED occurrence with a normalizer stages PROMOTION-READY f
 });
 
 test("a recovered WALKED_NO_YIELD discharges this period's reading only: the obligation comes due again under a new RouteTask", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const empty = await interrupted(repos, obligation("ob-empty"), disposes("WALKED_NO_YIELD"));
     await repos.debts.put(
       "ob-empty",
@@ -675,7 +667,7 @@ test("a recovered WALKED_NO_YIELD discharges this period's reading only: the obl
 });
 
 test("a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const walled = await interrupted(repos, obligation("ob-walled"), disposes("REQUIRES_NEW_ADAPTER"));
 
     const recovery = await cycleAt(repos, T1);
@@ -698,7 +690,7 @@ test("a recovered non-reading disposition leaves the obligation owed: unresolved
 });
 
 test("an aborted or interrupted occurrence is still resumed and dispatched, and its earlier Attempt and partial evidence are kept", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     const vault = cycleVault(vaultRoot);
 
@@ -818,7 +810,7 @@ function closedScoutLane(modelIds: ReadonlySet<string>): ResearchLanes {
 }
 
 test("BEFORE DISPATCH: every settled occurrence is recovered with no dispatch capacity at all (a zero ceiling, a debt backoff, a closed Scout lane) and nothing is walked", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     const fixtures = {
       "ob-ingested": await interrupted(repos, obligation("ob-ingested"), ingests(vaultRoot, "https://example.gov/feed.json", '{"rows":[1]}')),
@@ -890,7 +882,7 @@ test("BEFORE DISPATCH: every settled occurrence is recovered with no dispatch ca
 });
 
 test("BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lane neither recovers it twice nor walks it", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     const adapter = await interrupted(repos, obligation("ob-adapter"), disposes("REQUIRES_NEW_ADAPTER"));
     await repos.debts.put(
       "ob-adapter",
@@ -913,7 +905,7 @@ test("BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lan
 });
 
 test("findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-settled-")) {
     await interrupted(repos, obligation("ob-settled"), disposes("WALKED_NO_YIELD"));
     /* Open on a RouteTask with no disposition: owed work, for a lane to dispatch. */
     await repos.obligations.put("ob-open", standing(obligation("ob-open", { subjectId: "wtp-body/open" }), T0), T0);

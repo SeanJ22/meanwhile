@@ -39,8 +39,27 @@
  * `tests/method-fixtures.ts` already uses.
  */
 
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
 import type { CompletionSnapshot } from "../lib/control-plane/completion.ts";
 import type { CampaignFinanceCoverage } from "../lib/control-plane/campaign-finance/model.ts";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+
+/**
+ * The in-memory double AND a fresh durable file store, each labelled, so one
+ * test body proves its claim on both providers. `prefix` names the temp
+ * directory, so a failed run's file store is attributable.
+ */
+export async function eachStore(prefix: string): Promise<Array<readonly [string, ControlPlaneRepositories]>> {
+  return [
+    ["memory", createMemoryRepositories()],
+    ["file", await createFileRepositories(mkdtempSync(join(tmpdir(), prefix)))],
+  ];
+}
 
 /**
  * The fixed instants the control-plane suites share.

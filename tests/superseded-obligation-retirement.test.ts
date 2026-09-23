@@ -34,12 +34,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtempSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 
-import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { dispatchOne, type RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
@@ -63,6 +58,7 @@ import {
   type FreshnessObligation,
   type ScheduledObligation,
 } from "../lib/control-plane/scheduler/obligation.ts";
+import { eachStore } from "./control-plane-fixtures.ts";
 
 const T0 = "2026-09-01T19:36:07.092Z"; // the cycle that walked the route and died
 const T1 = "2026-09-23T06:00:00.000Z"; // the cycle that finds the row superseded
@@ -73,13 +69,6 @@ const AWAITS = `freshness:candidate-enrichment:${CANDIDATE}#candidate-authored-a
 const RECORDED = `freshness:candidate-enrichment:${CANDIDATE}#candidate-site-recorded`;
 const WIKI = `freshness:candidate-enrichment:${CANDIDATE}#candidate-wikipedia-api`;
 const MEETINGS = "freshness:jurisdiction:az:city:city-of-avondale#meetings-1";
-
-async function eachStore(): Promise<Array<readonly [string, ControlPlaneRepositories]>> {
-  return [
-    ["memory", createMemoryRepositories()],
-    ["file", await createFileRepositories(mkdtempSync(join(tmpdir(), "wtp-superseded-")))],
-  ];
-}
 
 function obligation(id: string, routeId: string): FreshnessObligation {
   return {
@@ -260,7 +249,7 @@ test("PLAN: a retired row still pointing at an occurrence is settled under its o
 });
 
 test("SEEDED: a superseded row with an open occurrence on a settled RouteTask is retired; the occurrence closes unresolved, its debt is tombstoned as retired, and nothing else is written", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
     const before = await untouched(repos, shape.routeTaskId, shape.workItemId);
     assert.equal(before.task.value.state, "DISPOSED");
@@ -308,7 +297,7 @@ test("SEEDED: a superseded row with an open occurrence on a settled RouteTask is
 });
 
 test("SEEDED: while the provider cannot read its input, nothing is retired and the occurrence stays open", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
     const corpus = supersededCorpus();
     const sync = await syncObligations(repos, corpus, T1);
@@ -326,7 +315,7 @@ test("SEEDED: while the provider cannot read its input, nothing is retired and t
 });
 
 test("SEEDED: a row the legacy prefix retirement left pointing at an open occurrence has it closed under its own reason, and keeps its retirement", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
     await retireObligationsByPrefix(repos, ["freshness:candidate-enrichment:"], T1, "LEGACY TRANSFER");
     const legacy = (await repos.obligations.mustRead(AWAITS)).value;
@@ -350,7 +339,7 @@ test("SEEDED: a row the legacy prefix retirement left pointing at an open occurr
 });
 
 test("a retirement reverses itself: when the registry emits the id again, sync writes it live and it schedules", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     await supersededShape(repos);
     const corpus = supersededCorpus();
     const sync = await syncObligations(repos, corpus, T1);
@@ -369,7 +358,7 @@ test("a retirement reverses itself: when the registry emits the id again, sync w
 });
 
 test("an interrupted retirement completes on the next cycle: an occurrence already closed is not closed twice, and the pointer clears", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
     /* A cycle closed the occurrence, then died before the obligation's own write. */
     const occurrence = await repos.occurrences.mustRead(shape.occurrenceId);
@@ -395,7 +384,7 @@ test("an interrupted retirement completes on the next cycle: an occurrence alrea
 });
 
 test("sync names what it did not walk, and cannot under exact reads", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     await syncObligations(repos, [obligation(AWAITS, "candidate-authored-awaits-site"), obligation(WIKI, "candidate-wikipedia-api")], T0);
     const full = await syncObligations(repos, [obligation(WIKI, "candidate-wikipedia-api")], T1);
     assert.deepEqual(full.outside?.map((o) => o.id), [AWAITS], `${label}: the full read sees the row it did not walk`);
@@ -405,7 +394,7 @@ test("sync names what it did not walk, and cannot under exact reads", async () =
 });
 
 test("persistDebts still says discharged for a discharge, and only a retired row's debt is tombstoned as retired", async () => {
-  for (const [label, repos] of await eachStore()) {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const failure = (id: string) =>
       recordFailure(null, { obligationId: id, cause: "UPSTREAM_ERROR", detail: "x", target: "t", dueAt: T0, now: T0 });
     await repos.debts.put("ob-worked", failure("ob-worked"), T0);

@@ -78,11 +78,11 @@ import { BarChart, Funnel, Ring, StackedBar } from "../../charts.tsx";
 import { GapNote, HeldNum, Name, Num, QueueForm, Said, When } from "../../console-ui.tsx";
 import { NeedsYouLine, Plain, StatusBlock, type NeedsYou } from "../../status-ui.tsx";
 import { Identity } from "./identity";
+import { IntentButton } from "../../_mw/intent-control.tsx";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const INTENT_ROUTE = "/api/admin/research";
 const HERE = "/admin/research";
 const NEEDS_NOTHING: NeedsYou = { needed: false };
 
@@ -1088,18 +1088,16 @@ export default async function ResearchPage() {
       <h2>Controls</h2>
       <NeedsYouLine needs={NEEDS_NOTHING} />
       <div className="controls-row">
-        <form method="post" action={INTENT_ROUTE}>
-          <input type="hidden" name="action" value={view.pauseAction} />
-          <input type="hidden" name="returnTo" value={HERE} />
-          <button type="submit" className="primary">
-            {view.pauseAction === "PAUSE" ? "Pause research" : "Resume research"}
-          </button>
-        </form>
-        <form method="post" action={INTENT_ROUTE}>
-          <input type="hidden" name="action" value="RUN_CYCLE_NOW" />
-          <input type="hidden" name="returnTo" value={HERE} />
-          <button type="submit" className="primary">Run a cycle now</button>
-        </form>
+        {/* The same two intents through the same route, answered as JSON (Admin redesign): the plain form's redirect lands on the wrong host. */}
+        <IntentButton
+          action={view.pauseAction}
+          label={view.pauseAction === "PAUSE" ? "Pause research" : "Resume research"}
+          returnTo={HERE}
+          buttonClass="primary"
+          okClass="state-green"
+          refusalClass="refusal"
+        />
+        <IntentButton action="RUN_CYCLE_NOW" label="Run a cycle now" returnTo={HERE} buttonClass="primary" okClass="state-green" refusalClass="refusal" />
       </div>
       <p className="note">
         Each button writes down what you want; the runner reads it on its next cycle and records that it did. Nothing

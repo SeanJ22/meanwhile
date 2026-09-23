@@ -1,10 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { renderToStaticMarkup } from "react-dom/server";
 
-import { LatestDigestStatus } from "../app/(admin)/digest-status.tsx";
 import {
   ownerDigestAttention,
+  type OwnerDigestAttention,
   type OwnerDigestRecord,
   type RoutineCivicDataReaderReadbackReference,
   type RoutineCivicDataTaskReceiptReference,
@@ -12,7 +11,29 @@ import {
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
+/**
+ * **THE LATEST RUNNER DIGEST IS CLASSIFIED BEFORE IT IS BELIEVED.**
+ *
+ * A routine civic-data cycle is classified from its exact receipts — a
+ * supervisor failure, a contained source hold, a Reader delivery failure, an
+ * unproven or contradictory aggregate — and never called healthy from an
+ * absent or inconsistent outcome.
+ *
+ * Admin redesign, 2026-09-23: the home page's latest-runner-outcome block (the
+ * component that drew this classification, with the report and the exact
+ * receipts behind a disclosure) was removed, and no redesigned screen draws
+ * the latest digest. The classification is still used (the MapTiler attempt
+ * history reads it), so it is covered here in its own words — the headline,
+ * what happened and the action — and the rendering checks, including the task
+ * and contract identifiers the disclosure listed, are retired.
+ */
+
 const NOW = "2026-09-09T12:00:00.000Z";
+
+/** The owner-facing words of a classification: what the block led with. */
+function words(attention: OwnerDigestAttention): string {
+  return [attention.headline, attention.happened, attention.action ?? ""].join(" — ");
+}
 const READER_SHA = "a".repeat(40);
 
 function readerReference(
@@ -128,20 +149,19 @@ function digest(input: {
   };
 }
 
-test("Admin leads with actionable supervisor failure and never calls it healthy", () => {
+test("the digest classification leads with actionable supervisor failure and never calls it healthy", () => {
   const record = digest({
     failures: [{ taskId: "fec-funding", code: "CHILD_TIMEOUT", detail: "child timed out" }],
   });
   const attention = ownerDigestAttention(record);
   assert.equal(attention.level, "RED");
   assert.equal(attention.needsYou, true);
-  const html = renderToStaticMarkup(<LatestDigestStatus digest={record} />);
-  assert.match(html, /Routine civic-data supervision needs attention/);
-  assert.match(html, /inspect and restore the failed routine-data supervisor path/);
-  assert.doesNotMatch(html, /nothing in it needs you/i);
+  assert.match(words(attention), /Routine civic-data supervision needs attention/);
+  assert.match(words(attention), /inspect and restore the failed routine-data supervisor path/);
+  assert.doesNotMatch(words(attention), /nothing in it needs you|cycle completed/i);
 });
 
-test("Admin distinguishes a contained source hold from a successful all-green cycle", () => {
+test("the digest classification distinguishes a contained source hold from a successful all-green cycle", () => {
   const contained = digest({ references: [
     reference("source-failed", "VERIFIED_SOURCE_FAILURE"),
     reference("source-unaffected", "VERIFIED_SOURCE_SUCCESS"),
@@ -150,17 +170,16 @@ test("Admin distinguishes a contained source hold from a successful all-green cy
     { level: ownerDigestAttention(contained).level, needsYou: ownerDigestAttention(contained).needsYou },
     { level: "AMBER", needsYou: false },
   );
-  const containedHtml = renderToStaticMarkup(<LatestDigestStatus digest={contained} />);
-  assert.match(containedHtml, /Routine source failure was contained/);
-  assert.match(containedHtml, /source-failed/);
-  assert.match(containedHtml, /source-unaffected/);
+  assert.match(words(ownerDigestAttention(contained)), /Routine source failure was contained/);
+  assert.match(words(ownerDigestAttention(contained)), /1 exact source receipt\(s\) held their own LKG while 1 unaffected task\(s\) completed successfully/);
+  // Admin redesign, 2026-09-23: the disclosure that listed each task receipt by id was removed with the block that drew it.
 
   const success = digest({ references: [reference("source-good", "VERIFIED_SOURCE_SUCCESS")] });
   assert.deepEqual(
     { level: ownerDigestAttention(success).level, needsYou: ownerDigestAttention(success).needsYou },
     { level: "GREEN", needsYou: false },
   );
-  assert.match(renderToStaticMarkup(<LatestDigestStatus digest={success} />), /Routine civic-data cycle completed/);
+  assert.match(words(ownerDigestAttention(success)), /Routine civic-data cycle completed/);
 });
 
 test("a Reader delivery failure is RED without reclassifying source disposition or LKG", () => {
@@ -179,15 +198,13 @@ test("a Reader delivery failure is RED without reclassifying source disposition 
 
   const attention = ownerDigestAttention(record);
   assert.deepEqual({ level: attention.level, needsYou: attention.needsYou }, { level: "RED", needsYou: true });
-  const html = renderToStaticMarkup(<LatestDigestStatus digest={record} />);
-  assert.match(html, /Canonical Reader delivery needs attention/);
-  assert.match(html, /reader-contract/);
-  assert.match(html, /reader-version/);
-  assert.match(html, /Source dispositions, promoted pointers, and LKG remain unchanged/);
-  assert.doesNotMatch(html, /Routine civic-data cycle completed|nothing in it needs you/i);
+  assert.match(words(attention), /Canonical Reader delivery needs attention/);
+  // Admin redesign, 2026-09-23: the disclosure that listed the failing contract and version by id was removed with the block that drew it.
+  assert.match(words(attention), /Source dispositions, promoted pointers, and LKG remain unchanged/);
+  assert.doesNotMatch(words(attention), /Routine civic-data cycle completed|nothing in it needs you/i);
 });
 
-test("Admin refuses a missing promotion or contradictory Reader aggregate as healthy", () => {
+test("the digest classification refuses a missing promotion or contradictory Reader aggregate as healthy", () => {
   const noPromotion = digest({
     references: [reference("source-good", "VERIFIED_SOURCE_SUCCESS")],
     readerReferences: [readerReference("NO_PROMOTION")],
@@ -196,7 +213,7 @@ test("Admin refuses a missing promotion or contradictory Reader aggregate as hea
     { level: ownerDigestAttention(noPromotion).level, needsYou: ownerDigestAttention(noPromotion).needsYou },
     { level: "UNKNOWN", needsYou: true },
   );
-  assert.match(renderToStaticMarkup(<LatestDigestStatus digest={noPromotion} />), /Reader delivery is not yet proven/);
+  assert.match(words(ownerDigestAttention(noPromotion)), /Reader delivery is not yet proven/);
 
   const valid = digest({
     references: [reference("source-good", "VERIFIED_SOURCE_SUCCESS")],
@@ -212,23 +229,22 @@ test("Admin refuses a missing promotion or contradictory Reader aggregate as hea
     { level: "UNKNOWN", needsYou: true },
   );
   assert.doesNotMatch(
-    renderToStaticMarkup(<LatestDigestStatus digest={contradictory} />),
+    words(ownerDigestAttention(contradictory)),
     /Routine civic-data cycle completed|nothing in it needs you/i,
   );
 });
 
-test("Admin does not infer health from a legacy digest with no structured outcome", () => {
+test("the digest classification does not infer health from a legacy digest with no structured outcome", () => {
   const record = digest({ structured: false });
   assert.deepEqual(
     { level: ownerDigestAttention(record).level, needsYou: ownerDigestAttention(record).needsYou },
     { level: "UNKNOWN", needsYou: true },
   );
-  const html = renderToStaticMarkup(<LatestDigestStatus digest={record} />);
-  assert.match(html, /cannot be classified/);
-  assert.doesNotMatch(html, /cycle completed|nothing in it needs you/i);
+  assert.match(words(ownerDigestAttention(record)), /cannot be classified/);
+  assert.doesNotMatch(words(ownerDigestAttention(record)), /cycle completed|nothing in it needs you/i);
 });
 
-test("Admin refuses aggregate-only and internally inconsistent routine evidence", () => {
+test("the digest classification refuses aggregate-only and internally inconsistent routine evidence", () => {
   const aggregateOnly: OwnerDigestRecord = {
     formatVersion: 1,
     digestId: "aggregate-only",
@@ -274,9 +290,8 @@ test("Admin refuses aggregate-only and internally inconsistent routine evidence"
     { level: aggregateAttention.level, needsYou: aggregateAttention.needsYou },
     { level: "UNKNOWN", needsYou: true },
   );
-  const aggregateHtml = renderToStaticMarkup(<LatestDigestStatus digest={aggregateOnly} />);
-  assert.match(aggregateHtml, /lacks consistent exact task evidence/);
-  assert.doesNotMatch(aggregateHtml, /Routine source failure was contained|nothing in it needs you/i);
+  assert.match(words(aggregateAttention), /lacks consistent exact task evidence/);
+  assert.doesNotMatch(words(aggregateAttention), /Routine source failure was contained|nothing in it needs you/i);
 
   const failed = reference("source-failed", "VERIFIED_SOURCE_FAILURE");
   const mismatched: OwnerDigestRecord = {
@@ -292,7 +307,7 @@ test("Admin refuses aggregate-only and internally inconsistent routine evidence"
     { level: "UNKNOWN", needsYou: true },
   );
   assert.doesNotMatch(
-    renderToStaticMarkup(<LatestDigestStatus digest={mismatched} />),
+    words(mismatchedAttention),
     /Routine source failure was contained|nothing in it needs you/i,
   );
 });

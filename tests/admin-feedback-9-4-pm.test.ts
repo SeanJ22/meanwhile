@@ -10,10 +10,11 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import test from "node:test";
 
-import { surfaceSource } from "./admin-surface.ts";
+import { surfaceFiles, surfaceSource } from "./admin-surface.ts";
+import { codeOf, sourceFilesUnder } from "./read-code.ts";
 import { consoleReturnPath, isConsolePath } from "../lib/control-plane/console-paths.ts";
 import { buildCostPanel, costRowKind } from "../lib/control-plane/cost-panel.ts";
 import { NO_FOLLOW_UP_OPTION as RECEIPT_NO_WORK, decisionReceipt, impliesNoWork, receiptHeadline, splitDecided } from "../lib/control-plane/decision-receipt.ts";
@@ -91,17 +92,37 @@ test("ADM-22: an ISO stamp reads as Eastern time spelled out, with the year only
   );
 });
 
-test("ADM-22: no console page prints a raw ISO stamp where the owner reads; every one goes through <When>", () => {
-  for (const which of ["home", "research", "readiness"] as const) {
-    const page = surface(which);
-    assert.match(page, /<When iso=/, `the ${which} surface renders stamps through When`);
-    assert.doesNotMatch(page, /[^=$]\{(snapshot\.publishedAt|heartbeat\.lastCycleStartedAt|d\.writtenAt|intent\.requestedAt|row\.recordedAt|attempt\.startedAt)\}/, `the ${which} surface prints no bare ISO stamp`);
-  }
+test("ADM-22: no console page prints a raw ISO stamp where the owner reads; every one is spelled out in Eastern time", () => {
+  const BARE = /[^=$]\{(snapshot\.publishedAt|heartbeat\.lastCycleStartedAt|d\.writtenAt|intent\.requestedAt|row\.recordedAt|attempt\.startedAt|base\.nowIso)\}/;
+  // The research page kept its content: its stamps go through <When>.
+  const research = surface("research");
+  assert.match(research, /<When iso=/, "the research surface renders stamps through When");
+  assert.doesNotMatch(research, BARE, "the research surface prints no bare ISO stamp");
+  assert.ok((research.match(/<Said text=/g) ?? []).length >= 5, "the research surface quotes instrument sentences through Said");
   assert.match(src("app/(admin)/console-ui.tsx"), /dateTime=\{iso\} title=\{iso\}/, "the ISO string stays on the element for the machine and the hover");
   assert.match(src("app/(admin)/console-ui.tsx"), /<span className="gap-whose">\{gapLabel\(gap\)\}<\/span> \{easternize\(gap\.says\)\}/, "a published gap sentence is quoted with its stamps in Eastern time");
-  for (const which of ["home", "research"] as const) {
-    assert.ok((surface(which).match(/<Said text=/g) ?? []).length >= 5, `the ${which} surface quotes instrument sentences through Said`);
+  // Admin redesign, 2026-09-23: the Fleet and Readiness areas spell their stamps out with formatEastern (the shell's strip keeps the ISO string on the element for the machine and the hover) instead of through <When>.
+  assert.match(src("app/(admin)/_mw/shell.tsx"), /<time className=\{s\.stripVal\} dateTime=\{props\.observedAt\} title=\{props\.observedAt\}>\s*\{formatEastern\(props\.observedAt, \{ year: true \}\)\}/);
+  const offenders: string[] = [];
+  for (const which of ["home", "readiness"] as const) {
+    const page = surface(which);
+    assert.match(page, /formatEastern\(/, `the ${which} surface spells its stamps out in Eastern time`);
+    if (BARE.test(page)) offenders.push(`${which}: a bare ISO field printed as a child`);
+    for (const rel of surfaceFiles(ROOT, which)) {
+      const code = codeOf(rel);
+      // Every redesigned page ends with the audit footer, which prints when the page read what it shows.
+      for (const footer of code.match(/<AuditFooter\b[^\n]*/g) ?? []) {
+        if (!/readAt=\{formatEastern\(/.test(footer)) offenders.push(`${rel}: the audit footer's read time is not spelled out (${footer.trim()})`);
+      }
+      // An instrument's own sentence can carry machine stamps (a provider circuit names the instant it reopens); printed bare, they reach the face as ISO.
+      if (/\{standing\.detail\}/.test(code)) offenders.push(`${rel}: the runner's own sentence is printed without Said, so its stamps stay ISO`);
+      // The redesign builds its sentences in lib/control-plane/admin-view: a stamp interpolated there reaches the face the same way.
+      // (A React key, an element id or a link target is never read by the owner, so those templates are set aside first.)
+      const shown = code.replace(/\b(?:key|id|href)=\{`[^`]*`\}/g, "");
+      for (const m of shown.matchAll(/\$\{\s*([\w.]+\.at)\s*(?:\}|\?\?)/g)) offenders.push(`${rel}: \${${m[1]}} is interpolated into owner text as a raw ISO stamp`);
+    }
   }
+  assert.deepEqual([...new Set(offenders)], [], "raw ISO stamps reach the owner's face");
 });
 
 /* ================================================================== *
@@ -160,14 +181,14 @@ test("ADM-12: a candidate is named from the record and never re-derived from the
   assert.doesNotMatch(publisher, /candidate-cards-2026\.json/, "the operational snapshot must not republish tracked civic data");
 });
 
-test("ADM-12: every console surface renders keys through <Name>, raw key on hover", () => {
-  const nameUses = [["home", 3], ["research", 3]] as const;
-  for (const [which, least] of nameUses) {
-    const n = (surface(which).match(/<Name raw=/g) ?? []).length;
-    assert.ok(n >= least, `the ${which} surface renders at least ${least} keys through Name (found ${n})`);
-  }
+test("ADM-12: every console surface renders keys as display names", () => {
+  const n = (surface("research").match(/<Name raw=/g) ?? []).length;
+  assert.ok(n >= 3, `the research surface renders at least 3 keys through Name (found ${n})`);
   const ui = src("app/(admin)/console-ui.tsx");
   assert.match(ui, /title=\{d\.raw === d\.name \? undefined : d\.raw\}/, "the raw key is the hover title");
+  // Admin redesign, 2026-09-23: the Fleet screens name a subject key with displayNameOf where they draw it (the costliest assignments on Money) instead of through <Name>.
+  assert.match(codeOf("app/(admin)/_mw/screens/money.tsx"), /\{displayNameOf\(t\.subject \?\? t\.recordClass, \{ candidateNames: names \}\)\.name\}/, "a subject key reaches the face as its display name, with the candidate names the snapshot carries");
+  assert.doesNotMatch(surface("home"), /\{t\.subject\}|\{row\.subject\}|\{c\.subject\}/, "no subject key is printed bare on a Fleet screen");
 });
 
 /* ================================================================== *
@@ -233,18 +254,24 @@ test("ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a
 });
 
 test("ADM-16: the page renders the split and receipt, while tracked tracker synchronization stays outside the immutable runtime", () => {
-  const page = surface("home");
-  assert.match(page, /splitDecided\(/);
-  assert.match(page, /total=\{waiting\.length\}/, "the count is the WAITING cards, not every card");
-  assert.match(
-    src("app/(admin)/admin/decisions.tsx"),
-    /const waitingNow = total - goneRows\.size;/,
-    "ADM-32: the count drops the moment a decision is recorded, before the network answers",
-  );
-  assert.match(page, /<DecidedSection /);
-  assert.match(page, /className="receipt"/);
-  assert.match(page, /returnTo=\{HERE\}/);
-  assert.doesNotMatch(page, /carried into the tracker at the next sync, where the row closes/, "the old one-sentence promise is gone; the receipt shows each leg");
+  const now = codeOf("app/(admin)/admin/page.tsx");
+  assert.match(now, /splitDecided\(snapshot\.decisionCards, collapseDecisionLog\(decisionLog\)\)/, "the page splits the cards against the live decision log");
+  assert.match(now, /const waiting = split \? split\.waiting : \[\];/, "a card with a recorded decision leaves the list");
+  assert.match(now, /const steps = stepsFrom\(waiting\);/, "the count is the WAITING cards, not every card");
+  // Admin redesign, 2026-09-23: the decided cards are listed again under the next steps, each with its three-leg receipt — the gateway's answer promises the card will say when the sync has acted.
+  assert.match(now, /const decided = split \? split\.decided : \[\];/, "what was decided is listed from the same split");
+  assert.match(now, /receiptHeadline\(entry\.steps\)/, "each decided card leads with how far its receipt has got");
+  assert.match(now, /entry\.steps\.map\(/, "and shows every leg of the receipt");
+  // Admin redesign, 2026-09-23: the old queue's client-side count that dropped before the network answered was removed; the card itself changes at once, and the server-drawn count drops on the refresh after the receipt.
+  const steps = codeOf("app/(admin)/_mw/next-steps.tsx");
+  const saving = steps.indexOf('set(card.rowId, { kind: "SAVING", what });');
+  assert.ok(saving > 0 && saving < steps.indexOf("await fetch(props.liveRoute"), "ADM-32: the card shows it is recording before the network answers");
+  // The card itself also says what was recorded, at once, before the page refreshes.
+  assert.match(steps, /RECORDED VERBATIM/, "the receipt says what was recorded");
+  assert.match(steps, /A PERSON APPLIES IT/, "and who carries it into the tracker");
+  assert.match(now, /returnTo=\{base\.here\}/);
+  assert.match(steps, /returnTo: props\.returnTo/);
+  assert.doesNotMatch(surface("home"), /carried into the tracker at the next sync, where the row closes/, "the old one-sentence promise is gone");
   assert.equal(consoleReturnPath("/readiness/az", "/admin"), "/readiness/az");
   assert.equal(consoleReturnPath("https://evil.example/", "/admin"), "/admin");
   assert.equal(consoleReturnPath("/readiness/AZ", "/admin"), "/admin", "the closed list is exact");
@@ -413,20 +440,36 @@ test("ADM-20: every gap on the console carries the queue button, and the page ha
   assert.match(src("app/api/admin/decision/route.ts"), /parseFixField\(/);
   assert.deepEqual(parseFixField("Cost — not measured yet"), { where: "Cost", says: "not measured yet", subjectId: fixSubjectId("Cost", "not measured yet"), consequenceShown: "Cost — not measured yet" });
   assert.equal(parseFixField("   "), null);
-  for (const rel of ["app/(admin)/admin/page.tsx", "app/(admin)/admin/research/page.tsx", "app/(admin)/readiness/[state]/page.tsx"]) {
-    assert.match(src(rel), /<QueueForm returnTo=/, `${rel} renders the one queue form`);
-  }
   assert.match(ui, /where && <QueueButton where=\{where\} says=\{gap\.says\}/, "GapNote carries the button whenever the page says where it is");
-  const page = surface("home");
-  assert.match(page, /<FixQueueSection /);
-  assert.match(page, /value=\{GO_FIX_OPTION\}/);
-  assert.match(page, /value=\{FIX_QUEUE_SUBJECT\}/);
-  for (const rel of ["app/(admin)/admin/page.tsx", "app/(admin)/admin/research/page.tsx"]) {
+  /*
+   * Admin redesign, 2026-09-23: Fleet · Now and the readiness state page draw no
+   * gap notes, so they no longer carry the queue form; the rule is kept
+   * class-wide instead — every page that draws a queue button, directly or in
+   * a panel beside it, renders the one form the button names, and every gap
+   * note on the console names where it is.
+   */
+  const CONSOLE = join(ROOT, "app", "(admin)");
+  for (const abs of sourceFilesUnder([".tsx"], "app", "(admin)")) {
+    const rel = relative(ROOT, abs).split(sep).join("/");
+    if (rel === "app/(admin)/console-ui.tsx") continue;
     const s = src(rel);
-    const gaps = (s.match(/<GapNote /g) ?? []).length;
-    const located = (s.match(/<GapNote [^>]*where=/g) ?? []).length;
+    const gaps = (s.match(/<GapNote\b/g) ?? []).length;
+    const located = (s.match(/<GapNote\b[^>]*where=/g) ?? []).length;
     assert.equal(located, gaps, `${rel}: every GapNote names where it is (${located} of ${gaps})`);
+    if (located === 0 && !/<QueueButton\b/.test(s)) continue;
+    const page = join(dirname(abs), "page.tsx");
+    assert.ok(page.startsWith(CONSOLE), `${rel} draws a queue button outside the console`);
+    assert.match(src(relative(ROOT, page)), /<QueueForm returnTo=/, `${relative(ROOT, page)} draws a queue button (in ${rel}) and must render the one queue form it names`);
   }
+  assert.match(src("app/(admin)/admin/research/page.tsx"), /<QueueForm returnTo=/, "the research page renders the one queue form");
+  // Admin redesign, 2026-09-23: the home page's fix-queue section moved to the Fix list, which puts an item on the queue through queue.add and sends the queue with Go fix these on the fix-queue row.
+  const fix = codeOf("app/(admin)/_mw/screens/fix.tsx");
+  assert.match(fix, /<GoFix [^>]*subjectId=\{FIX_QUEUE_SUBJECT\} option=\{GO_FIX_OPTION\}/);
+  const controls = codeOf("app/(admin)/_mw/fix-controls.tsx");
+  assert.match(controls, /type: "queue\.add",[\s\S]{0,120}input: \{ fix: props\.fixField\[item\.id\] \}/, "an item goes on the queue through the typed gateway, as the parsed fix field");
+  assert.match(fix, /fixField\[item\.id\] = fixConsequence\(t\.where, t\.says\);/, "the fix field is the same where — says shape parseFixField reads back");
+  assert.match(src("lib/control-plane/gateway/registry.ts"), /const parsed = parseFixField\(combined\);/, "and the gateway's queue.add reads it back with parseFixField");
+  assert.match(controls, /type: "decision\.record",[\s\S]{0,160}subjectId: props\.subjectId,\s*chosenOption: props\.option,/, "Go fix these is a decision on the fix-queue row");
 });
 
 /* ================================================================== *
@@ -437,7 +480,11 @@ test("ADM-19: a gap of ours reads 'not measured', never OUR GAP, on every consol
   const ui = src("app/(admin)/console-ui.tsx");
   assert.match(ui, /if \(gap\.whose === "OURS"\) return "not measured";/);
   assert.match(ui, /if \(gap\.whose === "THEIRS"\) return "not published";/);
-  for (const rel of ["app/(admin)/admin/page.tsx", "app/(admin)/admin/research/page.tsx", "app/(admin)/readiness/[state]/readiness-panel.tsx", "app/(admin)/console-ui.tsx"]) {
+  // Admin redesign, 2026-09-23: the per-state readiness panel this named was removed; the sweep now covers every console file and the redesign's view models, so a new screen walks into the rule.
+  const swept = [...sourceFilesUnder([".ts", ".tsx"], "app", "(admin)"), ...sourceFilesUnder([".ts"], "lib", "control-plane", "admin-view")];
+  assert.ok(swept.some((f) => f.endsWith(join("readiness", "[state]", "page.tsx"))) && swept.some((f) => f.endsWith(join("_mw", "next-steps.tsx"))), "the sweep reaches the redesigned screens");
+  for (const abs of swept) {
+    const rel = relative(ROOT, abs).split(sep).join("/");
     assert.doesNotMatch(src(rel), /our gap|OUR GAP|function whoseLabel/i, `${rel} carries no 'our gap' wording and no second gap labeller`);
   }
 });
@@ -618,19 +665,24 @@ test("ADM-17: a role whose attempts all ran without a paid model is $0 by design
   assert.equal(scout.kind, "MEASURED");
   assert.match(scout.meaning ?? "", /1 of 2 attempts reported a dollar cost; 1 reported none/);
   const page = surface("home");
-  // POS-12: the two charts the owner said he likes are still drawn.
-  assert.match(page, /Spend by role — measured dollars/);
-  assert.match(page, /Spend by day — last 14 days/);
+  // Admin redesign, 2026-09-23: the spend-by-role and spend-by-day charts (POS-12) were removed; Fleet · Money draws AI usage by provider and model, and the model money by place, instead.
   /*
    * ADM-33 (9.6.26) struck the blanket "$0 by design" claim: the owner did not
    * believe the Detective was free, and he was right to ask — absence of a cost
-   * record was being read as proof that a role never spends. The section now
-   * classifies each row from the EXECUTION POLICY, so "Plain code" is a reading
-   * of the code that runs the role and "$0 this run" is a reading of the ledger,
-   * and the two are never the same sentence. This guard now pins that split.
+   * record was being read as proof that a role never spends. "Plain code" is a
+   * reading of the code that runs the work and "no dollars reported" is a
+   * reading of the ledger, and the two are never the same sentence.
+   *
+   * Admin redesign, 2026-09-23: Money no longer draws a row per role; it draws
+   * a row per model, each carrying its own class (plain code, or which tier of
+   * model). The split follows the row.
    */
   assert.doesNotMatch(page, /free by design/i, "the blanket claim is gone");
-  assert.match(page, /costClassOf|cost-class/, "each row carries its own cost class");
+  assert.match(codeOf("lib/control-plane/admin-view/money-view.ts"), /tier: tierOf\(r\.key\),/, "each model row carries its own class");
+  const money = codeOf("app/(admin)/_mw/screens/money.tsx");
+  const cells = /function ModelCells[\s\S]*?\n\}/.exec(money)?.[0] ?? "";
+  assert.ok(cells.includes("{m.tier}"), "the class is drawn on the row");
+  assert.doesNotMatch(cells, /m\.usd === null \? <span[^>]*>no model cost</, "ADM-33: a model row whose charges reported no dollars reads 'no model cost', the same words as plain code — an unpriced model reads as free");
   assert.match(src("scripts/publish-owner-snapshot.mts"), /spendByDay: spendByDay\(reads\)/);
 });
 
@@ -638,11 +690,13 @@ test("ADM-17: a role whose attempts all ran without a paid model is $0 by design
  * ADM-18 — the reader suite says what it is, or one line
  * ================================================================== */
 
-test("ADM-18: the reader-suite section leads with what it measures and collapses to one line when there is no grid", () => {
-  const page = surface("home");
-  assert.match(page, /The reader check asks the live site the questions a resident would ask/);
-  assert.match(page, /<GapNote gap=\{snapshot\.zipRows\.gap\}/, "no grid renders as a NAMED gap with its queue button, never as an empty table");
-  assert.doesNotMatch(page, /"no grid"/);
+test("ADM-18: the reader-suite reading collapses to one named line when there is no grid", () => {
+  // Admin redesign, 2026-09-23: the home page's reader-check section (its lead sentence and its per-ZIP table) was removed; the same snapshot reading is drawn on /admin/fleet's Panels tab as the coverage-gaps panel.
+  const panels = codeOf("components/admin/fleet-panels-tab.tsx");
+  assert.match(panels, /const zip = c\.value\.zipRows;/, "the panel reads the reader-suite grid from the snapshot");
+  assert.match(panels, /\$\{zip\.gap\.says\}/, "no grid renders as the NAMED gap sentence, never as an empty table");
+  assert.doesNotMatch(panels, /"no grid"/);
+  assert.doesNotMatch(surface("home"), /"no grid"/);
 });
 
 /* ================================================================== *
@@ -712,31 +766,35 @@ test("ADM-23: population-weighted completeness is a measured share of the state'
   assert.doesNotMatch(refresh, /statePopulation\(spec\.code\)/, "readiness may not revive tracked ACS as a second authority");
   assert.doesNotMatch(src("lib/control-plane/readiness/extract.ts"), /not yet ingested/);
   assert.match(refresh, /Routine ACS population is shown from the canonical civic-data receipt in Admin/, "the readiness publisher names the canonical owner instead of copying tracked ACS truth");
-  const panel = src("app/(admin)/readiness/[state]/readiness-panel.tsx");
-  assert.match(panel, /\{z\.population\.gap\.says\}/, "the panel renders the published gap sentence, never a hardcoded one");
-  assert.doesNotMatch(panel, /"population not on file"/);
+  // Admin redesign, 2026-09-23: the per-state readiness panel and its per-ZIP population column were removed; the redesigned state page draws no population, so no page can hardcode a population gap.
+  for (const rel of ["app/(admin)/readiness/[state]/page.tsx", "lib/control-plane/admin-view/readiness-view.ts", "lib/control-plane/admin-view/coverage.ts"]) {
+    assert.doesNotMatch(src(rel), /"population not on file"/, `${rel} hardcodes a population gap`);
+  }
 });
 
 /* ================================================================== *
  * ADM-15 — the next step per ZIP
  * ================================================================== */
 
-test("ADM-15: every readiness ZIP row carries a next step and a Deploy-fleet-here intent that returns to the state's page", () => {
-  const panel = src("app/(admin)/readiness/[state]/readiness-panel.tsx");
-  assert.match(panel, /function NextStep\(/);
-  assert.match(panel, /<th>Next step<\/th>/);
-  assert.match(panel, /Go get this one thing:/);
-  assert.match(panel, /Deploy fleet here/);
+test("ADM-15: readiness says the next thing to do, and a Deploy-fleet-here control carries its own target", () => {
+  // Admin redesign, 2026-09-23: the per-ZIP table (its next-step column and per-row deploy button) was removed; the all-states page says the next thing to do per state, from its largest county gap.
+  const all = codeOf("app/(admin)/readiness/page.tsx");
+  assert.match(all, /"Next thing to do"/);
+  assert.match(all, /next: counties\.kind === "HELD" && registry\.kind === "HELD" \? nextThing\(/, "the next step is generated from the state's own gaps");
+  assert.match(all, /\{r\.next\}/);
   /*
-   * §9A.16 (9.6.26): the row's button is the SAME control as the console
-   * home's, so it explains itself before acting and sends through the one typed
-   * gateway. It still carries the row's own target and still comes back here.
+   * §9A.16 (9.6.26): the button is the SAME control as the rest of the console,
+   * so it explains itself before acting and sends through the one typed
+   * gateway. Admin redesign, 2026-09-23: Deploy fleet here on an opened
+   * container is a link to the Work composer with that geography already
+   * filled in; the composer (guarded in admin-feedback-9-4, ADM-8) explains
+   * itself and sends expansion.scope.set.
    */
-  assert.match(panel, /<DeployFleet returnTo=\{`\/readiness\/\$\{stateCode\}`\}/);
-  assert.match(panel, /prefill=\{target\}/, "the row already knows which ZIP and which gap, so he does not retype it");
-  assert.match(src("app/(admin)/admin/deploy-fleet.tsx"), /type: "fleet\.deployHere"/);
-  assert.match(panel, /Nothing to do — every governing body a resident belongs to is resolved\./);
-  assert.match(panel, /GATED_ON_OPERATOR/);
+  const state = codeOf("app/(admin)/readiness/[state]/page.tsx");
+  assert.match(state, /withScope\("\/admin\/work", scope, \{ geo: `\$\{shortOf\}:\$\{open\.c\.geography\.geoid\}`, st: code \}\)[\s\S]{0,80}Deploy fleet here/, "the container already knows which geography, so he does not retype it");
+  const work = codeOf("app/(admin)/_mw/screens/work.tsx");
+  assert.match(work, /const geoParam = param\(sp, "geo"\);/, "the Work screen reads the geography it was sent with");
+  assert.match(work, /initial=\{initialGeo\}/, "and hands it to the composer as the choice already made");
 });
 
 /* ================================================================== *
@@ -799,9 +857,10 @@ test("ADM-14: the research page issues its reads in one round and the header sti
   }
   assert.doesNotMatch(page, /const fleet = await readWorkerFleet/);
   assert.doesNotMatch(page, /const lastWindow = await readLastWindow/);
-  const nav = src("app/(admin)/console-nav.tsx");
+  // Admin redesign, 2026-09-23: the header's View / State dropdowns were replaced by the shell's scope select, the one header control that waits on the server; it acknowledges the choice inside a transition with a loading status.
+  const nav = codeOf("app/(admin)/_mw/header-controls.tsx");
   assert.match(nav, /useTransition\(/);
-  assert.match(nav, /console-nav-pending/);
+  assert.match(nav, /\{pending && \([\s\S]*?role="status"/);
 });
 
 /* ================================================================== *

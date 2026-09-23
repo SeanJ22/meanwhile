@@ -90,5 +90,33 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "not recorded", detail: wrote.detail }, { status: 500 });
   }
 
-  return NextResponse.redirect(new URL(destination, request.url), 303);
+  /*
+   * THE JSON ANSWER (Admin redesign, 2026-09-23). The console's controls post
+   * with `Accept: application/json` and refresh the page themselves, so they
+   * get a body and no redirect: the page is re-read from the store, never drawn
+   * from the click. A plain form without script still gets the redirect below,
+   * built on the admin origin (#371). Everything above — host, origin, session,
+   * validation, append — runs first and unchanged, so a refused request is
+   * refused before anything is written.
+   */
+  if ((request.headers.get("accept") ?? "").includes("application/json")) {
+    return NextResponse.json(
+      {
+        ok: true,
+        recorded: { intentId: intent.intentId, action: intent.action, requestedAt: intent.requestedAt },
+        says: `Recorded: ${INTENT_WORDS[action]}. The runner reads it at its next cycle and records that it did; until then it is a request.`,
+      },
+      { status: 200 },
+    );
+  }
+  return NextResponse.redirect(new URL(destination, ADMIN_ORIGIN), 303);
 }
+
+const INTENT_WORDS: Readonly<Record<(typeof RESEARCH_INTENT_ACTIONS)[number], string>> = {
+  PAUSE: "you paused paid research",
+  RESUME: "you resumed paid research",
+  RUN_CYCLE_NOW: "you asked for a cycle now",
+  DISPATCH: "your instruction to deploy the fleet",
+  PAUSE_RUNNER: "you paused the runner",
+  RESUME_RUNNER: "you resumed the runner",
+};

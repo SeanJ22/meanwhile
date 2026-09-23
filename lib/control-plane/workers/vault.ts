@@ -15,7 +15,13 @@ const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "ADVERSARIAL_AUDITOR"];
  * bytes to a worker and whose held identity the vault holds is read. Binding only
  * the first record refused bytes the vault held under a later record whenever the
  * first record's bytes were never vaulted (2026-09-23: 13 records over 10 ids
- * after the vault restore). The ParserInput names the Attempt whose bytes it read.
+ * after the vault restore).
+ *
+ * The ParserInput names the Attempt whose bytes it actually read, not the first
+ * record's. Provenance is machine-owned (RULING 252): whatever a worker extracts
+ * is attributed to the acquisition that produced the bytes it parsed. Naming the
+ * first record's Attempt would credit the bytes to a capture the vault never held,
+ * a citation that no replay of that Attempt's evidence could reproduce.
  */
 export function workerVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string) {
   return async (artifactId: string): Promise<ParserInput> => {

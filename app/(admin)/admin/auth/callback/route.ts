@@ -72,7 +72,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!verdict.ok && verdict.rejection === "TOKEN_EXCHANGE_FAILED") {
       console.error(`admin google sign-in: TOKEN_EXCHANGE_FAILED (http ${verdict.httpStatus ?? "unreachable"})`);
     }
-    const response = NextResponse.redirect(new URL(loginPathFor(why), request.url), 303);
+    const response = NextResponse.redirect(new URL(loginPathFor(why), ADMIN_ORIGIN), 303);
     response.headers.append("set-cookie", clearState);
     response.headers.set("cache-control", "no-store");
     return response;
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     { sid: mintAdminSessionId(), iat: nowSeconds, exp: nowSeconds + SESSION_LIFETIME_SECONDS, via: "google" },
     sessionKey,
   );
-  const response = NextResponse.redirect(new URL("/admin", request.url), 303);
+  const response = NextResponse.redirect(new URL("/admin", ADMIN_ORIGIN), 303);
   response.headers.append(
     "set-cookie",
     `${ADMIN_SESSION_COOKIE}=${cookie}; ${sessionCookieAttributes(SESSION_LIFETIME_SECONDS)}`,

@@ -90,5 +90,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "not recorded", detail: wrote.detail }, { status: 500 });
   }
 
-  return NextResponse.redirect(new URL(destination, request.url), 303);
+  return NextResponse.redirect(new URL(destination, ADMIN_ORIGIN), 303);
 }

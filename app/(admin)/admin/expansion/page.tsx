@@ -63,6 +63,8 @@ import { ConsoleNav } from "../../console-nav.tsx";
 import { QueueForm, Said, When, agoText } from "../../console-ui.tsx";
 import { EditScopeControl, SelectScopeControl } from "./scope-controls.tsx";
 
+/* The Census lookup reads the production data plane: server-only, Node runtime. */
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 

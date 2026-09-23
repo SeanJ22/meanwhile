@@ -14,7 +14,7 @@ import test from "node:test";
 
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns } from "../lib/census-geography/build.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
-import type { GeographyVersion } from "../lib/census-geography/contract.ts";
+import { PRIMARY_GROUPING_TYPES, type GeographyVersion } from "../lib/census-geography/contract.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 
 const CD_HEADER =
@@ -114,6 +114,51 @@ test("lookup: unknown ZCTA and unknown geography are typed absence, never zero",
   assert.equal(rev.status.kind, "NOT_IN_COVERAGE");
   const badVer = await l.zctasForGrouping({ type: "congressional_district", geoid: "0406", version: "cd:120" });
   assert.equal(badVer.status.kind, "NOT_YET_PUBLISHED");
+});
+
+test("lookup: enumerates Arizona's metro AND micro CBSAs, class always present", async () => {
+  const cbsas = await azLookup().enumerateGroupings("cbsa");
+  assert.equal(cbsas.status.kind, "OK");
+  assert.equal(cbsas.count, 11);
+  assert.ok(
+    cbsas.instances.every((r) => r.type === "cbsa" && (r.cbsaClass === "metropolitan" || r.cbsaClass === "micropolitan")),
+    "every CBSA carries a metro/micro class",
+  );
+  assert.ok(cbsas.instances.some((r) => r.cbsaClass === "metropolitan"), "AZ has metros");
+  assert.ok(cbsas.instances.some((r) => r.cbsaClass === "micropolitan"), "AZ has micros");
+  assert.ok(cbsas.instances.every((r) => r.ocdId === null), "a CBSA is a statistical area, not an OCD division");
+});
+
+test("lookup: Phoenix metro (CBSA 38060) returns every overlapping ZCTA, whole and partial, area basis", async () => {
+  const res = await azLookup().zctasForGrouping({ type: "cbsa", geoid: "38060", version: "cbsa:2023" });
+  assert.equal(res.status.kind, "OK");
+  assert.equal(res.geography.cbsaClass, "metropolitan");
+  assert.equal(res.count, 169);
+  assert.equal(res.count, res.overlaps.length);
+  assert.ok(res.overlaps.some((o) => o.whole), "a metro contains whole ZCTAs");
+  assert.ok(res.overlaps.some((o) => !o.whole), "a metro also clips ZCTAs on its edge");
+  assert.ok(res.overlaps.every((o) => o.fractionBasis === "area"), "CBSA shares are area-based (no population weight)");
+});
+
+test("lookup: a micropolitan CBSA is kept distinct from a metropolitan one", async () => {
+  const payson = await azLookup().zctasForGrouping({ type: "cbsa", geoid: "37740", version: "cbsa:2023" });
+  assert.equal(payson.status.kind, "OK");
+  assert.equal(payson.geography.cbsaClass, "micropolitan");
+});
+
+test("lookup: reverse ZCTA -> groupings includes the parallel CBSA layer", async () => {
+  const l = azLookup();
+  const phx = await l.zctasForGrouping({ type: "cbsa", geoid: "38060", version: "cbsa:2023" });
+  const rev = await l.groupingsForZcta(phx.overlaps.find((o) => o.whole)!.zcta5);
+  const types = new Set(rev.memberships.map((m) => m.geography.type));
+  assert.ok(types.has("cbsa"), "a ZCTA in a metro is in the CBSA layer independently of its county/district");
+  assert.ok(types.has("county"), "and still in its county");
+});
+
+test("lookup: the manifest publishes all five of Admin's primary groupings", async () => {
+  const m = await azLookup().manifest();
+  const types = new Set(m.scopes.map((s) => s.type));
+  for (const t of PRIMARY_GROUPING_TYPES) assert.ok(types.has(t), `manifest missing primary grouping ${t}`);
 });
 
 test("lookup: postal reconciliation distinguishes a ZCTA from a non-ZCTA ZIP", async () => {

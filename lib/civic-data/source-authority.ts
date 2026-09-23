@@ -9,6 +9,30 @@ import {
  * The one authority/competence registry for routine civic data. An adapter may
  * add parser mechanics, but it may not invent trusted hosts or competent facts.
  */
+
+/**
+ * OWNER POLICY (Sean, 2026-09-21) — official-government auto-qualification.
+ *
+ * An official government publisher qualifies BY DEFAULT for automatic ingestion
+ * and publication through the authorized routine pipeline: a newly encountered
+ * `.gov` (or otherwise approved official) host does not need per-source manual
+ * approval. Every normal check is preserved — successful retrieval, correct
+ * identity, geographic/date version, parsing, required completeness, and runtime
+ * authority — and passing records proceed automatically while a failure records
+ * its specific reason. A source that is deliberately research/corroboration only
+ * sets `routineAutoPromotion: false` with a stated reason; being outside `.gov`
+ * does not by itself disqualify an otherwise approved official source. This is
+ * shared logic, never a per-source exception for any one publisher.
+ */
+export function isOfficialGovHost(host: string): boolean {
+  return /(^|\.)gov$/i.test(host.trim().replace(/:\d+$/, ""));
+}
+
+/** True when every final host of a source authority is an official `.gov` host. */
+export function officialGovAutoQualifies(source: { readonly allowedFinalHosts: readonly string[] }): boolean {
+  return source.allowedFinalHosts.length > 0 && source.allowedFinalHosts.every(isOfficialGovHost);
+}
+
 export const SOURCE_AUTHORITIES = {
   "federal-legislative-records": {
     id: "federal-legislative-records",
@@ -297,6 +321,24 @@ export const SOURCE_AUTHORITIES = {
     freshnessExpectation: "At the supported product's official release cadence.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
+  },
+  "census-geography-relationships": {
+    id: "census-geography-relationships",
+    publisher: "U.S. Census Bureau",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "FEDERAL_AGENCY",
+    routePrefixes: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/"],
+    allowedFinalHosts: ["www2.census.gov"],
+    jurisdictions: ["US"],
+    recordClasses: ["CENSUS_GEOGRAPHY"],
+    competentFacts: ["ZCTA-to-geography area overlap (2020 tab20 relationship file)", "Census GEOID"],
+    expectedIdentifierKeys: ["type", "geoid", "version"],
+    expectedTemporalFields: ["version", "source_through"],
+    horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. It never claims a wider geography universe and never substitutes a different Census vintage.",
+    parserVersion: "census-geography-overlaps/1",
+    freshnessExpectation: "Owner-invoked version promotion on a new Census relationship-file vintage; never a silent vintage substitution.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
   },
   "jurisdiction-operational-reference": {
     id: "jurisdiction-operational-reference",

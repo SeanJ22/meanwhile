@@ -189,6 +189,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "nh-state-rollcalls",
     "nj-state-rollcalls",
     "census-acs-population",
+    "census-geography-overlaps",
     "nj-morris-filing",
     "dotgov",
   ]);

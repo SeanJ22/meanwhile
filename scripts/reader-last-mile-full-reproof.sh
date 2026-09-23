@@ -61,14 +61,37 @@ export READER_PROOF_SOURCES="../reader-last-mile-final-proof-sources.json"
 export SHOOT_BASE_URL="http://localhost:3210"
 export COMMIT_REF="$(git rev-parse HEAD)"
 unset ANTHROPIC_API_KEY
+# Node 24's Happy-Eyeballs gives each address 250 ms; where IPv6 to Neon is
+# unreachable and IPv4 connects run near that (seen 2026-09-22: p50 159-256 ms,
+# max 457), all-slow attempts fail as AggregateError ETIMEDOUT. Widen the per-
+# address attempt; appended so any existing NODE_OPTIONS survives. Environment
+# only: no fingerprinted file, no evidence, no assertion changes.
+export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--network-family-autoselection-attempt-timeout=2500"
 [ -n "$DATABASE_URL" ] || { echo "no WTP_PRODUCTION_DATABASE_URL_READONLY in $ENV_FILE"; exit 1; }
 LOG=".scratch/reproof-step.log"; mkdir -p .scratch
 mask() { sed -E 's#postgres(ql)?://[^ "]*#postgres://<redacted>#g'; }
 
-# run LABEL -- CMD... ; retries once on a transient failure (e.g. store blip)
-run() { local label="$1"; shift; local e attempt
-  for attempt in 1 2; do echo "=== $label (attempt $attempt) ==="; "$@" >"$LOG" 2>&1; e=$?
-    tail -3 "$LOG" | mask; [ "$e" -eq 0 ] && { echo ok; return 0; }; echo "attempt $attempt exit $e"; done
+# run LABEL -- CMD... ; retries once on any failure. When the log shows this host
+# could not reach the store, that is transient infrastructure, not a proof result:
+# wait and re-ask, up to STORE_RETRY_MAX attempts STORE_RETRY_WAIT_MS apart. An
+# immediate retry lands in the same outage window (seen 2026-09-22: intermittent
+# host-to-Neon "fetch failed" on both databases for minutes at a time). The
+# executor re-runs whole, so every assertion must still hold; only timing changes.
+STORE_RETRY_MAX="${STORE_RETRY_MAX:-6}"; STORE_RETRY_WAIT_MS="${STORE_RETRY_WAIT_MS:-90000}"
+STORE_UNREACHABLE='We could not ask the store|STORE_READ_FAILED|Error connecting to database'
+run() { local label="$1"; shift; local e attempt=0
+  while :; do attempt=$((attempt + 1)); echo "=== $label (attempt $attempt) ==="; "$@" >"$LOG" 2>&1; e=$?
+    tail -3 "$LOG" | mask; [ "$e" -eq 0 ] && { echo ok; return 0; }; echo "attempt $attempt exit $e"
+    # Keep every failed attempt whole: the next attempt overwrites $LOG, and a
+    # retry that passes must not erase why the first one failed.
+    local kept="${LOG%.log}.$(printf '%s' "$label" | tr -c 'A-Za-z0-9._-' '_').attempt$attempt.log"
+    cp "$LOG" "$kept" 2>/dev/null && echo "failed attempt log kept: $kept"
+    if grep -qE "$STORE_UNREACHABLE" "$LOG" && [ "$attempt" -lt "$STORE_RETRY_MAX" ]; then
+      echo "store unreachable from this host — re-asking in $((STORE_RETRY_WAIT_MS / 1000))s"
+      node -e "setTimeout(() => {}, $STORE_RETRY_WAIT_MS)"; continue
+    fi
+    [ "$attempt" -lt 2 ] && continue; break
+  done
   echo "!!! FAILED $label — tail:"; tail -25 "$LOG" | mask; exit "$e"; }
 # proof OUTPUT_OR_EMPTY SCRIPT [LOADER]  (LOADER defaults to tsx; use "test" for in-process CSS renders)
 tsx="node --import tsx"; testldr="node --experimental-strip-types --import ./scripts/register-test-loader.mjs"

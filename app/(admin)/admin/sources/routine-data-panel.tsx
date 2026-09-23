@@ -422,6 +422,19 @@ export function RoutineDataPanel({
       </section>
     );
   }
+  if (outcome.kind === "STORE_UNREACHABLE" && outcome.cause === "READ_TIMED_OUT") {
+    return (
+      <section aria-labelledby="routine-data-heading">
+        <h2 id="routine-data-heading">Canonical routine-data operations</h2>
+        <StatusBlock
+          what={<><Code raw="READ_TIMED_OUT" /> — the full proof-based routine read is too large to finish inside a page request.</>}
+          happened={outcome.detail}
+          next="Bounding this read is Admin engineering work. Nothing is wrong with the store connection, and no source or store failure is inferred."
+          needsYou={{ needed: false }}
+        />
+      </section>
+    );
+  }
   if (outcome.kind === "STORE_UNREACHABLE") {
     return (
       <section aria-labelledby="routine-data-heading">

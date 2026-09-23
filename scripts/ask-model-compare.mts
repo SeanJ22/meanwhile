@@ -99,6 +99,7 @@ import { divisionIndexFor } from "../lib/health/body-denominator.ts";
 import { loadJsonArray } from "../lib/health/json-store.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
+import { refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 
 import { today } from "./doc-dates.mjs";
 
@@ -970,6 +971,11 @@ async function main(): Promise<void> {
     console.error("ask:model-compare · BOUNDARY — the meetings snapshot is not readable.");
     process.exit(1);
   }
+
+  // Since 092b8089 the registry-runtime projection is read once, asynchronously, and every
+  // synchronous caller (canonicalBodyIdentity below) throws STORE_UNREACHABLE until it is primed.
+  await refreshRegistryRuntimeFromPromoted({ bypassCache: true });
+
   const bodies: KnownSubjectName[] = snapshotEntities(
     snapshot.meetings as { bodyId?: string | null; ocdId: string | null }[],
     (bodyId) => canonicalBodyIdentity(bodyId),

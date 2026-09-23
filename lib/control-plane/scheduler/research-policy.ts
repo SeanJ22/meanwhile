@@ -215,6 +215,13 @@ export interface ResearchState {
   readonly fleetSafety?: FleetSafetySnapshot | null;
   /** Last completed research-window projection, retained while a later cycle is running. */
   readonly researchProgression?: import("../research-progression.ts").ResearchWindowProgression | null;
+  /**
+   * The owner's selected expansion scopes as this cycle resolved and applied
+   * them (membership, order, spend, coverage, budget holds). Absent on states
+   * written before the expansion controls existed, and null when no scope is
+   * selected: both read as "nothing measured", never as an empty scope.
+   */
+  readonly expansion?: import("../expansion/reading.ts").ExpansionCycleReading | null;
 }
 
 /**

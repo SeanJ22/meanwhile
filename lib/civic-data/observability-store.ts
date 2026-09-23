@@ -30,15 +30,40 @@ export const ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS = {
   accessMode: "read only",
 } as const;
 
+/**
+ * A read that runs past its caller's statement limit ends with a named error.
+ * (2026-09-23.) The unbounded selection below takes minutes of correlated
+ * scans and returns 3.8 GB, which no request-scoped caller can wait for. The
+ * projection reports the named error as a store that could not be read, never
+ * as an empty or zero outcome.
+ */
+export class RoutineObservabilityReadTimedOut extends Error {
+  constructor(limitMs: number, cause: unknown) {
+    super(`the routine civic-data read did not finish within its ${limitMs} ms statement limit`, { cause });
+    this.name = "RoutineObservabilityReadTimedOut";
+  }
+}
+
+function isStatementTimeout(error: unknown): boolean {
+  for (let current: unknown = error; current !== null && current !== undefined; ) {
+    if (typeof current === "object" && (current as { code?: unknown }).code === "57014") return true;
+    current = typeof current === "object" ? (current as { cause?: unknown }).cause : undefined;
+  }
+  return false;
+}
+
 async function readRowsFromCanonicalTables(
   connection: string,
   since: string,
   now: string,
+  statementTimeoutMs: number | null,
 ): Promise<RoutineObservabilityRows> {
   // HTTP batches cap responses at 64 MiB. Keep the complete evidence over
   // one connection and one read-only MVCC snapshot, closing it on every exit.
   const pool = new Pool({ connectionString: connection, max: 1, connectionTimeoutMillis: 15000 });
   try { return await drizzle(pool, { schema }).transaction(async (db) => {
+  // A caller's statement limit binds every statement in this snapshot.
+  if (statementTimeoutMs !== null) await db.execute(sql.raw(`SET LOCAL statement_timeout = ${statementTimeoutMs}`));
   const candidateSelection = {
     id: civicDataCandidates.id,
     sourceId: civicDataCandidates.sourceId,
@@ -228,6 +253,9 @@ async function readRowsFromCanonicalTables(
     }).from(civicDataReaderProjections);
   return { candidates, events, promotions, preparedProjections };
   }, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS);
+  } catch (error) {
+    if (statementTimeoutMs !== null && isStatementTimeout(error)) throw new RoutineObservabilityReadTimedOut(statementTimeoutMs, error);
+    throw error;
   } finally { await pool.end(); }
 }
 
@@ -238,14 +266,23 @@ async function readRowsFromCanonicalTables(
  */
 export async function readRoutineDataObservabilityFromConnection(
   connection: string | null | undefined,
-  options: { readonly now?: string; readonly currentReaderBuild?: CurrentReaderBuildIdentity } = {},
+  options: {
+    readonly now?: string;
+    readonly currentReaderBuild?: CurrentReaderBuildIdentity;
+    /** A request-scoped caller's server-side limit; absent means none. */
+    readonly statementTimeoutMs?: number;
+  } = {},
 ): Promise<RoutineObservabilityRead> {
   const now = options.now ?? new Date().toISOString();
   const selected = connection?.trim() ?? "";
+  const limit = options.statementTimeoutMs;
+  if (limit !== undefined && (!Number.isSafeInteger(limit) || limit <= 0)) {
+    throw new Error(`ROUTINE_OBSERVABILITY_STATEMENT_TIMEOUT_INVALID:${limit}`);
+  }
   return projectRoutineDataObservabilityRead({
     now,
     connected: selected !== "",
     currentReaderBuild: options.currentReaderBuild,
-    ...(selected !== "" ? { readRows: (since: string) => readRowsFromCanonicalTables(selected, since, now) } : {}),
+    ...(selected !== "" ? { readRows: (since: string) => readRowsFromCanonicalTables(selected, since, now, limit ?? null) } : {}),
   });
 }

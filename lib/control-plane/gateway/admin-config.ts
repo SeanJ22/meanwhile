@@ -52,6 +52,8 @@
  * PURE. No store, no clock, no environment.
  */
 
+import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
+
 export const ADMIN_CONFIG_FORMAT_VERSION = 1;
 
 /** One row. The policy is singular by construction, not by convention. */
@@ -91,6 +93,14 @@ export interface AdminConfig {
    * fallback, and this module stays free of that constant.
    */
   readonly fleetSpendCeiling?: FleetSpendCeilingDecision | null;
+  /**
+   * The owner's selected expansion scopes: one Census geography each, with a
+   * priority and a rolling-24h paid-work budget (`lib/control-plane/expansion/
+   * scopes.ts`). Optional because a config written before this field existed
+   * selected none — which reads as none. Each entry carries its own
+   * decidedAt/decidedBy/receiptId, exactly like the spend-ceiling dial.
+   */
+  readonly expansionScopes?: readonly ExpansionScopeDecision[] | null;
   readonly updatedAt: string;
 }
 
@@ -185,6 +195,25 @@ export function withFleetSpendCeiling(
       receiptId: change.receiptId,
       previousUsd: change.previousUsd,
     },
+    updatedAt: change.decidedAt,
+  };
+}
+
+/**
+ * The next policy after an owner changes the expansion scope list.
+ *
+ * Pure, like its siblings: the caller reads, computes the list with
+ * `withScopeSet` / `withScopeRemoved`, and compare-and-sets the result. Every
+ * other decision on the row is carried through untouched.
+ */
+export function withExpansionScopes(
+  current: AdminConfig,
+  change: { readonly scopes: readonly ExpansionScopeDecision[]; readonly decidedAt: string },
+): AdminConfig {
+  return {
+    ...current,
+    formatVersion: ADMIN_CONFIG_FORMAT_VERSION,
+    expansionScopes: [...change.scopes],
     updatedAt: change.decidedAt,
   };
 }

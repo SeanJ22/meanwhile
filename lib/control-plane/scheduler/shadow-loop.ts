@@ -100,6 +100,17 @@ export interface CycleInput {
   readonly openOccurrence?: (
     row: ScheduledObligation,
   ) => Promise<boolean | { readonly settled: SettledOccurrence }>;
+  /**
+   * **SETTLED OCCURRENCES RECOVERED BEFORE ANY LANE RUNS.** (2026-09-23.)
+   *
+   * The caller finds them with `findSettledOccurrences`. Each one whose
+   * obligation is scheduled is recovered by the rule `openOccurrence`'s
+   * `{ settled }` applies, whatever its lane, due time, debt backoff or
+   * admission. Its row is then withheld from both lanes, so it is recovered
+   * exactly once. A recovery walks nothing and spends nothing, so no dispatch
+   * gate applies to it.
+   */
+  readonly settledOccurrences?: readonly SettledOccurrence[];
   /** Observability only; recovery still completes before any worker is admitted. */
   readonly onRecoveryComplete?: () => void;
   readonly maturity: MethodMaturity;
@@ -407,7 +418,54 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const recovered: RecoveredOccurrence[] = [];
   const simulated: string[] = [];
   const deferred: { obligationId: string; why: string }[] = [];
+  const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
+
+  /*
+   * **A SETTLED OCCURRENCE IS RECOVERED, NEVER DISPATCHED.** (2026-09-22.)
+   *
+   * An interrupted cycle committed this occurrence's disposition and ended
+   * before closing it. Walking the route again would claim a settled task, so
+   * the disposition already committed is recorded by the rule `record` applies
+   * to a dispatch's: a reading discharges the debt; any other disposition
+   * closes the route, not the obligation, and accrues debt exactly as a WORKED
+   * non-reading does, so the obligation stays owed and retries on its backoff.
+   */
+  const recover = (row: ScheduledObligation, settled: SettledOccurrence): void => {
+    const discharged = DISCHARGING_DISPOSITIONS.includes(settled.disposition.disposition);
+    recovered.push({ ...settled, discharged });
+    if (discharged) {
+      debtsById.delete(row.obligation.id);
+      return;
+    }
+    debtsById.set(
+      row.obligation.id,
+      recordFailure(debtsById.get(row.obligation.id) ?? null, {
+        obligationId: row.obligation.id,
+        cause: "REFUSED_BY_HOST",
+        detail: settledUnresolvedReason(settled.disposition),
+        target: row.obligation.routeId ?? row.obligation.subjectId,
+        dueAt: row.nextDueAt,
+        now: input.now,
+      }),
+    );
+  };
+
+  /*
+   * 3b · RECOVER, BEFORE ANY LANE. (2026-09-23.) Every settled occurrence the
+   * caller found is recovered here, whatever its due time, backoff, lane or
+   * admission, and its row is withheld from both lanes below. An obligation
+   * with no schedule has no row to recover against and is left open for the
+   * caller to name.
+   */
+  const scheduledById = new Map(schedule.scheduled.map((row) => [row.obligation.id, row] as const));
+  for (const settled of input.settledOccurrences ?? []) {
+    const row = scheduledById.get(settled.obligationId);
+    if (row !== undefined) recover(row, settled);
+  }
+  const recoveredBeforeDispatch = new Set(recovered.map((r) => r.obligationId));
+
   for (const [obligationId, debt] of backedOff) {
+    if (recoveredBeforeDispatch.has(obligationId)) continue;
     deferred.push({
       obligationId,
       why:
@@ -416,7 +474,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         "and counted here — a walled route re-opened every cycle is a hot loop reported as an outage.",
     });
   }
-  const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
 
   /*
    * The record step, shared by both lanes. Applied to each result as it
@@ -484,36 +541,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     /* NOT_CLAIMED is not a failure. Another worker holds it; that is the lease
        working, and counting it as debt would make ordinary concurrency read as
        a backlog. */
-  };
-
-  /*
-   * **A SETTLED OCCURRENCE IS RECOVERED, NEVER DISPATCHED.** (2026-09-22.)
-   *
-   * An interrupted cycle committed this occurrence's disposition and ended
-   * before closing it. Walking the route again would claim a settled task, so
-   * the disposition already committed is recorded by the rule `record` applies
-   * to a dispatch's: a reading discharges the debt; any other disposition
-   * closes the route, not the obligation, and accrues debt exactly as a WORKED
-   * non-reading does, so the obligation stays owed and retries on its backoff.
-   */
-  const recover = (row: ScheduledObligation, settled: SettledOccurrence): void => {
-    const discharged = DISCHARGING_DISPOSITIONS.includes(settled.disposition.disposition);
-    recovered.push({ ...settled, discharged });
-    if (discharged) {
-      debtsById.delete(row.obligation.id);
-      return;
-    }
-    debtsById.set(
-      row.obligation.id,
-      recordFailure(debtsById.get(row.obligation.id) ?? null, {
-        obligationId: row.obligation.id,
-        cause: "REFUSED_BY_HOST",
-        detail: settledUnresolvedReason(settled.disposition),
-        target: row.obligation.routeId ?? row.obligation.subjectId,
-        dueAt: row.nextDueAt,
-        now: input.now,
-      }),
-    );
   };
 
   const budgetSpent = (): boolean =>
@@ -596,10 +623,12 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const decisions = new Map<string, ExecutorDecision>();
   const deterministicRows: ScheduledObligation[] = [];
   const modelRows: ScheduledObligation[] = [];
+  /* A row recovered before dispatch is withheld from both lanes, so it is recovered once and never walked. */
+  const laneWork = workNow.filter((row) => !recoveredBeforeDispatch.has(row.obligation.id));
   if (research === undefined) {
-    deterministicRows.push(...workNow);
+    deterministicRows.push(...laneWork);
   } else {
-    for (const row of workNow) {
+    for (const row of laneWork) {
       const decision = research.decide(row);
       decisions.set(row.obligation.id, decision);
       (decision.kind === "BOUNDED_MODEL_WORKER" ? modelRows : deterministicRows).push(row);
@@ -800,11 +829,13 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         };
 
   const debts = [...debtsById.values()];
+  /* A recovered reading is a reading: its obligation is not overdue. Counted over
+     the due set, because a recovery before dispatch can be a row that was not due. */
+  const readThisCycle = new Set([...worked, ...recovered.filter((r) => r.discharged).map((r) => r.obligationId)]);
   const risk = stalenessRisk({
     scheduled: schedule.scheduled.length,
     unscheduled: schedule.unscheduled.length,
-    /* A recovered reading is a reading: its obligation is not overdue. */
-    overdue: workNow.length - worked.length - recovered.filter((r) => r.discharged).length,
+    overdue: workNow.filter((row) => !readThisCycle.has(row.obligation.id)).length,
     debts,
     nowMs,
   });

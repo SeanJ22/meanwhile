@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 701,
-    "named": 6961,
+    "files": 707,
+    "named": 7007,
     "dynamic": 28
   },
   "files": {
@@ -2951,6 +2951,15 @@
       ],
       "dynamic": 0
     },
+    "tests/control-plane-vault-restore.test.ts": {
+      "names": [
+        "a corrupted source body, or a record the object does not satisfy, is refused and writes nothing",
+        "a record held only in the source vault is copied verbatim and then read by the runtime's own resolvers",
+        "a target key already holding a different object is a conflict, and is never overwritten",
+        "an altered plan, or a vault restored from itself, is refused before anything is read or written"
+      ],
+      "dynamic": 0
+    },
     "tests/control-query.test.ts": {
       "names": [
         "a CONFIRMED identifier may be a HIT",
@@ -3637,11 +3646,43 @@
       ],
       "dynamic": 0
     },
+    "tests/expansion-gateway.test.ts": {
+      "names": [
+        "a budget above the Fleet ceiling is recorded and the receipt says the Fleet ceiling is the one that holds",
+        "a malformed selection is refused with the reason and writes nothing",
+        "a policy row holding an unreadable scope entry refuses both actions rather than overwrite a budget",
+        "only the owner's own session may select or remove a scope; a chat or an agent is refused",
+        "removing a scope takes it off the list, and removing one that is not there changes nothing",
+        "selecting a geography records it with priority, budget and provenance, and leaves every other decision alone"
+      ],
+      "dynamic": 0
+    },
     "tests/expansion-log.test.ts": {
       "names": [
         "docs/expansion-log.md states that a zero-yield route is a reported success",
         "the newest session in docs/log.md has an expansion-log entry, or claims the non-hunt marker",
         "the non-hunt exemption is claimed by a marker in the id, never inferred"
+      ],
+      "dynamic": 0
+    },
+    "tests/expansion-scopes.test.ts": {
+      "names": [
+        "a $0 budget holds all paid work in the scope, and a subject in two scopes must pass both",
+        "a malformed stored scope is counted, never dropped as if no restriction stood",
+        "a piece of work's subject and state are read from its own id, never guessed",
+        "a scope budget admits within it, reserves the worst case, and refuses by name past it",
+        "a scope's geography, priority, budget, note and key are validated before anything is written",
+        "on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans",
+        "registry governments join their Census unit territory by the generator's own id rule",
+        "resolving against the lookup names every failure and never returns an empty scope as a resolved one",
+        "setting a scope is an upsert that keeps the previous decision, and removing one leaves the rest",
+        "sharing a border ZCTA is not membership: only a certain overlap inside a ZCTA places a government",
+        "the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and the verdict in words",
+        "the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope",
+        "the page shows a runner reading only for the decision it measured, and counts listed assignments in scope",
+        "the plan places work by ZCTA overlap, orders scopes by priority, and states coverage and gap",
+        "the runner's load: nothing selected changes nothing; a bootstrap lookup resolves nothing; a published one resolves",
+        "unmeasured spend, an unresolved scope and an unreadable scope list all hold paid work — restrict-only"
       ],
       "dynamic": 0
     },
@@ -6470,6 +6511,7 @@
       "names": [
         "a crash after reservation cannot restart the same attempt indefinitely",
         "owner refresh accepts one exact registered partition and at most two attempts; no direct source child",
+        "owner refresh also takes one exact registered routine source contract, never an unregistered id",
         "standing parent consumes durable bounded refresh requests independently of ordinary source due time"
       ],
       "dynamic": 0
@@ -8402,6 +8444,27 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-observability-bounded.test.ts": {
+      "names": [
+        "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
+        "a read that runs past its statement limit is a named store failure, never an empty or zero outcome",
+        "any other read failure stays an untyped store failure",
+        "the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it",
+        "the research cycle never makes the unbounded observability read",
+        "the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed",
+        "the statement limit is validated before any connection is opened"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-publication-status.test.ts": {
+      "names": [
+        "each contract gets the verdict its pointer and the readback of exactly that version support",
+        "the Sources page reads the three sources together and shows the narrow panel before the proof-based one",
+        "the narrow read selects no payload and never touches the candidate JSON",
+        "with nothing recorded, every contract is NOT_PUBLISHED with no attempt, never a pass"
+      ],
+      "dynamic": 0
+    },
     "tests/routing.test.ts": {
       "names": [
         "85723: no routed step ever names a body that isn't the division's own government",
@@ -8805,6 +8868,8 @@
     },
     "tests/settled-occurrence-recovery.test.ts": {
       "names": [
+        "BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lane neither recovers it twice nor walks it",
+        "BEFORE DISPATCH: every settled occurrence is recovered with no dispatch capacity at all (a zero ceiling, a debt backoff, a closed Scout lane) and nothing is walked",
         "SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease",
         "SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, and a dead lease on one is left for the sweep",
         "a recovered INGESTED occurrence keeps its bytes eligible for parsing, verification and staging",
@@ -8812,7 +8877,8 @@
         "a recovered WALKED_NO_YIELD discharges this period's reading only: the obligation comes due again under a new RouteTask",
         "a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask",
         "an aborted or interrupted occurrence is still resumed and dispatched, and its earlier Attempt and partial evidence are kept",
-        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won"
+        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won",
+        "findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read"
       ],
       "dynamic": 0
     },
@@ -10024,6 +10090,16 @@
       "names": [
         "the Wikipedia route is a live deterministic HTTP GET on the permitted Wikimedia REST host",
         "the Wikipedia route's yield contract makes an empty search a FAILED extraction"
+      ],
+      "dynamic": 0
+    },
+    "tests/window-exited-holder.test.ts": {
+      "names": [
+        "a holder id names its process: role, host and pid",
+        "a live pid, another host's process, or a holder that names no process keeps the lease",
+        "an absent, released or expired lease needs nothing and probes no process",
+        "the relaunched runner's cycle is no longer refused under an exited cycle's lease",
+        "the runner checks for an exited holder before every research cycle and every nightly window"
       ],
       "dynamic": 0
     },

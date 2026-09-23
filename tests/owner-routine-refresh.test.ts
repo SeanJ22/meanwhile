@@ -18,6 +18,18 @@ test("owner refresh accepts one exact registered partition and at most two attem
   assert.throws(() => installedRuntimeChildPlan(payload), /OWNER_REFRESH_HAS_NO_CHILD_COMMAND/);
 });
 
+test("owner refresh also takes one exact registered routine source contract, never an unregistered id", async () => {
+  const sourceContract = "census-geography-overlaps";
+  assert.deepEqual(routineRefreshSelection([`--contract=${sourceContract}`]), { contractId: sourceContract, maximumAttempts: 1 });
+  for (const args of [["--contract=census-geography"], ["--contract=census-geography-overlaps/2"], ["--contract="]]) {
+    assert.throws(() => routineRefreshSelection(args), /OWNER_REFRESH_REGISTERED_CONTRACT_REQUIRED/);
+  }
+  const repos = createMemoryRepositories();
+  await requestRoutineRefresh(repos, [`--contract=${sourceContract}`], NOW);
+  const claim = await reserveRoutineRefresh(repos, NOW);
+  assert.deepEqual(claim?.args, ["--force", `--only=${sourceContract}`], "the standing parent launches it through its own routine child");
+});
+
 test("standing parent consumes durable bounded refresh requests independently of ordinary source due time", async () => {
   const repos = createMemoryRepositories();
   assert.equal(await reserveRoutineRefresh(repos, NOW), null);

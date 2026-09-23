@@ -22,6 +22,8 @@
  *   bill ≠ ledger               the provider's bill and our measured ledger are two
  *                               routes to the same money and are never added
  *   credit ≠ usage              a balance or a purchase is not consumption
+ *   search ≠ model              a search API request's charge is its own line,
+ *                               per host, never inside model spend
  *   windows are named           a UTC month, a rolling 24 hours and a billing
  *                               period never share one sum
  *   shared stays shared         the databases and the host serve the reader site
@@ -38,6 +40,7 @@ import {
   providerDefinition,
   type BillingFact,
 } from "../billing-facts.ts";
+import { DISCOVERY_SEARCH_ROLE, SEARCH_SOURCE_NOT_ON_RECORD } from "../cost.ts";
 import { modelName } from "../plain-words.ts";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
@@ -79,6 +82,49 @@ export interface LedgerMonth {
   readonly unpricedModelRows: number | null;
   readonly byModel: readonly LedgerRow[];
   readonly byRole: readonly LedgerRow[];
+  /** Search charges by API host; null when the snapshot predates the breakdown (not broken down — never "none"). */
+  readonly bySearchSource: readonly LedgerRow[] | null;
+}
+
+/** The month's search charges, as the ledger's role breakdown carries them; null when none are on the ledger. */
+function searchCharges(month: LedgerMonth): LedgerRow | null {
+  return month.byRole.find((r) => r.key === DISCOVERY_SEARCH_ROLE) ?? null;
+}
+
+/**
+ * Model money this month: the ledger's measured total less search charges,
+ * which are not model spend and are counted on their own line. Null when the
+ * ledger's total is not measured.
+ */
+export function modelSpendUsd(month: LedgerMonth): number | null {
+  if (month.measuredUsd === null) return null;
+  return Math.round((month.measuredUsd - (searchCharges(month)?.usd ?? 0)) * 100) / 100;
+}
+
+const SEARCH_HOSTS: Readonly<Record<string, string>> = { "api.search.brave.com": "Brave Search", "api.exa.ai": "Exa" };
+
+/** The search line: measured per host, a request with no published price named as unknown, and a month with no request a measured zero. */
+function searchLine(month: LedgerMonth | null): { readonly amount: string | null; readonly how: string } {
+  if (month === null) return { amount: null, how: "The published snapshot was not read, so search spend is not shown. Not a zero." };
+  const all = searchCharges(month);
+  if (all === null) return { amount: usd(0), how: "No search request is on the ledger this month. The search rung writes one row per request, so this is a count, not a gap." };
+  const requests = all.measuredRows + all.unmeasuredRows;
+  const unpriced = all.unmeasuredRows > 0 ? ` ${plural(all.unmeasuredRows, "request")} had no published price — unknown, not free, so the figure is a floor.` : "";
+  const hosts =
+    month.bySearchSource === null
+      ? "Not broken down by provider in this snapshot."
+      : month.bySearchSource
+          .map((r) => `${r.key === SEARCH_SOURCE_NOT_ON_RECORD ? "Host not recorded" : SEARCH_HOSTS[r.key] ?? r.key} ${r.usd === null ? "no price" : usd(r.usd)} · ${plural(r.measuredRows + r.unmeasuredRows, "request")}`)
+          .join("; ") + ".";
+  return { amount: all.usd === null ? null : usd(all.usd), how: `${plural(requests, "request")}, one ledger row each, never counted as model spend. ${hosts}${unpriced}` };
+}
+
+/** Who the month's paid model calls went to, from the model rows themselves. */
+export function modelProviderWords(month: LedgerMonth): string {
+  const paid = month.byModel.filter((r) => r.key !== NO_MODEL && r.usd !== null && r.usd > 0);
+  const providers = [...new Set(paid.map((r) => (r.key.startsWith("claude") || r.key === NOT_ON_RECORD ? "Anthropic" : "a provider not recorded on the charge")))];
+  if (providers.length === 0) return "No paid model call is on the ledger this month.";
+  return providers.length === 1 ? `Every paid model call so far went to one provider: ${providers[0]}.` : `Paid model calls went to ${providers.join(" and ")}.`;
 }
 
 export interface RollingSpend {
@@ -216,16 +262,18 @@ export function providerRows(input: {
   readonly facts: readonly BillingFact[];
 }): ProviderRow[] {
   const m = input.month;
+  const modelUsd = m ? modelSpendUsd(m) : null;
+  const search = searchLine(m);
   const rows: ProviderRow[] = [
     {
       key: "ledger-month",
       name: "Anthropic — measured here",
-      amount: m && m.measuredUsd !== null ? usd(m.measuredUsd) : null,
+      amount: modelUsd !== null ? usd(modelUsd) : null,
       amountTone: "text",
       kind: "Our own ledger",
       period: m ? `${m.label} (UTC), to ${eastern(m.asOf)}` : "Unknown",
       how: m
-        ? `Per charge, written by the runner.${m.unpricedModelRows !== null && m.unpricedModelRows > 0 ? ` ${plural(m.unpricedModelRows, "model charge")} reported no cost — unknown, not free work.` : ""}`
+        ? `Per charge, written by the runner.${m.unpricedModelRows !== null && m.unpricedModelRows > 0 ? ` ${plural(m.unpricedModelRows, "model charge")} reported no cost — unknown, not free work.` : ""}${searchCharges(m) !== null ? " Search requests are on their own line." : ""}`
         : "The published snapshot was not read, so the ledger is not shown. Not a zero.",
       shared: false,
       controllable: true,
@@ -239,6 +287,18 @@ export function providerRows(input: {
       kind: "Our own ledger",
       period: "Rolling 24 hours",
       how: input.rolling ? `The window the ceiling is enforced over, as the runner last measured it (${eastern(input.rolling.asOf)}).` : "The runner's spend window was not read.",
+      shared: false,
+      controllable: true,
+      factId: null,
+    },
+    {
+      key: "ledger-search",
+      name: "Search APIs — measured here",
+      amount: search.amount,
+      amountTone: "text",
+      kind: "Our own ledger",
+      period: m ? `${m.label} (UTC), to ${eastern(m.asOf)}` : "Unknown",
+      how: search.how,
       shared: false,
       controllable: true,
       factId: null,
@@ -327,7 +387,7 @@ export function tierOf(key: string): string {
 }
 
 export function modelUsageRows(month: LedgerMonth): ModelUsageRow[] {
-  const total = month.measuredUsd ?? 0;
+  const total = modelSpendUsd(month) ?? 0;
   return month.byModel.map((r) => ({
     model: r.key === NO_MODEL ? "Plain code" : r.key === NOT_ON_RECORD ? "Model not recorded — the hourly cache pre-warm" : modelName(r.key),
     provider: r.key === NO_MODEL ? "None" : r.key.startsWith("claude") || r.key === NOT_ON_RECORD ? "Anthropic" : "Not recorded",
@@ -356,6 +416,7 @@ export function reconciliation(input: {
   readonly proofAssignments: number | null;
 }): ReconLine[] {
   const m = input.month;
+  const modelUsd = m ? modelSpendUsd(m) : null;
   const bill = latest(input.facts, (f) => f.provider === "anthropic-api" && (f.kind === "MONTH_TO_DATE" || f.kind === "BILLED"));
   return [
     {
@@ -363,10 +424,10 @@ export function reconciliation(input: {
       tone: "slate",
       text:
         "The provider's bill and our own measured ledger cover the same model spend by two routes. " +
-        (m && m.measuredUsd !== null && bill
-          ? `The ledger's ${usd(m.measuredUsd)} (${m.label}, to ${eastern(m.asOf)}) and the ${factAmountWords(bill)} you read on ${bill.asOf} (${factPeriodWords(bill)}) are never summed. ` +
+        (m && modelUsd !== null && bill
+          ? `The ledger's ${usd(modelUsd)} of model spend (${m.label}, to ${eastern(m.asOf)}) and the ${factAmountWords(bill)} you read on ${bill.asOf} (${factPeriodWords(bill)}) are never summed. ` +
             (bill.periodStart === m.since.slice(0, 10)
-              ? `They cover the same month; the gap between them, ${usd(Math.abs(bill.amountUsd - m.measuredUsd))}, is spend the ledger does not carry — development and the reader's Ask are billed to the same account — plus anything after the day you read it.`
+              ? `They cover the same month; the gap between them, ${usd(Math.abs(bill.amountUsd - modelUsd))}, is spend the ledger does not carry — development and the reader's Ask are billed to the same account — plus anything after the day you read it.`
               : "They cover different periods, so the difference between them is not a discrepancy.")
           : "They are never summed, and the bill also carries development and the reader's Ask, which the ledger does not."),
     },
@@ -381,7 +442,7 @@ export function reconciliation(input: {
       text:
         input.unread === 0
           ? "Every provider has a reading. The readings still cover different periods, so they are shown provider by provider rather than as one total."
-          : `${plural(input.unread, "provider row")} ${input.unread === 1 ? "has" : "have"} no reading. The operating cost of this system therefore has a floor, not a total${m && m.measuredUsd !== null ? ` — at least ${usd(m.measuredUsd)} this month in model usage alone` : ""} — and every rate computed against it is a ceiling.`,
+          : `${plural(input.unread, "provider row")} ${input.unread === 1 ? "has" : "have"} no reading. The operating cost of this system therefore has a floor, not a total${modelUsd !== null ? ` — at least ${usd(modelUsd)} this month in model usage alone` : ""} — and every rate computed against it is a ceiling.`,
     },
     {
       pill: "CREDIT IS NOT USAGE",
@@ -623,7 +684,7 @@ export function ladderTiles(month: LedgerMonth): LadderTile[] {
   const count = (rows: readonly LedgerRow[]) => rows.reduce((n, r) => n + r.measuredRows + r.unmeasuredRows, 0);
   const dollars = (rows: readonly LedgerRow[]) => rows.reduce((n, r) => n + (r.usd ?? 0), 0);
   const names = (rows: readonly LedgerRow[]) => [...new Set(rows.map((r) => modelName(r.key)))].join(" and ");
-  const total = month.measuredUsd ?? 0;
+  const total = modelSpendUsd(month) ?? 0;
   const top = tier("Most capable AI");
   const pre = tier("Not recorded on the charge");
   const cheap = tier("Cheapest AI");

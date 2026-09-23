@@ -13,6 +13,7 @@ import { FIX_ITEMS, orderByMarks } from "@/lib/control-plane/admin-view/fix-list
 import { routineDetail } from "@/lib/control-plane/admin-view/work-view.ts";
 import {
   ceilingCards,
+  modelProviderWords,
   outcomesInScope,
   perAttempt,
   placeWords,
@@ -51,6 +52,7 @@ const MONTH: LedgerMonth = {
     { key: "no model (deterministic work)", usd: null, measuredRows: 0, unmeasuredRows: 2312 },
   ],
   byRole: [],
+  bySearchSource: [],
 };
 
 function fact(over: Partial<BillingFact>): BillingFact {
@@ -98,6 +100,46 @@ test("an entered figure fills its provider's row with its kind, period and prove
   assert.match(never.text, /the gap between them, \$13\.21/, "the same month: the difference is stated, not smoothed");
   assert.doesNotMatch(recon.map((l) => l.text).join(" "), /\$359\.41/, "the bill and the ledger are never added");
   assert.match(recon.find((l) => l.pill === "UNKNOWN IS NOT ZERO")!.text, /floor, not a total/);
+});
+
+test("search API spend is its own line beside model spend, per host, and an unpriced request is never a zero", () => {
+  const withSearch: LedgerMonth = {
+    ...MONTH,
+    measuredUsd: 186.33,
+    byRole: [
+      { key: "SCOUT", usd: 186.31, measuredRows: 2238, unmeasuredRows: 2 },
+      { key: "DISCOVERY_SEARCH", usd: 0.02, measuredRows: 3, unmeasuredRows: 1 },
+    ],
+    bySearchSource: [
+      { key: "api.search.brave.com", usd: 0.01, measuredRows: 2, unmeasuredRows: 0 },
+      { key: "api.exa.ai", usd: null, measuredRows: 0, unmeasuredRows: 1 },
+      { key: "(host not recorded)", usd: 0.01, measuredRows: 1, unmeasuredRows: 0 },
+    ],
+  };
+  const rows = providerRows({ month: withSearch, rolling: null, maptiler: null, facts: [] });
+  assert.equal(rows.find((r) => r.key === "ledger-month")?.amount, "$186.31", "the Anthropic line is model spend, without the search charges");
+  const line = rows.find((r) => r.key === "ledger-search")!;
+  assert.equal(line.name, "Search APIs — measured here");
+  assert.equal(line.amount, "$0.02");
+  assert.match(line.how, /Brave Search \$0\.01 · 2 requests; Exa no price · 1 request; Host not recorded \$0\.01 · 1 request\./);
+  assert.match(line.how, /1 request had no published price — unknown, not free, so the figure is a floor\./);
+
+  const bill = fact({ id: "anthropic-api:MONTH_TO_DATE:2026-09-01" });
+  const recon = reconciliation({ month: withSearch, facts: [bill], unread: 3, proofAssignments: null });
+  assert.match(recon.find((l) => l.pill === "NEVER ADDED")!.text, /the gap between them, \$13\.21/, "the Anthropic bill is set against model spend, not search");
+  assert.match(recon.find((l) => l.pill === "UNKNOWN IS NOT ZERO")!.text, /at least \$186\.31 this month in model usage alone/);
+
+  // A month the ledger was read for, with no search request: a measured zero, said as a count.
+  const none = providerRows({ month: MONTH, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
+  assert.equal(none.amount, "$0.00");
+  assert.match(none.how, /^No search request is on the ledger this month/);
+  // A snapshot from before the breakdown: the total stands and the split is said to be missing, never shown as none.
+  const older = providerRows({ month: { ...withSearch, bySearchSource: null }, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
+  assert.match(older.how, /Not broken down by provider in this snapshot\./);
+  // The snapshot unread: no figure at all.
+  assert.equal(providerRows({ month: null, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")?.amount, null);
+
+  assert.equal(modelProviderWords(MONTH), "Every paid model call so far went to one provider: Anthropic.");
 });
 
 test("the three ceilings are never blended, and an account cap or a subscription with no entry has no number", () => {

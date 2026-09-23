@@ -49,12 +49,14 @@ import {
   occurrenceStampInstant,
   supersedesSeriesRecord,
 } from "../lib/sources/event-identity.ts";
-import { makeIcalSource, parseIcs, slotStamp } from "../lib/sources/ical/index.ts";
+import { makeIcalSource, parseDtStart, parseIcs, slotStamp } from "../lib/sources/ical/index.ts";
+import { readRule } from "../lib/sources/ical/recurrence.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import {
   promoteMeetingPartition,
   promoteMeetingPartitions,
   reconcileSuccessfulMeetingPartition,
+  recurrenceHeldFacts,
 } from "../scripts/ingest.ts";
 
 const FIXTURES = join(process.cwd(), "tests", "fixtures", "ical");
@@ -152,25 +154,31 @@ test("ICAL-OCC · the parser reads the recurrence fields it keys on", () => {
 /* ----------------------------------------------------------- the fix --- */
 
 test("ICAL-OCC · every sitting of the Conservation Commission series is its own record", () => {
-  const { meetings, accounting, duplicateIdentity } = normalize(
+  const { meetings, accounting, duplicateIdentity, recurrence } = normalize(
     wiringFor("bradford-conservation-commission"),
     READ_1,
   );
   assert.deepEqual(
-    meetings.map(({ id, startsAt, status }) => ({ id, startsAt, status })),
+    meetings.map(({ id, startsAt, status, title }) => ({ id, startsAt, status, title })),
     [
-      // The master: its own DTSTART is the slot of its first sitting.
-      { id: `${CC_SERIES}/20260721T230000Z`, startsAt: "2026-07-21T23:00:00.000Z", status: "CONCLUDED" },
-      { id: `${CC_SERIES}/20260915T230000Z`, startsAt: "2026-09-15T23:00:00.000Z", status: "CONCLUDED" },
+      // The series' rule (every fourth Tuesday at 7pm from 21 July) places
+      // each unedited sitting; each edited sitting is its override.
+      { id: `${CC_SERIES}/20260721T230000Z`, startsAt: "2026-07-21T23:00:00.000Z", status: "CONCLUDED", title: "Conservation Commission" },
+      { id: `${CC_SERIES}/20260818T230000Z`, startsAt: "2026-08-18T23:00:00.000Z", status: "CONCLUDED", title: "Conservation Commission" },
+      { id: `${CC_SERIES}/20260915T230000Z`, startsAt: "2026-09-15T23:00:00.000Z", status: "CONCLUDED", title: "Conservation Commission" },
       // Moved by the town from 13 to 20 October: the id is the SLOT it replaced.
-      { id: `${CC_SERIES}/20261013T230000Z`, startsAt: "2026-10-20T23:00:00.000Z", status: "SCHEDULED" },
+      { id: `${CC_SERIES}/20261013T230000Z`, startsAt: "2026-10-20T23:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
       // 10 November at 7pm Eastern (standard time) is 00:00Z on the 11th.
-      { id: `${CC_SERIES}/20261111T000000Z`, startsAt: "2026-11-18T00:00:00.000Z", status: "SCHEDULED" },
-      { id: `${CC_SERIES}/20261209T000000Z`, startsAt: "2026-12-16T00:00:00.000Z", status: "SCHEDULED" },
+      { id: `${CC_SERIES}/20261111T000000Z`, startsAt: "2026-11-18T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
+      { id: `${CC_SERIES}/20261209T000000Z`, startsAt: "2026-12-16T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
+      { id: `${CC_SERIES}/20270106T000000Z`, startsAt: "2027-01-06T00:00:00.000Z", status: "SCHEDULED", title: "Conservation Commission" },
     ],
   );
-  assert.deepEqual(duplicateIdentity, { exact: 0, weakIdCollision: 0 }, "no sitting competes for another's id");
+  // The four sittings the town edited are stated twice, by the rule and by
+  // their overrides; the override is the sitting, and the rule's copy is not.
+  assert.deepEqual(duplicateIdentity, { exact: 4, weakIdCollision: 0 });
   assert.equal(accounting.outcome, "CONSERVED");
+  assert.deepEqual(recurrence, { expandedSeries: 1, exclusions: [], notExpanded: [] });
 });
 
 test("ICAL-OCC · the same events in any order produce the same meetings", () => {
@@ -180,7 +188,7 @@ test("ICAL-OCC · the same events in any order produce the same meetings", () =>
     "bradford-budget-committee",
   );
   const expected = normalize(wiring, READ_1).meetings;
-  assert.equal(expected.length, 8);
+  assert.equal(expected.length, 14);
   for (const [label, ics] of [
     ["the second recorded read", READ_2],
     ["the first read reversed", reordered(READ_1, (all) => [...all].reverse())],
@@ -211,7 +219,7 @@ test("ICAL-OCC · an event outside any series keeps its id exactly", () => {
   }
 });
 
-test("ICAL-OCC · Warner's Zoning Board: the master is out of window and each in-window override is its own sitting", () => {
+test("ICAL-OCC · Warner's Zoning Board: each edited and each unedited sitting of the series is its own record", () => {
   const { meetings } = normalize(wiringFor("warner-zoning-board"), WARNER);
   assert.deepEqual(
     meetings.map(({ id, startsAt, status, title }) => ({ id, startsAt, status, title })),
@@ -219,6 +227,11 @@ test("ICAL-OCC · Warner's Zoning Board: the master is out of window and each in
       { id: `${ZBA_SERIES}/20260708T230000Z`, startsAt: "2026-07-08T23:00:00.000Z", status: "CANCELED", title: "CANCELED Zoning Board Meeting" },
       { id: `${ZBA_SERIES}/20260812T230000Z`, startsAt: "2026-08-12T23:00:00.000Z", status: "CONCLUDED", title: "Zoning Board Meeting" },
       { id: `${ZBA_SERIES}/20260909T230000Z`, startsAt: "2026-09-09T23:00:00.000Z", status: "CANCELED", title: "CANCELED Zoning Board Meeting" },
+      // The second Wednesday at 7pm, which no one edited: the rule's own sittings.
+      { id: `${ZBA_SERIES}/20261014T230000Z`, startsAt: "2026-10-14T23:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
+      { id: `${ZBA_SERIES}/20261112T000000Z`, startsAt: "2026-11-12T00:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
+      { id: `${ZBA_SERIES}/20261210T000000Z`, startsAt: "2026-12-10T00:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
+      { id: `${ZBA_SERIES}/20270114T000000Z`, startsAt: "2027-01-14T00:00:00.000Z", status: "SCHEDULED", title: "Zoning Board Meeting" },
     ],
     "the held meeting and the two cancelled ones are three records, never one alternating",
   );
@@ -241,13 +254,23 @@ test("ICAL-OCC · an edited sitting belongs to its series' body, and replaces th
     normalize(wiring, ics)
       .meetings.filter((meeting) => meeting.id.includes("42cp3onvveme22uorqju8uhu34"))
       .map(({ id, bodyId, startsAt, status, title }) => ({ id, bodyId, startsAt, status, title }));
-  const expected = [{
-    id: `${SB_SERIES}/20260908T220000Z`,
-    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board",
-    startsAt: "2026-09-08T22:00:00.000Z",
-    status: "CONCLUDED",
-    title: "RESCHEDULED Select Brd -9/15",
-  }];
+  const body = "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board";
+  const unedited = (slot: string, startsAt: string) =>
+    ({ id: `${SB_SERIES}/${slot}`, bodyId: body, startsAt, status: "SCHEDULED", title: "Select Board Meeting" });
+  const expected = [
+    {
+      id: `${SB_SERIES}/20260908T220000Z`,
+      bodyId: body,
+      startsAt: "2026-09-08T22:00:00.000Z",
+      status: "CONCLUDED",
+      title: "RESCHEDULED Select Brd -9/15",
+    },
+    // The second Tuesday at 6pm, as the series states it after its first sitting.
+    unedited("20261013T220000Z", "2026-10-13T22:00:00.000Z"),
+    unedited("20261110T230000Z", "2026-11-10T23:00:00.000Z"),
+    unedited("20261208T230000Z", "2026-12-08T23:00:00.000Z"),
+    unedited("20270112T230000Z", "2027-01-12T23:00:00.000Z"),
+  ];
   assert.deepEqual(selectBoard(WARNER), expected);
   assert.deepEqual(selectBoard(reordered(WARNER, (all) => [...all].reverse())), expected);
 
@@ -397,6 +420,13 @@ test("ICAL-OCC · a series record is replaced only by an occurrence holding its 
 
 /* ------------------------------------ the first read under the new id --- */
 
+/** The 15 September sitting of the Bradford Conservation Commission series. */
+const fifteenth = (rows: readonly Meeting[]): Meeting => {
+  const found = rows.find((row) => row.id === `${CC_SERIES}/20260915T230000Z`);
+  assert.ok(found, "the 15 September sitting is produced");
+  return found;
+};
+
 const WARNER_FEED =
   "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics";
 
@@ -494,7 +524,8 @@ test("ICAL-OCC · Warner's 8 September record is replaced by the edited sitting:
   });
   assert.equal(first?.outcome.candidate.state, "PROMOTED", first?.outcome.candidate.failureDetail ?? "");
   const changeSet = first!.outcome.candidate.candidate.changeSet!;
-  assert.deepEqual(changeSet.added.map(({ key }) => key), [`meeting:${edited.id}`]);
+  assert.deepEqual(changeSet.added.map(({ key }) => key), fresh.map(({ id }) => `meeting:${id}`));
+  assert.ok(changeSet.added.some(({ key }) => key === `meeting:${edited.id}`));
   assert.deepEqual(changeSet.changed, []);
   assert.deepEqual(changeSet.removed.map(({ key }) => key), [`meeting:${legacy.id}`]);
   assert.deepEqual(
@@ -502,7 +533,11 @@ test("ICAL-OCC · Warner's 8 September record is replaced by the edited sitting:
     [{ key: `meeting:${legacy.id}`, code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY" }],
   );
   const payload = first!.outcome.promoted!.payload as { meetings: Meeting[] };
-  assert.deepEqual(payload.meetings.map(({ id, title }) => ({ id, title })), [{ id: edited.id, title: "RESCHEDULED Select Brd -9/15" }]);
+  assert.deepEqual(
+    payload.meetings.filter(({ startsAt }) => startsAt === "2026-09-08T22:00:00.000Z").map(({ id, title }) => ({ id, title })),
+    [{ id: edited.id, title: "RESCHEDULED Select Brd -9/15" }],
+    "one 8 September record, the edited one",
+  );
   assert.equal(payload.meetings.some((row) => row.carried), false);
 });
 
@@ -541,7 +576,7 @@ test("ICAL-OCC · the first read under occurrence identity replaces the series r
     ],
   );
   const payload = first!.outcome.promoted!.payload as { meetings: Meeting[] };
-  assert.deepEqual(payload.meetings.map(({ id }) => id), fresh.map(({ id }) => id), "five sittings, none of them twice");
+  assert.deepEqual(payload.meetings.map(({ id }) => id), fresh.map(({ id }) => id), "each sitting once, none of them twice");
   assert.equal(payload.meetings.some((row) => row.carried), false, "no ghost of the old record");
 
   // The second read, in its own order, changes nothing at all.
@@ -561,7 +596,7 @@ test("ICAL-OCC · the first read under occurrence identity replaces the series r
 test("ICAL-OCC · a series record whose fact no current occurrence holds is carried, never removed", () => {
   const cc = partition("bradford-conservation-commission");
   const fresh = normalize([cc.wiring], READ_1).meetings;
-  const stale: Meeting = { ...fresh[0]!, id: CC_SERIES, startsAt: "2026-08-18T23:00:00.000Z" };
+  const stale: Meeting = { ...fresh[0]!, id: CC_SERIES, startsAt: "2026-08-04T23:00:00.000Z" };
   const reconciled = reconcileSuccessfulMeetingPartition({
     sourceName: "ical",
     generatedAt: NOW,
@@ -615,7 +650,7 @@ test("ICAL-OCC · the promotion door re-derives a supersession claim and refuses
     ["a start the old record never had", claim({ priorStartsAt: "2026-10-20T23:00:00.000Z" })],
   ] as const) {
     const store = new MemoryRoutineDataStore();
-    await seedLegacySeriesRecord(store, fresh[1]!, "2026-09-23T15:13:36.680Z");
+    await seedLegacySeriesRecord(store, fifteenth(fresh), "2026-09-23T15:13:36.680Z");
     const before = (await store.readPromotion("MEETING", cc.scope))?.versionId;
     const refused = await promoteMeetingPartition(store, cc, snapshot, [], evidence);
     assert.equal(refused.outcome.candidate.state, "HORIZON_UNRESOLVED", label);
@@ -625,7 +660,365 @@ test("ICAL-OCC · the promotion door re-derives a supersession claim and refuses
 
   // The honest claim, for contrast, promotes.
   const store = new MemoryRoutineDataStore();
-  await seedLegacySeriesRecord(store, fresh[1]!, "2026-09-23T15:13:36.680Z");
+  await seedLegacySeriesRecord(store, fifteenth(fresh), "2026-09-23T15:13:36.680Z");
   const accepted = await promoteMeetingPartition(store, cc, snapshot, [], claim({}));
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
+});
+
+/* ======================================================================== *
+ *  RRULE EXPANSION (2026-09-23), proved against the towns' published view
+ * ======================================================================== */
+
+/*
+ * Full recorded feeds and the towns' own published view of them:
+ *
+ * - `bradford-2026-09-23-full.ics` and `warner-2026-09-23-full.ics`: every
+ *   event of each Google Calendar feed as read at 2026-09-23T17:30:01Z through
+ *   the product's own retrieval path (sha256 241ccd00… and 86bf769e…), with
+ *   DESCRIPTION, ATTENDEE and ORGANIZER removed.
+ * - `bradford-view-2026-10.html` and `warner-view-2026-10.html`: the agenda
+ *   Google renders for October 2026 of the same calendars
+ *   (`calendar.google.com/calendar/htmlembed?src=…&ctz=America/New_York
+ *   &mode=AGENDA`), read at 17:34:48Z and 17:34:50Z. Each town's own calendar
+ *   page (bradfordnh.gov/pages/calendar, warnernh.gov/calendar/) embeds exactly
+ *   that calendar, so this is the town's published view. Every listed sitting
+ *   carries Google's own instance id, `<series>_<UTC slot>`: the same slot this
+ *   adapter keys on.
+ * - `newbury-2026-09-23-selectboard.ics`: the Town of Newbury's Drupal export
+ *   read at 17:29:56Z (sha256 664250b2…), its Selectboard events only,
+ *   DESCRIPTION removed.
+ */
+const BRADFORD_FULL = readFileSync(join(FIXTURES, "bradford-2026-09-23-full.ics"), "utf8");
+const WARNER_FULL = readFileSync(join(FIXTURES, "warner-2026-09-23-full.ics"), "utf8");
+const NEWBURY_SELECTBOARD = readFileSync(join(FIXTURES, "newbury-2026-09-23-selectboard.ics"), "utf8");
+const FULL_READ_AT = "2026-09-23T17:30:01.000Z";
+
+function rowsOn(feedNeedle: string): BodySourceWiring[] {
+  return MEETING_PARTITION_CONTRACTS
+    .filter((row) => row.meetingSource === "ical" && (row.wiring.config.feedUrl ?? "").includes(feedNeedle))
+    .map((row) => row.wiring);
+}
+
+/** "Tue Oct 20, 2026" and "7pm" / "6:30pm", exactly as the published view writes them. */
+function asPublished(iso: string): { date: string; time: string } {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+      .formatToParts(new Date(iso))
+      .map((part) => [part.type, part.value]),
+  );
+  const minute = parts.minute === "00" ? "" : `:${parts.minute}`;
+  return {
+    date: `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year}`,
+    time: `${parts.hour}${minute}${String(parts.dayPeriod).toLowerCase()}`,
+  };
+}
+
+/** Each sitting of a series the published view lists: `<stem>_<slot>|date|time|title`. */
+function publishedSeriesSittings(html: string): string[] {
+  const listed: string[] = [];
+  for (const section of html.split('<div class="date-section').slice(1)) {
+    const date = /<div class="date">([^<]*)<\/div>/.exec(section)?.[1] ?? "";
+    for (const row of section.split('<tr class="event">').slice(1)) {
+      const time = /<td class="event-time">([^<]*)<\/td>/.exec(row)?.[1] ?? "";
+      const title = (/<span class="event-summary">([^<]*)<\/span>/.exec(row)?.[1] ?? "").replace(/&amp;/g, "&").trim();
+      const eid = /eid=([A-Za-z0-9_-]+)/.exec(row)?.[1];
+      if (!eid) continue;
+      const instance = Buffer.from(eid.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8").split(" ")[0];
+      if (!/_\d{8}T\d{6}Z$/.test(instance)) continue;
+      listed.push(`${instance}|${date}|${time}|${title}`);
+    }
+  }
+  return listed.sort();
+}
+
+/** Google's instance stem for one of our series ids: the UID without `@google.com` or a split's `_R…`. */
+function stemOf(seriesId: string): string {
+  const uid = seriesId.split(":").slice(2).join(":");
+  return uid.replace(/@google\.com$/, "").replace(/_R\d{8}T\d{6}$/, "");
+}
+
+for (const [town, feed, needle, view, atLeast] of [
+  ["Bradford", BRADFORD_FULL, "bradfordnewhampshire", "bradford-view-2026-10.html", 7],
+  ["Warner", WARNER_FULL, "4550fa96", "warner-view-2026-10.html", 7],
+] as const) {
+  test(`ICAL-OCC · ${town}: every October sitting of a wired series matches the town's published view, both ways`, () => {
+    const result = normalize(rowsOn(needle), feed, FULL_READ_AT);
+    assert.equal(result.accounting.outcome, "CONSERVED");
+    const series = result.meetings
+      .map((meeting) => ({ meeting, parts: occurrenceParts(meeting.id) }))
+      .filter((row) => row.parts !== null);
+    const wiredStems = new Set(series.map(({ parts }) => stemOf(parts!.seriesId)));
+    const ours = series
+      .filter(({ meeting }) => /Oct \d+, 2026$/.test(asPublished(meeting.startsAt).date))
+      .map(({ meeting, parts }) => {
+        const shown = asPublished(meeting.startsAt);
+        return `${stemOf(parts!.seriesId)}_${parts!.stamp}|${shown.date}|${shown.time}|${meeting.title}`;
+      })
+      .sort();
+    const theirs = publishedSeriesSittings(readFileSync(join(FIXTURES, view), "utf8"))
+      .filter((row) => wiredStems.has(row.split("|")[0].replace(/_\d{8}T\d{6}Z$/, "")));
+    assert.ok(ours.length >= atLeast, `only ${ours.length} October sittings of wired series`);
+    assert.deepEqual(ours, theirs);
+  });
+}
+
+test("ICAL-OCC · a series keeps its wall clock across the daylight-saving change, and a zone without DST keeps its offset", () => {
+  const zba = normalize(wiringFor("bradford-zoning-board"), BRADFORD_FULL, FULL_READ_AT).meetings
+    .filter((meeting) => meeting.id.includes("0t8vhcepakgloa5f8dldojgfdh_R20240605T230000"))
+    .map(({ startsAt }) => startsAt);
+  // First Wednesday at 7pm: EDT until 1 November 2026, EST after it.
+  assert.ok(zba.includes("2026-10-07T23:00:00.000Z"));
+  assert.ok(zba.includes("2026-11-05T00:00:00.000Z"));
+  assert.ok(zba.includes("2026-12-03T00:00:00.000Z"));
+
+  // Hours beside the change itself resolve as RFC 5545 §3.3.5 says.
+  assert.equal(parseDtStart("TZID=America/New_York:20261101T030000", "UTC")?.iso, "2026-11-01T08:00:00.000Z");
+  assert.equal(parseDtStart("TZID=America/New_York:20261101T013000", "UTC")?.iso, "2026-11-01T05:30:00.000Z", "a repeated hour is its first occurrence");
+  assert.equal(parseDtStart("TZID=America/New_York:20260308T023000", "UTC")?.iso, "2026-03-08T07:30:00.000Z", "a skipped hour takes the offset before the gap");
+
+  const phoenix = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:phoenix-1@example.org",
+    "DTSTART;TZID=America/Phoenix:20261021T190000",
+    "RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=WE",
+    "SUMMARY:Select Board Meeting",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  assert.deepEqual(
+    normalize([SELECT_BOARD_WIRING], phoenix).meetings.map(({ startsAt }) => startsAt),
+    ["2026-10-22T02:00:00.000Z", "2026-10-29T02:00:00.000Z", "2026-11-05T02:00:00.000Z"],
+    "7pm in Phoenix is 02:00Z on both sides of 1 November",
+  );
+});
+
+const EC_SERIES = "ical:bradford-energy-committee:03tpdgk3pk8t5fdia85sh9uqhj_R20240618T210000@google.com";
+
+test("ICAL-OCC · a sitting the publisher struck out (EXDATE) is not published, and is named", () => {
+  const result = normalize(wiringFor("bradford-energy-committee"), BRADFORD_FULL, FULL_READ_AT);
+  const starts = result.meetings.map(({ startsAt }) => startsAt);
+  assert.ok(starts.includes("2026-07-21T21:00:00.000Z"));
+  assert.ok(!starts.includes("2026-08-18T21:00:00.000Z"), "the struck third Tuesday of August");
+  assert.ok(starts.includes("2026-09-15T21:00:00.000Z"));
+  assert.deepEqual(result.recurrence?.exclusions, [{
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#energy-committee",
+    seriesId: EC_SERIES,
+    slot: "20260818T210000Z",
+    meetingId: `${EC_SERIES}/20260818T210000Z`,
+    statedBy: ";TZID=America/New_York:20260818T170000",
+  }]);
+});
+
+test("ICAL-OCC · a published sitting the publisher later strikes out is removed under EXCLUDED_BY_PUBLISHER, and only then", async () => {
+  const ec = partition("bradford-energy-committee");
+  const result = normalize([ec.wiring], BRADFORD_FULL, FULL_READ_AT);
+  const fresh = result.meetings;
+  const struck: Meeting = {
+    ...fresh[0]!,
+    id: `${EC_SERIES}/20260818T210000Z`,
+    startsAt: "2026-08-18T21:00:00.000Z",
+    provenance: { ...fresh[0]!.provenance, collectedAt: "2026-09-20T12:00:00.000Z" },
+  };
+  const seed = async (store: MemoryRoutineDataStore) => {
+    const [seeded] = await promoteMeetingPartitions({
+      store,
+      partitions: [ec],
+      meetings: [struck],
+      agendaDocuments: [],
+      reports: [report(READ_2, 1)],
+      generatedAt: "2026-09-20T12:00:00.000Z",
+    });
+    assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
+  };
+
+  // With the publisher's statement in hand: removed, on that authority.
+  const store = new MemoryRoutineDataStore();
+  await seed(store);
+  const [next] = await promoteMeetingPartitions({
+    store,
+    partitions: [ec],
+    meetings: fresh,
+    agendaDocuments: [],
+    reports: [{ ...report(BRADFORD_FULL, fresh.length), recurrence: result.recurrence }],
+    generatedAt: FULL_READ_AT,
+  });
+  assert.equal(next?.outcome.candidate.state, "PROMOTED", next?.outcome.candidate.failureDetail ?? "");
+  const changeSet = next!.outcome.candidate.candidate.changeSet!;
+  assert.deepEqual(changeSet.removed.map(({ key }) => key), [`meeting:${struck.id}`]);
+  assert.deepEqual(changeSet.changed, []);
+  assert.deepEqual(
+    (next!.candidate.removalEvidence ?? []).map((row) => ({ key: row.key, code: row.code })),
+    [{ key: `meeting:${struck.id}`, code: "EXCLUDED_BY_PUBLISHER" }],
+  );
+  assert.ok(changeSet.held.some((fact) => fact.code === "MEETING_EXCLUDED_BY_PUBLISHER" && fact.key === `meeting:${struck.id}`));
+
+  // Without it: an unexplained disappearance, carried and never removed.
+  const blind = new MemoryRoutineDataStore();
+  await seed(blind);
+  const [carried] = await promoteMeetingPartitions({
+    store: blind,
+    partitions: [ec],
+    meetings: fresh,
+    agendaDocuments: [],
+    reports: [report(BRADFORD_FULL, fresh.length)],
+    generatedAt: FULL_READ_AT,
+  });
+  assert.deepEqual(carried!.outcome.candidate.candidate.changeSet!.removed, []);
+  const payload = carried!.outcome.promoted!.payload as { meetings: Meeting[] };
+  assert.equal(payload.meetings.find(({ id }) => id === struck.id)?.carried?.reason, "UNEXPLAINED_DISAPPEARANCE");
+
+  // A claim the read did not make is refused at the door.
+  const forged = new MemoryRoutineDataStore();
+  await seed(forged);
+  const before = (await forged.readPromotion("MEETING", ec.scope))?.versionId;
+  const refused = await promoteMeetingPartition(forged, ec, {
+    formatVersion: 1,
+    generatedAt: FULL_READ_AT,
+    counts: { fresh: fresh.length, carried: 0, total: fresh.length },
+    sources: [{ ...report(BRADFORD_FULL, fresh.length), error: null }],
+    meetings: fresh,
+    agendaDocuments: [],
+  }, [], [{
+    key: `meeting:${struck.id}`,
+    code: "EXCLUDED_BY_PUBLISHER",
+    seriesId: EC_SERIES,
+    slot: "20260818T210000Z",
+    priorStartsAt: struck.startsAt,
+  }]);
+  assert.equal(refused.outcome.candidate.state, "HORIZON_UNRESOLVED");
+  assert.equal(refused.outcome.candidate.failureCode, "REMOVAL_EVIDENCE_MISMATCH");
+  assert.equal((await forged.readPromotion("MEETING", ec.scope))?.versionId, before);
+
+  // The same for a series' UID-only record at the struck slot: removed only
+  // on this read's own held statement, refused without it.
+  const legacyStore = async () => {
+    const store = new MemoryRoutineDataStore();
+    const [seeded] = await promoteMeetingPartitions({
+      store,
+      partitions: [ec],
+      meetings: [{ ...struck, id: EC_SERIES }],
+      agendaDocuments: [],
+      reports: [report(READ_2, 1)],
+      generatedAt: "2026-09-20T12:00:00.000Z",
+    });
+    assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
+    return store;
+  };
+  const snapshot = {
+    formatVersion: 1 as const,
+    generatedAt: FULL_READ_AT,
+    counts: { fresh: fresh.length, carried: 0, total: fresh.length },
+    sources: [{ ...report(BRADFORD_FULL, fresh.length), error: null }],
+    meetings: fresh,
+    agendaDocuments: [],
+  };
+  const legacyClaim: RoutineRemovalEvidence[] = [{
+    key: `meeting:${EC_SERIES}`,
+    code: "EXCLUDED_BY_PUBLISHER",
+    seriesId: EC_SERIES,
+    slot: "20260818T210000Z",
+    priorStartsAt: struck.startsAt,
+  }];
+  const unstated = await promoteMeetingPartition(await legacyStore(), ec, snapshot, [], legacyClaim);
+  assert.equal(unstated.outcome.candidate.failureCode, "REMOVAL_EVIDENCE_MISMATCH", "no held statement, no removal");
+  const statedHeld = recurrenceHeldFacts(result.recurrence, ec.bodyId).held;
+  const stated = await promoteMeetingPartition(await legacyStore(), ec, snapshot, [], legacyClaim, [], statedHeld);
+  assert.equal(stated.outcome.candidate.state, "PROMOTED", stated.outcome.candidate.failureDetail ?? "");
+});
+
+test("ICAL-OCC · a rule part not supported is a named failure: the series' own sittings publish and nothing is guessed", async () => {
+  const sb = partition("warner-select-board");
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:monthday-1@example.org",
+    "DTSTART;TZID=America/New_York:20261015T190000",
+    "RRULE:FREQ=MONTHLY;BYMONTHDAY=15",
+    "SUMMARY:Select Board Meeting",
+    "END:VEVENT",
+    "BEGIN:VEVENT",
+    "UID:monthday-1@example.org",
+    "RECURRENCE-ID;TZID=America/New_York:20261115T190000",
+    "DTSTART;TZID=America/New_York:20261116T190000",
+    "SUMMARY:Select Board Meeting",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const result = normalize([sb.wiring], ics);
+  const series = "ical:warner-select-board:monthday-1@example.org";
+  assert.deepEqual(result.meetings.map(({ id, startsAt }) => ({ id, startsAt })), [
+    { id: `${series}/20261015T230000Z`, startsAt: "2026-10-15T23:00:00.000Z" },
+    { id: `${series}/20261116T000000Z`, startsAt: "2026-11-17T00:00:00.000Z" },
+  ], "the series' own first sitting and its edited sitting; no 15 December is inferred");
+  assert.equal(result.recurrence?.expandedSeries, 0);
+  assert.equal(result.recurrence?.notExpanded.length, 1);
+  assert.equal(result.recurrence?.notExpanded[0]?.reason, "UNSUPPORTED_RULE");
+  assert.equal(result.recurrence?.notExpanded[0]?.seriesId, series);
+  assert.match(result.recurrence?.notExpanded[0]?.detail ?? "", /^BYMONTHDAY is not supported/);
+
+  // It reaches the partition's candidate as a held fact, and the partition still promotes.
+  const store = new MemoryRoutineDataStore();
+  const [promoted] = await promoteMeetingPartitions({
+    store,
+    partitions: [sb],
+    meetings: result.meetings,
+    agendaDocuments: [],
+    reports: [{ ...report(ics, result.meetings.length, WARNER_FEED), recurrence: result.recurrence }],
+    generatedAt: NOW,
+  });
+  assert.equal(promoted?.outcome.candidate.state, "PROMOTED", promoted?.outcome.candidate.failureDetail ?? "");
+  const held = promoted!.outcome.candidate.candidate.changeSet!.held;
+  assert.ok(held.some((fact) =>
+    fact.code === "ICAL_SERIES_RULE_UNSUPPORTED" && fact.key === `meeting-series:${series}` && /BYMONTHDAY/.test(fact.detail)));
+});
+
+test("ICAL-OCC · the rule reader names every part it refuses", () => {
+  for (const [rule, part] of [
+    ["FREQ=DAILY;COUNT=3", "FREQ=DAILY"],
+    ["FREQ=MONTHLY;BYDAY=2TU;BYSETPOS=1", "BYSETPOS"],
+    ["FREQ=MONTHLY;COUNT=12;BYDAY=+2TU;BYMONTH=1,2", "BYMONTH"],
+    ["FREQ=WEEKLY;BYDAY=2TU", "BYDAY=2TU under FREQ=WEEKLY"],
+    ["FREQ=WEEKLY;BYDAY=TU;COUNT=3;UNTIL=20261231T000000Z", "UNTIL together with COUNT"],
+    ["FREQ=WEEKLY;BYDAY=TU;UNTIL=20261231T000000", "UNTIL=20261231T000000 on a date-time series"],
+    ["FREQ=MONTHLY", "FREQ=MONTHLY without BYDAY"],
+  ] as const) {
+    const reading = readRule(rule, false);
+    assert.equal(reading.ok, false, rule);
+    if (!reading.ok) assert.equal(reading.unsupported, part, rule);
+  }
+  for (const rule of [
+    "FREQ=WEEKLY;WKST=SU;INTERVAL=4;BYDAY=TU",
+    "FREQ=MONTHLY;UNTIL=20240805T035959Z;BYDAY=3WE",
+    "FREQ=WEEKLY;COUNT=3;BYDAY=TH",
+    "FREQ=WEEKLY;UNTIL=20240805T035959Z;BYDAY=FR,MO,TH,TU,WE",
+  ]) {
+    assert.equal(readRule(rule, false).ok, true, rule);
+  }
+  assert.equal(readRule("FREQ=MONTHLY;UNTIL=20260414;BYDAY=3WE", true).ok, true, "a date UNTIL on an all-day series");
+});
+
+test("ICAL-OCC · a feed that restates the series' rule on every sitting is read event by event", () => {
+  const governing = partition("newbury-ical-governing");
+  const result = normalize([governing.wiring], NEWBURY_SELECTBOARD, FULL_READ_AT);
+  const uids = new Set(parseIcs(NEWBURY_SELECTBOARD).map((event) => event.uid));
+  assert.equal(result.meetings.length, 21);
+  for (const meeting of result.meetings) {
+    assert.equal(occurrenceParts(meeting.id), null, `${meeting.id} kept its single-event id`);
+    assert.ok(uids.has(meeting.id.slice("ical:newbury-ical-governing:".length)));
+  }
+  assert.equal(result.recurrence?.expandedSeries, 0);
+  assert.deepEqual(result.recurrence?.notExpanded.map(({ reason, seriesId }) => ({ reason, seriesId })), [
+    { reason: "RULE_RESTATED_ON_PUBLISHED_SITTINGS", seriesId: null },
+  ]);
+  assert.equal(result.accounting.outcome, "CONSERVED");
 });

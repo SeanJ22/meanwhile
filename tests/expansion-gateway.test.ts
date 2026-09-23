@@ -64,7 +64,7 @@ test("selecting a geography records it with priority, budget and provenance, and
   assert.match(outcome.receipt.says, /priority 1 with a \$5\.00 rolling 24-hour budget/);
   assert.match(outcome.receipt.says, /starts nothing/, "the receipt says selecting a scope starts no work");
   assert.match(outcome.receipt.says, /Fleet ceiling of \$105\.00 still binds first/);
-  assert.equal(outcome.receipt.readBackAt, "/admin/expansion");
+  assert.equal(outcome.receipt.readBackAt, "/admin/work");
 
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const scopes = expansionScopesOf(row?.value ?? null);

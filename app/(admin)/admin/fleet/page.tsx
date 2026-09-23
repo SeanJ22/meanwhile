@@ -18,15 +18,16 @@
  */
 
 import type { ReadOutcome } from "@/lib/control-plane/admin-data";
-import { openControlPlane, readDecisions, readFleetSafety, readHeartbeat, readSnapshot } from "@/lib/control-plane/admin-data";
+import { openControlPlane, readDecisions, readFleetSafety, readSnapshot } from "@/lib/control-plane/admin-data";
 import type { OwnerSnapshot } from "@/lib/control-plane/owner-surface.ts";
 import { HEARTBEAT_LATE_MINUTES } from "@/lib/control-plane/owner-surface.ts";
 import { projectFleetDecisionQueue, projectFleetPanels } from "@/lib/control-plane/fleet-operations";
 import { researchProgressHealth } from "@/lib/control-plane/research-progress-health.ts";
-import { pulseRevision } from "@/lib/control-plane/live-pulse";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { readFleetSeedState } from "@/lib/admin/fleet-seed";
 import { fleetBandCounts, fleetRedFindings } from "@/lib/admin/fleet-triage";
+
+import { redirect } from "next/navigation";
 
 import { ConsoleNav } from "@/app/(admin)/console-nav";
 import { FleetReadClock } from "@/components/admin/fleet-read-clock";
@@ -34,7 +35,6 @@ import { FleetTabStrip, parseFleetTab } from "@/components/admin/fleet-tab-strip
 import { FleetTriageBands } from "@/components/admin/fleet-triage-bands";
 import { FleetTriageTab } from "@/components/admin/fleet-triage-tab";
 import { FleetWorkTab } from "@/components/admin/fleet-operations-map";
-import { FleetDecisionsTab } from "@/components/admin/fleet-decisions-tab";
 import { FleetPanelsTab } from "@/components/admin/fleet-panels-tab";
 import { FleetBlindSpotsTab } from "@/components/admin/fleet-blind-spots-tab";
 
@@ -61,6 +61,8 @@ export default async function FleetOperationsPage({
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = (await searchParams) ?? {};
+  // Decisions are answered on Fleet · Now (Admin redesign); an old link to this tab goes there.
+  if ((Array.isArray(params.tab) ? params.tab[0] : params.tab) === "decisions") redirect("/admin");
   const tab = parseFleetTab(params.tab);
   const observedAt = new Date().toISOString();
 
@@ -72,9 +74,9 @@ export default async function FleetOperationsPage({
   const unreachable = (): { readonly kind: "STORE_UNREACHABLE"; readonly detail: string } =>
     ({ kind: "STORE_UNREACHABLE", detail: opened.ok ? "the control plane opened but a read was not attempted" : opened.detail });
 
-  const [progressOut, snapshotOut, decisionsOut, heartbeatOut] = repos
-    ? await Promise.all([readFleetSafety(repos), readSnapshot(repos), readDecisions(repos), readHeartbeat(repos)])
-    : [null, null, null, null];
+  const [progressOut, snapshotOut, decisionsOut] = repos
+    ? await Promise.all([readFleetSafety(repos), readSnapshot(repos), readDecisions(repos)])
+    : [null, null, null];
 
   const progressState = progressOut?.kind === "HELD" ? progressOut.value : null;
   const progress = researchProgressHealth(progressState, observedAt);
@@ -94,16 +96,6 @@ export default async function FleetOperationsPage({
     measuredAnswered: [measured.receipts, measured.spend, measured.coverage].filter(Boolean).length,
   });
 
-  const heartbeat = heartbeatOut?.kind === "HELD" ? heartbeatOut.value : null;
-  const snapshot = snapshotOut?.kind === "HELD" ? snapshotOut.value : null;
-  const fleetSafety = progressState?.fleetSafety ?? null;
-  const stateVersion = pulseRevision({
-    beatAt: heartbeat?.beatAt ?? null,
-    snapshotRevision: snapshot?.publishedAt ? Date.parse(snapshot.publishedAt) : null,
-    decisionCount: decisionsOut?.kind === "HELD" ? decisionsOut.value.length : null,
-    researchRevision: fleetSafety ? Date.parse(fleetSafety.cycle.startedAt) : null,
-    receiptCount: null,
-  });
 
   // The 2 665-row operations scan is read ONLY for the work tab.
   const workState = tab === "work"
@@ -143,7 +135,6 @@ export default async function FleetOperationsPage({
 
       {tab === "triage" && <FleetTriageTab progress={progress} findings={redFindings} measured={measured} />}
       {tab === "work" && <FleetWorkTab initialState={workState ?? undefined} />}
-      {tab === "decisions" && <FleetDecisionsTab cards={decisionQueue.cards} stateVersion={stateVersion} />}
       {tab === "panels" && <FleetPanelsTab reading={panels} />}
       {tab === "gaps" && <FleetBlindSpotsTab />}
     </main>

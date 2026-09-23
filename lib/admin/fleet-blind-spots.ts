@@ -53,12 +53,12 @@ export const FLEET_BLIND_SPOTS: readonly BlindSpot[] = [
       "Fleet operations: the map prints observedAt verbatim and there is no auto re-read on this surface (correctly — it is not the heartbeat). Show the age in human terms ('read 34 minutes ago') next to the Refresh control, and state that nothing re-reads it, so an operator cannot mistake an hour-old read for live.",
   },
   {
-    n: 5, severity: "red", title: "You cannot answer a decision from this page",
+    n: 5, severity: "amber", title: "Decisions are answered on Fleet · Now, not here",
     summary:
-      "The page says N things need you and offers no control that answers any of them, while a complete answer-and-undo decision queue already exists two routes away and is not mounted here.",
-    paths: ["components/admin/fleet-operations-map.tsx", "app/(admin)/admin/decisions.tsx", "app/api/admin/decision/route.ts"],
+      "This page counts what needs you; the decisions themselves are answered on Fleet · Now, which carries each card's options, what each one does, your own words, and the receipt. The count here does not link there yet.",
+    paths: ["components/admin/fleet-operations-map.tsx", "app/(admin)/_mw/next-steps.tsx", "app/api/admin/action/route.ts"],
     brief:
-      "Fleet operations: the 'Needs you' list renders decision titles with no way to answer them, while app/(admin)/admin/decisions.tsx already implements the full queue — options with consequences, optimistic decide, undo by superseding record, and the three-leg receipt — posting decision.record to the admin action gateway. Mount that existing DecisionQueue on the fleet page instead of rendering a read-only shadow. Nothing new needs building.",
+      "Fleet operations: link the 'Needs you' count to Fleet · Now (/admin), where app/(admin)/_mw/next-steps.tsx answers each decision through decision.record at the admin action gateway. Do not mount a second decision queue here — one control, one place (Admin redesign, 2026-09-23).",
   },
   {
     n: 6, severity: "amber", title: "The projection drops nine of the card's eleven fields",

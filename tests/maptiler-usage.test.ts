@@ -693,7 +693,8 @@ test("an unasked question declares no numbers at all", async () => {
  * would let the page audit one set of numbers and show another.
  */
 test("the admin page audits the map panel from the same projection it renders", async () => {
-  const src = await readFile(join(process.cwd(), "app", "(admin)", "admin", "page.tsx"), "utf8");
+  // The map provider panel lives on Fleet · Money since the Admin redesign (2026-09-23).
+  const src = await readFile(join(process.cwd(), "app", "(admin)", "_mw", "screens", "money.tsx"), "utf8");
 
   assert.match(src, /maptilerSectionNumbers[(]/, "the page must feed the panel's numbers to the audit");
   assert.match(src, /numbers[.]push[(][.][.][.]maptilerSectionNumbers[(]/, "they must land in the audited array");
@@ -723,7 +724,7 @@ test("the admin page audits the map panel from the same projection it renders", 
   assert.ok(pushAt < auditAt, "the numbers must be pushed before the audit reads the array");
 
   const section = await readFile(
-    join(process.cwd(), "app", "(admin)", "admin", "sections", "maptiler.tsx"),
+    join(process.cwd(), "app", "(admin)", "_mw", "maptiler-panel.tsx"),
     "utf8",
   );
   for (const visible of ["Automatic collection history", "history.windows.map", "history.attempts.map", "Receipt <code>"]) {

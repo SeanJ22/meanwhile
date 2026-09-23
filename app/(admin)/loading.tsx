@@ -1,6 +1,6 @@
 /**
  * **THE CONSOLE ANSWERS THE CLICK BEFORE IT ANSWERS THE QUESTION.** (ADM-38,
- * §9A.12.)
+ * §9A.12; drawn in the redesign's shell, 2026-09-23.)
  *
  * The owner, third report on the same thing:
  *
@@ -20,15 +20,29 @@
  * rendering an empty shell while all meaningful content still waits
  * unnecessarily."* So this says what it is waiting for, in his words, and every
  * page behind it still does the work of cutting its own load. It is the
- * acknowledgment, never the answer.
+ * acknowledgment, never the answer. It is drawn dark, in the redesign's own
+ * tokens, so the wait never flashes the old console's look.
  */
+import { Logo } from "@/components/brand/logo";
+
+import s from "./_mw/mw.module.css";
+
 export default function ConsoleLoading() {
   return (
-    <main className="admin console-page console-loading" aria-busy="true">
-      <p className="plain">Reading the records…</p>
-      <p className="note">
-        The console is asking the control plane for the current state of things. Nothing is cached, so what arrives is what is true right now.
-      </p>
+    <main className={s.root} aria-busy="true">
+      <header className={s.header}>
+        <span className={s.brand}>
+          <Logo variant="wordmark" size={20} decorative />
+        </span>
+      </header>
+      <div className={s.container}>
+        <p className={s.lede} role="status">
+          Reading the records…
+        </p>
+        <p className={s.note}>
+          The console is asking the control plane for the current state of things. Nothing is cached, so what arrives is what is true right now.
+        </p>
+      </div>
     </main>
   );
 }

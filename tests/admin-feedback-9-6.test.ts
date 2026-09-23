@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { commandCentre, type CommandCentreInput } from "../lib/control-plane/command-centre.ts";
+import { FLEET_TABS, READINESS_TABS, withScope } from "../app/(admin)/_mw/scope.ts";
 import { readinessRowOutcome } from "../lib/control-plane/readiness/read.ts";
 import { READINESS_DERIVATION_CONTRACT } from "../lib/control-plane/readiness/model.ts";
 import { findingCodesWithMeaning, findingMeaning, roleLead } from "../lib/control-plane/workers/plain-roles.ts";
@@ -30,88 +30,80 @@ const ROOT = join(HERE, "..");
  * with no indicated part is a no-op in every browser rather than an error.
  *
  * So the guard is not "the blocked card points at `#blocked`" — that would pass
- * again the moment someone renamed the section. It is: **every fragment this
- * projection can emit is an id something actually renders.**
+ * again the moment someone renamed the section. It is: **every fragment the
+ * console can send the owner to is an id something actually renders.**
+ *
+ * Admin redesign, 2026-09-23: the command centre strip and its cards were
+ * removed (its projection, `lib/control-plane/command-centre.ts`, is no longer
+ * drawn by any page), so the sweep now reads the fragment links the console
+ * itself builds — on Fleet · Work, in the composer, from a readiness code to
+ * the body it names on Fleet · Now, and on the pages that kept their content.
  */
 const ADMIN_SOURCE_DIRS = ["app"] as const;
 
+function adminFiles(): string[] {
+  return filesThatWouldBeCommitted({ cwd: ROOT, paths: [...ADMIN_SOURCE_DIRS] }).filter((f) => /\.tsx?$/.test(f));
+}
+
 function adminSource(): string {
-  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: [...ADMIN_SOURCE_DIRS] }).filter((f) => /\.tsx?$/.test(f));
-  return files.map((f) => readFileSync(join(ROOT, f), "utf8")).join("\n");
+  return adminFiles().map((f) => readFileSync(join(ROOT, f), "utf8")).join("\n");
 }
 
-function centreInput(over: Partial<CommandCentreInput> = {}): CommandCentreInput {
-  return {
-    runner: { state: "Active", level: "GREEN", needsYou: false, action: null },
-    code: { rawMain: "a".repeat(40), executable: "b".repeat(40), verdict: "CURRENT" },
-    production: { sha: "c".repeat(40), at: "2026-09-07T08:32:53.000Z" },
-    staging: { sha: "d".repeat(40), reviewState: "READY_FOR_REVIEW", decision: null },
-    steward: { depth: 0, current: null, paused: false },
-    promotionOn: false,
-    openRecordClasses: 0,
-    decisionsWaiting: 77,
-    stuckIncidents: 27,
-    latestReceipt: { says: "A readback was recorded.", at: "2026-09-07T08:00:00.000Z", id: "rcpt-1" },
-    receiptGap: null,
-    ...over,
-  };
+/** Every fragment an admin link names: the literal id, or the fixed prefix of a built one. */
+function fragmentLinks(): { readonly from: string; readonly line: string; readonly id: string; readonly built: boolean }[] {
+  const out: { from: string; line: string; id: string; built: boolean }[] = [];
+  for (const f of adminFiles().filter((p) => p.startsWith("app/(admin)/"))) {
+    for (const line of readFileSync(join(ROOT, f), "utf8").split("\n")) {
+      if (!/\bhref=/.test(line)) continue;
+      for (const m of line.matchAll(/#([a-z][\w-]*?)(\$\{|[`"'])/g)) out.push({ from: f, line: line.trim(), id: m[1], built: m[2] === "${" });
+    }
+  }
+  return out;
 }
 
-test("every fragment the command centre can send the owner to is an id something renders", () => {
+test("every fragment the console sends the owner to is an id something renders", () => {
   const source = adminSource();
-  // Both branches of every card: the answered one and the could-not-read one.
-  const answers = [...commandCentre(centreInput()), ...commandCentre(centreInput({
-    production: null,
-    staging: null,
-    steward: null,
-    latestReceipt: null,
-    receiptGap: "not read",
-    decisionsWaiting: 0,
-    stuckIncidents: 0,
-  }))];
-  const fragments = [...new Set(answers.map((a) => a.where).filter((w): w is string => typeof w === "string" && w.startsWith("#")).map((w) => w.slice(1)))];
-
-  assert.ok(fragments.length > 0, "the sweep found no fragment targets at all, so it is not looking at the projection");
-  const dead = fragments.filter((id) => !source.includes(`id="${id}"`));
+  const links = fragmentLinks();
+  assert.ok(links.some((l) => l.id === "assignments") && links.some((l) => l.built), "the sweep found none of the console's fragment links, so it is not looking at them");
+  const dead = links.filter((l) => (l.built ? !source.includes(`id={\`${l.id}\${`) : !source.includes(`id="${l.id}"`)));
   assert.deepEqual(
-    dead,
+    dead.map((l) => `${l.from}: #${l.id}${l.built ? "…" : ""}`),
     [],
-    `these cards point at fragments no element renders, so their Open control silently does nothing: ${dead.join(", ")}. ` +
+    "these links point at fragments no element renders, so they silently do nothing. " +
       "This is the exact defect the owner found on the merged Admin C — #decisions and #receipts were both dead.",
   );
 });
 
-test("the route targets the command centre can send the owner to are real pages", () => {
-  const answers = commandCentre(centreInput());
-  const routes = [...new Set(answers.map((a) => a.where).filter((w): w is string => typeof w === "string" && w.startsWith("/")))];
-  assert.ok(routes.length > 0, "the sweep found no route targets, so it is not looking at the projection");
+test("a fragment link built through the scope helper keeps its fragment where the browser reads it", () => {
+  /*
+   * A URL's fragment runs to its end: a query written after `#` is read as part
+   * of the fragment, which then names no element — and the scope it carried is
+   * lost with it. The redesigned pages build their links with `withScope`.
+   */
+  const built = [...adminSource().matchAll(/withScope\(`([^`]*#[^`]*)`/g)].map((m) => m[1]);
+  assert.ok(built.length > 0, "the sweep found no fragment link built with withScope, so it is not looking at them");
+  for (const raw of built) {
+    const path = raw.replace(/\$\{[^}]*\}/g, "x");
+    const url = new URL(withScope(path, { kind: "state", state: "az" }), "https://admin.invalid");
+    assert.equal(url.hash, `#${path.split("#")[1]}`, `${raw}: the scope is written after the fragment, so the browser reads "${url.hash}" as the id to scroll to — no element has it — and the scope is dropped`);
+    assert.equal(url.searchParams.get("scope"), "az", `${raw}: the scope does not survive the link`);
+  }
+});
+
+test("the route targets the console's own navigation sends the owner to are real pages", () => {
+  // Admin redesign, 2026-09-23: the command centre's cards were removed; the console's routes are now its area tabs, its area toggle and its Other pages menu.
+  const header = readFileSync(join(ROOT, "app", "(admin)", "_mw", "header-controls.tsx"), "utf8");
+  const others = [...header.matchAll(/\{ href: "(\/[^"]+)", label:/g)].map((m) => m[1]);
+  assert.ok(others.length >= 5, `the sweep must read the Other pages menu; saw ${others.length}`);
+  const routes = [...new Set([...FLEET_TABS.map((t) => t.path), ...READINESS_TABS.map((t) => t.path), ...others])];
   const tracked = new Set(filesThatWouldBeCommitted({ cwd: ROOT, paths: ["app"] }));
-  const missing = routes.filter((route) => {
-    const leaf = route.replace(/^\/admin\/?/, "");
-    return ![...tracked].some((f) => f.includes(`/admin/${leaf}/page.tsx`));
-  });
-  assert.deepEqual(missing, [], `these cards point at routes with no page: ${missing.join(", ")}`);
+  const missing = routes.filter((route) => !tracked.has(`app/(admin)${route}/page.tsx`));
+  assert.deepEqual(missing, [], `these links point at routes with no page: ${missing.join(", ")}`);
+  assert.ok(tracked.has("app/(admin)/readiness/[state]/page.tsx"), "the Readiness toggle lands on a state's page when the scope names one");
 });
 
-test("the blocked card's destination is one region carrying BOTH halves of what it counts", () => {
-  const blocked = commandCentre(centreInput()).find((a) => a.question === "What is blocked?");
-  assert.ok(blocked, "the blocked card is gone");
-  assert.equal(blocked.where, "#blocked");
-  assert.match(blocked.says ?? "", /77 decisions and 27 stuck sources/);
-  const page = readFileSync(join(ROOT, "app", "(admin)", "admin", "page.tsx"), "utf8");
-  const region = page.slice(page.indexOf('<RevealTarget id="blocked"'), page.indexOf("</RevealTarget>"));
-  assert.ok(region.length > 0, "no #blocked region is rendered on the console at all");
-  assert.match(region, /<ObligationsSection/, "the stuck-source explanation is not inside the destination");
-  assert.match(region, /<DecisionQueue/, "the decision list is not inside the destination");
-});
-
-test("the banner's 'Take me there' and the card's 'Open' cannot disagree — they are the same value", () => {
-  // `actNext` picks the answer, and the banner renders `next.where`. A separate
-  // banner target would be a second thing to keep alive.
-  const strip = readFileSync(join(ROOT, "app", "(admin)", "admin", "sections", "command-centre.tsx"), "utf8");
-  assert.match(strip, /<a href=\{next\.where\}>Take me there<\/a>/);
-  assert.match(strip, /<a href=\{a\.where\}>Open<\/a>/);
-});
+// Admin redesign, 2026-09-23: the "What is blocked?" card and its #blocked region were removed with the command centre; Fleet · Now's three cards are counted from the lists drawn beneath them on the same page.
+// Admin redesign, 2026-09-23: the command centre's banner and its per-card Open links were removed, so there is no second target to keep in step.
 
 test("a fragment target clears the sticky header rather than landing under it", () => {
   const layout = readFileSync(join(ROOT, "app", "(admin)", "layout.tsx"), "utf8");
@@ -122,17 +114,7 @@ test("a fragment target clears the sticky header rather than landing under it", 
   );
 });
 
-test("the destination opens what is collapsed inside it, in both mechanisms", () => {
-  const reveal = readFileSync(join(ROOT, "app", "(admin)", "reveal.tsx"), "utf8");
-  assert.match(reveal, /querySelectorAll\("details"\)/, "plain disclosures inside the region are not opened");
-  assert.match(reveal, /scrollIntoView/);
-  assert.match(reveal, /\.focus\(/, "the target is never focused, so keyboard and screen-reader users do not move");
-  assert.match(reveal, /hashchange/, "a second click on the same target would do nothing");
-  // The decision queue owns its open state in React and cannot be reached into.
-  const decisions = readFileSync(join(ROOT, "app", "(admin)", "admin", "decisions.tsx"), "utf8");
-  assert.match(decisions, /addresses\("blocked"/, "the decision queue does not open when it is the destination");
-  assert.match(decisions, /setOpen\(true\)/);
-});
+// Admin redesign, 2026-09-23: the reveal-on-arrival wrapper and the collapsible decision queue it opened were removed; Fleet · Work opens an assignment in place from its URL (?open=), and the suggested next steps are never collapsed.
 
 /* -------------------------------------------------------------------------- */
 /* B — the research detail did not explain itself in English                   */
@@ -311,18 +293,20 @@ test("a superseded readiness snapshot says what happened in owner language, and 
 });
 
 test("the readiness page puts the machine facts one disclosure down, and keeps them", () => {
+  // Admin redesign, 2026-09-23: the state page was redrawn in the shell; its branch for a record worked out an older way is now a refusal box over the `readiness` outcome. The rule follows the branch.
   const page = readFileSync(join(ROOT, "app", "(admin)", "readiness", "[state]", "page.tsx"), "utf8");
-  const start = page.indexOf('outcome.kind === "REQUIRES_REPUBLISH"');
-  const block = page.slice(start, page.indexOf("const snapshot: ReadinessStateSnapshot"));
-  assert.match(block, /\{outcome\.says\}/, "the page does not lead with the owner sentence");
-  assert.match(block, /\{outcome\.next\}/);
+  const start = page.indexOf('readiness.kind === "REQUIRES_REPUBLISH" && (');
+  assert.ok(start > 0, "the state page has no branch for a record worked out an older way");
+  const block = page.slice(start, page.indexOf(")}", page.indexOf("</Refusal>", start)));
+  assert.match(block, /\{readiness\.says\}/, "the page does not lead with the owner sentence");
+  assert.match(block, /\{readiness\.next\}/);
   const disclosureAt = block.indexOf("<details");
-  assert.ok(disclosureAt > 0, "there is no Technical details disclosure");
-  assert.ok(block.indexOf("{outcome.says}") < disclosureAt, "the machine facts still come first");
+  assert.ok(disclosureAt > 0, "there is no Technical details disclosure: the machine facts were deleted rather than demoted");
+  assert.ok(block.indexOf("{readiness.says}") < disclosureAt, "the machine facts still come first");
   const disclosure = block.slice(disclosureAt);
   assert.match(disclosure, /clearedBy\.command/, "the standing publisher identity was deleted from the technical disclosure");
   assert.match(disclosure, /snapshotContract/, "the contract identifier was deleted rather than demoted");
-  assert.match(disclosure, /outcome\.detail/);
+  assert.match(disclosure, /readiness\.detail/);
 });
 
 test("the console is published before the first cycle, not only after one", () => {

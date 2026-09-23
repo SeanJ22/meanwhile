@@ -63,10 +63,22 @@ import {
   fleetSpendCeilingOverrideUsd,
   isAdminConfig,
   withApiFallback,
+  withBillingFacts,
   withExpansionScopes,
   withFleetSpendCeiling,
   API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
+import {
+  billingFactId,
+  billingFactsOf,
+  factAmountWords,
+  factPeriodWords,
+  providerDefinition,
+  validateBillingFact,
+  withFactRecorded,
+  withFactRemoved,
+  type BillingFact,
+} from "../billing-facts.ts";
 import { FLEET_SPEND_CEILING_MAX_USD, resolveRollingCeiling } from "../fleet-safety.ts";
 import {
   SCOPE_TYPE_WORDS,
@@ -783,7 +795,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           "The runner reads it at the start of its next cycle. Selecting it starts nothing: the paid lane stays exactly as it is, " +
           `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.`,
         openedWork: [],
-        readBackAt: "/admin/expansion",
+        readBackAt: "/admin/work",
         undo:
           previous === null
             ? "Remove this geography from the expansion list."
@@ -817,7 +829,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : null;
         if (existing === null || current === null) {
-          return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/expansion", undo: null };
+          return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/work", undo: null };
         }
         const held = expansionScopesOf(current);
         if (held.malformed > 0) {
@@ -828,7 +840,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         }
         const next = withScopeRemoved(held.scopes, key);
         if (next.removed === null) {
-          return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/expansion", undo: null };
+          return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/work", undo: null };
         }
         removedLabel = next.removed.geography.label;
         await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
@@ -843,8 +855,130 @@ const REGISTRY: readonly RegisteredAction[] = [
           `Removed: ${removedLabel} is no longer on your expansion list. From the runner's next cycle its work keeps its normal place in the queue, ` +
           "and its budget no longer holds paid work back. Nothing already done is undone.",
         openedWork: [],
-        readBackAt: "/admin/expansion",
+        readBackAt: "/admin/work",
         undo: "Select it again from the Census lookup, with the priority and budget you want.",
+      };
+    },
+  },
+
+  /* ---------------------------------------------------- billing.fact.record */
+  {
+    definition: {
+      type: "billing.fact.record",
+      label: "Record a billing figure",
+      does:
+        "Records a figure you read from a provider's console, invoice or export — its amount, the period it covers, the day you read it and where — durably, so the Money screen can show it beside what the system measures itself.",
+      doesNot:
+        "Does not change any ceiling, budget or runner decision, and is never added to the system's own measured ledger for the same money. Entering the same provider, kind and period again corrects the earlier figure rather than adding a second one.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "a figure from a bill the system cannot read",
+      // The config row's compare-and-set is the version check, exactly as for
+      // the spend dial; a figure the owner read does not go stale on the page.
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      // The day-read check against today runs again in execute, which has the gateway's clock.
+      const checked = validateBillingFact(input, "9999-12-31");
+      return checked.ok ? { ok: true, value: { ...checked.value } } : bad(checked.why);
+    },
+    async execute(deps, context, input) {
+      const at = context.at;
+      const rechecked = validateBillingFact(input, at.slice(0, 10));
+      if (!rechecked.ok) return refuse("INVALID_INPUT", `Nothing was recorded: ${rechecked.why}.`);
+      const fact: BillingFact = {
+        ...rechecked.value,
+        id: billingFactId(rechecked.value),
+        decidedAt: at,
+        decidedBy: context.request.actorRef,
+        receiptId: context.receiptId,
+      };
+      let previous: BillingFact | null = null;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
+        const held = billingFactsOf(current);
+        if (held.malformed > 0) {
+          return refuse(
+            "DOWNSTREAM_REFUSED",
+            `${held.malformed} stored billing figure${held.malformed === 1 ? "" : "s"} on your policy row could not be read, so nothing was changed — rewriting the list would silently drop them.`,
+          );
+        }
+        const next = withFactRecorded(held.facts, fact);
+        previous = next.previous;
+        const written = withBillingFacts(current, { facts: next.facts, decidedAt: at });
+        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
+        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
+      } catch (error) {
+        return storeRefusal("your billing figure", error);
+      }
+      const name = fact.label ?? providerDefinition(fact.provider).name;
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: fact.id,
+        says:
+          `Recorded: ${name}, ${factAmountWords(fact)} (${factPeriodWords(fact).toLowerCase()}), read ${fact.asOf} from ${fact.source}` +
+          (previous === null ? "." : `, correcting the ${factAmountWords(previous)} entered for the same slot.`) +
+          " It is shown beside the system's own measurements and never added to them.",
+        openedWork: [],
+        readBackAt: "/admin/money",
+        undo: previous === null ? "Remove this figure." : `Enter ${factAmountWords(previous)} again for the same slot.`,
+      };
+    },
+  },
+
+  /* ---------------------------------------------------- billing.fact.remove */
+  {
+    definition: {
+      type: "billing.fact.remove",
+      label: "Remove a billing figure",
+      does: "Takes one figure you entered off the Money screen, durably.",
+      doesNot: "Does not change any ceiling, budget or measurement; the provider's row goes back to saying it has no reading.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "a billing figure you entered",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const id = text(input.id);
+      if (id === "" || id.length > 200) return bad("say which figure to remove");
+      return { ok: true, value: { id } };
+    },
+    async execute(deps, context, input) {
+      const id = String(input.id);
+      const at = context.at;
+      let removed: BillingFact | null = null;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : null;
+        if (existing === null || current === null) {
+          return { ok: true, outcome: "DONE", subject: id, says: "That figure was not recorded, so nothing changed.", openedWork: [], readBackAt: "/admin/money", undo: null };
+        }
+        const held = billingFactsOf(current);
+        if (held.malformed > 0) {
+          return refuse(
+            "DOWNSTREAM_REFUSED",
+            `${held.malformed} stored billing figure${held.malformed === 1 ? "" : "s"} on your policy row could not be read, so nothing was changed — rewriting the list would silently drop them.`,
+          );
+        }
+        const next = withFactRemoved(held.facts, id);
+        if (next.removed === null) {
+          return { ok: true, outcome: "DONE", subject: id, says: "That figure was not recorded, so nothing changed.", openedWork: [], readBackAt: "/admin/money", undo: null };
+        }
+        removed = next.removed;
+        await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withBillingFacts(current, { facts: next.facts, decidedAt: at }), at);
+      } catch (error) {
+        return storeRefusal("the change to your billing figures", error);
+      }
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: id,
+        says: `Removed: ${removed.label ?? providerDefinition(removed.provider).name}, ${factAmountWords(removed)} (${factPeriodWords(removed).toLowerCase()}). That row goes back to saying it has no reading.`,
+        openedWork: [],
+        readBackAt: "/admin/money",
+        undo: `Enter ${factAmountWords(removed)} again, read ${removed.asOf} from ${removed.source}.`,
       };
     },
   },

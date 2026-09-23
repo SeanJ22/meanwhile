@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 710,
-    "named": 7038,
+    "files": 711,
+    "named": 7041,
     "dynamic": 28
   },
   "files": {
@@ -395,6 +395,14 @@
         "the six cell states are one class each, and the grid renders them on a <button>"
       ],
       "dynamic": 1
+    },
+    "tests/admin-redirect-origin.test.ts": {
+      "names": [
+        "SEEDED: a request whose URL names the public host, arriving on the admin host, is sent back to the admin host",
+        "each redirecting route builds exactly its redirects on ADMIN_ORIGIN",
+        "no admin route builds a URL on request.url, except a named in-process forward"
+      ],
+      "dynamic": 0
     },
     "tests/admin-release-review.test.ts": {
       "names": [

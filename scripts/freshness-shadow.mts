@@ -122,8 +122,10 @@ import {
 } from "../lib/control-plane/promotion/fact-freshness.ts";
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
+import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
 import {
   findSettledOccurrences,
+  planMovedToGapLedger,
   planRetiredResidue,
   planSupersededRetirement,
   settleRetirements,
@@ -676,9 +678,13 @@ if (canonicalCandidateCounts === null) {
  * **WHAT THE REGISTRY NO LONGER EMITS IS RETIRED, AND A RETIRED ROW HOLDS
  * NOTHING OPEN.** (2026-09-23.)
  *
- * Two planners over the rows `syncObligations` read outside the corpus, and
+ * Three planners over the rows `syncObligations` read outside the corpus, and
  * one apply (`settleRetirements`):
  *
+ * - **A jurisdiction meetings row** (`freshness:jurisdiction:<id>#meetings-N`)
+ *   is retired only when the committed gap ledger lists its jurisdiction as
+ *   owed meetings discovery, and its reason names that entry
+ *   (`planMovedToGapLedger`). The superseded planner never sees one.
  * - **A row the registry stopped emitting** is retired only when its provider
  *   read cleanly and the drop stays inside the bound
  *   (`planSupersededRetirement`). Otherwise it is held back by name.
@@ -696,37 +702,76 @@ if (canonicalCandidateCounts === null) {
 const retirementWrites = !dry && !canary && !scheduledBlackout;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
 const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
-const supersededPlan =
+const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
+/* The committed gap ledger is the only evidence on which a jurisdiction meetings row retires; unreadable retires none. */
+const gapLedger =
   retirementOutside === null
     ? null
-    : planSupersededRetirement({
+    : (() => {
+        try {
+          return recordedMeetingsDiscovery(JSON.parse(readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8")));
+        } catch (error) {
+          return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
+        }
+      })();
+const movedPlan =
+  retirementOutside === null || gapLedger === null
+    ? null
+    : planMovedToGapLedger({
         outside: retirementOutside,
-        corpus: allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id })),
+        corpus: corpusUnits,
+        providers: registry.byProvider,
+        ledger: { path: GAP_LEDGER_PATH, recorded: gapLedger },
+      });
+const supersededPlan =
+  retirementOutside === null || movedPlan === null
+    ? null
+    : planSupersededRetirement({
+        outside: retirementOutside.filter((row) => !movedPlan.owned.has(row.id)),
+        corpus: corpusUnits,
         providers: registry.byProvider,
       });
-const supersededHolds = (supersededPlan?.heldBack ?? []).reduce<Record<string, number>>(
+const retirementHeldBack = [...(movedPlan?.heldBack ?? []), ...(supersededPlan?.heldBack ?? [])];
+const retirementHolds = retirementHeldBack.reduce<Record<string, number>>(
   (m, h) => ((m[h.code] = (m[h.code] ?? 0) + 1), m),
   {},
 );
+/*
+ * The share of the cycle's wall the writes may spend. #368's first pass wrote
+ * 43 rows in 34 s; the 484 moved rows would take about three minutes in one
+ * cycle. The rest is deferred untouched and planned again, so the move takes
+ * a few cycles and the dispatch lanes keep their time. Residue and superseded
+ * rows go first, so the large move never starves them.
+ */
+const RETIREMENT_BUDGET_MS = 45_000;
 let retirementApplied: Awaited<ReturnType<typeof settleRetirements>> | null = null;
 let retirementError: string | null = null;
 /** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
 const retiredDebtReasons = new Map<string, string>();
-if (supersededPlan !== null && retirementOutside !== null) {
-  const items = [...residueItems, ...supersededPlan.retire];
+if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null) {
+  const items = [...residueItems, ...supersededPlan.retire, ...movedPlan.retire];
   console.log(
-    `  retirement: ${supersededPlan.retire.length} superseded, ${residueItems.length} retired row(s) still holding an occurrence` +
-      (supersededPlan.heldBack.length > 0 ? `; held back ${JSON.stringify(supersededHolds)}` : "") +
+    `  retirement: ${movedPlan.retire.length} moved to the gap ledger, ${supersededPlan.retire.length} superseded, ` +
+      `${residueItems.length} retired row(s) still holding an occurrence` +
+      (retirementHeldBack.length > 0 ? `; held back ${JSON.stringify(retirementHolds)}` : "") +
       (retirementWrites ? "" : " (plan only: this cycle writes nothing)"),
   );
   if (retirementWrites) {
     if (items.length > 0) {
       try {
-        retirementApplied = await settleRetirements(repos, { items, now: NOW });
+        const budgetStartedMs = Date.now();
+        retirementApplied = await settleRetirements(repos, {
+          items,
+          now: NOW,
+          budget: { spent: () => Date.now() - budgetStartedMs >= RETIREMENT_BUDGET_MS },
+        });
         console.log(
           `  retirement: ${retirementApplied.retired.length} obligation(s) retired, ` +
             `${retirementApplied.occurrencesClosed.length} open occurrence(s) closed unresolved` +
-            (retirementApplied.failed.length > 0 ? `, ${retirementApplied.failed.length} did not complete and are planned again` : ""),
+            (retirementApplied.failed.length > 0 ? `, ${retirementApplied.failed.length} did not complete and are planned again` : "") +
+            (retirementApplied.deferred.length > 0
+              ? `, ${retirementApplied.deferred.length} deferred untouched to the next cycle (${RETIREMENT_BUDGET_MS / 1000} s budget spent)`
+              : ""),
         );
       } catch (error) {
         retirementError = error instanceof Error ? error.message : String(error);
@@ -2289,14 +2334,16 @@ const researchLines = [
 
 const lines = [
   ...digestLines(cycle),
-  ...(supersededPlan === null
+  ...(movedPlan === null || supersededPlan === null
     ? []
     : [
-        `  retired            ${retirementApplied?.retired.length ?? 0} of ${supersededPlan.retire.length} planned obligation(s) the registry no longer emits · ` +
+        `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) ` +
+          `(${movedPlan.retire.length} moved to the gap ledger, ${supersededPlan.retire.length} the registry no longer emits) · ` +
           `${retirementApplied?.occurrencesClosed.length ?? 0} open occurrence(s) closed unresolved · ` +
           `${persisted.clearedAsRetired.length} debt(s) tombstoned as retired` +
-          (supersededPlan.heldBack.length > 0 ? ` · held back ${JSON.stringify(supersededHolds)}` : "") +
+          (retirementHeldBack.length > 0 ? ` · held back ${JSON.stringify(retirementHolds)}` : "") +
           ((retirementApplied?.failed.length ?? 0) > 0 ? ` · ${retirementApplied?.failed.length} did not complete, planned again` : "") +
+          ((retirementApplied?.deferred.length ?? 0) > 0 ? ` · ${retirementApplied?.deferred.length} deferred to the next cycle (budget)` : "") +
           (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
       ]),
   "",
@@ -2363,15 +2410,20 @@ const runRecord = {
         artifactIds: r.disposition.artifactIds,
         discharged: r.discharged,
       })),
-      /* Rows the registry no longer emits: what was planned, held back by code, and actually written (2026-09-23). */
+      /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */
       retirement:
-        supersededPlan === null
+        movedPlan === null || supersededPlan === null || gapLedger === null
           ? null
           : {
+              movedToGapLedger: movedPlan.retire.map((item) => item.obligationId),
+              gapLedger:
+                "unreadable" in gapLedger
+                  ? { path: GAP_LEDGER_PATH, unreadable: gapLedger.unreadable }
+                  : { path: GAP_LEDGER_PATH, jurisdictionsRecorded: gapLedger.jurisdictionIds.size },
               superseded: supersededPlan.retire.map((item) => item.obligationId),
               residue: residueItems.map((item) => item.obligationId),
-              heldBackByCode: supersededHolds,
-              heldBackExamples: supersededPlan.heldBack.slice(0, 25),
+              heldBackByCode: retirementHolds,
+              heldBackExamples: retirementHeldBack.slice(0, 25),
               applied: retirementApplied,
               error: retirementError,
               debtsTombstonedAsRetired: persisted.clearedAsRetired,

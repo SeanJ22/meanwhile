@@ -121,7 +121,7 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
 
   return (
     <aside
-      aria-label={`${listingCount.heading} at ${venue.name}${elsewhere.length > 0 ? `, and ${elsewhere.join(" and ")} from the same body` : ""}`}
+      aria-label={`${listingCount.heading} at ${venue.name}${elsewhere.length > 0 ? `, and ${elsewhere.join(" and ")} from the bodies that meet here` : ""}`}
       className="panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">

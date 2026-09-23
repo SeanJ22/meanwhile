@@ -259,7 +259,7 @@ export function ListOverlay({
             type="button"
             data-list-focus-clear
             className="al-focus-chip"
-            aria-label={`Showing: ${focused.chip}. Show every meeting.`}
+            aria-label={`Showing ${focused.chip.replace(/^Only /, "only ")}. Show every meeting.`}
             onClick={() =>
               dispatch({ type: "list/open", open: true, focusBodyId: null, focusBodyName: null, focusDivision: null })
             }

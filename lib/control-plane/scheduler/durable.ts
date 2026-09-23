@@ -520,8 +520,10 @@ export function planRetiredResidue(outside: readonly StandingObligation[]): read
 /**
  * Retire each row, or settle one already retired, in this order:
  *
- * 1. close its open occurrence UNRESOLVED under the item's reason, never with
- *    a disposition, so the anchor does not move;
+ * 1. close EVERY open occurrence it owns, including one its pointer lost,
+ *    UNRESOLVED under the item's reason and never with a disposition, so the
+ *    anchor does not move. The query is bounded to that one obligation;
+ *    nothing loads every occurrence;
  * 2. an active row is retired: inactive, no next-due, no open occurrence, and
  *    the reason. An already-retired row keeps its own retirement and only
  *    loses a dangling occurrence pointer.
@@ -551,17 +553,17 @@ export async function settleRetirements(
       const held = await repos.obligations.read(obligationId);
       if (held === null) continue;
 
-      if (held.value.openOccurrenceId !== null) {
-        const occurrence = await repos.occurrences.read(held.value.openOccurrenceId);
-        if (occurrence !== null && occurrence.value.closedAt === null) {
-          await closeOccurrence(repos, {
-            occurrenceId: occurrence.id,
-            disposition: null,
-            unresolvedReason: `${reason}. The occurrence closes unresolved: nothing was read and nothing was refreshed`,
-            now: input.now,
-          });
-          occurrencesClosed.push(occurrence.id);
-        }
+      /* Every open occurrence the row owns, not only the one it points at: on
+         2026-09-23 one superseded row held an occurrence its pointer had lost. */
+      for (const occurrence of await repos.occurrences.listWhere(["obligationId"], obligationId)) {
+        if (occurrence.value.closedAt !== null) continue;
+        await closeOccurrence(repos, {
+          occurrenceId: occurrence.id,
+          disposition: null,
+          unresolvedReason: `${reason}. The occurrence closes unresolved: nothing was read and nothing was refreshed`,
+          now: input.now,
+        });
+        occurrencesClosed.push(occurrence.id);
       }
 
       const row = await repos.obligations.mustRead(obligationId);

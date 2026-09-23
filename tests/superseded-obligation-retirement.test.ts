@@ -357,6 +357,27 @@ test("a retirement reverses itself: when the registry emits the id again, sync w
   }
 });
 
+test("SEEDED: an open occurrence the row's pointer lost is closed too; a retired row holds nothing open", async () => {
+  for (const [label, repos] of await eachStore("wtp-superseded-")) {
+    const shape = await supersededShape(repos);
+    /* The 2026-09-01 shape: occurrence 1 left open, its obligation's pointer cleared by a path that never closed it. */
+    const row = await repos.obligations.mustRead(AWAITS);
+    await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, openOccurrenceId: null }, T0);
+    assert.equal((await repos.occurrences.mustRead(shape.occurrenceId)).value.closedAt, null);
+
+    const corpus = supersededCorpus();
+    const sync = await syncObligations(repos, corpus, T1);
+    const plan = planSupersededRetirement({ outside: sync.outside ?? [], corpus: unitsOf(corpus), providers: [CLEAN], bound: 1 });
+    const applied = await settleRetirements(repos, { items: plan.retire, now: T1 });
+    assert.deepEqual(applied, { retired: [AWAITS], occurrencesClosed: [shape.occurrenceId], failed: [] }, label);
+    const occurrence = (await repos.occurrences.mustRead(shape.occurrenceId)).value;
+    assert.equal(occurrence.closedAt, T1, `${label}: the orphan is closed`);
+    assert.equal(occurrence.disposition, null);
+    const open = (await repos.occurrences.list()).filter((o) => o.value.obligationId === AWAITS && o.value.closedAt === null);
+    assert.deepEqual(open, [], `${label}: nothing of the retired row is left open`);
+  }
+});
+
 test("an interrupted retirement completes on the next cycle: an occurrence already closed is not closed twice, and the pointer clears", async () => {
   for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);

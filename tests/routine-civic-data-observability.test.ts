@@ -13,6 +13,7 @@ import {
   type RoutinePromotionRow,
 } from "../lib/civic-data/observability.ts";
 import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "../lib/civic-data/contracts.ts";
+import { ROUTINE_SOURCE_TASKS, routineTaskDue } from "../lib/civic-data/runner.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionSourceContract } from "../lib/civic-data/manual-contracts.ts";
 import { VALIDATION_CHECKS, type RoutineChangeSet, type ValidationReceipt } from "../lib/civic-data/types.ts";
@@ -1817,4 +1818,21 @@ test("PDC-13: the deterministic Admin render contract leads with canonical opera
   assert.match(panel, /data plane was not classified as failed, empty, or healthy/);
   assert.match(panel, /inspect the typed Reader readback and repair; do not reclassify or rerun the source/);
   assert.match(panel, /This is a measured zero/);
+});
+
+test("Admin shows a succeeding source's next read at the runner's own instant, one lead ahead of its cadence", () => {
+  const contract = ROUTINE_SOURCE_CONTRACTS.find((row) => row.id === "census-geography-overlaps")!;
+  const lkg = candidateRow(contract, { id: "census-geo-lead", at: NOW });
+  const view = projectRoutineDataObservability(
+    { candidates: [lkg], events: sourceHistory(lkg), promotions: [promotion(contract, lkg)] },
+    NOW,
+    [contract],
+  );
+  const observed = view.contracts[0];
+  // 30-day cadence less its six-hour lead, from the store-observed first event.
+  assert.deepEqual(observed.cadence.nextDue, { kind: "MEASURED", value: "2026-10-08T06:00:00.000Z" });
+  const task = ROUTINE_SOURCE_TASKS.find((row) => row.id === contract.id)!;
+  const clock = { lastAttemptedAt: NOW, lastSucceededAt: NOW };
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-08T06:00:00.000Z") - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-08T06:00:00.000Z")), true, "the runner reads the instant Admin shows");
 });

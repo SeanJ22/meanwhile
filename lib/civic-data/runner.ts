@@ -1,5 +1,5 @@
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
-import { ROUTINE_SOURCE_CONTRACTS, cadenceMsAt, type RoutineSourceContract } from "./contracts.ts";
+import { ROUTINE_SOURCE_CONTRACTS, routineCadenceDueAtMs, type RoutineSourceContract } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 import { SOURCE_AUTHORITIES, authorityFor } from "./source-authority.ts";
 import {
@@ -453,5 +453,8 @@ export function routineTaskDue(task: RoutineSourceTask, clock: RoutineTaskClock 
   // Measuring from the older success would make every pilot cycle retry at
   // once merely because the ordinary cadence had already elapsed.
   if (attempted > succeeded) return nowMs - attempted >= task.retryMs;
-  return nowMs - succeeded >= cadenceMsAt(task.contract, nowMs);
+  // A succeeding source is re-read one lead ahead of its cadence, so the
+  // Reader never sees it age past its maxAge (one cadence) while the next pass
+  // admits it and its fetch lands. Admin displays this same instant.
+  return nowMs >= routineCadenceDueAtMs(task.contract, succeeded);
 }

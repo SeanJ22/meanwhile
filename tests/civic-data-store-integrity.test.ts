@@ -1136,8 +1136,10 @@ test("a success is clocked in the attempt clock's own units, so the cadence, not
   const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
   assert.deepEqual(clock, { lastAttemptedAt: observedAt, lastSucceededAt: observedAt });
   assert.equal(routineTaskDue(task, clock, Date.parse("2026-09-23T11:26:51.162Z")), false, "the retry clock never re-acquires a success");
-  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-23T05:26:51.161Z")), false);
-  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-23T05:26:51.162Z")), true, "the 30-day cadence governs");
+  // The 30-day cadence governs, re-read its six-hour lead ahead of the
+  // Reader's one-cadence maxAge: 2026-10-23T05:26:51.162Z minus 6 h.
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-22T23:26:51.161Z")), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-22T23:26:51.162Z")), true, "the 30-day cadence, less its lead, governs");
 
   // A later failed attempt still puts the source on its retry clock.
   const failedAt = "2026-09-23T12:00:00.000Z";
@@ -1172,10 +1174,12 @@ test("any nonzero acquisition time leaves a success on its cadence, not its retr
       );
       const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
       const label = `${taskId} gap ${gapMs} ms`;
+      // Both contracts retry after 6 h, so each is re-read 6 h ahead of its cadence.
+      const rereadAt = Date.parse(observedAt) + task.cadenceMs - 6 * HOUR_MS;
       assert.deepEqual(clock, { lastAttemptedAt: observedAt, lastSucceededAt: observedAt }, label);
       assert.equal(routineTaskDue(task, clock, Date.parse(observedAt) + task.retryMs), false, `${label}: not on the retry clock`);
-      assert.equal(routineTaskDue(task, clock, Date.parse(observedAt) + task.cadenceMs - 1), false, `${label}: before the cadence`);
-      assert.equal(routineTaskDue(task, clock, Date.parse(observedAt) + task.cadenceMs), true, `${label}: at the cadence`);
+      assert.equal(routineTaskDue(task, clock, rereadAt - 1), false, `${label}: before the cadence less its lead`);
+      assert.equal(routineTaskDue(task, clock, rereadAt), true, `${label}: at the cadence less its lead`);
     }
   }
 });

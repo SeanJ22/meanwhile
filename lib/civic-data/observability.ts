@@ -8,6 +8,7 @@
  */
 import {
   cadenceMsAt,
+  routineCadenceDueAtMs,
   type RoutineSourceContract,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "./meeting-partitions.ts";
@@ -1194,7 +1195,8 @@ function nextDue(
   if (!Number.isFinite(succeeded) || attempted > succeeded) {
     return measured(new Date(attempted + contract.retry.afterMs).toISOString());
   }
-  return measured(new Date(succeeded + cadenceMsAt(contract, nowMs)).toISOString());
+  // The runner's own instant (routineTaskDue), so Admin shows when it will run.
+  return measured(new Date(routineCadenceDueAtMs(contract, succeeded)).toISOString());
 }
 
 const TERMINAL_REFUSAL_STATES = new Set<CandidateState>([

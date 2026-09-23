@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 698,
-    "named": 6960,
+    "files": 701,
+    "named": 6979,
     "dynamic": 28
   },
   "files": {
@@ -8386,6 +8386,27 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-observability-bounded.test.ts": {
+      "names": [
+        "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
+        "a read that runs past its statement limit is a named store failure, never an empty or zero outcome",
+        "any other read failure stays an untyped store failure",
+        "the Sources panel tells a timed-out read from a lost connection, and asks nothing of the owner for it",
+        "the research cycle never makes the unbounded observability read",
+        "the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed",
+        "the statement limit is validated before any connection is opened"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-publication-status.test.ts": {
+      "names": [
+        "each contract gets the verdict its pointer and the readback of exactly that version support",
+        "the Sources page reads the three sources together and shows the narrow panel before the proof-based one",
+        "the narrow read selects no payload and never touches the candidate JSON",
+        "with nothing recorded, every contract is NOT_PUBLISHED with no attempt, never a pass"
+      ],
+      "dynamic": 0
+    },
     "tests/routing.test.ts": {
       "names": [
         "85723: no routed step ever names a body that isn't the division's own government",
@@ -8789,6 +8810,8 @@
     },
     "tests/settled-occurrence-recovery.test.ts": {
       "names": [
+        "BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lane neither recovers it twice nor walks it",
+        "BEFORE DISPATCH: every settled occurrence is recovered with no dispatch capacity at all (a zero ceiling, a debt backoff, a closed Scout lane) and nothing is walked",
         "SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease",
         "SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, and a dead lease on one is left for the sweep",
         "a recovered INGESTED occurrence keeps its bytes eligible for parsing, verification and staging",
@@ -8796,7 +8819,8 @@
         "a recovered WALKED_NO_YIELD discharges this period's reading only: the obligation comes due again under a new RouteTask",
         "a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask",
         "an aborted or interrupted occurrence is still resumed and dispatched, and its earlier Attempt and partial evidence are kept",
-        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won"
+        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won",
+        "findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read"
       ],
       "dynamic": 0
     },
@@ -10008,6 +10032,16 @@
       "names": [
         "the Wikipedia route is a live deterministic HTTP GET on the permitted Wikimedia REST host",
         "the Wikipedia route's yield contract makes an empty search a FAILED extraction"
+      ],
+      "dynamic": 0
+    },
+    "tests/window-exited-holder.test.ts": {
+      "names": [
+        "a holder id names its process: role, host and pid",
+        "a live pid, another host's process, or a holder that names no process keeps the lease",
+        "an absent, released or expired lease needs nothing and probes no process",
+        "the relaunched runner's cycle is no longer refused under an exited cycle's lease",
+        "the runner checks for an exited holder before every research cycle and every nightly window"
       ],
       "dynamic": 0
     },

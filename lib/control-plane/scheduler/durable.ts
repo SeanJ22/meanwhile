@@ -416,6 +416,52 @@ export type ResumedOccurrence =
   | { readonly kind: "SETTLED"; readonly settled: SettledOccurrence };
 
 /**
+ * **EVERY SETTLED OPEN OCCURRENCE, FOUND BEFORE ANY LANE RUNS.** (2026-09-23.)
+ *
+ * A lane recovers a settled occurrence only when it reaches that row, and it
+ * reaches a row only through admission: the deterministic ceiling, the
+ * dispatch budget, the Scout lane's state. Recovery walks nothing and spends
+ * nothing, so it must not wait on dispatch capacity. On 2026-09-23 the 62
+ * production recoveries sat at due-queue ranks 17 to 2,621 of about 2,865,
+ * with about 25 dispatched per cycle, and those on the model lane sat behind a
+ * closed Scout lane.
+ *
+ * `settledRouteTaskIds` comes from a listing the caller already holds
+ * (`settledRouteTaskIds` below). A disposition is only ever added, never
+ * cleared, so an earlier listing never names a task that has since become
+ * unsettled. That listing only narrows the candidates: each one is confirmed
+ * by `resumeOpenOccurrence`, which reads the occurrence and its RouteTask
+ * again, so what comes back meets exactly the test a lane applies.
+ */
+export async function findSettledOccurrences(
+  repos: ControlPlaneRepositories,
+  input: {
+    readonly obligations: readonly StandingObligation[];
+    readonly settledRouteTaskIds: ReadonlySet<string>;
+  },
+): Promise<readonly SettledOccurrence[]> {
+  const byOpenOccurrence = new Map<string, StandingObligation>();
+  for (const o of input.obligations) if (o.openOccurrenceId !== null) byOpenOccurrence.set(o.openOccurrenceId, o);
+  if (byOpenOccurrence.size === 0 || input.settledRouteTaskIds.size === 0) return [];
+  const found: SettledOccurrence[] = [];
+  for (const occurrence of await repos.occurrences.list()) {
+    const obligation = byOpenOccurrence.get(occurrence.id);
+    if (obligation === undefined || occurrence.value.closedAt !== null) continue;
+    if (!input.settledRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
+    const resumed = await resumeOpenOccurrence(repos, obligation);
+    if (resumed?.kind === "SETTLED") found.push(resumed.settled);
+  }
+  return found;
+}
+
+/** The ids of the RouteTasks that carry a disposition: the settledness `resumeOpenOccurrence` reads. */
+export function settledRouteTaskIds(
+  routeTasks: readonly { readonly id: string; readonly value: RouteTask }[],
+): ReadonlySet<string> {
+  return new Set(routeTasks.filter((t) => t.value.disposition !== null).map((t) => t.id));
+}
+
+/**
  * Open the next occurrence of a due obligation, with its own WorkItem and
  * RouteTask.
  *

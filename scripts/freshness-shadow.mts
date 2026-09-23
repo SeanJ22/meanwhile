@@ -117,13 +117,14 @@ import {
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import {
   factFreshnessFromPermanentMeetings,
-  permanentMeetingsReceipt,
+  RESEARCH_CYCLE_MEETINGS_RECEIPT,
   type PermanentMeetingsReceipt,
 } from "../lib/control-plane/promotion/fact-freshness.ts";
-import { readRoutineDataObservabilityFromConnection } from "../lib/civic-data/observability-store.ts";
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
+  findSettledOccurrences,
+  settledRouteTaskIds,
   loadDebts,
   openOccurrence,
   resumeOpenOccurrence,
@@ -938,11 +939,18 @@ const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.li
 // A held Parser/Validator chain has no autonomous acquisition plan. Its next
 // stage is enqueued by advanceHeldWorkerFleet, so completed producer tasks also
 // reserve downstream time until that pass can inspect their retained evidence.
-const heldWorkIds = new Set(canary || scheduledBlackout ? [] : (await repos.routeTasks.list())
-  .filter(row => row.value.workerTask?.contract.schemaVersion === 1 &&
-    (row.value.state === "PENDING" || row.value.state === "RECLAIMABLE" ||
-      (row.value.state === "RESULT_RECORDED" && row.value.workerTask.role !== "ADVERSARIAL_AUDITOR")))
-  .map(row => row.value.workItemId));
+const [heldWorkIds, settledTaskIds] = await (async () => {
+  const listing = canary || scheduledBlackout ? [] : await repos.routeTasks.list();
+  return [
+    new Set(listing
+      .filter(row => row.value.workerTask?.contract.schemaVersion === 1 &&
+        (row.value.state === "PENDING" || row.value.state === "RECLAIMABLE" ||
+          (row.value.state === "RESULT_RECORDED" && row.value.workerTask.role !== "ADVERSARIAL_AUDITOR")))
+      .map(row => row.value.workItemId)),
+    /* The same read names the settled RouteTasks the pre-dispatch recovery starts from (2026-09-23). Only ids outlive it. */
+    settledRouteTaskIds(listing),
+  ] as const;
+})();
 const downstreamWorkCount = plannedWork.length + heldWorkIds.size;
 finishPhase("schedule-and-intents");
 if (dispatchOrdering !== null) {
@@ -1648,6 +1656,27 @@ const fleetReserveMs = !dry && !canary && downstreamWorkCount ? Math.min(360_000
 // verification unresolved; initial source discovery is not the only model work.
 finishPhase("worker-context");
 
+/*
+ * **SETTLED OCCURRENCES ARE RECOVERED BEFORE THE LANES, NOT WHEN A LANE REACHES
+ * THEM.** (2026-09-23.) A recovery walks nothing and spends nothing, so it
+ * waits on no ceiling, budget or Scout admission. The scan starts from the
+ * settled RouteTask ids the listing above already read, and reads the
+ * occurrences once, about 5 s over the 4,751 production rows. A failed scan is
+ * named, and the lanes still recover any settled row they reach, so a failure
+ * costs latency and never correctness.
+ */
+let settledOccurrences: readonly SettledOccurrence[] = [];
+if (!canary && !scheduledBlackout) {
+  try {
+    settledOccurrences = await findSettledOccurrences(repos, { obligations: sync.all, settledRouteTaskIds: settledTaskIds });
+  } catch (error) {
+    runtimeConditions.push(
+      `settled occurrences could not be found before dispatch (${error instanceof Error ? error.message : String(error)}); a lane recovers any it reaches`,
+    );
+  }
+}
+finishPhase("settled-occurrence-scan");
+
 const cycle = await runCycle({
   repos,
   obligations: sync.all,
@@ -1672,6 +1701,7 @@ const cycle = await runCycle({
   },
   maxDispatches: MAX_DISPATCHES,
   openOccurrence: openOccurrenceInStep,
+  settledOccurrences,
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
@@ -1765,6 +1795,15 @@ for (const row of cycle.deferred) {
   const code = /^([A-Z][A-Z0-9_]+)/.exec(row.why)?.[1] ?? "CYCLE_DEFERRED";
   fleetSafety.defer(row.obligationId, code, row.why);
 }
+/* A settled occurrence found before dispatch on an obligation with no schedule stays open, and is named rather than dropped. */
+{
+  const recoveredIds = new Set(cycle.recovered.map((r) => r.obligationId));
+  const leftOpen = settledOccurrences.filter((s) => !recoveredIds.has(s.obligationId));
+  console.log(
+    `  settled occurrences: ${settledOccurrences.length} found before dispatch, ${settledOccurrences.length - leftOpen.length} recovered` +
+      (leftOpen.length > 0 ? `; ${leftOpen.length} left open on an unscheduled obligation: ${leftOpen.map((s) => s.obligationId).join(", ")}` : ""),
+  );
+}
 
 const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
 console.log(
@@ -1823,11 +1862,7 @@ if (!dry && !canary) {
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   try {
-    const routineObservation = await readRoutineDataObservabilityFromConnection(
-      process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
-      { now: nowIso() },
-    );
-    const meetingsReceipt: PermanentMeetingsReceipt = permanentMeetingsReceipt(routineObservation);
+    const meetingsReceipt: PermanentMeetingsReceipt = RESEARCH_CYCLE_MEETINGS_RECEIPT;
     if (meetingsReceipt.kind === "UNAVAILABLE") {
       runtimeConditions.push(
         `permanent meetings receipt unavailable to immutable fact projection: ${meetingsReceipt.detail}; ` +

@@ -377,7 +377,12 @@ export interface RoutineObservabilityView {
 export type RoutineObservabilityRead =
   | { readonly kind: "HELD"; readonly value: RoutineObservabilityView }
   | { readonly kind: "NOT_CONNECTED"; readonly detail: string }
-  | { readonly kind: "STORE_UNREACHABLE"; readonly detail: string }
+  | {
+      readonly kind: "STORE_UNREACHABLE";
+      readonly detail: string;
+      /** READ_TIMED_OUT: the store answered, but this read cannot finish inside a request's statement limit. */
+      readonly cause?: "READ_TIMED_OUT";
+    }
   | { readonly kind: "PROJECTION_FAILED"; readonly detail: string };
 
 function object(value: unknown): Record<string, unknown> | null {
@@ -2299,6 +2304,16 @@ export async function projectRoutineDataObservabilityRead(
   try {
     rows = await options.readRows(since);
   } catch (error) {
+    if (error instanceof Error && error.name === "RoutineObservabilityReadTimedOut") {
+      return {
+        kind: "STORE_UNREACHABLE",
+        cause: "READ_TIMED_OUT",
+        detail:
+          "The canonical routine civic-data read did not finish inside this request's statement limit " +
+          "(RoutineObservabilityReadTimedOut): it selects every candidate version from 30 days with its full payload, " +
+          "3.8 GB on 2026-09-23, so no page request can wait for it. The store itself answered. No empty or zero outcome is being claimed.",
+      };
+    }
     return {
       kind: "STORE_UNREACHABLE",
       detail: `The routine civic-data tables could not be read (${error instanceof Error ? error.name : "unknown error"}). We could not ask, so no empty or zero outcome is being claimed.`,

@@ -219,6 +219,60 @@ export async function releaseWindowLease(
   return true;
 }
 
+/** The process a window-lease holder id names: `<role>@<host>#<pid>`, e.g. `cycle@HOST#1234`. */
+export function windowLeaseHolderProcess(
+  holder: string,
+): { readonly role: string; readonly host: string; readonly pid: number } | null {
+  const match = /^([a-z][a-z-]*)@([^#@]+)#(\d+)$/.exec(holder);
+  if (match === null) return null;
+  const pid = Number(match[3]);
+  return Number.isSafeInteger(pid) && pid > 0 ? { role: match[1]!, host: match[2]!, pid } : null;
+}
+
+export type ExitedHolderRecovery =
+  | { readonly state: "RELEASED"; readonly holder: string; readonly expiresAt: string }
+  | { readonly state: "NOT_NEEDED" | "KEPT"; readonly holder: string | null; readonly reason: string };
+
+/**
+ * **A WINDOW LEASE WHOSE HOLDER HAS EXITED ON THIS HOST IS RELEASED BY THIS
+ * HOST.** (2026-09-23.)
+ *
+ * A cycle that dies in a native abort never reaches its `finally`. The cycles
+ * at 00:18Z and 01:38Z on 2026-09-23 died this way, from a V8 heap exhaustion.
+ * Their lease then stood for the rest of its 25-minute TTL, and a runner
+ * relaunched in that time had its first cycle refused under it (17:54Z on
+ * 2026-09-22; 00:25Z on 2026-09-23).
+ *
+ * The rule is the one `scripts/autonomous-fleet-cutover.mts
+ * --recover-dead-holder` applies by hand:
+ * - the exact holder names a process on THIS host, and
+ * - no process with that pid exists.
+ *
+ * It releases through the same compare-and-set as `releaseWindowLease`, and
+ * leaves clock and expiry untouched. It keeps the lease when:
+ * - another host's process holds it, since it cannot be judged from here;
+ * - the holder names no process;
+ * - the pid is live, or its existence cannot be read.
+ */
+export async function releaseWindowLeaseOfExitedLocalHolder(
+  repos: ControlPlaneRepositories,
+  input: { readonly host: string; readonly now: string; readonly processExists: (pid: number) => boolean },
+): Promise<ExitedHolderRecovery> {
+  const current = await repos.leases.read(WINDOW_LEASE_ID);
+  if (current === null || isExpired(current.value, input.now)) {
+    return { state: "NOT_NEEDED", holder: current?.value.holder ?? null, reason: "no live window lease stands" };
+  }
+  const holder = current.value.holder;
+  const held = windowLeaseHolderProcess(holder);
+  if (held === null) return { state: "KEPT", holder, reason: "the holder does not name a process" };
+  if (held.host.toLowerCase() !== input.host.toLowerCase()) {
+    return { state: "KEPT", holder, reason: `held on host ${held.host}, whose processes this host cannot see` };
+  }
+  if (input.processExists(held.pid)) return { state: "KEPT", holder, reason: `process ${held.pid} still exists` };
+  await repos.leases.compareAndSet(WINDOW_LEASE_ID, current.revision, release(current.value), input.now);
+  return { state: "RELEASED", holder, expiresAt: current.value.expiresAt };
+}
+
 /**
  * Run `fn` under the window lease. Released in a finally, so a normal return
  * hands it back; a dead process holds nothing past the TTL.

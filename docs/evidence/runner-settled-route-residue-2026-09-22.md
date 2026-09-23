@@ -333,6 +333,26 @@ first, are:
 Admin's per-cycle check watches for their recovery signature: the occurrence closed `INGESTED`
 (11) or unresolved "already disposed …" (51), still 1 Attempt, and an unchanged lease revision.
 
+**Why they waited, and the fix.**
+
+- Recovery walks nothing and spends nothing. Even so, #358 recovered a row only when a lane
+  admitted it.
+- At about 25 dispatches per cycle, most of the 43 deterministic rows were days away.
+- The 19 Scout rows couldn't recover at all while the Scout lane was closed.
+
+The follow-up commit on the close-out branch has the runner find every open occurrence on a settled
+RouteTask before either lane runs. The scan, `findSettledOccurrences`, runs in three steps:
+
+1. It reuses the RouteTask listing the cycle already holds.
+2. It makes one pass over the occurrences, which takes about 5 s on production.
+3. It re-reads each candidate, so a candidate passes exactly the test a lane applies.
+
+The cycle then recovers every one of them. Each is recovered once, with no claim, Attempt, lease or
+spend, and its row is withheld from both lanes.
+
+A read-only check before that commit found exactly 62 open occurrences on settled RouteTasks. All
+62 were active and scheduled, and there were no others.
+
 **What recovery will and will not move for the 11 INGESTED records.** Their bytes (Marginalia search
 results) are held only in the main checkout's vault, not the runtime vault. The fixed runner will
 stage them as acquired but still owed.

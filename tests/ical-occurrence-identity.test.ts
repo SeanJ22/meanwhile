@@ -224,23 +224,69 @@ test("ICAL-OCC · Warner's Zoning Board: the master is out of window and each in
   );
 });
 
-test("ICAL-OCC · an override of a series' first sitting replaces it, whichever is listed first", () => {
+const SB_SERIES = "ical:warner-select-board:42cp3onvveme22uorqju8uhu34@google.com";
+
+test("ICAL-OCC · an edited sitting belongs to its series' body, and replaces the series' own copy of it", () => {
   /*
    * Warner's Select Board series `42cp3onv…` starts 8 September, and the town
-   * edited that first sitting to read "RESCHEDULED Select Brd -9/15". The old
-   * adapter always produced "Select Board Meeting" on 8 September from the
-   * master: a sitting the town had moved. The override now speaks for that
-   * slot. Its own title is not this board's, so nothing is produced for it,
-   * and the master's first sitting is a counted duplicate, not a meeting.
+   * edited that first sitting to read "RESCHEDULED Select Brd -9/15". Read by
+   * its own title that names no board, so it was dropped, and the series'
+   * unedited copy ("Select Board Meeting", 8 September) stood in for a sitting
+   * the town had edited. The series decides the body; the edited copy's own
+   * DTSTART decides when; its title is shown as the town wrote it. The
+   * series' own copy of that sitting is a counted duplicate, never a meeting.
    */
   const wiring = wiringFor("warner-select-board");
   const selectBoard = (ics: string) =>
-    normalize(wiring, ics).meetings.filter((meeting) => meeting.id.includes("42cp3onvveme22uorqju8uhu34"));
-  assert.deepEqual(selectBoard(WARNER), []);
-  assert.deepEqual(selectBoard(reordered(WARNER, (all) => [...all].reverse())), []);
+    normalize(wiring, ics)
+      .meetings.filter((meeting) => meeting.id.includes("42cp3onvveme22uorqju8uhu34"))
+      .map(({ id, bodyId, startsAt, status, title }) => ({ id, bodyId, startsAt, status, title }));
+  const expected = [{
+    id: `${SB_SERIES}/20260908T220000Z`,
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board",
+    startsAt: "2026-09-08T22:00:00.000Z",
+    status: "CONCLUDED",
+    title: "RESCHEDULED Select Brd -9/15",
+  }];
+  assert.deepEqual(selectBoard(WARNER), expected);
+  assert.deepEqual(selectBoard(reordered(WARNER, (all) => [...all].reverse())), expected);
 
   const result = normalize(wiring, WARNER);
-  assert.equal(result.duplicateIdentity?.exact, 1, "the master's first sitting, published again by its override");
+  assert.equal(result.duplicateIdentity?.exact, 1, "the series' own copy of the edited sitting");
+  assert.equal(result.accounting.outcome, "CONSERVED");
+});
+
+test("ICAL-OCC · an edited sitting is never claimed by a body its own title happens to name", () => {
+  const planning = {
+    ...SELECT_BOARD_WIRING,
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#planning-board",
+    config: { ...SELECT_BOARD_WIRING.config, slug: "warner-planning-board", titleMatch: "Planning Board" },
+  } as unknown as BodySourceWiring;
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:series-2@example.org",
+    "DTSTART;TZID=America/New_York:20260908T180000",
+    "RRULE:FREQ=MONTHLY;COUNT=1;BYDAY=2TU",
+    "SUMMARY:Select Board Meeting",
+    "END:VEVENT",
+    "BEGIN:VEVENT",
+    "UID:series-2@example.org",
+    "RECURRENCE-ID;TZID=America/New_York:20260908T180000",
+    "DTSTART;TZID=America/New_York:20260908T190000",
+    "SUMMARY:Joint session with the Planning Board",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const result = normalize([SELECT_BOARD_WIRING, planning], ics);
+  assert.deepEqual(
+    result.meetings.map(({ id, bodyId, startsAt }) => ({ id, bodyId, startsAt })),
+    [{
+      id: "ical:warner-select-board:series-2@example.org/20260908T220000Z",
+      bodyId: SELECT_BOARD_WIRING.bodyId,
+      startsAt: "2026-09-08T23:00:00.000Z",
+    }],
+  );
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
@@ -351,18 +397,21 @@ test("ICAL-OCC · a series record is replaced only by an occurrence holding its 
 
 /* ------------------------------------ the first read under the new id --- */
 
-function acquisitions(ics: string) {
+const WARNER_FEED =
+  "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics";
+
+function acquisitions(ics: string, feed = BRADFORD_FEED) {
   return [{
     source: "ical",
-    requestedUrl: BRADFORD_FEED,
-    finalUrl: BRADFORD_FEED,
+    requestedUrl: feed,
+    finalUrl: feed,
     httpStatus: 200,
     rawHash: createHash("sha256").update(ics).digest("hex"),
     byteCount: Buffer.byteLength(ics),
   }];
 }
 
-function report(ics: string, rows: number) {
+function report(ics: string, rows: number, feed = BRADFORD_FEED) {
   return {
     source: "ical",
     ok: true,
@@ -370,7 +419,7 @@ function report(ics: string, rows: number) {
     fetched: rows,
     normalized: rows,
     drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-    acquisitions: acquisitions(ics),
+    acquisitions: acquisitions(ics, feed),
   };
 }
 
@@ -379,15 +428,22 @@ function report(ics: string, rows: number) {
  * showing whichever sitting its last read listed first (15 September at
  * 15:13Z), with the town's calendar page stored against it.
  */
-async function seedLegacySeriesRecord(store: MemoryRoutineDataStore, sitting: Meeting, seededAt: string) {
+async function seedLegacySeriesRecord(
+  store: MemoryRoutineDataStore,
+  sitting: Meeting,
+  seededAt: string,
+  slug = "bradford-conservation-commission",
+  seriesId = CC_SERIES,
+  feed = BRADFORD_FEED,
+) {
   const legacy: Meeting = {
     ...sitting,
-    id: CC_SERIES,
+    id: seriesId,
     provenance: { ...sitting.provenance, collectedAt: seededAt },
   };
   const page: AgendaDocument = {
-    id: `${CC_SERIES}@${"a".repeat(64)}`,
-    meetingId: CC_SERIES,
+    id: `${seriesId}@${"a".repeat(64)}`,
+    meetingId: seriesId,
     ocdId: legacy.ocdId,
     documentUrl: "https://bradfordnh.gov/pages/calendar",
     contentHash: "a".repeat(64),
@@ -403,15 +459,52 @@ async function seedLegacySeriesRecord(store: MemoryRoutineDataStore, sitting: Me
   };
   const [seeded] = await promoteMeetingPartitions({
     store,
-    partitions: [partition("bradford-conservation-commission")],
+    partitions: [partition(slug)],
     meetings: [legacy],
-    agendaDocuments: [page],
-    reports: [report(READ_2, 1)],
+    agendaDocuments: slug === "bradford-conservation-commission" ? [page] : [],
+    reports: [report(READ_2, 1, feed)],
     generatedAt: seededAt,
   });
   assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
   return legacy;
 }
+
+test("ICAL-OCC · Warner's 8 September record is replaced by the edited sitting: not duplicated, not carried", async () => {
+  const store = new MemoryRoutineDataStore();
+  const sb = partition("warner-select-board");
+  const fresh = normalize([sb.wiring], WARNER).meetings;
+  const edited = fresh.find((row) => row.id === `${SB_SERIES}/20260908T220000Z`);
+  assert.ok(edited, "the edited 8 September sitting is produced for the Select Board");
+  // Production's record: the series' unedited copy, "Select Board Meeting", 8 September.
+  const legacy = await seedLegacySeriesRecord(
+    store,
+    { ...edited, title: "Select Board Meeting" },
+    "2026-09-23T15:13:36.680Z",
+    "warner-select-board",
+    SB_SERIES,
+    WARNER_FEED,
+  );
+  const [first] = await promoteMeetingPartitions({
+    store,
+    partitions: [sb],
+    meetings: fresh,
+    agendaDocuments: [],
+    reports: [report(WARNER, fresh.length, WARNER_FEED)],
+    generatedAt: NOW,
+  });
+  assert.equal(first?.outcome.candidate.state, "PROMOTED", first?.outcome.candidate.failureDetail ?? "");
+  const changeSet = first!.outcome.candidate.candidate.changeSet!;
+  assert.deepEqual(changeSet.added.map(({ key }) => key), [`meeting:${edited.id}`]);
+  assert.deepEqual(changeSet.changed, []);
+  assert.deepEqual(changeSet.removed.map(({ key }) => key), [`meeting:${legacy.id}`]);
+  assert.deepEqual(
+    (first!.candidate.removalEvidence ?? []).map((row) => ({ key: row.key, code: row.code })),
+    [{ key: `meeting:${legacy.id}`, code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY" }],
+  );
+  const payload = first!.outcome.promoted!.payload as { meetings: Meeting[] };
+  assert.deepEqual(payload.meetings.map(({ id, title }) => ({ id, title })), [{ id: edited.id, title: "RESCHEDULED Select Brd -9/15" }]);
+  assert.equal(payload.meetings.some((row) => row.carried), false);
+});
 
 test("ICAL-OCC · the first read under occurrence identity replaces the series record: no ghost, no false reschedule", async () => {
   const store = new MemoryRoutineDataStore();

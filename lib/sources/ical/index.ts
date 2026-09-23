@@ -475,25 +475,53 @@ export function makeIcalSource(
        * and the series master must not keep asserting that it is.
        */
       const overriddenSlots = new Set<string>();
+      /** Each series' own event(s): the non-override events carrying its `UID`. */
+      const seriesOwners = new Map<string, IcalEvent[]>();
       for (const event of events) {
-        if (!event.uid || !event.recurrenceId) continue;
+        if (!event.uid) continue;
+        if (!event.recurrenceId) {
+          seriesOwners.set(event.uid, [...(seriesOwners.get(event.uid) ?? []), event]);
+          continue;
+        }
         const slot = slotStamp(event.recurrenceId, wiring.timeZone);
         if (slot) overriddenSlots.add(`${event.uid} ${slot}`);
       }
+      /** Does this row's own rule name this event, read from its own fields? */
+      const namesThisBody = (event: IcalEvent): boolean => {
+        const cats = (event.categories ?? "")
+          .split(",")
+          .map((c) => c.trim().toLowerCase());
+        const summary = (event.summary ?? "").toLowerCase();
+        return category
+          ? cats.includes(category.toLowerCase())
+          : titleTerms.length > 0 &&
+              titleTerms.some((t) => summary.includes(t)) &&
+              !excludeTerms.some((t) => summary.includes(t));
+      };
 
       for (const event of events) {
         // A-002 · the logical record here is the EVENT, never the document.
         // One `.ics` file is one raw row and, at Newbury, 1,157 of these.
         considered += 1;
-        const cats = (event.categories ?? "")
-          .split(",")
-          .map((c) => c.trim().toLowerCase());
-        const summary = (event.summary ?? "").toLowerCase();
-        const matched = category
-          ? cats.includes(category.toLowerCase())
-          : titleTerms.length > 0 &&
-            titleTerms.some((t) => summary.includes(t)) &&
-            !excludeTerms.some((t) => summary.includes(t));
+        /*
+         * **AN EDITED SITTING BELONGS TO ITS SERIES' BODY, NOT TO ITS OWN
+         * TITLE.** (2026-09-23.)
+         *
+         * An override (`RECURRENCE-ID`) is one sitting of the series its `UID`
+         * names, and the series is what says which board sits. Warner's Select
+         * Board edited its 8 September sitting to read "RESCHEDULED Select Brd
+         * -9/15"; read by its own title that is no board at all, so the edited
+         * sitting was dropped and the series' unedited first sitting stood in
+         * for it. The series' own event decides the body; the override's own
+         * `DTSTART` says when the sitting now is, and its own title is shown as
+         * the town wrote it. Nothing is read out of a title but the body match.
+         * An override whose series event is not in the feed is read by its own
+         * fields, as before: there is nothing else to read it by.
+         */
+        const owners = event.uid && event.recurrenceId ? seriesOwners.get(event.uid) : undefined;
+        const matched = owners && owners.length > 0
+          ? owners.some(namesThisBody)
+          : namesThisBody(event);
         if (!matched) {
           drops.notConfigured++;
           continue;

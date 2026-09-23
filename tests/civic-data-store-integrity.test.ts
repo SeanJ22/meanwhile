@@ -12,6 +12,7 @@ import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
   candidateSummaryRead,
+  preparedProjectionCouplingRead,
   MemoryRoutineDataStore,
   PostgresRoutineDataStore,
   PROMOTED_POINTER_COLUMNS,
@@ -967,6 +968,14 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     payload: value.readModel,
     receipt: persisted,
   });
+});
+
+test("the prepared projection's coupling read carries no composed payload", () => {
+  const select = selectList(preparedProjectionCouplingRead(drizzle.mock({ schema }), "MEETING", "composed-reader-snapshot"));
+  assert.doesNotMatch(select, /"payload"/);
+  for (const column of ["record_class", "scope", "sequence", "composed_from", "generated_at"]) {
+    assert.match(select, new RegExp(`"${column}"`), `the coupling read must still carry ${column}`);
+  }
 });
 
 test("a candidate summary is every row column but the envelope and identity set", () => {

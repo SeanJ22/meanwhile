@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 709,
-    "named": 7032,
+    "named": 7033,
     "dynamic": 28
   },
   "files": {
@@ -2468,7 +2468,8 @@
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
         "the Reader-evidence door's narrow read decides authority exactly as the whole envelope does",
-        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt"
+        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt",
+        "the prepared projection's coupling read carries no composed payload"
       ],
       "dynamic": 0
     },

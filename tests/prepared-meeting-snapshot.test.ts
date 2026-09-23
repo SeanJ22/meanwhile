@@ -48,6 +48,7 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     readPromotionIdentity: async () => null,
     readPromotionIdentities: async () => [],
     readPreparedReaderProjection: async () => null,
+    readPreparedReaderProjectionCoupling: async () => null,
     writePreparedReaderProjection: async () => ({ published: false, sequence: 0 }),
     ...overrides,
   };
@@ -148,21 +149,20 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     receipt: {} as never,
   }));
   const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
+  // The idempotent pass decides from identities and the serving copy's
+  // coupling alone: neither the partitions' payloads (7.8 MB per pass) nor
+  // the composed payload (7.5 MB) is read to learn that nothing changed.
   const store = fakeStore({
-    readPromotions: (async () => promotions) as RoutineDataStore["readPromotions"],
+    readPromotions: async () => { throw new Error("PARTITION_PAYLOADS_MUST_NOT_BE_READ_ON_IDEMPOTENT_PREPARE"); },
+    readPromotionIdentities: async () => promotions.map(({ payload: _payload, receipt: _receipt, ...identity }) => identity),
     readCandidates: async () => { throw new Error("COMPOSE_MUST_NOT_RUN_ON_IDEMPOTENT_PREPARE"); },
-    readPreparedReaderProjection: async () => ({
+    readPreparedReaderProjection: async () => { throw new Error("PREPARED_PAYLOAD_MUST_NOT_BE_READ_ON_IDEMPOTENT_PREPARE"); },
+    readPreparedReaderProjectionCoupling: async () => ({
       recordClass: "MEETING",
       scope: MEETINGS_PREPARED_SCOPE,
       sequence: 3,
-      payload: {},
       composedFrom,
-      factSha256: "b".repeat(64),
       generatedAt: "2026-09-06T00:00:00.000Z",
-      composedAt: "2026-09-06T00:00:10.000Z",
-      sourceThrough: null,
-      retrievedAt: null,
-      promotedThrough: null,
     }),
     writePreparedReaderProjection: async () => { throw new Error("IDEMPOTENT_PREPARE_MUST_NOT_WRITE"); },
   });

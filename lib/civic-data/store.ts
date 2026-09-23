@@ -82,6 +82,9 @@ export interface PreparedReaderProjectionRow {
   readonly promotedThrough: string | null;
 }
 
+/** A prepared projection row without its payload (the composed snapshot, 7.5 MB on 2026-09-23). */
+export type PreparedReaderProjectionCoupling = Pick<PreparedReaderProjectionRow, "recordClass" | "scope" | "sequence" | "composedFrom" | "generatedAt">;
+
 export interface PreparedReaderProjectionInput {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
@@ -121,6 +124,11 @@ export interface RoutineDataStore {
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** Read the single derived reader-serving projection for a record class + scope (one query). Null before the first is published. */
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
+  /**
+   * The prepared projection's publication coupling without its payload: what
+   * a runner pass needs to decide the serving copy is already current.
+   */
+  readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
   /**
    * Publish a derived reader-serving projection (a SERVING COPY of the promoted
    * partitions, never a promotion). Monotonic + last-valid-safe: the write lands
@@ -752,6 +760,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return row ? structuredClone(row) : null;
   }
 
+  async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
+    const row = this.preparedProjections.get(projectionKey(recordClass, scope));
+    return row
+      ? structuredClone({ recordClass: row.recordClass, scope: row.scope, sequence: row.sequence, composedFrom: row.composedFrom, generatedAt: row.generatedAt })
+      : null;
+  }
+
   async writePreparedReaderProjection(
     input: PreparedReaderProjectionInput,
     expectedSequence: number | null,
@@ -1125,6 +1140,21 @@ export function readerEvidenceRowToRecord(
   };
 }
 
+/** The prepared projection's coupling columns; never its composed payload. */
+export function preparedProjectionCouplingRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
+  return db
+    .select({
+      recordClass: civicDataReaderProjections.recordClass,
+      scope: civicDataReaderProjections.scope,
+      sequence: civicDataReaderProjections.sequence,
+      composedFrom: civicDataReaderProjections.composedFrom,
+      generatedAt: civicDataReaderProjections.generatedAt,
+    })
+    .from(civicDataReaderProjections)
+    .where(and(eq(civicDataReaderProjections.recordClass, recordClass), eq(civicDataReaderProjections.scope, scope)))
+    .limit(1);
+}
+
 function preparedRowToProjection(row: typeof civicDataReaderProjections.$inferSelect): PreparedReaderProjectionRow {
   return {
     recordClass: row.recordClass as RoutineRecordClass,
@@ -1339,6 +1369,19 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       eq(civicDataReaderProjections.scope, scope),
     )).limit(1);
     return row ? preparedRowToProjection(row) : null;
+  }
+
+  async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
+    const [row] = await preparedProjectionCouplingRead(this.db, recordClass, scope);
+    return row
+      ? {
+          recordClass: row.recordClass as RoutineRecordClass,
+          scope: row.scope,
+          sequence: row.sequence,
+          composedFrom: row.composedFrom as readonly PreparedProjectionCoupling[],
+          generatedAt: row.generatedAt,
+        }
+      : null;
   }
 
   async writePreparedReaderProjection(

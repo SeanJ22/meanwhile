@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 707,
-    "named": 7007,
+    "files": 708,
+    "named": 7021,
     "dynamic": 28
   },
   "files": {
@@ -4614,6 +4614,25 @@
         "statesFor reconciles presence against the record, field by field",
         "the file's migratedAt is a wall-clock stamp, not a plausible date",
         "the migration promoted nothing to VERIFIED_ABSENT"
+      ],
+      "dynamic": 0
+    },
+    "tests/ical-occurrence-identity.test.ts": {
+      "names": [
+        "ICAL-OCC · Warner's Zoning Board: the master is out of window and each in-window override is its own sitting",
+        "ICAL-OCC · a series record is replaced only by an occurrence holding its fact",
+        "ICAL-OCC · a series record whose fact no current occurrence holds is carried, never removed",
+        "ICAL-OCC · an event outside any series keeps its id exactly",
+        "ICAL-OCC · an occurrence stamp is the slot in UTC, or the date of an all-day slot",
+        "ICAL-OCC · an override of a series' first sitting replaces it, whichever is listed first",
+        "ICAL-OCC · every sitting of the Conservation Commission series is its own record",
+        "ICAL-OCC · the first read under occurrence identity replaces the series record: no ghost, no false reschedule",
+        "ICAL-OCC · the parser reads the recurrence fields it keys on",
+        "ICAL-OCC · the promotion door re-derives a supersession claim and refuses one the candidate does not hold",
+        "ICAL-OCC · the same events in any order produce the same meetings",
+        "ICAL-OCC · two copies at the same revision are settled on content, never on position",
+        "ICAL-OCC · two events on one sitting: the later revision keeps it, in either order",
+        "ICAL-OCC · two recorded reads 42 seconds apart serve the same events in different orders"
       ],
       "dynamic": 0
     },

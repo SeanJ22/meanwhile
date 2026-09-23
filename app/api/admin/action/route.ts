@@ -49,6 +49,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
+import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
@@ -220,7 +221,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const destination = consoleReturnPath(body.envelope.returnTo ?? "", "/admin");
   return NextResponse.redirect(
-    new URL(`${destination}#${outcome.ok ? "recorded" : "refused"}`, request.url),
+    new URL(`${destination}#${outcome.ok ? "recorded" : "refused"}`, ADMIN_ORIGIN),
     303,
   );
 }

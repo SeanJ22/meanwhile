@@ -154,7 +154,11 @@ const REGENERATE = (() => {
  * challenger measured on the same shape, in one run, per question. Naming the
  * arms is what lets that run happen on either side of the switch landing.
  *
- *   pnpm ask:model-compare --incumbent claude-opus-5 --challenger claude-sonnet-5
+ *   pnpm ask:model-compare --incumbent claude-opus-5 --challenger claude-opus-5-5
+ *
+ * With no flags the arms are those two constants. Since 2026-09-23 that is Opus
+ * 5 against Opus 5.5, the comparison still owed; `ASK_CHALLENGER_MODEL` says
+ * why. Arms that resolve to one model are refused by name below.
  *
  * The chosen arms are written into the run record, so a later reader never has
  * to infer which two models a record compared from what the constants say

@@ -83,7 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // the decision, and pressing one means DECIDE; the feedback-only button carries its own action.
   const action = (field("action") ?? (field("decision") !== null ? "DECIDE" : "")).trim();
   const back = (notice: string, detail?: string): NextResponse => {
-    const url = new URL(HERE, request.url);
+    const url = new URL(HERE, ADMIN_ORIGIN);
     url.searchParams.set("notice", notice);
     if (detail) url.searchParams.set("detail", detail.slice(0, 400));
     return NextResponse.redirect(url, 303);

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 714,
-    "named": 7055,
+    "named": 7057,
     "dynamic": 27
   },
   "files": {
@@ -414,6 +414,7 @@
         "an entered figure fills its provider's row with its kind, period and provenance, and the bill is never added to the ledger",
         "every provider with no reading renders as NO READING with its manual path — never a number, never zero",
         "paid outcomes narrow by state without borrowing another state's refusals",
+        "search API spend is its own line beside model spend, per host, and an unpriced request is never a zero",
         "the fix list: unique ids, every item says where it stands and what to check first, and marks order without dropping",
         "the scope travels in the URL and an unreadable scope is everywhere, never a guess",
         "the three ceilings are never blended, and an account cap or a subscription with no entry has no number"
@@ -3073,6 +3074,7 @@
         "ADM-C14: the cache row carries the defect counts, the batch share and the saving the cycle measured",
         "Fleet · Money renders dollars to the cent and no longer claims a role is free by design",
         "every number the cost section draws itself carries a denominator and a contract",
+        "search API charges are broken down by host and never counted as model spend",
         "§9A.23: an empty month is a month with nothing measured, never a month that cost $0.00",
         "§9A.23: rows are counted into their own month, both bounds inclusive, and an unreadable stamp is dropped rather than filed at the epoch",
         "§9A.23: the month totals by provider, model and role, prices the savings once, and keeps unmeasured rows out of the dollars",

@@ -18,6 +18,7 @@ import {
   weakEventIdentity,
 } from "../event-identity.ts";
 import { politeGetText } from "../http.ts";
+import { dateOfDay, dayNumber, expandRuleDays, readRule } from "./recurrence.ts";
 import type {
   Meeting,
   MeetingQuery,
@@ -25,6 +26,7 @@ import type {
   DuplicateIdentityCounts,
   NormalizeDropCounts,
   PartialScopeFailure,
+  RecurrenceReport,
   ReportingMeetingSource,
 } from "../types.ts";
 import {
@@ -73,11 +75,14 @@ import {
  *
  * ## A recurring series is one record per sitting
  *
- * A series is one `UID` across a master and its overrides. Each event in a
+ * A series is one `UID` across a master and its overrides. Each sitting of a
  * series is keyed by the `UID` plus its recurrence slot, `ical:<slug>:<UID>/
  * <slot>`; an event outside any series keeps `ical:<slug>:<UID>`. See
  * `occurrenceId` in `lib/sources/event-identity.ts`. The master's `RRULE` is
- * not expanded: the master stands for its own first sitting only.
+ * expanded into its in-window sittings when every part of it is one the
+ * recorded feeds use (`lib/sources/ical/recurrence.ts`); otherwise the refused
+ * part is named in `recurrence.notExpanded` and the master stands for its own
+ * first sitting only. An edited sitting belongs to its series' body.
  *
  * ## Per-body isolation
  *
@@ -135,6 +140,27 @@ export interface IcalEvent {
   sequence: number | null;
   /** `LAST-MODIFIED`, as written, when stated. */
   lastModified: string | null;
+  /** The `RRULE` value, when there is exactly one; see `rruleLines`. */
+  rrule: string | null;
+  /** How many `RRULE` lines the event carries. More than one is refused. */
+  rruleLines: number;
+  /** Each `EXDATE` value as `params:value`, one entry per listed date. */
+  exdates: string[];
+  /** Each `RDATE` value as `params:value`, one entry per listed date. */
+  rdates: string[];
+  /** The `RECURRENCE-ID` carries a `RANGE` parameter (this-and-future). */
+  recurrenceRange: boolean;
+}
+
+/** `EXDATE;TZID=X:a,b` → [`;TZID=X:a`, `;TZID=X:b`]. */
+function listedValues(body: string, name: string): string[] {
+  return [...body.matchAll(new RegExp(`^${name}([^:\\r\\n]*):(.*)$`, "gim"))].flatMap((m) =>
+    m[2]
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .map((value) => `${m[1]}:${value}`),
+  );
 }
 
 /**
@@ -160,7 +186,13 @@ export function parseIcs(ics: string): IcalEvent[] {
     const dtstartLine = /^DTSTART([^:\r\n]*):(.*)$/im.exec(body);
     const recurrenceIdLine = /^RECURRENCE-ID([^:\r\n]*):(.*)$/im.exec(body);
     const sequence = Number.parseInt(prop("SEQUENCE") ?? "", 10);
+    const rrules = [...body.matchAll(/^RRULE:(.*)$/gim)].map((m) => m[1].trim());
     events.push({
+      rrule: rrules.length === 1 ? rrules[0] : null,
+      rruleLines: rrules.length,
+      exdates: listedValues(body, "EXDATE"),
+      rdates: listedValues(body, "RDATE"),
+      recurrenceRange: recurrenceIdLine ? /;RANGE=/i.test(recurrenceIdLine[1]) : false,
       uid: prop("UID"),
       summary: unescapeText(prop("SUMMARY")),
       location: unescapeText(prop("LOCATION")),
@@ -236,7 +268,7 @@ export function parseDtStart(
   // zone had at that instant, which is the only correct way across a DST
   // boundary — a fixed offset is right for half the year.
   const naive = Date.UTC(+y, +mo - 1, +d, +hh, +mi, +ss);
-  const offset = zoneOffsetMs(naive, tzid);
+  const offset = wallClockOffsetMs(naive, tzid);
   /*
    * A-007 · A ZONE WE COULD NOT INTERPRET PRODUCES NO TIMESTAMP.
    *
@@ -252,6 +284,28 @@ export function parseDtStart(
    */
   if (offset === null) return null;
   return { iso: new Date(naive - offset).toISOString(), dayOnly };
+}
+
+/**
+ * The zone's UTC offset for a WALL-CLOCK time (given as if it were UTC), or
+ * `null` when the zone cannot be read.
+ *
+ * Asking for the offset at the naive instant is right except within hours of
+ * a daylight-saving change, where the naive instant and the real one fall on
+ * opposite sides of it: 3am on 1 November 2026 in New York came out 7:00Z,
+ * which is 2am EST. So both the offset before and the offset after are
+ * tried, and the one that reproduces the wall clock wins, the earlier where
+ * both do (a repeated hour's first occurrence) and the offset before the gap
+ * where neither does (an hour that does not exist): RFC 5545 §3.3.5.
+ */
+function wallClockOffsetMs(naive: number, zone: string): number | null {
+  const before = zoneOffsetMs(naive - 43_200_000, zone);
+  const after = zoneOffsetMs(naive + 43_200_000, zone);
+  if (before === null || after === null) return null;
+  const valid = [before, after].filter((candidate) => zoneOffsetMs(naive - candidate, zone) === candidate);
+  if (valid.length === 0) return before;
+  // The earlier instant is the one with the larger offset.
+  return Math.max(...valid);
 }
 
 function splitOnce(s: string, sep: string): [string, string] {
@@ -275,18 +329,38 @@ function splitOnce(s: string, sep: string): [string, string] {
  * propagates to `unplaceableInTime`, which is a fact about the record rather
  * than an assertion about the meeting.
  */
+/**
+ * One formatter per zone, because constructing one is the expensive part and
+ * an expanded series asks for the same zone hundreds of times. A zone `Intl`
+ * refuses is remembered as refused (`null`), never as UTC.
+ */
+const zoneFormatters = new Map<string, Intl.DateTimeFormat | null>();
+
+function zoneFormatter(zone: string): Intl.DateTimeFormat | null {
+  if (!zoneFormatters.has(zone)) {
+    try {
+      zoneFormatters.set(zone, new Intl.DateTimeFormat("en-US", {
+        timeZone: zone,
+        hour12: false,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }));
+    } catch {
+      zoneFormatters.set(zone, null);
+    }
+  }
+  return zoneFormatters.get(zone) ?? null;
+}
+
 function zoneOffsetMs(utcMs: number, zone: string): number | null {
   try {
-    const dtf = new Intl.DateTimeFormat("en-US", {
-      timeZone: zone,
-      hour12: false,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
+    const dtf = zoneFormatter(zone);
+    // A-007: NOT `0`. A zone Intl refused is no offset at all.
+    if (!dtf) return null;
     const parts = Object.fromEntries(
       dtf.formatToParts(new Date(utcMs)).map((p) => [p.type, p.value]),
     );
@@ -355,6 +429,199 @@ function preferredClaim(held: IdentityClaim, incoming: IdentityClaim): IdentityC
   return content(incoming) < content(held) ? incoming : held;
 }
 
+/** One sitting a series states: its instant and its recurrence slot. */
+interface Sitting {
+  readonly iso: string;
+  readonly dayOnly: boolean;
+  readonly slot: string;
+}
+
+/** What a series event states inside the serving window. */
+interface SeriesPlan {
+  /** Sittings the series itself states, ascending, before overrides apply. */
+  readonly sittings: readonly Sitting[];
+  /** In-window sittings the publisher struck out with `EXDATE`. */
+  readonly excluded: readonly { readonly slot: string; readonly statedBy: string }[];
+  /** Null when the rule was expanded; otherwise the part that was refused. */
+  readonly unsupported: string | null;
+}
+
+function isDateValue(raw: string): boolean {
+  const [params, value] = splitOnce(raw, ":");
+  return /VALUE=DATE(?!-)/i.test(params) || /^\d{8}$/.test(value.trim());
+}
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+/** The calendar day a `DTSTART` value names, on its own wall clock. */
+function localDay(raw: string): number | null {
+  const m = /^(\d{4})(\d{2})(\d{2})/.exec(splitOnce(raw, ":")[1].trim());
+  return m ? dayNumber(+m[1], +m[2], +m[3]) : null;
+}
+
+/**
+ * **THE SITTINGS ONE SERIES STATES, OR THE PART OF ITS RULE THAT WAS REFUSED.**
+ *
+ * An expanded series states every sitting its `RRULE` (and `RDATE`) produces
+ * inside the serving window, less the ones its `EXDATE` strikes out; its
+ * overrides are applied by the caller, which holds them. A series whose rule
+ * is refused states its own first sitting only, exactly as it did before
+ * expansion existed, and names the refused part: nothing is guessed.
+ */
+function planSeries(input: {
+  readonly master: IcalEvent;
+  readonly owners: readonly IcalEvent[];
+  readonly overrides: readonly IcalEvent[];
+  readonly zone: string;
+  readonly fromMs: number;
+  readonly toMs: number;
+}): SeriesPlan | null {
+  const { master, owners, overrides, zone, fromMs, toMs } = input;
+  if (!master.dtstart) return null;
+  const first = parseDtStart(master.dtstart, zone);
+  const firstSlot = slotStamp(master.dtstart, zone);
+  if (!first || !firstSlot) return null;
+  const [params, value] = splitOnce(master.dtstart, ":");
+  const inWindow = (iso: string) => {
+    const at = Date.parse(iso);
+    return at >= fromMs && at <= toMs;
+  };
+
+  const exclusions = new Map<string, string>();
+  let exdateProblem: string | null = null;
+  for (const raw of master.exdates) {
+    if (isDateValue(raw) !== first.dayOnly) {
+      exdateProblem = `EXDATE ${raw} of the wrong value type`;
+      break;
+    }
+    const slot = slotStamp(raw, zone);
+    if (!slot) {
+      exdateProblem = `EXDATE ${raw} that cannot be placed in time`;
+      break;
+    }
+    exclusions.set(slot, raw);
+  }
+
+  const firstOnly = (unsupported: string): SeriesPlan => {
+    const struck = exdateProblem === null && exclusions.has(firstSlot);
+    return {
+      sittings: !struck && inWindow(first.iso) ? [{ iso: first.iso, dayOnly: first.dayOnly, slot: firstSlot }] : [],
+      excluded: struck && inWindow(first.iso) ? [{ slot: firstSlot, statedBy: exclusions.get(firstSlot)! }] : [],
+      unsupported,
+    };
+  };
+
+  if (owners.length > 1) return firstOnly("more than one series event carrying this UID");
+  if (overrides.some((event) => event.recurrenceRange)) return firstOnly("RECURRENCE-ID with RANGE");
+  if (master.rruleLines > 1) return firstOnly("more than one RRULE");
+  if (!first.dayOnly && !/TZID=/i.test(params)) return firstOnly("a DTSTART with no TZID");
+  if (exdateProblem) return firstOnly(exdateProblem);
+
+  const stated: Sitting[] = [];
+  for (const raw of master.rdates) {
+    if (/VALUE=PERIOD/i.test(raw) || splitOnce(raw, ":")[1].includes("/")) return firstOnly("RDATE as a period");
+    if (isDateValue(raw) !== first.dayOnly) return firstOnly(`RDATE ${raw} of the wrong value type`);
+    const parsed = parseDtStart(raw, zone);
+    const slot = slotStamp(raw, zone);
+    if (!parsed || !slot) return firstOnly(`RDATE ${raw} that cannot be placed in time`);
+    stated.push({ iso: parsed.iso, dayOnly: parsed.dayOnly, slot });
+  }
+
+  if (!master.rrule) {
+    stated.push({ iso: first.iso, dayOnly: first.dayOnly, slot: firstSlot });
+  } else {
+    const reading = readRule(master.rrule, first.dayOnly);
+    if (!reading.ok) return firstOnly(reading.unsupported);
+    const rule = reading.rule;
+    const local = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2}))?$/.exec(value.trim());
+    if (!local) return firstOnly(`DTSTART ${value}`);
+    const clock = first.dayOnly ? "" : `T${local[4]}${local[5]}${local[6]}`;
+    /** A day on the series' own wall clock, resolved in its own zone. */
+    const on = (day: number): Sitting | null => {
+      const { y, m, d } = dateOfDay(day);
+      const stamp = `${y}${pad2(m)}${pad2(d)}`;
+      const parsed = parseDtStart(`${params}:${stamp}${clock}`, zone);
+      if (!parsed) return null;
+      const slot = first.dayOnly ? stamp : occurrenceStampFromInstant(parsed.iso);
+      return slot ? { iso: parsed.iso, dayOnly: first.dayOnly, slot } : null;
+    };
+    const expansion = expandRuleDays({
+      rule,
+      startDay: dayNumber(+local[1], +local[2], +local[3]),
+      throughDay: Math.floor(toMs / 86_400_000) + 2,
+      pastUntil: (day) => {
+        if (!rule.until) return false;
+        if (rule.until.kind === "DATE") return day > rule.until.day;
+        const sitting = on(day);
+        return sitting === null || Date.parse(sitting.iso) > rule.until.ms;
+      },
+    });
+    if (!expansion.ok) return firstOnly(expansion.unsupported);
+    for (const day of expansion.days) {
+      const sitting = on(day);
+      if (!sitting) return firstOnly("a sitting the zone cannot place in time");
+      stated.push(sitting);
+    }
+  }
+
+  const bySlot = new Map(stated.map((sitting) => [sitting.slot, sitting]));
+  const sittings: Sitting[] = [];
+  const excluded: { slot: string; statedBy: string }[] = [];
+  for (const sitting of [...bySlot.values()].sort((a, b) => Date.parse(a.iso) - Date.parse(b.iso))) {
+    if (!inWindow(sitting.iso)) continue;
+    const struck = exclusions.get(sitting.slot);
+    if (struck !== undefined) excluded.push({ slot: sitting.slot, statedBy: struck });
+    else sittings.push(sitting);
+  }
+  return { sittings, excluded, unsupported: null };
+}
+
+/**
+ * **A FEED THAT PUBLISHES EVERY SITTING, WITH THE SERIES' RULE ON EACH.**
+ *
+ * The Town of Newbury's Drupal calendar exports each sitting of a repeating
+ * meeting as its own event, under its own `UID`, and writes the whole series'
+ * `RRULE` on every one of them: 25 fortnightly Selectboard sittings, each
+ * carrying `FREQ=WEEKLY;COUNT=25;INTERVAL=2;BYDAY=MO`. Expanding those as RFC
+ * 5545 reads them would publish each sitting up to 25 times and invent
+ * sittings past the series' end.
+ *
+ * The evidence is in the feed itself: two events with different `UID`s, the
+ * same title and the same rule, the later one starting on a sitting of the
+ * earlier one's rule. A feed that shows it publishes its sittings one by one,
+ * so no rule in it is expanded and every event is one sitting, keyed exactly
+ * as a single event always was. Returns the evidence, or null.
+ */
+function ruleRestatedOnSittings(events: readonly IcalEvent[]): string | null {
+  const groups = new Map<string, IcalEvent[]>();
+  for (const event of events) {
+    if (!event.uid || !event.rrule || event.recurrenceId || !event.dtstart) continue;
+    const [params, value] = splitOnce(event.dtstart, ":");
+    const key = JSON.stringify([event.rrule, (event.summary ?? "").trim().toLowerCase(), params, value.trim().slice(8)]);
+    groups.set(key, [...(groups.get(key) ?? []), event]);
+  }
+  for (const group of groups.values()) {
+    if (new Set(group.map((event) => event.uid)).size < 2) continue;
+    const ordered = [...group].sort((a, b) => (localDay(a.dtstart!) ?? 0) - (localDay(b.dtstart!) ?? 0));
+    const earliest = ordered[0];
+    const startDay = localDay(earliest.dtstart!);
+    const reading = readRule(earliest.rrule!, isDateValue(earliest.dtstart!));
+    if (startDay === null || !reading.ok) continue;
+    const lastDay = Math.max(...ordered.map((event) => localDay(event.dtstart!) ?? startDay));
+    const expansion = expandRuleDays({ rule: reading.rule, startDay, throughDay: lastDay, pastUntil: () => false });
+    if (!expansion.ok) continue;
+    const days = new Set(expansion.days);
+    const later = ordered.find((event) => event.uid !== earliest.uid && days.has(localDay(event.dtstart!) ?? -1));
+    if (later) {
+      return (
+        `${earliest.uid} and ${later.uid} carry the same title and rule (${earliest.rrule}), ` +
+        `and ${later.uid} starts on a sitting of ${earliest.uid}'s rule`
+      );
+    }
+  }
+  return null;
+}
+
 export function makeIcalSource(
   wiringRows: BodySourceWiring[],
   fetchImpl?: typeof fetch,
@@ -368,7 +635,10 @@ export function makeIcalSource(
     unreachableOcdIds?: string[];
     partialScopes?: PartialScopeFailure[];
     duplicateIdentity?: DuplicateIdentityCounts;
+    recurrence?: RecurrenceReport;
   }> => {
+    /** What became of every series this pass met, by body. */
+    const recurrence: RecurrenceReport = { expandedSeries: 0, exclusions: [], notExpanded: [] };
     const drops: NormalizeDropCounts = {
       placeless: 0,
       unknownVenue: 0,
@@ -475,25 +745,64 @@ export function makeIcalSource(
        * and the series master must not keep asserting that it is.
        */
       const overriddenSlots = new Set<string>();
+      /** Each series' own event(s): the non-override events carrying its `UID`. */
+      const seriesOwners = new Map<string, IcalEvent[]>();
+      /** Each series' overrides. */
+      const seriesOverrides = new Map<string, IcalEvent[]>();
       for (const event of events) {
-        if (!event.uid || !event.recurrenceId) continue;
+        if (!event.uid) continue;
+        if (!event.recurrenceId) {
+          seriesOwners.set(event.uid, [...(seriesOwners.get(event.uid) ?? []), event]);
+          continue;
+        }
+        seriesOverrides.set(event.uid, [...(seriesOverrides.get(event.uid) ?? []), event]);
         const slot = slotStamp(event.recurrenceId, wiring.timeZone);
         if (slot) overriddenSlots.add(`${event.uid} ${slot}`);
       }
+      /*
+       * A feed that publishes every sitting itself and restates the series'
+       * rule on each one is read event by event: no rule in it is expanded,
+       * and each event keeps the id a single event always had. See
+       * `ruleRestatedOnSittings`.
+       */
+      const restated = ruleRestatedOnSittings(events);
+      let restatedSeriesEvents = 0;
+      /** Does this row's own rule name this event, read from its own fields? */
+      const namesThisBody = (event: IcalEvent): boolean => {
+        const cats = (event.categories ?? "")
+          .split(",")
+          .map((c) => c.trim().toLowerCase());
+        const summary = (event.summary ?? "").toLowerCase();
+        return category
+          ? cats.includes(category.toLowerCase())
+          : titleTerms.length > 0 &&
+              titleTerms.some((t) => summary.includes(t)) &&
+              !excludeTerms.some((t) => summary.includes(t));
+      };
 
       for (const event of events) {
         // A-002 · the logical record here is the EVENT, never the document.
         // One `.ics` file is one raw row and, at Newbury, 1,157 of these.
         considered += 1;
-        const cats = (event.categories ?? "")
-          .split(",")
-          .map((c) => c.trim().toLowerCase());
-        const summary = (event.summary ?? "").toLowerCase();
-        const matched = category
-          ? cats.includes(category.toLowerCase())
-          : titleTerms.length > 0 &&
-            titleTerms.some((t) => summary.includes(t)) &&
-            !excludeTerms.some((t) => summary.includes(t));
+        /*
+         * **AN EDITED SITTING BELONGS TO ITS SERIES' BODY, NOT TO ITS OWN
+         * TITLE.** (2026-09-23.)
+         *
+         * An override (`RECURRENCE-ID`) is one sitting of the series its `UID`
+         * names, and the series is what says which board sits. Warner's Select
+         * Board edited its 8 September sitting to read "RESCHEDULED Select Brd
+         * -9/15"; read by its own title that is no board at all, so the edited
+         * sitting was dropped and the series' unedited first sitting stood in
+         * for it. The series' own event decides the body; the override's own
+         * `DTSTART` says when the sitting now is, and its own title is shown as
+         * the town wrote it. Nothing is read out of a title but the body match.
+         * An override whose series event is not in the feed is read by its own
+         * fields, as before: there is nothing else to read it by.
+         */
+        const owners = event.uid && event.recurrenceId ? seriesOwners.get(event.uid) : undefined;
+        const matched = owners && owners.length > 0
+          ? owners.some(namesThisBody)
+          : namesThisBody(event);
         if (!matched) {
           drops.notConfigured++;
           continue;
@@ -508,13 +817,91 @@ export function makeIcalSource(
           drops.unplaceableInTime++;
           continue;
         }
-        const when = new Date(start.iso);
-        if (when < from || when > to) {
-          // COUNTED, because an uncounted exit path is how a zero-row
-          // extraction passes for an accounted one. See `outOfWindow` in
-          // lib/sources/normalize-account.ts.
-          outOfWindow++;
-          continue;
+
+        /*
+         * **WHICH SITTINGS THIS EVENT STATES.** (2026-09-23.)
+         *
+         * A single event and an override state one sitting each: their own
+         * start. A series event states every sitting of its rule inside the
+         * window (`planSeries`), and each of those is a logical record of
+         * its own, so the series event is replaced in the count by its
+         * sittings. One with no sitting in the window counts once, as out
+         * of window, which is where it counted before expansion existed.
+         */
+        const seriesEvent = Boolean(event.uid && event.recurs && !event.recurrenceId);
+        if (seriesEvent && restated) restatedSeriesEvents += 1;
+        let sittings: { iso: string; dayOnly: boolean; slot: string | null }[];
+        if (seriesEvent && !restated) {
+          const plan = planSeries({
+            master: event,
+            owners: seriesOwners.get(event.uid!) ?? [event],
+            overrides: seriesOverrides.get(event.uid!) ?? [],
+            zone: wiring.timeZone,
+            fromMs: from.getTime(),
+            toMs: to.getTime(),
+          });
+          if (!plan) {
+            drops.unplaceableInTime++;
+            continue;
+          }
+          const seriesId = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid}`;
+          if (plan.unsupported === null) recurrence.expandedSeries += 1;
+          else {
+            recurrence.notExpanded.push({
+              bodyId: wiring.bodyId,
+              seriesId,
+              reason: "UNSUPPORTED_RULE",
+              detail:
+                `${plan.unsupported} is not supported, so this series' rule is not expanded: ` +
+                "its own first sitting and its edited sittings are published, and no other sitting is inferred",
+            });
+          }
+          for (const { slot, statedBy } of plan.excluded) {
+            recurrence.exclusions.push({
+              bodyId: wiring.bodyId,
+              seriesId,
+              slot,
+              meetingId: occurrenceId(seriesId, slot),
+              statedBy,
+            });
+          }
+          if (plan.sittings.length === 0) {
+            // COUNTED, because an uncounted exit path is how a zero-row
+            // extraction passes for an accounted one. See `outOfWindow` in
+            // lib/sources/normalize-account.ts.
+            outOfWindow++;
+            continue;
+          }
+          considered += plan.sittings.length - 1;
+          // A sitting an override speaks for is the same sitting published
+          // twice: the override is its own event and is produced as itself.
+          sittings = [];
+          for (const sitting of plan.sittings) {
+            if (overriddenSlots.has(`${event.uid} ${sitting.slot}`)) {
+              duplicates += 1;
+              exactDuplicates += 1;
+            } else {
+              sittings.push(sitting);
+            }
+          }
+          if (sittings.length === 0) continue;
+        } else {
+          const when = new Date(start.iso);
+          if (when < from || when > to) {
+            outOfWindow++;
+            continue;
+          }
+          let slot: string | null = null;
+          if (event.uid && event.recurrenceId) {
+            slot = slotStamp(event.recurrenceId, wiring.timeZone);
+            if (!slot) {
+              // An override whose own slot cannot be placed in time has no
+              // identity we could state: the A-007 disposition, counted.
+              drops.unplaceableInTime++;
+              continue;
+            }
+          }
+          sittings = [{ iso: start.iso, dayOnly: start.dayOnly, slot }];
         }
 
         const rawLocation = (event.location ?? "").trim();
@@ -541,7 +928,8 @@ export function makeIcalSource(
          * `placeless` drop, because then we genuinely have nothing.
          */
         if (!rawLocation && !wiring.config.venueMatch) {
-          drops.placeless++;
+          // Every sitting this event states is one record, and each is lost.
+          drops.placeless += sittings.length;
           continue;
         }
         /*
@@ -569,7 +957,7 @@ export function makeIcalSource(
           venue = resolveVenue(SOURCE_NAME, wiring.ocdId, wiring.config.venueMatch);
         }
         if (!venue) {
-          drops.unknownVenue++;
+          drops.unknownVenue += sittings.length;
           continue;
         }
 
@@ -601,100 +989,86 @@ export function makeIcalSource(
           description: null,
         });
         const seriesId = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid ?? fallbackIdentity}`;
-        /*
-         * ONE SITTING OF A RECURRING SERIES IS ONE RECORD (2026-09-23; see
-         * `occurrenceId` in lib/sources/event-identity.ts).
-         *
-         * A series is one `UID` across several events, the master and its
-         * overrides, and keying on the `UID` alone made them compete for one
-         * id that feed order then decided. An event that is part of a series
-         * is identified by the `UID` plus its recurrence SLOT: the
-         * `RECURRENCE-ID` of an override, or the master's own `DTSTART`, which
-         * is the slot of its first sitting. An event that is not part of a
-         * series keeps the id it always had.
-         *
-         * The master stands only for that first sitting. The adapter does not
-         * expand an `RRULE` into the sittings after it, so a series' regular
-         * unedited sittings are still not produced here.
-         */
-        let id = seriesId;
-        if (event.uid && (event.recurrenceId || event.recurs)) {
-          const slot = event.recurrenceId
-            ? slotStamp(event.recurrenceId, wiring.timeZone)
-            : slotStamp(event.dtstart, wiring.timeZone);
-          if (!slot) {
-            // An override whose own slot cannot be placed in time has no
-            // identity we could state: the A-007 disposition, counted.
-            drops.unplaceableInTime++;
-            continue;
-          }
-          if (!event.recurrenceId && overriddenSlots.has(`${event.uid} ${slot}`)) {
+
+        for (const sitting of sittings) {
+          /*
+           * ONE SITTING OF A RECURRING SERIES IS ONE RECORD (2026-09-23; see
+           * `occurrenceId` in lib/sources/event-identity.ts).
+           *
+           * A series is one `UID` across several events, the master and its
+           * overrides, and keying on the `UID` alone made them compete for
+           * one id that feed order then decided. A sitting of a series is
+           * identified by the `UID` plus its recurrence SLOT: the
+           * `RECURRENCE-ID` of an override, or the instance the series' rule
+           * places, whose slot is the same key an override of it would carry.
+           * A single event keeps the id it always had.
+           */
+          const id = sitting.slot === null ? seriesId : occurrenceId(seriesId, sitting.slot);
+          const meeting: Meeting = {
+            id,
+            ocdId: wiring.ocdId,
+            /* NH-RC4: the body, from the wiring row that produced this meeting. */
+            bodyId: wiring.bodyId,
+            bodyName: wiring.config.bodyName ?? wiring.publishingOrg,
+            title,
+            startsAt: sitting.iso,
+            startPrecision: sitting.dayOnly ? "DAY" : "MINUTE",
+            timeZone: wiring.timeZone,
+            location: {
+              name: venue.name,
+              address: venue.address,
+              lat: venue.lat,
+              lng: venue.lng,
+            },
+            agendaUrl: null,
+            jurisdiction: wiring.jurisdiction,
+            status:
+              CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "")
+                ? "CANCELED"
+                : statusOf(sitting.iso, now),
+            provenance: {
+              sourceUrl: event.url ?? sourceUrl,
+              sourceOrg: wiring.publishingOrg,
+              collectedAt,
+              verifiedAt: null,
+            },
+          };
+
+          const claim: IdentityClaim = { meeting, event };
+          const held = claims.get(id);
+          if (held) {
             /*
-             * The town edited the series' first sitting, so an override now
-             * speaks for it and the master's own `DTSTART` no longer does.
-             * The same sitting published twice: an exact duplicate, whichever
-             * of the two the feed happened to list first.
+             * A-002 and A-005 · this was a bare `continue` that left the
+             * record with no disposition at all. The two kinds are counted
+             * apart, because they mean different things: an EXACT duplicate
+             * is a feed publishing the same identity twice, and a WEAK-ID
+             * collision is two records this code decided were the same
+             * without the feed saying so. The second is the one worth
+             * watching, and pooling them would hide it inside the first.
+             *
+             * WHICH ONE KEEPS THE ID is `preferredClaim`, not arrival order:
+             * a feed that reorders itself between reads must not change what
+             * a record says (2026-09-23).
              */
             duplicates += 1;
-            exactDuplicates += 1;
+            if (event.uid) exactDuplicates += 1;
+            else weakIdCollisions += 1;
+            claims.set(id, preferredClaim(held, claim));
             continue;
           }
-          id = occurrenceId(seriesId, slot);
+          claims.set(id, claim);
         }
-
-        const meeting: Meeting = {
-          id,
-          ocdId: wiring.ocdId,
-          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+      }
+      if (restated && restatedSeriesEvents > 0) {
+        recurrence.notExpanded.push({
           bodyId: wiring.bodyId,
-          bodyName: wiring.config.bodyName ?? wiring.publishingOrg,
-          title,
-          startsAt: start.iso,
-          startPrecision: start.dayOnly ? "DAY" : "MINUTE",
-          timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
-          agendaUrl: null,
-          jurisdiction: wiring.jurisdiction,
-          status:
-            CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "")
-              ? "CANCELED"
-              : statusOf(start.iso, now),
-          provenance: {
-            sourceUrl: event.url ?? sourceUrl,
-            sourceOrg: wiring.publishingOrg,
-            collectedAt,
-            verifiedAt: null,
-          },
-        };
-
-        const claim: IdentityClaim = { meeting, event };
-        const held = claims.get(id);
-        if (held) {
-          /*
-           * A-002 and A-005 · this was a bare `continue` that left the record
-           * with no disposition at all. The two kinds are counted apart,
-           * because they mean different things: an EXACT duplicate is a feed
-           * publishing the same identity twice, and a WEAK-ID collision is two
-           * records this code decided were the same without the feed saying
-           * so. The second is the one worth watching, and pooling them would
-           * hide it inside the first.
-           *
-           * WHICH ONE KEEPS THE ID is `preferredClaim`, not arrival order:
-           * a feed that reorders itself between reads must not change what a
-           * record says (2026-09-23).
-           */
-          duplicates += 1;
-          if (event.uid) exactDuplicates += 1;
-          else weakIdCollisions += 1;
-          claims.set(id, preferredClaim(held, claim));
-          continue;
-        }
-        claims.set(id, claim);
+          seriesId: null,
+          reason: "RULE_RESTATED_ON_PUBLISHED_SITTINGS",
+          detail:
+            `${restatedSeriesEvents} event(s) this body's rule selects carry a recurrence rule, and this feed ` +
+            `publishes its sittings one by one with the series' rule restated on each (${restated}); ` +
+            "each event is read as the one sitting it states, and no rule is expanded",
+        });
       }
     }
 
@@ -718,6 +1092,9 @@ export function makeIcalSource(
         // A-005 · reported always, including as zeroes. A counter that only
         // appears when it fires cannot be read as "we looked and it was none".
         duplicateIdentity: { exact: exactDuplicates, weakIdCollision: weakIdCollisions },
+        // Reported always, like the duplicate counts: a series that was not
+        // expanded is named here, never left for a short calendar to imply.
+        recurrence,
         ...(archiveRefusals.size > 0
           ? {
               // A-004 · the third state, between `ok` and refused. The

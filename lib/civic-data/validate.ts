@@ -8,7 +8,7 @@ import {
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
-import { supersedesSeriesRecord } from "../sources/event-identity.ts";
+import { occurrenceStampFromInstant, supersedesSeriesRecord } from "../sources/event-identity.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -176,6 +176,36 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       validMeetingEvidence.set(delta.key, row);
       continue;
     }
+    if (row.code === "EXCLUDED_BY_PUBLISHER") {
+      /*
+       * A sitting the publisher struck out of its series (2026-09-23). The
+       * statement must be one THIS read recorded, as a held fact of this
+       * candidate, for this record's own body; the removed record must be
+       * that very sitting; and the candidate must not publish it anyway.
+       */
+      const stated = (candidate.excludedFacts ?? [])
+        .filter((fact) => fact.code === "MEETING_EXCLUDED_BY_PUBLISHER")
+        .map((fact) => object(fact.record))
+        .find((record) => record?.seriesId === row.seriesId && record?.slot === row.slot);
+      const statedMeetingId = typeof stated?.meetingId === "string" ? stated.meetingId : null;
+      const thatSitting =
+        meetingId !== null && startsAt !== null && (
+          meetingId === statedMeetingId ||
+          (meetingId === row.seriesId && occurrenceStampFromInstant(startsAt) === row.slot)
+        );
+      if (
+        row.parentMeetingKey !== undefined ||
+        !meetingId || delta.key !== `meeting:${meetingId}` ||
+        !startsAt || startsAt !== row.priorStartsAt ||
+        !stated || !statedMeetingId || stated.bodyId !== (typeof before?.bodyId === "string" ? before.bodyId : null) ||
+        !thatSitting ||
+        currentMember(`meeting:${statedMeetingId}`) !== undefined
+      ) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven struck out by its publisher in this read.`);
+      }
+      validMeetingEvidence.set(delta.key, row);
+      continue;
+    }
     if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} names no removal authority this validator recognizes.`);
     }
@@ -212,8 +242,10 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       (row.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" && parent.code === "OUTSIDE_REGISTERED_SERVING_WINDOW"
         ? row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
           row.lowerBound === parent.lowerBound && row.upperBound === parent.upperBound
-        : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" &&
-          row.successorKey === parent.successorKey);
+        : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY"
+          ? row.successorKey === parent.successorKey
+          : row.code === "EXCLUDED_BY_PUBLISHER" && parent.code === "EXCLUDED_BY_PUBLISHER" &&
+            row.seriesId === parent.seriesId && row.slot === parent.slot);
     if (!inherits) {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }

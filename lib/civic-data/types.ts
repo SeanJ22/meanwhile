@@ -303,7 +303,8 @@ export interface RoutineChangeSet {
  */
 export type RoutineRemovalEvidence =
   | ServingWindowRemovalEvidence
-  | OccurrenceSupersessionRemovalEvidence;
+  | OccurrenceSupersessionRemovalEvidence
+  | PublisherExclusionRemovalEvidence;
 
 export interface ServingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
@@ -335,6 +336,29 @@ export interface OccurrenceSupersessionRemovalEvidence {
   readonly code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY";
   /** `meeting:<series id>/<slot>`, a fresh member of the same candidate. */
   readonly successorKey: string;
+  /** The previously promoted meeting's exact `startsAt`. */
+  readonly priorStartsAt: string;
+  /** Required only for an agenda document; names its exact removed meeting. */
+  readonly parentMeetingKey?: string;
+}
+
+/**
+ * A published sitting of a recurring series that its publisher has since
+ * struck out of the series (`EXDATE`), 2026-09-23. The validator re-derives it
+ * from the candidate's own held fact `MEETING_EXCLUDED_BY_PUBLISHER`, which the
+ * same read recorded: same series, same slot, same body, and the removed
+ * record is that sitting (its occurrence id, or the series' own UID-only id at
+ * that slot's instant). A cancellation the publisher states as a STATUS is not
+ * this: it stays a status on a published sitting.
+ */
+export interface PublisherExclusionRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
+  readonly key: string;
+  readonly code: "EXCLUDED_BY_PUBLISHER";
+  /** The series' own meeting id, `<source>:<slug>:<UID>`. */
+  readonly seriesId: string;
+  /** The struck sitting's recurrence slot. */
+  readonly slot: string;
   /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;
   /** Required only for an agenda document; names its exact removed meeting. */

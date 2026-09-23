@@ -2,8 +2,8 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 715,
-    "named": 7072,
-    "dynamic": 28
+    "named": 7081,
+    "dynamic": 29
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -4679,22 +4679,31 @@
     },
     "tests/ical-occurrence-identity.test.ts": {
       "names": [
-        "ICAL-OCC · Warner's Zoning Board: the master is out of window and each in-window override is its own sitting",
+        "ICAL-OCC · Warner's 8 September record is replaced by the edited sitting: not duplicated, not carried",
+        "ICAL-OCC · Warner's Zoning Board: each edited and each unedited sitting of the series is its own record",
+        "ICAL-OCC · a feed that restates the series' rule on every sitting is read event by event",
+        "ICAL-OCC · a published sitting the publisher later strikes out is removed under EXCLUDED_BY_PUBLISHER, and only then",
+        "ICAL-OCC · a rule part not supported is a named failure: the series' own sittings publish and nothing is guessed",
+        "ICAL-OCC · a series keeps its wall clock across the daylight-saving change, and a zone without DST keeps its offset",
         "ICAL-OCC · a series record is replaced only by an occurrence holding its fact",
         "ICAL-OCC · a series record whose fact no current occurrence holds is carried, never removed",
+        "ICAL-OCC · a sitting the publisher struck out (EXDATE) is not published, and is named",
+        "ICAL-OCC · an RDATE adds a sitting to its series; an RDATE period is refused by name",
+        "ICAL-OCC · an edited sitting belongs to its series' body, and replaces the series' own copy of it",
+        "ICAL-OCC · an edited sitting is never claimed by a body its own title happens to name",
         "ICAL-OCC · an event outside any series keeps its id exactly",
         "ICAL-OCC · an occurrence stamp is the slot in UTC, or the date of an all-day slot",
-        "ICAL-OCC · an override of a series' first sitting replaces it, whichever is listed first",
         "ICAL-OCC · every sitting of the Conservation Commission series is its own record",
         "ICAL-OCC · the first read under occurrence identity replaces the series record: no ghost, no false reschedule",
         "ICAL-OCC · the parser reads the recurrence fields it keys on",
         "ICAL-OCC · the promotion door re-derives a supersession claim and refuses one the candidate does not hold",
+        "ICAL-OCC · the rule reader names every part it refuses",
         "ICAL-OCC · the same events in any order produce the same meetings",
         "ICAL-OCC · two copies at the same revision are settled on content, never on position",
         "ICAL-OCC · two events on one sitting: the later revision keeps it, in either order",
         "ICAL-OCC · two recorded reads 42 seconds apart serve the same events in different orders"
       ],
-      "dynamic": 0
+      "dynamic": 1
     },
     "tests/ical-source.test.ts": {
       "names": [

@@ -19,7 +19,7 @@ import {
 import type { BindableEntity } from "@/lib/routing/named-entity";
 import { asksForBodyAgenda, classPhraseIn, mentionBeforeClassPhrase } from "@/lib/routing/named-entity";
 import { applyNamedBodyDecision, decideNamedBody } from "@/lib/ask/body-confirmation";
-import { heldAgendaDocumentRecords } from "@/lib/ask/held-agenda";
+import { sittingAgendaHoldings } from "@/lib/ask/held-agenda";
 import { outcomeQuestionClass } from "@/lib/ask/outcome-question";
 import { ripcordPulled } from "@/lib/ripcords";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
@@ -1291,8 +1291,16 @@ export async function POST(request: Request) {
       for (const sitting of [chosen, ...sameDay]) {
       const chosen = sitting;
       const forMeeting = documents.filter((d) => d.meetingId === chosen.id);
-      records.push(...heldAgendaDocumentRecords(chosen, snapshot?.agendaDocuments ?? [], meetings));
-      denominators.agendaDocumentsForThatMeeting = (denominators.agendaDocumentsForThatMeeting ?? 0) + forMeeting.length;
+      /*
+       * One reading of the sitting's held agenda for the whole answer
+       * (2026-09-22): the records, the document count the model is given, and
+       * the document every portal and item record below cites. Counting stored
+       * rows told the model Tucson Unified sitting 499 held 89 agenda documents
+       * — 88 re-reads of one unchanged page plus the board's site root.
+       */
+      const holdings = sittingAgendaHoldings(chosen, snapshot?.agendaDocuments ?? [], meetings);
+      records.push(...holdings.records);
+      denominators.agendaDocumentsForThatMeeting = (denominators.agendaDocumentsForThatMeeting ?? 0) + holdings.documents.length;
 
       /*
        * ── ASK-07 ── **WHOSE GAP AN ABSENT AGENDA IS.** (2026-08-29.)
@@ -1393,7 +1401,9 @@ export async function POST(request: Request) {
       // structured agenda for this exact sitting.
       if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) gaps.push(publication.gap);
 
-      const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
+      // The document the reader is shown first — the one the reading, and so
+      // `items`, was taken over — never merely the newest stored row.
+      const newest = holdings.documents[0];
       const items = publication.items;
 
       if (publication.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX" && newest) {
@@ -1429,7 +1439,7 @@ export async function POST(request: Request) {
                link is an id, not an inference from a heading. */
             bodyId: chosen.bodyId,
             meetingId: chosen.id,
-            documentId: (snapshot?.agendaDocuments ?? []).find(document => document.meetingId === chosen.id && document.documentUrl === newest.documentUrl)?.id,
+            documentId: newest.id,
             text: item,
             occurredAt: chosen.startsAt,
             sourceUrl: newest.documentUrl,

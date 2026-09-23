@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 696,
-    "named": 6934,
+    "files": 697,
+    "named": 6937,
     "dynamic": 28
   },
   "files": {
@@ -4379,6 +4379,14 @@
         "Q: the vendor host that serves the agenda PDF disallows us. Is the agenda unavailable?",
         "Q: we hold text from a host later found to disallow crawling. Purge it?",
         "answering a CURRENT question never requires the history files"
+      ],
+      "dynamic": 0
+    },
+    "tests/grounded-agenda-projection.test.ts": {
+      "names": [
+        "one reading per sitting: Tucson Unified 499's 89 stored rows are ONE shown document, the newest read of its own page",
+        "the document every agenda item cites is the one the reading was taken over, never a newer index page",
+        "the real grounded route hands the answer model ONE Tucson Unified 499 document, the projection's newest, and cites Pima items to the agenda"
       ],
       "dynamic": 0
     },

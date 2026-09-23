@@ -438,6 +438,23 @@ manifest shows. It was written at 04:27:50Z, has 593 entries and has `promotionE
   captures: search-index results for candidate sites. No normalizer or verifier exists for them.
   Their evidence is held and cited.
 
+**The second cycle on `795f56c1`, 04:44:10–04:53:43Z**, also finished OK. Nothing was
+recovered twice, and the obligations stayed live.
+
+- **Dispatch.** Its digest shows 12 dispatched: 2 DISCHARGED and 10 failed. It has no "recovered"
+  line.
+- **Afterwards.** 0 Attempts were on an already-settled task. There were no CLAIMED-but-disposed
+  tasks, no open Attempts and no live or stale route leases.
+- **Against the first cycle's readback:**
+  - Nothing moved on any of the 62: task, lease, Attempt and commit-count fields are unchanged.
+  - The 41 owed rows kept exactly the debt they had, with no second failure.
+  - The 10 are unchanged.
+- **The 11 discharged Marginalia obligations came due and were walked again.** Each walk ran
+  under a new occurrence and a new RouteTask, never the settled one.
+  - 2 were read again (INGESTED) and are now anchored at 04:44:10Z.
+  - 9 failed and carry debt for their retry.
+  - This is the recurrence the fix is meant to preserve.
+
 **The 10 still open are superseded obligations, and they are inert.**
 
 - **Which ones.** All 10 are `#candidate-authored-awaits-site` obligations, for Diaz, Swallow,
@@ -461,4 +478,5 @@ manifest shows. It was written at 04:27:50Z, has 593 entries and has `promotionE
 | --- | --- | --- |
 | `runner-settled-route-residue-recovery-before-2026-09-22.json` | `cac90aee…` | The 02:24Z read-only baseline of the 62 |
 | `runner-settled-route-residue-recovery-after-2026-09-22.json` | `d5c87d1d…` | The 04:28Z read-only readback after the first cycle on `795f56c1` |
+| `runner-settled-route-residue-recovery-second-cycle-2026-09-22.json` | `5b3817b3…` | The 04:54Z read-only readback after the second cycle |
 | `runner-settled-route-residue-verify-2026-09-22.mjs.txt` | `12980b61…` | The READ ONLY verifier that produced both |

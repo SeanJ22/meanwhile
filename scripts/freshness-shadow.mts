@@ -847,9 +847,10 @@ const placementRank = (obligationId: string): number | null => {
   const at = subject === undefined || expansionPlan === null ? null : expansionPlan.placementOf(subject);
   return at === null ? null : 1 + at;
 };
-const placedFirst: ReadonlySet<string> =
+/** The dispatcher's first rows when NO DISPATCH is pending: every selected scope's work. Null otherwise, so a DISPATCH keeps both lanes. */
+const scopePlaceFirst: ReadonlySet<string> | null =
   dispatchPriority.size > 0 || expansionPlan === null
-    ? dispatchPriority
+    ? null
     : new Set(sync.all.filter((o) => expansionPlan.placedSubjects.has(o.subjectId)).map((o) => o.id));
 if (expansionPlan !== null) {
   console.log(`  expansion scopes: ${expansionPlan.scopes.length} selected (${expansionPlan.reading.lookup.source} Census geography)`);
@@ -900,8 +901,14 @@ const modelOrder = orderByReaderImpact(
   orderingInputs,
 );
 const dispatchOrdering: DispatchOrdering | null = dueModel.length === 0 ? null : modelOrder.ordering;
-/* The owner's dispatch goes ahead of the bands (ADM-8), then the selected expansion scopes by priority; within each group the band order stands. */
-const scoutOrder = orderByPlacement(modelOrder.ordered, (b) => placementRank(b.row.id));
+/* The owner's dispatch goes ahead of the bands (ADM-8); within each group the band order stands. With expansion scopes selected, the same
+   DISPATCH-first order continues scope by scope (priority 1 first) before the rest. */
+const scoutOrder = expansionPlan === null
+  ? [
+      ...modelOrder.ordered.filter((b) => dispatchPriority.has(b.row.id)),
+      ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
+    ]
+  : orderByPlacement(modelOrder.ordered, (b) => placementRank(b.row.id));
 const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation): number => {
   const leftRank = placementRank(left.obligation.id) ?? Number.POSITIVE_INFINITY;
   const rightRank = placementRank(right.obligation.id) ?? Number.POSITIVE_INFINITY;
@@ -1669,8 +1676,10 @@ const cycle = await runCycle({
   skipReclaim: canary,
   admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
   budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
-  /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too; with none pending, the selected expansion scopes do. */
-  placeFirst: placedFirst,
+  /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too. */
+  placeFirst: dispatchPriority,
+  /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
+  ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
     decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */

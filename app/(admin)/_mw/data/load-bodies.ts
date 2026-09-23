@@ -10,6 +10,7 @@ import zipIndex from "@/data/derived/zip-division-ids.json";
 import { buildBodyViews, type BodyView, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
 
 import { readBodyStore } from "./body-store.ts";
+import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
 
 export type BodiesRead =
   | { readonly kind: "HELD"; readonly asOf: string; readonly views: readonly BodyView[] }
@@ -66,15 +67,21 @@ function zipOf(ocdId: string | null): string | null {
   return null;
 }
 
-/* Kept for a minute in this instance: a body's standing moves on the runner's clock, not on a click. */
-const TTL_MS = 60_000;
-let memo: { readonly at: number; readonly read: BodiesRead } | null = null;
+/*
+ * A minute fresh, five minutes recent (see shared-read.ts): a body's standing
+ * moves on the runner's clock, not on a click, and every page names the time
+ * its bodies were read.
+ */
+const shared = sharedRead<BodiesRead>({
+  freshMs: 60_000,
+  staleMs: 5 * 60_000,
+  deadlineMs: ADMIN_READ_DEADLINE_MS,
+  keep: (r) => r.kind === "HELD",
+  late: (ms) => ({ kind: "UNREAD", detail: lateWords("The body read", ms) }),
+});
 
 export async function loadWatchedBodies(nowIso: string): Promise<BodiesRead> {
-  if (memo && Date.now() - memo.at < TTL_MS) return memo.read;
-  const read = await readWatchedBodies(nowIso);
-  if (read.kind === "HELD") memo = { at: Date.now(), read };
-  return read;
+  return shared.read(() => readWatchedBodies(nowIso));
 }
 
 async function readWatchedBodies(nowIso: string): Promise<BodiesRead> {

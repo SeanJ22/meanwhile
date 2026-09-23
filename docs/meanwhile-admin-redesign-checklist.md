@@ -24,16 +24,21 @@ session supplies the evidence for the capabilities it delivers; a row names its 
 
 ---
 
-## What Sean can do in Admin (once PR A is deployed)
+## What Sean can do in Admin (deployed 2026-09-23, #373)
+
+Statuses from the signed-in walk of admin.meanwhileusa.com on 2026-09-23, 20:12–20:25Z (Sean's session): every
+redesigned page and three kept pages returned 200 with their content, and the figures below were checked against the
+stores with independent read-only SQL. Write controls were not pressed: they are Sean's to press, and the paid lane stays
+paused.
 
 | Area | What | Status |
 | --- | --- | --- |
-| Every page | One header: Fleet / Readiness, one scope filter that holds across both, Other pages. The old View/State header is gone everywhere. | built |
-| Fleet · Now | Read what is working, what isn't and where to put effort, each counted from the lists beneath; answer each decision with an option or in his own words; open any watched body. | built |
-| Fleet · Work | See the runner and pause/resume it; choose a geography (kind, then place) and see every ZCTA it covers and what already exists there before sending; send it with a priority and a budget; watch the runner acknowledge it; open any assignment in place. | built |
-| Fleet · Money | See the three ceilings (and change the in-app dial), every provider with its reading or NO READING, AI usage by model, spend by place, what paid work produced; enter or import a bill the system cannot read. | built |
-| Is it learning · Fix list | Read what the records say about learning today; order the MW items; put one on the fix queue; send the queue. | built |
-| Readiness | All states; one state's collection status, five readings and gaps by district, county or metro; County → Pima → its 56 ZCTAs with coverage, gaps and work; What counts as done. | built |
+| Every page | One header: Fleet / Readiness, one scope filter that holds across both, Other pages. The old View/State header is gone everywhere. | verified |
+| Fleet · Now | Read what is working, what isn't and where to put effort, each counted from the lists beneath; answer each decision with an option or in his own words; open any watched body. | verified — 108 of 119 bodies got in; 24-hour changes 217 added, 3,741 revised, 10 removed equal the store to the record; 74 cards listed = 69 decisions + 3 optional + 2 machine checks. Records held read 596 where the store holds at least 608 (bodies read through two sources counted one source) — fixed in P5 |
+| Fleet · Work | See the runner and pause/resume it; choose a geography (kind, then place) and see every ZCTA it covers and what already exists there before sending; send it with a priority and a budget; watch the runner acknowledge it; open any assignment in place. | verified (read); the first open on a cold instance failed with "This page didn't load" (the page outran Netlify's 10-second limit) — fixed in P5 |
+| Fleet · Money | See the three ceilings (and change the in-app dial), every provider with its reading or NO READING, AI usage by model, spend by place, what paid work produced; enter or import a bill the system cannot read. | verified — September ledger $186.31 equals `cp_log_costs` to the cent; the last charge with dollars is still 2026-09-22 20:06:54Z; the dial reads $105.00, set 2026-09-19 |
+| Is it learning · Fix list | Read what the records say about learning today; order the MW items; put one on the fix queue; send the queue. | verified (read) |
+| Readiness | All states; one state's collection status, five readings and gaps by district, county or metro; County → Pima → its 56 ZCTAs with coverage, gaps and work; What counts as done. | verified — Pima: 56 codes, 96 bodies, 38 with a way in, 4 codes not indexed; choosing districts clears the county; Ohio reads as sentences, never zeros |
 
 ---
 
@@ -50,7 +55,7 @@ session supplies the evidence for the capabilities it delivers; a row names its 
 | 1.7 | Inherited knowledge: exact text given at dispatch, and whether used | needs recording | Recorded on each Scout result since 2026-09-19; "whether used" is not (MW-025) | Backend |
 | 1.8 | Model routing: class, why, one escalation with evidence and combined cost | needs recording | No step has ever escalated; the reason is recorded nowhere (MW-031) | Backend |
 | 1.9 | Budget enforcement per assignment | needs recording | Per-geography budget enforced; per-assignment does not exist (MW-021) | Backend |
-| 1.10 | One new or changed record reaches the public site, with its audit trail | built — to demonstrate | Routine reads carry it end to end today (read → change set → validated → promoted version → reader readback). An opened routine assignment's trail follows the latest version that changed what readers see — source, retrieval time, what changed with the meetings named, validation time, promotion time and version, public destination, first readback — and names the later version serving now, which re-confirmed it. Candidate for the demonstration: Morris County, NJ, where the county withdrew the 7:00 PM agenda for its September 23 meeting; read, validated, promoted and read back at 9:53 AM ET that day (version `cv-362cbf555009…`) | Redesign (demo) |
+| 1.10 | One new or changed record reaches the public site, with its audit trail | demonstrated (routine) | Morris County, NJ, 2026-09-23. The county withdrew the agenda for its Board of County Commissioners' 7:00 PM regular meeting (its own page now reads "The meeting is not available at this time"). On the deployed Admin, Work → the routine assignment shows: IQM2 portal; retrieved 9:53 AM ET; 1 meeting changed, named; validation passed 9:53 AM ET; promoted as version `cv-362cbf555009…` at 9:53 AM ET; public destination meanwhileusa.com/?zip=07005; checked 9:53 AM ET through the Reader's projection; served now by a later version that changed nothing. On the reader's path, the public meetings API for 07005 lists the same 24 meetings for that board and serves `iqm2:morriscountynj:2248` with no agenda link, while the 5:00 PM work session keeps its agenda. One search-log row written. The owner-assignment form of this test (a selected geography) waits on Sean's approved scope and budget | Redesign |
 | 1.11 | Not finished: refused/unsettled visible with three dead-end fields | built (partial) | Three fields shown or named missing (MW-016); refusals roll up per assignment only in part (MW-015) | Backend (MW-015/016) |
 | 2 | Unknown is never zero; empty state gives sentences; unanswerable period refused | built | Dashed pills and floors throughout; a state with nothing registered gives two sentences; every figure names its own window (no period selector exists — MW-023) | Redesign |
 | 3.1 | A readiness gap opens the assignment that addresses it | built (partial) | A container opens Work with the geography chosen, or the assignment already covering it; gaps are not yet linked to requirement instances by id (MW-063) | Redesign / Backend |
@@ -59,7 +64,7 @@ session supplies the evidence for the capabilities it delivers; a row names its 
 | 3.4 | Scope holds across areas; panels that cannot narrow say so | built | `?scope=` on every link; Money and Learning say which figures are everywhere | Redesign |
 | 3.5 | One queue, one ledger, one status vocabulary | built | The old decision queue and the fleet Decisions tab are deleted; one assignment view; one charge ledger | Redesign |
 | 4 | Cost: every provider, bill ≠ ledger, balance ≠ usage, three ceilings, refused rates, test spend | built | Money · Overall spending and Cost of work; manual entry path (`billing.fact.record`); test spend is inside totals and not yet separated (MW-024) | Redesign / Backend (MW-024) |
-| 5 | Maintenance does not become a paid re-read | built — to demonstrate | Routine re-reads are plain code: $0 model spend by construction; paid research is paused | Redesign (demo) |
+| 5 | Maintenance does not become a paid re-read | partly shown | Routine re-reads are plain code: $0 model spend by construction. In the 24 hours to 20:12Z on 2026-09-23 the runner made 2,603 routine meeting reads (1,355 got in) and the ledger gained no charge with dollars — the last is 2026-09-22 20:06:54Z. The test as written deploys an assignment against a current body, which is an expansion and waits on Sean's approved scope and budget | Redesign (demo) / Sean |
 | 6 | Readiness arithmetic: no sixth number; a gate blocks its own lane; a body counted once; blocked stays unsatisfied; versioned bar | built (partial) | First four hold on the Readiness screens; the standard is code, not versioned data (MW-063) | Backend (MW-063) |
 
 ---
@@ -119,7 +124,7 @@ session supplies the evidence for the capabilities it delivers; a row names its 
 | --- | --- | --- | --- |
 | Vault — complete (handoff 2026-09-23, re-checked 17:41Z) | Held evidence is readable by the runtime: 473 objects restored from the main checkout's vault (#362, merge f0767e02) and 23 from an agent worktree's vault (#370, merge cee32592), add-only, sidecars byte-identical; the deployed tool finds 0 of 3,731 records held only in an old vault. Worker artifact resolution reads any complete, admitted record of an artifact (#367, merge 8e21f229): 10 of 10 previously failing ids read, 0 NOT_IN_VAULT across the 339 restored ids | `docs/evidence/runtime-vault-restore-2026-09-22.md`, `docs/evidence/runtime-vault-restore-agent-worktree-2026-09-23.md`; #362 and #367 comments | 4 binary bodies refused at `issueParserInput` (UTF-8 only) — Backend. 57 records with bytes in no vault: 17 restricted by design; 40 raw, recoverable only by a new walk (including 2 Pima Legistar parser tasks) — no owner or budget; Sean decides whether they matter |
 | Census — delivered | The Census geography lookup behind every district, county and metro choice | #346, #363; `docs/meanwhile-admin-requirements.md` row 3 | The 2026 district build, only if Sean picks a redrawn state |
-| RouteTask — delivered, one PR in the train | #368 (merge d4b7edde, verified 17:54Z): an obligation the registry stops emitting is retired with a named reason. First cycle: 23 superseded rows retired, 20 legacy rows' open occurrences settled, 40 occurrences closed unresolved, 17 debts tombstoned; nothing deleted, no RouteTask, lease or Attempt written. Admin's live-obligation and open-occurrence counts no longer include that dead work | #368; post-deploy receipts to follow for #372 | #372 (in the train after #371): 19 abandoned occurrences from 2026-09-01 closed, with a guard. Meetings discovery moves to the gap ledger tonight with Backend's reader batch: owed for 2,641 jurisdictions (1,975 with a known site never walked, 666 with no website recorded); **nothing performs it** — the only executor that walks a site is the paid Scout lane, closed under the research pause |
+| RouteTask — delivered (#368, #372) | #368 (merge d4b7edde, verified 17:54Z): an obligation the registry stops emitting is retired with a named reason. First cycle: 23 superseded rows retired, 20 legacy rows' open occurrences settled, 40 occurrences closed unresolved, 17 debts tombstoned; nothing deleted, no RouteTask, lease or Attempt written. Admin's live-obligation and open-occurrence counts no longer include that dead work | #368; #372 (merge 41d4c724) post-deploy receipt: read-only check at 19:49:43Z against a 19:07:32Z before-image, first cycle on runtime 41d4c724 at 19:34:18Z — 19 of 19 abandoned occurrences closed unresolved ("ABANDONED: … Nothing was read and nothing was refreshed"), their 19 RouteTasks unchanged, no Attempt, lease or commit written, all 19 obligations still active, nothing deleted. That cycle was killed at the 15-minute wall after its work finished, so it wrote no digest line; the receipt is read from the store | #372 closed 19 abandoned occurrences from 2026-09-01, with a guard against new ones — dead work removed, never work done. Meetings discovery moves to the gap ledger tonight with Backend's reader batch: owed for 2,641 jurisdictions (1,975 with a known site never walked, 666 with no website recorded); **nothing performs it** — the only executor that walks a site is the paid Scout lane, closed under the research pause |
 
 Data meanings the screens rely on: `WORKER_ARTIFACT_NOT_IN_VAULT` now means no complete, admitted record of the artifact is held anywhere the runtime reads — a true absence. A worker's evidence names the Attempt whose bytes were actually read, which can be later than the first record carrying that artifact id. An obligation with `active=false`, a `retiredAt` and a `retirementReason` (SUPERSEDED, MOVED TO THE GAP LEDGER, or a legacy transfer reason) is retired history, not live work. An occurrence closed with no disposition and an `unresolvedReason` (SUPERSEDED, MOVED TO THE GAP LEDGER, ABANDONED, or the row's own retirement reason) is a closure, not a reading, and never counts as work done. A debt with zero failures and "…the obligation was retired (…). Not a reading" is a tombstone, not a discharge. Meetings discovery needs recorded in the gap ledger are **owed, with no executor** — never shown as scheduled work.
 
@@ -142,11 +147,36 @@ row, so none reads as still fixed. Whether any returns is Sean's call.
 
 ---
 
+## Track everywhere, without a code change (Sean, 2026-09-23)
+
+Sean's direction, on learning that tracking stops at three states: *"This shouldn't be a code change - new areas states
+will be added rapidly, it needs to be able to track and keep up everywhere, not just a small subset"*, and of the three
+things an area needs to be trackable end to end, *"This needs built, whether it's in this session or the admin and worker
+cost visibility session"*.
+
+What exists today (measured 2026-09-23): the published Census lookup already covers every state (Ohio: 88 counties, 15
+congressional districts, 44 metros, 33 and 99 state legislative districts), so Admin can already accept an instruction
+for any county, district or metro. Three things stop at three states: the coverage list is code (`COVERED_STATES` in
+`lib/coverage/states.ts`, read by Admin, expansion, coverage artifacts, the ballot and funding readers, and two build
+scripts); the ZIP index that places bodies on codes holds 279 ZIPs, all AZ/NH/NJ; and nothing does discovery (the paid
+lane is paused and no unpaid executor exists).
+
+| Part | Owner | Status |
+| --- | --- | --- |
+| Coverage as data: which states and areas are tracked comes from what is registered, not from a list in code; Admin's state list, readiness and composer follow it | Redesign | mapping started; the reader-bound consumers (`lib/ballot`, `lib/funding`) land after Backend's reader batch |
+| A nationwide ZIP index and geometry, so any code's bodies can be placed | Redesign | mapping started |
+| MW-028: sending a geography creates its missing work (registry-derived requirement instances become obligations and RouteTasks through the durable path, capped by the budget, with created / reordered / blocked counts on the receipt). Its unit list is read from the registration data above, never from a code list | Backend | design started |
+| An unpaid discovery executor under the standing runner: consumes the gap ledger (owed site walks, vendor-pattern probes, robots-first, no model) | RouteTask (by Backend's assignment) | asked |
+| Demonstrating any of it on a new area | Sean | waits on an approved scope and budget; building does not |
+
+---
+
 ## Shipping
 
 | # | Item | Evidence | Status |
 | --- | --- | --- | --- |
-| P1 | PR A — the redesign on existing reads, the billing-figure actions, the research route's JSON answer | required checks green, merged, deployed | built |
+| P1 | PR A — the redesign on existing reads, the billing-figure actions, the research route's JSON answer | #373: local gates 16 of 16 run as CI runs them (7,162 tests, 0 failing); 11 required checks green on `c014400c`; merged as `65f0c6f6` at 20:09:17Z; Netlify's deploy record shows `65f0c6f` live at 20:11:11Z (deploy `6ab431ef…`), read without a request to the site | deployed |
 | P2 | Redirect host fix: nine redirects in seven admin routes build their Location from the admin origin, with a guard over `app/api/admin/**` and `app/(admin)/**` | #371 (Backend), merge 94ab9213, served from 18:22:25Z. Read-only probe of a failed Google sign-in callback: before (17:46:11Z) `303 → https://meanwhileusa.com/admin/login?why=BAD_STATE`, the public host, a 404; after (18:22:33Z) `303 → https://admin.meanwhileusa.com/admin/login?why=BAD_STATE`. The first owner button press is the live confirmation of the write path | verified (read path) |
-| P3 | Signed-in walk of admin.meanwhileusa.com, side by side with the prototype; values checked against records | screenshots per screen | todo |
-| P4 | Assignment-to-publication demonstration (acceptance 1.10 and 5) on the deployed site | a routine assignment followed from read to reader; and, only with Sean's approved scope and budget, one selected geography | todo |
+| P3 | Signed-in walk of admin.meanwhileusa.com, side by side with the prototype; values checked against records | Walked 20:12–20:25Z in Sean's signed-in session: content and values per screen, recorded in the first table above. It found the cold-load failure and the two-source undercount, both fixed in P5. The pixel comparison against the prototype on the deployed site is still to do (the Browser pane is narrow and hidden, so pixels there were checked for Fleet · Now only) | content and values verified; pixels pending |
+| P4 | Assignment-to-publication demonstration (acceptance 1.10 and 5) on the deployed site | Routine form demonstrated: Morris County, acceptance 1.10 above. The selected-geography form waits on Sean's approved scope and budget | routine form done |
+| P5 | PR B — every page inside the host's time limit, the records-held floor, phone width | Reads shared by concurrent callers, recent reads served while refreshed, and a six-second deadline per read that names a late read as not read this time, never as none; locally a cold All states page went from ~13.5 s of reads to 7.2 s. Records held counts a two-source body's larger source and says the total is a floor (596 → at least 608). At 375 px no page is wider than the screen | built |

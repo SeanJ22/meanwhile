@@ -32,7 +32,10 @@ import { cookies } from "next/headers";
 
 import { readRoutineDataObservability } from "@/lib/civic-data/observability-server.ts";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
-import { openControlPlane, readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { openControlPlane, readFleetSafety, readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { isExpansionCycleReading } from "@/lib/control-plane/expansion/reading.ts";
+import { validateScopeKey } from "@/lib/control-plane/expansion/scopes.ts";
+import { subjectOfObligationId } from "@/lib/control-plane/expansion/subjects.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineAssignmentRows, routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
 import {
@@ -128,16 +131,39 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
   const hasSession = jar.has(ADMIN_SESSION_COOKIE);
   const nowIso = new Date().toISOString();
   const id = first(params.id);
+  const scopeParam = validateScopeKey(first(params.scope));
   const filter: AssignmentFilter = {
     state: parseState(first(params.state)),
     lane: parseLane(first(params.lane)),
     overdue: first(params.overdue) === "1",
+    scope: scopeParam.ok ? scopeParam.value : null,
   };
 
   const opened = await openControlPlane();
   const snapshotOut = opened.ok ? await readSnapshot(opened.repos) : null;
   const publication = snapshotOut?.kind === "HELD" ? snapshotOut.value.assignments : undefined;
   const view: AssignmentView | null = publication?.kind === "BUILT" ? publication.view : null;
+
+  /*
+   * The expansion-scope filter: the subjects the runner last measured as IN the
+   * scope (by ZCTA overlap), from the research state it wrote. A filter that
+   * cannot be applied says so and filters nothing — it never shows an empty
+   * list as "no work here".
+   */
+  let scopeFilter: { readonly label: string; readonly at: string; readonly subjects: ReadonlySet<string>; readonly complete: boolean } | null = null;
+  let scopeFilterGap: string | null = null;
+  if (filter.scope) {
+    const research = opened.ok ? await readFleetSafety(opened.repos) : null;
+    const reading = research?.kind === "HELD" && isExpansionCycleReading(research.value.expansion) ? research.value.expansion : null;
+    const scoped = reading?.scopes.find((s) => s.key === filter.scope) ?? null;
+    if (reading === null || scoped === null) {
+      scopeFilterGap = "the runner has not measured this geography yet (it is measured at the start of the cycle after it is selected)";
+    } else if (scoped.work === null) {
+      scopeFilterGap = `${scoped.label} is not resolved${scoped.resolution.kind === "UNRESOLVED" ? ` (${scoped.resolution.why})` : ""}`;
+    } else {
+      scopeFilter = { label: scoped.label, at: reading.at, subjects: new Set(scoped.work.subjectIds), complete: scoped.work.subjectIdsComplete };
+    }
+  }
 
   /* The routine lane, through the Sources page's own read of the production data plane. */
   const routineRead = await readRoutineDataObservability({ now: nowIso });
@@ -188,7 +214,12 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
 
   /* The list: the published rows and the routine rows, filtered by the URL. */
   const listed = [...(view?.rows ?? []), ...routineRows];
-  const shown = listed.filter((r) => matches(r, filter));
+  const inScope = (r: AssignmentListRow): boolean => {
+    if (scopeFilter === null) return true;
+    const subject = subjectOfObligationId(r.id);
+    return subject !== null && scopeFilter.subjects.has(subject);
+  };
+  const shown = listed.filter((r) => matches(r, filter) && inScope(r));
   const counts = combinedCounts(view, routineRows, routineRead.kind === "HELD" ? null : routineRead.detail);
 
   /* ---------------- THE PAGE'S AUDIT OF ITSELF ---------------- */
@@ -210,7 +241,8 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
           .reduce((n, g) => n + g.published, 0)
       : 0;
     const statedRoutine = routineRows.filter((r) => (filter.state === null || r.state === filter.state) && (filter.lane === null || r.lane === filter.lane)).length;
-    if (!filter.overdue) {
+    // Neither overdue nor an expansion scope is part of the published group counts, so either one makes this claim unstatable.
+    if (!filter.overdue && scopeFilter === null) {
       claims.push({ label: "assignment rows shown for this filter", stated: statedPublished + statedRoutine, rendered: shown.length });
     }
     numbers.push({
@@ -281,6 +313,7 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
     filter.state ? STATE_WORDS[filter.state].label.toLowerCase() : null,
     filter.lane ? LANE_WORDS[filter.lane].label.toLowerCase() : null,
     filter.overdue ? "overdue" : null,
+    scopeFilter ? `in ${scopeFilter.label}` : null,
   ].filter(Boolean);
 
   return (
@@ -335,6 +368,20 @@ export default async function AssignmentsPage({ searchParams }: { searchParams?:
       </div>
 
       <AssignmentFilters counts={counts} filter={filter} />
+      {scopeFilter !== null && (
+        <p className="note">
+          Only assignments about a government in <strong>{scopeFilter.label}</strong>, as the runner measured the geography at the start of its cycle{" "}
+          <When iso={scopeFilter.at} /> — in it means the government&rsquo;s territory overlaps one of its ZCTAs (Census ZIP-code tabulation areas, by
+          area share, not USPS ZIP codes). Routine contracts and created work items are not placed in a geography, so they are not listed here
+          {scopeFilter.complete ? "" : "; the runner's subject list for it was cut, so this is a floor"}. The counts above are over every assignment.{" "}
+          <a href={ASSIGNMENTS_PATH}>Clear the geography</a> · <a href="/admin/expansion">Expansion controls</a>
+        </p>
+      )}
+      {scopeFilterGap !== null && (
+        <p className="refusal">
+          The geography filter could not be applied: <Said text={scopeFilterGap} />. The list below is not filtered by it.
+        </p>
+      )}
       {view && <AssignmentMeasures view={view} />}
 
       <h2>

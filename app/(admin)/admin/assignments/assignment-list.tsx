@@ -28,6 +28,8 @@ export interface AssignmentFilter {
   readonly state: AssignmentState | null;
   readonly lane: AssignmentLane | null;
   readonly overdue: boolean;
+  /** An owner-selected expansion scope key (`<version>/<geoid>`), or null. */
+  readonly scope?: string | null;
 }
 
 function filterHref(next: AssignmentFilter): string {
@@ -35,6 +37,7 @@ function filterHref(next: AssignmentFilter): string {
   if (next.state) q.set("state", next.state.toLowerCase());
   if (next.lane) q.set("lane", next.lane.toLowerCase());
   if (next.overdue) q.set("overdue", "1");
+  if (next.scope) q.set("scope", next.scope);
   const s = q.toString();
   return s === "" ? ASSIGNMENTS_PATH : `${ASSIGNMENTS_PATH}?${s}`;
 }

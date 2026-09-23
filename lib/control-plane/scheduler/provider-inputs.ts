@@ -4,8 +4,8 @@
  * change — new areas states will be added rapidly, it needs to be able to
  * track and keep up everywhere, not just a small subset.")
  *
- * Three readings a provider used to answer with a constant, each now read
- * from data and handed in:
+ * The readings a provider used to answer with a constant, or not at all, each
+ * now read from data and handed in:
  *
  * ```
  *   TrackedStatesSource        which states' registry work stands on a clock.
@@ -17,6 +17,9 @@
  *                              promoted operational-reference bundle's own
  *                              registry keys: a state is tracked when its
  *                              registry has been promoted. Data, not code
+ *   promotedRegistries()       every promoted registry, read through the one
+ *                              accessor the providers use, and each one that
+ *                              accessor refuses, by name
  *   MeetingPartitionOwnership  whether a production meeting partition (the
  *                              one meetings clock, RULING 282/283) carries a
  *                              government's meetings. Was a blanket strip of
@@ -25,6 +28,11 @@
  *                              answer is UNKNOWN, and UNKNOWN holds a
  *                              machine-openable meetings route rather than risk
  *                              a second clock
+ *   FreeDiscoveryWalks         what the unpaid discovery walk last recorded for
+ *                              a government's meetings, so the paid lane never
+ *                              re-walks what the free lane read. The attempt
+ *                              log is RouteTask's; until it is injected every
+ *                              answer is UNREAD, which holds the paid lane
  *   MaterializedReading        the obligations the owner's dispatch created
  *                              (MW-028), read back from the store so a provider
  *                              keeps them in its corpus
@@ -34,8 +42,8 @@
  * because an empty tracked set would retire every clock the provider owns and
  * an empty materialized set would do the same to the owner's created work.
  *
- * PURE apart from the interim tracked-state source, which reads the bundle the
- * runner already preloaded (no I/O of its own).
+ * PURE apart from the two readings of the operational-reference bundle, which
+ * read what the runner already preloaded (no I/O of their own).
  */
 
 import {

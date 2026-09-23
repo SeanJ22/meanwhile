@@ -36,6 +36,15 @@ The routine clock stops reading the college's Diligent tenant in the same
 change. Sunnyside's and Tucson Unified's tenants are still read by the
 production wiring; whether that continues is the owner's separate decision.
 
+**Evening update (section 10).** Each district's own calendar is now unioned
+with its portal's list for the forward window. Tucson Unified readers gain four
+upcoming Governing Board meetings the portal did not yet list (Oct 6, Oct 27,
+Nov 17 and Dec 8, at the Duffy Community Center, agenda not yet posted), and the
+Sep 11 Budget Advisory Committee meeting reads as cancelled, as the portal's own
+title says. Sunnyside readers gain the Jan 12, 2027 Governing Board meeting from
+the district's calendar, which states no place for it yet. A missing place or
+agenda no longer keeps a verified sitting off the list.
+
 ---
 
 ## 2. Permission first, every host, before any content fetch
@@ -65,9 +74,12 @@ sends. Evaluated with `lib/control-plane/scheduler/robots.ts` (token
 | `raw.githubusercontent.com`, `web.archive.org` | 20:11:59Z, 20:56:09Z | 404 | NO_ROBOTS |
 | `brave.com`, `exa.ai` (price pages) | 20:09:50Z, 20:09:52Z | 200 | ALLOWED |
 
-**The Diligent file is an allowlist.** Its `*` group refuses root, and six
-groups (msnbot, slurp, googlebot, bingbot, duckduckbot, AddSearchBot) may read
-`/Portal/`, `/document/` and `/Services/` under `Crawl-delay: 120`. The three
+**The Diligent file is an allowlist.** Its `*` group refuses root (lines 4–5,
+`User-agent: *` / `Disallow: /`), some 1,400 named bot groups are refused root
+too, and six groups (msnbot, Slurp, Googlebot, Bingbot, DuckDuckBot,
+AddSearchBot) are refused only resource paths (`/FileStorage/`, `/js/`,
+`/Content/` and the like), so they may read `/Portal/`, `/document/` and
+`/Services/`, under `Crawl-delay: 120`. The three
 tenants serve it byte for byte, so the refusal is the vendor's default and one
 change on Diligent's side (a `we-the-people` group) would admit this client on
 every tenant (section 6, action A).
@@ -175,7 +187,7 @@ only on Diligent (action A; action D optional).
 
 ---
 
-## 4. Tucson Unified — agenda records WIRED; meeting-list route BUILT and HELD
+## 4. Tucson Unified — agenda records WIRED; district calendar UNIONED into the list (section 10)
 
 **What exists.** Production's `meetings:diligent` partition (promoted
 2026-09-23T20:41:55Z) holds 18 sittings and 967 stored reads of portal pages.
@@ -212,7 +224,7 @@ not read the tenant; only `govboard.tusd1.org` fetched live;
 - **Added**: 7 agenda documents (967 → 974 stored versions).
 - **Removed with authority: none.** 18 meetings before and after.
 
-**Built and held (meeting list).** `lib/sources/tusd-govboard/index.ts` reads
+**Built and held (meeting list); superseded the same evening by the union in section 10.** The calendar is not a replacement, for the losses named here, so it is unioned with the portal list instead of cut over. `lib/sources/tusd-govboard/index.ts` reads
 the calendar fragments and `/Actions`. Against the held partition: 15 of 18
 sittings at the same wall clock, 4 upcoming board sittings the tenant lacks
 (Oct 6, Oct 27, Nov 17, Dec 8), and one correction (Jul 15 Audit Committee moved
@@ -238,7 +250,7 @@ sittings (Board Actions exist only after a sitting).
 
 ---
 
-## 5. Sunnyside USD — meeting-list route BUILT and HELD; agendas owed
+## 5. Sunnyside USD — district calendar UNIONED into the list (section 10); agendas owed
 
 **What exists.** Production's partition (promoted 2026-09-23T20:41:52Z) holds
 12 sittings and 875 stored portal reads. The district's own page says
@@ -252,7 +264,7 @@ sittings (Board Actions exist only after a sitting).
 | `https://www.susd12.org/governing-board-home` | HTML | Standing schedule and room, "unless otherwise noted"; board members' published emails |
 | `https://www.youtube.com/playlist?list=PLTBo-3s9P-vx9gH0buzdaJ7SzJ0yIOLNW` | HTML + page JSON | A pre-scheduled stream for every sitting through May 2027; no agenda content |
 
-**Built and held.** `lib/sources/smartsites/index.ts` (generic ParentSquare
+**Built and held as a standalone route; its calendar read is unioned into the portal list since the evening pass (section 10).** `lib/sources/smartsites/index.ts` (generic ParentSquare
 SmartSites calendar adapter; reads the wall clock in the body's zone because the
 tenant is set to `America/Denver`). **Held because it states no place:** every
 board event's `address` is empty, and the district's Diligent titles mark Oct 13
@@ -275,8 +287,23 @@ Tests `tests/smartsites-source.test.ts`, fixtures `tests/fixtures/smartsites/`.
 
 ## 6. Owner actions (fully specified)
 
+Re-challenged the same evening (section 11) by six methods materially different
+from the first pass. What follows is only what survived: no permitted copy of a
+2026 Sunnyside agenda or a 2026 Tucson Unified committee agenda was found in the
+sources checked, and the rule that excludes this client from the tenants is the
+one quoted in A.
+
 **A. Diligent: one named robots.txt group (unlocks all three bodies, and every
 other Diligent Community tenant, including Vail USD).**
+- *The rule that excludes us, exactly:* `we-the-people` is named in no group, so
+  the `*` group applies: lines 4–5 of the 1,520-line file, `User-agent: *` /
+  `Disallow: /`, with no `Allow` line (read 2026-09-23T20:02:48Z and again
+  23:14:14Z on all three tenant hostnames, 23,479 bytes, sha256
+  `b5cbf0b4b2cbcf18…`). The six named crawlers (msnbot, Slurp, Googlebot,
+  Bingbot, DuckDuckBot, AddSearchBot) are refused only resource paths
+  (`/FileStorage/`, `/WorkSpace/`, `/js/`, `/scripts/`, `/css/`, `/images/`,
+  `/fonts/`, `/Content/`, `WebResource.axd`, `ScriptResource.axd`) under
+  `Crawl-delay: 120`. No path is open to this client except `/robots.txt`.
 - *Records it unlocks, and the evidence they exist:* the agenda documents behind
   the 14 still-owed sittings (PCC 698, 705, 707; TUSD 494, 496, 497, 500, 502;
   SUSD 162, 163, 165, 166, 167, 174) and every future sitting's agenda. Production holds each sitting from the tenant's own meeting
@@ -302,10 +329,16 @@ other Diligent Community tenant, including Vail USD).**
   `/document/<id>`, dry-run each partition in memory, and hand it to the batch.
 - *Draft:* `docs/email-diligent-legal.md` (Sean's voice, audited).
 
-**B. Tucson Unified: committee meetings, cancellations and agendas on the board
-site.**
-- *Unlocks:* a meeting-list cutover that loses nothing (the three missing facts in
-  section 4) and the committee agendas.
+**B. Tucson Unified: committee agendas (and cancellations) on the board site.**
+- *Unlocks:* the committee agendas (5 of the 18 owed sittings, and every future
+  committee sitting). The district's own posting statements name Diligent
+  Community as the electronic home for "all meeting notices, agendas, minutes,
+  actions, recordings", and its Audit Committee agendas were posted on
+  `govboard.tusd1.org` itself through 2021-06-24. The meeting LIST no longer
+  needs this ask while the portal is read: the calendar is unioned in
+  (section 10). Cancellations on the calendar (the Sep 11 Budget Advisory
+  Committee showed as an ordinary meeting there) matter only if the owner stops
+  the portal reads.
 - *Verified contact:* Governing Board Office, (520) 225-6070; its email is under
   "Contact the Board" on `govboard.tusd1.org` (protected against scraping, so
   read it in a browser). Records requests: the same office.
@@ -313,10 +346,15 @@ site.**
   rerun the held adapter's diff, and wire the list route when it is a superset.
 - *Draft:* `docs/email-tusd-clerk.md` (audited).
 
-**C. Sunnyside USD: place on each calendar event, and agendas on the district's
-own site.**
-- *Unlocks:* a list cutover that places every sitting, and agendas without
-  Diligent.
+**C. Sunnyside USD: agendas on the district's own site, the place on each
+calendar event, and where its statutory notice statement is.**
+- *Unlocks:* agendas without Diligent (6 of the 18 owed sittings and every future
+  one), and a place for sittings the district's calendar lists first (the Jan 12,
+  2027 sitting the union now publishes with no place stated). A.R.S.
+  38-431.02(A)(2)(a) requires the district to post on its website where its
+  meeting notices are posted, physical and electronic; no such statement was
+  found on any readable SUSD page checked (section 11, M4), and its agenda page
+  names Diligent.
 - *Verified contacts:* Board President Beki Quintero, `BekiQ@susd12.org`, as
   listed on `susd12.org/governing-board-home` (read 2026-09-23); district office
   +1 520-545-2000. Formal route for specific agendas: the district's public
@@ -337,6 +375,8 @@ own site.**
   >
   > If the calendar events carried the location and the agendas went on susd12.org, residents would see both through us the day you post them. Every entry credits the district and links to your page.
   >
+  > One more thing. We couldn't find the district's statement of where meeting notices are posted, which A.R.S. 38-431.02 asks every district to keep on its website. If it's on susd12.org, a link would help us point residents to it.
+  >
   > We'll keep reading the calendar either way.
   >
   > Sean Johnson
@@ -349,6 +389,16 @@ own site.**
 - *Ask:* post each meeting's agenda as a PDF on `www.pima.edu`, as the college did
   for the Aug 10 study session. Afterward: nothing to build; the wired adapter
   reads a first-party link the day it appears.
+
+**Considered and not asked (the re-challenge answered them):**
+- *Subscribe a mailbox to Diligent's e-updates.* The vendor's own guide says the
+  email carries "a link to the published document", and that document sits on
+  the refused tenant host; nothing documents an attachment. A subscription would
+  add a mailbox and still end at the same rule.
+- *Use search-engine snippets of tenant documents.* Brave returns snippet text
+  by default; for a tenant document it is page text from a refused host, and a
+  fragment is not the record. Not read, and not proposed.
+- *Records requests* stay the formal fallback inside C, not a separate ask.
 
 ---
 
@@ -407,8 +457,32 @@ Exa Search **$7 per 1,000 requests** for up to 10 results
 | 14 | Brave | `Tucson Unified "Employee Benefits Trust" agenda September 2026` | 5 |
 | 15 | Exa | `Sunnyside Unified School District governing board meeting agenda items approved August 2026` | 10 |
 
-**Totals: 15 queries — Brave 12 ($0.060), Exa 3 ($0.021) — $0.081 at list
-price**, against a cap of 100. Model spend: **none** (no Anthropic API call).
+The evening re-challenge (section 11), each with the parameter it tested:
+
+| # | Provider | Query (parameters) | Results |
+| --- | --- | --- | --- |
+| 16 | Brave | `Tucson Unified "Budget Advisory Committee" agenda` (extra_snippets, result_filter web, freshness 2026) | 11 |
+| 17 | Exa | `Tucson Unified School District committee meeting agenda` (includeDomains tusd1.org, from 2026-01-01) | 10 |
+| 18 | Exa | `Sunnyside Unified School District Governing Board meeting agenda 2026` (category pdf, no contents) | 10 |
+| 19 | Brave | `site:susd-12.community.highbond.com` (pointers only) | 2 |
+| 20 | Brave | `site:tusd1-schooldesk.community.diligentoneplatform.com` (pointers only) | 0 |
+| 21 | Exa | `Sunnyside Unified School District Governing Board meeting agenda` (includeDomains the SUSD tenant, no contents) | 10 |
+| 22 | Exa | `Tucson Unified committee meeting agenda` (includeDomains both TUSD tenant names, no contents) | 10 |
+| 23 | Exa | `statement of where all public notices of Governing Board meetings will be posted, physical and electronic locations` (includeDomains susd12.org) | 10 |
+| 24 | Brave | `"Sunnyside Unified" ("board highlights" OR "board briefs" OR "board recap" OR newsletter) governing board 2026` | 2 |
+| 25 | Brave | `site:susd12.org Ginter meeting notices posted` | 18 |
+| 26 | Exa | SUSD or TUSD committee agenda packet (includeDomains blob, CloudFront, S3, Azure CDN, googleusercontent) | 10 |
+| 27 | Exa | SUSD or TUSD board or committee agenda 2026 (includeDomains Google Docs, Drive, Sites) | 10 |
+| 28 | Exa | SUSD governing board agenda items (includeDomains newsletter and news hosts, from 2026) | 10 |
+| 29 | Exa | TUSD BAC, BOC or Audit Committee agenda (includeDomains newsletter and news hosts, from 2026) | 10 |
+| 30 | Exa | TUSD committee meetings 2026 (includeDomains youtube.com) | 10 |
+| 31 | Brave | `Sunnyside Unified School District Governing Board meeting 2026` (result_filter videos) | 0 |
+| 32 | Exa | Diligent Community public-site subscriptions (includeDomains help.diligentoneplatform.com) | 10 |
+| 33 | Exa | SUSD regular board agenda "call to order consent agenda" 2026 (excludeDomains the tenants and susd12.org) | 10 |
+
+**Totals: 33 queries — Brave 18 ($0.090), Exa 15 ($0.105) — $0.195 at list
+price**, against a cap of 100 (first pass 15 queries, $0.081; re-challenge 18,
+$0.114). Model spend: **none** (no Anthropic API call).
 Production: read-only transactions only (partition payloads, promoted venue
 resolutions); **nothing written to any production store**, including
 `cp_field_manual` and the cost ledger.
@@ -441,3 +515,176 @@ resolutions); **nothing written to any production store**, including
   identity, as the real one does), `tests/method-claims.test.ts` (control (e)
   scoped to its own amendment, the way its count already was), plus the
   regenerated views.
+- Evening pass (sections 10 and 11): new `lib/sources/diligent/schedule-union.ts`,
+  `tests/tusd-schedule-union.test.ts`, `scripts/method/learn-pima-schedule-union.mts`
+  (method knowledge v81 → v85); changed `lib/sources/diligent/index.ts`,
+  `lib/sources/tusd-govboard/index.ts` (exports the calendar helpers),
+  `lib/registry/source-wiring.ts` (TUSD and SUSD rows),
+  `lib/civic-data/source-authority.ts` (`www.susd12.org` calendar JSON),
+  `package.json`, `docs/sources.md`, this ledger, and the regenerated views.
+
+---
+
+## 10. Schedule reconciliation: each district's own calendar, unioned into its partition
+
+**The directive (owner, 2026-09-23 evening):** reconcile the governing-board
+schedule on the district's own site through the configured forward window
+(`UPCOMING_HORIZON_DAYS`, 120 days: through Jan 21, 2027); publish a verified
+meeting before its agenda exists; never let a missing agenda or place suppress a
+verified meeting; never infer cancellation from an unavailable agenda.
+
+**What was built.** `lib/sources/diligent/schedule-union.ts`, called from the
+Diligent adapter for a wiring row that names the district's own calendar. The
+partition, its clock and its single writer are unchanged; the union happens
+inside the one acquisition:
+
+- The calendar is read for the forward window only, under the same permission
+  gate as the Board Actions records: Tucson Unified's ixCal month fragments
+  (`govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&…`, 5 reads a run) and
+  Sunnyside's SmartSites events JSON (`www.susd12.org/api/calendars/150042/events`,
+  1 read). Any refusal or failure throws, so the partition keeps its last good
+  version and never publishes half a union.
+- A calendar sitting that matches a portal sitting on body key plus local date
+  and time is the same sitting: the portal row stands, with its agenda link and
+  its cancellation note. `sittingBodyKey` reduces both publications' names to one
+  key ("GOVERNING BOARD AGENDA SPECIAL MEETING" and "Governing Board Meeting -
+  via Zoom" are both `governing-board`; "Employee Benefit Trust Committee" and
+  "Employee Benefits Trust Meeting" are both `employee-benefit-trust`).
+- A calendar sitting the portal does not list is published from the calendar:
+  the place its own sentence names (reusing the portal's reviewed venue
+  spellings), online when it says Zoom or Virtual, and **no place when it names
+  none**. Its agenda is null until one exists.
+- Portal rows with no place, or a place with no reviewed spelling, are now
+  published with no place instead of dropped (`drops.unknownVenue` was the only
+  route out; the Diligent adapter no longer uses it).
+- The portal's own cancellation words are the sitting's status: "CANCELLED DUE
+  TO LACK OF QUORUM …" makes the Sep 11 Budget Advisory Committee `CANCELED`
+  rather than `CONCLUDED`. Absence from the portal is never read as cancellation.
+- **Identity.** Portal ids readers already hold stay (`legacyIdsThrough`: 505 for
+  Tucson Unified, 174 for Sunnyside). Every sitting new to the partition is
+  `<YYYY-MM-DD>T<HHMM>-<body key>` whichever source lists it, so the day the
+  portal starts listing a sitting first published from the calendar it keeps
+  the same id and nothing is carried twice. The upcoming legacy sittings are
+  pinned by sitting key (`legacySitting:<id>`), so if the portal stops returning
+  one while the calendar still lists it, the calendar row inherits the id
+  readers already have. A union configured without `legacyIdsThrough` refuses to
+  run.
+- `www.susd12.org` joined the meetings source authority; the SUSD dry run was
+  refused `FINAL_HOST_NOT_AUTHORIZED` until it did. `govboard.tusd1.org` was
+  already there.
+
+**Tests:** `tests/tusd-schedule-union.test.ts` (10): the body keys; every forward
+sitting either source verifies, with portal ids unchanged and Sep 28 once; a
+no-place calendar sitting published with no place and never called online; the
+same id before and after the portal lists a sitting; the legacy pin; the
+cancellation status; a no-place portal row published; a refused calendar read
+failing the run; Sunnyside's JSON; the forward months.
+
+### Tucson Unified: every sitting in the served window
+
+Dry run of the next promotion (`.scratch/dryrun-tusd-union.mts`, 23:25:37Z):
+production's partition `cv-a088b86e…` (promoted 22:50:41Z, read read-only) as the
+stand-in for the runner's next portal read, which this client does not make;
+`/Actions` and eight calendar fragments read live, all ALLOWED. Accounting:
+28 considered (17 portal rows, 11 forward calendar entries), 21 produced, 6 out
+of window (September entries already past), 1 duplicate (Sep 28), CONSERVED.
+**GOOD / PROMOTED.**
+
+| When (local) | Body | Portal (Diligent) | District calendar | Published as | Readers see |
+| --- | --- | --- | --- | --- | --- |
+| Jul 14 16:30 | GOVERNING BOARD AGENDA REGULAR MEETING | yes | yes | `484` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: Board Actions record |
+| Jul 15 14:30 | Audit Committee Meeting Agenda | yes | yes | `489` | CONCLUDED; Morrow Education Center, Board Conference Room; agenda: portal link |
+| Jul 21 17:00 | GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING | yes | yes | `490` | CONCLUDED; online: Via Zoom; agenda: portal link |
+| Jul 28 16:30 | GOVERNING BOARD AGENDA SPECIAL MEETING | yes | yes | `485` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: Board Actions record |
+| Aug 4 17:00 | GOVERNING BOARD AGENDA SPECIAL MEETING | yes | yes | `491` | CONCLUDED; online: via Zoom; agenda: Board Actions record |
+| Aug 11 16:30 | GOVERNING BOARD AGENDA REGULAR MEETING | yes | yes | `492` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: Board Actions record |
+| Aug 17 18:00 | Alternative Education Advisory Committee Meeting Agenda | yes | yes | `494` | CONCLUDED; online: Via Zoom Webinar; agenda: portal link |
+| Aug 20 13:00 | Bond Oversight Committee Meeting Agenda | yes | yes | `496` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: portal link |
+| Aug 25 16:30 | GOVERNING BOARD AGENDA SPECIAL MEETING | yes | yes | `493` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: Board Actions record |
+| Sep 8 16:30 | GOVERNING BOARD AGENDA REGULAR MEETING | yes | yes | `498` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: Board Actions record |
+| Sep 11 16:00 | Budget Advisory Committee Meeting Agenda | yes | yes | `500` | CANCELED; online: Via Zoom; agenda: portal link |
+| Sep 14 17:30 | Employee Benefit Trust Committee | yes | yes | `497` | CONCLUDED; online: Via Zoom Webinar; agenda: portal link |
+| Sep 16 14:30 | AGENDA FOR AUDIT COMMITTEE MEETING | carried (not in its latest response) | yes | `495` | SCHEDULED; online: Via Zoom Webinar; agenda: none yet (carried row) |
+| Sep 17 13:00 | Bond Oversight Committee Meeting Agenda | yes | yes | `502` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: portal link |
+| Sep 22 16:30 | GOVERNING BOARD AGENDA SPECIAL MEETING | yes | yes | `499` | CONCLUDED; Duffy Community Center, Multipurpose Room; agenda: Board Actions record |
+| Sep 28 18:15 | Alternative Education Advisory Committee Meeting Agenda | yes | yes | `503` | SCHEDULED; online: Via Zoom Webinar; agenda: none yet |
+| Sep 30 16:00 | Budget Advisory Committee Meeting Agenda | yes | no | `505` | SCHEDULED; online: Via Zoom; agenda: none yet |
+| Oct 5 17:30 | Employee Benefit Trust Committee | yes | no | `504` | SCHEDULED; online: Via Zoom Webinar; agenda: none yet |
+| Oct 6 16:30 | Governing Board | no | yes | `2026-10-06T1630-governing-board` | SCHEDULED; Duffy Community Center, Multipurpose Room; agenda: none yet | <!-- expected-future: a scheduled sitting's own id, read from the district's calendar 2026-09-23 -->
+| Oct 27 16:30 | Governing Board | no | yes | `2026-10-27T1630-governing-board` | SCHEDULED; Duffy Community Center, Multipurpose Room; agenda: none yet | <!-- expected-future: a scheduled sitting's own id, read from the district's calendar 2026-09-23 -->
+| Nov 17 16:30 | Governing Board | no | yes | `2026-11-17T1630-governing-board` | SCHEDULED; Duffy Community Center, Multipurpose Room; agenda: none yet | <!-- expected-future: a scheduled sitting's own id, read from the district's calendar 2026-09-23 -->
+| Dec 8 16:30 | Governing Board | no | yes | `2026-12-08T1630-governing-board` | SCHEDULED; Duffy Community Center, Multipurpose Room; agenda: none yet | <!-- expected-future: a scheduled sitting's own id, read from the district's calendar 2026-09-23 -->
+Earlier calendar entries (Jun 8, 9, 16, 18) fall before the served window
+(2026-06-25) and are not published by either source.
+
+- **Added, 4:** the Oct 6, Oct 27, Nov 17 and Dec 8 Governing Board meetings, at
+  the Duffy Community Center, Multipurpose Room, agenda not yet posted. TUSD's
+  own YouTube channel has scheduled streams for all four (section 11, M1); the
+  Oct 6 stream is set for 5:30 pm, an hour after the calendar's 4:30 pm start,
+  the same gap as past regular meetings with an executive session first. The
+  calendar's time is what is published.
+- **Removed with authority: none.** 18 rows before, 22 after (21 fresh + the
+  carried 495).
+- **Changed, 8:** 7 agenda links from the portal page to the Board's own Board
+  Actions record (484, 485, 491, 492, 493, 498, 499), and 500 from `CONCLUDED`
+  to `CANCELED`.
+- **Seen but not changed.** 495 (Sep 16 Audit Committee) is a carried row: the
+  portal stopped returning it before the date, so production still shows it as
+  scheduled via Zoom Webinar. The calendar lists the same sitting with "location
+  TBD". Concluded sittings stay the portal's list, so the union does not publish
+  it a second time. The stale `SCHEDULED` on a carried past row is a carry-forward
+  behavior outside this change. Jul 15 Audit: the portal kept the Morrow Education
+  Center room, the calendar's sentence describes the move to the new Robert D.
+  Morrow Building; the portal row stands.
+- **Residual, named:** a legacy row the portal stops returning is pinned by
+  `legacySitting` only for the three upcoming ones (503, 504, 505); the pins go
+  inert as those dates pass.
+
+### Sunnyside: the district calendar against the portal
+
+Dry run (`.scratch/dryrun-susd-union.mts`, 23:25:26Z): production's partition `cv-54b5856a…` (promoted 22:50:40Z) as the
+portal stand-in; the SmartSites JSON for Sep 23, 2026 to Jan 21, 2027 read live,
+ALLOWED. Accounting: 19 considered, 13 produced, 6 duplicates, CONSERVED.
+**GOOD / PROMOTED.**
+
+- The district calendar's seven forward Governing Board entries: Sep 29, Oct 13,
+  Oct 27, Nov 10, Nov 24 and Dec 8 are already the portal's rows 168–173; the
+  seventh, **Jan 12, 2027 at 6:30 pm, is added** as
+  `diligent:susd12:2027-01-12T1830-governing-board` <!-- expected-future: a scheduled sitting's id, read from the district's calendar 2026-09-23 -->,
+  with no place (its entry states none) and no agenda yet.
+- Removed with authority: none. Changed: none.
+- Seen and not changed: the portal titles Oct 13 and Nov 24 "VIRTUAL Governing
+  Board Meeting" while its location field names the District Administration
+  Building, and the calendar called Aug 4 "Special Virtual" where the portal
+  named the building. The adapter carries the portal's location field; the
+  disagreement is recorded here for the next Sunnyside pass.
+
+---
+
+## 11. The re-challenge: six methods, before anyone is asked for anything
+
+Run 2026-09-23 23:06–23:25Z by a delegated research pass on the same rules
+(robots first through the walker, pointer-only search, nothing subscribed,
+nothing written outside `.scratch/`). Obstacle classes: discovery, access
+policy, extraction, validation, publication, display.
+
+| # | Method | Tried | Result | Obstacle |
+| --- | --- | --- | --- | --- |
+| M1 | Copies on permitted hosts: district news, Google Docs/Drive/Sites, board-member pages, YouTube descriptions, newsletter archives | Queries 24, 26–30, 33; walked a Substack post, Tucson Daily Brief's meeting watch, TUSD's YouTube channel (TUSDMedia) | No permitted copy of a 2026 SUSD or TUSD committee agenda in the sources checked. TUSDMedia holds Audit Committee (Jan 21, Feb 6, Feb 13) and Bond Oversight (Sep 17) recordings with empty descriptions, and scheduled streams for the four Governing Board sittings section 10 adds | discovery |
+| M2 | Which API parameters the integration actually sends | Queries 16–22, 31, 33; read `lib/control-plane/scheduler/scout-search.ts` | The integration sends Brave only `q` and `count`, Exa only `query`, `type`, `numResults` (and optionally `includeDomains`). The keys honor Brave `result_filter`, `freshness` and return `extra_snippets` by default (the integration's comment says the default carries none); Exa honors `includeDomains`, `excludeDomains`, `startPublishedDate`. The youtube.com filter is what found TUSDMedia. Search indexes point at tenant pages only | access policy |
+| M3 | Diligent e-update subscriptions | Public Site Resource and Admin Help Guide (connect.diligent.com), three help.diligentoneplatform.com pages | "E-updates will automatically send out notification emails, including a link to the published document" (read 23:24:19Z). No attachment or inline text documented; confirmation by email; the clerk chooses per publication whether to notify; an admin-entered "Public meetings ICS feed" field whose host is not visible. The link resolves on the refused tenant | access policy |
+| M4 | A.R.S. § 38-431.02 posting statements | The statute (azleg.gov, 23:09:31Z); TUSD and SUSD governing-board pages | The statute requires each district to post on its website where notices are posted, physical and electronic, and (G) a notice "shall include an agenda … or information on how the public may obtain a copy". TUSD names its District Office door, Diligent Community (notices and agendas) and govboard.tusd1.org ("Information concerning the Board's agenda"). No SUSD statement found on any readable page checked; its agenda page names Diligent | access policy |
+| M5 | Another host serving Diligent documents | Query 26 across CDN and blob hosts; the 224-page Admin Guide; all three tenant hostnames' robots.txt | No document CDN named or found; both tenant aliases serve the same file (sha `b5cbf0b4b2cbcf18…`) | discovery |
+| M6 | The districts' own committee and board-member pages | govboard.tusd1.org Board-Committees, Audit Committee agendas and minutes, Budget Advisory Committee, members, Postings; www.tusd1.org Employee Benefits Trust; susd12.org EBT menu | TUSD's own Audit Committee agenda PDFs end 2021-06-24; the Budget Advisory page lists sittings (Sep 11 with its Zoom link) but no agendas; the Postings PDFs are quorum notices (e.g. Sep 10 Reconfiguration Committee, 5:30 pm, Duffy). SUSD's EBT item leads to its Diligent page | publication |
+
+**Precisely which rule excludes this client from the tenants:** section 6, A.
+**What survives into the owner's list:** A, B (committee agendas), C (agendas,
+place, and the missing posting statement), D; subscription and search snippets
+were answered by the re-challenge and are not asked (section 6).
+
+**Follow-ups this pass found, not done here:** the search integration could send
+`freshness`, `result_filter`, `startPublishedDate` and `excludeDomains` (pointer
+parameters) and its "default carries none" comment is wrong; TUSD's Postings
+PDFs (quorum notices on govboard) are a third first-party source of sittings;
+other meeting adapters still drop a verified sitting for want of a resolvable
+place, which the owner's rule now forbids.

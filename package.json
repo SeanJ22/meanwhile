@@ -383,7 +383,8 @@
     "zip:universe": "tsx scripts/zip-universe.mts",
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "ci:certified": "node scripts/certified-tree.mjs",
-    "ship:amplification": "tsx scripts/shipping-amplification.mts"
+    "ship:amplification": "tsx scripts/shipping-amplification.mts",
+    "method:learn-pima-schedule-union": "tsx scripts/method/learn-pima-schedule-union.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

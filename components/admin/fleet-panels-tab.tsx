@@ -10,6 +10,7 @@
  * fleet-activity scan.
  */
 
+import { formatEastern } from "@/lib/control-plane/eastern-time";
 import type { FleetPanelsReading } from "@/lib/control-plane/fleet-operations";
 import { FLEET_MAP_CONTRACTS, FLEET_MAP_PANELS } from "@/lib/admin/fleet-map-meta";
 import { NOTES, receiptLoadingSummary, receiptSourceSummary } from "@/lib/admin/fleet-operations-view";
@@ -54,8 +55,8 @@ function PanelBody({ id, reading }: { readonly id: string; readonly reading: Fle
     return (
       <p className="note" style={{ margin: 0 }}>
         {zip.held
-          ? `${zip.value.length} ZIP row(s), snapshot published ${c.value.publishedAt}. ${NOTES.coverage}`
-          : `${zip.gap.says} (snapshot ${c.value.publishedAt}).`}
+          ? `${zip.value.length} ZIP row(s), snapshot published ${formatEastern(c.value.publishedAt)}. ${NOTES.coverage}`
+          : `${zip.gap.says} (snapshot ${formatEastern(c.value.publishedAt)}).`}
       </p>
     );
   }

@@ -51,26 +51,6 @@
       "reason": "Not an absence. `needsYou.needed` is already TRUE at this point — the caller has asserted the card needs the owner — and the `??` only chooses wording when the caller named no specific action. So it stands in front of a known YES, never in front of an unknown, and 'Needs you: Yes — a decision from you' is the least specific TRUE sentence rather than a guess about a record. Appears twice: once in NeedsYouLine, once in DefinedTile, which render the same fact in two shapes."
     },
     {
-      "file": "app/(admin)/admin/sections/runner.tsx",
-      "text": "no stop reason recorded for this cycle",
-      "reason": "Not an absence about the world; an absence about the RECORD, stated as one. `fleetSafety.stoppedBecause` is empty when the cycle stopped for no reason it names, and the sentence says exactly that — the runner recorded no reason — rather than 'nothing stopped it', which would be a claim about the cycle. It sits inside Technical details beside the instrument's own words, and the face of the card carries the derived stop sentence or nothing at all."
-    },
-    {
-      "file": "app/(admin)/admin/deploy-fleet.tsx",
-      "text": "Deploy fleet",
-      "reason": "Not an absence. It is the button's own words, and the `??` chooses between a surface's own label ('Deploy fleet here' on a readiness row) and the console home's. Both describe the same control; neither stands in front of missing data."
-    },
-    {
-      "file": "app/(admin)/admin/deploy-fleet.tsx",
-      "text": "The fleet has been told where to go.",
-      "reason": "Not an absence. The `??` fires only after the gateway answered ok, so the action DID happen; the fallback is the sentence to read when the receipt came back without one of its own. It reports a completed write, never a missing record."
-    },
-    {
-      "file": "app/(admin)/admin/deploy-fleet.tsx",
-      "text": "Working out what this would do…",
-      "reason": "Not an absence. It is the in-flight state of the preview request — the panel is open and the answer has not arrived — and it is replaced by the preview or by the named reason the preview could not be built. A pending read says it is pending; it never stands in for one that failed."
-    },
-    {
       "file": "app/(admin)/admin/sources/routine-data-panel.tsx",
       "text": "terminal failure",
       "reason": "Not an inferred source disposition. This renders only for an ExactRefusedRecord whose verdict is null, which the projection emits solely from a candidate terminal state carrying a durable failure code or detail. The same row says that the candidate terminal state, rather than a validation receipt, proves it."
@@ -104,21 +84,6 @@
       "file": "app/(admin)/admin/research/page.tsx",
       "text": "not readable",
       "reason": "Labels only the aggregateRevision field returned as null by the method-candidate authority projection. The adjacent fail-closed authority state, exact status code, and detail distinguish absence, refusal, and store failure; this text supplies no revision and makes no authority claim."
-    },
-    {
-      "file": "app/(admin)/admin/sections/maptiler.tsx",
-      "text": "The comparison is unknown, not zero.",
-      "reason": "The provider reading is present but the independently measured actor comparison is absent. This default explicitly withholds a robot-request count and refuses to turn the missing comparison into zero, so it is a named OURS measurement gap rather than a claim about provider usage."
-    },
-    {
-      "file": "app/(admin)/admin/sections/maptiler.tsx",
-      "text": "The append-only map-provider history is unavailable, and this panel did not carry a reason.",
-      "reason": "Names an internal owner-surface gap only when both the projected history and the read outcome detail are absent. It deliberately avoids the former unsupported claim that the canonical history contains no attempts, and makes no assertion about provider activity, LKG, or store reachability."
-    },
-    {
-      "file": "app/(admin)/admin/decisions.tsx",
-      "text": "Decisions waiting on you",
-      "reason": "Not an absence. It is the heading on the decision queue (decisions.tsx:266), and the ?? chooses between a caller's own title — the fleet page passes 'Fleet decisions waiting on you' — and the console's standard one. It labels a section and asserts nothing about any record; the measured quantity is the separate dq-count beside it (waitingNow). Same shape as the 'Technical details' and 'a decision from you' admin labels already recorded here."
     }
   ]
 }

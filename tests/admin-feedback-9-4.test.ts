@@ -8,7 +8,7 @@
  */
 import assert from "node:assert/strict";
 import { codeOf } from "./read-code.ts";
-import { surfaceSource } from "./admin-surface.ts";
+import { surfaceFiles } from "./admin-surface.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -123,10 +123,14 @@ test("ADM-4: the decision route accepts an answer in the owner's own words, and 
    * the network answers. The fields the owner was shown still travel — that is
    * what this guard is about — they travel as a JSON body rather than as form
    * inputs.
+   *
+   * Admin redesign, 2026-09-23: the decision queue island was replaced by
+   * Fleet · Now's suggested next steps (`_mw/next-steps.tsx`), which posts the
+   * same `decision.record` body; the guard follows the island.
    */
-  const island = src("app/(admin)/admin/decisions.tsx");
-  assert.match(island, /consequenceShown:/, "the consequence the owner READ travels with his answer");
-  assert.match(island, /ownerAnswer/, "an answer in his own words travels too");
+  const island = codeOf("app/(admin)/_mw/next-steps.tsx");
+  assert.match(island, /input: \{[^}]*\bconsequenceShown\b[^}]*\bownerAnswer\b[^}]*\}/, "the consequence the owner READ travels with his answer, and his own words beside it");
+  assert.match(island, /record\(card, p\.option, p\.consequence, null\)/, "the consequence sent is the one the confirm box showed for that option");
   assert.match(island, /type: "decision\.record"/, "the decision goes through the one typed gateway, same as every other action");
   const page = src("app/(admin)/admin/page.tsx");
   // ADM-16 (evening): a decided card leaves the queue and shows its receipt; the split is the live log's.
@@ -254,7 +258,7 @@ test("ADM-8: units match by bounded state token or by term; a dispatch to an une
   assert.match(describeDispatchMatch(az, 1177, 2996, ["az", "nh", "nj"]), /matched 1177 of 2996/);
 });
 
-test("ADM-8: a DISPATCH needs words; the intent carries them; the page lists deployments with their outcome", () => {
+test("ADM-8: a DISPATCH needs words and the intent carries them; the control that sends work explains itself before it acts", () => {
   assert.equal(validateIntentNote("DISPATCH", "  ").ok, false);
   const ok = validateIntentNote("DISPATCH", "  deep   dive on Illinois ");
   assert.deepEqual(ok, { ok: true, note: "deep dive on Illinois" });
@@ -265,19 +269,19 @@ test("ADM-8: a DISPATCH needs words; the intent carries them; the page lists dep
   assert.equal(rows.length, 1);
   assert.equal(rows[0].status, "PENDING");
   assert.equal(readIntents(log).pendingDispatch.length, 1);
-  const page = src("app/(admin)/admin/page.tsx");
-  assert.match(page, /<DeployFleet/);
-  assert.match(page, /dispatchHistory\(/);
+  // Admin redesign, 2026-09-23: the home page's Deploy fleet control and its list of deployments were removed; work is now sent from the Fleet · Work composer, which records a geography, priority and budget (expansion.scope.set) rather than a DISPATCH intent in words.
   /*
    * §9A.16 (9.6.26): the owner had never pressed this button, because it did
-   * not say what it would do. The control now shows a preview first and sends
-   * through the one typed Action Gateway — the same DISPATCH intent lands, and
-   * `dispatchHistory` above still reads it. The guard follows the action.
+   * not say what it would do. The control that replaced it — the composer —
+   * shows the geography's codes and bodies before anything is sent, says what
+   * pressing send does and what it does NOT do, and sends through the one
+   * typed Action Gateway. The guard follows the control.
    */
-  const control = src("app/(admin)/admin/deploy-fleet.tsx");
-  assert.match(control, /type: "fleet.deployHere"/, "the button posts the typed action that appends the DISPATCH intent");
-  assert.match(control, /Show me what this would do/, "§9A.16: it explains itself before it acts");
-  assert.match(control, /What it will not do/, "and says what it will NOT do");
+  const control = codeOf("app/(admin)/_mw/composer.tsx");
+  assert.match(control, /type: "expansion\.scope\.set"/, "the button posts the typed action");
+  assert.match(control, /previewRoute/, "§9A.16: the geography is read before anything is sent");
+  assert.match(control, /What pressing send does/, "§9A.16: it explains itself before it acts");
+  assert.match(control, /CREATES NO NEW WORK/, "and says what it will NOT do");
   assert.doesNotMatch(control, /<form/, "no second write path beside the gateway");
 });
 
@@ -333,28 +337,35 @@ test("ADM-7: the five groups cover the roles, with counts that carry denominator
   assert.equal(whereOf(null, null), null);
 });
 
-test("ADM-7: the page organises Pilot Health around the fleet and keeps the instrument-detail link", () => {
+test("ADM-7: the console home audits its own numbers, renders per request, and keeps the instrument-detail link", () => {
   /*
-   * ADM-38 (9.6.26) moved the fleet into its own streamed component: the read
-   * is 1,225 ms and 6.62 MB, five times everything else on the page put
-   * together, and it used to hold pilot health, the runner, the obligations and
-   * the decision queue behind it. So the guard reads the SURFACE — the page and
-   * its sections — and additionally pins the property that made the move safe:
-   * a streamed section audits ITS OWN numbers, because the page cannot audit a
-   * section it did not wait for.
+   * ADM-38 (9.6.26) moved the fleet into its own streamed component that
+   * audited its own numbers. Admin redesign, 2026-09-23: the home page's
+   * worker-fleet section, its streamed loading state and its own audit were
+   * removed — Fleet · Now draws the watched bodies instead, and the worker
+   * roles are read on the research page's worker panel and on /admin/fleet.
+   * What still holds is pinned here, on the page that replaced the home.
    */
-  const page = surfaceSource(ROOT, "home");
-  assert.match(page, /buildFleetView\(/);
-  assert.match(page, /The fleet — what the workers are doing/);
-  assert.match(page, /href="\/admin\/research"/);
-  assert.match(page, /fleetRenderedNumbers\(/, "fleet numbers enter an audit");
-  assert.match(page, /auditRenderedNumbers\(/);
-  assert.match(page, /checkStatedEqualsRendered\(/);
-  assert.match(src("app/(admin)/admin/page.tsx"), /export const dynamic = "force-dynamic"/);
-  const fleet = src("app/(admin)/admin/sections/fleet.tsx");
-  assert.match(fleet, /auditRenderedNumbers\(numbers\)/, "the streamed section audits its own numbers");
-  assert.match(fleet, /refused to render its own numbers/, "and refuses itself rather than the whole console");
-  assert.match(src("app/(admin)/admin/page.tsx"), /<Suspense fallback=\{<FleetLoading \/>\}>/, "the fleet does not block the rest of the page");
+  const now = src("app/(admin)/admin/page.tsx");
+  assert.match(now, /export const dynamic = "force-dynamic"/);
+  assert.match(now, /const numberAudit = auditRenderedNumbers\(numbers\);/, "every figure the page draws enters its own audit");
+  assert.match(now, /const countAudit = checkStatedEqualsRendered\(claims\);/, "every stated count is checked against the rows drawn");
+  assert.match(now, /if \(!numberAudit\.ok \|\| !countAudit\.ok\)[\s\S]{0,200}refused to draw its own numbers/, "and a failed audit replaces the numbers with the reason");
+  // The instrument detail stays one step away: the research page is on the Other pages menu every redesigned screen carries.
+  assert.match(src("app/(admin)/_mw/header-controls.tsx"), /href: "\/admin\/research"/);
+  assert.match(src("app/(admin)/_mw/shell.tsx"), /<OtherPages scope=/);
+  // The old home's sections now live across the Fleet tabs, and Readiness shares their screens, so the same holds for every one of them.
+  const screens = new Set([...surfaceFiles(ROOT, "home"), ...surfaceFiles(ROOT, "readiness")]);
+  const pages = [...screens].filter((f) => f.endsWith("/page.tsx"));
+  assert.ok(pages.length >= 10, `the sweep must reach every area page; saw ${pages.length}`);
+  for (const rel of pages) assert.match(src(rel), /export const dynamic = "force-dynamic"/, `${rel} is not rendered per request`);
+  const drawers = [...screens].filter((f) => /<MwShell\b/.test(codeOf(f)));
+  assert.ok(drawers.length >= 8, `the sweep must reach every screen that draws the shell; saw ${drawers.length}`);
+  for (const rel of drawers) {
+    const code = codeOf(rel);
+    assert.match(code, /auditRenderedNumbers\(/, `${rel} draws figures without auditing them`);
+    assert.match(code, /checkStatedEqualsRendered\(/, `${rel} states counts without checking them against its rows`);
+  }
 });
 
 /* ================================================================== *
@@ -391,13 +402,12 @@ test("ADM-3: a stale reader check reads as one plain sentence, and the scale nam
   assert.match(plain.what, /Can a reader get a right answer/);
   assert.deepEqual(HEALTH_SCALE.map((s) => s.level), ["GREEN", "AMBER", "RED", "UNKNOWN"]);
   assert.equal(plainOverall("AMBER", [plain, { ...plain, contract: "TRUTH" }, { ...plain, contract: "FRESHNESS" }]), "Nothing is failing, but READER, TRUTH, FRESHNESS are not proven yet.");
-  const page = src("app/(admin)/admin/sections/health.tsx");
-  assert.match(page, /<HealthScale \/>/, "POS-13: the scale legend the owner likes stays");
-  assert.match(page, /Technical details<\/summary>/, "the instrument's own sentence is one disclosure away");
-  // Against the CODE, never the prose beside it: this file's own header quotes
-  // the command it removed, and a sweep of the raw text would fail on its
-  // explanation (`tests/read-code.ts` carries the argument).
-  assert.doesNotMatch(codeOf("app/(admin)/admin/sections/health.tsx"), /pnpm [a-z:]+/, "ADM-37: no CLI command reaches the face of the health card");
+  // Admin redesign, 2026-09-23: the Pilot health section (the plain contract cards, the grade-scale legend and their technical-details disclosure) was removed; the health contracts now reach the owner only as the Gates reading on a readiness state page.
+  // Against the CODE, never the prose beside it (`tests/read-code.ts` carries the argument).
+  for (const rel of ["app/(admin)/readiness/[state]/page.tsx", "lib/control-plane/admin-view/readiness-view.ts"]) {
+    assert.doesNotMatch(codeOf(rel), /pnpm [a-z:]+/, `ADM-37: no CLI command reaches the face where the health contracts are read (${rel})`);
+  }
+  assert.match(src("app/(admin)/readiness/[state]/page.tsx"), /pilotHealthView\(owner, base\.nowIso\)/, "the Gates reading is the published health contracts, read as they are");
 });
 
 test("ADM-3: FRESHNESS reads measured canonical-cycle risk through the owner publisher", () => {
@@ -473,10 +483,16 @@ test("ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current 
   assert.equal(out.snapshotContract, null);
   assert.match(out.currentContract, /instrument-derived/);
   assert.equal(out.clearedBy.command, READINESS_REPUBLISH_COMMAND);
-  const page = src("app/(admin)/readiness/[state]/page.tsx");
-  assert.match(page, /outcome\.clearedBy\.command/);
-  assert.match(page, /legacy\.publishedAt/);
-  assert.match(page, /State readiness — \{stateName\}/, "the state is named on every branch");
+  const page = codeOf("app/(admin)/readiness/[state]/page.tsx");
+  assert.match(page, /readiness\.kind === "REQUIRES_REPUBLISH"/, "the redesigned state page still has its own branch for a record worked out an older way");
+  // The record's publish facts and what clears it still reach the page (9.6.26 moved them one disclosure down; they were never to be deleted).
+  assert.match(page, /\.clearedBy\.command/, "the standing publisher that clears the record is not rendered anywhere on the state page");
+  assert.match(page, /\.legacy\.publishedAt/, "when the quarantined record was published is not rendered anywhere on the state page");
+  // Admin redesign, 2026-09-23: the page heading that named the state was replaced by the shell's crumbs, which name it on every branch.
+  assert.match(page, /const crumbs = [\s\S]*?\{name\}/, "the crumbs name the state");
+  const branches = page.split("<MwShell").slice(1).map((b) => b.slice(0, b.indexOf("</MwShell>")));
+  assert.ok(branches.length >= 4, `the guard must see every return of the page; saw ${branches.length}`);
+  for (const b of branches) assert.match(b, /\{crumbs\(/, "the state is named on every branch");
 });
 
 /* ================================================================== *
@@ -484,10 +500,17 @@ test("ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current 
  * ================================================================== */
 
 test("ADM-2: the console header navigates inside a transition, shows the choice at once, and the read path skips the schema bootstrap", () => {
-  const nav = src("app/(admin)/console-nav.tsx");
-  assert.match(nav, /useTransition\(/);
-  assert.match(nav, /console-nav-pending/);
-  assert.match(nav, /aria-busy=/);
+  /*
+   * Admin redesign, 2026-09-23: the View / State dropdown header was replaced by
+   * the shell's one scope select (`_mw/header-controls.tsx`); the header's
+   * other controls are plain links. The select is where a choice waits on the
+   * server, so the rule follows it.
+   */
+  const nav = codeOf("app/(admin)/_mw/header-controls.tsx");
+  assert.match(nav, /const \[pending, startTransition\] = useTransition\(\);/);
+  assert.match(nav, /startTransition\(\(\) => \{[\s\S]*?router\.push\(/, "the navigation runs inside the transition");
+  assert.match(nav, /const shown = pending && chosen !== null \? chosen : props\.value;/, "the choice shows the instant it is made");
+  assert.match(nav, /\{pending && \([\s\S]*?role="status" aria-live="polite"/, "a status line says what is loading while the current page stays up");
   assert.match(src("lib/control-plane/admin-data.ts"), /skipBootstrap: true/);
   assert.match(src("lib/control-plane/readiness/read.ts"), /skipBootstrap: true/);
   // The bootstrap call is now wrapped in a bounded connect-retry (connect-retry.ts)
@@ -499,23 +522,27 @@ test("ADM-2: the console header navigates inside a transition, shows the choice 
   );
 });
 
-test("ADM-9: the map's own ThemeToggle is mounted in the console header, and the research page carries the header too", () => {
-  const nav = src("app/(admin)/console-nav.tsx");
-  assert.match(nav, /import \{ ThemeToggle \} from "@\/components\/theme-toggle"/);
-  assert.match(nav, /<ThemeToggle/);
+test("ADM-9: the research page and the readiness page carry the one console header, and no swatch relies on a light-only grey or a white ring", () => {
+  // Admin redesign, 2026-09-23: the header's theme switch was removed — the control centre is always dark (the shell pins color-scheme: dark on its root and on the header frame).
+  assert.doesNotMatch(codeOf("app/(admin)/console-nav.tsx"), /ThemeToggle/, "no second theme control beside the always-dark shell");
+  assert.match(src("app/(admin)/_mw/mw.module.css"), /\.root,\s*\.frame\s*\{[^}]*color-scheme: dark;/, "the shell and the kept pages' header frame are dark by declaration, not by a reader's theme choice");
   assert.match(src("app/(admin)/admin/research/page.tsx"), /<ConsoleNav view="research"/);
-  assert.match(src("app/(admin)/readiness/[state]/page.tsx"), /<ConsoleNav view="readiness"/);
-  // Light-mode legibility: no swatch relies on a light-only grey or a white ring.
-  const styles = src("app/(admin)/readiness/[state]/styles.ts") + src("app/(admin)/layout.tsx");
+  assert.match(src("app/(admin)/console-nav.tsx"), /<OtherPages scope=/, "the kept pages' header is the shell's own, with its Other pages menu");
+  // Admin redesign, 2026-09-23: the readiness page renders inside the redesigned shell rather than under the old header.
+  assert.match(src("app/(admin)/readiness/[state]/page.tsx"), /<MwShell \{\.\.\.shellProps\}/);
+  // Legibility: no swatch relies on a light-only grey or a white ring.
+  const styles = src("app/(admin)/layout.tsx") + src("app/(admin)/_mw/mw.module.css");
   assert.doesNotMatch(styles, /#e9e7e2/);
   assert.doesNotMatch(styles, /3px #fff/);
   assert.doesNotMatch(styles, /#999/);
 });
 
-test("the readiness legend, tiles and swatch classes are one shared implementation", () => {
-  const panel = src("app/(admin)/readiness/[state]/readiness-panel.tsx");
-  assert.match(panel, /from "\.\.\/\.\.\/console-ui\.tsx"/);
-  assert.doesNotMatch(panel, /^const STATE_CLASS/m);
-  assert.doesNotMatch(panel, /^function Legend\(/m);
-  assert.doesNotMatch(panel, /^function Tile\(/m);
+test("the readiness pages draw with the one shared set of primitives, never a local copy", () => {
+  // Admin redesign, 2026-09-23: the per-state panel with its legend, tiles and swatch classes was removed; the readiness pages draw with the shell's primitives (`_mw/ui.tsx`).
+  for (const rel of ["app/(admin)/readiness/[state]/page.tsx", "app/(admin)/readiness/page.tsx"]) {
+    const page = codeOf(rel);
+    assert.match(page, /from "\.\.(\/\.\.)?\/_mw\/ui\.tsx"/, `${rel} draws with the shared primitives`);
+    assert.doesNotMatch(page, /^(export )?function (Pill|Dash|Fig|FigList|Cells|Section|Refusal|Legend|Tile)\(/m, `${rel} declares its own copy of a shared primitive`);
+    assert.doesNotMatch(page, /^const (STATE_CLASS|FIG_TONE|TONE_CLASS)\b/m, `${rel} carries its own class dictionary`);
+  }
 });

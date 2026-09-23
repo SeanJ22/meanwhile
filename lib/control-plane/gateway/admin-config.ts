@@ -52,6 +52,7 @@
  * PURE. No store, no clock, no environment.
  */
 
+import type { BillingFact } from "../billing-facts.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 
 export const ADMIN_CONFIG_FORMAT_VERSION = 1;
@@ -101,6 +102,15 @@ export interface AdminConfig {
    * decidedAt/decidedBy/receiptId, exactly like the spend-ceiling dial.
    */
   readonly expansionScopes?: readonly ExpansionScopeDecision[] | null;
+  /**
+   * Billing figures the owner read where the system cannot look — a
+   * provider's console, an invoice, an export (`lib/control-plane/billing-facts.ts`).
+   * The one field on this row that is not policy: an attestation, kept here
+   * because it shares the row's owner-only write path and its who-and-when
+   * record. Nothing reads it to decide anything; the Money screen renders it.
+   * Optional because a config written before this field existed carries none.
+   */
+  readonly billingFacts?: readonly BillingFact[] | null;
   readonly updatedAt: string;
 }
 
@@ -214,6 +224,25 @@ export function withExpansionScopes(
     ...current,
     formatVersion: ADMIN_CONFIG_FORMAT_VERSION,
     expansionScopes: [...change.scopes],
+    updatedAt: change.decidedAt,
+  };
+}
+
+/**
+ * The next row after the owner records or removes a billing figure.
+ *
+ * Pure, like its siblings: the caller reads, computes the list with
+ * `withFactRecorded` / `withFactRemoved`, and compare-and-sets the result.
+ * Every decision on the row is carried through untouched.
+ */
+export function withBillingFacts(
+  current: AdminConfig,
+  change: { readonly facts: readonly BillingFact[]; readonly decidedAt: string },
+): AdminConfig {
+  return {
+    ...current,
+    formatVersion: ADMIN_CONFIG_FORMAT_VERSION,
+    billingFacts: [...change.facts],
     updatedAt: change.decidedAt,
   };
 }

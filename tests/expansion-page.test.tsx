@@ -1,20 +1,25 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
-import { renderToStaticMarkup } from "react-dom/server";
 
-import { ScopeCardSummary } from "../app/(admin)/admin/expansion/scope-card.tsx";
 import { loadBootstrapLookup } from "../lib/census-geography/reader.ts";
+import { instructionView, type InstructionView } from "../lib/control-plane/admin-view/work-view.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { armExpansionBudget, buildTerritoryIndex, planExpansion, withCycleCounts, type ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import { scopeKeyOf, type ExpansionScopeDecision, type ExpansionScopeGeography } from "../lib/control-plane/expansion/scopes.ts";
-import { scopeCards } from "../lib/control-plane/expansion/view.ts";
 
 /**
- * **THE EXPANSION PAGE'S SCOPE CARD, RENDERED.** (Expansion controls, 2026-09-23.)
+ * **A SELECTED GEOGRAPHY'S CARD, READ AS THE OWNER READS IT.** (Expansion
+ * controls, 2026-09-23; re-pointed for the Admin redesign, 2026-09-23.)
  *
- * The card is rendered to markup from the real pipeline — the committed Arizona
- * census bootstrap, a registry, a cost ledger — and read as the owner would:
- * every measured figure appears, and every unknown appears as the sentence that
+ * Admin redesign, 2026-09-23: the expansion page and its scope card were
+ * replaced by Fleet · Work, where each geography the owner selected is an
+ * instruction card built by `instructionView` (lib/control-plane/admin-view/
+ * work-view.ts) and opened in place. The card is built here from the real
+ * pipeline — the committed Arizona census bootstrap, a registry, a cost
+ * ledger — and every sentence it carries is read as the owner would: every
+ * measured figure appears, and every unknown appears as the sentence that
  * says why, never as a zero, `NaN` or `undefined`.
  */
 
@@ -40,8 +45,12 @@ function scoutCost(jurisdiction: string, usd: number | null): CostEntry {
   };
 }
 
-async function cardsFor(costs: readonly CostEntry[] | null, scopes?: (d: ExpansionScopeDecision) => Promise<ResolvedScope>) {
-  const d = decision(PIMA, 5);
+async function viewFor(
+  costs: readonly CostEntry[] | null,
+  scopes?: (d: ExpansionScopeDecision) => Promise<ResolvedScope>,
+  decidedAt?: string,
+): Promise<InstructionView> {
+  const d = decision(PIMA, 5, decidedAt);
   const lookup = loadBootstrapLookup();
   const result = await lookup.zctasForGrouping({ type: "county", geoid: "04019", version: "county:2020" });
   const zips = result.overlaps.map((o) => o.zcta5);
@@ -77,49 +86,56 @@ async function cardsFor(costs: readonly CostEntry[] | null, scopes?: (d: Expansi
   });
   const armed = armExpansionBudget(plan, { now: NOW, costs, worstCaseUsd: 0.6 });
   const reading = withCycleCounts(armed.reading, { dueByScope: new Map([[d.key, 1]]), scoutPlacedFirstByScope: new Map(), gate: armed.gate });
-  return scopeCards({ scopes: [d], reading, assignmentRows: null, assignmentTotal: null });
+  return instructionView({ decision: d, reading, rows: null, totalAssignments: null, paidLaneClosedBecause: null, runnerPaused: null });
 }
 
-function text(markup: string): string {
-  return markup.replace(/<[^>]+>/g, "").replace(/&#x27;/g, "'").replace(/&amp;/g, "&");
+/** Everything the card can put in front of the owner, as one text. */
+function text(v: InstructionView): string {
+  return [
+    v.card.title,
+    v.card.summary,
+    ...v.ack.map((a) => `${a.pill}: ${a.text}`),
+    ...v.lanes.flatMap((l) => [l.name, l.pill, ...l.rows.map(([k, val]) => `${k}: ${val}`), l.note]),
+    v.spend,
+  ].join("\n");
 }
 
-test("a resolved geography renders its ZCTAs, work, spend, coverage, gap and budget — and a link to its assignments", async () => {
-  const [card] = await cardsFor([scoutCost("az:county:county-of-pima", 0.25)]);
-  const markup = renderToStaticMarkup(<ScopeCardSummary card={card} nowIso={NOW} />);
-  const words = text(markup);
-  assert.match(words, /1\. Pima County, Arizona/);
-  assert.match(words, /Priority 1, with a budget of \$5\.00 per rolling 24 hours/);
-  assert.match(words, /was priority 2 with \$1\.00/);
-  assert.match(words, /56 ZCTA\(s\) wholly or partly inside it/);
-  assert.match(words, /1 standing obligation\(s\) about 1 government\(s\) in it; 1 were due/);
-  assert.match(words, /Spent here: \$0\.25 in the rolling 24 hours/);
-  assert.match(words, /50 of its 56 ZCTAs have a local government with work; 6 have none — the gap/);
-  assert.match(words, /Budget: \$0\.25 spent in the rolling 24 hours of a \$5\.00 budget/);
-  assert.match(words, /Last cycle it held 0 paid Scout\(s\) and let 0 through/);
-  assert.match(words, /not on the published snapshot yet/, "no published assignment list is a named gap");
-  assert.doesNotMatch(markup, /NaN|undefined|>null</);
+test("a resolved geography renders its ZCTAs, work, spend, coverage and budget — and opens by its own reference", async () => {
+  const view = await viewFor([scoutCost("az:county:county-of-pima", 0.25)]);
+  const words = text(view);
+  assert.match(words, /Pima County, Arizona — county, priority 1/);
+  assert.match(words, /Paid work here may spend \$5\.00 in any rolling 24 hours/);
+  assert.match(words, /resolved 56 codes/);
+  assert.match(words, /1 pieces of standing work are about governments here; 1 were due that cycle/);
+  assert.match(words, /\$0\.25 in the rolling 24 hours/);
+  assert.match(words, /Governments with work: 1 of 1/);
+  assert.match(words, /\$0\.25 spent in the rolling 24 hours of a \$5\.00 budget/);
+  assert.match(words, /Admitted: 0\nHeld by budget: 0/, "last cycle it held 0 paid Scouts and let 0 through");
+  // Admin redesign, 2026-09-23: the card no longer quotes the priority and budget it replaced, and the geography's ZCTA gap is read on the readiness state page (Where the gaps are) rather than on the instruction.
+  assert.equal(view.card.id, `scope:${scopeKeyOf(PIMA)}`, "the card opens in place by the same reference Readiness links to");
+  // No published assignment list is a named gap on the Work screen, never an empty list.
+  assert.match(readFileSync(join(process.cwd(), "app", "(admin)", "_mw", "screens", "work.tsx"), "utf8"), /The assignment list is not on the published snapshot, so no standing work is listed — not an empty list\./);
+  assert.doesNotMatch(words, /NaN|undefined|\bnull\b/);
 });
 
 test("unknown renders as its reason: unmeasured spend, an unreadable ledger, an unresolved geography, a reading not yet taken", async () => {
-  const [unmeasured] = await cardsFor([scoutCost("az:county:county-of-pima", null)]);
-  const a = text(renderToStaticMarkup(<ScopeCardSummary card={unmeasured} nowIso={NOW} />));
-  assert.match(a, /Spent here: not measured in the rolling 24 hours \(0 measured row\(s\), 1 with no dollar figure\)/);
-  assert.match(a, /reported no dollar figure, so the \$5\.00 budget cannot be checked/);
+  const unmeasured = text(await viewFor([scoutCost("az:county:county-of-pima", null)]));
+  assert.match(unmeasured, /unknown \(a charge reported no cost\) in the rolling 24 hours/);
+  assert.match(unmeasured, /reported no dollar figure, so the \$5\.00 budget cannot be checked/);
+  assert.doesNotMatch(unmeasured, /\$0\.00 in the rolling/, "unmeasured spend is never a zero");
 
-  const [unread] = await cardsFor(null);
-  const b = text(renderToStaticMarkup(<ScopeCardSummary card={unread} nowIso={NOW} />));
-  assert.match(b, /Spend here was not read, so it is not shown — not zero/);
+  const unread = text(await viewFor(null));
+  assert.match(unread, /The cost ledger could not be read, so the \$5\.00 budget cannot be checked/);
+  assert.doesNotMatch(unread, /\$0\.00 in the rolling/, "an unread ledger is never a zero");
 
-  const [unresolved] = await cardsFor([], async (d) => ({ kind: "UNRESOLVED", decision: d, why: "the Census geography is not published yet", states: ["AZ"] }));
-  const c = text(renderToStaticMarkup(<ScopeCardSummary card={unresolved} nowIso={NOW} />));
-  assert.match(c, /Not resolved: the Census geography is not published yet — nothing is placed in it/);
-  assert.doesNotMatch(c, /standing obligation/, "an unresolved geography claims no work, not zero work");
-  assert.match(c, /paid work anywhere in AZ/);
+  const unresolved = text(await viewFor([], async (d) => ({ kind: "UNRESOLVED", decision: d, why: "the Census geography is not published yet", states: ["AZ"] })));
+  assert.match(unresolved, /It could not be resolved/);
+  assert.doesNotMatch(unresolved, /\d+ pieces of standing work|Standing work here: \d/, "an unresolved geography claims no work, not zero work");
+  assert.match(unresolved, /paid work anywhere in AZ/);
+  assert.match(unresolved, /the Census geography is not published yet/, "the card says it could not be resolved but never says why — the reason the runner recorded is dropped");
 
-  const [card] = await cardsFor([]);
-  const later = { ...card, runner: { kind: "NOT_YET" as const, says: "It takes effect at the start of the next cycle." } };
-  const d = text(renderToStaticMarkup(<ScopeCardSummary card={later} nowIso={NOW} />));
-  assert.match(d, /It takes effect at the start of the next cycle/);
-  assert.doesNotMatch(d, /ZCTA\(s\) wholly/, "a reading of the old decision is not shown as this one's");
+  const later = text(await viewFor([], undefined, "2026-09-23T05:00:00.000Z"));
+  assert.match(later, /It takes effect at the start of the next cycle/);
+  assert.doesNotMatch(later, /resolved 56 codes/, "a reading of the old decision is not shown as this one's");
+  for (const words of [unmeasured, unread, unresolved, later]) assert.doesNotMatch(words, /NaN|undefined|\bnull\b/);
 });

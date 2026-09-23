@@ -4,61 +4,59 @@ import { join } from "node:path";
 import test, { after, before } from "node:test";
 import type { Page } from "playwright";
 
-import { CELL_STATES, type CellState } from "../lib/control-plane/readiness/gates.ts";
+import { HEALTH_SCALE } from "../lib/control-plane/plain-health.ts";
 import { launchGuarded, type GuardedBrowser } from "../scripts/browser.mts";
 
 /**
- * **A CLICKABLE READINESS CELL KEEPS ITS STATE BOX.** (Admin Pass A, ADM-A1..A4,
- * 2026-09-06.)
+ * **A STATE SWATCH KEEPS ITS BOX; EVERY CONTROL SHOWS ITS FOCUS.** (Admin Pass
+ * A, ADM-A1..A4, 2026-09-06; re-pointed for the Admin redesign, 2026-09-23.)
  *
  * ## What broke
  *
- * The State Readiness grid renders one `button.rq-cell` per capability × gate,
- * carrying one of six state classes (`rq-current` … `rq-gated`). The #281
- * restyle (Lumen Edge) added a generic button recipe for the whole console and,
- * to keep the cell out of it, a reset: `.admin button.rq-cell { background: none;
- * box-shadow: none }`. That selector is (0,2,1); the state class is (0,2,0). The
- * reset won the cascade on every cell, so the grid rendered every state as an
- * empty box while the legend swatches — `<i>`, not `<button>` — kept theirs. The
- * class name was present the whole time, which is why a test that only greps for
- * the class proves nothing: this one renders the real stylesheets in Chromium
- * and reads `getComputedStyle`.
+ * The State Readiness grid rendered one `button.rq-cell` per capability × gate,
+ * carrying one of six state classes. The #281 restyle (Lumen Edge) added a
+ * generic button recipe for the whole console and, to keep the cell out of it,
+ * a reset that also cleared the cell's background and shadow. That selector
+ * outranked the state class on specificity, so the grid rendered every state as
+ * an empty box while the legend swatches — not buttons — kept theirs.
  *
  * ## The fix, and why it is a cascade fix rather than six overrides
  *
  * Every generic control recipe in the console (buttons, selects, inputs, cards,
- * element-level text rules) now lives in `@layer ce-recipe`. Cascade layers are
+ * element-level text rules) lives in `@layer ce-recipe`. Cascade layers are
  * ordered BEFORE specificity: an unlayered rule beats a layered one whatever its
- * selector. The state classes, the swatch geometry and the violation ring stay
- * unlayered, so no future recipe — however specific — can outrank them without
- * moving them into the layer, which the structural guard below refuses.
+ * selector. The state classes and the swatch geometry stay unlayered, so no
+ * future recipe — however specific — can outrank them without moving them into
+ * the layer, which the structural guard below refuses.
  *
- * ## What this file proves
+ * ## Admin redesign, 2026-09-23
  *
- *   1  all six states render visibly and distinctly on a BUTTON cell, and each
- *      equals its legend swatch, in dark and in light
- *   2  the monotonicity-violation ring survives on a button cell
- *   3  a cell is focusable and activatable by keyboard, and its focus ring does
- *      not erase the state box
- *   4  every generic control reset is inside the recipe layer, and the state
- *      classes are not (the structural half of the fix)
- *   5  the same class of defect elsewhere: every focusable console control
- *      shows a keyboard focus indicator, and a health card's grade band survives
- *      hover and focus-within
- *   6  a POSITIVE CONTROL: re-appending the #281 reset makes the state check
- *      fail, so the checker is shown catching the defect on every run
+ * The per-state readiness panel — its capability grid of button cells, its
+ * legend, its violation ring and its own stylesheet — was removed; the
+ * redesigned readiness page draws its readings with the shell's primitives.
+ * The rendered checks on those cells are retired with it. What still holds:
  *
- * The harness is the two admin stylesheets exactly as the components inject
- * them (read from their template literals; neither interpolates), around the
- * panel's own markup shape. It carries no `globals.css`: the user-agent styles
- * a `<button>` gets without preflight are the harder case, not the easier one.
+ *   1  every generic control reset in the console stylesheet (which the pages
+ *      that kept their content still wear) is inside the recipe layer, and the
+ *      swatch classes still drawn — a health grade beside its word — are not;
+ *      a POSITIVE CONTROL re-appends the #281 reset and the check must fail
+ *   2  class-wide: every focusable console control shows a keyboard focus
+ *      indicator — on the kept pages, AND in the redesigned shell every Fleet
+ *      and Readiness screen renders in
+ *   3  class-wide: the runner card's grade band survives hover and
+ *      focus-within (the health cards that shared the rule were removed)
+ *
+ * The harness is each stylesheet exactly as the page gets it (the console's
+ * template literal; the shell's CSS module text, whose class names the harness
+ * uses unhashed), around the markup shapes the pages render. It carries no
+ * `globals.css`: the user-agent styles a control gets without preflight are
+ * the harder case, not the easier one.
  */
 
 const ROOT = process.cwd();
 const LAYOUT = "app/(admin)/layout.tsx";
-const PANEL_STYLES = "app/(admin)/readiness/[state]/styles.ts";
+const SHELL_CSS = "app/(admin)/_mw/mw.module.css";
 const CONSOLE_UI = "app/(admin)/console-ui.tsx";
-const PANEL = "app/(admin)/readiness/[state]/readiness-panel.tsx";
 /** The layer every generic recipe lives in. Named once here and once in the stylesheet. */
 const RECIPE_LAYER = "ce-recipe";
 /** The #281 reset, verbatim from `git show dc2294b0:app/(admin)/layout.tsx`. */
@@ -75,17 +73,6 @@ function styleLiteral(rel: string, name: string): string {
   assert.ok(match, `${rel}: no template literal named ${name}`);
   assert.ok(!match[1].includes("${"), `${rel}: ${name} interpolates, so its text is not what the page gets`);
   return match[1];
-}
-
-/** `STATE_CLASS` from console-ui.tsx, read as text (the module is JSX, which node cannot load). */
-function stateClasses(): Record<CellState, string> {
-  const src = read(CONSOLE_UI);
-  const block = /STATE_CLASS: Record<CellState, string> = \{([^}]*)\}/.exec(src);
-  assert.ok(block, `${CONSOLE_UI}: STATE_CLASS not found`);
-  const out: Partial<Record<CellState, string>> = {};
-  for (const m of block[1].matchAll(/([A-Z_]+):\s*"([a-z-]+)"/g)) out[m[1] as CellState] = m[2];
-  for (const s of CELL_STATES) assert.ok(out[s], `STATE_CLASS has no class for ${s}`);
-  return out as Record<CellState, string>;
 }
 
 /* ------------------------------------------------------------- CSS parse */
@@ -137,91 +124,45 @@ function parseRules(css: string): Rule[] {
 const CONTROL_ELEMENT = /(^|[\s>+~(])(button|select|input|textarea)(?![\w-])/;
 const OWNED_BY_A_STATE = /(^|;)\s*(background(-color|-image)?|box-shadow)\s*:/;
 
-/* ------------------------------------------------------------- harness */
-
-interface Swatch {
-  readonly bg: string;
-  readonly img: string;
-  readonly shadow: string;
-  readonly outlineStyle: string;
-  readonly outlineWidth: string;
-  readonly transform: string;
-  readonly width: number;
-  readonly height: number;
-}
-
-const READ_SWATCH = `(el) => {
-  const cs = getComputedStyle(el);
-  const r = el.getBoundingClientRect();
-  return { bg: cs.backgroundColor, img: cs.backgroundImage, shadow: cs.boxShadow, outlineStyle: cs.outlineStyle, outlineWidth: cs.outlineWidth, transform: cs.transform, width: r.width, height: r.height };
-}`;
-
-function gridHarness(layoutCss: string, panelCss: string, cls: Record<CellState, string>, light: boolean): string {
-  const legend = CELL_STATES.map((s) => `<span><i class="rq-cell ${cls[s]}" data-legend="${s}"></i> ${s}</span>`).join("");
-  const cells = CELL_STATES.map(
-    (s) => `<td class="rq-gatecell"><button type="button" class="rq-cell ${cls[s]}" data-state="${s}" aria-label="${s}"></button></td>`,
-  ).join("");
-  const violation = `<td class="rq-gatecell"><button type="button" class="rq-cell ${cls.CURRENT} rq-violation" data-state="CURRENT" data-violation="1" aria-label="violation"></button></td>`;
-  const zip = CELL_STATES.map((s) => `<span class="rq-cell ${cls[s]}" data-zip="${s}"></span>`).join(" ");
-  return `<!doctype html><html lang="en"${light ? ' data-theme="light"' : ""}><head><meta charset="utf-8"><style>${layoutCss}</style></head><body>
-<main class="admin readiness">
-<style>${panelCss}</style>
-<h2>Capabilities</h2>
-<div class="rq-legend" aria-label="What the cell colours mean">${legend}</div>
-<div class="rq-gridwrap"><table class="rq-grid"><thead><tr><th>Capability</th><th class="rq-gatecol">Gate</th></tr></thead><tbody>
-<tr><td>Row</td>${cells}${violation}</tr></tbody></table></div>
-<table class="rq-zip"><tbody><tr><td>${zip} complete</td></tr></tbody></table>
-</main>
-<script>window.__clicks = []; for (const b of document.querySelectorAll("button.rq-cell")) b.addEventListener("click", () => window.__clicks.push(b.dataset.state + (b.dataset.violation ? "+violation" : "")));</script>
-</body></html>`;
-}
-
-async function measureGrid(page: Page): Promise<{
-  legend: Record<string, Swatch>;
-  buttons: Record<string, Swatch>;
-  zip: Record<string, Swatch>;
-  violation: Swatch;
-}> {
-  return page.evaluate(`(() => {
-    const read = ${READ_SWATCH};
-    const pick = (sel, key) => Object.fromEntries([...document.querySelectorAll(sel)].map((el) => [el.dataset[key], read(el)]));
-    return {
-      legend: pick("i.rq-cell[data-legend]", "legend"),
-      buttons: pick("button.rq-cell[data-state]:not([data-violation])", "state"),
-      zip: pick("span.rq-cell[data-zip]", "zip"),
-      violation: read(document.querySelector("button.rq-cell[data-violation]")),
-    };
-  })()`) as Promise<{ legend: Record<string, Swatch>; buttons: Record<string, Swatch>; zip: Record<string, Swatch>; violation: Swatch }>;
-}
-
-const TRANSPARENT = /^rgba\(\d+, \d+, \d+, 0\)$|^transparent$/;
-
-/** A swatch is visible when it paints a fill, a gradient, or (an empty box) a rim. */
-function visible(s: Swatch): boolean {
-  return !TRANSPARENT.test(s.bg) || s.img !== "none" || s.shadow !== "none";
-}
-
-/** The check the positive control must be able to fail: every state, on a button, visible, distinct, equal to its legend. */
-function checkStates(m: Awaited<ReturnType<typeof measureGrid>>, theme: string): void {
-  const seen = new Map<string, CellState>();
-  for (const s of CELL_STATES) {
-    const button = m.buttons[s];
-    const legend = m.legend[s];
-    assert.ok(button && legend, `${theme}: ${s} did not render both a button cell and a legend swatch`);
-    assert.ok(visible(button), `${theme}: the ${s} button cell paints nothing (bg ${button.bg}, image ${button.img}, shadow ${button.shadow})`);
-    assert.ok(button.width >= 12 && button.height >= 12, `${theme}: the ${s} button cell is ${button.width}×${button.height}px — not a box`);
-    assert.equal(button.bg, legend.bg, `${theme}: ${s} button background differs from its legend swatch`);
-    assert.equal(button.img, legend.img, `${theme}: ${s} button background-image differs from its legend swatch`);
-    assert.equal(button.shadow, legend.shadow, `${theme}: ${s} button rim differs from its legend swatch`);
-    assert.equal(m.zip[s].bg, legend.bg, `${theme}: the zip-table ${s} swatch differs from the legend`);
-    const key = `${button.bg}|${button.img}`;
-    const twin = seen.get(key);
-    assert.equal(twin, undefined, `${theme}: ${s} and ${twin} render alike (${key})`);
-    seen.set(key, s);
+/** Element-level control rules outside the recipe layer that declare a property a state class owns. */
+function escapedRecipes(css: string): string[] {
+  const escaped: string[] = [];
+  for (const rule of parseRules(css)) {
+    if (rule.layer === RECIPE_LAYER) continue;
+    const touchesAControl = rule.selector.split(",").some((s) => CONTROL_ELEMENT.test(s.trim()));
+    if (touchesAControl && OWNED_BY_A_STATE.test(rule.body)) escaped.push(rule.selector);
   }
-  // NOT_WALKED is an empty box on purpose (no claim is made) — the rim is what makes it a box.
-  assert.ok(TRANSPARENT.test(m.buttons.NOT_WALKED.bg) && m.buttons.NOT_WALKED.shadow !== "none", `${theme}: NOT_WALKED must be an empty box with a visible rim`);
+  return escaped;
 }
+
+/* ------------------------------------------------------------- 1 */
+
+test("every generic control reset lives in the recipe layer; the state classes never do", () => {
+  const css = styleLiteral(LAYOUT, "STYLES");
+  const layout = parseRules(css);
+  const recipe = layout.find((r) => /^\.admin button, \.console-nav button$/.test(r.selector));
+  assert.ok(recipe, "the console button recipe is gone");
+  assert.equal(recipe.layer, RECIPE_LAYER, `the button recipe must live in @layer ${RECIPE_LAYER}`);
+
+  assert.deepEqual(
+    escapedRecipes(css),
+    [],
+    `an element-level control rule outside @layer ${RECIPE_LAYER} declares a background or box-shadow — the property a state class owns. Move it into the layer.`,
+  );
+
+  // Admin redesign, 2026-09-23: the readiness grid's six cell-state classes and its violation ring have no element left to draw; the swatch the kept pages still draw — a health grade beside its word — is what the layer protects now.
+  assert.match(read(CONSOLE_UI), /<i className=\{`rq-cell hl-\$\{level\}`\} aria-hidden="true" \/>/, "the grade swatch carries the swatch class and its level class");
+  for (const sel of [".admin .rq-cell", ...HEALTH_SCALE.map((s) => `.admin .hl-${s.level}`)]) {
+    const rule = layout.find((r) => r.selector === sel);
+    assert.ok(rule, `${sel} is not declared in the console stylesheet`);
+    assert.equal(rule.layer, null, `${sel} must stay unlayered so no recipe can outrank it`);
+  }
+});
+
+test("POSITIVE CONTROL: re-appending the #281 reset makes the structural check fail", () => {
+  const withReset = `${styleLiteral(LAYOUT, "STYLES")}\n${THE_281_RESET}\n`;
+  assert.deepEqual(escapedRecipes(withReset), [".admin button.rq-cell"], "the checker passed with the #281 reset back in place, so it is not measuring the defect");
+});
 
 /* ------------------------------------------------------------- the browser */
 
@@ -240,33 +181,87 @@ async function openHarness(html: string): Promise<Page> {
   return page;
 }
 
-/* ------------------------------------------------------------- 1 + 2 */
+/* ------------------------------------------------------------- 2 */
 
-test("the six cell states are one class each, and the grid renders them on a <button>", () => {
-  const cls = stateClasses();
-  assert.equal(new Set(Object.values(cls)).size, CELL_STATES.length, "two states share a class");
-  const panel = read(PANEL);
-  assert.match(panel, /<button\s[^>]*className=\{`rq-cell \$\{STATE_CLASS\[cell\.state\]\}/, "the grid cell is no longer a button carrying its state class");
-  assert.match(panel, /" rq-violation"/, "the monotonicity violation class left the grid cell");
-});
+/** The controls the kept pages draw under the console stylesheet (research, sources, release review, the chat, feedback, the fleet map). */
+function keptPagesHarness(layoutCss: string): string {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>${layoutCss}</style></head><body>
+<main class="admin console-page">
+<section class="card runner-card l-RED" data-band="RED"><div class="status-block"><p class="status-what">Runner</p><details class="status-detail"><summary data-ctl="summary">Technical details</summary><p class="note">x</p></details></div></section>
+<div class="controls-row"><span><button type="button" class="primary" data-ctl="primary">Pause research</button></span></div>
+<p class="note">gap <button type="submit" class="queue-add compact" data-ctl="queue-add">Add this to the queue</button></p>
+<form><label>Reason<input type="text" data-ctl="text"></label><label>Words<textarea data-ctl="textarea"></textarea></label><label>Page<select data-ctl="select"><option>1</option></select></label></form>
+<a href="#x" data-ctl="link">Instrument detail</a>
+<button type="button" data-ctl="plain">Plain</button>
+</main></body></html>`;
+}
 
-for (const theme of ["dark", "light"] as const) {
-  test(`SEEDED (#281): a clickable rq-cell renders a visible, distinct state box for all six states — ${theme}`, async () => {
-    const page = await openHarness(gridHarness(styleLiteral(LAYOUT, "STYLES"), styleLiteral(PANEL_STYLES, "READINESS_STYLES"), stateClasses(), theme === "light"));
+/** The controls the redesigned shell draws: the header frame the kept pages carry, and a screen with every control shape the Fleet and Readiness areas use. */
+function shellHarness(shellCss: string): string {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>${shellCss}</style></head><body>
+<div class="frame"><header class="header"><a class="brand" href="/admin" data-ctl="frame-brand">Meanwhile</a><nav class="areaToggle"><a class="areaBtn" href="/admin" data-ctl="frame-area">Fleet</a></nav><div class="headerRight"><button type="button" class="otherBtn" data-ctl="frame-other">Other pages</button></div></header></div>
+<main class="root">
+<header class="header"><nav class="areaToggle"><a class="areaBtn areaBtnOn" href="/admin" data-ctl="area">Fleet</a></nav><div class="headerRight"><select class="select" data-ctl="scope"><option>Everywhere</option></select><button type="button" class="otherBtn" data-ctl="other">Other pages</button></div></header>
+<nav class="tabs"><a class="tab tabOn" href="/admin" data-ctl="tab">Now</a></nav>
+<div class="container"><div class="card">
+<div class="actions"><button type="button" class="btnPrimary" data-ctl="btn-primary">Do it</button><button type="button" class="btnSecondary" data-ctl="btn-secondary">Do not</button><button type="button" class="btnToggle" data-ctl="btn-toggle">Something else</button><button type="button" class="btnLink" data-ctl="btn-link">Open</button></div>
+<textarea class="textarea" data-ctl="textarea"></textarea>
+<button type="button" class="chip" data-ctl="chip">Neither of these</button>
+<button type="button" class="rowChoice" data-ctl="row-choice">When my budget is reached</button>
+<input class="input" data-ctl="input" value="0"><input class="inputText" data-ctl="input-text">
+<a class="btnPrimary" href="/admin/work" data-ctl="link-primary">Deploy fleet here</a>
+<a class="chip" href="/readiness/az?by=county" data-ctl="link-chip">County</a>
+<a class="linkStrong" href="/readiness/az" data-ctl="link-strong">Arizona</a>
+</div></div></main></body></html>`;
+}
+
+const READ_FOCUS = `(el) => { const cs = getComputedStyle(el); return { ctl: el.dataset.ctl, outlineStyle: cs.outlineStyle, outlineWidth: cs.outlineWidth, shadow: cs.boxShadow, bg: cs.backgroundColor }; }`;
+
+/** Tab through every control and return the ones that show nothing when focused from the keyboard. */
+async function focusBlindControls(page: Page): Promise<{ unreached: string[]; blind: string[] }> {
+  const rest = (await page.evaluate(`[...document.querySelectorAll("[data-ctl]")].map(${READ_FOCUS})`)) as { ctl: string; outlineStyle: string; outlineWidth: string; shadow: string }[];
+  const expected = rest.map((r) => r.ctl);
+  const seen = new Map<string, { outlineStyle: string; outlineWidth: string; shadow: string }>();
+  for (let i = 0; i < 60 && seen.size < expected.length; i += 1) {
+    await page.keyboard.press("Tab");
+    const f = (await page.evaluate(`(() => { const el = document.activeElement; return el && el.dataset && el.dataset.ctl ? (${READ_FOCUS})(el) : null; })()`)) as { ctl: string; outlineStyle: string; outlineWidth: string; shadow: string } | null;
+    if (f && !seen.has(f.ctl)) seen.set(f.ctl, f);
+  }
+  const unreached = expected.filter((c) => !seen.has(c));
+  const blind: string[] = [];
+  for (const r of rest) {
+    const f = seen.get(r.ctl);
+    if (!f) continue;
+    const byOutline = f.outlineStyle !== "none" && f.outlineWidth !== "0px";
+    const byShadow = f.shadow !== r.shadow;
+    if (!byOutline && !byShadow) blind.push(`${r.ctl} (outline ${f.outlineStyle} ${f.outlineWidth}; shadow unchanged: ${f.shadow})`);
+  }
+  return { unreached, blind };
+}
+
+test("class-wide: every focusable console control shows a keyboard focus indicator", async () => {
+  // Admin redesign, 2026-09-23: the old header's View / State selects and theme switch, the health cards, the decision queue's option forms, the deploy control and the readiness panel's selects, cells, sort and drawer were removed; the harness draws the controls that remain, and the redesigned shell's.
+  for (const [name, html] of [
+    ["the pages that kept their content", keptPagesHarness(styleLiteral(LAYOUT, "STYLES"))],
+    ["the redesigned shell", shellHarness(read(SHELL_CSS))],
+  ] as const) {
+    const page = await openHarness(html);
     try {
-      checkStates(await measureGrid(page), theme);
+      const { unreached, blind } = await focusBlindControls(page);
+      assert.deepEqual(unreached, [], `${name}: Tab never reached these controls`);
+      assert.deepEqual(blind, [], `${name}: these controls show nothing when focused from the keyboard`);
     } finally {
       await page.close();
     }
-  });
-}
+  }
+});
 
-test("a monotonicity-violation ring survives on a button cell, over the state fill", async () => {
-  const page = await openHarness(gridHarness(styleLiteral(LAYOUT, "STYLES"), styleLiteral(PANEL_STYLES, "READINESS_STYLES"), stateClasses(), false));
+test("POSITIVE CONTROL: a shell control whose focus indicator is taken away is caught", async () => {
+  const unfocused = `${read(SHELL_CSS)}\n.root button:focus-visible, .root select:focus-visible { outline: none; }\n`;
+  const page = await openHarness(shellHarness(unfocused));
   try {
-    const m = await measureGrid(page);
-    assert.equal(m.violation.bg, m.legend.CURRENT.bg, "the violation cell lost its state fill");
-    assert.match(m.violation.shadow, /rgb\(204, 75, 75\)/, `the violation ring is not drawn: ${m.violation.shadow}`);
+    const { blind } = await focusBlindControls(page);
+    assert.ok(blind.some((b) => b.startsWith("btn-primary")) && blind.some((b) => b.startsWith("scope")), `the checker did not see the removed focus ring: ${blind.join("; ")}`);
   } finally {
     await page.close();
   }
@@ -274,151 +269,20 @@ test("a monotonicity-violation ring survives on a button cell, over the state fi
 
 /* ------------------------------------------------------------- 3 */
 
-test("a cell is keyboard-operable, and its focus ring does not erase the state box", async () => {
-  const page = await openHarness(gridHarness(styleLiteral(LAYOUT, "STYLES"), styleLiteral(PANEL_STYLES, "READINESS_STYLES"), stateClasses(), false));
-  try {
-    const rest = await measureGrid(page);
-    // Keyboard focus, so :focus-visible is what a keyboard user gets.
-    await page.keyboard.press("Tab");
-    const focused = (await page.evaluate(`(() => { const el = document.activeElement; const read = ${READ_SWATCH}; return el && el.matches("button.rq-cell") ? { state: el.dataset.state, ...read(el) } : null; })()`)) as (Swatch & { state: string }) | null;
-    assert.ok(focused, "Tab did not reach a cell button — the cell is not focusable");
-    assert.equal(focused.state, "CURRENT");
-    const ringByOutline = focused.outlineStyle !== "none" && focused.outlineWidth !== "0px";
-    const ringByShadow = focused.shadow !== rest.buttons.CURRENT.shadow;
-    assert.ok(ringByOutline || ringByShadow, `no visible focus indicator on the focused cell (outline ${focused.outlineStyle} ${focused.outlineWidth}, shadow ${focused.shadow})`);
-    assert.equal(focused.bg, rest.buttons.CURRENT.bg, "the focus ring erased the state box");
-    assert.equal(focused.img, rest.buttons.CURRENT.img, "the focus ring erased the state pattern");
-
-    await page.keyboard.press("Enter");
-    await page.keyboard.press("Space");
-    await page.click('button.rq-cell[data-state="BLOCKED"]');
-    const clicks = (await page.evaluate("window.__clicks")) as string[];
-    assert.deepEqual(clicks, ["CURRENT", "CURRENT", "BLOCKED"], "Enter, Space and a click must each activate the cell");
-
-    await page.hover('button.rq-cell[data-state="BLOCKED"]');
-    const hovered = (await page.evaluate(`(${READ_SWATCH})(document.querySelector('button.rq-cell[data-state="BLOCKED"]'))`)) as Swatch;
-    assert.equal(hovered.bg, rest.buttons.BLOCKED.bg, "hover erased the state box");
-    assert.notEqual(hovered.transform, "none", "the cell has no hover affordance");
-  } finally {
-    await page.close();
-  }
-});
-
-/* ------------------------------------------------------------- 4 */
-
-test("every generic control reset lives in the recipe layer; the state classes never do", () => {
-  const layout = parseRules(styleLiteral(LAYOUT, "STYLES"));
-  const panel = parseRules(styleLiteral(PANEL_STYLES, "READINESS_STYLES"));
-  const recipe = layout.find((r) => /^\.admin button, \.console-nav button$/.test(r.selector));
-  assert.ok(recipe, "the console button recipe is gone");
-  assert.equal(recipe.layer, RECIPE_LAYER, `the button recipe must live in @layer ${RECIPE_LAYER}`);
-
-  const escaped: string[] = [];
-  for (const rule of [...layout, ...panel]) {
-    if (rule.layer === RECIPE_LAYER) continue;
-    const touchesAControl = rule.selector.split(",").some((s) => CONTROL_ELEMENT.test(s.trim()));
-    if (touchesAControl && OWNED_BY_A_STATE.test(rule.body)) escaped.push(rule.selector);
-  }
-  assert.deepEqual(
-    escaped,
-    [],
-    `an element-level control rule outside @layer ${RECIPE_LAYER} declares a background or box-shadow — the property a state class owns. Move it into the layer.`,
-  );
-
-  const cls = stateClasses();
-  for (const sel of [".admin .rq-cell", ".admin .rq-violation", ...CELL_STATES.map((s) => `.admin .${cls[s]}`)]) {
-    const rule = layout.find((r) => r.selector === sel);
-    assert.ok(rule, `${sel} is not declared in the console stylesheet`);
-    assert.equal(rule.layer, null, `${sel} must stay unlayered so no recipe can outrank it`);
-  }
-});
-
-/* ------------------------------------------------------------- 5 */
-
-function controlsHarness(layoutCss: string, panelCss: string): string {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>${layoutCss}</style></head><body>
-<nav class="console-nav"><label>View<select data-ctl="console-select"><option>Pilot health</option></select></label><button type="button" class="icon-btn" data-ctl="theme-toggle" aria-label="Switch">t</button></nav>
-<main class="admin readiness console-page">
-<style>${panelCss}</style>
-<div class="ph-cards"><div class="ph-card card ph-l-GREEN" data-band="GREEN"><h3>Contract <span class="ph-chip">GREEN</span></h3><details class="ph-evidence" open><summary data-ctl="summary">Instrument detail</summary><p class="note">x <button type="submit" class="queue-add compact" data-ctl="queue-add-in-card">Add this to the queue</button></p></details></div></div>
-<div class="runner-card card l-RED" data-band="RED"><p>Runner</p><form><input type="text" data-ctl="text" aria-label="why"><button type="submit" class="primary" data-ctl="primary">Record</button></form></div>
-<div class="deploy"><div class="actions"><button type="button" class="primary" data-ctl="deploy">Deploy fleet</button></div></div>
-<section class="queue-card card"><div class="options"><form><button type="submit" class="option" data-ctl="option">Option<span class="consequence">consequence</span></button></form><form class="own-words"><label>Own words<textarea data-ctl="textarea"></textarea></label></form></div></section>
-<p class="note">gap <button type="submit" class="queue-add compact" data-ctl="queue-add">Add this to the queue</button></p>
-<div class="rq-controls"><label>Level<select data-ctl="rq-select"><option>All levels</option></select></label></div>
-<div class="rq-gridwrap"><table class="rq-grid"><tbody><tr><td class="rq-gatecell"><button type="button" class="rq-cell rq-partial" data-ctl="rq-cell" aria-label="cell"></button></td></tr></tbody></table></div>
-<table class="rq-zip"><thead><tr><th><button type="button" data-ctl="zip-sort" aria-pressed="true">Zip</button></th></tr></thead></table>
-<form class="deploy-here"><button type="submit" class="primary" data-ctl="deploy-here">Deploy fleet here</button></form>
-<a href="#x" data-ctl="link">Instrument detail</a>
-<button type="button" data-ctl="plain">Plain</button>
-<div class="rq-drawer"><button type="button" class="rq-drawer-close" data-ctl="drawer-close">Close</button></div>
-</main></body></html>`;
-}
-
-const READ_FOCUS = `(el) => { const cs = getComputedStyle(el); return { ctl: el.dataset.ctl, outlineStyle: cs.outlineStyle, outlineWidth: cs.outlineWidth, shadow: cs.boxShadow, bg: cs.backgroundColor }; }`;
-
-test("class-wide: every focusable console control shows a keyboard focus indicator", async () => {
-  const page = await openHarness(controlsHarness(styleLiteral(LAYOUT, "STYLES"), styleLiteral(PANEL_STYLES, "READINESS_STYLES")));
-  try {
-    const rest = (await page.evaluate(`[...document.querySelectorAll("[data-ctl]")].map(${READ_FOCUS})`)) as { ctl: string; outlineStyle: string; outlineWidth: string; shadow: string }[];
-    const expected = rest.map((r) => r.ctl);
-    const seen = new Map<string, { outlineStyle: string; outlineWidth: string; shadow: string }>();
-    for (let i = 0; i < 40 && seen.size < expected.length; i += 1) {
-      await page.keyboard.press("Tab");
-      const f = (await page.evaluate(`(() => { const el = document.activeElement; return el && el.dataset && el.dataset.ctl ? (${READ_FOCUS})(el) : null; })()`)) as { ctl: string; outlineStyle: string; outlineWidth: string; shadow: string } | null;
-      if (f && !seen.has(f.ctl)) seen.set(f.ctl, f);
-    }
-    const unreached = expected.filter((c) => !seen.has(c));
-    assert.deepEqual(unreached, [], "Tab never reached these controls");
-    const blind: string[] = [];
-    for (const r of rest) {
-      const f = seen.get(r.ctl)!;
-      const byOutline = f.outlineStyle !== "none" && f.outlineWidth !== "0px";
-      const byShadow = f.shadow !== r.shadow;
-      if (!byOutline && !byShadow) blind.push(`${r.ctl} (outline ${f.outlineStyle} ${f.outlineWidth}; shadow unchanged: ${f.shadow})`);
-    }
-    assert.deepEqual(blind, [], "these controls show nothing when focused from the keyboard");
-  } finally {
-    await page.close();
-  }
-});
-
-test("class-wide: a health card's grade band keeps its colour on hover and while focus is inside it", async () => {
-  const page = await openHarness(controlsHarness(styleLiteral(LAYOUT, "STYLES"), styleLiteral(PANEL_STYLES, "READINESS_STYLES")));
+test("class-wide: the runner card's grade band keeps its colour on hover and while focus is inside it", async () => {
+  // Admin redesign, 2026-09-23: the Pilot health cards that shared this rule were removed; the research page's runner card still carries a grade band.
+  const page = await openHarness(keptPagesHarness(styleLiteral(LAYOUT, "STYLES")));
   try {
     const band = (sel: string) => page.evaluate(`getComputedStyle(document.querySelector('${sel}'), "::after").backgroundImage`) as Promise<string>;
-    const GREEN = /rgb\(76, 154, 90\)/;
     const RED = /rgb\(204, 75, 75\)/;
-    assert.match(await band(".ph-l-GREEN"), GREEN, "at rest, the GREEN band is not green");
     assert.match(await band(".runner-card.l-RED"), RED, "at rest, the RED band is not red");
-    await page.hover(".ph-l-GREEN");
-    assert.match(await band(".ph-l-GREEN"), GREEN, "hovering the card recoloured its grade band");
     await page.hover(".runner-card.l-RED");
     assert.match(await band(".runner-card.l-RED"), RED, "hovering the runner card recoloured its grade band");
     await page.focus('[data-ctl="summary"]');
-    assert.match(await band(".ph-l-GREEN"), GREEN, "focus inside the card recoloured its grade band");
-    await page.focus('[data-ctl="text"]');
     assert.match(await band(".runner-card.l-RED"), RED, "focus inside the runner card recoloured its grade band");
   } finally {
     await page.close();
   }
 });
 
-/* ------------------------------------------------------------- 6 */
-
-test("POSITIVE CONTROL: re-appending the #281 reset makes the state check fail", async () => {
-  const withReset = `${styleLiteral(LAYOUT, "STYLES")}\n${THE_281_RESET}\n`;
-  const page = await openHarness(gridHarness(withReset, styleLiteral(PANEL_STYLES, "READINESS_STYLES"), stateClasses(), false));
-  try {
-    const m = await measureGrid(page);
-    let failed = false;
-    try {
-      checkStates(m, "control");
-    } catch {
-      failed = true;
-    }
-    assert.ok(failed, "the checker passed with the #281 reset back in place, so it is not measuring the defect");
-  } finally {
-    await page.close();
-  }
-});
+// Admin redesign, 2026-09-23: the readiness grid's button cells, their six state boxes against the legend (dark and light), the violation ring and the cells' keyboard operation were removed with the per-state panel; the redesigned readiness page has no clickable state cell.

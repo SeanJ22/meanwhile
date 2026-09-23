@@ -42,6 +42,7 @@ import {
   type StalenessRisk,
 } from "./debt.ts";
 import {
+  DISCHARGING_DISPOSITIONS,
   dischargesObligation,
   dispatchOne,
   sweepExpiredLeases,
@@ -53,6 +54,12 @@ import {
   type DeclaredExecutor,
   type WorkerBound,
 } from "./dispatch.ts";
+import {
+  closeOccurrence,
+  closeSettledOccurrence,
+  settledUnresolvedReason,
+  type SettledOccurrence,
+} from "./durable.ts";
 import {
   dueNow,
   scheduleAll,
@@ -84,8 +91,15 @@ export interface CycleInput {
    * the whole backlog, and there is no per-cycle open ceiling to size. Returns
    * whether the occurrence is now open (so `routeTaskFor` resolves it). Absent,
    * `requireOpenOccurrence` governs and the caller pre-opens.
+   *
+   * It may instead return `{ settled }`: the obligation's open occurrence holds
+   * a RouteTask an interrupted cycle already disposed (2026-09-22). That row is
+   * RECOVERED with the committed disposition and never dispatched; the caller
+   * closes it in its occurrence-and-debt phase (`closeCycleOccurrences`).
    */
-  readonly openOccurrence?: (row: ScheduledObligation) => Promise<boolean>;
+  readonly openOccurrence?: (
+    row: ScheduledObligation,
+  ) => Promise<boolean | { readonly settled: SettledOccurrence }>;
   /** Observability only; recovery still completes before any worker is admitted. */
   readonly onRecoveryComplete?: () => void;
   readonly maturity: MethodMaturity;
@@ -268,6 +282,12 @@ export interface CycleResult {
   readonly deferred: readonly { readonly obligationId: string; readonly why: string }[];
   /** Obligations DISCHARGED this cycle — a committed disposition, each one. */
   readonly worked: readonly string[];
+  /**
+   * Open occurrences whose route an interrupted cycle had already disposed,
+   * closed with that disposition and never dispatched. Apart from `dispatched`
+   * and `worked`, because nothing ran for them this cycle.
+   */
+  readonly recovered: readonly RecoveredOccurrence[];
   /** Obligations whose executor deliberately did nothing. Still owed. */
   readonly simulated: readonly string[];
   readonly debts: readonly FreshnessDebt[];
@@ -278,6 +298,12 @@ export interface CycleResult {
   readonly lanes: LaneCounts | null;
   /** Structural, and it is the shadow guarantee. Always false in this module. */
   readonly promotedToReaderTruth: false;
+}
+
+/** A settled occurrence the cycle recovered, and whether its disposition was a reading. */
+export interface RecoveredOccurrence extends SettledOccurrence {
+  /** True when the committed disposition is in `DISCHARGING_DISPOSITIONS`. */
+  readonly discharged: boolean;
 }
 
 /** A bounded pool: at most `limit` items in flight, in input order. */
@@ -327,7 +353,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    * of latency rather than a lease TTL every cycle forever.
    */
   const reclaim = input.skipReclaim
-    ? { reclaimed: [], stillLive: [], refused: [] }
+    ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }
     : await sweepExpiredLeases(input.repos, {
         now: input.now,
         observedBy: input.holder,
@@ -378,6 +404,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const ceiling = input.maxDispatches ?? workNow.length;
   const dispatched: DispatchResult[] = [];
   const worked: string[] = [];
+  const recovered: RecoveredOccurrence[] = [];
   const simulated: string[] = [];
   const deferred: { obligationId: string; why: string }[] = [];
   for (const [obligationId, debt] of backedOff) {
@@ -457,6 +484,36 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     /* NOT_CLAIMED is not a failure. Another worker holds it; that is the lease
        working, and counting it as debt would make ordinary concurrency read as
        a backlog. */
+  };
+
+  /*
+   * **A SETTLED OCCURRENCE IS RECOVERED, NEVER DISPATCHED.** (2026-09-22.)
+   *
+   * An interrupted cycle committed this occurrence's disposition and ended
+   * before closing it. Walking the route again would claim a settled task, so
+   * the disposition already committed is recorded by the rule `record` applies
+   * to a dispatch's: a reading discharges the debt; any other disposition
+   * closes the route, not the obligation, and accrues debt exactly as a WORKED
+   * non-reading does, so the obligation stays owed and retries on its backoff.
+   */
+  const recover = (row: ScheduledObligation, settled: SettledOccurrence): void => {
+    const discharged = DISCHARGING_DISPOSITIONS.includes(settled.disposition.disposition);
+    recovered.push({ ...settled, discharged });
+    if (discharged) {
+      debtsById.delete(row.obligation.id);
+      return;
+    }
+    debtsById.set(
+      row.obligation.id,
+      recordFailure(debtsById.get(row.obligation.id) ?? null, {
+        obligationId: row.obligation.id,
+        cause: "REFUSED_BY_HOST",
+        detail: settledUnresolvedReason(settled.disposition),
+        target: row.obligation.routeId ?? row.obligation.subjectId,
+        dueAt: row.nextDueAt,
+        now: input.now,
+      }),
+    );
   };
 
   const budgetSpent = (): boolean =>
@@ -578,7 +635,9 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    * the pre-open path stands and this is a no-op; the early `requireOpenOccurrence`
    * check governs instead.
    */
-  const tryOpen = async (row: ScheduledObligation): Promise<boolean> => {
+  const tryOpen = async (
+    row: ScheduledObligation,
+  ): Promise<boolean | { readonly settled: SettledOccurrence }> => {
     if (input.openOccurrence === undefined) return true;
     try {
       return await input.openOccurrence(row);
@@ -610,8 +669,13 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         });
         continue;
       }
-      if (!(await tryOpen(row))) {
+      const opened = await tryOpen(row);
+      if (opened === false) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
+        continue;
+      }
+      if (opened !== true) {
+        recover(row, opened.settled);
         continue;
       }
       if (!aggregateAdmits(row)) continue;
@@ -693,10 +757,16 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         deferredBy[admit.code] = (deferredBy[admit.code] ?? 0) + 1;
         return;
       }
-      if (!(await tryOpen(row))) {
+      const opened = await tryOpen(row);
+      if (opened === false) {
         deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
         modelDeferred += 1;
         deferredBy.NO_OPEN_OCCURRENCE = (deferredBy.NO_OPEN_OCCURRENCE ?? 0) + 1;
+        return;
+      }
+      /* No Scout runs for a recovered row, so it is not counted as dispatched. */
+      if (opened !== true) {
+        recover(row, opened.settled);
         return;
       }
       if (!aggregateAdmits(row)) {
@@ -733,7 +803,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const risk = stalenessRisk({
     scheduled: schedule.scheduled.length,
     unscheduled: schedule.unscheduled.length,
-    overdue: workNow.length - worked.length,
+    /* A recovered reading is a reading: its obligation is not overdue. */
+    overdue: workNow.length - worked.length - recovered.filter((r) => r.discharged).length,
     debts,
     nowMs,
   });
@@ -746,6 +817,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     dueCount: workNow.length,
     dispatched,
     worked,
+    recovered,
     simulated,
     deferred,
     debts,
@@ -755,6 +827,40 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     health: pilotHealth(input.reader, input.truth, freshnessContract(risk)),
     promotedToReaderTruth: false,
   };
+}
+
+/**
+ * **CLOSE WHAT THE CYCLE DISPATCHED AND WHAT IT RECOVERED, BY ONE RULE.**
+ *
+ * The close half of the occurrence-and-debt phase. A dispatch's occurrence
+ * closes DISCHARGED only on a committed reading (`dischargesObligation`); a
+ * recovered one by the same rule, applied to the disposition its RouteTask
+ * already carries (`closeSettledOccurrence`). Everything else closes UNRESOLVED
+ * and its obligation stays owed. `occurrenceFor` names the occurrence each
+ * dispatched obligation ran under; a recovered one carries its own.
+ */
+export async function closeCycleOccurrences(
+  repos: ControlPlaneRepositories,
+  input: {
+    readonly cycle: Pick<CycleResult, "dispatched" | "recovered">;
+    readonly occurrenceFor: (obligationId: string) => string | null;
+    readonly now: string;
+  },
+): Promise<void> {
+  for (const result of input.cycle.dispatched) {
+    const occurrenceId = input.occurrenceFor(result.obligationId);
+    if (occurrenceId === null) continue;
+    const discharged = dischargesObligation(result);
+    await closeOccurrence(repos, {
+      occurrenceId,
+      disposition: discharged ? result.disposition : null,
+      unresolvedReason: discharged ? null : result.detail,
+      now: input.now,
+    });
+  }
+  for (const recovered of input.cycle.recovered) {
+    await closeSettledOccurrence(repos, { settled: recovered, now: input.now });
+  }
 }
 
 /**
@@ -801,16 +907,27 @@ export function digestLines(cycle: CycleResult): string[] {
    * beside it so the two cannot drift apart in a report.
    */
   const committed = cycle.dispatched.filter((d) => d.dispositionCommitted);
+  const recoveredReadings = cycle.recovered.filter((r) => r.discharged).length;
   out.push(
     `  dispositions       ${committed.length} committed — ` +
       (committed.length === 0
-        ? "none, so nothing this cycle discharged an obligation"
+        ? recoveredReadings === 0
+          ? "none, so nothing this cycle discharged an obligation"
+          : "none by a dispatch this cycle"
         : committed.map((d) => `${d.disposition}`).join(", ")),
   );
   out.push(
     `  artifacts          ${committed.reduce((n, d) => n + d.artifactIds.length, 0)} recorded ` +
       "against a closed Attempt",
   );
+  if (cycle.recovered.length > 0) {
+    out.push(
+      `  recovered          ${cycle.recovered.length} open occurrence(s) on a route an interrupted cycle ` +
+        "had already disposed, closed with that committed disposition and not walked again — " +
+        `${recoveredReadings} reading(s) discharged, ${cycle.recovered.length - recoveredReadings} still owed: ` +
+        cycle.recovered.map((r) => r.disposition.disposition).join(", "),
+    );
+  }
   if (cycle.simulated.length > 0) {
     out.push(
       `      SIMULATED ${cycle.simulated.length} obligation(s) had a shadow decision and NO ` +
@@ -842,6 +959,7 @@ export function digestLines(cycle: CycleResult): string[] {
   }
   out.push(
     `  leases             ${cycle.reclaim.reclaimed.length} reclaimed · ` +
+      `${cycle.reclaim.releasedSettled.length} released on an already-disposed route · ` +
       `${cycle.reclaim.stillLive.length} still live · ${cycle.reclaim.refused.length} refused`,
   );
   out.push(`  freshness debt     ${cycle.debts.length} row(s) across ${cycle.incidents.length} incident(s)`);

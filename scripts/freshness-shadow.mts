@@ -60,7 +60,9 @@ import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers
  *   --provider=postgres   the durable control plane named by
  *                         WTP_CONTROL_PLANE_DATABASE_URL; default is the file store
  *   --dry                 a recorded executor instead of the network. Labelled
- *                         SIMULATED, and by construction discharges nothing
+ *                         SIMULATED, and by construction discharges nothing it
+ *                         dispatches (an occurrence an earlier cycle already
+ *                         disposed is still recovered with that disposition)
  *   --max=N               the stated deterministic dispatch ceiling for this cycle
  *   --scout-max=N         the stated Scout ceiling for this cycle (default RESEARCH_BOUNDS)
  *   --no-model            hold the Scout lane closed for this cycle (a diagnostic)
@@ -88,7 +90,12 @@ import {
   CONTROL_PLANE_URL_VAR,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { digestLines, placeFirstRows, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import {
+  closeCycleOccurrences,
+  digestLines,
+  placeFirstRows,
+  runCycle,
+} from "../lib/control-plane/scheduler/shadow-loop.ts";
 import {
   describeDispatchMatch,
   parseDispatchTarget,
@@ -117,7 +124,6 @@ import { readRoutineDataObservabilityFromConnection } from "../lib/civic-data/ob
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
-  closeOccurrence,
   loadDebts,
   openOccurrence,
   resumeOpenOccurrence,
@@ -126,6 +132,7 @@ import {
   recordArguedAbsence,
   retireObligationsByPrefix,
   syncObligations,
+  type SettledOccurrence,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
@@ -220,7 +227,9 @@ import {
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
+import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
+import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
+import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -447,8 +456,28 @@ const finishPhase = (name: string) => {
   console.log(`  phase ${phase.name}: ${phase.durationMs}ms; ${phase.repositoryCalls} repository calls`);
 };
 
+/*
+ * Both startup authority reads are idempotent, and one failed read must not
+ * cost the hour: on 2026-09-22 at 21:34:53Z a single STORE_READ_FAILED on the
+ * operational reference crashed the cycle 17 s in, and the store answered
+ * again minutes later. A failed read is re-read within the connect-retry
+ * bounds, never while the Neon circuit is latched; a persistent failure still
+ * reaches the named failure below unchanged.
+ */
+const startupReadRetry = {
+  circuitLatched: () => readNeonCircuit(ROOT, nowIso()) !== null,
+  onRetry: ({ attempt, delayMs, error }: { readonly attempt: number; readonly delayMs: number; readonly error: unknown }) =>
+    console.error(
+      `freshness:shadow · startup read retry ${attempt} in ${delayMs}ms: ${error instanceof Error ? error.message : String(error)}`,
+    ),
+};
+
 if (wantsPostgres) {
-  const methodAuthority = await readMethodCandidateAuthorityStatus(repos);
+  const methodAuthority = await retryStartupRead(
+    () => readMethodCandidateAuthorityStatus(repos),
+    (status) => (status.state === "STORE_UNREACHABLE" ? status.detail : null),
+    startupReadRetry,
+  );
   if (methodAuthority.state !== "ADOPTED") {
     throw new Error(
       `METHOD_CANDIDATE_AUTHORITY_NOT_ADOPTED: ${methodAuthority.code} — ${methodAuthority.detail} ` +
@@ -462,7 +491,11 @@ if (wantsPostgres) {
  * authority as Admin. A missing/unreachable pointer is a named failed cycle;
  * the retired tracked jurisdiction projections are never a silent fallback.
  */
-await preloadOperationalReferenceBundle({ bypassCache: true });
+await retryStartupRead(
+  () => preloadOperationalReferenceBundle({ bypassCache: true }),
+  () => null,
+  startupReadRetry,
+);
 await preloadCandidateEnrichmentAuthorities();
 
 /*
@@ -874,10 +907,14 @@ if (dispatchOrdering !== null) {
  * dispatch before the wall, never the whole backlog, and there is no per-cycle
  * open ceiling to size. A resume picks up an occurrence an earlier cycle opened
  * and did not reach; a fresh open otherwise. A throw is isolated by name and the
- * row keeps its next-due. Returns whether the occurrence is now open.
+ * row keeps its next-due. Returns whether the occurrence is now open — or, when
+ * the open occurrence's route was already disposed by a cycle that ended before
+ * closing it, `{ settled }`, and the cycle recovers it without dispatching.
  */
 const standingById = new Map(sync.all.map((o) => [o.id, o]));
-const openOccurrenceInStep = async (row: ScheduledObligation): Promise<boolean> => {
+const openOccurrenceInStep = async (
+  row: ScheduledObligation,
+): Promise<boolean | { readonly settled: SettledOccurrence }> => {
   const id = row.obligation.id;
   if (occurrenceByObligation.has(id)) return true;
   if (scheduledBlackout) return false;
@@ -887,8 +924,16 @@ const openOccurrenceInStep = async (row: ScheduledObligation): Promise<boolean> 
   if (obligation === undefined) return false;
   try {
     const resumed = await resumeOpenOccurrence(repos, obligation);
+    if (resumed?.kind === "SETTLED") {
+      /* The model lane admits a row before opening it; a recovery runs no Scout, so it hands its admission back. */
+      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") {
+        openedModel += 1;
+        scoutsAdmittedThisCycle = Math.max(0, scoutsAdmittedThisCycle - 1);
+      } else openedDeterministic += 1;
+      return { settled: resumed.settled };
+    }
     if (resumed !== null) {
-      occurrenceByObligation.set(id, resumed);
+      occurrenceByObligation.set(id, { id: resumed.id, routeTaskId: resumed.routeTaskId });
       resumedCount += 1;
     } else {
       const occ = await openOccurrence(repos, { obligation, dueAt: row.nextDueAt, now: NOW });
@@ -929,29 +974,22 @@ if (scoutSearch !== null) {
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-const laneDisabledCode = scheduledBlackout
-  ? "SCHEDULED_BLACKOUT"
-  : dry
-  ? "LANE_DISABLED"
-  : noModel
-    ? "LANE_DISABLED"
-    : !credentialConfigured
-      ? "LANE_DISABLED"
-      : intents.paused
-        ? "PAUSED"
-        : null;
-const laneDisabledReason = scheduledBlackout
-  ? "SCHEDULED BLACKOUT: Saturday 18:00 through Sunday 06:00 America/Phoenix permits no model or network research"
-  : dry
-  ? "--dry: no retrieval of any kind runs, so no Scout runs"
-  : noModel
-    ? "--no-model: the Scout lane is held closed for this diagnostic cycle"
-    : !credentialConfigured
-      ? `${WORKER_CREDENTIAL_VAR} is not set in this process, so no model can be invoked`
-      : intents.paused
-        ? `paused by owner intent ${intents.pauseIntentId ?? "(id unrecorded)"}`
-        : null;
-const modelLaneEnabled = laneDisabledReason === null;
+/* One ordered answer for why the model lane is closed (model-lane.ts). It also
+   closes the lane while no delivery path is open: with promotion off, paid
+   Scout and auditor output could only accumulate unread (owner, 2026-09-22). */
+const laneClosure = modelLaneClosure({
+  scheduledBlackout,
+  dry,
+  noModel,
+  credentialConfigured,
+  credentialVar: WORKER_CREDENTIAL_VAR,
+  activation: readActivationGate(ROOT),
+  paused: intents.paused,
+  pauseIntentId: intents.pauseIntentId ?? null,
+});
+const laneDisabledCode = laneClosure?.code ?? null;
+const laneDisabledReason = laneClosure?.reason ?? null;
+const modelLaneEnabled = laneClosure === null;
 
 /*
  * THE LANE PAUSE / RESUME GETS ITS HONORED RECORD. (9.4.26 admin feedback.)
@@ -1643,20 +1681,12 @@ console.log(
 
 /* ------------------------------------------------- close, and persist debt --- */
 
-for (const result of cycle.dispatched) {
-  const occ = occurrenceByObligation.get(result.obligationId);
-  if (!occ) continue;
-  const discharged =
-    result.outcome === "WORKED" &&
-    result.dispositionCommitted &&
-    (result.disposition === "INGESTED" || result.disposition === "WALKED_NO_YIELD");
-  await closeOccurrence(repos, {
-    occurrenceId: occ.id,
-    disposition: discharged ? result.disposition : null,
-    unresolvedReason: discharged ? null : result.detail,
-    now: NOW,
-  });
-}
+/* Dispatched and recovered occurrences close by one rule; a recovered one by the disposition it already carries. */
+await closeCycleOccurrences(repos, {
+  cycle,
+  occurrenceFor: (obligationId) => occurrenceByObligation.get(obligationId)?.id ?? null,
+  now: NOW,
+});
 
 const persisted = await persistDebts(repos, cycle.debts, NOW, canary ? corpus.map((obligation) => obligation.id) : null);
 finishPhase("occurrence-and-debt-commit");
@@ -1786,6 +1816,54 @@ for (const result of cycle.dispatched) {
       body,
       nextDueAt: nextDueByObligation.get(result.obligationId) ?? null,
       detail: result.detail,
+      stagedOn: today(),
+    }),
+  );
+}
+/*
+ * A RECOVERED DISPOSITION STILL MOVES THROUGH THE TAIL. (2026-09-22.) The cycle
+ * that committed it ended before staging it, and closing the occurrence is not
+ * the end of the record's work: its bytes are read back by held identity, since
+ * this cycle's ledger never saw them, and staged exactly as a dispatch's would be.
+ */
+for (const recovered of cycle.recovered) {
+  const unit = units.find((u) => u.obligation.id === recovered.obligationId);
+  if (unit === undefined) continue;
+  const { disposition } = recovered;
+  let body: string | null = null;
+  try {
+    const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
+    for (const artifactId of disposition.artifactIds) {
+      const record = held.find((a) => a.artifactId === artifactId);
+      if (record === undefined) continue;
+      body = await vault.readHeld(record);
+      if (body !== null) break;
+    }
+  } catch (error) {
+    runtimeConditions.push(
+      `recovered ${recovered.obligationId}: its held bytes could not be read back ` +
+        `(${error instanceof Error ? error.message : String(error)}); it is staged as still owed`,
+    );
+  }
+  staged.push(
+    stageOne({
+      root: ROOT,
+      obligationId: recovered.obligationId,
+      providerId: unit.providerId,
+      recordClass: unit.record.recordClass,
+      subjectId: unit.record.subjectId,
+      route: unit.route,
+      disposition: disposition.disposition,
+      artifactIds: disposition.artifactIds,
+      body,
+      nextDueAt: nextDueByObligation.get(recovered.obligationId) ?? null,
+      detail:
+        `committed ${disposition.at} by Attempt ${disposition.attemptId} in a cycle that ended before ` +
+        "closing or staging it, and recovered without walking the route again" +
+        (disposition.disposition === "INGESTED" && body === null
+          ? "; its vaulted bytes were not found in this runner's vault, so the record is staged as still owed"
+          : "") +
+        `. ${disposition.note}`,
       stagedOn: today(),
     }),
   );
@@ -2051,6 +2129,17 @@ const runRecord = {
       dueCount: cycle.dueCount,
       dispatched: cycle.dispatched.length,
       worked: cycle.worked,
+      /* Settled occurrences an interrupted cycle left open, closed with their committed disposition. */
+      recovered: cycle.recovered.map((r) => ({
+        obligationId: r.obligationId,
+        occurrenceId: r.occurrenceId,
+        routeTaskId: r.routeTaskId,
+        disposition: r.disposition.disposition,
+        committedAt: r.disposition.at,
+        attemptId: r.disposition.attemptId,
+        artifactIds: r.disposition.artifactIds,
+        discharged: r.discharged,
+      })),
       simulated: cycle.simulated,
       dispositions: cycle.dispatched
         .filter((d) => d.dispositionCommitted)

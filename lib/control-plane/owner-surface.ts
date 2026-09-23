@@ -1532,6 +1532,18 @@ export interface OwnerSnapshot {
   readonly deliveryTrail?: import("./delivery-trail.ts").DeliveryTrailView | null;
 
   /**
+   * The assignment view (owner ask, 2026-09-22): every unit of work — standing
+   * obligations, created work items, test and proof rows — counted by state,
+   * lane and cost over the whole control plane, with a BOUNDED, ordered list of
+   * compact rows (each carrying all seven parts) and the rule it was cut by.
+   * The full chain of any assignment is read live by id on the drilldown.
+   * Absent on a snapshot published before the field existed, which the page
+   * renders as the specific missing wire; NOT_BUILT names why a publish could
+   * not build it. Never a zeroed view. An inline type import, as above.
+   */
+  readonly assignments?: import("./assignment-view.ts").AssignmentPublication | null;
+
+  /**
    * **Panel 8 — the map provider's bill** (MAPQ-5 and MAPQ-6, 2026-09-07).
    *
    * The first MapTiler billing period closed at 101,863 requests against a

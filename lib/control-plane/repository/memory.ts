@@ -84,6 +84,11 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     return row === undefined ? null : { ...row, value: jsonCopy(row.value) };
   };
 
+  const list = async (): Promise<readonly Persisted<T>[]> =>
+    [...rows.values()]
+      .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+      .map((row) => ({ ...row, value: jsonCopy(row.value) }));
+
   return {
     read,
 
@@ -132,10 +137,11 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
       return { ...persisted, value: jsonCopy(persisted.value) };
     },
 
-    list: async (): Promise<readonly Persisted<T>[]> =>
-      [...rows.values()]
-        .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
-        .map((row) => ({ ...row, value: jsonCopy(row.value) })),
+    list,
+
+    /* `list()` filtered, so the two can never disagree on rows or order. */
+    listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
+      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
   };
 }
 

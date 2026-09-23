@@ -40,7 +40,7 @@ export async function retainRoutineMeetingForWorkers(input: {
   const task = createRouteTask({ workItemId: item.id, routeId: `routine-meeting-capture:${input.candidateVersionId ?? response.retrievedAt}:${response.rawHash}`,
     routeLabel: "Actual permanent source acquisition receipt", target: response.requestedUrl, inherited: false, now });
   const prior = await repos.routeTasks.read(task.id);
-  if (prior?.value.state === "DISPOSED") return null;
+  if (prior?.value.disposition != null) return null;
   await registerRouteTask(repos, task, now);
   const holder = `routine-meeting-receipt:${randomUUID()}`;
   const claim = await claimRouteTask(repos, { routeTaskId: task.id, holder, now, ttlMs: 120_000 });

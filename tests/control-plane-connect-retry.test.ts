@@ -201,6 +201,42 @@ test("backoff is capped and jittered by the injected random", async () => {
   assert.deepEqual(delays, [500, 750, 750]);
 });
 
+test("a caller's own classifier replaces the transport classifier; the bound and backoff are unchanged", async () => {
+  const delays: number[] = [];
+  let calls = 0;
+  const storeReadFailed = () => new Error("Reading canonical pointer X failed (Error). We could not ask the store.");
+  const value = await withControlPlaneConnectRetry(
+    async () => {
+      calls += 1;
+      if (calls <= 2) throw storeReadFailed();
+      return "read";
+    },
+    {
+      isRetryable: (error) => error instanceof Error && /could not ask the store/.test(error.message),
+      sleep: async (ms) => void delays.push(ms),
+      random: () => 1,
+    },
+  );
+  assert.equal(value, "read");
+  assert.equal(calls, 3);
+  assert.deepEqual(delays, [CONTROL_PLANE_CONNECT_BASE_BACKOFF_MS, CONTROL_PLANE_CONNECT_BASE_BACKOFF_MS * 2]);
+  // The default classifier would not have retried it.
+  assert.equal(isTransientControlPlaneConnectError(storeReadFailed()), false);
+  // And the override still stops at the bound.
+  let bounded = 0;
+  await assert.rejects(
+    withControlPlaneConnectRetry(
+      async () => {
+        bounded += 1;
+        throw storeReadFailed();
+      },
+      { maxAttempts: 2, isRetryable: () => true, sleep: async () => {} },
+    ),
+    /could not ask the store/,
+  );
+  assert.equal(bounded, 2);
+});
+
 test("the default attempt budget is a small, bounded number", () => {
   assert.ok(CONTROL_PLANE_CONNECT_MAX_ATTEMPTS >= 2 && CONTROL_PLANE_CONNECT_MAX_ATTEMPTS <= 8);
 });
@@ -267,10 +303,12 @@ test("createPgRepositories survives a transient connect fault at the real bootst
  * was the lone standing-runner cycle child missing this install; routine-civic-
  * data-runner.mts had it. Both open the control plane at cycle start, so both
  * MUST install the deadline. This is a source tripwire, deliberately strict.
+ * The console publisher joined the list when it began reading every record the
+ * assignment view joins: one hung request there stalls the whole publish.
  */
 test("every standing-runner cycle child that bootstraps the control plane also installs the per-attempt Neon deadline", () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  for (const child of ["scripts/freshness-shadow.mts", "scripts/routine-civic-data-runner.mts"]) {
+  for (const child of ["scripts/freshness-shadow.mts", "scripts/routine-civic-data-runner.mts", "scripts/publish-owner-snapshot.mts"]) {
     const src = readFileSync(join(root, child), "utf8");
     assert.match(src, /createPgRepositories\s*\(/, `${child} is expected to open the control plane at cycle start`);
     assert.match(

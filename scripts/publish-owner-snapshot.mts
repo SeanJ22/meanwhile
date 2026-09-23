@@ -38,6 +38,7 @@ import {
 } from "../lib/health/contracts.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { loadJsonArray } from "../lib/health/json-store.ts";
 import {
   appendMapTilerUsageCollectionDigest,
@@ -73,8 +74,11 @@ import {
 import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
 import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
 import { buildDeliveryTrail } from "../lib/control-plane/delivery-trail.ts";
+import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
+import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
 import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
+import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
 import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
@@ -409,6 +413,12 @@ interface ControlPlaneReads {
   readonly verifiedRecords: number | null;
   /** The full pipeline states, kept for the delivery trail (not thrown away after the VERIFIED count). */
   readonly pipelineStates: Awaited<ReturnType<typeof readPipelineStates>>;
+  /**
+   * Every record the assignment view joins, read at this same instant, or the
+   * named reason it could not be read (the view then publishes as NOT_BUILT,
+   * never as an empty list).
+   */
+  readonly assignmentSources: { readonly ok: true; readonly value: AssignmentSources } | { readonly ok: false; readonly says: string };
 }
 
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
@@ -420,11 +430,35 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
   ]);
   let verifiedRecords: number | null = null;
   let pipelineStates: Awaited<ReturnType<typeof readPipelineStates>> = [];
+  let pipelineRead = false;
   try {
     pipelineStates = await readPipelineStates(repos);
     verifiedRecords = stageCounts(pipelineStates).byStage.VERIFIED;
+    pipelineRead = true;
   } catch (error) {
     log(`the promotion pipeline could not be read (${(error as Error).message}) — cost per verified record and the delivery trail are gaps`);
+  }
+  let assignmentSources: ControlPlaneReads["assignmentSources"];
+  try {
+    assignmentSources = {
+      ok: true,
+      value: await readAllAssignmentSources(
+        repos,
+        { nowIso: NOW_ISO, activation: readActivationGate(process.cwd()), pilotZips: PILOT_ZIPS },
+        {
+          costs,
+          attempts: attempts.map((a) => a.value),
+          obligations: obligations.map((o) => o.value),
+          // A pipeline that could not be read is a named gap on every assignment, never "nothing offered".
+          pipeline: pipelineRead ? pipelineStates : null,
+        },
+      ),
+    };
+  } catch (error) {
+    // The error NAME only: a driver message can carry the connection string.
+    const name = (error as Error)?.name ?? "error";
+    log(`the assignment view's records could not be read (${name}) — the assignment view publishes as NOT_BUILT`);
+    assignmentSources = { ok: false, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
   }
   const metrics = research?.value.metrics ?? null;
   return {
@@ -435,6 +469,38 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
     share: metrics?.share ?? null,
     verifiedRecords,
     pipelineStates,
+    assignmentSources,
+  };
+}
+
+/**
+ * The assignment view as the snapshot carries it: BUILT over the records read
+ * at this publish's instant, or NOT_BUILT with the named reason.
+ */
+function assignmentPublication(reads: ControlPlaneReads): AssignmentPublication {
+  if (!reads.assignmentSources.ok) return { kind: "NOT_BUILT", at: NOW_ISO, says: reads.assignmentSources.says };
+  const sources = reads.assignmentSources.value;
+  return {
+    kind: "BUILT",
+    view: buildAssignmentView(sources, {
+      reads: [
+        {
+          what: "leases",
+          held: true,
+          says: "read for the route tasks that hold an open attempt — the one question a lease answers here (is a worker on it now)",
+        },
+        {
+          what: "disposition commits",
+          held: false,
+          says: "not read at publish: each route task carries its applied disposition; the drilldown reads the commits by route task",
+        },
+        {
+          what: "promotion pipeline",
+          held: sources.pipeline !== null,
+          says: sources.pipeline !== null ? "read whole at publish" : "could not be read at publish; verification shows as a named gap",
+        },
+      ],
+    }),
   };
 }
 
@@ -534,6 +600,8 @@ function buildSnapshot(
           costPerVerifiedRecord: cost ? cost.costPerVerifiedRecord : notOpened,
         })
       : undefined,
+    // The assignment view: whole-universe counts and a bounded, ordered list (absent when the store was not opened).
+    assignments: reads ? assignmentPublication(reads) : undefined,
     maptiler,
 
     obligationsByState: obligationsByState(reads),
@@ -624,6 +692,10 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
     );
   }
   if (!DRY_RUN) assertRuntimeAuthority({ capabilities: ["CONSOLE_PUBLISHER"] });
+  // Bound each Neon request. This child reads every record the assignment view
+  // joins, several hundred pages; without a deadline one hung request holds it
+  // until the runner's 5-minute publisher ceiling kills the whole publish.
+  installNeonRequestDeadline();
   return createPgRepositories(url, NOW_ISO);
 }
 
@@ -729,6 +801,27 @@ async function main(): Promise<void> {
         `${s?.attemptsMeasured ?? 0} measured ($${(s?.measuredUsd ?? 0).toFixed(4)}), ${s?.attemptsUnmeasured ?? 0} unmeasured; ` +
         `${snapshot.costByRole.length} role row(s), ${snapshot.costByModel.length} model row(s)`,
     );
+  }
+  const assignments = snapshot.assignments;
+  if (assignments?.kind === "BUILT") {
+    const v = assignments.view;
+    log(
+      floorLine(
+        floored(
+          "assignments",
+          "every obligation, work item and orphaned execution record",
+          v.summary.total,
+          v.summary.total,
+          v.summary.total === 0 ? "the control plane holds no standing obligation and no work item" : undefined,
+        ),
+      ),
+    );
+    log(
+      `  assignment list: ${v.selection.published} of ${v.summary.total} published ` +
+        `(${v.selection.trimmedForBytes} trimmed for the ${v.selection.byteBudget}-byte budget); ${JSON.stringify(v).length} bytes`,
+    );
+  } else if (assignments?.kind === "NOT_BUILT") {
+    log(`  assignment view NOT BUILT: ${assignments.says}`);
   }
 
   if (DRY_RUN || repos === null) {

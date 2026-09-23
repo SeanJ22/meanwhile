@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 686,
-    "named": 6854,
-    "dynamic": 27
+    "files": 693,
+    "named": 6920,
+    "dynamic": 28
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -717,7 +717,10 @@
       "names": [
         "list() of an empty table is one empty bounded page",
         "list() of exactly one full page still terminates on the short second page",
-        "list() pages an aggregate larger than one response and returns every row in id order"
+        "list() pages an aggregate larger than one response and returns every row in id order",
+        "listWhere() of a selective filter is ONE bounded statement where list() pages the whole table",
+        "listWhere() pages a large match set and equals list() filtered, row for row in id order",
+        "listWhere() refuses an unsafe JSON path segment rather than building SQL from it"
       ],
       "dynamic": 0
     },
@@ -1319,6 +1322,33 @@
         "RULING 20: no NEW portrait or PDF binary is committed to the repo",
         "RULING 20: reference data and provenance stay in git",
         "RULING 20: the sweep actually reaches the binaries it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/assignment-view.test.ts": {
+      "names": [
+        "a Scout that says only a person can move it is BLOCKED on you, though the runner committed it as a wall",
+        "a parser attempt that aborted without a result is a failed parse run, counted — never 'no parse has run'",
+        "a refused hunter finish carries when it was refused, so a refusal quoting an old limit never reads as current",
+        "a retry is work repeated after a failure — a scheduled re-reading after a discharged round is not one",
+        "a shared cost (the Scout pre-warm) is named as shared, joined to no assignment, and never split",
+        "an Attempt with no model recorded says 'model not recorded' — never an assumed model",
+        "an unmeasured cost (usd null on model work) is a named gap in the row, the list row and the summary — never $0",
+        "eligibility is the later of the next-due and the backoff retry",
+        "every number the view draws carries a denominator and a contract, and every stated N equals the rows",
+        "failed: a Scout that found nothing and a wall at the source read FAILED; REQUIRES_NEW_ADAPTER reads BLOCKED on engineering",
+        "filter counts say which half is missing, so an unpublished view or an unread routine plane never draws as zero",
+        "routine contracts: a healthy one succeeds with public availability OBSERVED; a retrying one fails with its retry named; cost is plain code and unmetered",
+        "routine counts the projector could not state stay unknown — never replaced by a list length or a zero",
+        "succeeded (Scout ROUTE_CANDIDATE with artifacts): the model recorded, needs-more-evidence counted, a guard refusal is not a rejection",
+        "succeeded (plain code, INGESTED with a document): downloads counted, the parse gap named, the cost plain code — never $0",
+        "the byte budget is spent one rank at a time across groups, so a large group never crowds out a small one",
+        "the jurisdiction of a candidacy is named through the one display projection; anything else passes through",
+        "the obligation provider prefixes are each provider's own scheduledId template",
+        "the published list is bounded, fair across groups, and states exactly what it left out",
+        "the published view is aggregate-only and its unknowns stay unknown",
+        "waiting: overdue, in failure backoff, with a named blocker and the owner of the next step",
+        "working, worker lost, retired, created and proof: each lands in its own state and lane"
       ],
       "dynamic": 0
     },
@@ -2540,6 +2570,16 @@
       ],
       "dynamic": 0
     },
+    "tests/connect-attempt-window.test.ts": {
+      "names": [
+        "a child started with that environment runs with the window before its own code",
+        "install sets this process's default and the environment children inherit",
+        "pilot-runner installs the connect window before its singleton, handoff or any read",
+        "the window fits the measured handshake and stays inside the per-request deadline",
+        "the window is appended once, replaces an earlier value, and leaves other options alone"
+      ],
+      "dynamic": 0
+    },
     "tests/conservation.test.ts": {
       "names": [
         "A-002 · 100 in, 0 out, 1 recorded drop is a FAILURE, not an accounted run",
@@ -2666,10 +2706,11 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 8
+      "dynamic": 9
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
+        "a caller's own classifier replaces the transport classifier; the bound and backoff are unchanged",
         "a latched circuit is a HARD refusal and is never transient",
         "a latched circuit throws immediately with no retry",
         "a non-transient error throws immediately with no retry",
@@ -2679,6 +2720,7 @@
         "classifies raw transport errors (and the deadline abort) as transient",
         "classifies the driver's connect-transport failure as transient",
         "createPgRepositories survives a transient connect fault at the real bootstrap (wiring)",
+        "every standing-runner cycle child that bootstraps the control plane also installs the per-attempt Neon deadline",
         "exhausts a bounded number of attempts then rethrows the transient error",
         "follows the sourceError / cause chain",
         "returns the value on the first try without sleeping or retrying",
@@ -3147,6 +3189,16 @@
       ],
       "dynamic": 0
     },
+    "tests/dead-lease-sweep.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: a sweep over N dead settled leases makes zero full Attempt listings, and the same counter does see one",
+        "SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once, nothing else moves, and the next sweep does not walk it",
+        "a LIVE task's expired lease is still reclaimed and the task reopened, in the same sweep that releases a settled one",
+        "an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released",
+        "attemptsForRouteTask's filtered read returns exactly what the old full-list filter returned, row for row and in order, on memory and file"
+      ],
+      "dynamic": 0
+    },
     "tests/deferred-census.test.ts": {
       "names": [
         "a binary mirror entry is compared as bytes, never as trimmed text",
@@ -3163,6 +3215,14 @@
         "the run refuses rather than shipping a header that disagrees with its body",
         "the size cap names what would be cut instead of truncating",
         "the split moves rows and cannot alter one"
+      ],
+      "dynamic": 0
+    },
+    "tests/delivery-trail.test.ts": {
+      "names": [
+        "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
+        "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
+        "empty pipeline: every stage is a named gap, the blockers are named, promotions empty"
       ],
       "dynamic": 0
     },
@@ -5729,6 +5789,7 @@
         "POSITIVE CONTROL — a Fable model is refused",
         "POSITIVE CONTROL — an unrated (unapproved) model is refused",
         "every routable class is within the ceiling (and importing the module already proved it)",
+        "legacy Opus 5 is now priced ABOVE the cheaper Opus 5.5 ceiling, so nothing may route to it",
         "the ceiling is Opus",
         "the ceiling model and the cheaper classes each pass; none is a Fable"
       ],
@@ -5736,6 +5797,8 @@
     },
     "tests/model-cost-metered.test.ts": {
       "names": [
+        "Opus 5.5: the known usage prices at the verified $4/$20 rates and is cheaper than legacy Opus 5",
+        "Opus 5.5: the non-standard 0.05× cache-read multiplier is wired end to end (charge + saving = uncached price)",
         "PC-10: a known usage with a 5m/1h split prices to known dollars at Claude Opus 5's multipliers",
         "PC-10: an unmeasured base count or an unpriced model is null, never zero",
         "PC-10: the aggregate cache_creation_input_tokens contributes NOTHING on top of its split",
@@ -5744,7 +5807,19 @@
         "PC-9: a ledger row predating the fields reads UNMEASURED by name; a null row reads UNREPORTED; a measured row reads its numbers",
         "PC-9: the parser reads the API's usage block, the split included, and never infers from the request",
         "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured",
+        "per-model minimum cacheable prefix: looked up by model, non-monotonic, aliases resolved, unknown is null",
         "§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess"
+      ],
+      "dynamic": 0
+    },
+    "tests/model-lane.test.ts": {
+      "names": [
+        "freshness-shadow derives modelLaneEnabled from modelLaneClosure and the activation gate",
+        "promotion on with no record class open is still no delivery path",
+        "reasons are ordered: blackout, dry, no-model, credential, delivery, owner pause",
+        "the lane is open only when nothing closes it and a delivery path is open",
+        "the real activation gate decides: the lane is open exactly when a delivery path is",
+        "with promotion off, the lane closes and says why, and what keeps running"
       ],
       "dynamic": 0
     },
@@ -8647,6 +8722,19 @@
       ],
       "dynamic": 0
     },
+    "tests/settled-occurrence-recovery.test.ts": {
+      "names": [
+        "SEEDED: an open occurrence on an already-disposed RouteTask is recovered, never dispatched — no second claim, Attempt or lease",
+        "SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, and a dead lease on one is left for the sweep",
+        "a recovered INGESTED occurrence keeps its bytes eligible for parsing, verification and staging",
+        "a recovered INGESTED occurrence with a normalizer stages PROMOTION-READY from bytes an earlier cycle vaulted",
+        "a recovered WALKED_NO_YIELD discharges this period's reading only: the obligation comes due again under a new RouteTask",
+        "a recovered non-reading disposition leaves the obligation owed: unresolved, in debt, and retried under a new RouteTask",
+        "an aborted or interrupted occurrence is still resumed and dispatched, and its earlier Attempt and partial evidence are kept",
+        "claimRouteTask refuses a RouteTask disposed while the claim raced for its lease, and gives back the lease it won"
+      ],
+      "dynamic": 0
+    },
     "tests/shared-notes.test.ts": {
       "names": [
         "F01 11.1: a note carried by many contests moves to the foot, once",
@@ -8973,6 +9061,19 @@
         "ignoreTopLevel drops a run-accounting block only at the top",
         "key order is not a fact; array order is",
         "writeStampStable leaves unchanged facts byte-identical and records the observation; changed facts write"
+      ],
+      "dynamic": 0
+    },
+    "tests/startup-read-retry.test.ts": {
+      "names": [
+        "a deterministic refusal fails on the first read",
+        "a persistent failed read throws the last error unchanged",
+        "a persistent unreachable status is returned unchanged after the bounded attempts",
+        "an unreachable status is re-read and the recovered status returned",
+        "freshness-shadow routes both startup authority reads through retryStartupRead",
+        "nothing is retried while the Neon circuit is latched",
+        "only a failed read is retryable; deterministic store refusals are not",
+        "the 21:34:53Z crash, reproduced: one failed store read, then the bundle loads"
       ],
       "dynamic": 0
     },

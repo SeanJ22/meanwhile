@@ -48,6 +48,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
@@ -303,6 +304,58 @@ for (const provider of providers) {
       listed.map((r) => r.id),
       "already sorted",
     );
+  });
+
+  test(`${provider.name}: listWhere is exactly list() filtered — same rows, same id order`, async () => {
+    /*
+     * 2026-09-22. `attemptsForRouteTask` moved from a full `list()` to this
+     * filtered read for cost, so every provider must return exactly what
+     * `list()` filtered would. Namespaced like `item()`: the Postgres lane keeps
+     * every run's rows, and a run-local value keeps this run's filter from
+     * matching last run's.
+     */
+    const repos = await provider.open();
+    const wanted = `rt-${RUN_NAMESPACE}-wanted`;
+    const placed = [
+      ["z", wanted],
+      ["m", `rt-${RUN_NAMESPACE}-other`],
+      ["a", wanted],
+      ["q", wanted],
+    ] as const;
+    for (const [suffix, routeTaskId] of placed) {
+      const id = `at-${RUN_NAMESPACE}-${suffix}`;
+      await repos.attempts.put(
+        id,
+        {
+          id,
+          routeTaskId,
+          workItemId: `wi-${RUN_NAMESPACE}`,
+          worker: { role: "ACQUIRER", provider: "test", version: "1", instance: "conformance" },
+          leaseId: `ls-${id}`,
+          startedAt: NOW,
+          endedAt: null,
+          outcome: null,
+          abortReason: null,
+          artifactIds: [],
+          cost: ZERO_COST,
+          methodVersion: 1,
+          policyVersion: "conformance",
+        },
+        NOW,
+      );
+    }
+    const filtered = await repos.attempts.listWhere(["routeTaskId"], wanted);
+    assert.deepEqual(
+      filtered,
+      (await repos.attempts.list()).filter((row) => row.value.routeTaskId === wanted),
+      "the filtered read and the filtered listing are the same answer",
+    );
+    assert.deepEqual(
+      filtered.map((row) => row.id),
+      ["a", "q", "z"].map((suffix) => `at-${RUN_NAMESPACE}-${suffix}`),
+      "in id order, and not vacuous",
+    );
+    assert.deepEqual(await repos.attempts.listWhere(["routeTaskId"], `rt-${RUN_NAMESPACE}-absent`), []);
   });
 
   test(`${provider.name}: the nightly door's four logs exist and keep history (schema v5)`, async () => {

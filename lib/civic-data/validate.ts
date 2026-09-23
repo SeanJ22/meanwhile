@@ -8,6 +8,7 @@ import {
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { supersedesSeriesRecord } from "../sources/event-identity.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -134,16 +135,54 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   const validMeetingEvidence = new Map<string, (typeof evidence)[number]>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  let currentMembers: ReadonlyMap<string, unknown> | null = null;
+  const currentMember = (key: string): unknown => {
+    currentMembers ??= new Map(
+      civicRecordsFor(candidate.recordClass, candidate.readModel).map((member) => [member.key, member.record]),
+    );
+    return currentMembers.get(key);
+  };
   for (const delta of removed.filter(({ key }) => key.startsWith("meeting:"))) {
     const row = evidenceByKey.get(delta.key)!;
     const before = object(delta.before);
     const meetingId = typeof before?.id === "string" ? before.id : null;
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
+    if (row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY") {
+      /*
+       * A series record replaced by the occurrence that holds its fact
+       * (2026-09-23). Nothing in the evidence row is taken on trust: the
+       * successor is looked up among THIS candidate's own members, must be a
+       * fresh row rather than a carried one, and must pass the same test the
+       * reconciliation applied, re-run here on the stored records.
+       */
+      const successor = typeof row.successorKey === "string" ? object(currentMember(row.successorKey)) : null;
+      const successorId = typeof successor?.id === "string" ? successor.id : null;
+      const successorStartsAt = typeof successor?.startsAt === "string" ? successor.startsAt : null;
+      const bodyOf = (record: Record<string, unknown> | null) =>
+        typeof record?.bodyId === "string" ? record.bodyId : null;
+      if (
+        row.parentMeetingKey !== undefined ||
+        !meetingId || delta.key !== `meeting:${meetingId}` ||
+        !startsAt || startsAt !== row.priorStartsAt ||
+        !successorId || !successorStartsAt || row.successorKey !== `meeting:${successorId}` ||
+        (successor?.carried !== undefined && successor?.carried !== null) ||
+        !supersedesSeriesRecord(
+          { id: meetingId, bodyId: bodyOf(before), startsAt },
+          { id: successorId, bodyId: bodyOf(successor), startsAt: successorStartsAt },
+        )
+      ) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven replaced by a fresh occurrence of the same series.`);
+      }
+      validMeetingEvidence.set(delta.key, row);
+      continue;
+    }
+    if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} names no removal authority this validator recognizes.`);
+    }
     const lower = Date.parse(row.lowerBound);
     const upper = Date.parse(row.upperBound);
     const prior = Date.parse(row.priorStartsAt);
     if (
-      row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW" ||
       row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
       registeredWindow === null ||
       row.lowerBound !== registeredWindow.lowerBound ||
@@ -166,13 +205,16 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
     const meetingId = typeof before?.meetingId === "string" ? before.meetingId : null;
     const parentKey = meetingId ? `meeting:${meetingId}` : null;
     const parent = parentKey ? validMeetingEvidence.get(parentKey) : null;
-    if (
-      row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW" ||
-      row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
-      !documentId || delta.key !== `agenda-document:${documentId}` ||
-      !parentKey || row.parentMeetingKey !== parentKey || !removedKeys.has(parentKey) || !parent ||
-      row.lowerBound !== parent.lowerBound || row.upperBound !== parent.upperBound || row.priorStartsAt !== parent.priorStartsAt
-    ) {
+    const inherits =
+      !!documentId && delta.key === `agenda-document:${documentId}` &&
+      !!parentKey && row.parentMeetingKey === parentKey && removedKeys.has(parentKey) && !!parent &&
+      row.code === parent.code && row.priorStartsAt === parent.priorStartsAt &&
+      (row.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" && parent.code === "OUTSIDE_REGISTERED_SERVING_WINDOW"
+        ? row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
+          row.lowerBound === parent.lowerBound && row.upperBound === parent.upperBound
+        : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" &&
+          row.successorKey === parent.successorKey);
+    if (!inherits) {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
   }

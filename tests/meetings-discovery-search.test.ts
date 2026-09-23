@@ -1,0 +1,264 @@
+/**
+ * **SEARCH IS A POINTER, PRICED PER REQUEST, BUDGETED PER CYCLE AND PER DAY,
+ * AND A METHOD IT PROVES IS SAVED.** (2026-09-23.)
+ *
+ * The discovery executor's search rung (`lib/hunt/discovery-search.ts`,
+ * `lib/control-plane/discovery/search-runtime.ts`). No test reaches the network.
+ * What these tests hold:
+ *
+ * - **Queries.** A saved method's templates come first, then the defaults; a
+ *   query with an unfilled slot is never sent, and "own site" is expressed per
+ *   provider (Brave's site:, Exa's includeDomains).
+ * - **Pointers only.** A result is followed only on the government's own domain
+ *   or a known meeting publisher, opened robots-first, and confirmed by content.
+ * - **Every request is charged.** One cost row per request sent, role
+ *   DISCOVERY_SEARCH, at the published price; a request lost in transport is
+ *   UNMEASURED (null), and a refused one is never sent and never charged.
+ * - **Budgeted.** The cycle's cap and the day's cap, kept in the durable
+ *   shared ledger, refuse by name; FleetSafety's refusal passes through.
+ * - **Learned.** A route a search found is saved as a method, and the next
+ *   government's walk searches with it first.
+ *
+ * Every test that writes runs on the in-memory double AND the durable file
+ * store.
+ */
+
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import type { CostEntry } from "../lib/control-plane/cost.ts";
+import {
+  runMeetingsDiscovery,
+  walkMeetingsDiscoveryNeed,
+  type DiscoveryOpen,
+  type DiscoveryRuntime,
+  type DiscoverySearch,
+} from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import {
+  DISCOVERY_SEARCH_VENDOR,
+  SEARCH_HOSTS,
+  durableSearchBudget,
+  makeDiscoverySearch,
+  type SearchBudget,
+} from "../lib/control-plane/discovery/search-runtime.ts";
+import type { FetchLike } from "../lib/control-plane/scheduler/scout-search.ts";
+import { SEARCH_PRICES, hitStanding, plannedQueries, requestPrice } from "../lib/hunt/discovery-search.ts";
+import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import { SEED_RECIPES, identityFor, knownRecipes } from "../lib/hunt/meetings-recipes.ts";
+import { eachStore } from "./control-plane-fixtures.ts";
+
+const NOW = "2026-09-24T04:00:00.000Z";
+const ICS = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:Council\r\nDTSTART:20261001T010000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
+
+function need(jurisdictionId: string, site: string, name: string, stateCode = "AZ"): MeetingsDiscoveryNeed {
+  return { jurisdictionId, stateCode, name, govClass: "CITY_OR_TOWN", ownWebAddress: site, basis: "SOURCE_DISCOVERY_OWED", sources: ["MEETINGS:THIS_JURISDICTION:this-government-itself"] };
+}
+
+function fakeOpen(map: Readonly<Record<string, { status: number; body?: string }>>): { open: DiscoveryOpen; seen: string[] } {
+  const seen: string[] = [];
+  return {
+    seen,
+    open: async ({ url }) => {
+      seen.push(url);
+      const r = map[url] ?? { status: 404, body: "not found" };
+      const body = r.body ?? "";
+      return { status: r.status, body, bytes: body.length, contentType: "text/html", location: null, transportError: null };
+    },
+  };
+}
+
+/** A search seam that answers from a table and records every call. */
+function fakeSearch(table: Readonly<Record<string, readonly string[]>>, over: Partial<{ failExa: boolean; refuseBrave: boolean }> = {}): { search: DiscoverySearch; calls: { query: string; ownSiteDomain: string | null }[] } {
+  const calls: { query: string; ownSiteDomain: string | null }[] = [];
+  return {
+    calls,
+    search: async (input) => {
+      calls.push(input);
+      const urls = table[input.query] ?? [];
+      return {
+        hits: urls.map((url) => ({ url, title: url, provider: "brave" as const })),
+        requests: [
+          over.refuseBrave
+            ? { provider: "brave", status: "BUDGET_REFUSED", error: "the cycle's search budget is spent", bytes: 0, hitCount: 0 }
+            : { provider: "brave", status: "DELIVERED", error: null, bytes: 100, hitCount: urls.length },
+          over.failExa
+            ? { provider: "exa", status: "FAILED", error: "exa HTTP 500", bytes: 0, hitCount: 0 }
+            : { provider: "exa", status: "DELIVERED", error: null, bytes: 50, hitCount: 0 },
+        ],
+      };
+    },
+  };
+}
+
+function runtime(open: DiscoveryOpen, search: DiscoverySearch | undefined, costs: CostEntry[], recipes = knownRecipes([])): DiscoveryRuntime {
+  return {
+    open,
+    spaceOut: async () => {},
+    vault: async () => ({ stored: true, where: "vault", why: "stored" }),
+    now: () => NOW,
+    budget: { spent: () => false },
+    recipes,
+    ...(search ? { search } : {}),
+    recordCost: async (entry) => {
+      costs.push(entry);
+    },
+  };
+}
+
+test("QUERIES: a saved method's templates first, then the defaults; unfilled slots never sent; own-site expressed as a flag", () => {
+  const identity = identityFor(need("az:city:city-of-benson", "benson.gov", "CITY OF BENSON"), "https://benson.gov", 2026);
+  const wp = SEED_RECIPES.find((r) => r.recipeId === "wordpress-events-calendar-list-ical")!;
+  const custom = { ...wp, recipeId: "custom", queryTemplates: ["{bodyName} {superintendent} board", "{bodyName} council calendar {year}"] };
+  const planned = plannedQueries([custom, wp], identity, 4);
+  assert.deepEqual(planned.map((q) => [q.templateId, q.query, q.ownSiteOnly]), [
+    ["custom#q1", "CITY OF BENSON council calendar 2026", false],
+    ["wordpress-events-calendar-list-ical#q0", "CITY OF BENSON meetings calendar", true],
+    ["own-site-meetings", "CITY OF BENSON meetings agendas minutes", true],
+    ["publisher-portal", "CITY OF BENSON AZ meeting agendas", false],
+  ]);
+  assert.equal(planned.length, 4, "the half-filled {superintendent} query is never planned");
+  assert.equal(plannedQueries([custom, wp], identity, 2).length, 2, "at most the limit");
+});
+
+test("POINTERS: only the government's own domain or a known meeting publisher is worth opening", () => {
+  assert.equal(hitStanding("https://www.benson.gov/meetings", "benson.gov"), "OWN_SITE");
+  assert.equal(hitStanding("https://benson.gov/x", "benson.gov"), "OWN_SITE");
+  assert.equal(hitStanding("https://bensonaz.legistar.com/Calendar.aspx", "benson.gov"), "PUBLISHER");
+  assert.equal(hitStanding("https://www.bensonnews.com/council-meeting", "benson.gov"), null, "someone else's page about the government is not its record");
+  assert.equal(hitStanding("https://notbenson.gov/", "benson.gov"), null);
+  assert.equal(hitStanding("mailto:clerk@benson.gov", "benson.gov"), null);
+});
+
+test("PRICES: each provider's published per-request price carries its source and date; a lost request is UNMEASURED, never zero", () => {
+  for (const p of Object.values(SEARCH_PRICES)) {
+    assert.ok(p.usdPerRequest !== null && p.usdPerRequest > 0, p.provider);
+    assert.match(p.source, /^https:\/\//);
+    assert.match(p.readOn, /^\d{4}-\d{2}-\d{2}$/);
+  }
+  assert.equal(requestPrice("brave", true).usd, 0.005);
+  assert.equal(requestPrice("exa", true).usd, 0.007);
+  assert.equal(requestPrice("exa", false).usd, null);
+});
+
+test("SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named", async () => {
+  const sent: { url: string; body?: string }[] = [];
+  const fetchImpl: FetchLike = async (url, init) => {
+    sent.push({ url, body: init.body });
+    if (url.startsWith("https://api.exa.ai")) return { ok: false, status: 500, text: async () => "upstream" };
+    return { ok: true, status: 200, text: async () => JSON.stringify({ web: { results: [{ url: "https://benson.gov/meetings", title: "Meetings" }] } }) };
+  };
+  const taken: string[] = [];
+  const budget: SearchBudget = { take: async (host) => (taken.push(host), null), done: async () => {} };
+  const search = makeDiscoverySearch({ braveKey: "b", exaKey: "e", budget, fetchImpl })!;
+  const res = await search({ query: "CITY OF BENSON meetings", ownSiteDomain: "benson.gov" });
+  assert.match(new URL(sent[0].url).searchParams.get("q") ?? "", /site:benson\.gov$/);
+  assert.deepEqual(JSON.parse(sent[1].body ?? "{}").includeDomains, ["benson.gov"]);
+  assert.deepEqual(res.requests.map((r) => [r.provider, r.status]), [["brave", "DELIVERED"], ["exa", "FAILED"]]);
+  assert.deepEqual(res.hits.map((h) => h.url), ["https://benson.gov/meetings"]);
+  assert.deepEqual(taken, [SEARCH_HOSTS.brave, SEARCH_HOSTS.exa]);
+
+  const refusing: SearchBudget = { take: async () => "the cycle's 50-request search budget is spent", done: async () => {} };
+  sent.length = 0;
+  const none = await makeDiscoverySearch({ braveKey: "b", budget: refusing, fetchImpl })!({ query: "q", ownSiteDomain: null });
+  assert.deepEqual(sent, [], "a refused request is never sent");
+  assert.equal(none.requests[0].status, "BUDGET_REFUSED");
+  assert.equal(makeDiscoverySearch({ budget, fetchImpl }), null, "no key, no seam");
+});
+
+test("BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap holds across cycles in the durable ledger", async () => {
+  for (const [label, repos] of await eachStore("wtp-search-budget-")) {
+    let clock = Date.parse(NOW);
+    const now = () => new Date((clock += 2_000)).toISOString();
+    const cycle1 = durableSearchBudget({ repos, perCycle: 2, perDay: 3, admit: () => null, now });
+    for (let i = 0; i < 2; i += 1) {
+      assert.equal(await cycle1.take(SEARCH_HOSTS.brave), null, `${label}: request ${i + 1} admitted`);
+      await cycle1.done(SEARCH_HOSTS.brave);
+    }
+    assert.match((await cycle1.take(SEARCH_HOSTS.brave)) ?? "", /cycle's 2-request search budget is spent/);
+
+    const cycle2 = durableSearchBudget({ repos, perCycle: 5, perDay: 3, admit: () => null, now });
+    assert.equal(await cycle2.take(SEARCH_HOSTS.exa), null, `${label}: the third request today is admitted`);
+    await cycle2.done(SEARCH_HOSTS.exa);
+    const refused = await cycle2.take(SEARCH_HOSTS.exa);
+    assert.ok(refused !== null && /discovery-search|daily/i.test(refused), `${label}: the day's cap across both providers refuses, kept in the shared ledger: ${refused}`);
+    const ledger = (await repos.budget.read()).value;
+    assert.equal(ledger.vendors[DISCOVERY_SEARCH_VENDOR]?.dailyRequestCap, 3);
+
+    const blackout = durableSearchBudget({ repos, perCycle: 5, perDay: 3, admit: () => "network/provider execution is disabled during the Saturday blackout", now });
+    assert.match((await blackout.take(SEARCH_HOSTS.brave)) ?? "", /blackout/, `${label}: FleetSafety's refusal passes through`);
+  }
+});
+
+test("WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method", async () => {
+  for (const [label, repos] of await eachStore("wtp-search-walk-")) {
+    const site = fakeOpen({
+      "https://benson.gov/robots.txt": { status: 404 },
+      "https://benson.gov/": { status: 200, body: "<html><a href='/parks'>Parks</a></html>" },
+      "https://benson.gov/government/meetings": { status: 200, body: "<a href='/calendar/council.ics'>Subscribe</a>" },
+      "https://benson.gov/calendar/council.ics": { status: 200, body: ICS },
+    });
+    const searches = fakeSearch({
+      "CITY OF BENSON meetings agendas minutes": ["https://www.bensonnews.com/council", "https://benson.gov/government/meetings"],
+    }, { failExa: true });
+    const costs: CostEntry[] = [];
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:city:city-of-benson", "benson.gov", "CITY OF BENSON")],
+      runtime: runtime(site.open, searches.search, costs),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    const walk = pass.walked[0];
+    assert.equal(walk.outcome, "FOUND", label);
+    assert.deepEqual(walk.found.map((f) => [f.basis, f.url]), [["SEARCH", "https://benson.gov/calendar/council.ics"]]);
+    assert.equal(site.seen.some((u) => u.includes("bensonnews")), false, `${label}: someone else's page is never opened`);
+    assert.deepEqual(searches.calls[0], { query: "CITY OF BENSON meetings agendas minutes", ownSiteDomain: "benson.gov" });
+
+    assert.deepEqual(
+      costs.map((c) => [c.role, c.source, c.cost.usd, c.jurisdiction, c.routeId]),
+      [
+        ["DISCOVERY_SEARCH", "api.search.brave.com", 0.005, "az:city:city-of-benson", "discovery-search:own-site-meetings"],
+        ["DISCOVERY_SEARCH", "api.exa.ai", null, "az:city:city-of-benson", "discovery-search:own-site-meetings"],
+      ],
+      `${label}: one row per request sent; the lost Exa request is UNMEASURED, never zero`,
+    );
+    assert.equal(walk.search[0].requests[0].priceSource, SEARCH_PRICES.brave.source);
+    assert.equal(walk.recipes.learned.length, 1);
+    const learned = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === walk.recipes.learned[0].recipeId)!;
+    assert.equal(learned.successes, 1, `${label}: the method is saved with its success`);
+    assert.deepEqual(learned.queryTemplates, ["{bodyName} meetings agendas minutes"]);
+
+    /* The next government's walk searches with the saved method first. */
+    const next = fakeOpen({ "https://avondale.gov/robots.txt": { status: 404 }, "https://avondale.gov/": { status: 200, body: "<html></html>" } });
+    const nextSearches = fakeSearch({});
+    const nextPass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:city:city-of-avondale", "avondale.gov", "CITY OF AVONDALE")],
+      runtime: runtime(next.open, nextSearches.search, [], knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.equal(nextSearches.calls[0].query, "CITY OF AVONDALE meetings agendas minutes", `${label}: the saved template, identity substituted`);
+    assert.equal(nextPass.walked[0].search[0].recipeId, learned.recipeId, `${label}: the first query came from the saved method, not the default`);
+    const afterMiss = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === learned.recipeId)!;
+    assert.equal(afterMiss.failures, 1, `${label}: a saved method that found nothing here is recorded against it`);
+
+    /* A walk that confirmed a route never searches. */
+    const found = fakeOpen({
+      "https://gilbert.gov/robots.txt": { status: 404 },
+      "https://gilbert.gov/": { status: 200, body: "<a href='/m.ics'>m</a>" },
+      "https://gilbert.gov/m.ics": { status: 200, body: ICS },
+    });
+    const idle = fakeSearch({});
+    const direct = await walkMeetingsDiscoveryNeed(need("az:town:gilbert", "gilbert.gov", "TOWN OF GILBERT"), runtime(found.open, idle.search, []));
+    assert.equal(direct.outcome, "FOUND");
+    assert.deepEqual(idle.calls, [], `${label}: no search is paid for once the site proved a route`);
+  }
+});
+
+test("REFUSED: a request the budget refused is recorded in the walk and never charged", async () => {
+  const site = fakeOpen({ "https://x.gov/robots.txt": { status: 404 }, "https://x.gov/": { status: 200, body: "<html></html>" } });
+  const costs: CostEntry[] = [];
+  const walk = await walkMeetingsDiscoveryNeed(need("az:town:x", "x.gov", "TOWN OF X"), runtime(site.open, fakeSearch({}, { refuseBrave: true }).search, costs));
+  assert.equal(walk.search[0].requests[0].status, "BUDGET_REFUSED");
+  assert.equal(walk.search[0].requests[0].usd, null);
+  assert.deepEqual(costs.map((c) => c.source), ["api.exa.ai", "api.exa.ai"], "only requests actually sent are charged");
+});

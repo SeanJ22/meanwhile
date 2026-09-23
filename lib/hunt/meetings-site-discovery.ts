@@ -16,9 +16,11 @@
  * - **SERVED_BY**: the vendor's markup on the government's own domain.
  * - **EMBEDDED**: a vendor tenant named in the page's own script.
  *
- * The executor adds one more, **RECIPE**: a saved method's path on the
+ * The executor adds two more. **RECIPE** is a saved method's path on the
  * government's own origin, proposed only when this page shows the method's
- * precondition (`lib/hunt/meetings-recipes.ts`).
+ * precondition (`lib/hunt/meetings-recipes.ts`). **SEARCH** is a search result
+ * on the government's own domain or a known meeting-publisher host
+ * (`lib/hunt/discovery-search.ts`), used only when nothing else was confirmed.
  *
  * No tenant slug is derived from a name. The measured traps (`docs/source-ladder.md`)
  * are why: every `*.novusagenda.com/agendapublic/` answers 200, and a guessed
@@ -46,9 +48,11 @@ import { detectTenancy } from "./platform-tenancy.ts";
  * How a candidate was evidenced. The first three come from the government's
  * own page; RECIPE is a saved method's path on the government's own origin,
  * proposed only when the page shows the method's precondition
- * (`lib/hunt/meetings-recipes.ts`). All four are confirmed by content alike.
+ * (`lib/hunt/meetings-recipes.ts`); SEARCH is a search result on the
+ * government's own domain or a known meeting-publisher host
+ * (`lib/hunt/discovery-search.ts`). All five are confirmed by content alike.
  */
-export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED" | "RECIPE";
+export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED" | "RECIPE" | "SEARCH";
 
 /** The endpoint families this module can confirm by content. */
 export const VERIFIABLE_VENDORS = [
@@ -366,7 +370,27 @@ export interface MeetingsDiscoveryAttempt {
       readonly detail: string;
     }[];
     readonly skipped: readonly { readonly recipeId: string; readonly why: string }[];
+    /** Methods a search success taught this walk, saved for the next government. */
+    readonly learned: readonly import("./meetings-recipes.ts").MeetingsRecipe[];
   };
+  /** The search rung: each query, every provider request with its price basis, and the results followed. */
+  readonly search: readonly {
+    readonly templateId: string;
+    readonly recipeId: string | null;
+    readonly query: string;
+    readonly ownSiteOnly: boolean;
+    readonly requests: readonly {
+      readonly provider: "brave" | "exa";
+      readonly host: string;
+      readonly status: "DELIVERED" | "BUDGET_REFUSED" | "FAILED";
+      readonly error: string | null;
+      readonly hitCount: number;
+      readonly usd: number | null;
+      readonly priceSource: string;
+      readonly priceReadOn: string;
+    }[];
+    readonly followed: readonly string[];
+  }[];
   readonly requestCount: number;
   /** When the need is due to be walked again. A schedule, never a disposition. */
   readonly recheckAfter: string;

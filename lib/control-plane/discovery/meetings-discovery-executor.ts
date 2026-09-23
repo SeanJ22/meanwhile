@@ -34,12 +34,19 @@ import { createHash } from "node:crypto";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import {
+  failureStands,
+  identityFor,
   recipeCandidates,
   recipeEntry,
+  recipeFromSearchFind,
+  recipesFor,
   recordRecipeOutcome,
   type MeetingsRecipe,
   type RecipeCandidate,
 } from "../../hunt/meetings-recipes.ts";
+import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
+import type { CostEntry } from "../cost.ts";
+import type { SearchHit } from "../scheduler/scout-contract.ts";
 import {
   decideOutcome,
   meetingEndpointCandidates,
@@ -52,8 +59,10 @@ import {
   type EndpointCandidate,
   type MeetingsDiscoveryAttempt,
   type StepPermission,
+  type VerifiableVendor,
 } from "../../hunt/meetings-site-discovery.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
+import { FRESHNESS_PROJECT } from "../scheduler/durable.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { fieldManualEntryId, type FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -91,6 +100,69 @@ export interface DiscoveryRuntime {
    * Consulted on every walk; each application's outcome is written back.
    */
   readonly recipes?: readonly MeetingsRecipe[];
+  /**
+   * The search seam (Brave and Exa, pointers only). Absent, the walk never
+   * searches. Every provider request it reports is charged to the cost ledger.
+   */
+  readonly search?: DiscoverySearch;
+  /** Writes one CostEntry per provider request actually sent (role DISCOVERY_SEARCH). */
+  readonly recordCost?: (entry: CostEntry) => Promise<void>;
+  readonly maxQueriesPerWalk?: number;
+}
+
+/** One provider request the search seam made, refused, or lost in transport. */
+export interface SearchRequestRecord {
+  readonly provider: SearchProvider;
+  readonly status: "DELIVERED" | "BUDGET_REFUSED" | "FAILED";
+  readonly error: string | null;
+  readonly bytes: number;
+  readonly hitCount: number;
+}
+
+/** Search for pointers. Restricting to the government's own domain is the seam's to express per provider. */
+export type DiscoverySearch = (input: {
+  readonly query: string;
+  readonly ownSiteDomain: string | null;
+}) => Promise<{ readonly hits: readonly SearchHit[]; readonly requests: readonly SearchRequestRecord[] }>;
+
+const MAX_HITS_FOLLOWED_PER_QUERY = 2;
+const DEFAULT_MAX_QUERIES_PER_WALK = 2;
+
+/** The cost-ledger row for one search request: role DISCOVERY_SEARCH, never mixed with model spend. */
+export function searchCostEntry(input: {
+  readonly attemptId: string;
+  readonly jurisdictionId: string;
+  readonly routeId: string;
+  readonly host: string;
+  readonly usd: number | null;
+  readonly bytes: number;
+  readonly recordedAt: string;
+}): CostEntry {
+  return {
+    attemptId: input.attemptId,
+    workItemId: discoveryWorkId(input.jurisdictionId),
+    routeTaskId: null,
+    routeId: input.routeId,
+    source: input.host,
+    jurisdiction: input.jurisdictionId,
+    project: FRESHNESS_PROJECT,
+    role: "DISCOVERY_SEARCH",
+    cost: {
+      inputTokens: null,
+      outputTokens: null,
+      usd: input.usd,
+      durationMs: null,
+      bytesFetched: input.bytes,
+      requestCount: 1,
+      cacheReadInputTokens: null,
+      cacheCreationInputTokens: null,
+      cacheCreation5mInputTokens: null,
+      cacheCreation1hInputTokens: null,
+      uncachedInputTokens: null,
+      batch: false,
+    },
+    recordedAt: input.recordedAt,
+  };
 }
 
 /**
@@ -252,11 +324,15 @@ export async function walkMeetingsDiscoveryNeed(
   /* 1–2. The homepage, on each recorded origin in turn, until one is read. */
   let candidates: readonly EndpointCandidate[] = [];
   let proposals: readonly RecipeCandidate[] = [];
+  let homeOrigin: string | null = null;
+  let homeHtml: string | null = null;
   const recipeSkips: { recipeId: string; why: string }[] = [];
   const origins = siteOrigins(need.ownWebAddress);
   for (const origin of origins) {
     const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
     if (home !== null) {
+      homeOrigin = new URL(home.finalUrl).origin;
+      homeHtml = home.body;
       candidates = meetingEndpointCandidates(home.body, home.finalUrl);
       /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
       const proposed = recipeCandidates({
@@ -309,6 +385,76 @@ export async function walkMeetingsDiscoveryNeed(
     leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "recognised but not readable by any content check yet" });
   }
 
+  /*
+   * 4. Search, only when nothing was confirmed and a search seam exists: the
+   * saved methods' queries first, then the defaults. A result is a pointer: it
+   * is followed only on the government's own domain or a known publisher host,
+   * opened robots-first, and confirmed by content. Every request is charged.
+   */
+  const searchLog: MeetingsDiscoveryAttempt["search"][number][] = [];
+  const learned: MeetingsRecipe[] = [];
+  if (found.length === 0 && runtime.search !== undefined && origins.length > 0) {
+    const identity = identityFor(need, homeOrigin ?? origins[0], new Date(startedAt).getUTCFullYear());
+    /* A saved method searches only where its precondition shows (or it has none) and no failure of it stands here. */
+    const applicable = recipesFor(runtime.recipes ?? [], { bodyClass: need.govClass, state: need.stateCode }).filter(
+      (r) =>
+        (r.precondition === null || (homeHtml !== null && new RegExp(r.precondition, "i").test(homeHtml))) &&
+        failureStands(r, need.jurisdictionId, startedAt) === null,
+    );
+    const tried = new Set(planned.map((p) => p.candidate.url));
+    for (const q of plannedQueries(applicable, identity, runtime.maxQueriesPerWalk ?? DEFAULT_MAX_QUERIES_PER_WALK)) {
+      const res = await runtime.search({ query: q.query, ownSiteDomain: q.ownSiteOnly ? identity.domain : null });
+      const requests = res.requests.map((r) => {
+        const { usd, price } = requestPrice(r.provider, r.status === "DELIVERED");
+        return {
+          provider: r.provider, host: price.host, status: r.status, error: r.error, hitCount: r.hitCount,
+          usd: r.status === "BUDGET_REFUSED" ? null : usd, priceSource: price.source, priceReadOn: price.readOn, bytes: r.bytes,
+        };
+      });
+      for (const r of requests) {
+        if (r.status === "BUDGET_REFUSED") continue;
+        await runtime.recordCost?.(searchCostEntry({
+          attemptId, jurisdictionId: need.jurisdictionId, routeId: q.recipeId ?? `discovery-search:${q.templateId}`,
+          host: r.host, usd: r.usd, bytes: r.bytes, recordedAt: runtime.now(),
+        }));
+      }
+      const followed: string[] = [];
+      for (const hit of res.hits) {
+        if (found.length > 0 || followed.length >= MAX_HITS_FOLLOWED_PER_QUERY) break;
+        if (hitStanding(hit.url, identity.domain) === null || tried.has(hit.url)) continue;
+        followed.push(hit.url);
+        tried.add(hit.url);
+        const page = await get(hit.url, "endpoint", ACCEPT_PAGE);
+        if (page === null) continue;
+        /* The result may itself be a route; otherwise it is read as a page for the routes it evidences. */
+        const direct = meetingEndpointCandidates(`<a href="${hit.url.replace(/"/g, "%22")}"></a>`, page.finalUrl).filter((c) => c.verifiable);
+        const onPage = meetingEndpointCandidates(page.body, page.finalUrl).filter((c) => c.verifiable && !tried.has(c.url));
+        for (const c of [...direct, ...onPage].slice(0, 3)) {
+          const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
+          if (body === null) continue;
+          const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl });
+          const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail };
+          if (check.verdict !== "YIELDED") {
+            leads.push(base);
+            continue;
+          }
+          found.push({ ...base, count: check.count, artifactId: body.artifactId });
+          if (q.recipeId !== null) recipeApplied.push({ recipeId: q.recipeId, url: c.url, verdict: "YIELDED", detail: check.detail });
+          else learned.push(recipeFromSearchFind({ templateId: q.templateId, template: q.template, vendor: c.vendor as VerifiableVendor, need, attemptId }));
+          break;
+        }
+      }
+      searchLog.push({
+        templateId: q.templateId, recipeId: q.recipeId, query: q.query, ownSiteOnly: q.ownSiteOnly,
+        requests: requests.map(({ bytes: _bytes, ...rest }) => rest), followed,
+      });
+      if (q.recipeId !== null && found.length === 0) {
+        recipeApplied.push({ recipeId: q.recipeId, url: `search:${q.query}`, verdict: "NOT_CONFIRMED", detail: followed.length === 0 ? "the search returned no result on the government's own domain or a known publisher" : "no result the search pointed to was confirmed by content" });
+      }
+      if (found.length > 0) break;
+    }
+  }
+
   const finishedAt = runtime.now();
   const outcome: DiscoveryOutcome = origins.length === 0 ? "COULD_NOT_READ" : decideOutcome({ found, leads, steps });
   return {
@@ -323,7 +469,8 @@ export async function walkMeetingsDiscoveryNeed(
     found,
     leads,
     steps,
-    recipes: { applied: recipeApplied, skipped: recipeSkips },
+    recipes: { applied: recipeApplied, skipped: recipeSkips, learned },
+    search: searchLog,
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
     note: noteFor(need, outcome, found, leads, origins.length),
@@ -487,6 +634,13 @@ export async function runMeetingsDiscovery(
   const touched = new Set<string>();
   let recipeApplications = 0;
   for (const attempt of walked) {
+    /* A method a search success taught: added, or credited when it is already known. */
+    for (const fresh of attempt.recipes.learned) {
+      const known = recipesById.get(fresh.recipeId) ?? fresh;
+      const note = { at: attempt.finishedAt, jurisdictionId: attempt.jurisdictionId, url: attempt.found[0]?.url ?? "", conditions: `walk ${attempt.attemptId}: found by search` };
+      recipesById.set(fresh.recipeId, recordRecipeOutcome(known, { succeeded: true, note }));
+      touched.add(fresh.recipeId);
+    }
     for (const a of attempt.recipes.applied) {
       const recipe = recipesById.get(a.recipeId);
       if (recipe === undefined) continue;

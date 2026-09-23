@@ -80,6 +80,12 @@ export const WORKER_ROLES = [
   "VALIDATOR",
   "ADVERSARIAL_AUDITOR",
   "RELEASE_ORCHESTRATOR",
+  /*
+   * A search-API request made by the unpaid meetings-discovery executor
+   * (2026-09-23). Not a model worker: it exists so search spend is accounted
+   * apart from model spend, one CostEntry per provider request.
+   */
+  "DISCOVERY_SEARCH",
 ] as const;
 export type WorkerRole = (typeof WORKER_ROLES)[number];
 

@@ -1768,7 +1768,7 @@ if (!canary && !scheduledBlackout) {
     );
   }
   if (abandonedOccurrences.length > 0) {
-    if (dry) {
+    if (dry || ONLY !== null || IDS !== null) {
       console.log(`  abandoned occurrences: ${abandonedOccurrences.length} found (plan only: this cycle writes nothing)`);
     } else {
       abandonedClosed = await closeAbandonedOccurrences(repos, { abandoned: abandonedOccurrences, now: NOW });

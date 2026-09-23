@@ -50,7 +50,7 @@ session supplies the evidence for the capabilities it delivers; a row names its 
 | 1.7 | Inherited knowledge: exact text given at dispatch, and whether used | needs recording | Recorded on each Scout result since 2026-09-19; "whether used" is not (MW-025) | Backend |
 | 1.8 | Model routing: class, why, one escalation with evidence and combined cost | needs recording | No step has ever escalated; the reason is recorded nowhere (MW-031) | Backend |
 | 1.9 | Budget enforcement per assignment | needs recording | Per-geography budget enforced; per-assignment does not exist (MW-021) | Backend |
-| 1.10 | One new or changed record reaches the public site, with its audit trail | built — to demonstrate | Routine reads carry it end to end today (read → change set → validated → promoted version → reader readback); shown per body and per routine assignment | Redesign (demo) |
+| 1.10 | One new or changed record reaches the public site, with its audit trail | built — to demonstrate | Routine reads carry it end to end today (read → change set → validated → promoted version → reader readback). An opened routine assignment's trail follows the latest version that changed what readers see — source, retrieval time, what changed with the meetings named, validation time, promotion time and version, public destination, first readback — and names the later version serving now, which re-confirmed it. Candidate for the demonstration: Morris County, NJ, where the county withdrew the 7:00 PM agenda for its September 23 meeting; read, validated, promoted and read back at 9:53 AM ET that day (version `cv-362cbf555009…`) | Redesign (demo) |
 | 1.11 | Not finished: refused/unsettled visible with three dead-end fields | built (partial) | Three fields shown or named missing (MW-016); refusals roll up per assignment only in part (MW-015) | Backend (MW-015/016) |
 | 2 | Unknown is never zero; empty state gives sentences; unanswerable period refused | built | Dashed pills and floors throughout; a state with nothing registered gives two sentences; every figure names its own window (no period selector exists — MW-023) | Redesign |
 | 3.1 | A readiness gap opens the assignment that addresses it | built (partial) | A container opens Work with the geography chosen, or the assignment already covering it; gaps are not yet linked to requirement instances by id (MW-063) | Redesign / Backend |
@@ -123,6 +123,22 @@ session supplies the evidence for the capabilities it delivers; a row names its 
 
 Data meanings the screens rely on: `WORKER_ARTIFACT_NOT_IN_VAULT` now means no complete, admitted record of the artifact is held anywhere the runtime reads — a true absence. A worker's evidence names the Attempt whose bytes were actually read, which can be later than the first record carrying that artifact id. An obligation with `active=false`, a `retiredAt` and a `retirementReason` (SUPERSEDED, MOVED TO THE GAP LEDGER, or a legacy transfer reason) is retired history, not live work. An occurrence closed with no disposition and an `unresolvedReason` (SUPERSEDED, MOVED TO THE GAP LEDGER, ABANDONED, or the row's own retirement reason) is a closure, not a reading, and never counts as work done. A debt with zero failures and "…the obligation was retired (…). Not a reading" is a tombstone, not a discharge. Meetings discovery needs recorded in the gap ledger are **owed, with no executor** — never shown as scheduled work.
 
+
+---
+
+## Earlier owner feedback the design does not carry (recorded, not built in this delivery)
+
+The design package is the spec, so where it draws no place for something the old console had, the
+thing went with the old console. Each is recorded here, and in the feedback sweep where it has a
+row, so none reads as still fixed. Whether any returns is Sean's call.
+
+| Item | What went | Where it stands |
+| --- | --- | --- |
+| ADM-9, POS-10 (9.4.26) | The light/dark toggle in the header. The design is dark-first and writes no theme; its prototype carries light values "so a port has somewhere to land" | Sweep `checkDebt` — not counted fixed. Restoring it means wiring the toggle over the design's light values and re-checking every screen in both themes |
+| ADM-18 (9.4.26 evening) | The owner-facing reader-suite section on the old home page. The reading survives only on the fleet operations map's Panels tab, in engineering terms | Sweep `checkDebt` — not counted fixed until the design gives the reader check a place |
+| POS-12 | The spend-by-role and spend-by-day charts | Money draws AI usage by provider and model, and model money by place, instead |
+| ADM-C14 (part) | The per-model cache hit rate and caching saving | Money's model table carries charges, measured dollars, unpriced charges and share |
+| Health legend | The Pilot health contract cards and grade-scale legend | The health contracts reach the owner as the Gates reading on a readiness state page |
 
 ---
 

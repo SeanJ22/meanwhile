@@ -481,6 +481,79 @@ export function routineCard(body: BodyView, contractId: string): CardView {
   };
 }
 
+type TrailRow = readonly [string, string];
+
+function destinationWords(body: BodyView): string {
+  return body.publicZip ? `${new URL(PUBLIC_SITE_ORIGIN).host}/?zip=${body.publicZip} — its meetings list` : "No indexed ZIP carries this body's division, so no page is named";
+}
+
+function countWords(c: { readonly added: number; readonly changed: number; readonly removed: number; readonly held: number }): string {
+  return `${c.added} added, ${c.changed} changed, ${c.removed} removed${c.held > 0 ? `; ${c.held} held back` : ""} (a record is a meeting or one of its agenda documents)`;
+}
+
+/**
+ * Acceptance 1.10's audit trail, for the latest version that changed what
+ * readers are served: later reads that changed nothing move the version
+ * pointer on, so the version serving now is named beside it, never instead.
+ */
+/** ". New meetings: A, January 20, 2027, 5:30 PM ET; and 2 more" — or nothing when none is named. */
+function meetingList(label: string, meetings: readonly { readonly title: string; readonly startsAt: string | null }[], total: number): string {
+  if (meetings.length === 0) return "";
+  const more = total - meetings.length;
+  const names = meetings.map((m) => `${m.title}${m.startsAt ? `, ${formatEastern(m.startsAt, { year: true })}` : ""}`);
+  return `. ${label}${total === 1 ? "" : "s"}: ${names.join("; ")}${more > 0 ? `; and ${more} more` : ""}`;
+}
+
+function changeTrail(body: BodyView, c: NonNullable<BodyView["lastChange"]>): TrailRow[] {
+  const now = c.servedNow;
+  return [
+    ["Source", `${c.source.charAt(0).toUpperCase()}${c.source.slice(1)}${c.sourceUrl ? ` — ${c.sourceUrl}` : ""}`],
+    ["Retrieved", `${formatEastern(c.retrievedAt)} — the read that found the change`],
+    ["What changed", `${countWords(c)}${meetingList("New meeting", c.named, c.meetingsAdded)}${meetingList("Changed meeting", c.changedNamed, c.meetingsChanged)}`],
+    ["Validation", c.validatedAt ? `Passed ${formatEastern(c.validatedAt)} — every applicable check` : "Passed — a version is promoted only after it validates; the check's own time is not recorded"],
+    ["Promoted", `Version ${c.versionId.slice(0, 15)}…${c.promotedAt ? ` at ${formatEastern(c.promotedAt)}` : " — its promotion time is not recorded"}`],
+    ["Public destination", destinationWords(body)],
+    [
+      "Checked",
+      c.readback
+        ? `${formatEastern(c.readback.at)}${c.readback.passed ? "" : " — and the readback failed"}, through the reader's own projection — the public page itself was not fetched`
+        : "No readback of that version is recorded",
+    ],
+    [
+      "Serving now",
+      now === null
+        ? "No version of this source is recorded as serving readers now"
+        : now.versionId === c.versionId
+          ? `This version${now.readback ? `, last read back ${formatEastern(now.readback.at)}` : ""}`
+          : `Version ${now.versionId.slice(0, 15)}…, promoted ${formatEastern(now.promotedAt)} by a later read that changed nothing${now.readback ? `; read back ${formatEastern(now.readback.at)}${now.readback.passed ? "" : ", and that readback failed"}` : "; no readback of it is recorded"}`,
+    ],
+    ["Never proves", "That a person actually viewed it. Available is not read."],
+  ];
+}
+
+/**
+ * The trail when no changing version is on record — the version serving now,
+ * as it is — or when the change history was not read, which it says first.
+ */
+function currentTrail(body: BodyView): TrailRow[] {
+  return [
+    ...(body.changeRead
+      ? []
+      : ([["Last change", "Not read this time: the change history did not answer, so when a record last reached readers is not shown. The version below may only re-confirm what readers already had."]] as const)),
+    ["Source", body.schedule.find(([k]) => k === "Last look")?.[1] ?? "no read recorded"],
+    ...(body.current
+      ? ([
+          ["Version", `${body.current.versionId.slice(0, 15)}… promoted ${formatEastern(body.current.promotedAt)}`],
+          ["What changed", body.current.outcome === "UNCHANGED" ? "Nothing — this version re-confirmed what readers already had" : countWords(body.current)],
+          ["Validation", "Passed — a version is promoted only after it validates"],
+        ] as const)
+      : []),
+    ["Public destination", destinationWords(body)],
+    ["Checked", body.readback ? `${formatEastern(body.readback.at)}, through the reader's own projection — the public page itself was not fetched` : "No readback is recorded"],
+    ["Never proves", "That a person actually viewed it. Available is not read."],
+  ];
+}
+
 /** The opened routine assignment, from the same body facts Fleet · Now shows. */
 export function routineDetail(body: BodyView): AssignmentDetailView {
   const outcomes: OutcomeCell[] = [
@@ -506,24 +579,7 @@ export function routineDetail(body: BodyView): AssignmentDetailView {
               pill: "CONFIRMED PUBLIC",
               tone: "teal",
               title: `${body.records} meetings from ${body.name}`,
-              trail: [
-                ["Source", body.schedule.find(([k]) => k === "Last look")?.[1] ?? "no read recorded"],
-                ...(body.current
-                  ? ([
-                      ["Version", `${body.current.versionId.slice(0, 15)}… promoted ${formatEastern(body.current.promotedAt)}`],
-                      [
-                        "What changed",
-                        body.current.outcome === "UNCHANGED"
-                          ? "Nothing — this version re-confirmed what readers already had"
-                          : `${body.current.added} added, ${body.current.changed} changed, ${body.current.removed} removed${body.current.held > 0 ? `; ${body.current.held} held back` : ""} (a record is a meeting or one of its agenda documents)`,
-                      ],
-                      ["Validation", "Passed — a version is promoted only after it validates"],
-                    ] as const)
-                  : []),
-                ["Public destination", body.publicZip ? `${new URL(PUBLIC_SITE_ORIGIN).host}/?zip=${body.publicZip} — its meetings list` : "No indexed ZIP carries this body's division, so no page is named"],
-                ["Checked", body.readback ? `${formatEastern(body.readback.at)}, through the reader's own projection — the public page itself was not fetched` : "No readback is recorded"],
-                ["Never proves", "That a person actually viewed it. Available is not read."],
-              ],
+              trail: body.lastChange ? changeTrail(body, body.lastChange) : currentTrail(body),
             },
           ]
         : [],

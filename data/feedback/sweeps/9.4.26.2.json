@@ -117,8 +117,8 @@
       "workItemId": "wi:feedback:9.4.26.2:ADM-15",
       "instancesFound": 5,
       "instancesFixed": 5,
-      "checkId": "tests/admin-feedback-9-4-pm.test.ts::ADM-15: every readiness ZIP row carries a next step and a Deploy-fleet-here intent that returns to the state's page",
-      "checkResult": "GREEN — NextStep in the readiness panel covers the five non-complete worst states plus the complete case; the button is the existing Deploy-fleet intent (ADM-8: it reorders registered work, never invents it) and the research route returns to /readiness/<state>. Rendered on the local production build for Arizona.",
+      "checkId": "tests/admin-feedback-9-4-pm.test.ts::ADM-15: readiness says the next thing to do, and a Deploy-fleet-here control carries its own target",
+      "checkResult": "GREEN — re-pointed 2026-09-23 to the owner's Meanwhile Admin design, which replaces the per-ZIP table: All states says the next thing to do for each state, from its own gaps; each district, county or metro names the worst gap inside it; an opened one lists every code's standing, and Deploy fleet here opens the Work composer with that geography already chosen, showing what sending does before anything moves. Rendered locally against the production stores (read-only) for Arizona. (Before: NextStep in the readiness panel and a per-row Deploy-fleet intent returning to /readiness/<state>.)",
       "blocker": null
     },
     {
@@ -234,10 +234,10 @@
       "failureClass": "rendering",
       "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:9.4.26.2:ADM-22",
-      "instancesFound": 26,
-      "instancesFixed": 26,
-      "checkId": "tests/admin-feedback-9-4-pm.test.ts::ADM-22: no console page prints a raw ISO stamp where the owner reads; every one goes through <When>",
-      "checkResult": "GREEN — lib/control-plane/eastern-time.ts is the one formatter; 26 stamp render sites across the four console files go through <When>. Note the owner's example 'September 5, 10:20 PM' for 2026-09-05T02:20Z is September 4 in New York, and the page says so.",
+      "instancesFound": 39,
+      "instancesFixed": 39,
+      "checkId": "tests/admin-feedback-9-4-pm.test.ts::ADM-22: no console page prints a raw ISO stamp where the owner reads; every one is spelled out in Eastern time",
+      "checkResult": "GREEN — lib/control-plane/eastern-time.ts is the one formatter. The original 26 stamp render sites went through <When>; the Meanwhile Admin design (2026-09-23) spells its stamps out with formatEastern, the shell strip keeping the ISO string on the element and the hover. Re-pointed 2026-09-23 to a check that sweeps every console file rather than listing four; it found 13 more raw stamps on the kept fleet operations and feedback pages, fixed the same day (found 26 → 39). Note the owner's example 'September 5, 10:20 PM' for 2026-09-05T02:20Z is September 4 in New York, and the page says so.",
       "blocker": null
     },
     {
@@ -324,6 +324,18 @@
       "checkId": "tests/admin-feedback-9-4.test.ts::ADM-9: the map's own ThemeToggle is mounted in the console header, and the research page carries the header too",
       "checkResult": "GREEN — kept; the Lumen tokens (ADM-21) are defined for both themes so the toggle keeps working.",
       "blocker": null
+    }
+  ],
+  "checkDebt": [
+    {
+      "itemId": "ADM-18",
+      "reason": "Withdrawn with its surface, not verified. The Meanwhile Admin design (the owner's spec, 2026-09-23) replaced the old home page, and with it the reader-suite section this item fixed. The reading is now drawn only on the fleet operations map's Panels tab, in engineering terms with no owner-facing lead sentence, so the fixed form no longer exists anywhere the owner reads. It counts as fixed again when the owner-facing reader check has a place in the design.",
+      "since": "2026-09-23"
+    },
+    {
+      "itemId": "POS-10",
+      "reason": "No longer kept. The Meanwhile Admin design (the owner's spec, 2026-09-23) is dark-first and writes no theme, so the header's light/dark toggle went with the old header. The design ships light values so a port has somewhere to land; whether the toggle returns over them is the owner's call, recorded on the redesign checklist.",
+      "since": "2026-09-23"
     }
   ]
 }

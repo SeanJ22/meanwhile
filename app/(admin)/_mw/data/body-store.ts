@@ -17,7 +17,14 @@ import "server-only";
  *              payload (measured 2026-09-23: 84 bodies in ~180 ms)
  *   attempts   the last five reads per body in the last seven days, from
  *              the local attempt event (never the adapter's claimed time)
- *   readbacks  the typed Reader readback of each current version
+ *   changes    each body's LATEST version that changed something readers are
+ *              served: when it was retrieved, validated and promoted (its own
+ *              events), its change counts and the first meetings it added.
+ *              Later reads that changed nothing move the pointer on, so the
+ *              current version alone cannot say when a record reached readers
+ *              (measured 2026-09-23: 85 bodies in ~1.4 s)
+ *   readbacks  the typed Reader readback of each current version, and of
+ *              each latest change
  *   day        per body, the last 24 hours: reads, reads that got in,
  *              versions promoted and the change counts they carried
  * ```
@@ -73,6 +80,28 @@ export interface BodyReadbackRow {
   readonly passed: boolean;
 }
 
+export interface BodyChangeRow {
+  readonly scope: string;
+  readonly versionId: string;
+  readonly retrievedAt: string;
+  /** Its "Atomic pointer … moved" event; null when none is recorded. */
+  readonly promotedAt: string | null;
+  /** Its "Every applicable GOOD check passed" event; null when none is recorded. */
+  readonly validatedAt: string | null;
+  readonly added: number;
+  readonly changed: number;
+  readonly removed: number;
+  readonly held: number;
+  /** How many of the added records are meetings; the rest are agenda documents. */
+  readonly meetingsAdded: number;
+  /** Up to three added meetings, earliest first, as the record names them. */
+  readonly named: readonly { readonly title: string | null; readonly startsAt: string | null }[];
+  /** How many of the changed records are meetings; the rest are agenda documents. */
+  readonly meetingsChanged: number;
+  /** Up to three changed meetings, earliest first. */
+  readonly changedNamed: readonly { readonly title: string | null; readonly startsAt: string | null }[];
+}
+
 export interface BodyDayRow {
   readonly scope: string;
   readonly reads: number;
@@ -92,6 +121,8 @@ export interface BodyStoreRead {
   readonly attempts: readonly BodyAttemptRow[];
   readonly readbacks: readonly BodyReadbackRow[];
   readonly day: readonly BodyDayRow[];
+  /** Null when the change history did not answer: the bodies render without it, and say so. */
+  readonly changes: readonly BodyChangeRow[] | null;
 }
 
 function iso(value: unknown): string {
@@ -111,6 +142,9 @@ function intOrNull(value: unknown): number | null {
 }
 function textOrNull(value: unknown): string | null {
   return typeof value === "string" && value.trim() !== "" ? value : null;
+}
+function meetingsOf(value: unknown): { readonly title: string | null; readonly startsAt: string | null }[] {
+  return (Array.isArray(value) ? (value as Record<string, unknown>[]) : []).map((m) => ({ title: textOrNull(m.title), startsAt: textOrNull(m.startsAt) }));
 }
 
 export async function readBodyStore(connection: string, nowIso: string): Promise<BodyStoreRead> {
@@ -166,14 +200,72 @@ export async function readBodyStore(connection: string, nowIso: string): Promise
       [nowIso],
     );
 
-    const currentIds = [...new Set(versions.rows.map((r) => String(r.current_version_id)))];
+    /*
+     * The latest changing version of each source serving readers, found by
+     * walking that source's versions newest first and stopping at the first
+     * change (measured 2026-09-23: 84 sources in ~140 ms on the server, where
+     * reading every version's change set took ~1.4 s). It is read under a
+     * savepoint: if it does not answer, the bodies still render, and each
+     * trail says its change history was not read rather than borrowing one.
+     */
+    await client.query("SAVEPOINT body_changes");
+    let changeRows: Record<string, unknown>[] | null;
+    try {
+      const changes = await client.query(
+        `WITH latest AS (
+           SELECT p.scope, l.id
+             FROM civic_data_promotions p
+             CROSS JOIN LATERAL (
+               SELECT x.id
+                 FROM civic_data_candidates x
+                WHERE x.record_class = 'MEETING' AND x.scope = p.scope AND x.state = 'PROMOTED'
+                  AND x.candidate->'changeSet'->>'outcome' = 'CHANGED'
+                ORDER BY x.retrieved_at DESC, x.id DESC
+                LIMIT 1) l
+            WHERE p.record_class = 'MEETING')
+         SELECT l.scope, l.id, c.retrieved_at,
+              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'added', '[]'::jsonb)) AS added,
+              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'changed', '[]'::jsonb)) AS changed,
+              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'removed', '[]'::jsonb)) AS removed,
+              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'held', '[]'::jsonb)) AS held,
+              (SELECT count(*) FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'added', '[]'::jsonb)) e
+                WHERE e->>'key' LIKE 'meeting:%') AS meetings_added,
+              (SELECT jsonb_agg(x) FROM (
+                 SELECT jsonb_build_object('title', e->'after'->>'title', 'startsAt', e->'after'->>'startsAt') AS x
+                   FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'added', '[]'::jsonb)) e
+                  WHERE e->>'key' LIKE 'meeting:%'
+                  ORDER BY e->'after'->>'startsAt'
+                  LIMIT 3) s) AS named,
+              (SELECT count(*) FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'changed', '[]'::jsonb)) e
+                WHERE e->>'key' LIKE 'meeting:%') AS meetings_changed,
+              (SELECT jsonb_agg(x) FROM (
+                 SELECT jsonb_build_object('title', e->'after'->>'title', 'startsAt', e->'after'->>'startsAt') AS x
+                   FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'changed', '[]'::jsonb)) e
+                  WHERE e->>'key' LIKE 'meeting:%'
+                  ORDER BY e->'after'->>'startsAt'
+                  LIMIT 3) s) AS changed_named,
+              (SELECT min(ev.at) FROM civic_data_candidate_events ev
+                WHERE ev.candidate_id = l.id AND ev.detail LIKE 'Atomic pointer %') AS promoted_at,
+              (SELECT min(ev.at) FROM civic_data_candidate_events ev
+                WHERE ev.candidate_id = l.id AND ev.detail LIKE 'Every applicable GOOD check passed%') AS validated_at
+         FROM latest l JOIN civic_data_candidates c ON c.id = l.id`,
+      );
+      changeRows = changes.rows;
+      await client.query("RELEASE SAVEPOINT body_changes");
+    } catch (error) {
+      await client.query("ROLLBACK TO SAVEPOINT body_changes");
+      console.error("[admin] body change history not read", error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error);
+      changeRows = null;
+    }
+
+    const readbackIds = [...new Set([...versions.rows.map((r) => String(r.current_version_id)), ...(changeRows ?? []).map((r) => String(r.id))])];
     const readbacks =
-      currentIds.length === 0
+      readbackIds.length === 0
         ? { rows: [] as Record<string, unknown>[] }
         : await client.query(
             `SELECT candidate_id, at, detail FROM civic_data_candidate_events
               WHERE candidate_id = ANY($1::text[]) AND detail LIKE $2`,
-            [currentIds, `${READER_PROJECTION_READBACK_PREFIX}%`],
+            [readbackIds, `${READER_PROJECTION_READBACK_PREFIX}%`],
           );
 
     const day = await client.query(
@@ -243,6 +335,24 @@ export async function readBodyStore(connection: string, nowIso: string): Promise
         changed: int(r.changed),
         removed: int(r.removed),
       })),
+      changes:
+        changeRows === null
+          ? null
+          : changeRows.map((r) => ({
+              scope: String(r.scope),
+              versionId: String(r.id),
+              retrievedAt: iso(r.retrieved_at),
+              promotedAt: isoOrNull(r.promoted_at),
+              validatedAt: isoOrNull(r.validated_at),
+              added: int(r.added),
+              changed: int(r.changed),
+              removed: int(r.removed),
+              held: int(r.held),
+              meetingsAdded: int(r.meetings_added),
+              named: meetingsOf(r.named),
+              meetingsChanged: int(r.meetings_changed),
+              changedNamed: meetingsOf(r.changed_named),
+            })),
     };
   } catch (error) {
     await client.query("ROLLBACK").catch(() => undefined);

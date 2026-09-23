@@ -51,7 +51,7 @@ import { loadRegistryBodies } from "../../_mw/data/registry.ts";
 import { paidLaneOf } from "../../_mw/data/research-lane.ts";
 import { isRegisteredState, shellScope, stateName } from "../../_mw/load-shell.ts";
 import { openPage, param, type SearchParams } from "../../_mw/page-base.ts";
-import { GEO_TYPE_WORDS, geographyShortLabel, withScope, type MwGeoType, type MwScope } from "../../_mw/scope.ts";
+import { GEO_TYPE_WORDS, geographyShortLabel, withScope, type MwScope } from "../../_mw/scope.ts";
 import { MwShell } from "../../_mw/shell.tsx";
 import { Dash, Fig, MetaKV, Pill, Refusal, Section, mw as s } from "../../_mw/ui.tsx";
 
@@ -226,7 +226,7 @@ export default async function ReadinessStatePage({
                     <div key={`${mm.type}-${mm.geoid}`} className={s.insetRow}>
                       <span className={s.monoText}>{shortLabel(mm.label)}</span>
                       <span className={`${s.note} ${s.grow}`}>{overlapWords(mm.whole, mm.fraction)}</span>
-                      <span className={s.mono}>{GEO_TYPE_WORDS[mm.type as MwGeoType] ?? "Another kind of area"}</span>
+                      <span className={s.mono}>{geoTypeWords(mm.type)}</span>
                     </div>
                   ))
                 )}
@@ -577,6 +577,12 @@ export default async function ReadinessStatePage({
 
 function cap(text: string): string {
   return text.length === 0 ? text : text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** A container type in words: the header's own word where it has one, else the lookup's type name spelled out. */
+function geoTypeWords(type: string): string {
+  const known = (GEO_TYPE_WORDS as Readonly<Record<string, string>>)[type];
+  return known === undefined ? cap(type.replace(/_/g, " ")) : known;
 }
 
 /** What else the container crosses — kept to words the lookup itself supports. */

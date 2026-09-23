@@ -122,6 +122,34 @@ test("ADM-22: no console page prints a raw ISO stamp where the owner reads; ever
       for (const m of shown.matchAll(/\$\{\s*([\w.]+\.at)\s*(?:\}|\?\?)/g)) offenders.push(`${rel}: \${${m[1]}} is interpolated into owner text as a raw ISO stamp`);
     }
   }
+  /*
+   * Every other console file, swept rather than listed — the pages kept under
+   * the new header (the fleet operations map and its panels, feedback, sources)
+   * are console pages too. A stamp field printed as a child, or interpolated
+   * into a sentence, reaches the owner as ISO; an attribute (`iso=`, `key=`,
+   * `dateTime=`) does not. Found on 2026-09-23: thirteen such prints on the
+   * fleet operations and feedback pages.
+   */
+  const NOT_A_STAMP = new Set([
+    "row.adapter.at", // the sources page's adapter module path: a place, not a time
+    "e.at", // the sources page's evidence location: a place, not a time
+    "answer.readBackAt", // the page a chat answer can be read back on: a path, not a time
+    "receipt.readBackAt", // the page an action's result can be read back on: a path, not a time
+    "readAt", // the audit footer's prop, spelled out at every call site (asserted above)
+  ]);
+  const consoleFiles = [...sourceFilesUnder([".tsx"], "app", "(admin)"), ...sourceFilesUnder([".tsx"], "components", "admin")];
+  for (const abs of consoleFiles) {
+    const rel = relative(ROOT, abs).split(sep).join("/");
+    const shown = codeOf(rel).replace(/\b(?:key|id|href)=\{`[^`]*`\}/g, "");
+    for (const m of shown.matchAll(/\$\{\s*([\w.?]+(?:At|\.at|Iso))\s*\}/g)) {
+      if (!NOT_A_STAMP.has(m[1])) offenders.push(`${rel}: \${${m[1]}} is interpolated into owner text as a raw ISO stamp`);
+    }
+    // A child, not a destructuring pattern (`{ observedAt }: Props`) or an attribute.
+    for (const m of shown.matchAll(/(?<![=\w$])\{\s*([\w.?]+(?:At|\.at|Iso))\s*\}(?!\s*[:=)])/g)) {
+      if (!NOT_A_STAMP.has(m[1])) offenders.push(`${rel}: {${m[1]}} is printed as a raw ISO stamp`);
+    }
+  }
+  assert.ok(consoleFiles.length > 40, `the sweep read the console (${consoleFiles.length} files)`);
   assert.deepEqual([...new Set(offenders)], [], "raw ISO stamps reach the owner's face");
 });
 

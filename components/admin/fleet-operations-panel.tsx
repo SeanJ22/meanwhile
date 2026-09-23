@@ -18,6 +18,7 @@
 
 import { useCallback, useState } from "react";
 
+import { formatEastern } from "@/lib/control-plane/eastern-time";
 import type { FleetOperation, FleetOperationsReport } from "@/lib/control-plane/fleet-operations";
 import {
   applyRefresh,
@@ -96,13 +97,13 @@ function OperationCard({ op }: { op: FleetOperation }) {
 
       {/* Heartbeat vs useful progress — an activity move is not evidence advancing. */}
       <p className="note">
-        {prog.advanced ? `Progress advanced (last useful result ${prog.progressAt})` : "No useful progress recorded yet"}
-        {prog.activityAt ? ` · last activity ${prog.activityAt}${prog.progressAt !== prog.activityAt ? " (heartbeat/retry ≠ progress)" : ""}` : ""}
+        {prog.advanced ? `Progress advanced (last useful result ${formatEastern(prog.progressAt)})` : "No useful progress recorded yet"}
+        {prog.activityAt ? ` · last activity ${formatEastern(prog.activityAt)}${prog.progressAt !== prog.activityAt ? " (heartbeat/retry ≠ progress)" : ""}` : ""}
       </p>
 
       {/* Acquired ≠ published: last held acquisition, and any later failure, kept apart. */}
       {op.sourceHealth.lastAcquired ? (
-        <p className="note">Acquired: {op.sourceHealth.lastAcquired.artifactIds.length} artifact(s) at {op.sourceHealth.lastAcquired.at}. {NOTES.acquisition}</p>
+        <p className="note">Acquired: {op.sourceHealth.lastAcquired.artifactIds.length} artifact(s) at {formatEastern(op.sourceHealth.lastAcquired.at)}. {NOTES.acquisition}</p>
       ) : (
         <p className="note">No successful acquisition held.</p>
       )}
@@ -175,7 +176,7 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
       {state.lastError && (
         <div className="refusal" style={{ marginBottom: ".75rem" }}>
           <strong>{report ? "Refresh failed." : "Could not read the operations report."}</strong> {state.lastError}
-          {report && ` Showing the last successful read from ${report.observedAt} (unchanged).`}
+          {report && ` Showing the last successful read from ${formatEastern(report.observedAt)} (unchanged).`}
         </div>
       )}
 
@@ -188,7 +189,7 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
             {extensionCapability(report) === "UNAVAILABLE" && (
               <span className="op-badge" data-op="blocked" title={NOTES.extensionUnavailable}>extension unavailable</span>
             )}
-            <span className="note">Read at {report.observedAt}. {NOTES.delivery}</span>
+            <span className="note">Read at {formatEastern(report.observedAt)}. {NOTES.delivery}</span>
           </p>
 
           <ReceiptLoadingBlock loading={report.receiptLoading} source={report.receiptSource} />
@@ -204,8 +205,8 @@ export function FleetOperationsView({ state }: { state: FleetConsumerState }) {
           <Outcome label="Coverage" outcome={report.coverageGaps}>
             {report.coverageGaps.kind === "HELD" && (
               report.coverageGaps.value.zipRows.held
-                ? <p className="note">{report.coverageGaps.value.zipRows.value.length} ZIP row(s), snapshot published {report.coverageGaps.value.publishedAt}. {NOTES.coverage}</p>
-                : <p className="note"><span className="op-badge" data-op="stale">ZIP gap</span> {report.coverageGaps.value.zipRows.gap.says} (snapshot {report.coverageGaps.value.publishedAt}).</p>
+                ? <p className="note">{report.coverageGaps.value.zipRows.value.length} ZIP row(s), snapshot published {formatEastern(report.coverageGaps.value.publishedAt)}. {NOTES.coverage}</p>
+                : <p className="note"><span className="op-badge" data-op="stale">ZIP gap</span> {report.coverageGaps.value.zipRows.gap.says} (snapshot {formatEastern(report.coverageGaps.value.publishedAt)}).</p>
             )}
           </Outcome>
 

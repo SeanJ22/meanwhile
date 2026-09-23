@@ -90,6 +90,24 @@ export interface ReadbackFacts {
   readonly passed: boolean;
 }
 
+/** A source's latest version that changed what readers are served, with its own events. */
+export interface ChangeFacts {
+  readonly scope: string;
+  readonly versionId: string;
+  readonly retrievedAt: string;
+  readonly promotedAt: string | null;
+  readonly validatedAt: string | null;
+  readonly added: number;
+  readonly changed: number;
+  readonly removed: number;
+  readonly held: number;
+  readonly meetingsAdded: number;
+  readonly named: readonly { readonly title: string | null; readonly startsAt: string | null }[];
+  /** Optional: a reading taken before changed meetings were named. */
+  readonly meetingsChanged?: number;
+  readonly changedNamed?: readonly { readonly title: string | null; readonly startsAt: string | null }[];
+}
+
 export interface DayFacts {
   readonly scope: string;
   readonly reads: number;
@@ -109,6 +127,8 @@ export interface BodyStoreFacts {
   readonly attempts: readonly AttemptFacts[];
   readonly readbacks: readonly ReadbackFacts[];
   readonly day: readonly DayFacts[];
+  /** Each source's latest changing version; null (or absent, in a reading taken before it was read) when it was not read. */
+  readonly changes?: readonly ChangeFacts[] | null;
 }
 
 export interface BodyCell {
@@ -213,6 +233,40 @@ export interface BodyView {
   readonly readback: { readonly at: string; readonly passed: boolean } | null;
   /** A ZIP whose readers are served this body, for the public destination. */
   readonly publicZip: string | null;
+  /**
+   * The latest version that changed what readers are served, with its trail:
+   * the source and when it was read, what changed, when it validated and was
+   * promoted, and when the typed Reader first read it back — plus the version
+   * serving readers now, which re-confirmed it when later reads changed
+   * nothing. Null when no change is on record for any of the body's sources,
+   * or the store was read without its changes.
+   */
+  readonly lastChange: {
+    readonly versionId: string;
+    readonly source: string;
+    readonly sourceUrl: string | null;
+    readonly retrievedAt: string;
+    readonly promotedAt: string | null;
+    readonly validatedAt: string | null;
+    readonly added: number;
+    readonly changed: number;
+    readonly removed: number;
+    readonly held: number;
+    readonly meetingsAdded: number;
+    readonly named: readonly { readonly title: string; readonly startsAt: string | null }[];
+    readonly meetingsChanged: number;
+    readonly changedNamed: readonly { readonly title: string; readonly startsAt: string | null }[];
+    /** The first passing readback of that version, else its latest. */
+    readonly readback: { readonly at: string; readonly passed: boolean } | null;
+    /** The version of the same source readers are served now, and its latest readback. */
+    readonly servedNow: {
+      readonly versionId: string;
+      readonly promotedAt: string;
+      readonly readback: { readonly at: string; readonly passed: boolean } | null;
+    } | null;
+  } | null;
+  /** Whether the change history was read at all: false means `lastChange` is unknown, not absent. */
+  readonly changeRead: boolean;
 }
 
 const DAY_MS = 86_400_000;
@@ -333,6 +387,34 @@ function sourceWords(source: string): string {
   return known[s] ?? `${source} source`;
 }
 
+function titled(meetings: readonly { readonly title: string | null; readonly startsAt: string | null }[]): { readonly title: string; readonly startsAt: string | null }[] {
+  return meetings.flatMap((m) => (m.title === null ? [] : [{ title: m.title, startsAt: m.startsAt }]));
+}
+
+function lastChangeOf(c: WatchedContract, f: ChangeFacts, l: Lookups): NonNullable<BodyView["lastChange"]> {
+  const first = l.firstPassByCandidate.get(f.versionId) ?? l.readbackByCandidate.get(f.versionId) ?? null;
+  const now = l.versionByScope.get(c.scope) ?? null;
+  const nowReadback = now ? l.readbackByCandidate.get(now.versionId) ?? null : null;
+  return {
+    versionId: f.versionId,
+    source: sourceWords(c.meetingSource),
+    sourceUrl: c.sourceUrl,
+    retrievedAt: f.retrievedAt,
+    promotedAt: f.promotedAt,
+    validatedAt: f.validatedAt,
+    added: f.added,
+    changed: f.changed,
+    removed: f.removed,
+    held: f.held,
+    meetingsAdded: f.meetingsAdded,
+    named: titled(f.named),
+    meetingsChanged: f.meetingsChanged ?? 0,
+    changedNamed: titled(f.changedNamed ?? []),
+    readback: first ? { at: first.at, passed: first.passed } : null,
+    servedNow: now ? { versionId: now.versionId, promotedAt: now.promotedAt, readback: nowReadback ? { at: nowReadback.at, passed: nowReadback.passed } : null } : null,
+  };
+}
+
 interface BodyGroup {
   readonly bodyId: string;
   readonly contracts: WatchedContract[];
@@ -359,10 +441,15 @@ export function buildBodyViews(input: BodyModelInput): BodyView[] {
   }
   for (const list of attemptsByScope.values()) list.sort((x, y) => ms(y.attemptedAt) - ms(x.attemptedAt));
   const readbackByCandidate = new Map<string, ReadbackFacts>();
+  const firstPassByCandidate = new Map<string, ReadbackFacts>();
   for (const r of input.store.readbacks) {
     const held = readbackByCandidate.get(r.candidateId);
     if (!held || ms(held.at) < ms(r.at)) readbackByCandidate.set(r.candidateId, r);
+    const first = firstPassByCandidate.get(r.candidateId);
+    if (r.passed && (!first || ms(r.at) < ms(first.at))) firstPassByCandidate.set(r.candidateId, r);
   }
+  const changeRead = Array.isArray(input.store.changes);
+  const changeByScope = new Map((input.store.changes ?? []).map((c) => [c.scope, c]));
 
   const groups = new Map<string, BodyGroup>();
   for (const c of input.contracts) {
@@ -371,7 +458,9 @@ export function buildBodyViews(input: BodyModelInput): BodyView[] {
     groups.set(c.bodyId, g);
   }
 
-  const views = [...groups.values()].map((g) => bodyView(g, { versionByScope, dayByScope, attemptsByScope, readbackByCandidate, nowMs, zipOf: input.zipOf ?? (() => null) }));
+  const views = [...groups.values()].map((g) =>
+    bodyView(g, { versionByScope, dayByScope, attemptsByScope, readbackByCandidate, firstPassByCandidate, changeByScope, changeRead, nowMs, zipOf: input.zipOf ?? (() => null) }),
+  );
   const order: Record<BodyStatus, number> = { STUCK: 0, "NEEDS ATTENTION": 1, "NOT READ YET": 2, WORKING: 3 };
   return views.sort((a, b) => order[a.status] - order[b.status] || a.name.localeCompare(b.name));
 }
@@ -382,6 +471,9 @@ interface Lookups {
   readonly zipOf: (ocdId: string | null) => string | null;
   readonly attemptsByScope: ReadonlyMap<string, readonly AttemptFacts[]>;
   readonly readbackByCandidate: ReadonlyMap<string, ReadbackFacts>;
+  readonly firstPassByCandidate: ReadonlyMap<string, ReadbackFacts>;
+  readonly changeByScope: ReadonlyMap<string, ChangeFacts>;
+  readonly changeRead: boolean;
   readonly nowMs: number;
 }
 
@@ -418,6 +510,14 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
           { added: 0, changed: 0, removed: 0, reads: 0, gotIn: 0, changedReads: 0, versions: 0, cannotTell: 0 },
         );
   const readback = version ? l.readbackByCandidate.get(version.versionId) ?? null : null;
+  // Across the body's sources, the newest version that changed something readers are served.
+  const change =
+    g.contracts
+      .flatMap((c) => {
+        const f = l.changeByScope.get(c.scope);
+        return f === undefined ? [] : [{ c, f }];
+      })
+      .sort((a, b) => ms(b.f.retrievedAt) - ms(a.f.retrievedAt))[0] ?? null;
   const name = bodyDisplayName(contract, version);
   const stateCode = stateCodeOf(g.bodyId, contract.ocdId);
 
@@ -658,6 +758,8 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
       : null,
     readback: readback ? { at: readback.at, passed: readback.passed } : null,
     publicZip: l.zipOf(contract.ocdId),
+    lastChange: change === null ? null : lastChangeOf(change.c, change.f, l),
+    changeRead: l.changeRead,
     recovery:
       last === null
         ? "NOT_READ"

@@ -21,6 +21,7 @@
 import { useCallback, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 
+import { formatEastern } from "@/lib/control-plane/eastern-time";
 import type { FleetOperation, FleetOperationsReport } from "@/lib/control-plane/fleet-operations";
 import {
   applyRefresh,
@@ -197,7 +198,7 @@ export function FleetWorkTab({ initialState }: { initialState?: FleetConsumerSta
                   <summary>Sample recovering leases</summary>
                   <ul className="ft-samples">
                     {recovering.slice(0, 3).map((o) => (
-                      <li key={o.workItemId} className="note">{o.subject}{o.lastActivity?.at ? ` · ${o.lastActivity.at}` : ""}</li>
+                      <li key={o.workItemId} className="note">{o.subject}{o.lastActivity?.at ? ` · ${formatEastern(o.lastActivity.at)}` : ""}</li>
                     ))}
                   </ul>
                   {recovering.length > 3 && <p className="note">{recovering.length - 3} more · every one carries an expired lease and a next action of lease reconciliation.</p>}
@@ -332,7 +333,7 @@ function WorkItem({ op, lane, open, onToggle }: {
           )}
           <p className="note" style={{ margin: 0 }}>
             {op.sourceHealth.lastAcquired
-              ? `Source health · last acquired ${op.sourceHealth.lastAcquired.at}, ${op.sourceHealth.lastAcquired.artifactIds.length} artifact(s). ${NOTES.acquisition}`
+              ? `Source health · last acquired ${formatEastern(op.sourceHealth.lastAcquired.at)}, ${op.sourceHealth.lastAcquired.artifactIds.length} artifact(s). ${NOTES.acquisition}`
               : "Source health · no successful acquisition held."}
             {op.sourceHealth.evidenceGaps.length > 0 && ` · ${op.sourceHealth.evidenceGaps.length} evidence gap(s) named.`}
           </p>

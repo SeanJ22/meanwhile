@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { BillingFact } from "@/lib/control-plane/billing-facts.ts";
+import { buildBodyViews, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
 import { FIX_ITEMS, orderByMarks } from "@/lib/control-plane/admin-view/fix-list.ts";
+import { routineDetail } from "@/lib/control-plane/admin-view/work-view.ts";
 import {
   ceilingCards,
   outcomesInScope,
@@ -172,6 +174,78 @@ test("the fix list: unique ids, every item says where it stands and what to chec
   assert.equal(ordered.length, FIX_ITEMS.length);
   assert.equal(ordered[ordered.length - 1].id, "MW-012", "Not now goes last");
   assert.ok(ordered.findIndex((i) => i.id === "MW-011") < ordered.findIndex((i) => i.id === "MW-012"));
+});
+
+test("a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it", () => {
+  // The shape of a real record: Tucson's Commission on Disability Issues gained a meeting on 2026-09-22, and every later read changed nothing.
+  const contract: WatchedContract = {
+    id: "meetings:clerksboards:tucson-cdi",
+    scope: "source:clerksboards:body:tucson-cdi",
+    bodyId: "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues",
+    ocdId: "ocd-division/country:us/state:az/place:tucson",
+    meetingSource: "clerksboards",
+    jurisdiction: "Tucson",
+    publishingOrg: "City of Tucson",
+    sourceUrl: "https://www.tucsonaz.gov/clerks/boards",
+    verifiedAt: null,
+    cadence: { description: "every hour", defaultEveryMs: 3_600_000 },
+    retry: { afterMs: 900_000, description: "fifteen minutes later" },
+  };
+  const CHANGE = "cv-71b8dedc288199322814033059d8efdc";
+  const NOW_SERVING = "cv-afec3ea631973487c7f8119b2563959a";
+  const current: VersionFacts = {
+    scope: contract.scope, versionId: NOW_SERVING, promotedAt: "2026-09-23T15:08:22.614Z", meetings: 7, fresh: 7, carried: 0, docs: 0, noAgendaLink: 0,
+    noAgendaAhead: 0, upcoming: 3, furthestAhead: "2027-01-20T22:30:00.000Z", bodyName: "Commission on Disability Issues", jurisdiction: "Tucson",
+    outcome: "UNCHANGED", added: 0, changed: 0, removed: 0, held: 0,
+  };
+  const store: BodyStoreFacts = {
+    asOf: NOW,
+    versions: [current],
+    attempts: [{ scope: contract.scope, candidateId: NOW_SERVING, state: "PROMOTED", failureCode: null, failureDetail: null, acquisitionSucceeded: true, attemptedAt: "2026-09-23T15:08:22.500Z" }],
+    readbacks: [
+      { candidateId: CHANGE, at: "2026-09-22T00:05:16.603Z", passed: true },
+      { candidateId: CHANGE, at: "2026-09-22T09:00:00.000Z", passed: true },
+      { candidateId: NOW_SERVING, at: "2026-09-23T17:34:17.881Z", passed: true },
+    ],
+    day: [],
+    changes: [{
+      scope: contract.scope, versionId: CHANGE, retrievedAt: "2026-09-22T00:05:14.274Z", promotedAt: "2026-09-22T00:05:14.479Z", validatedAt: "2026-09-22T00:05:14.479Z",
+      added: 1, changed: 0, removed: 0, held: 0, meetingsAdded: 1, named: [{ title: "Commission on Disability Issues", startsAt: "2027-01-20T15:30:00-07:00" }],
+    }],
+  };
+  const trailOf = (facts: BodyStoreFacts) => {
+    const [body] = buildBodyViews({ contracts: [contract], store: facts, nowIso: NOW, zipOf: () => "85701" });
+    const [promoted] = routineDetail(body).promoted;
+    return new Map(promoted.trail);
+  };
+
+  const trail = trailOf(store);
+  assert.equal(trail.get("Source"), "Clerk's board page — https://www.tucsonaz.gov/clerks/boards");
+  assert.equal(trail.get("Retrieved"), "September 21, 8:05 PM ET — the read that found the change");
+  assert.equal(trail.get("What changed"), "1 added, 0 changed, 0 removed (a record is a meeting or one of its agenda documents). New meeting: Commission on Disability Issues, January 20, 2027, 5:30 PM ET");
+  assert.equal(trail.get("Validation"), "Passed September 21, 8:05 PM ET — every applicable check");
+  assert.equal(trail.get("Promoted"), "Version cv-71b8dedc2881… at September 21, 8:05 PM ET");
+  assert.match(trail.get("Public destination") ?? "", /\/\?zip=85701 — its meetings list$/);
+  assert.match(trail.get("Checked") ?? "", /^September 21, 8:05 PM ET, through the reader's own projection/, "checked when the Reader FIRST read the change back");
+  assert.equal(trail.get("Serving now"), "Version cv-afec3ea63197…, promoted September 23, 11:08 AM ET by a later read that changed nothing; read back September 23, 1:34 PM ET");
+
+  // A changed meeting is named too, so "1 changed" says which (Morris County withdrew an agenda on 2026-09-23).
+  const withdrawn = trailOf({
+    ...store,
+    changes: [{ ...store.changes![0], added: 0, changed: 1, meetingsAdded: 0, named: [], meetingsChanged: 1, changedNamed: [{ title: "Board of County Commissioners - Regular Meeting", startsAt: "2026-09-23T19:00:00-04:00" }] }],
+  });
+  assert.equal(withdrawn.get("What changed"), "0 added, 1 changed, 0 removed (a record is a meeting or one of its agenda documents). Changed meeting: Board of County Commissioners - Regular Meeting, September 23, 2026, 7:00 PM ET");
+
+  // With no changing version on record, the trail is the version serving now, as it is — never a borrowed change.
+  const fallback = trailOf({ ...store, changes: [] });
+  assert.equal(fallback.get("What changed"), "Nothing — this version re-confirmed what readers already had");
+  assert.equal(fallback.has("Serving now"), false);
+  assert.equal(fallback.has("Last change"), false, "an empty history that was read is not a failure to read it");
+
+  // A change history that did not answer is said to be unread, never shown as no change.
+  const unread = trailOf({ ...store, changes: null });
+  assert.match(unread.get("Last change") ?? "", /^Not read this time/);
+  assert.equal(unread.get("What changed"), "Nothing — this version re-confirmed what readers already had", "the version serving now is still shown as it is");
 });
 
 test("the scope travels in the URL and an unreadable scope is everywhere, never a guess", () => {

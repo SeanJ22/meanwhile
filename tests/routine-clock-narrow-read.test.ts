@@ -147,33 +147,27 @@ test("the routine clock reads a pointer's identity and proof, never its promoted
 });
 
 test("the routine clock builds its candidate view in Postgres; the payload and read model never leave the database", () => {
-  const query = routineClockCandidateRead(drizzle.mock({ schema }), "cv-example");
-  const select = selectList(query);
+  const select = selectList(routineClockCandidateRead(drizzle.mock({ schema }), "cv-example"));
   assert.doesNotMatch(select, DATASET);
   assert.doesNotMatch(select, /"candidate"(?!\s*(?:->|#>))/, "the whole candidate column is never selected");
   assert.match(select, /jsonb_strip_nulls\(jsonb_build_object\(/);
   for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.top) {
     assert.match(select, new RegExp(`'${field}', "civic_data_candidates"\\."candidate"->'${field}'`));
   }
-  // Success is the pointed candidate's own store-observed first event, in the
-  // attempt clock's units; its claimed retrieval instant is not read at all.
-  assert.doesNotMatch(select, /retrievedAt|retrieved_at/, "the claimed retrieval instant is never the success clock");
-  assert.match(select, /"civic_data_candidate_events"\."at"/);
-  assert.match(
-    query.toSQL().sql,
-    /left join "civic_data_candidate_events" on \("civic_data_candidate_events"\."candidate_id" = "civic_data_candidates"\."id" and "civic_data_candidate_events"\."sequence" = \$\d+\)/,
-  );
-  assert.ok(query.toSQL().params.includes(1), "the joined event is sequence 1");
+  for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval) {
+    assert.match(select, new RegExp(`'${field}', "civic_data_candidates"\\."candidate"#>'\\{retrieval,${field}\\}'`));
+  }
 });
 
 test("the clock view names exactly the fields the clock proves; widening it is a visible cost decision", () => {
   assert.deepEqual(ROUTINE_CLOCK_CANDIDATE_FIELDS, {
     top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
+    retrieval: ["retrievedAt"],
   });
   const view = routineClockCandidateView(candidate("view-shape"));
-  assert.deepEqual(Object.keys(view).sort(), ["id", "recordClass", "scope", "sourceId"]);
+  assert.deepEqual(Object.keys(view).sort(), ["id", "recordClass", "retrieval", "scope", "sourceId"]);
+  assert.deepEqual(view.retrieval, { retrievedAt: "2026-09-08T12:00:00.000Z" });
   assert.doesNotMatch(JSON.stringify(view), /view-shape-\d/, "no dataset row survives the view");
-  assert.doesNotMatch(JSON.stringify(view), /retrievedAt/, "the claimed retrieval instant is not a clock input");
 });
 
 test("both stores' clocks read through the narrowed view, never a whole row", () => {
@@ -193,11 +187,8 @@ test("the narrowed view decides exactly what the whole candidate decides", () =>
   const imported = candidate("clock-imported", {
     bootstrapImport: { kind: "TRUSTED_LKG_IMPORT" } as unknown as RoutineCandidate["bootstrapImport"],
   });
-  // The store observed the acquisition 2.5 s after the adapter's claimed
-  // retrieval; a proven success reports that observation, never the claim.
-  const observedAt = "2026-09-08T12:00:02.500Z";
   const cases: { name: string; record: CandidateVersionRecord; pointer: ReturnType<typeof pointerFor>; expected: string | undefined }[] = [
-    { name: "consistent promotion", record: promoted(base), pointer: pointerFor(base), expected: observedAt },
+    { name: "consistent promotion", record: promoted(base), pointer: pointerFor(base), expected: base.retrieval.retrievedAt },
     { name: "pointer moved on", record: promoted(base), pointer: pointerFor(base, { versionId: "cv-other" }), expected: undefined },
     { name: "pointer from another source", record: promoted(base), pointer: pointerFor(base, { sourceId: "other-source" }), expected: undefined },
     { name: "refused receipt", record: promoted(base, { receipt: receiptFor(base, "FAIL") }), pointer: pointerFor(base), expected: undefined },
@@ -206,15 +197,10 @@ test("the narrowed view decides exactly what the whole candidate decides", () =>
     { name: "trusted LKG import", record: promoted(imported), pointer: pointerFor(imported), expected: undefined },
   ];
   for (const { name, record, pointer, expected } of cases) {
-    const whole = proofConsistentSuccess(record as RoutineClockRecord, pointer as never, observedAt);
+    const whole = proofConsistentSuccess(record as RoutineClockRecord, pointer as never);
     assert.equal(whole, expected, `${name}: whole-candidate decision`);
-    assert.equal(proofConsistentSuccess(narrowed(record), pointer as never, observedAt), whole, `${name}: the narrowed view must decide the same`);
+    assert.equal(proofConsistentSuccess(narrowed(record), pointer as never), whole, `${name}: the narrowed view must decide the same`);
   }
-  assert.equal(
-    proofConsistentSuccess(narrowed(promoted(base)), pointerFor(base) as never, undefined),
-    undefined,
-    "a success with no observed first event reports none, never the claimed retrieval instant",
-  );
   assert.deepEqual(routineClockCandidateView(imported).bootstrapImport, { kind: "TRUSTED_LKG_IMPORT" });
 });
 

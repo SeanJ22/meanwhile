@@ -689,32 +689,6 @@ function recordStates(dataset: Dataset, raw: RawRecord): string[] {
   return unique(tagged);
 }
 
-/**
- * The agenda rows a reader is shown, per sitting: one per distinct content (the newest row carrying it), and no
- * publication-index page once the sitting's own document is held. This is `readerAgendaDocuments`, the one
- * projection /api/agenda, the meeting card and Ask all serve, read once per snapshot.
- */
-const readerShownAgendaIds = new Map<string, ReadonlySet<string>>();
-function readerShownAgendaDocumentIds(dataset: Dataset): ReadonlySet<string> {
-  const key = `${dataset.path}:${dataset.sha256}`;
-  const cached = readerShownAgendaIds.get(key);
-  if (cached) return cached;
-  const value = object(dataset.value);
-  const documents = (Array.isArray(value.agendaDocuments) ? value.agendaDocuments : []) as AgendaDocumentLike[];
-  const meetings = Array.isArray(value.meetings) ? value.meetings : [];
-  const bySitting = new Map<string, AgendaDocumentLike[]>();
-  for (const document of documents) {
-    const meetingId = string(object(document).meetingId);
-    bySitting.set(meetingId, [...(bySitting.get(meetingId) ?? []), document]);
-  }
-  const shown = new Set<string>();
-  for (const held of bySitting.values()) {
-    for (const document of readerAgendaDocuments(held, { documentsAcrossCorpus: documents, meetingsAcrossCorpus: meetings }).documents) shown.add(string(object(document).id));
-  }
-  readerShownAgendaIds.set(key, shown);
-  return shown;
-}
-
 function eligibility(
   dataset: Dataset,
   raw: RawRecord,
@@ -785,7 +759,6 @@ function eligibility(
   }
   if (dataset.family === "identity" && row.outcome && row.outcome !== "RECONCILED") return { state: "IDENTITY_UNRESOLVED", reason: `Canonical reconciliation outcome=${string(row.outcome)}; identity candidates must not be guessed.` };
   if (dataset.family === "meetings" && raw.unit === "agendaDocuments") {
-    if (!readerShownAgendaDocumentIds(dataset).has(string(row.id))) return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: "Held, and not shown on its own: its content is identical to a newer row a reader is shown for this sitting (a re-fetch, not a version), or it is a publication-index page set aside because the sitting's own document is held (readerAgendaDocuments). The stored row remains provenance." };
     if (row.extraction === "failed" || agendaDocumentRepresentation(row as unknown as AgendaDocumentLike) === "UNREADABLE") return { state: "NOT_READER_ELIGIBLE", reason: "The canonical agenda representation classifier found no readable document text. A successful extraction label cannot promote binary document bytes. The raw artifact remains held; the linked meeting, source URL and explicit OURS readability gap remain independently reader eligible." };
     const across = object(dataset.value).agendaDocuments;
     const meetings = object(dataset.value).meetings;
@@ -2792,8 +2765,17 @@ export async function projectCanonicalReaderRecords(
         const meeting = snapshot.meetings.find((meeting) => meeting.id === (record.unit === "meetings" ? raw.id : raw.meetingId));
         if (meeting && !currentMeetingWindow(meeting)) for (const surface of record.unit === "meetings" ? ["meetings", "map"] as const : ["map"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "searchMeetings / CONCLUDED_LOOKBACK_DAYS / UPCOMING_HORIZON_DAYS", reason: `Event ${meeting.id} starts ${meeting.startsAt}, outside the canonical calendar window ${CONCLUDED_LOOKBACK_DAYS} days back / ${UPCOMING_HORIZON_DAYS} days ahead at ${asOf.toISOString()}. This is a current-calendar scope, not unheld data or publisher absence. Held historical records retain applicable dated Ask/agenda obligations.` };
         if (record.unit === "agendaDocuments") {
-          const latest = snapshot.agendaDocuments?.filter((doc) => doc.meetingId === raw.meetingId).sort((a,b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
-          if (latest && latest.id !== raw.id) for (const surface of ["map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: surface === "map" ? "GET /api/agenda newest-first → AgendaDocuments documents[0]" : "canonical meeting evidence → latest held agenda revision", reason: `This is an earlier document revision. The current meeting question selects the latest held revision ${latest.id}; the historical revision remains directly returned by the agenda endpoint and cannot be presented as the current agenda. The map also displays the full version count.` };
+          // What a reader is shown for this sitting is readerAgendaDocuments over the LIVE rows: one row per
+          // distinct content (the newest row carrying it), no publication-index page once the sitting's own
+          // document is held. /api/agenda, the meeting card and Ask all serve exactly that projection.
+          const heldLive = snapshot.agendaDocuments?.filter((doc) => doc.meetingId === raw.meetingId) ?? [];
+          const shown = readerAgendaDocuments(heldLive, { documentsAcrossCorpus: snapshot.agendaDocuments ?? [], meetingsAcrossCorpus: snapshot.meetings }).documents;
+          const latest = shown[0];
+          if (heldLive.some((doc) => doc.id === raw.id) && !shown.some((doc) => doc.id === raw.id)) {
+            // Held live and not shown: an identical re-fetch of a shown row, or an index page set aside. A row
+            // missing from the live rows altogether is NOT excused here; it stays an obligation the proof checks.
+            for (const surface of ["agenda", "map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "readerAgendaDocuments (GET /api/agenda, the meeting card, Ask)", reason: `Held and not shown on its own. Its content is identical to a newer row shown for this sitting (a re-fetch, not a version), or it is a publication-index page set aside because the sitting's own document is held${latest ? `; the sitting shows ${shown.length} distinct document${shown.length === 1 ? "" : "s"}, newest ${latest.id}` : ""}. The stored row remains provenance.` };
+          } else if (latest && latest.id !== raw.id) for (const surface of ["map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: surface === "map" ? "GET /api/agenda newest-first → AgendaDocuments documents[0]" : "canonical meeting evidence → latest shown agenda version", reason: `This is an earlier distinct version. The current meeting question selects the latest shown version ${latest.id}; this version remains directly returned by the agenda endpoint and cannot be presented as the current agenda. The map also displays the distinct version count.` };
         }
       }
       if (record.family === "body-compositions") inputFor(["civic-routing"], "The exact verified legal composition constrains membersOfBody before contact routing. Its member count was checked by this adapter. Contact records are person/office facts rather than an extra legal-composition answer; the composition itself remains a direct map obligation.");

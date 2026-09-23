@@ -225,7 +225,10 @@ export class PromotionBaseChangedError extends Error {
   }
 }
 
-function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCandidate): boolean {
+/** The four fields that name a candidate; a receipt must name exactly these. */
+type RoutineCandidateName = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
+
+function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {
   return receipt.candidateId === candidate.id &&
     receipt.sourceId === candidate.sourceId &&
     receipt.recordClass === candidate.recordClass &&
@@ -236,7 +239,7 @@ function receiptsEqual(left: ValidationReceipt, right: ValidationReceipt): boole
   return canonicalCivicDataJson(left) === canonicalCivicDataJson(right);
 }
 
-function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: RoutineCandidate): boolean {
+function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {
   const parsed = parseValidationReceipt(receipt);
   return parsed !== null && parsed.decision === "GOOD" && receiptNamesCandidate(parsed, candidate);
 }
@@ -524,9 +527,59 @@ interface PromotionPointerProof {
   readonly receipt: ValidationReceipt;
 }
 
+/**
+ * The only candidate fields the routine clock reads. `proofConsistentSuccess`
+ * names the candidate against its pointer and receipt and takes
+ * `retrieval.retrievedAt`; `isTrustedLkgImportCandidate` reads
+ * `bootstrapImport`. The clock never needs a promoted payload, a normalized
+ * payload or a read model. It runs for every routine task on every pass, and
+ * whole-row reads moved every promoted dataset (twice, through the candidate)
+ * across the wire each time: 52.7 MB received per pass against production on
+ * 2026-09-22 (0.75 MB through this view), about 15 GB/day of billed transfer.
+ * Both stores read the clock through this one view, and the Postgres store
+ * builds it server-side, so widening it is a cost decision a reviewer sees,
+ * never a convenience.
+ */
+export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
+  top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
+  retrieval: ["retrievedAt"],
+} as const;
+
+type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport"> & {
+  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt">;
+};
+
+/** A candidate record as the clock sees it: every row field, the candidate narrowed. */
+export type RoutineClockRecord = Omit<CandidateVersionRecord, "candidate"> & {
+  readonly candidate: RoutineClockCandidate;
+};
+
+/** Postgres `jsonb_strip_nulls`: object fields holding null go, recursively; array elements stay. */
+function stripJsonNulls(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripJsonNulls);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(
+    Object.entries(value).flatMap(([key, field]) => (field === null || field === undefined ? [] : [[key, stripJsonNulls(field)]])),
+  );
+}
+
+/**
+ * The in-memory twin of the Postgres clock stub below: the same fields with
+ * the same null handling, so the memory store (the reference every clock test
+ * runs against) decides from exactly what the Postgres clock is sent.
+ */
+export function routineClockCandidateView(candidate: RoutineCandidate): RoutineClockCandidate {
+  const source = candidate as unknown as Readonly<Record<string, unknown>>;
+  const retrieval = (candidate.retrieval ?? {}) as unknown as Readonly<Record<string, unknown>>;
+  return stripJsonNulls({
+    ...Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) => [field, source[field] ?? null])),
+    retrieval: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) => [field, retrieval[field] ?? null])),
+  }) as RoutineClockCandidate;
+}
+
 /** A historical PROMOTED state is not a clock; only the current pointer and its exact proof are. */
-function proofConsistentSuccess(
-  record: CandidateVersionRecord | null | undefined,
+export function proofConsistentSuccess(
+  record: RoutineClockRecord | null | undefined,
   pointer: PromotionPointerProof | null | undefined,
 ): string | undefined {
   const receipt = record?.receipt;
@@ -737,7 +790,11 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     // remain durable without postponing the next source attempt.
     const lastAttemptedAt = attempts[0]?.at;
     const pointer = this.promotions.get(projectionKey(recordClass, scope));
-    const pointedRecord = pointer?.sourceId === sourceId ? this.candidates.get(pointer.versionId) : null;
+    const pointedRow = pointer?.sourceId === sourceId ? this.candidates.get(pointer.versionId) : null;
+    // Decide from exactly the narrowed view the Postgres clock is sent.
+    const pointedRecord: RoutineClockRecord | null = pointedRow
+      ? { ...pointedRow, candidate: routineClockCandidateView(pointedRow.candidate) }
+      : null;
     if (pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
       // The cutover successor is neither an attempt nor a success. Do not let
       // a predecessor's old attempt timestamp postpone the first live read.
@@ -754,6 +811,78 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 function rowToCandidate(row: typeof civicDataCandidates.$inferSelect): CandidateVersionRecord {
   return {
     candidate: row.candidate as RoutineCandidate,
+    state: row.state as CandidateState,
+    acquisitionSucceeded: row.acquisitionSucceeded,
+    receipt: row.validationReceipt as ValidationReceipt | null,
+    promotedVersion: row.promotedVersionId,
+    lastKnownGoodVersion: row.lastKnownGoodVersionId,
+    failureCode: row.failureCode,
+    failureDetail: row.failureDetail,
+  };
+}
+
+const CLOCK_FIELD_NAME = /^[A-Za-z]+$/;
+for (const field of [...ROUTINE_CLOCK_CANDIDATE_FIELDS.top, ...ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval]) {
+  // The names are spliced into SQL as literals, so they stay plain identifiers.
+  if (!CLOCK_FIELD_NAME.test(field)) throw new Error(`ROUTINE_CLOCK_FIELD_INVALID:${field}`);
+}
+
+/**
+ * `routineClockCandidateView`, built by Postgres: the candidate column is read
+ * only through these paths, so its payload and read model never leave the
+ * database. `jsonb_strip_nulls` makes an absent field absent, not null.
+ */
+function routineClockCandidateStub() {
+  const column = civicDataCandidates.candidate;
+  const top = ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) =>
+    sql`${sql.raw(`'${field}'`)}, ${column}->${sql.raw(`'${field}'`)}`);
+  const retrieval = ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) =>
+    sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{retrieval,${field}}'`)}`);
+  return sql`jsonb_strip_nulls(jsonb_build_object(${sql.join(
+    [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`],
+    sql`, `,
+  )}))`.mapWith(civicDataCandidates.candidate);
+}
+
+type RoutineClockDb = Pick<ReturnType<typeof getDb>, "select">;
+
+/** The clock's pointer read: identity and proof, never the promoted payload. */
+export function routineClockPointerRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
+  return db
+    .select({
+      sourceId: civicDataPromotions.sourceId,
+      recordClass: civicDataPromotions.recordClass,
+      scope: civicDataPromotions.scope,
+      currentVersionId: civicDataPromotions.currentVersionId,
+      lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+      validationReceipt: civicDataPromotions.validationReceipt,
+    })
+    .from(civicDataPromotions)
+    .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
+    .limit(1);
+}
+
+/** The clock's pointed-candidate read: every row field, the candidate as its narrowed view. */
+export function routineClockCandidateRead(db: RoutineClockDb, versionId: string) {
+  return db
+    .select({
+      candidate: routineClockCandidateStub(),
+      state: civicDataCandidates.state,
+      acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
+      validationReceipt: civicDataCandidates.validationReceipt,
+      promotedVersionId: civicDataCandidates.promotedVersionId,
+      lastKnownGoodVersionId: civicDataCandidates.lastKnownGoodVersionId,
+      failureCode: civicDataCandidates.failureCode,
+      failureDetail: civicDataCandidates.failureDetail,
+    })
+    .from(civicDataCandidates)
+    .where(eq(civicDataCandidates.id, versionId))
+    .limit(1);
+}
+
+function routineClockRowToRecord(row: Awaited<ReturnType<typeof routineClockCandidateRead>>[number]): RoutineClockRecord {
+  return {
+    candidate: row.candidate as RoutineClockCandidate,
     state: row.state as CandidateState,
     acquisitionSucceeded: row.acquisitionSucceeded,
     receipt: row.validationReceipt as ValidationReceipt | null,
@@ -1192,11 +1321,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ))
       .orderBy(desc(civicDataCandidateEvents.at))
       .limit(1);
-    const pointerQuery = this.db
-      .select()
-      .from(civicDataPromotions)
-      .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
-      .limit(1);
+    // Identity and proof only: a whole-row read here moves every promoted
+    // dataset on every pass (see ROUTINE_CLOCK_CANDIDATE_FIELDS).
+    const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const [rows, pointerRows] = await this.db.batch([attemptQuery, pointerQuery]);
     // The first event is the store-observed attempt clock. A refused
     // candidate's claimed retrievedAt is evidence, never scheduler authority.
@@ -1205,9 +1332,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       : canonicalPostgresRoutineTimestamp(rows[0].attemptedAt, "clock.lastAttemptedAt");
     const pointer = pointerRows[0];
     const [pointedRow] = pointer && pointer.sourceId === sourceId
-      ? await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, pointer.currentVersionId)).limit(1)
+      ? await routineClockCandidateRead(this.db, pointer.currentVersionId)
       : [];
-    const pointedRecord = pointedRow ? rowToCandidate(pointedRow) : null;
+    const pointedRecord = pointedRow ? routineClockRowToRecord(pointedRow) : null;
     if (pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) return {};
     const lastSucceededAt = proofConsistentSuccess(
       pointedRecord,

@@ -104,7 +104,7 @@ export const STATIC_READINESS_REFERENCES: readonly StaticReadinessReference[] = 
   {
     id: "census-gis-geography",
     disposition: "STATIC_VERSIONED_REFERENCE",
-    inputs: ["data/derived/zip-division-ids.json", "data/states/*/geo/cd119-*.geojson"],
+    inputs: ["data/derived/zip-divisions/*.json", "data/states/*/geo/cd119-*.geojson"],
     mayAssertRuntimeFreshness: false,
     mayAssertProductionContractDelivery: false,
     reason: "Adopted geography vintages supply static scope and labels, not source-run or Reader-delivery outcomes.",

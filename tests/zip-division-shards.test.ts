@@ -93,7 +93,8 @@ test("a code resolves to its governments anywhere, and the three-state index's Z
   assert.ok(divisionsOf("03255").includes("ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"));
   assert.ok(divisionsOf("85701").includes("ocd-division/country:us/state:az/place:tucson"));
 
-  const old = JSON.parse(readFileSync(join(ROOT, "data", "derived", "zip-division-ids.json"), "utf8")) as { zips: Record<string, string[]> };
+  // The three-state index this replaced, frozen as the baseline the build also refuses to lose from.
+  const old = JSON.parse(readFileSync(join(ROOT, "tests", "fixtures", "zip-division-ids-three-state.json"), "utf8")) as { zips: Record<string, string[]> };
   for (const [zip, ids] of Object.entries(old.zips)) {
     const now = new Set(divisionsOf(zip));
     for (const id of ids) {

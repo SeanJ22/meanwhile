@@ -11,28 +11,26 @@ import "server-only";
  *                congressional district or metro area overlaps, wholly or in
  *                part — the published Census geography lookup, nothing else
  *   coverage     which governments' territory reaches each ZCTA — the reader's
- *                own ZIP division index (`data/derived/zip-division-ids.json`),
- *                the same file the reader uses to decide what governs a ZIP
+ *                own national ZIP index (`lib/geo/zip-division-index.ts`), the
+ *                same one the reader uses to decide what governs a ZIP
  * ```
  *
- * The index carries the ZCTAs this repository has committed geometry for; a
- * ZCTA outside it is `indexed: false` and the page names it as not yet
- * indexed. It is never shown as a ZCTA with no governments.
+ * The index covers every ZIP code in the country. A ZCTA it does not carry
+ * (the lattice found no land in it), or whose shard cannot be read, is
+ * `indexed: false` and the page names it as not indexed. It is never shown as a
+ * ZCTA with no governments.
  */
-import zipIndex from "@/data/derived/zip-division-ids.json";
 import type { GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
 import { loadPublishedLookupState, type PublishedLookupSource } from "@/lib/census-geography/reader.ts";
+import { zipDivisionEntry } from "@/lib/geo/zip-division-index.ts";
 
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
 
-const INDEX = zipIndex as unknown as {
-  readonly generatedAt: string;
-  readonly zips: Readonly<Record<string, readonly string[]>>;
-  readonly partial?: Readonly<Record<string, readonly string[]>>;
-};
-
-export const ZIP_INDEX_GENERATED_AT: string = INDEX.generatedAt;
-export const ZIP_INDEX_SIZE: number = Object.keys(INDEX.zips).length;
+/** One code's place in the index: every division whose territory reaches it, or not indexed. */
+async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[] }> {
+  const entry = await zipDivisionEntry(zcta5);
+  return entry === null ? { indexed: false, divisions: [] } : { indexed: true, divisions: entry.ids };
+}
 
 export interface ZctaInScope {
   readonly zcta5: string;
@@ -119,18 +117,7 @@ export async function loadContainer(
   if (version === undefined) return unread(`The published lookup carries no ${type.replace(/_/g, " ")} geography yet.`);
   const r = await opened.state.lookup.zctasForGrouping({ type, geoid, version });
   if (r.status.kind !== "OK") return unread(r.status.note);
-  const zctas: ZctaInScope[] = r.overlaps
-    .map((o) => {
-      const divisions = INDEX.zips[o.zcta5];
-      return {
-        zcta5: o.zcta5,
-        whole: o.whole,
-        fraction: o.fraction,
-        indexed: divisions !== undefined,
-        divisions: divisions ?? [],
-      };
-    })
-    .sort((a, b) => a.zcta5.localeCompare(b.zcta5));
+  const zctas = await codesOf(r.overlaps);
   return {
     kind: "HELD",
     source: opened.state.source,
@@ -139,13 +126,9 @@ export async function loadContainer(
   };
 }
 
-function codesOf(overlaps: readonly { readonly zcta5: string; readonly whole: boolean; readonly fraction: number | null }[]): ZctaInScope[] {
-  return overlaps
-    .map((o) => {
-      const divisions = INDEX.zips[o.zcta5];
-      return { zcta5: o.zcta5, whole: o.whole, fraction: o.fraction, indexed: divisions !== undefined, divisions: divisions ?? [] };
-    })
-    .sort((a, b) => a.zcta5.localeCompare(b.zcta5));
+async function codesOf(overlaps: readonly { readonly zcta5: string; readonly whole: boolean; readonly fraction: number | null }[]): Promise<ZctaInScope[]> {
+  const codes = await Promise.all(overlaps.map(async (o) => ({ zcta5: o.zcta5, whole: o.whole, fraction: o.fraction, ...(await indexedCode(o.zcta5)) })));
+  return codes.sort((a, b) => a.zcta5.localeCompare(b.zcta5));
 }
 
 export interface ContainerWithCodes {
@@ -165,7 +148,7 @@ export async function loadContainersWithCodes(stateAbbr: string, type: Geography
   for (const g of refs) {
     const r = await opened.state.lookup.zctasForGrouping({ type: g.type, geoid: g.geoid, version: g.version });
     if (r.status.kind !== "OK") continue;
-    out.push({ geography: g, zctas: codesOf(r.overlaps) });
+    out.push({ geography: g, zctas: await codesOf(r.overlaps) });
   }
   return { kind: "HELD", source: opened.state.source, versionId: opened.state.versionId, value: out };
 }
@@ -188,12 +171,11 @@ export async function membershipsOfCode(zcta5: string, types: readonly Geography
     .filter((m) => types.includes(m.geography.type))
     .map((m) => ({ type: m.geography.type, geoid: m.geography.geoid, label: m.geography.label, whole: m.whole, fraction: m.fraction }))
     .sort((a, b) => a.type.localeCompare(b.type) || a.label.localeCompare(b.label, "en", { numeric: true }));
-  const divisions = INDEX.zips[zcta5];
   return {
     kind: "HELD",
     source: opened.state.source,
     versionId: opened.state.versionId,
-    value: { memberships, code: { zcta5, whole: true, fraction: null, indexed: divisions !== undefined, divisions: divisions ?? [] } },
+    value: { memberships, code: { zcta5, whole: true, fraction: null, ...(await indexedCode(zcta5)) } },
   };
 }
 

@@ -33,7 +33,7 @@ test("Next deployment tracing includes static geography and excludes every migra
     "./data/derived/resolver-geometry.json",
     "./public/geo/*.geojson",
     "./data/derived/zip-coverage-tiers-runtime.json",
-    "./data/derived/zip-division-ids.json",
+    "./data/derived/zip-divisions/*.json",
     "./lib/db/migrations/meta/_journal.json",
   ]) {
     assert.ok(includes.includes(required), `static production input is no longer traced: ${required}`);
@@ -68,6 +68,7 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
   try {
     write(join(root, "data/derived/resolver-geometry.json"), { files: ["public/geo/state-outlines.geojson"] });
     write(join(root, "data/states/az/funding/state-money-az-2026.json"), {});
+    write(join(root, "data/derived/zip-divisions/857.json"), {});
     const contracts = readerTraceRequirements(root);
     const routes = new Map<string, Set<string>>();
     for (const contract of contracts) {

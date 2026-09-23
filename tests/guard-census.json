@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 713,
-    "named": 7050,
+    "files": 714,
+    "named": 7054,
     "dynamic": 27
   },
   "files": {
@@ -9353,6 +9353,8 @@
       "names": [
         "a new state's first acquisition creates a required manifest without a state list edit",
         "a readback update makes a byte-current manifest stale while preserving its observed_at",
+        "a superseded holding leaves current holdings while its frozen bytes stay at a named test baseline",
+        "a superseded label cannot hide a present file, drift from its frozen hash, or lose its baseline or successor",
         "a transitive generator code change invalidates manifests independently of held data",
         "an authority-cutover label cannot hide a present file or drift from its frozen hash and production contract",
         "an exact authority cutover preserves the frozen law-title evidence but removes the dead Git path from current holdings",
@@ -10580,6 +10582,13 @@
         "clearing the radius limiter leaves unrelated filters alone",
         "enabling the radius limiter keeps the widened results on screen",
         "every target zip survives the client filter with default state"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-division-shards.test.ts": {
+      "names": [
+        "a code resolves to its governments anywhere, and the three-state index's ZIPs keep what the committed geometry carries",
+        "every ZIP the national lattice sampled is in exactly its ZIP3 shard, and every shard is what the index says"
       ],
       "dynamic": 0
     },

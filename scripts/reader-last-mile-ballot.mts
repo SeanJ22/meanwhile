@@ -9,6 +9,7 @@ import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt } from "../lib/registry/server.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { readAllZipDivisions } from "../lib/geo/zip-division-index.ts";
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
 import { provisionsForContest } from "../lib/ballot/measure-provisions.ts";
@@ -31,10 +32,12 @@ assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
 const requestedStates = process.env.READER_BALLOT_STATES?.split(",").map((state) => state.trim()).filter(Boolean);
 await prepareReaderProofRuntime();
 const sets = await Promise.all(BALLOT_SOURCES.filter(({ state }) => !requestedStates?.length || requestedStates.includes(state)).map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
-const zipIndex = JSON.parse(readFileSync("data/derived/zip-division-ids.json", "utf8")) as { zips: Record<string, string[]> };
+// Every indexed ZIP that reaches a ballot state: a ZIP reaching none of them cannot match any contest or absence here.
+const ballotStates = sets.map(({ state }) => `/state:${state}`);
+const indexedZips = [...readAllZipDivisions(process.cwd())].filter(([, entry]) => entry.ids.some((id) => ballotStates.some((st) => id.includes(st)))).map(([zip]) => zip);
 type BallotPlan = { zip: string; state: typeof sets[number]["state"]; set: typeof sets[number]["set"] } & ReturnType<typeof contestsForDivisions>;
 const plans: BallotPlan[] = [];
-for (const zip of [...new Set(["85701", "85641", "07866", "03255", ...Object.keys(zipIndex.zips)])].sort()) {
+for (const zip of [...new Set(["85701", "85641", "07866", "03255", ...indexedZips])].sort()) {
   const point = resolveZip(zip); if (!point.ok) continue;
   const divisions = await divisionIdsForZipArea(zip, (await divisionsAt(point.centroid.lat, point.centroid.lng)).map((division) => division.ocdId));
   for (const { state, set } of sets) {
@@ -58,10 +61,10 @@ while (remaining.size) {
   chosen.push(best.plan);
   planIds(best.plan).forEach(id => remaining.delete(id));
 }
-const planEvidence = { rule: "Deterministic ZIP set cover from committed ZIP/division geometry, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.", contests: targets.size, sourcedAbsences: absenceTargets.size, chosen: chosen.map(({ zip, state, contests, absences }) => ({ zip, state, contestIds: contests.map((contest) => contest.id), absenceOcdIds: absences.map(absence => absence.ocdId) })), unresolvedContestIds: [...remaining].filter(id => !id.startsWith("absence:")).sort(), unresolvedAbsenceIds: [...remaining].filter(id => id.startsWith("absence:")).sort() };
+const planEvidence = { rule: "Deterministic ZIP set cover over every ZIP the national ZIP index gives a division of a ballot state, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.", contests: targets.size, sourcedAbsences: absenceTargets.size, chosen: chosen.map(({ zip, state, contests, absences }) => ({ zip, state, contestIds: contests.map((contest) => contest.id), absenceOcdIds: absences.map(absence => absence.ocdId) })), unresolvedContestIds: [...remaining].filter(id => !id.startsWith("absence:")).sort(), unresolvedAbsenceIds: [...remaining].filter(id => id.startsWith("absence:")).sort() };
 writeFileSync(planOutputPath, JSON.stringify(planEvidence, null, 2) + "\n");
 if (process.argv.includes("--plan-only")) { console.log(JSON.stringify(planEvidence, null, 2)); process.exit(remaining.size ? 1 : 0); }
-assert.equal(remaining.size, 0, `Held current contests cannot reach any committed ZIP: ${[...remaining].join(", ")}`);
+assert.equal(remaining.size, 0, `Held current contests cannot reach any indexed ZIP: ${[...remaining].join(", ")}`);
 const browser = await launchGuarded({ label: "reader-last-mile-all-ballots" });
 const context = await browser.context({ viewport: { width: 1440, height: 1000 } });
 const page = await context.newPage();

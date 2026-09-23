@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 
 export interface ReaderTraceRequirement { route: string; loader: string; files: string[] }
@@ -12,9 +12,13 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
     "data/states/az/geo/body-territories.geojson",
   ])];
   if (geometry.files.length === 0) throw new Error("Reader trace denominator is empty");
+  // The national ZIP index is read one shard per request, and any ZIP can be asked for, so every shard must be traced.
+  const shardDir = join(root, "data", "derived", "zip-divisions");
+  const zipShards = readdirSync(shardDir).filter((f) => /^\d{3}\.json$/.test(f)).sort().map((f) => `data/derived/zip-divisions/${f}`);
+  if (zipShards.length === 0) throw new Error("Reader trace denominator is empty: no ZIP index shard");
   const zipArea = [
     "data/derived/zip-coverage-tiers-runtime.json",
-    "data/derived/zip-division-ids.json",
+    ...zipShards,
   ];
   return [
     ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),

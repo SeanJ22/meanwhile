@@ -30,38 +30,14 @@
  *
  * The union starts from the point-resolved divisions, so nothing a reader saw
  * yesterday can disappear today — the failed-fetch-empties-a-full-surface rule,
- * applied to a resolver change. A zip absent from the index (outside the
- * committed geometry) falls back to exactly the previous behaviour.
+ * applied to a resolver change. A zip absent from the index, or whose shard
+ * cannot be read (OUR gap), falls back to exactly the previous behaviour.
+ *
+ * The index is national (`lib/geo/zip-division-index.ts`, 2026-09-23): every
+ * ZIP code in the country, read one small shard at a time.
  */
 
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-
-type Index = {
-  scope: string;
-  zips: Record<string, string[]>;
-};
-
-let cache: Promise<Index | null> | null = null;
-
-async function index(): Promise<Index | null> {
-  cache ??= readFile(
-    join(process.cwd(), "data", "derived", "zip-division-ids.json"),
-    "utf8",
-  )
-    .then((text) => JSON.parse(text) as Index)
-    .catch(() => {
-      /*
-       * A missing or unreadable index is OUR gap and must degrade to the
-       * previous behaviour rather than to an empty ballot. The cache is cleared
-       * so a transient failure does not become permanent for the process — the
-       * same reasoning as `lib/registry/server.ts`.
-       */
-      cache = null;
-      return null;
-    });
-  return cache;
-}
+import { zipDivisionEntry } from "../geo/zip-division-index.ts";
 
 /**
  * Every division whose territory reaches inside this zip, unioned with the
@@ -76,7 +52,7 @@ export async function divisionIdsForZipArea(
 ): Promise<string[]> {
   const out = new Set(pointDivisionIds);
   if (!zip || !/^\d{5}$/.test(zip)) return [...out];
-  const idx = await index();
-  for (const id of idx?.zips[zip] ?? []) out.add(id);
+  const entry = await zipDivisionEntry(zip);
+  for (const id of entry?.ids ?? []) out.add(id);
   return [...out];
 }

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { BillingFact } from "@/lib/control-plane/billing-facts.ts";
-import { buildBodyViews, nowFigures, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
+import { buildBodyViews, nowFigures, type BodyStoreFacts, type PublicZip, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
 import { lateWords, sharedRead } from "@/app/(admin)/_mw/data/shared-read.ts";
 import { FIX_ITEMS, orderByMarks } from "@/lib/control-plane/admin-view/fix-list.ts";
 import { routineDetail } from "@/lib/control-plane/admin-view/work-view.ts";
@@ -214,11 +214,15 @@ test("a routine assignment's trail follows the version that changed what readers
       added: 1, changed: 0, removed: 0, held: 0, meetingsAdded: 1, named: [{ title: "Commission on Disability Issues", startsAt: "2027-01-20T15:30:00-07:00" }],
     }],
   };
-  const trailOf = (facts: BodyStoreFacts) => {
-    const [body] = buildBodyViews({ contracts: [contract], store: facts, nowIso: NOW, zipOf: () => "85701" });
+  const trailOf = (facts: BodyStoreFacts, where: PublicZip = { kind: "ZIP", zip: "85701" }) => {
+    const [body] = buildBodyViews({ contracts: [contract], store: facts, nowIso: NOW, zipOf: () => where });
     const [promoted] = routineDetail(body).promoted;
     return new Map(promoted.trail);
   };
+
+  // A division the index carries no ZIP for, and an index that did not answer, are different sentences.
+  assert.equal(trailOf(store, { kind: "NONE" }).get("Public destination"), "No indexed ZIP carries this body's division, so no page is named");
+  assert.equal(trailOf(store, { kind: "UNREAD" }).get("Public destination"), "The ZIP index was not read this time, so no page is named");
 
   const trail = trailOf(store);
   assert.equal(trail.get("Source"), "Clerk's board page — https://www.tucsonaz.gov/clerks/boards");

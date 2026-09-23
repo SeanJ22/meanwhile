@@ -9,6 +9,7 @@
   "divisionReferences": 107067,
   "edges": 272526,
   "edgesWithNoOcdId": {},
+  "zipsWithAPartialDivision": 26734,
   "zipsWithNoCountyEdge": 0,
   "collisions": 278,
   "committedIdsKept": 16,

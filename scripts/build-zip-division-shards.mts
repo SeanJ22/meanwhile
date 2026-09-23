@@ -7,10 +7,11 @@
  * able to track and keep up everywhere, not just a small subset", and adding
  * one must not be a code change.
  *
- * `data/derived/zip-division-ids.json` names a government for a ZIP only when
- * this repository has committed that government's polygon, and the committed
- * geometry is clipped to three states' pilot counties — so it holds 279 ZIPs.
- * The national inputs already exist: `zip-governments.json` places all 33,791
+ * The index it replaced (kept as the frozen baseline
+ * `tests/fixtures/zip-division-ids-three-state.json`) named a government for a
+ * ZIP only when this repository had committed that government's polygon, and
+ * the committed geometry is clipped to three states' pilot counties — so it
+ * held 279 ZIPs. The national inputs already exist: `zip-governments.json` places all 33,791
  * ZCTAs against every county, place, county subdivision and school district in
  * the country (`pnpm zipgov:build`). What was missing is each government's OCD
  * id without a committed polygon, and that comes from the Census names with the
@@ -43,15 +44,12 @@
  * shard is a few kilobytes. A ZCTA's states come from its county edges, so a
  * code that crosses a state line is listed under each state it reaches.
  *
- * The old file is left byte-identical and its readers move separately: the
- * reader's in a reader batch with its own proof (RULING 257).
- *
  * Two assertions, and the build refuses on either: no two governments share an
  * id (bar the one shared id the committed geometry already holds, carried and
- * printed rather than created), and no ZIP in the old index loses a division
- * (or a partial marking) that the committed geometry still carries. An id the
- * old index kept after the geometry re-minted it is stale there, and printed as
- * corrected.
+ * printed rather than created), and no ZIP loses a division (or a partial
+ * marking) that the committed geometry still carries — measured against the
+ * three-state baseline and against the previous build. An id the baseline kept
+ * after the geometry re-minted it is stale there, and printed as corrected.
  *
  * Measured 2026-09-23: 33,791 ZIPs in 896 shards (~9.7 MB), 85,541 governments,
  * every edge given an id; 278 name collisions, 16 of whose committed sides kept
@@ -65,6 +63,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { basename, join } from "node:path";
 
 import { readBoundaryAttributes } from "../lib/geo/shapefile.ts";
+import { readAllZipDivisions, type ZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import { geometryFiles } from "../lib/holdings/files.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { countyIdentity, placeIdentity, schoolIdentity, subdivisionIdentity, type DivisionIdentity } from "../lib/ocd/divisions.ts";
@@ -214,36 +213,45 @@ for (const [zip, list] of Object.entries(zipGov.zips)) {
   byShard.set(shard, map);
 }
 
-/* ------------------------------------------------------------ no ZIP loses what the old index gave it */
-const old = JSON.parse(readFileSync(join(ROOT, "data", "derived", "zip-division-ids.json"), "utf8")) as {
+/* ------------------------------------------------------------ no ZIP loses what an earlier index gave it */
+const baseline = JSON.parse(readFileSync(join(ROOT, "tests", "fixtures", "zip-division-ids-three-state.json"), "utf8")) as {
   zips: Record<string, string[]>;
   partial: Record<string, string[]>;
 };
+// The previous build, when there is one: a rebuild may add, and may never drop, a committed id.
+const previous = existsSync(join(OUT, "index.json")) ? readAllZipDivisions(ROOT) : new Map<string, ZipDivisionEntry>();
 /*
- * An id in the old index that the committed geometry no longer carries is the
- * old index being stale, not a loss: New Jersey's two Washington Township
+ * An id the baseline carries that the committed geometry no longer does is the
+ * baseline being stale, not a loss: New Jersey's two Washington Township
  * school districts were re-minted with their GEOID suffixes (and the registry's
- * bodies follow the suffixed ids) while the old index kept the bare one, which
- * joins to no body. Those are printed as corrected; losing an id the committed
- * geometry still carries refuses the build.
+ * bodies follow the suffixed ids) while the three-state index kept the bare
+ * one, which joins to no body. Those are printed as corrected. Losing an id the
+ * committed geometry still carries refuses the build, against either the
+ * baseline or the previous build; an id only the national layers minted may
+ * change with a new Census vintage, and is counted.
  */
 const committedIds = new Set(pinned.values());
 const losses: string[] = [];
 const corrected = new Set<string>();
-for (const [zip, oldIds] of Object.entries(old.zips)) {
+let changedSincePrevious = 0;
+function compare(zip: string, before: readonly string[], beforePartial: readonly string[], fromBaseline: boolean): void {
   const now = byShard.get(zip.slice(0, 3))?.get(zip);
   const ids = new Set(now?.ids ?? []);
   const partial = new Set(now?.partial ?? []);
-  for (const id of oldIds) {
+  for (const id of before) {
     if (ids.has(id)) continue;
     if (committedIds.has(id)) losses.push(`${zip} loses ${id}`);
-    else corrected.add(id);
+    else if (fromBaseline) corrected.add(id);
+    else changedSincePrevious++;
   }
-  for (const id of old.partial[zip] ?? []) if (!partial.has(id) && committedIds.has(id)) losses.push(`${zip} no longer marks ${id} partial`);
+  for (const id of beforePartial) if (!partial.has(id) && committedIds.has(id)) losses.push(`${zip} no longer marks ${id} partial`);
 }
+for (const [zip, ids] of Object.entries(baseline.zips)) compare(zip, ids, baseline.partial[zip] ?? [], true);
+for (const [zip, e] of previous) compare(zip, e.ids, e.partial, false);
 if (losses.length > 0) {
-  throw new Error(`${losses.length} division(s) the old index gives a ZIP would be lost:\n  ${losses.slice(0, 20).join("\n  ")}`);
+  throw new Error(`${losses.length} division(s) an earlier index gives a ZIP would be lost:\n  ${losses.slice(0, 20).join("\n  ")}`);
 }
+if (changedSincePrevious > 0) console.log(`  ${changedSincePrevious} national-layer id(s) a ZIP carried in the previous build are not carried now (a new Census vintage renames or re-draws them).`);
 
 /* ------------------------------------------------------------ write */
 if (existsSync(OUT)) for (const f of readdirSync(OUT)) if (f.endsWith(".json")) rmSync(join(OUT, f));
@@ -287,6 +295,7 @@ writeFileSync(
         divisionReferences: divisionsWritten,
         edges,
         edgesWithNoOcdId: unmappedByLayer,
+        zipsWithAPartialDivision: [...byShard.values()].reduce((n, zips) => n + [...zips.values()].filter((z) => z.partial.length > 0).length, 0),
         zipsWithNoCountyEdge: noCountyEdge,
         collisions: collisions.length,
         committedIdsKept: pinnedKept,
@@ -294,7 +303,7 @@ writeFileSync(
       },
       /** Committed ids that already name more than one government, carried as committed rather than renamed. */
       inheritedSharedIds: Object.fromEntries([...inheritedCollapses].map(([id, holders]) => [id, [...holders].sort()])),
-      /** Ids the old three-state index carried that the committed geometry no longer does: stale there, corrected here. */
+      /** Ids the three-state baseline carried that the committed geometry no longer does: stale there, corrected here. */
       staleInTheOldIndex: [...corrected].sort(),
       shards: index,
       statesToShards,
@@ -311,5 +320,5 @@ console.log(`name collisions: ${collisions.length} (committed sides kept: ${pinn
 for (const c of collisions.filter((c) => /state:(az|nh|nj)\//.test(c)).slice(0, 25)) console.log(`  ${c}`);
 for (const [id, holders] of inheritedCollapses) console.log(`INHERITED shared id (committed geometry, not created here): ${id} names ${[...holders].join(" and ")}`);
 if (pinsNotNational.length > 0) console.log(`committed ids with no row in the 2023 national layers (a vintage difference, kept out rather than guessed): ${pinsNotNational.join(", ")}`);
-console.log(`ZIPs written: ${zipsWritten} in ${Object.keys(index).length} shards; the old index's ${Object.keys(old.zips).length} ZIPs keep every committed division they had; stale ids corrected: ${[...corrected].join(", ") || "none"}`);
+console.log(`ZIPs written: ${zipsWritten} in ${Object.keys(index).length} shards; the baseline's ${Object.keys(baseline.zips).length} ZIPs and the previous build's ${previous.size} keep every committed division they had; stale ids corrected: ${[...corrected].join(", ") || "none"}`);
 console.log(`edges with no id: ${JSON.stringify(unmappedByLayer)}; ZIPs with no county edge: ${noCountyEdge}`);

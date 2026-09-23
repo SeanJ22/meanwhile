@@ -61,7 +61,7 @@ const nextConfig: NextConfig = {
       // the tracer cannot see it; untraced, the widening silently does nothing
       // in production and the card goes back to naming one of the two — a
       // regression that looks exactly like honest missing data.
-      "./data/derived/zip-division-ids.json",
+      "./data/derived/zip-divisions/*.json",
     ],
     /*
      * THE LEDGER IS READ THROUGH `process.cwd()`, WHICH NEXT CANNOT SEE.
@@ -88,12 +88,12 @@ const nextConfig: NextConfig = {
      */
     "/ballot": [
       "./data/derived/zip-coverage-tiers-runtime.json",
-      // A ZIP IS AN AREA (NJ01). Built by `pnpm zip:divisions`, read through
+      // A ZIP IS AN AREA (NJ01). The national index, one shard per ZIP3, built by `pnpm zip:divisions` and read through
       // `process.cwd()`, so the tracer cannot see it. Absent from the deploy,
       // the ballot silently narrows back to the centroid answer and Rockaway
       // Borough disappears again — a regression that looks exactly like
       // honest missing data, which is why it is named per route.
-      "./data/derived/zip-division-ids.json",
+      "./data/derived/zip-divisions/*.json",
     ],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
@@ -113,8 +113,14 @@ const nextConfig: NextConfig = {
     "/api/ask/grounded": [
       ...staticGeographyTrace,
       "./data/derived/zip-coverage-tiers-runtime.json",
-      "./data/derived/zip-division-ids.json",
+      "./data/derived/zip-divisions/*.json",
     ],
+    // Admin places registered bodies on ZIP codes with the same national
+    // index (`app/(admin)/_mw/data/geography.ts`, `load-bodies.ts`), read one
+    // shard at a time through process.cwd().
+    "/admin/**": ["./data/derived/zip-divisions/*.json"],
+    "/readiness/**": ["./data/derived/zip-divisions/*.json"],
+    "/api/admin/geography-preview": ["./data/derived/zip-divisions/*.json"],
   },
   // The demo is unlisted. Platform-level visibility is the access control;
   // this keeps every route out of search indexes regardless of what a crawler

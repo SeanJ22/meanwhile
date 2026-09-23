@@ -298,9 +298,14 @@ export interface RoutineChangeSet {
  * Exact authority for removing one previously promoted record from an
  * incomplete candidate horizon. This is deliberately narrow: today only a
  * meeting (or one of its attached agenda-document versions) may age out of
- * the registered Reader serving window without a complete-universe claim.
+ * the registered Reader serving window without a complete-universe claim, or
+ * be replaced by the occurrence record that now holds its exact fact.
  */
-export interface RoutineRemovalEvidence {
+export type RoutineRemovalEvidence =
+  | ServingWindowRemovalEvidence
+  | OccurrenceSupersessionRemovalEvidence;
+
+export interface ServingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "OUTSIDE_REGISTERED_SERVING_WINDOW";
@@ -309,6 +314,27 @@ export interface RoutineRemovalEvidence {
   /** Inclusive registered window used by the acquisition/Reader. */
   readonly lowerBound: string;
   readonly upperBound: string;
+  /** The previously promoted meeting's exact `startsAt`. */
+  readonly priorStartsAt: string;
+  /** Required only for an agenda document; names its exact removed meeting. */
+  readonly parentMeetingKey?: string;
+}
+
+/**
+ * A recurring series' single `UID`-keyed record, replaced by the occurrence
+ * record that holds the same fact (2026-09-23; see `supersedesSeriesRecord` in
+ * lib/sources/event-identity.ts). The validator re-derives every clause from
+ * the candidate itself: the successor must be a fresh member of this candidate,
+ * an occurrence of exactly the removed series id, for the same body, at the
+ * removed record's start or in its slot. An agenda document attached to the
+ * removed record inherits this authority from it, never on its own.
+ */
+export interface OccurrenceSupersessionRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
+  readonly key: string;
+  readonly code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY";
+  /** `meeting:<series id>/<slot>`, a fresh member of the same candidate. */
+  readonly successorKey: string;
   /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;
   /** Required only for an agenda document; names its exact removed meeting. */

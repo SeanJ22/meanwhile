@@ -58,6 +58,7 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
+import { supersedesSeriesRecord } from "../lib/sources/event-identity.ts";
 import {
   STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
   buildCompositeSource,
@@ -547,9 +548,19 @@ export interface SuccessfulMeetingPartitionReconciliation {
  *
  * A successful response is still an OPEN fact set. Omission therefore cannot
  * delete an in-window fact: the prior row remains, visibly marked as carried.
- * The sole removal authority is an exact prior start outside the same
- * registered serving window used for acquisition and Reader delivery. Agenda
- * documents inherit that authority only from their exact removed meeting.
+ * A prior row is removed on one of two authorities, and on nothing else: an
+ * exact prior start outside the same registered serving window used for
+ * acquisition and Reader delivery, or a fresh occurrence record of the same
+ * recurring series that now holds the prior row's exact fact (2026-09-23,
+ * `supersedesSeriesRecord`). Agenda documents inherit either authority only
+ * from their exact removed meeting.
+ *
+ * The second authority exists for one transition. Until 2026-09-23 every
+ * sitting of an iCalendar series shared the series' `UID`-only id; each series
+ * now yields one record per sitting. Without it, the first read under the new
+ * identity would carry the old record forward beside the occurrence that
+ * replaced it, and a reader would see that sitting twice until it aged out of
+ * the window.
  */
 export function reconcileSuccessfulMeetingPartition(input: {
   readonly sourceName: string;
@@ -590,6 +601,27 @@ export function reconcileSuccessfulMeetingPartition(input: {
           windowContract: window.contract,
           lowerBound,
           upperBound,
+          priorStartsAt: prior.startsAt,
+          parentMeetingKey: meetingKey,
+        });
+      }
+      continue;
+    }
+    const successor = input.freshMeetings.find((fresh) => supersedesSeriesRecord(prior, fresh));
+    if (successor) {
+      const meetingKey = `meeting:${prior.id}`;
+      const successorKey = `meeting:${successor.id}`;
+      removalEvidence.push({
+        key: meetingKey,
+        code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+        successorKey,
+        priorStartsAt: prior.startsAt,
+      });
+      if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
+        removalEvidence.push({
+          key: agendaDocumentRecordKey({ meetingId: prior.id }),
+          code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+          successorKey,
           priorStartsAt: prior.startsAt,
           parentMeetingKey: meetingKey,
         });

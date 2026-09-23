@@ -189,6 +189,7 @@ import {
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
 import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.ts";
+import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/promotion/window.ts";
 
 /* Before anything connects: a per-address connect window that fits this host,
    for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
@@ -1545,12 +1546,65 @@ async function windowDecision(): Promise<{ readonly run: boolean; readonly trigg
   }
 }
 
+/**
+ * True unless the OS answers that no process has this pid (ESRCH). A live
+ * pid, a reused one, or one whose existence cannot be read counts as existing,
+ * so it keeps any lease it holds.
+ */
+function processExists(pid: number): boolean {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code !== "ESRCH";
+  }
+}
+
+/**
+ * Before a research cycle or the nightly window, release a window lease that
+ * a process on this host left behind when it exited without its `finally`
+ * (window.ts `releaseWindowLeaseOfExitedLocalHolder`). (2026-09-23.) Without
+ * this, a runner relaunched after a native crash had its first cycle refused
+ * for the rest of the dead cycle's TTL. Best effort: an unreadable store
+ * leaves the child's own acquisition to decide, exactly as before. Returns the
+ * line the digest carries when a lease was released.
+ */
+async function recoverExitedWindowHolder(before: string): Promise<string | null> {
+  let repos: ControlPlaneRepositories | null;
+  try {
+    repos = await ownerRepositories();
+  } catch {
+    return null;
+  }
+  if (repos === null) return null;
+  try {
+    const outcome = await releaseWindowLeaseOfExitedLocalHolder(repos, {
+      host: hostname(),
+      now: new Date().toISOString(),
+      processExists,
+    });
+    if (outcome.state !== "RELEASED") return null;
+    const line =
+      `released the window lease that exited process ${outcome.holder} left behind (it would have held until ` +
+      `${outcome.expiresAt}), before the ${before}`;
+    console.log(`  ${line}`);
+    return line;
+  } catch (error) {
+    console.error(
+      `  the window lease could not be checked before the ${before} (${error instanceof Error ? error.message : String(error)}); ` +
+        "the child's own acquisition decides",
+    );
+    return null;
+  }
+}
+
 async function runNightlyWindow(trigger: string): Promise<void> {
   const startedAt = new Date().toISOString();
   if (scheduledBlackoutAt(startedAt)) {
     console.log("\npilot-runner · SCHEDULED BLACKOUT — nightly window refused before process launch");
     return;
   }
+  await recoverExitedWindowHolder("nightly window");
   console.log(`\npilot-runner · nightly window (${trigger}) started ${startedAt} — SHADOW`);
   const [run] = await runBoundedChildPass([{
     id: "nightly-research-window",
@@ -1654,6 +1708,7 @@ while (cycle < CYCLES) {
   const startedAt = new Date().toISOString();
   console.log(`\npilot-runner · cycle ${cycle} started ${startedAt}`);
 
+  const leaseRecovered = await recoverExitedWindowHolder("research cycle");
   const result = await runOneCycle();
   if (result.circuit) {
     const c = result.circuit;
@@ -1758,7 +1813,8 @@ while (cycle < CYCLES) {
     );
   }
 
-  const delivered = deliver(buildDigest(record, cycle, today(), result.ok) + failureSection, headline);
+  const beforeSection = leaseRecovered === null ? "" : `\n## BEFORE THE CYCLE\n\n- ${leaseRecovered}\n`;
+  const delivered = deliver(buildDigest(record, cycle, today(), result.ok) + beforeSection + failureSection, headline);
   console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
   console.log(`  ${headline}`);
 

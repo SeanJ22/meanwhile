@@ -51,10 +51,13 @@ import type { ControlPlaneRepositories } from "../lib/control-plane/repository/t
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { dispatchOne, sweepExpiredLeases, type RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
 import {
+  closeSettledOccurrence,
+  findSettledOccurrences,
   loadDebts,
   openOccurrence,
   persistDebts,
   resumeOpenOccurrence,
+  settledRouteTaskIds,
   standing,
 } from "../lib/control-plane/scheduler/durable.ts";
 import {
@@ -65,7 +68,12 @@ import {
 } from "../lib/control-plane/scheduler/obligation.ts";
 import { stageOne } from "../lib/control-plane/scheduler/promotion-tail.ts";
 import type { RouteDescriptor } from "../lib/control-plane/scheduler/registry.ts";
-import { closeCycleOccurrences, digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import {
+  closeCycleOccurrences,
+  digestLines,
+  runCycle,
+  type ResearchLanes,
+} from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { advanceHeldWorkerFleet, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {
@@ -219,17 +227,30 @@ const neverRuns: RunWork = async () => {
 /**
  * One cycle as the standing runner runs it: occurrences resumed or opened in
  * step with dispatch (scripts/freshness-shadow.mts `openOccurrenceInStep`), then
- * closed by `closeCycleOccurrences` and the debt persisted.
+ * closed by `closeCycleOccurrences` and the debt persisted. `scan` runs the
+ * runner's pre-dispatch scan (`findSettledOccurrences` from a RouteTask
+ * listing); without it, only a lane that reaches a row recovers it.
  */
-async function cycleAt(repos: ControlPlaneRepositories, now: string, run: RunWork = neverRuns) {
+async function cycleAt(
+  repos: ControlPlaneRepositories,
+  now: string,
+  run: RunWork = neverRuns,
+  options: { readonly scan?: boolean; readonly maxDispatches?: number; readonly research?: ResearchLanes } = {},
+) {
   const rows = (await repos.obligations.list()).map((row) => row.value);
   const open = new Map<string, { id: string; routeTaskId: string }>();
   let ran = 0;
+  const settledOccurrences = options.scan
+    ? await findSettledOccurrences(repos, { obligations: rows, settledRouteTaskIds: settledRouteTaskIds(await repos.routeTasks.list()) })
+    : undefined;
   const cycle = await runCycle({
     repos,
     obligations: rows,
     debts: await loadDebts(repos),
     routeTaskFor: (id) => open.get(id)?.routeTaskId ?? null,
+    ...(settledOccurrences !== undefined ? { settledOccurrences } : {}),
+    ...(options.maxDispatches !== undefined ? { maxDispatches: options.maxDispatches } : {}),
+    ...(options.research !== undefined ? { research: options.research } : {}),
     openOccurrence: async (row) => {
       const held = rows.find((o) => o.id === row.obligation.id)!;
       const resumed = await resumeOpenOccurrence(repos, held);
@@ -778,5 +799,142 @@ test("an aborted or interrupted occurrence is still resumed and dispatched, and 
     }
     assert.equal((await repos.occurrences.mustRead(aborted.occurrenceId)).value.disposition, "WALKED_NO_YIELD");
     assert.equal((await repos.occurrences.mustRead(killed.occurrence.id)).value.disposition, "WALKED_NO_YIELD");
+  }
+});
+
+/** A Scout lane that admits nothing, like production's while no delivery path is open. */
+function closedScoutLane(modelIds: ReadonlySet<string>): ResearchLanes {
+  return {
+    decide: (row) =>
+      modelIds.has(row.obligation.id)
+        ? { kind: "BOUNDED_MODEL_WORKER", why: "fixture model row", disagreement: null }
+        : { kind: "DETERMINISTIC", why: "fixture deterministic row", disagreement: null },
+    admitScout: () => ({ admit: false, code: "LANE_DISABLED", why: "the fixture Scout lane is closed" }),
+    modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: neverRuns },
+    maxConcurrentScouts: 2,
+    scoutLeaseTtlMs: TTL,
+    scoutWallMs: 60_000,
+  };
+}
+
+test("BEFORE DISPATCH: every settled occurrence is recovered with no dispatch capacity at all (a zero ceiling, a debt backoff, a closed Scout lane) and nothing is walked", async () => {
+  for (const [label, repos] of await eachStore()) {
+    const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
+    const fixtures = {
+      "ob-ingested": await interrupted(repos, obligation("ob-ingested"), ingests(vaultRoot, "https://example.gov/feed.json", '{"rows":[1]}')),
+      "ob-adapter": await interrupted(repos, obligation("ob-adapter"), disposes("REQUIRES_NEW_ADAPTER")),
+      "ob-scout": await interrupted(repos, obligation("ob-scout", { subjectId: "wtp-body/scout" }), disposes("WALKED_NO_YIELD")),
+      "ob-backed-off": await interrupted(repos, obligation("ob-backed-off", { subjectId: "wtp-body/backed-off" }), disposes("WALKED_NO_YIELD")),
+    };
+    await repos.debts.put(
+      "ob-adapter",
+      recordFailure(null, { obligationId: "ob-adapter", cause: "REFUSED_BY_HOST", detail: "an earlier failure", target: "legistar:events", dueAt: T0, now: T0 }),
+      T0,
+    );
+    const holding = recordFailure(null, {
+      obligationId: "ob-backed-off",
+      cause: "UPSTREAM_ERROR",
+      detail: "a failure whose backoff has not elapsed",
+      target: "legistar:events",
+      dueAt: T0,
+      now: "2026-09-22T19:59:00.000Z",
+    });
+    assert.ok(holding.retryAt > T1, "precondition: the backoff still holds at T1");
+    await repos.debts.put("ob-backed-off", holding, T0);
+    /* Due, never opened and not settled: ordinary work that the ceiling must still defer by name. */
+    await repos.obligations.put("ob-owed", standing(obligation("ob-owed", { subjectId: "wtp-body/owed" }), T0), T0);
+    const before = Object.fromEntries(
+      await Promise.all(Object.entries(fixtures).map(async ([id, f]) => [id, await routeState(repos, f.routeTaskId, f.workItemId)] as const)),
+    );
+
+    const { cycle, ran } = await cycleAt(repos, T1, neverRuns, {
+      scan: true,
+      maxDispatches: 0,
+      research: closedScoutLane(new Set(["ob-scout"])),
+    });
+
+    assert.equal(ran, 0, `${label}: nothing was walked`);
+    assert.deepEqual(cycle.dispatched, [], `${label}: nothing was dispatched, on either lane`);
+    assert.deepEqual(
+      cycle.recovered.map((r) => [r.obligationId, r.disposition.disposition, r.discharged]).sort(),
+      [
+        ["ob-adapter", "REQUIRES_NEW_ADAPTER", false],
+        ["ob-backed-off", "WALKED_NO_YIELD", true],
+        ["ob-ingested", "INGESTED", true],
+        ["ob-scout", "WALKED_NO_YIELD", true],
+      ],
+      `${label}: all four recovered once each, whatever the ceiling, the backoff or the Scout lane`,
+    );
+    assert.deepEqual(
+      cycle.deferred.map((d) => d.obligationId),
+      ["ob-owed"],
+      `${label}: a recovered row is not also reported deferred; the one owed row is deferred by the ceiling`,
+    );
+    assert.match(cycle.deferred[0].why, /stated ceiling of 0/);
+    assert.equal(cycle.lanes?.model.due, 0, `${label}: the recovered model row never reached the Scout lane`);
+    for (const [id, f] of Object.entries(fixtures)) {
+      assert.deepEqual(
+        await routeState(repos, f.routeTaskId, f.workItemId),
+        before[id],
+        `${label}/${id}: no claim, Attempt, lease, disposition or artifact was written`,
+      );
+      assert.notEqual((await repos.occurrences.mustRead(f.occurrenceId)).value.closedAt, null, `${label}/${id}: closed`);
+      assert.equal((await repos.obligations.mustRead(id)).value.openOccurrenceId, null);
+    }
+    const debts = new Map((await loadDebts(repos)).map((d) => [d.obligationId, d]));
+    assert.equal(debts.get("ob-adapter")?.consecutiveFailures, 2, `${label}: the route fact accrues one failure`);
+    assert.equal(debts.get("ob-backed-off")?.consecutiveFailures, 0, `${label}: a recovered reading clears the debt it was held under`);
+    assert.match(debts.get("ob-backed-off")?.detail ?? "", /^cleared at .*discharged/, `${label}: as a tombstone, never a deletion`);
+    assert.equal((await repos.obligations.mustRead("ob-backed-off")).value.lastWorkedAt, T0, `${label}: anchored on the reading's own time`);
+  }
+});
+
+test("BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lane neither recovers it twice nor walks it", async () => {
+  for (const [label, repos] of await eachStore()) {
+    const adapter = await interrupted(repos, obligation("ob-adapter"), disposes("REQUIRES_NEW_ADAPTER"));
+    await repos.debts.put(
+      "ob-adapter",
+      recordFailure(null, { obligationId: "ob-adapter", cause: "REFUSED_BY_HOST", detail: "an earlier failure", target: "legistar:events", dueAt: T0, now: T0 }),
+      T0,
+    );
+    const before = await routeState(repos, adapter.routeTaskId, adapter.workItemId);
+
+    const { cycle, ran } = await cycleAt(repos, T1, neverRuns, { scan: true });
+
+    assert.equal(ran, 0, `${label}: the admitted lane did not walk it`);
+    assert.deepEqual(cycle.recovered.map((r) => r.obligationId), ["ob-adapter"], `${label}: recovered exactly once`);
+    assert.deepEqual(await routeState(repos, adapter.routeTaskId, adapter.workItemId), before);
+    assert.equal(
+      (await loadDebts(repos)).find((d) => d.obligationId === "ob-adapter")?.consecutiveFailures,
+      2,
+      `${label}: one failure accrued, not one per recovery`,
+    );
+  }
+});
+
+test("findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read", async () => {
+  for (const [label, repos] of await eachStore()) {
+    await interrupted(repos, obligation("ob-settled"), disposes("WALKED_NO_YIELD"));
+    /* Open on a RouteTask with no disposition: owed work, for a lane to dispatch. */
+    await repos.obligations.put("ob-open", standing(obligation("ob-open", { subjectId: "wtp-body/open" }), T0), T0);
+    await openOccurrence(repos, { obligation: (await repos.obligations.mustRead("ob-open")).value, dueAt: T0, now: T0 });
+    /* Settled, and closed after both listings below were taken. */
+    await interrupted(repos, obligation("ob-closed", { subjectId: "wtp-body/closed" }), disposes("WALKED_NO_YIELD"));
+
+    const obligations = (await repos.obligations.list()).map((row) => row.value);
+    const routeTasks = await repos.routeTasks.list();
+    const closing = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-closed")).value);
+    assert.equal(closing?.kind, "SETTLED");
+    if (closing?.kind === "SETTLED") await closeSettledOccurrence(repos, { settled: closing.settled, now: T1 });
+
+    const found = await findSettledOccurrences(repos, { obligations, settledRouteTaskIds: settledRouteTaskIds(routeTasks) });
+    assert.deepEqual(found.map((s) => s.obligationId), ["ob-settled"], `${label}: only the settled one still open`);
+    const confirmed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value);
+    assert.deepEqual(found[0], confirmed?.kind === "SETTLED" ? confirmed.settled : null, `${label}: exactly what a lane's resume reads`);
+    assert.deepEqual(
+      await findSettledOccurrences(repos, { obligations, settledRouteTaskIds: new Set() }),
+      [],
+      `${label}: a listing that names no settled RouteTask yields no candidate`,
+    );
   }
 });

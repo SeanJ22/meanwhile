@@ -9,15 +9,29 @@ import "server-only";
 import { registryBodyOf, type RegistryBody } from "@/lib/control-plane/admin-view/coverage.ts";
 import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model.ts";
 
+import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
+
 export type RegistryRead =
   | { readonly kind: "HELD"; readonly versionId: string; readonly bodies: readonly RegistryBody[]; readonly readAt: string }
   | { readonly kind: "UNREAD"; readonly detail: string };
 
-const TTL_MS = 60_000;
-let memo: { readonly at: number; readonly read: RegistryRead } | null = null;
+/*
+ * A minute fresh, fifteen recent (see shared-read.ts): the projection is 3.6 MB
+ * and moves only when a registry version is promoted.
+ */
+const shared = sharedRead<RegistryRead>({
+  freshMs: 60_000,
+  staleMs: 15 * 60_000,
+  deadlineMs: ADMIN_READ_DEADLINE_MS,
+  keep: (r) => r.kind === "HELD",
+  late: (ms) => ({ kind: "UNREAD", detail: lateWords("The registry", ms) }),
+});
 
 export async function loadRegistryBodies(): Promise<RegistryRead> {
-  if (memo && Date.now() - memo.at < TTL_MS && memo.read.kind === "HELD") return memo.read;
+  return shared.read(readRegistryBodies);
+}
+
+async function readRegistryBodies(): Promise<RegistryRead> {
   let read: RegistryRead;
   try {
     const r = await readRegistryRuntimeProjection();
@@ -45,6 +59,5 @@ export async function loadRegistryBodies(): Promise<RegistryRead> {
   } catch (error) {
     read = { kind: "UNREAD", detail: `The registry read did not complete (${error instanceof Error ? error.name : "error"}).` };
   }
-  if (read.kind === "HELD") memo = { at: Date.now(), read };
   return read;
 }

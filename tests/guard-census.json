@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 711,
-    "named": 7041,
+    "files": 712,
+    "named": 7046,
     "dynamic": 28
   },
   "files": {
@@ -2158,6 +2158,16 @@
         "distinct publishers never merge",
         "same-source rows merge, and the merged row states the count",
         "the committed Tucson Unified roster resolves — the card under the defect"
+      ],
+      "dynamic": 0
+    },
+    "tests/carried-row-reason.test.ts": {
+      "names": [
+        "a calendar that answered is never called unreachable, and its answer is never read as the body's act",
+        "both surfaces render the decided clause for every reason, and neither calls an answering calendar unreachable",
+        "each recorded carry reason earns its own plain clause, and a mark without one earns none",
+        "no reader surface writes a carried-row sentence of its own; both go through the one decider",
+        "the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search"
       ],
       "dynamic": 0
     },

@@ -126,7 +126,7 @@ import {
   type PlannedScope,
   type TerritoryIndex,
 } from "./membership.ts";
-import { READING_LIST_CAP } from "./reading.ts";
+import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
 import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "./dispatch-work-bounds.ts";
 
 /* ------------------------------------------------------------------ bounds */
@@ -888,10 +888,5 @@ export function carriedDispatchTargets(prior: unknown): DispatchWorkTarget[] {
 
 /** A value on the research state that is not a reading reads as none, never as an empty list. */
 export function isDispatchWorkReading(value: unknown): value is DispatchWorkReading {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    (value as { formatVersion?: unknown }).formatVersion === DISPATCH_WORK_FORMAT_VERSION &&
-    Array.isArray((value as { targets?: unknown }).targets)
-  );
+  return isVersionedCycleReading(value, DISPATCH_WORK_FORMAT_VERSION, "targets");
 }

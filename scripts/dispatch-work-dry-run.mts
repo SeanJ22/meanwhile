@@ -53,6 +53,7 @@ import {
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { meetingsDiscoveryProvider } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
+import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 
 const ROOT = process.cwd();
 const NOW = new Date().toISOString();
@@ -108,8 +109,11 @@ try {
   const config = control.config[0]?.value;
   const ceiling = resolveRollingCeiling(isAdminConfig(config) ? fleetSpendCeilingOverrideUsd(config) : null);
   const laneClosed = (control.research[0]?.closed as string | null | undefined) ?? null;
+  const noRows = "the control plane holds no obligation row, which a standing runner never leaves";
+  const active = [...durable.values()].filter((r) => r.active).length;
   console.log(
-    `control plane: ${control.rows.length} obligation rows (${[...durable.values()].filter((r) => r.active).length} active, ${materialized.size} materialized by a dispatch); ` +
+    `control plane: ${floorLine(floored("active obligation rows", "cp_obligations", control.rows.length, active, noRows))}; ` +
+      `${floorLine(floored("rows a dispatch materialized", "cp_obligations", control.rows.length, materialized.size, noRows))}; ` +
       `ceiling $${ceiling.rollingCeilingUsd.toFixed(2)} (${ceiling.source}); paid lane ${laneClosed === null ? "open" : `closed: ${laneClosed}`}` +
       `${control.research[0]?.paused === "true" ? "; the owner's research PAUSE stands" : ""}`,
   );
@@ -179,20 +183,24 @@ try {
     planOnlyWhy: "a read-only dry run writes nothing",
   });
 
-  console.log(`\nPLANNED ONLY — nothing was written. ${plan.writes.length} obligation(s) would be created, at most ${plan.writeBudget} a cycle.`);
+  console.log(`\nPLANNED ONLY — nothing was written. At most ${plan.writeBudget} obligations are written a cycle.`);
   for (const t of reading.targets) {
     const r = t.requirements;
     console.log(`\n${t.label} (${t.key})`);
     console.log(`  ${dispatchWorkSentence(t)}`);
+    /* RULING 159: every count below is floored — a zero with no population says why, never reads as measured. */
+    const governments = t.units.blocked === null ? null : t.units.placed + t.units.blocked;
     console.log(
-      `  governments: ${t.units.placed} placed with requirements; ${t.units.blocked === null ? "an uncounted number" : t.units.blocked} blocked by missing data; ` +
-        `${t.units.unplaced} in its state(s) that no territory can place in or out`,
+      `  ${governments === null
+        ? "governments blocked by missing data: COULD NOT ASSERT — the geography did not resolve, so the governments in it cannot be named"
+        : floorLine(floored("governments blocked by missing data", t.label, governments, t.units.blocked ?? 0, "the Census names no government certainly in this geography"))}` +
+        ` · ${t.units.unplaced} in its state(s) that no territory can place in or out`,
     );
-    console.log(
-      `  requirements: ${r.defined} defined = ${r.carried} already on a clock (reordered) + ${r.created} created + ${r.deferred} would be created (deferred to the write) + ` +
-        `${r.capped} beyond the cap of ${t.cap} + ${r.held} held + ${r.failed} failed`,
-    );
-    console.log(`  standing obligations reordered: ${t.reordered.obligations} of ${t.reordered.of}`);
+    const noRequirement = "no requirement is defined here: every government is blocked or unplaceable";
+    console.log(`  ${floorLine(floored("requirements that would be created", t.label, r.defined, r.deferred, noRequirement))}`);
+    console.log(`  ${floorLine(floored("requirements already on a clock (reordered)", t.label, r.defined, r.carried, noRequirement))}`);
+    console.log(`  requirements beyond the cap of ${t.cap}: ${r.capped} · held: ${r.held} · created before this run: ${r.created}`);
+    console.log(`  ${floorLine(floored("standing obligations reordered", "the standing corpus", t.reordered.of, t.reordered.obligations, "the corpus is empty"))}`);
     const planned = plan.targets.find((p) => p.target.key === t.key);
     const wouldCreate = planned?.instances.filter((p) => p.state === "MISSING") ?? [];
     const byKind = new Map<string, number>();

@@ -89,7 +89,7 @@
  * every such row in its corpus while the registry still defines it.
  */
 
-import type { Jurisdiction, JurisdictionRegistry, JurisdictionSource } from "../../../hunt/jurisdiction-universe.ts";
+import { sourceOf, type Jurisdiction, type JurisdictionRegistry, type JurisdictionSource } from "../../../hunt/jurisdiction-universe.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
 import {
   NOTHING_MATERIALIZED,
@@ -145,18 +145,6 @@ export interface JurisdictionRequirement {
   readonly source: JurisdictionSource;
   readonly route: RouteDescriptor;
   readonly carriage: RequirementCarriage;
-}
-
-/** A catalog entry by key, THROWING on a dangling key exactly as `sourcesOf` does. */
-function catalogEntry(reg: JurisdictionRegistry, j: Jurisdiction, key: string): JurisdictionSource {
-  const s = reg.sourceCatalog[key];
-  if (!s) {
-    throw new Error(
-      `jurisdiction ${j.id} references source \`${key}\`, which is not in ${reg.stateCode}'s source ` +
-        "catalog. A dangling reference dropped silently is a government quietly losing a route.",
-    );
-  }
-  return s;
 }
 
 /** Custodian dedupe, the header's rules 1 and 2: whose record a source is. */
@@ -246,7 +234,7 @@ export function jurisdictionRequirements(
   let n = 0;
   let k = 0;
   for (const key of j.sourceIds) {
-    const s = catalogEntry(reg, j, key);
+    const s = sourceOf(reg, j, key);
     if (!belongsToThisRow(s, j)) continue;
     if (s.recordClass !== "MEETINGS") {
       const routeId = routeIdFor(s, n);

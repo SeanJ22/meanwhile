@@ -34,7 +34,7 @@ import {
   type TerritoryIndex,
 } from "@/lib/control-plane/expansion/membership.ts";
 import { readTerritoryIndex } from "@/lib/control-plane/expansion/runner-load.ts";
-import { scopeKeyOf, type ExpansionScopeDecision, type ExpansionScopeGeography } from "@/lib/control-plane/expansion/scopes.ts";
+import { scopeKeyOf, withScopeSet, type ExpansionScopeDecision, type ExpansionScopeGeography } from "@/lib/control-plane/expansion/scopes.ts";
 import { stateOfSubject, subjectOfObligationId } from "@/lib/control-plane/expansion/subjects.ts";
 import { scopeCreationNumbers, scopeCreationView } from "@/lib/control-plane/expansion/view.ts";
 import { auditRenderedNumbers } from "@/lib/control-plane/owner-surface.ts";
@@ -111,18 +111,10 @@ function territory(): TerritoryIndex {
 const PIMA: ExpansionScopeGeography = { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, Arizona", stateAbbr: "AZ" };
 const CD6: ExpansionScopeGeography = { type: "congressional_district", geoid: "0406", version: "cd:119", label: "Arizona CD 6", stateAbbr: "AZ" };
 
+/** A selected scope, built by the gateway's own pure step, exactly as `expansion.scope.set` records it. */
 function decision(geography: ExpansionScopeGeography, priority = 1, budgetUsd = 5, decidedAt = T0): ExpansionScopeDecision {
-  return {
-    key: scopeKeyOf(geography),
-    geography,
-    priority,
-    budgetUsd,
-    note: null,
-    decidedAt,
-    decidedBy: "adm_test-session",
-    receiptId: `expansion.scope.set:${geography.geoid}`,
-    previous: null,
-  };
+  const [made] = withScopeSet([], { geography, priority, budgetUsd, note: null, decidedAt, decidedBy: "adm_test-session", receiptId: `expansion.scope.set:${geography.geoid}` }).scopes;
+  return made;
 }
 
 async function planned(d: ExpansionScopeDecision): Promise<PlannedScope> {

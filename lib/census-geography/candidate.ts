@@ -53,6 +53,30 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
 
   const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
+  // The read model IS the dataset, and the engine derives the change set from
+  // it (candidateChangeSet reads candidate.readModel). The normalized evidence
+  // is therefore a compact descriptor bound to that exact read model by its
+  // canonical hash, as the other builders' descriptors are, never a second
+  // copy. A second copy put the national candidate at 48.8 MB, and promote()
+  // RETURNs the candidate and pointer rows in one Neon HTTP response: 75.8 MB
+  // escaped against the 64 MiB (67.1 MB) response cap on the first routine
+  // pass (VALIDATED, never promoted). This descriptor brings it to 58.5 MB.
+  const readModelHash = sha256(canonicalCivicDataJson(dataset));
+  const normalizedPayload = {
+    formatVersion: dataset.formatVersion,
+    builtAt: dataset.builtAt,
+    readModelHash,
+    zctaUniverseCount: dataset.zctaUniverse.length,
+    scopes: dataset.scopes.map((s) => ({
+      type: s.type,
+      version: s.version,
+      fractionBasis: s.fractionBasis,
+      instanceCount: s.instanceCount,
+      zctaEdgeCount: s.zctaEdgeCount,
+      sourceChecksums: [...s.versionMeta.provenance.sourceChecksums].sort(),
+    })),
+  };
+
   return {
     id,
     sourceId: CENSUS_GEO_SOURCE_ID,
@@ -73,8 +97,8 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
       schemaVersion: CENSUS_GEO_SCHEMA_VERSION,
       // Digest via the civic-data canonical JSON — the exact function the
       // source-scoped verifier re-derives the read-model hash with.
-      normalizedHash: sha256(canonicalCivicDataJson(dataset)),
-      normalizedPayloadHash: sha256(canonicalCivicDataJson(dataset)),
+      normalizedHash: readModelHash,
+      normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
       inputRecords: groupings,
       outputRecords: groupings,
       droppedRecords: 0,
@@ -102,7 +126,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
         detail: `${groupings} groupings, ${edges} ZCTA edges across ${dataset.scopes.length} scope(s).`,
       },
     ],
-    normalizedPayload: dataset,
+    normalizedPayload,
     readModel: dataset,
   };
 }

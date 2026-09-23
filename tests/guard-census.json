@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 701,
-    "named": 6979,
+    "files": 702,
+    "named": 6984,
     "dynamic": 28
   },
   "files": {
@@ -2938,6 +2938,15 @@
         "the Granicus wall stays a WALL — an OPEN disposition, never an emptiness",
         "the run agrees with the acceptance established BEFORE the control plane existed",
         "the shadow run executes end to end against DURABLE stores"
+      ],
+      "dynamic": 0
+    },
+    "tests/control-plane-vault-restore.test.ts": {
+      "names": [
+        "a corrupted source body, or a record the object does not satisfy, is refused and writes nothing",
+        "a record held only in the source vault is copied verbatim and then read by the runtime's own resolvers",
+        "a target key already holding a different object is a conflict, and is never overwritten",
+        "an altered plan, or a vault restored from itself, is refused before anything is read or written"
       ],
       "dynamic": 0
     },
@@ -6465,6 +6474,7 @@
       "names": [
         "a crash after reservation cannot restart the same attempt indefinitely",
         "owner refresh accepts one exact registered partition and at most two attempts; no direct source child",
+        "owner refresh also takes one exact registered routine source contract, never an unregistered id",
         "standing parent consumes durable bounded refresh requests independently of ordinary source due time"
       ],
       "dynamic": 0

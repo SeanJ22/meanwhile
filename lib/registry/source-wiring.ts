@@ -134,9 +134,101 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
     REVIZE: "revize",
     SCHEDULEPAGE: "schedulepage",
     ICAL: "ical",
+    PIMA_EDU: "pima-edu",
   };
   const route = routeByType[row.agendaSourceType];
+  if (route) {
+    const retired = retiredMeetingRoute(route, row.bodyId);
+    if (retired) {
+      throw new Error(
+        `MEETING_ROUTE_RETIRED:${route}:${row.bodyId} — retired ${retired.retiredOn} (${retired.reason}); ` +
+          `the permitted route is ${retired.replacedBy}.`,
+      );
+    }
+  }
   return route ? [route] : [];
+}
+
+/**
+ * **A ROUTE RETIRED FOR PERMISSION, AND WHAT IT LEAVES BEHIND.**
+ * (2026-09-23, the Pima school-agenda routes session. RULING 283, RULING 263.)
+ *
+ * RULING 283: a proved source cutover disables its old writer in the same
+ * transaction, and neither two authoritative clocks nor none is lawful. When a
+ * body's permitted route replaces a route whose host refuses this client, the
+ * old (route, body) pair is named here, and naming it is enforced, not
+ * described:
+ *
+ * - `meetingSourceNamesForWiring` throws for a wiring row that would re-open
+ *   the pair, so no partition, clock or acquisition can exist for it;
+ * - `scripts/ingest.ts` refuses agenda-document retrieval from `hosts` — the
+ *   body still PUBLISHES links into its agenda platform, and a reader may
+ *   follow one, but this client never requests it;
+ * - `tests/retired-meeting-routes.test.ts` holds that every retired pair has a
+ *   wired successor for the same body.
+ *
+ * **What the retired route already holds stays.** Its promoted partition
+ * version and every candidate behind it remain in the production store exactly
+ * as written — nothing here deletes, rewrites or re-dates them. Until the
+ * successor's first promotion that version is HELD: composed in the
+ * successor's place and named on its readback (`HELD_MEETING_PARTITIONS`,
+ * `lib/civic-data/meeting-partitions.ts`), so the body's sittings never leave
+ * the page between the old writer stopping and the new one's first version.
+ * The first promotion supersedes it. A permission rule binds the next fetch,
+ * never possession of what was already published (RULING 263).
+ */
+export interface RetiredMeetingRoute {
+  /** The adapter route (partition `meetings:<meetingSource>:<bodyId>`) that no longer runs. */
+  readonly meetingSource: string;
+  readonly bodyId: string;
+  /** Hosts the retired route read. Nothing may fetch them for this body. */
+  readonly hosts: readonly string[];
+  /** ISO date of the cutover (`pnpm stamp`). */
+  readonly retiredOn: string;
+  readonly reason: string;
+  /** The wired meeting source that replaced it for the same body. */
+  readonly replacedBy: string;
+  /** What happens to the rows and documents the retired route already holds. */
+  readonly held: string;
+}
+
+export const RETIRED_MEETING_ROUTES: readonly RetiredMeetingRoute[] = [
+  {
+    meetingSource: "diligent",
+    bodyId: "curated:az/pima-community-college#governing",
+    hosts: ["pima.community.highbond.com"],
+    retiredOn: "2026-09-23",
+    reason:
+      "robots.txt on pima.community.highbond.com is an allowlist — six named search crawlers may read " +
+      "/Portal/, /document/ and /Services/, and User-agent: * carries Disallow: / (read 2026-09-23T20:02Z, " +
+      "23,479 bytes, sha256 b5cbf0b4b2cbcf18…); docs/sources.md recorded the host DISALLOWED on 2026-08-29",
+    replacedBy: "pima-edu",
+    held:
+      "the promoted meetings:diligent partition for this body (7 sittings, 486 stored portal-page reads as of " +
+      "2026-09-23T19:48Z) stays in the production store unchanged, composed as held rows until the pima-edu " +
+      "partition's first promotion supersedes it; the college's own " +
+      "links into the tenant are carried by pima-edu as links and never fetched",
+  },
+];
+
+export function retiredMeetingRoute(meetingSource: string, bodyId: string): RetiredMeetingRoute | null {
+  return (
+    RETIRED_MEETING_ROUTES.find((r) => r.meetingSource === meetingSource && r.bodyId === bodyId) ?? null
+  );
+}
+
+/**
+ * Is this URL on a host a retired route read? Agenda retrieval refuses these:
+ * the link stays a link a reader can follow, and this client does not read it.
+ */
+export function isRetiredMeetingHost(url: string): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return RETIRED_MEETING_ROUTES.some((r) => r.hosts.includes(host));
 }
 
 export function wiringForMeetingSource(sourceName: string): BodySourceWiring[] {
@@ -239,6 +331,14 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // to the Governing Board regular meeting of 2026-08-11.
       meetingPath: "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
       extraQuery: "&loadall=true",
+      // The Board's own Board Actions index on govboard.tusd1.org (robots.txt
+      // names only GPTbot and PetalBot; read 2026-09-23): one PDF per
+      // Governing Board sitting, the agenda's items with the action on each.
+      // Portal type ids 17 (Regular) and 29 (Special) are the sittings it
+      // covers — read off the service's own rows; 28 (Special Executive
+      // Session) has no Board Actions entry. See lib/sources/diligent.
+      agendaRecordsUrl: "https://govboard.tusd1.org/Actions",
+      agendaRecordsTypeIds: "17,29",
     },
     // The Board's own notice page: server-renders the meeting notice
     // (times, venue, public hearings) days before the Diligent portal
@@ -298,25 +398,42 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   },
 
   // ── D28: Pima Community College Governing Board ─────────────────────────
-  // A live Diligent tenant with no Census division: `ocdId` is null and the
-  // body is the curated registry row. Venue strings resolve through the
-  // venue cache against the District Office address PCC's own board page
-  // publishes; "VIRTUAL MEETING" rows drop placeless, counted.
+  // No Census division: `ocdId` is null and the body is the curated registry
+  // row. Read from the college's OWN permitted pages since 2026-09-23 — the
+  // Diligent tenant this row used to name (pima.community.highbond.com)
+  // disallows this client in robots.txt, and that route is retired in
+  // RETIRED_MEETING_ROUTES above. See lib/sources/pima-edu/index.ts.
+  //
+  // Every URL below was read 2026-09-23 under a robots.txt that permits it:
+  // www.pima.edu (8 narrow disallows, none on the governing-board path) and
+  // events.pima.edu (Drupal defaults: /admin/, /search/, /user/…). Venue
+  // spellings key the promoted `venue-resolutions` rows reviewed 2026-08-14
+  // against the board-meetings page's District Office address; the room code
+  // the college prints (C-105, C-228) selects the row.
   {
     bodyId: "curated:az/pima-community-college#governing",
     ocdId: null,
-    agendaSourceType: "DILIGENT",
+    agendaSourceType: "PIMA_EDU",
     jurisdiction: "Pima Community College District, AZ",
     publishingOrg: "Pima Community College Governing Board",
     timeZone: "America/Phoenix",
     config: {
       slug: "pcc",
-      serviceBase: "https://pima.community.highbond.com",
-      // Verified live 2026-08-14: the service answers plain GET with venue
-      // strings (District Office rooms C-105 / C-228).
-      meetingPath: "/Portal/MeetingInformation.aspx?Org=Cal&Id=",
+      documentsUrl:
+        "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html",
+      eventsUrl: "https://events.pima.edu/?calendar[]=3&calId=10",
+      committeeName: "Finance and Audit Committee",
+      committeeScheduleUrl:
+        "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/index.html",
+      committeeDocumentsUrl:
+        "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/agendas-minutes.html",
+      venueSourceId: "diligent",
+      venueTenant: "pcc",
+      "venueRoom:C-105": "District Office, Community/Board Room C-105",
+      "venueRoom:C-228": "District Office, Board Conference Room C-228",
+      venueBuilding: "District Office TBD",
     },
-    verifiedAt: "2026-08-14",
+    verifiedAt: "2026-09-23",
   },
 
   /*

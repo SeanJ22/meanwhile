@@ -17,6 +17,8 @@ import {
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetJson } from "../http.ts";
+import { makePermissionGate, permittedText } from "../permission-gate.ts";
+import { parseBoardActions } from "../tusd-govboard/board-actions.ts";
 import type {
   Meeting,
   MeetingQuery,
@@ -79,6 +81,12 @@ export interface DiligentRaw {
   wiring: BodySourceWiring;
   meetings: DiligentMeeting[];
   collectedAt: string;
+  /**
+   * The body's OWN per-sitting agenda records on a host that permits this
+   * client, when its wiring row names one (`agendaRecordsUrl`). Read raw here
+   * and parsed in normalize, like the meetings themselves.
+   */
+  agendaRecords?: { url: string; html: string } | null;
 }
 
 function isoDate(date: Date): string {
@@ -130,8 +138,31 @@ export function makeDiligentSource(
     let considered = 0;
     let keptButPlaceless = 0;
 
-    for (const { wiring, meetings: rows, collectedAt } of raw) {
+    for (const { wiring, meetings: rows, collectedAt, agendaRecords } of raw) {
       considered += rows.length;
+      /*
+       * **A CONCLUDED SITTING'S AGENDA RECORD FROM THE BODY'S OWN PERMITTED
+       * HOST.** (2026-09-23.)
+       *
+       * The portal's meeting page is not the agenda — the agenda is a linked
+       * document on the same tenant host, and the tenants' robots.txt refuses
+       * this client. Tucson Unified publishes, for every Governing Board
+       * sitting, a Board Actions PDF on govboard.tusd1.org (permitted): the
+       * agenda's numbered items with the action taken on each. Where the
+       * wiring row names that index (`agendaRecordsUrl`) and the portal type
+       * ids it covers (`agendaRecordsTypeIds`, read off the portal's own
+       * rows), a CONCLUDED sitting of those types links its record instead of
+       * the portal page. Nothing else about the row changes.
+       */
+      const recordsByDay = agendaRecords
+        ? parseBoardActions(agendaRecords.html, agendaRecords.url)
+        : new Map<string, string>();
+      const recordTypes = new Set(
+        (wiring.config.agendaRecordsTypeIds ?? "")
+          .split(",")
+          .map((id) => Number(id.trim()))
+          .filter((id) => Number.isInteger(id) && id > 0),
+      );
       for (const m of rows) {
         const clock = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(
           m.MeetingDateTime ?? "",
@@ -186,6 +217,11 @@ export function makeDiligentSource(
         const meetingUrl = `${wiring.config.serviceBase}${wiring.config.meetingPath}${m.Id}`;
 
         const bodyName = bodyNameFor(m, wiring);
+        const status = statusOf(startsAt, now);
+        const record =
+          status === "CONCLUDED" && m.TypeId != null && recordTypes.has(m.TypeId)
+            ? recordsByDay.get(`${clock[1]}-${clock[2]}-${clock[3]}`) ?? null
+            : null;
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${m.Id}`,
           ocdId: wiring.ocdId,
@@ -205,10 +241,11 @@ export function makeDiligentSource(
             : null,
           ...(online ? { online } : {}),
           // The meeting page hosts the agenda once the tenant publishes it;
-          // `Published` is the service's own flag for exactly that.
-          agendaUrl: m.Published ? meetingUrl : null,
+          // `Published` is the service's own flag for exactly that. A body's
+          // own permitted agenda record for a concluded sitting comes first.
+          agendaUrl: record ?? (m.Published ? meetingUrl : null),
           jurisdiction: wiring.jurisdiction,
-          status: statusOf(startsAt, now),
+          status,
           provenance: {
             sourceUrl: meetingUrl,
             sourceOrg: wiring.publishingOrg,
@@ -244,10 +281,20 @@ export function makeDiligentSource(
           fetchImpl,
           signal: query?.signal,
         });
+        // The body's own agenda-record index is read only under a permission
+        // verdict for ITS host, asked before the request (RULING 263).
+        const recordsUrl = wiring.config.agendaRecordsUrl;
+        let agendaRecords: DiligentRaw["agendaRecords"] = null;
+        if (recordsUrl) {
+          const gate = makePermissionGate({ fetchImpl, signal: query?.signal });
+          const html = await permittedText(gate, recordsUrl, { fetchImpl, signal: query?.signal });
+          agendaRecords = { url: recordsUrl, html };
+        }
         collected.push({
           wiring,
           meetings: Array.isArray(rows) ? rows : [],
           collectedAt: new Date().toISOString(),
+          agendaRecords,
         });
       }
       return collected;

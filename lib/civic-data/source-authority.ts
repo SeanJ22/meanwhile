@@ -376,7 +376,13 @@ export const SOURCE_AUTHORITIES = {
       "https://clerksboards.tucsonaz.gov/", "https://meetings.boardbook.org/", "https://mesa.legistar.com/",
       "https://webapi.legistar.com/v1/",
       "https://morriscountynj.iqm2.com/", "https://newburynh.civicweb.net/", "https://newlondon.nh.gov/",
-      "https://pima.community.highbond.com/", "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
+      // Pima Community College's own permitted pages (2026-09-23); its Diligent
+      // tenant pima.community.highbond.com is a retired route (robots.txt
+      // Disallow: /) and no longer inherits meetings authority.
+      "https://www.pima.edu/robots.txt",
+      "https://www.pima.edu/about-pima/leadership-policies/governing-board/",
+      "https://events.pima.edu/",
+      "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
       "https://pima.legistar.com/",
       "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
       "https://tusd1-schooldesk.community.diligentoneplatform.com/", "https://vailschooldistrictaz.thrillshare.com/",
@@ -389,7 +395,7 @@ export const SOURCE_AUTHORITIES = {
       "capaz.portal.civicclerk.com", "govboard.tusd1.org", "clerksboards.tucsonaz.gov", "meetings.boardbook.org",
       "mesa.legistar.com", "morriscountynj.iqm2.com", "newburynh.civicweb.net",
       "webapi.legistar.com",
-      "newlondon.nh.gov", "pima.community.highbond.com", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
+      "newlondon.nh.gov", "www.pima.edu", "events.pima.edu", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
       "www.pima.gov",
       "tusd1-schooldesk.community.diligentoneplatform.com", "vailschooldistrictaz.thrillshare.com", "warnernh.gov",
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",

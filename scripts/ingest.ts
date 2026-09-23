@@ -69,7 +69,7 @@ import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
-import { SOURCE_WIRING, wiringForTypes } from "../lib/registry/source-wiring.ts";
+import { SOURCE_WIRING, isRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -183,7 +183,32 @@ function documentUrlFor(meeting: Meeting): string | null {
 }
 
 async function retrieveAgendas(meetings: Meeting[]) {
-  const withAgenda = meetings.filter((m) => documentUrlFor(m));
+  /*
+   * **A LINK INTO A RETIRED ROUTE'S HOST IS HELD AS A LINK, NEVER READ.**
+   * (2026-09-23, RULING 283 / RULING 263.)
+   *
+   * A body whose agenda platform refuses this client in robots.txt still
+   * publishes links into it on its own permitted pages, and a reader may
+   * follow one. Retrieval is this client's act, and the retired route's
+   * hosts are exactly the ones it may not request — so the link is kept on
+   * the meeting and the document behind it is not fetched. Counted, so a
+   * held link never reads as a retrieval that failed or an agenda nobody
+   * posted.
+   */
+  const linkedOnly = meetings.filter((m) => {
+    const url = documentUrlFor(m);
+    return url !== null && isRetiredMeetingHost(url);
+  });
+  if (linkedOnly.length > 0) {
+    console.log(
+      `agenda documents: ${linkedOnly.length} link(s) held as links only — their host is a retired ` +
+        "route (robots.txt refuses this client), so nothing was requested from it",
+    );
+  }
+  const withAgenda = meetings.filter((m) => {
+    const url = documentUrlFor(m);
+    return url !== null && !isRetiredMeetingHost(url);
+  });
   // Meetings with no stored document yet go first: the cap is politeness per
   // run, and the store is seeded from the previous snapshot, so over repeated
   // refreshes every agenda gets retrieved before any gets re-checked.

@@ -193,6 +193,16 @@ export const AGENDA_SLOT_BY_ADAPTER: Readonly<Record<string, AgendaSlotDeclarati
       "tests/fixtures/boardbook-amphi-2065.html, which contains the Agenda cell the parser " +
       "matches. A row without one is BoardBook's per-sitting answer.",
   },
+  "pima-edu": {
+    state: "PRESENT",
+    basis:
+      "the college's documents table carries a per-sitting Agenda cell, read by " +
+      "lib/sources/pima-edu/index.ts from tests/fixtures/pima-edu/documents-2026.html: a link (a " +
+      "first-party PDF, or the college's link into its agenda platform) or plain text. The adapter " +
+      "carries the link and deliberately records NO observation for a text-only cell, because this " +
+      "page mirrors the college's agenda platform and can lag it — an unlinked cell here is not the " +
+      "college saying it posted nothing, so every null stays OUR gap.",
+  },
   mock: { state: "ABSENT", basis: "fixtures are not a publisher surface and observe nothing." },
 };
 

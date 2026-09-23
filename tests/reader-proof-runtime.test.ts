@@ -25,7 +25,11 @@ import {
   readerClosureReadConnectionIdentity,
   type ReaderClosureExecutionAuthorityEvidence,
 } from "../lib/holdings/reader-census.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import {
+  HELD_MEETING_PARTITIONS,
+  MEETING_PARTITION_CONTRACTS,
+  heldMeetingPartitionFor,
+} from "../lib/civic-data/meeting-partitions.ts";
 import { pdcV2CanonicalMeetingFactEvidence } from "../lib/civic-data/store.ts";
 import {
   readSnapshot,
@@ -271,13 +275,17 @@ function frozenMeetingAuthority(): ReaderProofMeetingsExpectedAuthority {
   assert.ok(frozen, "the bundled frozen trusted-LKG meetings snapshot is present");
   const aggregate = pdcV2CanonicalMeetingFactEvidence([frozen]);
   const partitions = MEETING_PARTITION_CONTRACTS.map((partition) => {
+    // The frozen import predates every cutover, so a successor's authority is
+    // the one its retired predecessor was imported with (HELD_MEETING_PARTITIONS).
+    const held = heldMeetingPartitionFor(partition.id);
+    const imported = held ? { id: held.id, meetingSource: held.meetingSource } : partition;
     const promoted = frozen.meetings.some((meeting) =>
-      meeting.bodyId === partition.bodyId && meeting.id.startsWith(`${partition.meetingSource}:`)
+      meeting.bodyId === partition.bodyId && meeting.id.startsWith(`${imported.meetingSource}:`)
     );
     return {
       contractId: partition.id,
       kind: promoted ? "PROMOTED" as const : "NOT_RECORDED" as const,
-      versionId: promoted ? `${partition.id}:trusted-lkg-test-version` : null,
+      versionId: promoted ? `${imported.id}:trusted-lkg-test-version` : null,
     };
   });
   return {
@@ -296,7 +304,8 @@ function frozenImportAdmission(): ReaderExecutionAuthorityArchivedSupportAdmissi
   const dispositionSet = frozenMeetingAuthority().partitions
     .filter(({ kind }) => kind === "PROMOTED")
     .map(({ contractId, versionId }) => ({
-      contractId,
+      // The archived import names the identity that existed when it was taken.
+      contractId: heldMeetingPartitionFor(contractId)?.id ?? contractId,
       candidateId: versionId!,
       disposition: "PROMOTED_ABSENT_POINTER" as const,
       versionId: versionId!,
@@ -398,6 +407,88 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
     reversed.value,
   );
   assert.equal(readerProofMeetingPartitionIdentity(reversed, expected), identity);
+});
+
+test("a partition retired by a proved cutover hands its imported authority to its registered successor", () => {
+  assert.ok(HELD_MEETING_PARTITIONS.length > 0, "the Pima Community College cutover is a held succession");
+  const admission = frozenImportAdmission();
+  const authority = readerProofMeetingsAuthorityFromImport(admission);
+  for (const held of HELD_MEETING_PARTITIONS) {
+    assert.ok(
+      admission.dispositionSet.some(({ contractId }) => contractId === held.id),
+      `the archived import names the retired identity ${held.id}`,
+    );
+    const inherited = authority.partitions.find(({ contractId }) => contractId === held.successorId);
+    assert.equal(inherited?.kind, "PROMOTED", "a promoted body stays promoted across its cutover");
+    assert.equal(inherited?.versionId, `${held.id}:trusted-lkg-test-version`, "with the version the import carried");
+    assert.equal(authority.partitions.some(({ contractId }) => contractId === held.id), false);
+  }
+  const [held] = HELD_MEETING_PARTITIONS;
+  assert.throws(
+    () => readerProofMeetingsAuthorityFromImport({
+      ...admission,
+      dispositionSet: [
+        ...admission.dispositionSet,
+        {
+          contractId: held!.successorId,
+          candidateId: "successor-version",
+          disposition: "PROMOTED_ABSENT_POINTER",
+          versionId: "successor-version",
+          readerReadback: "PASS",
+        },
+      ],
+    }),
+    /duplicates a meeting partition disposition/,
+    "an import naming both identities is two authorities for one body",
+  );
+});
+
+test("a successor served from its predecessor's held version keeps the body's authority; without it the loss is refused", () => {
+  const expected = frozenMeetingAuthority();
+  const [held] = HELD_MEETING_PARTITIONS;
+  const base = meetingProofInput();
+  assert.equal(base.kind, "PROMOTED");
+  if (base.kind !== "PROMOTED") return;
+  const heldFrom = { contractId: held!.id, scope: held!.scope, versionId: "retired-route-lkg" };
+  const replace = (patch: (row: MeetingReadback) => MeetingReadback) =>
+    base.partitions.map((row) => row.contractId === held!.successorId ? patch(row) : row);
+  assert.equal(
+    base.partitions.some((row) => row.heldFrom !== undefined),
+    false,
+    "the post-promotion readback carries no held version",
+  );
+
+  const served = meetingProofInput(replace((row) => ({ ...row, kind: "NOT_RECORDED", versionId: null, detail: "held", heldFrom })));
+  assert.equal(requireReaderProofMeetingsProjection(served, expected), served.value);
+  assert.notEqual(
+    readerProofMeetingPartitionIdentity(served, expected),
+    readerProofMeetingPartitionIdentity(base, expected),
+    "the held version is part of what was composed, so it is part of the identity",
+  );
+
+  const lost = meetingProofInput(replace((row) => ({ ...row, kind: "NOT_RECORDED", versionId: null, detail: "no pointer" })));
+  assert.throws(() => requireReaderProofMeetingsProjection(lost, expected), /regressed from the phase import authority/);
+
+  const foreign = meetingProofInput(replace((row) => ({
+    ...row,
+    kind: "NOT_RECORDED",
+    versionId: null,
+    heldFrom: { ...heldFrom, contractId: "meetings:diligent:another-body" },
+  })));
+  assert.throws(() => requireReaderProofMeetingsProjection(foreign, expected), /not its registered succession/);
+
+  const doubled = meetingProofInput(replace((row) => ({ ...row, heldFrom })));
+  assert.throws(
+    () => requireReaderProofMeetingsProjection(doubled, expected),
+    /not its registered succession/,
+    "a partition with its own pointer never also claims a held one",
+  );
+
+  const unrelated = base.partitions.find((row) => row.kind === "PROMOTED" && row.contractId !== held!.successorId)!;
+  const stray = meetingProofInput(base.partitions.map((row) => row.contractId === unrelated.contractId
+    ? { ...row, kind: "NOT_RECORDED", versionId: null, heldFrom }
+    : row));
+  assert.throws(() => requireReaderProofMeetingsProjection(stray, expected), /not its registered succession/);
 });
 
 test("meeting proof identity rejects incomplete, ambiguous, or unreadable partition authority", () => {

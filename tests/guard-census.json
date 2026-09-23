@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 693,
-    "named": 6920,
+    "files": 695,
+    "named": 6930,
     "dynamic": 28
   },
   "files": {
@@ -8321,6 +8321,16 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-observability-bounded.test.ts": {
+      "names": [
+        "Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot",
+        "a read that runs past its statement limit is a named store failure, never an empty or zero outcome",
+        "the research cycle never makes the unbounded observability read",
+        "the research cycle's meetings receipt is UNAVAILABLE by name, and it holds approval fail-closed",
+        "the statement limit is validated before any connection is opened"
+      ],
+      "dynamic": 0
+    },
     "tests/routing.test.ts": {
       "names": [
         "85723: no routed step ever names a body that isn't the division's own government",
@@ -9943,6 +9953,16 @@
       "names": [
         "the Wikipedia route is a live deterministic HTTP GET on the permitted Wikimedia REST host",
         "the Wikipedia route's yield contract makes an empty search a FAILED extraction"
+      ],
+      "dynamic": 0
+    },
+    "tests/window-exited-holder.test.ts": {
+      "names": [
+        "a holder id names its process: role, host and pid",
+        "a live pid, another host's process, or a holder that names no process keeps the lease",
+        "an absent, released or expired lease needs nothing and probes no process",
+        "the relaunched runner's cycle is no longer refused under an exited cycle's lease",
+        "the runner checks for an exited holder before every research cycle and every nightly window"
       ],
       "dynamic": 0
     },

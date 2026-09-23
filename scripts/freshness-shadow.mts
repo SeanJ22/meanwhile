@@ -117,10 +117,9 @@ import {
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import {
   factFreshnessFromPermanentMeetings,
-  permanentMeetingsReceipt,
+  RESEARCH_CYCLE_MEETINGS_RECEIPT,
   type PermanentMeetingsReceipt,
 } from "../lib/control-plane/promotion/fact-freshness.ts";
-import { readRoutineDataObservabilityFromConnection } from "../lib/civic-data/observability-store.ts";
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
@@ -1727,11 +1726,7 @@ if (!dry && !canary) {
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   try {
-    const routineObservation = await readRoutineDataObservabilityFromConnection(
-      process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
-      { now: nowIso() },
-    );
-    const meetingsReceipt: PermanentMeetingsReceipt = permanentMeetingsReceipt(routineObservation);
+    const meetingsReceipt: PermanentMeetingsReceipt = RESEARCH_CYCLE_MEETINGS_RECEIPT;
     if (meetingsReceipt.kind === "UNAVAILABLE") {
       runtimeConditions.push(
         `permanent meetings receipt unavailable to immutable fact projection: ${meetingsReceipt.detail}; ` +

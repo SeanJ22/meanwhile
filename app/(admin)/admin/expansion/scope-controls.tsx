@@ -120,12 +120,13 @@ export function SelectScopeControl(props: {
   );
 }
 
-/** Change one selected scope's priority or budget, or remove it. */
+/** Change one selected scope's priority or budget, or remove it. Its note is carried through unchanged. */
 export function EditScopeControl(props: {
   readonly actionRoute: string;
   readonly geography: ExpansionScopeGeography;
   readonly priority: number;
   readonly budgetUsd: number;
+  readonly note: string | null;
 }) {
   const router = useRouter();
   const ids = { priority: useId(), budget: useId() };
@@ -146,13 +147,13 @@ export function EditScopeControl(props: {
     const out = await send(props.actionRoute, {
       type: "expansion.scope.set",
       subject: props.geography.label,
-      input: { geography: props.geography, priority: numbers.priority, budgetUsd: numbers.budgetUsd },
+      input: { geography: props.geography, priority: numbers.priority, budgetUsd: numbers.budgetUsd, note: props.note },
       idempotencyKey: `expansion-set:${props.geography.geoid}:${Date.now()}`,
     });
     setSaid(out);
     setSending(false);
     if (out.ok) router.refresh();
-  }, [props.actionRoute, props.geography, priority, budget, router]);
+  }, [props.actionRoute, props.geography, props.note, priority, budget, router]);
 
   const remove = useCallback(async () => {
     setSending(true);

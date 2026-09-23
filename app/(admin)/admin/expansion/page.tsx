@@ -132,7 +132,7 @@ function ScopeCardView({ card, nowIso }: { card: ScopeCard; nowIso: string }) {
   return (
     <section className="card" id={`scope-${d.key.replace(/[^a-z0-9]+/gi, "-")}`}>
       <ScopeCardSummary card={card} nowIso={nowIso} />
-      <EditScopeControl actionRoute={ACTION_ROUTE} geography={d.geography} priority={d.priority} budgetUsd={d.budgetUsd} />
+      <EditScopeControl actionRoute={ACTION_ROUTE} geography={d.geography} priority={d.priority} budgetUsd={d.budgetUsd} note={d.note} />
     </section>
   );
 }

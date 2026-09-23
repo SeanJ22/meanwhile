@@ -51,7 +51,7 @@ import {
   type RosterReaderDisposition,
 } from "../registry/body-rosters.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
-import { agendaDocumentRepresentation, classifyAgendaPublication } from "../ask/agenda-publication.ts";
+import { agendaDocumentRepresentation, classifyAgendaPublication, readerAgendaDocuments } from "../ask/agenda-publication.ts";
 import type { AgendaDocumentLike } from "../routing/agenda-search.ts";
 import type { ReaderProofMeetingsExpectedAuthority } from "../meetings/snapshot.ts";
 import {
@@ -689,6 +689,32 @@ function recordStates(dataset: Dataset, raw: RawRecord): string[] {
   return unique(tagged);
 }
 
+/**
+ * The agenda rows a reader is shown, per sitting: one per distinct content (the newest row carrying it), and no
+ * publication-index page once the sitting's own document is held. This is `readerAgendaDocuments`, the one
+ * projection /api/agenda, the meeting card and Ask all serve, read once per snapshot.
+ */
+const readerShownAgendaIds = new Map<string, ReadonlySet<string>>();
+function readerShownAgendaDocumentIds(dataset: Dataset): ReadonlySet<string> {
+  const key = `${dataset.path}:${dataset.sha256}`;
+  const cached = readerShownAgendaIds.get(key);
+  if (cached) return cached;
+  const value = object(dataset.value);
+  const documents = (Array.isArray(value.agendaDocuments) ? value.agendaDocuments : []) as AgendaDocumentLike[];
+  const meetings = Array.isArray(value.meetings) ? value.meetings : [];
+  const bySitting = new Map<string, AgendaDocumentLike[]>();
+  for (const document of documents) {
+    const meetingId = string(object(document).meetingId);
+    bySitting.set(meetingId, [...(bySitting.get(meetingId) ?? []), document]);
+  }
+  const shown = new Set<string>();
+  for (const held of bySitting.values()) {
+    for (const document of readerAgendaDocuments(held, { documentsAcrossCorpus: documents, meetingsAcrossCorpus: meetings }).documents) shown.add(string(object(document).id));
+  }
+  readerShownAgendaIds.set(key, shown);
+  return shown;
+}
+
 function eligibility(
   dataset: Dataset,
   raw: RawRecord,
@@ -759,6 +785,7 @@ function eligibility(
   }
   if (dataset.family === "identity" && row.outcome && row.outcome !== "RECONCILED") return { state: "IDENTITY_UNRESOLVED", reason: `Canonical reconciliation outcome=${string(row.outcome)}; identity candidates must not be guessed.` };
   if (dataset.family === "meetings" && raw.unit === "agendaDocuments") {
+    if (!readerShownAgendaDocumentIds(dataset).has(string(row.id))) return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: "Held, and not shown on its own: its content is identical to a newer row a reader is shown for this sitting (a re-fetch, not a version), or it is a publication-index page set aside because the sitting's own document is held (readerAgendaDocuments). The stored row remains provenance." };
     if (row.extraction === "failed" || agendaDocumentRepresentation(row as unknown as AgendaDocumentLike) === "UNREADABLE") return { state: "NOT_READER_ELIGIBLE", reason: "The canonical agenda representation classifier found no readable document text. A successful extraction label cannot promote binary document bytes. The raw artifact remains held; the linked meeting, source URL and explicit OURS readability gap remain independently reader eligible." };
     const across = object(dataset.value).agendaDocuments;
     const meetings = object(dataset.value).meetings;

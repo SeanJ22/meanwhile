@@ -6,7 +6,7 @@ import type { MeetingsSnapshot } from "../../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import { snapshotEntities, titleCaseName } from "../../lib/ask/inventory.ts";
 import { localDate } from "../../lib/ask/meeting-time.ts";
-import { classifyAgendaPublication } from "../../lib/ask/agenda-publication.ts";
+import { classifyAgendaPublication, readerAgendaDocuments } from "../../lib/ask/agenda-publication.ts";
 import { getOutcomeSnapshot } from "../../lib/outcomes/store.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
 import type { EvidencePack, EvidenceRecord } from "../../lib/ask/evidence.ts";
@@ -71,7 +71,12 @@ export async function meetingsAskProof(
       const sitting = outcomes.sittings.find((row) => row.meetingId === meeting.id && row.bodyId === meeting.bodyId && row.extraction === "RETRIEVED");
       for (const rec of sitting?.agenda ?? []) expected.push({ kind: "AGENDA_ITEM", id: `${rec.eventItemId}#agenda`, bodyId: meeting.bodyId, text: rec.title, occurredAt: meeting.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
       const held = documents.filter((document) => document.meetingId === meeting.id);
-      const newest = [...held].sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt))[0];
+      // What a reader is shown for this sitting (readerAgendaDocuments, the projection Ask and /api/agenda
+      // serve): one row per distinct content, newest first, and no publication-index page once the sitting's
+      // own document is held. The newest SHOWN row is the document every item and portal record cites.
+      const shown = readerAgendaDocuments(held, { documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings }).documents;
+      const shownIds = new Set(shown.map((document) => document.id));
+      const newest = shown[0];
       const publication = classifyAgendaPublication({ bodyName: bodyNames.get(meeting.bodyId!)!, meetingId: meeting.id, documentsForMeeting: held, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, discoveredDocumentUrl: meeting.agendaUrl, observations: [], now: Date.now() });
       const recordIds: string[] = [];
       if (newest && publication.acquisition === "ITEMS_READER_READY") for (const [index, item] of publication.items.entries()) {
@@ -83,11 +88,20 @@ export async function meetingsAskProof(
         recordIds.push(newest.documentUrl);
         expected.push({ kind: "AGENDA_DOCUMENT", id: newest.documentUrl, bodyId: meeting.bodyId, sourceUrl: newest.documentUrl, sourceOrg: publication.documentSharedAcrossGovernments ? null : newest.sourceOrg ?? null, retrievedAt: newest.retrievedAt });
       }
-      // ASK-27 carries every native held document/version, exactly like the
-      // meeting route. The newest version still drives extracted item text;
-      // retaining earlier document identities does not infer extra items.
+      // ASK-27 carries every document a reader is shown for the sitting, exactly
+      // like the meeting route: one per distinct content. The newest shown
+      // version drives extracted item text; earlier distinct versions keep their
+      // own identities without inferring extra items. A held row that is not
+      // shown (an identical re-fetch, or an index page set aside) is accounted
+      // for in documentDispositions and expected nowhere in the answer.
       for (const document of held) {
         const reading = classifyAgendaPublication({ bodyName: bodyNames.get(meeting.bodyId!)!, meetingId: meeting.id, documentsForMeeting: [document], documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, now: Date.now() });
+        if (!shownIds.has(document.id)) {
+          documentDispositions.push({ id: document.id, meetingId: meeting.id, documentUrl: document.documentUrl, sourceUrl: document.sourceUrl, sourceOrg: document.sourceOrg, contentHash: document.contentHash, retrievedAt: document.retrievedAt,
+            acquisition: reading.acquisition, expectedRecordIds: [],
+            reason: "Held, not shown on its own: identical content to a newer row shown for this sitting (a re-fetch, not a version), or a publication-index page set aside because the sitting's own document is held." });
+          continue;
+        }
         const publicationIndex = reading.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
         const title = "title" in document && typeof document.title === "string" ? document.title : null;
         expected.push({ kind: "AGENDA_DOCUMENT", id: document.id, documentId: document.id, meetingId: meeting.id,
@@ -99,7 +113,7 @@ export async function meetingsAskProof(
               : title ?? `${meeting.title} — held agenda document` });
         documentDispositions.push({ id: document.id, meetingId: meeting.id, documentUrl: document.documentUrl, sourceUrl: document.sourceUrl, sourceOrg: document.sourceOrg, contentHash: document.contentHash, retrievedAt: document.retrievedAt,
           acquisition: reading.acquisition, expectedRecordIds: [document.id, ...(document === newest ? recordIds : [])],
-          reason: document === newest ? reading.gap?.statement ?? null : "The native held document/version remains visible; the latest held revision alone supplies extracted agenda items." });
+          reason: document === newest ? reading.gap?.statement ?? null : "An earlier distinct version remains visible; the latest shown version alone supplies extracted agenda items." });
       }
     }
     proofs.push(await prove("meetings-and-agendas", group, `What was on this body's agenda on ${localDate(group[0])}?`, ["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT"], expected));

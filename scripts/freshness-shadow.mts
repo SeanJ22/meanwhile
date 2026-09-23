@@ -787,6 +787,13 @@ if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null)
     for (const id of retirementApplied?.retired ?? []) retiredDebtReasons.set(id, reasonOf.get(id) ?? "RETIRED");
   }
 }
+/* The move takes several cycles under the budget, so every cycle says how many moved and how many remain. */
+const movedIds = new Set((movedPlan?.retire ?? []).map((item) => item.obligationId));
+const movedThisCycle = (retirementApplied?.retired ?? []).filter((id) => movedIds.has(id)).length;
+const movedRemaining = movedIds.size - movedThisCycle;
+if (movedIds.size > 0) {
+  console.log(`  retirement: moved to the gap ledger ${movedThisCycle} this cycle, ${movedRemaining} remain`);
+}
 finishPhase("retirement");
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
@@ -2367,8 +2374,9 @@ const lines = [
   ...(movedPlan === null || supersededPlan === null
     ? []
     : [
-        `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) ` +
-          `(${movedPlan.retire.length} moved to the gap ledger, ${supersededPlan.retire.length} the registry no longer emits) · ` +
+        `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) · ` +
+          `moved to the gap ledger ${movedThisCycle} this cycle, ${movedRemaining} remain · ` +
+          `${supersededPlan.retire.length} planned that the registry no longer emits · ` +
           `${retirementApplied?.occurrencesClosed.length ?? 0} open occurrence(s) closed unresolved · ` +
           `${persisted.clearedAsRetired.length} debt(s) tombstoned as retired` +
           (retirementHeldBack.length > 0 ? ` · held back ${JSON.stringify(retirementHolds)}` : "") +
@@ -2456,6 +2464,8 @@ const runRecord = {
           ? null
           : {
               movedToGapLedger: movedPlan.retire.map((item) => item.obligationId),
+              movedThisCycle,
+              movedRemaining,
               gapLedger:
                 "unreadable" in gapLedger
                   ? { path: GAP_LEDGER_PATH, unreadable: gapLedger.unreadable }

@@ -92,25 +92,42 @@ export const ASK_MODEL_RATES: Readonly<Record<string, ModelRate>> = {
 export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
 
 /**
- * **THE STANDING COMPARISON ARM — and after ITEM K it points the other way.**
- * (2026-09-01.)
+ * **THE STANDING COMPARISON ARM: the comparison this repository still owes.**
+ * (2026-09-01; re-pointed 2026-09-23.)
  *
- * H2 evaluated `claude-sonnet-5` against an incumbent `claude-opus-5`. ITEM K
- * landed that switch under the owner's ruling, so the incumbent IS Sonnet 5
- * now and this constant would name the incumbent if it were left alone —
- * `switchVerdict` would then grade a model against itself.
+ * A flagless `pnpm ask:model-compare` measures `ASK_INCUMBENT_MODEL` against
+ * this constant, so it names the comparison that is still OWED, not one that is
+ * already settled.
  *
- * It names `claude-opus-5` instead, and that is not a leftover: §6's
- * reversibility mechanism is *if the new model fails any required question the
- * previous one held on the same run, revert the one constant*. The standing
- * comparison this repository owes is therefore incumbent-versus-revert-target,
- * and a SWITCH verdict on this arm reads, correctly, as **revert**.
+ * - H2 (2026-08-31) measured `claude-sonnet-5` against the incumbent
+ *   `claude-opus-5` and retained the incumbent. ITEM K made that switch under
+ *   the owner's override (RULING 234), and RULING 234's own reversibility clause
+ *   reverted it the same day (RULING 236: the election-day weather question).
+ * - With the incumbent back on `claude-opus-5`, this constant went on naming
+ *   `claude-sonnet-5`, a comparison RULING 236 had settled, while this comment
+ *   still said it named `claude-opus-5`.
+ * - The owner's 2026-09-22 directive puts `claude-opus-5-5` wherever
+ *   `claude-opus-5` is selected, and for Ask that switch stands on RULING 230.
+ *   The 2026-09-23 run (`data/health/ask-model-compare-runs/2026-09-22-1790139767491.json`)
+ *   was NOT_MEASURED, and NOT_MEASURED keeps a comparison owed. So the
+ *   standing arm is `claude-opus-5-5`.
+ *
+ * This constant chooses which two arms a flagless run measures, and nothing
+ * else:
+ * - `switchVerdict` remains the only function that emits a SwitchVerdict, and
+ *   its `to` is read off the measured runs, not off this constant.
+ * - The model Ask actually runs is `ASK_SYNTHESIS_MODEL` in `lib/ask/model.ts`,
+ *   which no comparison can move. A switch still needs every required question
+ *   measured and holding (RULING 230), and then a deliberate edit of that
+ *   constant.
+ * - If Ask ever runs `claude-opus-5-5`, this default equals the incumbent. The
+ *   harness then refuses by name until the next owed comparison is named here.
  *
  * The arms are overridable per run (`--incumbent` / `--challenger` on
- * `pnpm ask:model-compare`), and the run record names the two it used — so no
+ * `pnpm ask:model-compare`), and the run record names the two it used, so no
  * later reader has to infer a record's arms from what this constant says today.
  */
-export const ASK_CHALLENGER_MODEL = "claude-sonnet-5";
+export const ASK_CHALLENGER_MODEL = "claude-opus-5-5";
 
 /**
  * How much cheaper the challenger's tokens are, on the published rates alone.

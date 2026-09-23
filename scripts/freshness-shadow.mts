@@ -231,6 +231,14 @@ import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "..
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
+import {
+  armExpansionBudget,
+  countByScope,
+  orderByPlacement,
+  withCycleCounts,
+} from "../lib/control-plane/expansion/membership.ts";
+import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
+import { loadExpansionPlan } from "../lib/control-plane/expansion/runner-load.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -812,9 +820,54 @@ for (const pending of intents.pendingDispatch) {
   );
 }
 
+/*
+ * **THE OWNER'S EXPANSION SCOPES — STANDING PRIORITY.** (Expansion controls,
+ * 2026-09-23; `lib/control-plane/expansion/membership.ts`.)
+ *
+ * Read once, here, before any order is decided. After the owner's DISPATCH,
+ * due work whose government lies in a selected scope (its territory overlaps
+ * the scope's ZCTAs) goes first: in the Scout lane by scope priority, 1 first;
+ * in the plain-code lane every selected scope together, because the
+ * dispatcher's `placeFirst` is a set — and a cycle with a pending DISPATCH
+ * orders that lane by the DISPATCH alone, so ADM-8 still holds. A scope never
+ * adds, skips or makes due a row, and never opens the paid lane.
+ */
+const expansionLoad = await loadExpansionPlan({
+  repos,
+  root: ROOT,
+  now: NOW,
+  obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
+});
+runtimeConditions.push(...expansionLoad.conditions);
+const expansionPlan = expansionLoad.plan;
+const subjectByObligation = new Map(sync.all.map((o) => [o.id, o.subjectId]));
+/** 0 = the owner's DISPATCH; 1 + n = the n-th selected scope in run order; null = neither. */
+const placementRank = (obligationId: string): number | null => {
+  if (dispatchPriority.has(obligationId)) return 0;
+  const subject = subjectByObligation.get(obligationId);
+  const at = subject === undefined || expansionPlan === null ? null : expansionPlan.placementOf(subject);
+  return at === null ? null : 1 + at;
+};
+/** The dispatcher's first rows when NO DISPATCH is pending: every selected scope's work. Null otherwise, so a DISPATCH keeps both lanes. */
+const scopePlaceFirst: ReadonlySet<string> | null =
+  dispatchPriority.size > 0 || expansionPlan === null
+    ? null
+    : new Set(sync.all.filter((o) => expansionPlan.placedSubjects.has(o.subjectId)).map((o) => o.id));
+if (expansionPlan !== null) {
+  console.log(`  expansion scopes: ${expansionPlan.scopes.length} selected (${expansionPlan.reading.lookup.source} Census geography)`);
+  for (const scope of expansionPlan.scopes) {
+    console.log(
+      `      priority ${scope.decision.priority}  ${scope.decision.geography.label}  budget $${scope.decision.budgetUsd.toFixed(2)}  ` +
+        (scope.kind === "RESOLVED" ? `${scope.zctas.size} ZCTA(s), ${scope.members.size} registered government(s) with work` : `NOT RESOLVED — ${scope.why}`),
+    );
+  }
+}
+
 /* OLDEST FIRST for the deterministic lane, which is the dispatcher's own order — behind the owner's dispatch. */
 dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
-const dueOrdered = placeFirstRows(dueThisCycle, dispatchPriority);
+const dueOrdered = expansionPlan === null
+  ? placeFirstRows(dueThisCycle, dispatchPriority)
+  : orderByPlacement(dueThisCycle, (d) => placementRank(d.obligation.id));
 const dueModel = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
 const dueDeterministicRows = dueOrdered.filter((d) => !dueModel.includes(d));
 const dueDeterministic = dueDeterministicRows.length;
@@ -849,15 +902,18 @@ const modelOrder = orderByReaderImpact(
   orderingInputs,
 );
 const dispatchOrdering: DispatchOrdering | null = dueModel.length === 0 ? null : modelOrder.ordering;
-/* The owner's dispatch goes ahead of the bands (ADM-8); within each group the band order stands. */
-const scoutOrder = [
-  ...modelOrder.ordered.filter((b) => dispatchPriority.has(b.row.id)),
-  ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
-];
+/* The owner's dispatch goes ahead of the bands (ADM-8); within each group the band order stands. With expansion scopes selected, the same
+   DISPATCH-first order continues scope by scope (priority 1 first) before the rest. */
+const scoutOrder = expansionPlan === null
+  ? [
+      ...modelOrder.ordered.filter((b) => dispatchPriority.has(b.row.id)),
+      ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
+    ]
+  : orderByPlacement(modelOrder.ordered, (b) => placementRank(b.row.id));
 const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation): number => {
-  const leftOwner = dispatchPriority.has(left.obligation.id);
-  const rightOwner = dispatchPriority.has(right.obligation.id);
-  if (leftOwner !== rightOwner) return leftOwner ? -1 : 1;
+  const leftRank = placementRank(left.obligation.id) ?? Number.POSITIVE_INFINITY;
+  const rightRank = placementRank(right.obligation.id) ?? Number.POSITIVE_INFINITY;
+  if (leftRank !== rightRank) return leftRank < rightRank ? -1 : 1;
   const orderable = (row: ScheduledObligation) => ({
     id: row.obligation.id,
     subjectId: row.obligation.subjectId,
@@ -904,7 +960,8 @@ if (dispatchOrdering !== null) {
       (dispatchPriority.size > 0 ? ` · owner dispatch first: ${scoutOrder.filter((b) => dispatchPriority.has(b.row.id)).length} of them` : ""),
   );
   for (const b of scoutOrder.slice(0, 12)) {
-    console.log(`      ${dispatchPriority.has(b.row.id) ? "DISPATCH" : `band ${b.band}`}  ${b.row.id}  — ${b.why}`);
+    const rank = placementRank(b.row.id);
+    console.log(`      ${rank === 0 ? "DISPATCH" : rank !== null ? `SCOPE ${rank}` : `band ${b.band}`}  ${b.row.id}  — ${b.why}`);
   }
 }
 
@@ -1085,6 +1142,26 @@ const fleetSafety = new FleetSafetyController({
 if (ledgerUnreadable !== null) {
   fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
 }
+
+/*
+ * THE EXPANSION-SCOPE BUDGETS, armed from the same ledger the Fleet ceiling
+ * reads. Restrict-only: `admitScout` consults the gate AFTER every Fleet gate,
+ * so a scope can hold a Scout back and can never admit one the Fleet refused.
+ * An unreadable ledger arms every budgeted scope to hold its paid work.
+ */
+const expansionBudget = expansionPlan === null
+  ? null
+  : armExpansionBudget(expansionPlan, { now: NOW, costs: ledgerUnreadable === null ? costLedger : null, worstCaseUsd: SCOUT_WORST_CASE_USD });
+let expansionReading: ExpansionCycleReading | null = expansionBudget === null || expansionPlan === null
+  ? null
+  : withCycleCounts(expansionBudget.reading, {
+      dueByScope: countByScope(expansionPlan, dueThisCycle.map((d) => d.obligation.subjectId)),
+      scoutPlacedFirstByScope: countByScope(
+        expansionPlan,
+        scoutOrder.filter((b) => (placementRank(b.row.id) ?? 0) > 0).map((b) => subjectByObligation.get(b.row.id) ?? ""),
+      ),
+      gate: null,
+    });
 
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
@@ -1384,6 +1461,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     ownerDispatch: ownerDispatches.at(-1) ?? null,
     fleetSafety: fleetSafety.snapshot(cycleFinishedAt ?? nowIso()),
     researchProgression,
+    expansion: expansionReading,
   };
 }
 
@@ -1630,11 +1708,13 @@ const cycle = await runCycle({
   budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
   /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
+  /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
+  ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
     decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
     /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
     compareModelRows: compareScoutRows,
-    admitScout: () => {
+    admitScout: (row) => {
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
       if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
@@ -1658,6 +1738,12 @@ const cycle = await runCycle({
         };
       }
       if (Number.isFinite(SCOUT_MAX) && scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `the diagnostic --scout-max cap of ${SCOUT_MAX} for this cycle is reached` };
+      /* The owner's expansion-scope budgets: last, so a scope reservation is
+         only ever taken for a Scout every Fleet gate above already admitted. */
+      if (expansionBudget !== null) {
+        const scoped = expansionBudget.gate.admit(row.obligation.id, row.obligation.subjectId);
+        if (!scoped.admit) return { admit: false, code: scoped.code, why: scoped.why };
+      }
       scoutsAdmittedThisCycle += 1;
       return { admit: true };
     },
@@ -1679,6 +1765,8 @@ const cycle = await runCycle({
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
         spentThisCycle += result.cost?.usd ?? 0;
+        /* A Scout that reported no dollar figure leaves its scope's spend unmeasured, which holds that scope's paid work. */
+        expansionBudget?.gate.settle(result.obligationId, result.cost?.usd ?? null);
         const at = running.findIndex((r) => r.attemptId === result.attemptId);
         if (at >= 0) running.splice(at, 1);
         laneCounts = { ...laneCounts, modelDispatched: laneCounts.modelDispatched + 1 };
@@ -1690,6 +1778,14 @@ const cycle = await runCycle({
   },
 });
 finishPhase("dispatch");
+if (expansionReading !== null && expansionBudget !== null) {
+  /* The scopes' dispatch outcome: what each budget admitted and held this cycle. */
+  expansionReading = withCycleCounts(expansionReading, {
+    dueByScope: new Map(expansionReading.scopes.map((s) => [s.key, s.work?.dueThisCycle ?? 0])),
+    scoutPlacedFirstByScope: new Map(expansionReading.scopes.map((s) => [s.key, s.work?.scoutRowsPlacedFirst ?? 0])),
+    gate: expansionBudget.gate,
+  });
+}
 laneCounts = {
   deterministicDispatched: cycle.lanes?.deterministic.dispatched ?? laneCounts.deterministicDispatched,
   modelDispatched: cycle.lanes?.model.dispatched ?? laneCounts.modelDispatched,

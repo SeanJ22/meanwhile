@@ -63,10 +63,24 @@ import {
   fleetSpendCeilingOverrideUsd,
   isAdminConfig,
   withApiFallback,
+  withExpansionScopes,
   withFleetSpendCeiling,
   API_FALLBACK_MISSING_SEAM,
 } from "./admin-config.ts";
 import { FLEET_SPEND_CEILING_MAX_USD, resolveRollingCeiling } from "../fleet-safety.ts";
+import {
+  SCOPE_TYPE_WORDS,
+  expansionScopesOf,
+  scopeKeyOf,
+  validateScopeBudget,
+  validateScopeGeography,
+  validateScopeKey,
+  validateScopeNote,
+  validateScopePriority,
+  withScopeRemoved,
+  withScopeSet,
+  type ExpansionScopeGeography,
+} from "../expansion/scopes.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
 
 /* ------------------------------------------------------------------ deps */
@@ -689,6 +703,148 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin",
         undo: `Set it back to $${previousUsd.toFixed(2)}.`,
+      };
+    },
+  },
+
+  /* ------------------------------------------------------ expansion.scope.set */
+  {
+    definition: {
+      type: "expansion.scope.set",
+      label: "Select this geography for expansion",
+      does:
+        "Records a geography you chose from the Census lookup, with its priority and its rolling 24-hour budget for paid work there, durably. The runner reads it at the start of its next cycle.",
+      doesNot:
+        "Does not start any work, open the paid lane, add a government or a source, or raise any spend limit. It puts work already registered there first, and its budget can only hold paid work back.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "a geography you want worked first",
+      // The same reasoning as the spend-ceiling dial: the config row's own
+      // compare-and-set is the version check, and a page-level quote would only
+      // refuse good clicks.
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const nested = input.geography;
+      const geography = validateScopeGeography(
+        nested !== null && typeof nested === "object" ? (nested as Readonly<Record<string, unknown>>) : input,
+      );
+      if (!geography.ok) return bad(geography.why);
+      const priority = validateScopePriority(input.priority);
+      if (!priority.ok) return bad(priority.why);
+      const budget = validateScopeBudget(input.budgetUsd);
+      if (!budget.ok) return bad(budget.why);
+      const note = validateScopeNote(input.note);
+      if (!note.ok) return bad(note.why);
+      return { ok: true, value: { geography: geography.value, priority: priority.value, budgetUsd: budget.value, note: note.value } };
+    },
+    async execute(deps, context, input) {
+      const geography = input.geography as ExpansionScopeGeography;
+      const priority = Number(input.priority);
+      const budgetUsd = Number(input.budgetUsd);
+      const at = context.at;
+      let previous: { readonly priority: number; readonly budgetUsd: number } | null = null;
+      let ceilingUsd: number;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
+        const held = expansionScopesOf(current);
+        if (held.malformed > 0) {
+          return refuse(
+            "DOWNSTREAM_REFUSED",
+            `${held.malformed} stored scope entr${held.malformed === 1 ? "y" : "ies"} on your policy row could not be read, so nothing was changed — writing over them would silently drop a budget you set.`,
+          );
+        }
+        ceilingUsd = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(current)).rollingCeilingUsd;
+        const next = withScopeSet(held.scopes, {
+          geography,
+          priority,
+          budgetUsd,
+          note: input.note === null ? null : String(input.note),
+          decidedAt: at,
+          decidedBy: context.request.actorRef,
+          receiptId: context.receiptId,
+        });
+        previous = next.previous === null ? null : { priority: next.previous.priority, budgetUsd: next.previous.budgetUsd };
+        const written = withExpansionScopes(current, { scopes: next.scopes, decidedAt: at });
+        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
+        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
+      } catch (error) {
+        return storeRefusal("your expansion scope", error);
+      }
+      const what = `${geography.label} (${SCOPE_TYPE_WORDS[geography.type].toLowerCase()}, ${geography.stateAbbr})`;
+      const was = previous === null ? "newly selected" : `was priority ${previous.priority} with $${previous.budgetUsd.toFixed(2)}`;
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: scopeKeyOf(geography),
+        says:
+          `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} rolling 24-hour budget for paid work there (${was}), and that survives a restart. ` +
+          "The runner reads it at the start of its next cycle. Selecting it starts nothing: the paid lane stays exactly as it is, " +
+          `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.`,
+        openedWork: [],
+        readBackAt: "/admin/expansion",
+        undo:
+          previous === null
+            ? "Remove this geography from the expansion list."
+            : `Set it back to priority ${previous.priority} with $${previous.budgetUsd.toFixed(2)}.`,
+      };
+    },
+  },
+
+  /* --------------------------------------------------- expansion.scope.remove */
+  {
+    definition: {
+      type: "expansion.scope.remove",
+      label: "Remove this geography from expansion",
+      does: "Takes one geography off your expansion list, durably. The runner stops ordering its work first and drops its budget at the start of its next cycle.",
+      doesNot:
+        "Does not stop, delete or undo any work, and does not change the Fleet ceiling — work there keeps its normal place in the queue.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "a geography on your expansion list",
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const key = validateScopeKey(input.key);
+      return key.ok ? { ok: true, value: { key: key.value } } : bad(key.why);
+    },
+    async execute(deps, context, input) {
+      const key = String(input.key);
+      const at = context.at;
+      let removedLabel: string | null = null;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : null;
+        if (existing === null || current === null) {
+          return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/expansion", undo: null };
+        }
+        const held = expansionScopesOf(current);
+        if (held.malformed > 0) {
+          return refuse(
+            "DOWNSTREAM_REFUSED",
+            `${held.malformed} stored scope entr${held.malformed === 1 ? "y" : "ies"} on your policy row could not be read, so nothing was changed — rewriting the list would silently drop them.`,
+          );
+        }
+        const next = withScopeRemoved(held.scopes, key);
+        if (next.removed === null) {
+          return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/expansion", undo: null };
+        }
+        removedLabel = next.removed.geography.label;
+        await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
+      } catch (error) {
+        return storeRefusal("the change to your expansion list", error);
+      }
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: key,
+        says:
+          `Removed: ${removedLabel} is no longer on your expansion list. From the runner's next cycle its work keeps its normal place in the queue, ` +
+          "and its budget no longer holds paid work back. Nothing already done is undone.",
+        openedWork: [],
+        readBackAt: "/admin/expansion",
+        undo: "Select it again from the Census lookup, with the priority and budget you want.",
       };
     },
   },

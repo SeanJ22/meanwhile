@@ -36,7 +36,7 @@
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { ConsoleNav } from "../../console-nav.tsx";
 
-import { readRoutineDataObservability } from "@/lib/civic-data/observability-server.ts";
+import { readRoutineDataObservability, readRoutinePublicationStatus } from "@/lib/civic-data/observability-server.ts";
 import { readReaderEdgeObservation } from "@/lib/meetings/edge-observability.ts";
 import { formatCalendarDate } from "@/lib/control-plane/eastern-time.ts";
 import {
@@ -59,6 +59,7 @@ import {
 
 import { Band, GapNote, QueueButton, QueueForm, When, gapLabel } from "../../console-ui.tsx";
 import { Bar, Code, DefinedTile, NeedsYouLine, Plain, StatusBlock, type NeedsYou } from "../../status-ui.tsx";
+import { PublicationStatusPanel } from "./publication-status-panel.tsx";
 import { RoutineDataPanel } from "./routine-data-panel.tsx";
 
 export const dynamic = "force-dynamic";
@@ -250,8 +251,13 @@ function Row({ row }: { row: SourceRow }) {
 
 export default async function SourcesPage() {
   const now = new Date();
-  const routineData = await readRoutineDataObservability({ now: now.toISOString() });
-  const readerEdge = await readReaderEdgeObservation(now.toISOString());
+  /* Three independent reads, so the page costs the slowest one, not their sum: the proof-based routine read is
+     bounded and currently times out by name (READ_TIMED_OUT), and the narrow publication read answers in about 3 s. */
+  const [routineData, publication, readerEdge] = await Promise.all([
+    readRoutineDataObservability({ now: now.toISOString() }),
+    readRoutinePublicationStatus(),
+    readReaderEdgeObservation(now.toISOString()),
+  ]);
   const view = buildSourceRegistry({
     nowIso: now.toISOString(),
     credentialPresence: readCredentialPresence(process.env),
@@ -276,6 +282,7 @@ export default async function SourcesPage() {
           Canonical routine-data operations appear first and read only the production data-plane store. The retained
           source and credential capability inventory follows as a separate static view.
         </p>
+        <PublicationStatusPanel read={publication} />
         <RoutineDataPanel outcome={routineData} edge={readerEdge} />
         <h2>Source and credential capability inventory</h2>
         <p className="refusal">
@@ -303,7 +310,8 @@ export default async function SourcesPage() {
         promotion pointers. The wider source and credential capability inventory follows as a static view. Nothing
         on this page calls a public source — a key is never spent to draw a screen.
       </p>
-      <RoutineDataPanel outcome={routineData} edge={readerEdge} />
+      <PublicationStatusPanel read={publication} />
+        <RoutineDataPanel outcome={routineData} edge={readerEdge} />
 
       <h2>Source and credential capability inventory</h2>
       <p className="note">

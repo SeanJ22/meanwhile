@@ -1,6 +1,6 @@
 {
-  "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
-  "buildId": "nmJIGEAY6VrlKX8yvoeE4",
+  "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
+  "buildId": "E1cg0vwcuRVHV8-HjriQj",
   "base": "http://localhost:3210",
   "sourceHashes": [
     {
@@ -261,7 +261,7 @@
     },
     {
       "path": "components/map/list-overlay.tsx",
-      "sha256": "1fc947b40af3ed2d3eaece202b33061c65ec5fa6f8e46202d2c1edaa5f05bcaa"
+      "sha256": "707e70fc5597d95cf79e10acf0e5dede0f1a407c7fe3db6e7a7d22dab7df2e4d"
     },
     {
       "path": "components/map/map-canvas.tsx",
@@ -281,7 +281,7 @@
     },
     {
       "path": "components/map/meeting-panel.tsx",
-      "sha256": "dcae4ddfcdf98e466eea61f4cfaeecf067dc8cd9f6471681cc1a57660e398cb3"
+      "sha256": "6bdf6440af7ccfc09c8a973efc09a795cc1705e38bbba27f17aaf86e58a5fd6f"
     },
     {
       "path": "components/map/meeting-status-pill.tsx",
@@ -1741,11 +1741,11 @@
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "d9588b414dd875e074bc1f7406e97ae155dd6fed0fb08b028aea1129def53133"
+      "sha256": "2dae4c6a7b5fedcd7da0d88e1b3d684e4dd557118942ddd1680c5720e388ba38"
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "16b15b59a7eb93bdd404ec22d044fa0d8381663f9dc277641a746a677012934a"
+      "sha256": "40793eb5763b7c2c06f939e63d769d944b74ddf51eaf786275c3f507f496803f"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -1801,7 +1801,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "1a48d005f7653ce8adee4cfd8c08fad6ed17e017d8747a166a83f7876fa33e49"
+      "sha256": "e1bc0d808aeb14b193db24c32a2f5a7eb49c68ef9347bd20b5dc73d3f89bb4fc"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -1817,7 +1817,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "4e3ff4243a950f9c3b7dcd57e63c058d6866ccb1952fa289e81520ebe44cd003"
+      "sha256": "5e045e2b5e843d9d88585934183fa2eb3b4263d929b6b14dd29b1360984d8105"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2913,7 +2913,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "9fa427152ede1db9347b86e81ab5d0f306cfb2d25d3cacc0e1b10b56be21550f"
+      "sha256": "cb3213543216b98b67f26fbddda7f599259b9c54ae139f640d2949d67f53390a"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -7769,18 +7769,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b160766454fd3e4f73af346a66e69e43d526de1dd907710c5b53fbcba3c4f3d3"
+      "payloadSha256": "52722f2010a095d47fa808acdc09d575fd90e2fa32bd95e38a9d5d74793ae01b"
     },
     {
       "surface": "funding/state-money",
@@ -8245,18 +8245,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "8694773cdcfcf7e0a1bfa64cd71c7e85c7d9a4937ce7aa7e96f2072b3443d93e"
+      "payloadSha256": "12ec6fe1bba44ce6739b37e22ac4482046dd08f48b8398e2b682368d20bfb2ea"
     },
     {
       "surface": "funding/state-money",
@@ -10722,7 +10722,7 @@
           "typeConcentrationSentences": [],
           "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -10730,18 +10730,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "864b11292033c05b38e186bd186972f64a8bbc5f33623b949827176e8a36c64e"
+      "payloadSha256": "fb82fe340ce75a84a245a30a41db6fdcab6ad4a40834f3de8b085c3752c3987a"
     },
     {
       "surface": "funding/state-money",
@@ -11198,8 +11198,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -11290,8 +11290,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -11403,7 +11403,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -11411,18 +11411,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "cf7462c932f38bed7f72e5e47e9e7efbb48a175c0d984f037991d205761e567d"
+      "payloadSha256": "fab43d254b5fadcf9fadfc634c72934e87a36b73ba93909d01af345309df080c"
     },
     {
       "surface": "funding/state-money",
@@ -11874,13 +11874,13 @@
           "secondHop": {
             "C00401224": {
               "name": "ACTBLUE",
-              "receipts": 2074564660.18,
+              "receipts": 2258057679.23,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00401224",
               "designation": "U",
@@ -11941,8 +11941,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00941567/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00941567",
               "designation": "J",
@@ -12056,7 +12056,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -12064,18 +12064,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "7cb25567eb9e0b07714e728fe2dd49acf867339559a25f93629e2da0d08ae688"
+      "payloadSha256": "47d5dc6a88ad981ea04f59fdcfc830dd5679544aad604177e5f1f1a7bdb927fa"
     },
     {
       "surface": "funding/state-money",
@@ -12103,7 +12103,7 @@
           "typeConcentrationSentences": [],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -12111,18 +12111,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6e2e528295fdc104157d9131610188cc55eadfa538e82d472cabd63f3fd9b2bc"
+      "payloadSha256": "7471b552876eb2482bcdb8bee1fe6209b7569e6f7286776feaed0d255986328a"
     },
     {
       "surface": "funding/state-money",
@@ -12150,7 +12150,7 @@
           "typeConcentrationSentences": [],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -12158,18 +12158,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6e2e528295fdc104157d9131610188cc55eadfa538e82d472cabd63f3fd9b2bc"
+      "payloadSha256": "7471b552876eb2482bcdb8bee1fe6209b7569e6f7286776feaed0d255986328a"
     },
     {
       "surface": "funding/state-money",
@@ -12621,13 +12621,13 @@
           "secondHop": {
             "C00401224": {
               "name": "ACTBLUE",
-              "receipts": 2074564660.18,
+              "receipts": 2258057679.23,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00401224",
               "designation": "U",
@@ -12688,8 +12688,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00941567/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00941567",
               "designation": "J",
@@ -12803,7 +12803,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -12811,18 +12811,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "7cb25567eb9e0b07714e728fe2dd49acf867339559a25f93629e2da0d08ae688"
+      "payloadSha256": "47d5dc6a88ad981ea04f59fdcfc830dd5679544aad604177e5f1f1a7bdb927fa"
     },
     {
       "surface": "funding/state-money",
@@ -13279,8 +13279,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -13371,8 +13371,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -13484,7 +13484,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -13492,18 +13492,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "cf7462c932f38bed7f72e5e47e9e7efbb48a175c0d984f037991d205761e567d"
+      "payloadSha256": "fab43d254b5fadcf9fadfc634c72934e87a36b73ba93909d01af345309df080c"
     },
     {
       "surface": "funding/state-money",
@@ -13962,7 +13962,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -13970,18 +13970,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b71d41e739d37dabfbb2995206b794a18d315188083c5a0056eccc0c23cd8d67"
+      "payloadSha256": "1be85e11931496a0d3f1915b6405115b0524721d8202390dfeb5e1f8e88d8b7d"
     },
     {
       "surface": "funding/state-money",
@@ -14492,8 +14492,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00663609/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00663609",
               "designation": "D",
@@ -14584,8 +14584,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00248948/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00248948",
               "designation": "D",
@@ -14676,8 +14676,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00892752/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00892752",
               "designation": "D",
@@ -14763,13 +14763,13 @@
             },
             "C00441949": {
               "name": "JSTREETPAC",
-              "receipts": 6616102.17,
+              "receipts": 7339590.2,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00441949/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00441949",
               "designation": "B",
@@ -14860,8 +14860,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00617803/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00617803",
               "designation": "D",
@@ -14975,7 +14975,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -14983,18 +14983,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "cb4aea4ea207718b24042ee80019031acc1cb8bb6ede2adc95ffd037f1242dc3"
+      "payloadSha256": "880ac95b0376d31c62679a8b7b7990101f0f98092d4f0cd1981d9acdbfa13631"
     },
     {
       "surface": "funding/state-money",
@@ -15505,8 +15505,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00663609/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00663609",
               "designation": "D",
@@ -15597,8 +15597,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00248948/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00248948",
               "designation": "D",
@@ -15689,8 +15689,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00892752/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00892752",
               "designation": "D",
@@ -15776,13 +15776,13 @@
             },
             "C00441949": {
               "name": "JSTREETPAC",
-              "receipts": 6616102.17,
+              "receipts": 7339590.2,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00441949/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00441949",
               "designation": "B",
@@ -15873,8 +15873,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00617803/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00617803",
               "designation": "D",
@@ -15988,7 +15988,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -15996,18 +15996,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "cb4aea4ea207718b24042ee80019031acc1cb8bb6ede2adc95ffd037f1242dc3"
+      "payloadSha256": "880ac95b0376d31c62679a8b7b7990101f0f98092d4f0cd1981d9acdbfa13631"
     },
     {
       "surface": "funding/state-money",
@@ -16466,7 +16466,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -16474,18 +16474,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b71d41e739d37dabfbb2995206b794a18d315188083c5a0056eccc0c23cd8d67"
+      "payloadSha256": "1be85e11931496a0d3f1915b6405115b0524721d8202390dfeb5e1f8e88d8b7d"
     },
     {
       "surface": "funding/state-money",
@@ -18687,13 +18687,13 @@
           "secondHop": {
             "C00401224": {
               "name": "ACTBLUE",
-              "receipts": 2074564660.18,
+              "receipts": 2258057679.23,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00401224",
               "designation": "U",
@@ -18775,7 +18775,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -18783,18 +18783,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "df1d94b605aa697047e35fb67d66180d3324cf2cce70178cbadaac954ff89010"
+      "payloadSha256": "f465decd72b0c3b7153ea6ebf22799b91b54f7c1137345517217b51bd8967d1f"
     },
     {
       "surface": "funding/state-money",
@@ -19251,8 +19251,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00904607/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00904607",
               "designation": "J",
@@ -19343,8 +19343,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00890137/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00890137",
               "designation": "J",
@@ -19456,7 +19456,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -19464,18 +19464,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b8363c70c704b0dd9ffe3bcaa62e57391f35a5a5d530ecf3d63324a6c92859f1"
+      "payloadSha256": "7eb891166dbb9ed3931c4224c38263a0876a35172bd1405c907ef56f4c20a291"
     },
     {
       "surface": "funding/state-money",
@@ -19712,7 +19712,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -19720,18 +19720,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "718e7ef36853430020a73e4d1aa57d1e2e3e8a4e9a57baab71efbff2b19ca56b"
+      "payloadSha256": "6f17d6ef936c430d56cf2b062b9d79589f777af0fbbf10608d12cb85ed20419f"
     },
     {
       "surface": "funding/state-money",
@@ -20206,8 +20206,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00004036/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00004036",
               "designation": "B",
@@ -20322,7 +20322,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -20330,18 +20330,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "52c4b483801668d5212c6d25d87535c448941e0834aa3531d958061a3595e18e"
+      "payloadSha256": "8794db887a3379f23a8504f6e84ef82f0a9b9fc166518a0b85b6371e8be8fbd5"
     },
     {
       "surface": "funding/state-money",
@@ -20838,7 +20838,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -20846,18 +20846,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "f3bb5594265988476096ac5d3a0044433ee4323541c861510ae29fbe8acd5918"
+      "payloadSha256": "074c06268207063f1839c9d3a93b3ba7ca24f13ac6a386c375c6992569615a0b"
     },
     {
       "surface": "funding/state-money",
@@ -21314,8 +21314,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00694323/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00694323",
               "designation": "U",
@@ -21406,8 +21406,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00909648/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00909648",
               "designation": "J",
@@ -21521,7 +21521,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -21529,18 +21529,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6b46ef19298911cedd6dcf109220a60228439d936b476b8ebe32b201a3c83579"
+      "payloadSha256": "5412fb1b56f604ad18224b51941bcb6cac84d218f8d8ba83e6b9ad39327060fe"
     },
     {
       "surface": "funding/state-money",
@@ -21992,13 +21992,13 @@
           "secondHop": {
             "C00401224": {
               "name": "ACTBLUE",
-              "receipts": 2074564660.18,
+              "receipts": 2258057679.23,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00401224",
               "designation": "U",
@@ -22082,7 +22082,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -22090,18 +22090,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "5008006145478aef74003c9ddf4908cd3030f96cf3840bfad568ca3cd33cbcdf"
+      "payloadSha256": "07744f751cfadfe28342bbeb1dd000fe9a4fded02f9c16133ea92942e8441f47"
     },
     {
       "surface": "funding/state-money",
@@ -22594,8 +22594,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00949925/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00949925",
               "designation": "J",
@@ -22686,8 +22686,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00878702/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00878702",
               "designation": "J",
@@ -22778,8 +22778,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00898965/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00898965",
               "designation": "J",
@@ -22870,8 +22870,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00949933/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00949933",
               "designation": "J",
@@ -22983,7 +22983,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -22991,18 +22991,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "a5b3f1dad8676ea1b0da179d3bf0cc67c8156d4da0d1c6b9b62abb5db542d641"
+      "payloadSha256": "b5b506b7e62c8cff8997b0a93cd62c14607f0538f6a0039e160b61f63f2f43ed"
     },
     {
       "surface": "funding/state-money",
@@ -23423,8 +23423,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00924175/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00924175",
               "designation": "J",
@@ -23536,7 +23536,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -23544,18 +23544,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "0284f7e25a3cee3e18fc7192db506ce74123a7c5e1acfd547fc849eb4a0fd2a5"
+      "payloadSha256": "7a9fef492dbc7426cb7ea3f5c65cc2bd5a92c980c6caab8c166c3f664deee182"
     },
     {
       "surface": "funding/state-money",
@@ -42608,8 +42608,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00113241/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00113241",
               "designation": "B",
@@ -42700,8 +42700,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00489005/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00489005",
               "designation": "B",
@@ -42792,8 +42792,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00784694/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00784694",
               "designation": "D",
@@ -42909,7 +42909,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -42917,18 +42917,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "ef20f37c12644aaa6e12fd50e4eaec8be33a04a9d8d63e44a6bae0981acf1260"
+      "payloadSha256": "d304ec81427c40e204dc25d10d5a04bffa4aef33714ae8410a68e2ff19a9b34a"
     },
     {
       "surface": "funding/state-money",
@@ -43434,13 +43434,13 @@
           "secondHop": {
             "C00517235": {
               "name": "TURQUOISE PAC",
-              "receipts": 621678,
+              "receipts": 654178,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00517235/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00517235",
               "designation": "D",
@@ -43531,8 +43531,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00174011/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00174011",
               "designation": "U",
@@ -43623,8 +43623,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00003251/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00003251",
               "designation": "B",
@@ -43715,8 +43715,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00685552/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00685552",
               "designation": "D",
@@ -43831,7 +43831,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -43839,18 +43839,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "bf2b18070d523b60a4a4fc249d28b3dcbd8b4dbffe22a286ed322465a242928a"
+      "payloadSha256": "3915f0a9d43073e6360e544011de2322759563bec2b6b198b44b144da11e3428"
     },
     {
       "surface": "funding/state-money",
@@ -44289,8 +44289,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00734319/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00734319",
               "designation": "J",
@@ -44402,7 +44402,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -44410,18 +44410,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6d3b908e106862471a3999cd21c54bf7fd70ac28872148577afda16f463e898b"
+      "payloadSha256": "f9c77ef1e264a98926255eec5919aa046ef5ac6507907932afd657168f8e0ec4"
     },
     {
       "surface": "funding/state-money",
@@ -44918,7 +44918,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -44926,18 +44926,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "3e3970270948db9e7dbfdefc16561fa5eb951a1df21eae8234f599368f6c98ff"
+      "payloadSha256": "8299aefe16d5e408097c272901b3f468a785061acad4d6ed6758bfcb61225b72"
     },
     {
       "surface": "funding/state-money",
@@ -47002,8 +47002,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00734319/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00734319",
               "designation": "J",
@@ -47115,7 +47115,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -47123,18 +47123,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6d3b908e106862471a3999cd21c54bf7fd70ac28872148577afda16f463e898b"
+      "payloadSha256": "f9c77ef1e264a98926255eec5919aa046ef5ac6507907932afd657168f8e0ec4"
     },
     {
       "surface": "funding/state-money",
@@ -47191,18 +47191,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b160766454fd3e4f73af346a66e69e43d526de1dd907710c5b53fbcba3c4f3d3"
+      "payloadSha256": "52722f2010a095d47fa808acdc09d575fd90e2fa32bd95e38a9d5d74793ae01b"
     },
     {
       "surface": "funding/state-money",
@@ -47659,8 +47659,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -47751,8 +47751,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -47864,7 +47864,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -47872,18 +47872,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "cf7462c932f38bed7f72e5e47e9e7efbb48a175c0d984f037991d205761e567d"
+      "payloadSha256": "fab43d254b5fadcf9fadfc634c72934e87a36b73ba93909d01af345309df080c"
     },
     {
       "surface": "funding/state-money",
@@ -48340,8 +48340,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00848317/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00848317",
               "designation": "J",
@@ -48432,8 +48432,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00904607/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00904607",
               "designation": "J",
@@ -48545,7 +48545,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -48553,18 +48553,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b05d67b1d60e931a7940bb7a2b4666a25eb1b53ab11c5341c4f4e1a125b9aca8"
+      "payloadSha256": "0c2ec2f8412a06ab052448fb2b90d1ac6f091063d83905b07ab2790f768a47cc"
     },
     {
       "surface": "funding/state-money",
@@ -49021,8 +49021,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00904607/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00904607",
               "designation": "J",
@@ -49113,8 +49113,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00890137/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00890137",
               "designation": "J",
@@ -49226,7 +49226,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -49234,18 +49234,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b8363c70c704b0dd9ffe3bcaa62e57391f35a5a5d530ecf3d63324a6c92859f1"
+      "payloadSha256": "7eb891166dbb9ed3931c4224c38263a0876a35172bd1405c907ef56f4c20a291"
     },
     {
       "surface": "funding/state-money",
@@ -49756,8 +49756,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00663609/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00663609",
               "designation": "D",
@@ -49848,8 +49848,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00248948/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00248948",
               "designation": "D",
@@ -49940,8 +49940,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00892752/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00892752",
               "designation": "D",
@@ -50027,13 +50027,13 @@
             },
             "C00441949": {
               "name": "JSTREETPAC",
-              "receipts": 6616102.17,
+              "receipts": 7339590.2,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00441949/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00441949",
               "designation": "B",
@@ -50124,8 +50124,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00617803/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00617803",
               "designation": "D",
@@ -50239,7 +50239,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -50247,18 +50247,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "cb4aea4ea207718b24042ee80019031acc1cb8bb6ede2adc95ffd037f1242dc3"
+      "payloadSha256": "880ac95b0376d31c62679a8b7b7990101f0f98092d4f0cd1981d9acdbfa13631"
     },
     {
       "surface": "funding/state-money",
@@ -50751,8 +50751,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00408260/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00408260",
               "designation": "B",
@@ -50843,8 +50843,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00457234/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00457234",
               "designation": "B",
@@ -50935,8 +50935,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00009985/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00009985",
               "designation": "B",
@@ -51027,8 +51027,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00364455/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00364455",
               "designation": "U",
@@ -51119,8 +51119,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00426874/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00426874",
               "designation": "B",
@@ -51234,7 +51234,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -51242,18 +51242,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "7f1176143d6a54999e421bdc4e8e5a1ad3f46358604c2e8b665ea55df993cb9c"
+      "payloadSha256": "85a9e99f5851cee1fe0ddc5ae2dc0e454b3ebb31a57c62dd2f6383beb2881916"
     },
     {
       "surface": "funding/state-money",
@@ -51741,13 +51741,13 @@
           "secondHop": {
             "C00401224": {
               "name": "ACTBLUE",
-              "receipts": 2074564660.18,
+              "receipts": 2258057679.23,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00401224",
               "designation": "U",
@@ -51808,8 +51808,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00706861/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00706861",
               "designation": "J",
@@ -51900,8 +51900,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00908020/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00908020",
               "designation": "J",
@@ -51955,7 +51955,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -51963,18 +51963,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "b0900da8f217d1f695cbaac997084fa73b96d4557c2d7a6bf640f9d53e76f1e8"
+      "payloadSha256": "563378aa41a50d210c1ffe9b9806086bf3fa70ccc76deb7675ca26de2f7a7397"
     },
     {
       "surface": "funding/state-money",
@@ -52467,8 +52467,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00938720/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00938720",
               "designation": "J",
@@ -52559,8 +52559,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00912907/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00912907",
               "designation": "J",
@@ -52674,7 +52674,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -52682,18 +52682,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "187d4b13cf1767aaeae92f863ff75ac3cc70715fbe96da2035bdcdce10e25ca9"
+      "payloadSha256": "8b51935476e84dad58a4784c4cdd4ffa986319d6e2344f3b57793fc2514d9656"
     },
     {
       "surface": "funding/state-money",
@@ -52706,18 +52706,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6fe8430106d48e5f70cc0526d15fa87d540e4a8243ee8e11326975cfd3c1df3d"
+      "payloadSha256": "1d03dc35efbedccb32cfaf023e5c2f81f3761463a227b1f63972e2d6a4d539c7"
     },
     {
       "surface": "funding/state-money",
@@ -53223,13 +53223,13 @@
           "secondHop": {
             "C00517235": {
               "name": "TURQUOISE PAC",
-              "receipts": 621678,
+              "receipts": 654178,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00517235/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00517235",
               "designation": "D",
@@ -53320,8 +53320,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00174011/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00174011",
               "designation": "U",
@@ -53412,8 +53412,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00003251/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00003251",
               "designation": "B",
@@ -53504,8 +53504,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00685552/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00685552",
               "designation": "D",
@@ -53620,7 +53620,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -53628,18 +53628,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "bf2b18070d523b60a4a4fc249d28b3dcbd8b4dbffe22a286ed322465a242928a"
+      "payloadSha256": "3915f0a9d43073e6360e544011de2322759563bec2b6b198b44b144da11e3428"
     },
     {
       "surface": "funding/state-money",
@@ -53652,18 +53652,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "6fe8430106d48e5f70cc0526d15fa87d540e4a8243ee8e11326975cfd3c1df3d"
+      "payloadSha256": "1d03dc35efbedccb32cfaf023e5c2f81f3761463a227b1f63972e2d6a4d539c7"
     },
     {
       "surface": "funding/state-money",
@@ -54133,13 +54133,13 @@
           "secondHop": {
             "C00401224": {
               "name": "ACTBLUE",
-              "receipts": 2074564660.18,
+              "receipts": 2258057679.23,
               "dataClass": "FEC_CONTRIBUTOR",
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00401224",
               "designation": "U",
@@ -54200,8 +54200,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00107235/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00107235",
               "designation": "B",
@@ -54292,8 +54292,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00016683/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00016683",
               "designation": "B",
@@ -54384,8 +54384,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00004812/",
-                "verifiedAt": "2026-09-19",
-                "collectedAt": "2026-09-19"
+                "verifiedAt": "2026-09-22",
+                "collectedAt": "2026-09-22"
               },
               "committeeId": "C00004812",
               "designation": "B",
@@ -54500,7 +54500,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-19"
+          "collectedAt": "2026-09-22"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -54508,18 +54508,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "3d686e7d85c2e389d7f0c22f6a92f5dfe80560d191c8bf7b85eaa76b56b032df"
+      "payloadSha256": "17ab1ba058a89c34af9a18847a045ad5aa7fdfffce6c82c416bb4ee58055cf04"
     },
     {
       "surface": "funding/state-money",
@@ -54576,18 +54576,18 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
-          "lastKnownGoodVersionId": "cv-31cb4d27cc741dd2009dbf12df7eb31a",
+          "versionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
+          "lastKnownGoodVersionId": "cv-4c139d8dcb5fc65ce0d84fd1c1688b52",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-20T04:17:33.222Z",
-          "promotedAt": "2026-09-20T04:17:33.473Z",
+          "retrievedAt": "2026-09-22T23:37:48.560Z",
+          "promotedAt": "2026-09-22T23:37:48.835Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-27T04:17:33.222Z"
+          "staleAt": "2026-09-29T23:37:48.560Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "payloadSha256": "8694773cdcfcf7e0a1bfa64cd71c7e85c7d9a4937ce7aa7e96f2072b3443d93e"
+      "payloadSha256": "12ec6fe1bba44ce6739b37e22ac4482046dd08f48b8398e2b682368d20bfb2ea"
     },
     {
       "surface": "funding/state-money",
@@ -58595,7 +58595,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8d28f6e54ef58f47dde7b8fd0ee89bae15da21f3bcb5240763a35add9f59dd73"
+      "payloadSha256": "9ec7cdeb6ef925765d0a4839dcfc181a2ee27d3979e5a112370cb85129962cf6"
     },
     {
       "surface": "agenda/map",
@@ -58614,7 +58614,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "4c01e2bb98d0bd489821182790e5c4c1e5bab1021994a4e018b5ceca76f55d74"
+      "payloadSha256": "7c73c416443783092efe7faa0b29d57b25217392719849d31fb9350b1265771c"
     },
     {
       "surface": "agenda/map",
@@ -58633,7 +58633,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "b4d6c1dd94218c7cba68662ed72c8ea885b80ffaa7140bdba74c4ca3ad3e2022"
+      "payloadSha256": "097d79e615c51e825b651de9c6a3ea5b013968453e001027afac165c3c36968a"
     },
     {
       "surface": "agenda/map",
@@ -58652,7 +58652,7 @@
         "votes": 310
       },
       "status": "HELD",
-      "payloadSha256": "f8659d95ebecf476d2e707d242e374f2e460609d02561e86053eb7ed3191c586"
+      "payloadSha256": "40e0bb6ee3b8360a0bd089576cf436d42a7485202e2ec5221f020760a3360897"
     },
     {
       "surface": "agenda/map",
@@ -58671,7 +58671,7 @@
         "votes": 220
       },
       "status": "HELD",
-      "payloadSha256": "d37ee85f9949db47a6858092d85bfed3261f145e2cead0c0415b96479e8e3d33"
+      "payloadSha256": "7c383de4ccdab3e580773762228cdc65916b3f10b2af7edacfcdd7d90688a2a7"
     },
     {
       "surface": "agenda/map",
@@ -58690,7 +58690,7 @@
         "votes": 380
       },
       "status": "HELD",
-      "payloadSha256": "b44d0398696fd423fc0046b51ddb1a2894e8a04f59ecd68e187272037ac53c09"
+      "payloadSha256": "754a7f6be328b84bf6fddaef91f74fafbcea3ecc563501dbc7abaadf6c853986"
     },
     {
       "surface": "agenda/map",
@@ -58709,7 +58709,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "112bf7e1090aeaa48ee5cefe71751198d223c3853f3d9a551888c459862a8076"
+      "payloadSha256": "257bd9973b619c9c5e0fe5d2fa24b5e6dbd1444f276aa509ef7e2fa131fe65b9"
     },
     {
       "surface": "agenda/map",
@@ -58728,7 +58728,7 @@
         "votes": 145
       },
       "status": "HELD",
-      "payloadSha256": "ae5114396c231805ef8454b0f6590a473ef592848129f803c6b954e67a21dd72"
+      "payloadSha256": "50efd343f902561e955aa08887e106d9a221717cfcd271b2d56d278716a7061d"
     },
     {
       "surface": "agenda/map",
@@ -58747,7 +58747,7 @@
         "votes": 185
       },
       "status": "HELD",
-      "payloadSha256": "f4243cc426a1a14975c6b3b6bb1c263478be4d641cb7f89ed6530fe659d967d5"
+      "payloadSha256": "d08aa30dbf8520192686fa2b230999977ed83c278bb1debd3dca83f8e3ebf1d7"
     },
     {
       "surface": "agenda/map",
@@ -58766,7 +58766,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "9554f19c6ba27e81af67322b2623541023c2c805a421019a62991e2ad289d69c"
+      "payloadSha256": "e95d55fc88ea9a463fd9ccebde1f5ff3d978e44401b3cbd24e85a956087f6f80"
     },
     {
       "surface": "agenda/map",
@@ -58785,7 +58785,7 @@
         "votes": 230
       },
       "status": "HELD",
-      "payloadSha256": "79c43526ea7b5a6e2042cd4ceb79fab9297dc0741ae19e4ee5d16c61479bce2a"
+      "payloadSha256": "57b6eca8a820a54b427ad34041765d7e5fb4ab5ccc5621ea71148b2c628245f3"
     },
     {
       "surface": "agenda/map",
@@ -58804,7 +58804,7 @@
         "votes": 285
       },
       "status": "HELD",
-      "payloadSha256": "a918877860a745a9ab9f020011df27e272a48d7f8ff94f5966c0d8f9aa7ca7c6"
+      "payloadSha256": "fc195c4278409da7be0581f6ec1060031d03e8b7c05230de2b2c620d751a900a"
     },
     {
       "surface": "agenda/map",
@@ -58823,7 +58823,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "82e8c63a78764eb436df36c2ae6e80985e492517bb94f827089091f13cb80700"
+      "payloadSha256": "2c54d9b2b003132950c2eabc09af44c8699c4e07ebd5e1804c9a72cff2994457"
     },
     {
       "surface": "agenda/map",
@@ -58842,7 +58842,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "5233500a2678ce78d9336b1bf46f37d35f6d3c9f42eba03966778f5ebee99472"
+      "payloadSha256": "e9c165da030f314dc941ec6f3574c446d9f3fef78f011c6cfcb5d07b3d45df99"
     },
     {
       "surface": "agenda/map",
@@ -58861,7 +58861,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "cf8c8368e8465e7d0fe5c4b008e1560c3d61a9b543a6a75d9ba69c7d8b7757c0"
+      "payloadSha256": "510662d4876ec38169ce839bbd59296d83af896f1d729dd391f1cde6ada5a471"
     },
     {
       "surface": "agenda/map",
@@ -58880,7 +58880,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "dcd1b27b01a3c4ce994e77da959cb7c07ff53c7295f4671659976dceed78511a"
+      "payloadSha256": "115236b44704cc03d42a00837ac91a86d37d7cc845f126737850618dd6e9c79a"
     },
     {
       "surface": "agenda/map",
@@ -58899,7 +58899,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "512b7cd9fc27c879c94ea71a2c1c25871149ba3b7430d840cbd43de74396d7d5"
+      "payloadSha256": "34c58185b27bbff03a4f3f86e5364aa2728e79cd61f9dda0e0258662937bb0c5"
     },
     {
       "surface": "agenda/map",
@@ -58918,7 +58918,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "ba791f6cb8ed28c50cc31efdd8a526d0f9f6a046eb03b6521797e951f2679714"
+      "payloadSha256": "7f554ee2fcce23816f4f7f03ea1efb4993caf9758bba2cb279920068e6101751"
     },
     {
       "surface": "agenda/map",
@@ -58937,7 +58937,7 @@
         "votes": 5
       },
       "status": "HELD",
-      "payloadSha256": "01130303a61e0f18552214fdaddf5c644011cec9fe8410612076fbfe782e54d0"
+      "payloadSha256": "84dc1f2593e8c076c83d769e67822a2761c61858127e944098097367e2d55e06"
     },
     {
       "surface": "agenda/map",
@@ -58956,7 +58956,7 @@
         "votes": 8
       },
       "status": "HELD",
-      "payloadSha256": "8b901462137df22b89be27d9fb693c3c8097c0b408959656099da1b9168a8339"
+      "payloadSha256": "395cb66c93587a15f537a2ab49ed8760e769e3b1653a67d2df24928803f358b9"
     },
     {
       "surface": "agenda/map",
@@ -58975,7 +58975,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "8feffa18c6e090bdade8c8ea2b97a7280343fcd65e427aa343e75ae4518b6892"
+      "payloadSha256": "472daf1b644d34f7d5b79e85572cf65e0dd59d5e0c07aac6fa5f6a892010fd7f"
     },
     {
       "surface": "agenda/map",
@@ -58994,7 +58994,7 @@
         "votes": 0
       },
       "status": "HELD",
-      "payloadSha256": "31b9e5656b3cd290845c06b1f16e5dfc12efaef62396624f91211f74fbfd258d"
+      "payloadSha256": "df7f3269d1b5a3b709f3192c0a68c2a38ff2a1682600f5845a193947611d4a71"
     }
   ]
 }

@@ -111,7 +111,6 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
-          <MeetingListingNotice groups={listingCount.groups} />
           {/* MTG-6: venue name and address, in gray, beneath — the Parks and
               Recreation pattern the author named as the reference. Where the
               building IS the title there is nothing left to repeat under it,
@@ -158,7 +157,19 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
           first row of an eight-meeting card. It now renders the three groups,
           and the whole card's provenance collapses to ONE credit line at the
           foot (SRC-1). */}
-      <div className="overflow-y-auto">
+      <div className="min-h-0 overflow-y-auto">
+        {/* The unresolved-listing notice lives in this SCROLLING body, never the
+            pinned header above. It grows one line per listing group, and in the
+            header a long one outgrew the panel's height cap on a phone (Newbury
+            NH, `.bottom-sheet > .panel` at 55dvh): the header cannot shrink
+            below its content, so this list collapsed to zero height and every
+            sitting in it was unreachable. Here it still reads first, directly
+            under the count it explains, and scrolls with the sittings. */}
+        {listingCount.groups.length > 0 && (
+          <div className="px-5 pt-2">
+            <MeetingListingNotice groups={listingCount.groups} />
+          </div>
+        )}
         {groups.map((group) => (
           <section key={group.id}>
             <p className="t-structure sticky top-0 z-[1] bg-[var(--panel)] px-5 py-2 text-label">

@@ -1,6 +1,6 @@
 {
-  "exactHead": "00740becc0b00e092bbc5e03fce5e4be680a5357",
-  "buildId": "nmJIGEAY6VrlKX8yvoeE4",
+  "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
+  "buildId": "E1cg0vwcuRVHV8-HjriQj",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -260,7 +260,7 @@
     },
     {
       "path": "components/map/list-overlay.tsx",
-      "sha256": "1fc947b40af3ed2d3eaece202b33061c65ec5fa6f8e46202d2c1edaa5f05bcaa"
+      "sha256": "707e70fc5597d95cf79e10acf0e5dede0f1a407c7fe3db6e7a7d22dab7df2e4d"
     },
     {
       "path": "components/map/map-canvas.tsx",
@@ -280,7 +280,7 @@
     },
     {
       "path": "components/map/meeting-panel.tsx",
-      "sha256": "dcae4ddfcdf98e466eea61f4cfaeecf067dc8cd9f6471681cc1a57660e398cb3"
+      "sha256": "6bdf6440af7ccfc09c8a973efc09a795cc1705e38bbba27f17aaf86e58a5fd6f"
     },
     {
       "path": "components/map/meeting-status-pill.tsx",
@@ -1740,11 +1740,11 @@
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "d9588b414dd875e074bc1f7406e97ae155dd6fed0fb08b028aea1129def53133"
+      "sha256": "2dae4c6a7b5fedcd7da0d88e1b3d684e4dd557118942ddd1680c5720e388ba38"
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "16b15b59a7eb93bdd404ec22d044fa0d8381663f9dc277641a746a677012934a"
+      "sha256": "40793eb5763b7c2c06f939e63d769d944b74ddf51eaf786275c3f507f496803f"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -1800,7 +1800,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "1a48d005f7653ce8adee4cfd8c08fad6ed17e017d8747a166a83f7876fa33e49"
+      "sha256": "e1bc0d808aeb14b193db24c32a2f5a7eb49c68ef9347bd20b5dc73d3f89bb4fc"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -1816,7 +1816,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "4e3ff4243a950f9c3b7dcd57e63c058d6866ccb1952fa289e81520ebe44cd003"
+      "sha256": "5e045e2b5e843d9d88585934183fa2eb3b4263d929b6b14dd29b1360984d8105"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2912,7 +2912,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "9fa427152ede1db9347b86e81ab5d0f306cfb2d25d3cacc0e1b10b56be21550f"
+      "sha256": "cb3213543216b98b67f26fbddda7f599259b9c54ae139f640d2949d67f53390a"
     },
     {
       "path": "pnpm-lock.yaml",

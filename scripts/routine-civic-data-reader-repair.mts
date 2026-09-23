@@ -34,6 +34,7 @@ import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
 
 function safeFailure(value: string): string {
@@ -124,7 +125,7 @@ if (meetingAggregate) {
         const routing = await readEverydayRoutingProjection();
         extras = { commentAccess, everydayRouting: routing.kind === "PROMOTED" ? routing.value : null };
       } catch (error) {
-        process.stderr.write(`READER_EDGE_EXTRAS_SKIPPED: ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+        process.stderr.write(`READER_EDGE_EXTRAS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       // The large authority families (registry-runtime, federal-directory,
       // campaign-sites): publish each promoted, validated value (production DB)
@@ -137,21 +138,21 @@ if (meetingAggregate) {
         if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: rt.metadata.versionId };
         else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime kind=${rt.kind}\n`);
       } catch (error) {
-        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       try {
         const fd = await readFederalDirectoryProjection();
         if (fd.kind === "PROMOTED" && fd.metadata.versionId) authority["federal-directory"] = { value: fd.value, versionId: fd.metadata.versionId };
         else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: federal-directory kind=${fd.kind}\n`);
       } catch (error) {
-        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: federal-directory ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: federal-directory ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       try {
         const cs = await readCuratedReaderProjection("campaign-sites");
         if (cs.kind === "PROMOTED" && cs.metadata.versionId) authority["campaign-sites"] = { value: cs.value, versionId: cs.metadata.versionId };
         else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites kind=${cs.kind}\n`);
       } catch (error) {
-        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       // State legislators: one artifact holding the promoted read model per scope
       // (the pilot state chambers). Each scope that fails/absent is simply omitted;
@@ -168,12 +169,12 @@ if (meetingAggregate) {
               versions.push(`${scope}=${sl.metadata.versionId}`);
             }
           } catch (error) {
-            process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators/${scope} ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+            process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators/${scope} ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
           }
         }
         if (versions.length > 0) authority["state-legislators"] = { value: legislators, versionId: versions.sort().join("|") };
       } catch (error) {
-        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       const edge = await publishReaderEdgeArtifacts(
         readBack.value,
@@ -198,7 +199,7 @@ if (meetingAggregate) {
     }
   } catch (error) {
     failed = true;
-    process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(error instanceof Error ? error.message : String(error))}\n`);
+    process.stderr.write(`READER_EDGE_PUBLISH_FAILED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
   }
 } else {
   const contracts = [
@@ -222,7 +223,7 @@ if (meetingAggregate) {
     failed = true;
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,
-      { ok: false, error: safeFailure(error instanceof Error ? error.message : String(error)) },
+      { ok: false, error: safeFailure(sanitizedErrorDiagnostic(error)) },
     )));
   }
 }

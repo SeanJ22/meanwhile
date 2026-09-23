@@ -5,6 +5,7 @@ import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts"
 import { parseValidationReceipt } from "./receipt.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 /**
  * The durable-receipt check's store: the proven read model for the one
@@ -319,6 +320,6 @@ export async function durableRoutineRunnerReceiptIssue(
     ) return "the held receipt does not match an unchanged, proof-valid canonical LKG pointer";
     return null;
   } catch (error) {
-    return `durable receipt readback failed (${error instanceof Error ? error.name : "unknown error"})`;
+    return `durable receipt readback failed: ${sanitizedErrorDiagnostic(error)}`;
   }
 }

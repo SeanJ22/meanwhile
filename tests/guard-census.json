@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 708,
-    "named": 7028,
+    "files": 709,
+    "named": 7032,
     "dynamic": 28
   },
   "files": {
@@ -3611,6 +3611,15 @@
         "the merge preserves order and never invents a row",
         "the same sitting from two sources becomes one row, and the agenda wins",
         "two sittings of one body from ONE source are left alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/error-diagnostic.test.ts": {
+      "names": [
+        "a plain message stays exactly itself, and a long chain is capped",
+        "every credential-shaped span is redacted in isolation",
+        "repair and supervisor outcomes carry the sanitized cause",
+        "the cause chain survives with its codes; no credential or endpoint does"
       ],
       "dynamic": 0
     },

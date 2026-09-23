@@ -4,6 +4,7 @@ import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -324,7 +325,7 @@ async function promotedPointerReadbackIssue(
   try {
     pointer = await store.readPromotionIdentity(contract.recordClass, promoted.scope);
   } catch (error) {
-    return `Reading canonical pointer ${promoted.key} failed (${error instanceof Error ? error.name : "unknown error"}). We could not ask the store.`;
+    return `Reading canonical pointer ${promoted.key} failed (${sanitizedErrorDiagnostic(error)}). We could not ask the store.`;
   }
   if (
     pointer === null ||
@@ -587,7 +588,7 @@ export async function repairMeetingReaderProjectionReadbacks(
     // and only when some partition's receipt is not already current.
     promotions = await store.readPromotionIdentities("MEETING", scopes);
   } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
+    const detail = sanitizedErrorDiagnostic(error);
     return contracts.map(({ id }) => ({ contractId: id, ok: false, value: null, error: detail }));
   }
   const promotionsByScope = new Map<string, PromotedPointerIdentity[]>();
@@ -671,7 +672,7 @@ export async function repairMeetingReaderProjectionReadbacks(
       const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
       aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
     } catch (error) {
-      aggregateError = error instanceof Error ? error.message : String(error);
+      aggregateError = sanitizedErrorDiagnostic(error);
     }
 
     if (aggregateError !== null || aggregate === null) {

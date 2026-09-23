@@ -611,7 +611,7 @@ test("the identity readback records a failed pointer read as evidence and refuse
   assert.equal(failed?.status, "FAIL");
   assert.equal(failed?.versionId, first.id);
   assert.equal(failed?.verifierId, "lib/civic-data/store.ts#readPromotionIdentity");
-  assert.match(failed?.detail ?? "", /Reading canonical pointer FEC_FUNDING:federal-supported failed \(TypeError\)/);
+  assert.match(failed?.detail ?? "", /Reading canonical pointer FEC_FUNDING:federal-supported failed \(TypeError: fetch failed\)/);
 
   const laterAt = "2026-09-07T13:00:00.000Z";
   const second = candidate("reader-readback-pointer-second", {

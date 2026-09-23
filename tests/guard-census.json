@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 715,
-    "named": 7081,
+    "files": 717,
+    "named": 7108,
     "dynamic": 29
   },
   "files": {
@@ -2474,14 +2474,21 @@
     },
     "tests/civic-data-store-integrity.test.ts": {
       "names": [
+        "Postgres promotion ships no dataset back and returns the pointer with the read model it copied",
         "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
+        "Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
+        "a Postgres transition moves the candidate envelope once and returns it with the written columns",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
+        "a candidate summary is every row column but the envelope and identity set",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
         "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
+        "a promotion's RETURNING names the moved pointer and never carries its dataset",
+        "a success is clocked in the attempt clock's own units, so the cadence, not the retry, schedules the next read",
         "a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof",
         "a terminal transition requires exact non-GOOD receipt evidence and is immutable",
         "an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG",
+        "any nonzero acquisition time leaves a success on its cadence, not its retry clock",
         "append-only Reader evidence must be a receipt for the exact promoted contract and version",
         "candidate creation refuses a mismatched first event before persisting either half",
         "candidate event time is a bounded local clock and never moves backward by sequence",
@@ -2491,9 +2498,12 @@
         "production NODE_ENV alone cannot open the permanent routine-data writer",
         "promotion accepts only the exact persisted GOOD receipt",
         "terminal store exposes no one-time import or aggregate retirement door",
+        "the Postgres clock reports success from the pointed candidate's first event, in the attempt clock's units",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
-        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt"
+        "the Reader-evidence door's narrow read decides authority exactly as the whole envelope does",
+        "the durable success clock follows the current proof-consistent pointer, not a later unpromoted attempt",
+        "the prepared projection's coupling read carries no composed payload"
       ],
       "dynamic": 0
     },
@@ -3656,6 +3666,15 @@
         "the merge preserves order and never invents a row",
         "the same sitting from two sources becomes one row, and the agenda wins",
         "two sittings of one body from ONE source are left alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/error-diagnostic.test.ts": {
+      "names": [
+        "a plain message stays exactly itself, and a long chain is capped",
+        "every credential-shaped span is redacted in isolation",
+        "repair and supervisor outcomes carry the sanitized cause",
+        "the cause chain survives with its codes; no credential or endpoint does"
       ],
       "dynamic": 0
     },
@@ -8148,6 +8167,7 @@
     },
     "tests/registry-runtime-edge.test.ts": {
       "names": [
+        "an unchanged authority version carries its served artifact forward; the runner never re-reads it",
         "primeRegistryRuntimeFromValue serves the value synchronously with its version, no DB",
         "republishing the same authority version is idempotent; a new version advances the pointer",
         "the registry-runtime edge value is request-scoped: absent by default (runner/workers keep the DB path)",
@@ -8373,6 +8393,7 @@
     },
     "tests/routine-civic-data-observability.test.ts": {
       "names": [
+        "Admin shows a succeeding source's next read at the runner's own instant, one lead ahead of its cadence",
         "PDC meetings observability enumerates every source/body authority and excludes the retired aggregate",
         "PDC-13: 24h, 7d, and 30d histories use exact attempt/event members",
         "PDC-13: LKG serving is based on candidate chronology, not pointer-write timestamp",
@@ -8435,6 +8456,7 @@
         "a FEC period that regresses behind the class LKG is refused",
         "a Reader code-version change re-verifies the same LKG immediately without source reacquisition",
         "a Reader projection whose declared digest names different bytes is refused before LKG moves",
+        "a Reader readback moves identity around the typed Reader, never another copy of the dataset",
         "a delayed older acquisition cannot overwrite a newer source-scoped LKG",
         "a future-dated acquisition cannot replace LKG with a pointer the Reader will refuse",
         "a malformed typed Reader projection is refused before it can replace LKG",
@@ -8443,6 +8465,7 @@
         "a normalized payload whose declared digest names different bytes is refused before LKG moves",
         "a pointer whose LKG candidate is missing cannot bless a replacement",
         "a pre-parser source failure is one durable terminal event with a validation receipt",
+        "a promotion reports its durable record without reading the promoted envelope back again",
         "a registered production candidate must bind its normalized evidence, not only its Reader payload",
         "a state member whose chamber and term contradict the normalized seat is refused",
         "a supplied civic-member projection cannot hide or replace the members derived from Reader",
@@ -8464,6 +8487,7 @@
         "registered promotion durably reads back the exact Reader projection instead of inferring delivery",
         "registered promotion snapshots one durable candidate before any async store step",
         "the generic transition driver cannot write a production store outside an exact registered contract door",
+        "the identity readback records a failed pointer read as evidence and refuses a pointer that moved",
         "the standing promotion door binds adapter output to its exact registered contract",
         "wrong Census schema is refused",
         "wrong Census vintage is refused",
@@ -8516,6 +8540,7 @@
         "standing routine data and intake launch together and one failure cannot suppress the other",
         "standing task construction enforces every declarative authority and validation field",
         "the Neon transport deadline aborts underlying I/O instead of abandoning a promise",
+        "the durable receipt check proves exactly one pointer through the full proof and reads nothing else whole",
         "the fixed pool caps host load and drains queued siblings after timeout and launcher failure",
         "the pilot awaits independently bounded routine and intake children without overlapping ticks",
         "the pilot outer bound contains the one-per-provider frontier, not a failed provider tail",
@@ -8559,6 +8584,18 @@
         "the Sources page reads the three sources together and shows the narrow panel before the proof-based one",
         "the narrow read selects no payload and never touches the candidate JSON",
         "with nothing recorded, every contract is NOT_PUBLISHED with no attempt, never a pass"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-reread-lead.test.ts": {
+      "names": [
+        "Admin's next-due and the runner read one function",
+        "a failed later attempt keeps its retry clock exactly; the lead applies only to a success",
+        "a source that succeeds on every attempt never reads older than its Reader maxAge",
+        "a succeeding meeting partition is re-read at 23 h, one hour ahead of its daily maxAge",
+        "the daily-then-weekly switch on 2026-11-04 never yields a negative or skipped re-read instant",
+        "the lead is the contract's retry, never under 15 minutes, never over half the cadence",
+        "the old on-the-cadence rule fails the same property (negative control)"
       ],
       "dynamic": 0
     },

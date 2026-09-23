@@ -499,6 +499,136 @@ test("a Reader code-version change re-verifies the same LKG immediately without 
   assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.lastKnownGoodVersionId, exact.id);
 });
 
+test("a Reader readback moves identity around the typed Reader, never another copy of the dataset", async () => {
+  class CountingReadStore extends MemoryRoutineDataStore {
+    readonly reads = { promotion: 0, candidate: 0, identity: 0 };
+
+    override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
+      this.reads.promotion += 1;
+      return super.readPromotion<T>(recordClass, scope);
+    }
+
+    override async readCandidate(candidateId: string) {
+      this.reads.candidate += 1;
+      return super.readCandidate(candidateId);
+    }
+
+    override async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string) {
+      this.reads.identity += 1;
+      return super.readPromotionIdentity(recordClass, scope);
+    }
+  }
+  const store = new CountingReadStore();
+  const exact = candidate("reader-readback-identity-only", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  await processRoutineCandidate(store, exact, NOW);
+  const contract = ROUTINE_SOURCE_CONTRACTS[0];
+  const reset = () => Object.assign(store.reads, { promotion: 0, candidate: 0, identity: 0 });
+
+  reset();
+  const recorded = await repairRoutineReaderProjectionReadback(
+    store,
+    contract,
+    new Date(Date.parse(NOW) + 1).toISOString(),
+    READER_CODE_SHA_A,
+  );
+  assert.equal(recorded.kind, "RECORDED");
+  assert.equal(recorded.receipt?.status, "PASS");
+  assert.deepEqual(
+    store.reads,
+    { promotion: 1, candidate: 1, identity: 2 },
+    "the dataset crosses once, in the typed Reader's own proven read; inspection and the pointer check name it",
+  );
+
+  reset();
+  const current = await repairRoutineReaderProjectionReadback(
+    store,
+    contract,
+    new Date(Date.parse(NOW) + 2).toISOString(),
+    READER_CODE_SHA_A,
+  );
+  assert.equal(current.kind, "CURRENT");
+  assert.deepEqual(
+    store.reads,
+    { promotion: 0, candidate: 0, identity: 1 },
+    "the ordinary pass decides a current receipt from identity and events alone",
+  );
+});
+
+test("a promotion reports its durable record without reading the promoted envelope back again", async () => {
+  class CountingStore extends MemoryRoutineDataStore {
+    readonly wholeCandidateReads: string[] = [];
+
+    override async readCandidate(candidateId: string) {
+      this.wholeCandidateReads.push(candidateId);
+      return super.readCandidate(candidateId);
+    }
+  }
+  const store = new CountingStore();
+  const exact = candidate("promotion-outcome-no-reread", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const outcome = await processRoutineCandidate(store, exact, NOW);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  assert.deepEqual(store.wholeCandidateReads.filter((id) => id === exact.id), [], "the promoted candidate is never read whole again");
+  assert.deepEqual(outcome.candidate, await store.readCandidate(exact.id), "the reported record is exactly the durable one");
+});
+
+test("the identity readback records a failed pointer read as evidence and refuses a pointer that moved", async () => {
+  class FlakyIdentityStore extends MemoryRoutineDataStore {
+    failNextIdentityRead = false;
+
+    override async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string) {
+      if (this.failNextIdentityRead) {
+        this.failNextIdentityRead = false;
+        throw new TypeError("fetch failed");
+      }
+      return super.readPromotionIdentity(recordClass, scope);
+    }
+  }
+  const store = new FlakyIdentityStore();
+  const contract = ROUTINE_SOURCE_CONTRACTS[0];
+  const first = candidate("reader-readback-pointer-first", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const inspected = (await processRoutineCandidate(store, first, NOW)).promoted!;
+
+  store.failNextIdentityRead = true;
+  const failed = await recordRoutineReaderProjectionReadback(
+    store,
+    contract,
+    inspected,
+    "2026-09-07T12:00:00.001Z",
+    READER_CODE_SHA_A,
+  );
+  assert.equal(failed?.status, "FAIL");
+  assert.equal(failed?.versionId, first.id);
+  assert.equal(failed?.verifierId, "lib/civic-data/store.ts#readPromotionIdentity");
+  assert.match(failed?.detail ?? "", /Reading canonical pointer FEC_FUNDING:federal-supported failed \(TypeError: fetch failed\)/);
+
+  const laterAt = "2026-09-07T13:00:00.000Z";
+  const second = candidate("reader-readback-pointer-second", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    retrieval: { ...first.retrieval, retrievedAt: laterAt },
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  assert.equal((await processRoutineCandidate(store, second, laterAt)).promoted?.versionId, second.id);
+  const staleEvents = await store.events(first.id);
+  await assert.rejects(
+    recordRoutineReaderProjectionReadback(store, contract, inspected, "2026-09-07T13:00:00.001Z", READER_CODE_SHA_A),
+    new RegExp(`CANDIDATE_READER_EVIDENCE_INVALID:${first.id}`),
+  );
+  assert.deepEqual(await store.events(first.id), staleEvents, "no evidence is appended to a version the pointer has left");
+});
+
 test("dependent evidence can affect only its exact source, record class, and scope", async () => {
   await expectHeld((base) => ({
     ...base,

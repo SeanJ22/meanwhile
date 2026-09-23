@@ -596,3 +596,14 @@ export interface PromotedProjection<T = unknown> {
   readonly payload: T;
   readonly receipt: ValidationReceipt;
 }
+
+/**
+ * A canonical pointer named, never carried: its identity columns and none of
+ * its dataset. The payload is the Reader's value, up to tens of MB on the wire
+ * for the largest classes; code that only names, compares, or appends evidence
+ * to the current version reads this, and the typed Reader reads the payload.
+ */
+export type PromotedPointerIdentity = Pick<
+  PromotedProjection,
+  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt"
+>;

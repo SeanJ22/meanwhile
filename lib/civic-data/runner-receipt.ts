@@ -4,6 +4,14 @@ import { canonicalCivicDataJson } from "./changes.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import type { RoutineRecordClass } from "./types.ts";
+import type { RoutineDataStore } from "./store.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+
+/**
+ * The durable-receipt check's store: the proven read model for the one
+ * canonical pointer it must prove, and narrow doors for everything else.
+ */
+export type DurableReceiptStore = CivicDataReadStore & Pick<RoutineDataStore, "readCandidateSummary" | "readPromotionIdentity">;
 
 export interface RoutineRunnerReceipt {
   readonly source: string;
@@ -238,11 +246,21 @@ export interface ExpectedRoutineRunnerReceipt {
   readonly scope: string;
 }
 
-/** Prove a child summary against its durable candidate and canonical LKG. */
+/**
+ * Prove a child summary against its durable candidate and canonical LKG.
+ *
+ * The one pointer it must prove (the new version on success, the unchanged
+ * LKG when held) is read through the proven read model, payload and candidate
+ * included, with the full promotion proof. Everything else is read narrow: the
+ * reported candidate's own columns, and on a held outcome the pointer's
+ * identity. The whole-row reads this replaced moved the reported candidate's
+ * envelope and a second copy of the pointer's payload: 66.9 MB for one held
+ * NJ roll-call settle on 2026-09-23, against a 67.11 MB response cap.
+ */
 export async function durableRoutineRunnerReceiptIssue(
   receipt: RoutineRunnerReceipt,
   expected: ExpectedRoutineRunnerReceipt,
-  store: CivicDataReadStore,
+  store: DurableReceiptStore,
   expectedOutcome: "SUCCESS" | "HELD",
 ): Promise<string | null> {
   try {
@@ -252,7 +270,7 @@ export async function durableRoutineRunnerReceiptIssue(
     if (expectedOutcome === "HELD" && (receipt.state === "PROMOTED" || receipt.decision === "GOOD" || receipt.promotedVersion !== null)) {
       return "a nonzero child claimed a successful promotion instead of a held outcome";
     }
-    const candidate = await store.readCandidate(receipt.candidateId);
+    const candidate = await store.readCandidateSummary(receipt.candidateId);
     if (candidate === null) return `candidate ${receipt.candidateId} is not durable`;
     if (
       candidate.candidate.id !== receipt.candidateId ||
@@ -289,7 +307,7 @@ export async function durableRoutineRunnerReceiptIssue(
       return null;
     }
 
-    const pointer = await store.readPromotion(expected.recordClass, expected.scope);
+    const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
     if (receipt.lastKnownGoodVersion === null) {
       return pointer === null ? null : "the held receipt omitted the canonical last-known-good pointer";
     }
@@ -302,6 +320,6 @@ export async function durableRoutineRunnerReceiptIssue(
     ) return "the held receipt does not match an unchanged, proof-valid canonical LKG pointer";
     return null;
   } catch (error) {
-    return `durable receipt readback failed (${error instanceof Error ? error.name : "unknown error"})`;
+    return `durable receipt readback failed: ${sanitizedErrorDiagnostic(error)}`;
   }
 }

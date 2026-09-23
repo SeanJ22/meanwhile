@@ -3,15 +3,27 @@ import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import test from "node:test";
 
+import { neonConfig } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+
+import * as schema from "../lib/db/schema.ts";
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {
   assertRoutineDataStoreMutationAuthority,
   canonicalPostgresRoutineTimestamp,
+  candidateSummaryRead,
+  preparedProjectionCouplingRead,
   MemoryRoutineDataStore,
+  PostgresRoutineDataStore,
+  PROMOTED_POINTER_COLUMNS,
+  promotedPointerIdentityRead,
+  readerEvidenceCandidateRead,
+  readerEvidenceRowToRecord,
   routineDataStoreCandidateAuthorityIssue,
 } from "../lib/civic-data/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { failedAcquisitionCandidate, normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { ROUTINE_SOURCE_TASKS, routineTaskDue, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import {
   VALIDATION_CHECKS,
@@ -668,6 +680,91 @@ test("a contract-A runtime envelope cannot mutate contract B through the public 
   );
 });
 
+/** The SELECT list of a query, before its FROM clause. */
+function selectList(query: { toSQL(): { sql: string } }): string {
+  const text = query.toSQL().sql;
+  return text.slice(0, text.indexOf(" from "));
+}
+
+test("Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it", () => {
+  // Measured against production on 2026-09-23: the NJ roll-call payload is
+  // 9.8 MB on the wire and its candidate row 23.7 MB. The readback once read
+  // the payload to inspect, again to check the pointer, and the candidate to
+  // append evidence, around the typed Reader's own read of both.
+  const pointer = selectList(promotedPointerIdentityRead(drizzle.mock({ schema }), "STATE_ROLL_CALL", ["US-NJ"]));
+  assert.doesNotMatch(pointer, /"payload"|"validation_receipt"/);
+  for (const column of ["key", "source_id", "record_class", "scope", "current_version_id", "last_known_good_version_id", "promoted_at"]) {
+    assert.match(pointer, new RegExp(`"${column}"`), `the identity read must still carry ${column}`);
+  }
+
+  const evidence = selectList(readerEvidenceCandidateRead(drizzle.mock({ schema }), "cv-example"));
+  assert.doesNotMatch(evidence, /"candidate"(?!\s*(?:->|\?))/, "the candidate envelope is never selected whole");
+  assert.doesNotMatch(evidence, /"identity"|"validation_receipt"/);
+  for (const column of ["id", "source_id", "record_class", "scope", "state"]) {
+    assert.match(evidence, new RegExp(`"${column}"`), `the evidence read must still carry ${column}`);
+  }
+
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  const append = postgres.slice(postgres.indexOf("  async appendEvidence("), postgres.indexOf("  async promote("));
+  assert.match(append, /readerEvidenceCandidateRead\(this\.db, candidateId\)/);
+  assert.doesNotMatch(append, /\.select\(\)/, "a whole-row read here moves the candidate envelope on every recorded readback");
+
+  const verification = readFileSync(join(ROOT, "lib", "civic-data", "reader-verification.ts"), "utf8");
+  assert.doesNotMatch(
+    verification,
+    /store\.readPromotions?\(|store\.readCandidates?\(/,
+    "readback evidence reads identity; only the typed Reader reads and proves the dataset",
+  );
+  assert.match(verification, /store\.readPromotionIdentity\(contract\.recordClass, contract\.scope\)/);
+  assert.match(verification, /store\.readPromotionIdentities\("MEETING", scopes\)/);
+});
+
+test("the Reader-evidence door's narrow read decides authority exactly as the whole envelope does", () => {
+  const value = candidate("evidence-authority-parity");
+  const contractAuthority = {
+    repo: ROOT,
+    sha: "1".repeat(40),
+    capability: "ROUTINE_CONTRACT" as const,
+    contract: "fec-funding",
+    parentPid: 123,
+    nonce: "2".repeat(64),
+  };
+  const supervisor = { ...contractAuthority, capability: "ROUTINE_SUPERVISOR" as const, contract: null };
+  const envelopes: Array<[string, RoutineCandidate]> = [
+    ["no marker", value],
+    ["a present null marker", { ...value, bootstrapImport: null } as unknown as RoutineCandidate],
+    ["a transfer marker", {
+      ...value,
+      bootstrapImport: { kind: "TRUSTED_LKG_IMPORT", contractId: "fec-funding" },
+    } as unknown as RoutineCandidate],
+  ];
+  for (const [label, whole] of envelopes) {
+    const hasBootstrapImport = Object.prototype.hasOwnProperty.call(whole, "bootstrapImport");
+    // Postgres answers SQL NULL for an absent key and JSON null for a null
+    // one; the driver parses both to null, and the key test tells them apart.
+    const narrow = readerEvidenceRowToRecord({
+      id: whole.id,
+      sourceId: whole.sourceId,
+      recordClass: whole.recordClass,
+      scope: whole.scope,
+      state: "PROMOTED",
+      hasBootstrapImport,
+      bootstrapImport: hasBootstrapImport ? whole.bootstrapImport ?? null : null,
+    });
+    assert.equal(narrow.state, "PROMOTED");
+    for (const envelope of [contractAuthority, supervisor]) {
+      for (const operation of ["candidate", "reader-evidence"] as const) {
+        assert.equal(
+          routineDataStoreCandidateAuthorityIssue(narrow.candidate, envelope, operation),
+          routineDataStoreCandidateAuthorityIssue(whole, envelope, operation),
+          `${label}: ${envelope.capability} ${operation}`,
+        );
+      }
+    }
+  }
+});
+
 test("the Postgres promotion transaction is selected from the exact persisted proof", () => {
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const promote = source.slice(source.indexOf("  async promote(candidateId", source.indexOf("export class Postgres")), source.indexOf("  async events(candidateId", source.indexOf("export class Postgres")));
@@ -682,6 +779,276 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
   assert.match(promote, /validationReceipt: persistedReceipt/);
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
+  // The same transaction, answered without its dataset: the pointer write
+  // returns identity and receipt, the candidate write its id, and the
+  // projection's payload is the read model already in hand (which the
+  // insert copies as the pointer's payload).
+  assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
+  assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);
+  assert.match(promote, /update\(civicDataCandidates\)[\s\S]*\.returning\(\{ candidateId: civicDataCandidates\.id \}\)/);
+  assert.match(promote, /\$\{civicDataCandidates\.candidate\}->'readModel'/);
+  assert.match(promote, /payload: candidate\.readModel,/);
+  assert.doesNotMatch(promote, /select\(\)\.from\(civicDataPromotions\)/, "the prior pointer is read for its version id alone");
+});
+
+test("a promotion's RETURNING names the moved pointer and never carries its dataset", () => {
+  const mock = drizzle.mock({ schema });
+  const returning = (text: string) => text.slice(text.lastIndexOf(" returning ") + " returning ".length);
+  const pointer = returning(mock.update(schema.civicDataPromotions)
+    .set({ scope: "moved" })
+    .returning(PROMOTED_POINTER_COLUMNS)
+    .toSQL().sql);
+  assert.doesNotMatch(pointer, /"payload"/);
+  for (const column of [
+    "key",
+    "source_id",
+    "record_class",
+    "scope",
+    "current_version_id",
+    "last_known_good_version_id",
+    "promoted_at",
+    "validation_receipt",
+  ]) {
+    assert.match(pointer, new RegExp(`"${column}"`), `the promotion RETURNING must still name ${column}`);
+  }
+});
+
+/** Postgres type OIDs the canned Neon HTTP answers below declare. */
+const NEON_TYPE = { text: 25, bool: 16, jsonb: 3802, timestamptz: 1184, void: 2278 } as const;
+type NeonColumn = readonly [name: string, type: keyof typeof NEON_TYPE];
+interface NeonAnswer {
+  readonly columns: readonly NeonColumn[];
+  readonly rows: readonly (readonly unknown[])[];
+}
+interface NeonStatement {
+  readonly query: string;
+  readonly params: readonly unknown[];
+}
+
+/**
+ * Drive the real PostgresRoutineDataStore through the Neon driver's own fetch
+ * seam: every statement is recorded and answered from canned rows in the
+ * driver's raw-text array protocol. No network, no database.
+ */
+async function withCannedNeon<T>(
+  answer: (statement: NeonStatement) => NeonAnswer,
+  run: (store: PostgresRoutineDataStore, sent: NeonStatement[]) => Promise<T>,
+): Promise<T> {
+  const originalFetch = neonConfig.fetchFunction;
+  const originalUrl = process.env.DATABASE_URL;
+  const sent: NeonStatement[] = [];
+  neonConfig.fetchFunction = (async (_endpoint: unknown, init: { readonly body: string }) => {
+    const body = JSON.parse(init.body) as { query?: string; params?: unknown[]; queries?: NeonStatement[] };
+    const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
+    const results = statements.map((statement) => {
+      sent.push(statement);
+      const { columns, rows } = answer(statement);
+      return {
+        command: "SELECT",
+        rowCount: rows.length,
+        rowAsArray: true,
+        fields: columns.map(([name, type]) => ({ name, dataTypeID: NEON_TYPE[type] })),
+        rows: rows.map((row) => row.map((value) =>
+          value === null ? null
+            : typeof value === "boolean" ? (value ? "t" : "f")
+              : typeof value === "string" ? value
+                : JSON.stringify(value))),
+      };
+    });
+    return new Response(JSON.stringify(body.queries ? { results } : results[0]), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  }) as typeof neonConfig.fetchFunction;
+  process.env.DATABASE_URL = "postgresql://canned:canned@ep-canned-store-proof.us-east-2.aws.neon.tech/neondb";
+  try {
+    const store = new PostgresRoutineDataStore();
+    // The installed-runtime attestation is its own suite's subject; this proof
+    // enters with the exact contract authority a registered FEC child holds.
+    Object.assign(store as unknown as Record<string, unknown>, {
+      writeAuthority: {
+        repo: ROOT,
+        sha: "1".repeat(40),
+        capability: "ROUTINE_CONTRACT",
+        contract: "fec-funding",
+        parentPid: 123,
+        nonce: "2".repeat(64),
+      } satisfies RuntimeAuthorityEnvelope,
+    });
+    return await run(store, sent);
+  } finally {
+    neonConfig.fetchFunction = originalFetch;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = originalUrl;
+  }
+}
+
+/** The RETURNING list of a statement, or null when it has none. */
+function returningList(query: string): string | null {
+  const at = query.lastIndexOf(" returning ");
+  return at < 0 ? null : query.slice(at + " returning ".length);
+}
+
+test("Postgres promotion ships no dataset back and returns the pointer with the read model it copied", async () => {
+  const value = candidate("postgres-promotion-returning", "2026-09-08T12:00:00.000Z", "fec-open-api");
+  const persisted = receiptFor(value);
+  const promotedAt = "2026-09-08T12:01:00.000Z";
+  const candidateRow: readonly (readonly [NeonColumn, unknown])[] = [
+    [["id", "text"], value.id],
+    [["source_id", "text"], value.sourceId],
+    [["record_class", "text"], value.recordClass],
+    [["scope", "text"], value.scope],
+    [["state", "text"], "VALIDATED"],
+    [["acquisition_succeeded", "bool"], true],
+    [["raw_hash", "text"], value.retrieval.rawHash],
+    [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
+    [["source_through", "text"], value.temporal.sourceThrough],
+    [["parser_version", "text"], value.normalization.parserVersion],
+    [["identity", "jsonb"], value.identities],
+    [["candidate", "jsonb"], value],
+    [["validation_receipt", "jsonb"], persisted],
+    [["promoted_version_id", "text"], null],
+    [["last_known_good_version_id", "text"], null],
+    [["failure_code", "text"], null],
+    [["failure_detail", "text"], null],
+  ];
+  const pointerRow: readonly (readonly [NeonColumn, unknown])[] = [
+    [["key", "text"], `${value.recordClass}:${value.scope}`],
+    [["source_id", "text"], value.sourceId],
+    [["record_class", "text"], value.recordClass],
+    [["scope", "text"], value.scope],
+    [["current_version_id", "text"], value.id],
+    [["last_known_good_version_id", "text"], value.id],
+    [["promoted_at", "timestamptz"], "2026-09-08 12:01:00+00"],
+    [["validation_receipt", "jsonb"], persisted],
+  ];
+  const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
+    columns: cells.map(([column]) => column),
+    rows: [cells.map(([, cell]) => cell)],
+  });
+  const none: NeonAnswer = { columns: [], rows: [] };
+
+  const promoted = await withCannedNeon((statement) => {
+    const text = statement.query;
+    if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
+    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(candidateRow);
+    if (text.startsWith("select") && text.includes(`from "civic_data_promotions"`)) return none;
+    if (text.startsWith(`insert into "civic_data_promotions"`)) return answer(pointerRow);
+    if (text.startsWith(`insert into "civic_data_candidate_events"`)) return none;
+    if (text.startsWith(`update "civic_data_candidates"`)) return { columns: [["id", "text"]], rows: [[value.id]] };
+    throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
+  }, async (store, sent) => {
+    // Judge the statements sent before the answer is mapped, so a whole-row
+    // RETURNING fails on what it asked for, not on the canned reply's shape.
+    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt)
+      .then((result) => ({ result }), (error: unknown) => ({ error }));
+
+    const priorRead = sent.find(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_promotions"`));
+    assert.match(priorRead?.query ?? "", /^select "current_version_id" from "civic_data_promotions"/, "the prior pointer is read for its version id alone");
+    const pointerWrite = sent.find(({ query }) => query.startsWith(`insert into "civic_data_promotions"`));
+    assert.match(pointerWrite?.query ?? "", /"candidate"->'readModel'/, "the pointer's payload is still copied server-side from the candidate");
+    const pointerReturning = returningList(pointerWrite?.query ?? "");
+    assert.ok(pointerReturning !== null, "the pointer write still reports the moved pointer");
+    assert.doesNotMatch(pointerReturning ?? "", /"payload"/, "the promoted payload is not shipped back");
+    const candidateWrite = sent.find(({ query }) => query.startsWith(`update "civic_data_candidates"`));
+    assert.equal(returningList(candidateWrite?.query ?? ""), `"id"`, "the candidate write returns its id, never the envelope");
+    if ("error" in settled) throw settled.error;
+    return settled.result;
+  });
+
+  assert.deepEqual(promoted, {
+    key: `${value.recordClass}:${value.scope}`,
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    versionId: value.id,
+    lastKnownGoodVersionId: value.id,
+    promotedAt,
+    payload: value.readModel,
+    receipt: persisted,
+  });
+});
+
+test("the prepared projection's coupling read carries no composed payload", () => {
+  const select = selectList(preparedProjectionCouplingRead(drizzle.mock({ schema }), "MEETING", "composed-reader-snapshot"));
+  assert.doesNotMatch(select, /"payload"/);
+  for (const column of ["record_class", "scope", "sequence", "composed_from", "generated_at"]) {
+    assert.match(select, new RegExp(`"${column}"`), `the coupling read must still carry ${column}`);
+  }
+});
+
+test("a candidate summary is every row column but the envelope and identity set", () => {
+  const select = selectList(candidateSummaryRead(drizzle.mock({ schema }), "cv-example"));
+  assert.doesNotMatch(select, /"candidate"|"identity"/);
+  for (const column of ["id", "source_id", "record_class", "scope", "state", "acquisition_succeeded", "validation_receipt", "promoted_version_id", "last_known_good_version_id", "failure_code", "failure_detail"]) {
+    assert.match(select, new RegExp(`"${column}"`), `the summary must still carry ${column}`);
+  }
+});
+
+test("a Postgres transition moves the candidate envelope once and returns it with the written columns", async () => {
+  // A transition read the whole row before its compare-and-set and again
+  // after it: two copies of the envelope per step, 47.3 MB for one NJ
+  // roll-call step on 2026-09-23. The envelope is written once at create and
+  // never updated, so the pre-read's copy is the durable one.
+  const value = candidate("postgres-transition-narrow");
+  const at = "2026-09-08T12:00:00.000Z";
+  const wholeRow: readonly (readonly [NeonColumn, unknown])[] = [
+    [["id", "text"], value.id],
+    [["source_id", "text"], value.sourceId],
+    [["record_class", "text"], value.recordClass],
+    [["scope", "text"], value.scope],
+    [["state", "text"], "FETCHED"],
+    [["acquisition_succeeded", "bool"], true],
+    [["raw_hash", "text"], value.retrieval.rawHash],
+    [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
+    [["source_through", "text"], value.temporal.sourceThrough],
+    [["parser_version", "text"], value.normalization.parserVersion],
+    [["identity", "jsonb"], value.identities],
+    [["candidate", "jsonb"], value],
+    [["validation_receipt", "jsonb"], null],
+    [["promoted_version_id", "text"], null],
+    [["last_known_good_version_id", "text"], null],
+    [["failure_code", "text"], null],
+    [["failure_detail", "text"], null],
+  ];
+  const summaryRow = wholeRow
+    .filter(([[name]]) => !["raw_hash", "normalized_hash", "retrieved_at", "source_through", "parser_version", "identity", "candidate"].includes(name))
+    .map(([column, cell]) => [column, column[0] === "state" ? "NORMALIZED" : cell] as const);
+  const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
+    columns: cells.map(([column]) => column),
+    rows: [cells.map(([, cell]) => cell)],
+  });
+  const result = await withCannedNeon((statement) => {
+    const text = statement.query;
+    if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
+    if (text.startsWith("with ")) {
+      return {
+        columns: [["id", "text"], ["candidate_id", "text"], ["sequence", "text"], ["state", "text"], ["at", "timestamptz"], ["detail", "text"]],
+        rows: [["00000000-0000-4000-8000-000000000001", value.id, "2", "NORMALIZED", "2026-09-08 12:00:00+00", "normalized"]],
+      };
+    }
+    if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) {
+      return selectList({ toSQL: () => ({ sql: text }) }).includes(`"candidate"`) ? answer(wholeRow) : answer(summaryRow);
+    }
+    throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
+  }, async (store, sent) => {
+    const record = await store.transition(value.id, "NORMALIZED", at, "normalized");
+    const candidateReads = sent.filter(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_candidates"`));
+    assert.equal(candidateReads.length, 2, "the pre-read and the post-write read");
+    assert.match(selectList({ toSQL: () => ({ sql: candidateReads[0]!.query }) }), /"candidate"/, "the pre-read is the one envelope read");
+    assert.doesNotMatch(
+      selectList({ toSQL: () => ({ sql: candidateReads[1]!.query }) }),
+      /"candidate"|"identity"/,
+      "the post-write read carries the row's columns, never the envelope again",
+    );
+    assert.ok(sent.some(({ query }) => /^with "updated_candidate" as \(update "civic_data_candidates"/.test(query)), "the compare-and-set CTE is unchanged");
+    return record;
+  });
+  assert.equal(result.state, "NORMALIZED");
+  assert.deepEqual(result.candidate, value, "the returned record carries the durable envelope");
+  assert.equal(result.receipt, null);
 });
 
 test("every Postgres candidate-event allocator is serialized inside its Neon batch", () => {
@@ -774,4 +1141,186 @@ test("terminal store exposes no one-time import or aggregate retirement door", (
   const retiredDeclaration = /\b(?:assertPdcV2|retirePdcV2)\w*\s*\(/;
   assert.doesNotMatch(source, retiredDeclaration);
   assert.doesNotMatch(adapter, retiredDeclaration);
+});
+
+const HOUR_MS = 60 * 60 * 1_000;
+const DAY_MS = 24 * HOUR_MS;
+
+function routineTask(id: string): RoutineSourceTask {
+  const task = ROUTINE_SOURCE_TASKS.find((row) => row.id === id);
+  assert.ok(task, `routine task ${id} is registered`);
+  return task;
+}
+
+/** A candidate carrying one routine task's exact identity. */
+function taskCandidate(task: RoutineSourceTask, id: string, retrievedAt: string): RoutineCandidate {
+  const base = candidate(id, retrievedAt, task.sourceId);
+  return {
+    ...base,
+    recordClass: task.recordClass,
+    scope: task.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(task.sourceId, task.recordClass, task.scope),
+    normalization: { ...base.normalization, parserVersion: task.parserVersion },
+  };
+}
+
+/**
+ * One successful acquisition exactly as the production driver writes it: the
+ * adapter's claimed `retrievedAt`, then the store's own first event at
+ * `observedAt`, with NORMALIZED, VALIDATED and PROMOTED sharing that instant.
+ */
+async function seedObservedSuccess(
+  store: MemoryRoutineDataStore,
+  value: RoutineCandidate,
+  observedAt: string,
+): Promise<void> {
+  const receipt: ValidationReceipt = { ...receiptFor(value), validatedAt: observedAt };
+  const current = await store.readPromotion(value.recordClass, value.scope);
+  await store.create({
+    candidate: value,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: current?.lastKnownGoodVersionId ?? null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
+    candidateId: value.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: observedAt,
+    detail: `Acquired raw ${value.retrieval.rawHash}.`,
+  });
+  await store.transition(value.id, "NORMALIZED", observedAt, "Normalized 1/1 records.");
+  await store.transition(value.id, "VALIDATED", observedAt, "Every applicable GOOD check passed.", receipt);
+  await store.promote(value.id, receipt, observedAt);
+}
+
+test("a success is clocked in the attempt clock's own units, so the cadence, not the retry, schedules the next read", async () => {
+  // Recorded production fixture, census-geography-overlaps on 2026-09-23:
+  // candidate cv-cef6aa616ba495f3ab559f6d695e54d3 claimed retrieval at
+  // 05:26:48.668Z; the store first observed it 2.494 s later, at 05:26:51.162Z.
+  // The success clock used to report the claim, so attempted > succeeded and
+  // the six-hour retry fired at 11:26:51.162Z; the next candidate
+  // (cv-ee0d1eea89877734bb501a5f21998f57) was retrieved at 11:31:12.516Z
+  // against a 30-day cadence.
+  const task = routineTask("census-geography-overlaps");
+  assert.equal(task.cadenceMs, 30 * DAY_MS);
+  assert.equal(task.retryMs, 6 * HOUR_MS);
+  const observedAt = "2026-09-23T05:26:51.162Z";
+  const store = new MemoryRoutineDataStore();
+  await seedObservedSuccess(
+    store,
+    taskCandidate(task, "cv-cef6aa616ba495f3ab559f6d695e54d3", "2026-09-23T05:26:48.668Z"),
+    observedAt,
+  );
+
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
+  assert.deepEqual(clock, { lastAttemptedAt: observedAt, lastSucceededAt: observedAt });
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-09-23T11:26:51.162Z")), false, "the retry clock never re-acquires a success");
+  // The 30-day cadence governs, re-read its six-hour lead ahead of the
+  // Reader's one-cadence maxAge: 2026-10-23T05:26:51.162Z minus 6 h.
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-22T23:26:51.161Z")), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-10-22T23:26:51.162Z")), true, "the 30-day cadence, less its lead, governs");
+
+  // A later failed attempt still puts the source on its retry clock.
+  const failedAt = "2026-09-23T12:00:00.000Z";
+  const failed = await processRoutineCandidate(store, failedAcquisitionCandidate({
+    sourceId: task.sourceId,
+    recordClass: task.recordClass,
+    scope: task.scope,
+    requestedUrl: task.requestedUrl,
+    attemptedAt: failedAt,
+    failureDetail: "The Census relationship-file publisher did not answer.",
+    parserVersion: task.parserVersion,
+  }), failedAt);
+  assert.equal(failed.candidate.state, "SOURCE_BLOCKED");
+  const afterFailure = await store.clock(task.sourceId, task.recordClass, task.scope);
+  assert.deepEqual(afterFailure, { lastAttemptedAt: failedAt, lastSucceededAt: observedAt });
+  assert.equal(routineTaskDue(task, afterFailure, Date.parse("2026-09-23T17:59:59.999Z")), false);
+  assert.equal(routineTaskDue(task, afterFailure, Date.parse("2026-09-23T18:00:00.000Z")), true);
+});
+
+test("any nonzero acquisition time leaves a success on its cadence, not its retry clock", async () => {
+  // fec-funding's first event followed its claimed retrieval by about 0.2 s;
+  // ACS by 5.2 s. No gap may turn a success into a retry.
+  for (const taskId of ["fec-funding", "census-geography-overlaps"]) {
+    const task = routineTask(taskId);
+    for (const gapMs of [1, 200, 2_494, 5_200]) {
+      const observedAt = "2026-09-23T05:00:00.000Z";
+      const store = new MemoryRoutineDataStore();
+      await seedObservedSuccess(
+        store,
+        taskCandidate(task, `${taskId}-gap-${gapMs}`, new Date(Date.parse(observedAt) - gapMs).toISOString()),
+        observedAt,
+      );
+      const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
+      const label = `${taskId} gap ${gapMs} ms`;
+      // Both contracts retry after 6 h, so each is re-read 6 h ahead of its cadence.
+      const rereadAt = Date.parse(observedAt) + task.cadenceMs - 6 * HOUR_MS;
+      assert.deepEqual(clock, { lastAttemptedAt: observedAt, lastSucceededAt: observedAt }, label);
+      assert.equal(routineTaskDue(task, clock, Date.parse(observedAt) + task.retryMs), false, `${label}: not on the retry clock`);
+      assert.equal(routineTaskDue(task, clock, rereadAt - 1), false, `${label}: before the cadence less its lead`);
+      assert.equal(routineTaskDue(task, clock, rereadAt), true, `${label}: at the cadence less its lead`);
+    }
+  }
+});
+
+test("the Postgres clock reports success from the pointed candidate's first event, in the attempt clock's units", async () => {
+  const task = routineTask("census-geography-overlaps");
+  const value = taskCandidate(task, "cv-cef6aa616ba495f3ab559f6d695e54d3", "2026-09-23T05:26:48.668Z");
+  const receipt: ValidationReceipt = { ...receiptFor(value), validatedAt: "2026-09-23T05:26:51.162Z" };
+  const clock = await withCannedNeon((statement) => {
+    const text = statement.query;
+    if (text.includes(`inner join "civic_data_candidate_events"`)) {
+      return { columns: [["at", "timestamptz"]], rows: [["2026-09-23 05:26:51.162+00"]] };
+    }
+    if (text.includes(`left join "civic_data_candidate_events"`)) {
+      return {
+        columns: [
+          ["candidate", "jsonb"],
+          ["state", "text"],
+          ["acquisition_succeeded", "bool"],
+          ["validation_receipt", "jsonb"],
+          ["promoted_version_id", "text"],
+          ["last_known_good_version_id", "text"],
+          ["failure_code", "text"],
+          ["failure_detail", "text"],
+          ["at", "timestamptz"],
+        ],
+        rows: [[
+          { id: value.id, sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope },
+          "PROMOTED",
+          true,
+          receipt,
+          value.id,
+          value.id,
+          null,
+          null,
+          "2026-09-23 05:26:51.162+00",
+        ]],
+      };
+    }
+    if (text.startsWith("select") && text.includes(`from "civic_data_promotions"`)) {
+      return {
+        columns: [
+          ["source_id", "text"],
+          ["record_class", "text"],
+          ["scope", "text"],
+          ["current_version_id", "text"],
+          ["last_known_good_version_id", "text"],
+          ["validation_receipt", "jsonb"],
+        ],
+        rows: [[value.sourceId, value.recordClass, value.scope, value.id, value.id, receipt]],
+      };
+    }
+    throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
+  }, (store) => store.clock(task.sourceId, task.recordClass, task.scope));
+
+  assert.deepEqual(clock, {
+    lastAttemptedAt: "2026-09-23T05:26:51.162Z",
+    lastSucceededAt: "2026-09-23T05:26:51.162Z",
+  });
+  assert.equal(routineTaskDue(task, clock, Date.parse("2026-09-23T11:26:51.162Z")), false);
 });

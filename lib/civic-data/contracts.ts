@@ -299,6 +299,47 @@ export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, no
   return contract.cadence.defaultEveryMs;
 }
 
+/** A succeeding source is never re-read less than this far ahead of its cadence. */
+export const ROUTINE_REREAD_MIN_LEAD_MS = 15 * 60_000;
+
+type CadencedContract = Pick<RoutineSourceContract, "cadence" | "retry">;
+
+/**
+ * How far ahead of its cadence a source whose newest attempt succeeded is
+ * re-read: its own retry interval, never under 15 minutes, capped at half the
+ * cadence so the re-read interval stays positive. The Reader marks a record
+ * STALE one cadence after its retrieval (`routineFreshnessMs`); re-reading on
+ * the cadence itself left every succeeding source STALE from that instant
+ * until the next pass admitted it and its fetch landed.
+ */
+export function routineRereadLeadMsAt(contract: CadencedContract, atMs: number): number {
+  return Math.min(Math.max(contract.retry.afterMs, ROUTINE_REREAD_MIN_LEAD_MS), cadenceMsAt(contract, atMs) / 2);
+}
+
+/**
+ * The one instant a source whose newest attempt succeeded at `succeededMs` is
+ * next due; the runner schedules by it and Admin displays it. It is the first
+ * t ≥ succeededMs with t − succeededMs ≥ cadence(t) − lead(t), both read at t,
+ * so a cadence phase boundary moves the instant exactly as it moves the rule:
+ * phase boundaries split time into spans of one fixed cadence, and the first
+ * span that contains its own re-read instant decides. The interval is at least
+ * half a cadence, so the instant is never at or before the success, and it
+ * never moves once computed, so no displayed instant is skipped.
+ */
+export function routineCadenceDueAtMs(contract: CadencedContract, succeededMs: number): number {
+  const boundaries = [...new Set(
+    (contract.cadence.phases ?? []).map((phase) => Date.parse(phase.through)),
+  )].filter((through) => Number.isFinite(through) && through > succeededMs).sort((a, b) => a - b);
+  let spanStart = succeededMs;
+  for (const spanEnd of [...boundaries, Number.POSITIVE_INFINITY]) {
+    const intervalMs = cadenceMsAt(contract, spanStart) - routineRereadLeadMsAt(contract, spanStart);
+    const dueAt = Math.max(spanStart, succeededMs + intervalMs);
+    if (dueAt < spanEnd) return dueAt;
+    spanStart = spanEnd;
+  }
+  return spanStart;
+}
+
 export function routineContract(id: string): RoutineSourceContract | null {
   return ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === id) ?? null;
 }

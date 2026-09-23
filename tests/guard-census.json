@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 691,
-    "named": 6907,
+    "files": 694,
+    "named": 6921,
     "dynamic": 28
   },
   "files": {
@@ -626,6 +626,16 @@
       "names": [
         "outcome-store failure cannot erase an independently held meeting or listing identity",
         "registry failure cannot erase held outcome records"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-version-projection.test.ts": {
+      "names": [
+        "Tucson Unified 499: 88 identical re-fetches plus the board's site root are ONE version, never a revision",
+        "a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording",
+        "a revision at the same address is still two versions, and the old address is not offered as the old text",
+        "a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision",
+        "the real agenda route over the committed holding returns one row per distinct content and reconciles every held row"
       ],
       "dynamic": 0
     },
@@ -4398,6 +4408,14 @@
       ],
       "dynamic": 0
     },
+    "tests/held-agenda-projection.test.ts": {
+      "names": [
+        "Ask, Tucson Unified 499: 89 stored rows (88 identical re-reads plus the site root) are ONE agenda record with no revision language",
+        "Ask, a real revision: two distinct contents are two agenda records, each with its own source",
+        "Ask, a sitting holding only the site root: its listing pages are named as publication indexes, never as an agenda"
+      ],
+      "dynamic": 0
+    },
     "tests/holdings-readback.test.ts": {
       "names": [
         "holdings instrument observes one database snapshot without schema initialization or mutations",
@@ -5367,6 +5385,17 @@
         "MTG-9: the building is still the last rung, and still says so",
         "MTG-9: the shape does not fire on a real body name",
         "MTG-9: the sweep reaches the corpus it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-change-facts.test.ts": {
+      "names": [
+        "Rockaway: a fetch differing only in stamps, raw hashes and collectedAt is a validated no-change",
+        "Tucson Unified: the sitting's agenda is one record; re-fetches are no change and a revision is one CHANGE of that key",
+        "a real fact change is still a change, and only the record whose facts moved is changed",
+        "an aged-out sitting's agenda is removed by exactly one evidence row, however many stored versions it has",
+        "durable trusted-LKG transfers keep proving against the row-keyed contract they were written under",
+        "the ingest store appends a new version only when the content changed"
       ],
       "dynamic": 0
     },

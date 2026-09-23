@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 707,
-    "named": 7013,
+    "named": 7016,
     "dynamic": 28
   },
   "files": {
@@ -2448,9 +2448,11 @@
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
         "a malformed or misidentified GOOD receipt cannot enter the validated durable state",
         "a promotion's RETURNING names the moved pointer and never carries its dataset",
+        "a success is clocked in the attempt clock's own units, so the cadence, not the retry, schedules the next read",
         "a terminal PROMOTED candidate cannot be rewritten or invalidate its live LKG proof",
         "a terminal transition requires exact non-GOOD receipt evidence and is immutable",
         "an atomic pointer race becomes durable CANNOT_TELL evidence without changing LKG",
+        "any nonzero acquisition time leaves a success on its cadence, not its retry clock",
         "append-only Reader evidence must be a receipt for the exact promoted contract and version",
         "candidate creation refuses a mismatched first event before persisting either half",
         "candidate event time is a bounded local clock and never moves backward by sequence",
@@ -2460,6 +2462,7 @@
         "production NODE_ENV alone cannot open the permanent routine-data writer",
         "promotion accepts only the exact persisted GOOD receipt",
         "terminal store exposes no one-time import or aggregate retirement door",
+        "the Postgres clock reports success from the pointed candidate's first event, in the attempt clock's units",
         "the Postgres promotion transaction is selected from the exact persisted proof",
         "the Postgres retry clock is the local sequence-one event, never a refused acquisition claim",
         "the Reader-evidence door's narrow read decides authority exactly as the whole envelope does",

@@ -1,0 +1,7496 @@
+{
+ "formatVersion": 1,
+ "generatedAt": "2026-09-23",
+ "source": "data/derived/zip-governments.json (national TIGER lattice sampling), with each government's OCD id built from the Census names by lib/ocd/divisions.ts",
+ "note": "Every division whose territory reaches each ZCTA, one shard per ZIP3. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area (RULING 71). Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
+ "counts": {
+  "zips": 33791,
+  "shards": 896,
+  "divisionReferences": 107067,
+  "edges": 272526,
+  "edgesWithNoOcdId": {},
+  "zipsWithNoCountyEdge": 0,
+  "collisions": 278,
+  "committedIdsKept": 16,
+  "committedIdsNotInTheNationalLayers": 0
+ },
+ "inheritedSharedIds": {
+  "ocd-division/country:us/state:nj/school_district:union_township_school_district": [
+   "elsd:3416440",
+   "unsd:3416500"
+  ]
+ },
+ "staleInTheOldIndex": [
+  "ocd-division/country:us/state:nj/school_district:washington_township_school_district"
+ ],
+ "shards": {
+  "100": {
+   "sha256": "856c38299070f4dae7888f5ed3ce8f4d6da2eb79928cb23f7a7e4c580f614ec4",
+   "zips": 42,
+   "states": [
+    "NY"
+   ]
+  },
+  "101": {
+   "sha256": "04c601a8d370f3e79591f49d752691a487e749abef7212b58c3dd87fea8954c3",
+   "zips": 22,
+   "states": [
+    "NY"
+   ]
+  },
+  "102": {
+   "sha256": "bb875bc1964d868ace2e6828fd371d3938dc895552983d547892c25d7c8bfb19",
+   "zips": 5,
+   "states": [
+    "NY"
+   ]
+  },
+  "103": {
+   "sha256": "37e33b81881e8df51825b9a4997ff76640b6b7a92ee5acf3a2a4bba35727240a",
+   "zips": 13,
+   "states": [
+    "NY"
+   ]
+  },
+  "104": {
+   "sha256": "09df6ae7c4b80019049d1a8d3f9d00fd985329d10b17ea060ab2d9b2079b9e0b",
+   "zips": 25,
+   "states": [
+    "NY"
+   ]
+  },
+  "105": {
+   "sha256": "b6942736674ee76ae739ff19e85bc379580f10d1582d2ebb9f4a82a7ef1d606e",
+   "zips": 63,
+   "states": [
+    "NY"
+   ]
+  },
+  "106": {
+   "sha256": "312f5d5516c6ce828675eb7f6d6e8c590ff01d3c98a9b90130f754ed6bba3c2c",
+   "zips": 6,
+   "states": [
+    "NY"
+   ]
+  },
+  "107": {
+   "sha256": "6e0ad10c1a607fc4ff7e37ed91685c448ae5ae54bc2bd29dc1ebf9d295a6ba02",
+   "zips": 9,
+   "states": [
+    "NY"
+   ]
+  },
+  "108": {
+   "sha256": "21de0222e5e19e52d8e3ce0f95ad1670c995dd35f37f5632e3e4c77f9b42f302",
+   "zips": 4,
+   "states": [
+    "NY"
+   ]
+  },
+  "109": {
+   "sha256": "03a32330d32c3175c304b46c84336d0b7d9f8d22802de59aafba050d2f38b5d7",
+   "zips": 59,
+   "states": [
+    "NY"
+   ]
+  },
+  "110": {
+   "sha256": "1e221356af51f412e9ef5a8fe1ffeb85d94f13d8d542323e9ed62074d0ed0569",
+   "zips": 14,
+   "states": [
+    "NY"
+   ]
+  },
+  "111": {
+   "sha256": "79c1f7f022286c4f29b21ba5bf8963e5311fa6b17a1b31e1183e4b6b128702c2",
+   "zips": 7,
+   "states": [
+    "NY"
+   ]
+  },
+  "112": {
+   "sha256": "794a91ff4beacb1a0e54e7dc86459bfe1768c21dd64097a8662783584ecd1b41",
+   "zips": 38,
+   "states": [
+    "NY"
+   ]
+  },
+  "113": {
+   "sha256": "59fcb1c242f01255c3aca9b07283cc9205a6021429441431702daeea59756daf",
+   "zips": 26,
+   "states": [
+    "NY"
+   ]
+  },
+  "114": {
+   "sha256": "0901e51310b0e92731df907fa0e304adfd52c978827e6c745430f6164e1c75a0",
+   "zips": 26,
+   "states": [
+    "NY"
+   ]
+  },
+  "115": {
+   "sha256": "e12d7ee24a9a5d6b921d1f7d8d04d346084eece970110797bc957b6cf6c241f7",
+   "zips": 40,
+   "states": [
+    "NY"
+   ]
+  },
+  "116": {
+   "sha256": "c0082cb0824b52edfc4c26507037251c7364458f126dd31658d65b30937ba17e",
+   "zips": 5,
+   "states": [
+    "NY"
+   ]
+  },
+  "117": {
+   "sha256": "3702fe06f41a5fc12f16d9e068309cabe0bea0bde245ce1fd1372376c036677b",
+   "zips": 77,
+   "states": [
+    "NY"
+   ]
+  },
+  "118": {
+   "sha256": "7cc2c592c8240ed1e8f0236ffdfe5d76b3e6ac206acdc0945f1a1453020d5171",
+   "zips": 3,
+   "states": [
+    "NY"
+   ]
+  },
+  "119": {
+   "sha256": "bd98b1ef9b7a72ea54e491935be56f032b58b82982771c22668ba51ea6dd6e15",
+   "zips": 44,
+   "states": [
+    "NY"
+   ]
+  },
+  "120": {
+   "sha256": "857c90299fc4dc35a1c2e5caff87c4d75c431d3f1f66d8af63d4e8a264d44578",
+   "zips": 66,
+   "states": [
+    "NY"
+   ]
+  },
+  "121": {
+   "sha256": "7ebff08f3588d93f74813714955102bdb29170cabd871ec99e93c1cb9668ab58",
+   "zips": 68,
+   "states": [
+    "NY"
+   ]
+  },
+  "122": {
+   "sha256": "72d0387de54d49943ef6ce67a250e6215e4d7b4d8dbcffca04b74c20bbcd0e87",
+   "zips": 12,
+   "states": [
+    "NY"
+   ]
+  },
+  "123": {
+   "sha256": "72292e2c27bd2216cd58b966b491a15bc035134c3c38b4fccfee84cb9d0fd25d",
+   "zips": 8,
+   "states": [
+    "NY"
+   ]
+  },
+  "124": {
+   "sha256": "32f2c50c562f7e71aadc1e2ad695bec5fec5bbde7a5e9deb7c7e20c4d679f4db",
+   "zips": 82,
+   "states": [
+    "NY"
+   ]
+  },
+  "125": {
+   "sha256": "3cd8ee7cd7a658319dc01bd02d24efb4bc8ce473a78e67ee39e95b5407d3201f",
+   "zips": 63,
+   "states": [
+    "NY"
+   ]
+  },
+  "126": {
+   "sha256": "d9dd98fb5c749625e555fa927dd2748c6eb321538d99dc6588e2ef325ac15bbf",
+   "zips": 3,
+   "states": [
+    "NY"
+   ]
+  },
+  "127": {
+   "sha256": "7bd8bf47344eb2616dc4635729b0d4f19573684878b792a2fadd896c23e684f2",
+   "zips": 59,
+   "states": [
+    "NY"
+   ]
+  },
+  "128": {
+   "sha256": "00484ae6948807bc381b7a87242e1061cb27f8308a93c2f9979d3ba05f1bf7bc",
+   "zips": 65,
+   "states": [
+    "NY"
+   ]
+  },
+  "129": {
+   "sha256": "fbb6559d6a6d63f517d09ae9e937353a3fd16d055201aa6c1169019908c557b1",
+   "zips": 72,
+   "states": [
+    "NY"
+   ]
+  },
+  "130": {
+   "sha256": "58b1b30239f92fae58115ee101772e8efb0452e3bc89ed9db6eb99831a197ea6",
+   "zips": 50,
+   "states": [
+    "NY"
+   ]
+  },
+  "131": {
+   "sha256": "a8814c13906c53f67dc7279b8ec703e244fda670074f903a8b4e385514da5bd9",
+   "zips": 51,
+   "states": [
+    "NY"
+   ]
+  },
+  "132": {
+   "sha256": "a7ca648928314178c9854aee5462cbbf828b4d42615c6ccff98332ae2267f072",
+   "zips": 17,
+   "states": [
+    "NY"
+   ]
+  },
+  "133": {
+   "sha256": "ea4996193e589eae631274febb1725729d6587efa538926c1a4b58d10b6bbd43",
+   "zips": 53,
+   "states": [
+    "NY"
+   ]
+  },
+  "134": {
+   "sha256": "1e015fa9ff456646867ff539f1a0f6e645e81bb11f2b626682b3986b034d9d73",
+   "zips": 62,
+   "states": [
+    "NY"
+   ]
+  },
+  "135": {
+   "sha256": "88447cf53cf6f8b3d777181c327b723e4ac53f6438c85e5ba0ae4b444b797a46",
+   "zips": 2,
+   "states": [
+    "NY"
+   ]
+  },
+  "136": {
+   "sha256": "840031eae0d336d44542b1d0983d89b660099204ec591aec31922f51e3651169",
+   "zips": 83,
+   "states": [
+    "NY"
+   ]
+  },
+  "137": {
+   "sha256": "c8891ba8a076c59a6004a605012bc19e945b0c1125549127c98c4d76264c02a3",
+   "zips": 39,
+   "states": [
+    "NY"
+   ]
+  },
+  "138": {
+   "sha256": "a856356da8d6d159584a8724fb433359e5889aa0faf52b1b24dfdae97aa7cc99",
+   "zips": 41,
+   "states": [
+    "NY"
+   ]
+  },
+  "139": {
+   "sha256": "5bf324f4591746e70d37b881ef59b3965bb9f2a86b63224eb85c8f0d5979ef51",
+   "zips": 5,
+   "states": [
+    "NY"
+   ]
+  },
+  "140": {
+   "sha256": "d0c98fb37efaec95b4dda6e5b10fb0422ac94dc8daf364cf10e9c1e7a1005d0d",
+   "zips": 61,
+   "states": [
+    "NY"
+   ]
+  },
+  "141": {
+   "sha256": "a4179acc0a3450a3148f568ec25419f4fe6e550d7a8f38f45575dc0ea38f1405",
+   "zips": 35,
+   "states": [
+    "NY"
+   ]
+  },
+  "142": {
+   "sha256": "9fa59706be07756927b699fd4a7d0b529bd12b2a3a2a3adb273df42cfe771e39",
+   "zips": 29,
+   "states": [
+    "NY"
+   ]
+  },
+  "143": {
+   "sha256": "0f4055da25e5687acb056d88053f55c8ffccf75283188b7c48b257601e1d4a1d",
+   "zips": 5,
+   "states": [
+    "NY"
+   ]
+  },
+  "144": {
+   "sha256": "2487e2bac9d338c6e0e43697710fcc62497090d449addec8f2b12b5f7369a814",
+   "zips": 45,
+   "states": [
+    "NY"
+   ]
+  },
+  "145": {
+   "sha256": "4052a1d5a572f6aa99fd0342864c1f3d20124b84b7e31637b80a85318ea7332a",
+   "zips": 56,
+   "states": [
+    "NY"
+   ]
+  },
+  "146": {
+   "sha256": "319d93cf60fc1e3dc0300a85efcf75ccfce097b1834a19af706e64f9208fbed4",
+   "zips": 25,
+   "states": [
+    "NY"
+   ]
+  },
+  "147": {
+   "sha256": "652e224d115c5082d3830be667a0d50ecc3aaf261164514f90e93491583bcc2b",
+   "zips": 62,
+   "states": [
+    "NY"
+   ]
+  },
+  "148": {
+   "sha256": "6afd89fbe1ced637f25576b5964b853d9cdfbd7ccd68b2943f9a8dadf4f557a3",
+   "zips": 74,
+   "states": [
+    "NY"
+   ]
+  },
+  "149": {
+   "sha256": "8110d589485b9bf8c9f7a7dafd5dd8c0db9bac73f69abdf0798294259418cecd",
+   "zips": 4,
+   "states": [
+    "NY"
+   ]
+  },
+  "150": {
+   "sha256": "fed8717c999b838b3290d2adfb0dd4db0f922691d6e629746e5d6139779187d0",
+   "zips": 71,
+   "states": [
+    "PA"
+   ]
+  },
+  "151": {
+   "sha256": "430889e2c3afebad7019fa2dd90246e48e7ee7ffe1df280a495bf3fae6365833",
+   "zips": 28,
+   "states": [
+    "PA"
+   ]
+  },
+  "152": {
+   "sha256": "84a207407dd59fe69f17822504dada5c8d5cfefe0d3dfa24928ce9c1c5273a5e",
+   "zips": 43,
+   "states": [
+    "PA"
+   ]
+  },
+  "153": {
+   "sha256": "d008a9a7d57df09d9f6fff445676a0358f23c9f8b0b6a4826481e7af0ecbdf05",
+   "zips": 55,
+   "states": [
+    "PA"
+   ]
+  },
+  "154": {
+   "sha256": "661ee121dd1f89e603fc7cf300fe1def411af55b273d6a5258492c480161c34c",
+   "zips": 70,
+   "states": [
+    "PA"
+   ]
+  },
+  "155": {
+   "sha256": "6f294b2ba9e77097c4b8490280adc4fefe06bbbe4f393bd30d0c5751bb0a6a62",
+   "zips": 37,
+   "states": [
+    "PA"
+   ]
+  },
+  "156": {
+   "sha256": "c794b416bb1860aa91453329042d3c2c94a47e51b6587b87c484556110069573",
+   "zips": 72,
+   "states": [
+    "PA"
+   ]
+  },
+  "157": {
+   "sha256": "407016764352a107edd76bc44fd461b032e28019d4aef43c2811516fb1c4574f",
+   "zips": 63,
+   "states": [
+    "PA"
+   ]
+  },
+  "158": {
+   "sha256": "697f63fe959bbe9215ff23ce602efdc0e9f238248d8a34cb33b7572ea020566f",
+   "zips": 30,
+   "states": [
+    "PA"
+   ]
+  },
+  "159": {
+   "sha256": "5ac086d6c6f9eec23f78bb76aae4638ebf076b8a08f972ec39848cff2109cc90",
+   "zips": 43,
+   "states": [
+    "PA"
+   ]
+  },
+  "160": {
+   "sha256": "2d6a6d58dfd41934d38b0bb071a57d5f9dd51bcb4d81b17013616384b6efaa14",
+   "zips": 35,
+   "states": [
+    "PA"
+   ]
+  },
+  "161": {
+   "sha256": "6b90f2f3c2c8aa073fec443580d1b61d61ce01f1c8513bb8e6183220b40fd777",
+   "zips": 42,
+   "states": [
+    "PA"
+   ]
+  },
+  "162": {
+   "sha256": "c162b57fd54806d50c69c1dae6510f709ba537fa14da9022fe42c98630a471db",
+   "zips": 39,
+   "states": [
+    "PA"
+   ]
+  },
+  "163": {
+   "sha256": "944c4dc668f85210bdc03adebb22864d25a70fe58dafeb8a307c1200f565336e",
+   "zips": 43,
+   "states": [
+    "PA"
+   ]
+  },
+  "164": {
+   "sha256": "17629eb3c0a071fa7e27be14ddcce49e3b23b698a756625164971f218f78f5c4",
+   "zips": 33,
+   "states": [
+    "PA"
+   ]
+  },
+  "165": {
+   "sha256": "7f57119263f11bdd4c6eceef7d42c13c4e082a3c16cdcb085f283b84531e452a",
+   "zips": 14,
+   "states": [
+    "PA"
+   ]
+  },
+  "166": {
+   "sha256": "93ccb0af4296c2069dcb7065a10cd3c64f653c990e1bc5d84a18e48c1c5838c3",
+   "zips": 67,
+   "states": [
+    "PA"
+   ]
+  },
+  "167": {
+   "sha256": "a3cf786b2f15b0c2d037e88633d1c5108f113beea2af0f648529f4caa95ca997",
+   "zips": 22,
+   "states": [
+    "PA"
+   ]
+  },
+  "168": {
+   "sha256": "c024f5b4791e8e17c2a5fd70dbd6269553657fedbae7a2f23bffeab2698e9b23",
+   "zips": 55,
+   "states": [
+    "PA"
+   ]
+  },
+  "169": {
+   "sha256": "51e001aa303e23c26662a328a7f7a667b20d109e2c3910c69ccbb9e3f6f7d739",
+   "zips": 32,
+   "states": [
+    "PA"
+   ]
+  },
+  "170": {
+   "sha256": "131cfda30326fa434da25af7951f30dbd23453d87d905113b68a9a94f5ea07d6",
+   "zips": 86,
+   "states": [
+    "PA"
+   ]
+  },
+  "171": {
+   "sha256": "72ac92aaf6d7b7ab99e9c6bbf4d57e82a405af344f8c20164929ad16e5672aa2",
+   "zips": 10,
+   "states": [
+    "PA"
+   ]
+  },
+  "172": {
+   "sha256": "e0d4943231aef578febae2300e343136d9930105ed7862186d5bc9ef5ca89944",
+   "zips": 49,
+   "states": [
+    "PA"
+   ]
+  },
+  "173": {
+   "sha256": "c857c8b2ada641c3105ff4adbeb73d44e7920c088542ffc7b4276056ddcd3a7b",
+   "zips": 48,
+   "states": [
+    "PA"
+   ]
+  },
+  "174": {
+   "sha256": "07c88cf67df2090df48dac018f85343f9fd17c1161de95f7f89f05ef162d4718",
+   "zips": 7,
+   "states": [
+    "PA"
+   ]
+  },
+  "175": {
+   "sha256": "532f1cc3b104b3ec79e2c855384a57c6c158cc376ac79c8e3d966af9cd8aeacb",
+   "zips": 47,
+   "states": [
+    "PA"
+   ]
+  },
+  "176": {
+   "sha256": "3e776721febd0d9a9ee8cc65fee1faf1a9810f90beafd42f238dad24dd177def",
+   "zips": 4,
+   "states": [
+    "PA"
+   ]
+  },
+  "177": {
+   "sha256": "c96ee48c6b1f2cc005e574e4ebd0f7fc34ceb77ab59bf98687231ff01ccc400e",
+   "zips": 40,
+   "states": [
+    "PA"
+   ]
+  },
+  "178": {
+   "sha256": "c22cd6a5801b407f2577c72d88abd63de3a506e4f605cfa3724160730c00b768",
+   "zips": 54,
+   "states": [
+    "PA"
+   ]
+  },
+  "179": {
+   "sha256": "f57fd0a9febdac388a112fe43186edf9b056066f7abef1146590400ce68bf903",
+   "zips": 45,
+   "states": [
+    "PA"
+   ]
+  },
+  "180": {
+   "sha256": "7f265efb4dc24b8c6b00437f903081b4b18140e2c33c44be9cc2041f063a0327",
+   "zips": 55,
+   "states": [
+    "PA"
+   ]
+  },
+  "181": {
+   "sha256": "c4114aed9d00d56a9fed03bb39c42bd8bdc1cb04f9f7ea70af56de5663b80d85",
+   "zips": 7,
+   "states": [
+    "PA"
+   ]
+  },
+  "182": {
+   "sha256": "914e97ea03d3124b2ad1942cba2f68ebfd27107f283128bbf4bc50d71bfa00ad",
+   "zips": 36,
+   "states": [
+    "PA"
+   ]
+  },
+  "183": {
+   "sha256": "e4f15b9b286aef80d98a94712fcc820636098605c62531273f5f1181107bb1e6",
+   "zips": 36,
+   "states": [
+    "PA"
+   ]
+  },
+  "184": {
+   "sha256": "3ee00c32d71e67e82d8c25c57a44ff023adadd53762ba978caf2253f94b81f20",
+   "zips": 51,
+   "states": [
+    "PA"
+   ]
+  },
+  "185": {
+   "sha256": "c734f4bf008c388926400593f5cffdefc2f1629f2a5a90c70570c059622cf876",
+   "zips": 11,
+   "states": [
+    "PA"
+   ]
+  },
+  "186": {
+   "sha256": "66631f9227498b0c5dab03c2519a71fb53a29d5da400c06d42e317f666a9822b",
+   "zips": 36,
+   "states": [
+    "PA"
+   ]
+  },
+  "187": {
+   "sha256": "428cd645dcbbfd3ead7de94208d3120bbd8f7d40a34ed63ed012803687a25fd9",
+   "zips": 8,
+   "states": [
+    "PA"
+   ]
+  },
+  "188": {
+   "sha256": "e0b8cc250a62bb19c8d1e5c8f73526e8472f37d030d4267912dc0c7aefa1601b",
+   "zips": 34,
+   "states": [
+    "PA"
+   ]
+  },
+  "189": {
+   "sha256": "083ec1da1c7ef3a7033a8b43a688d8a0a13ea4ae156145e8b476ce61470863a5",
+   "zips": 39,
+   "states": [
+    "PA"
+   ]
+  },
+  "190": {
+   "sha256": "df7d0da6445adb708dceaf79b0a7aec90c9332c6a709d26fb97cf37ce542f04f",
+   "zips": 68,
+   "states": [
+    "PA"
+   ]
+  },
+  "191": {
+   "sha256": "2139f2d1c0afdcd96e02494393630e7e53044e061d186f5956291fef51b1cc27",
+   "zips": 50,
+   "states": [
+    "PA"
+   ]
+  },
+  "193": {
+   "sha256": "c041b96bf1288a3de3e5fecbcd07a2fe4c5ab6c5d2c342dd5b17ab245ba5a2c8",
+   "zips": 34,
+   "states": [
+    "PA"
+   ]
+  },
+  "194": {
+   "sha256": "d471750e45a2029155058c14a45cf811a3f274873fd9a589227335439328737c",
+   "zips": 32,
+   "states": [
+    "PA"
+   ]
+  },
+  "195": {
+   "sha256": "51e52099af319da6c0a10fdf6c3bdaab7c0d32f5b95c1d365ac8701176b4c635",
+   "zips": 42,
+   "states": [
+    "PA"
+   ]
+  },
+  "196": {
+   "sha256": "2df96e2788d67adcb0940039897f760877db016ccf86c17dd59ad66aa983e2c8",
+   "zips": 10,
+   "states": [
+    "PA"
+   ]
+  },
+  "197": {
+   "sha256": "e372060355865ec01dd0e02ffea6b89731c73a94eb1983e190d00e7cba2fb751",
+   "zips": 19,
+   "states": [
+    "DE"
+   ]
+  },
+  "198": {
+   "sha256": "8e9d0e43d0318b4eea344b433514df42271bf1ca472516c403c2b3e131530086",
+   "zips": 10,
+   "states": [
+    "DE"
+   ]
+  },
+  "199": {
+   "sha256": "bdbba11f5f3b4f4eb48ca6d02ba4d32554bfe00657aac997a1b71bc326585ce0",
+   "zips": 39,
+   "states": [
+    "DE",
+    "MD"
+   ]
+  },
+  "200": {
+   "sha256": "06fb31004811059cfe29b2e60a76d927d8d26258514329e723ed0fee96311657",
+   "zips": 27,
+   "states": [
+    "DC"
+   ]
+  },
+  "201": {
+   "sha256": "e9de2483e93f1f06182cc1924b8d0f83e20d371262dfc5c2693e7b9fc5e87976",
+   "zips": 45,
+   "states": [
+    "VA",
+    "WV"
+   ]
+  },
+  "202": {
+   "sha256": "423eb7fea66cccb9b3c3a181cf67c08c5c4d11fae09d8a1c0ca52889b120acf8",
+   "zips": 7,
+   "states": [
+    "DC"
+   ]
+  },
+  "203": {
+   "sha256": "97e3f889c42e8481b8400c6f5a0b6f67281883cb551a4da30529bcbac98d3e59",
+   "zips": 5,
+   "states": [
+    "DC"
+   ]
+  },
+  "204": {
+   "sha256": "18e2476d2c4ca8e6eb8dbc874f7be083272e7f42417a09365b9c8cd44d5400b4",
+   "zips": 6,
+   "states": [
+    "DC"
+   ]
+  },
+  "205": {
+   "sha256": "f7304970fb59699b851597a221e675c0d3ed5fd2790d142541c126781e5883e0",
+   "zips": 12,
+   "states": [
+    "DC"
+   ]
+  },
+  "206": {
+   "sha256": "f83f99207927dd71a647f61dc8ebd5423d2b9dac5f14d5260c8be644f5fe2fe3",
+   "zips": 61,
+   "states": [
+    "MD"
+   ]
+  },
+  "207": {
+   "sha256": "c56a90d99796b3680ff0a4756223257a845b0d86d61dc6400f331527d48140dd",
+   "zips": 53,
+   "states": [
+    "MD"
+   ]
+  },
+  "208": {
+   "sha256": "fea950b4416445deb86c575ebbe2a501502ca80df7ddda2d56637aaed343b030",
+   "zips": 40,
+   "states": [
+    "MD"
+   ]
+  },
+  "209": {
+   "sha256": "bbff93555cc24e9e0d7e0e3bdfa07c93c9b973541f501979832193e285f211c5",
+   "zips": 8,
+   "states": [
+    "MD"
+   ]
+  },
+  "210": {
+   "sha256": "1e66d092cceb186f3a2a88061c0d164d38bf77bda7c51b66607707b45d2cfa8e",
+   "zips": 48,
+   "states": [
+    "MD"
+   ]
+  },
+  "211": {
+   "sha256": "fce792d8527644f6f56616e9171c2f8783c00cf684f254b15fec6fd95c659def",
+   "zips": 30,
+   "states": [
+    "MD"
+   ]
+  },
+  "212": {
+   "sha256": "201bc84772aae4596b86cb9164be6d4caf786239db77fea58caa065938d40d5b",
+   "zips": 43,
+   "states": [
+    "MD"
+   ]
+  },
+  "214": {
+   "sha256": "3ee46d8deec01c41467d3f13faa7c2775409d4d7b65b32dc3c6833397eae78c2",
+   "zips": 5,
+   "states": [
+    "MD"
+   ]
+  },
+  "215": {
+   "sha256": "87bac42a747c9fb36cc3441fd2eb9ec557cca363c20da7a631f989ff0547bf3d",
+   "zips": 23,
+   "states": [
+    "MD"
+   ]
+  },
+  "216": {
+   "sha256": "e0c3744685ebdd4596a4af8ec1e16d539262cbe35e7e5c4c8e64a3223ae9093a",
+   "zips": 58,
+   "states": [
+    "MD"
+   ]
+  },
+  "217": {
+   "sha256": "b61b5998c79e503bcc96174bf90c5fded0dcf48bd32c981790bf517133eef181",
+   "zips": 56,
+   "states": [
+    "MD"
+   ]
+  },
+  "218": {
+   "sha256": "4f452e85c5789654b129293f8a97ba5932492f2c56e906e3b2a565405c816f2c",
+   "zips": 37,
+   "states": [
+    "MD"
+   ]
+  },
+  "219": {
+   "sha256": "c724386768fa6cb286ea6dc396b1e4b5fd449e0c68849c036d10e9bc98e509a7",
+   "zips": 15,
+   "states": [
+    "MD"
+   ]
+  },
+  "220": {
+   "sha256": "3702da9a717a4e08e6283ebe792268fa3f698779bed00243e47a943d3502a298",
+   "zips": 19,
+   "states": [
+    "VA"
+   ]
+  },
+  "221": {
+   "sha256": "5b2a9c04d6ba401bd9c81bf4ef6e05d19d345a5b0f283e8b76e25237b15e5718",
+   "zips": 16,
+   "states": [
+    "VA"
+   ]
+  },
+  "222": {
+   "sha256": "3db7b26aba449ef429bd2b5de5deed21e49361edb887e73d675c20bcc8d814db",
+   "zips": 11,
+   "states": [
+    "VA"
+   ]
+  },
+  "223": {
+   "sha256": "ea1f842dd84ae4eaf6e979705baf806122217af6852fcfe1f1e2003cd1ea0f11",
+   "zips": 14,
+   "states": [
+    "VA"
+   ]
+  },
+  "224": {
+   "sha256": "fdc048eb2e39791b3d11dd95bb916fea33f43c0563af45ff4696ec9953c4ae17",
+   "zips": 24,
+   "states": [
+    "VA"
+   ]
+  },
+  "225": {
+   "sha256": "1a35ba8ac875719ec5b7141d974866c074bc5556d6ea46d84bb9847910ffed21",
+   "zips": 25,
+   "states": [
+    "VA"
+   ]
+  },
+  "226": {
+   "sha256": "5a9e783a2fe1fb9f76128c98f166316a7fc50a55f645a9d7738966137964289e",
+   "zips": 29,
+   "states": [
+    "VA"
+   ]
+  },
+  "227": {
+   "sha256": "4b01936a97aba9e223d2e125051f142d1efbf9ffa941083e0a300862f58d7c4a",
+   "zips": 35,
+   "states": [
+    "VA"
+   ]
+  },
+  "228": {
+   "sha256": "522829a0f8e0479df39b6268742bd342f95fa5fcefb5123c6cd6c3f6adcdd47e",
+   "zips": 28,
+   "states": [
+    "VA"
+   ]
+  },
+  "229": {
+   "sha256": "f13edd18ccc0a6db1417fe0a6002ee137e5080402f7e5fc8448a293441f1004c",
+   "zips": 40,
+   "states": [
+    "VA"
+   ]
+  },
+  "230": {
+   "sha256": "7be9744ddf2aeaae21c34e17109cbfca8d2df0fa335b127c193533ef1fb2624e",
+   "zips": 48,
+   "states": [
+    "VA"
+   ]
+  },
+  "231": {
+   "sha256": "6242fb3ad9a8807bc9ffb278d9c54db1808b3435b3f08ad7bc02da649e19779e",
+   "zips": 45,
+   "states": [
+    "VA"
+   ]
+  },
+  "232": {
+   "sha256": "17b513be22420eb1a70df2abff4d1a96caf2502018bb84afe1346e76ecef7ee4",
+   "zips": 23,
+   "states": [
+    "VA"
+   ]
+  },
+  "233": {
+   "sha256": "468a7fbefc7e8daf877ea7619f63b608303a0d96a77a663815fdd009d5fed607",
+   "zips": 29,
+   "states": [
+    "VA"
+   ]
+  },
+  "234": {
+   "sha256": "8a46b752ce252828cbdfa59e4dd823df106328c7ddb7fed4c2c120f0f2ce6999",
+   "zips": 45,
+   "states": [
+    "VA"
+   ]
+  },
+  "235": {
+   "sha256": "8ee11abbe69ecd061181578409fcd0ad79f8fe669766626a13378837da60013f",
+   "zips": 14,
+   "states": [
+    "VA"
+   ]
+  },
+  "236": {
+   "sha256": "db010dd4e73bebfca8448dd16bd8577066054bf6994209ca38d308d1148d5824",
+   "zips": 24,
+   "states": [
+    "VA"
+   ]
+  },
+  "237": {
+   "sha256": "1814ff68f91cbd6348789e607e69fde4f6255f76fdc68bad38d8513e43a71dc1",
+   "zips": 7,
+   "states": [
+    "VA"
+   ]
+  },
+  "238": {
+   "sha256": "38eb79fdac485fedee977a9415e8c042af63f8ff7c1827f5dfeca1a6c67ae8f4",
+   "zips": 55,
+   "states": [
+    "VA"
+   ]
+  },
+  "239": {
+   "sha256": "ef1bbe394a9e3070fc78fa771125603e7ca69f69c7b13fba9a06c287b6ea866a",
+   "zips": 36,
+   "states": [
+    "VA"
+   ]
+  },
+  "240": {
+   "sha256": "05c5cafbfc4836f195999972743413e4653f3caeb8520b85c66ce48723306eab",
+   "zips": 43,
+   "states": [
+    "VA"
+   ]
+  },
+  "241": {
+   "sha256": "87cd404e205e00e724e5b2edfbcbb25d2422e34e9501cc8944183ed0bfaa6f69",
+   "zips": 40,
+   "states": [
+    "VA"
+   ]
+  },
+  "242": {
+   "sha256": "6cae5b32dc3482154c9d2dbd5e63ce0e06acb8975fa3d327cc4f7c0caa2877de",
+   "zips": 44,
+   "states": [
+    "VA"
+   ]
+  },
+  "243": {
+   "sha256": "a543e133b9f0a4aad47f3c7da78559524e305f3f2a112469d0d68e90c17d0502",
+   "zips": 40,
+   "states": [
+    "VA"
+   ]
+  },
+  "244": {
+   "sha256": "fab49bdb59fe0e831a86a21c1fbf7534ac3eef9209a426da9c91d94b7992a21b",
+   "zips": 43,
+   "states": [
+    "VA"
+   ]
+  },
+  "245": {
+   "sha256": "72f2cad0d8656de3061922c988356246daac5bde8c0b0a0d27736f29334fbe3c",
+   "zips": 56,
+   "states": [
+    "VA"
+   ]
+  },
+  "246": {
+   "sha256": "1db2749569a3245f5e943a33f6e88bfccd4a8001cefca14fe793ba1969f6465a",
+   "zips": 25,
+   "states": [
+    "VA",
+    "WV"
+   ]
+  },
+  "247": {
+   "sha256": "119c86dc85005716fd6820cca1cdca88831bfd1b8158a0de7328e2f2ed38929a",
+   "zips": 17,
+   "states": [
+    "WV"
+   ]
+  },
+  "248": {
+   "sha256": "2a41488be5e7103687f91cbf290be7b52bd47189885228b33b65193f96c6be45",
+   "zips": 55,
+   "states": [
+    "WV"
+   ]
+  },
+  "249": {
+   "sha256": "ae14393e97c83dbef3937ac36b22c61c888bdc7704b937da811cab1659880365",
+   "zips": 35,
+   "states": [
+    "WV"
+   ]
+  },
+  "250": {
+   "sha256": "f0516aadbaa0732d0550e682790736fede0e9791e16c0669504ed1b01646ef15",
+   "zips": 50,
+   "states": [
+    "WV"
+   ]
+  },
+  "251": {
+   "sha256": "5fb4097920b8052c2ca7f7939eaf3714262c62a02c6bd09dcf998a13b5821535",
+   "zips": 52,
+   "states": [
+    "WV"
+   ]
+  },
+  "252": {
+   "sha256": "8da2c0a59bdea56b460d42e818a33d7c250a4550dce8463699c5bb49a5870be8",
+   "zips": 40,
+   "states": [
+    "WV"
+   ]
+  },
+  "253": {
+   "sha256": "92647183c8721c4283ddbea3d9fdc1dd8a763f86c8905ef30c14bfdb57c11917",
+   "zips": 14,
+   "states": [
+    "WV"
+   ]
+  },
+  "254": {
+   "sha256": "2e9d9986a116221ee8940c75b31fa9df943d8c6f9e17c0ea61581d16435a5b29",
+   "zips": 24,
+   "states": [
+    "WV"
+   ]
+  },
+  "255": {
+   "sha256": "50e43de5c89017db7c50f4aebbada54adbbd172c06f71c86711abe92997e8ec6",
+   "zips": 40,
+   "states": [
+    "WV"
+   ]
+  },
+  "256": {
+   "sha256": "ed25c68628dfe138f9d4bc0daed0f9da893ae013f3ddcc3629b3ca4896d5faa3",
+   "zips": 43,
+   "states": [
+    "WV"
+   ]
+  },
+  "257": {
+   "sha256": "6a2d87c7fbd4f3b903f79e00ee8e1bc999fc12ae7d6334b79a25261b8eae76f9",
+   "zips": 6,
+   "states": [
+    "WV"
+   ]
+  },
+  "258": {
+   "sha256": "0f71bb16a8bd39c7b37544f330d97bafc7075850fc0efe131af6ff316f514a44",
+   "zips": 44,
+   "states": [
+    "WV"
+   ]
+  },
+  "259": {
+   "sha256": "c64105df3d44650c668a15835dd6c698c6a404589356b19aca8e82310799a827",
+   "zips": 37,
+   "states": [
+    "WV"
+   ]
+  },
+  "260": {
+   "sha256": "cf3e388949b8dc11abec82e1c424c78ef15597f76085d90384fd23529827635f",
+   "zips": 24,
+   "states": [
+    "WV"
+   ]
+  },
+  "261": {
+   "sha256": "cf9c54598424e060ed736fbdee946ab6be9426edef4652e9f01875a1d5cb5c58",
+   "zips": 33,
+   "states": [
+    "WV"
+   ]
+  },
+  "262": {
+   "sha256": "7c2c0f35e1258a812819a9365478d7ba041d7a56ba88fc449e3a370d9ad23667",
+   "zips": 52,
+   "states": [
+    "WV"
+   ]
+  },
+  "263": {
+   "sha256": "d2d997f2f1e3c4c4ddbbcbe98e63f36530ece65c2ead8cafb9d015b679a624a0",
+   "zips": 31,
+   "states": [
+    "WV"
+   ]
+  },
+  "264": {
+   "sha256": "88c70b204db295aedd4b6f3f8f6e58542ae01907cbf060ad0512833b044164e4",
+   "zips": 29,
+   "states": [
+    "WV"
+   ]
+  },
+  "265": {
+   "sha256": "18f1fc65dbdc490a82be6c6edc57c2cb63a3f8e1b16d63fffbbf8303790bea3c",
+   "zips": 37,
+   "states": [
+    "WV"
+   ]
+  },
+  "266": {
+   "sha256": "ef7426a641b2f2e63e4b134675a7b3741c6f453ac5214d63bebe1c11633c19b7",
+   "zips": 28,
+   "states": [
+    "WV"
+   ]
+  },
+  "267": {
+   "sha256": "9712291778f20e7b3a8544b7f7c4a78c9f6d7e304f8191060d66c24e4898c159",
+   "zips": 23,
+   "states": [
+    "WV"
+   ]
+  },
+  "268": {
+   "sha256": "e346b8e90d34144b142463ad203f8252fdbe17c93ab62d19d1a187d8ac308efd",
+   "zips": 24,
+   "states": [
+    "WV"
+   ]
+  },
+  "270": {
+   "sha256": "61f86496a9ca1827a69d53edbdc1d7768f17a4e6a56db78e4e7ba3d6a1f8eed1",
+   "zips": 34,
+   "states": [
+    "NC"
+   ]
+  },
+  "271": {
+   "sha256": "3783444dc6afe9d51bb209aa29c60e0873bbabc1bef405b7dce65eea7a8b654b",
+   "zips": 9,
+   "states": [
+    "NC"
+   ]
+  },
+  "272": {
+   "sha256": "79d567fe11c4c2397b2c90f76613ef45a7abd99509de1a0b895e520fb50dca55",
+   "zips": 44,
+   "states": [
+    "NC"
+   ]
+  },
+  "273": {
+   "sha256": "0f8d0503e84d35e1b64968c5ca76feba2e55a08b49335c12b5036488500de6a6",
+   "zips": 36,
+   "states": [
+    "NC"
+   ]
+  },
+  "274": {
+   "sha256": "81b410d4d6269cf0d8da92669cda689703d09ce015367e4f6df5f222decbda48",
+   "zips": 11,
+   "states": [
+    "NC"
+   ]
+  },
+  "275": {
+   "sha256": "e61d2edcb38041b229338c79d4161ab331986868fb979402335cc6eda2951385",
+   "zips": 72,
+   "states": [
+    "NC"
+   ]
+  },
+  "276": {
+   "sha256": "a9a60ec475bbc9c5a65a44dfe369518788a2d926364d1c37ea3d9a1b7b487d0b",
+   "zips": 17,
+   "states": [
+    "NC"
+   ]
+  },
+  "277": {
+   "sha256": "600ee452c979be1a4198475073f669f8a747b5470f02ffda8f30cb6dd4884758",
+   "zips": 9,
+   "states": [
+    "NC"
+   ]
+  },
+  "278": {
+   "sha256": "86b9cd5c824822d91be8c48d2011558f47fbed0a4e70c9f2e9131cb4f951806f",
+   "zips": 83,
+   "states": [
+    "NC"
+   ]
+  },
+  "279": {
+   "sha256": "66b843a3844d9cdf11a6e59d098076b6df915602da1334eb7b2ce1a7ea1b69b9",
+   "zips": 58,
+   "states": [
+    "NC"
+   ]
+  },
+  "280": {
+   "sha256": "32f47ad4ef7b8451692baf7c7dbff3792a4430acad380cd1be53a7dc69e829be",
+   "zips": 49,
+   "states": [
+    "NC"
+   ]
+  },
+  "281": {
+   "sha256": "f8824b849fda48f94e7e1eff21cca6795c8bc595308ef88652490e6250453bc0",
+   "zips": 43,
+   "states": [
+    "NC"
+   ]
+  },
+  "282": {
+   "sha256": "6da816110ed4267b069f331a5a3dcd95d22599e7f25fbec12457e37cb2ff9ecb",
+   "zips": 29,
+   "states": [
+    "NC"
+   ]
+  },
+  "283": {
+   "sha256": "8983a38214412fb5478cffc5634c24e34b65f294c3960fe652caf9f4c6009841",
+   "zips": 77,
+   "states": [
+    "NC"
+   ]
+  },
+  "284": {
+   "sha256": "a375544059227dab283c59ff24baf81ede811fdfb1a11f61b4c503399cf9c598",
+   "zips": 55,
+   "states": [
+    "NC"
+   ]
+  },
+  "285": {
+   "sha256": "b4b72ef5b86033f70f3b7cb564e0a5b994943442579b312c17640ff05e63b2b8",
+   "zips": 62,
+   "states": [
+    "NC"
+   ]
+  },
+  "286": {
+   "sha256": "70561f9f64462e97ebccc3e05d9a3a28faba11b246971a1ff9ad2e290f1303bd",
+   "zips": 79,
+   "states": [
+    "NC",
+    "VA"
+   ]
+  },
+  "287": {
+   "sha256": "2d8a5a5641e963b97b905957f6fcc57afa787a28def7435fe3514e7d05ac4348",
+   "zips": 75,
+   "states": [
+    "NC"
+   ]
+  },
+  "288": {
+   "sha256": "a9d4b76a9cd7e6a8894e6d4cc2504880bbd9b2b6b4488a438318652e92dc1d80",
+   "zips": 5,
+   "states": [
+    "NC"
+   ]
+  },
+  "289": {
+   "sha256": "11c32ca74fc314a9b29a66f340ce5689ad894f9273ffc392e018369e6d1be7ed",
+   "zips": 6,
+   "states": [
+    "NC"
+   ]
+  },
+  "290": {
+   "sha256": "5ca8706a70d9221802db4e94ad956316052f5cab2b7fddbd0b28bf3586edcba6",
+   "zips": 49,
+   "states": [
+    "SC"
+   ]
+  },
+  "291": {
+   "sha256": "2ce22362cdabafa2056421c514da87939abb484c5ae5501c60989ca6e1d6d777",
+   "zips": 47,
+   "states": [
+    "SC"
+   ]
+  },
+  "292": {
+   "sha256": "a3e478b66957d6092e1ba2dc29551e3882e2966854536b24df2ff2cb69d2a32b",
+   "zips": 13,
+   "states": [
+    "SC"
+   ]
+  },
+  "293": {
+   "sha256": "56f18112a7a1a581cae9a0b0c1fa7124e0364f5668ee8713fdd8774320d988f0",
+   "zips": 45,
+   "states": [
+    "SC"
+   ]
+  },
+  "294": {
+   "sha256": "31c4cde1255d32900a2ede902dafab4bb12bc4f875b6430d4a1a43360f429423",
+   "zips": 57,
+   "states": [
+    "SC"
+   ]
+  },
+  "295": {
+   "sha256": "3d4033c03e80d391e8aae0c72b8791b9de81582597aa90651da9afc8ca013f52",
+   "zips": 57,
+   "states": [
+    "SC"
+   ]
+  },
+  "296": {
+   "sha256": "e04359fcbb1b85e1549b3ee48743f87291e73234f4d19e7604a4b288322f81f5",
+   "zips": 65,
+   "states": [
+    "SC"
+   ]
+  },
+  "297": {
+   "sha256": "05de4a33a39131d5e7b97d66ad2bedbee6c2ef44096fe2912349a2caa3eb2432",
+   "zips": 25,
+   "states": [
+    "SC"
+   ]
+  },
+  "298": {
+   "sha256": "78f4b8c433667af7474b8c943378ec91124b07240bd02b4834d741f82d484d49",
+   "zips": 35,
+   "states": [
+    "SC"
+   ]
+  },
+  "299": {
+   "sha256": "1d149bc83fc8fb138d272bfaff980efb0032e95910766fdbd2646b69729efd70",
+   "zips": 31,
+   "states": [
+    "SC"
+   ]
+  },
+  "300": {
+   "sha256": "56afff406e210dad0da716e34d5c7e685a9d345ced592ad8a5481d4a09463e83",
+   "zips": 62,
+   "states": [
+    "GA"
+   ]
+  },
+  "301": {
+   "sha256": "70e875661e7866ee95522e4bf0e4cfd3fd00efd37e3b74da1d6c05c93927c450",
+   "zips": 57,
+   "states": [
+    "AL",
+    "GA"
+   ]
+  },
+  "302": {
+   "sha256": "21d7b293435014d179ee1a1c42b35bc48dc44c61d23b6fa519198b6b8eecaa22",
+   "zips": 56,
+   "states": [
+    "GA"
+   ]
+  },
+  "303": {
+   "sha256": "4b44e91624c0b7a36eead6a16665ba2a56438a37ac4a6a0421e4246ab441bc72",
+   "zips": 40,
+   "states": [
+    "GA"
+   ]
+  },
+  "304": {
+   "sha256": "d649b8dba1dd0e1e4e5c201a66acccfc8e84f943cf85011205cce40e60c8a826",
+   "zips": 43,
+   "states": [
+    "GA"
+   ]
+  },
+  "305": {
+   "sha256": "b21b24e990d2be39445dad072700e543980442048b41f16abdad3e8852936f39",
+   "zips": 63,
+   "states": [
+    "GA"
+   ]
+  },
+  "306": {
+   "sha256": "7b7c1336917a5ed155e07558a34e92b4cc8669610bc1097519fb1c9259c9a732",
+   "zips": 44,
+   "states": [
+    "GA"
+   ]
+  },
+  "307": {
+   "sha256": "bfe0233e40632adc4e76f308b1b1edb9ac8cb9fe2b286b325f94e9c19228bd1c",
+   "zips": 32,
+   "states": [
+    "GA"
+   ]
+  },
+  "308": {
+   "sha256": "f313337a3f317db8d71bb4ee4f0efaafae3e2dba5c38d67e24dc35b6b6b97c6b",
+   "zips": 22,
+   "states": [
+    "GA"
+   ]
+  },
+  "309": {
+   "sha256": "92efe1f97750185e027b4b80dda2e25c8df82fabfed321c3e96582ce00624a70",
+   "zips": 7,
+   "states": [
+    "GA"
+   ]
+  },
+  "310": {
+   "sha256": "2656fa9e15bc63277bf368a0cee48b210a4133a0852e2cabf018173ed040663e",
+   "zips": 84,
+   "states": [
+    "GA"
+   ]
+  },
+  "312": {
+   "sha256": "0d1bd0926b74b0681194886d79e692e1eb997e1534d2cf1a39bb09037ba43ff1",
+   "zips": 10,
+   "states": [
+    "GA"
+   ]
+  },
+  "313": {
+   "sha256": "08bd5bad244a6ce56d9d768c665bef6d2cc281e88377091b734ddcd6edf32420",
+   "zips": 24,
+   "states": [
+    "GA"
+   ]
+  },
+  "314": {
+   "sha256": "401203265ace0e85fe6ca0f685e0a04699766046787b09619cd3f38829bfd1aa",
+   "zips": 12,
+   "states": [
+    "GA"
+   ]
+  },
+  "315": {
+   "sha256": "5447420f508fe9741d77eff7873d7e47501a7bd7366558e713d9971ead20ded5",
+   "zips": 47,
+   "states": [
+    "GA"
+   ]
+  },
+  "316": {
+   "sha256": "a6e4d6883fa2a2dd873c35ccc9c8fcf7321f83a866e19106da3cb60e1370016d",
+   "zips": 31,
+   "states": [
+    "GA"
+   ]
+  },
+  "317": {
+   "sha256": "ca924f9edc0585259e733b2f9c8e5ccd37e9bed5d59bf392f2f50d10a4db8d06",
+   "zips": 52,
+   "states": [
+    "GA"
+   ]
+  },
+  "318": {
+   "sha256": "1936e5af36265788c9914c29014fffb709e7d0657deaecb39aca89d0be994e59",
+   "zips": 27,
+   "states": [
+    "GA"
+   ]
+  },
+  "319": {
+   "sha256": "cdaf7f2868f407714adcca814026455f18862b24d16e0fb6917f9cd1c25b2d94",
+   "zips": 7,
+   "states": [
+    "GA"
+   ]
+  },
+  "320": {
+   "sha256": "08852a80b0bce0532b8920f2f928734693b802291d90c934c0b5513ba1b9ccf4",
+   "zips": 46,
+   "states": [
+    "FL"
+   ]
+  },
+  "321": {
+   "sha256": "7884bd25234fdbbf09f359aa65cb543a00aef2ab4d1143d5172eff8735958d64",
+   "zips": 45,
+   "states": [
+    "FL"
+   ]
+  },
+  "322": {
+   "sha256": "cf9ac0647ec693fe94171fc373ece5b5f24e1aee02b73aaee48aed0066e4e7f2",
+   "zips": 37,
+   "states": [
+    "FL"
+   ]
+  },
+  "323": {
+   "sha256": "f831eaec20857f1b32b07b3cf47f0400964004085dff7e75ad6909fbfdf57589",
+   "zips": 43,
+   "states": [
+    "FL"
+   ]
+  },
+  "324": {
+   "sha256": "9714992134a32ebd9e5067c593a361889f997e69595ab95cd4b5deeb7f4c2eac",
+   "zips": 43,
+   "states": [
+    "FL"
+   ]
+  },
+  "325": {
+   "sha256": "8675ee300883dbdbcba2ce07f27a6e49823f10fd44a15d91e4639b991240bb01",
+   "zips": 41,
+   "states": [
+    "FL"
+   ]
+  },
+  "326": {
+   "sha256": "b8114ca5d1fc1a4bc77771e6fe44eaad4a417ea44cb64a4a3e9cb0e210751088",
+   "zips": 43,
+   "states": [
+    "FL"
+   ]
+  },
+  "327": {
+   "sha256": "2761e971e0a0be46e86a8cf691ca4bb9e03bf232296bf81021538fc2880d3cc6",
+   "zips": 44,
+   "states": [
+    "FL"
+   ]
+  },
+  "328": {
+   "sha256": "99c7a5302bb230a307af2c39f52348301937abbfca4ef2f6f92402b989c43735",
+   "zips": 34,
+   "states": [
+    "FL"
+   ]
+  },
+  "329": {
+   "sha256": "a3d2e9fb7e6f18d8adf9ce6f710e86b76c23cbaf41e06dd429ff6c89ed943825",
+   "zips": 34,
+   "states": [
+    "FL"
+   ]
+  },
+  "330": {
+   "sha256": "731d5ac82dcb304808a8e197c8346bde626f3673c64eb98c13df74bd7bc49fa9",
+   "zips": 51,
+   "states": [
+    "FL"
+   ]
+  },
+  "331": {
+   "sha256": "0b0931455b57b602deed7ca88267d75147aa81b907350d89f6efa3f327f90038",
+   "zips": 63,
+   "states": [
+    "FL"
+   ]
+  },
+  "333": {
+   "sha256": "ac88ed6e96284fd568a60edbdda616bb3f790a4db7a0eb49298556aa84237505",
+   "zips": 28,
+   "states": [
+    "FL"
+   ]
+  },
+  "334": {
+   "sha256": "b0508a47b322cb4acc2f08b318f74dd078868585ca54f0606aa379b1bc46a2ab",
+   "zips": 57,
+   "states": [
+    "FL"
+   ]
+  },
+  "335": {
+   "sha256": "13d0f1493c506ee1256c5853bb7ccb826aa2a75ace71118f6fa70354220136ff",
+   "zips": 44,
+   "states": [
+    "FL"
+   ]
+  },
+  "336": {
+   "sha256": "4a52209ba118ff8614a430b467516db7e3a3b7f723d094da5be5a2dd6930488b",
+   "zips": 27,
+   "states": [
+    "FL"
+   ]
+  },
+  "337": {
+   "sha256": "0b5383227a7505236739f91c5768ef09fda34d47d44c359374a316f4355ce864",
+   "zips": 39,
+   "states": [
+    "FL"
+   ]
+  },
+  "338": {
+   "sha256": "d9a6671f859ddcb39843a1ef53f370c1dd1739a0cddc02c78302377c8fae33af",
+   "zips": 52,
+   "states": [
+    "FL"
+   ]
+  },
+  "339": {
+   "sha256": "b0aab86e0501558896ecddd02f58c79d88250c86fbefa3d77a235b16b78da80d",
+   "zips": 49,
+   "states": [
+    "FL"
+   ]
+  },
+  "341": {
+   "sha256": "dde8e9220a1b7e3d2146484adb4950edf3e335e78cc21dfaf5edbd60b3a542f5",
+   "zips": 24,
+   "states": [
+    "FL"
+   ]
+  },
+  "342": {
+   "sha256": "1102706c3632571669779100361f390092639d4c7ab6d23d5e066f9cfce38489",
+   "zips": 48,
+   "states": [
+    "FL"
+   ]
+  },
+  "344": {
+   "sha256": "0e10a8cd92e8c1a873ddb564e8c2c3f939fe15beae252919f1fb5ce14369cc8f",
+   "zips": 34,
+   "states": [
+    "FL"
+   ]
+  },
+  "346": {
+   "sha256": "e56115084a6f90c4653ea4997260c40575e733575bcad6819854151ab52b4404",
+   "zips": 33,
+   "states": [
+    "FL"
+   ]
+  },
+  "347": {
+   "sha256": "998558414ec2eb8563c894547e6a99f464ee734a2486d29f1dce42653f87148c",
+   "zips": 32,
+   "states": [
+    "FL"
+   ]
+  },
+  "349": {
+   "sha256": "df7644491ad2282794097623958511ef8b823ba108f32918da56f349fadd6c17",
+   "zips": 22,
+   "states": [
+    "FL"
+   ]
+  },
+  "350": {
+   "sha256": "7c2b13ced1ed0433e7d94f43717c5e8716a1ea1226ea43b16def8cb45fdb7466",
+   "zips": 57,
+   "states": [
+    "AL"
+   ]
+  },
+  "351": {
+   "sha256": "a546b072057a1c27f87b94cdfc0bbf40ff7ee9386e96c1dd1526b32b172d783c",
+   "zips": 42,
+   "states": [
+    "AL"
+   ]
+  },
+  "352": {
+   "sha256": "6252724a126b48839740fc4f18024fa6cb4d9d509430d297887862abc0921f6c",
+   "zips": 31,
+   "states": [
+    "AL"
+   ]
+  },
+  "354": {
+   "sha256": "9f15cc99aa58bcba7f28914e940ccb14249737d743a120fafe6fbb9f490b4fc6",
+   "zips": 34,
+   "states": [
+    "AL"
+   ]
+  },
+  "355": {
+   "sha256": "d599164745d254bf058a3a7d6174fd8e588c01f64c53ba056115e311d27c2bf6",
+   "zips": 41,
+   "states": [
+    "AL"
+   ]
+  },
+  "356": {
+   "sha256": "55be5f7bacdcf7e33389c915e2a1301a4c241904ae5e2a4c494e5a0962f2e1d0",
+   "zips": 37,
+   "states": [
+    "AL"
+   ]
+  },
+  "357": {
+   "sha256": "da01c297662a90763822441aa09469f7901e61d79c461c81e0b4fd6dae924218",
+   "zips": 32,
+   "states": [
+    "AL"
+   ]
+  },
+  "358": {
+   "sha256": "3d099a62363667ca933f9ff568f8948f4619abc0ec09594230f0ab248737b460",
+   "zips": 11,
+   "states": [
+    "AL"
+   ]
+  },
+  "359": {
+   "sha256": "75e119db528b974b81250bed46fc0f6a713bcb05af96bdecae713d2346508b36",
+   "zips": 39,
+   "states": [
+    "AL"
+   ]
+  },
+  "360": {
+   "sha256": "87d7e0cb83be4f8f8779802238d7ab568ddac8acb389913febf4977a8565ed6a",
+   "zips": 57,
+   "states": [
+    "AL"
+   ]
+  },
+  "361": {
+   "sha256": "60bd236fa943bc2cf717c8d353883a8b584a2c45c47906c2b0f02e17a9d455ca",
+   "zips": 16,
+   "states": [
+    "AL"
+   ]
+  },
+  "362": {
+   "sha256": "45a5b8e05719ced6aee48e26e0cbab3a3b3c965643af0f3bb09a2d6df24b769b",
+   "zips": 28,
+   "states": [
+    "AL"
+   ]
+  },
+  "363": {
+   "sha256": "70641e48f8c28dbd715409651b91fe20df5d1d3a057f6ac87c13ca2c43392145",
+   "zips": 34,
+   "states": [
+    "AL"
+   ]
+  },
+  "364": {
+   "sha256": "37a0dbfea5eb813797854b38fd2f357fd5a938fc3f2223c8200f9c9a8ed78629",
+   "zips": 32,
+   "states": [
+    "AL"
+   ]
+  },
+  "365": {
+   "sha256": "a86a6cb102d947d9be68ae9e308d84f4eeb776d2ee9479021c1111ec4c22384a",
+   "zips": 60,
+   "states": [
+    "AL"
+   ]
+  },
+  "366": {
+   "sha256": "cd5393c6ded1eebfc7075f3561f5992c1c4b503380f41a3c8b5b9225c2592aca",
+   "zips": 21,
+   "states": [
+    "AL"
+   ]
+  },
+  "367": {
+   "sha256": "7a0e043bb912a90ead097e448e8fbf1adf3fb52421660838eb569cf7a1f8fedf",
+   "zips": 44,
+   "states": [
+    "AL"
+   ]
+  },
+  "368": {
+   "sha256": "4457bf0289900560d9067a8e8e74e3b1190dcb1d6a056d067fe60c5379ffbe5e",
+   "zips": 27,
+   "states": [
+    "AL",
+    "GA"
+   ]
+  },
+  "369": {
+   "sha256": "635f5238b43cbde79c96005934fb1b4f50badb99fbdaea02a79603cbd06d9834",
+   "zips": 13,
+   "states": [
+    "AL"
+   ]
+  },
+  "370": {
+   "sha256": "125dcd8acfd5d1e0b18a3a1040e8553bd72364d2c9ced66329d6b048f7194e14",
+   "zips": 64,
+   "states": [
+    "TN"
+   ]
+  },
+  "371": {
+   "sha256": "c7ddc85144d8beab226aa6c2fa1ad6ca14b70f8f8d3d2abd6cc4f4bb3a68970f",
+   "zips": 47,
+   "states": [
+    "TN"
+   ]
+  },
+  "372": {
+   "sha256": "b1338f4386406fe684e81543a24245c2a606be9cd6570d59352257eda712395e",
+   "zips": 23,
+   "states": [
+    "TN"
+   ]
+  },
+  "373": {
+   "sha256": "23bf5778aeda56168be45369613c32248c39db0275533cc47c04cd08de651ad8",
+   "zips": 77,
+   "states": [
+    "TN"
+   ]
+  },
+  "374": {
+   "sha256": "26b9468ba380186a45ea77faafa8f2b907ab4de88ceb4e158f3354baab73effa",
+   "zips": 16,
+   "states": [
+    "TN"
+   ]
+  },
+  "376": {
+   "sha256": "57f0a5931b2785816be9aee9bbb43386ccb5a591b2d372bbc53dd74031f8d91e",
+   "zips": 33,
+   "states": [
+    "TN"
+   ]
+  },
+  "377": {
+   "sha256": "5174a55ff80a2c77b5e4fa80776dc8ac246eed4305897bcb16bf9e96cdefacf5",
+   "zips": 48,
+   "states": [
+    "TN",
+    "VA"
+   ]
+  },
+  "378": {
+   "sha256": "260b4b29656da2f14c872d2cd9c36e375301f1c0cbe64f873c8f3413e8b7cd7d",
+   "zips": 58,
+   "states": [
+    "TN"
+   ]
+  },
+  "379": {
+   "sha256": "72349a718f46d1afbe38e816e49cb1dc219497a4dc6d4f225e5f465b0332d4eb",
+   "zips": 19,
+   "states": [
+    "TN"
+   ]
+  },
+  "380": {
+   "sha256": "8364235617c810850ff801e159c8b7282ec23f703b213558e4574eaf1dccdca1",
+   "zips": 50,
+   "states": [
+    "KY",
+    "TN"
+   ]
+  },
+  "381": {
+   "sha256": "644e99863bb045923d12031603cfe45ea74be65f64d2eb57f8b988ba030c6df1",
+   "zips": 31,
+   "states": [
+    "TN"
+   ]
+  },
+  "382": {
+   "sha256": "6890ea1a11ab75c237e6bc00186d51a3d33e43d0b293771f18b4deb915c21c17",
+   "zips": 28,
+   "states": [
+    "TN"
+   ]
+  },
+  "383": {
+   "sha256": "37843cdd20b2d36b849e213a980824d9c43714451f48bdf166b45ff5edcda9f5",
+   "zips": 61,
+   "states": [
+    "MS",
+    "TN"
+   ]
+  },
+  "384": {
+   "sha256": "970e993af4e64645f941c74421730ada124ccaf1fd66ea84e596a603bf7f4b61",
+   "zips": 34,
+   "states": [
+    "TN"
+   ]
+  },
+  "385": {
+   "sha256": "2b7f59ce65ac87075ec30e06fa50c61cc5759752741d3b856c7da82ff854bf88",
+   "zips": 47,
+   "states": [
+    "KY",
+    "TN"
+   ]
+  },
+  "386": {
+   "sha256": "605b39a0f8352d7f037d1d0e701bbd4e947c3f1a584bb55d7d4cbb86acfb44d3",
+   "zips": 53,
+   "states": [
+    "MS"
+   ]
+  },
+  "387": {
+   "sha256": "273d0c9403e1466d83f2582c1866ea1fc2dcf3bc94a333770f610d4f20e80f6b",
+   "zips": 40,
+   "states": [
+    "AR",
+    "MS"
+   ]
+  },
+  "388": {
+   "sha256": "3d30db09526ce60d9f3f4b7f38805b88afec4fda2576fc4cea8d42a8f8384ef3",
+   "zips": 41,
+   "states": [
+    "AL",
+    "MS"
+   ]
+  },
+  "389": {
+   "sha256": "fdbd454e94883c97b97401be15675bb5481076e6b0f0215039164738b3621320",
+   "zips": 37,
+   "states": [
+    "MS"
+   ]
+  },
+  "390": {
+   "sha256": "b2e8c433342a1e46c45ae80212b55092590a972011906209d941c6d5be120652",
+   "zips": 36,
+   "states": [
+    "MS"
+   ]
+  },
+  "391": {
+   "sha256": "4e0dfa61a5c94072152e4ca56d049a2c69979e02ce7c08dd1fc79019bba023bb",
+   "zips": 43,
+   "states": [
+    "MS"
+   ]
+  },
+  "392": {
+   "sha256": "102daba7d4df4ec7de177ec9c16da52d678f9aa27111e7ad8cdd4ff037af3cea",
+   "zips": 17,
+   "states": [
+    "MS"
+   ]
+  },
+  "393": {
+   "sha256": "987ad88a6522b7864bb8b6e05fccec1a673114b4eee1740cf40944e80b17c0da",
+   "zips": 40,
+   "states": [
+    "MS"
+   ]
+  },
+  "394": {
+   "sha256": "ec2d477de573dfba3bd415c4e6961f4c55e8b8dfd51abc09eacfa1962e8177e2",
+   "zips": 36,
+   "states": [
+    "MS"
+   ]
+  },
+  "395": {
+   "sha256": "192fc860ba58151d88953c7970416d6ef1011b5a1c2cd040eb152931d45db2ab",
+   "zips": 28,
+   "states": [
+    "MS"
+   ]
+  },
+  "396": {
+   "sha256": "210c6dc3f59cfe3192b62e438ecc4ffc8b6b7abe6c0ce5e14b5281409448be4f",
+   "zips": 26,
+   "states": [
+    "MS"
+   ]
+  },
+  "397": {
+   "sha256": "235425bc829bdd99346dd09b7256395539c40d80a7249d8939b49f648740a48f",
+   "zips": 30,
+   "states": [
+    "MS"
+   ]
+  },
+  "398": {
+   "sha256": "7213f1907a4206c00c6cd71401b807c1c16671e8fcc18715d6885a739d6cbc49",
+   "zips": 31,
+   "states": [
+    "GA"
+   ]
+  },
+  "400": {
+   "sha256": "6c6b03ed6cfd79f3abcc4704ebc157605586fcd401b3a8234c38e982df79364a",
+   "zips": 49,
+   "states": [
+    "KY"
+   ]
+  },
+  "401": {
+   "sha256": "e11b7ca8280bb0e88c9f8d644136ca7a44d1e58fc60fe53edb7cd5c883b55fb4",
+   "zips": 31,
+   "states": [
+    "KY"
+   ]
+  },
+  "402": {
+   "sha256": "ed79607a02ae5787ff6c4b40180e069240f75cbe34ef6fc0f591aa4202036e6a",
+   "zips": 34,
+   "states": [
+    "KY"
+   ]
+  },
+  "403": {
+   "sha256": "b0a72f620b66243c4425776ac1f35e4c1c6ec851463978ac984d309ca61779a3",
+   "zips": 40,
+   "states": [
+    "KY"
+   ]
+  },
+  "404": {
+   "sha256": "6db5e8c21ecb8927f285da855b83c657bf533a201e76756e006618558b1d35a0",
+   "zips": 25,
+   "states": [
+    "KY"
+   ]
+  },
+  "405": {
+   "sha256": "e01ca3590d18ba913342eaabfcabb3c476e705c86bc5322865d799d54f23e0ec",
+   "zips": 16,
+   "states": [
+    "KY"
+   ]
+  },
+  "406": {
+   "sha256": "7a8899bbc7c98c916911ec52b33bbc9eb8c8337a694395d37b9910296f028706",
+   "zips": 1,
+   "states": [
+    "KY"
+   ]
+  },
+  "407": {
+   "sha256": "97b43a2015850a01053214897de408931061947c721f9bb217de5f54d8f6ca79",
+   "zips": 11,
+   "states": [
+    "KY"
+   ]
+  },
+  "408": {
+   "sha256": "8107dfc3d83c4580e49f5f3f24ec792553034146d127570fbee017a7eb1cecca",
+   "zips": 37,
+   "states": [
+    "KY"
+   ]
+  },
+  "409": {
+   "sha256": "03693e99e0310320c0bd7d5306ece5750515ac903b6b72edad38360f29768b68",
+   "zips": 30,
+   "states": [
+    "KY",
+    "TN"
+   ]
+  },
+  "410": {
+   "sha256": "72fb60d9fea9232945680ec445234e5aa887e506d47caefff0a58dea261f11b9",
+   "zips": 53,
+   "states": [
+    "KY"
+   ]
+  },
+  "411": {
+   "sha256": "4c90b0d5eaa6fe7405687eceda6d63eb359aa95a4ea1c1e898952287c18dcf3a",
+   "zips": 27,
+   "states": [
+    "KY"
+   ]
+  },
+  "412": {
+   "sha256": "bc27276a1ac879d9b60de95e44e9d551cfa4164e608be9cc44099e1e3c897704",
+   "zips": 29,
+   "states": [
+    "KY"
+   ]
+  },
+  "413": {
+   "sha256": "f35632e8f751e211875ae060f03aa563e18a41c456b379ae300c3111fa1d8cc2",
+   "zips": 19,
+   "states": [
+    "KY"
+   ]
+  },
+  "414": {
+   "sha256": "3271fdbef62835ca024060794a07c98f93bbfa1fa3f5886759c42ea0c6f8b62d",
+   "zips": 6,
+   "states": [
+    "KY"
+   ]
+  },
+  "415": {
+   "sha256": "33121f02d6a46553fbf31af8838758690ba9d42c1e837de664e44f99c00212ae",
+   "zips": 38,
+   "states": [
+    "KY"
+   ]
+  },
+  "416": {
+   "sha256": "32b51e1e50aa109d0d5f1cdd949f0b9099f51279b1ce40046312c76e4a0ec0db",
+   "zips": 34,
+   "states": [
+    "KY"
+   ]
+  },
+  "417": {
+   "sha256": "75bf077606f5631c1f1b7ed9551c85d119595b4d159872510c0feaf5987a0b48",
+   "zips": 33,
+   "states": [
+    "KY"
+   ]
+  },
+  "418": {
+   "sha256": "0427f4f91218299cb885a7fda73bf17e108fa9a5981d10d89d4de12459c65445",
+   "zips": 33,
+   "states": [
+    "KY"
+   ]
+  },
+  "420": {
+   "sha256": "58c5445dd4b87d60d810e05cf1a7b0445466637c688460539575078aed71447d",
+   "zips": 48,
+   "states": [
+    "KY"
+   ]
+  },
+  "421": {
+   "sha256": "95f755354fe03d6ddaefd6b5752adf63ee203491ed52844f4b9732151512a5d8",
+   "zips": 28,
+   "states": [
+    "KY"
+   ]
+  },
+  "422": {
+   "sha256": "99704ab7df8b18d3b9013821b0de0c4417550f6ca4cf8c0fa67f3abf569365a2",
+   "zips": 30,
+   "states": [
+    "KY",
+    "TN"
+   ]
+  },
+  "423": {
+   "sha256": "cfd1006d380eca5be9ffe4a65436b76ae3abb1380cc57cb4d664b6e42500c5e9",
+   "zips": 40,
+   "states": [
+    "KY"
+   ]
+  },
+  "424": {
+   "sha256": "d1c2ea2beadda690b2ffd737a65e5f34556c5c09eb79deb0f9def1267d4d272a",
+   "zips": 28,
+   "states": [
+    "KY"
+   ]
+  },
+  "425": {
+   "sha256": "491ea2ee24388aca61cefbf9d045fd7f72c01a6cbadbd817b8248bbfb72e60ed",
+   "zips": 14,
+   "states": [
+    "KY"
+   ]
+  },
+  "426": {
+   "sha256": "f8bda4333af8f442839ed1ad6fbb1e9598eb882cd3367e3e03dfe7feacc1c839",
+   "zips": 12,
+   "states": [
+    "KY"
+   ]
+  },
+  "427": {
+   "sha256": "b2a1a6b8fa5fcf1f2029fdf69849364901a9dd6e907c89dd49db5d4989acc70c",
+   "zips": 34,
+   "states": [
+    "KY"
+   ]
+  },
+  "430": {
+   "sha256": "98a9134e47c8a09f0e36be7acf57147f59ded3a2c2f5683ba61d38059dad23b1",
+   "zips": 62,
+   "states": [
+    "OH"
+   ]
+  },
+  "431": {
+   "sha256": "85c4f4f11a212e2809193966f4aac8ae049ad80b1a152d8c5f2baac14ff71d1b",
+   "zips": 46,
+   "states": [
+    "OH"
+   ]
+  },
+  "432": {
+   "sha256": "c06046383a760e1403527ecf83caea3ffb2f8fabab06b8ed78b70eb7ed56a47a",
+   "zips": 30,
+   "states": [
+    "OH"
+   ]
+  },
+  "433": {
+   "sha256": "b629df9b459ac5f2cd50c04431a36d807b2d1143a12e8b661793b3de16077986",
+   "zips": 40,
+   "states": [
+    "OH"
+   ]
+  },
+  "434": {
+   "sha256": "ce7e85bedb9147c738dbf1da0ee8b79a92dea5deea7039257327d10330a4f44d",
+   "zips": 43,
+   "states": [
+    "OH"
+   ]
+  },
+  "435": {
+   "sha256": "1d02773969c82c66a681e088d0dce4314f7a481abf3788c4431449fdcfe344f8",
+   "zips": 53,
+   "states": [
+    "OH"
+   ]
+  },
+  "436": {
+   "sha256": "042ce7cfc9a0361c50b11152ebcf947fad28e7912c25b1cabe5d2c57ccbdada8",
+   "zips": 17,
+   "states": [
+    "OH"
+   ]
+  },
+  "437": {
+   "sha256": "95c11031b24064292bbece289e09ccfe5382fc4ad632e89b446481237533f133",
+   "zips": 56,
+   "states": [
+    "OH"
+   ]
+  },
+  "438": {
+   "sha256": "0834309454b7007299d41db048e3206da51cfe1e1a53a5261cfb49a8d2210260",
+   "zips": 17,
+   "states": [
+    "OH"
+   ]
+  },
+  "439": {
+   "sha256": "683b7f3ba374916c12c78004cb5a6986d3349e243ee9217e3d8a97807e5e1dd7",
+   "zips": 55,
+   "states": [
+    "OH"
+   ]
+  },
+  "440": {
+   "sha256": "a82297ec49ba1f0585c6aa035808bfae2fb294a95216693ae29a7e622ee4593b",
+   "zips": 57,
+   "states": [
+    "OH"
+   ]
+  },
+  "441": {
+   "sha256": "774d959e836c207213622e74da538eba45e47cca5e17365a6e11478d16bafa85",
+   "zips": 48,
+   "states": [
+    "OH"
+   ]
+  },
+  "442": {
+   "sha256": "c95122e67ccc6ae33ed9b3c46de5ff8bc36bec46327ec99f9170166bf5a4562d",
+   "zips": 44,
+   "states": [
+    "OH"
+   ]
+  },
+  "443": {
+   "sha256": "53e90b2c13ac1aae32fd078f525ecf9d6db861584576fa07790c3eb77b2a9b19",
+   "zips": 18,
+   "states": [
+    "OH"
+   ]
+  },
+  "444": {
+   "sha256": "e953dd1268b8054ed436095a6ca727678aa69d7408144d50770a43623bc267fe",
+   "zips": 52,
+   "states": [
+    "OH"
+   ]
+  },
+  "445": {
+   "sha256": "c97cd22feebfed69c4aa539067aaa4034caf88f7a85b4a92cb3a95c0b2bb7650",
+   "zips": 13,
+   "states": [
+    "OH"
+   ]
+  },
+  "446": {
+   "sha256": "aafe0c53f8bd5ecb11534b250af1a42dda681da7c27855053e1b77834a726c44",
+   "zips": 72,
+   "states": [
+    "OH"
+   ]
+  },
+  "447": {
+   "sha256": "8c20689cf6499e1cb1c18d64e719fdb2f06352d2fa1e63905f0c069b3fa68602",
+   "zips": 14,
+   "states": [
+    "OH"
+   ]
+  },
+  "448": {
+   "sha256": "0ab85f87f280c27f9847b3880675a6cb928bd9f41e8ac310d4576d24381d505c",
+   "zips": 56,
+   "states": [
+    "OH"
+   ]
+  },
+  "449": {
+   "sha256": "7ef92017e6c27f58763c70b85ea76a0b4fbefe07bea9d885e6360550a2df892d",
+   "zips": 7,
+   "states": [
+    "OH"
+   ]
+  },
+  "450": {
+   "sha256": "e4797f09b1e463f0900c88a9af7bb61f78db7362792af2b9593ec8e3d91ccc0a",
+   "zips": 33,
+   "states": [
+    "OH"
+   ]
+  },
+  "451": {
+   "sha256": "03bf5a8d4f6f7e6baf73719c077fe8adf4f0c1005075f7fc3161955e3038d68b",
+   "zips": 48,
+   "states": [
+    "OH"
+   ]
+  },
+  "452": {
+   "sha256": "2c9c82ec585fc881ec16c96a3dc824acede9fe480ace427017defae6020ac227",
+   "zips": 46,
+   "states": [
+    "OH"
+   ]
+  },
+  "453": {
+   "sha256": "63312ed43b1ce0b25ef636108c1bbe876c7cf9c40bf6426dce698d47423f896b",
+   "zips": 77,
+   "states": [
+    "OH"
+   ]
+  },
+  "454": {
+   "sha256": "cf5551582036eac88aed22577a648c91b08e24d8240246a52786b8d42c5d291b",
+   "zips": 30,
+   "states": [
+    "OH"
+   ]
+  },
+  "455": {
+   "sha256": "92279d9d346b1bcb4d4427c362e5667d44f3c0b1198545845a495225d3de4d10",
+   "zips": 6,
+   "states": [
+    "OH"
+   ]
+  },
+  "456": {
+   "sha256": "cbdaa5e0697c337b845ce66dd71c417585f948438e344117c08d408687ef6166",
+   "zips": 64,
+   "states": [
+    "OH"
+   ]
+  },
+  "457": {
+   "sha256": "ff9943ea8d1a5bed460a80b19052d9bf0c1a76c5a12f539473f8cd63a7874afe",
+   "zips": 47,
+   "states": [
+    "OH"
+   ]
+  },
+  "458": {
+   "sha256": "fa1a9a5f7ebbd0eb491732eb1bf2de525cc6c8434df4e775be28db37ed9dae80",
+   "zips": 82,
+   "states": [
+    "OH"
+   ]
+  },
+  "460": {
+   "sha256": "ce51c5f146aafc3be6a886f0b89085881936beb260a300706591601e7b0d5de5",
+   "zips": 44,
+   "states": [
+    "IN"
+   ]
+  },
+  "461": {
+   "sha256": "a4413cdc213cc489ed9dcdbdf32268ac969b3a1691d970581a1e39af2cff7c54",
+   "zips": 62,
+   "states": [
+    "IN"
+   ]
+  },
+  "462": {
+   "sha256": "aff61193419de65cb3fbf7dc1a984a43506a74054798e38085dcf9e693a4bdaf",
+   "zips": 38,
+   "states": [
+    "IN"
+   ]
+  },
+  "463": {
+   "sha256": "1aa2f45e74a770cf1b48136618145ccbde713d957af41d7575d8dd47392e1e62",
+   "zips": 45,
+   "states": [
+    "IN"
+   ]
+  },
+  "464": {
+   "sha256": "9bd611050357f973b113fadc686fcd04f7c93700499705afc8802c284fa1c277",
+   "zips": 9,
+   "states": [
+    "IN"
+   ]
+  },
+  "465": {
+   "sha256": "6b918b35ed67249f4e8e315dd6a7b17d0b43ab4a500189982a77c5de25457770",
+   "zips": 48,
+   "states": [
+    "IN"
+   ]
+  },
+  "466": {
+   "sha256": "30d953937d35266ca35b73b759c2227f965d3a4163edc5e2a51bb9c2bd8a0f51",
+   "zips": 11,
+   "states": [
+    "IN"
+   ]
+  },
+  "467": {
+   "sha256": "69a7f9aaa33e6b003a19de1b64331db2efa9fedabc95fbb89528dcc884bf375d",
+   "zips": 62,
+   "states": [
+    "IN"
+   ]
+  },
+  "468": {
+   "sha256": "9c3195c94021eb6c56ea29823256dcf15968a3e93d8cf0588d3a19268316500a",
+   "zips": 16,
+   "states": [
+    "IN"
+   ]
+  },
+  "469": {
+   "sha256": "3da9d3e0f24bad068962dff08871d6516bc997df48498cdc915d030afb19c624",
+   "zips": 62,
+   "states": [
+    "IN"
+   ]
+  },
+  "470": {
+   "sha256": "db02419b790887d1ea9c72801f4ad0f9d0af3f4bd501261b4391e31ff965cca7",
+   "zips": 29,
+   "states": [
+    "IN",
+    "OH"
+   ]
+  },
+  "471": {
+   "sha256": "04bf3f03e27ea50a08c9f5fd0ea8ed03b1aca623e67f8d35d15cd27f2ba4ae2d",
+   "zips": 45,
+   "states": [
+    "IN"
+   ]
+  },
+  "472": {
+   "sha256": "2c8345ec54eecd768612fc87b2be39f1f93465edc5764b8a2f780b7adcd0f076",
+   "zips": 33,
+   "states": [
+    "IN"
+   ]
+  },
+  "473": {
+   "sha256": "3ab42dc45952b43720c9b6b2e1d503b492c54960e9fa65860c3d2de698764782",
+   "zips": 59,
+   "states": [
+    "IN"
+   ]
+  },
+  "474": {
+   "sha256": "699fbc615c6caaabcceea518bdd0a3b9ae8f7cfa0be926bd2249cb6e31ffe43d",
+   "zips": 43,
+   "states": [
+    "IN"
+   ]
+  },
+  "475": {
+   "sha256": "d531d9eb77912e49824218269d6a01375d99fae423a83ec85221f09d5ee3d6c8",
+   "zips": 52,
+   "states": [
+    "IN"
+   ]
+  },
+  "476": {
+   "sha256": "a6fbe2ee5bd6ee123f6ef36be5fec0f65c01cad97e59c1d77f9d15265461867b",
+   "zips": 26,
+   "states": [
+    "IN"
+   ]
+  },
+  "477": {
+   "sha256": "4251274b23e2270432200cc300f035a77c0ecc5a49b1d55616d305ae6d4fa426",
+   "zips": 9,
+   "states": [
+    "IN"
+   ]
+  },
+  "478": {
+   "sha256": "a79ad488f7f6215c9bcc3c7d2125e37b065525b05c446fa2e5fc9997a6ae5460",
+   "zips": 49,
+   "states": [
+    "IN"
+   ]
+  },
+  "479": {
+   "sha256": "962bde2a90d8d7bc3119e3b2a921f9a7d6f0204334fd785b2439c647f6d4585e",
+   "zips": 65,
+   "states": [
+    "IN"
+   ]
+  },
+  "480": {
+   "sha256": "18530d24447dd18bc8ed4c3690d89fa56db131b178bbb3961980e849f8407452",
+   "zips": 69,
+   "states": [
+    "MI"
+   ]
+  },
+  "481": {
+   "sha256": "02b4cea68a97a69cb7c4ea8c12b04728dae5a7a32c114f341e2e7dee384b87f2",
+   "zips": 70,
+   "states": [
+    "MI"
+   ]
+  },
+  "482": {
+   "sha256": "6c4dd252ed579ea154cc73b5eb7d75ea6c23c0767b3f5110a131582f1db1fb17",
+   "zips": 39,
+   "states": [
+    "MI"
+   ]
+  },
+  "483": {
+   "sha256": "3b50b790c4dc28f281d2cff546d3779a860f4c6250347731356412a0dd4c5c5f",
+   "zips": 51,
+   "states": [
+    "MI"
+   ]
+  },
+  "484": {
+   "sha256": "16974b5fefb511e66fb2b231894da141eddd614b5afdab4a1f1419fbffec3cd7",
+   "zips": 59,
+   "states": [
+    "MI"
+   ]
+  },
+  "485": {
+   "sha256": "de379e7319227838b8d892ec97e7b5757b36f2b9d0df86be2665c36686dbe6fd",
+   "zips": 10,
+   "states": [
+    "MI"
+   ]
+  },
+  "486": {
+   "sha256": "58c91f71e5ab7891a5a2eb94aa40eb9ed1f0e35afef1277ee07b7f3b9d6aa33a",
+   "zips": 51,
+   "states": [
+    "MI"
+   ]
+  },
+  "487": {
+   "sha256": "e64168468532fd37cb6478d0d281e16da59f5c8422dcf4559174599803dc2c08",
+   "zips": 50,
+   "states": [
+    "MI"
+   ]
+  },
+  "488": {
+   "sha256": "cad072422493847c84e6501cd3e4af1e609c05ed685331d5d7a9d44b09e95a03",
+   "zips": 79,
+   "states": [
+    "MI"
+   ]
+  },
+  "489": {
+   "sha256": "a6c73252718d7740ba0326d081294abfa597402b53f03e2b2c5ec278665eb710",
+   "zips": 7,
+   "states": [
+    "MI"
+   ]
+  },
+  "490": {
+   "sha256": "2daa9929823276f7dad340eb970567f6034c5468594d7e15d531e78509290486",
+   "zips": 79,
+   "states": [
+    "MI"
+   ]
+  },
+  "491": {
+   "sha256": "6d7acc237721fef9efb4e29333b1cb754f6013de7785cd117609237e9102e16f",
+   "zips": 20,
+   "states": [
+    "MI"
+   ]
+  },
+  "492": {
+   "sha256": "e7b4418abd92955f3a65c6fc5508498c0cb003e1ef79388f4982faee66204d11",
+   "zips": 58,
+   "states": [
+    "MI"
+   ]
+  },
+  "493": {
+   "sha256": "8c18bbd963e195066b56c0c012b9dbfcc289770d3005db49966b6db70e878a85",
+   "zips": 42,
+   "states": [
+    "MI"
+   ]
+  },
+  "494": {
+   "sha256": "3a0b57c3a0f102bb0fcb707e6f5d531a84a7b8eb2510fa769844387942cb777d",
+   "zips": 50,
+   "states": [
+    "MI"
+   ]
+  },
+  "495": {
+   "sha256": "06a32630dca5cf6e7f805a5adc55153695eedf028c26b28e351b561d2ffd9cab",
+   "zips": 14,
+   "states": [
+    "MI"
+   ]
+  },
+  "496": {
+   "sha256": "dd5ddcd1a42824324eb1b38cf16ac683da8e89f94a6a6231929cf401097e3719",
+   "zips": 67,
+   "states": [
+    "MI"
+   ]
+  },
+  "497": {
+   "sha256": "47fb4b32457363a84ae46ac0c2b7c476c3fc959735b55c890813d3314837767a",
+   "zips": 66,
+   "states": [
+    "MI"
+   ]
+  },
+  "498": {
+   "sha256": "dc9572ce0640f385a4bbc95b177d1bd85e1db9040c3640db5416731282d08d2e",
+   "zips": 65,
+   "states": [
+    "MI"
+   ]
+  },
+  "499": {
+   "sha256": "eda7f084607023a18dfb64d9bf25418a13b7547fd71fcda5907f6a07df8e4ed7",
+   "zips": 46,
+   "states": [
+    "MI"
+   ]
+  },
+  "500": {
+   "sha256": "d2b2278aeadd723551cef411e2b441510b9b7676653e6a571b583bdd056f595b",
+   "zips": 63,
+   "states": [
+    "IA"
+   ]
+  },
+  "501": {
+   "sha256": "80b51b4f1d8b17a9880e1f89f72775a2b98b5f4b2a6061a49bf02c675ee772d6",
+   "zips": 69,
+   "states": [
+    "IA"
+   ]
+  },
+  "502": {
+   "sha256": "68593faaf9f8778678469239deb4bab3ae41909d2b653659eca7ac6123b7bbfe",
+   "zips": 64,
+   "states": [
+    "IA"
+   ]
+  },
+  "503": {
+   "sha256": "232e35a2a423a70d3370b962c0faca70892b5c5459258cbcb0c8dfe8edeaf3d6",
+   "zips": 17,
+   "states": [
+    "IA"
+   ]
+  },
+  "504": {
+   "sha256": "995eda2e1c12c3252a8505e61b1945a6c941261cf46d42c2d3b2ae2ace0c5196",
+   "zips": 55,
+   "states": [
+    "IA"
+   ]
+  },
+  "505": {
+   "sha256": "348d12a16887df8991ebd738a57c9c773fdd072f2dabf2c18db4194cb1c8d245",
+   "zips": 74,
+   "states": [
+    "IA"
+   ]
+  },
+  "506": {
+   "sha256": "87bdb9c9625a62747d9d3587cd598b8ed8e43814db128e917cbd6865c0e17020",
+   "zips": 68,
+   "states": [
+    "IA"
+   ]
+  },
+  "507": {
+   "sha256": "685ade7f8ce9df37a1aeee09770103aeffba51350728c275cb0647484f94468c",
+   "zips": 4,
+   "states": [
+    "IA"
+   ]
+  },
+  "508": {
+   "sha256": "6419f9bd84bb179180bd8147ecb3f9c4dc27a3c6de6efa4a337c89d08e52211c",
+   "zips": 28,
+   "states": [
+    "IA"
+   ]
+  },
+  "510": {
+   "sha256": "72355564798987f13880d5cc29d41761f77cbd43c37fab7551360161bf5995e5",
+   "zips": 55,
+   "states": [
+    "IA",
+    "SD"
+   ]
+  },
+  "511": {
+   "sha256": "82a518bfc0c86e355994b4dddf325c7cd4e6222d2d90bae8995dc0c8867a2582",
+   "zips": 8,
+   "states": [
+    "IA"
+   ]
+  },
+  "512": {
+   "sha256": "ec309f0711a55e69fce221c8b9caf135c3e1453e7f138d6cad11cfd9c1dfd4bd",
+   "zips": 20,
+   "states": [
+    "IA"
+   ]
+  },
+  "513": {
+   "sha256": "7f80df36974a23f09065a44a244843fdfdd911abae23a1329c3c51b4df199e1d",
+   "zips": 23,
+   "states": [
+    "IA",
+    "MN"
+   ]
+  },
+  "514": {
+   "sha256": "7d6a9a00f733a02556ecb160771341c41f6c66b2eb576fa46ab0e1092dc8694f",
+   "zips": 32,
+   "states": [
+    "IA"
+   ]
+  },
+  "515": {
+   "sha256": "430d1efdf90a896253168ba13984afe9fe3aec4a3af6fb6dac09d4036de6b711",
+   "zips": 54,
+   "states": [
+    "IA",
+    "NE"
+   ]
+  },
+  "516": {
+   "sha256": "32604aacff367978fc98c57e106b9a7fc2ad4efb7ad8c4e31ab106d6d6194e4b",
+   "zips": 20,
+   "states": [
+    "IA",
+    "MO"
+   ]
+  },
+  "520": {
+   "sha256": "476a8e36b8be1d6b6c8d6ba6638e595f1228c7286fcffb0037a0941dee7bb6f6",
+   "zips": 44,
+   "states": [
+    "IA"
+   ]
+  },
+  "521": {
+   "sha256": "9f44a394b3cbd1fa43f22d5d1fc7f14d50f396762838193241fcd82d30d194b7",
+   "zips": 32,
+   "states": [
+    "IA"
+   ]
+  },
+  "522": {
+   "sha256": "dacde7406dff32d957e01be159aa86df49df41262bb1844a45f8446f733205ef",
+   "zips": 47,
+   "states": [
+    "IA"
+   ]
+  },
+  "523": {
+   "sha256": "cacd2b2812e5710489f8f830afe164f8ef55db1cb2cc7e9b68d510f2cd35ca80",
+   "zips": 53,
+   "states": [
+    "IA"
+   ]
+  },
+  "524": {
+   "sha256": "bf7745ded0ef3214cb698a077256a565c1d379a244a7a54701d730b528fe90fd",
+   "zips": 6,
+   "states": [
+    "IA"
+   ]
+  },
+  "525": {
+   "sha256": "1ab0c749734c713fb544d344113c514572ee91a414ed47155841e182cff7f240",
+   "zips": 50,
+   "states": [
+    "IA",
+    "MO"
+   ]
+  },
+  "526": {
+   "sha256": "b91b8b354c6f7bfe2f5e96afa44f8de321e8ae3480e86dbb9ffd8225f1e81eff",
+   "zips": 34,
+   "states": [
+    "IA",
+    "MO"
+   ]
+  },
+  "527": {
+   "sha256": "84e3a89f980ced227af2e7741d88cdc3f70c5fb51d347995a4b36a825237e7b3",
+   "zips": 44,
+   "states": [
+    "IA"
+   ]
+  },
+  "528": {
+   "sha256": "c3b933e0c2ab718b10bf6a0d6364d83b581ff37db311964bde5d61fb68b2b735",
+   "zips": 6,
+   "states": [
+    "IA"
+   ]
+  },
+  "530": {
+   "sha256": "36e904ed356eb417cd9c20fcdc599bba69258656fc4c46a39bddc2ddb371b0bb",
+   "zips": 75,
+   "states": [
+    "WI"
+   ]
+  },
+  "531": {
+   "sha256": "c9a63a6cd078d3a96875fc1fa7e2f46ed5f55ab0d47ba3becda6c055e0acf58d",
+   "zips": 55,
+   "states": [
+    "WI"
+   ]
+  },
+  "532": {
+   "sha256": "8a33422fa735f981f2242a506c40f15846acb02c1f7a0912337fb9a41595d41a",
+   "zips": 30,
+   "states": [
+    "WI"
+   ]
+  },
+  "534": {
+   "sha256": "f4f12e404d67ec243cced015720eef42dc17b401d0a41e3c46d71fa226c3d612",
+   "zips": 5,
+   "states": [
+    "WI"
+   ]
+  },
+  "535": {
+   "sha256": "b5752617c7a7615d71d9a5016de42ca0f8f59ddbb98f12f0201b9c65e84e1447",
+   "zips": 81,
+   "states": [
+    "WI"
+   ]
+  },
+  "537": {
+   "sha256": "3057c7e3661b6f4002d6328dc5a83977771eacbfb6808f765aed9d245a43591f",
+   "zips": 14,
+   "states": [
+    "WI"
+   ]
+  },
+  "538": {
+   "sha256": "a237be0f69823cafce9fc36251fdc69f2a01a3ebea4dc3ae723cf47e04252729",
+   "zips": 21,
+   "states": [
+    "WI"
+   ]
+  },
+  "539": {
+   "sha256": "14ac221544dbe26999d53f6ef40ed4c4ffb02905fd7bae928905a398b367aa98",
+   "zips": 48,
+   "states": [
+    "WI"
+   ]
+  },
+  "540": {
+   "sha256": "45fc8b1b0d019464aa58dcbd30b316337956b7439c4537e67e74d82d781d5d88",
+   "zips": 24,
+   "states": [
+    "WI"
+   ]
+  },
+  "541": {
+   "sha256": "506f7ddaf22fef2d5a48366e33687dc3d4febf1c5c7f575cb15be37efc830888",
+   "zips": 54,
+   "states": [
+    "WI"
+   ]
+  },
+  "542": {
+   "sha256": "dc3c15d4b28c85f364bdb8a210bc1f10b8b49515131d8dca619ad1f3373b7476",
+   "zips": 27,
+   "states": [
+    "WI"
+   ]
+  },
+  "543": {
+   "sha256": "d5ee02f0c1701e7835782441a50e6f24950fe86622ef5e2467e933aceed89a34",
+   "zips": 7,
+   "states": [
+    "WI"
+   ]
+  },
+  "544": {
+   "sha256": "c3192b81f0e2fb2a9f33cdb6fae58b77035cef70784968418402f7e6d7559fe6",
+   "zips": 77,
+   "states": [
+    "WI"
+   ]
+  },
+  "545": {
+   "sha256": "d446c13e330ef9babbf80a672075e90d790eaa94171b8993dbfe6c81ad08bf29",
+   "zips": 45,
+   "states": [
+    "MI",
+    "WI"
+   ]
+  },
+  "546": {
+   "sha256": "7fb571d92147352145ed41ff45c5074af0629d9b2b896845a8e353ba46c0ea55",
+   "zips": 53,
+   "states": [
+    "WI"
+   ]
+  },
+  "547": {
+   "sha256": "4e8b205365c8cad511c926183bd604882849e11c04f2868299195a0f4851f8d1",
+   "zips": 49,
+   "states": [
+    "WI"
+   ]
+  },
+  "548": {
+   "sha256": "2fee9af5eb6799a8e491337efcc14f52615b0a571f1c9517051fc54664283bdd",
+   "zips": 62,
+   "states": [
+    "WI"
+   ]
+  },
+  "549": {
+   "sha256": "4f5f37c3e8cc092de12b2b37e9eef03895172ae557956b853170783b624beb36",
+   "zips": 56,
+   "states": [
+    "WI"
+   ]
+  },
+  "550": {
+   "sha256": "30cfed9e49050ee86c8b3970463bfebc5abc3b52bd45e17ec432cff74c54090a",
+   "zips": 69,
+   "states": [
+    "MN"
+   ]
+  },
+  "551": {
+   "sha256": "006b89d74d76e4b933652e2cbe6ae9ad74480e33c76562da243485ba2597ed39",
+   "zips": 32,
+   "states": [
+    "MN"
+   ]
+  },
+  "553": {
+   "sha256": "fa4d338532d6896477226d556936ddfbf5e0f264efd1b222dc03e7c6a0092340",
+   "zips": 86,
+   "states": [
+    "MN"
+   ]
+  },
+  "554": {
+   "sha256": "2e858ada367a6775885de8cdf59a2d30dadaf7c1d23c2682cb81e11a60f58711",
+   "zips": 51,
+   "states": [
+    "MN"
+   ]
+  },
+  "556": {
+   "sha256": "a33d0878bd7d0597bd8370fedd44ad311cd615f5b31b99ac7e923d67ab024ea9",
+   "zips": 13,
+   "states": [
+    "MN"
+   ]
+  },
+  "557": {
+   "sha256": "e6d7f64f8f34b73d4989745091f48eae20733ffa7ea77165f4bab689c0460caa",
+   "zips": 69,
+   "states": [
+    "MN"
+   ]
+  },
+  "558": {
+   "sha256": "f87978f81dee84cb1ce1d9a5576ea1747add04268b258482ff1104f4c66a2878",
+   "zips": 11,
+   "states": [
+    "MN"
+   ]
+  },
+  "559": {
+   "sha256": "92b5e45ea4b03eb3161ec14ca008b4c7f07b8157c5fd2405ce88bcf0413957ba",
+   "zips": 71,
+   "states": [
+    "MN"
+   ]
+  },
+  "560": {
+   "sha256": "30daacd1390faeafe4ff3d34f2352d59c63caab4254a9614dca29acdd9640a41",
+   "zips": 71,
+   "states": [
+    "IA",
+    "MN"
+   ]
+  },
+  "561": {
+   "sha256": "6863f23086eba79ea93f01830151903496704e12333bca7df4f9416e477f71f9",
+   "zips": 66,
+   "states": [
+    "MN",
+    "SD"
+   ]
+  },
+  "562": {
+   "sha256": "cfb9dcb9cb1df017dbff1b7fc06e0cfb7a5b2eb4e3f1926561f4afd2993677e8",
+   "zips": 74,
+   "states": [
+    "MN",
+    "SD"
+   ]
+  },
+  "563": {
+   "sha256": "f9a7a07a147ed0828691988d6bfcafb3345745b54cd5265129724ab467ad8b21",
+   "zips": 70,
+   "states": [
+    "MN"
+   ]
+  },
+  "564": {
+   "sha256": "35748c2c979c0dc6d51ad1fe4cc9c8db33335011ffe35db520eb8828c9d0df92",
+   "zips": 39,
+   "states": [
+    "MN"
+   ]
+  },
+  "565": {
+   "sha256": "fd79849e8d472b6cd29fed82c11e279ff769541e85987991ecc64a5ae847909f",
+   "zips": 71,
+   "states": [
+    "MN"
+   ]
+  },
+  "566": {
+   "sha256": "7a1cd3e647784bee8340b94e4c6fb6c558d3b764d2d62cd8d2d844ed456d0dda",
+   "zips": 48,
+   "states": [
+    "MN"
+   ]
+  },
+  "567": {
+   "sha256": "79ae6f0bbc6c25b6ffe989c34e5b1d44c9549b530d37323ebf50838ac66c7e68",
+   "zips": 40,
+   "states": [
+    "MN",
+    "ND"
+   ]
+  },
+  "570": {
+   "sha256": "a10bb99ca09a906a1f901225352a70ecee25fc9d30dcfde64f0a314f68e740f4",
+   "zips": 69,
+   "states": [
+    "IA",
+    "MN",
+    "SD"
+   ]
+  },
+  "571": {
+   "sha256": "b14aae83758308951b985321338f5ef638948945335dde21d23248f23e466791",
+   "zips": 9,
+   "states": [
+    "SD"
+   ]
+  },
+  "572": {
+   "sha256": "7ac8067cc3fbb3d50b71b73c9171a59d2dec4ec333b818b14c2d1b92657222c1",
+   "zips": 56,
+   "states": [
+    "ND",
+    "SD"
+   ]
+  },
+  "573": {
+   "sha256": "66f405ee07bfb0cb64b498fd10ea998092891e76bfb97949485e08c41d4c0ea7",
+   "zips": 60,
+   "states": [
+    "SD"
+   ]
+  },
+  "574": {
+   "sha256": "7800a86dc7f0f4b3976d0bc9da644bb4ec9aa46ca8b0351752f01539ca54924f",
+   "zips": 49,
+   "states": [
+    "ND",
+    "SD"
+   ]
+  },
+  "575": {
+   "sha256": "ed6884c90b02701dfd687e391ce1b98181601d07971920ee1bbbd8acb56ae7a1",
+   "zips": 43,
+   "states": [
+    "SD"
+   ]
+  },
+  "576": {
+   "sha256": "ef2902780d672604636ae5e398c2ab9c5186f43ecd7f17df4b10a4fdd9f41bc6",
+   "zips": 32,
+   "states": [
+    "ND",
+    "SD"
+   ]
+  },
+  "577": {
+   "sha256": "64ce0be99701dff07d500ad935e38cd0fea7defd04d36f455d1cd0f2f44dc4aa",
+   "zips": 57,
+   "states": [
+    "MT",
+    "NE",
+    "SD",
+    "WY"
+   ]
+  },
+  "580": {
+   "sha256": "bb8c5d5c55ca187e45f3ba3da48286019275220ecd55f555f8f24bf4df5fb763",
+   "zips": 60,
+   "states": [
+    "MN",
+    "ND",
+    "SD"
+   ]
+  },
+  "581": {
+   "sha256": "96c755d7bade80abb5682af1211e92e4b1bb72ac507feb8cbdd96fc677b74d9f",
+   "zips": 4,
+   "states": [
+    "ND"
+   ]
+  },
+  "582": {
+   "sha256": "1f210c7340703c9849cda1a53bfe492a29c61999e5c0a436fc4552aa46a37e4f",
+   "zips": 58,
+   "states": [
+    "MN",
+    "ND"
+   ]
+  },
+  "583": {
+   "sha256": "39799ae1ea50e030b11449227b7198cfd04fb8e1c775ae8bc91c0b38f7b69274",
+   "zips": 50,
+   "states": [
+    "ND"
+   ]
+  },
+  "584": {
+   "sha256": "a57204ebc5ffaee30394ff967c9c6cf290070a228939bcc7babc2e57fe1a528a",
+   "zips": 62,
+   "states": [
+    "ND",
+    "SD"
+   ]
+  },
+  "585": {
+   "sha256": "5a7992ffebd8a09bcd14847fba9b3b55a239c88202a04414e27626aea5f72166",
+   "zips": 45,
+   "states": [
+    "ND",
+    "SD"
+   ]
+  },
+  "586": {
+   "sha256": "dbbf5bf1d40920d1fd03ce30c64b2473518698ecfc27432d9c7c3f30c46d3705",
+   "zips": 31,
+   "states": [
+    "MT",
+    "ND",
+    "SD"
+   ]
+  },
+  "587": {
+   "sha256": "eee2dcf7de92d8a70b0c2db0be66087c6199541e28dca2b3ab5f24daea000f80",
+   "zips": 63,
+   "states": [
+    "ND"
+   ]
+  },
+  "588": {
+   "sha256": "c1d04f73fa069ef3509918d72af6291561a03e3909b272ad79e8d65837eebb4c",
+   "zips": 15,
+   "states": [
+    "ND"
+   ]
+  },
+  "590": {
+   "sha256": "5ed6149756d98ad0fef7dc5573176ee5d013d4bd9c4562ad2871d74186350ba1",
+   "zips": 72,
+   "states": [
+    "MT"
+   ]
+  },
+  "591": {
+   "sha256": "099450ab73690158ddd8396da94422590421d047299c687af4d38ae4d4500f14",
+   "zips": 4,
+   "states": [
+    "MT"
+   ]
+  },
+  "592": {
+   "sha256": "62d06d0e00daafee589f6207d769aec8f0e0184cb92fd369da3629dbabf2b48b",
+   "zips": 41,
+   "states": [
+    "MT",
+    "ND"
+   ]
+  },
+  "593": {
+   "sha256": "d1fce7955307a322bcc9cb085af740d32f4b538dc997e59607ba3a8e43ebfb65",
+   "zips": 30,
+   "states": [
+    "MT"
+   ]
+  },
+  "594": {
+   "sha256": "5957f6cee9c740ff8cdd6a52f8f44afea501209cdd5f8f85571949353330d4fd",
+   "zips": 61,
+   "states": [
+    "MT"
+   ]
+  },
+  "595": {
+   "sha256": "617034b1e242006a8eab2ec19402608ddc488c3b602e4e111105eb3f2c4a2b33",
+   "zips": 23,
+   "states": [
+    "MT"
+   ]
+  },
+  "596": {
+   "sha256": "e819fbe364b2da82e9fa399755dd845400dfee8aaee556058ddf6ace0d23d4af",
+   "zips": 19,
+   "states": [
+    "MT"
+   ]
+  },
+  "597": {
+   "sha256": "a8edc8a7b99684e620f378a7aee579fa24b5053edc6d973c57274e6e9879be3f",
+   "zips": 42,
+   "states": [
+    "MT"
+   ]
+  },
+  "598": {
+   "sha256": "7b42fbeb03c5eaa8d5471b82ab192d2536a5d2e72d30693eb072cf341d988632",
+   "zips": 50,
+   "states": [
+    "ID",
+    "MT"
+   ]
+  },
+  "599": {
+   "sha256": "7b5f92bcdf90540c8e95afd6a9cb030f45cb8e85694d8ff83ce9dc16cb7c379a",
+   "zips": 27,
+   "states": [
+    "MT"
+   ]
+  },
+  "600": {
+   "sha256": "cc7e137d5dd50d44f4d53f035e0c6add621739d9638b5734f16c2b3c3e71df93",
+   "zips": 65,
+   "states": [
+    "IL"
+   ]
+  },
+  "601": {
+   "sha256": "32185e830ebbdde9163bf79d3c06262b88a979c4f93889fe29dbfd6e764f2741",
+   "zips": 72,
+   "states": [
+    "IL"
+   ]
+  },
+  "602": {
+   "sha256": "411dcd2993d8e69359de633d436998c42f38acde22b04b21e3823694898fb092",
+   "zips": 4,
+   "states": [
+    "IL"
+   ]
+  },
+  "603": {
+   "sha256": "70c18680dfa6b6eb74a6718ba0b7aad792a8b520e45f95da6165b4c128e5ac4a",
+   "zips": 4,
+   "states": [
+    "IL"
+   ]
+  },
+  "604": {
+   "sha256": "fc1e939503a82945275645196886538825ee58d40acf30e055fbf5849734c210",
+   "zips": 79,
+   "states": [
+    "IL"
+   ]
+  },
+  "605": {
+   "sha256": "43233e57014d43bc86af488f5ab404aaa49226b341ef460a9d495b5c3c174b30",
+   "zips": 56,
+   "states": [
+    "IL"
+   ]
+  },
+  "606": {
+   "sha256": "30ff92e9921fd3865b0416c4913c16c9c18c54e4e7af6c9593fcc65b3ea6d853",
+   "zips": 56,
+   "states": [
+    "IL"
+   ]
+  },
+  "607": {
+   "sha256": "130277aa43838da22651502e1715b2becee9e28df04ed0bda610af28c353422e",
+   "zips": 4,
+   "states": [
+    "IL"
+   ]
+  },
+  "608": {
+   "sha256": "8efb91420e4bb092a98dc7866ef1995f1990915c8482c5bb87e1f0b6c63be5c3",
+   "zips": 4,
+   "states": [
+    "IL"
+   ]
+  },
+  "609": {
+   "sha256": "173c3edaf040895dab60795d725d4de3b79828085ee1bce200d39897c67f17b0",
+   "zips": 56,
+   "states": [
+    "IL"
+   ]
+  },
+  "610": {
+   "sha256": "7e36ee824f62606380e4c17779d93f5feb1b0960b28065f1b0b338ca093e2aa3",
+   "zips": 66,
+   "states": [
+    "IL"
+   ]
+  },
+  "611": {
+   "sha256": "e0ba85f4e4cda6f1f609a63b59dcd2cd8461a22b5e87f755a0f00401f21503a2",
+   "zips": 11,
+   "states": [
+    "IL"
+   ]
+  },
+  "612": {
+   "sha256": "c1c1bb34e125174ed970efeaf3bdaf85c81de338cef2ef64f493d159fbbb4a10",
+   "zips": 44,
+   "states": [
+    "IL"
+   ]
+  },
+  "613": {
+   "sha256": "f590f9fac5b2345c250762592ffc5b3e418978c6740df0d940f53e6c87d2475f",
+   "zips": 62,
+   "states": [
+    "IL"
+   ]
+  },
+  "614": {
+   "sha256": "5a44b76933479fd9cef781c292b9a06c10610794ea9bb1dca65c986aaac09cba",
+   "zips": 73,
+   "states": [
+    "IL"
+   ]
+  },
+  "615": {
+   "sha256": "2537b0a2fcea39c0922738ae33fe9d679ec912fb17fb05da9fab30bd6e089928",
+   "zips": 46,
+   "states": [
+    "IL"
+   ]
+  },
+  "616": {
+   "sha256": "aaae5bb762b33a7a9af9319d5b50a784dc7f6ce64e80ee4b5faea55f7e367487",
+   "zips": 12,
+   "states": [
+    "IL"
+   ]
+  },
+  "617": {
+   "sha256": "fecf50dd5c9b19ac29ff54f75336574133f190658aad2e38b10ac44623e96ac6",
+   "zips": 53,
+   "states": [
+    "IL"
+   ]
+  },
+  "618": {
+   "sha256": "367dbe522bf4d34202c800656e50a0f70fd9c0121a2ec47b1ced3dddefcedcca",
+   "zips": 58,
+   "states": [
+    "IL"
+   ]
+  },
+  "619": {
+   "sha256": "13a4b181f2bf9777cc0476ba54becef260c4aa1c6d098a889c31649d5e20d89d",
+   "zips": 30,
+   "states": [
+    "IL"
+   ]
+  },
+  "620": {
+   "sha256": "a32fe5d2af5411709e108d65e14b45497d7956cc766f5013c2728df041caaad2",
+   "zips": 75,
+   "states": [
+    "IL"
+   ]
+  },
+  "622": {
+   "sha256": "2e1a3bef1f6951002b0438547e7adc55fc03850a0c1281f1deaf9b9180743cc3",
+   "zips": 74,
+   "states": [
+    "IL"
+   ]
+  },
+  "623": {
+   "sha256": "a140690c05b68791556ddcfc8cf6dd6a7680d4a08794343a4538b2161fc8a11d",
+   "zips": 52,
+   "states": [
+    "IL"
+   ]
+  },
+  "624": {
+   "sha256": "749d6fd5756d089aaa986e16dbb90bfeede76ae5f982a68c6cd046715af605a5",
+   "zips": 60,
+   "states": [
+    "IL"
+   ]
+  },
+  "625": {
+   "sha256": "0562803388dff5e4f386ad996bf67f3102ed13f4646e6170a45e79f65684b414",
+   "zips": 51,
+   "states": [
+    "IL"
+   ]
+  },
+  "626": {
+   "sha256": "30285d9ba81eacb5ee9094d19b6fdf0c9c8e410766e8293708e1b769b41038fd",
+   "zips": 57,
+   "states": [
+    "IL"
+   ]
+  },
+  "627": {
+   "sha256": "95756ba727b14180c7e74ffee3300977da514a8b99692563fdb615dd99cb0062",
+   "zips": 8,
+   "states": [
+    "IL"
+   ]
+  },
+  "628": {
+   "sha256": "bb095a23c20cf7e537fbe7bee5106bce6e71717956bbb6dc3001fcad8341921c",
+   "zips": 86,
+   "states": [
+    "IL"
+   ]
+  },
+  "629": {
+   "sha256": "8d2723fc2d14754ed50ca3565c1b6ddd351ee522264f304617436713ae781dc0",
+   "zips": 78,
+   "states": [
+    "IL"
+   ]
+  },
+  "630": {
+   "sha256": "db8ab5fc3dfbe62887a5be7e54e484fc3dde1e6c138a2828c01b37cd05546fb8",
+   "zips": 57,
+   "states": [
+    "MO"
+   ]
+  },
+  "631": {
+   "sha256": "8078640bd69e0a0149a0230a0eeac61583ee777d4a5e50e4a48350493ffb1dce",
+   "zips": 46,
+   "states": [
+    "MO"
+   ]
+  },
+  "633": {
+   "sha256": "861f7a42b8fe013fc2336951bd97055702bf397f744f3c532cdbab0eec3407aa",
+   "zips": 45,
+   "states": [
+    "MO"
+   ]
+  },
+  "634": {
+   "sha256": "cff925367b7c43013708e1a77935a14646a86685140089ff0eb875c6f6aa5648",
+   "zips": 40,
+   "states": [
+    "MO"
+   ]
+  },
+  "635": {
+   "sha256": "26ba0bc6287e2d4e21ee793f6b6b3bf8c90c1fbae5f9e7d279a022443f25f7e4",
+   "zips": 33,
+   "states": [
+    "MO"
+   ]
+  },
+  "636": {
+   "sha256": "3b1439b53c89d5ef15b8b2390aa3177d278130145ba8d55d57ef0db82461b531",
+   "zips": 34,
+   "states": [
+    "IL",
+    "MO"
+   ]
+  },
+  "637": {
+   "sha256": "a1edd407f100a700b177cb3a581e555434fdf31907135b5eb97514a473a56b69",
+   "zips": 37,
+   "states": [
+    "MO"
+   ]
+  },
+  "638": {
+   "sha256": "75d17209376270a7584fa2fd23202374331989f4411d9f6ac082f3a6f8ca3d41",
+   "zips": 45,
+   "states": [
+    "MO"
+   ]
+  },
+  "639": {
+   "sha256": "4a75b6f73c6531b988dc55bf1e032c99416b7364b358daad8bddc4996873ea60",
+   "zips": 29,
+   "states": [
+    "MO"
+   ]
+  },
+  "640": {
+   "sha256": "62d340ad22e7cb0826e999f79a21925a56e1f616c0a4f5a9f342c7e70463428f",
+   "zips": 63,
+   "states": [
+    "MO"
+   ]
+  },
+  "641": {
+   "sha256": "7ec1c984bd756837045b91544d1015134cde9f63db887924cc016f08a379e45e",
+   "zips": 51,
+   "states": [
+    "MO"
+   ]
+  },
+  "644": {
+   "sha256": "3f558062ad840fc99325d0bde8ee7f17963c11ade74687541c636bb931257f29",
+   "zips": 70,
+   "states": [
+    "MO"
+   ]
+  },
+  "645": {
+   "sha256": "1f05b16035c52761c2d3a675fd8feb7ccff3ba7c8df078be87eb0773ba362925",
+   "zips": 6,
+   "states": [
+    "MO"
+   ]
+  },
+  "646": {
+   "sha256": "b11a5031d299e03d5d20a2d6319a1eed01654a02db450e6e78af22c6c802c678",
+   "zips": 54,
+   "states": [
+    "MO"
+   ]
+  },
+  "647": {
+   "sha256": "c1ac82579910cb74f68fc3136d315a5d99251ae24be527409ac2b3e27ae0427c",
+   "zips": 46,
+   "states": [
+    "MO"
+   ]
+  },
+  "648": {
+   "sha256": "9484f161df7f5f770983d1e68bd9ef122bebad82b9429d2774ba4c383b828157",
+   "zips": 34,
+   "states": [
+    "MO"
+   ]
+  },
+  "650": {
+   "sha256": "72ffb52d9fd90d1c1edd6e3fff51de61ca0f41c0b5fc815017e03d91a15a7533",
+   "zips": 54,
+   "states": [
+    "MO"
+   ]
+  },
+  "651": {
+   "sha256": "8f890a6114d1821156e38ddcfca27a9b630235adb7a13ccbc559cc8ad678aab6",
+   "zips": 2,
+   "states": [
+    "MO"
+   ]
+  },
+  "652": {
+   "sha256": "2e82621a926976379d3287688d9313d8e5381215f5825718112fed4f6854fa06",
+   "zips": 46,
+   "states": [
+    "MO"
+   ]
+  },
+  "653": {
+   "sha256": "cf4b82f7a85b73b8a3ff6aba5b5039952910c768c5dacba1e5ee1faa34f876b0",
+   "zips": 31,
+   "states": [
+    "MO"
+   ]
+  },
+  "654": {
+   "sha256": "732346216e721c6a24a292353b53ea0720b1ee4712a51ec3b8650e41f7a79074",
+   "zips": 28,
+   "states": [
+    "MO"
+   ]
+  },
+  "655": {
+   "sha256": "7b4427efa955e80674231824f2db9944667ef04f4ed0659adc7c6ac3afbbdfe4",
+   "zips": 31,
+   "states": [
+    "MO"
+   ]
+  },
+  "656": {
+   "sha256": "1ee85ffb74db52e8cd7bb8353a6bedc57b3cc869fe0de74ea7ff2848a899ae73",
+   "zips": 70,
+   "states": [
+    "MO"
+   ]
+  },
+  "657": {
+   "sha256": "c978d83f1d3df72b20ac0d1332abc0b64e181a242b9004424a026156bc26f6f1",
+   "zips": 74,
+   "states": [
+    "AR",
+    "MO"
+   ]
+  },
+  "658": {
+   "sha256": "7c0a66fee4a8d3dbfd28c3c734ba7b06818eed7631067604b408a11a8bae61a7",
+   "zips": 9,
+   "states": [
+    "MO"
+   ]
+  },
+  "660": {
+   "sha256": "de8033db319bba8ac1cfab258e264cd0d7c4a3159055b6b69444419ddd68df4e",
+   "zips": 68,
+   "states": [
+    "KS"
+   ]
+  },
+  "661": {
+   "sha256": "60b1f9e682127ea1924e476b88c06cc698ab9bf7c54aaad883cdfacac07f922b",
+   "zips": 12,
+   "states": [
+    "KS"
+   ]
+  },
+  "662": {
+   "sha256": "62c1d28c2270ec805f0dcd434b1406adc7ab77fec0852c3d214b091a52eaf26b",
+   "zips": 25,
+   "states": [
+    "KS"
+   ]
+  },
+  "664": {
+   "sha256": "bc5d8079ee4adfe507590fdc3b1752e41c1f3533dcd43e80d250e71b6bd128b3",
+   "zips": 35,
+   "states": [
+    "KS"
+   ]
+  },
+  "665": {
+   "sha256": "e3cb042d0495a305356bacb7fa3ca17a150d3d8bf7ab5f65af237a09aa1adf20",
+   "zips": 43,
+   "states": [
+    "KS",
+    "NE"
+   ]
+  },
+  "666": {
+   "sha256": "036b1b23e7c9d2e6fae656f46a6e23b0c5ec1b9383b495079bbd9b168c0e3c8d",
+   "zips": 18,
+   "states": [
+    "KS"
+   ]
+  },
+  "667": {
+   "sha256": "38f75402b1d35d647f1fc00537028655d5969fac520cfd02e6fcf34498e5aa50",
+   "zips": 51,
+   "states": [
+    "KS"
+   ]
+  },
+  "668": {
+   "sha256": "cad54ca348d1c3d32d8452f2796ac9a2f0c4b7c6d05ddc07a4ea01beba6fe7ed",
+   "zips": 35,
+   "states": [
+    "KS"
+   ]
+  },
+  "669": {
+   "sha256": "207346233b21b208980990ae74db7c7834cb3364a24173208f9149bbe9a796cf",
+   "zips": 34,
+   "states": [
+    "KS",
+    "NE"
+   ]
+  },
+  "670": {
+   "sha256": "cb1a24f2f120752d131d3dd913567a7f3af9a6efdc115a92b557f1ccf7e78b76",
+   "zips": 58,
+   "states": [
+    "KS"
+   ]
+  },
+  "671": {
+   "sha256": "a9034203d4e36012e9de02cf5ee48770c0c8c488121d5b88a4948ba70a0d0509",
+   "zips": 42,
+   "states": [
+    "KS"
+   ]
+  },
+  "672": {
+   "sha256": "5af5fbf0971f0ee4cacfc443ce2c9442c37e59d8a44656461dd3beeefbc7ca09",
+   "zips": 28,
+   "states": [
+    "KS"
+   ]
+  },
+  "673": {
+   "sha256": "d4a09dbdcc61d636b9c86392f825cbf611d4e4437567ac52fd4de439eaad41f7",
+   "zips": 27,
+   "states": [
+    "KS"
+   ]
+  },
+  "674": {
+   "sha256": "a7d7f6d5a717ad64ff868ee630ee24bba3beb55cbe8b19c8da9e196318348171",
+   "zips": 57,
+   "states": [
+    "KS"
+   ]
+  },
+  "675": {
+   "sha256": "e66ab1094e584206e8b954cb8bdbd8291b045feedbbc2e508f1fd0069a355326",
+   "zips": 53,
+   "states": [
+    "KS"
+   ]
+  },
+  "676": {
+   "sha256": "1ba455afd9c5261e7724677859fd9715be58b97b5114981329f917efee33d6e4",
+   "zips": 45,
+   "states": [
+    "KS"
+   ]
+  },
+  "677": {
+   "sha256": "1a280ce2c510445abbdf498ce29f27eab11ddf90fa5c856ee14be1900dc26cd3",
+   "zips": 28,
+   "states": [
+    "KS"
+   ]
+  },
+  "678": {
+   "sha256": "cc58055eaa08335569c22dde8ba3945149e7875a4c8b378aca108dc44075295e",
+   "zips": 39,
+   "states": [
+    "KS"
+   ]
+  },
+  "679": {
+   "sha256": "01a13bf0410cd26a7eb9f7dd812ce74f2697ba6c6faf8d88cc1ee6353082fd66",
+   "zips": 6,
+   "states": [
+    "KS"
+   ]
+  },
+  "680": {
+   "sha256": "0e27ec04fba29e9842fe3cb2f7fe7240eb56bafaa6a82dd3029338ad961e1118",
+   "zips": 55,
+   "states": [
+    "NE"
+   ]
+  },
+  "681": {
+   "sha256": "ceb07a048f02e17e023e1c429d69977d502ef77fc59c339758942b6af6fa0af2",
+   "zips": 38,
+   "states": [
+    "NE"
+   ]
+  },
+  "683": {
+   "sha256": "57f2a6c23fbfa3f65fe6f31dfd829266d48839e8ffbb6bbdc97aee4b3d66bd36",
+   "zips": 70,
+   "states": [
+    "KS",
+    "NE"
+   ]
+  },
+  "684": {
+   "sha256": "397b36eae956e1c379db8732a4568f6ee130c6aa86a77553d6ef702a4b6811c7",
+   "zips": 56,
+   "states": [
+    "KS",
+    "NE"
+   ]
+  },
+  "685": {
+   "sha256": "1922d8e9eb034d5de7abe3414172b3bfe6efe76a397f3bcfdc600e58f2287478",
+   "zips": 23,
+   "states": [
+    "NE"
+   ]
+  },
+  "686": {
+   "sha256": "f7ee563082c9b4d907315eaf722fffb20e5311fe2ae6333a60d12d20713ebfcb",
+   "zips": 42,
+   "states": [
+    "NE"
+   ]
+  },
+  "687": {
+   "sha256": "59358eba467c86c6ab4463ae97656a4b13b8b7241dd9d0f0884c233b8accdfc7",
+   "zips": 73,
+   "states": [
+    "NE",
+    "SD"
+   ]
+  },
+  "688": {
+   "sha256": "772bbecb36994f6befe3533d75d0dfd1530881853221fc4c5acf0accc973d90d",
+   "zips": 64,
+   "states": [
+    "NE"
+   ]
+  },
+  "689": {
+   "sha256": "3121558aaba0a2e96abd45cf525cec9de177d8b9eed44a08fc98389f61cd4e29",
+   "zips": 55,
+   "states": [
+    "KS",
+    "NE"
+   ]
+  },
+  "690": {
+   "sha256": "4407a42bebe6c5115d9cb215e308af54c6fc81d41588c6fe7db75a296435d5cd",
+   "zips": 26,
+   "states": [
+    "KS",
+    "NE"
+   ]
+  },
+  "691": {
+   "sha256": "8f4bb903ec6477325d1c9287cd826772f39b061426fa79ecc7c174002081f260",
+   "zips": 44,
+   "states": [
+    "CO",
+    "NE"
+   ]
+  },
+  "692": {
+   "sha256": "74c8fd82bb560289016c5d86aa2be676c7f0dfe3eba7cf499628813b8a01ba17",
+   "zips": 11,
+   "states": [
+    "NE",
+    "SD"
+   ]
+  },
+  "693": {
+   "sha256": "1f101d25d8417a8ceb4d2dbe92e066eed7e7985ce7c132c4b2e6f9928bc277a0",
+   "zips": 29,
+   "states": [
+    "NE",
+    "SD"
+   ]
+  },
+  "700": {
+   "sha256": "918c70a1c7f92534ff7ebe9b7c4da37eb3ce5fd896bda53f0c8c04cad870eff5",
+   "zips": 45,
+   "states": [
+    "LA"
+   ]
+  },
+  "701": {
+   "sha256": "0b8176f460f2cf274dadabbfab27d6670077ae064faed1e02d7bdea8dd59bc64",
+   "zips": 22,
+   "states": [
+    "LA"
+   ]
+  },
+  "703": {
+   "sha256": "744214e0e465803c4ae27053f65a032e1827653ac460da7ad9d85812b8e340d9",
+   "zips": 34,
+   "states": [
+    "LA"
+   ]
+  },
+  "704": {
+   "sha256": "321d43380634ae9b60a1249f5778c59238c9335e5548064a815a64c9d614558e",
+   "zips": 39,
+   "states": [
+    "LA"
+   ]
+  },
+  "705": {
+   "sha256": "fc4b9e62925f2a03faf82305d467586d959b7b91dcad035ecda6eff2dec8f095",
+   "zips": 61,
+   "states": [
+    "LA"
+   ]
+  },
+  "706": {
+   "sha256": "ad92af232c04095e2915255163f7b0b4f17c6d26aaa52580ff5fa0c732838b85",
+   "zips": 39,
+   "states": [
+    "LA"
+   ]
+  },
+  "707": {
+   "sha256": "024da3c5347d6430283cc8e1b8bb189f76f285c85931121a8dbac46c2a1cf3d0",
+   "zips": 58,
+   "states": [
+    "LA"
+   ]
+  },
+  "708": {
+   "sha256": "f3e328bbf1711123763c8a17ffb00aed38b69e78c105a198a2ff64ab3007addd",
+   "zips": 21,
+   "states": [
+    "LA"
+   ]
+  },
+  "710": {
+   "sha256": "c61acf0a6c5467d827492a3c08e576beb6166a14b27384063926b136f8c154f4",
+   "zips": 53,
+   "states": [
+    "LA"
+   ]
+  },
+  "711": {
+   "sha256": "a337a24f082214b42ea5c88ba147de74ce115e7687cc5cf4d7bfb0181f2bbc4d",
+   "zips": 15,
+   "states": [
+    "LA"
+   ]
+  },
+  "712": {
+   "sha256": "3c50ff17fccb133103dc3bdbe9ff8241b87c1bd02b67bb2c247b3a3e9d35cbeb",
+   "zips": 51,
+   "states": [
+    "LA"
+   ]
+  },
+  "713": {
+   "sha256": "64105e495b0fa5421c40eef36e51622e434ac82a97d4203ce49651229ba8cbf2",
+   "zips": 42,
+   "states": [
+    "LA"
+   ]
+  },
+  "714": {
+   "sha256": "24f9e23aa62d3623390cc4445d00923f52da7605c22c01f892cfa0ada793490e",
+   "zips": 59,
+   "states": [
+    "LA"
+   ]
+  },
+  "716": {
+   "sha256": "b99925360c918bd18750f3192c0d20b4666bfb9654d01f70b3cbd691855ecca6",
+   "zips": 35,
+   "states": [
+    "AR"
+   ]
+  },
+  "717": {
+   "sha256": "e9ec93d0bdfa5ec9c5c4e8b40eac6b6f8a4ad4bde49a457f238f4727996b9ac1",
+   "zips": 29,
+   "states": [
+    "AR",
+    "LA"
+   ]
+  },
+  "718": {
+   "sha256": "7b3ae60604d7052df93ddb7307166d9ffaa90aebda4a1158e47e713e0f6c25d4",
+   "zips": 35,
+   "states": [
+    "AR"
+   ]
+  },
+  "719": {
+   "sha256": "4e80915f0d7531494f1b3e14eb42b7b11336cd238d357c240f0342fc598602aa",
+   "zips": 37,
+   "states": [
+    "AR",
+    "OK"
+   ]
+  },
+  "720": {
+   "sha256": "f6f81251dc52f5d7f1a9354ad624eefd8528b547dffedf30357cb1c34a1a6b65",
+   "zips": 75,
+   "states": [
+    "AR"
+   ]
+  },
+  "721": {
+   "sha256": "b25cbd3328bd2771cd6e2d39c62ef1d9959fa3ba35818d0ef7ac2f93c0da9dfb",
+   "zips": 60,
+   "states": [
+    "AR"
+   ]
+  },
+  "722": {
+   "sha256": "a0ea52edfe6094eb6947cd5f5acb5ec58becaf5057806c3a7ddc52b7437a8bda",
+   "zips": 12,
+   "states": [
+    "AR"
+   ]
+  },
+  "723": {
+   "sha256": "76df78b98fffe7c0fe47800c4d029091c809da4821e68d385df3ef004f302d89",
+   "zips": 58,
+   "states": [
+    "AR",
+    "TN"
+   ]
+  },
+  "724": {
+   "sha256": "57bbd69be202de38db39084bd649a96b1e8fa5fab78b84e9216e41ed77303e0d",
+   "zips": 60,
+   "states": [
+    "AR"
+   ]
+  },
+  "725": {
+   "sha256": "00b050e4041607cbf065d49f14fbe08e4f4c7e0626743d7c54bcc025eb5fc156",
+   "zips": 55,
+   "states": [
+    "AR"
+   ]
+  },
+  "726": {
+   "sha256": "42d2c956d4541217aeb52cbab2dc8407d084a94447448fa50523eb844e7a9d4c",
+   "zips": 49,
+   "states": [
+    "AR",
+    "MO"
+   ]
+  },
+  "727": {
+   "sha256": "135eae7e9963620086c38681afa7b79cdfbcfcd32fb7b086f394a23bb6f16d9f",
+   "zips": 40,
+   "states": [
+    "AR"
+   ]
+  },
+  "728": {
+   "sha256": "d4ae37509eb2c1dc58964b6dbc895ba213a6a03a120cfbdaf3a897ddc93495d2",
+   "zips": 35,
+   "states": [
+    "AR"
+   ]
+  },
+  "729": {
+   "sha256": "032942288f4ddbf0a9077bec45a74c3c5d3f095fa07fe1d701a1410a95ac4856",
+   "zips": 35,
+   "states": [
+    "AR"
+   ]
+  },
+  "730": {
+   "sha256": "5af549c0293394c2b12d3b9c9b979921020c201c2f57e0700e59ebfad162e853",
+   "zips": 85,
+   "states": [
+    "OK"
+   ]
+  },
+  "731": {
+   "sha256": "0c7d92f187f7ba90beda0fd596449624b92a2512169e4181ebac450338dd0cd6",
+   "zips": 43,
+   "states": [
+    "OK"
+   ]
+  },
+  "734": {
+   "sha256": "ee41b9f0d1162426212396087a03d3cd4fac8aa6aef47243497b0d0870609ce3",
+   "zips": 33,
+   "states": [
+    "OK"
+   ]
+  },
+  "735": {
+   "sha256": "244a6db91291a677cfa46f9a42e48cf491587621000227414304f64a12c78d4b",
+   "zips": 48,
+   "states": [
+    "OK"
+   ]
+  },
+  "736": {
+   "sha256": "2538476e9bd913ad917f8f7cd313325ec6eaaa38dbd188ceb6158ca77c2b4e90",
+   "zips": 33,
+   "states": [
+    "OK"
+   ]
+  },
+  "737": {
+   "sha256": "7963ea3081569ee8ac5f20f56bcd0531b0bc08d52931ad18946be837f4797ee9",
+   "zips": 49,
+   "states": [
+    "OK"
+   ]
+  },
+  "738": {
+   "sha256": "67f533a1b2dcb38224b748eb1bf0f61106ded4f4fad99090181174498d90c7f5",
+   "zips": 19,
+   "states": [
+    "OK"
+   ]
+  },
+  "739": {
+   "sha256": "e141e20f7af4245a96970a687e20d7f44f45de706d9a6826387724c5f34b5fc9",
+   "zips": 16,
+   "states": [
+    "OK",
+    "TX"
+   ]
+  },
+  "740": {
+   "sha256": "0e97275b3e60aacec0efb8c667d76af1e66b37cdb27535d365e425e86229c6db",
+   "zips": 67,
+   "states": [
+    "OK"
+   ]
+  },
+  "741": {
+   "sha256": "09bebe5f26d7ac59efa3ebf01dba3bcab535102e02be208158a5b50cecd79f4e",
+   "zips": 29,
+   "states": [
+    "OK"
+   ]
+  },
+  "743": {
+   "sha256": "aef8ee75da85745bbf081e4ec280feda32dca72188a99d63b908a84fb4df1878",
+   "zips": 30,
+   "states": [
+    "OK"
+   ]
+  },
+  "744": {
+   "sha256": "15510ad8f7106e93f4fc0a9c79d57542a34e8b57654ef8dc3a2160f00f6161d5",
+   "zips": 43,
+   "states": [
+    "OK"
+   ]
+  },
+  "745": {
+   "sha256": "9f5b277a7ef77df566196c06b46d71a8ee8781325c2caed1aecc03f4ce6f8545",
+   "zips": 39,
+   "states": [
+    "OK"
+   ]
+  },
+  "746": {
+   "sha256": "45308d967fc951627d6ef905c131d46233eba00c3c534423ab1a34613a0d8dab",
+   "zips": 18,
+   "states": [
+    "OK"
+   ]
+  },
+  "747": {
+   "sha256": "736fe417871fc35007cbbc81550d52ef79ec175e7bcb4d6af793b95c3bc430e8",
+   "zips": 34,
+   "states": [
+    "OK"
+   ]
+  },
+  "748": {
+   "sha256": "717121191a35f7c35eb3baf0ad42554fb82cd56e66266ccb110b33330c37f22d",
+   "zips": 47,
+   "states": [
+    "OK"
+   ]
+  },
+  "749": {
+   "sha256": "1d99e8592c6871ecfa6ec0a437b34fa917d89ef18a2b356cf1dce69e0d28dd11",
+   "zips": 32,
+   "states": [
+    "OK"
+   ]
+  },
+  "750": {
+   "sha256": "60ed4c8156c00d441770d663aef2c02dd2a69c11bd5b1f2411e5905bed92b3a7",
+   "zips": 62,
+   "states": [
+    "TX"
+   ]
+  },
+  "751": {
+   "sha256": "4fb7a18c47b8fdf13ef7cd9ef6c5df2d66fed57debd9954e98bf506840ca3782",
+   "zips": 52,
+   "states": [
+    "TX"
+   ]
+  },
+  "752": {
+   "sha256": "1d8867ffd27100d59e982857543e930fbe20c8e688d4821074edb5c444f28bda",
+   "zips": 50,
+   "states": [
+    "TX"
+   ]
+  },
+  "753": {
+   "sha256": "8b74e22594b866172892a55de064d6967264154e588161b3b01019d61655b477",
+   "zips": 1,
+   "states": [
+    "TX"
+   ]
+  },
+  "754": {
+   "sha256": "26fa79a95cbb21e75da4f3fbb6c9d4038234b7557caae2edd5760927b1819cd4",
+   "zips": 74,
+   "states": [
+    "TX"
+   ]
+  },
+  "755": {
+   "sha256": "aed836131e415511cdac5484f0841686f4779230d136ee868c4f969ba527907f",
+   "zips": 24,
+   "states": [
+    "TX"
+   ]
+  },
+  "756": {
+   "sha256": "417b569423e77a8be0826d87c0f69a77650c187d92d1aca030d843403e56e840",
+   "zips": 45,
+   "states": [
+    "TX"
+   ]
+  },
+  "757": {
+   "sha256": "54d69edc700206710619f2dce440c49e3645212d472ab59bda3947488347f683",
+   "zips": 40,
+   "states": [
+    "TX"
+   ]
+  },
+  "758": {
+   "sha256": "1d04bc3f1c9d5521740c92fdfc9764fdaec36864b08e04de08424390d00a2a90",
+   "zips": 28,
+   "states": [
+    "TX"
+   ]
+  },
+  "759": {
+   "sha256": "d5d7f7eb6be6b093f4fcd7bdf4e9e2b00da5210a348424d8bc91166319aa2373",
+   "zips": 44,
+   "states": [
+    "TX"
+   ]
+  },
+  "760": {
+   "sha256": "51f9940e28968f11d87c61fd2d48d1cbcdf7c3f823e9cd4f511da654c6a56839",
+   "zips": 60,
+   "states": [
+    "TX"
+   ]
+  },
+  "761": {
+   "sha256": "51156f9ac167277179c2cc586297f052b72ce4eec663fd3e7923681868b14b9f",
+   "zips": 36,
+   "states": [
+    "TX"
+   ]
+  },
+  "762": {
+   "sha256": "b9472ed9ca794b06aafb7907254236e6ddfa8a5424287dbe17b3af8088f5220e",
+   "zips": 42,
+   "states": [
+    "TX"
+   ]
+  },
+  "763": {
+   "sha256": "bcada500e8bfdb46b05d42ee3f3b02964d49bf7ff31db6da5413a52da5c65303",
+   "zips": 28,
+   "states": [
+    "TX"
+   ]
+  },
+  "764": {
+   "sha256": "c72fb3a7aed25bcf3b0c710c3f1f5ff232d3690d20b5d08d18d1cce95387f7d2",
+   "zips": 48,
+   "states": [
+    "TX"
+   ]
+  },
+  "765": {
+   "sha256": "1e0afbef8166454933cb6ab70e84a551ab424e6106ac31d024cb0e11aaaa8e19",
+   "zips": 47,
+   "states": [
+    "TX"
+   ]
+  },
+  "766": {
+   "sha256": "b864948b5fb2c4b9a3a11680e84a4435127d40c55782f0672406440c0f0464e1",
+   "zips": 56,
+   "states": [
+    "TX"
+   ]
+  },
+  "767": {
+   "sha256": "9c94a18a484e743d216e3110d12efa94a85c4ad318900eb2ad826bebac66fa18",
+   "zips": 10,
+   "states": [
+    "TX"
+   ]
+  },
+  "768": {
+   "sha256": "a4203a5c784ec0f18f72811a5d52d143bc0bde2f34a9377978a87ac63223367b",
+   "zips": 48,
+   "states": [
+    "TX"
+   ]
+  },
+  "769": {
+   "sha256": "b673bdf1f385c073e36b097c5a7ea2c9aae5152ed6288ee134c2e3807e9b1023",
+   "zips": 25,
+   "states": [
+    "TX"
+   ]
+  },
+  "770": {
+   "sha256": "21061bdb44bc81ef03357c48dde486b32d54e2af2591a83cb4e1437b2d5006df",
+   "zips": 96,
+   "states": [
+    "TX"
+   ]
+  },
+  "772": {
+   "sha256": "c70ec040023361ebf57e5df0250beec2cfd48c2df046c57c7e2d021da5eb9eb7",
+   "zips": 1,
+   "states": [
+    "TX"
+   ]
+  },
+  "773": {
+   "sha256": "15289e01144f0b79c393463a525255136ce2bac949610cb39afcf695d671bc44",
+   "zips": 56,
+   "states": [
+    "TX"
+   ]
+  },
+  "774": {
+   "sha256": "8171d3bb0a946403b761da9730324e0025b0aed0983c967b023e6f919f8a0b18",
+   "zips": 71,
+   "states": [
+    "TX"
+   ]
+  },
+  "775": {
+   "sha256": "aa35ddf543f93942ac6a95c8d31fd80bb676d1269f5351e79629a47686498e45",
+   "zips": 58,
+   "states": [
+    "TX"
+   ]
+  },
+  "776": {
+   "sha256": "4d01a84435b9f6d3bfe5195f2d875eefa434507f3da4ab4444ceb144ca389e41",
+   "zips": 30,
+   "states": [
+    "TX"
+   ]
+  },
+  "777": {
+   "sha256": "e6196c17d509951ea4836aa4c1bc84f75919623ad643d85edc1487f0813956d0",
+   "zips": 8,
+   "states": [
+    "TX"
+   ]
+  },
+  "778": {
+   "sha256": "a67df3ac709dd726b4e2a0de374b3086bb848710c2c6d32ce2339f1793aff62c",
+   "zips": 36,
+   "states": [
+    "TX"
+   ]
+  },
+  "779": {
+   "sha256": "ea29cd498094cd8fd41c4c95801f65412ddd0d9c89804d26024c2dbab3fba130",
+   "zips": 34,
+   "states": [
+    "TX"
+   ]
+  },
+  "780": {
+   "sha256": "47e78eb0ae000d196821c5cc37222b9115f034d5fe8a8ab5a6874d8c32245a8f",
+   "zips": 56,
+   "states": [
+    "TX"
+   ]
+  },
+  "781": {
+   "sha256": "53172e2affe0c02ef9e9ec80897f91255ffa5b2bc8b3eb7d6715ab00a3dfdb80",
+   "zips": 42,
+   "states": [
+    "TX"
+   ]
+  },
+  "782": {
+   "sha256": "263a9091ecb8a32a535e69e7f1165d22c6ce2ffe37a39ebbfeeff51c983dae10",
+   "zips": 61,
+   "states": [
+    "TX"
+   ]
+  },
+  "783": {
+   "sha256": "fe872fca63c4b71237e79cf24ea931ce6ab05974c4fd94369a3df260e89262c6",
+   "zips": 44,
+   "states": [
+    "TX"
+   ]
+  },
+  "784": {
+   "sha256": "b464c5de29e22689441a5db791776a93df384a12468342dbc21a3f1efc4866c6",
+   "zips": 18,
+   "states": [
+    "TX"
+   ]
+  },
+  "785": {
+   "sha256": "b6d005b59963435e0ffc54ccf2e1551d562118a090daa79bdb7dc89bcaa521a7",
+   "zips": 61,
+   "states": [
+    "TX"
+   ]
+  },
+  "786": {
+   "sha256": "903dc5e3c69de2b35be8148deb8c76eaf857976465f079edb632f79cccf435f3",
+   "zips": 64,
+   "states": [
+    "TX"
+   ]
+  },
+  "787": {
+   "sha256": "e93889a9ff5ce43f2397733da596b341b98f4df06507475f7ce19cbb4a6eb307",
+   "zips": 44,
+   "states": [
+    "TX"
+   ]
+  },
+  "788": {
+   "sha256": "544876c50fc0e3aceb265f5bca9a7566b078bca8b2115dddc5845e62d26d51b5",
+   "zips": 34,
+   "states": [
+    "TX"
+   ]
+  },
+  "789": {
+   "sha256": "e22e01fb0fa46d53c331b2369f890808cc9ba712d4c20ae5a83ab35771edd29f",
+   "zips": 25,
+   "states": [
+    "TX"
+   ]
+  },
+  "790": {
+   "sha256": "0af159a5cd659aae2bc174aad5944709c5a3620d5cf6d5d67b1b5d57ebad8e57",
+   "zips": 73,
+   "states": [
+    "TX"
+   ]
+  },
+  "791": {
+   "sha256": "dca38883687aae137f5eaabdde1e1ba55f72bccdaef0fd3058a33b0dfc6931ae",
+   "zips": 14,
+   "states": [
+    "TX"
+   ]
+  },
+  "792": {
+   "sha256": "4e023f1798bf12828a7f4e523869117e5c1e127ec5054a3addd6fd07c899fb0a",
+   "zips": 31,
+   "states": [
+    "TX"
+   ]
+  },
+  "793": {
+   "sha256": "84aee4c345b837607bc24de5a9a029718fe3a6651f11e40c120b5309d26c8ccc",
+   "zips": 47,
+   "states": [
+    "TX"
+   ]
+  },
+  "794": {
+   "sha256": "96a250edd018ec2b9cd5a51886e9a4343c3924d9ecd02c21a262ad06294f03b5",
+   "zips": 15,
+   "states": [
+    "TX"
+   ]
+  },
+  "795": {
+   "sha256": "f2cae3b6bbe9dfbb723622a2867a7888be20353a42b0294d736911e7d940bd73",
+   "zips": 47,
+   "states": [
+    "TX"
+   ]
+  },
+  "796": {
+   "sha256": "e0f996ec46254632ad56657860c424b0750b4fdc74450c71e0b499ba427a3663",
+   "zips": 7,
+   "states": [
+    "TX"
+   ]
+  },
+  "797": {
+   "sha256": "a9c9e017a0002594c5c7a1b3d9851ab402b2301a4dab6149b9de64f29b39b4ca",
+   "zips": 50,
+   "states": [
+    "TX"
+   ]
+  },
+  "798": {
+   "sha256": "3ef3f41ae19fa8e8ddd81f9320ef8236c964f6e1eee387fcad8ef48ea422e133",
+   "zips": 21,
+   "states": [
+    "NM",
+    "TX"
+   ]
+  },
+  "799": {
+   "sha256": "4ccdbe724387e964f226849a3a01b52491091ff36f2c01324ac8508b6c59e083",
+   "zips": 25,
+   "states": [
+    "NM",
+    "TX"
+   ]
+  },
+  "800": {
+   "sha256": "eb558612c053fb7335d533451417097aedc0a9efb692dafacf9c75210d9cb4de",
+   "zips": 27,
+   "states": [
+    "CO"
+   ]
+  },
+  "801": {
+   "sha256": "2b8c5591cc93678c24826876b6b284aaf652e1b8a4ee154ea35f2a6236aa1e15",
+   "zips": 35,
+   "states": [
+    "CO"
+   ]
+  },
+  "802": {
+   "sha256": "42f306162947026883774181e2f87a512461d9d7089190e6b5b6d558cec80891",
+   "zips": 44,
+   "states": [
+    "CO"
+   ]
+  },
+  "803": {
+   "sha256": "ac5f74ddc3928d09f6a52b62df4b9437fc9c5c4e833001bf31547c59c4264340",
+   "zips": 6,
+   "states": [
+    "CO"
+   ]
+  },
+  "804": {
+   "sha256": "2cdbf96e9a6d67265fd4732d497b90e0464ec48026f8c17eb235240d8685ba5b",
+   "zips": 57,
+   "states": [
+    "CO"
+   ]
+  },
+  "805": {
+   "sha256": "31493d9d2c53c530061b88f30d6a846b63cbfae3db4579b25a0fca1c5d798c6c",
+   "zips": 32,
+   "states": [
+    "CO"
+   ]
+  },
+  "806": {
+   "sha256": "c427660887f571ce5de818c028c6ceacdd6421d67b93c260e55c0681fa11363f",
+   "zips": 27,
+   "states": [
+    "CO"
+   ]
+  },
+  "807": {
+   "sha256": "920e12c6000dc0b96bce12cea2372e4d932b50a298e636266157395d9a469a1d",
+   "zips": 33,
+   "states": [
+    "CO",
+    "NE"
+   ]
+  },
+  "808": {
+   "sha256": "da9e6d9add095e1fa1fd44179498e45bbd7021f8724495eafadc4878f74d828b",
+   "zips": 39,
+   "states": [
+    "CO"
+   ]
+  },
+  "809": {
+   "sha256": "598d5360e7a62372fc32079a79d273fd1b54a543d9d907767461fcc86b6ed2c6",
+   "zips": 31,
+   "states": [
+    "CO"
+   ]
+  },
+  "810": {
+   "sha256": "fedd0629428b7f1c274459428b99a90be9c0b61c5ae278d14236013034389c25",
+   "zips": 52,
+   "states": [
+    "CO"
+   ]
+  },
+  "811": {
+   "sha256": "40b734381e3bfc5641afeec7ae02f26b1a2a3e011a55227f68d4a866f8e999b6",
+   "zips": 29,
+   "states": [
+    "CO",
+    "NM"
+   ]
+  },
+  "812": {
+   "sha256": "8e65810706efa78109e9b0164bcbf9a053a100d9a43b74b0873a3588dde93c4d",
+   "zips": 29,
+   "states": [
+    "CO"
+   ]
+  },
+  "813": {
+   "sha256": "1f61a61d75023f2173f986f8f6f3af1c98214bf52bf331e893b294b45251cbe8",
+   "zips": 15,
+   "states": [
+    "CO",
+    "UT"
+   ]
+  },
+  "814": {
+   "sha256": "44db285cfcf2d0e8e633596d7d7862b5df266402536075c6989d253a5b8ff114",
+   "zips": 23,
+   "states": [
+    "CO"
+   ]
+  },
+  "815": {
+   "sha256": "5b297fc922f122d653fbdb0c60f870ef82dc90a282dc4750a7c9bfebbcf46ca7",
+   "zips": 14,
+   "states": [
+    "CO"
+   ]
+  },
+  "816": {
+   "sha256": "729cfe52c23d39ea869c1fb4050c23e1ce6b17b2da4ef09b4fd77e13fa684281",
+   "zips": 34,
+   "states": [
+    "CO"
+   ]
+  },
+  "820": {
+   "sha256": "0401dd0de93427b362498acfcd36edbefbc9f737f4371102cdcd17872780fab7",
+   "zips": 22,
+   "states": [
+    "CO",
+    "NE",
+    "WY"
+   ]
+  },
+  "821": {
+   "sha256": "ff33c44afab198bc8fc82ac1371aa814e4006dd53333e296d777d910dcf4be35",
+   "zips": 1,
+   "states": [
+    "WY"
+   ]
+  },
+  "822": {
+   "sha256": "4aa95d4b9928a6aa8b28753ac393fb12201acf522001ab5e05bd740214594630",
+   "zips": 20,
+   "states": [
+    "WY"
+   ]
+  },
+  "823": {
+   "sha256": "fa367ff2b3422e7f2a423f754b5040e1d9c5d68126151abac0dcc33c89eb64dc",
+   "zips": 14,
+   "states": [
+    "WY"
+   ]
+  },
+  "824": {
+   "sha256": "2baae959f9353a80f9045ffb43bd449a2bf23d88d4c5061dbefc81262f69208a",
+   "zips": 22,
+   "states": [
+    "WY"
+   ]
+  },
+  "825": {
+   "sha256": "e130140477a19ccbc0793947c1923763901b9b02436d23c1cd0860ce9c5f7f01",
+   "zips": 9,
+   "states": [
+    "WY"
+   ]
+  },
+  "826": {
+   "sha256": "9985911110b9b508d6d3222ef4f6d1ab58fa364c82f7b8a162ab3705fe2e02df",
+   "zips": 18,
+   "states": [
+    "WY"
+   ]
+  },
+  "827": {
+   "sha256": "e72782935627ca6bb0bc991c640605ff000230103ccb17ce976079be884d8c5a",
+   "zips": 16,
+   "states": [
+    "SD",
+    "WY"
+   ]
+  },
+  "828": {
+   "sha256": "37f909ae8f12b7003cf7299744849852d0835a1e529860e283770de3dbc508ae",
+   "zips": 13,
+   "states": [
+    "MT",
+    "WY"
+   ]
+  },
+  "829": {
+   "sha256": "ad5a69b612b74241614a9d7a6bd87f238f53b40eb9d36fac3eac70d33a56abef",
+   "zips": 19,
+   "states": [
+    "UT",
+    "WY"
+   ]
+  },
+  "830": {
+   "sha256": "972028abfc2acaee223c6bbba70014fdaf70398a78956c47c64c965419fc2218",
+   "zips": 6,
+   "states": [
+    "WY"
+   ]
+  },
+  "831": {
+   "sha256": "5a0eb2ac22eeecfb540a7adc736ed98406eac32e00f4b3ed574927f01fe69ee9",
+   "zips": 18,
+   "states": [
+    "ID",
+    "WY"
+   ]
+  },
+  "832": {
+   "sha256": "d8b488771d64ea79a881c23ba07d01f0f19eadfa7c31fbc2b57a4ec0c31a32c2",
+   "zips": 52,
+   "states": [
+    "ID"
+   ]
+  },
+  "833": {
+   "sha256": "fe7210e4d7e774f3c65b97f666f2ff98674ddf900a49af2b2c31c92ad6c8cc65",
+   "zips": 37,
+   "states": [
+    "ID",
+    "UT"
+   ]
+  },
+  "834": {
+   "sha256": "94fdd4277031b64f40251f702b88718bdd62add39501f392af27c60993ddf88d",
+   "zips": 42,
+   "states": [
+    "ID",
+    "WY"
+   ]
+  },
+  "835": {
+   "sha256": "7a37aa462f5483199edeae8e0db733a861aee1225f0589dfd79b72fe4a727de0",
+   "zips": 27,
+   "states": [
+    "ID"
+   ]
+  },
+  "836": {
+   "sha256": "034576dd9e776eb15c215c5035d761de3bf8d34cbe3724ceef6ccc5fc4c24ace",
+   "zips": 50,
+   "states": [
+    "ID"
+   ]
+  },
+  "837": {
+   "sha256": "147fb9c6f2b835ec0c3cebbd19fc7b64802b113e68e589722d853530d6a916a4",
+   "zips": 12,
+   "states": [
+    "ID"
+   ]
+  },
+  "838": {
+   "sha256": "86eed8f284be40205a56e34fc154a5ba3dbda9203ac34e2b894f898d7bce7b2c",
+   "zips": 60,
+   "states": [
+    "ID",
+    "WA"
+   ]
+  },
+  "840": {
+   "sha256": "687f5054a1e0931732ba25b7909fd6069d2135a21b7213fcb1e9648fc7a743ca",
+   "zips": 86,
+   "states": [
+    "NV",
+    "UT"
+   ]
+  },
+  "841": {
+   "sha256": "1715d0d8d256d6a295b26879b977dbc4712c7ece2f1bdd52fd337332809a7792",
+   "zips": 27,
+   "states": [
+    "UT"
+   ]
+  },
+  "843": {
+   "sha256": "8745feebbb037d7e346e40978416f17902604da301bd5b74de6bc4ff619ae303",
+   "zips": 39,
+   "states": [
+    "UT"
+   ]
+  },
+  "844": {
+   "sha256": "746a1ba9ae553aa88573f0fd918091ed9ec680f01efe4e7345f6f416ae9970b7",
+   "zips": 6,
+   "states": [
+    "UT"
+   ]
+  },
+  "845": {
+   "sha256": "a84ccd7c5dd570e84bccc10225be1ea28446adfabadf054ec0551ab6045a9821",
+   "zips": 26,
+   "states": [
+    "AZ",
+    "UT"
+   ]
+  },
+  "846": {
+   "sha256": "ae21efcf28cc5117cdc1379a1c4fc5e61d6fc39752a41a9fdd1e9fde9653fb72",
+   "zips": 45,
+   "states": [
+    "UT"
+   ]
+  },
+  "847": {
+   "sha256": "f643fda8d09faaf19f8550469f95a659fae729ddd186d2bb2d7f2e217f14f7f2",
+   "zips": 69,
+   "states": [
+    "UT"
+   ]
+  },
+  "850": {
+   "sha256": "5218492ebbb011607730a000245f957f3d6dfbf20d6407855e18a559596a469d",
+   "zips": 44,
+   "states": [
+    "AZ"
+   ]
+  },
+  "851": {
+   "sha256": "79643db8f254956b333478744cf38c062114c0cc6f7adbfb12dcf714897b0e00",
+   "zips": 25,
+   "states": [
+    "AZ"
+   ]
+  },
+  "852": {
+   "sha256": "9b8cdfe59a420e35e3647f2689ea67503d72a2e3a228d47f13ece8f6d607168c",
+   "zips": 45,
+   "states": [
+    "AZ"
+   ]
+  },
+  "853": {
+   "sha256": "7a010149261c859dcd14d647812c8a231cfcca90df95b97f78b71a8d540798e0",
+   "zips": 69,
+   "states": [
+    "AZ"
+   ]
+  },
+  "855": {
+   "sha256": "5c37b01d43ddff8818a186273549c9d5f9c090852ef08f04e6cc3faf37eaf3f6",
+   "zips": 21,
+   "states": [
+    "AZ"
+   ]
+  },
+  "856": {
+   "sha256": "07d962a03d3841802ba0b19a595ffc52a27c20866e81972a57105dbb88d41c6d",
+   "zips": 45,
+   "states": [
+    "AZ"
+   ]
+  },
+  "857": {
+   "sha256": "462032c76b47aabd86ebbb2f8d6bbe35e26236fdcb64baee6951057a3094a1eb",
+   "zips": 38,
+   "states": [
+    "AZ"
+   ]
+  },
+  "859": {
+   "sha256": "11188c1f606052504e4ca00a40183c532b4f81dcf8ab845794458f084c16aed7",
+   "zips": 26,
+   "states": [
+    "AZ"
+   ]
+  },
+  "860": {
+   "sha256": "8a6c80965a950e19855baa12a47f3848058cb2ff385369d4e7ece6e9ff09dc2f",
+   "zips": 36,
+   "states": [
+    "AZ",
+    "UT"
+   ]
+  },
+  "863": {
+   "sha256": "469d78b1c4805ba41e69d6b994009a986c02ca8ee50e22eda7841ed5875ff907",
+   "zips": 25,
+   "states": [
+    "AZ"
+   ]
+  },
+  "864": {
+   "sha256": "db6847e10d3b9b27b8e21627afe90d3e19775b9bf9a76fd64436078b5e71b860",
+   "zips": 23,
+   "states": [
+    "AZ"
+   ]
+  },
+  "865": {
+   "sha256": "bbde4a2a93e71f7f1e81fd2d2ffb42831457052b9529af8fd7e9e9ea094b66b7",
+   "zips": 20,
+   "states": [
+    "AZ",
+    "NM",
+    "UT"
+   ]
+  },
+  "870": {
+   "sha256": "0071e724fd7f604266f3c29d198f4b6e4e614d3c955c4b4dcd7a537749af9ca4",
+   "zips": 57,
+   "states": [
+    "NM"
+   ]
+  },
+  "871": {
+   "sha256": "5127a0193ac06fd3aa64bf8817b9888a7b5cc45a55ebc04476948040f7e6ae6e",
+   "zips": 22,
+   "states": [
+    "NM"
+   ]
+  },
+  "873": {
+   "sha256": "dd0cfc83f333a9a140f96bfea8c703125f370a966727fb21ce150b8901820258",
+   "zips": 23,
+   "states": [
+    "AZ",
+    "NM"
+   ]
+  },
+  "874": {
+   "sha256": "ebb55c00689f2ec10a1800fc2906e8e44d8d25456d9e9d97f5d13bccd8578ac8",
+   "zips": 15,
+   "states": [
+    "NM"
+   ]
+  },
+  "875": {
+   "sha256": "bebc35a2e624865c1ef8bfc49add3a4d49fd9a6d59c1b32de28958cb755b5302",
+   "zips": 61,
+   "states": [
+    "NM"
+   ]
+  },
+  "877": {
+   "sha256": "9b961968977966453113eddc347515108e708bd156173c9f8f687b6665afb28b",
+   "zips": 30,
+   "states": [
+    "NM"
+   ]
+  },
+  "878": {
+   "sha256": "ac20049534e5927ce69ca8e7180c4ced57986f03e3ade908f84ac477e5daa146",
+   "zips": 12,
+   "states": [
+    "NM"
+   ]
+  },
+  "879": {
+   "sha256": "140886cbeb307b04d9747199e5c9dae92b4af07273bcac72515692d8531385c6",
+   "zips": 12,
+   "states": [
+    "NM"
+   ]
+  },
+  "880": {
+   "sha256": "33747865fc4857a8055d47a237434d7e31a14f4a5a31dae1bb39a26f1e5789ec",
+   "zips": 44,
+   "states": [
+    "NM"
+   ]
+  },
+  "881": {
+   "sha256": "25afac15963369ec3666e89471f6787e9e71cb29e04a5001bef93d2d2a13ada5",
+   "zips": 19,
+   "states": [
+    "NM"
+   ]
+  },
+  "882": {
+   "sha256": "5787c54ba571812fa37cb38db816408198c7d3286984faa87346691f7914e7a4",
+   "zips": 23,
+   "states": [
+    "NM"
+   ]
+  },
+  "883": {
+   "sha256": "7b8169be7c11dfa3078c1807c82b2c3ca4e59b8c57a1c48fa432ceed832f6371",
+   "zips": 33,
+   "states": [
+    "NM"
+   ]
+  },
+  "884": {
+   "sha256": "c11ebec9bfc58f5c1ff88085e217dfb9e75ebb44c9b7e7a41c05381647d56b9e",
+   "zips": 20,
+   "states": [
+    "NM",
+    "TX"
+   ]
+  },
+  "890": {
+   "sha256": "8ed9bd500d6a79a0eb716f2bcd1d166b9eb5a11b04a390366fede91d6aee4060",
+   "zips": 47,
+   "states": [
+    "CA",
+    "NV"
+   ]
+  },
+  "891": {
+   "sha256": "06ec410c8233aa20ccead4f07028951a3c1915ab9cf82fe8585a77d58dab1be1",
+   "zips": 45,
+   "states": [
+    "NV"
+   ]
+  },
+  "893": {
+   "sha256": "45e7e1515f0e14917b9daf39fcacab18453d4b08db634c85256a2bc2851d6d91",
+   "zips": 9,
+   "states": [
+    "NV"
+   ]
+  },
+  "894": {
+   "sha256": "dbcd0445086b105662f2ea63f6952ae7ca7aa9c63eda13ba7c67f97ddbd565da",
+   "zips": 46,
+   "states": [
+    "CA",
+    "NV",
+    "OR"
+   ]
+  },
+  "895": {
+   "sha256": "5afed0590a3bc61e71faaed61c3eee8b2ee8edbf91086616d9923d55118e6a1a",
+   "zips": 13,
+   "states": [
+    "NV"
+   ]
+  },
+  "897": {
+   "sha256": "f98f5bac7a1bf4892505a2f62db81aa0194a40de476d1c2efc87eaeb43e09bb6",
+   "zips": 5,
+   "states": [
+    "NV"
+   ]
+  },
+  "898": {
+   "sha256": "22d7221626b9c30764db4f5c0b628938aa72afd5f9357e1007c62d108c9244f4",
+   "zips": 16,
+   "states": [
+    "ID",
+    "NV"
+   ]
+  },
+  "900": {
+   "sha256": "974623e83b4b57756e82444d78af1c137faef7391e10ea7745f791c31412bebd",
+   "zips": 68,
+   "states": [
+    "CA"
+   ]
+  },
+  "902": {
+   "sha256": "ef199d7e08ae43e452ed3b8e0d68f19f11fa69a5291c586a4ee4c3deb011fa74",
+   "zips": 35,
+   "states": [
+    "CA"
+   ]
+  },
+  "903": {
+   "sha256": "a27edd3c5e35529912acd35f50219bea8959908c03888749204ec834341dab9a",
+   "zips": 5,
+   "states": [
+    "CA"
+   ]
+  },
+  "904": {
+   "sha256": "123f410cf563ac9b2a477d7d5913f6e14b9996cafc1b144f9468030ee9201c81",
+   "zips": 5,
+   "states": [
+    "CA"
+   ]
+  },
+  "905": {
+   "sha256": "7657e579aaeb529753195e6e474a219347fa7dce3e2908db37982144c5e07d69",
+   "zips": 6,
+   "states": [
+    "CA"
+   ]
+  },
+  "906": {
+   "sha256": "ef3bf05b32c97d39e97373c866bd59e6dad17714f125e05f4d281294837db64c",
+   "zips": 18,
+   "states": [
+    "CA"
+   ]
+  },
+  "907": {
+   "sha256": "c515bc6cf3874edabbf550d94d3a9c96c21bab2b61e09982a0f23bf8c8e0cf87",
+   "zips": 22,
+   "states": [
+    "CA"
+   ]
+  },
+  "908": {
+   "sha256": "985d60bd88a4ada269a2027acee6361319d345c8d09fa1140ba56de977f776b5",
+   "zips": 14,
+   "states": [
+    "CA"
+   ]
+  },
+  "910": {
+   "sha256": "07f8c7b2b62259a0065833cc8ca0bf3a05504b218c14d64d0bfc037469a602ea",
+   "zips": 13,
+   "states": [
+    "CA"
+   ]
+  },
+  "911": {
+   "sha256": "b410c0c99bc0598ef8ec26275d00af6cd67ef139accbad47637cd8fecaf34877",
+   "zips": 8,
+   "states": [
+    "CA"
+   ]
+  },
+  "912": {
+   "sha256": "85fcd7b3f00864787dbac37a3983bb4e783b2ee0ac41c9f1174c92710a900b97",
+   "zips": 10,
+   "states": [
+    "CA"
+   ]
+  },
+  "913": {
+   "sha256": "b9783ca80480c2e10ef0645b1625c6477a6d1bb2df8f25c22b0f251bca89a9fa",
+   "zips": 38,
+   "states": [
+    "CA"
+   ]
+  },
+  "914": {
+   "sha256": "cace3cfc6b2c6facae161c6768849fb752f0fe641c4f17d858ee498af03f8670",
+   "zips": 8,
+   "states": [
+    "CA"
+   ]
+  },
+  "915": {
+   "sha256": "db117b897e849d64d1b492ebdfb80bb7dd433e95e8105bdbcb010a90d2c221d6",
+   "zips": 5,
+   "states": [
+    "CA"
+   ]
+  },
+  "916": {
+   "sha256": "dc7e20d87dbd1e2d588b70c390b72342f89cd1e9e59db96b1782d88557dce65b",
+   "zips": 7,
+   "states": [
+    "CA"
+   ]
+  },
+  "917": {
+   "sha256": "47b22f1fecad9d8c7d425f2715bcac4971d2d76a1fc006bb217f180272d1778c",
+   "zips": 46,
+   "states": [
+    "CA"
+   ]
+  },
+  "918": {
+   "sha256": "a61cd072ffd1109b075a48e2b3adf0dda448dcf758e70d5220ba6f4bcecd6be5",
+   "zips": 2,
+   "states": [
+    "CA"
+   ]
+  },
+  "919": {
+   "sha256": "04471133ea910180b2f82c33a02c1ea92b9a536ea135b9e0cc313c70c145236e",
+   "zips": 25,
+   "states": [
+    "CA"
+   ]
+  },
+  "920": {
+   "sha256": "bde9b526c1156c34d42ed79259db4d2faf0d42baa8a12e41d092b82e97aaffe9",
+   "zips": 46,
+   "states": [
+    "CA"
+   ]
+  },
+  "921": {
+   "sha256": "1171b158669e0c49d4677932dd44e36fa49d66cbc9bb542b9ef9b90af6ee9653",
+   "zips": 43,
+   "states": [
+    "CA"
+   ]
+  },
+  "922": {
+   "sha256": "4000de95289e4c85faa9e07616531d731fb4b2df493a62db2f0afebb72fad1e9",
+   "zips": 48,
+   "states": [
+    "CA"
+   ]
+  },
+  "923": {
+   "sha256": "423a9320d09f96642f91db0739dcca8d961db29f69a4243525b70b57226f50d7",
+   "zips": 63,
+   "states": [
+    "CA"
+   ]
+  },
+  "924": {
+   "sha256": "6fa4c4dadef2f304a2a9fbccd9b945eca922578aa23de8189f5e729949ea9cbd",
+   "zips": 8,
+   "states": [
+    "CA"
+   ]
+  },
+  "925": {
+   "sha256": "444dedaefbf29bd21a8cf9698614e24f97977a1d0532acbbe33612e2e2bffff3",
+   "zips": 40,
+   "states": [
+    "CA"
+   ]
+  },
+  "926": {
+   "sha256": "4d8e52909a97676aa9481688c2c1e70099207ab3aec513a0da475506e334c182",
+   "zips": 43,
+   "states": [
+    "CA"
+   ]
+  },
+  "927": {
+   "sha256": "3f65b13f40bbaa4d9009ace5156d90b54dc9a75f9f0238b95f7a9e76f69e9b7d",
+   "zips": 9,
+   "states": [
+    "CA"
+   ]
+  },
+  "928": {
+   "sha256": "7b502fb60df7e89d58f20ee5a5e6b92c1f988f8363a4350d92e2b350d872fe99",
+   "zips": 33,
+   "states": [
+    "CA"
+   ]
+  },
+  "930": {
+   "sha256": "bfa69e532c4b006a636668617e7f5ed543a1b5bae0daf5c2f9622680a0c0cf1f",
+   "zips": 24,
+   "states": [
+    "CA"
+   ]
+  },
+  "931": {
+   "sha256": "3d9d6f0209ebfca8bbf11341b6597213ab0edb2d0bcbcacfaba7719a38b2f82f",
+   "zips": 9,
+   "states": [
+    "CA"
+   ]
+  },
+  "932": {
+   "sha256": "cf62ce45b60295c86ec96b0d401cfcb52e4c67f07f19d28881c2a9096ecf1630",
+   "zips": 65,
+   "states": [
+    "CA"
+   ]
+  },
+  "933": {
+   "sha256": "893012e171cae9ac277bff223784a6afb73d486a8968337036176091378e6315",
+   "zips": 11,
+   "states": [
+    "CA"
+   ]
+  },
+  "934": {
+   "sha256": "a8794c133741d1b2ab22ccbd0d0cb5b057ea09475eb18f93f6afc62d56ed8d28",
+   "zips": 38,
+   "states": [
+    "CA"
+   ]
+  },
+  "935": {
+   "sha256": "954c20bd1434134510d6ec4915ec0fc20d7cdc31b706fe428fa2685e497bc5e8",
+   "zips": 42,
+   "states": [
+    "CA"
+   ]
+  },
+  "936": {
+   "sha256": "36dc1c6522947048aa53913289c0e79ace3394d3892d5ae06e493b57e61605c9",
+   "zips": 59,
+   "states": [
+    "CA"
+   ]
+  },
+  "937": {
+   "sha256": "147b08de12ec7b4ca365da26ac254e8da882292a1964c2473bb39bbf38062f59",
+   "zips": 20,
+   "states": [
+    "CA"
+   ]
+  },
+  "939": {
+   "sha256": "4e6179a859e5e2c8adcdafe8c7bca44afb4eb4a89fe1607a050f61dad9feaf6c",
+   "zips": 25,
+   "states": [
+    "CA"
+   ]
+  },
+  "940": {
+   "sha256": "089e971a785b2830291849c4b08340a185e4606117a272c2692add0ac2aee7ea",
+   "zips": 34,
+   "states": [
+    "CA"
+   ]
+  },
+  "941": {
+   "sha256": "c4820a83999f65bf3b9b80cc2c8794df8b8226734c817f32ddeee7520f08d072",
+   "zips": 29,
+   "states": [
+    "CA"
+   ]
+  },
+  "943": {
+   "sha256": "870e07fd0e56466fd8903ca57cf9f376b9fc4ef71abc4e91a47c1eb1d067a184",
+   "zips": 5,
+   "states": [
+    "CA"
+   ]
+  },
+  "944": {
+   "sha256": "26cd5bd0cc78a6ef4aa8ebf8e6faceedffa38d21e84fcbf3ee25d9025ff82eb4",
+   "zips": 4,
+   "states": [
+    "CA"
+   ]
+  },
+  "945": {
+   "sha256": "665b2dd95fb195abfec426e491d0d896afcdc3f0fed343792128797399cded4e",
+   "zips": 83,
+   "states": [
+    "CA"
+   ]
+  },
+  "946": {
+   "sha256": "80b125774925c8173e89693215715f921b9fb0cb5bdd632a3e444f0166bde9ba",
+   "zips": 15,
+   "states": [
+    "CA"
+   ]
+  },
+  "947": {
+   "sha256": "b5110a59150c64714246cdf3ba7c67f6ec782a4650ae7701172aa8d209752fdf",
+   "zips": 10,
+   "states": [
+    "CA"
+   ]
+  },
+  "948": {
+   "sha256": "9896081fd8d36f28a9fdbb5ccd360e1dc78e7f64b6828da5a43ba3a051a457f2",
+   "zips": 5,
+   "states": [
+    "CA"
+   ]
+  },
+  "949": {
+   "sha256": "6820d5cfb01753e18bea7157cc546d42cefd2f2d26683d0127c4de33c9f026c8",
+   "zips": 36,
+   "states": [
+    "CA"
+   ]
+  },
+  "950": {
+   "sha256": "f5c6234bfc79fa7c218942b5981a0de3c8393c35452c7d54500a7be9b77481bf",
+   "zips": 39,
+   "states": [
+    "CA"
+   ]
+  },
+  "951": {
+   "sha256": "41009f1ad2dbf5ea492a27945a258117ccbdf242f2cf19728b68073bb93e1947",
+   "zips": 29,
+   "states": [
+    "CA"
+   ]
+  },
+  "952": {
+   "sha256": "1cbf8448f2a25a5be2a2057947dbd53ad2910e2bb1bd6b597b4a47600d93450b",
+   "zips": 41,
+   "states": [
+    "CA"
+   ]
+  },
+  "953": {
+   "sha256": "143c77708023869ba6dad4ca752a3d29d167051b41bfd0038347cef29dacd438",
+   "zips": 70,
+   "states": [
+    "CA"
+   ]
+  },
+  "954": {
+   "sha256": "92566cd76283bef8fe7cf43615e0f38be1038225c138fbd2e46d03b9f5694693",
+   "zips": 68,
+   "states": [
+    "CA"
+   ]
+  },
+  "955": {
+   "sha256": "95610b4e768e439fb30aadaee1825f95c116acefb2fbe45520c870e969b0bdac",
+   "zips": 47,
+   "states": [
+    "CA"
+   ]
+  },
+  "956": {
+   "sha256": "3b4b7abfdb94143b6d62f5ab3e3f8e8ba7ad02c1092718de08a0467c496e296b",
+   "zips": 87,
+   "states": [
+    "CA"
+   ]
+  },
+  "957": {
+   "sha256": "10a3aab7e3c531caa5d07da568da6320041464176daa71d2a2667b69aaab20f7",
+   "zips": 22,
+   "states": [
+    "CA"
+   ]
+  },
+  "958": {
+   "sha256": "6fc9d27f84ec321fa0d3d6fffdfb08e7b2431845a80edcc0d9327f2e8897c93e",
+   "zips": 29,
+   "states": [
+    "CA"
+   ]
+  },
+  "959": {
+   "sha256": "fe3f9f9c7f10f3880ff91865aed589dfdd65ad2692b249eb778db3125f0d465b",
+   "zips": 70,
+   "states": [
+    "CA"
+   ]
+  },
+  "960": {
+   "sha256": "8c2ee5f25c6e6ac72c51c6629d68ed77abfe63ae0af3e188be4ed2f56e3855ae",
+   "zips": 74,
+   "states": [
+    "CA"
+   ]
+  },
+  "961": {
+   "sha256": "c2e314fc80d546918e33b02d2875fd3c488dd7a7c2b5259216f494a0c7617244",
+   "zips": 44,
+   "states": [
+    "CA"
+   ]
+  },
+  "967": {
+   "sha256": "8ef89a503b8349165fcf33700b9d184feb0c3fd9e14f00d9c2921c177ceebb11",
+   "zips": 78,
+   "states": [
+    "AS",
+    "HI"
+   ]
+  },
+  "968": {
+   "sha256": "5e8c90c7ff7eecb3bd608443367c6e9db0be6ae26727472d1050e5c7df01fded",
+   "zips": 20,
+   "states": [
+    "HI"
+   ]
+  },
+  "969": {
+   "sha256": "1fa7359619f23c5323c8812aef36e3928c2ddc5a9878661efb76071ddbac5c42",
+   "zips": 10,
+   "states": [
+    "GU",
+    "MP"
+   ]
+  },
+  "970": {
+   "sha256": "a0ad4e621736f209ece342d0f683c01e9696dea21273da62d6d407d5f9fa52ab",
+   "zips": 62,
+   "states": [
+    "OR"
+   ]
+  },
+  "971": {
+   "sha256": "8aaf039f7d3d9cf2a787dd1acb236e6b5bc4264100490a5ac7aa06764d6923b8",
+   "zips": 41,
+   "states": [
+    "OR"
+   ]
+  },
+  "972": {
+   "sha256": "85397c76bfa939a1e07061cf26e2882e11e027f331301d09123013f0014f1567",
+   "zips": 35,
+   "states": [
+    "OR"
+   ]
+  },
+  "973": {
+   "sha256": "a41f77cb8824a9503751bd26560ea8c658e99b8f7dac819de6c0c4b4bd1de1b0",
+   "zips": 65,
+   "states": [
+    "OR"
+   ]
+  },
+  "974": {
+   "sha256": "22fd18e5cb68e8e0175961633bd5309ad028e2b49058fda9af1936e6810e00c1",
+   "zips": 78,
+   "states": [
+    "OR"
+   ]
+  },
+  "975": {
+   "sha256": "f80e526db5c6d92964af2570d9f5645996494324da2d2721eca435769ece5da5",
+   "zips": 24,
+   "states": [
+    "OR"
+   ]
+  },
+  "976": {
+   "sha256": "a0260937bc5eebadd80499e2a2ef860206ed84111848fdb77f0abe587718b52a",
+   "zips": 22,
+   "states": [
+    "CA",
+    "OR"
+   ]
+  },
+  "977": {
+   "sha256": "4988b98b0ea613347052b1adb4db3a8707f3cf54d43043c6dc9b54aa76518766",
+   "zips": 32,
+   "states": [
+    "OR"
+   ]
+  },
+  "978": {
+   "sha256": "8cd1bead969ff145420ff752b356cf4d826e3c9d19a8a89482e41c239102a00c",
+   "zips": 53,
+   "states": [
+    "OR"
+   ]
+  },
+  "979": {
+   "sha256": "11d24b9a0380db187706939da8f5a38e499a732a2b887d21cf855709132dce40",
+   "zips": 16,
+   "states": [
+    "ID",
+    "OR"
+   ]
+  },
+  "980": {
+   "sha256": "e63addebad51606b1d5effe9f1cffe1ccae769a072a0cf556d9af56b04500d2f",
+   "zips": 55,
+   "states": [
+    "WA"
+   ]
+  },
+  "981": {
+   "sha256": "af4f027c21ea147585c0788257fd2bf12ff1181492582120401f3afd4141758f",
+   "zips": 39,
+   "states": [
+    "WA"
+   ]
+  },
+  "982": {
+   "sha256": "c715e5921cf675df5d6a3511730621f221ea9f4f4e1839f097aa9bfa1d9200de",
+   "zips": 67,
+   "states": [
+    "WA"
+   ]
+  },
+  "983": {
+   "sha256": "7f56eb8e008689e9af009e87252ed5da5a2f5de2782a87440595b4b2e0d61df5",
+   "zips": 68,
+   "states": [
+    "WA"
+   ]
+  },
+  "984": {
+   "sha256": "47d85844a5d5cc2ce3e895dfeb1b6567bcb65cd7a82a0aa3055a6a87a1ec3c45",
+   "zips": 27,
+   "states": [
+    "WA"
+   ]
+  },
+  "985": {
+   "sha256": "c8ffaa215236822f122df1f164a16710e7296f9241f9711fe8d643423ed079d6",
+   "zips": 67,
+   "states": [
+    "WA"
+   ]
+  },
+  "986": {
+   "sha256": "a32a034b30daa5e33f8803d280bf49f84c5ec13f084291d1ffbcea9a6bf4b692",
+   "zips": 57,
+   "states": [
+    "WA"
+   ]
+  },
+  "988": {
+   "sha256": "376be6c37611de68e911d4ce24b5c33d0e1692c37a32be7d7b1130c2f64f4734",
+   "zips": 45,
+   "states": [
+    "WA"
+   ]
+  },
+  "989": {
+   "sha256": "0abe587c0a250075efb9c2958ecc338f3315ac1e9054baaca39786714bfe75ae",
+   "zips": 30,
+   "states": [
+    "WA"
+   ]
+  },
+  "990": {
+   "sha256": "899d5456d4b125491e2c5e8ef39fb59af52afb328f179c9ec782ee94816d272b",
+   "zips": 32,
+   "states": [
+    "WA"
+   ]
+  },
+  "991": {
+   "sha256": "8f0aadbbac59cc00ecb11dbeabe53016dbfc7b779bd3752b0b1be4ebb4d33503",
+   "zips": 64,
+   "states": [
+    "ID",
+    "WA"
+   ]
+  },
+  "992": {
+   "sha256": "25b0596c9c59c441991dddd23a1923c356442262225e719dd2e3dceb68669344",
+   "zips": 16,
+   "states": [
+    "WA"
+   ]
+  },
+  "993": {
+   "sha256": "531c098960069c0d30c5e88d328b25e2fc44d4bdc14ef4749d85d324e978f57b",
+   "zips": 35,
+   "states": [
+    "OR",
+    "WA"
+   ]
+  },
+  "994": {
+   "sha256": "e1b55559c8062e1f65a1ec155ab9681662c8c4e1de361cc69d5cbfdc267a3c99",
+   "zips": 3,
+   "states": [
+    "WA"
+   ]
+  },
+  "995": {
+   "sha256": "9b68f40f2f68df32df399f56747bdac0bd884e5999943f8535f353de0934dc32",
+   "zips": 57,
+   "states": [
+    "AK"
+   ]
+  },
+  "996": {
+   "sha256": "8a924f93714db5ade38e991f8549fe2c9dd4b036b7cbbac17b2054a641c0b3e6",
+   "zips": 85,
+   "states": [
+    "AK"
+   ]
+  },
+  "997": {
+   "sha256": "e6c1f6f6e3ab302e514a325625811bf03c06e31cced49f6542714004ddddd2e4",
+   "zips": 77,
+   "states": [
+    "AK"
+   ]
+  },
+  "998": {
+   "sha256": "de28604d0854d744642f9d26874cb00e9f5249fcf71973b456fbf0ae0b6d3b6c",
+   "zips": 15,
+   "states": [
+    "AK"
+   ]
+  },
+  "999": {
+   "sha256": "5c5740deae7d0ae29a571a2015cd2f66ac7eea8b3b0e2b58a5b25f9387cefbcd",
+   "zips": 11,
+   "states": [
+    "AK"
+   ]
+  },
+  "006": {
+   "sha256": "4c7870ff7ecc5dd0b86a893343bf95a89d459e6ddfabe6357a3fe022f43d4963",
+   "zips": 46,
+   "states": [
+    "PR"
+   ]
+  },
+  "007": {
+   "sha256": "35033bf5bb1d49cc9bd98e5b9163efec1e4fd43792c13da24c15b95e7bf8481e",
+   "zips": 46,
+   "states": [
+    "PR"
+   ]
+  },
+  "008": {
+   "sha256": "efe90b70ad1ec43233fca488b7fdfa34adcf08304cf22649b7817c9565d77776",
+   "zips": 6,
+   "states": [
+    "VI"
+   ]
+  },
+  "009": {
+   "sha256": "f83605b5d7cfb0de7541ce3b57818086eae2edd9721ef9c50537cf996e331a99",
+   "zips": 40,
+   "states": [
+    "PR"
+   ]
+  },
+  "010": {
+   "sha256": "c1cfceca4cb277ccd03648a63473809454fba6d88efa5d8fc07c6f2d09d62e13",
+   "zips": 62,
+   "states": [
+    "MA"
+   ]
+  },
+  "011": {
+   "sha256": "df82a2429e5efd6ce72ab1ddcf2e567c6b2aaaa78f1eb0bd422e0248960c6705",
+   "zips": 13,
+   "states": [
+    "MA"
+   ]
+  },
+  "012": {
+   "sha256": "c47f04c8c6d7790d0de06f0ddf05aef8f77ca87783e0160c9ae5f9fd0f79ad6b",
+   "zips": 32,
+   "states": [
+    "MA"
+   ]
+  },
+  "013": {
+   "sha256": "6ed4656bc36109a98c0f9ace17068e2d12caed9985886ca9d6b661126e08fd52",
+   "zips": 30,
+   "states": [
+    "MA"
+   ]
+  },
+  "014": {
+   "sha256": "bdcaae99fad2b165612205f1e8519fffc1258a1566da949d38fbad8c82729031",
+   "zips": 21,
+   "states": [
+    "MA"
+   ]
+  },
+  "015": {
+   "sha256": "ac21d33b316acdf3a61096a06ed4aa7245d5f72c055772764e183ef85f69cac5",
+   "zips": 45,
+   "states": [
+    "MA"
+   ]
+  },
+  "016": {
+   "sha256": "389e2c4c4b78a49a8c1c2c8be9ab5845766bd6510c685a4c6f9f972b9ef79030",
+   "zips": 11,
+   "states": [
+    "MA"
+   ]
+  },
+  "017": {
+   "sha256": "dbbc898bfeb0fbeb867a9f63148e05022dd833ce7e0980284def54398677779e",
+   "zips": 27,
+   "states": [
+    "MA"
+   ]
+  },
+  "018": {
+   "sha256": "22163311ce08c62b5a8c37b6f2112425ad9952b5ef0072b0fa8e26cb8970ec5e",
+   "zips": 32,
+   "states": [
+    "MA"
+   ]
+  },
+  "019": {
+   "sha256": "cc33efe2e15620fb6adbff685cab4ccc8a1b54e8fed82016ecbfeecf7cb2f74f",
+   "zips": 32,
+   "states": [
+    "MA"
+   ]
+  },
+  "020": {
+   "sha256": "3bb834ae1be9e46bc88f34f051978ee586379cff7c685c877c3d5984bb530bee",
+   "zips": 26,
+   "states": [
+    "MA"
+   ]
+  },
+  "021": {
+   "sha256": "e94ad68725c00869cae071f09cd68f75a21d34139077db079035dc27c3ed4655",
+   "zips": 53,
+   "states": [
+    "MA"
+   ]
+  },
+  "022": {
+   "sha256": "f901d1300bca17c72472512106b338cbb91403f13a3227ec077bf541f2ce8775",
+   "zips": 4,
+   "states": [
+    "MA"
+   ]
+  },
+  "023": {
+   "sha256": "a048f0eaab5695329d394e411f87a099c22f6016460d25115daf1b26e9ddbf88",
+   "zips": 28,
+   "states": [
+    "MA"
+   ]
+  },
+  "024": {
+   "sha256": "b2787ca68dd8406d708c9deffa4c70eb437acee9b29035a5af14d63d1ad4fe22",
+   "zips": 27,
+   "states": [
+    "MA"
+   ]
+  },
+  "025": {
+   "sha256": "c011654c237aa042121a244a3fab65eec73e228de2479c685589748462d870b3",
+   "zips": 25,
+   "states": [
+    "MA"
+   ]
+  },
+  "026": {
+   "sha256": "7bd07c830e0371f8b8c89f1a8747952fd38aa5c9f82fe4f4e8314beb2b2558f9",
+   "zips": 35,
+   "states": [
+    "MA"
+   ]
+  },
+  "027": {
+   "sha256": "d73e2a08c372c41427e62e0fa83d5b2c3db1871d7cf541eb193d3a5c4bdf1aea",
+   "zips": 36,
+   "states": [
+    "MA"
+   ]
+  },
+  "028": {
+   "sha256": "8cb1b9226044e51011d050f95a5f954155a72479e5287c7d00c9565212c9232e",
+   "zips": 63,
+   "states": [
+    "RI"
+   ]
+  },
+  "029": {
+   "sha256": "4f40be55fbeef00fbded8399330d19a007aa55434ac23b5b6c3c642a59d735fd",
+   "zips": 18,
+   "states": [
+    "RI"
+   ]
+  },
+  "030": {
+   "sha256": "ea627b1674d4ee6eb760c0b5aa579dda0592e21b6db74c51b1947080e0fc8b5a",
+   "zips": 34,
+   "states": [
+    "NH"
+   ]
+  },
+  "031": {
+   "sha256": "cb04c3a4c1cae345e469421fcb7488e78cfc80b5c7081faff90041b5b037d54f",
+   "zips": 7,
+   "states": [
+    "NH"
+   ]
+  },
+  "032": {
+   "sha256": "d9520053222a6ff407b87e2535a691f561ba0c7f959364f813936c658ef9b609",
+   "zips": 58,
+   "states": [
+    "NH"
+   ]
+  },
+  "033": {
+   "sha256": "7c7c0a71bcae1573caeb8206bfb9bf50b0d4e7300f277790a6ff48c422133f0a",
+   "zips": 4,
+   "states": [
+    "NH"
+   ]
+  },
+  "034": {
+   "sha256": "751ce42f5fc3096e2c84ed3c09ad8783d702efa81b92cbb1220f8ae88a6c2eaa",
+   "zips": 25,
+   "states": [
+    "NH"
+   ]
+  },
+  "035": {
+   "sha256": "914dfa1259fbbb2590a6baed557b2f6c4d2c21a55bd856adeee42da802fc116b",
+   "zips": 20,
+   "states": [
+    "ME",
+    "NH"
+   ]
+  },
+  "036": {
+   "sha256": "9d658027353321a0d47422d571d8332bcc857d3dc6f2684237fc58ad20429623",
+   "zips": 8,
+   "states": [
+    "NH"
+   ]
+  },
+  "037": {
+   "sha256": "20eef31cf030a88e51d0a757afc384c74e91ee3b90ae250c958b70ff9920f307",
+   "zips": 24,
+   "states": [
+    "NH"
+   ]
+  },
+  "038": {
+   "sha256": "ad816f8bf52d81cdac28305f02e182a5a4b9835cf01471b7b4b214d994ebdac0",
+   "zips": 67,
+   "states": [
+    "NH"
+   ]
+  },
+  "039": {
+   "sha256": "025afd430a75c8866e471b6452153b08d9a2995c3c3b70a5c787d874742081e4",
+   "zips": 11,
+   "states": [
+    "ME"
+   ]
+  },
+  "040": {
+   "sha256": "95a2a3ea735558a95a4d942bf491694360bc8963f7fd827abee4fb653301a3a6",
+   "zips": 62,
+   "states": [
+    "ME"
+   ]
+  },
+  "041": {
+   "sha256": "29ed67e9c9b86a6a0d79af1e763d234ad94630a620a79248f9fec4aeca85fb0c",
+   "zips": 9,
+   "states": [
+    "ME"
+   ]
+  },
+  "042": {
+   "sha256": "3927f3e8ff0623945db69b83279d3e83dbca3bb526f60b3edd6d6dfb36f71974",
+   "zips": 48,
+   "states": [
+    "ME"
+   ]
+  },
+  "043": {
+   "sha256": "4414a486dd5ce81f408a53156dd439ad520300603691aa0ac9d471ca376b360e",
+   "zips": 21,
+   "states": [
+    "ME"
+   ]
+  },
+  "044": {
+   "sha256": "d73283f9b3f24da141bf5e0dcae6f5d9e1dbbb3156016b6f65d4fecb10833443",
+   "zips": 66,
+   "states": [
+    "ME"
+   ]
+  },
+  "045": {
+   "sha256": "42a116ae553cffb568b4307777f88a2b9364f1ad7a490d567a6beced94cbcac9",
+   "zips": 29,
+   "states": [
+    "ME"
+   ]
+  },
+  "046": {
+   "sha256": "843eb0e224eeff36d8184c2208725dcc38caf671745679e3a3c9659e34eef608",
+   "zips": 59,
+   "states": [
+    "ME"
+   ]
+  },
+  "047": {
+   "sha256": "ae3a5dd3d6e4ebdc20fbb5234944d1bfcce97b6ba73ac13e2246afb8201a0f6a",
+   "zips": 39,
+   "states": [
+    "ME"
+   ]
+  },
+  "048": {
+   "sha256": "74556358ccb85392631c47e4847e3643cfa40afd8e3611c091842df53ce78295",
+   "zips": 18,
+   "states": [
+    "ME"
+   ]
+  },
+  "049": {
+   "sha256": "8f4cfd0c7d5875b19ff4b5b2fdbeeec267e1edf0d07532d0ada90b6112c7afa9",
+   "zips": 64,
+   "states": [
+    "ME"
+   ]
+  },
+  "050": {
+   "sha256": "88cdf40014ba570d35b41448698a642635594f9a767cd41a60076c5dd3afbef1",
+   "zips": 49,
+   "states": [
+    "VT"
+   ]
+  },
+  "051": {
+   "sha256": "510b3249d34d7a57d644d5a41ff08dd9cb5a7ba131f702da060bb7907d57f277",
+   "zips": 16,
+   "states": [
+    "VT"
+   ]
+  },
+  "052": {
+   "sha256": "6844b8201bf37eeffbbfbd34116d9041d091f462f5a578dc4f980636d6e67db0",
+   "zips": 11,
+   "states": [
+    "VT"
+   ]
+  },
+  "053": {
+   "sha256": "90e69de5d38031f38158015c9ef0cad2b3e50baa96428475c2d753ac1fdf49bc",
+   "zips": 21,
+   "states": [
+    "VT"
+   ]
+  },
+  "054": {
+   "sha256": "8da47753e5f1df28db3cd326c7ea82002fe37c7ba9cb8fe2c550b91daf250d5f",
+   "zips": 48,
+   "states": [
+    "VT"
+   ]
+  },
+  "056": {
+   "sha256": "fada4c075d5aeb52be009e4fe6ae9a504a2ac16306c68b30e758a03024f2a63f",
+   "zips": 33,
+   "states": [
+    "VT"
+   ]
+  },
+  "057": {
+   "sha256": "368d8c6a9acfe2d9bc28c2e643590188a7480fd158fec3cc41d49f697b08108d",
+   "zips": 40,
+   "states": [
+    "VT"
+   ]
+  },
+  "058": {
+   "sha256": "52f56f884947be56a2eb5fbb8954de7c44a02ed7bf6b02a14aa15883156eea6e",
+   "zips": 40,
+   "states": [
+    "VT"
+   ]
+  },
+  "059": {
+   "sha256": "863f6a069bb0a4d3fe2219fbbf4d3f0caba2c6ac9e27418043ffe4e5914bf9c4",
+   "zips": 7,
+   "states": [
+    "VT"
+   ]
+  },
+  "060": {
+   "sha256": "a67195e491e3bdf7419d61d78f67668980f41a54ce37b6bde7467c7437909735",
+   "zips": 61,
+   "states": [
+    "CT"
+   ]
+  },
+  "061": {
+   "sha256": "d3645261ca7f49059d9c7abe353e92ec5333a7565fcd1a9b7920bfccf21b6200",
+   "zips": 14,
+   "states": [
+    "CT"
+   ]
+  },
+  "062": {
+   "sha256": "3370b1ad0c3c08f8923a3b7b624ed50db696149e1dd392236af0d9aa8b633e0e",
+   "zips": 33,
+   "states": [
+    "CT"
+   ]
+  },
+  "063": {
+   "sha256": "e01d1b2bdfe8d736e3be25e157c10829405491f8a0cff5d7d108781521753516",
+   "zips": 36,
+   "states": [
+    "CT",
+    "NY"
+   ]
+  },
+  "064": {
+   "sha256": "7110e4a2d517766e40942890b794265e748f2003b4b69cb07989666c46d86d3f",
+   "zips": 54,
+   "states": [
+    "CT"
+   ]
+  },
+  "065": {
+   "sha256": "c38ac359c3e5a92ed6f6f257451433bc9450e53dd28750cd3f3c0f11c9b9fcf2",
+   "zips": 12,
+   "states": [
+    "CT"
+   ]
+  },
+  "066": {
+   "sha256": "4b26021ebd5c15664d36ff9fd42a0fbb189437999550ed3b2234edfcbd999018",
+   "zips": 10,
+   "states": [
+    "CT"
+   ]
+  },
+  "067": {
+   "sha256": "75a00c8c333f38651c72d1982b5a38dfb55c2843e0dd69183a70aad0bbaae2c5",
+   "zips": 38,
+   "states": [
+    "CT"
+   ]
+  },
+  "068": {
+   "sha256": "a4b8f303e2337f7e0899ded976b23dd8b54b3fd77b965a4e12c95cbc81715c10",
+   "zips": 25,
+   "states": [
+    "CT"
+   ]
+  },
+  "069": {
+   "sha256": "9ed8cd29a79d957c11fe8363d74cb04f60e70f77efe57f2a1fe712f2872e98f8",
+   "zips": 6,
+   "states": [
+    "CT"
+   ]
+  },
+  "070": {
+   "sha256": "3d996a9af9bbf0250277d27c97e96059617fb5a01f36acadc67fc33dbeae471b",
+   "zips": 79,
+   "states": [
+    "NJ"
+   ]
+  },
+  "071": {
+   "sha256": "589611d276ead76629753bc5adc3e0e0070bc0fd7f185f1375dbf7c23be9e985",
+   "zips": 12,
+   "states": [
+    "NJ"
+   ]
+  },
+  "072": {
+   "sha256": "49f3b2595382c51aa479e9df18fddcdd745413262da5c1e389a2a3dbf079907f",
+   "zips": 7,
+   "states": [
+    "NJ"
+   ]
+  },
+  "073": {
+   "sha256": "64635bd538cd50f5863947648350ec0264cfee39d697d19168253095cb5dc186",
+   "zips": 7,
+   "states": [
+    "NJ"
+   ]
+  },
+  "074": {
+   "sha256": "d90c2b18772f01faef4ffe792c6cfa26e1dc24894bcb4cfa37e8cb8a02d13265",
+   "zips": 37,
+   "states": [
+    "NJ"
+   ]
+  },
+  "075": {
+   "sha256": "7c65be9ed52bf9c5e11440c4dd2d33425a4da093c5515af49c58b070c8a46b27",
+   "zips": 12,
+   "states": [
+    "NJ"
+   ]
+  },
+  "076": {
+   "sha256": "673966167f854cd64dc92ee4d914d783f8a5e73e47d23650b3c7373be39878b8",
+   "zips": 39,
+   "states": [
+    "NJ"
+   ]
+  },
+  "077": {
+   "sha256": "174a404f71ef039e66bd9ea2e7e0db9bd3e23312d7dcc5180df06066f83a2e3a",
+   "zips": 41,
+   "states": [
+    "NJ"
+   ]
+  },
+  "078": {
+   "sha256": "97f14a9d302799d6916de4c050e54f418f0e3517a4fb95eea025c467c4e0da3a",
+   "zips": 45,
+   "states": [
+    "NJ"
+   ]
+  },
+  "079": {
+   "sha256": "6557ea15797b44f4b3f10f7d857c91dff74ac59c8370138550e8038b09faee4d",
+   "zips": 29,
+   "states": [
+    "NJ"
+   ]
+  },
+  "080": {
+   "sha256": "982096c8ec2cfaa5a64abbf9e063ede41d54cceeb9e20a3fea7550d7d073381f",
+   "zips": 87,
+   "states": [
+    "NJ"
+   ]
+  },
+  "081": {
+   "sha256": "2d37ce9c618bdc915946212a1aa42925413d0fa0cacb33c203b41f4ad6774fb6",
+   "zips": 9,
+   "states": [
+    "NJ"
+   ]
+  },
+  "082": {
+   "sha256": "8a82778d172b9a3c66c36fb6c24f4f0969483945d0e872e0ea0608f65eec942e",
+   "zips": 29,
+   "states": [
+    "NJ"
+   ]
+  },
+  "083": {
+   "sha256": "5a157986c5d0407d1e124654b063c39481630612543cad1729992f69a17f1e28",
+   "zips": 33,
+   "states": [
+    "NJ"
+   ]
+  },
+  "084": {
+   "sha256": "ee6d0b45bf696bda7603a2bd75e1620ded30d4a3e5851821e2254e9e4ae3fcf6",
+   "zips": 4,
+   "states": [
+    "NJ"
+   ]
+  },
+  "085": {
+   "sha256": "d71133a857a2bd4904f14d35c0303df7f1cf7f378d535ef4f083e11d4960cdd5",
+   "zips": 31,
+   "states": [
+    "NJ"
+   ]
+  },
+  "086": {
+   "sha256": "c2857a27b31bb4d791d1013fcd491eaa574b18ddd0232016328ca2d8b272476c",
+   "zips": 15,
+   "states": [
+    "NJ"
+   ]
+  },
+  "087": {
+   "sha256": "e0e81b785a9840ddf27ba7c1709d29e14d73ff8164c13ee15f8d37f2e34690c2",
+   "zips": 25,
+   "states": [
+    "NJ"
+   ]
+  },
+  "088": {
+   "sha256": "c3f05f6ad47f5e6c4f359ef4573016b88baf79f5e40bc9eb963b03e9c37a3b95",
+   "zips": 54,
+   "states": [
+    "NJ"
+   ]
+  },
+  "089": {
+   "sha256": "9c11ceefeac2d7285190de32bcb1f4ce22b5a4c08131e2e3523f12320c633260",
+   "zips": 3,
+   "states": [
+    "NJ"
+   ]
+  }
+ },
+ "statesToShards": {
+  "PR": [
+   "006",
+   "007",
+   "009"
+  ],
+  "VI": [
+   "008"
+  ],
+  "MA": [
+   "010",
+   "011",
+   "012",
+   "013",
+   "014",
+   "015",
+   "016",
+   "017",
+   "018",
+   "019",
+   "020",
+   "021",
+   "022",
+   "023",
+   "024",
+   "025",
+   "026",
+   "027"
+  ],
+  "RI": [
+   "028",
+   "029"
+  ],
+  "NH": [
+   "030",
+   "031",
+   "032",
+   "033",
+   "034",
+   "035",
+   "036",
+   "037",
+   "038"
+  ],
+  "ME": [
+   "035",
+   "039",
+   "040",
+   "041",
+   "042",
+   "043",
+   "044",
+   "045",
+   "046",
+   "047",
+   "048",
+   "049"
+  ],
+  "VT": [
+   "050",
+   "051",
+   "052",
+   "053",
+   "054",
+   "056",
+   "057",
+   "058",
+   "059"
+  ],
+  "CT": [
+   "060",
+   "061",
+   "062",
+   "063",
+   "064",
+   "065",
+   "066",
+   "067",
+   "068",
+   "069"
+  ],
+  "NY": [
+   "063",
+   "100",
+   "101",
+   "102",
+   "103",
+   "104",
+   "105",
+   "106",
+   "107",
+   "108",
+   "109",
+   "110",
+   "111",
+   "112",
+   "113",
+   "114",
+   "115",
+   "116",
+   "117",
+   "118",
+   "119",
+   "120",
+   "121",
+   "122",
+   "123",
+   "124",
+   "125",
+   "126",
+   "127",
+   "128",
+   "129",
+   "130",
+   "131",
+   "132",
+   "133",
+   "134",
+   "135",
+   "136",
+   "137",
+   "138",
+   "139",
+   "140",
+   "141",
+   "142",
+   "143",
+   "144",
+   "145",
+   "146",
+   "147",
+   "148",
+   "149"
+  ],
+  "NJ": [
+   "070",
+   "071",
+   "072",
+   "073",
+   "074",
+   "075",
+   "076",
+   "077",
+   "078",
+   "079",
+   "080",
+   "081",
+   "082",
+   "083",
+   "084",
+   "085",
+   "086",
+   "087",
+   "088",
+   "089"
+  ],
+  "PA": [
+   "150",
+   "151",
+   "152",
+   "153",
+   "154",
+   "155",
+   "156",
+   "157",
+   "158",
+   "159",
+   "160",
+   "161",
+   "162",
+   "163",
+   "164",
+   "165",
+   "166",
+   "167",
+   "168",
+   "169",
+   "170",
+   "171",
+   "172",
+   "173",
+   "174",
+   "175",
+   "176",
+   "177",
+   "178",
+   "179",
+   "180",
+   "181",
+   "182",
+   "183",
+   "184",
+   "185",
+   "186",
+   "187",
+   "188",
+   "189",
+   "190",
+   "191",
+   "193",
+   "194",
+   "195",
+   "196"
+  ],
+  "DE": [
+   "197",
+   "198",
+   "199"
+  ],
+  "MD": [
+   "199",
+   "206",
+   "207",
+   "208",
+   "209",
+   "210",
+   "211",
+   "212",
+   "214",
+   "215",
+   "216",
+   "217",
+   "218",
+   "219"
+  ],
+  "DC": [
+   "200",
+   "202",
+   "203",
+   "204",
+   "205"
+  ],
+  "VA": [
+   "201",
+   "220",
+   "221",
+   "222",
+   "223",
+   "224",
+   "225",
+   "226",
+   "227",
+   "228",
+   "229",
+   "230",
+   "231",
+   "232",
+   "233",
+   "234",
+   "235",
+   "236",
+   "237",
+   "238",
+   "239",
+   "240",
+   "241",
+   "242",
+   "243",
+   "244",
+   "245",
+   "246",
+   "286",
+   "377"
+  ],
+  "WV": [
+   "201",
+   "246",
+   "247",
+   "248",
+   "249",
+   "250",
+   "251",
+   "252",
+   "253",
+   "254",
+   "255",
+   "256",
+   "257",
+   "258",
+   "259",
+   "260",
+   "261",
+   "262",
+   "263",
+   "264",
+   "265",
+   "266",
+   "267",
+   "268"
+  ],
+  "NC": [
+   "270",
+   "271",
+   "272",
+   "273",
+   "274",
+   "275",
+   "276",
+   "277",
+   "278",
+   "279",
+   "280",
+   "281",
+   "282",
+   "283",
+   "284",
+   "285",
+   "286",
+   "287",
+   "288",
+   "289"
+  ],
+  "SC": [
+   "290",
+   "291",
+   "292",
+   "293",
+   "294",
+   "295",
+   "296",
+   "297",
+   "298",
+   "299"
+  ],
+  "GA": [
+   "300",
+   "301",
+   "302",
+   "303",
+   "304",
+   "305",
+   "306",
+   "307",
+   "308",
+   "309",
+   "310",
+   "312",
+   "313",
+   "314",
+   "315",
+   "316",
+   "317",
+   "318",
+   "319",
+   "368",
+   "398"
+  ],
+  "AL": [
+   "301",
+   "350",
+   "351",
+   "352",
+   "354",
+   "355",
+   "356",
+   "357",
+   "358",
+   "359",
+   "360",
+   "361",
+   "362",
+   "363",
+   "364",
+   "365",
+   "366",
+   "367",
+   "368",
+   "369",
+   "388"
+  ],
+  "FL": [
+   "320",
+   "321",
+   "322",
+   "323",
+   "324",
+   "325",
+   "326",
+   "327",
+   "328",
+   "329",
+   "330",
+   "331",
+   "333",
+   "334",
+   "335",
+   "336",
+   "337",
+   "338",
+   "339",
+   "341",
+   "342",
+   "344",
+   "346",
+   "347",
+   "349"
+  ],
+  "TN": [
+   "370",
+   "371",
+   "372",
+   "373",
+   "374",
+   "376",
+   "377",
+   "378",
+   "379",
+   "380",
+   "381",
+   "382",
+   "383",
+   "384",
+   "385",
+   "409",
+   "422",
+   "723"
+  ],
+  "KY": [
+   "380",
+   "385",
+   "400",
+   "401",
+   "402",
+   "403",
+   "404",
+   "405",
+   "406",
+   "407",
+   "408",
+   "409",
+   "410",
+   "411",
+   "412",
+   "413",
+   "414",
+   "415",
+   "416",
+   "417",
+   "418",
+   "420",
+   "421",
+   "422",
+   "423",
+   "424",
+   "425",
+   "426",
+   "427"
+  ],
+  "MS": [
+   "383",
+   "386",
+   "387",
+   "388",
+   "389",
+   "390",
+   "391",
+   "392",
+   "393",
+   "394",
+   "395",
+   "396",
+   "397"
+  ],
+  "AR": [
+   "387",
+   "657",
+   "716",
+   "717",
+   "718",
+   "719",
+   "720",
+   "721",
+   "722",
+   "723",
+   "724",
+   "725",
+   "726",
+   "727",
+   "728",
+   "729"
+  ],
+  "OH": [
+   "430",
+   "431",
+   "432",
+   "433",
+   "434",
+   "435",
+   "436",
+   "437",
+   "438",
+   "439",
+   "440",
+   "441",
+   "442",
+   "443",
+   "444",
+   "445",
+   "446",
+   "447",
+   "448",
+   "449",
+   "450",
+   "451",
+   "452",
+   "453",
+   "454",
+   "455",
+   "456",
+   "457",
+   "458",
+   "470"
+  ],
+  "IN": [
+   "460",
+   "461",
+   "462",
+   "463",
+   "464",
+   "465",
+   "466",
+   "467",
+   "468",
+   "469",
+   "470",
+   "471",
+   "472",
+   "473",
+   "474",
+   "475",
+   "476",
+   "477",
+   "478",
+   "479"
+  ],
+  "MI": [
+   "480",
+   "481",
+   "482",
+   "483",
+   "484",
+   "485",
+   "486",
+   "487",
+   "488",
+   "489",
+   "490",
+   "491",
+   "492",
+   "493",
+   "494",
+   "495",
+   "496",
+   "497",
+   "498",
+   "499",
+   "545"
+  ],
+  "IA": [
+   "500",
+   "501",
+   "502",
+   "503",
+   "504",
+   "505",
+   "506",
+   "507",
+   "508",
+   "510",
+   "511",
+   "512",
+   "513",
+   "514",
+   "515",
+   "516",
+   "520",
+   "521",
+   "522",
+   "523",
+   "524",
+   "525",
+   "526",
+   "527",
+   "528",
+   "560",
+   "570"
+  ],
+  "SD": [
+   "510",
+   "561",
+   "562",
+   "570",
+   "571",
+   "572",
+   "573",
+   "574",
+   "575",
+   "576",
+   "577",
+   "580",
+   "584",
+   "585",
+   "586",
+   "687",
+   "692",
+   "693",
+   "827"
+  ],
+  "MN": [
+   "513",
+   "550",
+   "551",
+   "553",
+   "554",
+   "556",
+   "557",
+   "558",
+   "559",
+   "560",
+   "561",
+   "562",
+   "563",
+   "564",
+   "565",
+   "566",
+   "567",
+   "570",
+   "580",
+   "582"
+  ],
+  "NE": [
+   "515",
+   "577",
+   "665",
+   "669",
+   "680",
+   "681",
+   "683",
+   "684",
+   "685",
+   "686",
+   "687",
+   "688",
+   "689",
+   "690",
+   "691",
+   "692",
+   "693",
+   "807",
+   "820"
+  ],
+  "MO": [
+   "516",
+   "525",
+   "526",
+   "630",
+   "631",
+   "633",
+   "634",
+   "635",
+   "636",
+   "637",
+   "638",
+   "639",
+   "640",
+   "641",
+   "644",
+   "645",
+   "646",
+   "647",
+   "648",
+   "650",
+   "651",
+   "652",
+   "653",
+   "654",
+   "655",
+   "656",
+   "657",
+   "658",
+   "726"
+  ],
+  "WI": [
+   "530",
+   "531",
+   "532",
+   "534",
+   "535",
+   "537",
+   "538",
+   "539",
+   "540",
+   "541",
+   "542",
+   "543",
+   "544",
+   "545",
+   "546",
+   "547",
+   "548",
+   "549"
+  ],
+  "ND": [
+   "567",
+   "572",
+   "574",
+   "576",
+   "580",
+   "581",
+   "582",
+   "583",
+   "584",
+   "585",
+   "586",
+   "587",
+   "588",
+   "592"
+  ],
+  "MT": [
+   "577",
+   "586",
+   "590",
+   "591",
+   "592",
+   "593",
+   "594",
+   "595",
+   "596",
+   "597",
+   "598",
+   "599",
+   "828"
+  ],
+  "WY": [
+   "577",
+   "820",
+   "821",
+   "822",
+   "823",
+   "824",
+   "825",
+   "826",
+   "827",
+   "828",
+   "829",
+   "830",
+   "831",
+   "834"
+  ],
+  "ID": [
+   "598",
+   "831",
+   "832",
+   "833",
+   "834",
+   "835",
+   "836",
+   "837",
+   "838",
+   "898",
+   "979",
+   "991"
+  ],
+  "IL": [
+   "600",
+   "601",
+   "602",
+   "603",
+   "604",
+   "605",
+   "606",
+   "607",
+   "608",
+   "609",
+   "610",
+   "611",
+   "612",
+   "613",
+   "614",
+   "615",
+   "616",
+   "617",
+   "618",
+   "619",
+   "620",
+   "622",
+   "623",
+   "624",
+   "625",
+   "626",
+   "627",
+   "628",
+   "629",
+   "636"
+  ],
+  "KS": [
+   "660",
+   "661",
+   "662",
+   "664",
+   "665",
+   "666",
+   "667",
+   "668",
+   "669",
+   "670",
+   "671",
+   "672",
+   "673",
+   "674",
+   "675",
+   "676",
+   "677",
+   "678",
+   "679",
+   "683",
+   "684",
+   "689",
+   "690"
+  ],
+  "CO": [
+   "691",
+   "800",
+   "801",
+   "802",
+   "803",
+   "804",
+   "805",
+   "806",
+   "807",
+   "808",
+   "809",
+   "810",
+   "811",
+   "812",
+   "813",
+   "814",
+   "815",
+   "816",
+   "820"
+  ],
+  "LA": [
+   "700",
+   "701",
+   "703",
+   "704",
+   "705",
+   "706",
+   "707",
+   "708",
+   "710",
+   "711",
+   "712",
+   "713",
+   "714",
+   "717"
+  ],
+  "OK": [
+   "719",
+   "730",
+   "731",
+   "734",
+   "735",
+   "736",
+   "737",
+   "738",
+   "739",
+   "740",
+   "741",
+   "743",
+   "744",
+   "745",
+   "746",
+   "747",
+   "748",
+   "749"
+  ],
+  "TX": [
+   "739",
+   "750",
+   "751",
+   "752",
+   "753",
+   "754",
+   "755",
+   "756",
+   "757",
+   "758",
+   "759",
+   "760",
+   "761",
+   "762",
+   "763",
+   "764",
+   "765",
+   "766",
+   "767",
+   "768",
+   "769",
+   "770",
+   "772",
+   "773",
+   "774",
+   "775",
+   "776",
+   "777",
+   "778",
+   "779",
+   "780",
+   "781",
+   "782",
+   "783",
+   "784",
+   "785",
+   "786",
+   "787",
+   "788",
+   "789",
+   "790",
+   "791",
+   "792",
+   "793",
+   "794",
+   "795",
+   "796",
+   "797",
+   "798",
+   "799",
+   "884"
+  ],
+  "NM": [
+   "798",
+   "799",
+   "811",
+   "865",
+   "870",
+   "871",
+   "873",
+   "874",
+   "875",
+   "877",
+   "878",
+   "879",
+   "880",
+   "881",
+   "882",
+   "883",
+   "884"
+  ],
+  "UT": [
+   "813",
+   "829",
+   "833",
+   "840",
+   "841",
+   "843",
+   "844",
+   "845",
+   "846",
+   "847",
+   "860",
+   "865"
+  ],
+  "WA": [
+   "838",
+   "980",
+   "981",
+   "982",
+   "983",
+   "984",
+   "985",
+   "986",
+   "988",
+   "989",
+   "990",
+   "991",
+   "992",
+   "993",
+   "994"
+  ],
+  "NV": [
+   "840",
+   "890",
+   "891",
+   "893",
+   "894",
+   "895",
+   "897",
+   "898"
+  ],
+  "AZ": [
+   "845",
+   "850",
+   "851",
+   "852",
+   "853",
+   "855",
+   "856",
+   "857",
+   "859",
+   "860",
+   "863",
+   "864",
+   "865",
+   "873"
+  ],
+  "CA": [
+   "890",
+   "894",
+   "900",
+   "902",
+   "903",
+   "904",
+   "905",
+   "906",
+   "907",
+   "908",
+   "910",
+   "911",
+   "912",
+   "913",
+   "914",
+   "915",
+   "916",
+   "917",
+   "918",
+   "919",
+   "920",
+   "921",
+   "922",
+   "923",
+   "924",
+   "925",
+   "926",
+   "927",
+   "928",
+   "930",
+   "931",
+   "932",
+   "933",
+   "934",
+   "935",
+   "936",
+   "937",
+   "939",
+   "940",
+   "941",
+   "943",
+   "944",
+   "945",
+   "946",
+   "947",
+   "948",
+   "949",
+   "950",
+   "951",
+   "952",
+   "953",
+   "954",
+   "955",
+   "956",
+   "957",
+   "958",
+   "959",
+   "960",
+   "961",
+   "976"
+  ],
+  "OR": [
+   "894",
+   "970",
+   "971",
+   "972",
+   "973",
+   "974",
+   "975",
+   "976",
+   "977",
+   "978",
+   "979",
+   "993"
+  ],
+  "AS": [
+   "967"
+  ],
+  "HI": [
+   "967",
+   "968"
+  ],
+  "GU": [
+   "969"
+  ],
+  "MP": [
+   "969"
+  ],
+  "AK": [
+   "995",
+   "996",
+   "997",
+   "998",
+   "999"
+  ]
+ }
+}

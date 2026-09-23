@@ -170,6 +170,18 @@ function encodingFrom(entries: ZipEntry[]): BufferEncoding {
   return "latin1";
 }
 
+/**
+ * A boundary zip's attribute rows alone, in the encoding its `.cpg` declares —
+ * for a caller that needs names and codes (the national ZIP index) and would
+ * otherwise parse hundreds of megabytes of geometry it never reads.
+ */
+export function readBoundaryAttributes(buf: Buffer): Record<string, string>[] {
+  const entries = readZip(buf);
+  const dbf = entries.find((e) => e.name.toLowerCase().endsWith(".dbf"));
+  if (!dbf) throw new Error("boundary zip holds no .dbf");
+  return readDbf(dbf.data, encodingFrom(entries));
+}
+
 export function readDbf(buf: Buffer, encoding: BufferEncoding = "latin1"): Record<string, string>[] {
   const headerLength = buf.readUInt16LE(8);
   const recordLength = buf.readUInt16LE(10);

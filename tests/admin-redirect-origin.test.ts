@@ -3,7 +3,7 @@
  *
  * The owner pressed "Pause research" at 17:25Z. The intent was recorded and
  * the runner honored it, but the browser was sent to
- * `https://meanwhileusa.com/admin/research` and got a 404. The route built its
+ * the public host's /admin/research and got a 404. The route built its
  * 303 Location from `request.url`, and on Netlify an `/api/*` function sees the
  * site's primary host there, not the admin host the request actually came in
  * on. Middleware 404s every admin path off the admin host, so a write that

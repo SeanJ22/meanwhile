@@ -1,6 +1,6 @@
 {
-  "exactHead": "05f0223f2ab49166e3606b73385359ce57f741ab",
-  "buildId": "E1cg0vwcuRVHV8-HjriQj",
+  "exactHead": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
+  "buildId": "djtDstfcVbQ1yHnct4Gj2",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -12,7 +12,7 @@
     },
     {
       "path": "app/api/agenda/route.ts",
-      "sha256": "882c4454534e91e202ba475b78815457762c2e9a9491b29ad62369cf833c5d4d"
+      "sha256": "85eb4003f7514243154934367ec9fdba8a8cae98a0df5c8735924fce8b5ad3a8"
     },
     {
       "path": "app/api/ask/classify/route.ts",
@@ -20,7 +20,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "9e21b3604d898b38b288d3159c0029187e0904fe5aa48212f7f97fe04daacaa1"
+      "sha256": "ad1b1d89960c06c847601ec00b0d6cdea33bfded0a8b9bfe5d88601f3319232b"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -288,7 +288,7 @@
     },
     {
       "path": "components/map/popup/agenda-section.tsx",
-      "sha256": "3d77035f5727e73b56e3319de847ed69e73c620de5d5ec729a07dd71010b3a17"
+      "sha256": "031018ab794d97b86b8d0c2a945529c02763a874abeff2cede35d75163eddad8"
     },
     {
       "path": "components/map/popup/calendar-links.tsx",
@@ -1376,7 +1376,7 @@
     },
     {
       "path": "lib/ask/agenda-publication.ts",
-      "sha256": "4a9db8855a7ac64e3508f59f30406086334e7bbec74f7bf0437bc7fcad58630c"
+      "sha256": "53c5ca227161e82e8a0d4df57074e0f5cb5f7edcd543ab2511903da8473b64b4"
     },
     {
       "path": "lib/ask/agenda-sentence.ts",
@@ -1428,7 +1428,7 @@
     },
     {
       "path": "lib/ask/held-agenda.ts",
-      "sha256": "1821a246350b39c79f109dc2b27a9acdc088895c893c0af4bba505e8f8f7bb18"
+      "sha256": "6c14199f75505e0ad8a66f90578c8dbeb473395a883f5db02f43ef8d2693254e"
     },
     {
       "path": "lib/ask/host.ts",
@@ -1740,7 +1740,7 @@
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "2dae4c6a7b5fedcd7da0d88e1b3d684e4dd557118942ddd1680c5720e388ba38"
+      "sha256": "a265c2bb591c47000de032d318f94b0ad60bec8d3644e34d11e9b38b4562bac0"
     },
     {
       "path": "lib/civic-data/contracts.ts",
@@ -1808,11 +1808,11 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "5424e744ba2021d1820a93fa163d02b4d48daa1039a45b35e72389d0ac9bdeed"
+      "sha256": "9935c5117d9b11f74ee4515ed54e0787d207c0c8981335de4c0a9843282275af"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
-      "sha256": "0f545f7a89ce1b6ee46b1297acd71c88f6d40a68bed17de12ca843ef603102e8"
+      "sha256": "8f343d11e3a908aa22c14d0aa41c743295565f7c97aede8c723da3348264ec54"
     },
     {
       "path": "lib/civic-data/types.ts",
@@ -2111,8 +2111,12 @@
       "sha256": "ad9e32a10d73f46a1715c2b9c94b3911a6392b5f40e394550ac307aced9727fa"
     },
     {
+      "path": "lib/meetings/agenda-content.ts",
+      "sha256": "dc7a40d377b3beeee9ab6c0a00b28040235baf1caa00d829b1294db763c908ea"
+    },
+    {
       "path": "lib/meetings/agenda-documents.ts",
-      "sha256": "a0dfc24971f92877c111d1b605a12a26f5dc46cac0335b6cd92e4a41f667037d"
+      "sha256": "0335e22f142861efd1cfc9ad51c1713b28a7f617ed439145c8e785f989f39963"
     },
     {
       "path": "lib/meetings/attribution.ts",

@@ -164,7 +164,7 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | meetings | ask | az | 287 | 7 | RENDERED | 0 | 0 | true |
 | meetings | map | az | 287 | 7 | RENDERED | 0 | 0 | true |
 | meetings | meetings | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| meetings | agenda | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
+| meetings | agenda | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | ask | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | map | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | meetings | nh | 341 | 36 | RENDERED | 0 | 0 | true |

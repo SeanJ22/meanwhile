@@ -9,8 +9,9 @@
 import { createHash } from "node:crypto";
 
 import { readableContent } from "../extract/html-content.ts";
+import { agendaItems } from "../routing/agenda-search.ts";
 import type { Meeting, OcdId } from "../sources/types.ts";
-import { sameAgendaContent } from "./agenda-content.ts";
+import { PUBLISHER_PAGE_SIGNAL, agendaReadableText, sameAgendaContent } from "./agenda-content.ts";
 import { sourceUserAgent } from "../sources/http.ts";
 import { repairMojibake } from "../text/mojibake.ts";
 
@@ -147,6 +148,37 @@ export class AgendaDocumentStore {
     return false;
   }
 
+  /**
+   * Another sitting's held HTML document, from the same publisher host, whose
+   * readable text is word for word this text. (2026-09-23.)
+   *
+   * The text-level form of the landing-page question above: two sittings'
+   * pages that say exactly the same words say nothing about either sitting,
+   * so the words are the publisher's page. Measured across the composed
+   * Reader snapshot before this was adopted: 14 texts on 10 hosts were held
+   * for more than one sitting, every one a portal page, a calendar, a board's
+   * front page or a skip link — Diligent's header-only rows, CivicClerk's
+   * "enable JavaScript" shell, Bradford's and Warner's calendars — and not
+   * one yielded an agenda item.
+   */
+  publisherPageWitness(doc: {
+    readonly meetingId: string;
+    readonly documentUrl: string;
+    readonly text: string | null;
+  }): AgendaDocument | null {
+    const text = agendaReadableText(doc);
+    const host = hostOf(doc.documentUrl);
+    if (text === null || host === null) return null;
+    for (const [id, versions] of this.byMeeting) {
+      if (id === doc.meetingId) continue;
+      const witness = versions.find(
+        (v) => v.extraction === "html" && hostOf(v.documentUrl) === host && agendaReadableText(v) === text,
+      );
+      if (witness) return witness;
+    }
+    return null;
+  }
+
   get documentCount(): number {
     let n = 0;
     for (const versions of this.byMeeting.values()) n += versions.length;
@@ -156,6 +188,14 @@ export class AgendaDocumentStore {
 
 /** The per-process store, same lifetime as the composite's cache. */
 export const agendaDocumentStore = new AgendaDocumentStore();
+
+function hostOf(url: string): string | null {
+  try {
+    return new URL(url).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
 
 export function contentHashOf(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -242,6 +282,43 @@ export interface RetrieveOptions {
    * recorded against the notice URL it actually came from.
    */
   urlOverride?: string;
+  /**
+   * What is already held, for the one judgment a page cannot make about
+   * itself: whether another sitting's page says the same words. Defaults to
+   * the per-process store the ingest seeds and appends to.
+   */
+  held?: Pick<AgendaDocumentStore, "publisherPageWitness">;
+}
+
+/**
+ * **A READ THAT RETURNED NOTHING OF THE DOCUMENT IS A FAILED READ.**
+ * (RULING 269, 2026-09-23.)
+ *
+ * The retrieval used to store whatever text survived extraction as a
+ * successful one: the empty string, and 54 to 69 characters of Diligent skip
+ * links that 18 sittings then showed readers as their agenda. Two named
+ * signals now record such a read as `failed`. Neither is a length threshold,
+ * because a one-line notice ("This meeting is cancelled") is a whole
+ * document:
+ *
+ * - **No readable text.** Extraction produced no characters at all.
+ * - **The publisher's page.** An HTML page's text is word for word what the
+ *   same host served for a different sitting (`publisherPageWitness`) and
+ *   holds no agenda item. A joint agenda two sittings share yields items and
+ *   stays a document, exactly as the ingest's landing-page rule keeps one.
+ *   PDFs are not judged this way: a PDF is a document, and two sittings
+ *   holding the same one is a shared agenda, not a page.
+ *
+ * Each note opens with its signal's name, and the notes are written for the
+ * reader who may be shown them.
+ */
+const NO_READABLE_TEXT = "No readable text";
+
+function failedRead(
+  base: Omit<AgendaDocument, "text" | "extraction" | "extractionNote">,
+  note: string,
+): AgendaDocument {
+  return { ...base, text: null, extraction: "failed", extractionNote: note };
 }
 
 /**
@@ -291,6 +368,12 @@ export async function retrieveAgendaDocument(
   try {
     if (isPdf) {
       const text = await extractPdfText(bytes);
+      if (!text.trim()) {
+        return failedRead(
+          base,
+          `${NO_READABLE_TEXT}: the PDF has no text layer to read, which is how a scanned page reads.`,
+        );
+      }
       return { ...base, text, extraction: "pdf", extractionNote: null };
     }
     const decoded = new TextDecoder().decode(bytes);
@@ -307,6 +390,24 @@ export async function retrieveAgendaDocument(
       });
     }
     const text = extractHtmlText(decoded);
+    if (!text) {
+      return failedRead(
+        base,
+        `${NO_READABLE_TEXT}: once its scripts, controls and site navigation were set aside, the page held no words.`,
+      );
+    }
+    const witness = (options.held ?? agendaDocumentStore).publisherPageWitness({
+      meetingId: meeting.id,
+      documentUrl: url,
+      text,
+    });
+    if (witness && agendaItems(text).length === 0) {
+      return failedRead(
+        base,
+        `${PUBLISHER_PAGE_SIGNAL}: its text is word for word the page ${hostOf(url)} serves for another ` +
+          `meeting (${witness.meetingId}), so it is the publisher's page rather than this meeting's document.`,
+      );
+    }
     return canonicalAgendaDocument({ ...base, text, extraction: "html", extractionNote: null });
   } catch (error) {
     return {

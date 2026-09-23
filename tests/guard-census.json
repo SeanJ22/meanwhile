@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 712,
-    "named": 7046,
+    "files": 714,
+    "named": 7067,
     "dynamic": 28
   },
   "files": {
@@ -561,13 +561,19 @@
     "tests/agenda-documents.test.ts": {
       "names": [
         "a PDF that cannot be parsed records the failure and keeps the link",
+        "a PDF with no text layer is a failed read, and the note names why",
         "a meeting with no agenda link yields null, not a fabricated fetch",
+        "a one-line notice is a document, not a failure: no length threshold decides",
         "a revised agenda appends beside the old version, never over it",
+        "an HTML page with no readable text is a failed read, and the note names why",
         "an unchanged document is not stored twice",
         "binary Office bytes retain their URL/hash but never become Reader text or JSONB NULs",
         "contentHashOf is stable for identical bytes",
         "extractHtmlText strips markup and scripts, keeps the words",
-        "retrieveAgendaDocument extracts HTML text and records provenance"
+        "negative controls: a re-read of the same sitting, another host, and a shared joint agenda stay documents",
+        "retrieveAgendaDocument extracts HTML text and records provenance",
+        "the recorded Diligent page read beside a same-type sitting's page is the publisher's page",
+        "the same words another sitting's page says are the publisher's page: failed, witness named"
       ],
       "dynamic": 0
     },
@@ -639,7 +645,7 @@
     },
     "tests/agenda-version-projection.test.ts": {
       "names": [
-        "Tucson Unified 499: 88 identical re-fetches plus the board's site root are ONE version, never a revision",
+        "Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version",
         "a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording",
         "a revision at the same address is still two versions, and the old address is not offered as the old text",
         "a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision",
@@ -3431,6 +3437,16 @@
       ],
       "dynamic": 0
     },
+    "tests/diligent-portal-reading.test.ts": {
+      "names": [
+        "a read recorded as the publisher's page is the portal; a read with no text stays unreadable",
+        "negative controls: the rule reads the portal's own furniture on the portal's own address, nothing wider",
+        "regression control: every Diligent portal page in the committed holding is still read as the portal",
+        "the fixed extractor's reading of the recorded pages is the portal too",
+        "the stored skip-link rows of all three Diligent tenants read as the portal, not as an agenda we could not read"
+      ],
+      "dynamic": 0
+    },
     "tests/discovery-tree.test.ts": {
       "names": [
         "RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale",
@@ -4486,9 +4502,9 @@
     },
     "tests/grounded-agenda-projection.test.ts": {
       "names": [
-        "one reading per sitting: Tucson Unified 499's 89 stored rows are ONE shown document, the newest read of its own page",
+        "one reading per sitting: Tucson Unified 499's 89 stored rows are its two index pages, the portal page's newest read first",
         "the document every agenda item cites is the one the reading was taken over, never a newer index page",
-        "the real grounded route hands the answer model ONE Tucson Unified 499 document, the projection's newest, and cites Pima items to the agenda"
+        "the real grounded route hands the answer model Tucson Unified 499's two index pages, the projection's, and cites Pima items to the agenda"
       ],
       "dynamic": 0
     },
@@ -4530,7 +4546,7 @@
     },
     "tests/held-agenda-projection.test.ts": {
       "names": [
-        "Ask, Tucson Unified 499: 89 stored rows (88 identical re-reads plus the site root) are ONE agenda record with no revision language",
+        "Ask, Tucson Unified 499: 89 stored rows (88 re-reads of its portal page plus the site root) are two index records with no revision language",
         "Ask, a real revision: two distinct contents are two agenda records, each with its own source",
         "Ask, a sitting holding only the site root: its listing pages are named as publication indexes, never as an agenda"
       ],
@@ -4584,7 +4600,13 @@
         "DATA-1 negative control: civic prose is not keyword-deleted",
         "DATA-1: a div-soup page with no landmarks drops its menu and keeps its notice",
         "DATA-1: an empty page extracts as empty, never as invented content",
-        "DATA-1: entity decoding and mojibake repair still run after the region pass"
+        "DATA-1: entity decoding and mojibake repair still run after the region pass",
+        "a WebForms page is not deleted with its server form: the page's own content survives",
+        "a form nested inside the page form is still a control and goes whole",
+        "a hidden field can never leak into text, even when its value holds a '>'",
+        "negative control: a WebForms form holding a sliver of the page is a control and goes whole",
+        "negative control: a form that is not a WebForms server form is removed whole, however much it holds",
+        "the kept server form still loses its controls: no page state, no sign-in panel, no buttons"
       ],
       "dynamic": 0
     },
@@ -4767,6 +4789,15 @@
         "4: a key the snapshot never heard of resolves null, not an error",
         "4: an incumbent House rep on a House ballot resolves (Grijalva, AZ-7)",
         "4: challengers get no link — never a wrong one"
+      ],
+      "dynamic": 0
+    },
+    "tests/ingest-agenda-failed-reads.test.ts": {
+      "names": [
+        "a failed read is not stored over a version the sitting already holds",
+        "a readable revision over a held version is still stored beside it",
+        "a sitting that holds nothing still records its failed read, so the gap is named",
+        "the recorded Diligent page, read for a sitting already holding its skip links, adds nothing"
       ],
       "dynamic": 0
     },

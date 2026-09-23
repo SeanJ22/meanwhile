@@ -197,6 +197,13 @@ export async function syncObligations(
   readonly alreadyDurable: readonly string[];
   /** Durable rows whose provider-derived signals changed this pass. */
   readonly refreshed: readonly { readonly id: string; readonly changed: readonly string[] }[];
+  /**
+   * The durable rows this pass read that the corpus did NOT name, which is the
+   * input `planSupersededRetirement` judges (2026-09-23). Null under
+   * `exactReads`, which reads only the corpus's own rows and so cannot see
+   * what the registry stopped emitting.
+   */
+  readonly outside: readonly StandingObligation[] | null;
 }> {
   const registered: string[] = [];
   const alreadyDurable: string[] = [];
@@ -273,7 +280,11 @@ export async function syncObligations(
     refreshed.push({ id: o.id, changed });
     all.push(written.value);
   }
-  return { all, registered, alreadyDurable, refreshed };
+  const named = new Set(corpus.map((o) => o.id));
+  const outside = options.exactReads
+    ? null
+    : [...existingById.values()].filter((row) => !named.has(row.id)).map((row) => row.value);
+  return { all, registered, alreadyDurable, refreshed, outside };
 }
 
 /**
@@ -325,6 +336,264 @@ export async function retireObligationsByPrefix(
     retired.push(row.id);
   }
   return { retired, alreadyRetired };
+}
+
+/**
+ * **AN OBLIGATION THE REGISTRY NO LONGER EMITS IS RETIRED, NEVER LEFT LIVE.**
+ * (2026-09-23.)
+ *
+ * `syncObligations` walks the corpus, so a durable row the registry stopped
+ * emitting stayed `active` forever: never scheduled, never retired, and any
+ * occurrence it held stayed open. The shape seen on 2026-09-23: a candidate
+ * whose site was recorded is owed under `#candidate-site-recorded`, and its
+ * `#candidate-authored-awaits-site` row lived on. Ten of those held open
+ * occurrences that no recovery could reach. And every count read from the
+ * store rather than the corpus included such rows.
+ *
+ * A row outside the corpus is RETIRED only when all of these hold:
+ *
+ * - it is active;
+ * - its namespace (`freshness:<namespace>:`) belongs to exactly one provider
+ *   this cycle;
+ * - that provider read cleanly: no `readFailure`, no `emptyReason`, and at
+ *   least one unit;
+ * - retiring it keeps that provider under `SUPERSEDED_RETIREMENT_BOUND` this
+ *   cycle.
+ *
+ * Every other row outside the corpus is HELD BACK by name. A provider that
+ * could not read its input, or read nothing, or suddenly emits far less, is
+ * never evidence that its obligations ended. A retirement also reverses
+ * itself: when the registry emits the id again, `syncObligations` finds
+ * `active` changed and writes the row live.
+ */
+export const SUPERSEDED_RETIREMENT_BOUND = 0.25;
+
+/** `freshness:<namespace>:`, the part of a standing obligation id its provider owns. Null for any other id. */
+export function obligationNamespace(id: string): string | null {
+  const head = "freshness:";
+  if (!id.startsWith(head)) return null;
+  const end = id.indexOf(":", head.length);
+  return end <= head.length ? null : id.slice(0, end + 1);
+}
+
+/** One provider's reading this cycle, as `RegistryPass.byProvider` reports it. */
+export interface ProviderReading {
+  readonly providerId: string;
+  readonly units: number;
+  readonly readFailure: string | null;
+  readonly emptyReason: string | null;
+}
+
+export type SupersededHold =
+  | "NO_PROVIDER_NAMESPACE"
+  | "AMBIGUOUS_NAMESPACE"
+  | "PROVIDER_NOT_READ_CLEANLY"
+  | "OVER_RETIREMENT_BOUND";
+
+/** One row to retire, or to settle if already retired, and the reason its row, occurrence and debt carry. */
+export interface RetirementItem {
+  readonly obligationId: string;
+  readonly reason: string;
+}
+
+export interface SupersededRetirementPlan {
+  readonly retire: readonly RetirementItem[];
+  readonly heldBack: readonly {
+    readonly obligationId: string;
+    readonly code: SupersededHold;
+    readonly why: string;
+  }[];
+}
+
+/** Why an obligation was retired as superseded, in the words its row, occurrence and debt carry. */
+export function supersededRetirementReason(providerId: string): string {
+  return (
+    `SUPERSEDED: provider '${providerId}' read its input cleanly and no longer emits this ` +
+    "obligation, so it is no longer owed"
+  );
+}
+
+/**
+ * Which rows outside the corpus to retire, and which to hold back and why.
+ * PURE: the caller passes the rows `syncObligations` read (`outside`), the
+ * cycle's FULL, unfiltered registry units, and the provider reports.
+ */
+export function planSupersededRetirement(input: {
+  readonly outside: readonly StandingObligation[];
+  readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
+  readonly providers: readonly ProviderReading[];
+  readonly bound?: number;
+}): SupersededRetirementPlan {
+  const bound = input.bound ?? SUPERSEDED_RETIREMENT_BOUND;
+  const inCorpus = new Set(input.corpus.map((u) => u.obligationId));
+  const owners = new Map<string, Set<string>>();
+  const unitsBy = new Map<string, number>();
+  for (const u of input.corpus) {
+    unitsBy.set(u.providerId, (unitsBy.get(u.providerId) ?? 0) + 1);
+    const ns = obligationNamespace(u.obligationId);
+    if (ns === null) continue;
+    const set = owners.get(ns) ?? new Set<string>();
+    set.add(u.providerId);
+    owners.set(ns, set);
+  }
+  const reading = new Map(input.providers.map((p) => [p.providerId, p]));
+
+  const candidates = new Map<string, string[]>();
+  const heldBack: SupersededRetirementPlan["heldBack"][number][] = [];
+  for (const row of input.outside) {
+    if (!row.active || inCorpus.has(row.id)) continue;
+    const ns = obligationNamespace(row.id);
+    const owner = ns === null ? undefined : owners.get(ns);
+    if (ns === null || owner === undefined) {
+      heldBack.push({
+        obligationId: row.id,
+        code: "NO_PROVIDER_NAMESPACE",
+        why: `no provider emitted ${ns ?? "a standing namespace for this id"} this cycle, so nothing can say it ended`,
+      });
+      continue;
+    }
+    if (owner.size !== 1) {
+      heldBack.push({
+        obligationId: row.id,
+        code: "AMBIGUOUS_NAMESPACE",
+        why: `${ns} is emitted by ${[...owner].sort().join(" and ")}, so no one provider owns this row`,
+      });
+      continue;
+    }
+    const providerId = [...owner][0];
+    const p = reading.get(providerId);
+    if (p === undefined || p.readFailure !== null || p.emptyReason !== null || p.units === 0) {
+      heldBack.push({
+        obligationId: row.id,
+        code: "PROVIDER_NOT_READ_CLEANLY",
+        why:
+          `provider '${providerId}' did not read cleanly this cycle (` +
+          (p === undefined
+            ? "it reported nothing"
+            : p.readFailure ?? p.emptyReason ?? "it produced no units") +
+          "), so its missing rows are not evidence that they ended",
+      });
+      continue;
+    }
+    const list = candidates.get(providerId) ?? [];
+    list.push(row.id);
+    candidates.set(providerId, list);
+  }
+
+  const retire: SupersededRetirementPlan["retire"][number][] = [];
+  for (const [providerId, ids] of candidates) {
+    const standingTotal = (unitsBy.get(providerId) ?? 0) + ids.length;
+    if (ids.length > bound * standingTotal) {
+      for (const obligationId of ids) {
+        heldBack.push({
+          obligationId,
+          code: "OVER_RETIREMENT_BOUND",
+          why:
+            `provider '${providerId}' would retire ${ids.length} of its ${standingTotal} standing ` +
+            `obligations this cycle, more than the bound of ${Math.round(bound * 100)}%. A read that ` +
+            "suddenly emits that much less is held for a person, never retired by a clock",
+        });
+      }
+      continue;
+    }
+    for (const obligationId of ids) retire.push({ obligationId, reason: supersededRetirementReason(providerId) });
+  }
+  retire.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
+  heldBack.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
+  return { retire, heldBack };
+}
+
+/**
+ * **A RETIRED ROW HOLDS NO OPEN OCCURRENCE.** `retireObligationsByPrefix`
+ * retires a row and leaves its occurrence open. On 2026-09-23 the legacy
+ * meetings retirements held 20 that way. Any inactive row still pointing at
+ * an occurrence is settled under its own retirement reason. It is found from
+ * the rows `syncObligations` already read, with no extra read.
+ */
+export function planRetiredResidue(outside: readonly StandingObligation[]): readonly RetirementItem[] {
+  return outside
+    .filter((row) => !row.active && row.openOccurrenceId !== null)
+    .map((row) => ({ obligationId: row.id, reason: row.retirementReason ?? "RETIRED: this obligation was retired" }))
+    .sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
+}
+
+/**
+ * Retire each row, or settle one already retired, in this order:
+ *
+ * 1. close its open occurrence UNRESOLVED under the item's reason, never with
+ *    a disposition, so the anchor does not move;
+ * 2. an active row is retired: inactive, no next-due, no open occurrence, and
+ *    the reason. An already-retired row keeps its own retirement and only
+ *    loses a dangling occurrence pointer.
+ *
+ * Its freshness debt is not written here. The cycle keeps a retired row's debt
+ * out of the schedule, and `persistDebts` writes it as a tombstone that names
+ * the retirement.
+ *
+ * Nothing is deleted, and the RouteTask, its Attempts, commits and artifacts
+ * are never written. An interruption is safe: the row stays active until the
+ * last step, so the next cycle plans it again and finds the earlier step
+ * already done. One row's throw is isolated and named, never the cycle's.
+ */
+export async function settleRetirements(
+  repos: ControlPlaneRepositories,
+  input: { readonly items: readonly RetirementItem[]; readonly now: string },
+): Promise<{
+  readonly retired: readonly string[];
+  readonly occurrencesClosed: readonly string[];
+  readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
+}> {
+  const retired: string[] = [];
+  const occurrencesClosed: string[] = [];
+  const failed: { obligationId: string; why: string }[] = [];
+  for (const { obligationId, reason } of input.items) {
+    try {
+      const held = await repos.obligations.read(obligationId);
+      if (held === null) continue;
+
+      if (held.value.openOccurrenceId !== null) {
+        const occurrence = await repos.occurrences.read(held.value.openOccurrenceId);
+        if (occurrence !== null && occurrence.value.closedAt === null) {
+          await closeOccurrence(repos, {
+            occurrenceId: occurrence.id,
+            disposition: null,
+            unresolvedReason: `${reason}. The occurrence closes unresolved: nothing was read and nothing was refreshed`,
+            now: input.now,
+          });
+          occurrencesClosed.push(occurrence.id);
+        }
+      }
+
+      const row = await repos.obligations.mustRead(obligationId);
+      if (row.value.active) {
+        await repos.obligations.compareAndSet(
+          row.id,
+          row.revision,
+          {
+            ...row.value,
+            active: false,
+            nextDueAt: null,
+            openOccurrenceId: null,
+            retiredAt: row.value.retiredAt ?? input.now,
+            retirementReason: reason,
+            updatedAt: input.now,
+          },
+          input.now,
+        );
+        retired.push(obligationId);
+      } else if (row.value.openOccurrenceId !== null) {
+        await repos.obligations.compareAndSet(
+          row.id,
+          row.revision,
+          { ...row.value, openOccurrenceId: null, updatedAt: input.now },
+          input.now,
+        );
+      }
+    } catch (error) {
+      failed.push({ obligationId, why: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  return { retired, occurrencesClosed, failed };
 }
 
 /**
@@ -718,16 +987,44 @@ export async function persistDebts(
   next: readonly FreshnessDebt[],
   now: string,
   scope: readonly string[] | null = null,
-): Promise<{ readonly written: number; readonly cleared: readonly string[] }> {
+  /**
+   * Retired obligations, id → reason (2026-09-23). A retired obligation owes no
+   * freshness, so the cycle keeps its debt out of `next`. Its tombstone names
+   * the retirement and says it is not a reading. A retirement never reads as a
+   * discharge.
+   */
+  retired: ReadonlyMap<string, string> = new Map(),
+): Promise<{
+  readonly written: number;
+  readonly cleared: readonly string[];
+  readonly clearedAsRetired: readonly string[];
+}> {
   const byId = new Map(next.map((d) => [d.obligationId, d]));
   const existing = scope === null
     ? await repos.debts.list()
     : (await Promise.all(scope.map((id) => repos.debts.read(id)))).filter((row) => row !== null);
   const cleared: string[] = [];
+  const clearedAsRetired: string[] = [];
   const existingById = new Map(existing.map(row => [row.id, row]));
 
   for (const row of existing) {
     if (byId.has(row.value.obligationId)) continue;
+    const retiredFor = retired.get(row.value.obligationId);
+    if (retiredFor !== undefined) {
+      if (row.value.consecutiveFailures === 0) continue;
+      await repos.debts.compareAndSet(
+        row.id,
+        row.revision,
+        {
+          ...row.value,
+          consecutiveFailures: 0,
+          detail: `cleared at ${now}: the obligation was retired (${retiredFor}). Not a reading: nothing was refreshed`,
+        },
+        now,
+      );
+      clearedAsRetired.push(row.value.obligationId);
+      continue;
+    }
     /*
      * A cleared debt is written as a TOMBSTONE rather than deleted, because
      * `AggregateRepository` has no delete and should not grow one: an
@@ -757,7 +1054,7 @@ export async function persistDebts(
     }
     written += 1;
   }
-  return { written, cleared };
+  return { written, cleared, clearedAsRetired };
 }
 
 /**

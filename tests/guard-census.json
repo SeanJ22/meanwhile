@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 707,
-    "named": 7007,
+    "files": 708,
+    "named": 7018,
     "dynamic": 28
   },
   "files": {
@@ -9514,6 +9514,22 @@
         "places still carry LSAD, so a CDP can be told from a city",
         "the municipalities behind two target zips have geometry",
         "the same name in two counties gets two identifiers"
+      ],
+      "dynamic": 0
+    },
+    "tests/superseded-obligation-retirement.test.ts": {
+      "names": [
+        "PLAN: a provider that would suddenly retire more than the bound holds every row back for a person",
+        "PLAN: a retired row still pointing at an occurrence is settled under its own retirement reason",
+        "PLAN: only an active row outside the corpus, owned by a cleanly-read provider, is retired; every other row is held back by name",
+        "SEEDED: a row the legacy prefix retirement left pointing at an open occurrence has it closed under its own reason, and keeps its retirement",
+        "SEEDED: a superseded row with an open occurrence on a settled RouteTask is retired; the occurrence closes unresolved, its debt is tombstoned as retired, and nothing else is written",
+        "SEEDED: while the provider cannot read its input, nothing is retired and the occurrence stays open",
+        "a retirement reverses itself: when the registry emits the id again, sync writes it live and it schedules",
+        "an interrupted retirement completes on the next cycle: an occurrence already closed is not closed twice, and the pointer clears",
+        "obligationNamespace names the provider-owned prefix of a standing id, and nothing else",
+        "persistDebts still says discharged for a discharge, and only a retired row's debt is tombstoned as retired",
+        "sync names what it did not walk, and cannot under exact reads"
       ],
       "dynamic": 0
     },

@@ -18,11 +18,21 @@ import {
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetJson } from "../http.ts";
 import { makePermissionGate, permittedText } from "../permission-gate.ts";
+import { saysCanceled, sittingStatus } from "../sitting-status.ts";
 import { parseBoardActions } from "../tusd-govboard/board-actions.ts";
+import { calendarApiUrl } from "../smartsites/index.ts";
+import { calendarFragmentUrl } from "../tusd-govboard/index.ts";
+import {
+  calendarSittingsNotInPortal,
+  forwardCalendarMonths,
+  sittingBodyKey,
+  sittingKey,
+  type CalendarMonth,
+  type ScheduleCalendar,
+} from "./schedule-union.ts";
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
@@ -87,14 +97,19 @@ export interface DiligentRaw {
    * and parsed in normalize, like the meetings themselves.
    */
   agendaRecords?: { url: string; html: string } | null;
+  /**
+   * The body's OWN meeting calendar on a permitted host, when its wiring row
+   * names one (`scheduleCalendarBase` + `scheduleCalendarPid` for the ixCal
+   * month fragments, or `scheduleCalendarKind: smartsites` + `siteBase` +
+   * `calendarApiId` for a SmartSites events response), read for the forward
+   * window and unioned with the portal's list in normalize
+   * (`./schedule-union.ts`).
+   */
+  scheduleCalendar?: ScheduleCalendar | null;
 }
 
 function isoDate(date: Date): string {
   return date.toISOString().slice(0, 10);
-}
-
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
 /**
@@ -137,9 +152,22 @@ export function makeDiligentSource(
     // one tenant's service response and carries many meetings.
     let considered = 0;
     let keptButPlaceless = 0;
+    let outOfWindow = 0;
+    let duplicates = 0;
 
-    for (const { wiring, meetings: rows, collectedAt, agendaRecords } of raw) {
+    for (const { wiring, meetings: rows, collectedAt, agendaRecords, scheduleCalendar } of raw) {
       considered += rows.length;
+      // Sittings new to the partition are identified by body + local date and
+      // time once a body's own calendar is unioned in (./schedule-union.ts);
+      // portal ids at or below this stay as readers already hold them.
+      const legacyIdsThrough = wiring.config.legacyIdsThrough ? Number(wiring.config.legacyIdsThrough) : null;
+      if (scheduleCalendar && (legacyIdsThrough === null || !Number.isInteger(legacyIdsThrough))) {
+        // Without it, a sitting first published from the calendar would change
+        // id the day the portal lists it, and show twice.
+        throw new Error(`SCHEDULE_UNION_REQUIRES_LEGACY_IDS_THROUGH:${wiring.bodyId}`);
+      }
+      const portal: { id: string; key: string }[] = [];
+      const taken = new Set<string>();
       /*
        * **A CONCLUDED SITTING'S AGENDA RECORD FROM THE BODY'S OWN PERMITTED
        * HOST.** (2026-09-23.)
@@ -181,10 +209,6 @@ export function makeDiligentSource(
         );
 
         const location = (m.MeetingLocation ?? "").trim();
-        if (!location) {
-          drops.unknownVenue++;
-          continue;
-        }
         /*
          * A meeting held online is KEPT (D18). No building means no
          * coordinates and no pin, but it is a real public meeting a reader
@@ -193,7 +217,7 @@ export function makeDiligentSource(
          * publishes a join link, so joinUrl is null and renders as the gap
          * it is rather than as some other URL dressed up as a way in.
          */
-        const online = isPlacelessLocation(location)
+        const online = location && isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
         if (online) {
@@ -204,31 +228,44 @@ export function makeDiligentSource(
         }
         // D31: the tenant is passed so a division-less body keys on itself
         // rather than on a null every other division-less body also has.
-        const venue = online
+        // A sitting with no published place, or a place with no reviewed
+        // spelling yet, is still a verified sitting: it is published with no
+        // place rather than withheld (the owner's rule of 2026-09-23 — a
+        // missing location never suppresses an otherwise verified meeting).
+        const venue = online || !location
           ? null
-          : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug);
-        if (!online && !venue) {
-          drops.unknownVenue++;
-          continue;
-        }
+          : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
 
         // The portal's own permalink pattern, verified resolving on both
         // tenants (TUSD Id=492, Newbury Id=3370) before being relied on.
         const meetingUrl = `${wiring.config.serviceBase}${wiring.config.meetingPath}${m.Id}`;
 
         const bodyName = bodyNameFor(m, wiring);
-        const status = statusOf(startsAt, now);
+        const title = (m.CleanName ?? m.Name ?? bodyName).trim();
+        // The portal's own word for a called-off sitting ("CANCELLED DUE TO
+        // LACK OF QUORUM ...") is the sitting's status, not only its title.
+        const status = sittingStatus(startsAt, saysCanceled(title), now);
         const record =
           status === "CONCLUDED" && m.TypeId != null && recordTypes.has(m.TypeId)
             ? recordsByDay.get(`${clock[1]}-${clock[2]}-${clock[3]}`) ?? null
             : null;
+        const key = sittingKey(
+          { y: Number(clock[1]), m: Number(clock[2]), d: Number(clock[3]), h: Number(clock[4]), mi: Number(clock[5]) },
+          sittingBodyKey(bodyName),
+        );
+        let id = legacyIdsThrough !== null && m.Id > legacyIdsThrough
+          ? `${SOURCE_NAME}:${wiring.config.slug}:${key}`
+          : `${SOURCE_NAME}:${wiring.config.slug}:${m.Id}`;
+        for (let n = 2; taken.has(id); n += 1) id = `${SOURCE_NAME}:${wiring.config.slug}:${key}-${n}`;
+        taken.add(id);
+        portal.push({ id, key });
         meetings.push({
-          id: `${SOURCE_NAME}:${wiring.config.slug}:${m.Id}`,
+          id,
           ocdId: wiring.ocdId,
           /* NH-RC4: the body, from the wiring row that produced this meeting. */
           bodyId: wiring.bodyId,
           bodyName,
-          title: (m.CleanName ?? m.Name ?? bodyName).trim(),
+          title,
           startsAt,
           timeZone: wiring.timeZone,
           location: venue
@@ -254,13 +291,34 @@ export function makeDiligentSource(
           },
         });
       }
+      if (scheduleCalendar) {
+        const union = calendarSittingsNotInPortal({
+          wiring,
+          sourceName: SOURCE_NAME,
+          calendar: scheduleCalendar,
+          portal,
+          takenIds: taken,
+          collectedAt,
+          now,
+        });
+        considered += union.considered;
+        duplicates += union.duplicates;
+        outOfWindow += union.outOfWindow;
+        for (const meeting of union.produced) {
+          if (meeting.online) {
+            drops.placeless++;
+            keptButPlaceless += 1;
+          }
+          meetings.push(meeting);
+        }
+      }
     }
 
     return accountedNormalize(
       SOURCE_NAME,
       raw,
       { meetings, drops },
-      { logicalInput: considered, countedButProduced: keptButPlaceless },
+      { logicalInput: considered, countedButProduced: keptButPlaceless, outOfWindow, duplicates },
     );
   };
 
@@ -283,18 +341,42 @@ export function makeDiligentSource(
         });
         // The body's own agenda-record index is read only under a permission
         // verdict for ITS host, asked before the request (RULING 263).
+        const gate = makePermissionGate({ fetchImpl, signal: query?.signal });
+        const http = { fetchImpl, signal: query?.signal };
         const recordsUrl = wiring.config.agendaRecordsUrl;
         let agendaRecords: DiligentRaw["agendaRecords"] = null;
         if (recordsUrl) {
-          const gate = makePermissionGate({ fetchImpl, signal: query?.signal });
-          const html = await permittedText(gate, recordsUrl, { fetchImpl, signal: query?.signal });
-          agendaRecords = { url: recordsUrl, html };
+          agendaRecords = { url: recordsUrl, html: await permittedText(gate, recordsUrl, http) };
+        }
+        // The body's own calendar for the forward window, under the same
+        // permission gate. Any refusal or failure throws, so the partition
+        // keeps its last good version rather than publishing half a union.
+        const calendarBase = wiring.config.scheduleCalendarBase;
+        const calendarPid = wiring.config.scheduleCalendarPid;
+        let scheduleCalendar: DiligentRaw["scheduleCalendar"] = null;
+        if (wiring.config.scheduleCalendarKind === "smartsites") {
+          const url = calendarApiUrl(
+            wiring.config,
+            new Date(now),
+            new Date(now + WINDOW_FORWARD_DAYS * 86_400_000),
+          );
+          scheduleCalendar = {
+            events: { url, text: await permittedText(gate, url, { ...http, accept: "application/json" }) },
+          };
+        } else if (calendarBase && calendarPid) {
+          const months: CalendarMonth[] = [];
+          for (const month of forwardCalendarMonths(new Date(now))) {
+            const url = calendarFragmentUrl(calendarBase, calendarPid, month);
+            months.push({ url, html: await permittedText(gate, url, http) });
+          }
+          scheduleCalendar = { months };
         }
         collected.push({
           wiring,
           meetings: Array.isArray(rows) ? rows : [],
           collectedAt: new Date().toISOString(),
           agendaRecords,
+          scheduleCalendar,
         });
       }
       return collected;

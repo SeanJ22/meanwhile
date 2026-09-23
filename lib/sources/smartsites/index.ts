@@ -23,7 +23,10 @@ import type {
 /**
  * **ParentSquare SmartSites — a school district's own calendar, read from the
  * JSON its calendar component already fetches.** (2026-09-23, the Pima
- * school-agenda routes session. Built and recorded; NOT wired.)
+ * school-agenda routes session. As a standalone replacement for the portal it
+ * is built and held. Sunnyside's calendar JSON itself IS wired: its partition
+ * unions the forward-window sittings with the portal's list through
+ * lib/sources/diligent/schedule-union.ts, which reuses `calendarApiUrl`.)
  *
  * ## The route, because the route is the reusable part
  *

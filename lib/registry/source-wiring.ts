@@ -339,6 +339,26 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // Session) has no Board Actions entry. See lib/sources/diligent.
       agendaRecordsUrl: "https://govboard.tusd1.org/Actions",
       agendaRecordsTypeIds: "17,29",
+      // The Board's own meeting calendar (the Meeting-Calendar page's month
+      // fragments, inCal.aspx), unioned with the portal's list for the
+      // forward window: it carries Governing Board sittings months before the
+      // portal does (lib/sources/diligent/schedule-union.ts, 2026-09-23).
+      scheduleCalendarBase: "https://govboard.tusd1.org",
+      scheduleCalendarPid: "36871",
+      // Portal ids readers already held when the union began; sittings new
+      // to the partition are identified by body + local date and time.
+      legacyIdsThrough: "505",
+      // The upcoming sittings already published under portal ids, so a
+      // calendar row inherits the id if the portal stops returning one.
+      "legacySitting:503": "2026-09-28T1815-alternative-education-advisory",
+      "legacySitting:505": "2026-09-30T1600-budget-advisory",
+      "legacySitting:504": "2026-10-05T1730-employee-benefit-trust",
+      // The district's own place sentences → the reviewed spellings the
+      // portal's rows already resolve through (promoted venue-resolutions).
+      "venueMatch:Duffy Community Center":
+        "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+      "venueMatch:Morrow Education Center":
+        "Board Conference Room Morrow Education Center 1010 E. Tenth Street Tucson, Arizona 85719",
     },
     // The Board's own notice page: server-renders the meeting notice
     // (times, venue, public hearings) days before the Diligent portal
@@ -371,6 +391,23 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // district's own name for it (susd12.org/governing-board-home).
       "typeName:27": "Governing Board",
       "typeName:21": "Governing Board",
+      // The district's own calendar (www.susd12.org, ParentSquare SmartSites;
+      // robots.txt permits /api/, read 2026-09-23), unioned with the portal's
+      // list for the forward window: on 2026-09-23 it listed the Jan 12, 2027
+      // Governing Board meeting the portal did not yet carry
+      // (lib/sources/diligent/schedule-union.ts).
+      scheduleCalendarKind: "smartsites",
+      siteBase: "https://www.susd12.org",
+      calendarApiId: "150042",
+      scheduleCalendarTitlePattern: "\\bgoverning board\\b",
+      // Portal ids readers already held when the union began.
+      legacyIdsThrough: "174",
+      "legacySitting:168": "2026-09-29T1830-governing-board",
+      "legacySitting:169": "2026-10-13T1830-governing-board",
+      "legacySitting:170": "2026-10-27T1830-governing-board",
+      "legacySitting:171": "2026-11-10T1830-governing-board",
+      "legacySitting:172": "2026-11-24T1830-governing-board",
+      "legacySitting:173": "2026-12-08T1830-governing-board",
     },
     verifiedAt: "2026-08-14",
   },

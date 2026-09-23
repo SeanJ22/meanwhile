@@ -382,6 +382,10 @@ export const SOURCE_AUTHORITIES = {
       "https://www.pima.edu/robots.txt",
       "https://www.pima.edu/about-pima/leadership-policies/governing-board/",
       "https://events.pima.edu/",
+      // Sunnyside USD's own calendar JSON (robots.txt permits /api/; read
+      // 2026-09-23), unioned with its portal's list for the forward window.
+      "https://www.susd12.org/robots.txt",
+      "https://www.susd12.org/api/calendars/150042/events",
       "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
       "https://pima.legistar.com/",
       "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
@@ -395,7 +399,7 @@ export const SOURCE_AUTHORITIES = {
       "capaz.portal.civicclerk.com", "govboard.tusd1.org", "clerksboards.tucsonaz.gov", "meetings.boardbook.org",
       "mesa.legistar.com", "morriscountynj.iqm2.com", "newburynh.civicweb.net",
       "webapi.legistar.com",
-      "newlondon.nh.gov", "www.pima.edu", "events.pima.edu", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
+      "newlondon.nh.gov", "www.pima.edu", "events.pima.edu", "www.susd12.org", "pima.legistar.com", "susd-12.community.highbond.com", "tucsonaz.hylandcloud.com",
       "www.pima.gov",
       "tusd1-schooldesk.community.diligentoneplatform.com", "vailschooldistrictaz.thrillshare.com", "warnernh.gov",
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",

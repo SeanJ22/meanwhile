@@ -24,9 +24,12 @@ import type {
 
 /**
  * **Tucson Unified's own Governing Board site: the board calendar and the Board
- * Actions record.** (2026-09-23, the Pima school-agenda routes session. Built
- * and recorded; NOT wired — see the ledger in
- * docs/detective/pima-school-agenda-routes-2026-09-23.md for why.)
+ * Actions record.** (2026-09-23, the Pima school-agenda routes session. As a
+ * standalone REPLACEMENT for the portal this adapter is built and held — see
+ * the ledger in docs/detective/pima-school-agenda-routes-2026-09-23.md for why.
+ * Its calendar parser IS wired: the TUSD partition unions the calendar's
+ * forward-window sittings with the portal's list through
+ * lib/sources/diligent/schedule-union.ts.)
  *
  * ## The route
  *
@@ -126,8 +129,14 @@ export function monthsInWindow(now: Date): string[] {
   return out;
 }
 
-function bodyNameOf(title: string): string {
+/** The body a calendar title names: "Audit Committee Meeting - via Zoom" → "Audit Committee". */
+export function bodyNameOf(title: string): string {
   return title.replace(/\s*-\s*via Zoom$/i, "").replace(/\s+Meeting$/i, "").trim();
+}
+
+/** The month fragment URL the Meeting-Calendar page itself requests. */
+export function calendarFragmentUrl(base: string, pid: string, month: string): string {
+  return `${base}/inflow/xti/inCal.aspx?PID=${pid}&C=0&D=${month}&V=12`;
 }
 
 export function makeTusdGovboardSource(
@@ -227,7 +236,7 @@ export function makeTusdGovboardSource(
         const http = { fetchImpl, signal: query?.signal };
         const months: CalendarFragment[] = [];
         for (const month of monthsInWindow(new Date())) {
-          const url = `${cfg.base}/inflow/xti/inCal.aspx?PID=${cfg.calendarPid}&C=0&D=${month}&V=12`;
+          const url = calendarFragmentUrl(cfg.base, cfg.calendarPid, month);
           months.push({ url, html: await permittedText(gate, url, http) });
         }
         const actionsUrl = cfg.actionsUrl ?? null;

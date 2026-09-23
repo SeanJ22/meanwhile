@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 708,
-    "named": 7029,
+    "named": 7030,
     "dynamic": 29
   },
   "files": {
@@ -4628,6 +4628,7 @@
         "ICAL-OCC · a series record is replaced only by an occurrence holding its fact",
         "ICAL-OCC · a series record whose fact no current occurrence holds is carried, never removed",
         "ICAL-OCC · a sitting the publisher struck out (EXDATE) is not published, and is named",
+        "ICAL-OCC · an RDATE adds a sitting to its series; an RDATE period is refused by name",
         "ICAL-OCC · an edited sitting belongs to its series' body, and replaces the series' own copy of it",
         "ICAL-OCC · an edited sitting is never claimed by a body its own title happens to name",
         "ICAL-OCC · an event outside any series keeps its id exactly",

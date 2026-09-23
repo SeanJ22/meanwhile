@@ -982,6 +982,32 @@ test("ICAL-OCC · a rule part not supported is a named failure: the series' own 
     fact.code === "ICAL_SERIES_RULE_UNSUPPORTED" && fact.key === `meeting-series:${series}` && /BYMONTHDAY/.test(fact.detail)));
 });
 
+test("ICAL-OCC · an RDATE adds a sitting to its series; an RDATE period is refused by name", () => {
+  const withRdate = (rdate: string) => [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:rdate-1@example.org",
+    "DTSTART;TZID=America/New_York:20261006T180000",
+    "RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=TU",
+    rdate,
+    "SUMMARY:Select Board Meeting",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const series = "ical:warner-select-board:rdate-1@example.org";
+  const added = normalize([SELECT_BOARD_WIRING], withRdate("RDATE;TZID=America/New_York:20261029T180000"));
+  assert.deepEqual(added.meetings.map(({ id, startsAt }) => ({ id, startsAt })), [
+    { id: `${series}/20261006T220000Z`, startsAt: "2026-10-06T22:00:00.000Z" },
+    { id: `${series}/20261013T220000Z`, startsAt: "2026-10-13T22:00:00.000Z" },
+    { id: `${series}/20261029T220000Z`, startsAt: "2026-10-29T22:00:00.000Z" },
+  ]);
+  assert.equal(added.accounting.outcome, "CONSERVED");
+
+  const period = normalize([SELECT_BOARD_WIRING], withRdate("RDATE;VALUE=PERIOD:20261029T220000Z/PT2H"));
+  assert.deepEqual(period.meetings.map(({ id }) => id), [`${series}/20261006T220000Z`], "the series' own first sitting only");
+  assert.equal(period.recurrence?.notExpanded[0]?.detail.startsWith("RDATE as a period is not supported"), true);
+});
+
 test("ICAL-OCC · the rule reader names every part it refuses", () => {
   for (const [rule, part] of [
     ["FREQ=DAILY;COUNT=3", "FREQ=DAILY"],

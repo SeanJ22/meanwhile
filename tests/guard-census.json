@@ -1,11 +1,21 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 714,
-    "named": 7067,
+    "files": 715,
+    "named": 7072,
     "dynamic": 28
   },
   "files": {
+    "tests/abandoned-occurrences.test.ts": {
+      "names": [
+        "SEEDED: an occurrence 1 its obligation moved past, on a never-claimed RouteTask, is closed unresolved and nothing else is written",
+        "a live pointer survives: closing an abandoned occurrence never clears the obligation's own open occurrence",
+        "never abandoned: the occurrence it points at, its latest occurrence even with the pointer lost, and one whose RouteTask was claimed",
+        "openOccurrence refuses while its obligation points at an open occurrence, and writes nothing",
+        "the close re-reads every condition at write time and skips, by name, anything that changed"
+      ],
+      "dynamic": 0
+    },
     "tests/absence-defaults.test.ts": {
       "names": [
         "a single-token type default is not a claim and is not flagged",

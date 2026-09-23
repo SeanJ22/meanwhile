@@ -192,7 +192,15 @@ export interface ReaderRendering {
 export function readerRendering(change: ReaderChange): ReaderRendering {
   const m = change.after;
   const missing: string[] = [];
-  if (m.location === null && !m.online) missing.push("a place or an online access");
+  if (m.location === null && !m.online) {
+    missing.push(
+      m.venueGap
+        ? m.venueGap.kind === "NOT_STATED_BY_PUBLISHER"
+          ? `a venue (not stated by ${m.venueGap.publisher})`
+          : "map coordinates for the stated venue"
+        : "a place or an online access",
+    );
+  }
   if (m.agendaUrl === null) missing.push("an agenda link");
   if (m.provenance.sourceUrl === null) missing.push("a source page");
   let time: string;
@@ -200,7 +208,7 @@ export function readerRendering(change: ReaderChange): ReaderRendering {
   const agenda: ReaderAgendaState = change.agendaDocument !== null ? "DOCUMENT" : m.agendaUrl !== null ? "LINK" : m.agendaSlotObservedEmpty ? "PUBLISHER_SLOT_EMPTY" : "NOT_CARRIED_OUR_GAP";
   return {
     meetingId: m.id, body: m.bodyName, title: m.title, jurisdiction: m.jurisdiction, time, timeZone: m.timeZone, startsAt: m.startsAt,
-    where: m.location ? `${m.location.name}${m.location.address ? `, ${m.location.address}` : ""}` : m.online ? `online: ${m.online.label}${m.online.joinUrl ? ` (${m.online.joinUrl})` : " (no join link published)"}` : "(nowhere a reader could attend)",
+    where: m.location ? `${m.location.name}${m.location.address ? `, ${m.location.address}` : ""}` : m.online ? `online: ${m.online.label}${m.online.joinUrl ? ` (${m.online.joinUrl})` : " (no join link published)"}` : m.venueGap ? (m.venueGap.publishedText ? `${m.venueGap.publishedText} (as published; not placed on the map)` : `venue not stated by ${m.venueGap.publisher}`) : "(nowhere a reader could attend)",
     agenda, agendaUrl: m.agendaUrl, source: m.provenance.sourceUrl, publishedBy: m.provenance.sourceOrg, status: m.status, missing,
   };
 }

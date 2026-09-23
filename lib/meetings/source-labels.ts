@@ -59,6 +59,10 @@ export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   iqm2: "their online agenda portal",
   revize: "their town website's meetings page",
   schedulepage: "their own published schedule page",
+  // The body's own web page for an effort it runs — a district's school
+  // reconfiguration page, say — where it dates its committee meetings and
+  // community sessions. Not a calendar product, so not called one.
+  "official-page-events": "their own website's page for these meetings",
   // Plain words for a format a reader has no reason to know the name of. Not
   // "their iCalendar feed": the reader is trying to find out when their town
   // meets, and "iCalendar" is an identifier wearing a label's clothes.

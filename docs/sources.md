@@ -376,6 +376,31 @@ parse as data*, never *did the call succeed*.
   seeded from the NCES CCD website column and fingerprinting outbound links —
   recorded on `D70`, the enumeration-crawler row.
 
+### Official-page events — a body's OWN page, outside any vendor
+- **Last walked:** 2026-09-23
+- **Status:** WIRED — `lib/sources/official-page-events/` (AgendaSourceType
+  `OFFICIAL_PAGE_EVENTS`), one partition per wired body, promoted through the
+  standing runner's meeting-partition door like every other meeting source.
+- **Auth:** none. The body's own public web page.
+- **Licence:** the records are the body's own publication about its own public
+  meetings; facts (dates, times, places, titles) are extracted, prose is not
+  copied beyond a short evidence excerpt that cites the page.
+- **Permission, per page, read before the first fetch:**
+
+| Page | robots.txt | Verdict | Read |
+| --- | --- | --- | --- |
+| `https://www.tusd1.org/Reconfiguration` (Tucson Unified School District — WIRED) | `User-agent: *` disallows only `/TUSD-school-exit-survey` and `/PLC-Roskruge` (separate `Disallow: /` groups name SemrushBot, SiteAuditBot, SplitSignalBot and GPTBot, none of which is us) | **ALLOWED** — no rule matches the path | 2026-09-23 |
+| `https://www.sfps.info/page/board-of-education-2` (Santa Fe Public Schools, NM — recorded as a cross-state test fixture only, NOT wired) | `User-agent: *` `Allow: /`, `Disallow: /api/` | **ALLOWED** for the page; the paginated event API under `/api/` is disallowed and is not read | 2026-09-23 |
+
+- **Transport:** `www.tusd1.org` answered curl with a Cloudflare 520 while the
+  repo's own `politeGetText` (index profile, project User-Agent) received HTTP
+  200 for the same page — the pipeline's ordinary client, no escalation.
+- **Verification is per event:** the page host must be the body's registered
+  official domain (its registry `homepageUrl`) or explicitly authorized on the
+  wiring row; each date must parse unambiguously inside the serving window; the
+  title must name the body or its committee. Anything else is HELD with a named
+  reason, never guessed.
+
 ---
 
 ## Evaluated, not wired

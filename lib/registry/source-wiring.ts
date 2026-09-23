@@ -134,6 +134,7 @@ export function meetingSourceNamesForWiring(row: BodySourceWiring): readonly str
     REVIZE: "revize",
     SCHEDULEPAGE: "schedulepage",
     ICAL: "ical",
+    OFFICIAL_PAGE_EVENTS: "official-page-events",
   };
   const route = routeByType[row.agendaSourceType];
   return route ? [route] : [];
@@ -247,6 +248,48 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     // while the portal's agenda was still unpublished.
     noticeUrl: "https://govboard.tusd1.org/",
     verifiedAt: "2026-08-13",
+  },
+  // ── Official-page events: the district's own page, outside any vendor ───
+  // Tucson Unified's reconfiguration page dates the Joint Committee's
+  // meetings and the district's community engagement sessions on school
+  // consolidation — none of them on the Governing Board's Diligent portal
+  // above, which is why a reader was shown nothing while they were being
+  // held (owner report, 2026-09-23). robots.txt read 2026-09-23 disallows
+  // only /TUSD-school-exit-survey and /PLC-Roskruge for `*`.
+  //
+  // ATTRIBUTION: these are DISTRICT-hosted meetings, not the Board's. The
+  // registry holds exactly one TUSD body — `#board`, name null, homepage
+  // www.tusd1.org — and a partition must key on a registry body, so this row
+  // keys on it as the district's only registered identity. What a reader is
+  // told comes from the meeting itself: `bodyName` is the district, `title`
+  // is the page's own name for the sitting and `eventType` is "Joint
+  // Committee meeting" / "Community engagement session". Nothing here
+  // writes "Governing Board meeting". Registering the Joint Committee as
+  // its own body is a promoted-bodies + registry:build change of its own.
+  //
+  // Its own partition (`meetings:official-page-events:<#board>`), its own
+  // failure domain (www.tusd1.org) — it cannot collide with, delay or be
+  // delayed by the Diligent partition for the same body.
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+    ocdId:
+      "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+    agendaSourceType: "OFFICIAL_PAGE_EVENTS",
+    jurisdiction: "Tucson Unified School District, AZ",
+    publishingOrg: "Tucson Unified School District",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "tusd1-reconfiguration",
+      pageUrl: "https://www.tusd1.org/Reconfiguration",
+      // The registry body's homepageUrl host — its ownWebAddress. A test
+      // holds the two equal, so the registry stays the authority.
+      officialHost: "www.tusd1.org",
+      bodyName: "Tucson Unified School District",
+      // An event must name the district or its committee to publish.
+      nameTerms: "Tucson Unified|TUSD|Joint Committee",
+    },
+    verifiedAt: "2026-09-23",
   },
   {
     // Sunnyside USD runs the same Diligent/Highbond tenant shape as Pima

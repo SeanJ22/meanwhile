@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
+import { meetingPartitionsForSource } from "../lib/civic-data/meeting-partitions.ts";
+import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { Registry } from "../lib/registry/types.ts";
@@ -105,7 +107,17 @@ test("the snapshot reports EVERY wired source, including one that returned nothi
   const registered = [...wiringSource.matchAll(/^\s*name: "([a-z0-9-]+)",$/gm)].map((m) => m[1]);
 
   assert.ok(registered.length >= 10, `only ${registered.length} adapter names parsed — this guard is stale`);
-  const silent = registered.filter((n) => !reported.has(n));
+  // The bundled snapshot is FROZEN at the PDC v2 import. An adapter every one
+  // of whose partitions was registered after that import cannot appear in it;
+  // it is exempt only by being named, partition by partition, in
+  // PDC_V2_POST_IMPORT_MEETING_PARTITIONS — never by inference.
+  const postImportOnly = new Set(
+    registered.filter((name) => {
+      const partitions = meetingPartitionsForSource(name);
+      return partitions.length > 0 && partitions.every((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
+    }),
+  );
+  const silent = registered.filter((n) => !reported.has(n) && !postImportOnly.has(n));
   assert.deepEqual(
     silent,
     [],

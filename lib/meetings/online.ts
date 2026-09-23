@@ -1,4 +1,4 @@
-import type { Meeting, MeetingLocation, OnlineAccess } from "@/lib/sources/types";
+import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/lib/sources/types";
 
 /**
  * **ONLINE-NESS IS ONE QUESTION, ASKED IN ONE PLACE.** (MTG-14, 2026-08-28.)
@@ -43,7 +43,7 @@ import type { Meeting, MeetingLocation, OnlineAccess } from "@/lib/sources/types
  */
 
 /** The shape any surface needs to answer the question. Meetings satisfy it. */
-type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess };
+type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess; venueGap?: MeetingVenueGap };
 
 /**
  * **Whether this sitting happens online, with no room to attend in person.**
@@ -52,7 +52,10 @@ type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess };
  * `location === null` is what makes the claim true: there is nowhere to go.
  */
 export function isOnlineOnly(meeting: OnlineShaped): boolean {
-  return meeting.location === null;
+  // A physical meeting whose room is a named gap (`venueGap`) also carries a
+  // null location, and it is NOT online: labeling it so would send a reader
+  // looking for a join link that was never published.
+  return meeting.location === null && !meeting.venueGap;
 }
 
 /**

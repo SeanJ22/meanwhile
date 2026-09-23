@@ -64,6 +64,12 @@ export interface Provenance {
    * the line is available and the claim is precise rather than blanket.
    */
   secondHand?: boolean;
+  /**
+   * The publisher's own words this record was read from, verbatim — set by an
+   * adapter that reads a page's prose or cards rather than a structured feed,
+   * so the claim can be checked against its source without re-deriving it.
+   */
+  evidenceExcerpt?: string;
 }
 
 /**
@@ -142,6 +148,33 @@ export interface OnlineAccess {
   label: string;
   /** The join link the body published, or null when it published none. */
   joinUrl: string | null;
+}
+
+/**
+ * **A PHYSICAL MEETING WHOSE ROOM WE CANNOT PUT ON THE MAP** — a named gap
+ * (2026-09-23, official-page events).
+ *
+ * `location: null` used to mean exactly one thing: held online, nowhere to go
+ * (D18). A district's own page dating a Joint Committee meeting without naming
+ * a room is a different fact, and so is a card naming "Cholla High School
+ * South Gym" that this pipeline has no reviewed coordinates for. Neither is
+ * online, and dropping either hides a public meeting a reader could attend.
+ * So the gap is carried, named, with whose gap it is:
+ *
+ * - `NOT_STATED_BY_PUBLISHER` — the publisher's own page states no venue.
+ * - `STATED_NOT_PLACED` — the publisher states `publishedText` verbatim; the
+ *   gap is ours (no reviewed coordinates), so it renders as text, never a pin.
+ *
+ * Set together with `location: null` and never with `online`: the three are
+ * mutually exclusive, and `isOnlineOnly` reads this field so a venue gap is
+ * never labeled online.
+ */
+export interface MeetingVenueGap {
+  kind: "NOT_STATED_BY_PUBLISHER" | "STATED_NOT_PLACED";
+  /** The venue exactly as published, or null when none was. */
+  publishedText: string | null;
+  /** Whose page this was read from — the name the gap line cites. */
+  publisher: string;
 }
 
 /**
@@ -256,6 +289,25 @@ export interface Meeting {
    * a null `location`; see both notes.
    */
   online?: OnlineAccess;
+  /**
+   * A physical meeting with no placeable room — see `MeetingVenueGap`. Set
+   * together with a null `location` and never with `online`.
+   */
+  venueGap?: MeetingVenueGap;
+  /**
+   * The kind of sitting in the publisher's own terms — "Joint Committee
+   * meeting", "Community engagement session" — where the source states one
+   * the title alone does not. Never promoted upward: a committee's sitting is
+   * never labeled the governing body's.
+   */
+  eventType?: string;
+  /**
+   * End instant, ISO 8601 with offset, when the publisher states one. Absent
+   * or null means no end was published — never a default duration.
+   */
+  endsAt?: string | null;
+  /** RSVP, livestream or registration links the publisher gave for this sitting. */
+  publishedLinks?: Array<{ label: string; href: string }>;
   /**
    * Link to the published agenda, or null.
    *

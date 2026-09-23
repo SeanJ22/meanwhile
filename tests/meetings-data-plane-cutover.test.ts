@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
 import {
   readMeetingsProjection,
   readSnapshot,
@@ -155,7 +156,15 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
 
 test("meetings candidate proves SOURCE_WIRING obligations independently of row count", async () => {
   const coverage = meetingsWiringCoverage(fixture);
-  assert.equal(coverage.accounted, coverage.denominator);
+  // The bundled fixture is frozen at the PDC v2 import: the only obligations
+  // it may leave unaccounted are rows whose partitions were registered after
+  // it, each named in PDC_V2_POST_IMPORT_MEETING_PARTITIONS.
+  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
+  assert.deepEqual(
+    coverage.missing,
+    postImport.map((p) => `${p.bodyId}:${p.wiring.agendaSourceType}`),
+  );
+  assert.equal(coverage.accounted, coverage.denominator - postImport.length);
   assert.equal(coverage.denominator > 0, true);
   assert.equal(coverage.denominator === fixture.meetings.length, false);
 

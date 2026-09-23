@@ -164,6 +164,16 @@ export type AgendaSourceType =
    * Regional School District (2026-08-15, M78).
    */
   | "SCHEDULEPAGE"
+  /**
+   * Not a vendor and not a schedule — dated public events a body publishes on
+   * its OWN official page in whatever shapes it chose: schema.org JSON-LD or
+   * microdata, linked `.ics`, embedded event state, event cards, dated
+   * headings and "Next meeting <date>" statements. Every event is verified
+   * against the body (official host, unambiguous in-window date, a title that
+   * names the body) or held by name. First body: Tucson Unified's
+   * reconfiguration page (2026-09-23). See `lib/sources/official-page-events`.
+   */
+  | "OFFICIAL_PAGE_EVENTS"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

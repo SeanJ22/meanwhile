@@ -47,6 +47,7 @@ import {
 } from "../../lib/holdings/reader-census.ts";
 import {
   admitReaderExecutionAuthorityArchivedSupport,
+  PDC_V2_POST_IMPORT_MEETING_PARTITIONS,
   PDC_V2_ZERO_LKG_MEETING_PARTITIONS,
   type ReaderExecutionAuthorityArchivedSupportAdmission,
 } from "../../lib/holdings/reader-execution-authority.ts";
@@ -139,9 +140,15 @@ export function readerProofMeetingsAuthorityFromImport(
   if (promotedById.size !== promotedRows.length) {
     throw new Error("Reader phase import duplicates a meeting partition disposition.");
   }
+  // Partitions registered after the frozen import are outside its universe:
+  // NOT_RECORDED in this authority until routine promotion gains them.
+  const postImport = new Set(PDC_V2_POST_IMPORT_MEETING_PARTITIONS.filter((id) => registered.has(id)));
+  if (promotedRows.some(({ contractId }) => postImport.has(contractId))) {
+    throw new Error("Reader phase import claims a meeting partition registered after it.");
+  }
   if (
     admission.zeroMeetingPartitionsRefused !== PDC_V2_ZERO_LKG_MEETING_PARTITIONS ||
-    promotedRows.length !== registered.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS
+    promotedRows.length !== registered.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS - postImport.size
   ) {
     throw new Error("Reader phase import meeting partition denominator differs from the permanent 83/41 authority.");
   }
@@ -153,7 +160,7 @@ export function readerProofMeetingsAuthorityFromImport(
   });
   return {
     meetingPartitionsWithLkg: promotedRows.length,
-    meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused,
+    meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused + postImport.size,
     legacyMeetingsAggregate: admission.legacyMeetingsAggregate,
     partitions,
   };

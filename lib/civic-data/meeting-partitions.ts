@@ -56,6 +56,7 @@ export function meetingAcquisitionFailureDomain(
       case "schedulepage": return wiring.config.schedulePage;
       case "ical": return wiring.config.feedUrl;
       case "civicclerk": return wiring.config.apiBase;
+      case "official-page-events": return wiring.config.pageUrl;
       default: throw new Error(`MEETING_FAILURE_DOMAIN_ADAPTER_UNKNOWN:${sourceName}`);
     }
   })()?.trim();

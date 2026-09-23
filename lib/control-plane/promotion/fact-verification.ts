@@ -185,7 +185,8 @@ function assertionClassBurdens(input: FactVerificationInput, row: Record<string,
     const words = fact.source.sourceId === "legistar" ? [row.EventComment, row.EventAgendaStatusName] : [row.eventName];
     if (!words.some((w) => typeof w === "string" && /\bcancell?ed\b/i.test(w))) failures.push("CANCELED without the publisher's own word for it");
   }
-  if (m.location === null && !m.online) failures.push("no location and no online access — a meeting nobody can attend");
+  if (m.location === null && !m.online && !m.venueGap) failures.push("no location, no online access and no named venue gap — a meeting nobody can attend");
+  if (m.venueGap && (m.location !== null || m.online)) failures.push("a venue gap alongside a location or an online block; the three must agree");
   if (m.location !== null && m.online) failures.push("both a location and an online block; the two must agree");
   if (m.location !== null && (!Number.isFinite(m.location.lat) || !Number.isFinite(m.location.lng) || !m.location.name)) failures.push("a placed meeting without coordinates or a venue name");
   if (m.provenance.sourceUrl === null) failures.push("no source URL on the record");

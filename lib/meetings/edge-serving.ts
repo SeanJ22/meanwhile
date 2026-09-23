@@ -103,8 +103,26 @@ export interface PublishAuthorityValue {
   readonly value: unknown;
   readonly versionId: string;
 }
+/**
+ * A family whose promoted version is exactly the one the current manifest
+ * already serves. Its artifact was written from a proven read of that same
+ * immutable version, so publish reuses the manifest's reference instead of
+ * the runner reading the whole value (24 MB for registry-runtime) every pass.
+ */
+export interface PublishAuthorityCarried {
+  readonly versionId: string;
+  readonly carried: true;
+}
 /** The authority families the runner may publish, keyed by family id. */
-export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue>>;
+export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+
+/** The version a manifest serves for one authority family, or null when it serves none. */
+export function servedAuthorityVersion(
+  manifest: Pick<ReaderManifest, "authorityArtifacts"> | null | undefined,
+  family: AuthorityFamily,
+): string | null {
+  return manifest?.authorityArtifacts?.[family]?.version ?? null;
+}
 
 /** The compressed authority artifact envelope stored in the edge store. */
 interface AuthorityArtifactEnvelope {
@@ -293,6 +311,14 @@ export async function publishReaderEdgeArtifacts(
     for (const family of AUTHORITY_FAMILIES) {
       const entry = options.authority?.[family];
       if (!entry) continue;
+      if ("carried" in entry) {
+        // Only the exact version this manifest serves carries forward; if the
+        // manifest moved since the caller looked, the family is left out, as a
+        // failed read is, and the Reader falls back to the database for it.
+        const served = current?.manifest.authorityArtifacts?.[family];
+        if (served && served.version === entry.versionId) authorityArtifacts[family] = served;
+        continue;
+      }
       const key = authorityArtifactKey(sequence, family);
       const envelope: AuthorityArtifactEnvelope = {
         formatVersion: READER_ARTIFACT_FORMAT_VERSION,

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 709,
-    "named": 7033,
+    "named": 7034,
     "dynamic": 28
   },
   "files": {
@@ -8070,6 +8070,7 @@
     },
     "tests/registry-runtime-edge.test.ts": {
       "names": [
+        "an unchanged authority version carries its served artifact forward; the runner never re-reads it",
         "primeRegistryRuntimeFromValue serves the value synchronously with its version, no DB",
         "republishing the same authority version is idempotent; a new version advances the pointer",
         "the registry-runtime edge value is request-scoped: absent by default (runner/workers keep the DB path)",

@@ -19,9 +19,13 @@ import {
   publishReaderEdgeArtifacts,
   purgeReaderCacheTags,
   READER_MANIFEST_CACHE_TAG,
+  servedAuthorityVersion,
   type PublishReaderExtras,
   type PublishAuthority,
 } from "../lib/meetings/edge-serving.ts";
+import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
+import type { AuthorityFamily, ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
+import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { refreshCommentAccessFromPromoted, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
@@ -132,25 +136,65 @@ if (meetingAggregate) {
       // as its own compressed NATIONAL artifact ONLY when it validates. A
       // failed/absent read simply omits that family (the reader falls back to the
       // DB for it), never a hard failure of the publish.
+      //
+      // A family whose current pointer is still the version the edge already
+      // serves carries its artifact forward and is not read at all: that
+      // artifact was written from a proven read of the same immutable version.
+      // Every pass once read every family whole (30.8 MB on 2026-09-23, 24 MB
+      // of it registry-runtime) to learn that nothing had changed.
+      const artifactStore = resolveReaderArtifactWriteStore();
+      let servedManifest: ReaderManifest | null = null;
+      try {
+        servedManifest = artifactStore ? (await artifactStore.readManifest())?.manifest ?? null : null;
+      } catch {
+        servedManifest = null;
+      }
+      const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
+        const served = servedAuthorityVersion(servedManifest, family);
+        if (served === null) return null;
+        try {
+          return (await currentVersion()) === served ? served : null;
+        } catch {
+          return null;
+        }
+      };
+      const pointerVersion = (recordClass: RoutineRecordClass, scope: string) => async () =>
+        (await store.readPromotionIdentity(recordClass, scope))?.versionId ?? null;
+      const manualPointer = (contractId: string) => {
+        const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(({ id }) => id === contractId);
+        return contract ? pointerVersion(contract.recordClass, contract.scope) : async () => null;
+      };
       const authority: PublishAuthority = {};
       try {
-        const rt = await readRegistryRuntimeProjection();
-        if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: rt.metadata.versionId };
-        else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime kind=${rt.kind}\n`);
+        const carried = await servedIfCurrent("registry-runtime", manualPointer("registry-runtime-bindings"));
+        if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };
+        else {
+          const rt = await readRegistryRuntimeProjection();
+          if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: rt.metadata.versionId };
+          else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime kind=${rt.kind}\n`);
+        }
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       try {
-        const fd = await readFederalDirectoryProjection();
-        if (fd.kind === "PROMOTED" && fd.metadata.versionId) authority["federal-directory"] = { value: fd.value, versionId: fd.metadata.versionId };
-        else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: federal-directory kind=${fd.kind}\n`);
+        const carried = await servedIfCurrent("federal-directory", manualPointer("congress-bulk-roster"));
+        if (carried !== null) authority["federal-directory"] = { versionId: carried, carried: true };
+        else {
+          const fd = await readFederalDirectoryProjection();
+          if (fd.kind === "PROMOTED" && fd.metadata.versionId) authority["federal-directory"] = { value: fd.value, versionId: fd.metadata.versionId };
+          else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: federal-directory kind=${fd.kind}\n`);
+        }
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: federal-directory ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       try {
-        const cs = await readCuratedReaderProjection("campaign-sites");
-        if (cs.kind === "PROMOTED" && cs.metadata.versionId) authority["campaign-sites"] = { value: cs.value, versionId: cs.metadata.versionId };
-        else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites kind=${cs.kind}\n`);
+        const carried = await servedIfCurrent("campaign-sites", manualPointer("campaign-sites"));
+        if (carried !== null) authority["campaign-sites"] = { versionId: carried, carried: true };
+        else {
+          const cs = await readCuratedReaderProjection("campaign-sites");
+          if (cs.kind === "PROMOTED" && cs.metadata.versionId) authority["campaign-sites"] = { value: cs.value, versionId: cs.metadata.versionId };
+          else process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites kind=${cs.kind}\n`);
+        }
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: campaign-sites ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
@@ -158,21 +202,32 @@ if (meetingAggregate) {
       // (the pilot state chambers). Each scope that fails/absent is simply omitted;
       // the reader falls back to the DB for that scope only.
       try {
-        const legislators: Record<string, OfficialStateLegislatorReadModel> = {};
-        const versions: string[] = [];
-        for (const target of OFFICIAL_STATE_LEGISLATOR_TARGETS) {
-          const scope = target.jurisdiction;
-          try {
-            const sl = await readOfficialStateLegislatorsProjection(scope);
-            if (sl.kind === "PROMOTED" && sl.metadata.versionId) {
-              legislators[scope] = sl.value;
-              versions.push(`${scope}=${sl.metadata.versionId}`);
-            }
-          } catch (error) {
-            process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators/${scope} ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+        const carried = await servedIfCurrent("state-legislators", async () => {
+          const current: string[] = [];
+          for (const target of OFFICIAL_STATE_LEGISLATOR_TARGETS) {
+            const versionId = await pointerVersion("STATE_LEGISLATOR", target.jurisdiction)();
+            if (versionId !== null) current.push(`${target.jurisdiction}=${versionId}`);
           }
+          return current.length > 0 ? current.sort().join("|") : null;
+        });
+        if (carried !== null) authority["state-legislators"] = { versionId: carried, carried: true };
+        else {
+          const legislators: Record<string, OfficialStateLegislatorReadModel> = {};
+          const versions: string[] = [];
+          for (const target of OFFICIAL_STATE_LEGISLATOR_TARGETS) {
+            const scope = target.jurisdiction;
+            try {
+              const sl = await readOfficialStateLegislatorsProjection(scope);
+              if (sl.kind === "PROMOTED" && sl.metadata.versionId) {
+                legislators[scope] = sl.value;
+                versions.push(`${scope}=${sl.metadata.versionId}`);
+              }
+            } catch (error) {
+              process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators/${scope} ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+            }
+          }
+          if (versions.length > 0) authority["state-legislators"] = { value: legislators, versionId: versions.sort().join("|") };
         }
-        if (versions.length > 0) authority["state-legislators"] = { value: legislators, versionId: versions.sort().join("|") };
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
@@ -183,7 +238,7 @@ if (meetingAggregate) {
           retrievedAt: readBack.metadata.retrievedAt,
           promotedThrough: readBack.metadata.promotedAt,
         },
-        { now: observedAt, ...(extras ? { extras } : {}), ...(Object.keys(authority).length > 0 ? { authority } : {}) },
+        { store: artifactStore, now: observedAt, ...(extras ? { extras } : {}), ...(Object.keys(authority).length > 0 ? { authority } : {}) },
       );
       if (edge.status === "FAILED") {
         failed = true;

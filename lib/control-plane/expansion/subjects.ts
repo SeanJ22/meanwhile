@@ -7,9 +7,11 @@
  * field. Membership, spend and the assignment filter therefore all key on the
  * same string, and none of them re-derives it from a name.
  *
- * The four standing providers build their obligation ids as
+ * The standing providers build their obligation ids as
  * `freshness:<provider>:<subjectId>#<routeId>` (`scheduledId` in each provider),
  * so the subject is recoverable from an assignment row's id without a read.
+ * The meetings-discovery rows the owner's dispatch materialized (MW-028) are
+ * about a jurisdiction in the same way.
  *
  * PURE.
  */
@@ -22,6 +24,7 @@ const STANDING_PREFIXES = [
   "freshness:campaign-finance:",
   "freshness:candidate-enrichment:",
   "freshness:tracker:",
+  "freshness:meetings-discovery:",
 ] as const;
 
 /** The subject a standing obligation id names, or null for any other kind of id. */

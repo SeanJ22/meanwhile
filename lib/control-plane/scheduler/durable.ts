@@ -160,6 +160,9 @@ const RUNTIME_OWNED = [
   /* A recorded expiring absence (RULING 52/53) is runtime state a scout produced,
      not a corpus signal; a registration pass must never reset it. */
   "absentUntil",
+  /* The owner's dispatch materialized this row (MW-028). A provider that
+     re-emits it without the mark must not erase the mark that keeps it owed. */
+  "materializedBy",
 ] as const;
 
 /**
@@ -258,6 +261,7 @@ export async function syncObligations(
       openOccurrenceId: held.openOccurrenceId,
       lastWorkedAt: held.lastWorkedAt,
       absentUntil: held.absentUntil,
+      ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       updatedAt: now,
     };
 

@@ -76,6 +76,16 @@ export const ASK_MODEL_RATES: Readonly<Record<string, ModelRate>> = {
     statedOn: "2026-08-31",
     source: "Anthropic first-party API rates, read from the claude-api reference",
   },
+  /* The fleet's frontier since 2026-09-22 (owner directive; lib/control-plane/model-cost.ts
+     MODEL_WORKER_RATES carries the same dated rate). Recorded here so an Ask comparison
+     against Opus 5.5 prices both arms instead of reporting the challenger's cost as null. */
+  "claude-opus-5-5": {
+    model: "claude-opus-5-5",
+    inputUsdPerMillion: 4.0,
+    outputUsdPerMillion: 20.0,
+    statedOn: "2026-09-22",
+    source: "Anthropic first-party API rates, read from platform.claude.com (Claude Opus 5.5)",
+  },
 };
 
 /** The model Ask runs today, read from the code that runs it. */

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 696,
-    "named": 6939,
+    "files": 701,
+    "named": 6979,
     "dynamic": 28
   },
   "files": {
@@ -2179,14 +2179,47 @@
       ],
       "dynamic": 0
     },
+    "tests/census-geography-grf.test.ts": {
+      "names": [
+        "grf: a header missing a needed column fails loudly",
+        "grf: aggregates ZCTA↔CDCURFP overlaps by block land (whole vs partial), skips water/unassigned"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-geography-promotion.test.ts": {
+      "names": [
+        "a valid dataset auto-promotes through the routine door and the pointer serves the lookup",
+        "an empty dataset is refused and never promotes (fail closed)",
+        "census-geography-relationships is an official .gov source that auto-qualifies (owner policy)",
+        "the routine contract auto-publishes and matches the publication identity"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-geography-route.test.ts": {
+      "names": [
+        "route: AZ-06 returns 79 ZCTAs, each carrying the wholly/partly flag",
+        "route: a malformed geoid is a 400",
+        "route: a metropolitan CBSA returns its overlaps and its cbsaClass",
+        "route: a well-formed but absent geoid is typed NOT_IN_COVERAGE, never zero",
+        "route: an unknown geography type is a 400, never a false empty",
+        "route: states its data source, so a fixture is never mistaken for live coverage",
+        "route: version is optional and resolves the published version for the type"
+      ],
+      "dynamic": 0
+    },
     "tests/census-geography.test.ts": {
       "names": [
         "build: a header missing a needed column fails loudly",
         "build: parses whole/partial overlaps, skips the no-ZCTA remainder, keeps split relationships",
         "lookup: AZ-06 returns 79 ZCTAs (verified Census tab20 CD119), stated N == rows",
+        "lookup: Phoenix metro (CBSA 38060) returns every overlapping ZCTA, whole and partial, area basis",
+        "lookup: a micropolitan CBSA is kept distinct from a metropolitan one",
         "lookup: enumerates Arizona's 9 congressional districts",
+        "lookup: enumerates Arizona's metro AND micro CBSAs, class always present",
         "lookup: postal reconciliation distinguishes a ZCTA from a non-ZCTA ZIP",
+        "lookup: reverse ZCTA -> groupings includes the parallel CBSA layer",
         "lookup: reverse ZCTA -> groupings spans the parallel types, never nested",
+        "lookup: the manifest publishes all five of Admin's primary groupings",
         "lookup: unknown ZCTA and unknown geography are typed absence, never zero"
       ],
       "dynamic": 0
@@ -3594,11 +3627,43 @@
       ],
       "dynamic": 0
     },
+    "tests/expansion-gateway.test.ts": {
+      "names": [
+        "a budget above the Fleet ceiling is recorded and the receipt says the Fleet ceiling is the one that holds",
+        "a malformed selection is refused with the reason and writes nothing",
+        "a policy row holding an unreadable scope entry refuses both actions rather than overwrite a budget",
+        "only the owner's own session may select or remove a scope; a chat or an agent is refused",
+        "removing a scope takes it off the list, and removing one that is not there changes nothing",
+        "selecting a geography records it with priority, budget and provenance, and leaves every other decision alone"
+      ],
+      "dynamic": 0
+    },
     "tests/expansion-log.test.ts": {
       "names": [
         "docs/expansion-log.md states that a zero-yield route is a reported success",
         "the newest session in docs/log.md has an expansion-log entry, or claims the non-hunt marker",
         "the non-hunt exemption is claimed by a marker in the id, never inferred"
+      ],
+      "dynamic": 0
+    },
+    "tests/expansion-scopes.test.ts": {
+      "names": [
+        "a $0 budget holds all paid work in the scope, and a subject in two scopes must pass both",
+        "a malformed stored scope is counted, never dropped as if no restriction stood",
+        "a piece of work's subject and state are read from its own id, never guessed",
+        "a scope budget admits within it, reserves the worst case, and refuses by name past it",
+        "a scope's geography, priority, budget, note and key are validated before anything is written",
+        "on the committed data, Pima County holds Pima and Tucson and none of its neighbours; CD 6 holds the counties it spans",
+        "registry governments join their Census unit territory by the generator's own id rule",
+        "resolving against the lookup names every failure and never returns an empty scope as a resolved one",
+        "setting a scope is an upsert that keeps the previous decision, and removing one leaves the rest",
+        "sharing a border ZCTA is not membership: only a certain overlap inside a ZCTA places a government",
+        "the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and the verdict in words",
+        "the order puts DISPATCH first, then scopes by priority, and is exactly the old order with no scope",
+        "the page shows a runner reading only for the decision it measured, and counts listed assignments in scope",
+        "the plan places work by ZCTA overlap, orders scopes by priority, and states coverage and gap",
+        "the runner's load: nothing selected changes nothing; a bootstrap lookup resolves nothing; a published one resolves",
+        "unmeasured spend, an unresolved scope and an unreadable scope list all hold paid work — restrict-only"
       ],
       "dynamic": 0
     },

@@ -835,18 +835,143 @@ export async function findSettledOccurrences(
     readonly settledRouteTaskIds: ReadonlySet<string>;
   },
 ): Promise<readonly SettledOccurrence[]> {
+  if (!input.obligations.some((o) => o.openOccurrenceId !== null) || input.settledRouteTaskIds.size === 0) return [];
+  return (await scanOccurrences(repos, { ...input, neverClaimedRouteTaskIds: new Set() })).settled;
+}
+
+/**
+ * An OPEN occurrence its obligation has moved on from without closing: nothing
+ * points to it, so nothing will ever resume or dispatch it.
+ */
+export interface AbandonedOccurrence {
+  readonly occurrenceId: string;
+  readonly obligationId: string;
+  readonly sequence: number;
+  /** The obligation's own count: the occurrence it has moved on to. */
+  readonly movedOnTo: number;
+}
+
+/**
+ * **ONE PASS OVER THE OCCURRENCES, TWO FINDINGS.** (2026-09-23.) It is the pass
+ * `findSettledOccurrences` already made each cycle, so finding abandoned
+ * occurrences adds no read.
+ *
+ * - **settled**: an open occurrence its obligation points at, on a RouteTask
+ *   that already carries a disposition. See `findSettledOccurrences`.
+ * - **abandoned**: an OPEN occurrence where all of these hold:
+ *   - its obligation (in `obligations`) does not point to it;
+ *   - its obligation has already opened a later sequence;
+ *   - its RouteTask was never claimed (PENDING in the caller's listing, so no
+ *     lease, no Attempt and no disposition).
+ *   Nothing will resume it, and no work was ever started on it. An open
+ *   occurrence that is the latest its obligation opened is never abandoned,
+ *   even with its pointer lost; the obligation has not moved on.
+ */
+export async function scanOccurrences(
+  repos: ControlPlaneRepositories,
+  input: {
+    readonly obligations: readonly StandingObligation[];
+    readonly settledRouteTaskIds: ReadonlySet<string>;
+    readonly neverClaimedRouteTaskIds: ReadonlySet<string>;
+  },
+): Promise<{ readonly settled: readonly SettledOccurrence[]; readonly abandoned: readonly AbandonedOccurrence[] }> {
+  const byId = new Map<string, StandingObligation>();
   const byOpenOccurrence = new Map<string, StandingObligation>();
-  for (const o of input.obligations) if (o.openOccurrenceId !== null) byOpenOccurrence.set(o.openOccurrenceId, o);
-  if (byOpenOccurrence.size === 0 || input.settledRouteTaskIds.size === 0) return [];
-  const found: SettledOccurrence[] = [];
-  for (const occurrence of await repos.occurrences.list()) {
-    const obligation = byOpenOccurrence.get(occurrence.id);
-    if (obligation === undefined || occurrence.value.closedAt !== null) continue;
-    if (!input.settledRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
-    const resumed = await resumeOpenOccurrence(repos, obligation);
-    if (resumed?.kind === "SETTLED") found.push(resumed.settled);
+  for (const o of input.obligations) {
+    byId.set(o.id, o);
+    if (o.openOccurrenceId !== null) byOpenOccurrence.set(o.openOccurrenceId, o);
   }
-  return found;
+  const settled: SettledOccurrence[] = [];
+  const abandoned: AbandonedOccurrence[] = [];
+  if (byId.size === 0) return { settled, abandoned };
+  for (const occurrence of await repos.occurrences.list()) {
+    if (occurrence.value.closedAt !== null) continue;
+    const pointedBy = byOpenOccurrence.get(occurrence.id);
+    if (pointedBy !== undefined) {
+      if (!input.settledRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
+      const resumed = await resumeOpenOccurrence(repos, pointedBy);
+      if (resumed?.kind === "SETTLED") settled.push(resumed.settled);
+      continue;
+    }
+    const owner = byId.get(occurrence.value.obligationId);
+    if (owner === undefined || owner.openOccurrenceId === occurrence.id) continue;
+    if (occurrence.value.sequence >= owner.occurrenceCount) continue;
+    if (!input.neverClaimedRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
+    abandoned.push({
+      occurrenceId: occurrence.id,
+      obligationId: owner.id,
+      sequence: occurrence.value.sequence,
+      movedOnTo: owner.occurrenceCount,
+    });
+  }
+  return { settled, abandoned };
+}
+
+/**
+ * **CLOSE AN ABANDONED OCCURRENCE, AND WRITE NOTHING ELSE.** (2026-09-23.)
+ *
+ * Every condition is read again at write time: the occurrence is still open,
+ * its obligation still points elsewhere and has moved past it, and its
+ * RouteTask is still PENDING with no disposition. Anything else is skipped by
+ * name.
+ *
+ * Only the occurrence row is written: closed UNRESOLVED, never with a
+ * disposition. The obligation keeps its pointer and its anchor, so this is
+ * never `closeOccurrence`, which would clear a live pointer. The RouteTask, its
+ * WorkItem, Attempts and leases are not written, and nothing is deleted.
+ */
+export async function closeAbandonedOccurrences(
+  repos: ControlPlaneRepositories,
+  input: { readonly abandoned: readonly AbandonedOccurrence[]; readonly now: string },
+): Promise<{
+  readonly closed: readonly string[];
+  readonly skipped: readonly { readonly occurrenceId: string; readonly why: string }[];
+  readonly failed: readonly { readonly occurrenceId: string; readonly why: string }[];
+}> {
+  const closed: string[] = [];
+  const skipped: { occurrenceId: string; why: string }[] = [];
+  const failed: { occurrenceId: string; why: string }[] = [];
+  for (const { occurrenceId } of input.abandoned) {
+    try {
+      const occurrence = await repos.occurrences.read(occurrenceId);
+      if (occurrence === null || occurrence.value.closedAt !== null) {
+        skipped.push({ occurrenceId, why: "no longer open" });
+        continue;
+      }
+      const owner = await repos.obligations.read(occurrence.value.obligationId);
+      if (
+        owner === null ||
+        owner.value.openOccurrenceId === occurrence.id ||
+        occurrence.value.sequence >= owner.value.occurrenceCount
+      ) {
+        skipped.push({ occurrenceId, why: "its obligation has not moved on from it" });
+        continue;
+      }
+      const task = await repos.routeTasks.read(occurrence.value.routeTaskId);
+      if (task === null || task.value.state !== "PENDING" || task.value.disposition !== null) {
+        skipped.push({ occurrenceId, why: "its RouteTask is no longer an unclaimed PENDING task" });
+        continue;
+      }
+      await repos.occurrences.compareAndSet(
+        occurrence.id,
+        occurrence.revision,
+        {
+          ...occurrence.value,
+          closedAt: input.now,
+          disposition: null,
+          unresolvedReason:
+            `ABANDONED: the obligation moved on to occurrence ${owner.value.occurrenceCount} without closing ` +
+            `occurrence ${occurrence.value.sequence}, whose RouteTask was never claimed. Nothing was read and ` +
+            "nothing was refreshed",
+        },
+        input.now,
+      );
+      closed.push(occurrence.id);
+    } catch (error) {
+      failed.push({ occurrenceId, why: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  return { closed, skipped, failed };
 }
 
 /** The ids of the RouteTasks that carry a disposition: the settledness `resumeOpenOccurrence` reads. */
@@ -854,6 +979,21 @@ export function settledRouteTaskIds(
   routeTasks: readonly { readonly id: string; readonly value: RouteTask }[],
 ): ReadonlySet<string> {
   return new Set(routeTasks.filter((t) => t.value.disposition !== null).map((t) => t.id));
+}
+
+/** Raised when an obligation is asked to open past an occurrence it still holds open. */
+export class OccurrenceStillOpen extends Error {
+  readonly obligationId: string;
+  readonly occurrenceId: string;
+  constructor(obligationId: string, occurrenceId: string) {
+    super(
+      `obligation ${obligationId} still holds open occurrence ${occurrenceId}. Resume it; opening another ` +
+        "would strand it as open work nothing will ever dispatch",
+    );
+    this.name = "OccurrenceStillOpen";
+    this.obligationId = obligationId;
+    this.occurrenceId = occurrenceId;
+  }
 }
 
 /**
@@ -879,7 +1019,23 @@ export async function openOccurrence(
   const o = input.obligation;
   if (o.routeId === null) return null;
 
-  const sequence = o.occurrenceCount + 1;
+  /*
+   * **NEVER OPEN PAST AN OCCURRENCE THAT IS STILL OPEN.** (2026-09-23.)
+   *
+   * Before `resumeOpenOccurrence` existed (24ff5cf2), a cycle that opened an
+   * occurrence and never reached it was followed by one that opened sequence
+   * N+1 and moved the pointer. That stranded the first: on 2026-09-23, twenty
+   * occurrence 1s from 2026-09-01T14:30:45Z were still open. Resuming first is
+   * the caller's rule, and this makes it the function's too. It is checked
+   * against the row as it is now, not as the caller last read it, and the
+   * sequence comes from the same read.
+   */
+  const current = await repos.obligations.mustRead(o.id);
+  if (current.value.openOccurrenceId !== null) {
+    const held = await repos.occurrences.read(current.value.openOccurrenceId);
+    if (held !== null && held.value.closedAt === null) throw new OccurrenceStillOpen(o.id, held.id);
+  }
+  const sequence = current.value.occurrenceCount + 1;
   const workItem = createWorkItem({
     project: FRESHNESS_PROJECT,
     subject: o.subjectId,

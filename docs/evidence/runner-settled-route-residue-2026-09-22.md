@@ -4,6 +4,11 @@
 reviewed the exact transaction. R4 and R3b were not approved and were not run. The execution record
 is [below](#execution-record-2026-09-23). <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
 
+**Recovery: VERIFIED for 52 of the 62 on 2026-09-23 at 04:28Z** by the standing runner, on <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+`795f56c1` (#360). None of them was walked again. The other 10 belong to obligations the registry
+has since superseded, so no runner path reaches them. They are inert, and a runner follow-up owns
+them. See [Recovery verified](#recovery-verified-2026-09-23). <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+
 The plan rested on one `READ ONLY` Postgres transaction against the production control plane at
 2026-09-22T22:33:21Z; its rows are in
 [`runner-settled-route-residue-2026-09-22.json`](runner-settled-route-residue-2026-09-22.json).
@@ -353,6 +358,12 @@ spend, and its row is withheld from both lanes.
 A read-only check before that commit found exactly 62 open occurrences on settled RouteTasks. All
 62 were active and scheduled, and there were no others.
 
+> **Correction, after the recovery cycle.** "Scheduled" was read from the store: `active` and a
+> stored next-due. It was not read from the runner's corpus. 10 of the 62 were no longer in the
+> corpus. For the same reason, the ranks above overstate the runner's queue. They were counted over
+> `cp_obligations`, which holds about 3,046 rows against a corpus of 2,454, and some of those rows
+> are superseded. The conclusion still held: the 62 were days away.
+
 **What recovery will and will not move for the 11 INGESTED records.** Their bytes (Marginalia search
 results) are held only in the main checkout's vault, not the runtime vault. The fixed runner will
 stage them as acquired but still owed.
@@ -361,8 +372,93 @@ stage them as acquired but still owed.
   `advanceHeldWorkerFleet` queues only held meeting-event contracts.
 - None of them is verified or published, and nothing reaches a reader.
 
+> **Update.** Their bytes were copied into the runtime vault before the recovery cycle; see
+> [`runtime-vault-restore-2026-09-22.md`](runtime-vault-restore-2026-09-22.md), #362. So all 11
+> staged with their bytes held rather than as still owed. They are still neither verified nor
+> published.
+
 **Follow-ups, recorded and not blocking.**
 
 1. The runner never reconciles an *unapplied* disposition commit. Production had 0 at every read.
 2. The runtime can't read vault objects written before the runtime checkout existed. This is the
-   same gap as the 11 records above.
+   same gap as the 11 records above. **Closed** for the 473 objects #362 restored.
+3. Superseded obligations keep their open occurrences forever. See
+   [Recovery verified](#recovery-verified-2026-09-23). <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+
+## Recovery verified (2026-09-23) <!-- expected-future: a UTC instant; the Phoenix stamp date is still 2026-09-22 -->
+
+**Deployment.**
+
+- PR #360 carried the two commits from the close-out branch: the close-out record and the
+  pre-dispatch recovery. It also carried Admin's fixes for the research-cycle OOM and for the window
+  lease an exited cycle left behind. It merged as `795f56c1`.
+- On main, Build check `35817331626` passed. Post-deploy integrity `35817331700` read
+  SERVING_EXPECTED: meanwhileusa.com served `795f56c1` on the second probe of `/api/build`.
+  Integrity HELD.
+- Admin restarted the runner on `795f56c1` at 04:15:25Z with `pnpm pilot:start`.
+
+**Cycles on `37d330db` between the repair and the handoff.** The prevention held in each. None
+reached the promotion tail; each died of the OOM that #360 removes.
+
+| Cycle | Attempts | On a settled task | Afterwards: CLAIMED-but-disposed, open Attempts, live or stale route leases |
+| --- | --- | --- | --- |
+| 01:27:03–01:38:07Z | 25 (17 COMPLETED) | 0 | 0, 0, 0 |
+| 02:40:04–02:50:45Z | 13 (3 COMPLETED, 10 ABORTED) | 0 | 0, 0, 0 |
+| 03:52:32–04:04:17Z | 17 (7 COMPLETED, 10 ABORTED) | 0 | 0, 0, 0 |
+
+**The first cycle on `795f56c1`, 04:17:37–04:27:58Z**, finished OK. It was the first cycle to
+reach its promotion tail since 22:48Z on 2026-09-22.
+
+- **Dispatch.** 20 Attempts ran: 8 COMPLETED and 12 ABORTED. None was on an already-settled task.
+- **Afterwards.** There were no CLAIMED-but-disposed tasks, no open Attempts and no live or stale
+  route leases.
+- **Its digest:** "recovered 52 open occurrence(s) on a route an interrupted cycle had already
+  disposed, closed with that committed disposition and not walked again — 11 reading(s)
+  discharged, 41 still owed".
+- **Per row, against the 02:24Z baseline.** On all 62, the RouteTask's state, revision and
+  disposition, the Attempt count (1), the lease revision and release, and the disposition-commit
+  count (1) are unchanged. Recovery wrote only occurrences, obligations and debt.
+
+| The 62 | Occurrence | Obligation | Debt |
+| --- | --- | --- | --- |
+| 11 INGESTED (Marginalia) | closed `INGESTED` | `lastWorkedAt` 2026-09-01T19:36:07.092Z, the reading's own time; due again for a fresh walk | 2 cleared to tombstones (1→0); 9 had none |
+| 41 REQUIRES_NEW_ADAPTER | closed unresolved: "already disposed …, and the obligation stays owed" | anchor unchanged (`lastWorkedAt` null); still owed | one failure each (1→2 for 20, 2→3 for 6, none→1 for 15); retried on its backoff |
+| 10 REQUIRES_NEW_ADAPTER | still open | superseded (below) | unchanged |
+
+**Downstream: staged, not verified, not published.** This is what the cycle's runtime staging
+manifest shows. It was written at 04:27:50Z, has 593 entries and has `promotionEnabled: false`.
+
+- **The 11 INGESTED rows are `STAGED_GAP`.** The reader sentence says the record was "ACQUIRED and
+  is held, and this project has no reader yet for its shape". Each is unresolved as "NORMALIZER
+  MISSING for route candidate-marginalia-index". None reads "vaulted bytes were not found". The
+  run record contains no "could not be read back".
+- **The 41 rows are `STAGED_GAP`.** The route closed REQUIRES_NEW_ADAPTER, and the obligation is
+  still owed.
+- **Nothing was verified or published, and nothing reached a reader.** The 11 are discovery
+  captures: search-index results for candidate sites. No normalizer or verifier exists for them.
+  Their evidence is held and cited.
+
+**The 10 still open are superseded obligations, and they are inert.**
+
+- **Which ones.** All 10 are `#candidate-authored-awaits-site` obligations, for Diaz, Swallow,
+  Villegas, Hernandez, Mayes, Petersen, Hourihan, Lombardo, Fontes and Kolodin.
+- **What happened.** Each of those candidates now has a recorded site, so the registry emits
+  `#candidate-site-recorded` for them instead. The old ids appear nowhere in the cycle's run
+  record. Their stored rows were last updated 2026-09-14T04:04:55Z and are still `active: true`.
+- **Cause.** `syncObligations` walks only the corpus. An obligation that leaves the corpus is
+  never retired, scheduled or recovered, so its open occurrence stays open. The pre-dispatch scan
+  reads the synced obligations, so it can't see them either.
+- **Why they are inert.** No lane can dispatch them, so they can't claim, lease or duplicate. Their
+  information need continues under `#candidate-site-recorded`, which the runner schedules.
+- **Owner:** Admin and RouteTask. This is runner engineering, not an owner decision.
+- **Next action:** `syncObligations` retires an obligation that leaves the corpus and closes its
+  open occurrence as superseded, with a test.
+- **No manual repair.** The approved R1–R3 scope did not cover these rows.
+
+**Files.**
+
+| File | sha256 | What |
+| --- | --- | --- |
+| `runner-settled-route-residue-recovery-before-2026-09-22.json` | `cac90aee…` | The 02:24Z read-only baseline of the 62 |
+| `runner-settled-route-residue-recovery-after-2026-09-22.json` | `d5c87d1d…` | The 04:28Z read-only readback after the first cycle on `795f56c1` |
+| `runner-settled-route-residue-verify-2026-09-22.mjs.txt` | `12980b61…` | The READ ONLY verifier that produced both |

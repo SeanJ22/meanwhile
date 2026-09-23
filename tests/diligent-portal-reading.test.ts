@@ -148,7 +148,10 @@ test("regression control: every Diligent portal page in the committed holding is
   // A case this change was not derived from: the whole-page rows read before 2026-08-28.
   const snapshot = readSnapshot();
   assert.ok(snapshot);
-  const portalRows = snapshot.agendaDocuments.filter((document) => /\/Portal\/(?:MeetingInformation\.aspx)?\/?$/i.test(new URL(document.documentUrl).pathname));
+  const portalRows = snapshot.agendaDocuments.filter((document) => {
+    const address = new URL(document.documentUrl);
+    return /\/Portal\/(?:MeetingInformation\.aspx)?\/?$/i.test(address.pathname);
+  });
   assert.ok(portalRows.length >= 30, `the committed holding carries its Diligent pages (${portalRows.length})`);
   for (const document of portalRows) assert.equal(agendaDocumentRepresentation(document), "PUBLICATION_PORTAL", document.id);
 });

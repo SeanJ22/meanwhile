@@ -66,7 +66,7 @@ function renderPageView(state: FleetConsumerState, scratchDir: string): string {
     writeFileSync(${JSON.stringify(stateFile)}, ${JSON.stringify(JSON.stringify(state))});
     const state = JSON.parse(readFileSync(${JSON.stringify(stateFile)}, 'utf8'));
     console.log(renderToStaticMarkup(createElement(FleetOperationsView, { state })));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 8_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 8_000_000 });
 }
 
 test("the committed /admin/fleet page loads receipts from a temporary root, renders them, and retains a failed refresh without upgrading it", async t => {

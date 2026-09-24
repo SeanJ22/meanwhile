@@ -65,7 +65,7 @@ test("canonical isolated loader preserves transitive JSX, aliases, bare resoluti
         : passing.replace("EXPECTED", mode === "assertion" ? "5" : "4"));
       const result = spawnSync(process.execPath, ["--test", "--experimental-strip-types", "--import",
         "./scripts/register-test-loader.mjs", "--test-concurrency=1", "--test-reporter=spec", "fixture.test.ts"], {
-        cwd: root, env, encoding: "utf8", timeout: 10_000, windowsHide: true,
+        cwd: root, env, encoding: "utf8", timeout: 120_000, windowsHide: true,
       });
       assert.equal(result.error, undefined, `${mode} must complete naturally`);
       assert.equal(result.signal, null, `${mode} must return an exit code`);

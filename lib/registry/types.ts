@@ -164,6 +164,37 @@ export type AgendaSourceType =
    * Regional School District (2026-08-15, M78).
    */
   | "SCHEDULEPAGE"
+  /**
+   * Pima Community College's own publication of its Governing Board sittings
+   * on `www.pima.edu` and `events.pima.edu` — named for the host, as
+   * `CLERKSBOARDS` is, until it turns out to be a product other bodies run.
+   * The college's agenda platform (a Diligent Community tenant) disallows this
+   * client in `robots.txt`; this is the permitted route to the same sittings
+   * (2026-09-23).
+   */
+  | "PIMA_EDU"
+  /**
+   * ParentSquare SmartSites — the school-district CMS whose calendar component
+   * reads its own public JSON at `<site>/api/calendars/<id>/events`. First
+   * tenant read: Sunnyside USD (2026-09-23). Built and recorded; not wired.
+   */
+  | "SMARTSITES"
+  /**
+   * Tucson Unified's Governing Board site, `govboard.tusd1.org`: the board
+   * calendar's own month fragment (`/inflow/xti/inCal.aspx`) and the Board
+   * Actions PDFs. Built and recorded 2026-09-23; not wired.
+   */
+  | "TUSD_GOVBOARD"
+  /**
+   * Not a vendor and not a schedule — dated public events a body publishes on
+   * its OWN official page in whatever shapes it chose: schema.org JSON-LD or
+   * microdata, linked `.ics`, embedded event state, event cards, dated
+   * headings and "Next meeting <date>" statements. Every event is verified
+   * against the body (official host, unambiguous in-window date, a title that
+   * names the body) or held by name. First body: Tucson Unified's
+   * reconfiguration page (2026-09-23). See `lib/sources/official-page-events`.
+   */
+  | "OFFICIAL_PAGE_EVENTS"
   | "PRIMEGOV"
   | "NOVUSAGENDA"
   | "SIMBLI"

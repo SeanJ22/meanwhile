@@ -3,6 +3,8 @@ import type { Tier } from "@/lib/ocd/tiers";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { MeetingStatus, OcdId } from "@/lib/sources/types";
 
+import type { BodyScopeKey } from "./body-scope.ts";
+
 /**
  * The shared UI state.
  *
@@ -119,9 +121,11 @@ export interface UiState {
   tiers: Tier[];
 
   /** Cascading scope. Body is scoped to jurisdiction; changing jurisdiction
-   *  clears it. Both are OCD-IDs, never display names. */
+   *  clears it. Jurisdiction is an OCD-ID. Body is NOT one: it is the
+   *  `<ocdId>|<bodyName>` key only `bodyScopeKey` can make (2026-09-23 — the
+   *  district card's door dispatched a bare OCD-ID here and emptied the map). */
   jurisdiction: OcdId | null;
-  body: OcdId | null;
+  body: BodyScopeKey | null;
 
   filters: FilterState;
   search: SearchState;
@@ -169,6 +173,16 @@ export interface UiState {
    */
   listFocusBodyId: string | null;
   listFocusBodyName: string | null;
+  /**
+   * **THE DIVISION A COUNT OPENED THE LIST FOR.** (2026-09-23.)
+   *
+   * The district card's "Upcoming N" door. Same lifetime and same visibility as
+   * the ASK-22 focus above — one opening, cleared on close, named in a chip —
+   * and it narrows to exactly the rows the card counted (`divisionUpcoming` in
+   * `lib/state/list-focus.ts`), so the card's number and the list's rows are
+   * one computation.
+   */
+  listFocusDivision: { ocdId: OcdId; name: string } | null;
 
   listSort: ListSort;
   listGroupBy: ListGroupBy;
@@ -198,7 +212,7 @@ export type UiAction =
   | { type: "tier/toggle"; tier: Tier }
   | { type: "tier/set"; tiers: Tier[] }
   | { type: "scope/jurisdiction"; ocdId: OcdId | null }
-  | { type: "scope/body"; ocdId: OcdId | null }
+  | { type: "scope/body"; key: BodyScopeKey | null }
   | { type: "filter/toggleBodyType"; value: BodyType }
   | { type: "filter/toggleStatus"; value: MeetingStatus }
   | { type: "filter/toggleDistrictType"; value: DistrictType }
@@ -237,6 +251,11 @@ export type UiAction =
       focusBodyId?: string | null;
       /** That body's plain-language name, for the chip the reader can see. */
       focusBodyName?: string | null;
+      /**
+       * The division whose upcoming sittings a count opened the list for — the
+       * district card's door. See `listFocusDivision`.
+       */
+      focusDivision?: { ocdId: OcdId; name: string } | null;
     }
   | { type: "door/open"; door: "bodies" | "districts" | "officials" }
   | { type: "door/close" }

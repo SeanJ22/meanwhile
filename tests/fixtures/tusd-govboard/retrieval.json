@@ -1,0 +1,150 @@
+{
+  "incal-2026-06.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-06-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:49.578Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 12845,
+    "sha256": "f901110981c4b212cb763cacd0d60a8b91f11d51b7421562101e05a3833c9ce1",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2026-07.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-07-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:50.318Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 11667,
+    "sha256": "0d27f36494ac1cda111e06f4483d2ccde8681fcb0216726a98d56066da81b887",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2026-08.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-08-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:50.875Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 15100,
+    "sha256": "f610fa95269795c6ec3a37a4eee248c730e45793d5a0c02399ff042c50ba501d",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2026-09.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-09-23&V=12",
+    "retrievedAt": "2026-09-23T20:15:24.084Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 20044,
+    "sha256": "f4f304e344da5cfe53eb1bff3b99db475d530dbfa0670c0ef5365f9025b01263",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2026-10.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-10-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:51.332Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 7449,
+    "sha256": "030884e28658eb45c57dce44c73c1099470187dfcecdf1ad1635ef317176d20a",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2026-11.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-11-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:51.920Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 5101,
+    "sha256": "69d943dce6162cf41470a449ea0155941b0e0adee20b7f2e03973ded23090854",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2026-12.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2026-12-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:52.310Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 5097,
+    "sha256": "d065290d1ad414a6554d1df34aa75101209ee4bd8d7ae23b3e011b69e50bacff",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "incal-2027-01.html": {
+    "url": "https://govboard.tusd1.org/inflow/xti/inCal.aspx?PID=36871&C=0&D=2027-01-01&V=12",
+    "retrievedAt": "2026-09-23T20:21:52.714Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 3065,
+    "sha256": "f728ba51fe07480c7327baacd177d68d6f58166f3deed9a708edd13c2bffdb47",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "actions.html": {
+    "url": "https://govboard.tusd1.org/Actions",
+    "retrievedAt": "2026-09-23T20:06:59.706Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "bytes": 75002,
+    "sha256": "80a5e7047645acad60721ae890a0885f5d71976d14bc22f02bd058b0725b6b7d",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "board-actions-2026-09-22.pdf": {
+    "url": "https://govboard.tusd1.org/_theme/files/GovBoard/Docs/actions/09-22-2026S.pdf",
+    "retrievedAt": "2026-09-23T20:07:29.184Z",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "bytes": 124114,
+    "sha256": "86040a432c8d4b015c7c7d7a5f4a4d4daf82ea8bd009a670b237b4118b213b1b",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:51.008Z",
+      "robotsSha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8",
+      "matchedRule": null
+    }
+  },
+  "robots-govboard.tusd1.org.txt": {
+    "url": "https://govboard.tusd1.org/robots.txt",
+    "finalUrl": "https://govboard.tusd1.org/robots.txt",
+    "retrievedAt": "2026-09-23T20:02:51.008Z",
+    "httpStatus": 200,
+    "bytes": 68,
+    "sha256": "4dceaa1a5fe89a383ec54a073447e5ec0074b2176eb99875b9c3e4a595cbcda8"
+  }
+}

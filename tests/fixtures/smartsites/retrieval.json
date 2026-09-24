@@ -1,0 +1,24 @@
+{
+  "susd12-calendar-150042-events.json": {
+    "url": "https://www.susd12.org/api/calendars/150042/events?start_date=2026-06-25&end_date=2026-12-31&view_source=event-slider",
+    "retrievedAt": "2026-09-23T20:16:30.845Z",
+    "httpStatus": 200,
+    "contentType": "application/json",
+    "bytes": 22358,
+    "sha256": "f54756fc7ba2d2c5370cb106019590f96692e017f3fb48ff1a278a47b58fe309",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:50.371Z",
+      "robotsSha256": "e8e9fa92b86ef4f758ad1b7a87171b599635d1b16fa1e28fd355b81a183e9c96",
+      "matchedRule": null
+    }
+  },
+  "robots-www.susd12.org.txt": {
+    "url": "https://www.susd12.org/robots.txt",
+    "finalUrl": "https://www.susd12.org/robots.txt",
+    "retrievedAt": "2026-09-23T20:02:50.371Z",
+    "httpStatus": 200,
+    "bytes": 798,
+    "sha256": "e8e9fa92b86ef4f758ad1b7a87171b599635d1b16fa1e28fd355b81a183e9c96"
+  }
+}

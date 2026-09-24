@@ -7,7 +7,15 @@ import { MeetingListingNotice } from "./meeting-listing-notice";
 import { haversineKm } from "@/lib/geo/distance";
 import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
-import { isOnlineOnly } from "@/lib/meetings/online";
+import {
+  isOnlineOnly,
+  isPlaceUnrecorded,
+  PLACE_UNRECORDED_MARK,
+  statedVenueText,
+  venueGapMark,
+  venueGapOf,
+} from "@/lib/meetings/online";
+import { focusList } from "@/lib/state/list-focus";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 import {
   formatMeetingDate,
@@ -167,13 +175,17 @@ export function ListOverlay({
     * that body has no meetings — a claim about a government made out of a
     * filter interaction.
     */
-   const focused = useMemo(() => {
-     if (!ui.listFocusBodyId) return { list: meetings, applied: false, matched: 0 };
-     const hit = meetings.filter((m) => m.bodyId === ui.listFocusBodyId);
-     return hit.length > 0
-       ? { list: hit, applied: true, matched: hit.length }
-       : { list: meetings, applied: false, matched: 0 };
-   }, [meetings, ui.listFocusBodyId]);
+   /*
+    * 2026-09-23: the same mechanism now carries the district card's "Upcoming
+    * N" door — a DIVISION focus narrowed by the very predicate the card counted
+    * with. It used to dispatch a Body scope keyed on a bare OCD-ID, which no
+    * meeting can match, and this overlay read "0 meetings" under a card that
+    * said "Upcoming 3". See lib/state/list-focus.ts.
+    */
+   const focused = useMemo(
+     () => focusList(meetings, ui),
+     [meetings, ui],
+   );
 
    const sorted = useMemo(() => {
     const list = [...focused.list];
@@ -249,27 +261,28 @@ export function ListOverlay({
           {sorted.length} {listingCount.unit}
         </span>
         {/* ASK-22: the focus is stated and one tap clears it. */}
-        {focused.applied && ui.listFocusBodyName && (
+        {focused.applied && focused.chip && (
           <button
             type="button"
             data-list-focus-clear
             className="al-focus-chip"
-            aria-label={`Showing only ${ui.listFocusBodyName}. Show every meeting.`}
+            aria-label={`Showing ${focused.chip.replace(/^Only /, "only ")}. Show every meeting.`}
             onClick={() =>
-              dispatch({ type: "list/open", open: true, focusBodyId: null, focusBodyName: null })
+              dispatch({ type: "list/open", open: true, focusBodyId: null, focusBodyName: null, focusDivision: null })
             }
           >
-            Only {ui.listFocusBodyName} · show all ✕
+            {focused.chip} · show all ✕
           </button>
         )}
-        {ui.listFocusBodyId && !focused.applied && ui.listFocusBodyName && (
+        {focused.unmatched && focused.chip && (
           /*
-           * The answer named a body and this window holds none of its sittings.
-           * Said out loud, with the full list underneath, because an empty
-           * overlay here would read as "that body has no meetings".
+           * The answer (or the count) named a subject and this window holds none
+           * of its sittings. Said out loud, with the full list underneath,
+           * because an empty overlay here would read as "that body has no
+           * meetings".
            */
           <span className="al-focus-chip" data-list-focus-empty>
-            No {ui.listFocusBodyName} sittings in this window — showing every meeting
+            {focused.chip}
           </span>
         )}
         <button
@@ -519,6 +532,30 @@ export function ListOverlay({
                           // Anything under a mile rounds to 0, which reads as
                           // a missing value rather than "very close".
                           ` · ${formatMiles(km) < 1 ? "<1" : formatMiles(km)} mi`}
+                        {/*
+                          2026-09-23: no building AND no published online
+                          access. Still listed — a missing place never removes a
+                          meeting — and never marked online, which would be a
+                          claim nothing established. Our own gap, named.
+                        */}
+                        {isPlaceUnrecorded(meeting) && (
+                          <span data-meeting-where="unrecorded">{` · ${PLACE_UNRECORDED_MARK}`}</span>
+                        )}
+                        {/*
+                          A named venue gap (official-page events): a physical
+                          sitting with no pin and so no distance. The place the
+                          publisher stated, verbatim — it IS recorded, as text —
+                          or the publisher's own gap when its page states none.
+                          Never "online", never "place not recorded".
+                        */}
+                        {(() => {
+                          const gap = venueGapOf(meeting);
+                          return gap ? (
+                            <span data-meeting-where={statedVenueText(gap) !== null ? "stated" : "not-stated"}>
+                              {` · ${venueGapMark(gap)}`}
+                            </span>
+                          ) : null;
+                        })()}
                       </span>
                     </button>
                   );

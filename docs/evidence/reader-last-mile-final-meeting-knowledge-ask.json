@@ -1,5 +1,5 @@
 {
-  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+  "exactHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
@@ -33,11 +33,11 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "987f58dc1cee6b81dd3ef922eaa11073b02e544dea0ff6ff060589bab46495c8"
+      "sha256": "98d6e87e5947b593d2655c86c344d4fe10e3e3346d34ab540edb5fec2d410a8a"
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
-      "sha256": "50e60ae9120ff9969af77da3a934e82d3c839afe3fff5448eda23148455508c8"
+      "sha256": "a379bc54ec33911e37e5b45132dcb18ed0b951053f8e77320a5085014c43eed9"
     },
     {
       "path": "data/states/az/meetings/notice-summaries.json",
@@ -133,7 +133,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "180c35c2d9fc91a61764ef48a525123533546947686746ace481d729af48e1ef",
+      "payloadSha256": "1b143562d851b3259d3280679bc94d78d5e6796c0910aae92fd1a5814ead2ea1",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "8fa39254e790e1f1bdc22feeb8365eff4bf5604a1e66771ea101811afcd1c1a0",
+      "payloadSha256": "20d131d247f80afbeebef83daa1e00374a46ab0c02326fc18683a54e0cb70867",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -440,7 +440,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0c6788161f3b497767514fd72007762b1983ef9d72f81a79d84daccd3c519f2d",
+      "payloadSha256": "e9fc33e726d0424fe7e041ffdab488401303b3f79307f8636ffee846bd2fa6b3",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -597,7 +597,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "49c892c9c0d90746282d58ba344fed724260ca872217d509321f988ab4b7017a",
+      "payloadSha256": "43001cfd27a971feab7a2a1ba8e7c6909f4997f67b332aead19321ff0bbd350e",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -782,7 +782,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "c270dfd08f9a315e2878965e5ab682674f7ff5d7afea6dc4a3ded2344d77e0b3",
+      "payloadSha256": "8c5443afa7cb8c76856013a20bcf599c91f559e3fd611cd736c21f1e207be474",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -967,7 +967,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "be3b0f53d729d34579f11afa1618a46630edeb4141d7e7699c4376ff4014cf49",
+      "payloadSha256": "190bd3fc83ffa4797ae2f6b856452601d4ab7158fa7bd9b24db8efeb72391289",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1152,7 +1152,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "9ee4f9cec15675bff3ab6a5f6afe5ecfff48b963016423def45ec68b95f9eee7",
+      "payloadSha256": "b682aa5731d57841227769153fd481a0b31396f027f0c5443f3ee653415e08e4",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1365,7 +1365,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d6fb5a52a66eccd9d796f68d233b4c5c7918009ebd853c14bf70ba987baedfc8",
+      "payloadSha256": "df2aad69ffba53c9b27688d7b83f9451a0b67df83b2030b12f1b6eb58064ecdb",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1578,7 +1578,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d34045630a908c7e27f1be7aef0e56684b828e66ca5446a607f1e0e75dd8e455",
+      "payloadSha256": "1f0a0f033553244ac48982e7f9a4bb8e1f486dd6c135873610a61a6a03d5085f",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1724,7 +1724,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "7d4075c5400a8eb34af2a26a0bcffabb2dc1358653678c70869241b2b87a9137",
+      "payloadSha256": "4b72dd471e5c5c3217532f8b67ec687f6a8037988d6b6ec3e15ee3e506bcfbfd",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1937,7 +1937,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "497bc4d7c24146001551eeb5d39cb4309d7bacd647bc39daab3c2da3c253316b",
+      "payloadSha256": "dae24651a922c36acdcabcf72c98f5ae77393a77c7e1e2587c2ec189071bfd87",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2114,7 +2114,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "6938c52852047d3cbbf1d37977d6520c0e206efffee8638e6070a7b6c4bfe5e8",
+      "payloadSha256": "471fda88b51fa360d5d99b49893fcf8c85bff3cf1dae9c7c84e0ea7c9512dfd7",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2267,7 +2267,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e7b12107dbcac6b3582ec4d575831f0d058adc4ccb48f129b078135230b437b8",
+      "payloadSha256": "e3d384e31abb51f1f3e0964d3e190e76fb951e1d36826eb18d578f980f828197",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2476,7 +2476,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "ff3fefff71b4cdbb08231b61407078ce7b9f3943baae508e881dd22b099e4391",
+      "payloadSha256": "cffe9c3506b0a3980655f87092aec36f7dff230239fb534d5895e480d2ff8475",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2685,7 +2685,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "a6e4f9224ffe062817f34fba1fcd2872ca2a68e87439eb57955454255f40dbf9",
+      "payloadSha256": "60841d1a0a020fd05b584a496be12c34c9d8c7a1274e93bdc5170347d941324f",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2893,7 +2893,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "a9d55038c3e96bde8cdbaca685e9a837b6ad8c81b256f6c1cf36e737815242e9",
+      "payloadSha256": "df1e55cbf951ec591b49c5caa270a022924af54e6d1f353dc1cbad94ff64e13c",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3074,7 +3074,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "839c47b6bed4278375edcad9d5f4f2a198ab97d1ce2a6bacbdd7b4d3e550b7cf",
+      "payloadSha256": "144bb0ced3c7fbe1d2bc445d436af5e9cf68aedaffadb071eb1a22f2526bf590",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3255,7 +3255,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f7338096884c18b86a5da026f693ca7cb5f3e0b07ed9101673f790479ca711e0",
+      "payloadSha256": "a1532085d5c9e5ef3d36c3022bdb224cf33d1e713463e6ea4069e37e963c92fb",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3383,11 +3383,11 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting. We are still looking for it."
         },
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting. We are still looking for it."
         }
       ],
       "denominators": {
@@ -3404,7 +3404,7 @@
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
         "sittingsThatLocalDay": 2,
-        "agendaDocumentsForThatMeeting": 2,
+        "agendaDocumentsForThatMeeting": 0,
         "publisherPublicationObservationsForThatMeeting": 0,
         "minutesSummaryRecordsReturned": 0,
         "noticeSummaryRecordsReturned": 0,
@@ -3412,12 +3412,12 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "b4a40109ce70050c85a35ea9d18e23dc2d62ae79f48d14863ffc83ed3fb3306e",
+      "payloadSha256": "31d4c8610e1e8d9dd83532cab90502d057d86b2eef655a1e35a4eb4f16fadf39",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 15,
-      "traceRecordCount": 15,
+      "actualRecordCount": 13,
+      "traceRecordCount": 13,
       "status": "PROVEN"
     },
     {
@@ -3565,7 +3565,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "55798f14169ab0aa62eadf87bf978032bbdd25ffb01b634d7a889916148ddcb1",
+      "payloadSha256": "70a5b59ee53044e41a62290d1cbadfe73fe3d4ceb448d7ba28374551e249be99",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

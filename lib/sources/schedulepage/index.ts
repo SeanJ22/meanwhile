@@ -154,6 +154,12 @@ export interface SchedulePageRaw {
   wiring: BodySourceWiring;
   /** The schedule page's HTML. */
   schedule: string;
+  /**
+   * The publisher's own day files for the scheduled dates inside the serving window (`dayJson` on the row):
+   * one request per scheduled date, never a daily crawl. A date whose file was not read is absent here, and
+   * its sitting stays date-only.
+   */
+  days?: readonly { readonly date: string; readonly url: string; readonly json: string }[];
   /** The documents page's HTML, where the row wires one. */
   documents?: string;
   collectedAt: string;
@@ -529,6 +535,81 @@ export function parseEventTips(
   };
 }
 
+/** One sitting a publisher's day file states, with its own start and place. */
+export interface DaySitting {
+  /** The publisher's own id for the event. */
+  readonly nid: string;
+  readonly title: string;
+  readonly time: { hour: number; minute: number } | null;
+  /** The street address as printed; null when the file states none. */
+  readonly address: string | null;
+  /** The event's own page on the publisher's host. */
+  readonly pageUrl: string | null;
+}
+
+/**
+ * A Drupal calendar's day file (`/rest/events/day/YYYYMMDD`, Chandler AZ, 2026-09-24): every event the city
+ * posted for that day, each with its own start (`date_event`, e.g. `202609146:00pm`), its title as a link to
+ * its own page, and its street address. It is the city's whole calendar, so `titleMatch` is required and is
+ * the whole safety of the shape: a garden workshop never becomes a sitting of the Council. An item whose
+ * `date_event` does not name the day asked for is counted, never moved to another day.
+ */
+export function parseDayEvents(
+  json: string,
+  date: string,
+  titleMatch: string,
+  origin: string,
+): { sittings: DaySitting[]; counts: ParseCounts } {
+  const counts: ParseCounts = { notSittings: 0, undated: 0 };
+  if (!titleMatch) return { sittings: [], counts };
+  let items: unknown;
+  try {
+    items = JSON.parse(json);
+  } catch {
+    return { sittings: [], counts };
+  }
+  if (!Array.isArray(items)) return { sittings: [], counts };
+  const needle = titleMatch.toLowerCase();
+  const day = date.replace(/-/g, "");
+  const sittings: DaySitting[] = [];
+  for (const raw of items) {
+    const item = (raw ?? {}) as Record<string, unknown>;
+    const titleHtml = typeof item.title === "string" ? item.title : "";
+    const title = cellText(titleHtml);
+    if (!title.toLowerCase().includes(needle) || NOT_A_SITTING.test(title)) {
+      counts.notSittings += 1;
+      continue;
+    }
+    const when = /^(\d{8})(\d{1,2}):(\d{2})\s*([ap])m$/i.exec(typeof item.date_event === "string" ? item.date_event.trim() : "");
+    if (!when || when[1] !== day) {
+      counts.undated += 1;
+      continue;
+    }
+    let hour = Number(when[2]);
+    if (hour === 12) hour = 0;
+    if (when[4].toLowerCase() === "p") hour += 12;
+    const href = /href="([^"]+)"/.exec(titleHtml)?.[1] ?? null;
+    const address = typeof item.field_address_address_line1 === "string" ? cellText(item.field_address_address_line1) : "";
+    sittings.push({
+      nid: typeof item.nid === "string" || typeof item.nid === "number" ? String(item.nid) : title,
+      title,
+      time: { hour, minute: Number(when[3]) },
+      address: address === "" ? null : address,
+      pageUrl: href === null ? null : new URL(href, origin).toString(),
+    });
+  }
+  return { sittings: sittings.sort((a, b) => (a.time!.hour * 60 + a.time!.minute) - (b.time!.hour * 60 + b.time!.minute) || a.nid.localeCompare(b.nid)), counts };
+}
+
+/**
+ * Which of a day's sittings is the one the schedule table names: the Regular Meeting, else the Study Session,
+ * else the day's first. It keeps the date's own meeting id, so a date the table published before the city
+ * posted its events gains its time and place rather than a second sitting.
+ */
+export function scheduledOfDay(sittings: readonly DaySitting[]): DaySitting | null {
+  return sittings.find((x) => /\bregular meeting\b/i.test(x.title)) ?? sittings.find((x) => /\bstudy session\b/i.test(x.title)) ?? sittings[0] ?? null;
+}
+
 /**
  * Shape 4 — the document listing *is* the schedule.
  *
@@ -789,7 +870,8 @@ export function makeSchedulePageSource(
     // place (the venue-gap class, 2026-09-23), so it is not a drop.
     let keptUnplaced = 0;
 
-    for (const { wiring, schedule, documents, collectedAt, error } of raw) {
+    for (const row of raw) {
+      const { wiring, schedule, documents, collectedAt, error } = row;
       // A refused row publishes nothing THIS run. It is counted, not skipped:
       // `notConfigured` is the drop bucket for "we had a row and produced no
       // meeting from it", and a run that quietly shortened its own input is
@@ -873,7 +955,40 @@ export function makeSchedulePageSource(
         .map((s) => s.trim())
         .filter(Boolean);
 
+      /*
+       * A scheduled date whose day file was read becomes the day's own sittings of this body, each with the
+       * time and street address the city stated for it; the date's own meeting id stays with the one the
+       * table names. A date whose file was not read, or states none, stays date-only.
+       */
+      const dayFiles = new Map((row.days ?? []).map((f) => [f.date, f] as const));
+      const expanded: (ScheduledSitting & { id: string; address: string | null; pageUrl: string | null })[] = [];
       for (const sitting of mergedSittings) {
+        const file = dayFiles.get(sitting.date);
+        const day = file ? parseDayEvents(file.json, sitting.date, wiring.config.titleMatch ?? "", new URL(file.url).origin) : null;
+        if (day !== null) {
+          considered += day.counts.undated;
+          drops.unplaceableInTime += day.counts.undated;
+        }
+        const primary = day === null ? null : scheduledOfDay(day.sittings);
+        if (day === null || primary === null) {
+          expanded.push({ ...sitting, id: `${SOURCE_NAME}:${wiring.config.slug}:${sitting.date}`, address: null, pageUrl: null });
+          continue;
+        }
+        considered += day.sittings.length - 1;
+        for (const x of day.sittings) {
+          expanded.push({
+            ...sitting,
+            id: x === primary ? `${SOURCE_NAME}:${wiring.config.slug}:${sitting.date}` : `${SOURCE_NAME}:${wiring.config.slug}:${sitting.date}:${x.nid}`,
+            note: x.title,
+            time: x.time,
+            canceled: sitting.canceled || CANCELED.test(x.title),
+            address: x.address,
+            pageUrl: x.pageUrl,
+          });
+        }
+      }
+
+      for (const sitting of expanded) {
         const [y, mo, d] = sitting.date.split("-").map(Number);
         const time = sitting.time ?? stated;
         // With no stated time, local midnight is an ORDERING position and
@@ -897,7 +1012,8 @@ export function makeSchedulePageSource(
         // resolved on ITS OWN string, so an uncurated venue is never placed
         // at an inherited address that would send a reader to the wrong
         // building.
-        const marker = otherVenues.find((v) =>
+        /* A day file's own street address is the sitting's own place, resolved on its own words. */
+        const marker = sitting.address ?? otherVenues.find((v) =>
           sitting.note ? sitting.note.includes(v) : false,
         );
         const rowVenue = marker
@@ -922,7 +1038,7 @@ export function makeSchedulePageSource(
         const base =
           wiring.config.documentsPage ?? wiring.config.schedulePage;
         meetings.push({
-          id: `${SOURCE_NAME}:${wiring.config.slug}:${sitting.date}`,
+          id: sitting.id,
           ocdId: wiring.ocdId,
           /* NH-RC4: the body, from the wiring row that produced this meeting. */
           bodyId: wiring.bodyId,
@@ -944,7 +1060,7 @@ export function makeSchedulePageSource(
           jurisdiction: wiring.jurisdiction,
           status: sitting.canceled ? "CANCELED" : statusOf(startsAt, now),
           provenance: {
-            sourceUrl: wiring.config.schedulePage,
+            sourceUrl: sitting.pageUrl ?? wiring.config.schedulePage,
             sourceOrg: wiring.publishingOrg,
             collectedAt,
             verifiedAt: null,
@@ -1046,6 +1162,28 @@ export function makeSchedulePageSource(
               }
             }
           }
+          /*
+           * `dayJson` names the publisher's day-file route. Only the dates the schedule itself states, inside the
+           * serving window, are asked for: one request each. A day that fails keeps its sitting date-only.
+           */
+          const days: { date: string; url: string; json: string }[] = [];
+          if (wiring.config.dayJson) {
+            const section = wiring.config.sectionMatch ? sliceSection(text, wiring.config.sectionMatch) : text;
+            const now = Date.now();
+            const from = query?.startsAfter ? Date.parse(query.startsAfter) : now - WINDOW_BACK_DAYS * 86_400_000;
+            const to = query?.startsBefore ? Date.parse(query.startsBefore) : now + WINDOW_FORWARD_DAYS * 86_400_000;
+            for (const sitting of parseDatedList(section).sittings) {
+              const at = Date.parse(`${sitting.date}T12:00:00Z`);
+              if (!(at >= from - 86_400_000 && at <= to + 86_400_000)) continue;
+              const url = `${wiring.config.dayJson}${sitting.date.replace(/-/g, "")}`;
+              try {
+                const day = await politeGetText(url, { fetchImpl, accept: "application/json", profile, signal: query?.signal });
+                days.push({ date: sitting.date, url, json: day.text });
+              } catch {
+                // One day refused is not the body's calendar refused: that sitting stays date-only.
+              }
+            }
+          }
           let documents: string | undefined;
           if (wiring.config.documentsPage) {
             const page = await politeGetText(wiring.config.documentsPage, {
@@ -1059,6 +1197,7 @@ export function makeSchedulePageSource(
           collected.push({
             wiring,
             schedule,
+            ...(days.length > 0 ? { days } : {}),
             documents,
             collectedAt: new Date().toISOString(),
           });

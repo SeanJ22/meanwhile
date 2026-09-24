@@ -812,6 +812,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // dated: the rest of the page carries news and archive dates.
       sectionMatch: "paragraph--id--18399",
       venueMatch: "Council Chambers, 88 E. Chicago St.",
+      // The city's own day file for each scheduled date inside the window (one
+      // request per date, never a daily crawl): each Council sitting it posted,
+      // with its own start and street address. It is the city's whole
+      // calendar, so the filter is the Council's own name as its events print it.
+      dayJson: "https://www.chandleraz.gov/rest/events/day/",
+      titleMatch: "City Council",
     },
     verifiedAt: "2026-09-24",
   },

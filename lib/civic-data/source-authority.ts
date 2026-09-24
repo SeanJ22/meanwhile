@@ -421,6 +421,7 @@ export const SOURCE_AUTHORITIES = {
       // table on the city's own host, scoped to the one page wired.
       "https://www.chandleraz.gov/robots.txt",
       "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
+      "https://www.chandleraz.gov/rest/events/day/",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",

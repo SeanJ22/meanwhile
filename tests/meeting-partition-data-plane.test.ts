@@ -350,6 +350,12 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     generatedAt: FIRST,
   });
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
+  // 2026-09-24: each partition promotion once composed the whole aggregate to
+  // read back its own receipt (every partition's payload and candidate, ~24 MB
+  // in production, per promotion). The promotion reads no sibling partition;
+  // the repair below is the one aggregate read that records every receipt.
+  assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
+  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback === null), true);
   const before = await Promise.all(promoted.map(async ({ candidate }) => ({
     contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
     pointer: await store.readPromotion("MEETING", candidate.scope),

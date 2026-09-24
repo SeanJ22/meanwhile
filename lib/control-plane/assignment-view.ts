@@ -686,6 +686,8 @@ export const OBLIGATION_PROVIDER_PREFIXES: readonly { readonly prefix: string; r
   { prefix: "freshness:jurisdiction:", providerId: "local-jurisdictions" },
   { prefix: "freshness:campaign-finance:", providerId: "campaign-finance" },
   { prefix: "freshness:tracker:", providerId: "tracker-intake" },
+  /* MW-028: meetings discovery the owner's dispatch materialized. */
+  { prefix: "freshness:meetings-discovery:", providerId: "meetings-discovery" },
 ];
 
 export function providerOfObligation(id: string): string | null {

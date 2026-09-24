@@ -16,8 +16,9 @@
  *        scripts/scout-denominator.mts --label=before|after [--out=<path>]
  * ```
  *
- * The registry is the four research-provider subset of
- * `freshness-shadow.mts` (root = cwd); the deterministic promoted-fact
+ * The registry is the five research providers of
+ * `freshness-shadow.mts` (root = cwd), the owner's materialized work included
+ * (MW-028); the deterministic promoted-fact
  * provider is outside this Scout-class denominator. "Due" uses the standing
  * runtime's exact derivation:
  * `scheduleObligation` over the durable row's runtime fields, held out when
@@ -41,6 +42,9 @@ import {
   candidateEnrichmentProvider,
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import { meetingsDiscoveryProvider } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
+import type { MaterializedReading } from "../lib/control-plane/scheduler/provider-inputs.ts";
+import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { loadDebts, type StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
@@ -286,12 +290,21 @@ line(`testedSha: ${headSha(ROOT) ?? "null (no HEAD resolvable)"}`);
 
 /* ------------------------------------------------------------ the registry --- */
 
+/* The obligations the owner's dispatch materialized (MW-028), read by their mark, so this
+   denominator counts the same corpus the standing runner schedules. */
+let materialized: MaterializedReading;
+try {
+  materialized = { ids: new Set((await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH)).map((row) => row.id)) };
+} catch (error) {
+  materialized = { unreadable: redact(error instanceof Error ? error.message : String(error)) };
+}
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
     trackerIntakeProvider(),
-    localJurisdictionsProvider(),
+    localJurisdictionsProvider({ materialized: () => materialized }),
     candidateEnrichmentProvider(),
+    meetingsDiscoveryProvider({ materialized: () => materialized }),
   ],
   { root: ROOT, nowIso: NOW },
 );

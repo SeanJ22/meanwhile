@@ -270,7 +270,17 @@ export async function processRegisteredFanOutCandidate(
   );
 }
 
-/** A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract. */
+/**
+ * A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract.
+ *
+ * Its Reader readback is not taken here. The Reader of a meeting partition is
+ * the aggregate meetings Reader, which composes every partition, so a readback
+ * per promotion moved all 84 partitions' payloads and candidate rows (~24 MB)
+ * once per promoted partition. `repairMeetingReaderProjectionReadbacks`, the
+ * meeting Reader domain of every routine pass, appends the same typed receipt
+ * to each newly promoted partition from one aggregate read; the pass that
+ * promotes a partition records its readback before it ends.
+ */
 export async function processRegisteredMeetingPartitionCandidate(
   store: RoutineDataStore,
   partitionId: string,
@@ -293,12 +303,7 @@ export async function processRegisteredMeetingPartitionCandidate(
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
-  return appendTypedReaderProjectionReadback(
-    store,
-    contract,
-    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
-    now,
-  );
+  return processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification);
 }
 
 export function manualCandidateContractIssue(contractId: ManualProductionContractId, candidate: RoutineCandidate): string | null {

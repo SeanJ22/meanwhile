@@ -18,7 +18,8 @@
  *
  * The executor adds two more. **RECIPE** is a saved method's path on the
  * government's own origin, proposed only when this page shows the method's
- * precondition (`lib/hunt/meetings-recipes.ts`). **SEARCH** is a search result
+ * precondition, or a link this page itself carries on its own host
+ * (`lib/hunt/meetings-recipes.ts`). **SEARCH** is a search result
  * on the government's own domain or a known meeting-publisher host
  * (`lib/hunt/discovery-search.ts`), used only when nothing else was confirmed.
  *
@@ -42,6 +43,7 @@
  */
 
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
+import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 
 /**
@@ -63,6 +65,8 @@ export const VERIFIABLE_VENDORS = [
   "civicclerk-api",
   "iqm2",
   "boardbook",
+  /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
+  "official-page-events",
 ] as const;
 export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 
@@ -227,6 +231,182 @@ export interface EndpointVerification {
   readonly detail: string;
 }
 
+/* --------------------------------------------------- official-page events */
+
+/**
+ * The exact parser an official page is verified with: the
+ * `lib/sources/official-page-events` adapter, named by the first 12 hex of the
+ * digest of its value-import closure (`digestValueClosure`,
+ * lib/ops/generator-digest.ts: every file its runtime reaches, name and bytes;
+ * an import that carries only types cannot change behaviour and is left out). A
+ * test recomputes it, so a change anywhere the parser's runtime reaches fails
+ * until this is bumped, and anything keyed on it (a saved method, a wiring row)
+ * re-keys cleanly.
+ */
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@3f3436336408";
+
+/**
+ * The zone a state's bodies meet in, for the states that sit in one zone. A
+ * state that spans zones is absent, so its wall clocks are never guessed and a
+ * page for one of its bodies is not confirmed.
+ */
+export const STATE_TIME_ZONES: Readonly<Record<string, string>> = {
+  AZ: "America/Phoenix",
+  NH: "America/New_York",
+  NJ: "America/New_York",
+  NM: "America/Denver",
+};
+
+/** Words that name a government's class, not the government itself. */
+/*
+ * "Unified" and "Union" stay: they tell TUCSON UNIFIED from the City of Tucson,
+ * and a shorter core would let a neighbor's events verify.
+ */
+const CLASS_WORDS = /\b(city|town|village|township|borough|county|of|the|school|schools|public|district|districts|no\.?|number)\b/gi;
+const SMALL_WORDS = new Set(["of", "the", "and", "for", "at", "in"]);
+
+function titleCase(words: string): string {
+  return words
+    .toLowerCase()
+    .split(" ")
+    .map((w, i) => (i > 0 && SMALL_WORDS.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(" ");
+}
+
+/**
+ * The names a body's own events may carry, derived only from the body's
+ * recorded name, never from the page:
+ * - the name, title-cased, without a trailing district number ("Tucson Unified
+ *   School District");
+ * - the name without its class words ("Tucson Unified");
+ * - its initials, when they make at least three letters ("TUSD").
+ * The first is the body's name; the rest are the terms an event title may use
+ * instead of it.
+ */
+export function identityNameTerms(name: string): readonly string[] {
+  const plain = name.replace(/\s+/g, " ").trim().replace(/\s*(?:#|no\.?\s*)?\d+$/i, "").trim();
+  if (plain === "") return [];
+  const full = titleCase(plain);
+  const core = titleCase(plain.replace(CLASS_WORDS, " ").replace(/\s+/g, " ").trim());
+  const initials = plain
+    .split(" ")
+    .filter((w) => !SMALL_WORDS.has(w.toLowerCase()) && /^[a-z]/i.test(w))
+    .map((w) => w.charAt(0).toUpperCase())
+    .join("");
+  const terms = [full];
+  if (core.length >= 4 && core !== full) terms.push(core);
+  if (initials.length >= 3) terms.push(initials);
+  return terms;
+}
+
+/** An anchor on a page: where it points, and the words it shows the reader. */
+export interface AnchorLink {
+  readonly url: string;
+  readonly text: string;
+}
+
+const ANCHOR = /<a\b[^>]*?\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'<>]+))[^>]*>([\s\S]*?)<\/a>/gi;
+
+function anchorText(inner: string): string {
+  return inner
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Every http(s) anchor on the page with its visible text, resolved against the page, first 2,000. */
+export function anchorLinks(html: string, pageUrl: string): readonly AnchorLink[] {
+  const out: AnchorLink[] = [];
+  const seen = new Set<string>();
+  for (const m of html.matchAll(ANCHOR)) {
+    const raw = (m[1] ?? m[2] ?? m[3] ?? "").replace(/&amp;/gi, "&").trim();
+    if (raw === "" || raw.startsWith("#") || /^(javascript|mailto|tel|data):/i.test(raw)) continue;
+    let resolved: URL;
+    try {
+      resolved = new URL(raw, pageUrl);
+    } catch {
+      continue;
+    }
+    if (resolved.protocol !== "http:" && resolved.protocol !== "https:") continue;
+    resolved.hash = "";
+    const link = { url: resolved.toString(), text: anchorText(m[4]) };
+    const key = `${link.url}|${link.text}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(link);
+    if (out.length >= 2000) break;
+  }
+  return out;
+}
+
+/** The body an official page is verified for. */
+export interface OfficialPageIdentity {
+  readonly bodyId: string;
+  /** The body's recorded name; the name forms its events may carry derive from it (`identityNameTerms`). */
+  readonly name: string;
+  /**
+   * The words the body's own homepage used to link this page ("Board of Education"), or null when the
+   * page was not reached by such a link. With at least two words, the label is a name events may carry:
+   * the government itself says whose page this is. A one-word label ("Council") is too general to name a body.
+   */
+  readonly pageLabel: string | null;
+  /** The host the walk attested as the body's own: the recorded site, or a host its own redirect named. */
+  readonly officialHost: string;
+  readonly stateCode: string;
+  readonly now: string;
+}
+
+/**
+ * Is this page a route for the body's dated public events? The rules are the
+ * adapter's own `verifyOfficialPageEvents`, so a page this confirms is a page
+ * the standing runner would publish from: an event verifies only on the body's
+ * official host, named for the body in its title, and dated in the body's
+ * state's zone. A page for a body in an untabled state is never confirmed.
+ */
+function verifyOfficialPage(
+  response: { readonly body: string; readonly finalUrl: string },
+  identity: OfficialPageIdentity | undefined,
+): EndpointVerification {
+  if (identity === undefined) {
+    return { verdict: "NOT_CONFIRMED", count: null, detail: "an official page is verified only for a named body, and none was given" };
+  }
+  const timeZone = STATE_TIME_ZONES[identity.stateCode.toUpperCase()];
+  if (timeZone === undefined) {
+    return {
+      verdict: "NOT_CONFIRMED",
+      count: null,
+      detail: `TIME_ZONE_UNKNOWN: ${identity.stateCode} is not a one-zone state this module tables, and a wall clock is never guessed`,
+    };
+  }
+  const [name, ...nameForms] = identityNameTerms(identity.name);
+  if (name === undefined) return { verdict: "NOT_CONFIRMED", count: null, detail: "the body has no recorded name to verify events against" };
+  const label = identity.pageLabel?.trim() ?? "";
+  const nameTerms = label.split(/\s+/).filter((w) => w !== "").length >= 2 ? [...nameForms, label] : [...nameForms];
+  const result = verifyOfficialPageEvents({
+    body: { id: identity.bodyId, name, officialDomain: identity.officialHost, timeZone, nameTerms },
+    url: response.finalUrl,
+    html: response.body,
+    now: identity.now,
+  });
+  if (result.verdict === "YIELDED") {
+    const shown = result.sampleEvents.slice(0, 2).map((e) => `${e.title} (${e.startsAt.slice(0, 10)})`).join("; ");
+    const held = result.held.length > 0 ? `; ${result.held.length} held by name` : "";
+    return {
+      verdict: "YIELDED",
+      count: result.sampleEvents.length,
+      detail: `${result.sampleEvents.length} dated event(s) verified for ${name} by ${OFFICIAL_PAGE_EVENTS_VERSION}: ${shown}${held}`,
+    };
+  }
+  if (result.verdict === "EMPTY") {
+    return { verdict: "EMPTY", count: 0, detail: `${OFFICIAL_PAGE_EVENTS_VERSION}: ${result.reason ?? "no dated event on the page"}` };
+  }
+  return { verdict: "NOT_CONFIRMED", count: null, detail: `${OFFICIAL_PAGE_EVENTS_VERSION}: no event verified for ${name} (${result.reason ?? "held"})` };
+}
+
 function jsonOf(body: string): unknown {
   try {
     return JSON.parse(body);
@@ -243,6 +423,8 @@ function jsonOf(body: string): unknown {
 export function verifyEndpointBody(
   candidate: Pick<EndpointCandidate, "vendor" | "url">,
   response: { readonly status: number | null; readonly body: string; readonly finalUrl: string },
+  /** The body a page is verified for; required only by `official-page-events`. */
+  identity?: OfficialPageIdentity,
 ): EndpointVerification {
   const { status, body } = response;
   if (status === null || status < 200 || status >= 300) {
@@ -294,6 +476,8 @@ export function verifyEndpointBody(
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
     }
+    case "official-page-events":
+      return verifyOfficialPage(response, identity);
     default:
       return { verdict: "NOT_CONFIRMED", count: null, detail: `no content check exists for ${candidate.vendor}: a lead, not a route` };
   }
@@ -309,9 +493,9 @@ export type DiscoveryOutcome =
   | "LEAD"
   /** The pages that could be read showed nothing this walk recognises. */
   | "NOTHING_DETECTED"
-  /** Permission refused every origin: robots DISALLOWED or CANNOT_TELL, or a recorded wall. */
+  /** Every origin is a wall: its rules, a recorded wall, or a 401, 403 or 429 to this client. */
   | "BLOCKED"
-  /** Every origin failed in transport, or answered a wall. */
+  /** The site could not be read: a transport failure, a server error, or permission rules that could not be read. */
   | "COULD_NOT_READ";
 
 /** Days until a need is walked again, by outcome. A recheck is a schedule, never a verdict. */

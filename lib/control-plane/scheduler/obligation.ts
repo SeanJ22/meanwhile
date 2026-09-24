@@ -118,7 +118,19 @@ export interface FreshnessObligation {
    * means no standing absence. Runtime-owned and durable.
    */
   readonly absentUntil?: string | null;
+  /**
+   * Set when the owner's dispatch MATERIALIZED this obligation (MW-028,
+   * `lib/control-plane/expansion/dispatch-work.ts`): the registry defined the
+   * requirement, no standing provider carried it, and the runner created the
+   * row because the owner sent the fleet there. The providers read it back to
+   * keep the row in their corpus; a registration pass never resets it.
+   * Absent on every row a standing provider registered on its own.
+   */
+  readonly materializedBy?: typeof OWNER_DISPATCH;
 }
+
+/** The one value `FreshnessObligation.materializedBy` carries. */
+export const OWNER_DISPATCH = "OWNER_DISPATCH" as const;
 
 /** An obligation with a next-due, and the derivation that produced it. */
 export interface ScheduledObligation {

@@ -135,8 +135,12 @@ function assertCompletedWorkerResult(record: WorkerResultRecord, attempt: Attemp
 
 /** Same exact producer validation as a point read, with bounded repository reads for inherited history. */
 export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId?: string): Promise<readonly WorkerResultRecord[]> {
+  /* One item's results can only have been produced by that item's Attempts
+     (`completeWorkerTask` refuses a result whose Attempt belongs to another
+     item), so an item-scoped read lists only those Attempts. */
   const [records, attemptRows] = await Promise.all([
-    workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId), repos.attempts.list(),
+    workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
+    workItemId === undefined ? repos.attempts.list() : repos.attempts.listWhere(["workItemId"], workItemId),
   ]);
   const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
   return records.filter(record => {
@@ -179,8 +183,15 @@ function executionHead(tasks: readonly RouteTask[], attempts: readonly Attempt[]
  * Captured-artifact audits remain diagnostic to whole-obligation completion.
  */
 export async function loadWorkerCompletionEvidence(repos: ControlPlaneRepositories, workItemId: string): Promise<WorkerCompletionEvidence> {
+  /* One work item's rows only, filtered in the database: its RouteTasks and
+     Attempts by the item they belong to, and its results by their log key
+     (`completeWorkerTask` appends every result under its own work item). The
+     whole three tables, read once per work item, moved ~11 MB per call on
+     2026-09-24, twice per work item in every research cycle's projection. */
   const [taskRows, attemptRows, allResults] = await Promise.all([
-    repos.routeTasks.list(), repos.attempts.list(), repos.workerResults.readAll(),
+    repos.routeTasks.listWhere(["workItemId"], workItemId),
+    repos.attempts.listWhere(["workItemId"], workItemId),
+    repos.workerResults.read(workItemId),
   ]);
   const tasks = taskRows.map((row) => row.value).filter((task) => task.workItemId === workItemId &&
     task.workerTask && task.workerTask.purpose !== "DIAGNOSTIC_REPLAY");

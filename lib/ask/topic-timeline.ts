@@ -1,4 +1,5 @@
-import { agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
+import { agendaItems, agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
+import { isAnotherBodysNoticePage, isWiredNoticePage } from "../meetings/notice-pages.ts";
 import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import { localDate } from "./meeting-time.ts";
@@ -359,9 +360,16 @@ export function buildTopicTimeline(input: {
   }
 
   // 2. Lines in held agenda documents, for sittings the structured records did not cover.
+  // A body's notice page is never one of its sittings' agendas (D1, 2026-09-24):
+  // another body's page, or a notice page that states no agenda item, is not
+  // searched, not counted among the agendas held, and does not make a sitting
+  // read. CAP's meetings page held for Pima's Oct 13 study session is both.
+  const documents = input.documents.filter((document) =>
+    !isAnotherBodysNoticePage(document.documentUrl, { bodyId: input.bodyId, publisher: document.sourceOrg }) &&
+    !(isWiredNoticePage(document.documentUrl) && agendaItems(document.text ?? "").length === 0));
   const byMeeting = new Map(input.meetings.map((meeting) => [meeting.id, meeting]));
-  const { hits, searched, unreadable } = searchAgendas(input.documents, topic);
-  for (const document of input.documents) {
+  const { hits, searched, unreadable } = searchAgendas(documents, topic);
+  for (const document of documents) {
     const meeting = byMeeting.get(document.meetingId);
     if (meeting && document.text && document.text.trim()) readDays.add(dayOf(meeting.startsAt, meeting.timeZone));
   }
@@ -369,7 +377,7 @@ export function buildTopicTimeline(input: {
   // capped at 400 characters and, on a line that runs items together, can end
   // before the phrase it matched. Versions of one agenda collapse by content.
   const seenWindow = new Set<string>();
-  const newestFirst = [...input.documents].sort((a, b) => String(b.retrievedAt).localeCompare(String(a.retrievedAt)));
+  const newestFirst = [...documents].sort((a, b) => String(b.retrievedAt).localeCompare(String(a.retrievedAt)));
   for (const document of newestFirst) {
     if (!document.text || hits.every((hit) => hit.documentUrl !== document.documentUrl || hit.meetingId !== document.meetingId)) continue;
     const meeting = byMeeting.get(document.meetingId);

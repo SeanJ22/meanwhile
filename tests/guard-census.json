@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 758,
-    "named": 7472,
+    "files": 759,
+    "named": 7478,
     "dynamic": 30
   },
   "files": {
@@ -6630,6 +6630,17 @@
         "the family classifier preserves the frozen split-family semantics without UNKNOWN",
         "the formerly mixed curated Reader row has an exact truthful path partition and no PDC-7 blocker",
         "the registry fails closed for a new source, lost family, scheduled non-routine row, and research runtime fallback"
+      ],
+      "dynamic": 0
+    },
+    "tests/notice-page-reader.test.ts": {
+      "names": [
+        "Ask's topic timeline neither searches CAP's page nor counts Oct 13 as a read agenda",
+        "Mesa 1343183: the council's own meetings page is its publication index, never a read agenda",
+        "Pima 1381578: CAP's meetings page is never shown for a Pima Board sitting, and the sitting holds no agenda",
+        "Warner: a failed read of the town calendar is the body's page, not a document we could not read",
+        "an agenda posted on a body's notice page is still that sitting's agenda",
+        "the wiring decides whose notice page a URL is"
       ],
       "dynamic": 0
     },

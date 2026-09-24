@@ -11,6 +11,7 @@ import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
@@ -69,7 +70,17 @@ test("all three measured Newbury dates retain two listings with unresolved disti
       assert.equal(readerResponse.status, 200);
       assert.equal(reader.meetingId, id);
       assert.deepEqual(reader.listingIdentity.groups, [group]);
-      assert.deepEqual(reader.documents.map((document: { id: string }) => document.id).sort(), documents.map(document => document.id).sort());
+      // D1 (2026-09-24): another body's notice page held for this sitting (the
+      // Town of Bradford's calendar, on a Newbury sitting) is never shown for
+      // it; it is stated in the accounting instead.
+      const sitting = held.find(meeting => meeting.id === id)!;
+      const lent = documents.filter(document =>
+        isAnotherBodysNoticePage(document.documentUrl, { bodyId: sitting.bodyId, publisher: document.sourceOrg }));
+      assert.deepEqual(reader.documents.map((document: { id: string }) => document.id).sort(),
+        documents.filter(document => !lent.includes(document)).map(document => document.id).sort());
+      assert.equal(reader.documentAccounting.anotherBodysPagesSetAside, lent.length);
+      assert.ok(!reader.documents.some((document: { documentUrl: string }) => document.documentUrl === "https://bradfordnh.gov/pages/calendar"),
+        "a Newbury sitting is never shown the Town of Bradford's calendar");
     }
   }
 });

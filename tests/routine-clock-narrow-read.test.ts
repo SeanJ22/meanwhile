@@ -15,6 +15,7 @@ import {
   ROUTINE_CLOCK_CANDIDATE_FIELDS,
   routineClockCandidateRead,
   routineClockCandidateView,
+  routineClockConfirmationRead,
   routineClockPointedObservedRead,
   routineClockPointerRead,
   sittingStartsRead,
@@ -27,6 +28,7 @@ import {
   promotionProofIssue,
   readPromotedCivicData,
 } from "../lib/civic-data/read-model.ts";
+import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import {
   attestedPromotionFor,
   parseAttestedPromotions,
@@ -438,4 +440,149 @@ test("attestations parse whole or not at all", () => {
     assert.deepEqual(parseAttestedPromotions(bad), [], `refused: ${String(bad).slice(0, 40)}`);
   }
   assert.equal(promotedPayloadSha256({ b: 1, a: 2 }), promotedPayloadSha256({ a: 2, b: 1 }), "canonical, key order free");
+});
+
+async function promotedStore(value: RoutineCandidate): Promise<MemoryRoutineDataStore> {
+  const store = new MemoryRoutineDataStore();
+  await store.create({ ...promoted(value), state: "FETCHED", receipt: null, promotedVersion: null, lastKnownGoodVersion: null }, {
+    candidateId: value.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: value.retrieval.retrievedAt,
+    detail: "persisted acquisition",
+  });
+  await store.transition(value.id, "NORMALIZED", value.retrieval.retrievedAt, "persisted normalization");
+  const receipt = receiptFor(value);
+  await store.transition(value.id, "VALIDATED", value.retrieval.retrievedAt, "persisted validation", receipt);
+  await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
+  return store;
+}
+
+const CONFIRMING_RETRIEVAL = {
+  requestedUrl: "https://api.open.fec.gov/v1/",
+  finalUrl: "https://api.open.fec.gov/v1/",
+  httpStatus: 200,
+  rawHash: "e".repeat(64),
+  retrievedAt: "2026-09-08T18:00:00.000Z",
+};
+
+test("an unchanged re-check is a confirmation on the pointed version: readers keep it, the clock moves", async () => {
+  const value = candidate("confirmed");
+  const store = await promotedStore(value);
+  const pointerBefore = await store.readPromotion(value.recordClass, value.scope);
+  const input = {
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    parserVersion: value.normalization.parserVersion,
+    pointerVersionId: value.id,
+    readModelHash: value.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED" as const,
+    retrieval: CONFIRMING_RETRIEVAL,
+  };
+  const outcome = await store.confirmUnchanged(input, "2026-09-08T18:00:03.000Z");
+  assert.deepEqual(outcome, { kind: "CONFIRMED", versionId: value.id, at: "2026-09-08T18:00:03.000Z" });
+  assert.deepEqual(await store.readPromotion(value.recordClass, value.scope), pointerBefore, "the pointer does not move");
+  const events = await store.events(value.id);
+  assert.deepEqual(events.map(({ state }) => state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+  assert.equal(parseUnchangedConfirmation(events.at(-1)!.detail)?.retrieval.retrievedAt, "2026-09-08T18:00:00.000Z");
+  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), {
+    lastAttemptedAt: "2026-09-08T18:00:03.000Z",
+    lastSucceededAt: "2026-09-08T18:00:00.000Z",
+    lastSucceededObservedAt: "2026-09-08T18:00:03.000Z",
+  });
+
+  // Each refusal writes nothing.
+  const refusedAt = "2026-09-08T19:00:00.000Z";
+  const refusals: readonly [string, Parameters<MemoryRoutineDataStore["confirmUnchanged"]>[0]][] = [
+    ["POINTER_MOVED", { ...input, pointerVersionId: "cv-other" }],
+    ["HASH_DIFFERS", { ...input, readModelHash: "f".repeat(64) }],
+    ["EVIDENCE_INVALID", { ...input, basis: "PUBLISHER_STAMPS_UNCHANGED" }],
+    ["EVIDENCE_INVALID", {
+      ...input,
+      basis: "PUBLISHER_STAMPS_UNCHANGED",
+      stamps: [{ key: "s1", held: { modified: "a" }, fetched: { modified: "b" } }],
+    }],
+    ["EVIDENCE_INVALID", { ...input, retrieval: { ...CONFIRMING_RETRIEVAL, httpStatus: 404 } }],
+  ];
+  for (const [kind, refused] of refusals) {
+    assert.equal((await store.confirmUnchanged(refused, refusedAt)).kind, kind);
+  }
+  assert.equal((await store.events(value.id)).length, 5, "no refusal wrote an event");
+
+  // A stamp basis with every stamp equal is a confirmation too.
+  const stamped = await store.confirmUnchanged({
+    ...input,
+    basis: "PUBLISHER_STAMPS_UNCHANGED",
+    stamps: [{ key: "sitting:1826", held: { EventLastModifiedUtc: "2026-09-22T20:00:00Z" }, fetched: { EventLastModifiedUtc: "2026-09-22T20:00:00Z" } }],
+    retrieval: { ...CONFIRMING_RETRIEVAL, retrievedAt: "2026-09-08T20:00:00.000Z" },
+  }, "2026-09-08T20:00:01.000Z");
+  assert.equal(stamped.kind, "CONFIRMED");
+
+  // A later attempt that has not promoted is later than the confirmation: the retry clock owns it.
+  const later = candidate("attempt-after-confirmation", {
+    retrieval: { ...value.retrieval, retrievedAt: "2026-09-08T21:00:00.000Z" },
+  });
+  await store.create({ ...promoted(later), state: "FETCHED", receipt: null, promotedVersion: null, lastKnownGoodVersion: value.id }, {
+    candidateId: later.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: "2026-09-08T21:00:02.000Z",
+    detail: "persisted acquisition",
+  });
+  const clock = await store.clock(value.sourceId, value.recordClass, value.scope);
+  assert.equal(clock.lastAttemptedAt, "2026-09-08T21:00:02.000Z");
+  assert.equal(clock.lastSucceededObservedAt, "2026-09-08T20:00:01.000Z");
+});
+
+test("a trusted-LKG import is never confirmed: a live read of it promotes instead", async () => {
+  const imported = candidate("imported-pointer", {
+    bootstrapImport: { kind: "TRUSTED_LKG_IMPORT" } as unknown as RoutineCandidate["bootstrapImport"],
+  });
+  const key = `${imported.recordClass}:${imported.scope}`;
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, {
+    candidates: new Map([[imported.id, promoted(imported)]]),
+    history: new Map([[imported.id, [{ candidateId: imported.id, sequence: 1, state: "PROMOTED", at: imported.retrieval.retrievedAt, detail: "imported" }]]]),
+    promotions: new Map([[key, {
+      key,
+      sourceId: imported.sourceId,
+      recordClass: imported.recordClass,
+      scope: imported.scope,
+      versionId: imported.id,
+      lastKnownGoodVersionId: imported.id,
+      payload: imported.readModel,
+      receipt: receiptFor(imported),
+      promotedAt: "2026-09-08T12:01:00.000Z",
+    }]]),
+  });
+  const outcome = await store.confirmUnchanged({
+    sourceId: imported.sourceId,
+    recordClass: imported.recordClass,
+    scope: imported.scope,
+    parserVersion: imported.normalization.parserVersion,
+    pointerVersionId: imported.id,
+    readModelHash: imported.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED",
+    retrieval: CONFIRMING_RETRIEVAL,
+  }, "2026-09-08T18:00:03.000Z");
+  assert.equal(outcome.kind, "POINTER_IS_IMPORT");
+});
+
+test("the Postgres confirmation is one guarded insert, and the clock reads one event detail for it", () => {
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  const start = postgres.indexOf("  async confirmUnchanged(");
+  const method = postgres.slice(start, start + 3_000);
+  for (const guard of [
+    /\$\{civicDataCandidates\.normalizedHash\} = \$\{input\.readModelHash\}/,
+    /and not \(\$\{civicDataCandidates\.candidate\} \? 'bootstrapImport'\)/,
+    /\$\{civicDataPromotions\.currentVersionId\} = \$\{id\}/,
+    /\$\{civicDataPromotions\.lastKnownGoodVersionId\} = \$\{id\}/,
+    /\$\{civicDataCandidateEvents\.at\} > \$\{at\}::timestamptz/,
+    /this\.candidateEventLock\(id\)/,
+  ]) assert.match(method, guard);
+  const select = selectList(routineClockConfirmationRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
+  assert.doesNotMatch(select, DATASET);
+  assert.match(select, /"detail"/);
 });

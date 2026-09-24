@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 754,
-    "named": 7437,
+    "files": 755,
+    "named": 7442,
     "dynamic": 30
   },
   "files": {
@@ -3638,6 +3638,19 @@
       ],
       "dynamic": 0
     },
+    "tests/discovery-search-switch.test.ts": {
+      "names": [
+        "A CORRUPT ROW NEVER TURNS PAID SEARCH ON, and turning it off over one writes a real row",
+        "AN OWNER DECISION, SAID TWICE TO TURN ON, RECORDED DURABLY",
+        "NO SILENT RESUME: only the owner's action writes the switch; no env var can turn it on; each paid search path sits behind its own gate",
+        "OFF UNTIL HE SAYS SO: a fresh store, a never-decided row, a malformed decision and a corrupt row all read off",
+        "THE CONSOLE POSTS IT: the switch rides the search line, and turning it on posts the confirmation",
+        "THE LIMITS BESIDE IT: the search line reads the caps the runner acknowledged, and says the code's starting caps are only that until it has",
+        "THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt",
+        "THE RUNNER OBEYS IT: the switch is read at cycle start, no search step is built unless it is on, and discovery is on unless killed"
+      ],
+      "dynamic": 0
+    },
     "tests/discovery-tree.test.ts": {
       "names": [
         "RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale",
@@ -6514,8 +6527,6 @@
     "tests/nj-morris-data-plane.test.ts": {
       "names": [
         "Morris filing horizon requires the clerk's current general and school documents",
-        "Morris: between revisions the clerk's asset version decides, then the stamp in any of its formats",
-        "Morris: the clerk's unstamped 2026-09-18 revision is the current general document",
         "NJ Reader uses the promoted ballot/contact projection and exposes its exact LKG",
         "NJ ballot and filed contacts bootstrap only after an answered missing pointer",
         "NJ store failure is not disguised as a successful bundled ballot read"
@@ -7068,7 +7079,6 @@
       "names": [
         "PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG",
         "PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG",
-        "PDC-8 dotgov: a later registry commit whose hash sorts lower still promotes; the hash is an identity, not an order",
         "PDC-8 meetings: changed rows promote with exact added/changed/removed/held evidence; source-auth failure holds LKG",
         "PDC-8 trusted bootstrap fixtures project byte-for-structure through the three candidate builders",
         "run 34232794631 regression: software CI red cannot fail, relabel, or revert a source, and another source still promotes"

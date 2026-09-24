@@ -411,6 +411,28 @@ export interface RunnerHeartbeat {
    * current durable owner-facing receipt and never came through Git.
    */
   readonly intakeRuntime?: IntakeRuntimeObservation | null;
+  /**
+   * What the runner applied for PAID discovery search on its last cycle (NS28):
+   * the owner's switch as it read it at cycle start (`AdminConfig.discoverySearch`)
+   * and the caps it enforced. The console matches `receiptId` to the owner's
+   * latest decision, as it matches a pause, to say whether the runner has applied
+   * it. Absent on every beat written before the field existed.
+   */
+  readonly discoverySearch?: DiscoverySearchApplied | null;
+}
+
+/** The runner's acknowledgement of the paid discovery search switch, written into its heartbeat each cycle. */
+export interface DiscoverySearchApplied {
+  /** The receipt of the owner's decision it applied, or null when none was ever made (the default: off). */
+  readonly receiptId: string | null;
+  readonly enabled: boolean;
+  /** The caps it enforced: the env caps, or the code's defaults. */
+  readonly perCycle: number;
+  readonly perDay: number;
+  /** When it read and applied the switch: that cycle's start. */
+  readonly appliedAt: string;
+  /** Why it is on or off, in the runner's words (including "could not be read", which is off). */
+  readonly detail: string;
 }
 
 /**

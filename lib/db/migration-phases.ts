@@ -394,6 +394,16 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "will hold, never an existing one — so it is safe to apply BEFORE the deploy that first " +
       "writes the prepared snapshot.",
   },
+  "0029_unchanged_confirmation_receipts": {
+    phase: "expand",
+    why:
+      "Replaces the 0026 event-insert rule with the same rule plus one accepted shape: a repeated " +
+      "PROMOTED event that is an UNCHANGED_CONFIRMATION_V1 receipt naming its exact pointed, live " +
+      "version and read-model hash, or that receipt's companion sources event. Every other event " +
+      "is judged exactly as before. No table, column, constraint or row changes. The deployed " +
+      "build never writes the new receipt, and the build that does refuses safely without it " +
+      "(STORE_REFUSED, then promotes as before). Apply BEFORE the deploy that records it.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

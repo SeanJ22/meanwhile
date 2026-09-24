@@ -1,7 +1,7 @@
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
 import { PostgresRoutineDataStore, PromotionBaseChangedError, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
-import { candidateChangeSet } from "./changes.ts";
+import { canonicalCivicDataJson, candidateChangeSet } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
 import { requiredRoutineContract, type RoutineSourceContract } from "./contracts.ts";
 import { requiredMeetingPartitionContract } from "./meeting-partitions.ts";
@@ -108,7 +108,8 @@ async function appendTypedReaderProjectionReadback(
   outcome: PromotionOutcome,
   requestedAt: string,
 ): Promise<PromotionOutcome> {
-  if (outcome.promoted === null || contract.readerProjection === null) return outcome;
+  // A confirmation leaves the pointed version, and its readback, as they were.
+  if (outcome.promoted === null || outcome.confirmed || contract.readerProjection === null) return outcome;
   const observedAt = promotionReaderReadbackObservedAt(
     store,
     requestedAt,
@@ -417,6 +418,21 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
   return left.length === right.length && left.every((key, index) => key === right[index]);
 }
 
+/**
+ * The authority a read model cites outside its own records: a roll call's
+ * member join names the exact roster version it was checked against
+ * (`officialStateRollIdentityAuthorityIssue`), which its change set never
+ * sees. A re-check that cites a moved authority promotes, so a pointed version
+ * never keeps naming a superseded one.
+ */
+export function sameCitedAuthority(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  const cited = (value: RoutineCandidate) => {
+    const readModel = value.readModel as { readonly officialIdentityAuthority?: unknown } | null;
+    return canonicalCivicDataJson(readModel && typeof readModel === "object" ? readModel.officialIdentityAuthority ?? null : null);
+  };
+  return cited(candidate) === cited(pointed);
+}
+
 export async function processRoutineCandidate(
   store: RoutineDataStore,
   inputCandidate: RoutineCandidate,
@@ -515,7 +531,8 @@ export async function processRoutineCandidate(
     validated.state === "VALIDATED" && validated.receipt.decision === "GOOD" &&
     candidate.changeSet?.outcome === "UNCHANGED" &&
     typeof lkg.candidate.normalization.normalizedHash === "string" &&
-    sameHeldRecords(candidate, lkg.candidate)
+    sameHeldRecords(candidate, lkg.candidate) &&
+    sameCitedAuthority(candidate, lkg.candidate)
   ) {
     const retained = (candidate as { readonly retainedSourceResponses?: readonly unknown[] }).retainedSourceResponses;
     const confirmed = await store.confirmUnchanged({

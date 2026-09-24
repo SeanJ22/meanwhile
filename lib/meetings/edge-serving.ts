@@ -265,13 +265,18 @@ export async function ensureReaderAuthorityEdge(
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
     stateLegislators?: { value: Record<string, OfficialStateLegislatorReadModel>; versionId: string };
   } = {};
-  const registry = await fetchAuthorityValue("registry-runtime", refs["registry-runtime"], store);
+  // The four families are independent artifacts, fetched together rather than
+  // one after another on a cold instance (2026-09-24, C20/C22). Each fetch
+  // answers null for its own failure, so one missing family never costs another.
+  const [registry, federal, campaign, legislators] = await Promise.all([
+    fetchAuthorityValue("registry-runtime", refs["registry-runtime"], store),
+    fetchAuthorityValue("federal-directory", refs["federal-directory"], store),
+    fetchAuthorityValue("campaign-sites", refs["campaign-sites"], store),
+    fetchAuthorityValue("state-legislators", refs["state-legislators"], store),
+  ]);
   if (registry !== null) bundle.registryRuntime = { value: registry as RegistryRuntimeReadModel, versionId: refs["registry-runtime"]!.version };
-  const federal = await fetchAuthorityValue("federal-directory", refs["federal-directory"], store);
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
-  const campaign = await fetchAuthorityValue("campaign-sites", refs["campaign-sites"], store);
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
-  const legislators = await fetchAuthorityValue("state-legislators", refs["state-legislators"], store);
   if (legislators !== null) bundle.stateLegislators = { value: legislators as Record<string, OfficialStateLegislatorReadModel>, versionId: refs["state-legislators"]!.version };
   return { ...bundle, ...registrations };
 }

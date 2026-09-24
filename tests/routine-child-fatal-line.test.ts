@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { routineSupervisorOuterEvidence } from "../lib/civic-data/runner-receipt.ts";
-import { FATAL_LINE_PREFIX, fatalLine } from "../lib/ops/fatal-line.ts";
+import { FATAL_LINE_PREFIX, childFatalLine, fatalLine } from "../lib/ops/fatal-line.ts";
 
 /**
  * **A CHILD THAT DIES SAYS WHY, IN A LINE ITS PARENT MAY QUOTE.** (2026-09-24.)
@@ -52,18 +52,30 @@ test("an unhandled rejection and a thrown callback end the same way", () => {
   assert.match(thrown.stdout, /^RCD_FATAL routine-civic-data-runner: running the source pass — TypeError: clock is undefined$/m);
 });
 
-test("the parent's evidence quotes the child's fatal line and still never its raw stderr", () => {
+test("the parent reads the child's fatal line and still never its raw stderr", () => {
   const output = [
     `raw stderr the parent must not quote: ${SECRET_URL}`,
     fatalLine("routine-civic-data-runner", "taking the host-local singleton", new Error("listen EACCES: permission denied")),
-  ].join("\n");
-  const evidence = routineSupervisorOuterEvidence({ output, termination: "EXITED", exitStatus: 1 });
-  assert.equal(evidence.code, "ROUTINE_CHILD_EXITED");
-  assert.match(evidence.detail, /The child's own last line: routine-civic-data-runner: taking the host-local singleton — .*listen EACCES: permission denied\./);
-  assert.doesNotMatch(evidence.detail, /s3cr3t-password|raw stderr/);
+  ].join("\r\n");
+  const quoted = childFatalLine(output);
+  assert.match(quoted ?? "", /^routine-civic-data-runner: taking the host-local singleton — .*listen EACCES: permission denied$/);
+  assert.doesNotMatch(quoted ?? "", /s3cr3t-password|raw stderr/);
+  assert.equal(childFatalLine(`raw ${SECRET_URL}`), null);
+  assert.equal(childFatalLine(`${FATAL_LINE_PREFIX}x: y — ${"z".repeat(900)}`)?.length, 600);
 
-  const silent = routineSupervisorOuterEvidence({ output: `raw ${SECRET_URL}`, termination: "EXITED", exitStatus: 1 });
-  assert.doesNotMatch(silent.detail, /own last line|s3cr3t/);
+  // The outer evidence itself still reads protocol lines only.
+  const outer = routineSupervisorOuterEvidence({ output, termination: "EXITED", exitStatus: 1 });
+  assert.equal(outer.code, "ROUTINE_CHILD_EXITED");
+  assert.doesNotMatch(outer.detail, /s3cr3t-password|raw stderr/);
+});
+
+test("the pilot's outer incident quotes the fatal line it reads", () => {
+  const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
+  const incident = pilot.slice(pilot.indexOf("async function persistOuterRoutineChildFailure("));
+  assert.ok(incident.length > 0, "the pilot no longer has its outer incident writer");
+  const body = incident.slice(0, incident.indexOf("\n}\n"));
+  assert.match(body, /const fatal = childFatalLine\(output\);/);
+  assert.match(body, /The child's own last line: \$\{fatal\}\./);
 });
 
 test("the routine runner installs the fatal line before its first statement that can throw", () => {

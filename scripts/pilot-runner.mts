@@ -151,6 +151,7 @@ import {
   ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
+import { childFatalLine } from "../lib/ops/fatal-line.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
   ROUTINE_READER_MEETING_TIMEOUT_MS,
@@ -814,11 +815,15 @@ async function persistOuterRoutineChildFailure(
   run: Awaited<ReturnType<typeof runBoundedChildPass>>[number],
   output: string,
 ): Promise<void> {
-  const evidence = routineSupervisorOuterEvidence({
+  const outer = routineSupervisorOuterEvidence({
     output,
     termination: run.termination,
     exitStatus: run.status,
   });
+  // A child that died on an error nothing caught names its step and cause in
+  // one sanitized line (lib/ops/fatal-line.ts); quote that, never raw stderr.
+  const fatal = childFatalLine(output);
+  const evidence = fatal ? { ...outer, detail: `${outer.detail} The child's own last line: ${fatal}.` } : outer;
   try {
     const repos = await ownerRepositories();
     if (repos === null) throw new Error("production control plane is not configured");

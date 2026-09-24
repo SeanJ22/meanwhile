@@ -5,11 +5,7 @@ import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts"
 import { parseValidationReceipt } from "./receipt.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { redactDiagnosticText, sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { FATAL_LINE_PREFIX } from "../ops/fatal-line.ts";
-
-/** How much of a child's own fatal line the outer digest quotes. */
-const ROUTINE_FATAL_QUOTE_MAX_CHARS = 600;
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 /**
  * The durable-receipt check's store: the proven read model for the one
@@ -76,11 +72,6 @@ export interface RoutineSupervisorOuterEvidence {
  * classified by the routine child. This is used only when that child exits
  * nonzero: it never attributes a source disposition and never consumes raw
  * stderr, URLs, environment values, or publisher payloads.
- *
- * A child that died on an error nothing caught leaves one `RCD_FATAL` line,
- * written by `installFatalLine` from a sanitized cause chain (2026-09-24).
- * It is quoted, redacted again here, so the digest says what the child was
- * doing and why it stopped.
  */
 export function routineSupervisorOuterEvidence(input: {
   readonly output: string;
@@ -108,9 +99,6 @@ export function routineSupervisorOuterEvidence(input: {
     failures.delete(id);
   }
   const distinctLaunchCounts = [...new Set(launchCounts)];
-  const fatal = lines.flatMap((line) => line.startsWith(FATAL_LINE_PREFIX) ? [line.slice(FATAL_LINE_PREFIX.length).trim()] : [])
-    .filter(Boolean)
-    .at(-1);
   const attemptedTasks = distinctLaunchCounts.length === 1
     ? distinctLaunchCounts[0]!
     : successes.size + failures.size;
@@ -125,7 +113,6 @@ export function routineSupervisorOuterEvidence(input: {
       `launch plan=${distinctLaunchCounts.length === 1 ? attemptedTasks : "not exactly recorded"}; ` +
       `parent-observed durable source summaries=${successes.size} GOOD/${failures.size} HELD` +
       `${contradictory.length > 0 ? `; ${contradictory.length} contradictory task summary line(s) were not attributed` : ""}. ` +
-      (fatal ? `The child's own last line: ${redactDiagnosticText(fatal).slice(0, ROUTINE_FATAL_QUOTE_MAX_CHARS)}. ` : "") +
       "No source candidate, pointer, or LKG disposition was inferred by the parent.",
   };
 }

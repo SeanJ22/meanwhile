@@ -1,6 +1,6 @@
 import { writeSync } from "node:fs";
 
-import { sanitizedErrorDiagnostic } from "./error-diagnostic.ts";
+import { redactDiagnosticText, sanitizedErrorDiagnostic } from "./error-diagnostic.ts";
 
 /**
  * **A CHILD THAT DIES SAYS WHY, IN A LINE ITS PARENT MAY QUOTE.** (2026-09-24.)
@@ -49,4 +49,20 @@ export function installFatalLine(
   };
   process.on("uncaughtException", die);
   process.on("unhandledRejection", die);
+}
+
+/** How much of a child's own fatal line a parent's digest quotes. */
+export const FATAL_QUOTE_MAX_CHARS = 600;
+
+/**
+ * The last `RCD_FATAL` line in a child's output, without its prefix, redacted
+ * again and clipped. Null when the child left none. A parent quotes this line
+ * and still never a child's raw stderr.
+ */
+export function childFatalLine(output: string, maxChars: number = FATAL_QUOTE_MAX_CHARS): string | null {
+  const fatal = output.split(/\r?\n/)
+    .flatMap((line) => line.startsWith(FATAL_LINE_PREFIX) ? [line.slice(FATAL_LINE_PREFIX.length).trim()] : [])
+    .filter(Boolean)
+    .at(-1);
+  return fatal ? redactDiagnosticText(fatal).slice(0, maxChars) : null;
 }

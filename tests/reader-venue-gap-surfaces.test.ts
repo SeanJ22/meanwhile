@@ -31,6 +31,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { icsDataHref, meetingCalendarEvent } from "../lib/calendar/event-links.ts";
 import {
   isOnlineOnly,
   isPlaceUnrecorded,
@@ -89,6 +90,22 @@ test("a named venue gap is its own state: never online, never 'place not recorde
     false,
     "a named venue gap is never online, even beside an online block the verifier would refuse",
   );
+});
+
+test("the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none", () => {
+  const meetings = reconfigurationMeetings();
+  const cholla = meetings.find((m) => m.venueGap?.publishedText === CHOLLA);
+  const joint = meetings.find((m) => m.venueGap?.kind === "NOT_STATED_BY_PUBLISHER");
+  assert.ok(cholla && joint);
+  const stated = meetingCalendarEvent(cholla);
+  assert.equal(stated.location, CHOLLA);
+  assert.match(decodeURIComponent(icsDataHref(stated)), new RegExp(`\r\nLOCATION:${CHOLLA}\r\n`));
+  const none = meetingCalendarEvent(joint);
+  assert.equal(none.location, "");
+  assert.doesNotMatch(decodeURIComponent(icsDataHref(none)), /LOCATION:/);
+  // An online sitting's entry is unchanged: the body's own label and link.
+  const online = meetingCalendarEvent({ ...joint, venueGap: undefined, online: { label: "Via Zoom", joinUrl: "https://example.org/j/1" } });
+  assert.equal(online.location, "Via Zoom — https://example.org/j/1");
 });
 
 test("the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap", () => {

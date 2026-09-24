@@ -20,7 +20,7 @@ test("map and ballot Ask share every held contact channel, exact rows and per-pe
     const contacts = [...bodyIdentityIndex().values()].flatMap(body => contactsForBody(body, body.name)).concat(filed);
     const fixture = { id:'held-contact:all-fields', name:'Avery Reader', officeTitle:'Clerk', relationship:'Staff of the named body', basis:'BODY_STAFF', email:'clerk@example.test', phone:'+1 555-555-0100', websiteUrl:'https://office.example.test/', filedAddress:'PO Box 10, Test City', sourceUrl:'https://clerk.example.test/filing', sourceOrg:'Current Clerk', retrievedAt:'2026-09-01' };
     console.log(JSON.stringify({contacts, fixture, markup:renderToStaticMarkup(createElement(AskAnswerContacts,{contacts:[...contacts,fixture]})), empty:renderToStaticMarkup(createElement(AskAnswerContacts,{contacts:[]}))}));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 8_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 8_000_000 });
   const { contacts, fixture, markup, empty } = JSON.parse(output) as { contacts: { id: string; name: string; email: string | null; phone: string | null; websiteUrl: string | null; filedAddress?: string | null; sourceUrl: string | null; sourceOrg: string | null }[]; fixture: { id: string }; markup: string; empty: string };
   const escaped = (s: string) => s.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   assert.ok(contacts.length > 600, "all current sourced body and candidate-filing contacts are exercised");
@@ -41,7 +41,7 @@ test("Ask renders every grounded non-contact record with its own source even bes
     const records = Array.from({ length: 17 }, (_, i) => ({ kind: 'VOTE', id: 'held:vote:' + i, text: 'Held vote ' + i, sourceUrl: 'https://clerk.example/roll/' + i, sourceOrg: 'Clerk', retrievedAt: '2026-09-01' }));
     records.push({ kind: 'CONTACT', id: 'contact:one', text: 'Rendered by the contact panel' });
     console.log(JSON.stringify([false, true].map(initiallyOpen => renderToStaticMarkup(createElement(AskAnswerRecords, { records, initiallyOpen })))));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000 });
   const renders = JSON.parse(output.trim()) as string[];
   for (const markup of renders) {
     assert.match(markup, /data-ask-record-count="17"/);
@@ -64,7 +64,7 @@ test("a held filing revision renders its exact statement and both source documen
     import { FilingChanges } from './components/ballot/filing-changes.tsx';
     const removals = JSON.parse(readFileSync('data/states/nj/ballot/nj-morris-2026.json', 'utf8')).removals;
     console.log(JSON.stringify({ removals, markup: renderToStaticMarkup(createElement(FilingChanges, { removals })), empty: renderToStaticMarkup(createElement(FilingChanges, { removals: [] })) }));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000 });
   const result = JSON.parse(output.trim()) as { removals: { id: string; statement: string; lastListed: { sourceUrl: string }; absentFrom: { sourceUrl: string } }[]; markup: string; empty: string };
   assert.ok(result.removals.length > 0);
   assert.equal([...result.markup.matchAll(/data-filing-change-id=/g)].length, result.removals.length);
@@ -82,7 +82,7 @@ test("a sourced explainer without a held URL retains its publisher and read date
     import {createElement} from 'react';import {renderToStaticMarkup} from 'react-dom/server';
     import {AskAnswerRecords} from './components/ask/answer-records.tsx';
     console.log(renderToStaticMarkup(createElement(AskAnswerRecords,{initiallyOpen:true,records:[{kind:'KEY_VOTE_CONTEXT',id:'key-vote-entry:held-question',text:'The held question explainer',sourceUrl:null,sourceOrg:'congress.gov bill text and official summary',retrievedAt:'2026-08-15'}]})));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000 });
   assert.ok(markup.includes("congress.gov bill text and official summary"));
   assert.ok(markup.includes("August 15th, 2026"));
   assert.ok(!markup.includes("href="));

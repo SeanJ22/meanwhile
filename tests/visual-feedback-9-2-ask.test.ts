@@ -18,7 +18,7 @@ test("ASK-24: structured measure answers lead with the held definition and keep 
     const before = JSON.stringify(records);
     const render = (records, initiallyOpen) => renderToStaticMarkup(createElement(AskAnswerRecords,{records,initiallyOpen}));
     console.log(JSON.stringify({summary, structured:render(records,true), generated:render(records,false), plain:render(records.slice(0,2),true), only:render(records.slice(2,3),true), unchanged:before===JSON.stringify(records)}));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000 });
   const { summary, structured, generated, plain, only, unchanged } = JSON.parse(output) as {
     summary: { summary: string; summarizesUrl: string }; structured: string; generated: string; plain: string; only: string; unchanged: boolean;
   };

@@ -526,7 +526,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 **What is needed.** Decide whether the standing runner walks the gap ledger's 1,975 known government sites for their meeting calendars, whether it may pay for search when a site shows no route, and at what scope.
 
-**Why no machine can decide it.** The executor is built and inert behind WTP_MEETINGS_DISCOVERY. Turning it on sends new identified requests to government sites every cycle and makes the runner a new writer of discovery attempts and field-manual entries. Since #381 the same switch also runs Brave and Exa search wherever a key is set, which spends money: at most 50 requests a cycle and 200 a day across both providers, about $1.40 a day at published prices, recorded as DISCOVERY_SEARCH apart from model spend. Sean's note of 2026-09-23 grants no new production-write, expansion or spending authority, so the scope and the go are his; no committed artifact can supply that judgement.
+**Why no machine can decide it.** The executor is built and inert behind WTP_MEETINGS_DISCOVERY. Turning it on sends new identified requests to government sites every cycle and makes the runner a new writer of discovery attempts and field-manual entries. Since #381 the same switch also runs Brave and Exa search wherever a key is set, which spends money: at most 50 requests a cycle and 200 a day across both providers, about $1.40 a day at published prices, recorded as DISCOVERY_SEARCH apart from model spend. The first cycle can send at most 50 search requests, about $0.35 at Exa's $7 per 1,000. What a yes demonstrates: the standing runner walking real government sites robots-first, consulting the saved methods in the field manual and, with search on, searching where no route is confirmed, with every walk and request recorded. What it does not yet demonstrate: confirming an official-page event listing such as Tucson Unified's reconfiguration page (live since #384 as its own partition); discovery cannot yet verify that kind of page, and that is the next change. A local, unpaid sample of the 12 Arizona needs one hour's rotation selects (2026-09-23) confirmed 0 routes, found 13 leads on 3 cities, met 2 real walls and 1 site showing nothing, and could not read 6 whose registry website is stale (NH row filed). Sean's note of 2026-09-23 grants no new production-write, expansion or spending authority, so the scope and the go are his; no committed artifact can supply that judgement.
 
 **Your options.**
 
@@ -1017,7 +1017,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 490 row(s) carry a date the ledger stamped directly.
+- 491 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 

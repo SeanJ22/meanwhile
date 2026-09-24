@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **414 open**, 544 resolved.
+- **415 open**, 544 resolved.
 - **77 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -564,7 +564,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**103 open · 123 resolved.**
+**104 open · 123 resolved.**
 
 ### P1
 
@@ -641,6 +641,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH328** — In the State Readiness admin panel, a ZIP's body count and completeness percentage are scoped by data/derived/zip-division-ids.json, a precomputed 'every division whose territory overlaps the ZIP's area' map. The public reader instead scopes its 'bodies here' by the ZIP's centroid. Where a body-rich city sits next to an unincorporated ZIP, admin over-counts: 85641 (Vail) reads 66 bodies / 62% in admin but 10 on the reader, because the area-overlap map pulls in all 58 City of Tucson bodies a Vail resident is not governed by. 85701 (downtown Tucson) matches the reader at 65. Roughly 27 AZ ZIPs carry Tucson via area-overlap; the inflated ones are those whose centroid falls outside Tucson. NH and NJ are unaffected. Pre-existing since the panel shipped (Sept 4-5), not introduced by the Sept-19 producer restore.
 
 **NH330** — The meetings-discovery executor (NS28) can confirm that a government's own site publishes its meetings, but a confirmed route still reaches readers only by hand-editing lib/registry/source-wiring.ts and deploying. Stage 2 is a promoted, runner-kept wiring store so a route that passes every check starts publishing meetings on its own.
+
+**NH331** — A live walk of the meetings-discovery executor on 12 Arizona cities (2026-09-23, local and unpaid) found that 6 of the 12 homepage addresses the reviewed registry holds no longer lead to the city's site. Four domains do not resolve: Cottonwood www.ci.cottonwood.az.us, Douglas www.douglasaz.org, Eloy www.ci.eloy.az.us and Holbrook www.ci.holbrook.az.us. Two now redirect to a new home: El Mirage cityofelmirage.org to elmirageaz.gov, and Flagstaff flagstaffaz.gov to flagstaff.az.gov. Discovery records these as COULD_NOT_READ and cannot find their meetings until the registry carries the current address, and the same address is the government's website a reader may be shown.
 
 **NH46** — One of the three coverageNotes in data/states/nh/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 

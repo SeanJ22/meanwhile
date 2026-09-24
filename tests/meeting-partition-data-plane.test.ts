@@ -765,7 +765,9 @@ test("a meeting re-check that finds no new fact is confirmed on the pointed vers
   assert.equal(second?.outcome.confirmed?.at, SECOND);
   assert.equal(second?.outcome.confirmed?.recheck.changeSet?.outcome, "UNCHANGED");
   assert.equal(second?.outcome.candidate.candidate.id, pointer.versionId, "the receipt names the pointed version");
-  assert.deepEqual(await store.readPromotion("MEETING", legistar.scope), pointer, "readers keep their version");
+  const { latestConfirmation, ...kept } = (await store.readPromotion("MEETING", legistar.scope))!;
+  assert.deepEqual(kept, pointer, "readers keep their version");
+  assert.equal(latestConfirmation?.observedAt, SECOND, "and the pointer read carries the confirmation");
   assert.equal(await store.readCandidate(second!.candidate.id), null, "no new candidate row");
   const events = await store.events(pointer.versionId);
   const receipts = events.map((event) => parseUnchangedConfirmation(event.detail)).filter((row) => row !== null);

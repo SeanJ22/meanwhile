@@ -2,22 +2,13 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
+import { gunzipSync } from "node:zlib";
 
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor, rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
-import {
-  PDC_V2_FROZEN_BASE_SHA,
-  TRUSTED_LKG_IMPORT_AUTHORIZATION,
-  TRUSTED_LKG_IMPORT_PURPOSE,
-  trustedLkgCandidateEnvelopeSha256,
-  trustedLkgCandidateId,
-  trustedLkgFixtureSetSha256,
-  trustedLkgImportUrl,
-  trustedLkgValidatorIds,
-} from "../lib/civic-data/trusted-lkg-import.ts";
+import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
-import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate, TrustedLkgImportEvidence } from "../lib/civic-data/types.ts";
+import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -390,93 +381,24 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
 /**
  * The registry production holds (2026-09-14): the transfer-time trusted import,
  * explicitly not source-authenticated, carrying both placeholder boards and New
- * Hampshire's raw Census name. Shaped the way the retired importer shaped it and
- * validated by the real validator; the admission door itself is retired, so the
- * validated record and its pointer are placed as retained history, exactly as
- * the venue import fixture is.
+ * Hampshire's raw Census name. The admission door is retired, so no test mints
+ * an import: this one is RECORDED — the retired importer's shape over the
+ * committed registry, validated GOOD by the real validator when it was recorded
+ * (tests/fixtures/registry-transfer-import.json.gz) — and placed as retained
+ * history, exactly as the venue import fixture is. The tests interpret it;
+ * nothing admits it.
  */
 async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
-  const placeholders = frozenPlaceholders();
-  const shape = registryRuntimeCandidate(await registryPackage(at, "transfer-shape"));
-  const base = structuredClone(shape.readModel as RegistryRuntimeReadModel);
-  base.registry.bodies = [...base.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
-  base.registry.divisions = base.registry.divisions.map((division) =>
-    division.state === "NH" && placeholders.ids.has(division.ocdId) ? { ...division, label: "School District Not Defined" } : division);
-  const digest = hash(canonicalCivicDataJson(base));
-  const records = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", base);
-  const bytes = readFileSync("lib/registry/registry.json");
-  const fixtures = [{ path: "lib/registry/registry.json", sha256: createHash("sha256").update(bytes).digest("hex"), bytes: bytes.length }];
-  const fixtureSetSha256 = trustedLkgFixtureSetSha256(fixtures);
-  const envelope: RoutineCandidate = {
-    ...shape,
-    id: "content-addressed below",
-    retrieval: { succeeded: true, requestedUrl: trustedLkgImportUrl("registry-runtime-bindings"), finalUrl: null, httpStatus: null, retrievedAt: at, rawHash: fixtureSetSha256 },
-    normalization: { ...shape.normalization, normalizedHash: digest, normalizedPayloadHash: digest, inputRecords: records.length, outputRecords: records.length, droppedRecords: 0 },
-    identities: [...shape.identities, ...placeholders.bodies.map((body) => ({
-      subjectId: body.id,
-      jurisdiction: "US",
-      identifiers: { body_id: body.id, division_ocd_id: body.ocdId ?? "" },
-      matchBasis: "EXACT_SCOPED_ID" as const,
-      ambiguous: false,
-    }))],
-    temporal: { ...shape.temporal, staleAtRetrieval: true },
-    horizon: { ...shape.horizon, returnedRecords: records.length },
-    normalizedPayload: base,
-    readModel: base,
-    civicRecords: records,
-    excludedFacts: [],
+  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
+    record: CandidateVersionRecord;
+    projection: PromotedProjection;
   };
-  const evidence: TrustedLkgImportEvidence = {
-    contractVersion: 1,
-    kind: "TRUSTED_LKG_IMPORT",
-    authorization: TRUSTED_LKG_IMPORT_AUTHORIZATION,
-    purpose: TRUSTED_LKG_IMPORT_PURPOSE,
-    sourceAuthenticated: false,
-    contractId: "registry-runtime-bindings",
-    sourceId: shape.sourceId,
-    recordClass: shape.recordClass,
-    scope: shape.scope,
-    parserVersion: shape.normalization.parserVersion,
-    sourceVersion: shape.temporal.version,
-    sourceThrough: shape.temporal.sourceThrough,
-    importedAt: at,
-    frozenBaseSha: PDC_V2_FROZEN_BASE_SHA,
-    importerCodeSha: "0".repeat(40),
-    fixtureSetSha256,
-    fixtures,
-    normalizedPayloadSha256: digest,
-    readModelSha256: digest,
-    candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(envelope),
-    validatorIds: trustedLkgValidatorIds(envelope),
-  };
-  const unplaced: RoutineCandidate = { ...envelope, id: trustedLkgCandidateId(evidence), bootstrapImport: evidence };
-  const imported: RoutineCandidate = { ...unplaced, changeSet: candidateChangeSet(unplaced, null) };
-  const receiptOf = validateRoutineCandidate(imported, null, at).receipt;
-  assert.equal(receiptOf.decision, "GOOD", JSON.stringify(receiptOf.checks.filter((check) => check.verdict !== "PASS")));
-  const record: CandidateVersionRecord = {
-    candidate: imported,
-    state: "PROMOTED",
-    acquisitionSucceeded: true,
-    receipt: receiptOf,
-    promotedVersion: imported.id,
-    lastKnownGoodVersion: imported.id,
-    failureCode: null,
-    failureDetail: null,
-  };
-  const projection: PromotedProjection = {
-    key: `${imported.recordClass}:${imported.scope}`,
-    sourceId: imported.sourceId,
-    recordClass: imported.recordClass,
-    scope: imported.scope,
-    versionId: imported.id,
-    lastKnownGoodVersionId: imported.id,
-    promotedAt: at,
-    payload: base,
-    receipt: receiptOf,
-  };
-  assert.equal(promotionProofIssue(imported.recordClass, imported.scope, projection, record), null);
+  assert.equal(projection.promotedAt, at, "the recorded transfer promoted at T0");
+  assert.equal(promotionProofIssue(record.candidate.recordClass, record.candidate.scope, projection, record), null);
+  const imported = record.candidate;
+  const base = projection.payload as RegistryRuntimeReadModel;
   Object.assign(store, { candidates: new Map([[imported.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  return { imported, base, placeholders, record, projection };
+  return { imported, base, placeholders: frozenPlaceholders(), record, projection };
 }
 
 /** A correction that re-reviews only the two placeholder divisions against the Census directory they cite. */

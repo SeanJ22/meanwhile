@@ -367,6 +367,16 @@ test("the frozen Reader census retains retired authorities as withheld evidence 
   assert.equal(unstampedVenueFixtures.length, 3);
   assert.ok(unstampedVenueFixtures.every((record) => record.eligibility.state === "NOT_READER_ELIGIBLE"));
 
+  // A body minted on a Census "no district here" placeholder is not a
+  // government: held first-seed evidence, never a Reader record, whether or not
+  // the promoted registry still carries it.
+  const placeholderBodies = recordsAt("lib/registry/registry.json").filter((record) => record.unit === "bodies" && record.eligibility.reason.includes("Census placeholder"));
+  assert.deepEqual(placeholderBodies.map((record) => record.eligibility.state), ["NOT_READER_ELIGIBLE", "NOT_READER_ELIGIBLE"]);
+  assert.deepEqual(placeholderBodies.flatMap((record) => record.canonicalIdentity).filter((id) => id.endsWith("#board")).sort(), [
+    "ocd-division/country:us/state:az/school_district:school_district_not_defined#board",
+    "ocd-division/country:us/state:nh/school_district:school_district_not_defined#board",
+  ]);
+
   const source = readFileSync(new URL("../lib/holdings/reader-census.ts", import.meta.url), "utf8");
   assert.doesNotMatch(source, /getStateVotesSnapshot\(/);
   assert.match(source, /record\.eligibility\.state === "READER_ELIGIBLE" && \["votes", "positions", "rollCalls"\]/);

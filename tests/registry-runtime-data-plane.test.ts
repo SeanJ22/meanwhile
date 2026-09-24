@@ -21,10 +21,14 @@ import {
   REGISTRY_RUNTIME_SCOPE,
   REGISTRY_RUNTIME_SOURCE_ID,
   registryRuntimeCandidate,
+  registryRuntimeProjectionIssues,
   type RegistryRuntimePackage,
   type RegistryRuntimeReadModel,
 } from "../lib/registry/runtime-data-plane.ts";
-import { readRegistryRuntimeProjection, registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection, registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
+import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision } from "../lib/registry/census-placeholders.ts";
+import { slotsFor } from "../lib/registry/derive.ts";
+import type { Registry } from "../lib/registry/types.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -276,6 +280,95 @@ test("one blocked registry publisher holds only its dependent members while an u
     promoted.bodyRosters.find((roster) => roster.bodyId === blockedRoster.bodyId),
     firstPackage.payload.bodyRosters.find((roster) => roster.bodyId === blockedRoster.bodyId),
   );
+});
+
+/** The frozen first seed still holds the two bodies once minted on Census placeholders (Arizona, New Hampshire). */
+function frozenPlaceholders() {
+  const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
+  const divisions = frozen.divisions.filter((division) => isCensusPlaceholderDivision(division));
+  const ids = new Set(divisions.map((division) => division.ocdId));
+  return { divisions, ids, bodies: frozen.bodies.filter((body) => body.ocdId !== null && ids.has(body.ocdId)) };
+}
+
+test("a Census placeholder division is geography: no body is derived on it and no projection may carry one", () => {
+  const placeholders = frozenPlaceholders();
+  assert.deepEqual(placeholders.divisions.map((division) => division.geoid).sort(), ["0499997", "3399997"]);
+  assert.equal(placeholders.bodies.length, 2);
+  for (const division of placeholders.divisions) {
+    assert.deepEqual(slotsFor(division), { slots: [], skipped: "census-placeholder-not-a-government" });
+  }
+  // Known by the Census's own code whatever its slug or label says, the slug
+  // standing in only where no code is held; never a division of another layer.
+  const seed = registryRuntimeFirstSeed().value;
+  const real = seed.registry.divisions.find((division) => division.divisionType === "school_district" && !isCensusPlaceholderDivision(division));
+  assert.ok(real);
+  assert.deepEqual(slotsFor(real), { slots: [{ bodyClass: "GOVERNING", slot: "board" }], skipped: null });
+  assert.equal(isCensusPlaceholderDivision({ ...real, geoid: "0499997" }), true);
+  assert.equal(isCensusPlaceholderDivision({ ocdId: placeholders.divisions[0]!.ocdId }), true);
+  assert.equal(isCensusPlaceholderDivision({ ...placeholders.divisions[0]!, divisionType: "place" }), false);
+
+  // The composed first seed leaves both bodies out and keeps both places.
+  assert.equal(seed.registry.bodies.some((body) => body.ocdId !== null && placeholders.ids.has(body.ocdId)), false);
+  assert.equal(seed.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).length, 2);
+  assert.equal(registryRuntimeProjectionIssues(seed).some((issue) => issue.startsWith(CENSUS_PLACEHOLDER_BODY_ISSUE)), false);
+  const carrying: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
+  assert.deepEqual(
+    registryRuntimeProjectionIssues(carrying).filter((issue) => issue.startsWith(CENSUS_PLACEHOLDER_BODY_ISSUE)),
+    [`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholders.bodies.map((body) => body.id).sort().join(",")}`],
+  );
+});
+
+test("a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name", async () => {
+  const placeholders = frozenPlaceholders();
+  // The prior as production held it on 2026-09-14: both bodies, and New Hampshire's raw Census name.
+  const base = await registryPackage(T0, "placeholder-prior");
+  const priorPayload = structuredClone(base.payload);
+  priorPayload.registry.bodies = [...priorPayload.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
+  priorPayload.registry.divisions = priorPayload.registry.divisions.map((division) =>
+    division.state === "NH" && placeholders.ids.has(division.ocdId) ? { ...division, label: "School District Not Defined" } : division);
+  const prior = { versionId: "placeholder-prior", payload: priorPayload, sourceReceipt: receipt(priorPayload, T0, "placeholder-prior") };
+  const plainNames = (model: RegistryRuntimeReadModel) =>
+    model.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).map((division) => division.label);
+  const removals = (candidate: ReturnType<typeof registryRuntimeCandidate>) =>
+    (candidate.excludedFacts ?? []).filter((fact) => fact.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT").map((fact) => fact.key ?? "").sort();
+  const expectedRemovals = placeholders.bodies.map((body) => `body:${body.id}`).sort();
+
+  // Omitted by the package: this open family would otherwise keep a prior member forever.
+  const next = await registryPackage(T1, "placeholder-next");
+  const fromPrior = registryRuntimeCandidate(next, { prior });
+  const fromPriorModel = fromPrior.readModel as RegistryRuntimeReadModel;
+  assert.deepEqual(fromPrior.semantics.violations, []);
+  assert.equal(fromPriorModel.registry.bodies.length, base.payload.registry.bodies.length);
+  assert.deepEqual(plainNames(fromPriorModel), ["No unified school district here", "No unified school district here"]);
+  assert.deepEqual(removals(fromPrior), expectedRemovals);
+  assert.equal((fromPrior.excludedFacts ?? []).some((fact) => fact.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING" && expectedRemovals.includes(fact.key ?? "")), false);
+
+  // Carried by the package itself, raw name and all.
+  const carryingPayload = structuredClone(priorPayload);
+  const carrying: RegistryRuntimePackage = { ...next, payload: carryingPayload, sourceReceipt: receipt(carryingPayload, T1, "placeholder-carrying") };
+  const fromPackage = registryRuntimeCandidate(carrying);
+  const fromPackageModel = fromPackage.readModel as RegistryRuntimeReadModel;
+  assert.deepEqual(fromPackage.semantics.violations, []);
+  assert.equal(fromPackageModel.registry.bodies.some((body) => body.ocdId !== null && placeholders.ids.has(body.ocdId)), false);
+  assert.deepEqual(plainNames(fromPackageModel), ["No unified school district here", "No unified school district here"]);
+  assert.deepEqual(removals(fromPackage), expectedRemovals);
+  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "registry-runtime-bindings", fromPackage, T1);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+});
+
+test("the version production serves keeps reading until its correction promotes; no other defect is tolerated", async () => {
+  const placeholders = frozenPlaceholders();
+  const seed = registryRuntimeFirstSeed().value;
+  const legacy: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
+  try {
+    primeRegistryRuntimeFromValue(legacy, "legacy-with-placeholder-bodies");
+    assert.equal(getRegistryRuntimeReadModel().registry.bodies.length, seed.registry.bodies.length + 2);
+    const duplicated: RegistryRuntimeReadModel = { ...legacy, registry: { ...legacy.registry, bodies: [...legacy.registry.bodies, legacy.registry.bodies[0]!] } };
+    assert.throws(() => primeRegistryRuntimeFromValue(duplicated, "duplicate-body"), /BODY_ID_INVALID_OR_DUPLICATED/);
+  } finally {
+    const restored = await readRegistryRuntimeProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
+    assert.equal(restored.kind, "BOOTSTRAP");
+  }
 });
 
 test("both Reader projections reject cross-source proof and never bootstrap on store failure", async () => {

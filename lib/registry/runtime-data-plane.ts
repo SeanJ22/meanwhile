@@ -12,6 +12,7 @@ import { manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-dat
 import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineCandidate } from "../civic-data/types.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
+import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
 
@@ -433,8 +434,28 @@ function sourceScopedRegistryProjection(
   });
   const metadataAccepted = input.sourceReceipt.sources.every((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED") &&
     registryIsolationIssue(currentMembers[0]!) === null;
+  /*
+   * A Census placeholder is never a government. This open family keeps a prior
+   * member unless something proves it gone, so the proof is named here: a body
+   * on a division whose own Census code is the "no district here" placeholder
+   * (LEA 99997) leaves the projection whichever side holds it, and the
+   * placeholder's Census name is translated as the committed geometry's is.
+   * Without it the two bodies the 2026-09-14 version carries could never leave,
+   * and the promotion check below would then refuse every future promotion.
+   */
+  const placeholderDivisionIds = new Set(reconciled.members.flatMap((member) =>
+    member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
+  const removedKeys = new Set(reconciled.members.flatMap((member) =>
+    member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholderDivisionIds.has(member.record.value.row.ocdId) ? [member.key] : []));
+  const members = reconciled.members
+    .filter((member) => !removedKeys.has(member.key))
+    .map((member) => {
+      if (member.record.kind !== "DIVISION") return member;
+      const plain = CENSUS_PLACEHOLDER_LABELS[member.record.value.label];
+      return plain === undefined ? member : { ...member, record: { ...member.record, value: { ...member.record.value, label: plain } } };
+    });
   return {
-    payload: rebuildRegistryRuntime(input.payload, prior?.payload ?? null, reconciled.members),
+    payload: rebuildRegistryRuntime(input.payload, prior?.payload ?? null, members),
     sourceReceipt: reconciled.promotionReceipt,
     excludedFacts: [
       ...input.sourceReceipt.sources
@@ -445,7 +466,13 @@ function sourceScopedRegistryProjection(
           detail: `${source.requestedUrl} was blocked and could not authorize any current registry member: ${source.failureDetail}.`,
           record: source,
         })),
-      ...reconciled.excludedFacts,
+      ...reconciled.excludedFacts.filter((fact) => !removedKeys.has(fact.key)),
+      ...reconciled.members.filter((member) => removedKeys.has(member.key)).map((member) => ({
+        key: member.key,
+        code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT",
+        detail: `${member.key} sits on a Census "no district here" placeholder (LEA 99997): geography, never a government, so no body is registered on it.`,
+        record: member.record,
+      })),
     ],
     supportedCurrentSources: reconciled.supportedCurrentSources,
     acceptedCurrentMembers: reconciled.acceptedCurrentMembers,
@@ -470,6 +497,10 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (duplicate(divisions.map((division) => division.ocdId))) issues.push("DIVISION_ID_INVALID_OR_DUPLICATED");
   if (duplicate(bodies.map((body) => body.id))) issues.push("BODY_ID_INVALID_OR_DUPLICATED");
   if (bodies.some((body) => body.ocdId !== null && !divisionIds.has(body.ocdId))) issues.push("BODY_DIVISION_UNRESOLVED");
+  // A Census "no district here" placeholder is geography, never a government: no body may sit on one.
+  const placeholderDivisionIds = new Set(divisions.filter((division) => isCensusPlaceholderDivision(division)).map((division) => division.ocdId));
+  const placeholderBodies = bodies.filter((body) => body.ocdId !== null && placeholderDivisionIds.has(body.ocdId)).map((body) => body.id).sort();
+  if (placeholderBodies.length > 0) issues.push(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholderBodies.join(",")}`);
   const bodyIds = new Set(bodies.map((body) => body.id));
   if (!bodyRosters.length) issues.push("BODY_ROSTERS_EMPTY");
   if (duplicate(bodyRosters.map((roster) => roster.bodyId))) issues.push("BODY_ROSTER_ID_INVALID_OR_DUPLICATED");

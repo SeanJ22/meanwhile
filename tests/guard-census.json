@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 714,
-    "named": 7057,
+    "named": 7060,
     "dynamic": 27
   },
   "files": {
@@ -8098,13 +8098,16 @@
     },
     "tests/registry-runtime-data-plane.test.ts": {
       "names": [
+        "a Census placeholder division is geography: no body is derived on it and no projection may carry one",
+        "a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name",
         "both Reader projections reject cross-source proof and never bootstrap on store failure",
         "federal civic member ordering is independent of source-map insertion order",
         "federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer",
         "manual contracts have no clock and retired tracked writers cannot be invoked",
         "one blocked registry publisher holds only its dependent members while an unrelated roster update promotes",
         "registry civic member ordering is independent of JSONB object-key order",
-        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live"
+        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live",
+        "the version production serves keeps reading until its correction promotes; no other defect is tolerated"
       ],
       "dynamic": 0
     },

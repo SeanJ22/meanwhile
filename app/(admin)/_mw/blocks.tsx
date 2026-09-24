@@ -8,21 +8,26 @@ import type { RenderedNumber, CountClaim } from "@/lib/control-plane/owner-surfa
 import { withScope, type MwScope } from "./scope.ts";
 
 /** A scope with nothing registered: sentences, never arithmetic (ACCEPTANCE §2). */
-export function EmptyScope({ name, scope }: { name: string; scope: MwScope }) {
+export function EmptyScope({ name, scope, census }: { name: string; scope: MwScope; census?: string }) {
   return (
     <div className={s.grid2}>
       <div className={s.card}>
         <h2 className={s.h2CardTight}>Nothing is registered here</h2>
         <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch" }}>
-          {name} has no registered bodies, no codes and no records, and no work has ever run here. A zero would mean the system looked and found nothing. It has
-          not looked.
+          {name} has no registered bodies and no records, and no work has ever run here. A zero would mean the system looked and found nothing. It has not
+          looked.
         </p>
+        {census ? (
+          <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch", marginTop: 12 }}>
+            {census} That is what exists there, not anything collected.
+          </p>
+        ) : null}
       </div>
       <div className={s.card}>
         <h2 className={s.h2CardTight}>What you can do</h2>
         <p className={s.note} style={{ fontSize: 15, lineHeight: 1.55, maxWidth: "48ch", marginBottom: 16 }}>
-          Choose one of its geographies and send it as an assignment: it is ordered first when work exists there. Registering a state&rsquo;s bodies and sources
-          is engineering work, and nothing about {name} can be reported until a body has been read once.
+          Choose one of its geographies and send it as an assignment. Nothing in {name} is registered yet, so there is no work there to put first, and nothing about
+          it can be reported until a body has been read once.
         </p>
         <Link href={withScope("/admin/work", scope)} className={s.btnPrimary}>
           Open an assignment here

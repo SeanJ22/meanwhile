@@ -128,7 +128,7 @@ test("3.2: a zip outside our committed geometry resolves to null, not to certain
 
 test("3.8: the index states how many zips cross, and it is a real fraction", async () => {
   const idx = JSON.parse(
-    readFileSync(join(ROOT, "data", "derived", "zip-division-ids.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "derived", "zip-divisions", "index.json"), "utf8"),
   ) as { counts: { zips: number; zipsWithAPartialDivision: number; zipsWithNoCountyEdge: number } };
   assert.ok(idx.counts.zipsWithAPartialDivision > 0, "boundary-crossing zips are not exotic");
   assert.ok(

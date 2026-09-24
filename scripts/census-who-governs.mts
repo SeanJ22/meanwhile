@@ -25,6 +25,7 @@ import { join } from "node:path";
 
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { coverageAt } from "../lib/registry/server.ts";
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
 import type { Registry } from "../lib/registry/types.ts";
 
@@ -40,12 +41,13 @@ async function main() {
 
   const wiring = new Map(SOURCE_WIRING.map((w) => [w.bodyId, w]));
 
-  const registry = JSON.parse(
+  // A body minted on a Census "no district here" placeholder is not a government and is never counted.
+  const registry = withoutPlaceholderBodies(JSON.parse(
     await readFile(
       join(process.cwd(), "lib", "registry", "registry.json"),
       "utf8",
     ),
-  ) as Registry;
+  ) as Registry);
   const registryTypes = new Map(
     registry.bodies.map((b) => [b.id, b.agendaSourceType]),
   );

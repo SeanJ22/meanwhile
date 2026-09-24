@@ -1,9 +1,10 @@
-import { requiredVenueEntries } from "../../meetings/venue-cache.ts";
+import { haversineKm } from "../../geo/distance.ts";
+import { reviewedVenueEntries } from "../../meetings/venue-cache.ts";
 import {
   wiringForMeetingSource,
   type BodySourceWiring,
 } from "../../registry/source-wiring.ts";
-import type { OcdId } from "../types.ts";
+import type { MeetingQuery, OcdId } from "../types.ts";
 
 /**
  * Which Legistar clients this adapter knows.
@@ -18,10 +19,12 @@ import type { OcdId } from "../types.ts";
  * inferred from the slug.
  *
  * The events endpoint returns a room name and no coordinates. The promoted
- * projection supplies exact, cited resolutions; a missing pointer or missing
- * client scope fails closed before the adapter can treat zero venues as zero
- * meetings. Unknown published room strings still drop and are counted rather
- * than being approximately geocoded.
+ * projection supplies exact, cited resolutions, and a client scope may hold
+ * none (the venue-gap class, 2026-09-23): zero reviewed venues is never zero
+ * meetings and never a failed read. Every event is still read and published;
+ * a room with no reviewed row gets no coordinates and no pin, carries the
+ * publisher's own words as its named venue gap, and is counted as
+ * `unknownVenue` rather than approximately geocoded.
  */
 
 /**
@@ -120,10 +123,10 @@ export interface LegistarClient {
 /**
  * Venue strings that name a real meeting with no physical place.
  *
- * These are dropped like an unknown venue but counted separately, because they
- * are a different fact: not "we could not place this", but "there is nothing to
- * place". A virtual meeting is still a real public meeting and losing it from
- * the map is a gap worth a surface of its own — tracker D18.
+ * These are kept as online sittings and counted separately from an unknown
+ * venue, because they are a different fact: not "we could not place this", but
+ * "there is nothing to place". A virtual meeting is still a real public meeting
+ * and losing it from the map is a gap worth a surface of its own — tracker D18.
  */
 export const PLACELESS_VENUES = ["virtual meeting", "virtual", "zoom", "webex"];
 
@@ -154,8 +157,10 @@ export function legistarClientsFromWiring(
       timeZone: row.timeZone,
       ...(row.config.insiteHost ? { insiteHost: row.config.insiteHost } : {}),
       ...(insiteFeed ? { insiteFeed } : {}),
+      // Possibly empty: a scope with no reviewed row is a real state, and the
+      // adapter publishes its sittings with their venue gap named.
       get venues() {
-        return requiredVenueEntries("legistar", ocdId);
+        return reviewedVenueEntries("legistar", ocdId);
       },
     };
   });
@@ -184,4 +189,22 @@ export function findVenue(
 export function isPlaceless(location: string): boolean {
   const key = venueKey(location);
   return PLACELESS_VENUES.some((placeless) => venueKey(placeless) === key);
+}
+
+/**
+ * Is any of these reviewed venues inside the query radius? One answer for the
+ * Legistar WebAPI client and the InSite tenant, whose reviewed venues are the
+ * only geography either adapter holds.
+ *
+ * A scope with NO reviewed venue has no coordinate to measure, and that is
+ * never a reason to skip it (the venue-gap class, 2026-09-23): reading it is
+ * the only way its sittings reach a reader, each published with its place as a
+ * named gap. Skipping it here would be the silent suppression the old
+ * empty-scope throw guarded against, moved one step earlier.
+ */
+export function venuesWithinRadius(venues: readonly LegistarVenue[], query: MeetingQuery): boolean {
+  if (venues.length === 0) return true;
+  return venues.some(
+    (venue) => haversineKm(query.lat, query.lng, venue.lat, venue.lng) <= query.radiusKm,
+  );
 }

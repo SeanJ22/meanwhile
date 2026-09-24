@@ -823,23 +823,24 @@ export function oldestEvidenceDate(capabilities: readonly CapabilityInput[]): He
  * **POPULATION IN A READER-COMPLETE ZIP, OF THE STATE'S POPULATION.**
  * (ADM-23, the 9.4.26 evening admin feedback.)
  *
- * The numerator sums the ACS population of every researched ZIP whose
- * governing bodies are ALL resolved (CURRENT or ARGUED_ABSENT — the same
- * worst-of rule `computeZipRow` applies); the denominator is the Bureau's
+ * The numerator sums the ACS population of every ZIP in the state (every one
+ * the national ZIP index carries, since 2026-09-23) whose governing bodies are
+ * ALL resolved (CURRENT or ARGUED_ABSENT — the same worst-of rule
+ * `computeZipRow` applies); the denominator is the Bureau's
  * state total, external to us. Until a ZIP is complete the figure is
  * honestly 0 of the state — a measured zero, which is a different fact from
  * "not on file". Three named gaps, never a zero standing in for them:
- * no state total on file; no researched ZIP; every researched ZIP without a
+ * no state total on file; no ZIP indexed for the state; every ZIP without a
  * tabulation area.
  */
 export function populationInCompleteZip(a: StateAuthorities, zips: ReadinessInputs["zips"]): Held<Measured> {
   if (a.statePopulation === null) {
     return gap<Measured>("OURS", `no state population is on file for ${a.name} in the Census ACS state table, so a population-weighted completeness cannot be computed`);
   }
-  if (zips.length === 0) return gap<Measured>("OURS", `no ZIP has been researched in ${a.name} yet, so no population can be counted as complete`);
+  if (zips.length === 0) return gap<Measured>("OURS", `the ZIP index carries no ZIP in ${a.name}, so no population can be counted as complete`);
   const withPopulation = zips.filter((z) => z.population.held);
   if (withPopulation.length === 0) {
-    return gap<Measured>("OURS", `none of the ${zips.length} researched ZIP(s) in ${a.name} has a Census tabulation area on file, so no population can be counted`);
+    return gap<Measured>("OURS", `none of the ${zips.length} ZIP(s) in ${a.name} has a Census tabulation area on file, so no population can be counted`);
   }
   const resolved = (state: string) => state === "CURRENT" || state === "ARGUED_ABSENT";
   const complete = withPopulation.filter((z) => z.bodies.length > 0 && z.bodies.every((b) => resolved(b.state)));
@@ -848,7 +849,7 @@ export function populationInCompleteZip(a: StateAuthorities, zips: ReadinessInpu
     measured(
       Math.min(value, a.statePopulation),
       a.statePopulation,
-      `residents of researched ZIPs whose every governing body is resolved (${complete.length} of ${withPopulation.length} researched ZIP(s) with a population on file), of the state's ACS 5-Year 2024 total population`,
+      `residents of ZIPs whose every governing body is resolved (${complete.length} of ${withPopulation.length} ZIP(s) in ${a.name} with a population on file), of the state's ACS 5-Year 2024 total population`,
       "U.S. Census Bureau, American Community Survey 5-Year 2024 (table B01003), state total and ZIP Code Tabulation Area estimates",
     ),
   );

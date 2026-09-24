@@ -42,6 +42,15 @@ import {
  * via the venue cache. A name the cache does not know drops the meeting and
  * counts it — the Joint Meeting and the Public Housing Authority Board stay
  * unplaced until someone cites where they actually meet.
+ *
+ * **The one deliberate exception to the venue-gap class** (2026-09-23, every
+ * other adapter publishes an unplaced sitting with its gap named). The tenant
+ * lists every body's meetings on one page and this adapter has no body filter
+ * of its own: the name key is ALSO the only thing that says a row is the
+ * wired body's sitting. An unmatched name is therefore not an otherwise
+ * verified sitting of this body, and publishing it would attribute another
+ * body's meeting to the Mayor and Council. It keeps dropping, counted, until
+ * the wiring row states which published names are this body's.
  */
 
 const SOURCE_NAME = "onbase";

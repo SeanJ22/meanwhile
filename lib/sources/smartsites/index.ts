@@ -8,7 +8,7 @@ import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
-import { isPlacelessLocation, resolveVenue } from "../../meetings/venue-cache.ts";
+import { isPlacelessLocation, resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { accountedNormalize, type Accounted } from "../normalize-account.ts";
 import { makePermissionGate, permittedText } from "../permission-gate.ts";
@@ -58,8 +58,11 @@ import type {
  *   Board event read; the district's standing sentence ("take place at the
  *   District Administration Building … unless otherwise noted") is a habit, and
  *   its agenda platform marks two upcoming sittings VIRTUAL that this calendar
- *   does not. So a sitting whose own event states no place is DROPPED as
- *   `unknownVenue` and counted — never placed by the standing sentence.
+ *   does not. So a sitting whose own event states no place is never placed by
+ *   the standing sentence — and never suppressed either (the venue-gap class,
+ *   2026-09-23): it is published with no pin and the district's own silence as
+ *   its named gap, counted as `unknownVenue`. An address with no reviewed
+ *   spelling is published the same way, in the district's own words.
  *
  * ## Configuration
  *
@@ -150,9 +153,14 @@ export function makeSmartSitesSource(
         const venue = spelling
           ? resolveVenue(cfg.venueSourceId ?? SOURCE_NAME, wiring.ocdId, spelling, cfg.venueTenant ?? cfg.slug)
           : undefined;
-        if (!online && !venue) {
+        // No reviewed place never suppresses the sitting (the venue-gap class,
+        // 2026-09-23): published with no pin and its gap named — the event's
+        // `address` verbatim, or the district's silence where it is empty —
+        // counted as `unknownVenue` and kept. This used to `continue`.
+        const venueGap = !online && !venue ? unplacedVenueGap(address, wiring.publishingOrg) : null;
+        if (venueGap) {
           drops.unknownVenue += 1;
-          continue;
+          keptButPlaceless += 1;
         }
         if (online) {
           drops.placeless += 1;
@@ -168,6 +176,7 @@ export function makeSmartSitesSource(
           timeZone: wiring.timeZone,
           location: venue ? { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl: null,
           jurisdiction: wiring.jurisdiction,
           status: sittingStatus(startsAt, saysCanceled(e.title), now),

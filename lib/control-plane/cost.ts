@@ -43,6 +43,16 @@ export const COST_SCHEDULING_INVARIANT =
   "Cost informs SCHEDULING (what runs next, how much runs at once, when a run stops). " +
   "Cost never informs TRUTH: what a fact cost has no bearing on whether it is right.";
 
+/*
+ * The discovery search rung's charges (2026-09-23) carry DISCOVERY_SEARCH_ROLE
+ * (above, from attempt.ts): one row per request, `source` the API host
+ * (api.search.brave.com, api.exa.ai), `usd` the published price — or null when
+ * none is known, never 0. Search money is not model money; every view that
+ * counts model spend leaves these rows out and shows them on their own line.
+ */
+/** The key a search charge with no host recorded is grouped under. */
+export const SEARCH_SOURCE_NOT_ON_RECORD = "(host not recorded)";
+
 /** ------------------------------------------------------------------ entries */
 
 export const COST_METRICS = [

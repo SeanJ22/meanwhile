@@ -1,3 +1,4 @@
+import { isCensusPlaceholderDivision } from "./census-placeholders.ts";
 import type { Division, Body, BodyClass } from "./types.ts";
 
 /**
@@ -71,7 +72,9 @@ export type SkipReason =
   | "fictitious-duplicate-of-another-layer"
   | "unknown-lsad"
   | "unknown-funcstat"
-  | "legislative-seat-not-a-meeting-body";
+  | "legislative-seat-not-a-meeting-body"
+  /** TIGER's "no district here" placeholder (LEA 99997): geography, never a board. */
+  | "census-placeholder-not-a-government";
 
 export interface DerivedSlot {
   bodyClass: BodyClass;
@@ -100,6 +103,9 @@ export function slotsFor(division: Division): DerivationOutcome {
       return { slots: [{ bodyClass: "GOVERNING", slot: "governing" }], skipped: null };
 
     case "school_district":
+      // The Census's "School District Not Defined" row is land inside no
+      // district: a true place, and no board meets for it.
+      if (isCensusPlaceholderDivision(division)) return { slots: [], skipped: "census-placeholder-not-a-government" };
       return { slots: [{ bodyClass: "GOVERNING", slot: "board" }], skipped: null };
 
     case "place": {

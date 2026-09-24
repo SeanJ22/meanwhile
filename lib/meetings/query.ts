@@ -121,10 +121,16 @@ function bodyKey(m: Meeting): string {
  *   such a body would otherwise be in radius. `divisionsAtPoint` is the
  *   point-in-polygon set the route already resolves for the coverage summary
  *   — the same committed geometry, never a second source.
- * - one of the same body's PHYSICAL sittings is in radius. This is what covers
- *   a division-less government, where the first clause has no identifier to
- *   test: Pima Community College's board is in view exactly when its in-person
- *   sittings are.
+ * - one of the same body's PHYSICAL sittings, upcoming or recently concluded,
+ *   is in radius — whichever of the two lists that sitting is in. This is
+ *   what covers a division-less government, where the first clause has no
+ *   identifier to test: Pima Community College's board is in view exactly
+ *   when one of its in-person sittings is. `bodiesInView` is that set, built
+ *   by the caller ONCE per radius from both lists (`bodiesSittingWithin`) and
+ *   handed to the call for each list. Built from the list being filtered, as
+ *   it first was, it lost the college's two concluded sittings on 2026-09-24:
+ *   both were online, its building appeared only among its upcoming
+ *   sittings, and the concluded list, asked about itself, found no building.
  *
  * Neither clause invents a coordinate, and an online meeting that satisfies
  * neither is simply not in view — the same answer a distant building gets.
@@ -134,13 +140,13 @@ function within(
   lat: number,
   lng: number,
   radiusKm: number,
+  bodiesInView: ReadonlySet<string>,
   divisionsAtPoint: ReadonlySet<string> = new Set(),
 ) {
   const physical = meetings.filter((m) => m.location !== null);
   const inRadius = physical.filter(
     (m) => haversineKm(lat, lng, m.location!.lat, m.location!.lng) <= radiusKm,
   );
-  const bodiesInView = new Set(inRadius.map(bodyKey));
 
   const online = meetings.filter(
     (m) =>
@@ -150,6 +156,29 @@ function within(
 
   // Ordering is applied by the caller; concatenating keeps this a filter.
   return [...inRadius, ...online];
+}
+
+/**
+ * The bodies (by `bodyKey`) with a PHYSICAL sitting among `sittings` within
+ * `radiusKm` of the centre — the second clause of `within`, answered once for
+ * every list served at that radius. Only a sitting's own published place
+ * counts; a sitting with no place contributes nothing.
+ */
+function bodiesSittingWithin(
+  sittings: readonly Meeting[],
+  lat: number,
+  lng: number,
+  radiusKm: number,
+): Set<string> {
+  return new Set(
+    sittings
+      .filter(
+        (m) =>
+          m.location !== null &&
+          haversineKm(lat, lng, m.location.lat, m.location.lng) <= radiusKm,
+      )
+      .map(bodyKey),
+  );
 }
 
 /**
@@ -226,13 +255,21 @@ export async function searchMeetings(
     return t >= now.getTime() - lookbackMs && t < now.getTime() + horizonMs;
   });
 
+  // Where each body is, read once per rung from BOTH lists: a building listed
+  // only among a body's upcoming sittings keeps its online concluded ones in
+  // view, and the reverse. The recent past still never earns a rung by
+  // itself — it can place a body, and only an upcoming sitting in view counts.
+  const servedAtRung = [...upcoming, ...recentPast];
+
   for (const radiusKm of rungs) {
-    const hits = within(upcoming, lat, lng, radiusKm, divisionsAtPoint);
+    const bodiesInView = bodiesSittingWithin(servedAtRung, lat, lng, radiusKm);
+    const hits = within(upcoming, lat, lng, radiusKm, bodiesInView, divisionsAtPoint);
     if (hits.length > 0) {
       return {
-        meetings: [...hits, ...within(recentPast, lat, lng, radiusKm, divisionsAtPoint)].sort(
-          byStartAscending,
-        ),
+        meetings: [
+          ...hits,
+          ...within(recentPast, lat, lng, radiusKm, bodiesInView, divisionsAtPoint),
+        ].sort(byStartAscending),
         tier: radiusKm === rungs[0] ? "exact" : "widened",
         radiusKm,
         requestedRadiusKm: startRadiusKm,
@@ -245,15 +282,20 @@ export async function searchMeetings(
   // No future anywhere on the ladder. Show what was recently decided rather
   // than an empty map — a council that met last Tuesday is still the answer to
   // "who governs here."
+  const recentlyConcluded = all.filter((m) => {
+    if (m.status !== "CONCLUDED") return false;
+    const t = Date.parse(m.startsAt);
+    return t >= now.getTime() - lookbackMs && t < now.getTime();
+  });
+  // The same rule over what this tier serves: upcoming or recently concluded,
+  // never canceled. (Reaching here means no upcoming sitting was in view at
+  // the widest rung, so every building in radius is a concluded one.)
   const concluded = within(
-    all.filter((m) => {
-      if (m.status !== "CONCLUDED") return false;
-      const t = Date.parse(m.startsAt);
-      return t >= now.getTime() - lookbackMs && t < now.getTime();
-    }),
+    recentlyConcluded,
     lat,
     lng,
     widest,
+    bodiesSittingWithin([...upcoming, ...recentlyConcluded], lat, lng, widest),
     divisionsAtPoint,
   );
 

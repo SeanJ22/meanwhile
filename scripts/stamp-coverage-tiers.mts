@@ -35,6 +35,7 @@ import { join } from "node:path";
 import { promote, tierExceedsEvidence } from "../lib/coverage/tier.ts";
 import type { CoverageEvidence, CoverageTier } from "../lib/coverage/tier.ts";
 import { readTable } from "../lib/reference/index.ts";
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 // The one Phoenix day formatter in this repo.
 import { today } from "./doc-dates.mjs";
 
@@ -141,13 +142,14 @@ const resolvedByDocument = (() => {
  * question is the self-referential denominator this whole model replaces.
  */
 type Registry = {
-  divisions: Array<{ ocdId: string; geoid: string | null }>;
+  divisions: Array<{ ocdId: string; divisionType: string; geoid: string | null }>;
   bodies: Array<{ ocdId: string | null; bodyClass?: string }>;
 };
 
-const registry = JSON.parse(
+// A body minted on a Census "no district here" placeholder is not a government, so it never enumerates one.
+const registry = withoutPlaceholderBodies(JSON.parse(
   readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
-) as Registry;
+) as Registry);
 
 // The bridge is an IDENTIFIER, not a name. Registry divisions carry the TIGER
 // `geoid` — `04019` for Pima County — which is exactly the id the territory
@@ -170,7 +172,7 @@ for (const body of registry.bodies) {
   if (geoid) enumeratedGeoids.add(geoid);
 }
 console.log(
-  `registry: ${registry.bodies.length} bodies across ${registry.divisions.length} divisions — ` +
+  `registry: ${registry.bodies.length} bodies (none on a Census placeholder) across ${registry.divisions.length} divisions — ` +
     `${enumeratedGeoids.size} distinct governments have at least one enumerated body ` +
     `(${bodiesWithoutDivision} bodies carry no division and cannot be bridged)`,
 );

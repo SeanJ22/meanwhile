@@ -71,6 +71,7 @@ import { readAllZipDivisions, zipShardOf, type ZipDivisionEntry } from "../lib/g
 import { geometryFiles } from "../lib/holdings/files.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { countyIdentity, placeIdentity, schoolIdentity, subdivisionIdentity, type DivisionIdentity } from "../lib/ocd/divisions.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -325,4 +326,6 @@ for (const c of collisions.filter((c) => /state:(az|nh|nj)\//.test(c)).slice(0, 
 for (const [id, holders] of inheritedCollapses) console.log(`INHERITED shared id (committed geometry, not created here): ${id} names ${[...holders].join(" and ")}`);
 if (pinsNotNational.length > 0) console.log(`committed ids with no row in the 2023 national layers (a vintage difference, kept out rather than guessed): ${pinsNotNational.join(", ")}`);
 console.log(`ZIPs written: ${zipsWritten} in ${Object.keys(index).length} shards; the baseline's ${Object.keys(baseline.zips).length} ZIPs and the previous build's ${previous.size} keep every committed division they had; stale ids corrected: ${[...corrected].join(", ") || "none"}`);
-console.log(`edges with no id: ${JSON.stringify(unmappedByLayer)}; ZIPs with no county edge: ${noCountyEdge}`);
+console.log(`edges with no id: ${JSON.stringify(unmappedByLayer)}`);
+// Every ZIP written either reaches a county or is counted as reaching none (RULING 159: a count carries its denominator).
+console.log(floorLine(floored("ZIPs written that reach a county", "the national ZIP shards", zipsWritten, zipsWritten - noCountyEdge)));

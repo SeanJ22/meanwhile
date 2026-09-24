@@ -18,6 +18,10 @@
  * It needs the code that carries the rule installed there (merged, deployed,
  * and picked up by the runtime): the owner door that builds on the
  * transfer-time import, and the plane's placeholder removal contract.
+ *
+ * `@freshness-reads-here` — its clock stamps sit on a read in the same run:
+ * `retrievedAt` is taken as the Census directory's bytes arrive, and
+ * `reviewedAt` is the owner's review of the package built from those bytes.
  */
 import { createHash } from "node:crypto";
 import { writeFileSync } from "node:fs";

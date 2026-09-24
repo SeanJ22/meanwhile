@@ -29,7 +29,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 **What it started.** 2 row(s) opened, 2 still open.
 
-- **NS28** — 1,975 governments in AZ, NH and NJ have a known website whose meeting calendar nobody has looked for; the gap ledger lists them. A free, model-free executor now exists that walks those sites (robots.txt first on every host, identified requests, no paid research) and records what it finds for wiring. It is built and switched off. Turning it on is your call because it sends new outbound requests to government sites every cycle. *(open)*
+- **NS28** — 1,975 governments in AZ, NH and NJ have a known website whose meeting calendar nobody has looked for; the gap ledger lists them. The executor that walks those sites is built and switched off. It reads each site without a model (robots.txt first on every host, identified requests), tries saved methods that worked on other governments first, and, when a site shows no meetings route, searches with Brave and Exa. Search is paid: at most 50 requests a cycle and 200 a day across both providers, about $1.40 a day at published prices, recorded apart from model spend. Turning it on is your call because it sends new outbound requests to government sites every cycle and spends on search; search can be held at zero while the walks run. *(open)*
 - **NH330** — The meetings-discovery executor (NS28) can confirm that a government's own site publishes its meetings, but a confirmed route still reaches readers only by hand-editing lib/registry/source-wiring.ts and deploying. Stage 2 is a promoted, runner-kept wiring store so a route that passes every check starts publishing meetings on its own. *(open)*
 
 **Needs Sean.** NS28

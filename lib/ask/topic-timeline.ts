@@ -151,6 +151,63 @@ export function quotable(text: string, maxChars: number): string {
   return out;
 }
 
+/**
+ * The part of a clerk's line that carries the topic. A document line can run
+ * several items together ("9. … O-26-25 … ADA IMPROVEMENTS … 10. … O-26-23 …
+ * DESIGNATE DATA CENTERS AS A PROHIBITED USE"), and cutting it from the front
+ * quoted the wrong ordinance to a reader asking about data centers. The window
+ * starts at the last item number before the phrase when one is close enough,
+ * otherwise a little before the phrase, and every cut is marked with an
+ * ellipsis. The words are the clerk's; only the window is ours.
+ */
+export function topicWindow(text: string, topic: AgendaTopic, maxChars = 260): string {
+  const flat = text.replace(/\s+/g, " ").trim();
+  const lower = flat.toLowerCase();
+  let at = -1;
+  let phraseEnd = -1;
+  for (const phrase of topic.phrases) {
+    const index = lower.indexOf(phrase);
+    if (index >= 0 && (at < 0 || index < at)) {
+      at = index;
+      phraseEnd = index + phrase.length;
+    }
+  }
+  if (at < 0) return flat.length <= maxChars ? flat : `${flat.slice(0, maxChars).replace(/\s+\S*$/, "")}…`;
+  // Where this item starts: the last item number, or an item's own file
+  // number ("O-26-23"), before the phrase — when it is within reach.
+  const reach = Math.max(0, at - (maxChars - 60));
+  const starts = [...flat.slice(reach, at).matchAll(/(?:^|\s)(?:\d{1,3}\.\s+[A-Z(]|[A-Z]{1,3}-\d{2}-\d{2,3}\s)/g)];
+  let start: number;
+  if (starts.length > 0) {
+    const last = starts[starts.length - 1]!;
+    start = reach + (last.index ?? 0) + (last[0].startsWith(" ") ? 1 : 0);
+    // A file number directly under its item heading ("10. ORDINANCE(S) FOR
+    // ADOPTION: O-26-23 …") starts at the heading: it says what stage the item is at.
+    const heading = [...flat.slice(Math.max(0, start - 60), start).matchAll(/(?:^|\s)\d{1,3}\.\s+[A-Z(]/g)].at(-1);
+    if (heading && /^[A-Z]{1,3}-\d/.test(flat.slice(start))) {
+      start = Math.max(0, start - 60) + (heading.index ?? 0) + (heading[0].startsWith(" ") ? 1 : 0);
+    }
+  } else if (flat.length <= maxChars) {
+    start = 0;
+  } else {
+    start = Math.max(0, at - 90);
+    const space = flat.indexOf(" ", start);
+    if (start > 0 && space >= 0 && space < at) start = space + 1;
+  }
+  // Where it ends: the next item number, the next item's file number, or a
+  // page footer after the phrase — whichever comes first — within the budget.
+  const tail = flat.slice(phraseEnd);
+  const boundary = tail.search(/\s(?:\d{1,3}\.\s+[A-Z(]|[A-Z]{1,3}-\d{2}-\d{2,3}\b|Agenda Page\b|Page \d+ of \d+\b)/);
+  let end = Math.min(flat.length, start + maxChars, boundary >= 0 ? phraseEnd + boundary : flat.length);
+  if (end < flat.length && (boundary < 0 || end < phraseEnd + boundary)) {
+    const space = flat.lastIndexOf(" ", end);
+    if (space > at) end = space;
+  }
+  const cutBefore = start > 0;
+  const cutAfter = end < flat.length;
+  return `${cutBefore ? "…" : ""}${flat.slice(start, end).trim()}${cutAfter ? "…" : ""}`;
+}
+
 /** The last motion in a clerk's multi-motion text is the one that disposed of the item. */
 function finalMotion(text: string): string {
   const parts = text.split(/\s*(?=Motion\s+\d+\s*:)/i).map((part) => part.trim()).filter(Boolean);
@@ -299,31 +356,47 @@ export function buildTopicTimeline(input: {
     const meeting = byMeeting.get(document.meetingId);
     if (meeting && document.text && document.text.trim()) readDays.add(dayOf(meeting.startsAt, meeting.timeZone));
   }
-  const seenHit = new Set<string>();
-  for (const hit of hits) {
-    const meeting = byMeeting.get(hit.meetingId);
+  // Each occurrence is windowed from the FULL agenda text: the sweep's quote is
+  // capped at 400 characters and, on a line that runs items together, can end
+  // before the phrase it matched. Versions of one agenda collapse by content.
+  const seenWindow = new Set<string>();
+  const newestFirst = [...input.documents].sort((a, b) => String(b.retrievedAt).localeCompare(String(a.retrievedAt)));
+  for (const document of newestFirst) {
+    if (!document.text || hits.every((hit) => hit.documentUrl !== document.documentUrl || hit.meetingId !== document.meetingId)) continue;
+    const meeting = byMeeting.get(document.meetingId);
     if (!meeting) continue;
     const day = dayOf(meeting.startsAt, meeting.timeZone);
     if (structuredDays.has(day)) continue;
-    const key = `${day}#${hit.quote.slice(0, 80)}`;
-    if (seenHit.has(key)) continue;
-    seenHit.add(key);
-    entries.push({
-      key: `${meeting.id}#${hit.quote.slice(0, 40)}`,
-      meetingId: meeting.id,
-      startsAt: meeting.startsAt,
-      localDay: day,
-      itemText: hit.quote,
-      agendaNumber: null,
-      matterFile: null,
-      status: Date.parse(meeting.startsAt) >= now ? "SCHEDULED" : "OUTCOME_NOT_READ",
-      action: null,
-      tallyText: null,
-      sourceUrl: meeting.agendaUrl ?? hit.documentUrl,
-      sourceOrg: hit.sourceOrg,
-      retrievedAt: hit.retrievedAt,
-      basis: "AGENDA_DOCUMENT_LINE",
-    });
+    const flat = document.text.replace(/\s+/g, " ");
+    const lower = flat.toLowerCase();
+    const occurrences: number[] = [];
+    for (const phrase of topic.phrases) {
+      for (let index = lower.indexOf(phrase); index >= 0; index = lower.indexOf(phrase, index + phrase.length)) {
+        if (!occurrences.some((seen) => Math.abs(seen - index) < 250)) occurrences.push(index);
+      }
+    }
+    for (const index of occurrences.sort((a, b) => a - b)) {
+      const window = topicWindow(flat.slice(Math.max(0, index - 300), index + 300), topic);
+      const identity = `${day}#${window.replace(/^…/, "").slice(0, 120).toLowerCase()}`;
+      if (seenWindow.has(identity)) continue;
+      seenWindow.add(identity);
+      entries.push({
+        key: `${meeting.id}#${index}`,
+        meetingId: meeting.id,
+        startsAt: meeting.startsAt,
+        localDay: day,
+        itemText: window,
+        agendaNumber: null,
+        matterFile: null,
+        status: Date.parse(meeting.startsAt) >= now ? "SCHEDULED" : "OUTCOME_NOT_READ",
+        action: null,
+        tallyText: null,
+        sourceUrl: meeting.agendaUrl ?? document.documentUrl,
+        sourceOrg: document.sourceOrg,
+        retrievedAt: document.retrievedAt,
+        basis: "AGENDA_DOCUMENT_LINE",
+      });
+    }
   }
   entries.sort((a, b) => b.startsAt.localeCompare(a.startsAt));
 
@@ -391,7 +464,10 @@ function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
 function itemPhrase(entry: TopicTimelineEntry): string {
   const label = entry.agendaNumber ? `agenda item ${entry.agendaNumber}` : "an agenda item";
   const file = entry.matterFile ? ` (${entry.matterFile})` : "";
-  return `${label}${file}, "${quotable(entry.itemText, 150)}"`;
+  // A document line is already windowed on the topic (topicWindow); a
+  // structured title is quoted to its first sentence.
+  const quote = entry.basis === "AGENDA_DOCUMENT_LINE" ? entry.itemText : quotable(entry.itemText, 150);
+  return `${label}${file}, "${quote}"`;
 }
 
 function entrySentence(entry: TopicTimelineEntry, bodyName: string, lead: boolean): string {
@@ -450,7 +526,10 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   const newestPast = past[0] ?? null;
   const lead = decisive[0] && (!newestPast || decisive[0].localDay >= newestPast.localDay) ? decisive[0] : newestPast ?? upcoming[0] ?? null;
 
-  if (lead) add(entrySentence(lead, timeline.bodyName, true), lead);
+  if (lead && !add(entrySentence(lead, timeline.bodyName, true), lead)) {
+    // The lead is the answer; a long clerk's line is shortened, never dropped.
+    add(entrySentence({ ...lead, itemText: quotable(lead.itemText, 110), basis: "STRUCTURED_AGENDA_RECORD" }, timeline.bodyName, true), lead);
+  }
   const nextUp = upcoming.find((entry) => !used.has(entry.key));
   if (nextUp) add(entrySentence(nextUp, timeline.bodyName, !lead), nextUp);
   const earlier = past.find((entry) => !used.has(entry.key) && entry.localDay !== lead?.localDay);

@@ -160,6 +160,26 @@ test("ANOTHER STATE, ANOTHER PLATFORM: a New Hampshire town calendar (iCal/sched
   assert.equal(overLengthBudget(composed.answer), null);
 });
 
+test("ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPlus AgendaCenter) quotes the data-center ordinance, not its neighbour", () => {
+  const body = "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing";
+  const meetings = seed.meetings.filter((meeting) => meeting.bodyId === body);
+  const documents = seed.agendaDocuments.filter((document) => meetings.some((meeting) => meeting.id === document.meetingId));
+  assert.ok(meetings.length > 0 && documents.length > 0, "the recorded Rockaway calendar and agendas are in the committed seed");
+  const timeline = buildTopicTimeline({ topic: DATA_CENTER, bodyId: body, bodyName: "Rockaway Township Council", meetings, documents, sittings: [], now: NOW });
+  const days = timeline.entries.map((entry) => entry.localDay);
+  assert.ok(days.includes("2026-06-09") && days.includes("2026-07-14"), `introduction and adoption sittings both held: ${days.join(", ")}`);
+  for (const entry of timeline.entries) {
+    assert.match(entry.itemText, /DATA CENTERS/i, "every quote carries the phrase the reader asked about");
+    assert.equal(entry.status, "OUTCOME_NOT_READ", "no structured outcome is held for this body, and none is implied");
+  }
+  const composed = composeTopicAnswer(timeline, NOW)!;
+  assert.match(composed.answer, /July 14th, 2026/);
+  assert.match(composed.answer, /DESIGNATE DATA CENTERS AS A PROHIBITED USE/);
+  assert.doesNotMatch(composed.answer, /ADA IMPROVEMENTS/, "the neighbouring ordinance on the same line is not quoted as the answer");
+  assert.match(composed.answer, /we have not read the recorded outcome of that item/);
+  assert.equal(overLengthBudget(composed.answer), null);
+});
+
 test("a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either", () => {
   const meetings = [
     { id: "x:1", bodyName: "Council", title: "Council", startsAt: "2026-09-20T18:00:00-07:00", timeZone: "America/Phoenix", status: "CANCELED", provenance: { collectedAt: "2026-09-24T10:00:00Z" } },

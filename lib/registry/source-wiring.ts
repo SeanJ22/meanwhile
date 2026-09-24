@@ -253,7 +253,9 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       insiteHost: "pima.legistar.com",
       insiteBodyNames: "Board of Supervisors",
       insiteBodyName: "Board of Supervisors",
-      insiteClerkScheduleUrl: "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
+      // The county moved the page here from /2559/Board-of-Supervisors-Meeting-Schedule
+      // (a 301, seen 2026-09-24); robots.txt read the same day permits it (C18).
+      insiteClerkScheduleUrl: "https://www.pima.gov/board-of-supervisors-meeting-schedule",
       insiteFeedId: "43473383",
       insiteFeedGuid: "88b7d677-6602-4f79-b987-4677f7f035e6",
       insiteFeedRange: "Next Month",

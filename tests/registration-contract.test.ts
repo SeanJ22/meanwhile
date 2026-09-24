@@ -236,3 +236,27 @@ test("a 304 is authentic only as registration's pinned file; any other 304 is re
   // A 304 for a class that pins no bytes to a Last-Modified is refused: nothing was acquired.
   assert.match(notModifiedIssue({ ...second, recordClass: "MEETING" }) ?? "", /pins no bytes to a Last-Modified/);
 });
+
+test("registration emits the registry's own shapes, so the reader composes it without translation", () => {
+  const oh = registrationCandidate({ target: registrationTarget("OH"), reference: loadRegistrationReference(ROOT, "OH"), receipt: RECEIPT, reviewed: reviewedFromFirstSeed() }).readModel as RegistrationReadModel;
+  // The registry holds no state division; the state is the scope.
+  assert.ok(oh.divisions.length > 0 && oh.divisions.every((d) => d.divisionType !== ("state" as string)), "no state division is registered");
+  for (const d of oh.divisions) {
+    assert.equal(d.sourceDataset, "TIGER_CB2023");
+    assert.match(d.provenance.sourceUrl ?? "", /^https:\/\/www2\.census\.gov\/geo\/tiger\/GENZ2023\/shp\/cb_2023_us_(county|place|cousub|unsd|elsd|scsd)_500k\.zip$/);
+    assert.deepEqual([d.lsad, d.funcstat, d.classfp, d.canonicalOcdId, d.canonicalMatch, d.canonicalGap], [null, null, null, null, "none", "UNDETERMINED"], "no canonical match is claimed");
+  }
+  for (const b of oh.bodies) {
+    assert.equal(b.name, null, "a name is null until sourced");
+    assert.equal(b.coverageStatus, "NOT_ATTEMPTED");
+    if (b.bodyOrigin === "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS") {
+      assert.equal(b.sourceDataset, "COG_2022");
+      assert.equal(b.provenance.sourceUrl, REGISTRATION_SOURCE_URL);
+      assert.ok(typeof b.censusId === "string" && typeof b.censusUnitType === "string");
+    } else {
+      assert.equal(b.bodyOrigin, "DERIVED_FROM_DIVISION_TYPE");
+      assert.equal(b.sourceDataset, "TIGER_CB2023");
+      assert.equal(b.censusId, undefined, "a school district no listed government claimed carries no Census id");
+    }
+  }
+});

@@ -110,7 +110,16 @@ export type BodyOrigin =
    * union rather than against a private copy of it.
    */
   | "PROMOTED_FROM_DESCENT_CANDIDATE"
-  | "PROMOTED_FROM_CENSUS_OF_GOVERNMENTS";
+  | "PROMOTED_FROM_CENSUS_OF_GOVERNMENTS"
+  /*
+   * **REGISTERED, NOT YET RESEARCHED (2026-09-23).** A government the 2022
+   * Census of Governments lists, registered on the Census division that is its
+   * territory by the runner's REGISTRATION contract (`lib/registration/`).
+   * Nothing about it has been sourced beyond that: no name, no website, no
+   * calendar. Unlike PROMOTED_FROM_CENSUS_OF_GOVERNMENTS, no reported website
+   * was checked.
+   */
+  | "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS";
 
 /**
  * Which adapter can read this body's agendas. Open-ended by design.
@@ -198,7 +207,15 @@ export type SourceDataset =
    */
   | "DESCENT"
   | "GUS_2022"
-  | "USER_REPORTED";
+  | "USER_REPORTED"
+  /*
+   * **REGISTRATION'S GEOGRAPHY (2026-09-23).** The 2023 Census cartographic
+   * boundary files (GENZ2023, 1:500k) that the registration reference and the
+   * national ZIP index assign division ids from
+   * (`scripts/lib/national-division-ids.mts`). Named for its own vintage
+   * rather than filed under TIGER_GENZ2025.
+   */
+  | "TIGER_CB2023";
 
 /**
  * How well this repo's identifier matches the canonical OCD vocabulary.

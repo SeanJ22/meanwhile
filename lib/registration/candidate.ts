@@ -37,38 +37,37 @@ import {
   type RegistrationTarget,
 } from "./publication.ts";
 import type { LoadedReference, ReferenceLayer } from "./reference.ts";
+import type { Body, Division, DivisionType } from "../registry/types.ts";
 
-export interface RegistrationDivision {
-  readonly ocdId: string;
-  readonly divisionType: "state" | "county" | "place" | "school_district";
-  readonly tier: "state" | "local";
-  readonly state: string;
-  readonly label: string;
-  readonly parentOcdId: string | null;
+/**
+ * A registered division, in the registry's own shape (`lib/registry/types.ts`), so the reader
+ * composes it beside the reviewed registry without translation. Its geography is the 2023 Census
+ * cartographic boundary layer it came from; no canonical OCD match was attempted.
+ */
+export type RegistrationDivision = Division & {
   readonly geoid: string;
   readonly sourceDataset: "TIGER_CB2023";
-}
+  readonly canonicalOcdId: null;
+  readonly canonicalMatch: "none";
+  readonly canonicalGap: "UNDETERMINED";
+};
 
-export interface RegistrationBody {
-  readonly id: string;
+/**
+ * A registered body, in the registry's own shape: a government the Census lists (or a school district
+ * no listed government claimed), on its Census division, with nothing sourced beyond that. Its name is
+ * null until sourced, as the registry requires.
+ */
+export type RegistrationBody = Body & {
   readonly ocdId: string;
   readonly name: null;
   readonly bodyClass: "GOVERNING";
-  readonly bodyOrigin: "CENSUS_OF_GOVERNMENTS" | "DERIVED_FROM_DIVISION_TYPE";
+  readonly bodyOrigin: "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS" | "DERIVED_FROM_DIVISION_TYPE";
   readonly coverageStatus: "NOT_ATTEMPTED";
   readonly agendaSourceType: "NONE";
-  readonly agendaSourceRef: null;
-  readonly meetingCadence: null;
-  readonly homepageUrl: null;
-  readonly demandCount: 0;
-  readonly sourceDataset: "CENSUS_OF_GOVERNMENTS_2022" | "TIGER_CB2023";
-  /** The Census of Governments id, when the Census lists this government. */
-  readonly censusId: string | null;
-  readonly censusUnitType: string | null;
+  readonly sourceDataset: "COG_2022" | "TIGER_CB2023";
   /** The operational jurisdiction id, when the Census lists this government. */
   readonly jurisdictionId: string | null;
-  readonly provenance: { readonly sourceUrl: string; readonly sourceOrg: "U.S. Census Bureau"; readonly collectedAt: string; readonly verifiedAt: null };
-}
+};
 
 export interface RegistrationReadModel {
   readonly formatVersion: 1;
@@ -102,8 +101,8 @@ export interface ReviewedRegistryIds {
   readonly bodyDivisionIds: ReadonlySet<string>;
 }
 
-const DIVISION_TYPE: Readonly<Record<ReferenceLayer, RegistrationDivision["divisionType"]>> = {
-  state: "state",
+/** The registry holds no state division (its states are the scope), so the state layer registers none. */
+const DIVISION_TYPE: Readonly<Record<Exclude<ReferenceLayer, "state">, DivisionType>> = {
   county: "county",
   place: "place",
   cousub: "place",
@@ -113,6 +112,11 @@ const DIVISION_TYPE: Readonly<Record<ReferenceLayer, RegistrationDivision["divis
 };
 const SCHOOL_LAYERS = new Set<ReferenceLayer>(["unsd", "elsd", "scsd"]);
 const SCHOOL_TYPES = new Set(["SCHOOL DISTRICT", "DEPENDENT SCHOOL SYSTEM"]);
+
+/** The 2023 cartographic boundary file a layer's divisions were read from (`scripts/fetch-tiger-national.mts`). */
+function boundaryUrl(layer: Exclude<ReferenceLayer, "state">): string {
+  return `https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_${layer}_500k.zip`;
+}
 
 function parentOf(ocdId: string, stateOcdId: string): string | null {
   if (ocdId === stateOcdId) return null;
@@ -142,22 +146,33 @@ export function registrationCandidate(input: {
   const provenance = { sourceUrl: receipt.requestedUrl, sourceOrg: "U.S. Census Bureau" as const, collectedAt: loaded.generatedAt, verifiedAt: null };
   const stateOcdId = ref.divisions[0]?.[0] ?? "";
 
-  const allDivisions: RegistrationDivision[] = ref.divisions.map(([ocdId, layer, geoid, censusName]) => ({
-    ocdId,
-    divisionType: DIVISION_TYPE[layer],
-    tier: layer === "state" ? "state" : "local",
-    state: target.state,
-    label: censusName,
-    parentOcdId: parentOf(ocdId, stateOcdId),
-    geoid,
-    sourceDataset: "TIGER_CB2023",
-  }));
+  const allDivisions: RegistrationDivision[] = ref.divisions.flatMap(([ocdId, layer, geoid, censusName]): RegistrationDivision[] =>
+    layer === "state"
+      ? []
+      : [{
+          ocdId,
+          divisionType: DIVISION_TYPE[layer],
+          tier: "local",
+          state: target.state,
+          label: censusName,
+          parentOcdId: parentOf(ocdId, stateOcdId),
+          lsad: null,
+          funcstat: null,
+          classfp: null,
+          geoid,
+          canonicalOcdId: null,
+          canonicalMatch: "none",
+          canonicalGap: "UNDETERMINED",
+          sourceDataset: "TIGER_CB2023",
+          provenance: { sourceUrl: boundaryUrl(layer), sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null },
+        }],
+  );
 
   // Bodies: a paired government's, then every Census school district no government claimed.
   const candidates: RegistrationBody[] = [];
   const minted = new Set<string>();
   let duplicates = 0;
-  const mint = (ocdId: string, slot: "governing" | "board", origin: RegistrationBody["bodyOrigin"], gov: readonly [string, string, string] | null) => {
+  const mint = (ocdId: string, slot: "governing" | "board", origin: RegistrationBody["bodyOrigin"], gov: readonly [string, string, string] | null, source: RegistrationBody["provenance"]) => {
     const id = `${ocdId}#${slot}`;
     if (minted.has(id)) {
       duplicates++;
@@ -176,11 +191,10 @@ export function registrationCandidate(input: {
       meetingCadence: null,
       homepageUrl: null,
       demandCount: 0,
-      sourceDataset: gov ? "CENSUS_OF_GOVERNMENTS_2022" : "TIGER_CB2023",
-      censusId: gov ? gov[0] : null,
-      censusUnitType: gov ? gov[2] : null,
+      sourceDataset: gov ? "COG_2022" : "TIGER_CB2023",
+      ...(gov ? { censusId: gov[0], censusUnitType: gov[2] } : {}),
       jurisdictionId: gov ? gov[1] : null,
-      provenance,
+      provenance: source,
     });
   };
   const unpairedByReason: Record<string, number> = {};
@@ -200,12 +214,12 @@ export function registrationCandidate(input: {
     // The reviewed registry already registers this government, on either of its divisions.
     if (reviewed.bodyDivisionIds.has(primary) || (other !== null && reviewed.bodyDivisionIds.has(other))) continue;
     if (SCHOOL_TYPES.has(govType)) claimedSchools.add(division);
-    mint(primary, SCHOOL_TYPES.has(govType) ? "board" : "governing", "CENSUS_OF_GOVERNMENTS", [pid6, jurisdictionId, govType]);
+    mint(primary, SCHOOL_TYPES.has(govType) ? "board" : "governing", "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS", [pid6, jurisdictionId, govType], provenance);
   }
   ref.divisions.forEach(([ocdId, layer, , censusName], i) => {
     if (!SCHOOL_LAYERS.has(layer) || claimedSchools.has(i) || /not defined/i.test(censusName)) return;
     if (reviewed.bodyDivisionIds.has(ocdId)) return;
-    mint(ocdId, "board", "DERIVED_FROM_DIVISION_TYPE", null);
+    mint(ocdId, "board", "DERIVED_FROM_DIVISION_TYPE", null, { sourceUrl: boundaryUrl(layer as Exclude<ReferenceLayer, "state">), sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null });
   });
 
   // Reviewed wins: never write an id the reviewed registry holds.

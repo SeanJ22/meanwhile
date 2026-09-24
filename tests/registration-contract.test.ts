@@ -20,6 +20,7 @@ import {
   REGISTRATION_TARGETS,
   registrationTarget,
 } from "../lib/registration/publication.ts";
+import { composeRegistration } from "../lib/registration/compose.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 
@@ -259,4 +260,33 @@ test("registration emits the registry's own shapes, so the reader composes it wi
       assert.equal(b.censusId, undefined, "a school district no listed government claimed carries no Census id");
     }
   }
+});
+
+test("the reader composes a state's registration beside the reviewed registry it holds now, and reviewed still wins", () => {
+  const reviewed = JSON.parse(readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8")) as {
+    divisions: { ocdId: string }[];
+    bodies: { id: string; ocdId: string | null; alsoServesOcdIds?: string[]; censusId?: string }[];
+  };
+  const oh = registrationCandidate({ target: registrationTarget("OH"), reference: loadRegistrationReference(ROOT, "OH"), receipt: RECEIPT, reviewed: reviewedFromFirstSeed() }).readModel as RegistrationReadModel;
+  const composed = composeRegistration(reviewed, oh, "cv-oh");
+  assert.equal(composed.state, "OH");
+  assert.equal(composed.divisions.length, oh.divisions.length, "the reviewed registry holds nothing in Ohio yet");
+  assert.equal(composed.bodies.length, oh.bodies.length);
+
+  // The reviewed registry moves after Ohio registered: it now holds one of Ohio's divisions, keys a body on
+  // another, and lists a third government by its Census id. None of those is composed from registration.
+  const [heldDivision, keyedBody, censusBody] = [oh.divisions[0], oh.bodies[0], oh.bodies.find((b) => b.censusId !== undefined && b !== oh.bodies[0])!];
+  const later = {
+    divisions: [...reviewed.divisions, { ocdId: heldDivision.ocdId }],
+    bodies: [
+      ...reviewed.bodies,
+      { id: "reviewed-body-on-a-registered-division", ocdId: keyedBody.ocdId },
+      { id: "reviewed-body-for-the-same-government", ocdId: null, censusId: censusBody.censusId },
+    ],
+  };
+  const after = composeRegistration(later, oh, "cv-oh");
+  assert.equal(after.divisions.some((d) => d.ocdId === heldDivision.ocdId), false, "a division the reviewed registry holds now");
+  assert.equal(after.bodies.some((b) => b.id === keyedBody.id), false, "a division the reviewed registry now keys a body on");
+  assert.equal(after.bodies.some((b) => b.id === censusBody.id), false, "a government the reviewed registry now lists by its Census id");
+  assert.equal(after.bodies.length, oh.bodies.length - 2);
 });

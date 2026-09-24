@@ -426,3 +426,41 @@ test("the scope travels in the URL and an unreadable scope is everywhere, never 
   assert.equal(withScope("/admin/money", pima, { view: "work" }), "/admin/money?scope=az.county.04019&view=work");
   assert.equal(withScope("/admin", { kind: "all" }), "/admin");
 });
+
+test("a read our own code failed is never shown as the site refusing us: the ingest's JOB_FAILURE mark reads as ours, with engineering next", () => {
+  // The Pima Board of Supervisors shape (2026-09-14 to 09-24): every read failed on our own venue handling, recorded as
+  // SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED, and Admin read it as a publisher wall. The ingest now marks such a failure.
+  const contract: WatchedContract = {
+    id: "meetings:legistar-insite:pima-bos",
+    scope: "source:legistar-insite:body:pima-bos",
+    bodyId: "ocd-division/country:us/state:az/county:pima#governing",
+    ocdId: "ocd-division/country:us/state:az/county:pima",
+    meetingSource: "legistar-insite",
+    jurisdiction: "Pima County",
+    publishingOrg: "Pima County",
+    sourceUrl: "https://pima.legistar.com/Calendar.aspx",
+    verifiedAt: null,
+    cadence: { description: "every hour", defaultEveryMs: 3_600_000 },
+    retry: { afterMs: 900_000, description: "fifteen minutes later" },
+  };
+  const failedWith = (failureDetail: string): BodyStoreFacts => ({
+    asOf: NOW,
+    versions: [],
+    readbacks: [],
+    day: [],
+    changes: [],
+    attempts: [{ scope: contract.scope, candidateId: "cv-pima-bos", state: "SOURCE_BLOCKED", failureCode: "SOURCE_RETRIEVAL_FAILED", failureDetail, acquisitionSucceeded: false, attemptedAt: "2026-09-23T15:08:22.500Z" }],
+  });
+  const view = (failureDetail: string) => buildBodyViews({ contracts: [contract], store: failedWith(failureDetail), nowIso: NOW, zipOf: () => ({ kind: "NONE" }) })[0];
+
+  const ours = view("JOB_FAILURE: our own code or configuration failed before the publisher could answer; this is not a publisher wall. VENUE_RESOLUTIONS_MISSING: 3 sittings have no reviewed venue");
+  assert.equal(ours.deadEnd?.title, "The last read did not reach the site: our own code or configuration failed first, so this is not the site refusing us — VENUE_RESOLUTIONS_MISSING: 3 sittings have no reviewed venue");
+  assert.equal(ours.deadEnd?.wouldSettle, "A fix to our adapter or its configuration for https://pima.legistar.com/Calendar.aspx; the site itself was never asked.");
+  assert.match(ours.deadEnd?.whoMoves ?? "", /^Engineering: our adapter or its configuration has to change\. The runner retries on its clock \(fifteen minutes later after a failure\), but the same code fails the same way\.$/);
+  assert.doesNotMatch(JSON.stringify(ours), /could not get in/, "no line of the body says the site refused us");
+
+  // A publisher that did refuse keeps the wall's words and the runner's clock.
+  const wall = view("HTTP 403 from pima.legistar.com");
+  assert.equal(wall.deadEnd?.title, "The last read could not get in: the site refused or failed the request — HTTP 403 from pima.legistar.com");
+  assert.match(wall.deadEnd?.whoMoves ?? "", /^The runner reads it again on its clock/);
+});

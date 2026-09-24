@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 749,
-    "named": 7400,
-    "dynamic": 29
+    "files": 745,
+    "named": 7357,
+    "dynamic": 30
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -407,6 +407,7 @@
         "a body read through two sources holds at least its larger source, and every total over it says it is a floor",
         "a fraction of a cent per attempt says so instead of rounding to a free-looking $0.00",
         "a ledger place key reads as the place, from its own parts",
+        "a read our own code failed is never shown as the site refusing us: the ingest's JOB_FAILURE mark reads as ours, with engineering next",
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
         "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline",
@@ -636,8 +637,12 @@
     },
     "tests/agenda-retrieval-disallowed-hosts.test.ts": {
       "names": [
+        "a permitted agenda link that redirects into a refused host is held as a link, and the refused host is never requested",
+        "a portal detail page that redirects into a refused host is not followed, and the sitting keeps its link",
+        "a refused API agenda link is read through the sitting's portal link, stored on the API row, and the page is read once",
         "an agenda link on a disallowed host is held as a link, never read; permitted hosts are unaffected",
         "the ingest's agenda retrieval never requests a DISALLOWED host, and still requests a permitted one",
+        "the recorded detail page's agenda link is read, never the accessible copy, and an unposted agenda reads as none",
         "the refused hosts are derived from the catalogue's own DISALLOWED routes"
       ],
       "dynamic": 0
@@ -872,6 +877,8 @@
         "read() of an absent key is one empty bounded page",
         "read() pages a log larger than one response and returns every record in position order",
         "readAll() pages the whole table in (log_key, position) order",
+        "readLatest() answers each key's newest record, narrowed by the database, in one statement per page of keys",
+        "readLatest() refuses an unsafe projection key rather than building SQL from it",
         "readRecent() returns the newest N, newest first, bounded",
         "readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database",
         "readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it",
@@ -1255,13 +1262,6 @@
       ],
       "dynamic": 0
     },
-    "tests/ask-model-result-cache.test.ts": {
-      "names": [
-        "equivalent wording shares a key; different evidence never does",
-        "the cache is bounded in time and in size"
-      ],
-      "dynamic": 0
-    },
     "tests/ask-prompt-cache.test.ts": {
       "names": [
         "H1: a LOCAL PRODUCTION BUILD's harness traffic is never pooled with production readers",
@@ -1348,24 +1348,6 @@
         "a record with no source contributes no line at all",
         "an unparseable URL yields no label rather than an empty link",
         "six documents from one office are ONE source line"
-      ],
-      "dynamic": 0
-    },
-    "tests/ask-topic-timeline.test.ts": {
-      "names": [
-        "ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPlus AgendaCenter) quotes the data-center ordinance, not its neighbour",
-        "ANOTHER STATE, ANOTHER PLATFORM: a New Hampshire town calendar (iCal/schedule page) with a scheduled solar item and an unread recent sitting",
-        "PIMA, after the September 22 read: the adopted moratorium leads, from the official record, with its tally",
-        "PIMA, as held before the September 22 read: the August 11 decision leads, and the unread September 22 sitting is named",
-        "ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance",
-        "ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)",
-        "ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation",
-        "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
-        "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
-        "an agenda line with no recorded outcome says exactly that, never that nothing happened",
-        "an unreadable outcome store is named as our holding failure, never as 'no action'",
-        "held agendas that never mention the topic say what was searched, and what was not read",
-        "helpers quote without inventing: the tally sentence, the salient item, a sentence-safe quote"
       ],
       "dynamic": 0
     },
@@ -2254,16 +2236,6 @@
       ],
       "dynamic": 0
     },
-    "tests/carried-row-supersession.test.ts": {
-      "names": [
-        "CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting",
-        "CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant",
-        "CARRIED-SUPERSEDE · (c) the same normalized body at another local time is another sitting: both are kept",
-        "CARRIED-SUPERSEDE · (d) another body at the same minute is another sitting: both are kept, on every source",
-        "CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim: the honest one promotes, a forged one is refused"
-      ],
-      "dynamic": 0
-    },
     "tests/carry-pins.test.ts": {
       "names": [
         "R47: a held answer NEVER carries across a zip change",
@@ -2474,7 +2446,6 @@
         "Legistar adapters cannot reopen frozen tracked venue registries",
         "a manual contract cannot reclaim a routine canonical record-class/scope authority",
         "a retired data executable cannot survive behind a renamed package command",
-        "a standing-clock contract cannot regain an owner manual-promotion door under any package name or adapter",
         "actual 673f1dd job-watch tracker commit shape is blocked at the deleted workflow/writer boundary",
         "arbitrary-checkout control-plane bootstrap/proof writers cannot return as executable or package doors",
         "candidate research holdings and statement history cannot regain production authority",
@@ -2527,23 +2498,11 @@
     },
     "tests/civic-data-read-model-memo.test.ts": {
       "names": [
-        "a bypassCache batch read never asks identities",
-        "a bypassCache read never asks the identity and always proves again",
         "a bypassCache read never uses the memo — it re-proves the version every time",
-        "a failed batch identity read decides nothing: every scope is read whole",
-        "a moved pointer is read whole and proved again, never served from the old proof",
         "a pointer move to a new version is fetched and re-proved, never masked by the memo",
-        "a pointer whose identity changed in any field is read whole",
-        "a proof is served only to the store that made it",
-        "a shared read that fails decides nothing: a waiting reader reads for itself",
-        "an unmoved pointer is served from this store's proof after asking only its identity",
-        "concurrent readers of a cold scope share one read and one proof",
-        "readers of different stores never share a read",
-        "the batch read asks identities for proved scopes and reads only the moved one whole",
         "the batch read fetches candidate envelopes only for versions not yet proven",
         "the batch read hauls only the moved partition's envelope when one pointer advances",
-        "the single read proves a version once, then attests without re-reading the candidate",
-        "verification reads never share a read"
+        "the single read proves a version once, then attests without re-reading the candidate"
       ],
       "dynamic": 0
     },
@@ -2704,18 +2663,8 @@
       ],
       "dynamic": 0
     },
-    "tests/composite-failure-kind.test.ts": {
-      "names": [
-        "a JOB failure detail says whose failure it is, once",
-        "meeting partition receipts parse with and without the additive failureKind",
-        "our own code and configuration failures are jobs, and so is an unknown",
-        "publisher-side failures are walls"
-      ],
-      "dynamic": 0
-    },
     "tests/composite.test.ts": {
       "names": [
-        "2026-09-24: an exception OUR code throws before any request is a JOB, never the publisher's wall",
         "F22: a broken NAMESPACE is a JOB failure — the run must go red",
         "F22: a failed FETCH is a WALL — named, skipped, and the run continues",
         "F22: a normalize that THROWS is a JOB failure, not a wall",
@@ -2892,7 +2841,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 10
+      "dynamic": 11
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -4420,6 +4369,18 @@
       ],
       "dynamic": 0
     },
+    "tests/free-walks.test.ts": {
+      "names": [
+        "A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD, names why, and hands the Scout nothing",
+        "A WALK RECORD THE LANE CANNOT READ HOLDS ITS ROW: no known outcome or no finish time is never guessed at, and a lead without an address is dropped",
+        "DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, a state it cannot read named, a moved basis left out, and walked first even outside the ledger",
+        "EVERY READING REACHES ITS HOLD DECISION: found and not-walked hold, a walk that confirmed nothing or no site to walk opens, unread holds; the newest walk decides",
+        "ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site are read, and none at all when none has one",
+        "THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane can admit, and hands the reading to the hold, the Scout's brief and the walk list",
+        "THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only"
+      ],
+      "dynamic": 0
+    },
     "tests/freshness-provenance.test.ts": {
       "names": [
         "RULING 107: a run date never renders as a data date",
@@ -5333,7 +5294,6 @@
         "(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the API alone",
         "(g) NEGATIVE CONTROL: a viewable sitting carried by BOTH routes is not double-counted",
         "a PAGED grid is an incomplete enumeration, and it is reported rather than counted",
-        "a clerk schedule page that moved is not followed: the grid's sittings survive, no retained response leaves the registered routes, and the move is named",
         "a page target is READ OFF THE PAGER, never derived from the control index",
         "a postback that silently did not take is visible, not parsed as if it had",
         "a single-page range reports no shortfall — the check is not a blanket warning",
@@ -5869,7 +5829,6 @@
       "names": [
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
-        "a pass that records readbacks and republishes the prepared snapshot composes every partition once",
         "a semantic refusal holds only the exact source/body partition",
         "a successful thin response retains unexplained in-window rows with exact held evidence",
         "an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence",
@@ -7226,21 +7185,6 @@
       ],
       "dynamic": 0
     },
-    "tests/pima-legistar-outcomes-routine.test.ts": {
-      "names": [
-        "(a) Pima Legistar outcomes are one routine contract on the standing clock, not an owner-invoked manual contract",
-        "(b) a GOOD Pima candidate promotes through the routine door and a later failed read leaves that GOOD pointer as LKG",
-        "(c) no package script, installed dispatch, or firewall mapping can still promote this scope through a manual door",
-        "a Legistar UTC stamp is read as UTC, and a candidate's source-through never precedes the pointer it extends",
-        "a dry run reads the events route and writes nothing",
-        "a failed or empty events read is a durable held attempt, exits non-zero, and leaves the LKG live",
-        "a refused sitting holds the pass even when a later sitting promotes, and the receipt proves the moved LKG",
-        "a routine pass promotes every changed sitting, including one modified earlier than a sitting walked before it",
-        "an unchanged day costs one events request and ends in a validated no-change receipt",
-        "the rolling routine window ends today where the Board sits and reaches back 120 days"
-      ],
-      "dynamic": 0
-    },
     "tests/plain-work.test.ts": {
       "names": [
         "HUMAN_REQUIRED is the one Scout outcome that needs the owner, and it names the act",
@@ -7409,9 +7353,6 @@
     },
     "tests/prepared-meeting-snapshot.test.ts": {
       "names": [
-        "a held prepared row is re-read when the coupling differs in any part",
-        "a reader that holds the current prepared row asks only its coupling before serving it again",
-        "prepare composes through the pass's shared composition, and only when the coupling changed",
         "preparing over an unchanged promoted set is idempotent and never recomposes",
         "the prepared projection publishes monotonically — an older composition can never overwrite a newer one",
         "the reader fast-path falls back to the composing reader only when no prepared row exists",
@@ -8219,7 +8160,6 @@
         "a deployed build, a function runtime, or a process outside the harness never admits the pin",
         "a mid-run promotion splits the unpinned harness's two reads, and the pin holds both on the captured version",
         "a pinned store failure stays a failure and a pinned absence stays absent",
-        "a pinned version proven once serves the proof run's later requests without being re-read",
         "an admitted pin that is malformed or edited is refused loudly, never read as no pin",
         "the pinned read still refuses an unverified version: never promoted, or tampered after promotion",
         "the proof server's prepared row serves only when it was composed from exactly the pinned versions"
@@ -9555,7 +9495,6 @@
         "apptegy: board meetings filter from district calendars, coords from feed",
         "civicplus: a cancellation announced in the SUMMARY never says SCHEDULED",
         "civicplus: iCal parses and council sittings normalize with venues",
-        "civicplus: the archive's agenda link is kept on the feed's own row for the same date, never dropped with the duplicate",
         "civicplus: the boards feed splits Planning Board from Board of Adjustment",
         "civicplus: the iCal parser unfolds and keys DTSTART params",
         "civicplus: two bodies on one division do not suppress each other's archive",
@@ -10278,9 +10217,7 @@
       "names": [
         "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
-        "a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read",
         "retired trusted-LKG doors refuse new imports while retained history remains due",
-        "the trusted-LKG import clock counts only attempts strictly after the import's pointer move",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"
       ],
       "dynamic": 0

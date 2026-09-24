@@ -329,7 +329,28 @@ const FAILED_STATES = new Set([
  * lib/civic-data/validate.ts); the failure code narrows it where the code is
  * one this page knows.
  */
-export function readStateWords(state: string, failureCode: string | null): string {
+/**
+ * A read our own code or configuration failed before the publisher could answer. The ingest marks it
+ * by starting the failure detail with this prefix (lib/sources/composite/failure-kind.ts) while the
+ * state and code stay SOURCE_BLOCKED / SOURCE_RETRIEVAL_FAILED, so this page reads the detail, and
+ * never shows our own failure as a site that refused us.
+ */
+const JOB_FAILURE_PREFIX = "JOB_FAILURE:";
+const JOB_FAILURE_SENTENCE_END = "this is not a publisher wall.";
+
+export function isJobFailure(failureDetail: string | null | undefined): boolean {
+  return typeof failureDetail === "string" && failureDetail.startsWith(JOB_FAILURE_PREFIX);
+}
+
+/** A failure detail for display: the ingest's fixed JOB_FAILURE sentence gives way to the words above, leaving the original error. */
+function detailWords(failureDetail: string): string {
+  if (!isJobFailure(failureDetail)) return failureDetail;
+  const cut = failureDetail.indexOf(JOB_FAILURE_SENTENCE_END);
+  return (cut < 0 ? failureDetail.slice(JOB_FAILURE_PREFIX.length) : failureDetail.slice(cut + JOB_FAILURE_SENTENCE_END.length)).trim();
+}
+
+export function readStateWords(state: string, failureCode: string | null, failureDetail: string | null = null): string {
+  if (isJobFailure(failureDetail)) return "did not reach the site: our own code or configuration failed first, so this is not the site refusing us";
   switch (state) {
     case "PROMOTED":
       return "read it and published the new version";
@@ -364,8 +385,9 @@ export function readStateWords(state: string, failureCode: string | null): strin
 }
 
 /** What would settle a failed read: the rule the failing check states, never a guess. */
-function wouldSettleWords(state: string, failureCode: string | null, source: string, url: string | null): string {
+function wouldSettleWords(state: string, failureCode: string | null, source: string, url: string | null, failureDetail: string | null = null): string {
   const where = url ?? `the ${source}`;
+  if (isJobFailure(failureDetail)) return `A fix to our adapter or its configuration for ${where}; the site itself was never asked.`;
   if (state === "CANNOT_TELL") {
     return `A meeting listed at ${where}, or bounded evidence that the body publishes none there (a complete calendar for a stated period, or an official statement).`;
   }
@@ -558,7 +580,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   if (last === null) {
     parts.push(`No read of its ${source} is recorded in the last seven days.`);
   } else {
-    parts.push(`Last read ${readStateWords(last.state, last.failureCode)}.`);
+    parts.push(`Last read ${readStateWords(last.state, last.failureCode, last.failureDetail)}.`);
   }
   if (version) {
     parts.push(
@@ -618,7 +640,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
           pill: "CAN'T TELL",
           tone: "gold",
           text: "Is what we hold still correct?",
-          detail: last ? `the last read ${readStateWords(last.state, last.failureCode)}` : "not read in seven days",
+          detail: last ? `the last read ${readStateWords(last.state, last.failureCode, last.failureDetail)}` : "not read in seven days",
         }
       : {
           pill: "UP TO DATE",
@@ -684,7 +706,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   ];
 
   /* ---------------------------------------------------------------- when we look */
-  const lastLook = last ? `${fmt(last.attemptedAt)} — ${last.acquisitionSucceeded && !lastFailed ? "worked" : readStateWords(last.state, last.failureCode)}` : "No read in the last seven days";
+  const lastLook = last ? `${fmt(last.attemptedAt)} — ${last.acquisitionSucceeded && !lastFailed ? "worked" : readStateWords(last.state, last.failureCode, last.failureDetail)}` : "No read in the last seven days";
   let nextLook: string;
   if (last === null) nextLook = "Whenever the runner next reaches it — no read is recorded to count from";
   else if (lastFailed) nextLook = `Due ${fmt(new Date(ms(last.attemptedAt) + contract.retry.afterMs).toISOString())} — the retry after a failed read`;
@@ -730,17 +752,19 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   if (last !== null && lastFailed) {
     deadEnd = {
       pill: version ? "LAST READ FAILED" : "CANNOT FINISH",
-      title: `The last read ${readStateWords(last.state, last.failureCode)}${last.failureDetail ? ` — ${last.failureDetail}` : ""}`,
+      title: `The last read ${readStateWords(last.state, last.failureCode, last.failureDetail)}${last.failureDetail ? ` — ${detailWords(last.failureDetail)}` : ""}`,
       ruledOut: null,
-      wouldSettle: wouldSettleWords(last.state, last.failureCode, source, contract.sourceUrl),
-      whoMoves: `The runner reads it again on its clock (${contract.retry.description} after a failure)${version ? "; the last good version keeps serving meanwhile" : ""}. Nothing else is scheduled to change it.`,
+      wouldSettle: wouldSettleWords(last.state, last.failureCode, source, contract.sourceUrl, last.failureDetail),
+      whoMoves: isJobFailure(last.failureDetail)
+        ? `Engineering: our adapter or its configuration has to change. The runner retries on its clock (${contract.retry.description} after a failure), but the same code fails the same way${version ? "; the last good version keeps serving meanwhile" : ""}.`
+        : `The runner reads it again on its clock (${contract.retry.description} after a failure)${version ? "; the last good version keeps serving meanwhile" : ""}. Nothing else is scheduled to change it.`,
     };
   }
 
   /* ---------------------------------------------------------------- activity */
   const activity: BodyActivity[] = attempts.slice(0, 5).map((a) => ({
     at: a.attemptedAt,
-    what: `Read the ${source} — ${readStateWords(a.state, a.failureCode)}`,
+    what: `Read the ${source} — ${readStateWords(a.state, a.failureCode, a.failureDetail)}`,
     pill: "NO AI NEEDED",
     tone: "slate",
     cost: "no cost",

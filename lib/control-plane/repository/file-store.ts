@@ -609,6 +609,16 @@ export function fileAppendOnlyRepository<T>(
         .map((record) => projectRecord(record, projection));
     },
 
+    readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
+      const out = new Map<string, unknown>();
+      for (const key of new Set(keys)) {
+        const lines = await readLines(key);
+        const newest = lines[lines.length - 1];
+        if (newest !== undefined) out.set(key, projectRecord(newest.record, projection));
+      }
+      return out;
+    },
+
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),
 

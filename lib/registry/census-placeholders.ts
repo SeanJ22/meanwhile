@@ -31,3 +31,21 @@ export function isCensusPlaceholderDivision(division: { readonly ocdId: string; 
   if (typeof division.geoid === "string") return /^\d{2}99997$/.test(division.geoid);
   return /\/school_district:school_district_not_defined$/.test(division.ocdId);
 }
+
+/**
+ * The frozen first-seed registry as anything that counts or emits bodies must
+ * read it: every division stays (a placeholder is real geography), and no body
+ * minted on a Census placeholder survives. `lib/registry/registry.json` itself
+ * stays byte-identical, because its bytes are proof-bound; this is the one view
+ * of it, shared by the runtime first seed (lib/registry/runtime-read-model.ts)
+ * and every tool that reads the file.
+ */
+export function withoutPlaceholderBodies<
+  R extends {
+    readonly divisions: readonly { readonly ocdId: string; readonly divisionType?: string | null; readonly geoid?: string | null }[];
+    readonly bodies: readonly { readonly ocdId: string | null }[];
+  },
+>(registry: R): R {
+  const placeholders = new Set(registry.divisions.filter((division) => isCensusPlaceholderDivision(division)).map((division) => division.ocdId));
+  return { ...registry, bodies: registry.bodies.filter((body) => body.ocdId === null || !placeholders.has(body.ocdId)) };
+}

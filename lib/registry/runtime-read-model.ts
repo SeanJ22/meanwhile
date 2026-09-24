@@ -19,7 +19,7 @@ import {
 } from "./runtime-data-plane.ts";
 import type { Body, Registry } from "./types.ts";
 import { BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, type BodyRoster } from "./body-rosters.ts";
-import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
+import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, withoutPlaceholderBodies } from "./census-placeholders.ts";
 import { STATEWIDE_EXECUTIVES } from "../officials/statewide-executives.ts";
 
 let cache: RegistryRuntimeReadModel | null = null;
@@ -53,8 +53,10 @@ export function registryRuntimeFirstSeed(): CivicDataBootstrap<RegistryRuntimeRe
   const registry = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8")) as Registry;
   const promoted = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "promoted-bodies.json"), "utf8")) as { bodies?: Body[] };
   const held = new Set(registry.bodies.map((body) => body.id));
-  const placeholders = new Set(registry.divisions.filter((division) => isCensusPlaceholderDivision(division)).map((division) => division.ocdId));
-  const bodies = [...registry.bodies, ...(promoted.bodies ?? []).filter((body) => !held.has(body.id))].filter((body) => body.ocdId === null || !placeholders.has(body.ocdId));
+  const { bodies } = withoutPlaceholderBodies({
+    divisions: registry.divisions,
+    bodies: [...registry.bodies, ...(promoted.bodies ?? []).filter((body) => !held.has(body.id))],
+  });
   // The same translation a promotion applies: a Census placeholder name never reaches a reader as a district's name.
   const divisions = registry.divisions.map((division) => {
     const plain = CENSUS_PLACEHOLDER_LABELS[division.label];

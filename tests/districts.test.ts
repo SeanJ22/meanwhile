@@ -211,3 +211,26 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
     "the ocdId must not have been rewritten — it is a join key",
   );
 });
+
+test("item 6b: every tool that counts the frozen registry's bodies leaves out the placeholder boards", async () => {
+  const { readFileSync } = await import("node:fs");
+  // The frozen first seed still holds the two boards once minted on Census
+  // placeholders, and its bytes are proof-bound, so each tool that counts or
+  // emits its bodies reads them through withoutPlaceholderBodies
+  // (lib/registry/census-placeholders.ts). class-stamp-sweep takes its bodies
+  // from body-forms.json, which stamp-body-forms writes through the same view.
+  for (const tool of [
+    "scripts/stamp-body-forms.mts",
+    "scripts/stamp-coverage-tiers.mts",
+    "scripts/denominator-reconcile.mts",
+    "scripts/embedded-json-census.mts",
+    "scripts/measure-definitions-0823.mts",
+    "scripts/coverage-four-layer.mts",
+    "scripts/census-who-governs.mts",
+  ]) {
+    assert.match(readFileSync(tool, "utf8"), /withoutPlaceholderBodies\(JSON\.parse\(/, `${tool} reads the frozen registry's bodies without the placeholder rule`);
+  }
+  for (const artifact of ["data/derived/body-forms.json", "data/derived/class-stamp-sweep.json"]) {
+    assert.doesNotMatch(readFileSync(artifact, "utf8"), /school_district_not_defined#board/, `${artifact} still carries a placeholder board`);
+  }
+});

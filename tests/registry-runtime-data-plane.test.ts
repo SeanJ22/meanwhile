@@ -41,7 +41,7 @@ import {
   type RegistryRuntimeReadModel,
 } from "../lib/registry/runtime-data-plane.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection, registryRuntimeFirstSeed } from "../lib/registry/runtime-read-model.ts";
-import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision } from "../lib/registry/census-placeholders.ts";
+import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";
 
@@ -323,6 +323,16 @@ test("a Census placeholder division is geography: no body is derived on it and n
   // The composed first seed leaves both bodies out and keeps both places.
   assert.equal(seed.registry.bodies.some((body) => body.ocdId !== null && placeholders.ids.has(body.ocdId)), false);
   assert.equal(seed.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).length, 2);
+
+  // One view of the frozen file for everything that counts its bodies: it drops exactly the two boards,
+  // keeps every place, and serves nothing the first seed does not.
+  const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
+  const counted = withoutPlaceholderBodies(frozen);
+  assert.equal(counted.divisions.length, frozen.divisions.length);
+  const kept = new Set(counted.bodies.map((body) => body.id));
+  assert.deepEqual(frozen.bodies.filter((body) => !kept.has(body.id)).map((body) => body.id).sort(), placeholders.bodies.map((body) => body.id).sort());
+  const served = new Set(seed.registry.bodies.map((body) => body.id));
+  assert.ok(counted.bodies.every((body) => served.has(body.id)));
   assert.equal(registryRuntimeProjectionIssues(seed).some((issue) => issue.startsWith(CENSUS_PLACEHOLDER_BODY_ISSUE)), false);
   const carrying: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
   assert.deepEqual(

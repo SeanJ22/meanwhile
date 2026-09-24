@@ -123,12 +123,34 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
  * provenance; it only stops deciding whether a fact moved.
  */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
-  if (recordClass !== "MEETING" || !member.key.startsWith("meeting:")) return member.record;
-  const meeting = object(member.record);
-  const provenance = object(meeting?.provenance);
-  if (meeting === null || provenance === null) return member.record;
-  const { collectedAt: _collectedAt, ...factualProvenance } = provenance;
-  return { ...meeting, provenance: factualProvenance };
+  if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
+    return withoutProvenanceStamps(member.record, ["collectedAt"]);
+  }
+  /*
+   * The same class, measured on 2026-09-24. On a byte-identical source, every
+   * New Jersey roster member differed only in `provenance.collectedAt` and
+   * `provenance.verifiedAt`, both stamped with the fetch instant (120 of 120).
+   * Every New Jersey roll differed only in its own `retrievedAt` (about 1,500
+   * "changed" hourly).
+   */
+  if (recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) {
+    return withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt"]);
+  }
+  if (recordClass === "STATE_ROLL_CALL" && member.key.startsWith("roll:")) {
+    const roll = object(member.record);
+    if (roll === null) return member.record;
+    const { retrievedAt: _retrievedAt, ...facts } = roll;
+    return facts;
+  }
+  return member.record;
+}
+
+function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): unknown {
+  const row = object(record);
+  const provenance = object(row?.provenance);
+  if (row === null || provenance === null) return record;
+  const factualProvenance = Object.fromEntries(Object.entries(provenance).filter(([key]) => !stamps.includes(key)));
+  return { ...row, provenance: factualProvenance };
 }
 
 /** Exact civic member projection shared by promotion receipts and Admin. */

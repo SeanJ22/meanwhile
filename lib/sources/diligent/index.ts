@@ -235,6 +235,15 @@ export function makeDiligentSource(
         const venue = online || !location
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
+        if (!online && !venue) {
+          // The gap is NAMED, not hidden: `unknownVenue` still counts it, as
+          // `placeless` counts a kept online sitting (D18) — so the ingest
+          // report and the venue hunt still see an unreviewed place — and the
+          // row is PRODUCED with no place, which the Reader renders as its
+          // own gap ("We haven't recorded a place for this meeting yet").
+          drops.unknownVenue++;
+          keptButPlaceless += 1;
+        }
 
         // The portal's own permalink pattern, verified resolving on both
         // tenants (TUSD Id=492, Newbury Id=3370) before being relied on.
@@ -307,6 +316,10 @@ export function makeDiligentSource(
         for (const meeting of union.produced) {
           if (meeting.online) {
             drops.placeless++;
+            keptButPlaceless += 1;
+          } else if (!meeting.location) {
+            // Kept, and the gap named — the same tally as a portal row above.
+            drops.unknownVenue++;
             keptButPlaceless += 1;
           }
           meetings.push(meeting);

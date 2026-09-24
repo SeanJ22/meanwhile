@@ -555,8 +555,12 @@ inside the one acquisition:
   spellings), online when it says Zoom or Virtual, and **no place when it names
   none**. Its agenda is null until one exists.
 - Portal rows with no place, or a place with no reviewed spelling, are now
-  published with no place instead of dropped (`drops.unknownVenue` was the only
-  route out; the Diligent adapter no longer uses it).
+  published with no place instead of dropped. The gap stays NAMED: the row is
+  still counted in `unknownVenue` (as `placeless` counts a kept online sitting),
+  so the ingest report and the venue hunt still see an unreviewed place, and the
+  Reader renders it as its own gap. In the first promotions this touches no row:
+  every TUSD and SUSD portal row has a reviewed place; the SUSD Jan 12 calendar
+  row is the one sitting published with the gap named.
 - The portal's own cancellation words are the sitting's status: "CANCELLED DUE
   TO LACK OF QUORUM …" makes the Sep 11 Budget Advisory Committee `CANCELED`
   rather than `CONCLUDED`. Absence from the portal is never read as cancellation.
@@ -573,7 +577,11 @@ inside the one acquisition:
   refused `FINAL_HOST_NOT_AUTHORIZED` until it did. `govboard.tusd1.org` was
   already there.
 
-**Tests:** `tests/tusd-schedule-union.test.ts` (10): the body keys; every forward
+**Tests:** `tests/tusd-schedule-union.test.ts` (13, three of them on the
+recorded portal rows `tests/fixtures/tusd-govboard/diligent-tusd-portal-rows.json`:
+the first promotion's four additions with all 17 portal ids kept, row 500
+CANCELED from its own title, and a planted blank place published with the gap
+named): the body keys; every forward
 sitting either source verifies, with portal ids unchanged and Sep 28 once; a
 no-place calendar sitting published with no place and never called online; the
 same id before and after the portal lists a sitting; the legacy pin; the

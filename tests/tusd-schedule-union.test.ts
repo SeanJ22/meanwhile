@@ -116,6 +116,8 @@ test("a calendar sitting that names no place is published with no place, never w
   assert.equal(audit.online, undefined, "and never called online");
   assert.equal(audit.agendaUrl, null);
   assert.equal(audit.id, "diligent:tusd1:2026-10-21T1430-audit");
+  assert.equal(result.drops.unknownVenue, 1, "the gap is named in the count, and the row is kept");
+  assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
 test("a sitting keeps its identity when the portal starts listing it", () => {
@@ -154,7 +156,9 @@ test("a portal row with no published place is published, not dropped", () => {
   assert.ok(row530);
   assert.equal(row530.location, null);
   assert.equal(row530.online, undefined);
-  assert.equal(result.drops.unknownVenue, 0);
+  assert.equal(result.drops.unknownVenue, 1, "counted as a named gap");
+  assert.equal(result.accounting.dropped, 0, "and not as a drop");
+  assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
 test("the calendar is read only under a permission verdict; a refusal fails the run, never half a union", async () => {
@@ -209,6 +213,66 @@ test("Sunnyside: the district's own SmartSites calendar is unioned the same way,
   assert.equal(jan12.location, null, "its entry states no place, and it is published anyway");
   assert.equal(jan12.online, undefined);
   assert.equal(result.accounting.outcome, "CONSERVED");
+});
+
+/*
+ * RECORDED: the 17 portal rows production's TUSD partition held when the union
+ * was built (cv-a088b86e…, promoted 2026-09-23T22:50:41Z, read read-only), in
+ * the service's field names, beside the recorded calendar fragments. This is
+ * the first promotion's effect, pinned.
+ */
+const RECORDED = JSON.parse(readFileSync(join(FIXTURES, "diligent-tusd-portal-rows.json"), "utf8")) as { rows: DiligentMeeting[] };
+const AT_PROMOTION = new Date("2026-09-23T16:25:00-07:00");
+
+function recordedUnion(rows: DiligentMeeting[]) {
+  return makeDiligentSource([WIRING]).normalizeWithDrops!([{
+    wiring: WIRING,
+    meetings: rows,
+    collectedAt: "2026-09-23T23:25:00.000Z",
+    agendaRecords: null,
+    scheduleCalendar: { months: months() },
+  }], AT_PROMOTION);
+}
+
+test("recorded: the first promotion keeps all 17 portal ids and adds exactly the four calendar-only Governing Board sittings", () => {
+  const result = recordedUnion(RECORDED.rows);
+  const portalIds = RECORDED.rows.map((r) => `diligent:tusd1:${r.Id}`).sort();
+  assert.deepEqual(result.meetings.filter((m) => /:\d+$/.test(m.id)).map((m) => m.id).sort(), portalIds);
+  const added = result.meetings.filter((m) => !/:\d+$/.test(m.id));
+  assert.deepEqual(added.map((m) => m.id).sort(), [
+    "diligent:tusd1:2026-10-06T1630-governing-board",
+    "diligent:tusd1:2026-10-27T1630-governing-board",
+    "diligent:tusd1:2026-11-17T1630-governing-board",
+    "diligent:tusd1:2026-12-08T1630-governing-board",
+  ]);
+  for (const m of added) {
+    assert.equal(m.location?.name, "Duffy Community Center, Multipurpose Room");
+    assert.equal(m.agendaUrl, null);
+    assert.equal(m.status, "SCHEDULED");
+  }
+  assert.equal(result.drops.unknownVenue, 0, "every recorded row has a reviewed place");
+  assert.equal(result.accounting.outcome, "CONSERVED");
+});
+
+test("recorded: row 500's own title says CANCELLED, so it is CANCELED, not CONCLUDED", () => {
+  const result = recordedUnion(RECORDED.rows);
+  const row500 = result.meetings.find((m) => m.id === "diligent:tusd1:500")!;
+  assert.match(row500.title, /^CANCELLED DUE TO LACK OF QUORUM/);
+  assert.equal(row500.status, "CANCELED");
+  // Only the publisher's own words cancel: no other recorded row is CANCELED.
+  assert.deepEqual(result.meetings.filter((m) => m.status === "CANCELED").map((m) => m.id), ["diligent:tusd1:500"]);
+});
+
+test("recorded, planted: a portal row whose place is blanked is published with the gap named, never dropped", () => {
+  const rows = RECORDED.rows.map((r) => (r.Id === 505 ? { ...r, MeetingLocation: "" } : r));
+  const result = recordedUnion(rows);
+  const row505 = result.meetings.find((m) => m.id === "diligent:tusd1:505")!;
+  assert.ok(row505, "published");
+  assert.equal(row505.location, null);
+  assert.equal(row505.online, undefined, "not online: the portal said nothing about how");
+  assert.equal(result.drops.unknownVenue, 1);
+  assert.equal(result.accounting.dropped, 0);
+  assert.equal(result.meetings.length, 21);
 });
 
 test("the calendar route reads exactly the forward window's months", () => {

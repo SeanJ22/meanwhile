@@ -1,4 +1,5 @@
 import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
+import { createHash } from "node:crypto";
 import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
@@ -577,7 +578,7 @@ if (wantsPostgres) {
  * authority as Admin. A missing/unreachable pointer is a named failed cycle;
  * the retired tracked jurisdiction projections are never a silent fallback.
  */
-await retryStartupRead(
+const operationalReference = await retryStartupRead(
   () => preloadOperationalReferenceBundle({ bypassCache: true }),
   () => null,
   startupReadRetry,
@@ -809,7 +810,12 @@ const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationI
  */
 const gapLedgerRead = (() => {
   try {
-    return recordedMeetingsDiscovery(JSON.parse(readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8")));
+    const text = readFileSync(join(ROOT, GAP_LEDGER_PATH), "utf8");
+    const read = recordedMeetingsDiscovery(JSON.parse(text));
+    if ("unreadable" in read) return read;
+    /* Each need carries the ledger it was read from, so a route found from its address can be attested later (NH330). */
+    const addressSource = { source: "GAP_LEDGER" as const, versionId: createHash("sha256").update(text).digest("hex") };
+    return { ...read, needs: read.needs.map((need) => ({ ...need, addressSource })) };
   } catch (error) {
     return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
   }
@@ -824,7 +830,11 @@ const gapLedgerRead = (() => {
  */
 const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
 const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
-const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, e.need]));
+/* A dispatched need's address comes from the promoted jurisdiction reference; it carries that version (NH330). */
+const referenceAddress = { source: "OPERATIONAL_REFERENCE" as const, versionId: operationalReference?.metadata.versionId ?? null };
+const dispatchedNeeds = new Map(
+  dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, { ...e.need, addressSource: referenceAddress }]),
+);
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
   ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
 ].map((jurisdictionId) => {

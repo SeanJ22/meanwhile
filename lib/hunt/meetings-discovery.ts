@@ -61,6 +61,17 @@ export interface MeetingsDiscoveryNeed {
   readonly basis: MeetingsDiscoveryBasis;
   /** The DISCOVERY_OWED MEETINGS sources the need rests on; empty when none was recorded. */
   readonly sources: readonly string[];
+  /**
+   * Where `ownWebAddress` came from, so a route found from it can be attested later (NH330): the committed gap
+   * ledger (its file's sha256) or the promoted jurisdiction reference (its version id). Absent when unrecorded.
+   */
+  readonly addressSource?: DiscoveryAddressSource;
+}
+
+export interface DiscoveryAddressSource {
+  readonly source: "GAP_LEDGER" | "OPERATIONAL_REFERENCE";
+  /** GAP_LEDGER: the sha256 (bare hex) of the ledger file read. OPERATIONAL_REFERENCE: the promoted version id. */
+  readonly versionId: string | null;
 }
 
 /**

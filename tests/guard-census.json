@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 755,
-    "named": 7446,
+    "files": 758,
+    "named": 7472,
     "dynamic": 30
   },
   "files": {
@@ -2636,6 +2636,13 @@
       ],
       "dynamic": 0
     },
+    "tests/clerksboards-zoom-virtual.test.ts": {
+      "names": [
+        "board 49's sittings are kept online, with no place, no pin and no venue gap",
+        "the recorded board 49 page states its meeting location as Zoom (Virtual)"
+      ],
+      "dynamic": 0
+    },
     "tests/clerksboards.test.ts": {
       "names": [
         "D67: a published per-month date override wins over the recurrence",
@@ -3644,6 +3651,19 @@
         "regression control: every Diligent portal page in the committed holding is still read as the portal",
         "the fixed extractor's reading of the recorded pages is the portal too",
         "the stored skip-link rows of all three Diligent tenants read as the portal, not as an agenda we could not read"
+      ],
+      "dynamic": 0
+    },
+    "tests/discovery-search-switch.test.ts": {
+      "names": [
+        "A CORRUPT ROW NEVER TURNS PAID SEARCH ON, and turning it off over one writes a real row",
+        "AN OWNER DECISION, SAID TWICE TO TURN ON, RECORDED DURABLY",
+        "NO SILENT RESUME: only the owner's action writes the switch; no env var can turn it on; each paid search path sits behind its own gate",
+        "OFF UNTIL HE SAYS SO: a fresh store, a never-decided row, a malformed decision and a corrupt row all read off",
+        "THE CONSOLE POSTS IT: the switch rides the search line, and turning it on posts the confirmation",
+        "THE LIMITS BESIDE IT: the search line reads the caps the runner acknowledged, and says the code's starting caps are only that until it has",
+        "THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt",
+        "THE RUNNER OBEYS IT: the switch is read at cycle start, no search step is built unless it is on, and discovery is on unless killed"
       ],
       "dynamic": 0
     },
@@ -5924,6 +5944,7 @@
       "names": [
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
+        "a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof",
         "a pass that records readbacks and republishes the prepared snapshot composes every partition once",
         "a semantic refusal holds only the exact source/body partition",
         "a successful thin response retains unexplained in-window rows with exact held evidence",
@@ -5938,6 +5959,18 @@
         "production membership and scopes are one-to-one and the global disposition is absent",
         "the batched Reader bounds database calls and isolates a corrupt partition",
         "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-sitting-window.test.ts": {
+      "names": [
+        "Pima outcomes follow both Board partitions; an unreadable partition never cools them",
+        "a meeting partition is re-read hourly when hot and twice daily otherwise, never drifting past the hour",
+        "a sitting within seven days on either side makes a body hot, to the millisecond",
+        "no other data family's schedule is changed: only meeting partitions and meeting outcomes carry a sitting window",
+        "the policy is the owner's: seven days either side, hourly when hot, twice daily otherwise",
+        "the success is read in the attempt clock's own units, so a success is never mistaken for a failure",
+        "the window rolls: a sitting coming within seven days makes a twice-daily source due at that instant"
       ],
       "dynamic": 0
     },
@@ -8998,16 +9031,23 @@
         "the standing authority envelope is narrowed independently for every runtime child",
         "the standing parent durably accounts for a routine child killed outside source attribution",
         "the standing portfolio invokes data-plane scripts only",
-        "the standing scheduler advances a free lane on a later tick without overlapping a hung lane"
+        "the standing scheduler advances a free lane on a later tick without overlapping a hung lane",
+        "the supervisor proves the registry once for two or more meeting children and hands only them the attestation"
       ],
       "dynamic": 0
     },
     "tests/routine-clock-narrow-read.test.ts": {
       "names": [
+        "a MEETING clock reports its sitting starts, and the pointed success as its store-observed first event",
+        "a MEETING pointer's sitting starts are built in Postgres; the promoted payload never leaves the database",
+        "a live candidate's proof reads neither its identity set nor its change set and records, and decides the same",
+        "an attested version is served from its pointer alone; any mismatch runs the full proof",
+        "attestations parse whole or not at all",
         "both stores' clocks read through the narrowed view, never a whole row",
         "the clock view names exactly the fields the clock proves; widening it is a visible cost decision",
         "the memory store's clock, read through the view, keeps its attempt and success instants",
         "the narrowed view decides exactly what the whole candidate decides",
+        "the proof view is built in Postgres; the identity column and a live row's change set, records and identities never leave",
         "the routine clock builds its candidate view in Postgres; the payload and read model never leave the database",
         "the routine clock reads a pointer's identity and proof, never its promoted payload"
       ],
@@ -10355,6 +10395,7 @@
         "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
         "a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read",
+        "an import is read whole by its proof: its evidence binds the complete envelope",
         "retired trusted-LKG doors refuse new imports while retained history remains due",
         "the trusted-LKG import clock counts only attempts strictly after the import's pointer move",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"

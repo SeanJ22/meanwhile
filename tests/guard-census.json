@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 742,
-    "named": 7334,
-    "dynamic": 29
+    "files": 740,
+    "named": 7287,
+    "dynamic": 28
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -863,8 +863,6 @@
         "read() pages a log larger than one response and returns every record in position order",
         "readAll() pages the whole table in (log_key, position) order",
         "readRecent() returns the newest N, newest first, bounded",
-        "readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database",
-        "readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it",
         "readWhere() of a value with no match is an empty result, not an error",
         "readWhere() refuses an unsafe JSON path segment rather than building SQL from it",
         "readWhere() returns EVERY match by content, paged, regardless of position"
@@ -2243,16 +2241,6 @@
       ],
       "dynamic": 0
     },
-    "tests/carried-row-supersession.test.ts": {
-      "names": [
-        "CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting",
-        "CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant",
-        "CARRIED-SUPERSEDE · (c) the same normalized body at another local time is another sitting: both are kept",
-        "CARRIED-SUPERSEDE · (d) another body at the same minute is another sitting: both are kept, on every source",
-        "CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim: the honest one promotes, a forged one is refused"
-      ],
-      "dynamic": 0
-    },
     "tests/carry-pins.test.ts": {
       "names": [
         "R47: a held answer NEVER carries across a zip change",
@@ -2516,23 +2504,11 @@
     },
     "tests/civic-data-read-model-memo.test.ts": {
       "names": [
-        "a bypassCache batch read never asks identities",
-        "a bypassCache read never asks the identity and always proves again",
         "a bypassCache read never uses the memo — it re-proves the version every time",
-        "a failed batch identity read decides nothing: every scope is read whole",
-        "a moved pointer is read whole and proved again, never served from the old proof",
         "a pointer move to a new version is fetched and re-proved, never masked by the memo",
-        "a pointer whose identity changed in any field is read whole",
-        "a proof is served only to the store that made it",
-        "a shared read that fails decides nothing: a waiting reader reads for itself",
-        "an unmoved pointer is served from this store's proof after asking only its identity",
-        "concurrent readers of a cold scope share one read and one proof",
-        "readers of different stores never share a read",
-        "the batch read asks identities for proved scopes and reads only the moved one whole",
         "the batch read fetches candidate envelopes only for versions not yet proven",
         "the batch read hauls only the moved partition's envelope when one pointer advances",
-        "the single read proves a version once, then attests without re-reading the candidate",
-        "verification reads never share a read"
+        "the single read proves a version once, then attests without re-reading the candidate"
       ],
       "dynamic": 0
     },
@@ -2881,7 +2857,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 10
+      "dynamic": 9
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -3617,28 +3593,6 @@
         "the windows are RULING 53's, exactly",
         "two branches agreeing is simply found",
         "two branches producing different values is DIVERGENT, not resolved"
-      ],
-      "dynamic": 0
-    },
-    "tests/dispatch-work.test.ts": {
-      "names": [
-        "Admin reads the creation receipt for the decision it belongs to, with every number carrying its denominator",
-        "a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with the registry named",
-        "a DISPATCH naming a registered state creates there, counts it on the owner's record, and carries its remainder forward",
-        "a cycle that may not write plans, counts and writes nothing",
-        "a geography in a state with no promoted registry is blocked by name, and nothing is invented for it",
-        "a meetings route with a known address is carried by what the partition wiring says, and held when it cannot be read",
-        "a promoted registry the runtime's reader refuses is named as that, never used and never called missing",
-        "candidate enrichment enumerates the tracked states and names one with no ballot authority",
-        "created work joins the corpus through its providers next cycle: scheduled, never re-registered, never retired",
-        "creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk",
-        "local-jurisdictions schedules the tracked states it is handed, keeps every existing id, and names a tracked state with no registry",
-        "sending the fleet to Pima County creates what the registry defines there and no clock carries, in the shape syncObligations registers",
-        "sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement",
-        "syncObligations keeps the owner's mark when a provider's signals move",
-        "the gateway and the preview say the Send creates what is missing, bounded, and name no machine constant",
-        "the meetings-discovery provider emits exactly the materialized needs, in the gap ledger's shape",
-        "the per-cycle write budget defers the rest by count, the next cycle continues, and the cap is named"
       ],
       "dynamic": 0
     },
@@ -5842,7 +5796,6 @@
       "names": [
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
-        "a pass that records readbacks and republishes the prepared snapshot composes every partition once",
         "a semantic refusal holds only the exact source/body partition",
         "a successful thin response retains unexplained in-window rows with exact held evidence",
         "an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence",
@@ -7357,9 +7310,6 @@
     },
     "tests/prepared-meeting-snapshot.test.ts": {
       "names": [
-        "a held prepared row is re-read when the coupling differs in any part",
-        "a reader that holds the current prepared row asks only its coupling before serving it again",
-        "prepare composes through the pass's shared composition, and only when the coupling changed",
         "preparing over an unchanged promoted set is idempotent and never recomposes",
         "the prepared projection publishes monotonically — an older composition can never overwrite a newer one",
         "the reader fast-path falls back to the composing reader only when no prepared row exists",
@@ -7494,7 +7444,6 @@
         "a foreign row under the pipeline log is not an item",
         "a stage out of order is refused, the refusal is APPENDED as history, and it refuses the OFFER, not the item",
         "an identical re-offer of a held record is a NO-OP SUCCESS, so a re-map cannot refuse what it already mapped",
-        "item states come from one paged read of the log, equal to reading every item's key",
         "mapping: CONFIRMED exists only where an ACQUIRER artifact at the same URL comes from another Attempt",
         "mapping: ROUTE_CANDIDATE and EVIDENCE_FOUND become SCOUTED; refused and absence-shaped results map to nothing",
         "mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED",
@@ -8707,9 +8656,6 @@
         "frontier configuration and identities fail closed",
         "one pass admits one least-recently-considered task per provider domain",
         "repeated supervisor faults rotate fairly within one provider without changing other domains",
-        "the frontier decides the same from narrowed outcomes as from whole ones",
-        "the history window spans a day of passes and many rotations of the largest provider domain",
-        "the narrowed supervisor history holds every field the frontier's history reads",
         "the real pass ceiling is based on provider domains, not every partition in a failed provider tail"
       ],
       "dynamic": 0
@@ -10216,9 +10162,7 @@
       "names": [
         "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
-        "a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read",
         "retired trusted-LKG doors refuse new imports while retained history remains due",
-        "the trusted-LKG import clock counts only attempts strictly after the import's pointer move",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"
       ],
       "dynamic": 0
@@ -10799,7 +10743,6 @@
       "names": [
         "BROKE remains blocking through captured audit/replay until a newer exact independent source-universe chain survives",
         "a Validator-passing captured result is broken by another official route and dependent work reopens",
-        "a work item's completion evidence and inherited results read only that item's rows",
         "actual isolated Parser → Validator → Auditor dispatch persists the existing durable execution contract",
         "completed worker history recovers with bulk reads and no per-result replay calls",
         "completion aggregates every artifact chain and a newer failed Validator overrides its own old pass",

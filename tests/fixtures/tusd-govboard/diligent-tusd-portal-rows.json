@@ -1,0 +1,181 @@
+{
+ "recordedFrom": {
+  "what": "Tucson Unified's portal rows as production's promoted meetings:diligent partition holds them, re-expressed in the MeetingsService field names (title as Name/CleanName, the reviewed venue's source spelling as MeetingLocation, TypeId from the service's own type names). This client does not read the Diligent tenant (robots.txt refuses it); the rows were read from production in a read-only transaction.",
+  "partitionVersion": "cv-a088b86ec2aede7d506173f15b298f3c",
+  "promotedAt": "2026-09-23T22:50:41.607Z",
+  "readAt": "2026-09-23T23:18Z",
+  "excluded": "rows the partition carried rather than acquired fresh (495)"
+ },
+ "rows": [
+  {
+   "Id": 484,
+   "Name": "GOVERNING BOARD AGENDA REGULAR MEETING - Jul 14 2026",
+   "CleanName": "GOVERNING BOARD AGENDA REGULAR MEETING - Jul 14 2026",
+   "MeetingDateTime": "2026-07-14 16:30",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+   "TypeId": 17,
+   "Published": true
+  },
+  {
+   "Id": 489,
+   "Name": "AGENDA FOR AUDIT COMMITTEE MEETING - Jul 15 2026",
+   "CleanName": "AGENDA FOR AUDIT COMMITTEE MEETING - Jul 15 2026",
+   "MeetingDateTime": "2026-07-15 14:30",
+   "MeetingLocation": "Board Conference Room Morrow Education Center 1010 E. Tenth Street Tucson, Arizona 85719",
+   "MeetingTypeName": "Audit Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": true
+  },
+  {
+   "Id": 490,
+   "Name": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING - Jul 21 2026",
+   "CleanName": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING - Jul 21 2026",
+   "MeetingDateTime": "2026-07-21 17:00",
+   "MeetingLocation": "Via Zoom",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING",
+   "TypeId": 28,
+   "Published": true
+  },
+  {
+   "Id": 485,
+   "Name": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Jul 28 2026",
+   "CleanName": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Jul 28 2026",
+   "MeetingDateTime": "2026-07-28 16:30",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "TypeId": 29,
+   "Published": true
+  },
+  {
+   "Id": 491,
+   "Name": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 04 2026",
+   "CleanName": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 04 2026",
+   "MeetingDateTime": "2026-08-04 17:00",
+   "MeetingLocation": "via Zoom",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "TypeId": 29,
+   "Published": true
+  },
+  {
+   "Id": 492,
+   "Name": "GOVERNING BOARD AGENDA REGULAR MEETING - Aug 11 2026",
+   "CleanName": "GOVERNING BOARD AGENDA REGULAR MEETING - Aug 11 2026",
+   "MeetingDateTime": "2026-08-11 16:30",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+   "TypeId": 17,
+   "Published": true
+  },
+  {
+   "Id": 494,
+   "Name": "Alternative Education Advisory Committee Meeting Agenda - Aug 17 2026",
+   "CleanName": "Alternative Education Advisory Committee Meeting Agenda - Aug 17 2026",
+   "MeetingDateTime": "2026-08-17 18:00",
+   "MeetingLocation": "Via Zoom Webinar",
+   "MeetingTypeName": "Alternative Education Advisory Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": true
+  },
+  {
+   "Id": 496,
+   "Name": "Bond Oversight Committee Meeting Agenda - Aug 20 2026",
+   "CleanName": "Bond Oversight Committee Meeting Agenda - Aug 20 2026",
+   "MeetingDateTime": "2026-08-20 13:00",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "Bond Oversight Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": true
+  },
+  {
+   "Id": 493,
+   "Name": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 25 2026",
+   "CleanName": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 25 2026",
+   "MeetingDateTime": "2026-08-25 16:30",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "TypeId": 29,
+   "Published": true
+  },
+  {
+   "Id": 498,
+   "Name": "GOVERNING BOARD AGENDA REGULAR MEETING - Sep 08 2026",
+   "CleanName": "GOVERNING BOARD AGENDA REGULAR MEETING - Sep 08 2026",
+   "MeetingDateTime": "2026-09-08 16:30",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+   "TypeId": 17,
+   "Published": true
+  },
+  {
+   "Id": 500,
+   "Name": "CANCELLED DUE TO LACK OF QUORUM Budget Advisory Committee Meeting Agenda - Sep 11 2026",
+   "CleanName": "CANCELLED DUE TO LACK OF QUORUM Budget Advisory Committee Meeting Agenda - Sep 11 2026",
+   "MeetingDateTime": "2026-09-11 16:00",
+   "MeetingLocation": "Via Zoom",
+   "MeetingTypeName": "Budget Advisory Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": true
+  },
+  {
+   "Id": 497,
+   "Name": "Employee Benefit Trust Committee - Sep 14 2026",
+   "CleanName": "Employee Benefit Trust Committee - Sep 14 2026",
+   "MeetingDateTime": "2026-09-14 17:30",
+   "MeetingLocation": "Via Zoom Webinar",
+   "MeetingTypeName": "Employee Benefit Trust Committee",
+   "TypeId": null,
+   "Published": true
+  },
+  {
+   "Id": 502,
+   "Name": "Bond Oversight Committee Meeting Agenda - Sep 17 2026",
+   "CleanName": "Bond Oversight Committee Meeting Agenda - Sep 17 2026",
+   "MeetingDateTime": "2026-09-17 13:00",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "Bond Oversight Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": true
+  },
+  {
+   "Id": 499,
+   "Name": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Sep 22 2026",
+   "CleanName": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Sep 22 2026",
+   "MeetingDateTime": "2026-09-22 16:30",
+   "MeetingLocation": "Duffy Community Center Multipurpose Room 5145 E. 5th Street Tucson, AZ 85711",
+   "MeetingTypeName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+   "TypeId": 29,
+   "Published": true
+  },
+  {
+   "Id": 503,
+   "Name": "Alternative Education Advisory Committee Meeting Agenda - Sep 28 2026",
+   "CleanName": "Alternative Education Advisory Committee Meeting Agenda - Sep 28 2026",
+   "MeetingDateTime": "2026-09-28 18:15",
+   "MeetingLocation": "Via Zoom Webinar",
+   "MeetingTypeName": "Alternative Education Advisory Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": false
+  },
+  {
+   "Id": 505,
+   "Name": "Budget Advisory Committee Meeting Agenda - Sep 30 2026",
+   "CleanName": "Budget Advisory Committee Meeting Agenda - Sep 30 2026",
+   "MeetingDateTime": "2026-09-30 16:00",
+   "MeetingLocation": "Via Zoom",
+   "MeetingTypeName": "Budget Advisory Committee Meeting Agenda",
+   "TypeId": null,
+   "Published": false
+  },
+  {
+   "Id": 504,
+   "Name": "Employee Benefit Trust Committee - Oct 05 2026",
+   "CleanName": "Employee Benefit Trust Committee - Oct 05 2026",
+   "MeetingDateTime": "2026-10-05 17:30",
+   "MeetingLocation": "Via Zoom Webinar",
+   "MeetingTypeName": "Employee Benefit Trust Committee",
+   "TypeId": null,
+   "Published": false
+  }
+ ]
+}

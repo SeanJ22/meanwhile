@@ -8,7 +8,11 @@ import {
   type PreparedReaderProjectionRow,
   type RoutineDataStore,
 } from "../civic-data/store.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../civic-data/meeting-partitions.ts";
+import {
+  HELD_MEETING_PARTITIONS,
+  MEETING_PARTITION_CONTRACTS,
+  heldMeetingPartitionFor,
+} from "../civic-data/meeting-partitions.ts";
 import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
@@ -18,6 +22,7 @@ import {
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
+import { activeReaderProofMeetingPin } from "./proof-pin.ts";
 
 /**
  * **The prepared reader snapshot (PDC-8b, 2026-09-15).**
@@ -74,18 +79,34 @@ export async function preparePublishedMeetingSnapshot(
   now: string = new Date().toISOString(),
 ): Promise<PrepareMeetingSnapshotResult> {
   const scopes = MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope);
-  let promotions;
+  const versionByScope = new Map<string, string>();
   try {
     // Every pass asks only which versions are current: identity, not the
     // partitions' payloads (7.8 MB per pass on 2026-09-23).
-    promotions = await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes);
+    for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes)) {
+      versionByScope.set(promotion.scope, promotion.versionId);
+    }
+    // A retired route's held pointer is asked for only while its successor
+    // has none (HELD_MEETING_PARTITIONS); once superseded it costs nothing.
+    // Identity only, like the pass above.
+    const awaiting = HELD_MEETING_PARTITIONS.filter((held) => !versionByScope.has(held.successorScope));
+    if (awaiting.length > 0) {
+      for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, awaiting.map((held) => held.scope))) {
+        versionByScope.set(promotion.scope, promotion.versionId);
+      }
+    }
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: null };
   }
-  const versionByScope = new Map(promotions.map((promotion) => [promotion.scope, promotion.versionId]));
+  // A successor with no pointer of its own is composed from its retired
+  // predecessor's held version, so the coupling names that version: the
+  // successor's first promotion then changes the fingerprint and recomposes.
   const currentCoupling: PreparedProjectionCoupling[] = MEETING_PARTITION_CONTRACTS.flatMap((partition) => {
     const versionId = versionByScope.get(partition.scope);
-    return typeof versionId === "string" ? [{ contractId: partition.id, versionId }] : [];
+    if (typeof versionId === "string") return [{ contractId: partition.id, versionId }];
+    const held = heldMeetingPartitionFor(partition.id);
+    const heldVersionId = held ? versionByScope.get(held.scope) : undefined;
+    return held && typeof heldVersionId === "string" ? [{ contractId: held.id, versionId: heldVersionId }] : [];
   });
   const currentFingerprint = couplingFingerprint(currentCoupling);
 
@@ -113,7 +134,9 @@ export async function preparePublishedMeetingSnapshot(
   const composedFrom: PreparedProjectionCoupling[] = aggregate.partitions.flatMap((partition) =>
     partition.kind === "PROMOTED" && typeof partition.versionId === "string"
       ? [{ contractId: partition.contractId, versionId: partition.versionId }]
-      : [],
+      : partition.heldFrom
+        ? [{ contractId: partition.heldFrom.contractId, versionId: partition.heldFrom.versionId }]
+        : [],
   );
   let factSha256: string;
   try {
@@ -148,6 +171,8 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
   const versionByContract = new Map(composedFrom.map((entry) => [entry.contractId, entry.versionId]));
   return MEETING_PARTITION_CONTRACTS.map((partition) => {
     const versionId = versionByContract.get(partition.id);
+    const held = heldMeetingPartitionFor(partition.id);
+    const heldVersionId = versionId === undefined && held ? versionByContract.get(held.id) : undefined;
     return versionId !== undefined
       ? {
           contractId: partition.id,
@@ -158,15 +183,26 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
           versionId,
           detail: null,
         }
-      : {
-          contractId: partition.id,
-          source: partition.meetingSource,
-          bodyId: partition.bodyId,
-          scope: partition.scope,
-          kind: "NOT_RECORDED" as const,
-          versionId: null,
-          detail: "partition is not part of the prepared reader snapshot",
-        };
+      : held && heldVersionId !== undefined
+        ? {
+            contractId: partition.id,
+            source: partition.meetingSource,
+            bodyId: partition.bodyId,
+            scope: partition.scope,
+            kind: "NOT_RECORDED" as const,
+            versionId: null,
+            detail: `the prepared reader snapshot composed the retired route's held version ${held.id}@${heldVersionId} in this partition's place`,
+            heldFrom: { contractId: held.id, scope: held.scope, versionId: heldVersionId },
+          }
+        : {
+            contractId: partition.id,
+            source: partition.meetingSource,
+            bodyId: partition.bodyId,
+            scope: partition.scope,
+            kind: "NOT_RECORDED" as const,
+            versionId: null,
+            detail: "partition is not part of the prepared reader snapshot",
+          };
   });
 }
 
@@ -197,8 +233,25 @@ export async function readPreparedMeetingsProjection(
   if (prepared === null) {
     return readMeetingsProjection(options);
   }
+  // Proof-only (lib/meetings/proof-pin.ts; null in every deployed build): the
+  // serving copy is served only when it was composed from exactly the pinned
+  // versions. Otherwise the composing reader serves the pinned versions.
+  const pin = activeReaderProofMeetingPin();
+  if (
+    pin !== null &&
+    couplingFingerprint(prepared.composedFrom) !== couplingFingerprint(
+      pin.partitions.flatMap(({ contractId, kind, versionId }) =>
+        kind === "PROMOTED" && versionId !== null ? [{ contractId, versionId }] : []
+      ),
+    )
+  ) {
+    return readMeetingsProjection(options);
+  }
   const partitions = partitionsFromCoupling(prepared.composedFrom);
-  const allComposed = prepared.composedFrom.length === MEETING_PARTITION_CONTRACTS.length;
+  // Every registered partition composed from its OWN pointer; a held version
+  // in the coupling is a retired route's, not a registered partition's.
+  const ownComposed = new Set(prepared.composedFrom.map((entry) => entry.contractId));
+  const allComposed = MEETING_PARTITION_CONTRACTS.every((partition) => ownComposed.has(partition.id));
   return {
     kind: "PROMOTED",
     value: prepared.payload as MeetingsSnapshot,

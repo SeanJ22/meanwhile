@@ -4,6 +4,7 @@ import type {
   CandidateVersionRecord,
   PromotedProjection,
   RoutineRecordClass,
+  ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { parseValidationReceipt } from "./receipt.ts";
@@ -576,6 +577,130 @@ export async function readPromotedCivicDataBatch<T>(
     }
   }
   return scopes.map((scope) => results.get(scope)!);
+}
+
+/** One scope's version as a proof run pinned it; null = the capture read no pointer. */
+export interface PinnedCivicDataVersion {
+  readonly scope: string;
+  readonly versionId: string | null;
+}
+
+/** The pinned read also needs the append-only event log that dates a promotion. */
+export type CivicDataPinnedReadStore = CivicDataReadStore & Pick<RoutineDataStore, "events">;
+
+/**
+ * **PROOF-ONLY exact-version read** (`lib/meetings/proof-pin.ts`, which admits
+ * the pin only inside the Reader proof harness and never in a deployed build).
+ * Nothing else calls this; an unpinned read never reaches it.
+ *
+ * It pins WHICH version a scope resolves to, never WHETHER that version is
+ * proven. The live pointers are read and proven exactly as
+ * `readPromotedCivicDataBatch` does. Where a pointer still names the pinned
+ * version, that fully proven result is returned unchanged. Where it has moved
+ * on, the pinned version is read by its immutable id and proven again:
+ * candidate row, GOOD receipt, hashes, source authenticity and time order all
+ * go through `promotionProofIssue`. The pointer that named it is rebuilt from
+ * that same row, exactly as the atomic promotion door wrote it
+ * (`store.ts#promote`). The durable event log must also show exactly one
+ * "Atomic pointer <key> moved … to <version>." promotion, which dates it.
+ * A store that could not be asked stays unanswered, and a version that fails
+ * any proof stays PROMOTION_PROOF_INVALID. A pin never turns a failure into data.
+ */
+export async function readPinnedPromotedCivicDataBatch<T>(
+  recordClass: RoutineRecordClass,
+  pins: readonly PinnedCivicDataVersion[],
+  options: Omit<PromotedCivicDataReadOptions, "store"> & { readonly store?: CivicDataPinnedReadStore } = {},
+): Promise<readonly CivicDataReadResult<T>[]> {
+  const now = options.now ?? new Date().toISOString();
+  const live = await readPromotedCivicDataBatch<T>(recordClass, pins.map(({ scope }) => scope), options);
+  let store: CivicDataPinnedReadStore | undefined = options.store;
+  return Promise.all(pins.map(async (pin, index): Promise<CivicDataReadResult<T>> => {
+    const current = live[index]!;
+    if (
+      current.kind === "STORE_UNREACHABLE" &&
+      current.code !== "PROMOTION_PROOF_INVALID" &&
+      current.code !== "PROMOTION_CANDIDATE_MISSING"
+    ) return current;
+    if (pin.versionId === null) {
+      return {
+        kind: "NOT_RECORDED",
+        value: null,
+        metadata: emptyMetadata(recordClass, pin.scope),
+        detail: `The Reader proof pin recorded no canonical pointer for ${projectionKey(recordClass, pin.scope)} when it was captured; a pointer promoted since is outside this proof run.`,
+      };
+    }
+    if (current.kind === "PROMOTED" && current.metadata.versionId === pin.versionId) return current;
+    const key = projectionKey(recordClass, pin.scope);
+    if (!options.bypassCache) {
+      const proven = provenByVersion.get(pin.versionId);
+      if (proven && proven.projection.key === key) {
+        return promotedResult(proven.projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs);
+      }
+    }
+    let candidate: CandidateVersionRecord | null;
+    let promotions: readonly { readonly at: string }[];
+    let predecessor: CandidateVersionRecord | null = null;
+    try {
+      store ??= new PostgresRoutineDataStore();
+      candidate = await store.readCandidate(pin.versionId);
+      const moved = new RegExp(`^Atomic pointer ${escapeRegExp(key)} moved from \\S+ to ${escapeRegExp(pin.versionId)}\\.$`);
+      promotions = candidate === null
+        ? []
+        : (await store.events(pin.versionId)).filter((event) => event.state === "PROMOTED" && moved.test(event.detail));
+      const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
+      if (predecessorVersionId !== null) predecessor = await store.readCandidate(predecessorVersionId);
+    } catch (error) {
+      return {
+        kind: "STORE_UNREACHABLE",
+        value: null,
+        metadata: { ...emptyMetadata(recordClass, pin.scope), versionId: pin.versionId },
+        code: "STORE_READ_FAILED",
+        detail: `Reading pinned version ${pin.versionId} of ${key} failed (${error instanceof Error ? error.name : "unknown error"}). We could not ask the store.`,
+      };
+    }
+    if (candidate === null) {
+      return {
+        kind: "STORE_UNREACHABLE",
+        value: null,
+        metadata: { ...emptyMetadata(recordClass, pin.scope), versionId: pin.versionId },
+        code: "PROMOTION_CANDIDATE_MISSING",
+        detail: `The Reader proof pin names ${pin.versionId} for ${key}, but its candidate/version row is missing.`,
+      };
+    }
+    const projection: PromotedProjection<T> = {
+      key,
+      sourceId: candidate.candidate.sourceId,
+      recordClass,
+      scope: pin.scope,
+      versionId: pin.versionId,
+      lastKnownGoodVersionId: pin.versionId,
+      promotedAt: promotions[0]?.at ?? "",
+      payload: candidate.candidate.readModel as T,
+      receipt: candidate.receipt as ValidationReceipt,
+    };
+    if (promotions.length !== 1) {
+      return promotionProofInvalidResult(
+        recordClass,
+        pin.scope,
+        projection,
+        `the pinned version has ${promotions.length} durable atomic promotions of ${key}, not exactly one`,
+      );
+    }
+    try {
+      return resultFromPromotionProof(recordClass, pin.scope, projection, candidate, predecessor, now, options.maxAgeMs);
+    } catch (error) {
+      return promotionProofInvalidResult(
+        recordClass,
+        pin.scope,
+        projection,
+        `proof evaluation failed (${error instanceof Error ? error.name : "unknown error"})`,
+      );
+    }
+  }));
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function observedProjectionMetadata<T>(

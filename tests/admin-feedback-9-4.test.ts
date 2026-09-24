@@ -281,7 +281,9 @@ test("ADM-8: a DISPATCH needs words and the intent carries them; the control tha
   assert.match(control, /type: "expansion\.scope\.set"/, "the button posts the typed action");
   assert.match(control, /previewRoute/, "§9A.16: the geography is read before anything is sent");
   assert.match(control, /What pressing send does/, "§9A.16: it explains itself before it acts");
-  assert.match(control, /CREATES NO NEW WORK/, "and says what it will NOT do");
+  // MW-028: the Send now creates what the registry defines and nothing carries; it still says what it will NOT do.
+  assert.match(control, /CREATES MISSING WORK/, "it says what it creates");
+  assert.match(control, /It invents nothing no\s+registry defines/, "and says what it will NOT do");
   assert.doesNotMatch(control, /<form/, "no second write path beside the gateway");
 });
 

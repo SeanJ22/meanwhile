@@ -1,0 +1,308 @@
+/**
+ * **THE TUSD PROOF: A SAVED METHOD FINDS A BODY'S OWN EVENTS PAGE, AND THE
+ * RUNNER REUSES IT IN ANOTHER STATE.** (2026-09-23.)
+ *
+ * Owner directive, 2026-09-23: prove the reusable discovery process on the
+ * missing TUSD events at www.tusd1.org/Reconfiguration, with cross-state
+ * transfer in tests (Santa Fe), and show that the runner uses the saved method
+ * after the initial repair (#384 wired the page by hand).
+ *
+ * What these tests hold, on recorded pages only (no test reaches the network):
+ *
+ * - **The saved method.** The seed recipe `official-page-events-linked-committee-page`
+ *   follows TUSD's own homepage link "Reconfiguration Committee" and verifies
+ *   the page with the official-page-events extractor for Tucson Unified.
+ * - **Identity, never the page's say-so.** An event verifies only on the body's
+ *   own host, named in its title by the body's recorded name, the name without
+ *   class words, its initials, or the words the body's own homepage used to
+ *   link the page. It must also be dated in the body's state's zone. A state
+ *   that spans zones is never guessed.
+ * - **Cross-state transfer.** The same method, retrieved for Santa Fe Public
+ *   Schools (NM) with its identity substituted, verifies Santa Fe's board page.
+ *   An Arizona page never verifies for the New Mexico body, nor the reverse.
+ * - **The runner uses what it saved.** Cycle 1 credits the method in the field
+ *   manual. Cycle 2, a later process in another state, reads it from the store
+ *   and applies it.
+ * - **An exact parser version.** The extractor id names the digest of the
+ *   adapter's value-import closure, so a runtime change re-keys it.
+ */
+
+import assert from "node:assert/strict";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import test from "node:test";
+
+import {
+  runMeetingsDiscovery,
+  walkMeetingsDiscoveryNeed,
+  type DiscoveryOpen,
+  type DiscoveryRuntime,
+} from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import {
+  OFFICIAL_PAGE_EVENTS_VERSION,
+  STATE_TIME_ZONES,
+  anchorLinks,
+  identityNameTerms,
+  verifyEndpointBody,
+} from "../lib/hunt/meetings-site-discovery.ts";
+import { SEED_RECIPES, knownRecipes, recipeCandidates } from "../lib/hunt/meetings-recipes.ts";
+import { digestValueClosure, sourceClosure, valueClosure } from "../lib/ops/generator-digest.ts";
+import { eachStore } from "./control-plane-fixtures.ts";
+
+const FIXTURES = new URL("./fixtures/official-page-events/", import.meta.url);
+const TUSD_HOME = readFileSync(new URL("tusd-home.html", FIXTURES), "utf8");
+const TUSD_PAGE = readFileSync(new URL("tusd-reconfiguration.html", FIXTURES), "utf8");
+const SFPS_PAGE = readFileSync(new URL("sfps-board-of-education.html", FIXTURES), "utf8");
+/** The instant the recorded pages were read (their .meta.json). */
+const NOW = "2026-09-23T23:25:27.424Z";
+const METHOD = "official-page-events-linked-committee-page";
+const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" } as const;
+
+/** The gap ledger's TUSD need, carrying the reviewed registry's live homepage (the ledger's own address no longer resolves). */
+const TUSD: MeetingsDiscoveryNeed = {
+  jurisdictionId: "az:school:tucson-unified-school-district-1",
+  stateCode: "AZ",
+  name: "TUCSON UNIFIED SCHOOL DISTRICT 1",
+  govClass: "SCHOOL_DISTRICT",
+  ownWebAddress: "https://www.tusd1.org/",
+  basis: "SOURCE_DISCOVERY_OWED",
+  sources: ["MEETINGS:THIS_JURISDICTION:this-government-itself"],
+};
+
+/** Santa Fe Public Schools: New Mexico identity only (the NCES directory's website for LEAID 3502370). */
+const SFPS: MeetingsDiscoveryNeed = {
+  jurisdictionId: "nm:school:santa-fe-public-schools",
+  stateCode: "NM",
+  name: "SANTA FE PUBLIC SCHOOLS",
+  govClass: "SCHOOL_DISTRICT",
+  ownWebAddress: "https://www.sfps.info/",
+  basis: "SOURCE_DISCOVERY_OWED",
+  sources: ["MEETINGS:THIS_JURISDICTION:this-government-itself"],
+};
+/** A recorded-shape Santa Fe homepage: its own link to the board page, and nothing else that names a route. */
+const SFPS_HOME = `<html><body><nav><a href="/page/board-of-education-2">Board of Education</a><a href="/page/enroll">Enroll</a></nav></body></html>`;
+
+type Reply = { readonly status: number; readonly body?: string; readonly contentType?: string };
+
+function fakeOpen(map: Readonly<Record<string, Reply>>): { open: DiscoveryOpen; seen: string[] } {
+  const seen: string[] = [];
+  const open: DiscoveryOpen = async ({ url }) => {
+    seen.push(url);
+    const r = map[url] ?? { status: 404, body: "not found" };
+    const body = r.body ?? "";
+    return { status: r.status, body, bytes: body.length, contentType: r.contentType ?? "text/html", location: null, transportError: null };
+  };
+  return { open, seen };
+}
+
+function runtime(open: DiscoveryOpen, recipes = knownRecipes([]), now = NOW): DiscoveryRuntime {
+  return {
+    open,
+    spaceOut: async () => {},
+    vault: async () => ({ stored: true, where: "vault", why: "stored" }),
+    now: () => now,
+    budget: { spent: () => false },
+    recipes,
+  };
+}
+
+const TUSD_SITE = {
+  "https://www.tusd1.org/robots.txt": ALLOW,
+  "https://www.tusd1.org/": { status: 200, body: TUSD_HOME },
+  "https://www.tusd1.org/Reconfiguration": { status: 200, body: TUSD_PAGE },
+};
+const SFPS_SITE = {
+  "https://www.sfps.info/robots.txt": ALLOW,
+  "https://www.sfps.info/": { status: 200, body: SFPS_HOME },
+  "https://www.sfps.info/page/board-of-education-2": { status: 200, body: SFPS_PAGE },
+};
+
+test("TERMS AND ZONES: a body's name forms come from its recorded name alone; a zone is tabled or never guessed", () => {
+  assert.deepEqual(identityNameTerms("TUCSON UNIFIED SCHOOL DISTRICT 1"), ["Tucson Unified School District", "Tucson Unified", "TUSD"]);
+  assert.deepEqual(identityNameTerms("SANTA FE PUBLIC SCHOOLS"), ["Santa Fe Public Schools", "Santa Fe", "SFPS"]);
+  assert.deepEqual(identityNameTerms("CITY OF CHANDLER"), ["City of Chandler", "Chandler"], "two letters of initials name nothing");
+  assert.deepEqual(identityNameTerms("CITY OF TUCSON"), ["City of Tucson", "Tucson"]);
+  assert.notDeepEqual(identityNameTerms("TUCSON UNIFIED SCHOOL DISTRICT 1")[1], "Tucson", "a district's core name keeps Unified, so the city's events never verify for it");
+  assert.deepEqual(STATE_TIME_ZONES, { AZ: "America/Phoenix", NH: "America/New_York", NJ: "America/New_York", NM: "America/Denver" });
+  const texas = verifyEndpointBody(
+    { vendor: "official-page-events", url: "https://www.example-isd.org/board" },
+    { status: 200, body: TUSD_PAGE, finalUrl: "https://www.example-isd.org/board" },
+    { bodyId: "tx:x", name: "EXAMPLE ISD", pageLabel: "Board of Trustees", officialHost: "www.example-isd.org", stateCode: "TX", now: NOW },
+  );
+  assert.equal(texas.verdict, "NOT_CONFIRMED");
+  assert.match(texas.detail, /TIME_ZONE_UNKNOWN/);
+});
+
+test("VERSION: the extractor id names the digest of the adapter's value-import closure, so a runtime change re-keys it", () => {
+  const entry = "lib/sources/official-page-events/index.ts";
+  const digest = digestValueClosure(process.cwd(), entry).digest.slice(0, 12);
+  assert.equal(
+    OFFICIAL_PAGE_EVENTS_VERSION,
+    `official-page-events@${digest}`,
+    `the official-page-events parser's runtime closure changed: set OFFICIAL_PAGE_EVENTS_VERSION in lib/hunt/meetings-site-discovery.ts to "official-page-events@${digest}" so saved methods and wiring rows re-key`,
+  );
+  assert.ok(valueClosure(process.cwd(), entry).length < sourceClosure(process.cwd(), entry).length, "type-only imports are left out");
+});
+
+test("VALUE CLOSURE: an import or re-export that carries only types is left out; any value, side effect or dynamic import is kept", () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-value-closure-"));
+  try {
+    mkdirSync(join(root, "m"));
+    const files: Record<string, string> = {
+      "m/entry.ts": [
+        `import type { A } from "./types-only.ts";`,
+        `import { type B, c } from "./mixed.ts";`,
+        `import { type D } from "./all-type-names.ts";`,
+        `export type { E } from "./reexported-types.ts";`,
+        `export * from "./reexported-values.ts";`,
+        `import "./side-effect.ts";`,
+        `const lazy = () => import("./dynamic.ts");`,
+        `import def from "./default.ts";`,
+        `import { f } from "./reaches-types-only.ts";`,
+      ].join("\n"),
+      "m/types-only.ts": "export type A = 1;",
+      "m/mixed.ts": "export type B = 1; export const c = 1;",
+      "m/all-type-names.ts": "export type D = 1;",
+      "m/reexported-types.ts": "export type E = 1;",
+      "m/reexported-values.ts": "export const g = 1;",
+      "m/side-effect.ts": "globalThis.x = 1;",
+      "m/dynamic.ts": "export const h = 1;",
+      "m/default.ts": "export default 1;",
+      "m/reaches-types-only.ts": `import "./types-only.ts"; export const f = 1;`,
+    };
+    for (const [path, text] of Object.entries(files)) writeFileSync(join(root, path), text);
+    const value = valueClosure(root, join(root, "m/entry.ts"));
+    assert.deepEqual(value, [
+      "m/default.ts", "m/dynamic.ts", "m/entry.ts", "m/mixed.ts", "m/reaches-types-only.ts",
+      "m/reexported-values.ts", "m/side-effect.ts", "m/types-only.ts",
+    ], "types-only.ts lands only because a value import reaches it");
+    assert.equal(value.includes("m/all-type-names.ts"), false);
+    assert.equal(value.includes("m/reexported-types.ts"), false);
+    assert.equal(sourceClosure(root, join(root, "m/entry.ts")).length, Object.keys(files).length, "the full closure still follows every edge");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("THE SAVED METHOD: TUSD's homepage links its reconfiguration page by name, and the method proposes exactly that, on its own host", () => {
+  const links = anchorLinks(TUSD_HOME, "https://www.tusd1.org/");
+  assert.ok(links.some((l) => l.url === "https://www.tusd1.org/Reconfiguration" && l.text === "Reconfiguration Committee"));
+  const method = SEED_RECIPES.find((r) => r.recipeId === METHOD)!;
+  assert.equal(method.state, null, "portable: nothing in it names Tucson");
+  assert.equal(method.extractorId, "official-page-events");
+  assert.equal(method.successes, 0, "counts start at zero; only the runner's walks move them");
+  const proposed = recipeCandidates({ recipes: [method], need: TUSD, origin: "https://www.tusd1.org", homepageHtml: TUSD_HOME, nowIso: NOW });
+  assert.ok(proposed.candidates.length <= 3);
+  assert.ok(proposed.candidates.every((c) => new URL(c.url).host === "www.tusd1.org"), "never off the government's own host");
+  assert.deepEqual(
+    proposed.candidates.find((c) => c.url === "https://www.tusd1.org/Reconfiguration"),
+    { recipeId: METHOD, extractorId: "official-page-events", url: "https://www.tusd1.org/Reconfiguration", label: "Reconfiguration Committee" },
+  );
+});
+
+test("LABELS AND BOUNDS: only a label of two words or more names a body; a link step proposes at most its cap, never off-host", () => {
+  const board = (pageLabel: string | null) => verifyEndpointBody(
+    { vendor: "official-page-events", url: "https://www.sfps.info/page/board-of-education-2" },
+    { status: 200, body: SFPS_PAGE, finalUrl: "https://www.sfps.info/page/board-of-education-2" },
+    { bodyId: SFPS.jurisdictionId, name: SFPS.name, pageLabel, officialHost: "www.sfps.info", stateCode: "NM", now: NOW },
+  ).verdict;
+  assert.equal(board("Board of Education"), "YIELDED");
+  assert.equal(board("Board"), "NOT_CONFIRMED", "one word is too general to say whose page this is");
+  assert.equal(board(null), "NOT_CONFIRMED", "without the homepage's label, no Santa Fe event names the body");
+
+  const home = [1, 2, 3, 4, 5].map((i) => `<a href="/committee-${i}">Advisory Committee ${i}</a>`).join("") +
+    `<a href="https://other.gov/council">City Council</a>`;
+  const method = SEED_RECIPES.find((r) => r.recipeId === METHOD)!;
+  const proposed = recipeCandidates({ recipes: [method], need: SFPS, origin: "https://www.sfps.info", homepageHtml: home, nowIso: NOW }).candidates;
+  assert.deepEqual(proposed.map((c) => c.url), [1, 2, 3].map((i) => `https://www.sfps.info/committee-${i}`), "the cap holds, and another government's link is never followed");
+});
+
+test("SEARCH: a search result on the body's own domain that is itself its events page is confirmed from the page already read", async () => {
+  const site = fakeOpen({
+    "https://www.tusd1.org/robots.txt": ALLOW,
+    "https://www.tusd1.org/": { status: 200, body: "<html><body>Welcome</body></html>" },
+    "https://www.tusd1.org/Reconfiguration": { status: 200, body: TUSD_PAGE },
+  });
+  const costs: unknown[] = [];
+  const walk = await walkMeetingsDiscoveryNeed(TUSD, {
+    ...runtime(site.open),
+    search: async () => ({
+      hits: [{ url: "https://www.tusd1.org/Reconfiguration", title: "Reconfiguration", provider: "brave" as const }],
+      requests: [{ provider: "brave" as const, status: "DELIVERED" as const, error: null, bytes: 100, hitCount: 1 }],
+    }),
+    recordCost: async (entry) => {
+      costs.push(entry);
+    },
+  });
+  assert.equal(walk.outcome, "FOUND");
+  const find = walk.found.find((f) => f.url === "https://www.tusd1.org/Reconfiguration");
+  assert.ok(find);
+  assert.deepEqual([find.vendor, find.basis, find.count], ["official-page-events", "SEARCH", 2]);
+  assert.equal(site.seen.filter((u) => u === "https://www.tusd1.org/Reconfiguration").length, 1, "one request for the page");
+  assert.equal(costs.length, 1, "the one search request sent is charged");
+});
+
+test("TUSD PROOF: the executor alone, from TUSD's homepage, confirms the reconfiguration page's sessions for Tucson Unified", async () => {
+  const site = fakeOpen(TUSD_SITE);
+  const walk = await walkMeetingsDiscoveryNeed(TUSD, runtime(site.open));
+  assert.equal(walk.outcome, "FOUND");
+  const find = walk.found.find((f) => f.url === "https://www.tusd1.org/Reconfiguration");
+  assert.ok(find, `found: ${JSON.stringify(walk.found.map((f) => f.url))}`);
+  assert.equal(find.vendor, "official-page-events");
+  assert.equal(find.basis, "RECIPE");
+  assert.equal(find.count, 2, "the two community engagement sessions name Tucson Unified; the Joint Committee meeting does not, and is held");
+  assert.match(find.detail, new RegExp(OFFICIAL_PAGE_EVENTS_VERSION));
+  assert.match(find.detail, /Tucson Unified Facility Plans Community Engagement \(2026-09-23\)/);
+  assert.deepEqual(walk.recipes.applied.filter((a) => a.recipeId === METHOD).map((a) => [a.url, a.verdict]), [["https://www.tusd1.org/Reconfiguration", "YIELDED"]]);
+  assert.ok(site.seen.indexOf("https://www.tusd1.org/robots.txt") < site.seen.indexOf("https://www.tusd1.org/Reconfiguration"), "robots first");
+});
+
+test("SANTA FE TRANSFER: the same method, retrieved for a New Mexico district with its identity substituted, verifies its own board page; neither state's page verifies for the other", async () => {
+  const nm = fakeOpen(SFPS_SITE);
+  const walk = await walkMeetingsDiscoveryNeed(SFPS, runtime(nm.open));
+  assert.equal(walk.outcome, "FOUND");
+  const find = walk.found.find((f) => f.url === "https://www.sfps.info/page/board-of-education-2");
+  assert.ok(find);
+  assert.equal(find.count, 4, "the Board of Education's regular meetings, named by the homepage's own label for the page");
+  assert.match(find.detail, /Board of Education Regular Meeting \(2026-10-08\)/);
+
+  /* An Arizona page served where the New Mexico body's board page should be: nothing verifies for Santa Fe. */
+  const swapped = fakeOpen({ ...SFPS_SITE, "https://www.sfps.info/page/board-of-education-2": { status: 200, body: TUSD_PAGE } });
+  const azForNm = await walkMeetingsDiscoveryNeed(SFPS, runtime(swapped.open));
+  assert.notEqual(azForNm.outcome, "FOUND");
+  assert.deepEqual(azForNm.recipes.applied.filter((a) => a.recipeId === METHOD).map((a) => a.verdict), ["NOT_CONFIRMED"]);
+
+  /* And a New Mexico page behind TUSD's link: nothing verifies for Tucson Unified. */
+  const reverse = fakeOpen({ ...TUSD_SITE, "https://www.tusd1.org/Reconfiguration": { status: 200, body: SFPS_PAGE } });
+  const nmForAz = await walkMeetingsDiscoveryNeed(TUSD, runtime(reverse.open));
+  assert.equal(nmForAz.found.some((f) => f.url === "https://www.tusd1.org/Reconfiguration"), false);
+});
+
+test("THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 2, a later process in New Mexico, reads it from the store and applies it", async () => {
+  for (const [label, repos] of await eachStore("wtp-official-page-")) {
+    const first = await runMeetingsDiscovery(repos, {
+      needs: [TUSD],
+      runtime: runtime(fakeOpen(TUSD_SITE).open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? [])),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.equal(first.walked[0].outcome, "FOUND", label);
+    assert.ok(first.recipesUpdated.includes(METHOD), label);
+    const saved = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === METHOD)!;
+    assert.equal(saved.successes, 1, `${label}: the success is written to the field manual, which outlives the process`);
+    assert.equal(saved.lastSuccess?.jurisdictionId, TUSD.jurisdictionId);
+
+    const second = await runMeetingsDiscovery(repos, {
+      needs: [SFPS],
+      runtime: runtime(fakeOpen(SFPS_SITE).open, knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []), "2026-09-23T23:59:00.000Z"),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.equal(second.walked[0].outcome, "FOUND", label);
+    const after = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === METHOD)!;
+    assert.equal(after.successes, 2, `${label}: the New Mexico walk used the saved method and added to it`);
+    assert.equal(after.lastSuccess?.jurisdictionId, SFPS.jurisdictionId);
+  }
+});

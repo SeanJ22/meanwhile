@@ -102,6 +102,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   jsonTextAtPath,
+  projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -114,6 +115,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** ------------------------------------------------------------ primitives */
@@ -588,6 +590,23 @@ export function fileAppendOnlyRepository<T>(
       const records = (await readLines(key)).map((line) => line.record);
       const bounded = Math.max(0, Math.trunc(limit));
       return records.slice(Math.max(0, records.length - bounded)).reverse();
+    },
+
+    readRecentWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+      limit: number,
+      projection: RecordProjection,
+    ): Promise<readonly unknown[]> => {
+      const matches = (await readLines(key))
+        .map((line) => line.record)
+        .filter((record) => jsonTextAtPath(record, jsonPath) === value);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((record) => projectRecord(record, projection));
     },
 
     readAll: async (): Promise<readonly T[]> =>

@@ -19,21 +19,26 @@
  * words. On its next look the standing runner parses them into a target
  * (`scheduler/dispatch-target.ts`), moves every REGISTERED unit that matches to
  * the front of that cycle's queue, and records what matched — including
- * nothing, by name. It does not mint work, does not open a record class, does
- * not publish, and does not turn promotion on. The preview says exactly that,
- * in those words, because §9A.16 requires the wording to match the action
- * actually performed.
+ * nothing, by name. Where the words name a state, the runner also creates what
+ * that state's promoted registry defines and no clock carries yet (MW-028,
+ * `expansion/dispatch-work.ts`), bounded per cycle and per instruction. It does
+ * not open a record class, does not publish, and does not turn promotion on.
+ * The preview says exactly that, in those words, because §9A.16 requires the
+ * wording to match the action actually performed.
  *
  * ## The number it will not invent
  *
- * "How many work items will this create?" has an honest answer and it is zero:
- * a dispatch creates none. "How many will it move to the front?" is a real
+ * "How many work items will this create?" is answered by the RUNNER, which
+ * holds the registries and the durable rows; the deployed console holds
+ * neither, so the preview states the bound and says the count arrives with the
+ * runner's acknowledgement. "How many will it move to the front?" is a real
  * question with a real answer — and the answer lives in the registry the RUNNER
  * enumerates at the start of a cycle, not in anything the deployed console
  * holds. The console can count the standing obligations that match, which is
  * the closest true figure, and it says which figure it is.
  */
 import { parseDispatchTarget, type DispatchTarget } from "./scheduler/dispatch-target.ts";
+import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "./expansion/dispatch-work-bounds.ts";
 import { stateCodeOf } from "./unit-state.ts";
 import { count, usdCents } from "./plain-words.ts";
 
@@ -68,10 +73,10 @@ export interface DeployPreview {
 export const DEPLOY_WILL_NOT: readonly string[] = [
   "It publishes nothing to readers. Promotion stays off.",
   "It opens no new class of record.",
-  "It invents no work — it can only move work the fleet already owes.",
+  "It invents no work: it creates only what a promoted registry already defines, and moves what the fleet already owes.",
   "It runs no code and ships nothing.",
-  "It spends nothing outside the limits already set on the runner.",
-  "It looks for no new source outside the work it already has.",
+  "It spends nothing outside the limits already set on the runner, and starts no paid research.",
+  "It looks for no source a registry does not already name as owed.",
 ];
 
 /** The stages, in the owner's words rather than the pipeline's. */
@@ -113,7 +118,20 @@ export function deployPreview(input: DeployPreviewInput): DeployPreview {
   }
 
   const creates: PreviewLine[] = [
-    { says: "It creates no new work. A dispatch reorders what is already owed.", measured: true },
+    target.states.length > 0
+      ? {
+          says:
+            `For ${named}, the runner creates the work the promoted registry defines and no clock carries yet — at most ` +
+            `${DISPATCH_WORK_WRITE_BUDGET} a cycle and ${DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} for this instruction. How many is counted by the runner, ` +
+            "which holds the registries; its acknowledgement says what it created, reordered and could not reach, and a state with no registry is named as blocked.",
+          measured: false,
+        }
+      : {
+          says:
+            "It creates no new work: your words name no state, so there is no bounded geography to create it in. It reorders what is already owed. " +
+            "Send a geography from the Census lookup to create what is missing there.",
+          measured: true,
+        },
   ];
   if (!input.obligationsRead) {
     creates.push({
@@ -141,7 +159,9 @@ export function deployPreview(input: DeployPreviewInput): DeployPreview {
 
   return {
     target,
-    means: `Ask the research fleet to work ${named} next: it moves the records it already owes there to the front of the queue. This publishes nothing to readers and does not turn promotion on.`,
+    means:
+      `Ask the research fleet to work ${named} next: it moves the records it already owes there to the front of the queue` +
+      `${target.states.length > 0 ? ", and creates what the registry defines there that nothing carries yet" : ""}. This publishes nothing to readers and does not turn promotion on.`,
     creates,
     willNot: DEPLOY_WILL_NOT,
     after: DEPLOY_AFTER,

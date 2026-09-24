@@ -17,6 +17,7 @@ import {
   appendTransition,
   confirmationFromArtifacts,
   deriveItemState,
+  isPipelineRecord,
   readPipelineStates,
   scoutedFromMethodCandidate,
   scoutedFromScoutResult,
@@ -207,6 +208,31 @@ test("a foreign row under the pipeline log is not an item", async () => {
   await appendTransition(repos, scouted(), GOOD_CTX, T0);
   const states = await readPipelineStates(repos);
   assert.deepEqual(states.map((s) => s.itemId), ["pp-1"]);
+});
+
+test("item states come from one paged read of the log, equal to reading every item's key", async () => {
+  // 2026-09-24: one read per key issued 629 sequential requests and a research
+  // cycle reached its wall waiting on them.
+  const repos = createMemoryRepositories();
+  await repos.promotionPipeline.append("conformance-x", "r-1", { formatVersion: 1, note: "conformance" } as never, T0);
+  for (const itemId of ["pp-2", "pp-1", "pp-3"]) {
+    await appendTransition(repos, { ...scouted(), itemId, recordId: `${itemId}:scouted` }, GOOD_CTX, T0);
+  }
+  await appendTransition(repos, confirmed(), GOOD_CTX, T1);
+  await appendTransition(repos, { ...confirmed(), itemId: "pp-3", recordId: "pp-3:confirmed", actor: SCOUT }, GOOD_CTX, T1);
+  const perKey = [];
+  for (const key of await repos.promotionPipeline.keys()) {
+    const records = (await repos.promotionPipeline.read(key)).filter(isPipelineRecord);
+    if (records.length > 0) perKey.push(deriveItemState(key, records));
+  }
+  let keyReads = 0;
+  const observed = { ...repos, promotionPipeline: { ...repos.promotionPipeline,
+    read: async (key: string) => { keyReads += 1; return repos.promotionPipeline.read(key); } } };
+  const states = await readPipelineStates(observed);
+  assert.deepEqual(states, perKey);
+  assert.deepEqual(states.map((s) => s.itemId), ["pp-1", "pp-2", "pp-3"]);
+  assert.ok(states.find((s) => s.itemId === "pp-3")?.refused, "a refusal is part of its item's state, not lost by the grouping");
+  assert.equal(keyReads, 0, "no item is read by its key");
 });
 
 /* ------------------------------------------------------------- CONFIRMED */

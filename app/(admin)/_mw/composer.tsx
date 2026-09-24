@@ -14,9 +14,10 @@
  *                read before anything is sent (/api/admin/geography-preview)
  *   Send it      `expansion.scope.set`: your geography, its priority, its
  *                rolling 24-hour budget for paid work there, and your words.
- *                It creates no work (MW-028 is not built); the runner orders
- *                the work already registered there first and enforces the
- *                budget on paid research there.
+ *                At its next cycle the runner creates the work the registry
+ *                defines there that no clock carries yet (MW-028, bounded per
+ *                cycle and per geography), orders all work there first, and
+ *                enforces the budget on paid research there.
  * ```
  *
  * The questions, categories and stop rule have no command that carries them
@@ -26,6 +27,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "@/lib/control-plane/expansion/dispatch-work-bounds.ts";
 
 import { fnv } from "./fnv.ts";
 import s from "./mw.module.css";
@@ -428,9 +431,11 @@ export function Composer(props: {
         </h3>
         <div className={s.stack10}>
           <div className={s.row}>
-            <Pill tone="slate">CREATES NO NEW WORK</Pill>
+            <Pill tone="slate">CREATES MISSING WORK</Pill>
             <span className={`${s.note} ${s.growWide}`} style={{ fontSize: 14 }}>
-              Creating work in a geography is not a supported command yet (MW-028).
+              At its next cycle the runner creates the work the registry defines here that no clock carries yet — at most {DISPATCH_WORK_WRITE_BUDGET} a cycle and{" "}
+              {DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} for this geography — and counts what it created, reordered and could not reach. It invents nothing no
+              registry defines: governments in a state with no promoted registry are named as blocked.
               {t && t.neverWalked > 0 ? ` ${t.neverWalked} bodies here have never been walked; finding a way in is paid research` : " Finding a way in to a body is paid research"}
               {props.paidLaneClosedBecause ? `, and that lane is ${props.paidLaneClosedBecause}` : ", which this budget bounds."}
             </span>

@@ -22,6 +22,7 @@ import {
   weakEventIdentity,
 } from "../event-identity.ts";
 import { politeGetText } from "../http.ts";
+import { fetchFailureKind } from "../composite/failure-kind.ts";
 import { dateOfDay, dayNumber, expandRuleDays, readRule } from "./recurrence.ts";
 import type {
   Meeting,
@@ -114,6 +115,12 @@ export interface IcalRaw {
   collectedAt: string;
   /** This ROW's retrieval was refused and `ics` is empty. */
   refused?: boolean;
+  /** The refusal in its own words, when there was one to keep. */
+  refusedReason?: string;
+  /** Whose failure the refusal was: the publisher's wall, or our own job. */
+  refusedKind?: "WALL" | "JOB";
+  /** The furthest ladder rung the refused retrieval reached, when the client knew it. */
+  refusedRung?: number;
   /**
    * A-004 · the UPCOMING feed answered and the town's PAST feed did not.
    *
@@ -1193,7 +1200,7 @@ export function makeIcalSource(
        * a refusal is shared by every row on that URL, which is correct,
        * because it is one retrieval and one wall.
        */
-      const fetched = new Map<string, { ics: string; refused: boolean }>();
+      const fetched = new Map<string, { ics: string; refused: boolean; refusedReason?: string; refusedKind?: "WALL" | "JOB"; refusedRung?: number }>();
       for (const wiring of wiringRows) {
         const url = wiring.config.feedUrl;
         if (!url) {
@@ -1202,6 +1209,9 @@ export function makeIcalSource(
             ics: "",
             collectedAt: new Date().toISOString(),
             refused: true,
+            // Our wiring names no feed: our configuration, never the town's wall.
+            refusedReason: "no calendar feed URL is wired for this body",
+            refusedKind: "JOB",
             sourceUrl: "",
           });
           continue;
@@ -1212,7 +1222,14 @@ export function makeIcalSource(
             wiring,
             ics: cached.ics,
             collectedAt: new Date().toISOString(),
-            ...(cached.refused ? { refused: true } : {}),
+            ...(cached.refused
+              ? {
+                  refused: true,
+                  refusedReason: cached.refusedReason,
+                  refusedKind: cached.refusedKind,
+                  ...(typeof cached.refusedRung === "number" ? { refusedRung: cached.refusedRung } : {}),
+                }
+              : {}),
             sourceUrl: url,
           });
           continue;
@@ -1307,12 +1324,15 @@ export function makeIcalSource(
            * composite's own guard makes one layer up.
            */
           if (!/BEGIN:VEVENT/i.test(ics)) {
-            fetched.set(url, { ics: "", refused: true });
+            const refusedReason = `${url} answered a calendar envelope holding no events`;
+            fetched.set(url, { ics: "", refused: true, refusedReason, refusedKind: "WALL" });
             collected.push({
               wiring,
               ics: "",
               collectedAt: new Date().toISOString(),
               refused: true,
+              refusedReason,
+              refusedKind: "WALL",
               sourceUrl: url,
             });
             continue;
@@ -1325,15 +1345,25 @@ export function makeIcalSource(
             ...(archiveRefused ? { archiveRefused } : {}),
             sourceUrl: url,
           });
-        } catch {
+        } catch (error) {
           // One host's refusal empties this row and no other. `refused`
-          // carries it forward as a refusal rather than as an empty calendar.
-          fetched.set(url, { ics: "", refused: true });
+          // carries it forward as a refusal rather than as an empty calendar,
+          // now WITH the refusal's own words and kind (2026-09-24): Sutton's
+          // Cloudflare challenge was named by the fetch layer and dropped here,
+          // and the composite then filed the town's wall as our JOB.
+          const refusedReason = String((error as Error)?.message ?? error);
+          const refusedKind = fetchFailureKind(error);
+          const rung = (error as { rung?: unknown } | undefined)?.rung;
+          const refusedRung = typeof rung === "number" ? { refusedRung: rung } : {};
+          fetched.set(url, { ics: "", refused: true, refusedReason, refusedKind, ...refusedRung });
           collected.push({
             wiring,
             ics: "",
             collectedAt: new Date().toISOString(),
             refused: true,
+            refusedReason,
+            refusedKind,
+            ...refusedRung,
             sourceUrl: url,
           });
         }

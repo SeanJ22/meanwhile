@@ -272,6 +272,7 @@ test("the durable success clock follows the current proof-consistent pointer, no
   assert.deepEqual(await store.clock(current.sourceId, current.recordClass, current.scope), {
     lastAttemptedAt: laterAttempt.retrieval.retrievedAt,
     lastSucceededAt: current.retrieval.retrievedAt,
+    lastSucceededObservedAt: current.retrieval.retrievedAt,
   });
 });
 
@@ -361,6 +362,7 @@ test("a terminal PROMOTED candidate cannot be rewritten or invalidate its live L
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), {
     lastAttemptedAt: value.retrieval.retrievedAt,
     lastSucceededAt: value.retrieval.retrievedAt,
+    lastSucceededObservedAt: value.retrieval.retrievedAt,
   });
   assert.equal((await store.readPromotion(value.recordClass, value.scope))?.versionId, value.id);
   assert.deepEqual((await store.events(value.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);

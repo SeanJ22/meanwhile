@@ -130,6 +130,7 @@ test("a registered source failure is one durable attempt with retry clock and un
   assert.deepEqual(await store.clock(task.sourceId, task.recordClass, task.scope), {
     lastAttemptedAt: FAILED_AT,
     lastSucceededAt: GOOD_AT,
+    lastSucceededObservedAt: GOOD_AT,
   });
   assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs - 1), false);
   assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs), true);

@@ -32,6 +32,7 @@ import {
   routineSupervisorCycleId,
   routineTaskDue,
   routineTaskSelection,
+  sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
   type RoutineTaskClock,
@@ -348,6 +349,9 @@ const clockReads = FORCE
       selectedTasks,
       (task) => store.clock(task.sourceId, task.recordClass, task.scope),
     );
+// Meeting sources follow their bodies' sittings; the window is decided once,
+// at the same frozen instant, from this pass's own clock reads.
+const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs);
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -357,8 +361,11 @@ for (const read of clockReads) {
     continue;
   }
   const durableClock: RoutineTaskClock | undefined = read.clock;
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs)) {
-    console.log(`RCD_SKIP ${task.id}: cadence not due`);
+  const sittingHot = sittingSignals.get(task.id);
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot)) {
+    console.log(`RCD_SKIP ${task.id}: cadence not due${
+      sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
+    }`);
     continue;
   }
   dueCandidates.push({

@@ -154,7 +154,21 @@ export interface RoutineDataStore {
     sourceId: string,
     recordClass: RoutineRecordClass,
     scope: string,
-  ) => Promise<{ readonly lastAttemptedAt?: string; readonly lastSucceededAt?: string }>;
+  ) => Promise<RoutineStoreClock>;
+}
+
+/**
+ * One task's durable clock. `lastSucceededAt` is the pointed candidate's claimed
+ * retrieval; `lastSucceededObservedAt` is its store-observed first event, the
+ * attempt clock's own units, under the same pointer/receipt proof. Sitting
+ * starts are reported for MEETING scopes only, from the promoted payload,
+ * without the payload leaving the database.
+ */
+export interface RoutineStoreClock {
+  readonly lastAttemptedAt?: string;
+  readonly lastSucceededAt?: string;
+  readonly lastSucceededObservedAt?: string;
+  readonly sittingStarts?: readonly string[];
 }
 
 type RegisteredMutationContract = {
@@ -621,22 +635,53 @@ export function routineClockCandidateView(candidate: RoutineCandidate): RoutineC
 }
 
 /** A historical PROMOTED state is not a clock; only the current pointer and its exact proof are. */
+function proofConsistentPointedSuccess(
+  record: RoutineClockRecord | null | undefined,
+  pointer: PromotionPointerProof | null | undefined,
+): record is RoutineClockRecord {
+  const receipt = record?.receipt;
+  if (!record || !pointer || record.state !== "PROMOTED" || !record.acquisitionSucceeded || !receipt) return false;
+  if (pointer.versionId !== record.candidate.id || pointer.lastKnownGoodVersionId !== record.candidate.id) return false;
+  if (record.promotedVersion !== record.candidate.id || record.lastKnownGoodVersion !== record.candidate.id) return false;
+  if (pointer.sourceId !== record.candidate.sourceId || pointer.recordClass !== record.candidate.recordClass || pointer.scope !== record.candidate.scope) return false;
+  if (!receiptIsGoodForCandidate(receipt, record.candidate)) return false;
+  if (!receiptsEqual(pointer.receipt, receipt)) return false;
+  // A frozen LKG import is proof of service continuity, not a publisher
+  // acquisition. Returning no clock success makes the standing runner due
+  // immediately instead of silently waiting one cadence after cutover.
+  return !isTrustedLkgImportCandidate(record.candidate);
+}
+
 export function proofConsistentSuccess(
   record: RoutineClockRecord | null | undefined,
   pointer: PromotionPointerProof | null | undefined,
 ): string | undefined {
-  const receipt = record?.receipt;
-  if (!record || !pointer || record.state !== "PROMOTED" || !record.acquisitionSucceeded || !receipt) return undefined;
-  if (pointer.versionId !== record.candidate.id || pointer.lastKnownGoodVersionId !== record.candidate.id) return undefined;
-  if (record.promotedVersion !== record.candidate.id || record.lastKnownGoodVersion !== record.candidate.id) return undefined;
-  if (pointer.sourceId !== record.candidate.sourceId || pointer.recordClass !== record.candidate.recordClass || pointer.scope !== record.candidate.scope) return undefined;
-  if (!receiptIsGoodForCandidate(receipt, record.candidate)) return undefined;
-  if (!receiptsEqual(pointer.receipt, receipt)) return undefined;
-  // A frozen LKG import is proof of service continuity, not a publisher
-  // acquisition. Returning no clock success makes the standing runner due
-  // immediately instead of silently waiting one cadence after cutover.
-  if (isTrustedLkgImportCandidate(record.candidate)) return undefined;
-  return record.candidate.retrieval.retrievedAt;
+  return proofConsistentPointedSuccess(record, pointer) ? record.candidate.retrieval.retrievedAt : undefined;
+}
+
+/**
+ * The same proven success, as its store-observed first event. The claimed
+ * retrieval precedes that event by the acquisition's own duration, so a clock
+ * comparing it with the attempt clock reads every success as "a later attempt
+ * failed" (measured 2026-09-23: 157 ms to 10.1 s, never zero).
+ */
+export function proofConsistentObservedSuccess(
+  record: RoutineClockRecord | null | undefined,
+  pointer: PromotionPointerProof | null | undefined,
+  observedAt: string | null | undefined,
+): string | undefined {
+  if (!proofConsistentPointedSuccess(record, pointer)) return undefined;
+  return typeof observedAt === "string" && Number.isFinite(Date.parse(observedAt)) ? observedAt : undefined;
+}
+
+/** The start of every sitting a MEETING payload carries; the memory twin of `sittingStartsRead`. */
+export function meetingPayloadSittingStarts(payload: unknown): readonly string[] {
+  const meetings = payload && typeof payload === "object" ? (payload as { meetings?: unknown }).meetings : undefined;
+  if (!Array.isArray(meetings)) return [];
+  return meetings.flatMap((meeting) => {
+    const start = meeting && typeof meeting === "object" ? (meeting as { startsAt?: unknown }).startsAt : undefined;
+    return typeof start === "string" ? [start] : [];
+  });
 }
 
 /**
@@ -885,7 +930,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return structuredClone(this.history.get(candidateId) ?? []);
   }
 
-  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<{ lastAttemptedAt?: string; lastSucceededAt?: string }> {
+  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
     const attempts = [...this.candidates.values()]
       .filter((row) =>
         row.candidate.sourceId === sourceId &&
@@ -909,13 +954,20 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const pointedRecord: RoutineClockRecord | null = pointedRow
       ? { ...pointedRow, candidate: routineClockCandidateView(pointedRow.candidate) }
       : null;
+    const sittings = recordClass === "MEETING" && pointer ? { sittingStarts: meetingPayloadSittingStarts(pointer.payload) } : {};
     if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
-      return trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt);
+      return { ...trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt), ...sittings };
     }
     const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointer);
+    const pointedObservedAt = pointedRow
+      ? this.history.get(pointedRow.candidate.id)?.find((event) => event.sequence === 1)?.at
+      : undefined;
+    const lastSucceededObservedAt = proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt);
     return {
       ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
       ...(lastSucceededAt ? { lastSucceededAt } : {}),
+      ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+      ...sittings,
     };
   }
 }
@@ -973,6 +1025,48 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
     .limit(1);
+}
+
+/**
+ * The pointed candidate's store-observed first event, joined on the unique
+ * (candidate_id, sequence) index: the success instant in the attempt clock's
+ * own units. The pointer/receipt proof still decides whether it counts.
+ */
+export function routineClockPointedObservedRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
+  return db
+    .select({ observedAt: civicDataCandidateEvents.at })
+    .from(civicDataPromotions)
+    .innerJoin(civicDataCandidateEvents, and(
+      eq(civicDataCandidateEvents.candidateId, civicDataPromotions.currentVersionId),
+      eq(civicDataCandidateEvents.sequence, 1),
+    ))
+    .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
+    .limit(1);
+}
+
+/**
+ * A MEETING pointer's sitting starts, built by Postgres from the promoted
+ * payload: a few timestamps cross the wire, never the payload. The strings are
+ * returned as stored and parsed by the runner exactly as the memory twin
+ * (`meetingPayloadSittingStarts`) parses them, so no cast can fail the clock.
+ */
+export function sittingStartsRead(db: RoutineClockDb, scope: string) {
+  const payload = civicDataPromotions.payload;
+  return db
+    .select({
+      starts: sql<unknown>`coalesce((
+        select jsonb_agg(m->'startsAt')
+        from jsonb_array_elements(case when jsonb_typeof(${payload}->'meetings') = 'array' then ${payload}->'meetings' else '[]'::jsonb end) as m
+        where jsonb_typeof(m->'startsAt') = 'string'
+      ), '[]'::jsonb)`,
+    })
+    .from(civicDataPromotions)
+    .where(and(eq(civicDataPromotions.recordClass, "MEETING"), eq(civicDataPromotions.scope, scope)))
+    .limit(1);
+}
+
+function sittingStartsFromRow(value: unknown): readonly string[] | undefined {
+  return Array.isArray(value) ? value.filter((start): start is string => typeof start === "string") : undefined;
 }
 
 /** The clock's pointed-candidate read: every row field, the candidate as its narrowed view. */
@@ -1609,7 +1703,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.sort((a, b) => a.sequence - b.sequence).map(postgresCandidateEventRowToEvent);
   }
 
-  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<{ lastAttemptedAt?: string; lastSucceededAt?: string }> {
+  async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
     const attemptQuery = this.db
       .select({ attemptedAt: civicDataCandidateEvents.at })
       .from(civicDataCandidates)
@@ -1631,7 +1725,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     // Identity and proof only: a whole-row read here moves every promoted
     // dataset on every pass (see ROUTINE_CLOCK_CANDIDATE_FIELDS).
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
-    const [rows, pointerRows] = await this.db.batch([attemptQuery, pointerQuery]);
+    const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
+    const [rows, pointerRows, observedRows, sittingRows] = recordClass === "MEETING"
+      ? await this.db.batch([attemptQuery, pointerQuery, observedQuery, sittingStartsRead(this.db, scope)])
+      : [...await this.db.batch([attemptQuery, pointerQuery, observedQuery]), null] as const;
     // The first event is the store-observed attempt clock. A refused
     // candidate's claimed retrievedAt is evidence, never scheduler authority.
     const lastAttemptedAt = rows[0]?.attemptedAt === undefined
@@ -1642,29 +1739,41 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ? await routineClockCandidateRead(this.db, pointer.currentVersionId)
       : [];
     const pointedRecord = pointedRow ? routineClockRowToRecord(pointedRow) : null;
+    const sittings = pointer && sittingRows !== null
+      ? { sittingStarts: sittingStartsFromRow(sittingRows[0]?.starts) }
+      : {};
     if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
-      return trustedLkgImportClock(
-        lastAttemptedAt,
-        canonicalPostgresRoutineTimestamp(pointer.promotedAt, "clock.importPromotedAt"),
-      );
+      return {
+        ...trustedLkgImportClock(
+          lastAttemptedAt,
+          canonicalPostgresRoutineTimestamp(pointer.promotedAt, "clock.importPromotedAt"),
+        ),
+        ...sittings,
+      };
     }
-    const lastSucceededAt = proofConsistentSuccess(
-      pointedRecord,
-      pointer ? {
-        sourceId: pointer.sourceId,
-        recordClass: pointer.recordClass as RoutineRecordClass,
-        scope: pointer.scope,
-        versionId: pointer.currentVersionId,
-        lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
-        receipt: pointer.validationReceipt as ValidationReceipt,
-      } : null,
-    );
+    const pointerProof: PromotionPointerProof | null = pointer ? {
+      sourceId: pointer.sourceId,
+      recordClass: pointer.recordClass as RoutineRecordClass,
+      scope: pointer.scope,
+      versionId: pointer.currentVersionId,
+      lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
+      receipt: pointer.validationReceipt as ValidationReceipt,
+    } : null;
+    const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointerProof);
     const canonicalLastSucceededAt = lastSucceededAt === undefined
       ? undefined
       : canonicalPostgresRoutineTimestamp(lastSucceededAt, "clock.lastSucceededAt");
+    const observed = observedRows[0]?.observedAt;
+    const lastSucceededObservedAt = proofConsistentObservedSuccess(
+      pointedRecord,
+      pointerProof,
+      observed === undefined ? undefined : canonicalPostgresRoutineTimestamp(observed, "clock.lastSucceededObservedAt"),
+    );
     return {
       ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
       ...(canonicalLastSucceededAt ? { lastSucceededAt: canonicalLastSucceededAt } : {}),
+      ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+      ...sittings,
     };
   }
 }

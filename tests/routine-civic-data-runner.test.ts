@@ -1135,8 +1135,10 @@ test("the routine runner derives its clock from durable candidate history", () =
   assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
-  const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs)");
-  assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < dueDecision);
+  // Sitting windows are decided once, at the frozen instant, from the same reads.
+  const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs)");
+  const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot)");
+  assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < sittingSignals && sittingSignals < dueDecision);
   assert.doesNotMatch(source, /routine-civic-data-runner\.json|readState\(|writeState\(/);
 });
 

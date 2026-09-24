@@ -18,6 +18,84 @@ export interface RoutineCadencePolicy {
   }[];
 }
 
+/**
+ * **MEETING SOURCES FOLLOW THEIR SITTINGS** (owner decision, 2026-09-24).
+ *
+ * A meeting source is re-read hourly while its body has any sitting, upcoming
+ * or past, within seven days of now, and twice daily otherwise. The window
+ * rolls with the clock: a sitting entering it makes the source hourly at that
+ * instant, and the source leaves it seven days after its last sitting. It
+ * covers calendars, agendas, changes, cancellations, decisions and minutes;
+ * an outcome routine follows the partitions that carry its body's sittings.
+ *
+ * This is how often the runner re-reads, never how old a Reader may see a
+ * record: Reader freshness stays on each contract's `cadence`, which must
+ * outlast `baseEveryMs` so a re-read lands before the record reads STALE. No
+ * other data family's schedule is changed by this policy.
+ */
+export interface SittingWindowSchedule {
+  readonly kind: "SITTING_WINDOW";
+  /** A sitting starting within this distance of now, on either side, makes the source hot. */
+  readonly windowMs: number;
+  readonly hotEveryMs: number;
+  readonly baseEveryMs: number;
+  /** The meeting partitions whose sittings drive this task; omitted means the task's own payload. */
+  readonly follows?: readonly { readonly meetingSource: string; readonly bodyId: string }[];
+}
+
+export const MEETING_SITTING_WINDOW = {
+  kind: "SITTING_WINDOW",
+  windowMs: 7 * DAY,
+  hotEveryMs: HOUR,
+  baseEveryMs: 12 * HOUR,
+} as const satisfies SittingWindowSchedule;
+
+/** Polling admission is not acquisition; source contracts retain their own cadence. */
+export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
+
+/**
+ * Whether a body has a sitting within the window of `nowMs`, from its
+ * partitions' sitting starts. `undefined` means it cannot be told: a sitting
+ * list could not be read.
+ */
+export function sittingWindowHot(
+  schedule: SittingWindowSchedule,
+  sittingLists: readonly (readonly string[] | undefined)[],
+  nowMs: number,
+): boolean | undefined {
+  let unknown = sittingLists.length === 0;
+  for (const starts of sittingLists) {
+    if (starts === undefined) {
+      unknown = true;
+      continue;
+    }
+    for (const start of starts) {
+      const at = Date.parse(start);
+      if (Number.isFinite(at) && Math.abs(at - nowMs) <= schedule.windowMs) return true;
+    }
+  }
+  return unknown ? undefined : false;
+}
+
+/** How long after its last success a sitting-window task is re-read; unknown counts as hot. */
+export function sittingWindowRereadMs(schedule: SittingWindowSchedule, hot: boolean | undefined): number {
+  return hot === false ? schedule.baseEveryMs : schedule.hotEveryMs;
+}
+
+/**
+ * The instant a succeeded sitting-window task falls due: one re-read interval
+ * after its store-observed success, less one admission pass, so "hourly" is
+ * at most an hour and never drifts later pass by pass. The runner admits on it
+ * and Admin shows it, so the owner sees the instant the runner acts on.
+ */
+export function sittingWindowDueAtMs(
+  schedule: SittingWindowSchedule,
+  succeededMs: number,
+  hot: boolean | undefined,
+): number {
+  return succeededMs + sittingWindowRereadMs(schedule, hot) - ROUTINE_DATA_ADMISSION_MS;
+}
+
 export interface RoutineSourceContract {
   readonly id: string;
   readonly sourceId: SourceAuthorityId;
@@ -37,6 +115,8 @@ export interface RoutineSourceContract {
       };
   readonly parserNormalizerVersion: string;
   readonly cadence: RoutineCadencePolicy;
+  /** Omitted: the runner re-reads on `cadence`. See `SittingWindowSchedule`. */
+  readonly schedule?: SittingWindowSchedule;
   readonly retry: { readonly afterMs: number; readonly description: string };
   readonly authorityConstraint: { readonly registry: "SOURCE_AUTHORITIES"; readonly sourceId: SourceAuthorityId };
   readonly validationContract: typeof VALIDATION_CHECKS;
@@ -86,6 +166,7 @@ export const MEETING_PARTITION_POLICY = {
   recordClass: "MEETING",
   parserNormalizerVersion: "meetings-composite/2",
   cadence: MEETING_CADENCE,
+  schedule: MEETING_SITTING_WINDOW,
   retry: { afterMs: HOUR, description: "one hour after a failed source/body attempt" },
   authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meetings-public-bodies" },
   validationContract: CHECKS,
@@ -282,10 +363,21 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       requestedUrl: "https://webapi.legistar.com/v1/pima/events",
     },
     parserNormalizerVersion: "pima-legistar-outcomes/2",
+    // Reader freshness only; re-reads follow the Board's sitting window below.
+    // Fourteen hours outlasts the twelve-hour re-read plus one failed retry.
     cadence: {
-      description: "every three hours through the 2026 general election, then daily",
+      description: "fresh for fourteen hours through the 2026 general election, then a day",
       defaultEveryMs: DAY,
-      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 3 * HOUR, description: "every three hours through 2026-11-03" }],
+      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
+    },
+    // The Board of Supervisors' sittings are carried by both of its partitions:
+    // the Legistar Web API events and the InSite portal grid.
+    schedule: {
+      ...MEETING_SITTING_WINDOW,
+      follows: [
+        { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+        { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+      ],
     },
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, or votes attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "pima-legistar-outcomes" },

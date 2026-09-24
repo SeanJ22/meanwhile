@@ -337,7 +337,12 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal(healthyClock.lastSucceededAt, SECOND);
   assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 30 * 60_000), false);
   assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 60 * 60_000), true);
-  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000), false);
+  // The healthy sibling keeps its own sitting-window clock: twice daily when
+  // its body has no sitting within seven days, hourly when it does.
+  assert.equal(healthyClock.lastSucceededObservedAt, SECOND);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000, false), false);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 55 * 60_000 - 1, true), false);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 55 * 60_000, true), true);
 });
 
 test("meeting Reader repair composes the shared aggregate once and correlates exact partition receipts", async () => {

@@ -19,12 +19,23 @@ import "server-only";
  * (the lattice found no land in it), or whose shard cannot be read, is
  * `indexed: false` and the page names it as not indexed. It is never shown as a
  * ZCTA with no governments.
+ *
+ * Production reads only the slice a page needs from the promoted pointer
+ * (`lib/control-plane/admin-view/promoted-slices.ts`): one state's containers,
+ * one container, or one code's containers, cut out by Postgres. A cold server
+ * used to read the whole 13.7 MB lookup and prove it before any of these
+ * answered (7.5 s, 2026-09-24), and a load over three seconds is not a win
+ * (Sean, 2026-09-24). The whole lookup is built only outside production where
+ * the store holds no pointer: the committed Arizona bootstrap that local work
+ * and tests read.
  */
 import type { GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
 import { loadPublishedLookupState, type PublishedLookupSource } from "@/lib/census-geography/reader.ts";
+import { containersOfCode, oneContainer, stateContainers, type Slice } from "@/lib/control-plane/admin-view/promoted-slices.ts";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index.ts";
 
-import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
+import { readerQuery } from "./reader-query.ts";
+import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead, type SharedRead } from "./shared-read.ts";
 
 /** One code's place in the index: every division whose territory reaches it, or not indexed. */
 async function indexedCode(zcta5: string): Promise<{ readonly indexed: boolean; readonly divisions: readonly string[] }> {
@@ -50,17 +61,49 @@ function unread<T>(detail: string): LookupRead<T> {
   return { kind: "UNREAD", detail };
 }
 
+const NOT_PUBLISHED = "The Census geography lookup has not been published to this store yet, so no container can be listed. That is not a claim that none exist.";
+
+function byLabel(a: GeographyRef, b: GeographyRef): number {
+  return a.label.localeCompare(b.label, "en", { numeric: true });
+}
+
+/* ---------------------------------------------------------------- the slices */
+
+/*
+ * A slice is kept a minute fresh and half an hour recent, like every Admin
+ * read (see shared-read.ts), per question asked. The questions are few (a state
+ * and its kinds, a container, a code), and the map is cleared if it ever grows
+ * past a few hundred.
+ */
+const sliceReads = new Map<string, SharedRead<Slice<unknown>>>();
+
+function sliceRead<T>(key: string, what: string, load: () => Promise<Slice<T>>): Promise<Slice<T>> {
+  let shared = sliceReads.get(key);
+  if (shared === undefined) {
+    if (sliceReads.size > 400) sliceReads.clear();
+    shared = sharedRead<Slice<unknown>>({
+      freshMs: 60_000,
+      staleMs: 30 * 60_000,
+      deadlineMs: ADMIN_READ_DEADLINE_MS,
+      keep: (s) => s.kind === "HELD",
+      late: (ms) => ({ kind: "UNREAD", detail: lateWords(what, ms) }),
+    });
+    sliceReads.set(key, shared);
+  }
+  return shared.read(load) as Promise<Slice<T>>;
+}
+
+/** Whether this read falls back to the whole lookup: only outside production, only where the store has no pointer. */
+function readsWholeLookup(slice: Slice<unknown> | null): boolean {
+  return process.env.NODE_ENV !== "production" && (slice === null || slice.kind === "NOT_PUBLISHED");
+}
+
+/* ------------------------------------------------ the whole lookup (not prod) */
+
 type LookupOpened =
   | { readonly ok: true; readonly state: Awaited<ReturnType<typeof loadPublishedLookupState>> }
   | { readonly ok: false; readonly detail: string };
 
-/*
- * The built lookup: the promoted payload is ~15 MB of text and the index built
- * over it is the same until the pointer moves. One load is shared by every
- * caller that arrives while it runs — All states lists three states' counties
- * at once and used to load it three times over — then kept a minute fresh and
- * half an hour recent (see shared-read.ts).
- */
 const lookupShared = sharedRead<LookupOpened>({
   freshMs: 60_000,
   staleMs: 30 * 60_000,
@@ -73,12 +116,7 @@ async function lookupOrUnread(): Promise<LookupOpened> {
   return lookupShared.read(async () => {
     try {
       const state = await loadPublishedLookupState();
-      if (state.source === "unavailable") {
-        return {
-          ok: false,
-          detail: "The Census geography lookup has not been published to this store yet, so no container can be listed. That is not a claim that none exist.",
-        };
-      }
+      if (state.source === "unavailable") return { ok: false, detail: NOT_PUBLISHED };
       return { ok: true, state };
     } catch (error) {
       return { ok: false, detail: `The Census geography lookup could not be read (${error instanceof Error ? error.name : "error"}).` };
@@ -86,21 +124,39 @@ async function lookupOrUnread(): Promise<LookupOpened> {
   });
 }
 
+/* ------------------------------------------------------------------ the reads */
+
 /** Every container of the given types that lies in, or reaches into, the state. */
 export async function listContainers(
   stateAbbr: string,
   types: readonly GeographyType[],
 ): Promise<LookupRead<Readonly<Partial<Record<GeographyType, readonly GeographyRef[]>>>>> {
+  const st = stateAbbr.toUpperCase();
+  const query = readerQuery();
+  const slice =
+    query === null ? null : await sliceRead(`state|${st}|${[...types].sort().join(",")}`, `The Census geography for ${st}`, () => stateContainers(st, types, false, query));
+  if (!readsWholeLookup(slice) && slice !== null) {
+    if (slice.kind === "NOT_PUBLISHED") return unread(NOT_PUBLISHED);
+    if (slice.kind === "UNREAD") return unread(slice.detail);
+    const published = new Set(slice.value.scopes.map((s) => s.type));
+    const out: Partial<Record<GeographyType, readonly GeographyRef[]>> = {};
+    for (const type of types) {
+      if (!published.has(type)) continue;
+      out[type] = slice.value.containers
+        .filter((c) => c.ref.type === type)
+        .map((c) => c.ref)
+        .sort(byLabel);
+    }
+    return { kind: "HELD", source: "published", versionId: slice.versionId, value: out };
+  }
+
   const opened = await lookupOrUnread();
   if (!opened.ok) return unread(opened.detail);
-  const st = stateAbbr.toUpperCase();
   const out: Partial<Record<GeographyType, readonly GeographyRef[]>> = {};
   for (const type of types) {
     const e = await opened.state.lookup.enumerateGroupings(type);
     if (e.status.kind !== "OK") continue;
-    out[type] = e.instances
-      .filter((g) => g.stateAbbr === st || g.memberStates.includes(st))
-      .sort((a, b) => a.label.localeCompare(b.label, "en", { numeric: true }));
+    out[type] = e.instances.filter((g) => g.stateAbbr === st || g.memberStates.includes(st)).sort(byLabel);
   }
   return { kind: "HELD", source: opened.state.source, versionId: opened.state.versionId, value: out };
 }
@@ -110,6 +166,24 @@ export async function loadContainer(
   type: GeographyType,
   geoid: string,
 ): Promise<LookupRead<{ readonly geography: GeographyRef; readonly zctas: readonly ZctaInScope[]; readonly plan: string }>> {
+  const query = readerQuery();
+  const slice =
+    query === null ? null : await sliceRead(`container|${type}|${geoid}`, `The Census geography for ${geoid}`, () => oneContainer(type, geoid, query));
+  if (!readsWholeLookup(slice) && slice !== null) {
+    if (slice.kind === "NOT_PUBLISHED") return unread(NOT_PUBLISHED);
+    if (slice.kind === "UNREAD") return unread(slice.detail);
+    const scope = slice.value.scopes.find((s) => s.type === type);
+    if (scope === undefined) return unread(`The published lookup carries no ${type.replace(/_/g, " ")} geography yet.`);
+    const found = slice.value.containers[0];
+    if (found === undefined) return unread(`${type} ${geoid} is not a geography in published version ${scope.version}.`);
+    return {
+      kind: "HELD",
+      source: "published",
+      versionId: slice.versionId,
+      value: { geography: found.ref, zctas: await codesOf(found.overlaps ?? []), plan: found.plan },
+    };
+  }
+
   const opened = await lookupOrUnread();
   if (!opened.ok) return unread(opened.detail);
   const manifest = await opened.state.lookup.manifest();
@@ -136,14 +210,27 @@ export interface ContainerWithCodes {
   readonly zctas: readonly ZctaInScope[];
 }
 
-/** Every container of one type in the state, each with its codes — one lookup, one pass. */
+/** Every container of one type in the state, each with its codes — one read, one pass. */
 export async function loadContainersWithCodes(stateAbbr: string, type: GeographyType): Promise<LookupRead<readonly ContainerWithCodes[]>> {
+  const st = stateAbbr.toUpperCase();
+  const query = readerQuery();
+  const slice =
+    query === null ? null : await sliceRead(`codes|${st}|${type}`, `The Census geography for ${st}`, () => stateContainers(st, [type], true, query));
+  if (!readsWholeLookup(slice) && slice !== null) {
+    if (slice.kind === "NOT_PUBLISHED") return unread(NOT_PUBLISHED);
+    if (slice.kind === "UNREAD") return unread(slice.detail);
+    if (!slice.value.scopes.some((s) => s.type === type)) return unread(`The published lookup carries no ${type.replace(/_/g, " ")} geography yet.`);
+    const containers = [...slice.value.containers].sort((a, b) => byLabel(a.ref, b.ref));
+    const out: ContainerWithCodes[] = [];
+    for (const c of containers) out.push({ geography: c.ref, zctas: await codesOf(c.overlaps ?? []) });
+    return { kind: "HELD", source: "published", versionId: slice.versionId, value: out };
+  }
+
   const opened = await lookupOrUnread();
   if (!opened.ok) return unread(opened.detail);
-  const st = stateAbbr.toUpperCase();
   const e = await opened.state.lookup.enumerateGroupings(type);
   if (e.status.kind !== "OK") return unread(e.status.note);
-  const refs = e.instances.filter((g) => g.stateAbbr === st || g.memberStates.includes(st)).sort((a, b) => a.label.localeCompare(b.label, "en", { numeric: true }));
+  const refs = e.instances.filter((g) => g.stateAbbr === st || g.memberStates.includes(st)).sort(byLabel);
   const out: ContainerWithCodes[] = [];
   for (const g of refs) {
     const r = await opened.state.lookup.zctasForGrouping({ type: g.type, geoid: g.geoid, version: g.version });
@@ -161,16 +248,42 @@ export interface CodeMembership {
   readonly fraction: number | null;
 }
 
+function sortMemberships(memberships: CodeMembership[]): CodeMembership[] {
+  return memberships.sort((a, b) => a.type.localeCompare(b.type) || a.label.localeCompare(b.label, "en", { numeric: true }));
+}
+
 /** Which containers one code belongs to, of the given types (the lookup's reverse index). */
 export async function membershipsOfCode(zcta5: string, types: readonly GeographyType[]): Promise<LookupRead<{ readonly memberships: readonly CodeMembership[]; readonly code: ZctaInScope }>> {
+  const query = readerQuery();
+  const slice =
+    query === null ? null : await sliceRead(`code|${zcta5}|${[...types].sort().join(",")}`, `The Census geography for ZCTA ${zcta5}`, () => containersOfCode(zcta5, types, query));
+  if (!readsWholeLookup(slice) && slice !== null) {
+    if (slice.kind === "NOT_PUBLISHED") return unread(NOT_PUBLISHED);
+    if (slice.kind === "UNREAD") return unread(slice.detail);
+    if (!slice.value.known) return unread(`${zcta5} is not a Census ZCTA in the published coverage.`);
+    const memberships = sortMemberships(
+      slice.value.containers.flatMap((c) => {
+        const o = (c.overlaps ?? [])[0];
+        return o === undefined ? [] : [{ type: c.ref.type, geoid: c.ref.geoid, label: c.ref.label, whole: o.whole, fraction: o.fraction }];
+      }),
+    );
+    return {
+      kind: "HELD",
+      source: "published",
+      versionId: slice.versionId,
+      value: { memberships, code: { zcta5, whole: true, fraction: null, ...(await indexedCode(zcta5)) } },
+    };
+  }
+
   const opened = await lookupOrUnread();
   if (!opened.ok) return unread(opened.detail);
   const r = await opened.state.lookup.groupingsForZcta(zcta5);
   if (r.status.kind !== "OK") return unread(r.status.note);
-  const memberships = r.memberships
-    .filter((m) => types.includes(m.geography.type))
-    .map((m) => ({ type: m.geography.type, geoid: m.geography.geoid, label: m.geography.label, whole: m.whole, fraction: m.fraction }))
-    .sort((a, b) => a.type.localeCompare(b.type) || a.label.localeCompare(b.label, "en", { numeric: true }));
+  const memberships = sortMemberships(
+    r.memberships
+      .filter((m) => types.includes(m.geography.type))
+      .map((m) => ({ type: m.geography.type, geoid: m.geography.geoid, label: m.geography.label, whole: m.whole, fraction: m.fraction })),
+  );
   return {
     kind: "HELD",
     source: opened.state.source,

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 736,
-    "named": 7257,
+    "files": 737,
+    "named": 7266,
     "dynamic": 28
   },
   "files": {
@@ -5850,6 +5850,20 @@
         "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
         "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
         "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-official-page.test.ts": {
+      "names": [
+        "LABELS AND BOUNDS: only a label of two words or more names a body; a link step proposes at most its cap, never off-host",
+        "SANTA FE TRANSFER: the same method, retrieved for a New Mexico district with its identity substituted, verifies its own board page; neither state's page verifies for the other",
+        "SEARCH: a search result on the body's own domain that is itself its events page is confirmed from the page already read",
+        "TERMS AND ZONES: a body's name forms come from its recorded name alone; a zone is tabled or never guessed",
+        "THE RUNNER USES WHAT IT SAVED: cycle 1 credits the method for TUSD; cycle 2, a later process in New Mexico, reads it from the store and applies it",
+        "THE SAVED METHOD: TUSD's homepage links its reconfiguration page by name, and the method proposes exactly that, on its own host",
+        "TUSD PROOF: the executor alone, from TUSD's homepage, confirms the reconfiguration page's sessions for Tucson Unified",
+        "VALUE CLOSURE: an import or re-export that carries only types is left out; any value, side effect or dynamic import is kept",
+        "VERSION: the extractor id names the digest of the adapter's value-import closure, so a runtime change re-keys it"
       ],
       "dynamic": 0
     },

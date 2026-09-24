@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 755,
-    "named": 7451,
+    "named": 7453,
     "dynamic": 30
   },
   "files": {
@@ -5972,7 +5972,9 @@
         "A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN",
         "A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE",
         "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
+        "A PAGE CARRYING A CREDENTIAL IS READ AS ITS SANITIZED DERIVATIVE, AND A VAULT THAT REFUSES ITS BYTES NEVER ENDS THE WALK",
         "A STALE RECORDED ADDRESS: the current official site a route hint records is walked first, and the walk says what it replaced",
+        "A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other walks are recorded and their field manual is written",
         "BOUNDED: a walk stops at its request bound and says so",
         "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
         "FOUND: robots first, then the homepage, then the route it links; confirmed by content and vaulted under the walk",

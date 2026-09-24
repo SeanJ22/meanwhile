@@ -219,8 +219,11 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
         {
           key: "held",
           fig: figures.records.toLocaleString("en-US"),
+          floor: figures.recordsFloor,
           tone: "accent",
-          text: `records held as of now; ${figures.readerVisible.toLocaleString("en-US")} of them in versions a reader was confirmed able to open`,
+          text: `records held as of now; ${figures.readerVisible.toLocaleString("en-US")} of them in versions a reader was confirmed able to open${
+            figures.recordsFloor ? ". A body read through two sources counts the larger, since both may list the same sitting" : ""
+          }`,
         },
       ]
     : [];

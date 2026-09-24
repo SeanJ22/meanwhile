@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -8,6 +8,7 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import {
   ensureReaderAuthorityEdge,
   publishReaderEdgeArtifacts,
+  servedAuthorityVersion,
 } from "../lib/meetings/edge-serving.ts";
 import {
   primeRegistryRuntimeFromValue,
@@ -74,4 +75,61 @@ test("the registry-runtime edge value is request-scoped: absent by default (runn
   // No enterRegistryRuntimeEdge on this synchronous context → null, so
   // settleRegistryAuthorityReads falls through to refreshRegistryRuntimeFromPromoted.
   assert.equal(currentRegistryRuntimeEdge(), null);
+});
+
+test("an unchanged authority version carries its served artifact forward; the runner never re-reads it", async () => {
+  // Every reader-repair pass once read each authority family whole (30.8 MB on
+  // 2026-09-23, 24 MB of it registry-runtime) only to find it unchanged.
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
+  const value = registryRuntimeFirstSeed().value;
+  const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
+  assert.equal(first.status, "PUBLISHED");
+  const servedManifest = (await store.readManifest())!.manifest;
+  const servedRef = servedManifest.authorityArtifacts?.["registry-runtime"];
+  assert.equal(servedAuthorityVersion(servedManifest, "registry-runtime"), "rt-v1");
+  assert.equal(servedAuthorityVersion(servedManifest, "federal-directory"), null);
+
+  // Nothing changed: a carried family is as current as a re-read one.
+  const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { versionId: "rt-v1", carried: true } } });
+  assert.equal(same.status, "CURRENT");
+
+  // Another family changed, so a new manifest is written: the carried family
+  // keeps pointing at the exact artifact already served, and the Reader reads
+  // the same value back from it.
+  const campaignSites = { records: [{ id: "site-1" }] };
+  const advanced = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+    store,
+    authority: {
+      "registry-runtime": { versionId: "rt-v1", carried: true },
+      "campaign-sites": { value: campaignSites, versionId: "cs-v1" },
+    },
+  });
+  assert.equal(advanced.status, "PUBLISHED");
+  const manifest = (await store.readManifest())!.manifest;
+  assert.deepEqual(manifest.authorityArtifacts?.["registry-runtime"], servedRef, "the served artifact is carried, never rewritten");
+  assert.equal(manifest.authorityArtifacts?.["campaign-sites"]?.version, "cs-v1");
+  const edge = await ensureReaderAuthorityEdge(manifest, store);
+  assert.equal(edge.registryRuntime?.versionId, "rt-v1");
+  assert.equal(edge.registryRuntime?.value.bodyRosters.length, value.bodyRosters.length);
+
+  // A carried version the manifest no longer serves is left out, as a failed
+  // read is, so the Reader falls back to the database for that family.
+  const moved = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+    store,
+    authority: {
+      "registry-runtime": { versionId: "rt-v0-not-served", carried: true },
+      "campaign-sites": { value: campaignSites, versionId: "cs-v2" },
+    },
+  });
+  assert.equal(moved.status, "PUBLISHED");
+  assert.equal((await store.readManifest())!.manifest.authorityArtifacts?.["registry-runtime"], undefined);
+
+  // The runner asks the served manifest first and reads a family's value only
+  // when its pointer has moved past the served version.
+  const script = readFileSync("scripts/routine-civic-data-reader-repair.mts", "utf8");
+  for (const family of ["registry-runtime", "federal-directory", "campaign-sites", "state-legislators"]) {
+    assert.match(script, new RegExp(`servedIfCurrent\\("${family}"`), `${family} is checked against the served manifest`);
+    assert.match(script, new RegExp(`authority\\["${family}"\\] = \\{ versionId: carried, carried: true \\}`), `${family} carries forward`);
+  }
+  assert.match(script, /publishReaderEdgeArtifacts\([\s\S]*store: artifactStore/, "publish compares against the manifest the runner read");
 });

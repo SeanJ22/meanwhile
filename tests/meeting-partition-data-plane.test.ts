@@ -111,6 +111,7 @@ function agendaDocument(row: Meeting, retrievedAt: string): AgendaDocument {
 
 class CountingMeetingStore extends MemoryRoutineDataStore {
   readPromotionsCalls = 0;
+  readPromotionIdentitiesCalls = 0;
 
   override async readPromotions<T = unknown>(
     recordClass: RoutineRecordClass,
@@ -118,6 +119,11 @@ class CountingMeetingStore extends MemoryRoutineDataStore {
   ) {
     this.readPromotionsCalls += 1;
     return super.readPromotions<T>(recordClass, scopes);
+  }
+
+  override async readPromotionIdentities(recordClass: RoutineRecordClass, scopes: readonly string[]) {
+    this.readPromotionIdentitiesCalls += 1;
+    return super.readPromotionIdentities(recordClass, scopes);
   }
 }
 
@@ -350,6 +356,7 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     events: await store.events(candidate.id),
   })));
   store.readPromotionsCalls = 0;
+  store.readPromotionIdentitiesCalls = 0;
 
   const repairs = await repairMeetingReaderProjectionReadbacks(
     store,
@@ -357,7 +364,8 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     SECOND,
     "f".repeat(40),
   );
-  assert.equal(store.readPromotionsCalls, 2, "one pointer batch plus one actual aggregate Reader read");
+  assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
+  assert.equal(store.readPromotionsCalls, 1, "the payloads cross once, in the actual aggregate Reader read");
   assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
     { contractId: legistar.id, ok: true },
     { contractId: insite.id, ok: true },
@@ -385,6 +393,20 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     assert.equal(afterEvents.at(-1)?.state, "PROMOTED");
     assert.match(afterEvents.at(-1)?.detail ?? "", new RegExp(`^${READER_PROJECTION_READBACK_PREFIX}`));
   }
+
+  // The ordinary pass: every receipt is already current, so no partition's
+  // payload crosses the wire at all; the identity batch alone decides it.
+  store.readPromotionsCalls = 0;
+  store.readPromotionIdentitiesCalls = 0;
+  const current = await repairMeetingReaderProjectionReadbacks(
+    store,
+    [legistar, insite],
+    new Date(Date.parse(SECOND) + 1).toISOString(),
+    "f".repeat(40),
+  );
+  assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
+  assert.equal(store.readPromotionIdentitiesCalls, 1);
+  assert.equal(store.readPromotionsCalls, 0, "a current pass reads no partition payload");
 });
 
 test("a semantic refusal holds only the exact source/body partition", async () => {

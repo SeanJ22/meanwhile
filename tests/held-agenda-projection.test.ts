@@ -50,22 +50,27 @@ function tusd499Corpus(): AgendaDocument[] {
 
 const REVISION_LANGUAGE = /revis|version|amend/i;
 
-test("Ask, Tucson Unified 499: 89 stored rows (88 identical re-reads plus the site root) are ONE agenda record with no revision language", () => {
+test("Ask, Tucson Unified 499: 89 stored rows (88 re-reads of its portal page plus the site root) are two index records with no revision language", () => {
+  /*
+   * Corrected 2026-09-23: the 88 re-reads are the Diligent portal page's skip
+   * links, not the sitting's agenda, so both distinct contents are named as
+   * publication indexes. Identical re-reads are still ONE record.
+   */
   const corpus = tusd499Corpus();
   assert.equal(corpus.filter((document) => document.meetingId === sitting.id).length, 89);
   const records = heldAgendaDocumentRecords(sitting, corpus, meetings);
-  assert.equal(records.length, 1);
-  const [record] = records;
-  assert.equal(record!.kind, "AGENDA_DOCUMENT");
-  assert.equal(record!.sourceUrl, OWN_PAGE);
-  assert.equal(record!.retrievedAt, "2026-09-22T15:05:00.000Z", "the newest read of that content speaks for it");
-  assert.equal(record!.agendaDocument?.publicationIndex, false);
-  assert.ok(!records.some((candidate) => candidate.sourceUrl === SITE_ROOT), "the site root is not a version of this sitting's agenda");
-  for (const candidate of records) assert.doesNotMatch(candidate.text, REVISION_LANGUAGE);
+  assert.deepEqual(records.map((record) => record.sourceUrl), [OWN_PAGE, SITE_ROOT]);
+  assert.equal(records[0]!.retrievedAt, "2026-09-22T15:05:00.000Z", "the newest read of that content speaks for it");
+  for (const record of records) {
+    assert.equal(record.kind, "AGENDA_DOCUMENT");
+    assert.equal(record.agendaDocument?.publicationIndex, true);
+    assert.match(record.text, /publication index/);
+    assert.doesNotMatch(record.text, REVISION_LANGUAGE);
+  }
 
   // The reader's path: the Ask leaf renders exactly the records it was given.
   const markup = renderToStaticMarkup(createElement(AskAnswerRecords, { records, initiallyOpen: true, agendaLead: true, prose: null }));
-  assert.equal(markup.match(/data-ask-document-id=/g)?.length, 1, "stated N equals rendered rows");
+  assert.equal(markup.match(/data-ask-document-id=/g)?.length, 2, "stated N equals rendered rows");
   assert.doesNotMatch(markup, REVISION_LANGUAGE);
 });
 

@@ -49,6 +49,48 @@
           "occurrences": 1
         }
       ]
+    },
+    "tests/fixtures/diligent/meeting-information-pcc-698.html": {
+      "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+      "capturedOn": "2026-09-23",
+      "capturedBy": "the Diligent agenda-extraction diagnosis session, one GET with the project user agent (as served: sha256 b8117e8cc4d25c18413e33ef6a888c82ca02b793130f917d2c34b8100edcb9cc)",
+      "rawSha256": "905133e63a6ac2a39fb1ce2396f88863a4898b3c9b53a3adb841f7df31f46982",
+      "sanitizedSha256": "f483b80b1d19c6672429a093e43e78ba818b6ea060a9d473551357861cb44a89",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 1,
+      "substringsReplaced": 1,
+      "fingerprints": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "38fbfc7e58e5",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
+    },
+    "tests/fixtures/diligent/meeting-information-tusd-502.html": {
+      "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
+      "capturedOn": "2026-09-23",
+      "capturedBy": "the Diligent agenda-extraction diagnosis session, one GET with the project user agent (as served: sha256 7b3c0ee092bbec2d27a334415a3ba47290097c2f3cbfcb482cc33c45248894cc)",
+      "rawSha256": "0a8570bd12461ea5b8cfa92683f4222a4e9e213095f71f3692ec1e348018a1ff",
+      "sanitizedSha256": "d10dc7da30dcdf009a5b2b43b54acd51d8f2e7847c52221f2e5124fcb14f2196",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 1,
+      "substringsReplaced": 1,
+      "fingerprints": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "38fbfc7e58e5",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
     }
   }
 }

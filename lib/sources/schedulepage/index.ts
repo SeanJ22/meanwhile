@@ -148,7 +148,22 @@ export type ScheduleShape =
    * nothing scheduled. `monthsAhead` on the row walks them, and the count is
    * stated per run.
    */
-  | "event-tip";
+  | "event-tip"
+  /**
+   * A BODY'S OWN FEED OF PUBLIC NOTICES (C9, 2026-09-24): one RSS item per
+   * sitting, whose text states the day, the time and the room, e.g. the
+   * Newbury Public Library's "There will be a Newbury Public Library Board of
+   * Trustee Meeting on Tuesday September 8th, 5pm at the Newbury Public
+   * Library." The feed also carries programs and job posts, so a row must
+   * carry `titleMatch` naming the body in the notices' own words.
+   */
+  | "notice-feed"
+  /**
+   * A BODY'S OWN "Next Meeting Date:" LINE (C9, 2026-09-24), e.g. the Newbury
+   * Energy Committee's home page: "Next Meeting Date: (tentative date)
+   * October 21, 2026 4pm Town Offices Meeting Room". One sitting per read.
+   */
+  | "next-meeting-line";
 
 export interface SchedulePageRaw {
   wiring: BodySourceWiring;
@@ -187,6 +202,8 @@ export interface ScheduledSitting {
   href: string | null;
   /** The page says this sitting was called off. */
   canceled: boolean;
+  /** The room the row itself names, in its own words, where it names one. */
+  place?: string | null;
 }
 
 /** What a shape parser saw and could not turn into a sitting. */
@@ -632,6 +649,107 @@ export function parseDocuments(html: string): Map<string, string> {
   return byDate;
 }
 
+const WEEKDAY = String.raw`(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day`;
+
+/** "on Tuesday September 8th, 5pm at the Newbury Public Library" and its kin. */
+const NOTICE_SITTING = new RegExp(
+  String.raw`\bon\s+(?:${WEEKDAY},?\s+)?([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(\d{4}))?\s*,?\s*(?:at\s+)?(\d{1,2}(?::\d{2})?\s*[AaPp]\.?\s*[Mm]\.?)?(?:\s+at\s+(?:the\s+)?([^.<]{3,80}))?`,
+  "i",
+);
+
+/** "Next Meeting Date: (tentative date) October 21, 2026 4pm Town Offices Meeting Room". */
+const NEXT_MEETING_LINE = new RegExp(
+  String.raw`\bNext Meeting(?: Date)?\s*:\s*(\([^)]{1,40}\))?\s*(?:${WEEKDAY},?\s+)?([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s*(\d{4})\s*(?:at\s+)?(\d{1,2}(?::\d{2})?\s*[AaPp]\.?\s*[Mm]\.?)?\s*([^.|<]{0,60})?`,
+  "i",
+);
+
+/** One RSS field's text, CDATA unwrapped and markup stripped. */
+function feedField(item: string, name: string): string {
+  const inner = new RegExp(String.raw`<${name}\b[^>]*>([\s\S]*?)<\/${name}>`, "i").exec(item)?.[1] ?? "";
+  return cellText(inner.replace(/<!\[CDATA\[|\]\]>/g, ""));
+}
+
+/**
+ * Shape 6 — a body's own feed of public notices (C9, 2026-09-24).
+ *
+ * One `<item>` per notice. An item is a sitting only when its title or text
+ * carries `titleMatch` AND its text states a day ("on Tuesday September 8th,
+ * 5pm"); every other item — a program, a job post, a poetry contest — is
+ * counted as `notSittings`, so "no trustees meeting this month" and "the
+ * parser matched nothing" never look alike. A notice that names a day but no
+ * year takes the year that puts the day nearest after the notice's own
+ * `pubDate`, because a notice is posted before the sitting it announces.
+ */
+export function parseNoticeFeed(xml: string, titleMatch: string): {
+  sittings: ScheduledSitting[];
+  counts: ParseCounts;
+} {
+  const byDate = new Map<string, ScheduledSitting>();
+  const counts: ParseCounts = { notSittings: 0, undated: 0 };
+  const needles = titleMatch.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
+  for (const item of xml.matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)) {
+    const title = feedField(item[1], "title");
+    const text = (feedField(item[1], "content:encoded") || feedField(item[1], "description")).replace(/\s+/g, " ");
+    const haystack = `${title} ${text}`.toLowerCase();
+    if (needles.length === 0 || !needles.some((needle) => haystack.includes(needle))) {
+      counts.notSittings += 1;
+      continue;
+    }
+    const m = NOTICE_SITTING.exec(text);
+    const month = m ? monthIndex(m[1]) : 0;
+    const day = m ? Number(m[2]) : 0;
+    const posted = Date.parse(feedField(item[1], "pubDate"));
+    if (!m || month === 0 || day < 1 || day > 31 || (!m[3] && !Number.isFinite(posted))) {
+      counts.undated += 1;
+      continue;
+    }
+    let year = m[3] ? Number(m[3]) : new Date(posted).getUTCFullYear();
+    if (!m[3] && Date.UTC(year, month - 1, day) < posted - 31 * 86_400_000) year += 1;
+    const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    if (byDate.has(date)) continue;
+    byDate.set(date, {
+      ...emptySitting(date, `${m[1]} ${day}, ${year}`),
+      time: m[4] ? parseClockTime(m[4]) : null,
+      canceled: CANCELED.test(title) || CANCELED.test(text),
+      place: m[5]?.replace(/\s+/g, " ").trim() || null,
+    });
+  }
+  return { sittings: [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date)), counts };
+}
+
+/**
+ * Shape 7 — a body's own "Next Meeting Date:" line (C9, 2026-09-24).
+ *
+ * "Next Meeting Date: (tentative date) October 21, 2026 4pm Town Offices
+ * Meeting Room". The qualifier is the body's own and is kept as the note, so
+ * the title follows `sittingTitle`'s rule for a parenthetical. A line the
+ * parser cannot date is counted as `undated`, never dropped silently.
+ */
+export function parseNextMeetingLine(html: string): {
+  sittings: ScheduledSitting[];
+  counts: ParseCounts;
+} {
+  const counts: ParseCounts = { notSittings: 0, undated: 0 };
+  const text = stripMarkup(html).replace(/\s+/g, " ");
+  const m = NEXT_MEETING_LINE.exec(text);
+  const month = m ? monthIndex(m[2]) : 0;
+  const day = m ? Number(m[3]) : 0;
+  if (!m || month === 0 || day < 1 || day > 31) {
+    if (/\bNext Meeting(?: Date)?\s*:/i.test(text)) counts.undated += 1;
+    return { sittings: [], counts };
+  }
+  const date = `${m[4]}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  return {
+    sittings: [{
+      ...emptySitting(date, `${m[2]} ${day}, ${m[4]}`),
+      note: m[1] ?? null,
+      time: m[5] ? parseClockTime(m[5]) : null,
+      place: m[6]?.replace(/\s+/g, " ").trim() || null,
+    }],
+    counts,
+  };
+}
+
 /**
  * The sitting's own name, where the body wrote one beside the date.
  *
@@ -677,6 +795,7 @@ function mergeSittings(lists: ScheduledSitting[][]): ScheduledSitting[] {
         time: existing.time ?? sitting.time,
         href: existing.href ?? sitting.href,
         canceled: existing.canceled || sitting.canceled,
+        place: existing.place ?? sitting.place ?? null,
       });
     }
   }
@@ -838,6 +957,17 @@ export function makeSchedulePageSource(
           drops.notConfigured += counts.notSittings;
           drops.unplaceableInTime += counts.undated;
           parseDropped += counts.notSittings + counts.undated;
+        } else if (shape === "notice-feed") {
+          const { sittings, counts } = parseNoticeFeed(schedule, wiring.config.titleMatch ?? "");
+          lists.push(sittings);
+          drops.notConfigured += counts.notSittings;
+          drops.unplaceableInTime += counts.undated;
+          parseDropped += counts.notSittings + counts.undated;
+        } else if (shape === "next-meeting-line") {
+          const { sittings, counts } = parseNextMeetingLine(section);
+          lists.push(sittings);
+          drops.unplaceableInTime += counts.undated;
+          parseDropped += counts.undated;
         } else if (shape === "event-tip") {
           const { sittings, counts } = parseEventTips(
             schedule,
@@ -898,7 +1028,8 @@ export function makeSchedulePageSource(
         // at an inherited address that would send a reader to the wrong
         // building.
         const marker = otherVenues.find((v) =>
-          sitting.note ? sitting.note.includes(v) : false,
+          (sitting.note ? sitting.note.includes(v) : false) ||
+          (sitting.place ? sitting.place.includes(v) : false),
         );
         const rowVenue = marker
           ? resolveVenue(SOURCE_NAME, wiring.ocdId, marker)

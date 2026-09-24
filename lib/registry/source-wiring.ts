@@ -887,6 +887,55 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     },
     verifiedAt: "2026-08-15",
   },
+  // Two Newbury bodies the town's calendar never carries (C9, 2026-09-24).
+  // Their `ICAL` rows below read the town feed and have never matched a
+  // sitting; each body publishes its own on its own site. Both hosts were
+  // robots-checked on 2026-09-24 (`User-agent: *` allowed) and answered with
+  // no challenge.
+  // - The Library Trustees post a PUBLIC NOTICE per sitting on the library's
+  //   WordPress feed: "on Tuesday September 8th, 5pm at the Newbury Public
+  //   Library". The feed also carries programs, so `titleMatch` is required.
+  // - The Energy Committee's home page states its next sitting:
+  //   "Next Meeting Date: (tentative date) October 21, 2026 4pm Town Offices
+  //   Meeting Room", i.e. the Town Office its other rows already resolve.
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#library-trustees",
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Newbury Public Library Board of Trustees",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-library-trustees-notices",
+      shapes: "notice-feed",
+      schedulePage: "https://newburynhlibrary.net/feed/",
+      titleMatch: "Trustee",
+      bodyName: "Newbury Public Library Trustees",
+      venueMatch: "Newbury Public Library",
+      otherVenueMarkers: "Newbury Public Library",
+    },
+    verifiedAt: "2026-09-24",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#energy-committee",
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Newbury, NH",
+    publishingOrg: "Newbury Energy Committee",
+    timeZone: "America/New_York",
+    config: {
+      slug: "newbury-energy-committee-page",
+      shapes: "next-meeting-line",
+      schedulePage: "https://www.newburyenergynh.org/",
+      bodyName: "Newbury Energy Committee",
+      venueMatch: "Newbury Town Office",
+    },
+    verifiedAt: "2026-09-24",
+  },
   // The Zoning Board of Adjustment, wired 2026-08-15 (the mobile round-two
   // session). Same shape and same adapter as its Planning Board sibling; the
   // only thing that had ever been missing was the venue, and it turned up in

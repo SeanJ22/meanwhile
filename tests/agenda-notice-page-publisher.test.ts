@@ -56,6 +56,9 @@ const pimaStudySession = sitting("legistar-insite:pima:1381578", PIMA, "Board of
 const lakeTodd = sitting("ical:lake-todd-village-district-newbury:2026-10-10", NEWBURY, "Lake Todd Village District", "Town of Bradford");
 const bradfordSelectBoard = sitting("ical:bradford-select-board:2026-10-06", BRADFORD, "Select Board", "Town of Bradford");
 const bradfordUnwiredBody = sitting("ical:bradford-other:2026-10-07", BRADFORD, "Heritage Commission", "Town of Bradford");
+const WARNER_CALENDAR = "https://warnernh.gov/calendar/";
+const warnerSelectBoard = sitting("ical:warner-select-board:2026-10-05",
+  "ocd-division/country:us/state:nh/county:merrimack/place:warner_town", "Select Board", "Town of Warner");
 
 test("a division's only notice page is not lent to a sitting of another publisher", () => {
   assert.equal(documentUrlFor(newburyPlanning), null, "Newbury is not given Bradford's calendar");
@@ -82,8 +85,8 @@ test("a lent page is recognized as another publisher's; a sitting's own link nev
   assert.equal(isAnotherPublishersNoticePage(ownLink, BRADFORD_CALENDAR), false, "the sitting's own agenda link");
 });
 
-test("held pages another publisher lent are set aside when the previous payload is carried forward", () => {
-  const held = (meeting: Meeting, url: string, retrievedAt: string, hash: string): AgendaDocument => ({
+test("held notice pages that are not their sitting's agenda are left out of the run's store", () => {
+  const held = (meeting: Meeting, url: string, retrievedAt: string, hash: string, text = "Calendar Select Board Office Office hours"): AgendaDocument => ({
     id: `${meeting.id}@${hash}`,
     meetingId: meeting.id,
     ocdId: meeting.ocdId,
@@ -95,7 +98,7 @@ test("held pages another publisher lent are set aside when the previous payload 
     sourceOrg: meeting.provenance.sourceOrg,
     collectedAt: retrievedAt,
     verifiedAt: null,
-    text: "Calendar Select Board Office Office hours",
+    text,
     extraction: "html",
     extractionNote: null,
   });
@@ -105,14 +108,24 @@ test("held pages another publisher lent are set aside when the previous payload 
     held(newburyPlanning, BRADFORD_CALENDAR, "2026-09-21T13:40:55.293Z", "a2"),
     held(newburyConservation, ownAgenda, "2026-09-20T10:00:00.000Z", "b1"),
     held(lakeTodd, BRADFORD_CALENDAR, "2026-09-21T13:40:56.000Z", "c1"),
+    // An agenda its own publisher posted on its notice page states items and stays.
+    held(warnerSelectBoard, WARNER_CALENDAR, "2026-09-21T13:41:00.000Z", "d1",
+      "Select Board agenda 1. Call to order. 2. Approval of minutes. 3. Adjournment."),
   ];
   const store = new AgendaDocumentStore();
-  const seeded = seedHeldAgendaDocuments({ meetings: [newburyPlanning, newburyConservation, lakeTodd], agendaDocuments: documents }, store);
+  const seeded = seedHeldAgendaDocuments(
+    { meetings: [newburyPlanning, newburyConservation, lakeTodd, warnerSelectBoard], agendaDocuments: documents },
+    store,
+  );
 
-  assert.equal(seeded.lentNotices, 2, "both Bradford-calendar reads held for Newbury's Planning Board");
-  assert.deepEqual([...seeded.lentNoticeUrls], [BRADFORD_CALENDAR]);
+  // D1 (2026-09-24): the two Bradford-calendar reads lent to Newbury's Planning
+  // Board, and Lake Todd's own calendar page too: it is its publisher's page and
+  // states no agenda item, so it is not Lake Todd's agenda either.
+  assert.equal(seeded.noticePagesSetAside, 3);
+  assert.deepEqual([...seeded.noticePageUrlsSetAside], [BRADFORD_CALENDAR]);
   assert.equal(seeded.carried, 2);
   assert.equal(store.latestFor(newburyPlanning.id), null);
   assert.equal(store.latestFor(newburyConservation.id)?.documentUrl, ownAgenda);
-  assert.equal(store.latestFor(lakeTodd.id)?.documentUrl, BRADFORD_CALENDAR, "Lake Todd's own page stays");
+  assert.equal(store.latestFor(lakeTodd.id), null, "a calendar stating no agenda item is not Lake Todd's agenda");
+  assert.equal(store.latestFor(warnerSelectBoard.id)?.documentUrl, WARNER_CALENDAR, "an agenda posted on the notice page stays");
 });

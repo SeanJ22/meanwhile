@@ -183,10 +183,9 @@ export function documentUrlFor(meeting: Meeting): string | null {
     (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
   );
   if (onDivision.length === 0) return null;
-  const forBody = onDivision.find(
-    (row) => (row.config.bodyName ?? row.publishingOrg) === meeting.bodyName,
-  );
-  if (forBody) return forBody.noticeUrl ?? null;
+  // The sitting's own body row answers first, by identity rather than name.
+  const ownBody = onDivision.find((row) => row.bodyId === meeting.bodyId);
+  if (ownBody) return ownBody.noticeUrl ?? null;
   /*
    * **A DIVISION'S ONLY NOTICE PAGE CAN BELONG TO ANOTHER GOVERNMENT.**
    * (2026-09-24.)
@@ -201,12 +200,42 @@ export function documentUrlFor(meeting: Meeting): string | null {
    * its agenda, under "Pima County Clerk of the Board". Production held 27
    * such documents on 2026-09-24, every one served by /api/agenda.
    *
-   * So only the sitting's own publisher's page is lent across bodies.
+   * So only the sitting's own publisher's page is lent across bodies, and the
+   * body-name match reads only that publisher's rows too: two publishers on
+   * one division can each have a "Planning Board".
    */
   const publisher = meeting.provenance?.sourceOrg ?? null;
   const own = onDivision.filter((row) => publisher !== null && row.publishingOrg === publisher);
+  const forBody = own.find(
+    (row) => (row.config.bodyName ?? row.publishingOrg) === meeting.bodyName,
+  );
+  if (forBody) return forBody.noticeUrl ?? null;
   const distinct = new Set(own.map((row) => row.noticeUrl));
   return distinct.size === 1 ? (own[0]!.noticeUrl ?? null) : null;
+}
+
+/**
+ * The sitting is reached only through its body's notice page: it carries no
+ * agenda link of its own, so the page is the body's, never this sitting's.
+ */
+function readThroughNoticePage(meeting: Meeting): boolean {
+  return !meeting.agendaUrl && documentUrlFor(meeting) !== null;
+}
+
+/**
+ * A held document that is not this sitting's agenda (D1): another publisher's
+ * notice page, or a wiring notice page, not the sitting's own link, that states
+ * no agenda item. Production held 70 notice-page documents on 2026-09-24 and
+ * not one yields an agenda item.
+ */
+export function heldNoticePageIsNotItsAgenda(
+  meeting: Pick<Meeting, "agendaUrl" | "provenance">,
+  doc: Pick<AgendaDocument, "documentUrl" | "text">,
+): boolean {
+  if (isAnotherPublishersNoticePage(meeting, doc.documentUrl)) return true;
+  if (meeting.agendaUrl === doc.documentUrl) return false;
+  if (!SOURCE_WIRING.some((row) => row.noticeUrl === doc.documentUrl)) return false;
+  return agendaItems(doc.text ?? "").length === 0;
 }
 
 /**
@@ -350,8 +379,9 @@ export function seedHeldAgendaDocuments(
   readonly carried: number;
   readonly refused: number;
   readonly refusedUrls: ReadonlySet<string>;
-  readonly lentNotices: number;
-  readonly lentNoticeUrls: ReadonlySet<string>;
+  /** Notice pages that are not their sitting's agenda (D1), left out of this run's store. */
+  readonly noticePagesSetAside: number;
+  readonly noticePageUrlsSetAside: ReadonlySet<string>;
 } {
   const govOf = new Map(previous.meetings.map((m) => [m.id, m.ocdId ?? null]));
   const meetingOf = new Map(previous.meetings.map((m) => [m.id, m]));
@@ -367,8 +397,8 @@ export function seedHeldAgendaDocuments(
   let carried = 0;
   let refused = 0;
   const refusedUrls = new Set<string>();
-  let lentNotices = 0;
-  const lentNoticeUrls = new Set<string>();
+  let noticePagesSetAside = 0;
+  const noticePageUrlsSetAside = new Set<string>();
   for (const doc of inRetrievalOrder(previous.agendaDocuments)) {
     if ((govsByUrl.get(doc.documentUrl)?.size ?? 0) > 1) {
       refused++;
@@ -376,15 +406,15 @@ export function seedHeldAgendaDocuments(
       continue;
     }
     const meeting = meetingOf.get(doc.meetingId);
-    if (meeting && isAnotherPublishersNoticePage(meeting, doc.documentUrl)) {
-      lentNotices++;
-      lentNoticeUrls.add(doc.documentUrl);
+    if (meeting && heldNoticePageIsNotItsAgenda(meeting, doc)) {
+      noticePagesSetAside++;
+      noticePageUrlsSetAside.add(doc.documentUrl);
       continue;
     }
     store.append(doc);
     carried++;
   }
-  return { carried, refused, refusedUrls, lentNotices, lentNoticeUrls };
+  return { carried, refused, refusedUrls, noticePagesSetAside, noticePageUrlsSetAside };
 }
 
 /**
@@ -423,6 +453,9 @@ export function agendaRetrievalOrder(
   const rank = (meeting: Meeting): number => {
     const url = documentUrlFor(meeting);
     if (url === null) return 3;
+    // A body's notice page is read after every sitting's own link: it is the
+    // body's page, and one that states no agenda item is never held (D1).
+    if (readThroughNoticePage(meeting)) return 2;
     if (heldFromLink(meeting, url)) return 1;
     return store.isUrlOnAnotherMeeting(url, meeting.id) ? 2 : 0;
   };
@@ -498,11 +531,20 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   /* Refused links read through the portal, and those whose page links no agenda yet. */
   let readViaPortal = 0;
   let portalWithoutLink = 0;
+  /* Notice-page reads that stated no agenda item, so no sitting holds them (D1). */
+  let noticePagesRefused = 0;
+  /* A notice page is one body's page: read once per run, however many sittings reach it. */
+  const noticePageRefusedThisRun = new Set<string>();
   const fetchImpl = refusalCheckedFetch();
 
   for (const meeting of capped) {
     try {
       const url = documentUrlFor(meeting);
+      const viaNoticePage = readThroughNoticePage(meeting);
+      if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
+        noticePagesRefused++;
+        continue;
+      }
       let override = url && url !== meeting.agendaUrl ? url : null;
       const throughPortal = url !== null && agendaRetrievalRefusal(url) !== null;
       if (throughPortal) {
@@ -556,6 +598,22 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         landingPages++;
         continue;
       }
+      /*
+       * **A NOTICE PAGE THAT STATES NO AGENDA ITEM IS NOT THIS SITTING'S
+       * AGENDA, FOR THE FIRST SITTING AS FOR EVERY OTHER.** (2026-09-24, D1.)
+       * The rule above refuses a page only once another sitting holds it, so
+       * the first unlinked sitting to reach a body's notice page kept it:
+       * Mesa's council meetings page is held as sitting 1343183's agenda and a
+       * reader is shown it as a read agenda with no items. Measured in
+       * production the same day, 70 held documents came from notice pages and
+       * not one yields an agenda item. A notice page that does state items (an
+       * agenda posted on the notice) is still held.
+       */
+      if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
+        noticePagesRefused++;
+        if (url !== null) noticePageRefusedThisRun.add(url);
+        continue;
+      }
 
       /*
        * **A FAILED READ IS NEVER A NEW VERSION OVER ONE WE HOLD.** (RULING 269,
@@ -594,7 +652,8 @@ export async function retrieveAgendas(meetings: Meeting[]) {
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
       `${failedOverHeld} failed read(s) not stored over a held version, ` +
       `${redirectsRefused} redirect(s) into a refused host not followed, ` +
-      `${readViaPortal} refused link(s) read through the portal, ${portalWithoutLink} whose portal page links no agenda yet`,
+      `${readViaPortal} refused link(s) read through the portal, ${portalWithoutLink} whose portal page links no agenda yet, ` +
+      `${noticePagesRefused} notice-page read(s) stating no agenda item not held as a sitting's agenda`,
   );
 }
 
@@ -732,21 +791,31 @@ async function main() {
        *
        * Dropped rather than kept-and-flagged: the store is append-only, so a
        * row that stays gets re-appended by every later run.
+       *
+       * **WHAT THIS REACHES, STATED EXACTLY (2026-09-24, D1).** Only this run's
+       * store: the retrieval order, the landing-page test and the agenda-stated
+       * place matcher read it. The promoted payload is rebuilt from the previous
+       * partition's own documents (reconcileSuccessfulMeetingPartition), and the
+       * validator admits an agenda document's removal only with its meeting's,
+       * so a document set aside here stays held there until its sitting leaves
+       * the serving window. What a reader is shown is decided by the reader
+       * projection (lib/ask/agenda-publication.ts).
        */
-      const { carried, refused, refusedUrls, lentNotices, lentNoticeUrls } = seedHeldAgendaDocuments(previous);
+      const { carried, refused, refusedUrls, noticePagesSetAside, noticePageUrlsSetAside } = seedHeldAgendaDocuments(previous);
       console.log(
         `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
       );
       if (refused > 0) {
         console.warn(
-          `  ${refused} REFUSED — attached to meetings of more than one government, ` +
-            `so they are nobody's agenda: ${[...refusedUrls].join(", ")}`,
+          `  ${refused} left out of this run's store — attached to meetings of more than one government, ` +
+            `so they are nobody's agenda (the promoted payload still holds them): ${[...refusedUrls].join(", ")}`,
         );
       }
-      if (lentNotices > 0) {
+      if (noticePagesSetAside > 0) {
         console.warn(
-          `  ${lentNotices} SET ASIDE — another publisher's notice page, lent to a sitting ` +
-            `whose own publisher does not publish it: ${[...lentNoticeUrls].join(", ")}`,
+          `  ${noticePagesSetAside} left out of this run's store — a notice page that is not its sitting's agenda ` +
+            `(another publisher's, or stating no agenda item); the promoted payload still holds them: ` +
+            `${[...noticePageUrlsSetAside].join(", ")}`,
         );
       }
     }

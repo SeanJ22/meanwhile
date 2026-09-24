@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 757,
-    "named": 7453,
+    "files": 758,
+    "named": 7458,
     "dynamic": 30
   },
   "files": {
@@ -622,7 +622,7 @@
         "a body's own notice page, and its own publisher's shared page, still reach its sittings",
         "a division's only notice page is not lent to a sitting of another publisher",
         "a lent page is recognized as another publisher's; a sitting's own link never is",
-        "held pages another publisher lent are set aside when the previous payload is carried forward"
+        "held notice pages that are not their sitting's agenda are left out of the run's store"
       ],
       "dynamic": 0
     },
@@ -6614,6 +6614,16 @@
         "the family classifier preserves the frozen split-family semantics without UNKNOWN",
         "the formerly mixed curated Reader row has an exact truthful path partition and no PDC-7 blocker",
         "the registry fails closed for a new source, lost family, scheduled non-routine row, and research runtime fallback"
+      ],
+      "dynamic": 0
+    },
+    "tests/notice-page-not-an-agenda.test.ts": {
+      "names": [
+        "Newbury's sittings are never given the Town of Bradford's calendar",
+        "a Pima Board sitting with no agenda link is never given the water district's meetings page",
+        "a body's own notice page stating no agenda item is held by no sitting, and is read once per run",
+        "a notice page that states agenda items is still held",
+        "a sitting reached only through its body's notice page is read after every sitting's own link"
       ],
       "dynamic": 0
     },

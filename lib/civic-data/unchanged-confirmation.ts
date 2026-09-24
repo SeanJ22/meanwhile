@@ -228,8 +228,10 @@ export function serializeUnchangedConfirmationSources(
  * clock and Reader freshness read them, through their own one-row reads.
  */
 export function isUnchangedConfirmationEvent(event: { readonly state: string; readonly detail: string }): boolean {
-  return event.state === "PROMOTED" && (
-    event.detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX) ||
-    event.detail.startsWith(UNCHANGED_CONFIRMATION_SOURCES_PREFIX)
-  );
+  return event.state === "PROMOTED" && isUnchangedConfirmationDetail(event.detail);
+}
+
+/** The detail test alone, for readers that classify events by detail (the database admits these only as PROMOTED). */
+export function isUnchangedConfirmationDetail(detail: string): boolean {
+  return detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX) || detail.startsWith(UNCHANGED_CONFIRMATION_SOURCES_PREFIX);
 }

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 737,
-    "named": 7266,
+    "named": 7267,
     "dynamic": 28
   },
   "files": {
@@ -5869,6 +5869,7 @@
     },
     "tests/meetings-recipes.test.ts": {
       "names": [
+        "A CORRECTED SEED REACHES THE RUNNER: a stored seed keeps its counts and failure memory and takes the code's method; a learned recipe is the stored one",
         "A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here",
         "OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded",
         "PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here",

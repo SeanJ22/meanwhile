@@ -393,6 +393,9 @@ export const SOURCE_AUTHORITIES = {
       "https://warnernh.gov/", "https://www.cap-az.com/", "https://www.kearsarge.org/", "https://www.merrimackcounty.net/",
       "https://www.mesaaz.gov/", "https://www.mhrd.org/", "https://www.newbury.nh.gov/", "https://www.rockawaytownship.org/",
       "https://www.suttonnh.gov/", "https://www.wilmotnh.org/",
+      // Tucson Unified's own reconfiguration page (official-page events,
+      // 2026-09-23): the district host, scoped to the one page wired.
+      "https://www.tusd1.org/Reconfiguration",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
@@ -404,6 +407,7 @@ export const SOURCE_AUTHORITIES = {
       "tusd1-schooldesk.community.diligentoneplatform.com", "vailschooldistrictaz.thrillshare.com", "warnernh.gov",
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
       "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
+      "www.tusd1.org",
     ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],

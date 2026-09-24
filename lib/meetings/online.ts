@@ -1,4 +1,4 @@
-import type { Meeting, MeetingLocation, OnlineAccess } from "@/lib/sources/types";
+import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/lib/sources/types";
 
 /**
  * **ONLINE-NESS IS ONE QUESTION, ASKED IN ONE PLACE.** (MTG-14, 2026-08-28.)
@@ -59,12 +59,21 @@ import type { Meeting, MeetingLocation, OnlineAccess } from "@/lib/sources/types
  * - PLACE NOT RECORDED (`location` null and no online access) — our own named
  *   gap, `PLACE_UNRECORDED_LINE`, never a pin and never "online".
  *
- * All three stay listed. `hasPhysicalLocation` is unchanged, so the venue gate
+ * And a fourth, from official-page events (2026-09-23, `MeetingVenueGap`):
+ *
+ * - A NAMED VENUE GAP (`location` null, `venueGap` set, never with `online`) —
+ *   a physical sitting. Where the publisher STATED its place and we hold no
+ *   reviewed coordinates for it ("Cholla High School South Gym"), the place IS
+ *   recorded, as the publisher's words, and those words render; where the
+ *   publisher's page states no place, the gap is the publisher's and says so.
+ *   Never a pin, never "online", never "we haven't recorded a place".
+ *
+ * All four stay listed. `hasPhysicalLocation` is unchanged, so the venue gate
  * is unchanged.
  */
 
 /** The shape any surface needs to answer the question. Meetings satisfy it. */
-type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess };
+type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess; venueGap?: MeetingVenueGap };
 
 /**
  * **Whether this sitting happens online, with no room to attend in person.**
@@ -74,18 +83,25 @@ type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess };
  * online access is `isPlaceUnrecorded` instead — see the 2026-09-23 note above.
  */
 export function isOnlineOnly(meeting: OnlineShaped): boolean {
-  return meeting.location === null && meeting.online != null;
+  // Both halves, and no named venue gap: a physical meeting whose room is a
+  // named gap (`venueGap`) also carries a null location, and it is NOT online —
+  // labeling it so would send a reader looking for a join link that was never
+  // published (official-page events, 2026-09-23).
+  return meeting.location === null && meeting.online != null && !meeting.venueGap;
 }
 
 /**
- * **No building and no published online access: we do not hold its place.**
+ * **No building, no published online access and no named venue gap: we do not
+ * hold its place.**
  *
  * Still a real, listed meeting. What renders is `PLACE_UNRECORDED_LINE`, which
  * is a fact about this product — never "online", which would be a claim about
- * the government that nothing established.
+ * the government that nothing established. A sitting with a `venueGap` is NOT
+ * this state: the publisher either stated its place in words (which render) or
+ * stated none (which is the publisher's gap, and says so) — see `venueGapOf`.
  */
 export function isPlaceUnrecorded(meeting: OnlineShaped): boolean {
-  return meeting.location === null && meeting.online == null;
+  return meeting.location === null && meeting.online == null && !meeting.venueGap;
 }
 
 /**
@@ -105,10 +121,10 @@ export function hasPhysicalLocation<T extends OnlineShaped>(
 /**
  * The published online access for a sitting, or null.
  *
- * Returns null for a physical meeting AND for a sitting whose place is not
- * recorded (no building, no published online access). Both are the absence of
- * a published way in, and a surface reading this renders the named gap rather
- * than inventing one.
+ * Returns null for a physical meeting, for a sitting whose place is not
+ * recorded (no building, no published online access) AND for a named venue gap.
+ * Each is the absence of a published way in online, and a surface reading this
+ * renders the named gap rather than inventing one.
  */
 export function onlineAccessFor(meeting: OnlineShaped): OnlineAccess | null {
   if (!isOnlineOnly(meeting)) return null;
@@ -137,11 +153,54 @@ export const PLACE_UNRECORDED_LINE = "We haven't recorded a place for this meeti
 export const PLACE_UNRECORDED_MARK = "place not recorded yet";
 
 /**
+ * **A physical sitting whose room is a named gap, or null.** (Official-page
+ * events, 2026-09-23 — `MeetingVenueGap` in `lib/sources/types.ts`.)
+ *
+ * Read only where there is no building: a placed meeting's `location` is the
+ * answer, whatever else the row carries.
+ */
+export function venueGapOf(meeting: OnlineShaped): MeetingVenueGap | null {
+  return meeting.location === null && meeting.venueGap ? meeting.venueGap : null;
+}
+
+/**
+ * The publisher's page names no place: the gap is THEIRS, and the line says whose
+ * page it is. About the page we read, never a claim that the body published a
+ * place nowhere.
+ */
+export function venueNotStatedLine(publisher: string): string {
+  return `${publisher}'s page doesn't say where this meeting is held.`;
+}
+
+/** The same publisher's gap, short enough for a list row's metadata line. */
+export const VENUE_NOT_STATED_MARK = "place not stated by the publisher";
+
+/**
+ * What a named venue gap says about where the sitting is held. A STATED place is
+ * the publisher's own words, verbatim — the place IS recorded, as text, and it
+ * renders as text (never a pin, and never "we haven't recorded a place"). A page
+ * that states none gets the publisher's named gap.
+ */
+export function venueGapLine(gap: MeetingVenueGap): string {
+  const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
+  return stated ? stated : venueNotStatedLine(gap.publisher);
+}
+
+/** The venue gap for a list row's metadata line: the stated place, or the publisher's gap. */
+export function venueGapMark(gap: MeetingVenueGap): string {
+  const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
+  return stated ? stated : VENUE_NOT_STATED_MARK;
+}
+
+/**
  * The "Where" row for a sitting with no building: the online sentence where the
- * body published an online access, our own named gap where it did not.
+ * body published an online access; the publisher's stated place (or the
+ * publisher's named gap) for a named venue gap; our own named gap otherwise.
  */
 export function placelessWhereLine(meeting: OnlineShaped): string {
-  return isOnlineOnly(meeting) ? ONLINE_ONLY_LINE : PLACE_UNRECORDED_LINE;
+  if (isOnlineOnly(meeting)) return ONLINE_ONLY_LINE;
+  const gap = venueGapOf(meeting);
+  return gap ? venueGapLine(gap) : PLACE_UNRECORDED_LINE;
 }
 
 /**

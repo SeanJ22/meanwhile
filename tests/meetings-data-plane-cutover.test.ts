@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
 import {
   readMeetingsProjection,
   readSnapshot,
@@ -164,8 +165,16 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
    * still holds its sittings under the retired `diligent` route.
    */
   const WIRED_AFTER_FIXTURE = ["curated:az/pima-community-college#governing:PIMA_EDU"];
-  assert.deepEqual(coverage.missing, WIRED_AFTER_FIXTURE);
-  assert.equal(coverage.accounted, coverage.denominator - WIRED_AFTER_FIXTURE.length);
+  // The bundled fixture is frozen at the PDC v2 import: the only other
+  // obligations it may leave unaccounted are rows whose partitions were
+  // registered after it, each named in PDC_V2_POST_IMPORT_MEETING_PARTITIONS.
+  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
+  const expectedMissing = [
+    ...WIRED_AFTER_FIXTURE,
+    ...postImport.map((p) => `${p.bodyId}:${p.wiring.agendaSourceType}`),
+  ];
+  assert.deepEqual([...coverage.missing].sort(), [...expectedMissing].sort());
+  assert.equal(coverage.accounted, coverage.denominator - expectedMissing.length);
   assert.equal(coverage.denominator > 0, true);
   assert.equal(coverage.denominator === fixture.meetings.length, false);
 

@@ -14,6 +14,7 @@ import { makeIqm2Source } from "../iqm2/index.ts";
 import { makePimaEduSource } from "../pima-edu/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
 import { makeSchedulePageSource } from "../schedulepage/index.ts";
+import { makeOfficialPageEventsSource } from "../official-page-events/index.ts";
 import {
   makeLegistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -204,6 +205,14 @@ export const CAPABILITIES: Array<{
     name: "ical",
     types: ["ICAL"],
     make: (rows) => makeIcalSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    // Not a vendor: the body's own official page, read for dated events in
+    // every shape it publishes them and verified against the body per event.
+    name: "official-page-events",
+    types: ["OFFICIAL_PAGE_EVENTS"],
+    make: (rows) =>
+      makeOfficialPageEventsSource(rows) as ReportingMeetingSource<unknown>,
   },
 ];
 

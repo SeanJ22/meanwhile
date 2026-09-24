@@ -6,7 +6,8 @@
  *
  * Every route in this directory so far is Granicus telling us about Pima. The
  * Clerk of the Board's schedule table at
- * `https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule` is **Pima
+ * `https://www.pima.gov/board-of-supervisors-meeting-schedule` (moved there from
+ * `/2559/Board-of-Supervisors-Meeting-Schedule` by 2026-09-24) is **Pima
  * telling us about Pima**, on Pima's own domain, and it is the record the
  * vendor's calendar is generated FROM rather than a copy of it.
  *
@@ -40,10 +41,11 @@
  *
  * ## Permission
  *
- * `www.pima.gov/robots.txt`, read 2026-08-28: `Disallow: /` for **Baiduspider
- * and Yandex only**; `User-agent: *` carries no `Disallow` and no
- * `Crawl-delay`. Siteimprove's crawlers are asked for `Crawl-delay: 20`, which
- * is not us. Nothing here is disallowed.
+ * `www.pima.gov/robots.txt`, read 2026-09-24: `Disallow: /` for **Baiduspider
+ * and Yandex only**. `User-agent: *` is in ONE group with `User-agent:
+ * Siteimprove`, so it shares that group's `Crawl-delay: 20`, and nothing is
+ * disallowed. (The 2026-08-28 reading took the delay for Siteimprove's alone.)
+ * One request per tenant per refresh is within it.
  *
  * Nothing below concludes. A page that yields no rows is a failed extraction
  * for the caller to report as one — never a county with no meetings.

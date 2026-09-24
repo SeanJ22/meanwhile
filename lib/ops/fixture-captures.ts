@@ -59,7 +59,7 @@ export interface FixtureCapture {
 export const SANITIZED_CAPTURES: readonly FixtureCapture[] = [
   {
     path: "tests/fixtures/legistar-insite-pima-clerk-schedule.html",
-    sourceUrl: "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
+    sourceUrl: "https://www.pima.gov/board-of-supervisors-meeting-schedule",
     capturedOn: "2026-08-28",
     capturedBy: "scripts/learn-legistar-horizon.mts --record",
     provesWhat:

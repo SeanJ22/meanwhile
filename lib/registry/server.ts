@@ -31,9 +31,14 @@ import {
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentFederalDirectoryEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
+import { currentCampaignSitesEdge, currentFederalDirectoryEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge } from "./runtime-edge.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
+import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
+import { REGISTRATION_TARGETS } from "../registration/publication.ts";
+import type { RegistrationReadModel } from "../registration/candidate.ts";
+import { readRegistrationProjection } from "../registration/reader.ts";
+import { stateOf } from "./wording.ts";
 import {
   heldOfficialStateLegislators,
   heldOfficialStateLegislatorsFromRead,
@@ -365,6 +370,68 @@ async function registryLoaded(): Promise<RegistryLoaded> {
   return value;
 }
 
+/*
+ * **REGISTRATION, COMPOSED ONE STATE AT A TIME.** (2026-09-23.)
+ *
+ * The runner registers every state's Census governments (`lib/registration/`).
+ * A request reads only the states its own divisions name, through the shared
+ * promoted read and its 30-second pointer check, and composes each beside the
+ * reviewed registry held now (`composeRegistration`: reviewed wins). A state
+ * with no promoted registration adds nothing. A registration the store could not
+ * read is thrown like an unreadable registry, never returned as an emptiness:
+ * "nobody governs here" may never stand in for "we could not read who does".
+ */
+const REGISTRATION_STATES = new Set(REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()));
+interface ComposedRegistration {
+  readonly key: string;
+  readonly layer: RegistrationLayer;
+  readonly divisionsById: ReadonlyMap<string, Division>;
+}
+const registrationLayers = new Map<string, ComposedRegistration>();
+
+async function registrationFor(state: string): Promise<ComposedRegistration | null> {
+  if (!REGISTRATION_STATES.has(state)) return null;
+  const base = await registryLoaded();
+  // The edge first: an ordinary visitor never wakes the database for registration. The manifest's section is
+  // complete, so a state it does not name has no promoted registration.
+  const edge = currentRegistrationsEdge();
+  if (edge) {
+    if (!edge.states.has(state)) return null;
+    const served = await edge.load(state);
+    if (served) return composed(state, base, served.value, served.versionId);
+    // The artifact could not be fetched: this state is read from the database, on this request only.
+  }
+  const read = await readRegistrationProjection(state);
+  // No store at all (tests, the census gate, local work) has no registration to compose: registration has
+  // no first seed. A configured store that did not answer is a failure.
+  if (read.kind === "STORE_UNREACHABLE" && read.code === "STORE_NOT_CONFIGURED") return null;
+  if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
+  if (read.kind !== "PROMOTED" || read.metadata.versionId === null) return null;
+  return composed(state, base, read.value, read.metadata.versionId);
+}
+
+/** One state's registration composed against the reviewed registry held now, cached by both versions. */
+function composed(state: string, base: RegistryLoaded, model: RegistrationReadModel, versionId: string): ComposedRegistration {
+  const key = `${registryCache?.authorityKey ?? ""}|${versionId}`;
+  const held = registrationLayers.get(state);
+  if (held?.key === key) return held;
+  const layer = composeRegistration(base.registry, model, versionId);
+  const entry: ComposedRegistration = { key, layer, divisionsById: new Map(layer.divisions.map((d) => [d.ocdId, d])) };
+  registrationLayers.set(state, entry);
+  return entry;
+}
+
+/** The registered layers for the states these divisions name. */
+async function registrationsFor(ocdIds: Iterable<string>): Promise<ComposedRegistration[]> {
+  const states = new Set<string>();
+  for (const id of ocdIds) {
+    const state = stateOf(id);
+    if (state !== null) states.add(state);
+  }
+  const composed = await Promise.all([...states].map((state) => registrationFor(state)));
+  return composed.filter((c): c is ComposedRegistration => c !== null);
+}
+
 async function loaded(): Promise<Loaded> {
   const base = await registryLoaded();
   const registryKey = registryCache!.authorityKey;
@@ -405,10 +472,17 @@ async function loaded(): Promise<Loaded> {
  * against only the first would refuse two of the three body cards this product
  * renders, which reads as a broken pill rather than as a narrow allowlist.
  */
-export async function knownBodySubjectIds(): Promise<Set<string>> {
+export async function knownBodySubjectIds(forSubjectId?: string): Promise<Set<string>> {
   const { registry, divisionsById } = await registryLoaded();
   const out = new Set<string>(registry.bodies.map((b) => b.id));
   for (const ocdId of divisionsById.keys()) out.add(ocdId);
+  // A registered body or division is known through its own state's registration (2026-09-23).
+  if (forSubjectId !== undefined && !out.has(forSubjectId)) {
+    for (const r of await registrationsFor([forSubjectId])) {
+      for (const body of r.layer.bodies) out.add(body.id);
+      for (const ocdId of r.divisionsById.keys()) out.add(ocdId);
+    }
+  }
   return out;
 }
 
@@ -441,9 +515,11 @@ export async function divisionsAt(lat: number, lng: number): Promise<Division[]>
  */
 export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Division[]> {
   const { divisionsById } = await registryLoaded();
+  // An id the reviewed registry does not hold may be one its state registered (2026-09-23).
+  const registered = await registrationsFor(ocdIds.filter((id) => !divisionsById.has(id)));
   const out: Division[] = [];
   for (const id of ocdIds) {
-    const division = divisionsById.get(id);
+    const division = divisionsById.get(id) ?? registered.find((r) => r.divisionsById.has(id))?.divisionsById.get(id);
     if (division) out.push(division);
   }
   return out;
@@ -758,12 +834,15 @@ export async function coverageAt(
 ): Promise<CoverageSummary> {
   const { features, divisionsById, registry, officials, territory } = await loaded();
   const exactDivisions = resolvedDivisions ?? resolveDivisionsAt([lng, lat], features, divisionsById);
+  // The governments registered on these divisions' states, beside the reviewed bodies (2026-09-23).
+  const registered = await registrationsFor(exactDivisions.map((d) => d.ocdId));
+  const bodies = registered.length === 0 ? registry.bodies : [...registry.bodies, ...registered.flatMap((r) => r.layer.bodies)];
   const stateLegislators = await settleCoverageStateLegislators(exactDivisions, officials);
   const coverage = summarizeCoverage(
     [lng, lat],
     features,
     divisionsById,
-    registry.bodies,
+    bodies,
     meetingCount,
     stateLegislators.officials,
     exactDivisions,

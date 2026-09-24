@@ -122,7 +122,7 @@ export async function POST(request: Request) {
     known =
       submission.subjectType === "CANDIDATE"
         ? await getCandidateTargetIds(submission.subjectId)
-        : await knownBodySubjectIds();
+        : await knownBodySubjectIds(submission.subjectId);
   } catch {
     return Response.json({ error: "subject data unavailable" }, { status: 503 });
   }

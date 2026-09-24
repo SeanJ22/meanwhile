@@ -22,6 +22,9 @@ import {
   servedAuthorityVersion,
   type PublishReaderExtras,
   type PublishAuthority,
+  type PublishAuthorityCarried,
+  type PublishAuthorityValue,
+  type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import type { AuthorityFamily, ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
@@ -30,6 +33,8 @@ import { refreshCommentAccessFromPromoted, readCuratedReaderProjection } from ".
 import { currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/edge.ts";
+import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
@@ -231,6 +236,26 @@ if (meetingAggregate) {
       } catch (error) {
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-legislators ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
+      // Every state's promoted registration (lib/registration/edge.ts): one identity read for every registration
+      // pointer decides which states carry by reference; only a state whose version moved is read. The section is
+      // complete or left out: any failure leaves it out this pass, and the reader reads registration from the database.
+      let registrations: PublishRegistrations | undefined;
+      try {
+        const plan = registrationEdgePlan(await store.readPromotionIdentities("REGISTRATION", REGISTRATION_SCOPES), servedManifest?.registrations);
+        const entries: Record<string, PublishAuthorityValue | PublishAuthorityCarried> = {};
+        for (const [state, versionId] of Object.entries(plan.carried)) entries[state] = { versionId, carried: true };
+        for (const [state, versionId] of Object.entries(plan.publish)) {
+          const read = await readRegistrationProjection(state);
+          if (read.kind !== "PROMOTED" || read.metadata.versionId !== versionId) {
+            throw new Error(`registration ${state} read ${read.kind} at ${read.metadata.versionId ?? "no version"}, not the pointer's ${versionId}`);
+          }
+          entries[state] = { value: read.value, versionId };
+        }
+        registrations = entries;
+      } catch (error) {
+        process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}
+`);
+      }
       const edge = await publishReaderEdgeArtifacts(
         readBack.value,
         {
@@ -238,7 +263,13 @@ if (meetingAggregate) {
           retrievedAt: readBack.metadata.retrievedAt,
           promotedThrough: readBack.metadata.promotedAt,
         },
-        { store: artifactStore, now: observedAt, ...(extras ? { extras } : {}), ...(Object.keys(authority).length > 0 ? { authority } : {}) },
+        {
+          store: artifactStore,
+          now: observedAt,
+          ...(extras ? { extras } : {}),
+          ...(Object.keys(authority).length > 0 ? { authority } : {}),
+          ...(registrations !== undefined ? { registrations } : {}),
+        },
       );
       if (edge.status === "FAILED") {
         failed = true;

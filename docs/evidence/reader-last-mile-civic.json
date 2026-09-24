@@ -1,6 +1,6 @@
 {
-  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-  "buildId": "_v0YgXondFE6JGacMt51t",
+  "exactHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+  "buildId": "RdQEQ5F1pnKuDMyxeoaIq",
   "sourceHashes": {
     "lib/routing/everyday.ts": "b00840fba176f775797dc300c5121285e03b49826dd589a95bf6385bb92600c5",
     "lib/routing/everyday-data-plane.ts": "489377c61d35665f3cec39652d23be8842b7d1ba2166ef5cef35c72944a837a6",
@@ -187,7 +187,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "f318d0403051b51325ffadcb1501fb5b9a15acfde0befc4efa7e84b1b83bda30",
+      "canonicalAnswerSha256": "d01bd4ff462d297306172f3068d792af7a6fd4c0fea7010a1796e5de44c397d8",
       "renderedTextSha256": "9c0fabfbac5455453cb94d888dd45ec73e19bd9d3c4c90226a835f923fedd50b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -235,7 +235,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "37445303772f42061d1b7b5426c4c8bd002454e87482c7215c9e77e99c1f45b2",
+      "canonicalAnswerSha256": "cce921513a6af07a3d53bee87948dcd55ff0d534c1a9396b46ce1272130d38f9",
       "renderedTextSha256": "6387e74e9d8d6777f5e547e77a6740b6d1269bff618508e8e563ed77d6800fb9",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -396,7 +396,7 @@
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
       "canonicalAnswerSha256": "135ebafe6bb3a92b1e2b6bb61c6151a38ed172bb82721b36926d7b8f537b1546",
-      "renderedTextSha256": "6f061ca8f9fc015911c3568ef0b043e1f2a2d9162bea2c99ec5da2767fa041b3",
+      "renderedTextSha256": "750f0bd2c4cfec96b12b39d27dbe38d234168052612fa1e3ce5b61e57a354899",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -756,7 +756,7 @@
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
       "canonicalAnswerSha256": "2632e28366e7096670bb4648295126a8932bede60e42a108b990e3e75855780e",
-      "renderedTextSha256": "5103cfd216484b8be4f2dd559ff39e37d5944260c16d15e4e9f4d73fc9952c96",
+      "renderedTextSha256": "912f2746f6cad70a883ce001156fd0a72acc7c79321d5cc19ded45719e474e5b",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -1837,7 +1837,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "c77910071f2903514baafd84f46fa522b60f87d00c0c1440f0c358b01ddd2a27",
+      "canonicalAnswerSha256": "996d018475f945eb353dc26dd40b016f55dde87feb136732918752621c8789f7",
       "renderedTextSha256": "879a7fbaf65cdcb96a1402b104e1d0383cee6af889df98e8a4d3fa12ec895320",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -1885,7 +1885,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "123920f35c225d371c8239099203c5fb0adfd0a421663a1674c41fb6d8b276c6",
+      "canonicalAnswerSha256": "c656012411f26ffc6277da6b7f76b25d191218673b51ce554b9c19780e29ab92",
       "renderedTextSha256": "d22d14f403dc38dd6c6d9bb51e7c0a79c84938ffd674d1ffa9cb08ad1dc76848",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -2010,7 +2010,7 @@
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
       "canonicalAnswerSha256": "4bbf4cc0d46dcd5f5ac32a0fe349ed819738cb6c64c0a9d9092df90f09ca5424",
-      "renderedTextSha256": "b9086d547bfed7a6e74a52b8d34df7adff341ffeb92db8741aa49df9a480a92f",
+      "renderedTextSha256": "40989afa83688f1a5e9eb3e74206a1e8be0aede20233b092afff2a9ceb283f00",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {
@@ -2425,7 +2425,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with property tax bill and assessment too high and tax rate?",
-      "canonicalAnswerSha256": "c28f2760d124f9e56fea5f30241cf74b8e9f4f548ed0ee1389cbdf14cad5632e",
+      "canonicalAnswerSha256": "8488c9225bbc585b0c637aebf41f9c5410395bc10526b49c4b8ae4b09a9ce05d",
       "renderedTextSha256": "b978fc8ee7074341658b9bdc64b6382813b61089e2263e393e19fba8cd4ad272",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -2473,7 +2473,7 @@
         "verification": "PAGE_FETCHED"
       },
       "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
-      "canonicalAnswerSha256": "9fe8b5002bd99cbd06145161f3515f43037ce853e5c7ee5dbb6b8d43051ee918",
+      "canonicalAnswerSha256": "987588231c051d96e55f51b8c234266a7c034e4ef54678dd0965089f93d9c964",
       "renderedTextSha256": "e22a4bcb33a69312fb25398f69e29f66e9c684301fd3c1a2b76dc2ebf0302885",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
@@ -2630,7 +2630,7 @@
       },
       "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
       "canonicalAnswerSha256": "caa51eb0085b855ff876e503408c7734074b662e62d673dc9efbfa9607f0028d",
-      "renderedTextSha256": "bdef67e67fcd38bb52d4301fb376098d8b053dd37b070c5d296056b9b3e3acae",
+      "renderedTextSha256": "c772e293b8f0a57e1ad814496c81e96299c7db8262a707dee2f0c409334e8c26",
       "grounding": "Exact promoted topic/ZIP contact record; all factual contact fields checked against its holding, independent of model response."
     },
     {

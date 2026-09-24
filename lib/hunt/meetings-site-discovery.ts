@@ -52,9 +52,11 @@ import { detectTenancy } from "./platform-tenancy.ts";
  * proposed only when the page shows the method's precondition
  * (`lib/hunt/meetings-recipes.ts`); SEARCH is a search result on the
  * government's own domain or a known meeting-publisher host
- * (`lib/hunt/discovery-search.ts`). All five are confirmed by content alike.
+ * (`lib/hunt/discovery-search.ts`); HINT is a committed route hint
+ * (`lib/hunt/meetings-route-hints.ts`). All six are confirmed by content alike,
+ * and a hint no content check covers is a lead.
  */
-export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED" | "RECIPE" | "SEARCH";
+export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED" | "RECIPE" | "SEARCH" | "HINT";
 
 /** The endpoint families this module can confirm by content. */
 export const VERIFIABLE_VENDORS = [
@@ -582,6 +584,20 @@ export interface MeetingsDiscoveryAttempt {
   readonly recheckAfter: string;
   /** One sentence in reader terms: what was walked and what it showed. */
   readonly note: string;
+  /**
+   * The committed route hints this walk tried first (`lib/hunt/meetings-route-hints.ts`). Absent when the
+   * government has none. A need whose hints no longer match `fingerprint` is due again at once.
+   */
+  readonly routeHints?: {
+    readonly fingerprint: string;
+    /** The current official site the hint records, walked before the recorded address; null when it records none. */
+    readonly officialSite: string | null;
+    /** The recorded address that site replaces for the walk. */
+    readonly replaces: string | null;
+    /** The origin whose homepage the walk read, whichever it was; null when none was read. */
+    readonly homepageRead: string | null;
+    readonly routes: readonly string[];
+  };
 }
 
 const REFUSED: ReadonlySet<StepPermission> = new Set(["DISALLOWED", "CANNOT_TELL", "RECORDED_WALL"]);

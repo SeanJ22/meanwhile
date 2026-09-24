@@ -26,6 +26,7 @@
  */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -36,11 +37,13 @@ import {
   rotationWindow,
   runMeetingsDiscovery,
   walkMeetingsDiscoveryNeed,
+  walkableByFreeWalk,
   type DiscoveryOpen,
   type DiscoveryRuntime,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
+import { ROUTE_HINTS, namesItself, routeHintProblems, routeHintsFingerprint, type JurisdictionRouteHints } from "../lib/hunt/meetings-route-hints.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
 const NOW = "2026-09-24T01:00:00.000Z";
@@ -461,4 +464,187 @@ test("THE NEXT HOP: when nothing is confirmed, the pages the walk read are read 
   assert.ok(attempt.leads.some((l) => l.vendor === "destiny-agenda" && l.url.startsWith("https://public.destinyhosted.com/")), "the agenda publisher is a lead");
   assert.ok(!seen.some((u) => u.includes("destinyhosted.com")), "a lead is never requested");
   assert.ok(!seen.some((u) => u.includes("/news/")), "and the headline was never followed");
+});
+
+/* ------------------------------------------------------------ route hints */
+
+const HINT_SEEN = { at: "2026-09-24T18:00:00Z", by: "test" } as const;
+
+const OLDTOWN_HINTS: readonly JurisdictionRouteHints[] = [{
+  jurisdictionId: "az:city:city-of-oldtown",
+  officialSite: {
+    origin: "https://www.oldtownaz.gov",
+    selfName: "City of Oldtown",
+    replaces: "http://www.ci.oldtown.az.us",
+    recordedState: "the host does not resolve",
+    evidence: [".gov registry: oldtownaz.gov, City of Oldtown, Oldtown AZ"],
+    observed: HINT_SEEN,
+  },
+  routes: [],
+}];
+
+test("A STALE RECORDED ADDRESS: the current official site a route hint records is walked first, and the walk says what it replaced", async () => {
+  const { open, seen } = fakeOpen({
+    "https://www.oldtownaz.gov/robots.txt": ALLOW,
+    "https://www.oldtownaz.gov/": { status: 200, body: `<title>City of Oldtown, Arizona</title><a href="/calendar/meetings.ics">Meetings</a>` },
+    "https://www.oldtownaz.gov/calendar/meetings.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const oldtown = need("az:city:city-of-oldtown", "http://www.ci.oldtown.az.us");
+  const attempt = await walkMeetingsDiscoveryNeed(oldtown, runtime(open, { routeHints: OLDTOWN_HINTS }));
+  assert.deepEqual(
+    seen,
+    ["https://www.oldtownaz.gov/robots.txt", "https://www.oldtownaz.gov/", "https://www.oldtownaz.gov/calendar/meetings.ics"],
+    "the current site is walked, and the dead recorded host costs nothing",
+  );
+  assert.equal(attempt.outcome, "FOUND");
+  assert.equal(attempt.ownWebAddress, "http://www.ci.oldtown.az.us", "the attempt still names the address the reference records");
+  assert.deepEqual(attempt.routeHints, {
+    fingerprint: routeHintsFingerprint(OLDTOWN_HINTS[0]),
+    officialSite: "https://www.oldtownaz.gov",
+    replaces: "http://www.ci.oldtown.az.us",
+    homepageRead: "https://www.oldtownaz.gov",
+    routes: [],
+  });
+  assert.match(attempt.note, /It walked the current official site, https:\/\/www\.oldtownaz\.gov; the recorded http:\/\/www\.ci\.oldtown\.az\.us is stale \(the host does not resolve\)\.$/);
+
+  const bare = fakeOpen({
+    "https://www.ci.oldtown.az.us/robots.txt": { transportError: "getaddrinfo ENOTFOUND www.ci.oldtown.az.us" },
+    "https://ci.oldtown.az.us/robots.txt": { transportError: "getaddrinfo ENOTFOUND ci.oldtown.az.us" },
+  });
+  const without = await walkMeetingsDiscoveryNeed(oldtown, runtime(bare.open));
+  assert.equal(without.outcome, "COULD_NOT_READ", "without the hint the walk knocks on the dead host");
+  assert.equal(without.routeHints, undefined, "and records no hint");
+});
+
+test("A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it", async () => {
+  const { open, seen } = fakeOpen({
+    "https://www.oldtownaz.gov/robots.txt": ALLOW,
+    "https://www.oldtownaz.gov/": { status: 200, body: `<title>This domain may be for sale</title><a href="/calendar/meetings.ics">Calendar</a>` },
+    "https://www.ci.oldtown.az.us/robots.txt": { transportError: "getaddrinfo ENOTFOUND www.ci.oldtown.az.us" },
+    "https://ci.oldtown.az.us/robots.txt": { transportError: "getaddrinfo ENOTFOUND ci.oldtown.az.us" },
+  });
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:city:city-of-oldtown", "http://www.ci.oldtown.az.us"), runtime(open, { routeHints: OLDTOWN_HINTS }));
+  assert.ok(!seen.includes("https://www.oldtownaz.gov/calendar/meetings.ics"), "nothing the lapsed page links is requested");
+  assert.ok(seen.includes("https://www.ci.oldtown.az.us/robots.txt"), "the recorded address is tried behind it");
+  assert.deepEqual(attempt.found, []);
+  assert.equal(attempt.routeHints?.homepageRead, null, "no homepage was walked as the government's");
+  assert.ok(attempt.steps.some((s) => s.purpose === "homepage" && s.status === null && /not walked as .*'s own site: its homepage no longer names City of Oldtown/.test(s.note)));
+  assert.match(attempt.note, /answered but was not walked as the government's own: its homepage no longer names City of Oldtown; the recorded http:\/\/www\.ci\.oldtown\.az\.us is stale/);
+});
+
+test("HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed by content; any other is requested and recorded as a lead, a witness is never a sitting, and a binary body is never vaulted as text", async () => {
+  const hints: readonly JurisdictionRouteHints[] = [{
+    jurisdictionId: "nh:city:town-of-hilltop",
+    officialSite: null,
+    routes: [
+      { url: "https://library.example.org/feed/", kind: "FEED", body: "Hilltop Library Trustees", platform: "wordpress", verifyAs: null, evidence: "trustee notices", observed: HINT_SEEN },
+      { url: "https://energy.example.org/meetings.ics", kind: "FEED", body: "Hilltop Energy Committee", platform: "squarespace", verifyAs: "ical", evidence: "the committee's calendar", observed: HINT_SEEN },
+      { url: "https://schools.example.org/f/board_schedule.pdf", kind: "DOCUMENT", body: "Hilltop School Board", platform: "pdf", verifyAs: null, evidence: "the board's calendar", observed: HINT_SEEN },
+      { url: "https://video.example.com/@HilltopCable/streams", kind: "WITNESS", body: "Hilltop boards", platform: "youtube", verifyAs: null, evidence: "scheduled streams", observed: HINT_SEEN },
+    ],
+  }];
+  const { open, seen } = fakeOpen({
+    "https://hilltop.gov/robots.txt": ALLOW,
+    "https://hilltop.gov/": { status: 200, body: `<p>Welcome to Hilltop</p><a href="/m.ics">Meetings</a>` },
+    "https://hilltop.gov/m.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+    "https://library.example.org/robots.txt": ALLOW,
+    "https://library.example.org/feed/": { status: 200, body: "<rss><channel><item><title>Public Notice: Trustees Meeting</title></item></channel></rss>", contentType: "application/rss+xml; charset=UTF-8" },
+    "https://energy.example.org/robots.txt": ALLOW,
+    "https://energy.example.org/meetings.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+    "https://schools.example.org/robots.txt": ALLOW,
+    "https://schools.example.org/f/board_schedule.pdf": { status: 200, body: "%PDF-1.7 binary", contentType: "application/pdf" },
+    "https://video.example.com/robots.txt": ALLOW,
+    "https://video.example.com/@HilltopCable/streams": { status: 200, body: "<html>Upcoming: PB_2026_10_05</html>" },
+  });
+  const rt = runtime(open, { routeHints: hints });
+  const attempt = await walkMeetingsDiscoveryNeed(need("nh:city:town-of-hilltop", "hilltop.gov"), rt);
+
+  assert.deepEqual(seen, [
+    "https://hilltop.gov/robots.txt", "https://hilltop.gov/",
+    "https://library.example.org/robots.txt", "https://library.example.org/feed/",
+    "https://energy.example.org/robots.txt", "https://energy.example.org/meetings.ics",
+    "https://schools.example.org/robots.txt", "https://schools.example.org/f/board_schedule.pdf",
+    "https://video.example.com/robots.txt", "https://video.example.com/@HilltopCable/streams",
+    "https://hilltop.gov/m.ics",
+  ], "every hint before the route the page itself links");
+  assert.equal(attempt.outcome, "FOUND");
+  assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url, f.basis, f.count]), [["ical", "https://energy.example.org/meetings.ics", "HINT", 1], ["ical", "https://hilltop.gov/m.ics", "LINKED", 1]]);
+  assert.match(attempt.found[0].evidence, /^route hint \(feed, observed 2026-09-24T18:00:00Z by test\): the committee's calendar$/);
+  const leads = new Map(attempt.leads.map((l) => [l.url, l] as const));
+  assert.match(leads.get("https://library.example.org/feed/")!.detail, /answered HTTP 200 .* of application\/rss\+xml; charset=UTF-8; no content check covers a feed yet: a lead, not a route$/);
+  assert.match(leads.get("https://schools.example.org/f/board_schedule.pdf")!.detail, /no content check covers a document yet: a lead, not a route$/);
+  assert.match(leads.get("https://video.example.com/@HilltopCable/streams")!.detail, /a witness corroborates a sitting and is never one on its own$/);
+  assert.deepEqual([...leads.values()].map((l) => [l.vendor, l.basis]), [["wordpress", "HINT"], ["pdf", "HINT"], ["youtube", "HINT"]]);
+
+  const pdf = attempt.steps.find((s) => s.url === "https://schools.example.org/f/board_schedule.pdf")!;
+  assert.equal(pdf.artifactId, null);
+  assert.match(pdf.note, /^read \d+ bytes of application\/pdf; not vaulted: a binary body does not survive the text decode$/);
+  assert.ok(!rt.vaulted.some((a) => a.canonicalUrl.endsWith(".pdf")), "the PDF is not in the vault as text");
+  assert.ok(rt.vaulted.some((a) => a.canonicalUrl === "https://library.example.org/feed/"), "a feed is text and is vaulted");
+
+  assert.deepEqual(
+    discoveryFieldManualEntries(attempt).map((e) => [e.kind, e.outcome, e.platforms.join(",")]),
+    [["MEETINGS_ROUTE", "YIELDED", "ical"], ["MEETINGS_ROUTE", "YIELDED", "ical"], ["MEETINGS_LEAD", "REFERENCE", "wordpress"], ["MEETINGS_LEAD", "REFERENCE", "pdf"], ["MEETINGS_LEAD", "REFERENCE", "youtube"]],
+    "what the hints yielded is written the way every walk's results are, so later walks inherit it",
+  );
+});
+
+test("A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-")) {
+    const { open } = fakeOpen({});
+    const oldtown = need("az:city:city-of-oldtown", "http://www.ci.oldtown.az.us");
+    const earlier = await walkMeetingsDiscoveryNeed(oldtown, runtime(open, { now: () => "2026-09-23T00:00:00.000Z" }));
+    await repos.discoveryAttempts.append(oldtown.jurisdictionId, earlier.attemptId, { ...earlier, recheckAfter: "2026-10-01T00:00:00.000Z" }, earlier.finishedAt);
+
+    const first = await runMeetingsDiscovery(repos, { needs: [need("az:a:first-in-rotation", "a.gov"), oldtown], runtime: runtime(open, { routeHints: OLDTOWN_HINTS }), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(first.walked.map((a) => a.jurisdictionId), ["az:city:city-of-oldtown"], `${label}: the hint goes before the rotation, though the walk made without it set a later recheck`);
+
+    const again = await runMeetingsDiscovery(repos, { needs: [oldtown], runtime: runtime(open, { routeHints: OLDTOWN_HINTS }), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(again.notDue, ["az:city:city-of-oldtown"], `${label}: walked with its hints, it waits for its recheck like any other`);
+
+    const changed: readonly JurisdictionRouteHints[] = [{
+      ...OLDTOWN_HINTS[0],
+      routes: [{ url: "https://www.oldtownaz.gov/calendar/meetings.ics", kind: "FEED", body: "Oldtown City Council", platform: "civicplus", verifyAs: "ical", evidence: "the council calendar", observed: HINT_SEEN }],
+    }];
+    const third = await runMeetingsDiscovery(repos, { needs: [oldtown], runtime: runtime(open, { routeHints: changed }), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(third.walked.map((a) => a.jurisdictionId), ["az:city:city-of-oldtown"], `${label}: a changed hint is walked at once`);
+  }
+});
+
+test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN", () => {
+  const problems = routeHintProblems([
+    { jurisdictionId: "az:city:x", officialSite: { origin: "http://x.gov/path", selfName: "X", replaces: "http://x.gov", recordedState: " ", evidence: [], observed: { at: "yesterday", by: "" } }, routes: [] },
+    { jurisdictionId: "az:city:x", officialSite: null, routes: [{ url: "https://y.example/w", kind: "WITNESS", body: "Y boards", platform: "youtube", verifyAs: "ical", evidence: "e", observed: HINT_SEEN }] },
+    { jurisdictionId: "az:city:y", officialSite: { origin: "https://www.y.gov", selfName: "City of Y", replaces: "http://y.gov", recordedState: "parked", evidence: ["e"], observed: HINT_SEEN }, routes: [] },
+    { jurisdictionId: "az:city:z", officialSite: null, routes: [] },
+  ]);
+  for (const expected of [
+    /az:city:x: official site http:\/\/x\.gov\/path is not a bare https origin/,
+    /az:city:x: the official site's own name for the government is not recorded/,
+    /az:city:x: the recorded address's state is not said/,
+    /az:city:x: the official site carries no evidence/,
+    /az:city:x: the official site's observation is not dated and attributed/,
+    /az:city:x: listed twice/,
+    /az:city:x: witness https:\/\/y\.example\/w is checked as a route; a witness is never a sitting on its own/,
+    /az:city:y: the official site is the recorded host itself; there is nothing to correct/,
+    /az:city:z: no official site and no route; nothing to try/,
+  ]) {
+    assert.ok(problems.some((p) => expected.test(p)), `missing: ${expected}\n${problems.join("\n")}`);
+  }
+  assert.ok(namesItself("<title>City&nbsp;of \n El Mirage | Home</title>", "City of El Mirage"));
+  assert.ok(!namesItself("<title>This domain may be for sale</title>", "City of El Mirage"));
+});
+
+test("THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, replaces exactly the address it records, and the runner passes them to every walk", () => {
+  assert.deepEqual(routeHintProblems(ROUTE_HINTS), []);
+  const ledger = (JSON.parse(readFileSync("data/derived/gap-ledger.json", "utf8")) as { meetingsDiscovery: { needs: MeetingsDiscoveryNeed[] } }).meetingsDiscovery.needs;
+  for (const h of ROUTE_HINTS) {
+    const owed = ledger.find((n) => n.jurisdictionId === h.jurisdictionId);
+    assert.ok(owed !== undefined, `${h.jurisdictionId} is not a government the gap ledger owes meetings discovery`);
+    assert.ok(walkableByFreeWalk(owed), `${h.jurisdictionId}: the free walk cannot walk it`);
+    if (h.officialSite !== null) {
+      assert.equal(h.officialSite.replaces, owed.ownWebAddress, `${h.jurisdictionId}: the hint replaces an address the reference no longer records`);
+    }
+  }
+  assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /\n\s+routeHints: ROUTE_HINTS,\n/, "the runner passes the committed hints to its walks");
 });

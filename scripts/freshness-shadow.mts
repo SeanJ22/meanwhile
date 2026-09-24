@@ -160,6 +160,7 @@ import {
   type MeetingsDiscoveryPass,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
+import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
@@ -2392,6 +2393,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
           remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
+        /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
+        routeHints: ROUTE_HINTS,
         ...(discoverySearch === null ? {} : { search: discoverySearch }),
         recordCost: async (entry) => {
           costSeq += 1;

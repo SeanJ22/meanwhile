@@ -51,6 +51,7 @@ import {
   type MeetingsRecipe,
   type RecipeCandidate,
 } from "../../hunt/meetings-recipes.ts";
+import { namesItself, routeHintsFingerprint, routeHintsFor, type JurisdictionRouteHints } from "../../hunt/meetings-route-hints.ts";
 import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
 import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
@@ -114,6 +115,13 @@ export interface DiscoveryRuntime {
    * Consulted on every walk; each application's outcome is written back.
    */
   readonly recipes?: readonly MeetingsRecipe[];
+  /**
+   * The committed route hints (`lib/hunt/meetings-route-hints.ts`): a
+   * government's current official site when the recorded one is stale, and
+   * routes found on its own publications. They are tried first; absent, a
+   * walk starts from the recorded address alone.
+   */
+  readonly routeHints?: readonly JurisdictionRouteHints[];
   /**
    * The search seam (Brave and Exa, pointers only). Absent, the walk never
    * searches. Every provider request it reports is charged to the cost ledger.
@@ -256,6 +264,12 @@ function transportOf(status: number | null, transportError: string | null): Tran
   if (status === null) return "OTHER_NAMED_FAILURE";
   if (status >= 200 && status < 400) return "REACHABLE";
   return [401, 403, 429].includes(status) ? "CHALLENGED" : "FAILED_AT_RUNG";
+}
+
+/** A content type whose body is text. An unnamed type is taken as text: the walk cannot tell, and HTML servers often omit it. */
+function textualType(contentType: string): boolean {
+  const type = contentType.split(";")[0].trim().toLowerCase();
+  return type === "" || type.startsWith("text/") || /^application\/([a-z0-9.+-]+\+)?(json|xml|javascript|ecmascript)$/.test(type) || type.endsWith("+xml") || type.endsWith("+json");
 }
 
 function permissionState(p: StepPermission): PermissionState {
@@ -403,12 +417,17 @@ export async function walkMeetingsDiscoveryNeed(
         continue;
       }
       const ok = got.status !== null && got.status >= 200 && got.status < 300 && got.transportError === null;
-      const artifactId = ok ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
+      /* The body reaches the walk as decoded text, so a binary one (a PDF) would be vaulted as something it is not. */
+      const binary = ok && !textualType(got.contentType);
+      const artifactId = ok && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
       steps.push({
         purpose, url: url.toString(), permission: permission.verdict, status: got.status, transportError: got.transportError, bytes: got.bytes,
-        artifactId, rung: 2, note: ok ? `read ${got.bytes} bytes` : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
+        artifactId, rung: 2,
+        note: binary
+          ? `read ${got.bytes} bytes of ${got.contentType}; not vaulted: a binary body does not survive the text decode`
+          : ok ? `read ${got.bytes} bytes` : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
       });
-      return ok ? { finalUrl: url.toString(), status: got.status!, body: got.body, contentType: got.contentType, artifactId } : null;
+      return ok ? { finalUrl: url.toString(), status: got.status!, body: got.body, bytes: got.bytes, contentType: got.contentType, artifactId } : null;
     }
     skipped(purpose, current, "ALLOWED", `not requested: more than ${MAX_REDIRECT_HOPS} redirects`);
     return null;
@@ -419,11 +438,23 @@ export async function walkMeetingsDiscoveryNeed(
   let homeOrigin: string | null = null;
   let homeHtml: string | null = null;
   const recipeSkips: { recipeId: string; why: string }[] = [];
-  const origins = siteOrigins(need.ownWebAddress);
+  /*
+   * The government's committed hints (lib/hunt/meetings-route-hints.ts). A current official site the hint
+   * records, with its evidence, is walked before the recorded address; the recorded address stays behind it, so
+   * a hint gone stale costs the walk nothing it would otherwise have read.
+   */
+  const hints = routeHintsFor(need.jurisdictionId, runtime.routeHints ?? []);
+  const hintedSite = hints?.officialSite ?? null;
+  const hintedOrigins = new Set(hintedSite === null ? [] : siteOrigins(hintedSite.origin));
+  const origins = [...new Set([...hintedOrigins, ...siteOrigins(need.ownWebAddress)])];
+  /* Why a hinted site that answered was not walked as the government's own; null when it was, or never answered. */
+  let hintedSiteRefused: string | null = null;
+  /* Whether the homepage the walk read came from the hinted site (directly or by its own redirect). */
+  let homeFromHint = false;
   /*
    * The body an official page is verified for. Its official host is the homepage's final host, which the walk
-   * attested (the recorded address, or a host that address's own redirect named); before any homepage is read,
-   * the recorded address itself.
+   * attested: the recorded address, the current official site a route hint records with its evidence, or a host
+   * one of those named by its own redirect. Before any homepage is read, the first origin tried.
    */
   const pageIdentity = (pageLabel: string | null): OfficialPageIdentity => ({
     bodyId: need.jurisdictionId,
@@ -443,11 +474,22 @@ export async function walkMeetingsDiscoveryNeed(
   const learned: MeetingsRecipe[] = [];
   let checked = 0;
   try {
-    /* 1–2. The homepage, on each recorded origin in turn, until one is read. */
+    /* 1–2. The homepage, on each origin in turn (a hinted current site first), until one is read. */
     for (const origin of origins) {
       const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
+      /*
+       * A hinted site is the government's own only while it still says so: a lapsed domain can be anyone's. Its
+       * homepage must name the government as the hint observed it did; otherwise it is not walked as the
+       * government's, and the walk moves on to the recorded address.
+       */
+      if (home !== null && hintedSite !== null && hintedOrigins.has(origin) && !namesItself(home.body, hintedSite.selfName)) {
+        hintedSiteRefused = `its homepage no longer names ${hintedSite.selfName}`;
+        skipped("homepage", home.finalUrl, "ALLOWED", `read, but not walked as ${need.name}'s own site: ${hintedSiteRefused}`);
+        continue;
+      }
       if (home !== null) {
         homeOrigin = new URL(home.finalUrl).origin;
+        homeFromHint = hintedOrigins.has(origin);
         homeHtml = home.body;
         candidates = meetingEndpointCandidates(home.body, home.finalUrl);
         /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
@@ -465,11 +507,22 @@ export async function walkMeetingsDiscoveryNeed(
     }
 
     /*
-     * 3. The verifiable routes, confirmed by content: the page's own evidence
-     * first, then the saved methods. A saved method that proposes a route the page
-     * already links is credited with that route's outcome.
+     * 3. The routes, confirmed by content: the government's committed hints
+     * first, then the page's own evidence, then the saved methods. A hint no
+     * content check covers is still requested, robots-first, so the walk records
+     * whether it answers; it is a lead, never a find. A saved method that proposes
+     * a route already planned is credited with that route's outcome.
      */
-    for (const candidate of candidates.filter((c) => c.verifiable)) planned.push({ candidate, recipeIds: [], label: null });
+    for (const h of hints?.routes ?? []) {
+      planned.push({
+        candidate: { vendor: h.verifyAs ?? h.platform, url: h.url, basis: "HINT", evidence: `route hint (${h.kind.toLowerCase()}, observed ${h.observed.at} by ${h.observed.by}): ${h.evidence}`, verifiable: h.verifyAs !== null },
+        recipeIds: [],
+        label: h.body,
+      });
+    }
+    for (const candidate of candidates.filter((c) => c.verifiable && !planned.some((p) => p.candidate.url === c.url))) {
+      planned.push({ candidate, recipeIds: [], label: null });
+    }
     for (const p of proposals) {
       const same = planned.find((x) => x.candidate.url === p.url);
       if (same) {
@@ -486,9 +539,19 @@ export async function walkMeetingsDiscoveryNeed(
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
       if (got !== null) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl });
+      const hint = candidate.basis === "HINT" && !candidate.verifiable ? hints?.routes.find((r) => r.url === candidate.url) : undefined;
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
+        : hint !== undefined
+          ? {
+              verdict: "NOT_CONFIRMED" as const,
+              count: null,
+              detail: `answered HTTP ${got.status} with ${got.bytes} bytes of ${got.contentType || "an unnamed type"}; ` +
+                (hint.kind === "WITNESS"
+                  ? "a witness corroborates a sitting and is never one on its own"
+                  : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
+            }
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
@@ -641,8 +704,28 @@ export async function walkMeetingsDiscoveryNeed(
     search: queryTrail,
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
-    note: noteFor(need, outcome, found, leads, origins.length),
+    note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused),
+    ...(hints === null
+      ? {}
+      : {
+          routeHints: {
+            fingerprint: routeHintsFingerprint(hints),
+            officialSite: hintedSite?.origin ?? null,
+            replaces: hintedSite?.replaces ?? null,
+            homepageRead: homeOrigin,
+            routes: hints.routes.map((r) => r.url),
+          },
+        }),
   };
+}
+
+/** What the walk says about a stale recorded address it walked past. Empty when no official-site hint applied. */
+function siteNote(hinted: JurisdictionRouteHints["officialSite"], readFromHint: boolean, refused: string | null): string {
+  if (hinted === null) return "";
+  const stale = `the recorded ${hinted.replaces} is stale (${hinted.recordedState})`;
+  if (readFromHint) return ` It walked the current official site, ${hinted.origin}; ${stale}.`;
+  if (refused !== null) return ` The current official site a route hint records, ${hinted.origin}, answered but was not walked as the government's own: ${refused}; ${stale}.`;
+  return ` The current official site a route hint records, ${hinted.origin}, could not be read this walk; ${stale}.`;
 }
 
 function noteFor(
@@ -794,9 +877,19 @@ export async function runMeetingsDiscovery(
 ): Promise<MeetingsDiscoveryPass> {
   const skip = input.skipIds ?? new Set<string>();
   const walkable = input.needs.filter((n) => walkableByFreeWalk(n) && !skip.has(n.jurisdictionId));
-  const first = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) === true);
-  const rotation = rotationWindow(walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true), input.cycleIndex, input.maxWalks);
-  const window = [...first, ...rotation];
+  /*
+   * First the owner's dispatch, then the governments with committed route hints: a hint is evidence someone
+   * already found, so it is walked when due rather than when the rotation comes round. The rest rotate.
+   */
+  const hinted = new Map((input.runtime.routeHints ?? []).map((h) => [h.jurisdictionId, routeHintsFingerprint(h)] as const));
+  const dispatchedFirst = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) === true);
+  const hintedFirst = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true && hinted.has(n.jurisdictionId));
+  const rotation = rotationWindow(
+    walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true && !hinted.has(n.jurisdictionId)),
+    input.cycleIndex,
+    input.maxWalks,
+  );
+  const window = [...dispatchedFirst, ...hintedFirst, ...rotation];
   const walked: MeetingsDiscoveryAttempt[] = [];
   const notDue: string[] = [];
   const deferred: string[] = [];
@@ -807,7 +900,9 @@ export async function runMeetingsDiscovery(
   for (const need of window) {
     if (walked.length >= input.maxWalks) break;
     const [latest] = await repos.discoveryAttempts.readRecent(need.jurisdictionId, 1);
-    if (latest !== undefined && Date.parse(latest.recheckAfter) > nowMs) {
+    /* A walk made without the government's current hints set its recheck without them: the need is due again now. */
+    const hintsChanged = hinted.has(need.jurisdictionId) && latest?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
+    if (latest !== undefined && !hintsChanged && Date.parse(latest.recheckAfter) > nowMs) {
       notDue.push(need.jurisdictionId);
       continue;
     }

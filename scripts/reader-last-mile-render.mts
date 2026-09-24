@@ -15,6 +15,7 @@ import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.t
 import { formatMeetingDate, meetingRowTitle, meetingSubline } from "../lib/map/format.ts";
 import { minutesSummaryForMeeting } from "../lib/meetings/minutes-summaries.ts";
 import { noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
+import { venueGapLine, venueGapMark, venueGapOf } from "../lib/meetings/online.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
@@ -473,7 +474,7 @@ async function listingMultiplicityWitness(page: Page, label: string) {
   return { renderedListingCount: count, groups: readbacks };
 }
 
-async function meetingWitness(page: Page, meetingId: string, label: string) {
+async function meetingWitness(page: Page, meetingId: string, label: string, componentWitness = false) {
   const meeting = heldMeetings.find(row => row.id === meetingId);
   assert.ok(meeting, `${meetingId}: canonical sitting exists`);
   const listButton = page.locator('[data-stat="meetings"]').first();
@@ -503,6 +504,34 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
   const title = [meetingRowTitle(meeting, { jurisdictionShown: groupedDiagnostic }), meetingSubline(meeting)].filter(Boolean).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s*");
   const row = groupedDiagnostic ? page.locator(".al-row").filter({ has: page.locator(".al-row-title").filter({ hasText: new RegExp(`^${title}$`) }) }).filter({ hasText: formatMeetingDate(meeting) }) : page.locator(`.al-row[data-meeting-id="${meetingId}"]`);
   assert.equal(await row.count(), 1, `${meetingId}: actual list has exactly one matching sitting: ${JSON.stringify(await row.allInnerTexts())}`);
+  // Route by the witness's own promoted row (owner decision 1, 2026-09-24, venue-fix
+  // owner). A sitting with a location keeps the map-popup path. A sitting with no
+  // location and a named venue gap has no pin, so a reader reaches it from its list
+  // row, which opens the full meeting card directly (map-entry onPickMeeting ->
+  // openLarge). That path is verified here: the row's stated-place mark, the card's
+  // Where line, and the same agenda payload and card assertions as the popup path.
+  const venueGap = venueGapOf(meeting);
+  const path = venueGap
+    ? { kind: "LIST_ROW_TO_CARD", reason: "unplaced room pending venue review (owner decision 1)" }
+    : { kind: "MAP_POPUP", reason: meeting.location ? "the sitting has a location" : "no named venue gap" };
+  let placeless: { rowMark: string; cardWhere: string } | null = null;
+  let response: Awaited<ReturnType<Page["waitForResponse"]>>;
+  if (venueGap) {
+    const mark = row.locator("[data-meeting-where]");
+    assert.equal(await mark.count(), 1, `${meetingId}: the placeless row states where it is held`);
+    const rowMark = (await mark.innerText()).replace(/^\s*·\s*/, "").trim();
+    assert.equal(rowMark, venueGapMark(venueGap), `${meetingId}: the row shows the stated place or the publisher's named gap`);
+    [response] = await Promise.all([page.waitForResponse(response => {
+      const url = new URL(response.url());
+      return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
+    }), row.click()]);
+    const card = page.locator('.account-modal-overlay[role="dialog"]');
+    await card.waitFor({ state: "visible" });
+    const cardWhere = venueGapLine(venueGap);
+    assert.ok((await card.innerText()).includes(cardWhere), `${meetingId}: the card's Where line states the place as the reader sees it`);
+    if (meetingId === "legistar:pima:1825") await capture(page, `${label}-meeting-card-unplaced`, card);
+    placeless = { rowMark, cardWhere };
+  } else {
   await row.click();
   if (meeting.location) {
     // The list first opens the venue's real sitting list. Use the sitting's
@@ -510,15 +539,16 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     assert.ok(meeting.agendaUrl, `${meetingId}: known-answer witness has its exact agenda URL`);
     const entry = page.locator('aside:is([aria-label^="Meetings at"],[aria-label^="Calendar listings at"]):visible article').filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }).filter({ hasText: formatMeetingDate(meeting) });
     assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
-    if (meetingId === "legistar:pima:1825") await capture(page, `${label}-venue-meeting-panel`, entry);
+    if (componentWitness) await capture(page, `${label}-venue-meeting-panel`, entry);
     await entry.locator("h3 button").click();
   }
-  if (meetingId === "legistar:pima:1825") await capture(page, `${label}-meeting-popup`, page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }));
+  if (componentWitness) await capture(page, `${label}-meeting-popup`, page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }));
   if (groupedDiagnostic) await capture(page, `${label}-meeting-diagnostic-popup`);
-  const [response] = await Promise.all([page.waitForResponse(response => {
+  [response] = await Promise.all([page.waitForResponse(response => {
     const url = new URL(response.url());
     return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
   }), page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }).click()]);
+  }
   assert.equal(response.status(), 200);
   const payload = await response.json() as { meetingId: string; documentCount: number; documents: { documentUrl: string; contentHash: string; text: string | null }[]; records: MeetingReaderRecords; publication: AgendaPublicationReading | null };
   assert.equal(payload.meetingId, meetingId);
@@ -600,13 +630,17 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
   }
   if (payload.records.status !== "HELD" && !minutes && !textDocument) await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-meeting`, modal);
   await page.keyboard.press("Escape");
-  return { meetingId, bodyId: meeting.bodyId, returned: payload, renderedCounts: payload.records.counts, minutes: minutes?.summary ?? null, commentAccessBodyId: access?.bodyId ?? null, commentAccessLines: accessLines, commentAccessApplicability: readerStatus === "CONCLUDED" ? "Concluded sitting: participation rules intentionally do not apply" : "Current body participation rules" };
+  return { meetingId, bodyId: meeting.bodyId, path, placeless, returned: payload, renderedCounts: payload.records.counts, minutes: minutes?.summary ?? null, commentAccessBodyId: access?.bodyId ?? null, commentAccessLines: accessLines, commentAccessApplicability: readerStatus === "CONCLUDED" ? "Concluded sitting: participation rules intentionally do not apply" : "Current body participation rules" };
 }
 
 async function activityWitnesses(page: Page, zip: string, label: string) {
   const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827", "diligent:tusd1:493"] : zip === "85641" ? ["apptegy:vail:60703698"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : ["diligent:newburynh:3367"];
   const rows = [];
-  for (const id of ids) rows.push(await meetingWitness(page, id, label));
+  // The venue panel and the map popup are witnessed on the ZIP's first LOCATED
+  // witness: a placeless sitting has neither (owner decision 1, 2026-09-24). Until
+  // then legistar:pima:1825 carried both; its live row is now an unplaced room.
+  const componentWitness = ids.find(id => heldMeetings.find(row => row.id === id)?.location) ?? null;
+  for (const id of ids) rows.push(await meetingWitness(page, id, label, id === componentWitness));
   return rows;
 }
 

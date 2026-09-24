@@ -1,11 +1,11 @@
 {
-  "exactHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
+  "exactHead": "48ade9df88ce6af1e9b7814ff8c61861e68c7574",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "ad1b1d89960c06c847601ec00b0d6cdea33bfded0a8b9bfe5d88601f3319232b"
+      "sha256": "890df033ab645dffbf30de5807d5ced5d6e6b69e21e3a427dbec0d193ce76c63"
     },
     {
       "path": "lib/ask/meeting-knowledge.ts",
@@ -118,8 +118,8 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 3,
-        "calendarListingsHeldForThisBody": 27,
-        "meetingsHeldForThisBody": 27,
+        "calendarListingsHeldForThisBody": 26,
+        "meetingsHeldForThisBody": 26,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -133,7 +133,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f4c8f8c97565faf3fb12d8b8ace39c6876e79d1496f549ef42656097613c31f8",
+      "payloadSha256": "f2304484488d51ad917b58c952123d51672b294d01373afef6b2394411d49a68",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "cc82387bf2dc88daf0976e51859bd07d4f4a5a70d575adf8b5452516f608dfb2",
+      "payloadSha256": "0b10481d17e82a81313ffdce665618c199f6f194bd22efb4b878f51308ea5bab",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -407,11 +407,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Pima Community College Governing Board meeting. We hold the link their calendar gave and not the document behind it. We are still looking for it."
-        },
-        {
-          "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Pima Community College Governing Board meeting. We hold the link their calendar gave and not the document behind it. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Pima Community College Governing Board meeting. We hold the link their calendar gave and not the document behind it."
         },
         {
           "whose": "OURS",
@@ -440,7 +436,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "51e9957e12be04be65473d672da7609dd0301e64f9773815336222a05119bb1d",
+      "payloadSha256": "1a6765bb5e38424c8f60490f1a82b1c42eb1327afb6f84366dc8844f7a71057f",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -568,11 +564,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Pima County Board Of Supervisors meeting. We are still looking for it."
-        },
-        {
-          "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Pima County Board Of Supervisors meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Pima County Board Of Supervisors meeting."
         }
       ],
       "denominators": {
@@ -583,8 +575,8 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 3,
-        "calendarListingsHeldForThisBody": 27,
-        "meetingsHeldForThisBody": 27,
+        "calendarListingsHeldForThisBody": 26,
+        "meetingsHeldForThisBody": 26,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -597,7 +589,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "80fc4543c14015c576454994c03fa96c0e7a50ab23752a6fdad3c2367d1b5d79",
+      "payloadSha256": "8e169641836b025548fdfa6d68b65ae43458c717a4fb4271d9b05109cd196dba",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -753,7 +745,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Board Of Adjustment meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Board Of Adjustment meeting."
         },
         {
           "whose": "OURS",
@@ -782,7 +774,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "a03de23adbe2cc13e4a979620c47f4147c0cb04bcc9f74eac60b6a2a25822d8f",
+      "payloadSha256": "e81875b09f460b82ecda34c493d1ec20c01c752983620397a15da77600af2839",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -938,7 +930,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Citizens' Water Advisory Committee meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Citizens' Water Advisory Committee meeting."
         },
         {
           "whose": "OURS",
@@ -967,7 +959,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "fefbd76a95a6c2a5dfdf20779fa32b0985f2cfad7de3d5b6b4c93f7f47f3334b",
+      "payloadSha256": "d09c0f2aa28ed08e28b8701b99f511f5acbb0e5d08dbde1560466b0f3c05c0ae",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1123,7 +1115,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Community Police Advisory Review Board meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Community Police Advisory Review Board meeting."
         },
         {
           "whose": "OURS",
@@ -1152,7 +1144,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "be6a1ea6ebf3a438fbdb61c8a477323045e803843e858356cee6b19cb88c4584",
+      "payloadSha256": "d13df5b00c9fb656183bbbe8b347c5fa507d1ea8e8db8f25def4b5efcaea6900",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1336,11 +1328,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Tucson Mayor & Council meeting. We are still looking for it."
-        },
-        {
-          "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Tucson Mayor & Council meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Tucson Mayor & Council meeting."
         }
       ],
       "denominators": {
@@ -1365,7 +1353,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "ba904c837fc49802faf671b629554eaefe02dbf26af7bad1206e1aa77fb2e3a4",
+      "payloadSha256": "0f4ebf3d43a72b23ce2acbe56f7ebe398ffa45c364094fae00272a1e9fe1f8a2",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1549,7 +1537,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Tucson Planning Commission meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Tucson Planning Commission meeting."
         },
         {
           "whose": "OURS",
@@ -1578,7 +1566,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d196c18d416c278d767473ec07db4ffc2001e5c3e9c1a5a1e1b65de1d68c551c",
+      "payloadSha256": "dfa0995df810d5fdfc794cd708fc244cad77293c29a523db8032668881999434",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1724,7 +1712,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "2fe4caad6aa8d8f86b5ffc4dcb8bd93c5d50db28e0a10f6e0373a931e6aac2e5",
+      "payloadSha256": "7427b7f4c1b5111660f1740c6520e3f40e9add44b8cd2ec49928eb2739837b2c",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1908,7 +1896,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Tucson Parks And Recreation Commission meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Tucson Parks And Recreation Commission meeting."
         },
         {
           "whose": "OURS",
@@ -1937,7 +1925,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "60ab39c2545b003cac4998628a02ef57611886b1695c080246dee2d7a44af2b7",
+      "payloadSha256": "243ce73539dc1993cbc8aacf8b92d58630beacf520d5300422cbd01a79dea224",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2114,7 +2102,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "91d84926504ba79c4e9b932e59e9654e2f985423c1d1a65fd199d0c90b22061d",
+      "payloadSha256": "1dcad8984165f215dcb4243dc514f51028c5c2d56ba50460bff0a1902599d8a5",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2242,7 +2230,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Sunnyside Unified School District Governing Board meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Sunnyside Unified School District Governing Board meeting."
         }
       ],
       "denominators": {
@@ -2253,8 +2241,8 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 3,
-        "calendarListingsHeldForThisBody": 12,
-        "meetingsHeldForThisBody": 12,
+        "calendarListingsHeldForThisBody": 13,
+        "meetingsHeldForThisBody": 13,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 1,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -2267,7 +2255,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "4c46936cbea60d77f6793d5a4cfae9205374baf62a7cf768ba12ee11a92cf2d3",
+      "payloadSha256": "c006892f4b3c5379d5263062f7db935bc1a6c19b96cd70a8c2cc4b6a26e02b03",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2462,8 +2450,8 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 5,
-        "calendarListingsHeldForThisBody": 23,
-        "meetingsHeldForThisBody": 23,
+        "calendarListingsHeldForThisBody": 29,
+        "meetingsHeldForThisBody": 29,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 1,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -2476,7 +2464,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "73f6dd7225fa5fc749d96c98b80e853c29610d5a3039fcab63a78a473b29fbdc",
+      "payloadSha256": "55580c71d1916531353db2b84d623233a50154719f0845233ba19b5c71022255",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2685,7 +2673,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "420e872fa0981d8c9db25899730f37ff41654101707daea1761e4210e4e4ae33",
+      "payloadSha256": "73ace8dbec39077e935c2c61a1cf0e0a9678625cb89a2a3cb35718113f47c388",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2893,7 +2881,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "ee2eaf3484ed079f56a0298c333b25584e2de13baabc70856eafe1a74f8f0d6d",
+      "payloadSha256": "375f623ea77f120196775fe611afa4732d3b19613731e81677503b19f637a01c",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3060,8 +3048,8 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 4,
-        "calendarListingsHeldForThisBody": 19,
-        "meetingsHeldForThisBody": 19,
+        "calendarListingsHeldForThisBody": 20,
+        "meetingsHeldForThisBody": 20,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 1,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -3074,7 +3062,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "462ec1ac826e9d87408f541688aa78eb8f9036d4cb0f6052922b4abe2b270fcb",
+      "payloadSha256": "debfa58671f779e1d4cc54ac38d4b05288979196ca8a7b61361905f09e40ed9d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3230,7 +3218,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Rockaway Township Council meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Rockaway Township Council meeting."
         }
       ],
       "denominators": {
@@ -3255,7 +3243,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "369e9009afc55cd9d45ce2b22a8d090b795a33bd5eb1a33e0b0a991517f12868",
+      "payloadSha256": "7691cd89788e3154fb758b48c183b2c570cc2f68a156bb07ab525429bb82afba",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3383,11 +3371,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting. We are still looking for it."
-        },
-        {
-          "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting."
         }
       ],
       "denominators": {
@@ -3412,7 +3396,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "b910a13c00bf6e43b5aa7f564e4b25ae63231e8a02dd51b976a804bb81fefa97",
+      "payloadSha256": "0119964b1ee37ed30ede1537085dba567e0533c70d7baf4fe22dd965ab0d3dd5",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3540,7 +3524,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Rockaway Township Board Of Education meeting. We are still looking for it."
+          "statement": "We have not yet acquired the agenda for that Rockaway Township Board Of Education meeting."
         }
       ],
       "denominators": {
@@ -3565,7 +3549,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "ecfd185f3d671c07ee3bdf87d3dc961c6f3044f4ac54d88c12d29b1afd50e787",
+      "payloadSha256": "3afa4ae9fbc368457e4c74c4bbbcce56425b08e4a56626e932ea0aac794be6e6",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

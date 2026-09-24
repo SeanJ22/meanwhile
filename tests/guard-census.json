@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 764,
-    "named": 7508,
+    "files": 765,
+    "named": 7512,
     "dynamic": 30
   },
   "files": {
@@ -2313,6 +2313,15 @@
         "CARRIED-SUPERSEDE · (c) the same normalized body at another local time is another sitting: both are kept",
         "CARRIED-SUPERSEDE · (d) another body at the same minute is another sitting: both are kept, on every source",
         "CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim: the honest one promotes, a forged one is refused"
+      ],
+      "dynamic": 0
+    },
+    "tests/carried-venue-placement.test.ts": {
+      "names": [
+        "CARRIED-PLACE · (a) the measured case: the carried 23 September session is placed at the reviewed venue for its own words, and stays carried",
+        "CARRIED-PLACE · (b) with no reviewed venue for its words, or no venues handed in, the carried row keeps its stated words and no pin",
+        "CARRIED-PLACE · (c) only the row's own division places it; unstated, online, placed and division-less rows are returned as they were",
+        "CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin"
       ],
       "dynamic": 0
     },

@@ -22,6 +22,13 @@ export interface RoutineRunnerReceipt {
   readonly promotedVersion: string | null;
   readonly lastKnownGoodVersion: string | null;
   readonly structuralReleaseContract: ZeroReleaseEvents;
+  /**
+   * Present when the child confirmed the pointed version unchanged instead of
+   * promoting: the confirmation's observed instant. `candidateId` then names
+   * the pointed version, and the supervisor proves the receipt from the
+   * pointer's identity and its newest confirmation, never the dataset.
+   */
+  readonly confirmedAt?: string;
 }
 
 /** Candidate plus canonical pointer/LKG proof needs at most four Neon requests. */
@@ -161,7 +168,8 @@ export function parseRoutineRunnerReceipt(output: string): RoutineRunnerReceiptP
     !(row.decision === null || ["GOOD", "FAIL", "CANNOT_TELL"].includes(String(row.decision))) ||
     !nullableText(row.promotedVersion) ||
     !nullableText(row.lastKnownGoodVersion) ||
-    !exactSevenZero(row.structuralReleaseContract)
+    !exactSevenZero(row.structuralReleaseContract) ||
+    !(row.confirmedAt === undefined || (typeof row.confirmedAt === "string" && Number.isFinite(Date.parse(row.confirmedAt))))
   ) {
     return { ok: false, code: "RECEIPT_SCHEMA_INVALID", detail: "The RCD_RECEIPT payload does not satisfy the durable runner receipt contract." };
   }
@@ -297,6 +305,22 @@ export async function durableRoutineRunnerReceiptIssue(
     if (expectedOutcome === "SUCCESS") {
       const summaryIssue = successfulRoutineRunnerReceiptIssue(receipt);
       if (summaryIssue) return summaryIssue;
+      if (receipt.confirmedAt !== undefined) {
+        // A confirmation moved nothing: the pointer still names the version the
+        // candidate summary above proved, and carries this run's confirmation.
+        // The database admits that confirmation only for the pointed version and
+        // its read-model hash (migration 0029), so the dataset is not re-read.
+        const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
+        if (
+          pointer === null ||
+          pointer.versionId !== receipt.candidateId ||
+          pointer.lastKnownGoodVersionId !== receipt.candidateId ||
+          pointer.sourceId !== expected.sourceId ||
+          pointer.latestConfirmation?.versionId !== receipt.candidateId ||
+          pointer.latestConfirmation.observedAt !== receipt.confirmedAt
+        ) return `canonical ${expected.recordClass}:${expected.scope} does not carry the reported confirmation of ${receipt.candidateId}`;
+        return null;
+      }
       const readback = await readPromotedCivicData(expected.recordClass, expected.scope, { store, bypassCache: true });
       if (
         readback.kind !== "PROMOTED" ||

@@ -703,3 +703,45 @@ test("the narrowed event reads are chosen in Postgres: one newest readback per v
   assert.ok(moves.params.includes(POINTER_MOVE_DETAIL_PREFIX));
   for (const text of [readbacks, moves.sql]) assert.doesNotMatch(text, /"id"|"payload"|"candidate"[^_]/, "event columns only");
 });
+
+test("a confirmation's runner receipt is proved from the pointer and its newest confirmation, never the dataset", async () => {
+  const { durableRoutineRunnerReceiptIssue, parseRoutineRunnerReceipt } = await import("../lib/civic-data/runner-receipt.ts");
+  const { ZERO_RELEASE_EVENTS } = await import("../lib/civic-data/release.ts");
+  const value = candidate("receipt-confirmed");
+  const store = await promotedStore(value);
+  const at = "2026-09-08T18:00:03.000Z";
+  const confirmed = await store.confirmUnchanged({
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    parserVersion: value.normalization.parserVersion,
+    pointerVersionId: value.id,
+    readModelHash: value.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED",
+    retrieval: CONFIRMING_RETRIEVAL,
+  }, at);
+  assert.equal(confirmed.kind, "CONFIRMED");
+  const line = "RCD_RECEIPT=" + JSON.stringify({
+    source: "fec-funding", candidateId: value.id, acquisitionSucceeded: true, state: "PROMOTED", decision: "GOOD",
+    promotedVersion: value.id, lastKnownGoodVersion: value.id, confirmedAt: at, structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  });
+  const parsed = parseRoutineRunnerReceipt(line);
+  assert.ok(parsed.ok);
+  if (!parsed.ok) return;
+  assert.equal(parsed.receipt.confirmedAt, at);
+  const expected = { id: "fec-funding", sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope };
+  // Count every dataset door: a confirmation's proof opens none of them.
+  let datasetReads = 0;
+  const counting = Object.assign(Object.create(store), {
+    readPromotion: (...args: Parameters<typeof store.readPromotion>) => { datasetReads += 1; return store.readPromotion(...args); },
+    readCandidate: (...args: Parameters<typeof store.readCandidate>) => { datasetReads += 1; return store.readCandidate(...args); },
+    readCandidateProof: (...args: Parameters<typeof store.readCandidateProof>) => { datasetReads += 1; return store.readCandidateProof(...args); },
+  }) as typeof store;
+  assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, expected, counting, "SUCCESS"), null);
+  assert.equal(datasetReads, 0, "no payload or candidate envelope is read to prove a confirmation");
+  // A confirmation the pointer does not carry is refused.
+  const stale = { ...parsed.receipt, confirmedAt: "2026-09-08T17:00:00.000Z" };
+  assert.match(await durableRoutineRunnerReceiptIssue(stale, expected, counting, "SUCCESS") ?? "", /does not carry the reported confirmation/);
+  // A malformed instant is a schema failure, never a guess.
+  assert.equal(parseRoutineRunnerReceipt(line.replace(at, "not a time")).ok, false);
+});

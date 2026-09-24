@@ -1323,6 +1323,9 @@ export function printMeetingPartitionReceipt(
     // configuration failed first); absent on success. Additive: the durable
     // receipt contract reads the fields above and ignores this one.
     ...(failureKind ? { failureKind } : {}),
+    // A confirmation names its observed instant, so the supervisor proves it
+    // from the pointer's identity and newest confirmation, not the dataset.
+    ...(outcome.confirmed ? { confirmedAt: outcome.confirmed.at } : {}),
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
 }

@@ -19,9 +19,58 @@
  */
 import type { AssignmentListRow, AssignmentState } from "../assignment-view.ts";
 import type { RenderedNumber } from "../owner-surface.ts";
+import type { DispatchWorkReading, DispatchWorkTargetReading } from "./dispatch-work.ts";
 import type { ExpansionCycleReading, ExpansionScopeReading } from "./reading.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import { subjectOfObligationId } from "./subjects.ts";
+
+/* -------------------------------------------------- what a Send created (MW-028) */
+
+export type ScopeCreationView =
+  | { readonly kind: "READ"; readonly target: DispatchWorkTargetReading; readonly at: string; readonly planOnly: string | null }
+  | { readonly kind: "NOT_YET"; readonly says: string };
+
+/**
+ * What the runner created for this decision, from the research state's
+ * `dispatchWork` reading. The same rule as `runnerViewFor`: a reading taken at
+ * a cycle that started before the decision is not this decision's.
+ */
+export function scopeCreationView(decision: ExpansionScopeDecision, reading: DispatchWorkReading | null): ScopeCreationView {
+  if (reading === null) {
+    return { kind: "NOT_YET", says: "The runner has not created anything for a geography yet: it does so at the start of its next cycle." };
+  }
+  if (reading.at < decision.decidedAt) {
+    return { kind: "NOT_YET", says: "You changed this after the runner's last cycle started; what it creates here is counted at the start of the next one." };
+  }
+  const target = reading.targets.find((t) => t.kind === "SCOPE" && t.key === decision.key);
+  if (target === undefined) {
+    return { kind: "NOT_YET", says: "The runner's last cycle did not carry this geography. It is counted at the start of the next cycle." };
+  }
+  return { kind: "READ", target, at: reading.at, planOnly: reading.writes === "PLAN_ONLY" ? reading.planOnlyWhy : null };
+}
+
+/** Every number a surface draws for one target's creation receipt, each with its denominator and contract. */
+export function scopeCreationNumbers(target: DispatchWorkTargetReading): RenderedNumber[] {
+  const r = target.requirements;
+  const label = target.label;
+  const out: RenderedNumber[] = [
+    { label: `${label} requirements created`, value: r.created, denominator: r.defined, contract: "requirements the promoted registry defines for the governments here that the owner's Send created, of every one it defines here" },
+    { label: `${label} created this cycle`, value: r.createdThisCycle, denominator: r.created, contract: "of those created, how many the runner's last cycle wrote" },
+    { label: `${label} requirements reordered`, value: r.carried, denominator: r.defined, contract: "requirements here already on a standing clock, which the Send puts first rather than creates" },
+    { label: `${label} standing obligations reordered`, value: target.reordered.obligations, denominator: target.reordered.of, contract: "standing obligations about the governments here, of every standing obligation that cycle" },
+    { label: `${label} requirements deferred`, value: r.deferred, denominator: r.defined, contract: "requirements here still owed and not yet written: the per-cycle write budget ran out" },
+    { label: `${label} requirements beyond the cap`, value: r.capped, denominator: r.defined, contract: `requirements here beyond this geography's cap of ${target.cap}` },
+  ];
+  if (target.units.blocked !== null) {
+    out.push({
+      label: `${label} governments blocked`,
+      value: target.units.blocked,
+      denominator: target.units.placed + target.units.blocked,
+      contract: "governments in this geography that no dataset can give requirements to, of every government it holds that can be named",
+    });
+  }
+  return out;
+}
 
 export type ScopeRunnerView =
   | { readonly kind: "READ"; readonly reading: ExpansionScopeReading; readonly at: string }

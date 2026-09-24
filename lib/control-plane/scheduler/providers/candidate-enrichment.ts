@@ -115,11 +115,23 @@ import type {
   ProviderYield,
   RouteDescriptor,
 } from "../registry.ts";
+import { trackedStatesFromOperationalReference, type TrackedStatesSource } from "../provider-inputs.ts";
 
 export const CANDIDATE_ENRICHMENT_PROVIDER_ID = "candidate-enrichment";
 
-/** The states whose canonical universes this provider schedules. */
-export const ENRICHED_STATES = ["az", "nh", "nj"] as const;
+/**
+ * The states whose canonical candidate BALLOT AUTHORITY is registered in the
+ * civic-data contracts (`az-sos-ballot`, `nh-curated-ballot`,
+ * `nj-morris-filing`). A property of those contracts, not of coverage: which
+ * states this provider ENUMERATES is the tracked set it is handed
+ * (`TrackedStatesSource`, 2026-09-23). A tracked state outside this list is
+ * named as a dataset gap every cycle — its ballot authority is not registered —
+ * and never skipped quietly or read as an election with no candidates.
+ */
+export const BALLOT_AUTHORITY_STATES = ["az", "nh", "nj"] as const;
+type BallotAuthorityState = (typeof BALLOT_AUTHORITY_STATES)[number];
+const hasBallotAuthority = (state: string): state is BallotAuthorityState =>
+  (BALLOT_AUTHORITY_STATES as readonly string[]).includes(state);
 export const CYCLE = 2026;
 
 /**
@@ -475,7 +487,7 @@ function profileStores(
 export function candidateUniversesFromPromoted(
   authorities: CandidateEnrichmentAuthorities,
   nowIso: string,
-): Readonly<Record<(typeof ENRICHED_STATES)[number], CandidateUniverse>> {
+): Readonly<Record<BallotAuthorityState, CandidateUniverse>> {
   const stores = profileStores(authorities.profiles, authorities.corpus);
   const azDocuments: BallotDocument[] = [
     ballotDocument("civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot", authorities.az.ballot),
@@ -506,7 +518,7 @@ export function candidateUniversesFromPromoted(
 
 /** Derive one state's universe without acquiring either sibling ballot. */
 export function candidateUniverseFromPromoted(
-  stateCode: (typeof ENRICHED_STATES)[number],
+  stateCode: BallotAuthorityState,
   ballot: AzBallotProjection | NhBallotProjection | NjMorrisReadModel,
   profiles: CandidateProfilesProjection,
   corpus: CandidateCorpus,
@@ -541,11 +553,11 @@ export function candidateUniverseFromPromoted(
 export function candidateEnrichmentUniversesFromHoldings(
   holdings: CandidateEnrichmentAuthorityHoldings,
   nowIso: string,
-): { readonly universes: Partial<Record<(typeof ENRICHED_STATES)[number], CandidateUniverse>>; readonly failures: string[] } {
-  const universes: Partial<Record<(typeof ENRICHED_STATES)[number], CandidateUniverse>> = {};
+): { readonly universes: Partial<Record<BallotAuthorityState, CandidateUniverse>>; readonly failures: string[] } {
+  const universes: Partial<Record<BallotAuthorityState, CandidateUniverse>> = {};
   const failures = [...holdings.failures];
   if (!holdings.profiles || !holdings.corpus) return { universes, failures };
-  for (const stateCode of ENRICHED_STATES) {
+  for (const stateCode of BALLOT_AUTHORITY_STATES) {
     const ballot = holdings[stateCode];
     if (!ballot) continue;
     try {
@@ -557,7 +569,13 @@ export function candidateEnrichmentUniversesFromHoldings(
   return { universes, failures };
 }
 
-export function candidateEnrichmentProvider(): ObligationProvider {
+export interface CandidateEnrichmentInput {
+  /** Which states' candidate universes are enumerated. The coverage set, read as data; never a list in code. */
+  readonly trackedStates?: TrackedStatesSource;
+}
+
+export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}): ObligationProvider {
+  const trackedStates = input.trackedStates ?? trackedStatesFromOperationalReference();
   return {
     id: CANDIDATE_ENRICHMENT_PROVIDER_ID,
     describe:
@@ -584,7 +602,24 @@ export function candidateEnrichmentProvider(): ObligationProvider {
         : { universes: {}, failures: ["canonical ballot/profile projections were not preloaded"] };
       failures.push(...settled.failures);
 
-      for (const stateCode of ENRICHED_STATES) {
+      /* THE TRACKED STATES, read as data (2026-09-23). A tracked state with no registered ballot authority is named, never skipped. */
+      const tracked = trackedStates.read();
+      const enumerated: BallotAuthorityState[] = [];
+      if ("unreadable" in tracked) {
+        failures.push(`the tracked states could not be read from ${tracked.source} (${tracked.unreadable})`);
+      } else {
+        for (const stateCode of tracked.states) {
+          if (hasBallotAuthority(stateCode)) enumerated.push(stateCode);
+          else {
+            failures.push(
+              `${stateCode.toUpperCase()} is tracked (${tracked.source}) and no canonical candidate ballot authority is registered ` +
+                "for it in the civic-data contracts, so its candidate enrichment cannot be enumerated — a dataset gap, never an election with no candidates",
+            );
+          }
+        }
+      }
+
+      for (const stateCode of enumerated) {
         const universe = settled.universes[stateCode] ?? null;
         if (universe === null) continue;
         if (universe.candidacies.length === 0) {

@@ -81,7 +81,8 @@ test("POS-18 and the lines the owner asked to keep are still there", () => {
   // §9A.16: the control is the shared one that explains itself before acting and sends through the typed gateway.
   assert.match(page, /<Link href=\{withScope\("\/admin\/work", scope, \{ geo: /, "Deploy fleet here opens the Work composer with this geography already chosen");
   assert.match(codeOf("app/(admin)/_mw/composer.tsx"), /type: "expansion\.scope\.set"/);
-  assert.match(page, /creating missing work is not built yet/, "and the page says what sending does not do");
+  // MW-028 (2026-09-23): sending now creates what the registry defines and no clock carries, so the page says that instead of "not built yet".
+  assert.match(page, /Sending\s+creates the work the registry defines here that no clock carries yet \(bounded per cycle and per geography\)/, "and the page says what sending does");
   // Admin redesign, 2026-09-23: the per-ZIP rows that carried the "Nobody has looked yet" line and the per-card "Needs you" answer were removed; bodies never walked are counted apart in the Coverage reading and in every code's row.
   assert.match(codeOf(VIEW), /have never been walked/);
 });

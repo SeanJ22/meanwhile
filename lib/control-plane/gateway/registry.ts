@@ -93,7 +93,11 @@ import {
   withScopeSet,
   type ExpansionScopeGeography,
 } from "../expansion/scopes.ts";
+import { DISPATCH_WORK_TARGET_CAP, DISPATCH_WORK_WRITE_BUDGET } from "../expansion/dispatch-work-bounds.ts";
 import type { ActionDefinition, ActionRequest, ReceiptOutcome, RefusalCode } from "./contract.ts";
+
+/** How much the runner creates for one Send, in the words every receipt below quotes (MW-028). */
+const CREATION_BOUNDS = `at most ${DISPATCH_WORK_WRITE_BUDGET} a cycle, ${DISPATCH_WORK_TARGET_CAP.toLocaleString("en-US")} for one`;
 
 /* ------------------------------------------------------------------ deps */
 
@@ -467,8 +471,12 @@ const REGISTRY: readonly RegisteredAction[] = [
     definition: {
       type: "fleet.deployHere",
       label: "Deploy fleet here",
-      does: "Tells the fleet where to go next, in your words.",
-      doesNot: "Does not invent work — it reorders the work the fleet already has.",
+      does:
+        "Tells the fleet where to go next, in your words. Where your words name a state, the runner also creates the work " +
+        "that state's registry defines and no clock carries yet.",
+      doesNot:
+        `Does not start paid research, publish anything, or invent work no registry defines, and it creates ${CREATION_BOUNDS} instruction. ` +
+        "Without a state in your words it only reorders the work the fleet already has.",
       authority: "REVERSIBLE_NONPRODUCTION",
       subjectKind: "where you want the fleet to work",
       requiresStateVersion: false,
@@ -482,7 +490,10 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
     execute(deps, context, input) {
       return appendIntent(deps, context, "DISPATCH", String(input.note), {
-        says: "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there.",
+        says:
+          "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there. " +
+          `Where your words name a state, it also creates the work that state's registry defines and no clock carries yet (${CREATION_BOUNDS} instruction), ` +
+          "and its acknowledgement counts what it created, what it reordered and what missing data blocked. Work that needs a model waits for the paid lane.",
         undo: "Send it somewhere else; the later instruction is the one the next cycle reads.",
       });
     },
@@ -725,9 +736,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       type: "expansion.scope.set",
       label: "Select this geography for expansion",
       does:
-        "Records a geography you chose from the Census lookup, with its priority and its rolling 24-hour budget for paid work there, durably. The runner reads it at the start of its next cycle.",
+        "Records a geography you chose from the Census lookup, with its priority and its rolling 24-hour budget for paid work there, durably. " +
+        "At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet, and puts all work there first.",
       doesNot:
-        "Does not start any work, open the paid lane, add a government or a source, or raise any spend limit. It puts work already registered there first, and its budget can only hold paid work back.",
+        `Does not open the paid lane, add a government or a source no registry defines, or raise any spend limit, and it creates ${CREATION_BOUNDS} geography. ` +
+        "Its budget can only hold paid work back.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a geography you want worked first",
       // The same reasoning as the spend-ceiling dial: the config row's own
@@ -792,7 +805,9 @@ const REGISTRY: readonly RegisteredAction[] = [
         subject: scopeKeyOf(geography),
         says:
           `Recorded: ${what} is priority ${priority} with a $${budgetUsd.toFixed(2)} rolling 24-hour budget for paid work there (${was}), and that survives a restart. ` +
-          "The runner reads it at the start of its next cycle. Selecting it starts nothing: the paid lane stays exactly as it is, " +
+          "Recording it starts nothing itself. At the start of its next cycle the runner creates the work the registry defines there that no clock carries yet " +
+          `(${CREATION_BOUNDS} geography) and puts all work there first; the acknowledgement counts what was created, reordered and blocked. ` +
+          "Work that needs a model waits: the paid lane stays exactly as it is, " +
           `and the Fleet ceiling of $${ceilingUsd.toFixed(2)} still binds first${budgetUsd > ceilingUsd ? " — this budget is above it, so the Fleet ceiling is the one that holds" : ""}.`,
         openedWork: [],
         readBackAt: "/admin/work",
@@ -809,7 +824,8 @@ const REGISTRY: readonly RegisteredAction[] = [
     definition: {
       type: "expansion.scope.remove",
       label: "Remove this geography from expansion",
-      does: "Takes one geography off your expansion list, durably. The runner stops ordering its work first and drops its budget at the start of its next cycle.",
+      does:
+        "Takes one geography off your expansion list, durably. The runner stops ordering its work first, creates nothing more there, and drops its budget at the start of its next cycle.",
       doesNot:
         "Does not stop, delete or undo any work, and does not change the Fleet ceiling — work there keeps its normal place in the queue.",
       authority: "OWNER_DECISION_REQUIRED",

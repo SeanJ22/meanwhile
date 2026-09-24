@@ -160,6 +160,15 @@ export interface TerritoryIndex {
   readonly statewide: ReadonlySet<string>;
   /** Census units in states NO registry covers, for the "not registered" count. Keyed by state (upper). */
   readonly unregisteredUnitsByState: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
+  /**
+   * Census units in a state a registry DOES cover that no registry row joined:
+   * a government the Census names and our registry does not carry (MW-028 names
+   * them as blocked, never as work). Keyed by state (upper). Optional so an
+   * index built before the field existed still reads.
+   */
+  readonly unjoinedUnitsByState?: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
+  /** A unit's share of each of its ZCTAs, where the sampled overlap was loaded for it. */
+  readonly unitShares?: (unit: CensusUnitTerritory) => ReadonlyMap<string, number> | undefined;
 }
 
 /**
@@ -197,6 +206,7 @@ export function buildTerritoryIndex(
   const bySubject = new Map<string, Territory>();
   const unplaced = new Map<string, string>();
   const statewide = new Set<string>();
+  const claimed = new Set<CensusUnitTerritory>();
   for (const registry of registries) {
     const ids = new Set(registry.jurisdictions.map((j) => j.id));
     for (const j of registry.jurisdictions) {
@@ -220,6 +230,7 @@ export function buildTerritoryIndex(
         if (unit === null) unplaced.set(j.id, "no Census of Governments unit with a territory matches this registry id");
       }
       if (unit === null) continue;
+      claimed.add(unit);
       if (unit.zips.length === 0) {
         unplaced.set(j.id, "its Census unit carries no ZCTA territory");
         continue;
@@ -235,7 +246,34 @@ export function buildTerritoryIndex(
       });
     }
   }
-  return { bySubject, unplaced, statewide, unregisteredUnitsByState };
+  const unjoinedUnitsByState = new Map<string, CensusUnitTerritory[]>();
+  for (const unit of units) {
+    const state = unit.state.toUpperCase();
+    if (!registeredStates.has(state) || claimed.has(unit)) continue;
+    const list = unjoinedUnitsByState.get(state) ?? [];
+    list.push(unit);
+    unjoinedUnitsByState.set(state, list);
+  }
+  const unitShares = (unit: CensusUnitTerritory): ReadonlyMap<string, number> | undefined => {
+    const key = unitShareKey(unit);
+    return key === null ? undefined : sharesFor(key);
+  };
+  return { bySubject, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
+}
+
+/**
+ * The Census units (of those given) that certainly overlap the scope, by the
+ * same rule as a registered government: a whole-inside ZCTA, or shares that
+ * sum past the whole. A unit whose shares were not loaded can only be placed by
+ * a whole-inside ZCTA, so the count is a floor and never a guess.
+ */
+export function unitsCertainlyIn(
+  scope: ScopeZctas,
+  units: readonly CensusUnitTerritory[],
+  sharesOf: (unit: CensusUnitTerritory) => ReadonlyMap<string, number> | undefined = () => undefined,
+): CensusUnitTerritory[] {
+  const none = new Map<string, number>();
+  return units.filter((unit) => certainlyOverlaps({ zctas: new Set(unit.zips), shares: sharesOf(unit) ?? none }, scope));
 }
 
 /* ------------------------------------------------------------ resolution */
@@ -507,7 +545,9 @@ function countBy<T>(items: Iterable<T>, keyOf: (item: T) => string): Record<stri
  * What the scope holds: the registered governments that certainly overlap it,
  * which of them carry standing work, the scope ZCTAs a government with work
  * touches, and the rest (the gap). Census units in a state no registry covers
- * are counted by the whole-inside rule alone — their shares were not loaded.
+ * are counted by the same certain-overlap rule, with their sampled shares where
+ * the index loaded them (every unit's, since 2026-09-23) and by the
+ * whole-inside rule alone where it did not.
  */
 function coverageOf(
   scope: ScopeZctas,
@@ -524,12 +564,7 @@ function coverageOf(
   for (const t of withWork) for (const z of t.zctas) if (scope.zctas.has(z)) covered.add(z);
   const gap = [...scope.zctas].filter((z) => !covered.has(z)).sort();
   const notRegistered: CensusUnitTerritory[] = [];
-  const noShares = new Map<string, number>();
-  for (const state of states) {
-    for (const unit of index.unregisteredUnitsByState.get(state) ?? []) {
-      if (certainlyOverlaps({ zctas: new Set(unit.zips), shares: noShares }, scope)) notRegistered.push(unit);
-    }
-  }
+  for (const state of states) notRegistered.push(...unitsCertainlyIn(scope, index.unregisteredUnitsByState.get(state) ?? [], index.unitShares));
   return {
     registeredJurisdictions: registered.length,
     registeredByClass: countBy(registered, (t) => t.govClass),
@@ -638,7 +673,8 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
     orderSays:
       "The owner's DISPATCH goes first. Then, in the Scout (paid) lane, due work in a selected scope goes ahead of the rest, priority 1 first; " +
       "in the plain-code lane every selected scope's due work goes ahead of the rest together, oldest-due first (a cycle with a pending " +
-      "DISPATCH orders that lane by the DISPATCH alone). Nothing is added, skipped or made due by a scope.",
+      "DISPATCH orders that lane by the DISPATCH alone). The order adds, skips and makes due nothing; what a scope is missing is created " +
+      "separately, from the registry's own requirements, bounded and counted.",
   };
   return { scopes, placementOf, placedSubjects, malformedScopes: input.malformedScopes, reading };
 }

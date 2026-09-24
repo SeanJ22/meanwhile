@@ -10,12 +10,15 @@
  * ## What a target may do, and what it may not
  *
  * A dispatch REORDERS AND PRIORITISES registered work. It never invents an
- * obligation: the registry's providers enumerate the universe from committed
- * files (RULING 273 — the denominator is finite and stated at the start), and
+ * obligation: the registry's providers enumerate the universe from promoted
+ * data (RULING 273 — the denominator is finite and stated at the start), and
  * a target that matches nothing registered is honored with a sentence saying
- * so, never with a manufactured unit. Adding a state to the registry is a
- * scope decision, and it goes to the owner as a row rather than being made by
- * a button.
+ * so, never with a manufactured unit. Where the words name a state, the
+ * runner's MW-028 step (`expansion/dispatch-work.ts`) also creates what that
+ * state's promoted registry already DEFINES and no clock carries yet — the
+ * registry's own requirement definitions, bounded and counted, never a new
+ * one. Adding a state to the registry is a scope decision, and it goes to the
+ * owner as a row rather than being made by a button.
  *
  * ## How matching works
  *

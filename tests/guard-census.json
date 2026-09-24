@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 739,
-    "named": 7295,
+    "files": 740,
+    "named": 7300,
     "dynamic": 28
   },
   "files": {
@@ -5856,6 +5856,16 @@
         "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
         "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
         "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-online-sitting-visibility.test.ts": {
+      "names": [
+        "(a) a division-less body's online concluded sittings are in view by its upcoming building",
+        "(b) with none of the body's buildings in radius in either list, none of its online sittings is in view",
+        "(c) the division clause still reaches an online sitting whose division contains the centre",
+        "(d) the widened tier behaves as before, and the rule holds at the rung it lands on",
+        "the reverse holds too: a building among concluded sittings keeps the body's online upcoming ones in view"
       ],
       "dynamic": 0
     },

@@ -177,16 +177,41 @@ function documentUrlFor(meeting: Meeting): string | null {
    * notice URL on that division AGREES. Where they disagree, there is no
    * single right answer and this returns nothing rather than picking one.
    */
+  /*
+   * **A NOTICE PAGE IS ITS PUBLISHER'S PAGE, LENT TO NOBODY ELSE'S SITTINGS.**
+   * (2026-09-24, D1.) The division-wide fallback took the only notice URL on
+   * a division whoever published it. On Pima County's division that is the
+   * Central Arizona Water Conservation District's row, so a Board of
+   * Supervisors study session with no agenda link was given
+   * cap-az.com/board/board-committee-meetings/ and the ingest fetched and held
+   * it as that sitting's agenda. Newbury's sittings were given the Town of
+   * Bradford's calendar the same way, through the Lake Todd Village District
+   * row. So the sitting's own body row answers first, and the division-wide
+   * fallback reads only rows its own publisher wrote.
+   */
   const onDivision = SOURCE_WIRING.filter(
     (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
   );
   if (onDivision.length === 0) return null;
-  const forBody = onDivision.find(
+  const ownBody = onDivision.find((row) => row.bodyId === meeting.bodyId);
+  if (ownBody) return ownBody.noticeUrl ?? null;
+  const publisher = meeting.provenance?.sourceOrg ?? null;
+  const samePublisher = onDivision.filter((row) => publisher !== null && row.publishingOrg === publisher);
+  if (samePublisher.length === 0) return null;
+  const forBody = samePublisher.find(
     (row) => (row.config.bodyName ?? row.publishingOrg) === meeting.bodyName,
   );
   if (forBody) return forBody.noticeUrl ?? null;
-  const distinct = new Set(onDivision.map((row) => row.noticeUrl));
-  return distinct.size === 1 ? (onDivision[0].noticeUrl ?? null) : null;
+  const distinct = new Set(samePublisher.map((row) => row.noticeUrl));
+  return distinct.size === 1 ? (samePublisher[0].noticeUrl ?? null) : null;
+}
+
+/**
+ * The sitting is reached only through its body's notice page: it carries no
+ * agenda link of its own, so the page is the body's, never this sitting's.
+ */
+function readThroughNoticePage(meeting: Meeting): boolean {
+  return !meeting.agendaUrl && documentUrlFor(meeting) !== null;
 }
 
 /**
@@ -372,6 +397,9 @@ export function agendaRetrievalOrder(
   const rank = (meeting: Meeting): number => {
     const url = documentUrlFor(meeting);
     if (url === null) return 3;
+    // A body's notice page is read after every sitting's own link: it is the
+    // body's page, and one that states no agenda item is never held (D1).
+    if (readThroughNoticePage(meeting)) return 2;
     if (heldFromLink(meeting, url)) return 1;
     return store.isUrlOnAnotherMeeting(url, meeting.id) ? 2 : 0;
   };
@@ -447,11 +475,20 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   /* Refused links read through the portal, and those whose page links no agenda yet. */
   let readViaPortal = 0;
   let portalWithoutLink = 0;
+  /* Notice-page reads that stated no agenda item, so no sitting holds them (D1). */
+  let noticePagesRefused = 0;
+  /* A notice page is one body's page: read once per run, however many sittings reach it. */
+  const noticePageRefusedThisRun = new Set<string>();
   const fetchImpl = refusalCheckedFetch();
 
   for (const meeting of capped) {
     try {
       const url = documentUrlFor(meeting);
+      const viaNoticePage = readThroughNoticePage(meeting);
+      if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
+        noticePagesRefused++;
+        continue;
+      }
       let override = url && url !== meeting.agendaUrl ? url : null;
       const throughPortal = url !== null && agendaRetrievalRefusal(url) !== null;
       if (throughPortal) {
@@ -505,6 +542,22 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         landingPages++;
         continue;
       }
+      /*
+       * **A NOTICE PAGE THAT STATES NO AGENDA ITEM IS NOT THIS SITTING'S
+       * AGENDA, FOR THE FIRST SITTING AS FOR EVERY OTHER.** (2026-09-24, D1.)
+       * The rule above refuses a page only once another sitting holds it, so
+       * the first unlinked sitting to reach a body's notice page kept it:
+       * Mesa's council meetings page is held as sitting 1343183's agenda and
+       * a reader is shown it as a read agenda with no items. Measured in
+       * production the same day, 70 held documents came from notice pages and
+       * not one yields an agenda item. A notice page that does state items (an
+       * agenda posted on the notice) is still held.
+       */
+      if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
+        noticePagesRefused++;
+        if (url !== null) noticePageRefusedThisRun.add(url);
+        continue;
+      }
 
       /*
        * **A FAILED READ IS NEVER A NEW VERSION OVER ONE WE HOLD.** (RULING 269,
@@ -543,7 +596,8 @@ export async function retrieveAgendas(meetings: Meeting[]) {
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
       `${failedOverHeld} failed read(s) not stored over a held version, ` +
       `${redirectsRefused} redirect(s) into a refused host not followed, ` +
-      `${readViaPortal} refused link(s) read through the portal, ${portalWithoutLink} whose portal page links no agenda yet`,
+      `${readViaPortal} refused link(s) read through the portal, ${portalWithoutLink} whose portal page links no agenda yet, ` +
+      `${noticePagesRefused} notice-page read(s) stating no agenda item not held as a sitting's agenda`,
   );
 }
 

@@ -432,7 +432,7 @@ export function buildTopicTimeline(input: {
       whose: "OURS",
       statement: sitting.past
         ? `We have not read the agenda of the ${input.bodyName} meeting held ${spelled}, so this answer cannot say whether ${topic.label} was on it.`
-        : `We have not read an agenda for the ${input.bodyName} meeting on ${spelled}.`,
+        : `The ${input.bodyName} meets next on ${spelled}; we do not yet hold an agenda for that meeting.`,
     });
   }
   if (calendarLastReadAt && now - Date.parse(calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
@@ -564,7 +564,7 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
     const days = unreadPast.slice(-2).map((sitting) => formatDateLong(sitting.localDay) ?? sitting.localDay);
     add(`We have not read the agenda of the ${days.length > 1 ? `${days.join(" and ")} meetings` : `${days[0]} meeting`} yet, so ${days.length > 1 ? "they are" : "it is"} not reflected here`);
   } else if (unreadNext.length > 0 && !nextUp) {
-    add(`We have not read an agenda for the next meeting on ${formatDateLong(unreadNext[0].localDay) ?? unreadNext[0].localDay}`);
+    add(`The next meeting is ${formatDateLong(unreadNext[0].localDay) ?? unreadNext[0].localDay}; we do not yet hold an agenda for it`);
   }
   if (timeline.calendarLastReadAt && now - Date.parse(timeline.calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
     add(`Our most recent read of the board's calendar was ${formatDateLong(timeline.calendarLastReadAt.slice(0, 10)) ?? timeline.calendarLastReadAt.slice(0, 10)}`);

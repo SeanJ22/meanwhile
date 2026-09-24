@@ -156,6 +156,10 @@ function spyStore(
     readonly identity?: boolean;
     /** Make the batch identity read fail. */
     readonly identitiesFail?: boolean;
+    /** Hold every pointer read until this settles (to overlap concurrent readers). */
+    readonly gate?: Promise<void>;
+    /** Fail this many pointer reads before answering. */
+    readonly failFirstReads?: number;
   } = {},
 ) {
   const counts: SpyCounts = {
@@ -173,6 +177,9 @@ function spyStore(
   const store = {
     readPromotion: async <R>(_recordClass: RoutineRecordClass, scope: string) => {
       counts.readPromotion += 1;
+      const attempt = counts.readPromotion;
+      if (options.gate) await options.gate;
+      if (attempt <= (options.failFirstReads ?? 0)) throw new Error("pointer read failed");
       return (pointers.get(scope)?.projection ?? null) as PromotedProjection<R> | null;
     },
     readCandidate: async (candidateId: string) => {
@@ -436,4 +443,81 @@ test("a bypassCache batch read never asks identities", async () => {
 
   assert.deepEqual(counts.readPromotionIdentities, []);
   assert.equal(counts.readPromotions, 2);
+});
+
+/*
+ * **One read per cold scope, however many callers ask at once (2026-09-23).**
+ * A render asks for the same scope from several places; on a cold process each
+ * caller used to download the whole scope itself.
+ */
+
+function opened(): { gate: Promise<void>; open: () => void } {
+  let open: () => void = () => undefined;
+  const gate = new Promise<void>((resolve) => { open = resolve; });
+  return { gate, open };
+}
+
+test("concurrent readers of a cold scope share one read and one proof", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { gate, open } = opened();
+  const { store, counts } = spyStore(pointers, { identity: true, gate });
+
+  const readers = [1, 2, 3].map(() => readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store }));
+  open();
+  const results = await Promise.all(readers);
+
+  assert.deepEqual(results.map((r) => r.kind), ["PROMOTED", "PROMOTED", "PROMOTED"]);
+  assert.deepEqual(results[1], results[0]);
+  assert.deepEqual(results[2], results[0]);
+  assert.equal(counts.readPromotion, 1, "one pointer read serves every concurrent reader");
+  assert.equal(counts.readCandidate, 1, "one candidate read and proof serves every concurrent reader");
+});
+
+test("a shared read that fails decides nothing: a waiting reader reads for itself", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { gate, open } = opened();
+  const { store, counts } = spyStore(pointers, { identity: true, gate, failFirstReads: 1 });
+
+  const first = readPromotedCivicData(CLASS, "federal-supported", { store });
+  const second = readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  open();
+  const [failed, recovered] = await Promise.all([first, second]);
+
+  assert.equal(failed.kind, "STORE_UNREACHABLE");
+  assert.equal(recovered.kind, "PROMOTED", "the waiter is not handed the failure");
+  if (recovered.kind === "PROMOTED") assert.equal(recovered.value.answer, 1);
+  assert.equal(counts.readPromotion, 2);
+});
+
+test("verification reads never share a read", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { gate, open } = opened();
+  const { store, counts } = spyStore(pointers, { identity: true, gate });
+
+  const reads = [
+    readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true }),
+    readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true }),
+  ];
+  open();
+  await Promise.all(reads);
+
+  assert.equal(counts.readPromotion, 2, "each verification read reads and proves for itself");
+  assert.equal(counts.readCandidate, 2);
+});
+
+test("readers of different stores never share a read", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { gate, open } = opened();
+  const a = spyStore(pointers, { identity: true, gate });
+  const b = spyStore(pointers, { identity: true, gate });
+
+  const reads = [
+    readPromotedCivicData(CLASS, "federal-supported", { store: a.store }),
+    readPromotedCivicData(CLASS, "federal-supported", { store: b.store }),
+  ];
+  open();
+  await Promise.all(reads);
+
+  assert.equal(a.counts.readPromotion, 1);
+  assert.equal(b.counts.readPromotion, 1);
 });

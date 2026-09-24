@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 736,
-    "named": 7269,
+    "named": 7273,
     "dynamic": 28
   },
   "files": {
@@ -2487,11 +2487,15 @@
         "a pointer move to a new version is fetched and re-proved, never masked by the memo",
         "a pointer whose identity changed in any field is read whole",
         "a proof is served only to the store that made it",
+        "a shared read that fails decides nothing: a waiting reader reads for itself",
         "an unmoved pointer is served from this store's proof after asking only its identity",
+        "concurrent readers of a cold scope share one read and one proof",
+        "readers of different stores never share a read",
         "the batch read asks identities for proved scopes and reads only the moved one whole",
         "the batch read fetches candidate envelopes only for versions not yet proven",
         "the batch read hauls only the moved partition's envelope when one pointer advances",
-        "the single read proves a version once, then attests without re-reading the candidate"
+        "the single read proves a version once, then attests without re-reading the candidate",
+        "verification reads never share a read"
       ],
       "dynamic": 0
     },

@@ -196,6 +196,32 @@ const provenByVersion = new Map<string, { projection: PromotedProjection; candid
  * `bypassCache` (every verification path) never consults it.
  */
 const DEFAULT_STORE: object = {};
+
+/**
+ * **One read per cold scope, however many callers ask at once.** A page asks
+ * for the same scope from several places in the same render (the ballot page's
+ * division lookup, its preloads and its incumbency checks all want the
+ * registry). On a cold process each one found the cache empty and downloaded
+ * the whole scope itself: on an isolated copy of production (2026-09-23) one
+ * fresh instance serving its first ballot page read the registry's promotion,
+ * candidate and trusted-LKG predecessor (about 29 MB) two or three times over.
+ * A caller that finds a read of its scope already in flight from the same store
+ * now waits for it and is served the version that read proved; if that read
+ * proved nothing, it reads for itself. `bypassCache` (every verification
+ * path) never shares a read.
+ */
+type ProvenPair = { projection: PromotedProjection; candidate: CandidateVersionRecord };
+let inflight = new WeakMap<object, Map<string, Promise<ProvenPair | null>>>();
+
+function inflightOf(store: CivicDataReadStore | undefined): Map<string, Promise<ProvenPair | null>> {
+  const scope = store ?? DEFAULT_STORE;
+  let flights = inflight.get(scope);
+  if (flights === undefined) {
+    flights = new Map();
+    inflight.set(scope, flights);
+  }
+  return flights;
+}
 let provenPointers = new WeakMap<object, Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>>();
 
 function provenPointersOf(store: CivicDataReadStore | undefined): Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }> {
@@ -323,7 +349,38 @@ export async function readPromotedCivicData<T>(
     }
     return promotedResult(held.projection as PromotedProjection<T>, held.candidate, now, options.maxAgeMs);
   }
+  if (options.bypassCache) return loadPromotedCivicData<T>(recordClass, scope, options, now, key);
 
+  const flights = inflightOf(options.store);
+  const pending = flights.get(key);
+  if (pending !== undefined) {
+    const proven = await pending;
+    if (proven !== null) return promotedResult(proven.projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs);
+  }
+  let settle: (proven: ProvenPair | null) => void = () => undefined;
+  const flight = new Promise<ProvenPair | null>((resolve) => { settle = resolve; });
+  flights.set(key, flight);
+  try {
+    const result = await loadPromotedCivicData<T>(recordClass, scope, options, now, key);
+    // A PROMOTED load has just recorded the pair it proved for this store.
+    settle(result.kind === "PROMOTED" ? provenPointersOf(options.store).get(key) ?? null : null);
+    return result;
+  } catch (error) {
+    settle(null);
+    throw error;
+  } finally {
+    if (flights.get(key) === flight) flights.delete(key);
+  }
+}
+
+async function loadPromotedCivicData<T>(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  options: PromotedCivicDataReadOptions,
+  now: string,
+  key: string,
+): Promise<CivicDataReadResult<T>> {
+  const injected = options.store !== undefined;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new PostgresRoutineDataStore();
@@ -1044,4 +1101,5 @@ export function clearPromotedReadModelCache(): void {
   cache.clear();
   provenByVersion.clear();
   provenPointers = new WeakMap();
+  inflight = new WeakMap();
 }

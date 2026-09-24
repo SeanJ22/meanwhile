@@ -114,6 +114,11 @@ test("FOUND: robots first, then the homepage, then the route it links; confirmed
     assert.equal(a.methodRouteId, "discovery:meetings");
   }
   assert.equal(attempt.found[0].artifactId, rt.vaulted[2].id);
+  assert.deepEqual(attempt.found[0].via, { page: "https://avondale.org/", artifactId: rt.vaulted[1].id }, "the find names the page that linked it");
+  assert.deepEqual(attempt.site, {
+    address: null,
+    homepage: { url: "https://avondale.org/", artifactId: rt.vaulted[1].id, basis: "RECORDED_ADDRESS", hintFingerprint: null, startedAt: "https://avondale.org/", redirects: [] },
+  });
 });
 
 test("PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall", async () => {
@@ -461,6 +466,8 @@ test("THE NEXT HOP: when nothing is confirmed, the pages the walk read are read 
   assert.equal(attempt.outcome, "FOUND");
   assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url]), [["ical", "https://www.chandler.example.gov/calendar/council.ics"]]);
   assert.match(attempt.found[0].evidence, /^linked from https:\/\/www\.chandler\.example\.gov\/council-meetings/, "the evidence names the page that linked it");
+  assert.equal(attempt.found[0].via?.page, "https://www.chandler.example.gov/council-meetings", "and so does its provenance");
+  assert.ok(attempt.found[0].via?.artifactId, "with the linking page's vaulted artifact");
   assert.ok(attempt.leads.some((l) => l.vendor === "destiny-agenda" && l.url.startsWith("https://public.destinyhosted.com/")), "the agenda publisher is a lead");
   assert.ok(!seen.some((u) => u.includes("destinyhosted.com")), "a lead is never requested");
   assert.ok(!seen.some((u) => u.includes("/news/")), "and the headline was never followed");
@@ -506,6 +513,8 @@ test("A STALE RECORDED ADDRESS: the current official site a route hint records i
     routes: [],
   });
   assert.match(attempt.note, /It walked the current official site, https:\/\/www\.oldtownaz\.gov; the recorded http:\/\/www\.ci\.oldtown\.az\.us is stale \(the host does not resolve\)\.$/);
+  assert.equal(attempt.site?.homepage?.basis, "ROUTE_HINT");
+  assert.equal(attempt.site?.homepage?.hintFingerprint, routeHintsFingerprint(OLDTOWN_HINTS[0]));
 
   const bare = fakeOpen({
     "https://www.ci.oldtown.az.us/robots.txt": { transportError: "getaddrinfo ENOTFOUND www.ci.oldtown.az.us" },
@@ -711,4 +720,43 @@ test("A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other wa
     assert.equal(pass.fieldManual.written, 1, `${label}: the other walk's route reached the field manual`);
   }
   assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /walkFailures: meetingsDiscovery\?\.walkFailures \?\? \[\],/, "the cycle record names them");
+});
+
+test("PROVENANCE (NH330): the walk records where the address came from, each redirect to the homepage, and a withdrawn route's own 404 as vaulted evidence", async () => {
+  const { open } = fakeOpen({
+    "https://redirected.gov/robots.txt": ALLOW,
+    "https://redirected.gov/": { status: 301, location: "https://www.redirected.gov/" },
+    "https://www.redirected.gov/robots.txt": ALLOW,
+    "https://www.redirected.gov/": { status: 200, body: `<a href="/gone.ics">Meetings</a>` },
+    "https://www.redirected.gov/gone.ics": { status: 404, body: "<html>Page not found</html>" },
+  });
+  const rt = runtime(open);
+  const addressSource = { source: "GAP_LEDGER" as const, versionId: "a".repeat(64) };
+  const attempt = await walkMeetingsDiscoveryNeed({ ...need("az:city:city-of-redirected", "redirected.gov"), addressSource }, rt);
+  assert.deepEqual(attempt.site?.address, addressSource, "the need's address source is carried onto the attempt");
+  assert.deepEqual(attempt.site?.homepage?.redirects, [{ from: "https://redirected.gov/", to: "https://www.redirected.gov/", status: 301 }]);
+  assert.equal(attempt.site?.homepage?.url, "https://www.redirected.gov/");
+  const gone = attempt.steps.find((s) => s.url === "https://www.redirected.gov/gone.ics")!;
+  assert.equal(gone.status, 404);
+  assert.ok(gone.artifactId !== null, "a 404 route's body is vaulted: the only evidence that withdraws a derived row");
+  assert.match(gone.note, /its body is vaulted as withdrawal evidence/);
+  assert.equal(rt.vaulted.find((a) => a.id === gone.artifactId)?.httpStatus, 404);
+  assert.deepEqual(attempt.found, [], "and a 404 is never a find");
+});
+
+test("A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out a 90-day recheck unattestable (NH330)", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-")) {
+    const { open } = fakeOpen({
+      "https://found.gov/robots.txt": ALLOW,
+      "https://found.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
+      "https://found.gov/m.ics": { status: 200, body: ICS },
+    });
+    const first = await walkMeetingsDiscoveryNeed(need("az:a:found", "found.gov"), runtime(open));
+    const { site: _site, ...older } = first;
+    await repos.discoveryAttempts.append("az:a:found", older.attemptId, older, older.finishedAt);
+    const pass = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(pass.walked.map((a) => a.jurisdictionId), ["az:a:found"], `${label}: the find without provenance is due again`);
+    const again = await runMeetingsDiscovery(repos, { needs: [need("az:a:found", "found.gov")], runtime: runtime(open), cycleIndex: 0, maxWalks: 1 });
+    assert.deepEqual(again.notDue, ["az:a:found"], `${label}: once it carries provenance it waits for its recheck`);
+  }
 });

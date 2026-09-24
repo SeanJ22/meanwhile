@@ -535,6 +535,29 @@ export interface DiscoveryFind {
   readonly count: number | null;
   readonly detail: string;
   readonly artifactId: string | null;
+  /**
+   * The page whose link this route came from, with its vaulted artifact: what a derived wiring row's host
+   * attestation chains through (NH330). Null for a route no read page linked (a hint, a saved method's path, a
+   * search result itself). Absent on walks recorded before 2026-09-24.
+   */
+  readonly via?: { readonly page: string; readonly artifactId: string | null } | null;
+}
+
+/** How the walk reached the government's site: the start of every attestation chain a derived wiring row cites. */
+export interface DiscoverySiteProvenance {
+  /** Where the recorded address came from; null when the need did not say. */
+  readonly address: import("./meetings-discovery.ts").DiscoveryAddressSource | null;
+  /** The homepage the walk read as the government's own; null when none was read. */
+  readonly homepage: {
+    readonly url: string;
+    readonly artifactId: string | null;
+    /** The recorded address, or the current official site a committed route hint records. */
+    readonly basis: "RECORDED_ADDRESS" | "ROUTE_HINT";
+    readonly hintFingerprint: string | null;
+    /** The origin the walk started from, and each redirect it followed to the homepage it read. */
+    readonly startedAt: string;
+    readonly redirects: readonly { readonly from: string; readonly to: string; readonly status: number }[];
+  } | null;
 }
 
 export interface MeetingsDiscoveryAttempt {
@@ -588,6 +611,8 @@ export interface MeetingsDiscoveryAttempt {
    * The committed route hints this walk tried first (`lib/hunt/meetings-route-hints.ts`). Absent when the
    * government has none. A need whose hints no longer match `fingerprint` is due again at once.
    */
+  /** How the walk reached the site (NH330 attestation). Absent on walks recorded before 2026-09-24. */
+  readonly site?: DiscoverySiteProvenance;
   readonly routeHints?: {
     readonly fingerprint: string;
     /** The current official site the hint records, walked before the recorded address; null when it records none. */

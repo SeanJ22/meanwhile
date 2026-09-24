@@ -435,6 +435,8 @@ export async function walkMeetingsDiscoveryNeed(
   /** GET one URL, one hop at a time, asking permission of every host first. Null when nothing usable came back. */
   async function get(start: string, purpose: DiscoveryStep["purpose"], accept: string) {
     let current = start;
+    /* Each redirect this request followed: the chain a derived wiring row's attestation cites (NH330). */
+    const redirects: { from: string; to: string; status: number }[] = [];
     for (let hops = 0; hops <= MAX_REDIRECT_HOPS; hops += 1) {
       let url: URL;
       try {
@@ -458,23 +460,32 @@ export async function walkMeetingsDiscoveryNeed(
           purpose, url: url.toString(), permission: permission.verdict, status: got.status, transportError: null, bytes: got.bytes,
           artifactId: null, rung: 2, note: `redirected to ${got.location}`,
         });
-        current = new URL(got.location, url).toString();
+        const to = new URL(got.location, url).toString();
+        redirects.push({ from: url.toString(), to, status: got.status });
+        current = to;
         continue;
       }
       const ok = got.status !== null && got.status >= 200 && got.status < 300 && got.transportError === null;
+      /*
+       * A 404 or 410 is the only evidence that withdraws a derived wiring row (ROUTE_WITHDRAWN_BY_PUBLISHER,
+       * NH330), so its body is vaulted as that evidence. Nothing else is read from it.
+       */
+      const gone = got.transportError === null && (got.status === 404 || got.status === 410);
       /* The body reaches the walk as decoded text, so a binary one (a PDF) would be vaulted as something it is not. */
-      const binary = ok && !textualType(got.contentType);
-      const kept = ok && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
+      const binary = (ok || gone) && !textualType(got.contentType);
+      const kept = (ok || gone) && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
       const artifactId = kept?.artifactId ?? null;
       steps.push({
         purpose, url: url.toString(), permission: permission.verdict, status: got.status, transportError: got.transportError, bytes: got.bytes,
         artifactId, rung: 2,
         note: binary
           ? `read ${got.bytes} bytes of ${got.contentType}; not vaulted: a binary body does not survive the text decode`
-          : ok ? `read ${got.bytes} bytes${kept?.note ? `; ${kept.note}` : ""}` : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
+          : ok ? `read ${got.bytes} bytes${kept?.note ? `; ${kept.note}` : ""}`
+            : gone ? `HTTP ${got.status}${artifactId === null ? "" : "; its body is vaulted as withdrawal evidence"}`
+            : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
       });
       /* What the walk reads of a body is what it may keep: a credential-bearing page is read as its sanitized derivative. */
-      return ok ? { finalUrl: url.toString(), status: got.status!, body: kept?.readable ?? got.body, bytes: got.bytes, contentType: got.contentType, artifactId } : null;
+      return ok ? { finalUrl: url.toString(), status: got.status!, body: kept?.readable ?? got.body, bytes: got.bytes, contentType: got.contentType, artifactId, redirects } : null;
     }
     skipped(purpose, current, "ALLOWED", `not requested: more than ${MAX_REDIRECT_HOPS} redirects`);
     return null;
@@ -514,9 +525,14 @@ export async function walkMeetingsDiscoveryNeed(
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
   const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
-  const planned: { candidate: EndpointCandidate; recipeIds: string[]; label: string | null }[] = [];
+  /* `via`: the read page whose link the route came from, which its host attestation chains through (NH330). */
+  type Via = { readonly page: string; readonly artifactId: string | null } | null;
+  const planned: { candidate: EndpointCandidate; recipeIds: string[]; label: string | null; via: Via }[] = [];
   /* The pages step 3 read, kept so step 3b can read the routes they link. */
-  const readPages: { url: string; body: string; finalUrl: string }[] = [];
+  const readPages: { url: string; body: string; finalUrl: string; artifactId: string | null }[] = [];
+  /* The homepage read as the government's own, and how the walk got there. */
+  let homePage: Via = null;
+  let homeProvenance: NonNullable<MeetingsDiscoveryAttempt["site"]>["homepage"] = null;
   const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
   const learned: MeetingsRecipe[] = [];
   let checked = 0;
@@ -537,6 +553,15 @@ export async function walkMeetingsDiscoveryNeed(
       if (home !== null) {
         homeOrigin = new URL(home.finalUrl).origin;
         homeFromHint = hintedOrigins.has(origin);
+        homePage = { page: home.finalUrl, artifactId: home.artifactId };
+        homeProvenance = {
+          url: home.finalUrl,
+          artifactId: home.artifactId,
+          basis: homeFromHint ? "ROUTE_HINT" : "RECORDED_ADDRESS",
+          hintFingerprint: homeFromHint && hints !== null ? routeHintsFingerprint(hints) : null,
+          startedAt: `${origin}/`,
+          redirects: home.redirects,
+        };
         homeHtml = home.body;
         candidates = meetingEndpointCandidates(home.body, home.finalUrl);
         /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
@@ -565,10 +590,11 @@ export async function walkMeetingsDiscoveryNeed(
         candidate: { vendor: h.verifyAs ?? h.platform, url: h.url, basis: "HINT", evidence: `route hint (${h.kind.toLowerCase()}, observed ${h.observed.at} by ${h.observed.by}): ${h.evidence}`, verifiable: h.verifyAs !== null },
         recipeIds: [],
         label: h.body,
+        via: null,
       });
     }
     for (const candidate of candidates.filter((c) => c.verifiable && !planned.some((p) => p.candidate.url === c.url))) {
-      planned.push({ candidate, recipeIds: [], label: null });
+      planned.push({ candidate, recipeIds: [], label: null, via: homePage });
     }
     for (const p of proposals) {
       const same = planned.find((x) => x.candidate.url === p.url);
@@ -580,12 +606,14 @@ export async function walkMeetingsDiscoveryNeed(
         candidate: { vendor: p.extractorId, url: p.url, basis: "RECIPE", evidence: `saved method ${p.recipeId}`, verifiable: true },
         recipeIds: [p.recipeId],
         label: p.label,
+        /* A saved method proposes a path on the homepage's own origin, or a link the homepage carries. */
+        via: homePage,
       });
     }
-    for (const { candidate, recipeIds, label } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
+    for (const { candidate, recipeIds, label, via } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
-      if (got !== null) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl });
+      if (got !== null) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
       const hint = candidate.basis === "HINT" && !candidate.verifiable ? hints?.routes.find((r) => r.url === candidate.url) : undefined;
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
@@ -599,7 +627,7 @@ export async function walkMeetingsDiscoveryNeed(
                   : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
             }
           : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
-      const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
+      const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
       for (const recipeId of recipeIds) {
@@ -617,23 +645,24 @@ export async function walkMeetingsDiscoveryNeed(
      */
     if (found.length === 0) {
       const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url)]);
-      const nextHop: EndpointCandidate[] = [];
+      const nextHop: { candidate: EndpointCandidate; via: Via }[] = [];
       for (const page of readPages) {
+        const pageVia: Via = { page: page.finalUrl, artifactId: page.artifactId };
         for (const c of meetingEndpointCandidates(page.body, page.finalUrl)) {
           if (tried.has(c.url)) continue;
           tried.add(c.url);
           const linked = { ...c, evidence: `linked from ${page.url} (${c.evidence})` };
-          if (c.verifiable) nextHop.push(linked);
-          else leads.push({ vendor: c.vendor, url: c.url, basis: c.basis, evidence: linked.evidence, detail: "recognised but not readable by any content check yet" });
+          if (c.verifiable) nextHop.push({ candidate: linked, via: pageVia });
+          else leads.push({ vendor: c.vendor, url: c.url, basis: c.basis, evidence: linked.evidence, detail: "recognised but not readable by any content check yet", via: pageVia });
         }
       }
-      for (const candidate of nextHop.slice(0, Math.max(0, MAX_ENDPOINTS_PER_WALK - checked))) {
+      for (const { candidate, via } of nextHop.slice(0, Math.max(0, MAX_ENDPOINTS_PER_WALK - checked))) {
         const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
         checked += 1;
         const check = got === null
           ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
           : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(null));
-        const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
+        const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
         if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
         else leads.push(base);
       }
@@ -698,7 +727,8 @@ export async function walkMeetingsDiscoveryNeed(
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
             const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity(null));
-            const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail };
+            const via: Via = onPage.includes(c) ? { page: page.finalUrl, artifactId: page.artifactId } : null;
+            const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail, via };
             if (check.verdict !== "YIELDED") {
               leads.push(base);
               continue;
@@ -724,13 +754,13 @@ export async function walkMeetingsDiscoveryNeed(
      * so. A saved method not reached is neither credited nor charged: the time ran
      * out, not the method.
      */
-    for (const { candidate } of planned.slice(checked, MAX_ENDPOINTS_PER_WALK)) {
+    for (const { candidate, via } of planned.slice(checked, MAX_ENDPOINTS_PER_WALK)) {
       if (candidate.basis === "RECIPE") continue;
-      leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first" });
+      leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first", via });
     }
   }
   for (const candidate of candidates.filter((c) => !c.verifiable).slice(0, 8)) {
-    leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "recognised but not readable by any content check yet" });
+    leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "recognised but not readable by any content check yet", via: homePage });
   }
 
   const finishedAt = runtime.now();
@@ -751,6 +781,7 @@ export async function walkMeetingsDiscoveryNeed(
     search: queryTrail,
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
+    site: { address: need.addressSource ?? null, homepage: homeProvenance },
     note: noteFor(need, outcome, found, leads, origins.length) + siteNote(hintedSite, homeFromHint, hintedSiteRefused),
     ...(hints === null
       ? {}
@@ -952,7 +983,9 @@ export async function runMeetingsDiscovery(
     const [latest] = await repos.discoveryAttempts.readRecent(need.jurisdictionId, 1);
     /* A walk made without the government's current hints set its recheck without them: the need is due again now. */
     const hintsChanged = hinted.has(need.jurisdictionId) && latest?.routeHints?.fingerprint !== hinted.get(need.jurisdictionId);
-    if (latest !== undefined && !hintsChanged && Date.parse(latest.recheckAfter) > nowMs) {
+    /* A find recorded before walks carried their provenance cannot be attested for wiring (NH330): walk it again. */
+    const findWithoutProvenance = latest?.outcome === "FOUND" && latest.site === undefined;
+    if (latest !== undefined && !hintsChanged && !findWithoutProvenance && Date.parse(latest.recheckAfter) > nowMs) {
       notDue.push(need.jurisdictionId);
       continue;
     }

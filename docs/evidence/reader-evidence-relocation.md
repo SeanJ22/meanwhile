@@ -43,3 +43,22 @@ checkout. Historical executable replay copies retain their restore mappings.
 A merged code change alone does not release a still-used source directory.
 The detailed private preservation and binding receipts are in
 `D:\Meanwhile Recovery\2026-09-19\approved-local-cleanup\screenshot-consolidation`.
+
+## Added later: the #387 full reproof
+
+The PR #387 full reader reproof (proof head `48ade9df`, proof commit `597518a2`)
+wrote 395 images in a temporary worktree. They were copied, not moved, to
+`reader-last-mile/pr387-48ade9df-597518a2` and recorded the same way: original
+absolute name, one main-checkout-relative alias, destination and SHA-256. The
+manifest now holds 1,120 images. The seven proof-head artifacts that cite them
+were not rewritten. Their 402 absolute references resolve directly. Their 172
+witness references are run-relative (`screenshots/reader-last-mile/...`) and
+resolve through the proof checkout the same reports name; all 143 recorded
+hashes match. Four failure captures from an earlier attempt are preserved
+unreferenced.
+
+A run-relative name is never an alias. Older runs cite the same names with
+different bytes, so an alias would hand a later reproof this run's images. A
+recorded absolute name is different: a new proof run inside a checkout whose
+images are recorded here is refused by the witness reader, because its changed
+original no longer matches.

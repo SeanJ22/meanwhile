@@ -318,6 +318,8 @@ export interface LegistarInSiteRaw {
    */
   clerkScheduleHtml: string | null;
   clerkScheduleUrl: string | null;
+  /** Why the declared clerk page was not read on this run, when it was not. */
+  clerkScheduleNote?: string;
   collectedAt: string;
 }
 
@@ -1285,7 +1287,8 @@ function clerkObservation(
       reading.collectedAt,
       [],
       "NOT_RETRIEVED",
-      `${mechanism} was not read on this run. Its instances are UNKNOWN, not absent.`,
+      `${mechanism} was not read on this run${reading.clerkScheduleNote ? ` (${reading.clerkScheduleNote})` : ""}. ` +
+        "Its instances are UNKNOWN, not absent.",
     );
   }
 
@@ -1507,16 +1510,32 @@ export function makeLegistarInSiteSource(
          * 2026-08-28) publishes no `Crawl-delay` for `User-agent: *`; one
          * request per tenant per refresh is well inside anything it could ask.
          */
+        /*
+         * **A MOVED PAGE IS A REFUSAL HERE, NEVER A NEW ROUTE.** (2026-09-24.)
+         * Every response a partition retains must end on a registered
+         * publication route (scripts/ingest.ts, candidateForMeetingPartition).
+         * Pima County moved this page to
+         * www.pima.gov/board-of-supervisors-meeting-schedule, the read
+         * followed the redirect and answered 200 there, and the unregistered
+         * final URL refused the WHOLE partition, with the 14 upcoming
+         * sittings the grid carries. So this read does not follow redirects:
+         * a move ends it here with no corroboration, the move is named in the
+         * route's note, and nothing from the new URL is retained. Registering
+         * the new URL waits on reading its permission.
+         */
         let clerkScheduleHtml: string | null = null;
+        let clerkScheduleNote: string | null = null;
         if (tenant.clerkScheduleUrl) {
           try {
             const clerk = await new InSiteSession({
               fetchImpl: options.fetchImpl,
               spacingMs: 0,
               signal: query.signal,
+              followRedirects: false,
             }).get(tenant.clerkScheduleUrl, "text/html,application/xhtml+xml");
             clerkScheduleHtml = clerk.text;
           } catch (error) {
+            clerkScheduleNote = String((error as Error)?.message ?? error);
             console.warn(
               `  ${SOURCE_NAME}: clerk schedule unavailable for ${tenant.slug} — ${error}; ` +
                 "this reading records NO corroboration rather than a disagreement",
@@ -1533,6 +1552,7 @@ export function makeLegistarInSiteSource(
           icalByInsiteId,
           clerkScheduleHtml,
           clerkScheduleUrl: tenant.clerkScheduleUrl,
+          ...(clerkScheduleNote ? { clerkScheduleNote } : {}),
           collectedAt: new Date().toISOString(),
         });
       }

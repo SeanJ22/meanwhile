@@ -994,3 +994,90 @@ test("every tenant states a body, a zone and a sourced venue — no room name is
     }
   }
 });
+
+/**
+ * **A MOVED CLERK PAGE IS NOT FOLLOWED OFF ITS REGISTERED ROUTE.** (2026-09-24.)
+ * Pima County moved its schedule page to www.pima.gov/board-of-supervisors-
+ * meeting-schedule. The read followed the move, answered 200 there, and the
+ * unregistered final URL refused the whole InSite partition with the 14
+ * upcoming sittings the grid carries (SEMANTIC_INVALID, FINAL_ROUTE_NOT_REGISTERED,
+ * every read from 11:14Z). Driven here through the real acquisition capture,
+ * with the network stubbed the way production answered.
+ */
+test("a clerk schedule page that moved is not followed: the grid's sittings survive, no retained response leaves the registered routes, and the move is named", async () => {
+  const { captureSourceAcquisitions } = await import("../lib/sources/acquisition-trace.ts");
+  const { authorityFor } = await import("../lib/civic-data/source-authority.ts");
+  const pima = INSITE_TENANTS.find((t) => t.slug === "pima")!;
+  assert.ok(pima.clerkScheduleUrl, "Pima declares its clerk schedule page");
+  const MOVED = "https://www.pima.gov/board-of-supervisors-meeting-schedule";
+  const BY_RANGE: Record<string, string> = {
+    "Last Month": PIMA_LAST_MONTH,
+    "This Month": PIMA_THIS_MONTH,
+    "Next Month": PIMA_NEXT_MONTH,
+    "This Year": PIMA_THIS_YEAR,
+    "Next Year": PIMA_NEXT_YEAR,
+  };
+  const clerkAsked: (RequestRedirect | undefined)[] = [];
+  const requested: string[] = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input instanceof Request ? input.url : input);
+    requested.push(url);
+    if (url === pima.clerkScheduleUrl) {
+      clerkAsked.push(init?.redirect);
+      if (init?.redirect === "manual") return new Response(null, { status: 301, headers: { location: MOVED } });
+      // What fetch does by itself: follow the move and answer 200 from the new URL.
+      const followed = new Response("<html><body>Board of Supervisors Meeting Schedule</body></html>", {
+        status: 200,
+        headers: { "content-type": "text/html" },
+      });
+      Object.defineProperty(followed, "url", { value: MOVED });
+      return followed;
+    }
+    if (url.includes("Feed.ashx")) {
+      return new Response(PIMA_FEED, { status: 200, headers: { "content-type": "application/xml" } });
+    }
+    const body = typeof init?.body === "string" ? init.body : null;
+    const asked = body ? new URLSearchParams(body).get("ctl00$ContentPlaceHolder1$lstYears") : null;
+    return new Response((asked && BY_RANGE[asked]) || PIMA_THIS_MONTH, {
+      status: 200,
+      headers: { "content-type": "text/html" },
+    });
+  }) as typeof fetch;
+  let captured: Awaited<ReturnType<typeof captureSourceAcquisitions<LegistarInSiteRaw[]>>>;
+  try {
+    // The injected fetch defers to the global the capture wraps, so every
+    // response is seen exactly as production's capture sees it.
+    const source = makeLegistarInSiteSource({
+      fetchImpl: ((u: RequestInfo | URL, i?: RequestInit) => globalThis.fetch(u, i)) as typeof fetch,
+      tenants: [pima],
+    });
+    captured = await captureSourceAcquisitions((run) =>
+      run("legistar-insite", () => source.fetch({ lat: 32.2217, lng: -110.974, radiusKm: 40 })),
+    );
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+
+  assert.deepEqual(clerkAsked, ["manual"], "the clerk page is asked once and told not to follow a move");
+  assert.ok(!requested.includes(MOVED), "the page it moved to is never requested");
+  const reading = captured.value[0]!;
+  assert.equal(reading.clerkScheduleHtml, null);
+  assert.match(reading.clerkScheduleNote ?? "", /moved to https:\/\/www\.pima\.gov\/board-of-supervisors-meeting-schedule/);
+
+  assert.ok(captured.evidence.length > 0, "the grid's responses are retained as evidence");
+  for (const row of captured.evidence) {
+    const final = authorityFor("meetings-public-bodies", "MEETING", row.finalUrl);
+    assert.ok(final.ok, `${row.finalUrl} would refuse the partition: ${final.ok ? "" : final.code}`);
+  }
+  // The new URL stays unregistered until its permission is read.
+  const unregistered = authorityFor("meetings-public-bodies", "MEETING", MOVED);
+  assert.equal(unregistered.ok ? null : unregistered.code, "FINAL_ROUTE_NOT_REGISTERED");
+
+  const normalized = normalizeWithDrops(captured.value, NOW);
+  assert.ok(normalized.meetings.length > 0, "the grid's sittings are still produced");
+  const clerk = normalized.routes.find((r) => r.route === "CLERK_SCHEDULE_PAGE")!;
+  assert.equal(clerk.enumeration, "NOT_RETRIEVED");
+  assert.match(clerk.note ?? "", /moved to https:\/\/www\.pima\.gov\/board-of-supervisors-meeting-schedule/);
+  assert.match(clerk.note ?? "", /UNKNOWN, not absent/);
+});

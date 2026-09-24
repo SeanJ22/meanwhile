@@ -292,7 +292,6 @@ export interface RegistryAuthorityReaders {
  * federal-directory edge value serves it WITHOUT reading Neon; the runner and
  * workers (which never set it) fall through to the authoritative database reader.
  */
-/** Edge-aware federal directory read: the request-scoped edge value when primed, else the database. */
 export async function settleFederalDirectoryRead(): Promise<void> {
   const edge = currentFederalDirectoryEdge();
   if (edge) { primeFederalDirectoryFromValue(edge.value, edge.versionId); return; }

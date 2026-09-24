@@ -413,3 +413,31 @@ test("DISPATCH: an owner-dispatched need is walked first, and one another execut
     assert.deepEqual(await repos.discoveryAttempts.readRecent("az:z:held", 5), [], `${label}: a held need is never walked twice`);
   }
 });
+
+test("THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds", async () => {
+  const { workItemPrefix } = await import("../lib/control-plane/evidence/store.ts");
+  const { cycleVault } = await import("../lib/control-plane/scheduler/vault.ts");
+  const { mkdtempSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const { join } = await import("node:path");
+  for (const id of ["az:school:central-arizona-college", "az:city:city-of-chandler", "nh:town:town-of-sutton", "az:school:tucson-unified-school-district-1"]) {
+    const work = discoveryWorkId(id);
+    assert.match(work, /^[A-Za-z0-9._-]+$/, `${work} carries a character a Windows directory name refuses`);
+    const prefix = workItemPrefix("freshness", { sourceId: "meetings-discovery", retrievedAt: NOW, workItemId: work } as never);
+    assert.doesNotMatch(prefix, /[:*?"<>|\\]/, `${prefix} is not a legal Windows path`);
+  }
+  assert.notEqual(discoveryWorkId("az:a:b"), discoveryWorkId("az_a_b"), "ids that differ only in a replaced character stay apart");
+  assert.equal(discoveryWorkId("az:city:city-of-chandler"), discoveryWorkId("az:city:city-of-chandler"), "the same need, the same directory");
+
+  /* The runner's own vault, on this host: the first cycle after NS28 failed here with ENOENT on Windows. */
+  const vault = cycleVault(mkdtempSync(join(tmpdir(), "wtp-discovery-vault-")));
+  const { open } = fakeOpen({
+    "https://cac.example.edu/robots.txt": ALLOW,
+    "https://cac.example.edu/": { status: 200, body: `<a href="/calendar/meetings.ics">Meetings</a>` },
+    "https://cac.example.edu/calendar/meetings.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:school:central-arizona-college", "https://cac.example.edu"), runtime(open, { vault: vault.put }));
+  assert.equal(attempt.outcome, "FOUND");
+  assert.ok(attempt.found[0].artifactId !== null, "the route's evidence was stored in the durable vault");
+  assert.ok(attempt.steps.every((s) => s.status === null || s.artifactId !== null), "every page read was vaulted");
+});

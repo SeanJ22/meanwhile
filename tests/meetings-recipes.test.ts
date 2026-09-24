@@ -16,6 +16,8 @@
  *   and applies the method, with its counts, to a government in another state.
  * - **Failures are kept.** A failed application is recorded with its limit;
  *   while it stands, the same method is not tried on the same government again.
+ * - **The time ran out, not the method.** A saved method the walk did not reach
+ *   before the phase's time ran out is neither credited nor charged.
  *
  * Every test that writes runs on the in-memory double AND the durable file
  * store.
@@ -213,5 +215,36 @@ test("A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorde
     });
     assert.equal(two.seen.includes("https://shell.gov/events/list/?ical=1"), false, `${label}: the same unchanged failure is not paid for twice`);
     assert.match(second.walked[0].recipes.skipped[0].why, /not paid for again/);
+  }
+});
+
+test("THE TIME RAN OUT, NOT THE METHOD: a saved method the walk did not reach is neither credited nor charged", async () => {
+  for (const [label, repos] of await eachStore("wtp-recipes-")) {
+    let left = 60_000;
+    const site = fakeOpen({
+      "https://timed.gov/robots.txt": { status: 404 },
+      "https://timed.gov/": { status: 200, body: WP_HOME.replace(`<a href="/parks">Parks</a>`, `<a href="/calendar/m.ics">Meetings</a>`) },
+      "https://timed.gov/calendar/m.ics": { status: 200, body: ICS },
+      "https://timed.gov/events/list/?ical=1": { status: 200, body: ICS },
+    });
+    const spendAfterFeed: DiscoveryOpen = async (input) => {
+      const reply = await site.open(input);
+      if (input.url.endsWith("/m.ics")) left = 0;
+      return reply;
+    };
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:town:timed", "timed.gov")],
+      runtime: { ...runtime(spendAfterFeed, knownRecipes([])), budget: { spent: () => left <= 0, remainingMs: () => left } },
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.equal(pass.walked[0].outcome, "FOUND", `${label}: the route the page linked was confirmed before the time ran out`);
+    assert.deepEqual(pass.walked[0].found.map((f) => f.url), ["https://timed.gov/calendar/m.ics"]);
+    assert.equal(site.seen.includes("https://timed.gov/events/list/?ical=1"), false, `${label}: the saved method's route was never requested`);
+    assert.deepEqual(pass.walked[0].recipes.applied, [], `${label}: a method not reached is not applied`);
+    assert.equal(pass.walked[0].leads.some((l) => l.basis === "RECIPE"), false, `${label}: a method's guess is never a lead`);
+    assert.deepEqual(pass.recipesUpdated, [], label);
+    const saved = knownRecipes((await repos.fieldManual.read("live"))?.value.entries ?? []).find((r) => r.recipeId === WP.recipeId)!;
+    assert.equal(saved.failures, 0, `${label}: the time ran out, not the method`);
   }
 });

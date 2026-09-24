@@ -2010,7 +2010,10 @@ console.log(
  *
  * It spends at most MEETINGS_DISCOVERY_BUDGET_MS, walks at most
  * MEETINGS_DISCOVERY_MAX_WALKS needs, and runs only in a full standing cycle
- * with that much of the admission window left. It opens on its own FleetSafety
+ * with that much of the admission window left. The budget bounds the walk in
+ * progress too: each request's timeout is cut to the time left, so a slow site
+ * cannot carry the phase into the finalization reserve, and a walk the time
+ * runs out on before it confirmed anything is deferred, never recorded. It opens on its own FleetSafety
  * provider key, `discovery-web`, so a latch it trips never stops the routine
  * lanes, and shares the cycle's host spacing and vault.
  */
@@ -2090,7 +2093,10 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
         spaceOut: spacer,
         vault: vault.put,
         now: nowIso,
-        budget: { spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS },
+        budget: {
+          spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS,
+          remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
+        },
         recipes: knownRecipes(manual?.value.entries ?? []),
         ...(discoverySearch === null ? {} : { search: discoverySearch }),
         recordCost: async (entry) => {
@@ -2114,7 +2120,8 @@ console.log(
     (meetingsDiscovery === null
       ? ""
       : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
-        `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)`),
+        `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)` +
+        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "")),
 );
 finishPhase("meetings-discovery");
 
@@ -2515,7 +2522,9 @@ const lines = [
       : ` · ${meetingsDiscovery.walked.length} walked (${meetingsDiscoveryByOutcome.FOUND ?? 0} found, ${meetingsDiscoveryByOutcome.LEAD ?? 0} lead, ` +
         `${meetingsDiscoveryByOutcome.NOTHING_DETECTED ?? 0} nothing detected, ${meetingsDiscoveryByOutcome.BLOCKED ?? 0} blocked, ` +
         `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
-        `${meetingsDiscovery.deferred.length} deferred (budget) · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
+        `${meetingsDiscovery.deferred.length} deferred (budget)` +
+        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
+        ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
         (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "")),
   ...(abandonedOccurrences.length === 0
     ? []
@@ -2606,12 +2615,17 @@ const runRecord = {
         })),
         notDue: meetingsDiscovery?.notDue ?? [],
         deferred: meetingsDiscovery?.deferred ?? [],
+        cutShort: meetingsDiscovery?.cutShort ?? [],
         recipesApplied: meetingsDiscovery?.recipeApplications ?? 0,
         recipesUpdated: meetingsDiscovery?.recipesUpdated ?? [],
         search: {
           perCycleCap: SEARCH_PER_CYCLE,
           perDayCap: SEARCH_PER_DAY,
-          requests: (meetingsDiscovery?.walked ?? []).flatMap((a) => a.search.flatMap((q) => q.requests)),
+          /* Every request sent, including those of walks the time cut short: all of them were charged. */
+          requests: [
+            ...(meetingsDiscovery?.walked ?? []).flatMap((a) => a.search.flatMap((q) => q.requests)),
+            ...(meetingsDiscovery?.cutShort ?? []).flatMap((c) => c.search.flatMap((q) => q.requests)),
+          ],
         },
         appendFailures: meetingsDiscovery?.appendFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,

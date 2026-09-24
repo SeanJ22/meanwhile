@@ -14,6 +14,10 @@
  *
  * A refused request is reported as BUDGET_REFUSED and never sent. A request
  * that failed in transport is reported FAILED, and its cost is UNMEASURED.
+ *
+ * The seam states its worst case per query (`worstCaseMs`): every provider at
+ * its timeout, plus the ledger's calls. The walk starts a query only with that
+ * much of the phase's time left, so the time never cuts off a paid request.
  */
 
 import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
@@ -28,6 +32,8 @@ export const DISCOVERY_SEARCH_VENDOR = "discovery-search";
 export const SEARCH_HOSTS = { brave: "api.search.brave.com", exa: "api.exa.ai" } as const;
 /** Conservative starting caps, agreed with the data-plane owner; shown on the dial. */
 export const DEFAULT_SEARCH_BUDGET = { perCycle: 50, perDay: 200 } as const;
+/** Time allowed per query for the budget ledger's admission and release calls, on top of the provider requests. */
+const SEARCH_LEDGER_ALLOWANCE_MS = 2_000;
 
 function hostBudget(host: string): HostBudget {
   return {
@@ -144,7 +150,7 @@ export function makeDiscoverySearch(options: {
   const perProvider = options.perProvider ?? 5;
   const maxHits = options.maxHits ?? 8;
 
-  return async ({ query, ownSiteDomain }) => {
+  const run: DiscoverySearch = async ({ query, ownSiteDomain }) => {
     const requests: SearchRequestRecord[] = [];
     const lists: SearchHit[][] = [];
     const providers: { provider: "brave" | "exa"; key: string; host: string; run: () => Promise<{ hits: SearchHit[]; bytes: number }> }[] = [];
@@ -194,4 +200,7 @@ export function makeDiscoverySearch(options: {
     }
     return { hits, requests };
   };
+  /* One query sends each provider one request in turn, each at most timeoutMs; the budget ledger's calls take the rest. */
+  const providerCount = (braveKey === null ? 0 : 1) + (exaKey === null ? 0 : 1);
+  return Object.assign(run, { worstCaseMs: providerCount * timeoutMs + SEARCH_LEDGER_ALLOWANCE_MS });
 }

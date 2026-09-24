@@ -18,6 +18,9 @@
  *   shared ledger, refuse by name; FleetSafety's refusal passes through.
  * - **Learned.** A route a search found is saved as a method, and the next
  *   government's walk searches with it first.
+ * - **Timed.** A query starts only with time left for the seam's worst case. A
+ *   walk the time runs out on while following a result concludes nothing, and
+ *   the requests it paid for are still reported with it.
  *
  * Every test that writes runs on the in-memory double AND the durable file
  * store.
@@ -28,6 +31,7 @@ import test from "node:test";
 
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import {
+  DiscoveryTimeSpent,
   runMeetingsDiscovery,
   walkMeetingsDiscoveryNeed,
   type DiscoveryOpen,
@@ -261,4 +265,66 @@ test("REFUSED: a request the budget refused is recorded in the walk and never ch
   assert.equal(walk.search[0].requests[0].status, "BUDGET_REFUSED");
   assert.equal(walk.search[0].requests[0].usd, null);
   assert.deepEqual(costs.map((c) => c.source), ["api.exa.ai", "api.exa.ai"], "only requests actually sent are charged");
+});
+
+test("TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported", async () => {
+  /* Too little time for the seam's worst case: the query is not started, and nothing is charged. */
+  const quiet = fakeOpen({ "https://quiet.gov/robots.txt": { status: 404 }, "https://quiet.gov/": { status: 200, body: "<html></html>" } });
+  const unstarted = fakeSearch({});
+  const unchargedCosts: CostEntry[] = [];
+  await assert.rejects(
+    walkMeetingsDiscoveryNeed(need("az:town:quiet", "quiet.gov", "TOWN OF QUIET"), {
+      ...runtime(quiet.open, unstarted.search, unchargedCosts),
+      budget: { spent: () => false, remainingMs: () => 10_000 },
+    }),
+    (error: unknown) => error instanceof DiscoveryTimeSpent && error.search.length === 0,
+  );
+  assert.deepEqual(unstarted.calls, [], "a seam that states no worst case is given 20 seconds, and 10 are not enough");
+  assert.deepEqual(unchargedCosts, []);
+
+  for (const [label, repos] of await eachStore("wtp-search-time-")) {
+    /* The providers answer, and the time runs out while the result is followed. */
+    let left = 60_000;
+    const site = fakeOpen({
+      "https://slowtown.gov/robots.txt": { status: 404 },
+      "https://slowtown.gov/": { status: 200, body: "<html></html>" },
+      "https://slowtown.gov/meetings": { status: 200, body: "<a href='/m.ics'>m</a>" },
+    });
+    const answered = fakeSearch({ "TOWN OF SLOWTOWN meetings agendas minutes": ["https://slowtown.gov/meetings"] });
+    const spendingSearch: DiscoverySearch = Object.assign(
+      async (input: Parameters<DiscoverySearch>[0]) => {
+        const res = await answered.search(input);
+        left = 0;
+        return res;
+      },
+      { worstCaseMs: 5_000 },
+    );
+    const costs: CostEntry[] = [];
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:town:slowtown", "slowtown.gov", "TOWN OF SLOWTOWN")],
+      runtime: { ...runtime(site.open, spendingSearch, costs), budget: { spent: () => left <= 0, remainingMs: () => left } },
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.deepEqual(answered.calls.map((c) => c.query), ["TOWN OF SLOWTOWN meetings agendas minutes"], `${label}: 60 seconds cover a stated 5-second worst case`);
+    assert.deepEqual(pass.walked, [], `${label}: nothing is recorded as a reading`);
+    assert.equal(pass.cutShort.length, 1);
+    assert.deepEqual(
+      pass.cutShort[0].search.map((q) => [q.query, q.requests.map((r) => r.provider), q.followed]),
+      [["TOWN OF SLOWTOWN meetings agendas minutes", ["brave", "exa"], []]],
+      `${label}: the query it paid for is reported with the cut walk; the result it never requested is not "followed"`,
+    );
+    assert.deepEqual(costs.map((c) => c.source), ["api.search.brave.com", "api.exa.ai"], `${label}: both requests sent were charged`);
+    assert.equal(site.seen.includes("https://slowtown.gov/meetings"), false, `${label}: no request once the time was spent`);
+    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:town:slowtown", 5), []);
+  }
+});
+
+test("SEAM WORST CASE: every provider at its timeout, plus the ledger's calls", () => {
+  const budget: SearchBudget = { take: async () => null, done: async () => {} };
+  const fetchImpl: FetchLike = async () => {
+    throw new Error("never called");
+  };
+  assert.equal(makeDiscoverySearch({ braveKey: "b", exaKey: "e", budget, fetchImpl, timeoutMs: 8_000 })?.worstCaseMs, 18_000);
+  assert.equal(makeDiscoverySearch({ braveKey: "b", budget, fetchImpl, timeoutMs: 8_000 })?.worstCaseMs, 10_000);
 });

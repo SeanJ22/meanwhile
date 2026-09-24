@@ -90,6 +90,7 @@ import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import { budgetRepositoryFrom } from "./shared.ts";
@@ -753,6 +754,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts: fileAppendOnlyRepository<ActionReceipt>(resolved, "admin-receipts"),
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
+    discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),

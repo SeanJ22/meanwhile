@@ -94,12 +94,16 @@ export function meetingsDiscoveryNeeds(files: readonly JurisdictionRegistryFile[
  * old jurisdiction meetings clock only against this answer.
  *
  * Anything short of a well-formed record is UNREADABLE, never an empty list:
- * a missing field, no needs, a need without an id, a duplicated id, or a count
- * that disagrees with the list. A ledger that cannot be read retires nothing.
+ * a missing field, no needs, a need without an id, a duplicated id, a need
+ * with a malformed field, or a count that disagrees with the list. A ledger
+ * that cannot be read retires nothing and is walked by nothing. The validated
+ * needs are returned for the discovery executor to walk.
  */
 export function recordedMeetingsDiscovery(
   ledger: unknown,
-): { readonly jurisdictionIds: ReadonlySet<string> } | { readonly unreadable: string } {
+):
+  | { readonly jurisdictionIds: ReadonlySet<string>; readonly needs: readonly MeetingsDiscoveryNeed[] }
+  | { readonly unreadable: string } {
   const section = (ledger as { meetingsDiscovery?: unknown } | null)?.meetingsDiscovery as
     | { counts?: { enumerated?: unknown }; needs?: unknown }
     | undefined;
@@ -108,11 +112,32 @@ export function recordedMeetingsDiscovery(
     return { unreadable: `${GAP_LEDGER_PATH} records no ${MEETINGS_DISCOVERY_FIELD}` };
   }
   const jurisdictionIds = new Set<string>();
+  const needs: MeetingsDiscoveryNeed[] = [];
   for (const need of section.needs as unknown[]) {
-    const id = (need as { jurisdictionId?: unknown } | null)?.jurisdictionId;
+    const row = need as Partial<Record<keyof MeetingsDiscoveryNeed, unknown>> | null;
+    const id = row?.jurisdictionId;
     if (typeof id !== "string" || id === "") return { unreadable: `${GAP_LEDGER_PATH} holds a need with no jurisdictionId` };
     if (jurisdictionIds.has(id)) return { unreadable: `${GAP_LEDGER_PATH} lists ${id} twice` };
     jurisdictionIds.add(id);
+    const site = row?.ownWebAddress;
+    const basis = row?.basis;
+    if (
+      typeof row?.stateCode !== "string" || typeof row.name !== "string" || typeof row.govClass !== "string" ||
+      (site !== null && typeof site !== "string") ||
+      (basis !== "SOURCE_DISCOVERY_OWED" && basis !== "NO_MEETINGS_SOURCE_RECORDED") ||
+      !Array.isArray(row.sources) || !row.sources.every((s) => typeof s === "string")
+    ) {
+      return { unreadable: `${GAP_LEDGER_PATH} holds a malformed need for ${id}` };
+    }
+    needs.push({
+      jurisdictionId: id,
+      stateCode: row.stateCode,
+      name: row.name,
+      govClass: row.govClass,
+      ownWebAddress: site as string | null,
+      basis,
+      sources: row.sources as string[],
+    });
   }
   if (section.counts?.enumerated !== jurisdictionIds.size) {
     return {
@@ -121,5 +146,5 @@ export function recordedMeetingsDiscovery(
         "so the record disagrees with itself",
     };
   }
-  return { jurisdictionIds };
+  return { jurisdictionIds, needs };
 }

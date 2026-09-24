@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 745,
-    "named": 7352,
+    "named": 7356,
     "dynamic": 30
   },
   "files": {
@@ -636,8 +636,12 @@
     },
     "tests/agenda-retrieval-disallowed-hosts.test.ts": {
       "names": [
+        "a permitted agenda link that redirects into a refused host is held as a link, and the refused host is never requested",
+        "a portal detail page that redirects into a refused host is not followed, and the sitting keeps its link",
+        "a refused API agenda link is read through the sitting's portal link, stored on the API row, and the page is read once",
         "an agenda link on a disallowed host is held as a link, never read; permitted hosts are unaffected",
         "the ingest's agenda retrieval never requests a DISALLOWED host, and still requests a permitted one",
+        "the recorded detail page's agenda link is read, never the accessible copy, and an unposted agenda reads as none",
         "the refused hosts are derived from the catalogue's own DISALLOWED routes"
       ],
       "dynamic": 0

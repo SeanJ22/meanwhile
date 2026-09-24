@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 744,
-    "named": 7343,
+    "named": 7344,
     "dynamic": 29
   },
   "files": {
@@ -5275,6 +5275,7 @@
         "(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the API alone",
         "(g) NEGATIVE CONTROL: a viewable sitting carried by BOTH routes is not double-counted",
         "a PAGED grid is an incomplete enumeration, and it is reported rather than counted",
+        "a clerk schedule page that moved is not followed: the grid's sittings survive, no retained response leaves the registered routes, and the move is named",
         "a page target is READ OFF THE PAGER, never derived from the control index",
         "a postback that silently did not take is visible, not parsed as if it had",
         "a single-page range reports no shortfall — the check is not a blanket warning",

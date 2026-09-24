@@ -126,6 +126,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** The one environment variable, named and never valued. */
@@ -248,6 +249,34 @@ function jsonPathLiteral(table: string, path: readonly string[]): string {
     }
   }
   return `{${path.join(",")}}`;
+}
+
+/* A `RecordProjection` as a Postgres expression over the `record` column:
+   `projectRecord`, built by the database, so a dropped field never leaves it.
+   Keys are CODE-PROVIDED and embedded as literals, so each is validated as a
+   plain identifier exactly as a JSON path segment is. `jsonb_each` keeps only
+   the keys the record holds, so an absent key stays absent. */
+function recordProjectionSql(table: string, projection: RecordProjection): string {
+  const literal = (key: string): string => {
+    if (!/^[A-Za-z0-9_]+$/.test(key)) {
+      throw new Error(`${table}: unsafe projection key ${JSON.stringify(key)}`);
+    }
+    return `'${key}'`;
+  };
+  const kept = Object.keys(projection);
+  if (kept.length === 0) throw new Error(`${table}: an empty projection cannot select a field`);
+  const narrowed = kept.flatMap((key) => {
+    const keep = projection[key];
+    return keep === true ? [] : [
+      `WHEN t.key = ${literal(key)} AND jsonb_typeof(t.value) = 'object' THEN ` +
+        `(SELECT coalesce(jsonb_object_agg(f.key, f.value), '{}'::jsonb) FROM jsonb_each(t.value) AS f ` +
+        `WHERE f.key IN (${keep.length === 0 ? "NULL" : keep.map(literal).join(", ")}))`,
+    ];
+  });
+  const value = narrowed.length === 0 ? "t.value" : `CASE ${narrowed.join(" ")} ELSE t.value END`;
+  return `CASE WHEN jsonb_typeof(record) = 'object' THEN ` +
+    `(SELECT coalesce(jsonb_object_agg(t.key, ${value}), '{}'::jsonb) FROM jsonb_each(record) AS t ` +
+    `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE record END`;
 }
 
 /**
@@ -651,6 +680,26 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
+    async readRecentWhere(key, path, value, limit, projection) {
+      /* `readWhere` newest first, stopped at `limit` matches, each record
+         narrowed in the SELECT list: the database projects only the rows it
+         returns, and `limit` bounds the response, so this needs no paging.
+         `ORDER BY position DESC` on `(log_key, position)` is a backward index
+         scan that stops at the `limit`th match. */
+      const jsonPath = jsonPathLiteral(table, path);
+      const narrowed = recordProjectionSql(table, projection);
+      const rows = (await run(
+        "readRecentWhere",
+        "PAGE",
+        `SELECT ${narrowed} AS record FROM ${table}
+         WHERE log_key = $1 AND record #>> '${jsonPath}' = $2
+         ORDER BY position DESC
+         LIMIT $3`,
+        [key, value, Math.max(0, Math.trunc(limit))],
+      )) as Record<string, unknown>[];
+      return rows.map((r) => parseValue<unknown>(r.record, `${table} ${key}`));
+    },
+
     async readAll() {
       /* Keyset-paged over the whole table in the same (log_key, position) order
          the single statement used, for the same 64 MiB reason as `read`. */
@@ -694,22 +743,25 @@ export function pgAppendOnlyRepository<T>(
       return rows.map((r) => parseValue<T>(r.record, `${table} ${key}`));
     },
 
-    async readLatest<K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>> {
-      /* Each field is embedded as a validated path literal, as `readWhere` embeds its path; the keys are the parameter. */
-      const projection = fields.map((f) => `'${f}', record #> '${jsonPathLiteral(table, [f])}'`).join(", ");
+    async readLatest(keys, projection) {
+      /* The inner statement picks each key's newest row on `(log_key, position)`; the outer one narrows only those rows,
+         with the projection `readRecentWhere` uses, so older walks and dropped fields never leave the database. */
+      const narrowed = recordProjectionSql(table, projection);
       const unique = [...new Set(keys)];
-      const out = new Map<string, Pick<T, K>>();
+      const out = new Map<string, unknown>();
       /* One statement per page of keys, so a response stays under the 64 MiB cap for the reason `read` pages. */
       for (let at = 0; at < unique.length; at += APPEND_ONLY_LOG_READ_PAGE) {
         const rows = (await run(
           "readLatest",
           "PAGE",
-          `SELECT DISTINCT ON (log_key) log_key, jsonb_build_object(${projection}) AS picked FROM ${table}
-           WHERE log_key = ANY($1::text[])
-           ORDER BY log_key ASC, position DESC`,
+          `SELECT latest.log_key, ${narrowed} AS record FROM (
+             SELECT DISTINCT ON (log_key) log_key, record FROM ${table}
+             WHERE log_key = ANY($1::text[])
+             ORDER BY log_key ASC, position DESC
+           ) AS latest`,
           [unique.slice(at, at + APPEND_ONLY_LOG_READ_PAGE)],
         )) as Record<string, unknown>[];
-        for (const r of rows) out.set(String(r.log_key), parseValue<Pick<T, K>>(r.picked, `${table} ${String(r.log_key)}`));
+        for (const r of rows) out.set(String(r.log_key), parseValue<unknown>(r.record, `${table} ${String(r.log_key)}`));
       }
       return out;
     },

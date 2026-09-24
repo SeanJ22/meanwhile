@@ -301,11 +301,11 @@ for (const provider of providers) {
     await repos.discoveryAttempts.append(key("a"), "a1", walk("a1", "LEAD", NOW, [{ vendor: "v", url: "https://a.example/1" }]), NOW);
     await repos.discoveryAttempts.append(key("a"), "a2", walk("a2", "FOUND", LATER, []), LATER);
     await repos.discoveryAttempts.append(key("b"), "b1", walk("b1", "BLOCKED", NOW), NOW);
-    const latest = await repos.discoveryAttempts.readLatest([key("a"), key("b"), key("none"), key("a")], ["outcome", "finishedAt", "leads"]);
+    const latest = await repos.discoveryAttempts.readLatest([key("a"), key("b"), key("none"), key("a")], { outcome: true, finishedAt: true, leads: true });
     assert.deepEqual([...latest.keys()].sort(), [key("a"), key("b")].sort(), "a key with no record is absent, and a repeated key is read once");
-    assert.deepEqual(latest.get(key("a")), { outcome: "FOUND", finishedAt: LATER, leads: [] }, "the newest record, and only the named fields");
-    assert.deepEqual(latest.get(key("b")), { outcome: "BLOCKED", finishedAt: NOW, leads: null }, "a field the record lacks reads null");
-    assert.equal((await repos.discoveryAttempts.readLatest([], ["outcome"])).size, 0);
+    assert.deepEqual(latest.get(key("a")), { outcome: "FOUND", finishedAt: LATER, leads: [] }, "the newest record, and only the kept fields");
+    assert.deepEqual(latest.get(key("b")), { outcome: "BLOCKED", finishedAt: NOW }, "a kept field the record lacks stays absent, as readRecentWhere keeps it");
+    assert.equal((await repos.discoveryAttempts.readLatest([], { outcome: true })).size, 0);
   });
 
   test(`${provider.name}: list is ordered by id, so a report is diffable`, async () => {
@@ -372,6 +372,51 @@ for (const provider of providers) {
       "in id order, and not vacuous",
     );
     assert.deepEqual(await repos.attempts.listWhere(["routeTaskId"], `rt-${RUN_NAMESPACE}-absent`), []);
+  });
+
+  test(`${provider.name}: readRecentWhere is readWhere's newest matches, newest first, each narrowed`, async () => {
+    /*
+     * 2026-09-24. The routine runner's provider-frontier history moved from a
+     * whole-history `readWhere` (428 MB a pass) to this bounded, narrowed read,
+     * so every provider must return the newest matches exactly as `readWhere`
+     * holds them, minus the fields the projection drops. Namespaced like the
+     * other log tests: the Postgres lane keeps every run's rows.
+     */
+    const repos = await provider.open();
+    const key = `digest-${RUN_NAMESPACE}`;
+    const records = [0, 1, 2, 3, 4].map((index) => ({
+      digestId: `d-${RUN_NAMESPACE}-${index}`,
+      headline: `outcome ${index}`,
+      runtimeOutcome: {
+        kind: index === 2 ? "OTHER" : "WANTED",
+        finishedAt: `2026-09-24T00:0${index}:00.000Z`,
+        failures: [{ taskId: `t${index}`, code: "C", detail: null }],
+        readerReadbacks: [{ contractId: `c${index}`, large: "x".repeat(64) }],
+      },
+    }));
+    for (const record of records) {
+      await repos.ownerDigests.append(key, record.digestId, record as never, NOW);
+    }
+    const projection = { digestId: true, runtimeOutcome: ["kind", "finishedAt", "failures", "absentField"] } as const;
+    const narrowed = await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 2, projection);
+    assert.deepEqual(narrowed, [4, 3].map((index) => ({
+      digestId: records[index]!.digestId,
+      runtimeOutcome: {
+        kind: "WANTED",
+        finishedAt: records[index]!.runtimeOutcome.finishedAt,
+        failures: records[index]!.runtimeOutcome.failures,
+      },
+    })), "the newest two matches, newest first, without the dropped fields; a null inside a kept field stays null");
+    assert.deepEqual(
+      (await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 50, projection))
+        .map((record) => (record as { digestId: string }).digestId),
+      (await repos.ownerDigests.readWhere(key, ["runtimeOutcome", "kind"], "WANTED"))
+        .map((record) => (record as unknown as { digestId: string }).digestId)
+        .reverse(),
+      "an unconstraining limit is readWhere reversed: the same matches, no more, no fewer",
+    );
+    assert.deepEqual(await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "ABSENT", 5, projection), []);
+    assert.deepEqual(await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 0, projection), []);
   });
 
   test(`${provider.name}: the nightly door's four logs exist and keep history (schema v5)`, async () => {

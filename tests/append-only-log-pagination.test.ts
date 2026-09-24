@@ -24,6 +24,7 @@ import {
   APPEND_ONLY_LOG_READ_PAGE,
   pgAppendOnlyRepository,
 } from "../lib/control-plane/repository/pg-store.ts";
+import { projectRecord } from "../lib/control-plane/repository/types.ts";
 
 interface Row {
   readonly log_key: string;
@@ -41,6 +42,18 @@ function textAt(record: unknown, path: readonly string[]): string | null {
   return cursor === null || cursor === undefined || typeof cursor === "object" ? null : String(cursor);
 }
 
+/** The `RecordProjection` a narrowed read's statement names, read back from the statement itself. */
+function projectionIn(text: string, read: string): Record<string, true | string[]> {
+  const keys = (list: string) => [...list.matchAll(/'([A-Za-z0-9_]+)'/g)].map((m) => m[1]!);
+  const top = /WHERE t\.key IN \(([^)]*)\)\) ELSE record END AS record/.exec(text);
+  if (top === null) throw new Error(`${read} must narrow the record in the SELECT list: ${text}`);
+  const projection: Record<string, true | string[]> = Object.fromEntries(keys(top[1]).map((k) => [k, true]));
+  for (const nested of text.matchAll(/WHEN t\.key = '([A-Za-z0-9_]+)' AND jsonb_typeof\(t\.value\) = 'object' THEN \(SELECT coalesce\(jsonb_object_agg\(f\.key, f\.value\), '\{\}'::jsonb\) FROM jsonb_each\(t\.value\) AS f WHERE f\.key IN \(([^)]*)\)\)/g)) {
+    projection[nested[1]!] = keys(nested[2]!);
+  }
+  return projection;
+}
+
 /**
  * A minimal stand-in for the one method the repository calls. It understands the
  * paged read shapes and refuses anything without a `LIMIT`, so a regression to
@@ -53,23 +66,36 @@ function fakeLogSql(rows: readonly Row[]) {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push(text);
       const litLimit = /LIMIT\s+(\d+)/.exec(text);
+      // readRecentWhere: a content filter, newest first, LIMIT a parameter, and
+      // the record narrowed in the SELECT list. The fake reads the kept keys
+      // from the statement itself, so a statement naming the wrong keys fails.
+      const recentWhere = /record #>> '\{([^}]*)\}' = \$2/.exec(text);
+      if (recentWhere !== null && /ORDER BY\s+position DESC/i.test(text)) {
+        const [key, value, limit] = params as [string, string, number];
+        const path = recentWhere[1].split(",");
+        const projection = projectionIn(text, "readRecentWhere");
+        return rows.filter((r) => r.log_key === key && textAt(r.record, path) === value)
+          .sort((a, b) => b.position - a.position).slice(0, Number(limit))
+          .map((r) => ({ record: projectRecord(r.record, projection) }));
+      }
       // readRecent: newest first, LIMIT is a parameter.
       if (/ORDER BY\s+position DESC/i.test(text)) {
         const [key, limit] = params as [string, number];
         return rows.filter((r) => r.log_key === key).sort((a, b) => b.position - a.position).slice(0, Number(limit))
           .map((r) => ({ record: r.record }));
       }
-      // readLatest: DISTINCT ON (log_key) over WHERE log_key = ANY($1): bounded by the page of keys it names.
+      // readLatest: DISTINCT ON (log_key) over WHERE log_key = ANY($1), bounded by the page of keys it names; only
+      // the rows it chose are narrowed, by the projection the statement itself names.
       if (/SELECT DISTINCT ON \(log_key\)/i.test(text)) {
         const [keys] = params as [string[]];
         if (keys.length > APPEND_ONLY_LOG_READ_PAGE) throw new Error(`one readLatest statement named ${keys.length} keys, over a page`);
-        const fields = [...text.matchAll(/'(\w+)', record #> '\{(\w+)\}'/g)].map((m) => m[1]);
+        const projection = projectionIn(text, "readLatest");
         /* DISTINCT ON keeps each key's FIRST row in the statement's own order, as Postgres does. */
         const order = /ORDER BY log_key ASC, position (ASC|DESC)/i.exec(text)?.[1]?.toUpperCase();
         if (order === undefined) throw new Error(`a readLatest statement must order each key by position: ${text.replace(/\s+/g, " ").trim()}`);
         return keys.flatMap((key) => {
           const first = rows.filter((r) => r.log_key === key).sort((a, b) => (order === "DESC" ? b.position - a.position : a.position - b.position))[0];
-          return first === undefined ? [] : [{ log_key: key, picked: Object.fromEntries(fields.map((f) => [f, first.record[f] ?? null])) }];
+          return first === undefined ? [] : [{ log_key: key, record: projectRecord(first.record, projection) }];
         });
       }
       if (litLimit === null) {
@@ -183,7 +209,53 @@ test("readRecent() returns the newest N, newest first, bounded", async () => {
   assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
 });
 
-test("readLatest() answers each key's newest record, only the named fields, in one statement per page of keys", async () => {
+test("readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database", async () => {
+  const rows: Row[] = seq(40, "owner-digest", (i) => ({
+    digestId: `d${i}`,
+    lines: ["a long rendered line"],
+    runtimeOutcome: {
+      kind: i % 3 === 0 ? "OTHER" : "WANT",
+      finishedAt: `t${i}`,
+      readerReadbacks: [{ big: "x".repeat(100) }],
+    },
+  }));
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "owner_digests");
+
+  const out = await repo.readRecentWhere(
+    "owner-digest",
+    ["runtimeOutcome", "kind"],
+    "WANT",
+    3,
+    { digestId: true, runtimeOutcome: ["kind", "finishedAt"] },
+  );
+  assert.deepEqual(out, [38, 37, 35].map((i) => ({
+    digestId: `d${i}`,
+    runtimeOutcome: { kind: "WANT", finishedAt: `t${i}` },
+  })), "only matches, newest first, and nothing the projection drops");
+  assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
+  assert.match(calls[0]!, /LIMIT \$3/, "the limit is a parameter");
+  assert.doesNotMatch(calls[0]!, /SELECT\s+(position,\s*)?record\s+FROM/i, "the whole record is never selected");
+});
+
+test("readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it", async () => {
+  const { sql } = fakeLogSql([]);
+  const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "owner_digests");
+  await assert.rejects(
+    () => repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "x", 1, { "digestId'); drop": true }),
+    /unsafe projection key/,
+  );
+  await assert.rejects(
+    () => repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "x", 1, { runtimeOutcome: ["kind'); drop"] }),
+    /unsafe projection key/,
+  );
+  await assert.rejects(
+    () => repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind'); drop"], "x", 1, { digestId: true }),
+    /unsafe JSON path/,
+  );
+});
+
+test("readLatest() answers each key's newest record, narrowed by the database, in one statement per page of keys", async () => {
   const keys = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 20 }, (_, i) => `j${i}`);
   const rows: Row[] = keys.flatMap((key, i) =>
     i % 3 === 0
@@ -196,23 +268,21 @@ test("readLatest() answers each key's newest record, only the named fields, in o
   const { sql, calls } = fakeLogSql(rows);
   const repo = pgAppendOnlyRepository<{ seq: number; outcome: string; steps: string }>(sql, "discovery_attempts");
 
-  const latest = await repo.readLatest([...keys, "j1"], ["outcome", "seq"]);
+  const latest = await repo.readLatest([...keys, "j1"], { outcome: true, seq: true });
   assert.equal(calls.length, 2, "one statement per page of keys, never one per key");
-  assert.ok(
-    calls.every((c) => /SELECT DISTINCT ON \(log_key\) log_key, jsonb_build_object\('outcome', record #> '\{outcome\}', 'seq', record #> '\{seq\}'\) AS picked/.test(c)),
-    "only the named fields travel, never the record",
-  );
+  assert.ok(calls.every((c) => /^SELECT latest\.log_key, CASE WHEN jsonb_typeof\(record\) = 'object'/.test(c.trim())), "only the narrowed record leaves the database");
+  assert.ok(calls.every((c) => /\) AS latest$/.test(c.trim())), "each key's newest row is chosen inside the database, before it is narrowed");
   assert.equal(latest.size, keys.filter((_, i) => i % 3 !== 0).length, "a key with no record is absent");
-  assert.deepEqual(latest.get("j1"), { outcome: "BLOCKED", seq: 1 }, "the newest record by position");
-  assert.deepEqual(latest.get("j2"), { outcome: "FOUND", seq: 1 });
+  assert.deepEqual(latest.get("j1"), { seq: 1, outcome: "BLOCKED" }, "the newest record by position, and nothing the projection drops");
+  assert.deepEqual(latest.get("j2"), { seq: 1, outcome: "FOUND" });
   assert.equal(latest.has("j0"), false);
-  assert.equal((await repo.readLatest([], ["outcome"])).size, 0);
+  assert.equal((await repo.readLatest([], { outcome: true })).size, 0);
   assert.equal(calls.length, 2, "no keys, no statement");
 });
 
-test("readLatest() refuses an unsafe field name rather than building SQL from it", async () => {
+test("readLatest() refuses an unsafe projection key rather than building SQL from it", async () => {
   const { sql, calls } = fakeLogSql([]);
   const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "discovery_attempts");
-  await assert.rejects(() => repo.readLatest(["j"], ["outcome'); drop" as never]), /unsafe JSON path/);
+  await assert.rejects(() => repo.readLatest(["j"], { "outcome'); drop": true }), /unsafe projection key/);
   assert.equal(calls.length, 0);
 });

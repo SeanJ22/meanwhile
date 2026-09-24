@@ -10,7 +10,8 @@
  *   - WALKED_NOT_FOUND lets the paid lane take it. That covers a site that
  *     showed nothing or only leads, a wall, and an unreadable site.
  *   - NO_SITE_TO_WALK lets the paid lane take it too.
- *   - UNREAD holds it, so a failed read never opens the paid lane.
+ *   - UNREAD holds it, so a failed read never opens the paid lane. So does a
+ *     walk record the lane cannot read.
  *   - The newest walk decides, on the in-memory double and the durable file
  *     store.
  * - **One batched read.** The dispatched governments with a site are read in
@@ -34,7 +35,8 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  FREE_WALK_FIELDS,
+  FREE_WALK_PROJECTION,
+  asFreeWalkRecord,
   freeWalkBrief,
   readFreeDiscoveryWalks,
   type FreeWalkSubject,
@@ -140,11 +142,11 @@ test("A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD,
 });
 
 test("ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site are read, and none at all when none has one", async () => {
-  const calls: { keys: readonly string[]; fields: readonly string[] }[] = [];
+  const calls: { keys: readonly string[]; projection: unknown }[] = [];
   const repos = {
     discoveryAttempts: {
-      readLatest: async (keys: readonly string[], fields: readonly string[]) => {
-        calls.push({ keys, fields });
+      readLatest: async (keys: readonly string[], projection: unknown) => {
+        calls.push({ keys, projection });
         return new Map();
       },
     },
@@ -153,10 +155,33 @@ test("ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site ar
   await readFreeDiscoveryWalks(repos, [...SUBJECTS, { jurisdictionId: avondale, walkable: true }]);
   assert.equal(calls.length, 1, "one read a cycle, never one per government");
   assert.deepEqual(calls[0].keys, [AJ, avondale]);
-  assert.deepEqual(calls[0].fields, [...FREE_WALK_FIELDS]);
-  assert.deepEqual([...FREE_WALK_FIELDS], ["outcome", "finishedAt", "leads"]);
+  assert.deepEqual(calls[0].projection, FREE_WALK_PROJECTION);
+  assert.deepEqual(FREE_WALK_PROJECTION, { outcome: true, finishedAt: true, leads: true });
   await readFreeDiscoveryWalks(repos, [{ jurisdictionId: COOLIDGE, walkable: false }]);
   assert.equal(calls.length, 1, "no government with a site, no read");
+});
+
+test("A WALK RECORD THE LANE CANNOT READ HOLDS ITS ROW: no known outcome or no finish time is never guessed at, and a lead without an address is dropped", async () => {
+  assert.equal(asFreeWalkRecord({ outcome: "SOMETHING_NEW", finishedAt: "2026-09-24T01:00:00.000Z" }), null);
+  assert.equal(asFreeWalkRecord({ outcome: "LEAD" }), null);
+  assert.equal(asFreeWalkRecord({ outcome: "LEAD", finishedAt: "2026-09-24T01:00:00.000Z", leads: "not a list" }), null);
+  assert.equal(asFreeWalkRecord(null), null);
+  assert.deepEqual(
+    asFreeWalkRecord({ outcome: "LEAD", finishedAt: "2026-09-24T01:00:00.000Z", leads: [{ vendor: "granicus", url: "https://x.example/m" }, { vendor: "no-url" }] }),
+    { outcome: "LEAD", finishedAt: "2026-09-24T01:00:00.000Z", leads: [{ vendor: "granicus", url: "https://x.example/m" }] },
+  );
+  assert.deepEqual(asFreeWalkRecord({ outcome: "BLOCKED", finishedAt: "2026-09-24T01:00:00.000Z" })?.leads, [], "a walk with no leads recorded has none");
+
+  const repos = {
+    discoveryAttempts: {
+      readLatest: async () => new Map<string, unknown>([[AJ, { outcome: "SOMETHING_NEW", finishedAt: "2026-09-24T01:00:00.000Z" }]]),
+    },
+  } as unknown as Pick<ControlPlaneRepositories, "discoveryAttempts">;
+  const walks = await readFreeDiscoveryWalks(repos, SUBJECTS);
+  assert.equal(walks.latestFor(AJ), "UNREAD");
+  assert.equal(held(AJ_ROW, walks), FREE_WALK_FIRST, "an unreadable record opens nothing");
+  assert.equal(walks.latestFor(COOLIDGE), "NO_SITE_TO_WALK", "the other governments' readings stand");
+  assert.match(walks.source, /1 walk record\(s\) could not be read, and their rows stay held/);
 });
 
 test("THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only", () => {

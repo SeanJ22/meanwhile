@@ -404,20 +404,68 @@ export interface AppendOnlyRepository<T> {
    * reject, loudly). A store/transport error THROWS and is never an empty list.
    */
   readWhere(key: string, path: readonly string[], value: string): Promise<readonly T[]>;
+  /**
+   * `readWhere`'s newest `limit` matches, newest first, each narrowed to
+   * `projection` by the store before it leaves the store: neither older history
+   * nor a dropped field crosses the wire. `limit` bounds the response. A caller
+   * that needs a few fields of recent records reads them here rather than every
+   * whole record the log has ever held. The records are narrowed, so they are
+   * `unknown`: a caller validates what it reads, as it would a whole record.
+   */
+  readRecentWhere(
+    key: string,
+    path: readonly string[],
+    value: string,
+    limit: number,
+    projection: RecordProjection,
+  ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
   readRecent(key: string, limit: number): Promise<readonly T[]>;
   /**
-   * The newest record under each of `keys`, cut down to the top-level `fields`,
-   * by key. A key with no record is absent, and a field the record lacks reads
-   * null. It is one batched read, never one read per key, and only the named
-   * fields travel. A caller that needs three fields of many large records does
-   * not download the records.
+   * The newest record under each of `keys`, narrowed to `projection` by the
+   * store as `readRecentWhere` narrows, by key. A key with no record is absent.
+   * It is one batched read: one statement per page of keys, never one per key.
+   * Only the newest record's kept fields cross the wire, so a caller that needs
+   * a few fields of many governments' latest walks does not download the walks.
+   * The records are narrowed, so they are `unknown`: a caller validates what it
+   * reads.
    */
-  readLatest<K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>>;
+  readLatest(keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>>;
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
+}
+
+/**
+ * The parts of a record a narrowed read returns: a top-level key kept whole
+ * (`true`), or an object kept with only the named keys of its own. Every other
+ * key is dropped. A kept key the record does not hold stays absent, and a kept
+ * object that is not an object is returned as it is, so a caller validating the
+ * record still sees exactly what was written there.
+ */
+export type RecordProjection = Readonly<Record<string, true | readonly string[]>>;
+
+/**
+ * `projection` applied in process: the file and memory providers' mirror of the
+ * Postgres projection `pgAppendOnlyRepository.readRecentWhere` builds, so every
+ * provider returns the same narrowed record.
+ */
+export function projectRecord(record: unknown, projection: RecordProjection): unknown {
+  if (record === null || typeof record !== "object" || Array.isArray(record)) return record;
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(record as Record<string, unknown>)) {
+    if (!Object.prototype.hasOwnProperty.call(projection, key)) continue;
+    const keep = projection[key];
+    if (keep === true || value === null || typeof value !== "object" || Array.isArray(value)) {
+      out[key] = value;
+      continue;
+    }
+    out[key] = Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).filter(([inner]) => keep.includes(inner)),
+    );
+  }
+  return out;
 }
 
 /**
@@ -434,18 +482,6 @@ export function jsonTextAtPath(record: unknown, path: readonly string[]): string
   }
   if (cursor === null || cursor === undefined || typeof cursor === "object") return null;
   return String(cursor);
-}
-
-/**
- * A record cut down to its top-level `fields`, a missing field read as null:
- * the in-process mirror of Postgres `jsonb_build_object('f', record -> 'f')`,
- * so the file and memory providers' `readLatest` answers as the pg one does.
- */
-export function pickFields<T, K extends keyof T & string>(record: T, fields: readonly K[]): Pick<T, K> {
-  const source = record as unknown as Record<string, unknown>;
-  const out: Record<string, unknown> = {};
-  for (const field of fields) out[field] = source[field] === undefined ? null : source[field];
-  return out as Pick<T, K>;
 }
 
 /**

@@ -102,7 +102,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   jsonTextAtPath,
-  pickFields,
+  projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -115,6 +115,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** ------------------------------------------------------------ primitives */
@@ -591,12 +592,29 @@ export function fileAppendOnlyRepository<T>(
       return records.slice(Math.max(0, records.length - bounded)).reverse();
     },
 
-    readLatest: async <K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>> => {
-      const out = new Map<string, Pick<T, K>>();
+    readRecentWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+      limit: number,
+      projection: RecordProjection,
+    ): Promise<readonly unknown[]> => {
+      const matches = (await readLines(key))
+        .map((line) => line.record)
+        .filter((record) => jsonTextAtPath(record, jsonPath) === value);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((record) => projectRecord(record, projection));
+    },
+
+    readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
+      const out = new Map<string, unknown>();
       for (const key of new Set(keys)) {
         const lines = await readLines(key);
         const newest = lines[lines.length - 1];
-        if (newest !== undefined) out.set(key, pickFields(newest.record, fields));
+        if (newest !== undefined) out.set(key, projectRecord(newest.record, projection));
       }
       return out;
     },

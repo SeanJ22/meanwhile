@@ -54,7 +54,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   jsonTextAtPath,
-  pickFields,
+  projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -67,6 +67,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** One in-memory aggregate store with the full CAS contract. */
@@ -207,12 +208,28 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .map((entry) => jsonCopy(entry.record));
     },
 
-    readLatest: async <K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>> => {
-      const out = new Map<string, Pick<T, K>>();
+    readRecentWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+      limit: number,
+      projection: RecordProjection,
+    ): Promise<readonly unknown[]> => {
+      const matches = (partitions.get(key) ?? [])
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((entry) => projectRecord(jsonCopy(entry.record), projection));
+    },
+
+    readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
+      const out = new Map<string, unknown>();
       for (const key of new Set(keys)) {
         const partition = partitions.get(key) ?? [];
         const newest = partition[partition.length - 1];
-        if (newest !== undefined) out.set(key, pickFields(jsonCopy(newest.record), fields));
+        if (newest !== undefined) out.set(key, projectRecord(jsonCopy(newest.record), projection));
       }
       return out;
     },

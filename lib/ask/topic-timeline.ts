@@ -92,6 +92,8 @@ export interface UnreadSitting {
 export interface TopicTimeline {
   readonly topic: AgendaTopic;
   readonly bodyName: string;
+  /** The structured outcome store could not be read for this answer (a holding failure). */
+  readonly outcomesUnavailable: boolean;
   readonly entries: readonly TopicTimelineEntry[];
   /** Recent or imminent sittings of this body whose agenda we have not read. */
   readonly unreadSittings: readonly UnreadSitting[];
@@ -282,6 +284,8 @@ export function buildTopicTimeline(input: {
   readonly documents: readonly AgendaDocumentLike[];
   readonly sittings: readonly PersistedSittingOutcomes[];
   readonly now: number;
+  /** True when the recorded-outcome store failed to load; never inferred from an empty body. */
+  readonly outcomesUnavailable?: boolean;
 }): TopicTimeline {
   const { topic, now } = input;
   const entries: TopicTimelineEntry[] = [];
@@ -438,6 +442,13 @@ export function buildTopicTimeline(input: {
     });
   }
 
+  if (input.outcomesUnavailable) {
+    gaps.push({
+      whose: "OURS",
+      statement: "The recorded actions and votes we hold could not be read for this answer. This is a failure of our holding, not evidence that the body took no action.",
+    });
+  }
+
   const count = (status: TopicEntryStatus) => entries.filter((entry) => entry.status === status).length;
   const denominators: Record<string, number> = {
     topicTimelineEntries: entries.length,
@@ -454,7 +465,7 @@ export function buildTopicTimeline(input: {
     topicSittingsWithUnreadAgenda: unreadSittings.length,
   };
 
-  return { topic, bodyName: input.bodyName, entries, unreadSittings, calendarLastReadAt, records, gaps, denominators };
+  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, records, gaps, denominators };
 }
 
 function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
@@ -470,7 +481,7 @@ function itemPhrase(entry: TopicTimelineEntry): string {
   return `${label}${file}, "${quote}"`;
 }
 
-function entrySentence(entry: TopicTimelineEntry, bodyName: string, lead: boolean): string {
+function entrySentence(entry: TopicTimelineEntry, bodyName: string, lead: boolean, outcomesUnavailable = false): string {
   const day = spelledDay(entry);
   const subject = lead ? `the ${bodyName}` : "the board";
   switch (entry.status) {
@@ -486,7 +497,7 @@ function entrySentence(entry: TopicTimelineEntry, bodyName: string, lead: boolea
     case "SCHEDULED":
       return `${lead ? `The ${bodyName} has` : "The board has"} ${itemPhrase(entry)} on its agenda for ${day}`;
     case "OUTCOME_NOT_READ":
-      return `${itemPhrase(entry).replace(/^./, (c) => c.toUpperCase())} was on ${lead ? `the ${possessive(bodyName)}` : "the board's"} agenda for ${day}; we have not read the recorded outcome of that item`;
+      return `${itemPhrase(entry).replace(/^./, (c) => c.toUpperCase())} was on ${lead ? `the ${possessive(bodyName)}` : "the board's"} agenda for ${day}; ${outcomesUnavailable ? "the recorded outcomes could not be read for this answer" : "we have not read the recorded outcome of that item"}`;
   }
 }
 
@@ -526,14 +537,14 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   const newestPast = past[0] ?? null;
   const lead = decisive[0] && (!newestPast || decisive[0].localDay >= newestPast.localDay) ? decisive[0] : newestPast ?? upcoming[0] ?? null;
 
-  if (lead && !add(entrySentence(lead, timeline.bodyName, true), lead)) {
+  if (lead && !add(entrySentence(lead, timeline.bodyName, true, timeline.outcomesUnavailable), lead)) {
     // The lead is the answer; a long clerk's line is shortened, never dropped.
-    add(entrySentence({ ...lead, itemText: quotable(lead.itemText, 110), basis: "STRUCTURED_AGENDA_RECORD" }, timeline.bodyName, true), lead);
+    add(entrySentence({ ...lead, itemText: quotable(lead.itemText, 110), basis: "STRUCTURED_AGENDA_RECORD" }, timeline.bodyName, true, timeline.outcomesUnavailable), lead);
   }
   const nextUp = upcoming.find((entry) => !used.has(entry.key));
-  if (nextUp) add(entrySentence(nextUp, timeline.bodyName, !lead), nextUp);
+  if (nextUp) add(entrySentence(nextUp, timeline.bodyName, !lead, timeline.outcomesUnavailable), nextUp);
   const earlier = past.find((entry) => !used.has(entry.key) && entry.localDay !== lead?.localDay);
-  if (earlier) add(`Earlier, ${entrySentence(earlier, timeline.bodyName, false).replace(/^./, (c) => c.toLowerCase())}`, earlier);
+  if (earlier) add(`Earlier, ${entrySentence(earlier, timeline.bodyName, false, timeline.outcomesUnavailable).replace(/^./, (c) => c.toLowerCase())}`, earlier);
 
   // Only the sittings that could change the answer: after the newest held mention.
   const newestDay = timeline.entries[0]?.localDay ?? "";

@@ -180,6 +180,17 @@ test("ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPl
   assert.equal(overLengthBudget(composed.answer), null);
 });
 
+test("an unreadable outcome store is named as our holding failure, never as 'no action'", () => {
+  const timeline = buildTopicTimeline({
+    topic: DATA_CENTER, bodyId: PIMA_BOARD, bodyName: "Pima County Board Of Supervisors",
+    meetings: pimaMeetings, documents: pimaDocuments, sittings: [], now: NOW, outcomesUnavailable: true,
+  });
+  assert.ok(timeline.gaps.some((gap) => gap.whose === "OURS" && /could not be read for this answer.*not evidence that the body took no action/.test(gap.statement)));
+  const composed = composeTopicAnswer(timeline, NOW)!;
+  assert.match(composed.answer, /the recorded outcomes could not be read for this answer/);
+  assert.doesNotMatch(composed.answer, /we have not read the recorded outcome/, "a failed read is not an unread record");
+});
+
 test("a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either", () => {
   const meetings = [
     { id: "x:1", bodyName: "Council", title: "Council", startsAt: "2026-09-20T18:00:00-07:00", timeZone: "America/Phoenix", status: "CANCELED", provenance: { collectedAt: "2026-09-24T10:00:00Z" } },

@@ -109,6 +109,8 @@ import {
   observationFromMeetingRecord,
 } from "@/lib/ask/agenda-publication";
 import {
+  loadedFrom as outcomeStoreLoadedFrom,
+  outcomeProjectionReadState,
   publicationObservationsFor,
   refreshOutcomeSnapshotFromPromoted,
   sittingsForBody,
@@ -709,6 +711,12 @@ export async function POST(request: Request) {
     refreshExecutiveActionsFromPromoted,
   ];
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
+  // The recorded outcomes are what a topic answer leads with. A cold read that
+  // failed (a transient connect timeout on the first request) is retried once
+  // rather than silently answering from agenda lines alone.
+  if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
+    await refreshOutcomeSnapshotFromPromoted().catch(() => undefined);
+  }
   if (process.env.NODE_ENV === "production") {
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
@@ -1306,6 +1314,7 @@ export async function POST(request: Request) {
         documents: documents.filter((document) => bodyMeetingIds.has(document.meetingId)),
         sittings: sittingsForBody(subject.id),
         now: selectionNow,
+        outcomesUnavailable: outcomeStoreLoadedFrom() === "EMPTY_STORE",
       });
       records.push(...topicTimeline.records);
       gaps.push(...topicTimeline.gaps);

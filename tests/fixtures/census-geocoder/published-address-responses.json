@@ -1,0 +1,59 @@
+{
+  "about": "Recorded answers of the U.S. Census Bureau one-line geocoder (benchmark Public_AR_Current), each fetched once on 2026-09-24 by an identified, robots-checked client (geocoding.geo.census.gov/robots.txt answered 404: no restrictions). body is the exact response text; rawHash is sha256 of its bytes. Used by tests/published-address-geocoder.test.ts; no test calls the Bureau.",
+  "responses": [
+    {
+      "label": "census_geocode_20_e_main_mesa",
+      "requestedUrl": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=20+E+Main+St%2C+Mesa%2C+AZ+85201&benchmark=Public_AR_Current&format=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-24T04:15:42.326Z",
+      "rawHash": "13f3e0985e40047f62145ee2289e90d8e7f4905a788064cdd6297eab536c21dd",
+      "contentType": "application/json",
+      "body": "{\"result\":{\"input\":{\"address\":{\"address\":\"20 E Main St, Mesa, AZ 85201\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"L\",\"tigerLineId\":\"647698007\"},\"coordinates\":{\"x\":-111.83094163228,\"y\":33.415153407003},\"addressComponents\":{\"zip\":\"85201\",\"streetName\":\"MAIN\",\"preType\":\"\",\"city\":\"MESA\",\"preDirection\":\"E\",\"suffixDirection\":\"\",\"fromAddress\":\"2\",\"state\":\"AZ\",\"suffixType\":\"ST\",\"toAddress\":\"98\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"20 E MAIN ST, MESA, AZ, 85201\"}]}}"
+    },
+    {
+      "label": "census_geocode_11_n_wilmot",
+      "requestedUrl": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=11+N+Wilmot+Rd%2C+Wilmot%2C+NH+03287&benchmark=Public_AR_Current&format=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-24T16:01:45.854Z",
+      "rawHash": "160e089817c7caf981099c8682e1ee8a553eb7cf05923e65fa30116ffb8562c4",
+      "contentType": "application/json",
+      "body": "{\"result\":{\"input\":{\"address\":{\"address\":\"11 N Wilmot Rd, Wilmot, NH 03287\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"L\",\"tigerLineId\":\"117706354\"},\"coordinates\":{\"x\":-71.912736492489,\"y\":43.452031535915},\"addressComponents\":{\"zip\":\"03287\",\"streetName\":\"WILMOT\",\"preType\":\"\",\"city\":\"WILMOT\",\"preDirection\":\"N\",\"suffixDirection\":\"\",\"fromAddress\":\"1\",\"state\":\"NH\",\"suffixType\":\"RD\",\"toAddress\":\"41\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"11 N WILMOT RD, WILMOT, NH, 03287\"}]}}"
+    },
+    {
+      "label": "census_geocode_130_w_congress",
+      "requestedUrl": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=130+W+Congress+St%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-24T04:15:37.306Z",
+      "rawHash": "83134797cdde28717a298a1032617a4e2ef2dec22b2c21547c081731679673f3",
+      "contentType": "application/json",
+      "body": "{\"result\":{\"input\":{\"address\":{\"address\":\"130 W Congress St, Tucson, AZ 85701\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"121402581\"},\"coordinates\":{\"x\":-110.97403341724,\"y\":32.221615827429},\"addressComponents\":{\"zip\":\"85701\",\"streetName\":\"CONGRESS\",\"preType\":\"\",\"city\":\"TUCSON\",\"preDirection\":\"W\",\"suffixDirection\":\"\",\"fromAddress\":\"100\",\"state\":\"AZ\",\"suffixType\":\"ST\",\"toAddress\":\"148\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"130 W CONGRESS ST, TUCSON, AZ, 85701\"}]}}"
+    },
+    {
+      "label": "census_geocode_900_s_randolph",
+      "requestedUrl": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=900+S+Randolph+Way%2C+Tucson%2C+AZ&benchmark=Public_AR_Current&format=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-24T16:01:43.345Z",
+      "rawHash": "4ebe140f776e83847e0ccab37ef4df6f9d395880520d51fa1b650ffc67741cf2",
+      "contentType": "application/json",
+      "body": "{\"result\":{\"input\":{\"address\":{\"address\":\"900 S Randolph Way, Tucson, AZ\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"657459351\"},\"coordinates\":{\"x\":-110.918027978479,\"y\":32.210629430793},\"addressComponents\":{\"zip\":\"85716\",\"streetName\":\"RANDOLPH\",\"preType\":\"\",\"city\":\"TUCSON\",\"preDirection\":\"S\",\"suffixDirection\":\"\",\"fromAddress\":\"600\",\"state\":\"AZ\",\"suffixType\":\"WAY\",\"toAddress\":\"998\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"900 S RANDOLPH WAY, TUCSON, AZ, 85716\"}]}}"
+    },
+    {
+      "label": "census_geocode_300_s_fire_central",
+      "requestedUrl": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=300+S+Fire+Central+Pl%2C+Tucson%2C+AZ&benchmark=Public_AR_Current&format=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-24T16:01:33.302Z",
+      "rawHash": "0a8bebafd8d7bc4c06c1911477dc271ef25405aee734d4a3b29b9d6ef1eafd5b",
+      "contentType": "application/json",
+      "body": "{\"result\":{\"input\":{\"address\":{\"address\":\"300 S Fire Central Pl, Tucson, AZ\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+    },
+    {
+      "label": "census_geocode_1_e_main_az_no_city",
+      "requestedUrl": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=1+E+Main+St%2C+AZ&benchmark=Public_AR_Current&format=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-24T16:59:11.158Z",
+      "rawHash": "08d6ec46e68ce6af2eae8fe6b661cf5b68a606c32bf2e0358fd249d226e70eb1",
+      "contentType": "application/json",
+      "body": "{\"result\":{\"input\":{\"address\":{\"address\":\"1 E Main St, AZ\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"128168452\"},\"coordinates\":{\"x\":-112.349398691385,\"y\":33.429153550507},\"addressComponents\":{\"zip\":\"85323\",\"streetName\":\"MAIN\",\"preType\":\"\",\"city\":\"AVONDALE\",\"preDirection\":\"E\",\"suffixDirection\":\"\",\"fromAddress\":\"1\",\"state\":\"AZ\",\"suffixType\":\"ST\",\"toAddress\":\"199\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"1 E MAIN ST, AVONDALE, AZ, 85323\"},{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"647698007\"},\"coordinates\":{\"x\":-111.831405084027,\"y\":33.415043093485},\"addressComponents\":{\"zip\":\"85201\",\"streetName\":\"MAIN\",\"preType\":\"\",\"city\":\"MESA\",\"preDirection\":\"E\",\"suffixDirection\":\"\",\"fromAddress\":\"1\",\"state\":\"AZ\",\"suffixType\":\"ST\",\"toAddress\":\"99\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"1 E MAIN ST, MESA, AZ, 85201\"},{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"128023026\"},\"coordinates\":{\"x\":-109.630650511959,\"y\":32.815609658879},\"addressComponents\":{\"zip\":\"85551\",\"streetName\":\"MAIN\",\"preType\":\"\",\"city\":\"SOLOMON\",\"preDirection\":\"E\",\"suffixDirection\":\"\",\"fromAddress\":\"1\",\"state\":\"AZ\",\"suffixType\":\"ST\",\"toAddress\":\"199\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"1 E MAIN ST, SOLOMON, AZ, 85551\"}]}}"
+    }
+  ]
+}

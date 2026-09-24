@@ -16,9 +16,10 @@
  * runner's own walks.
  *
  * A recipe never guesses a vendor tenant. It proposes a PATH on the
- * government's own origin, and only when the homepage shows the recipe's
- * precondition. Whatever it proposes is opened robots-first and confirmed by
- * content, like every other candidate. A recipe candidate that answers a shell
+ * government's own origin, only when the homepage shows the recipe's
+ * precondition, or follows a LINK the homepage itself carries, on its own host.
+ * Whatever it proposes is opened robots-first and confirmed by content, like
+ * every other candidate. A recipe candidate that answers a shell
  * is a failure recorded against the recipe, never a find.
  *
  * PURE: no fetch, no clock, no store.
@@ -172,7 +173,8 @@ export const SEED_RECIPES: readonly MeetingsRecipe[] = [
     platform: null,
     state: null,
     precondition: null,
-    queryTemplates: ["{bodyName} committee meeting community engagement site:{domain}"],
+    /* Navigation only: a free link step. No query template, so the paid search rung's order is unchanged. */
+    queryTemplates: [],
     navigation: [
       {
         kind: "link",
@@ -287,6 +289,8 @@ export interface RecipeCandidate {
   readonly recipeId: string;
   readonly extractorId: VerifiableVendor;
   readonly url: string;
+  /** For a `link` step, the words the homepage used for the link; null for a `path` step. */
+  readonly label: string | null;
 }
 
 /**
@@ -320,7 +324,7 @@ export function recipeCandidates(input: {
           if (followed.size >= step.max) break;
           if (new URL(link.url).host.toLowerCase() !== ownHost || !pattern.test(link.text) || followed.has(link.url)) continue;
           followed.add(link.url);
-          candidates.push({ recipeId: recipe.recipeId, extractorId: recipe.extractorId, url: link.url });
+          candidates.push({ recipeId: recipe.recipeId, extractorId: recipe.extractorId, url: link.url, label: link.text });
         }
         continue;
       }
@@ -329,7 +333,7 @@ export function recipeCandidates(input: {
         skipped.push({ recipeId: recipe.recipeId, why: `a navigation template names a slot this government's identity lacks: ${step.template}` });
         continue;
       }
-      candidates.push({ recipeId: recipe.recipeId, extractorId: recipe.extractorId, url: new URL(path, `${input.origin}/`).toString() });
+      candidates.push({ recipeId: recipe.recipeId, extractorId: recipe.extractorId, url: new URL(path, `${input.origin}/`).toString(), label: null });
     }
   }
   return { candidates, skipped };

@@ -416,9 +416,10 @@ export async function walkMeetingsDiscoveryNeed(
    * attested (the recorded address, or a host that address's own redirect named); before any homepage is read,
    * the recorded address itself.
    */
-  const pageIdentity = (): OfficialPageIdentity => ({
+  const pageIdentity = (pageLabel: string | null): OfficialPageIdentity => ({
     bodyId: need.jurisdictionId,
     name: need.name,
+    pageLabel,
     officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
     stateCode: need.stateCode,
     now: runtime.now(),
@@ -426,7 +427,7 @@ export async function walkMeetingsDiscoveryNeed(
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
   const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
-  const planned: { candidate: EndpointCandidate; recipeIds: string[] }[] = [];
+  const planned: { candidate: EndpointCandidate; recipeIds: string[]; label: string | null }[] = [];
   const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
   const learned: MeetingsRecipe[] = [];
   let checked = 0;
@@ -457,7 +458,7 @@ export async function walkMeetingsDiscoveryNeed(
      * first, then the saved methods. A saved method that proposes a route the page
      * already links is credited with that route's outcome.
      */
-    for (const candidate of candidates.filter((c) => c.verifiable)) planned.push({ candidate, recipeIds: [] });
+    for (const candidate of candidates.filter((c) => c.verifiable)) planned.push({ candidate, recipeIds: [], label: null });
     for (const p of proposals) {
       const same = planned.find((x) => x.candidate.url === p.url);
       if (same) {
@@ -467,14 +468,15 @@ export async function walkMeetingsDiscoveryNeed(
       planned.push({
         candidate: { vendor: p.extractorId, url: p.url, basis: "RECIPE", evidence: `saved method ${p.recipeId}`, verifiable: true },
         recipeIds: [p.recipeId],
+        label: p.label,
       });
     }
-    for (const { candidate, recipeIds } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
+    for (const { candidate, recipeIds, label } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity());
+        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
@@ -541,7 +543,7 @@ export async function walkMeetingsDiscoveryNeed(
           for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
-            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity());
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity(null));
             const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail };
             if (check.verdict !== "YIELDED") {
               leads.push(base);

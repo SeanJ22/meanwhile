@@ -18,7 +18,8 @@
  *
  * The executor adds two more. **RECIPE** is a saved method's path on the
  * government's own origin, proposed only when this page shows the method's
- * precondition (`lib/hunt/meetings-recipes.ts`). **SEARCH** is a search result
+ * precondition, or a link this page itself carries on its own host
+ * (`lib/hunt/meetings-recipes.ts`). **SEARCH** is a search result
  * on the government's own domain or a known meeting-publisher host
  * (`lib/hunt/discovery-search.ts`), used only when nothing else was confirmed.
  *
@@ -234,13 +235,15 @@ export interface EndpointVerification {
 
 /**
  * The exact parser an official page is verified with: the
- * `lib/sources/official-page-events` adapter, named by the first 12 hex of its
- * whole import closure's digest (`digestGenerator`, lib/ops/generator-digest.ts:
- * every file it reaches, name and bytes, the digest regen uses). A test recomputes
- * it, so a change anywhere the parser reaches fails until this is bumped, and
- * anything keyed on it (a saved method, a wiring row) re-keys cleanly.
+ * `lib/sources/official-page-events` adapter, named by the first 12 hex of the
+ * digest of its value-import closure (`digestValueClosure`,
+ * lib/ops/generator-digest.ts: every file its runtime reaches, name and bytes;
+ * an import that carries only types cannot change behaviour and is left out). A
+ * test recomputes it, so a change anywhere the parser's runtime reaches fails
+ * until this is bumped, and anything keyed on it (a saved method, a wiring row)
+ * re-keys cleanly.
  */
-export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@45203ba3f228";
+export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@3f3436336408";
 
 /**
  * The zone a state's bodies meet in, for the states that sit in one zone. A
@@ -343,8 +346,14 @@ export function anchorLinks(html: string, pageUrl: string): readonly AnchorLink[
 /** The body an official page is verified for. */
 export interface OfficialPageIdentity {
   readonly bodyId: string;
-  /** The body's recorded name; the terms its events may carry derive from it alone. */
+  /** The body's recorded name; the name forms its events may carry derive from it (`identityNameTerms`). */
   readonly name: string;
+  /**
+   * The words the body's own homepage used to link this page ("Board of Education"), or null when the
+   * page was not reached by such a link. With at least two words, the label is a name events may carry:
+   * the government itself says whose page this is. A one-word label ("Council") is too general to name a body.
+   */
+  readonly pageLabel: string | null;
   /** The host the walk attested as the body's own: the recorded site, or a host its own redirect named. */
   readonly officialHost: string;
   readonly stateCode: string;
@@ -373,8 +382,10 @@ function verifyOfficialPage(
       detail: `TIME_ZONE_UNKNOWN: ${identity.stateCode} is not a one-zone state this module tables, and a wall clock is never guessed`,
     };
   }
-  const [name, ...nameTerms] = identityNameTerms(identity.name);
+  const [name, ...nameForms] = identityNameTerms(identity.name);
   if (name === undefined) return { verdict: "NOT_CONFIRMED", count: null, detail: "the body has no recorded name to verify events against" };
+  const label = identity.pageLabel?.trim() ?? "";
+  const nameTerms = label.split(/\s+/).filter((w) => w !== "").length >= 2 ? [...nameForms, label] : [...nameForms];
   const result = verifyOfficialPageEvents({
     body: { id: identity.bodyId, name, officialDomain: identity.officialHost, timeZone, nameTerms },
     url: response.finalUrl,

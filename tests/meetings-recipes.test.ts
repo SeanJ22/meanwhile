@@ -111,7 +111,7 @@ test("RETRIEVAL: by body class and state; state-specific before portable, then s
 test("PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here", () => {
   const benson = need("az:city:city-of-benson", "benson.gov");
   const shown = recipeCandidates({ recipes: [WP], need: benson, origin: "https://benson.gov", homepageHtml: WP_HOME, nowIso: NOW });
-  assert.deepEqual(shown.candidates, [{ recipeId: WP.recipeId, extractorId: "ical", url: "https://benson.gov/events/list/?ical=1" }]);
+  assert.deepEqual(shown.candidates, [{ recipeId: WP.recipeId, extractorId: "ical", url: "https://benson.gov/events/list/?ical=1", label: null }]);
   const absent = recipeCandidates({ recipes: [WP], need: benson, origin: "https://benson.gov", homepageHtml: "<html>no plugin</html>", nowIso: NOW });
   assert.deepEqual(absent.candidates, []);
 

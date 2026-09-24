@@ -39,6 +39,7 @@ export interface HeldVaultArtifact {
   readonly retrievedAt: string | null;
   readonly httpStatus: number | null;
   readonly sourceId: string | null;
+  readonly workItemId: string | null;
   readonly bodyPath: string;
   readonly bodySha256: string;
 }
@@ -47,6 +48,8 @@ export interface VaultIndex {
   readonly byId: ReadonlyMap<string, HeldVaultArtifact>;
   /** By the bare hex of the bytes' sha256. */
   readonly byHash: ReadonlyMap<string, HeldVaultArtifact>;
+  /** By the work item they were filed under: how evidence names the page a sanitized derivative was made from. */
+  readonly byWorkItem: ReadonlyMap<string, readonly HeldVaultArtifact[]>;
 }
 
 interface Sidecar {
@@ -64,6 +67,7 @@ const TIERS: readonly string[] = ARTIFACT_TIERS;
 export async function indexVault(root: string, project: string = READ_ONLY_VAULT_PROJECT): Promise<VaultIndex> {
   const byId = new Map<string, HeldVaultArtifact>();
   const byHash = new Map<string, HeldVaultArtifact>();
+  const byWorkItem = new Map<string, HeldVaultArtifact[]>();
   const walk = async (directory: string): Promise<void> => {
     let entries: Dirent[];
     try {
@@ -96,15 +100,25 @@ export async function indexVault(root: string, project: string = READ_ONLY_VAULT
         retrievedAt: meta.custom?.retrievedAt ?? null,
         httpStatus: Number.isInteger(status) ? status : null,
         sourceId: meta.custom?.sourceId ?? null,
+        workItemId: meta.custom?.workItemId ?? null,
         bodyPath: path.slice(0, -SIDECAR_SUFFIX.length),
         bodySha256: sidecar.bodySha256,
       };
       byId.set(held.id, held);
       byHash.set(hash.slice("sha256-".length), held);
+      if (held.workItemId !== null) byWorkItem.set(held.workItemId, [...(byWorkItem.get(held.workItemId) ?? []), held]);
     }
   };
   await walk(join(root, "project", project));
-  return { byId, byHash };
+  return { byId, byHash, byWorkItem };
+}
+
+/**
+ * The work item a crosswalk's evidence page is filed under, named by the raw page's sha256: a page that carries a
+ * credential is held only as its sanitized derivative, whose own hash differs, so the raw hash names it here.
+ */
+export function crosswalkEvidenceWorkItem(rawSha256: string): string {
+  return `crosswalk-evidence:${rawSha256}`;
 }
 
 /** The held bytes, proved to be the bytes the sidecar committed. */

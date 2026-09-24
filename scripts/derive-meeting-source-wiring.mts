@@ -52,7 +52,7 @@ import {
   wiringRowFor,
   type WiringVerification,
 } from "../lib/control-plane/discovery/derived-wiring.ts";
-import { indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { crosswalkEvidenceWorkItem, indexVault, readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
@@ -267,7 +267,9 @@ async function main(): Promise<void> {
     attempts,
     handWired: (bodyId) => SOURCE_WIRING.some((wiring) => wiring.bodyId === bodyId),
     vaulted: (artifactId) => refOf(vault.byId.get(artifactId)),
-    vaultedBytes: (hex) => refOf(vault.byHash.get(hex)),
+    /* A credential-bearing page is held as its sanitized derivative, filed under the raw page's sha256 (vault-crosswalk-evidence). */
+    vaultedBytes: (hex) => refOf(vault.byHash.get(hex)) ??
+      refOf(vault.byWorkItem.get(crosswalkEvidenceWorkItem(hex))?.find((held) => held.tier === "SANITIZED_DERIVED")),
     verify: (row, _binding, evidence) =>
       readings.get(`${row.crosswalkRowId}\u0000${evidence.artifactId}`) ?? { refused: `no adapter reading of ${evidence.artifactId} was made this pass` },
     adapterDigest,

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 770,
-    "named": 7553,
+    "files": 772,
+    "named": 7565,
     "dynamic": 30
   },
   "files": {
@@ -3652,6 +3652,16 @@
       ],
       "dynamic": 0
     },
+    "tests/derived-authority.test.ts": {
+      "names": [
+        "a held row is never removed: absence, transport, robots and a challenge hold it by name",
+        "a promoted row carries its inputs, and an undecided row is carried byte-exactly",
+        "a promotion without evidence, verified by another adapter, or producing nothing is refused by name",
+        "only the publisher withdraws a row, with vaulted evidence",
+        "the same inputs give the same hash in any order, and the version is no fresher than its newest input"
+      ],
+      "dynamic": 0
+    },
     "tests/derived-picks.test.ts": {
       "names": [
         "M134 rule 1 — a Yes on one candidate IS the pick, and the race stops asking",
@@ -3660,6 +3670,16 @@
         "M134 rule 4 — resolving a pick cannot alter a reaction: this module writes nothing",
         "M134 rule 5 — a measure's Yes/No derives the same way, through the same function",
         "M134 — a derived pick says where it came from, and stays on the device"
+      ],
+      "dynamic": 0
+    },
+    "tests/derived-wiring.test.ts": {
+      "names": [
+        "A PROMOTED ROW IS REMOVED ONLY ON ITS PUBLISHER'S OWN 404 OR 410; a walk that did not reach it holds it, carried",
+        "HOLD BY NAME, at the first check that fails: identity, registration, attestation, a hand-wired body, the reviewed filter, the vault, the reader adapter",
+        "PROMOTE only when every check holds, and the interface's own rule refuses none of the decisions",
+        "THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact",
+        "THE SHAPE: a confirmed route maps to the wiring kind the reader runs, and a route the reader cannot be configured from is held by name"
       ],
       "dynamic": 0
     },
@@ -6057,6 +6077,7 @@
     },
     "tests/meetings-discovery-executor.test.ts": {
       "names": [
+        "A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out a 90-day recheck unattestable (NH330)",
         "A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN",
         "A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE",
         "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
@@ -6070,6 +6091,7 @@
         "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
         "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
         "PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall",
+        "PROVENANCE (NH330): the walk records where the address came from, each redirect to the homepage, and a withdrawn route's own 404 as vaulted evidence",
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 754,
-    "named": 7434,
+    "named": 7437,
     "dynamic": 30
   },
   "files": {
@@ -5966,6 +5966,7 @@
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
         "THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds",
+        "THE NEXT HOP: when nothing is confirmed, the pages the walk read are read for the routes they link; a readable one is confirmed, an unreadable publisher is a lead and is never requested",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
         "WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door",
@@ -6029,6 +6030,8 @@
       "names": [
         "A CORRECTED SEED REACHES THE RUNNER: a stored seed keeps its counts and failure memory and takes the code's method; a learned recipe is the stored one",
         "A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here",
+        "A LINK STEP FOLLOWS NAVIGATION, NOT NEWS: a headline that names the council, or anything under a news section, is never followed",
+        "ONE FAILED ROUTE IS NOT PROOF: a first failure holds 3 days, each consecutive one doubles it up to 30, and a success clears it",
         "OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded",
         "PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here",
         "RETRIEVAL: by body class and state; state-specific before portable, then successes, then recency",

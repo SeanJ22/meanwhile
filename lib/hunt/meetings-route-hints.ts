@@ -117,6 +117,13 @@ const CHANDLER_RESEARCH: HintObservation = { at: "2026-09-24T18:24:00Z", by: "Ro
  */
 const SITE_RESEARCH = "RouteTask session research, robots-checked";
 const DOTGOV = "the .gov registry (CISA current-full.csv, read 2026-09-24T18:03:54Z) lists";
+/**
+ * The class behind the six (2026-09-24): 262 of the 1,975 governments owed discovery had a recorded host that does
+ * not resolve at all (checked against 1.1.1.1 and 8.8.8.8). Forty matched exactly one .gov registry row by name and
+ * state; each of those homepages was read robots-first, and the ones that name the government (or plainly the place)
+ * are hinted below. Unreadable robots, challenges, refusals and failed fetches are not.
+ */
+const DOTGOV_SWEEP = "RouteTask .gov sweep: one exact registry match by name and state, homepage read robots-first";
 
 function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): JurisdictionRouteHints {
   return { jurisdictionId, officialSite, routes: [] };
@@ -190,6 +197,270 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
       "its homepage answered 200 and reads \"The Official City of Holbrook Website\"",
     ],
     observed: { at: "2026-09-24T18:08:23Z", by: SITE_RESEARCH },
+  }),
+  siteHint("az:city:city-of-winslow", {
+    origin: "https://www.winslowaz.gov",
+    selfName: "City Of Winslow",
+    replaces: "http://www.ci.winslow.az.us",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} winslowaz.gov, City, City Of Winslow, Winslow, AZ`,
+      "its homepage answered 200, titled \"Home | City Of Winslow\", naming the City Of Winslow",
+    ],
+    observed: { at: "2026-09-24T19:41:14Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("az:city:town-of-huachuca-city", {
+    origin: "https://huachucacityaz.gov",
+    selfName: "Town of Huachuca City",
+    replaces: "http://WWW.HUACHUCACITY.ORG",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} huachucacityaz.gov, City, Town of Huachuca City, Huachuca City, AZ`,
+      "its homepage answered 200, titled \"Home - Town of Huachuca City\", naming the Town of Huachuca City",
+    ],
+    observed: { at: "2026-09-24T19:33:49Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("az:city:town-of-kearny", {
+    origin: "https://www.kearnyaz.gov",
+    selfName: "Town of Kearny",
+    replaces: "http://www.townof.kearny.com",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} kearnyaz.gov, City, Town of Kearny, Kearny, AZ`,
+      "its homepage answered 200, titled \"Official Web Site of Town of Kearny, Arizona\", naming the Town of Kearny",
+    ],
+    observed: { at: "2026-09-24T19:41:35Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("az:city:town-of-pinetop-lakeside", {
+    origin: "https://pinetoplakesideaz.gov",
+    selfName: "Town of Pinetop-Lakeside",
+    replaces: "http://www.ci.pinetop-lakeside.az.us",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} pinetoplakesideaz.gov, City, Town of Pinetop-Lakeside, Lakeside, AZ`,
+      "its homepage answered 200, titled \"Pinetop-Lakeside, AZ | Official Website\", naming the Town of Pinetop-Lakeside",
+    ],
+    observed: { at: "2026-09-24T19:41:44Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("az:city:town-of-snowflake", {
+    origin: "https://www.snowflakeaz.gov",
+    selfName: "Town of Snowflake",
+    replaces: "http://www.ci.snowflake.az.us",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} snowflakeaz.gov, City, Town of Snowflake, Snowflake, AZ`,
+      "its homepage answered 200, titled \"The Town of Snowflake, AZ\", naming the Town of Snowflake",
+    ],
+    observed: { at: "2026-09-24T19:42:06Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("az:special:fountain-hills-sanitary-district", {
+    origin: "https://www.az-fhsd.gov",
+    selfName: "Fountain Hills Sanitary District",
+    replaces: "http://www.azfhsd.gov",
+    recordedState: "it does not resolve: the name has no address record",
+    evidence: [
+      `${DOTGOV} az-fhsd.gov, City, Fountain Hills Sanitary District, Fountain Hills, AZ`,
+      "its homepage answered 200, titled \"Home - Fountain Hills Sanitary District\", naming the Fountain Hills Sanitary District",
+    ],
+    observed: { at: "2026-09-24T19:42:32Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-andover", {
+    origin: "https://andover-nh.gov",
+    selfName: "Town of Andover",
+    replaces: "http://www.andovernh.us.com",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} andover-nh.gov, City, TOWN OF ANDOVER, Andover, NH`,
+      "its homepage answered 200, titled \"Andover, NH | Official Website\", naming the Town of Andover",
+    ],
+    observed: { at: "2026-09-24T19:42:41Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-canterbury", {
+    origin: "https://www.canterburynh.gov",
+    selfName: "Town of Canterbury",
+    replaces: "http://www.canterburynh.org",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} canterburynh.gov, City, Town of Canterbury, Canterbury, NH`,
+      "its homepage answered 200, titled \"Home | Town of Canterbury NH\", naming the Town of Canterbury",
+    ],
+    observed: { at: "2026-09-24T19:43:43Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-freedom", {
+    origin: "https://townoffreedomnh.gov",
+    selfName: "Town Of Freedom",
+    replaces: "http://www.officeetownoffreedom.net",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} townoffreedomnh.gov, City, Town of Freedom, Freedom, NH`,
+      "its homepage answered 200, titled \"Town Of Freedom – Official Site\", naming the Town Of Freedom",
+    ],
+    observed: { at: "2026-09-24T19:43:57Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-hollis", {
+    origin: "https://hollisnh.gov",
+    selfName: "Town of Hollis",
+    replaces: "http://www.hollis.nh.us/",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} hollisnh.gov, City, Town of Hollis, Hollis, NH`,
+      "its homepage answered 200, titled \"Hollis, NH | Official Website\", naming the Town of Hollis",
+    ],
+    observed: { at: "2026-09-24T19:44:09Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-moultonborough", {
+    origin: "https://moultonboroughnh.gov",
+    selfName: "Moultonborough",
+    replaces: "http://www.moultonborouoghnh.gov",
+    recordedState: "it does not resolve: the name has no address record",
+    evidence: [
+      `${DOTGOV} moultonboroughnh.gov, City, Town of Moultonborough, Moultonborough, NH`,
+      "its homepage answered 200, titled \"Moultonborough, NH | Official Website\", naming the place but not in \"X of Y\" form",
+    ],
+    observed: { at: "2026-09-24T19:44:55Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-new-hampton", {
+    origin: "https://www.newhamptonnh.gov",
+    selfName: "Town of New Hampton",
+    replaces: "http://www.newhampton.nh.us",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} newhamptonnh.gov, City, Town of New Hampton, New Hampton, NH`,
+      "its homepage answered 200, titled \"Town of New Hampton - New Hampton Village Cemetery Association\", naming the Town of New Hampton",
+    ],
+    observed: { at: "2026-09-24T19:45:10Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:city:town-of-newton", {
+    origin: "https://newton-nh.gov",
+    selfName: "Newton",
+    replaces: "http://www.newtonnh.gov",
+    recordedState: "it does not resolve: the name has no address record",
+    evidence: [
+      `${DOTGOV} newton-nh.gov, City, Town of Newton, Newton, NH`,
+      "its homepage answered 200, titled \"Newton, NH | Official Website\", naming the place but not in \"X of Y\" form",
+    ],
+    observed: { at: "2026-09-24T19:45:18Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nh:school:gilford-school-district", {
+    origin: "https://sau73nh.gov",
+    selfName: "Gilford School District",
+    replaces: "http://WWW.GILFORD.K12.NH.US",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} sau73nh.gov, School district, Gilford School District, Gilford, NH`,
+      "its homepage answered 200, titled \"Home - Gilford School District\", naming the Gilford School District",
+    ],
+    observed: { at: "2026-09-24T19:52:04Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:borough-of-beach-haven", {
+    origin: "https://beachhaven-nj.gov",
+    selfName: "Borough of Beach Haven",
+    replaces: "http://www.beachhavennj.gov",
+    recordedState: "it does not resolve: the name has no address record",
+    evidence: [
+      `${DOTGOV} beachhaven-nj.gov, City, Borough of Beach Haven, Beach Haven, NJ`,
+      "its homepage answered 200, titled \"Home - Borough of Beach Haven\", naming the Borough of Beach Haven",
+    ],
+    observed: { at: "2026-09-24T19:52:12Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:borough-of-brielle", {
+    origin: "https://briellenj.gov",
+    selfName: "Borough of Brielle",
+    replaces: "http://www.brielln.j.com",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} briellenj.gov, City, Borough of Brielle, Brielle, NJ`,
+      "its homepage answered 200, titled \"Brielle, NJ | Official Website\", naming the Borough of Brielle",
+    ],
+    observed: { at: "2026-09-24T19:52:18Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:borough-of-island-heights", {
+    origin: "https://islandheightsborough.gov",
+    selfName: "Island Heights",
+    replaces: "http://www.islandheightsgov.com/",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} islandheightsborough.gov, City, Borough of Island Heights, Island Heights, NJ`,
+      "its homepage answered 200, titled \"Welcome | Island Heights, NJ\", naming the place but not in \"X of Y\" form",
+    ],
+    observed: { at: "2026-09-24T19:52:23Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:borough-of-ogdensburg", {
+    origin: "https://ogdensburgnj.gov",
+    selfName: "Borough of Ogdensburg",
+    replaces: "http://www.ogdensburgnij.org",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} ogdensburgnj.gov, City, Borough of Ogdensburg, Ogdensburg, NJ`,
+      "its homepage answered 200, titled \"Borough of Ogdensburg – County of Sussex, NJ\", naming the Borough of Ogdensburg",
+    ],
+    observed: { at: "2026-09-24T19:52:42Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:borough-of-waldwick", {
+    origin: "https://www.waldwicknj.gov",
+    selfName: "Borough of Waldwick",
+    replaces: "http://www.waldwickpd.org",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} waldwicknj.gov, City, Borough of Waldwick, Waldwick, NJ`,
+      "its homepage answered 200, titled \"Borough of Waldwick New Jersey - Home Page\", naming the Borough of Waldwick",
+    ],
+    observed: { at: "2026-09-24T19:52:52Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:city-of-absecon", {
+    origin: "https://abseconnj.gov",
+    selfName: "City of Absecon",
+    replaces: "http://www.abseconnewjersey.org",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} abseconnj.gov, City, City of Absecon, Absecon, NJ`,
+      "its homepage answered 200, titled \"City of Absecon\", naming the City of Absecon",
+    ],
+    observed: { at: "2026-09-24T19:52:57Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:city-of-bridgeton", {
+    origin: "https://cityofbridgetonnj.gov",
+    selfName: "City of Bridgeton",
+    replaces: "http://www.city.of.bridgeton.com",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} cityofbridgetonnj.gov, City, City of Bridgeton, Bridgeton, NJ`,
+      "its homepage answered 200, titled \"Bridgeton, NJ | Official Website\", naming the City of Bridgeton",
+    ],
+    observed: { at: "2026-09-24T19:53:05Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:city-of-hoboken", {
+    origin: "https://hobokennj.gov",
+    selfName: "City of Hoboken",
+    replaces: "http://www.hobokennj.org/",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} hobokennj.gov, City, City of Hoboken, Hoboken, NJ`,
+      "its homepage answered 200, titled \"Hoboken NJ Website\", naming the City of Hoboken",
+    ],
+    observed: { at: "2026-09-24T19:53:14Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:township-of-fredon", {
+    origin: "https://fredonnj.gov",
+    selfName: "Township of Fredon",
+    replaces: "http://WWW.TWP.FREDON.NJ.US",
+    recordedState: "it does not resolve: its nameservers fail (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} fredonnj.gov, City, Township of Fredon, Newton, NJ`,
+      "its homepage answered 200, titled \"Fredon Township\", naming the Township of Fredon",
+    ],
+    observed: { at: "2026-09-24T19:53:19Z", by: DOTGOV_SWEEP },
+  }),
+  siteHint("nj:city:township-of-north-brunswick", {
+    origin: "https://www.northbrunswicknj.gov",
+    selfName: "Township of North Brunswick",
+    replaces: "http://www.twp.north-brunswick.nj.us/index.html",
+    recordedState: "it does not resolve (NXDOMAIN)",
+    evidence: [
+      `${DOTGOV} northbrunswicknj.gov, City, Township of North Brunswick, North Brunswick, NJ`,
+      "its homepage answered 200, titled \"North Brunswick, NJ | Official Website\", naming the Township of North Brunswick",
+    ],
+    observed: { at: "2026-09-24T19:53:44Z", by: DOTGOV_SWEEP },
   }),
   {
     jurisdictionId: "az:city:city-of-chandler",

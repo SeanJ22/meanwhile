@@ -704,15 +704,34 @@ export async function POST(request: Request) {
       preloadMs[name] = Date.now() - started;
     }
   };
-  const edgeManifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
-  if (edgeManifest?.authorityArtifacts) {
-    const authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
-    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  }
+  /*
+   * **ONLY WHAT READS THE AUTHORITY EDGE WAITS FOR IT.** (2026-09-24, C20.)
+   * The edge manifest and the authority edge used to be awaited before any
+   * source was read, and the comment-access read after all of them: three
+   * serial steps on a cold instance. The registry and the federal directory
+   * read from the authority edge once it is entered, so they wait for it;
+   * the recorded outcomes and the comment-access rules read the database and
+   * start at once, beside it.
+   */
+  const edgeReady = (async () => {
+    const manifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
+    if (manifest?.authorityArtifacts) {
+      const authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(manifest).catch(() => null))();
+      if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+    }
+    return manifest;
+  })();
+  const afterEdge = <T,>(read: () => Promise<T>) => (): Promise<T> => edgeReady.then(read);
   const essentialPreloads = [
-    timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
-    timed("federalDirectory", settleFederalDirectoryRead),
+    afterEdge(timed("registry", () => settleRegistryAuthorityReads("REGISTRY"))),
+    afterEdge(timed("federalDirectory", settleFederalDirectoryRead)),
     timed("outcomes", refreshOutcomeSnapshotFromPromoted),
+    // Public-comment rules are an independent optional family. Initialize its
+    // pointer, but do not let a store outage suppress meetings, ballots,
+    // officials, or any other source's answer.
+    ...(process.env.NODE_ENV === "production"
+      ? [timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))]
+      : []),
   ];
   const deferrablePreloads = [
     timed("funding", refreshFundingFromPromoted),
@@ -726,7 +745,7 @@ export async function POST(request: Request) {
     timed("candidateCorpus", refreshCandidateCorpusFromPromoted),
     timed("officeholderStatements", refreshOfficeholderStatementsFromPromoted),
     timed("executiveActions", refreshExecutiveActionsFromPromoted),
-  ];
+  ].map(afterEdge);
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
   // The recorded outcomes are what a topic answer leads with. A cold read that
   // failed (a transient connect timeout on the first request) is retried once
@@ -738,12 +757,7 @@ export async function POST(request: Request) {
       trace.preloadRetries = [...(trace.preloadRetries ?? []), "outcomes"];
     }
   }
-  if (process.env.NODE_ENV === "production") {
-    // Public-comment rules are an independent optional family. Initialize its
-    // pointer, but do not let a store outage suppress meetings, ballots,
-    // officials, or any other source's answer.
-    await timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))();
-  }
+  const edgeManifest = await edgeReady;
 
   lap("sourcePreloads");
   trace.preloads = preloadMs;

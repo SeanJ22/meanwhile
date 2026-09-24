@@ -19,7 +19,7 @@ import {
   refreshNhBallotFromPromoted,
 } from "../../lib/civic-data/manual-read-models.ts";
 import { refreshOfficeholderStatementsFromPromoted } from "../../lib/corpus/data-plane.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
+import { HELD_MEETING_PARTITIONS, MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
 import { pdcV2CanonicalMeetingFactEvidence } from "../../lib/civic-data/store.ts";
 import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
@@ -35,6 +35,7 @@ import {
   requireReaderProofMeetingsProjection,
   type ReaderProofMeetingsExpectedAuthority,
 } from "../../lib/meetings/snapshot.ts";
+import { readerProofMeetingPinAdmission } from "../../lib/meetings/proof-pin.ts";
 import {
   readerClosureExecutionAuthorityAdmission,
   readerClosureExecutionAuthorityPaths,
@@ -47,6 +48,7 @@ import {
 } from "../../lib/holdings/reader-census.ts";
 import {
   admitReaderExecutionAuthorityArchivedSupport,
+  PDC_V2_POST_IMPORT_MEETING_PARTITIONS,
   PDC_V2_ZERO_LKG_MEETING_PARTITIONS,
   type ReaderExecutionAuthorityArchivedSupportAdmission,
 } from "../../lib/holdings/reader-execution-authority.ts";
@@ -118,7 +120,10 @@ export function readerProofMeetingPartitionIdentity(
     throw new Error("Meeting Reader proof has zero meeting rows.");
   }
   const identity = result.partitions
-    .map(({ contractId, kind, versionId }) => `${contractId}|${kind}|${versionId ?? ""}`)
+    .map(({ contractId, kind, versionId, heldFrom }) =>
+      `${contractId}|${kind}|${versionId ?? ""}` +
+      // A held version is part of what was composed, so it is part of the identity.
+      (heldFrom ? `|held:${heldFrom.contractId}@${heldFrom.versionId}` : ""))
     .sort()
     .join("\n");
   return `meeting-partitions:${createHash("sha256").update(identity).digest("hex")}`;
@@ -128,20 +133,35 @@ export function readerProofMeetingsAuthorityFromImport(
   admission: ReaderExecutionAuthorityArchivedSupportAdmission,
 ): ReaderProofMeetingsExpectedAuthority {
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map(({ id }) => id));
-  const unexpected = admission.dispositionSet.filter(({ contractId }) =>
+  // A partition retired by a proved cutover (RETIRED_MEETING_ROUTES) is carried
+  // by its registered successor for the same body, so the import's disposition
+  // for the retired identity is the authority the successor inherits: a
+  // promoted body stays promoted, and losing it remains a hard failure. An
+  // import that named both identities is a duplicate and is refused below.
+  const successorOf = new Map(HELD_MEETING_PARTITIONS.map(({ id, successorId }) => [id, successorId]));
+  const dispositions = admission.dispositionSet.map((row) =>
+    successorOf.has(row.contractId) ? { ...row, contractId: successorOf.get(row.contractId)! } : row
+  );
+  const unexpected = dispositions.filter(({ contractId }) =>
     contractId.startsWith("meetings:") && !registered.has(contractId)
   );
   if (unexpected.length) {
     throw new Error("Reader phase import names an unregistered meeting partition.");
   }
-  const promotedRows = admission.dispositionSet.filter(({ contractId }) => registered.has(contractId));
+  const promotedRows = dispositions.filter(({ contractId }) => registered.has(contractId));
   const promotedById = new Map(promotedRows.map((row) => [row.contractId, row]));
   if (promotedById.size !== promotedRows.length) {
     throw new Error("Reader phase import duplicates a meeting partition disposition.");
   }
+  // Partitions registered after the frozen import are outside its universe:
+  // NOT_RECORDED in this authority until routine promotion gains them.
+  const postImport = new Set(PDC_V2_POST_IMPORT_MEETING_PARTITIONS.filter((id) => registered.has(id)));
+  if (promotedRows.some(({ contractId }) => postImport.has(contractId))) {
+    throw new Error("Reader phase import claims a meeting partition registered after it.");
+  }
   if (
     admission.zeroMeetingPartitionsRefused !== PDC_V2_ZERO_LKG_MEETING_PARTITIONS ||
-    promotedRows.length !== registered.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS
+    promotedRows.length !== registered.size - PDC_V2_ZERO_LKG_MEETING_PARTITIONS - postImport.size
   ) {
     throw new Error("Reader phase import meeting partition denominator differs from the permanent 83/41 authority.");
   }
@@ -153,7 +173,7 @@ export function readerProofMeetingsAuthorityFromImport(
   });
   return {
     meetingPartitionsWithLkg: promotedRows.length,
-    meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused,
+    meetingPartitionsWithoutLkg: admission.zeroMeetingPartitionsRefused + postImport.size,
     legacyMeetingsAggregate: admission.legacyMeetingsAggregate,
     partitions,
   };
@@ -505,6 +525,12 @@ function prepareReaderProofRuntimeFor(options: ReaderProofRuntimeOptions): Promi
   }
   if (!preparation) {
     try {
+      // A pin the harness asked for but the reader refused would silently put
+      // this process back on live, mixed-version meeting reads. Refuse it here.
+      const pinAdmission = readerProofMeetingPinAdmission(process.env);
+      if (pinAdmission.state === "REFUSED") {
+        throw new Error(`Reader proof meeting pin was requested but refused: ${pinAdmission.reason}.`);
+      }
       const authority = loadReaderProofMeetingsExpectedAuthorityFor(process.cwd(), process.env, options);
       preparationKey = nextKey;
       preparation = runReaderProofRuntimeLoaders(productionLoaders(authority)).then((result) => {

@@ -10,8 +10,10 @@
  *   recorded (`#candidate-authored-awaits-site`). They held open occurrences
  *   on already-disposed RouteTasks.
  * - 484 jurisdiction MEETINGS routes, left behind by the PDC transfer. They
- *   are 41% of that provider's standing set, so the bound holds them for a
- *   person, pending per-row proof that a meeting contract now owns each one.
+ *   are 41% of that provider's standing set, so the bound held them. They are
+ *   not superseded: the need moved to the gap ledger, and
+ *   `planMovedToGapLedger` owns them
+ *   (tests/meetings-discovery-gap-ledger.test.ts).
  * - 80 rows the legacy prefix retirement had retired with 20 occurrences still
  *   open.
  *
@@ -259,7 +261,7 @@ test("SEEDED: a superseded row with an open occurrence on a settled RouteTask is
     assert.deepEqual(sync.outside?.map((o) => o.id), [AWAITS], `${label}: sync names the row it no longer walks`);
     const plan = planSupersededRetirement({ outside: sync.outside ?? [], corpus: unitsOf(corpus), providers: [CLEAN], bound: 1 });
     const applied = await settleRetirements(repos, { items: plan.retire, now: T1 });
-    assert.deepEqual(applied, { retired: [AWAITS], occurrencesClosed: [shape.occurrenceId], failed: [] });
+    assert.deepEqual(applied, { retired: [AWAITS], occurrencesClosed: [shape.occurrenceId], failed: [], deferred: [] });
 
     const occurrence = (await repos.occurrences.mustRead(shape.occurrenceId)).value;
     assert.equal(occurrence.closedAt, T1);
@@ -307,7 +309,7 @@ test("SEEDED: while the provider cannot read its input, nothing is retired and t
     assert.deepEqual(plan.heldBack.map((h) => h.code), ["PROVIDER_NOT_READ_CLEANLY"]);
 
     const applied = await settleRetirements(repos, { items: plan.retire, now: T1 });
-    assert.deepEqual(applied, { retired: [], occurrencesClosed: [], failed: [] });
+    assert.deepEqual(applied, { retired: [], occurrencesClosed: [], failed: [], deferred: [] });
     assert.equal((await repos.occurrences.mustRead(shape.occurrenceId)).value.closedAt, null, `${label}: still open`);
     assert.equal((await repos.obligations.mustRead(AWAITS)).value.active, true, `${label}: still active`);
     assert.equal((await repos.debts.mustRead(AWAITS)).value.consecutiveFailures, 1, `${label}: debt untouched`);
@@ -327,7 +329,7 @@ test("SEEDED: a row the legacy prefix retirement left pointing at an open occurr
     const items = planRetiredResidue(sync.outside ?? []);
     assert.deepEqual(items, [{ obligationId: AWAITS, reason: "LEGACY TRANSFER" }]);
     const applied = await settleRetirements(repos, { items, now: T2 });
-    assert.deepEqual(applied, { retired: [], occurrencesClosed: [shape.occurrenceId], failed: [] }, `${label}: settled, not retired twice`);
+    assert.deepEqual(applied, { retired: [], occurrencesClosed: [shape.occurrenceId], failed: [], deferred: [] }, `${label}: settled, not retired twice`);
     const occurrence = (await repos.occurrences.mustRead(shape.occurrenceId)).value;
     assert.equal(occurrence.disposition, null);
     assert.match(occurrence.unresolvedReason ?? "", /^LEGACY TRANSFER\. The occurrence closes unresolved/);
@@ -369,7 +371,7 @@ test("SEEDED: an open occurrence the row's pointer lost is closed too; a retired
     const sync = await syncObligations(repos, corpus, T1);
     const plan = planSupersededRetirement({ outside: sync.outside ?? [], corpus: unitsOf(corpus), providers: [CLEAN], bound: 1 });
     const applied = await settleRetirements(repos, { items: plan.retire, now: T1 });
-    assert.deepEqual(applied, { retired: [AWAITS], occurrencesClosed: [shape.occurrenceId], failed: [] }, label);
+    assert.deepEqual(applied, { retired: [AWAITS], occurrencesClosed: [shape.occurrenceId], failed: [], deferred: [] }, label);
     const occurrence = (await repos.occurrences.mustRead(shape.occurrenceId)).value;
     assert.equal(occurrence.closedAt, T1, `${label}: the orphan is closed`);
     assert.equal(occurrence.disposition, null);

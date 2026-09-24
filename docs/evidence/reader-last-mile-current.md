@@ -1,6 +1,6 @@
 # Reader last-mile census
 
-Registry-derived denominator: 34 reader dataset families; 89 declared family/surface edges; 1302 holdings; 48511 typed records; 1040 family/surface/state rows.
+Registry-derived denominator: 34 reader dataset families; 89 declared family/surface edges; 1401 holdings; 138171 typed records; 1040 family/surface/state rows.
 
 Records are typed container rows, not unique civic people. Units are kept separately; a sourced roster and its members, a meeting and agenda text, or a normalized snapshot and acquisition input must not be summed as unique facts. Reader eligibility is distinct from measured reader delivery. Unmeasured false-negative/positive counts are null, never zero.
 
@@ -386,10 +386,10 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | registry | representation | as | 3 | 0 | IDENTITY_UNRESOLVED | 0 | 0 | true |
 | registry | ballot | as | 3 | 0 | IDENTITY_UNRESOLVED | 0 | 0 | true |
 | registry | meetings | as | 3 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| registry | map | az | 1548 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
-| registry | representation | az | 1548 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
-| registry | ballot | az | 1548 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
-| registry | meetings | az | 1548 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| registry | map | az | 1547 | 1 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
+| registry | representation | az | 1547 | 1 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
+| registry | ballot | az | 1547 | 1 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
+| registry | meetings | az | 1547 | 1 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | registry | map | ca | 213 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | registry | representation | ca | 213 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | registry | ballot | ca | 213 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
@@ -506,10 +506,10 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | registry | representation | ne | 18 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | registry | ballot | ne | 18 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | registry | meetings | ne | 18 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| registry | map | nh | 1384 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
-| registry | representation | nh | 1384 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
-| registry | ballot | nh | 1384 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
-| registry | meetings | nh | 1384 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| registry | map | nh | 1383 | 1 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
+| registry | representation | nh | 1383 | 1 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
+| registry | ballot | nh | 1383 | 1 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
+| registry | meetings | nh | 1383 | 1 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | registry | map | nj | 1733 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | registry | representation | nj | 1733 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | registry | ballot | nj | 1733 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
@@ -743,10 +743,10 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | geography | ballot | mt | 260 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | geography | representation | mt | 260 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | geography | meetings | mt | 260 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| geography | map | national-unattributed | 6 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| geography | ballot | national-unattributed | 6 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| geography | representation | national-unattributed | 6 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| geography | meetings | national-unattributed | 6 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| geography | map | national-unattributed | 89666 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| geography | ballot | national-unattributed | 89666 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| geography | representation | national-unattributed | 89666 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| geography | meetings | national-unattributed | 89666 | 3 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | geography | map | nc | 118 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | geography | ballot | nc | 118 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | geography | representation | nc | 118 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |

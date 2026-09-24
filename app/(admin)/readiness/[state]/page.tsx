@@ -565,7 +565,8 @@ export default async function ReadinessStatePage({
               </div>
               <p className={s.note} style={{ marginTop: 14, maxWidth: "80ch" }}>
                 Deploy opens the same instruction the Fleet area uses, with this geography filled in, and shows what sending it does before anything moves. Sending
-                orders the work already registered here first and bounds paid work by a budget; creating missing work is not built yet (MW-028).
+                creates the work the registry defines here that no clock carries yet (bounded per cycle and per geography), orders all work here first, and bounds
+                paid work by a budget.
                 {decision ? "" : " No assignment covers this geography yet."}
               </p>
             </div>

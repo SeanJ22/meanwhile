@@ -37,6 +37,7 @@ import {
   type RegistrationTarget,
 } from "./publication.ts";
 import type { LoadedReference, ReferenceLayer } from "./reference.ts";
+import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import type { Body, Division, DivisionType } from "../registry/types.ts";
 
 /**
@@ -216,8 +217,9 @@ export function registrationCandidate(input: {
     if (SCHOOL_TYPES.has(govType)) claimedSchools.add(division);
     mint(primary, SCHOOL_TYPES.has(govType) ? "board" : "governing", "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS", [pid6, jurisdictionId, govType], provenance);
   }
-  ref.divisions.forEach(([ocdId, layer, , censusName], i) => {
-    if (!SCHOOL_LAYERS.has(layer) || claimedSchools.has(i) || /not defined/i.test(censusName)) return;
+  ref.divisions.forEach(([ocdId, layer, geoid], i) => {
+    // A Census placeholder is geography, never a government: no board is minted on it (lib/registry/census-placeholders.ts).
+    if (!SCHOOL_LAYERS.has(layer) || claimedSchools.has(i) || isCensusPlaceholderDivision({ ocdId, divisionType: "school_district", geoid })) return;
     if (reviewed.bodyDivisionIds.has(ocdId)) return;
     mint(ocdId, "board", "DERIVED_FROM_DIVISION_TYPE", null, { sourceUrl: boundaryUrl(layer as Exclude<ReferenceLayer, "state">), sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null });
   });

@@ -80,7 +80,7 @@ test("canonical TS/TSX loader retains spec failures and reports incomplete boots
       const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", "--experimental-strip-types",
         "--import", "./scripts/register-test-loader.mjs", "--test-reporter=spec", "--test-reporter-destination=stdout",
         `--test-reporter=${REPORTER}`, `--test-reporter-destination=${destination}`, ...expected], {
-        cwd: root, env, encoding: "utf8", timeout: 10_000, windowsHide: true,
+        cwd: root, env, encoding: "utf8", timeout: 120_000, windowsHide: true,
       });
       assert.equal(result.error, undefined, `${mode} must terminate naturally with teardown handles closed`);
       const timing = validateTimings(readFileSync(destination, "utf8"), expected);

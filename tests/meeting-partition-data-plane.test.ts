@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 
 import {
+  HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
 } from "../lib/civic-data/meeting-partitions.ts";
@@ -111,6 +112,7 @@ function agendaDocument(row: Meeting, retrievedAt: string): AgendaDocument {
 
 class CountingMeetingStore extends MemoryRoutineDataStore {
   readPromotionsCalls = 0;
+  readPromotionIdentitiesCalls = 0;
 
   override async readPromotions<T = unknown>(
     recordClass: RoutineRecordClass,
@@ -118,6 +120,11 @@ class CountingMeetingStore extends MemoryRoutineDataStore {
   ) {
     this.readPromotionsCalls += 1;
     return super.readPromotions<T>(recordClass, scopes);
+  }
+
+  override async readPromotionIdentities(recordClass: RoutineRecordClass, scopes: readonly string[]) {
+    this.readPromotionIdentitiesCalls += 1;
+    return super.readPromotionIdentities(recordClass, scopes);
   }
 }
 
@@ -343,6 +350,12 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     generatedAt: FIRST,
   });
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
+  // 2026-09-24: each partition promotion once composed the whole aggregate to
+  // read back its own receipt (every partition's payload and candidate, ~24 MB
+  // in production, per promotion). The promotion reads no sibling partition;
+  // the repair below is the one aggregate read that records every receipt.
+  assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
+  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback === null), true);
   const before = await Promise.all(promoted.map(async ({ candidate }) => ({
     contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
     pointer: await store.readPromotion("MEETING", candidate.scope),
@@ -350,6 +363,7 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     events: await store.events(candidate.id),
   })));
   store.readPromotionsCalls = 0;
+  store.readPromotionIdentitiesCalls = 0;
 
   const repairs = await repairMeetingReaderProjectionReadbacks(
     store,
@@ -357,7 +371,15 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     SECOND,
     "f".repeat(40),
   );
-  assert.equal(store.readPromotionsCalls, 2, "one pointer batch plus one actual aggregate Reader read");
+  assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
+  // The payloads cross once, in the actual aggregate Reader read, plus one
+  // batch for the held pointers of successors with none yet
+  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+  assert.equal(
+    store.readPromotionsCalls,
+    1 + (HELD_MEETING_PARTITIONS.length > 0 ? 1 : 0),
+    "the payloads cross once, in the actual aggregate Reader read, and its held-pointer batch",
+  );
   assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
     { contractId: legistar.id, ok: true },
     { contractId: insite.id, ok: true },
@@ -385,6 +407,20 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     assert.equal(afterEvents.at(-1)?.state, "PROMOTED");
     assert.match(afterEvents.at(-1)?.detail ?? "", new RegExp(`^${READER_PROJECTION_READBACK_PREFIX}`));
   }
+
+  // The ordinary pass: every receipt is already current, so no partition's
+  // payload crosses the wire at all; the identity batch alone decides it.
+  store.readPromotionsCalls = 0;
+  store.readPromotionIdentitiesCalls = 0;
+  const current = await repairMeetingReaderProjectionReadbacks(
+    store,
+    [legistar, insite],
+    new Date(Date.parse(SECOND) + 1).toISOString(),
+    "f".repeat(40),
+  );
+  assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
+  assert.equal(store.readPromotionIdentitiesCalls, 1);
+  assert.equal(store.readPromotionsCalls, 0, "a current pass reads no partition payload");
 });
 
 test("a semantic refusal holds only the exact source/body partition", async () => {
@@ -435,7 +471,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   let scalarCandidateReads = 0;
   let promotionBatchReads = 0;
   let candidateBatchReads = 0;
-  let requestedScopes: readonly string[] = [];
+  const requestedScopeBatches: string[][] = [];
   let requestedCandidateIds: readonly string[] = [];
   const corruptingStore = {
     async readPromotion<_T>(_recordClass: RoutineRecordClass, _scope: string) {
@@ -448,7 +484,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
     },
     async readPromotions<T>(recordClass: RoutineRecordClass, scopes: readonly string[]) {
       promotionBatchReads += 1;
-      requestedScopes = [...scopes];
+      requestedScopeBatches.push([...scopes]);
       return (await store.readPromotions<T>(recordClass, scopes)).map((pointer) =>
         pointer.versionId === corruptId
           ? { ...pointer, payload: structuredClone(corruptPayload) as T }
@@ -490,9 +526,15 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  assert.equal(promotionBatchReads, 1);
+  // One batch for every registered partition, and one more only for the held
+  // pointers of successors that have none yet (HELD_MEETING_PARTITIONS) — the
+  // college's successor has none in this store.
+  assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
-  assert.deepEqual(requestedScopes, MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope));
+  assert.deepEqual(requestedScopeBatches, [
+    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+    HELD_MEETING_PARTITIONS.map((held) => held.scope),
+  ]);
   assert.deepEqual(new Set(requestedCandidateIds), new Set(seeded.map((row) => row.candidate.id)));
 });
 

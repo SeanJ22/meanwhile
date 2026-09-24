@@ -74,6 +74,7 @@ import {
   computeReadinessSnapshot,
 } from "../lib/control-plane/readiness/compute.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { isCensusPlaceholderDivision } from "../lib/registry/census-placeholders.ts";
 
 const ROOT = process.cwd();
 const NOW = new Date().toISOString();
@@ -97,6 +98,7 @@ const FIXTURE_INPUT_OVERLAY = fixtureInputOverlay === undefined ? null : resolve
 interface Division {
   readonly ocdId: string;
   readonly divisionType: string;
+  readonly geoid?: string | null;
   readonly state?: string;
   readonly provenance?: { readonly collectedAt?: string };
 }
@@ -148,13 +150,16 @@ const maxDate = (a: string | null, b: string | null): string | null =>
   a === null ? b : b === null ? a : a >= b ? a : b;
 
 /** Held divisions of a state, counted by type, with the newest collectedAt.
- *  NOTE: `division.state` is UPPERCASE (e.g. "AZ") in the registry. */
+ *  NOTE: `division.state` is UPPERCASE (e.g. "AZ") in the registry.
+ *  A Census "no district here" placeholder stays in the registry as geography
+ *  but is not a held district boundary: the Census of Governments total it is
+ *  read against counts governments (Sean, 2026-09-23). */
 function heldDivisions(code: string): { byType: Record<string, number>; asOf: string | null } {
   const upper = code.toUpperCase();
   const byType: Record<string, number> = {};
   let asOf: string | null = null;
   for (const d of REGISTRY.divisions) {
-    if (d.state !== upper) continue;
+    if (d.state !== upper || isCensusPlaceholderDivision(d)) continue;
     byType[d.divisionType] = (byType[d.divisionType] ?? 0) + 1;
     asOf = maxDate(asOf, dateOf(d.provenance?.collectedAt));
   }

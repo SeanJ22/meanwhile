@@ -90,6 +90,7 @@ import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import { budgetRepositoryFrom } from "./shared.ts";
@@ -101,6 +102,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   jsonTextAtPath,
+  projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -113,6 +115,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** ------------------------------------------------------------ primitives */
@@ -589,6 +592,23 @@ export function fileAppendOnlyRepository<T>(
       return records.slice(Math.max(0, records.length - bounded)).reverse();
     },
 
+    readRecentWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+      limit: number,
+      projection: RecordProjection,
+    ): Promise<readonly unknown[]> => {
+      const matches = (await readLines(key))
+        .map((line) => line.record)
+        .filter((record) => jsonTextAtPath(record, jsonPath) === value);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((record) => projectRecord(record, projection));
+    },
+
     readAll: async (): Promise<readonly T[]> =>
       (await readEveryPartition()).map((line) => line.record),
 
@@ -753,6 +773,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts: fileAppendOnlyRepository<ActionReceipt>(resolved, "admin-receipts"),
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
+    discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),

@@ -1,68 +1,65 @@
-# Draft — Diligent, permission to read public agendas from tenant portals
+# Draft — Diligent, one named robots.txt group for Community public sites
 
 **Status: DRAFT. Not sent. Nothing here has been reviewed by counsel.**
 Related: tracker **D13** (the adapter), **D14** (the per-vendor finding),
 **B09** (the counsel question this letter tries to make unnecessary).
+Rewritten 2026-09-23 (the Pima school-agenda routes session) around what the
+tenants' robots.txt actually says; the ledger is
+`docs/detective/pima-school-agenda-routes-2026-09-23.md`.
 
-Send only after the author has read it. A reply either way moots B09 for this
-source, which is why it is worth sending early and in parallel with the letter
-to the district.
+## What was verified before this was drafted
+
+- **The file.** Every Diligent Community tenant read on 2026-09-23T20:02Z —
+  `pima.community.highbond.com`, `susd-12.community.highbond.com`,
+  `tusd1-schooldesk.community.diligentoneplatform.com` — serves one
+  byte-identical robots.txt (23,479 bytes, sha256 `b5cbf0b4b2cbcf18…`, recorded
+  as `tests/fixtures/pima-edu/robots-pima.community.highbond.com.txt`). It is an
+  allowlist: `User-agent: *` → `Disallow: /`, and six named crawlers (msnbot,
+  slurp, googlebot, bingbot, duckduckbot, AddSearchBot) may read `/Portal/`,
+  `/document/` and `/Services/` under `Crawl-delay: 120`, with ten narrow
+  disallows (`/FileStorage/`, `/WorkSpace/`, `/js/`, `/scripts/`, `/css/`,
+  `/images/`, `/fonts/`, `/Content/`, `/WebResource.axd`, `/ScriptResource.axd`).
+- **The address.** Diligent's Website Terms of Use
+  (`www.diligent.com/legal/terms-of-use`, updated 2022-01-06, read 2026-09-23)
+  name the contact for questions about them: Legal Department,
+  `legal@diligent.com`, 61 W 23rd Street 4th Floor, New York, NY 10010. The
+  same terms bar robots on "the Diligent Websites"; whether a tenant's public
+  site is one is B09's question, and a grant answers both.
+- **No API to ask for instead.** Diligent's Community public-site guide
+  (`connect.diligent.com/file-asset/Diligent_Community_Public_Site_Resource`)
+  documents searchable records, email subscriptions that send a link to each
+  published document, request-to-speak and YouTube links, and no API, feed or
+  export. `developer.diligent.com` could not be read (its robots.txt answers
+  with an HTML page, so it is CANNOT_TELL); a third-party profile lists only
+  customer-gated GRC APIs. This letter therefore asks for crawl permission, not
+  for an interface nobody has shown exists.
+- **The token the change must name.** This project's robots evaluator
+  (`lib/control-plane/scheduler/robots.ts`) reads the group for the product
+  token `we-the-people` before it falls back to `*`, so a group with that name
+  flips every Diligent tenant to ALLOWED for this client on the next read.
 
 ---
 
-**To:** Diligent — legal / privacy contact listed at `diligent.com/legal/`
-**Subject:** Automated access to public meeting agendas on Diligent Community
-tenant portals
+**To:** legal@diligent.com
+**Subject:** Diligent Community robots.txt: adding one named crawler
 
 ---
 
-Hello,
+Your Community public sites serve the same robots.txt on every tenant. It lets six search crawlers read /Portal/, /document/ and /Services/ with a two-minute crawl delay and turns every other agent away.
 
-I'm building a non-commercial civic tool that shows residents the upcoming
-public meetings of the governments that cover their address — city councils,
-county boards, and school boards — and links each one to the agenda the body
-itself published. It is free to readers, and it links out to the source rather
-than republishing agenda documents.
+I run Meanwhile, a free civic app that shows residents the public meetings of the bodies that govern them and links each meeting to the agenda the body published. Three Arizona boards we cover publish through you: Pima Community College, Sunnyside Unified and Tucson Unified. Arizona law requires those agendas to be public 24 hours before the meeting. Our crawler honors your file, so it can't read them.
 
-Many of the school boards I want to cover publish through Diligent Community.
-I'd like to check my reading of the terms with you before writing anything that
-touches a tenant portal.
+Add a group for our token, `we-the-people`, with the same rules as your Googlebot group: the same ten Disallow lines and Crawl-delay: 120. If you'd rather grant it in writing, a reply here works and I'll keep it on file.
 
-My understanding is that `diligent.com/legal/terms-of-use` governs
-diligent.com and its associated resource, training and community sites, and
-that it expressly carves out use of Diligent *products* to the terms agreed at
-signup or to the customer's own agreement, which take precedence in a conflict.
-If that reading is right, then a district's tenant portal — for example
-`tusd1-schooldesk.community.diligentoneplatform.com/Portal/` — is governed by
-the district's agreement rather than by the website terms of use. I would like
-to confirm that, because it decides who I should be asking.
+Our client identifies itself in the User-Agent as "we-the-people civic meeting index" with a contact link. It reads robots.txt before every run, waits out the crawl delay, backs off on any 429 or 5xx, reads only what a tenant published to its public site, and never logs in. Every record credits the district that published it.
 
-Three questions:
+If this belongs with someone other than Legal, send me the name and I'll take it to them. Once the group is live we re-read your robots.txt the same day and start from there.
 
-1. Is that reading of the scope correct?
-2. Does Diligent object to a modest, identified, rate-limited client reading
-   the meeting and agenda pages a district has already made public on its
-   portal? I would identify the project and a contact address in the
-   `User-Agent`, serialize requests with a delay, honour `Retry-After`, back
-   off on any 429 or 5xx, and never re-fetch a document whose content hash is
-   unchanged.
-3. Is there a supported interface I should use instead? If Diligent offers a
-   read API, a feed, or a bulk export for public meeting data, I would much
-   rather use it than read pages, and I would be glad to work against a
-   documented endpoint.
+Sean Johnson
+Meanwhile
 
-To be explicit about intent: I am asking about records that districts are
-already required to publish in advance of a meeting, and that are already
-public on the portal. I am not asking for anything behind authentication, and
-I am not looking to redistribute Diligent's software or its documents. The
-attribution on every record names the **district** as the publisher, not
-Diligent.
+---
 
-If the right answer is that this is the district's call rather than yours, I am
-happy to hear that and take it up with them — I am writing to both.
-
-Thank you for your time.
-
-[name]
-[project] — [url]
-[contact address]
+**Voice check (sean-voice audit, 2026-09-23):** banned strings 0, em dashes in
+the body 0, the close is the next action rather than a permission ask, and the
+opening is about their file.

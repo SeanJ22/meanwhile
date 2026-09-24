@@ -45,6 +45,7 @@ import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import { budgetRepositoryFrom, jsonCopy } from "./shared.ts";
@@ -53,6 +54,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   jsonTextAtPath,
+  projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -65,6 +67,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** One in-memory aggregate store with the full CAS contract. */
@@ -205,6 +208,22 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .map((entry) => jsonCopy(entry.record));
     },
 
+    readRecentWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+      limit: number,
+      projection: RecordProjection,
+    ): Promise<readonly unknown[]> => {
+      const matches = (partitions.get(key) ?? [])
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((entry) => projectRecord(jsonCopy(entry.record), projection));
+    },
+
     readAll: async (): Promise<readonly T[]> =>
       [...partitions.entries()]
         .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
@@ -280,6 +299,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts: memoryAppendOnlyRepository<ActionReceipt>("admin_receipts"),
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
+    discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,

@@ -1,5 +1,5 @@
 {
-  "exactHead": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
+  "exactHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
@@ -33,11 +33,11 @@
     },
     {
       "path": "lib/meetings/snapshot.ts",
-      "sha256": "987f58dc1cee6b81dd3ef922eaa11073b02e544dea0ff6ff060589bab46495c8"
+      "sha256": "98d6e87e5947b593d2655c86c344d4fe10e3e3346d34ab540edb5fec2d410a8a"
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
-      "sha256": "50e60ae9120ff9969af77da3a934e82d3c839afe3fff5448eda23148455508c8"
+      "sha256": "a379bc54ec33911e37e5b45132dcb18ed0b951053f8e77320a5085014c43eed9"
     },
     {
       "path": "data/states/az/meetings/notice-summaries.json",
@@ -133,7 +133,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "1f3b90f9853fdeba3fc9708571bc50bb5794f4d2d05f92f91084f6ab2cafd12e",
+      "payloadSha256": "f4c8f8c97565faf3fb12d8b8ace39c6876e79d1496f549ef42656097613c31f8",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e07552ce30c0d19d11d12a65f7e5def6fe1ece8225b9b6a6e7bdd666bb13aff4",
+      "payloadSha256": "cc82387bf2dc88daf0976e51859bd07d4f4a5a70d575adf8b5452516f608dfb2",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -407,11 +407,11 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "We have not yet acquired the agenda for that Pima Community College Governing Board meeting. We hold the link their calendar gave and not the document behind it. We are still looking for it."
         },
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "We have not yet acquired the agenda for that Pima Community College Governing Board meeting. We hold the link their calendar gave and not the document behind it. We are still looking for it."
         },
         {
           "whose": "OURS",
@@ -426,13 +426,13 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 5,
-        "calendarListingsHeldForThisBody": 7,
-        "meetingsHeldForThisBody": 7,
+        "calendarListingsHeldForThisBody": 12,
+        "meetingsHeldForThisBody": 12,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
         "sittingsThatLocalDay": 2,
-        "agendaDocumentsForThatMeeting": 2,
+        "agendaDocumentsForThatMeeting": 0,
         "publisherPublicationObservationsForThatMeeting": 0,
         "minutesSummaryRecordsReturned": 0,
         "noticeSummaryRecordsReturned": 0,
@@ -440,12 +440,12 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "51bdf1f3050ccb3dffc7968847be818f2013ad0f36f4498198151aed1a63f551",
+      "payloadSha256": "51e9957e12be04be65473d672da7609dd0301e64f9773815336222a05119bb1d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 10,
-      "traceRecordCount": 10,
+      "actualRecordCount": 8,
+      "traceRecordCount": 8,
       "status": "PROVEN"
     },
     {
@@ -597,7 +597,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "3711b71f8adb2062201d1e0ee96a5a795489ae0ba92ab0bf1ca604cbb5181039",
+      "payloadSha256": "80fc4543c14015c576454994c03fa96c0e7a50ab23752a6fdad3c2367d1b5d79",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -782,7 +782,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f66bc811631d4090c5f569687eaa2c9ae8015d3a743fb1f7caaa3ada6f311755",
+      "payloadSha256": "a03de23adbe2cc13e4a979620c47f4147c0cb04bcc9f74eac60b6a2a25822d8f",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -967,7 +967,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e92a01c492e42e43407f16a20a2e985abfd76dfa09a51e0beddfef8e43fdf3b4",
+      "payloadSha256": "fefbd76a95a6c2a5dfdf20779fa32b0985f2cfad7de3d5b6b4c93f7f47f3334b",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1152,7 +1152,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "06c79d15d4b748b3947562f069372b0ecf80790ee13ee9f7ba97c9ef8da6b09d",
+      "payloadSha256": "be6a1ea6ebf3a438fbdb61c8a477323045e803843e858356cee6b19cb88c4584",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1365,7 +1365,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "00693cb4011a2a3082c97b065d42d3a7b8ce4c15fe9216de7906d9502266d215",
+      "payloadSha256": "ba904c837fc49802faf671b629554eaefe02dbf26af7bad1206e1aa77fb2e3a4",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1578,7 +1578,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "8137e75f635b1cc45324312d4339418f83a4ca1030bd10930726cfd68c312e03",
+      "payloadSha256": "d196c18d416c278d767473ec07db4ffc2001e5c3e9c1a5a1e1b65de1d68c551c",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1724,7 +1724,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "658d19ac42d61939c2c1fb1488d9a29a57f356c7ec0279e4a3325d07f65967e3",
+      "payloadSha256": "2fe4caad6aa8d8f86b5ffc4dcb8bd93c5d50db28e0a10f6e0373a931e6aac2e5",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1937,7 +1937,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "5c585acbea5073da5a143ceb942d2680b8d1c0f6cb6fd64b9e2facef2bea4481",
+      "payloadSha256": "60ab39c2545b003cac4998628a02ef57611886b1695c080246dee2d7a44af2b7",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2114,7 +2114,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d50ebb7397128b212cdf5a6fe3cf8841124cc6dae5ecd2888a870245420a2e9a",
+      "payloadSha256": "91d84926504ba79c4e9b932e59e9654e2f985423c1d1a65fd199d0c90b22061d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2267,7 +2267,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "147c4c0f95df75a298ac3fb5f626784abaa214edb2936f27d2fef5a72bff2a04",
+      "payloadSha256": "4c46936cbea60d77f6793d5a4cfae9205374baf62a7cf768ba12ee11a92cf2d3",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2451,7 +2451,7 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We have not yet acquired the agenda for that Tucson Unified School District Governing Board meeting. We are still looking for it."
+          "statement": "The link we hold for that meeting is Tucson Unified School District Governing Board's agenda portal rather than the agenda itself."
         }
       ],
       "denominators": {
@@ -2462,13 +2462,13 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 5,
-        "calendarListingsHeldForThisBody": 18,
-        "meetingsHeldForThisBody": 18,
+        "calendarListingsHeldForThisBody": 23,
+        "meetingsHeldForThisBody": 23,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 1,
         "uniqueMeetingCountUnresolvedGroups": 0,
         "sittingsThatLocalDay": 1,
-        "agendaDocumentsForThatMeeting": 0,
+        "agendaDocumentsForThatMeeting": 1,
         "publisherPublicationObservationsForThatMeeting": 0,
         "minutesSummaryRecordsReturned": 0,
         "noticeSummaryRecordsReturned": 0,
@@ -2476,12 +2476,12 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "a4d6a0e637f785ccbb748a6be875f4625fda0286a33ccd37effeac0734a00af2",
+      "payloadSha256": "73f6dd7225fa5fc749d96c98b80e853c29610d5a3039fcab63a78a473b29fbdc",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 13,
-      "traceRecordCount": 13,
+      "actualRecordCount": 15,
+      "traceRecordCount": 15,
       "status": "PROVEN"
     },
     {
@@ -2685,7 +2685,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "8df452cda1ec849d504b76a1fb12e39329ed12b2b4f21752b3f627c4352955b9",
+      "payloadSha256": "420e872fa0981d8c9db25899730f37ff41654101707daea1761e4210e4e4ae33",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2893,7 +2893,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0dd209bd855d8c46deaa81906c4b90be65e8c2c1ffe2684a469532af56374ac4",
+      "payloadSha256": "ee2eaf3484ed079f56a0298c333b25584e2de13baabc70856eafe1a74f8f0d6d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3074,7 +3074,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0f13e559d0db6cbd8ac2c1ffe9db7417b8d5f4a31b6f3d9a1441194d03d0896b",
+      "payloadSha256": "462ec1ac826e9d87408f541688aa78eb8f9036d4cb0f6052922b4abe2b270fcb",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3255,7 +3255,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "629be471c416c55743ee068c9dcb4ff0c8ce6162d2ce2cd1c3636570c1f79072",
+      "payloadSha256": "369e9009afc55cd9d45ce2b22a8d090b795a33bd5eb1a33e0b0a991517f12868",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3383,11 +3383,11 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting. We are still looking for it."
         },
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "We have not yet acquired the agenda for that Morris County Board Of County Commissioners meeting. We are still looking for it."
         }
       ],
       "denominators": {
@@ -3404,7 +3404,7 @@
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
         "sittingsThatLocalDay": 2,
-        "agendaDocumentsForThatMeeting": 2,
+        "agendaDocumentsForThatMeeting": 0,
         "publisherPublicationObservationsForThatMeeting": 0,
         "minutesSummaryRecordsReturned": 0,
         "noticeSummaryRecordsReturned": 0,
@@ -3412,12 +3412,12 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "80e029b13a45971342b6e5ae1d7a27b07a90af48d7ef1f283d91f7023f4bdac1",
+      "payloadSha256": "b910a13c00bf6e43b5aa7f564e4b25ae63231e8a02dd51b976a804bb81fefa97",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 15,
-      "traceRecordCount": 15,
+      "actualRecordCount": 13,
+      "traceRecordCount": 13,
       "status": "PROVEN"
     },
     {
@@ -3565,7 +3565,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "90b75cb9c32511d9a39cd4f374c8028d500a265d0eb5e863ef56508f0d266891",
+      "payloadSha256": "ecfd185f3d671c07ee3bdf87d3dc961c6f3044f4ac54d88c12d29b1afd50e787",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

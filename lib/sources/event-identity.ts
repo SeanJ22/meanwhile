@@ -77,6 +77,116 @@ export function weakEventIdentity(fields: WeakEventIdentityFields): string {
 }
 
 /**
+ * **ONE SITTING OF A RECURRING SERIES IS ONE RECORD.** (2026-09-23.)
+ *
+ * ## What was wrong
+ *
+ * An iCalendar feed publishes a recurring board as ONE `UID` carried by
+ * several `VEVENT`s: the series master (`DTSTART` plus an `RRULE`) and one
+ * override per edited sitting, each naming the sitting it replaces with a
+ * `RECURRENCE-ID`. `ical` keyed a meeting on the `UID` alone, so every sitting
+ * of a series competed for one id, the first one in feed order won, and the
+ * rest were counted as exact duplicates. Google Calendar serves its `.ics`
+ * events in a different order on every request, so the one record changed
+ * sitting from read to read. Production, 2026-09-14 to 09-23: the Town of
+ * Bradford Conservation Commission's record moved its start 51 times across
+ * five sittings, and Warner's Zoning Board record 39 times across three,
+ * alternating between a held meeting and a cancelled one. A reader saw one
+ * sitting at a time, never all of them.
+ *
+ * ## What identity is instead
+ *
+ * RFC 5545's own identity for one instance: the `UID` plus the instance's
+ * ORIGINAL start (its recurrence slot). An override names its slot in
+ * `RECURRENCE-ID`; the series master's own `DTSTART` is the slot of its first
+ * instance. So a sitting keeps its id when the town moves it to another
+ * night, and that move reads as a change of the record, not a new record.
+ *
+ * The slot is written as a UTC instant, `YYYYMMDDTHHMMSSZ`, or as the calendar
+ * date `YYYYMMDD` for an all-day series, after the `UID` and a `/`. Nothing in
+ * this repository splits a meeting id on `/`, and a UTC stamp does not change
+ * when a feed respells the same instant in another `TZID`.
+ *
+ * A non-recurring event's id is unchanged: `ical:<slug>:<UID>`, exactly as
+ * before.
+ */
+export const OCCURRENCE_SEPARATOR = "/";
+
+/** A UTC instant `YYYYMMDDTHHMMSSZ`, or a calendar date `YYYYMMDD`. */
+const OCCURRENCE_STAMP = /^\d{8}(?:T\d{6}Z)?$/;
+
+/** `2026-09-15T23:00:00.000Z` → `20260915T230000Z`, or null when unparseable. */
+export function occurrenceStampFromInstant(iso: string): string | null {
+  const at = Date.parse(iso);
+  if (!Number.isFinite(at)) return null;
+  return new Date(at).toISOString().replace(/\.\d{3}Z$/, "Z").replace(/[-:]/g, "");
+}
+
+/** The instant a timed slot stamp names, or null for a date stamp or any other text. */
+export function occurrenceStampInstant(stamp: string): string | null {
+  const m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/.exec(stamp);
+  return m ? `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}.000Z` : null;
+}
+
+/** The id of one occurrence of the series whose id is `seriesId`. */
+export function occurrenceId(seriesId: string, stamp: string): string {
+  if (!OCCURRENCE_STAMP.test(stamp)) {
+    throw new Error(`OCCURRENCE_STAMP_INVALID:${stamp}`);
+  }
+  return `${seriesId}${OCCURRENCE_SEPARATOR}${stamp}`;
+}
+
+/**
+ * The series id and slot an occurrence id was built from, or null for an id of
+ * any other shape.
+ */
+export function occurrenceParts(
+  id: string,
+): { readonly seriesId: string; readonly stamp: string } | null {
+  const at = id.lastIndexOf(OCCURRENCE_SEPARATOR);
+  if (at <= 0) return null;
+  const stamp = id.slice(at + 1);
+  if (!OCCURRENCE_STAMP.test(stamp)) return null;
+  return { seriesId: id.slice(0, at), stamp };
+}
+
+/** The part of a meeting a supersession claim is checked against. */
+export interface OccurrenceSupersessionFacts {
+  readonly id: string;
+  readonly bodyId?: string | null;
+  readonly startsAt: string;
+}
+
+/**
+ * **WHEN AN OCCURRENCE RECORD REPLACES THE SERIES RECORD IT WAS HIDING IN.**
+ *
+ * Every series that lived under one `UID`-only id before 2026-09-23 has such a
+ * record in its last promoted version. On the first read under occurrence
+ * identity that id is no longer produced. Carrying it forward as an
+ * unexplained disappearance would show one sitting twice, under the old id and
+ * the new, until it aged out of the window.
+ *
+ * The old record is replaced only when the replacement holds the same fact:
+ * an occurrence of the same series (`<old id>/<slot>`), for the same body,
+ * that is either the same sitting (same start) or the same instance (its slot
+ * is the old record's start, and the town has since moved it). Anything else
+ * is not a replacement, and the old record takes the ordinary path.
+ */
+export function supersedesSeriesRecord(
+  prior: OccurrenceSupersessionFacts,
+  successor: OccurrenceSupersessionFacts,
+): boolean {
+  const parts = occurrenceParts(successor.id);
+  if (!parts || parts.seriesId !== prior.id) return false;
+  if ((successor.bodyId ?? null) !== (prior.bodyId ?? null)) return false;
+  const before = Date.parse(prior.startsAt);
+  if (!Number.isFinite(before)) return false;
+  if (Date.parse(successor.startsAt) === before) return true;
+  const slot = occurrenceStampInstant(parts.stamp);
+  return slot !== null && Date.parse(slot) === before;
+}
+
+/**
  * **IDENTITY FOR A SITTING TWO ROUTES NUMBER DIFFERENTLY.** (2026-08-28.)
  *
  * ## Why the publisher's own id cannot be the key here

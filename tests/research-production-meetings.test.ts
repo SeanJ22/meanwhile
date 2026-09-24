@@ -16,6 +16,7 @@ import { projectFactChains, collectFactChains } from "../lib/control-plane/promo
 import { readApprovedResearchMeetingPartition, approvedResearchMeetingPartition, RESEARCH_MEETING_ACTIVATION } from "../lib/control-plane/promotion/production-meetings.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 import type { FactFreshnessReading } from "../lib/control-plane/promotion/fact-freshness.ts";
 
@@ -108,7 +109,14 @@ test("routine acquisition bytes reach independent workers, approved facts, the s
       return { snapshot: current!, activationReceipt: scoped };
     } });
   assert.equal(outcomes[0].outcome.candidate.receipt?.decision, "GOOD", JSON.stringify(outcomes[0].outcome.candidate.receipt));
-  assert.ok(outcomes[0].outcome.promoted); assert.ok(outcomes[0].outcome.readerReadback);
+  assert.ok(outcomes[0].outcome.promoted);
+  // The partition door leaves the Reader readback to the pass's one aggregate
+  // meetings read, which records the typed receipt on the promoted version.
+  assert.equal(outcomes[0].outcome.readerReadback, null);
+  const [readback] = await repairMeetingReaderProjectionReadbacks(data, [partition], now(), "a".repeat(40));
+  assert.ok(readback?.ok && readback.value.kind === "RECORDED", JSON.stringify(readback));
+  assert.equal(readback.value.receipt?.versionId, outcomes[0].outcome.promoted.versionId);
+  assert.equal(readback.value.receipt?.status, "PASS", readback.value.receipt?.detail);
   assert.equal((outcomes[0].candidate.readModel as typeof approved.snapshot).meetings.length, 19, "Publication preserves the complete routine partition, including inherited LKG authority.");
   assert.ok(outcomes[0].candidate.dependentChecks.some(check => check.consumer === RESEARCH_MEETING_ACTIVATION && check.passed));
   const failed = await promoteMeetingPartitions({ store: data, partitions: [partition], meetings: [], agendaDocuments: [],

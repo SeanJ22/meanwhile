@@ -160,6 +160,9 @@ const RUNTIME_OWNED = [
   /* A recorded expiring absence (RULING 52/53) is runtime state a scout produced,
      not a corpus signal; a registration pass must never reset it. */
   "absentUntil",
+  /* The owner's dispatch materialized this row (MW-028). A provider that
+     re-emits it without the mark must not erase the mark that keeps it owed. */
+  "materializedBy",
 ] as const;
 
 /**
@@ -258,6 +261,7 @@ export async function syncObligations(
       openOccurrenceId: held.openOccurrenceId,
       lastWorkedAt: held.lastWorkedAt,
       absentUntil: held.absentUntil,
+      ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       updatedAt: now,
     };
 
@@ -414,6 +418,55 @@ export function supersededRetirementReason(providerId: string): string {
 }
 
 /**
+ * The one provider that owns a row's namespace this cycle and read cleanly,
+ * or the named reason there is none. Both retirement planners ask this.
+ */
+function cleanOwnerOf(
+  corpus: readonly { readonly providerId: string; readonly obligationId: string }[],
+  providers: readonly ProviderReading[],
+): (id: string) => { readonly providerId: string } | { readonly code: SupersededHold; readonly why: string } {
+  const owners = new Map<string, Set<string>>();
+  for (const u of corpus) {
+    const ns = obligationNamespace(u.obligationId);
+    if (ns === null) continue;
+    const set = owners.get(ns) ?? new Set<string>();
+    set.add(u.providerId);
+    owners.set(ns, set);
+  }
+  const reading = new Map(providers.map((p) => [p.providerId, p]));
+  return (id) => {
+    const ns = obligationNamespace(id);
+    const owner = ns === null ? undefined : owners.get(ns);
+    if (ns === null || owner === undefined) {
+      return {
+        code: "NO_PROVIDER_NAMESPACE",
+        why: `no provider emitted ${ns ?? "a standing namespace for this id"} this cycle, so nothing can say it ended`,
+      };
+    }
+    if (owner.size !== 1) {
+      return {
+        code: "AMBIGUOUS_NAMESPACE",
+        why: `${ns} is emitted by ${[...owner].sort().join(" and ")}, so no one provider owns this row`,
+      };
+    }
+    const providerId = [...owner][0];
+    const p = reading.get(providerId);
+    if (p === undefined || p.readFailure !== null || p.emptyReason !== null || p.units === 0) {
+      return {
+        code: "PROVIDER_NOT_READ_CLEANLY",
+        why:
+          `provider '${providerId}' did not read cleanly this cycle (` +
+          (p === undefined
+            ? "it reported nothing"
+            : p.readFailure ?? p.emptyReason ?? "it produced no units") +
+          "), so its missing rows are not evidence that they ended",
+      };
+    }
+    return { providerId };
+  };
+}
+
+/**
  * Which rows outside the corpus to retire, and which to hold back and why.
  * PURE: the caller passes the rows `syncObligations` read (`outside`), the
  * cycle's FULL, unfiltered registry units, and the provider reports.
@@ -426,58 +479,22 @@ export function planSupersededRetirement(input: {
 }): SupersededRetirementPlan {
   const bound = input.bound ?? SUPERSEDED_RETIREMENT_BOUND;
   const inCorpus = new Set(input.corpus.map((u) => u.obligationId));
-  const owners = new Map<string, Set<string>>();
   const unitsBy = new Map<string, number>();
-  for (const u of input.corpus) {
-    unitsBy.set(u.providerId, (unitsBy.get(u.providerId) ?? 0) + 1);
-    const ns = obligationNamespace(u.obligationId);
-    if (ns === null) continue;
-    const set = owners.get(ns) ?? new Set<string>();
-    set.add(u.providerId);
-    owners.set(ns, set);
-  }
-  const reading = new Map(input.providers.map((p) => [p.providerId, p]));
+  for (const u of input.corpus) unitsBy.set(u.providerId, (unitsBy.get(u.providerId) ?? 0) + 1);
+  const ownerOf = cleanOwnerOf(input.corpus, input.providers);
 
   const candidates = new Map<string, string[]>();
   const heldBack: SupersededRetirementPlan["heldBack"][number][] = [];
   for (const row of input.outside) {
     if (!row.active || inCorpus.has(row.id)) continue;
-    const ns = obligationNamespace(row.id);
-    const owner = ns === null ? undefined : owners.get(ns);
-    if (ns === null || owner === undefined) {
-      heldBack.push({
-        obligationId: row.id,
-        code: "NO_PROVIDER_NAMESPACE",
-        why: `no provider emitted ${ns ?? "a standing namespace for this id"} this cycle, so nothing can say it ended`,
-      });
+    const owner = ownerOf(row.id);
+    if ("code" in owner) {
+      heldBack.push({ obligationId: row.id, ...owner });
       continue;
     }
-    if (owner.size !== 1) {
-      heldBack.push({
-        obligationId: row.id,
-        code: "AMBIGUOUS_NAMESPACE",
-        why: `${ns} is emitted by ${[...owner].sort().join(" and ")}, so no one provider owns this row`,
-      });
-      continue;
-    }
-    const providerId = [...owner][0];
-    const p = reading.get(providerId);
-    if (p === undefined || p.readFailure !== null || p.emptyReason !== null || p.units === 0) {
-      heldBack.push({
-        obligationId: row.id,
-        code: "PROVIDER_NOT_READ_CLEANLY",
-        why:
-          `provider '${providerId}' did not read cleanly this cycle (` +
-          (p === undefined
-            ? "it reported nothing"
-            : p.readFailure ?? p.emptyReason ?? "it produced no units") +
-          "), so its missing rows are not evidence that they ended",
-      });
-      continue;
-    }
-    const list = candidates.get(providerId) ?? [];
+    const list = candidates.get(owner.providerId) ?? [];
     list.push(row.id);
-    candidates.set(providerId, list);
+    candidates.set(owner.providerId, list);
   }
 
   const retire: SupersededRetirementPlan["retire"][number][] = [];
@@ -501,6 +518,96 @@ export function planSupersededRetirement(input: {
   retire.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
   heldBack.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
   return { retire, heldBack };
+}
+
+/**
+ * **A NEED THAT MOVED RETIRES NAMING WHERE IT NOW LIVES.** (2026-09-23.)
+ *
+ * Since 902f5c50 the local-jurisdictions provider opens no MEETINGS source, so
+ * no freshness clock carries a jurisdiction's meetings discovery, and the old
+ * `freshness:jurisdiction:<id>#meetings-N` rows sit outside the corpus. On
+ * 2026-09-23, 484 were still active. That was more than
+ * `SUPERSEDED_RETIREMENT_BOUND` allows, so `planSupersededRetirement` held
+ * them all. They are not superseded: the need did not end. The committed gap
+ * ledger now records it (`meetingsDiscovery.needs`).
+ *
+ * This planner owns every such row outside the corpus, and
+ * `planSupersededRetirement` is given none of them. A row is RETIRED, with a
+ * reason naming the ledger entry, only when all of these hold:
+ *
+ * - it is active;
+ * - the provider that owns `freshness:jurisdiction:` read cleanly this cycle;
+ * - the ledger could be read, and lists the row's jurisdiction.
+ *
+ * Every other such row stays active and is held back by name. A retirement
+ * discovers nothing and says so: no scheduler walks the ledger's needs yet.
+ * If a provider emits the id again, `syncObligations` writes the row live.
+ */
+const JURISDICTION_MEETINGS_OBLIGATION = /^freshness:jurisdiction:([^#]+)#meetings-\d+$/;
+
+/** The jurisdiction a `freshness:jurisdiction:<id>#meetings-N` row was owed for; null for any other id. */
+export function jurisdictionMeetingsSubject(id: string): string | null {
+  return JURISDICTION_MEETINGS_OBLIGATION.exec(id)?.[1] ?? null;
+}
+
+export type MovedHold = SupersededHold | "LEDGER_UNREADABLE" | "NOT_RECORDED_IN_LEDGER";
+
+/** Why a jurisdiction meetings row was retired, naming the ledger entry that now records the need. */
+export function movedToGapLedgerReason(ledgerPath: string, jurisdictionId: string): string {
+  return (
+    `MOVED TO THE GAP LEDGER: this jurisdiction's meetings discovery is still owed. ${ledgerPath} records it ` +
+    `(meetingsDiscovery.needs, ${jurisdictionId}), and no freshness clock carries it. Nothing was discovered`
+  );
+}
+
+export function planMovedToGapLedger(input: {
+  readonly outside: readonly StandingObligation[];
+  readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
+  readonly providers: readonly ProviderReading[];
+  /** The committed ledger's path, and the jurisdictions it lists or why it could not be read. */
+  readonly ledger: {
+    readonly path: string;
+    readonly recorded: { readonly jurisdictionIds: ReadonlySet<string> } | { readonly unreadable: string };
+  };
+}): {
+  /** Every row this planner owns. None of them is given to `planSupersededRetirement`. */
+  readonly owned: ReadonlySet<string>;
+  readonly retire: readonly RetirementItem[];
+  readonly heldBack: readonly { readonly obligationId: string; readonly code: MovedHold; readonly why: string }[];
+} {
+  const inCorpus = new Set(input.corpus.map((u) => u.obligationId));
+  const ownerOf = cleanOwnerOf(input.corpus, input.providers);
+  const { path, recorded } = input.ledger;
+  const owned = new Set<string>();
+  const retire: RetirementItem[] = [];
+  const heldBack: { obligationId: string; code: MovedHold; why: string }[] = [];
+  for (const row of input.outside) {
+    const jurisdictionId = jurisdictionMeetingsSubject(row.id);
+    if (jurisdictionId === null || inCorpus.has(row.id)) continue;
+    owned.add(row.id);
+    if (!row.active) continue;
+    const owner = ownerOf(row.id);
+    if ("code" in owner) {
+      heldBack.push({ obligationId: row.id, ...owner });
+    } else if ("unreadable" in recorded) {
+      heldBack.push({
+        obligationId: row.id,
+        code: "LEDGER_UNREADABLE",
+        why: `the gap ledger could not be read (${recorded.unreadable}), so nothing shows this need is recorded`,
+      });
+    } else if (!recorded.jurisdictionIds.has(jurisdictionId)) {
+      heldBack.push({
+        obligationId: row.id,
+        code: "NOT_RECORDED_IN_LEDGER",
+        why: `${path} does not list ${jurisdictionId}, so retiring this row would drop a need nothing records`,
+      });
+    } else {
+      retire.push({ obligationId: row.id, reason: movedToGapLedgerReason(path, jurisdictionId) });
+    }
+  }
+  retire.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
+  heldBack.sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
+  return { owned, retire, heldBack };
 }
 
 /**
@@ -536,25 +643,44 @@ export function planRetiredResidue(outside: readonly StandingObligation[]): read
  * are never written. An interruption is safe: the row stays active until the
  * last step, so the next cycle plans it again and finds the earlier step
  * already done. One row's throw is isolated and named, never the cycle's.
+ *
+ * **A cycle spends a bounded share of its wall here.** (2026-09-23.) Each row
+ * costs three store round trips, and five more for each occurrence it closes;
+ * 43 rows took 34 s in production, and 484 would take minutes out of a cycle
+ * with a 15-minute wall. The caller's
+ * `budget` is asked before each row; once it is spent, the rest are returned
+ * as `deferred`, untouched, and planned again next cycle. Items are taken in
+ * the caller's order. This module reads no clock: the caller owns the budget.
  */
 export async function settleRetirements(
   repos: ControlPlaneRepositories,
-  input: { readonly items: readonly RetirementItem[]; readonly now: string },
+  input: {
+    readonly items: readonly RetirementItem[];
+    readonly now: string;
+    readonly budget?: { readonly spent: () => boolean };
+  },
 ): Promise<{
   readonly retired: readonly string[];
   readonly occurrencesClosed: readonly string[];
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
+  readonly deferred: readonly string[];
 }> {
   const retired: string[] = [];
   const occurrencesClosed: string[] = [];
   const failed: { obligationId: string; why: string }[] = [];
+  const deferred: string[] = [];
   for (const { obligationId, reason } of input.items) {
+    if (deferred.length > 0 || input.budget?.spent() === true) {
+      deferred.push(obligationId);
+      continue;
+    }
     try {
       const held = await repos.obligations.read(obligationId);
       if (held === null) continue;
 
       /* Every open occurrence the row owns, not only the one it points at: on
          2026-09-23 one superseded row held an occurrence its pointer had lost. */
+      let closedAny = false;
       for (const occurrence of await repos.occurrences.listWhere(["obligationId"], obligationId)) {
         if (occurrence.value.closedAt !== null) continue;
         await closeOccurrence(repos, {
@@ -564,9 +690,11 @@ export async function settleRetirements(
           now: input.now,
         });
         occurrencesClosed.push(occurrence.id);
+        closedAny = true;
       }
 
-      const row = await repos.obligations.mustRead(obligationId);
+      /* Closing an occurrence rewrote the row; otherwise the first read is still current. */
+      const row = closedAny ? await repos.obligations.mustRead(obligationId) : held;
       if (row.value.active) {
         await repos.obligations.compareAndSet(
           row.id,
@@ -595,7 +723,7 @@ export async function settleRetirements(
       failed.push({ obligationId, why: error instanceof Error ? error.message : String(error) });
     }
   }
-  return { retired, occurrencesClosed, failed };
+  return { retired, occurrencesClosed, failed, deferred };
 }
 
 /**

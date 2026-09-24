@@ -137,7 +137,16 @@ test("search API spend is its own line beside model spend, per host, and an unpr
   const older = providerRows({ month: { ...withSearch, bySearchSource: null }, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
   assert.match(older.how, /Not broken down by provider in this snapshot\./);
   // The snapshot unread: no figure at all.
-  assert.equal(providerRows({ month: null, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")?.amount, null);
+  const unread = providerRows({ month: null, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
+  assert.equal(unread.amount, null);
+
+  // Whatever the ledger says, the line states what a request costs and the limits the runner starts with,
+  // and that the runner's own setting and the day's count are not read here.
+  for (const row of [line, none, older, unread]) {
+    assert.match(row.how, /Prices: Brave Search \$0\.005 a request \(its pricing page, read Sep 23, 2026\); Exa \$0\.007 a request \(its pricing page, read Sep 23, 2026\)\./);
+    assert.match(row.how, /The runner starts with 50 requests a cycle and 200 a day across both — at most \$1\.40 a day\./);
+    assert.match(row.how, /It may be set to other limits, and it keeps the day's count in its budget ledger; this page reads neither\.$/);
+  }
 
   assert.equal(modelProviderWords(MONTH), "Every paid model call so far went to one provider: Anthropic.");
 });

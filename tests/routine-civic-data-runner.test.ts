@@ -23,7 +23,6 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-con
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate } from "../lib/civic-data/types.ts";
-import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { SOURCE_AUTHORITIES, authorityFor } from "../lib/civic-data/source-authority.ts";
 import {
   ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,
@@ -32,6 +31,7 @@ import {
   parseRoutineRunnerReceipt,
   routineSupervisorOuterEvidence,
   successfulRoutineRunnerReceiptIssue,
+  type DurableReceiptStore,
 } from "../lib/civic-data/runner-receipt.ts";
 import {
   appendRoutineCivicDataSupervisorDigest,
@@ -1487,9 +1487,11 @@ test("a proven durable source outcome survives a later child execution failure",
 
 test("nonzero child receipts must prove a durable held candidate and cannot claim PROMOTED", async () => {
   const task = ROUTINE_SOURCE_TASKS[0];
-  const noDurable: CivicDataReadStore = {
+  const noDurable: DurableReceiptStore = {
     readCandidate: async () => null,
+    readCandidateSummary: async () => null,
     readPromotion: async () => null,
+    readPromotionIdentity: async () => null,
   };
   const held = {
     source: "fec-funding",
@@ -1510,4 +1512,79 @@ test("nonzero child receipts must prove a durable held candidate and cannot clai
     promotedVersion: held.candidateId,
     lastKnownGoodVersion: held.candidateId,
   }, task, noDurable, "HELD") ?? "", /nonzero child claimed a successful promotion/);
+});
+
+test("the durable receipt check proves exactly one pointer through the full proof and reads nothing else whole", async () => {
+  // Measured 2026-09-23: the whole-row reads here moved 66.9 MB for one held
+  // NJ roll-call settle (the refused candidate's envelope plus the LKG
+  // pointer's payload twice), against a 67.11 MB Neon response cap.
+  class CountingStore extends MemoryRoutineDataStore {
+    readonly whole: string[] = [];
+
+    override async readCandidate(candidateId: string) {
+      this.whole.push(`candidate:${candidateId}`);
+      return super.readCandidate(candidateId);
+    }
+
+    override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
+      this.whole.push(`promotion:${recordClass}:${scope}`);
+      return super.readPromotion<T>(recordClass, scope);
+    }
+  }
+  const task = ROUTINE_SOURCE_TASKS[0];
+  const store = new CountingStore();
+  const good = sourceGoodCandidate();
+  const promoted = await processRegisteredRoutineCandidate(store, task.id, good, T0);
+  assert.equal(promoted.candidate.state, "PROMOTED");
+  const pointer = `promotion:${task.recordClass}:${task.scope}`;
+
+  store.whole.length = 0;
+  const success = {
+    source: task.id,
+    candidateId: good.id,
+    acquisitionSucceeded: true,
+    state: "PROMOTED" as const,
+    decision: "GOOD" as const,
+    promotedVersion: good.id,
+    lastKnownGoodVersion: good.id,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  };
+  assert.equal(await durableRoutineRunnerReceiptIssue(success, task, store, "SUCCESS"), null);
+  assert.deepEqual(store.whole, [pointer, `candidate:${good.id}`], "success: the new pointer's proof, once");
+
+  const failure = failedAcquisitionCandidate({
+    sourceId: task.sourceId,
+    recordClass: task.recordClass,
+    scope: task.scope,
+    requestedUrl: task.requestedUrl,
+    attemptedAt: "2026-09-08T13:00:00.000Z",
+    failureDetail: "The official publisher was unavailable.",
+    parserVersion: task.parserVersion,
+  });
+  const held = await processRegisteredRoutineCandidate(store, task.id, failure, failure.retrieval.retrievedAt);
+  assert.equal(held.candidate.state, "SOURCE_BLOCKED");
+  store.whole.length = 0;
+  assert.equal(await durableRoutineRunnerReceiptIssue({
+    source: task.id,
+    candidateId: failure.id,
+    acquisitionSucceeded: false,
+    state: "SOURCE_BLOCKED",
+    decision: held.candidate.receipt?.decision ?? null,
+    promotedVersion: null,
+    lastKnownGoodVersion: good.id,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  }, task, store, "HELD"), null);
+  assert.deepEqual(store.whole, [pointer, `candidate:${good.id}`], "held: the unchanged LKG's proof, once; never the refused envelope");
+
+  // The proof is still whole: a pointer whose payload no longer matches its
+  // candidate's read model is refused on both paths.
+  class TamperedStore extends CountingStore {
+    override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
+      const row = await super.readPromotion<T>(recordClass, scope);
+      return row === null ? null : { ...row, payload: { tampered: true } as T };
+    }
+  }
+  const tampered = new TamperedStore();
+  await processRegisteredRoutineCandidate(tampered, task.id, good, T0);
+  assert.match(await durableRoutineRunnerReceiptIssue(success, task, tampered, "SUCCESS") ?? "", /does not prove the reported GOOD candidate/);
 });

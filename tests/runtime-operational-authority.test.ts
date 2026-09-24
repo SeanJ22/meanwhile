@@ -98,7 +98,8 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
   const freshness = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   assert.match(freshness, /join\("\.runtime", "ops", "runner-relaunch-proof\.json"\)/);
   assert.doesNotMatch(freshness, /join\("data", "ops", "runner-relaunch-proof\.json"\)/);
-  assert.ok(freshness.indexOf("appendFreshnessCycleDigest(repos") < freshness.lastIndexOf("writeFileSync(path"));
+  /* The canonical append precedes the cycle's local record; since 2026-09-23 that record is written through writeCycleRecord. */
+  assert.ok(freshness.indexOf("appendFreshnessCycleDigest(repos") < freshness.lastIndexOf("writeCycleRecord(runRecord)"));
   const executableFreshness = freshness
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/^\s*\/\/.*$/gm, "")

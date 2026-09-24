@@ -107,6 +107,7 @@ import type {
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 
@@ -403,12 +404,58 @@ export interface AppendOnlyRepository<T> {
    * reject, loudly). A store/transport error THROWS and is never an empty list.
    */
   readWhere(key: string, path: readonly string[], value: string): Promise<readonly T[]>;
+  /**
+   * `readWhere`'s newest `limit` matches, newest first, each narrowed to
+   * `projection` by the store before it leaves the store: neither older history
+   * nor a dropped field crosses the wire. `limit` bounds the response. A caller
+   * that needs a few fields of recent records reads them here rather than every
+   * whole record the log has ever held. The records are narrowed, so they are
+   * `unknown`: a caller validates what it reads, as it would a whole record.
+   */
+  readRecentWhere(
+    key: string,
+    path: readonly string[],
+    value: string,
+    limit: number,
+    projection: RecordProjection,
+  ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
   readRecent(key: string, limit: number): Promise<readonly T[]>;
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
+}
+
+/**
+ * The parts of a record a narrowed read returns: a top-level key kept whole
+ * (`true`), or an object kept with only the named keys of its own. Every other
+ * key is dropped. A kept key the record does not hold stays absent, and a kept
+ * object that is not an object is returned as it is, so a caller validating the
+ * record still sees exactly what was written there.
+ */
+export type RecordProjection = Readonly<Record<string, true | readonly string[]>>;
+
+/**
+ * `projection` applied in process: the file and memory providers' mirror of the
+ * Postgres projection `pgAppendOnlyRepository.readRecentWhere` builds, so every
+ * provider returns the same narrowed record.
+ */
+export function projectRecord(record: unknown, projection: RecordProjection): unknown {
+  if (record === null || typeof record !== "object" || Array.isArray(record)) return record;
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(record as Record<string, unknown>)) {
+    if (!Object.prototype.hasOwnProperty.call(projection, key)) continue;
+    const keep = projection[key];
+    if (keep === true || value === null || typeof value !== "object" || Array.isArray(value)) {
+      out[key] = value;
+      continue;
+    }
+    out[key] = Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).filter(([inner]) => keep.includes(inner)),
+    );
+  }
+  return out;
 }
 
 /**
@@ -694,6 +741,12 @@ export interface ControlPlaneRepositories {
    */
   readonly adminReceipts: AppendOnlyRepository<ActionReceipt>;
   readonly agentJobs: AppendOnlyRepository<AgentJobRecord>;
+  /**
+   * Every walk of a government's own site for its meeting route, one append
+   * per walk, keyed by jurisdiction id (v12, 2026-09-23). Written only by the
+   * unpaid meetings-discovery executor; a walk is a reading taken at a time.
+   */
+  readonly discoveryAttempts: AppendOnlyRepository<MeetingsDiscoveryAttempt>;
   readonly adminConfig: AggregateRepository<AdminConfig>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;

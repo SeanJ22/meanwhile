@@ -358,6 +358,51 @@ for (const provider of providers) {
     assert.deepEqual(await repos.attempts.listWhere(["routeTaskId"], `rt-${RUN_NAMESPACE}-absent`), []);
   });
 
+  test(`${provider.name}: readRecentWhere is readWhere's newest matches, newest first, each narrowed`, async () => {
+    /*
+     * 2026-09-24. The routine runner's provider-frontier history moved from a
+     * whole-history `readWhere` (428 MB a pass) to this bounded, narrowed read,
+     * so every provider must return the newest matches exactly as `readWhere`
+     * holds them, minus the fields the projection drops. Namespaced like the
+     * other log tests: the Postgres lane keeps every run's rows.
+     */
+    const repos = await provider.open();
+    const key = `digest-${RUN_NAMESPACE}`;
+    const records = [0, 1, 2, 3, 4].map((index) => ({
+      digestId: `d-${RUN_NAMESPACE}-${index}`,
+      headline: `outcome ${index}`,
+      runtimeOutcome: {
+        kind: index === 2 ? "OTHER" : "WANTED",
+        finishedAt: `2026-09-24T00:0${index}:00.000Z`,
+        failures: [{ taskId: `t${index}`, code: "C", detail: null }],
+        readerReadbacks: [{ contractId: `c${index}`, large: "x".repeat(64) }],
+      },
+    }));
+    for (const record of records) {
+      await repos.ownerDigests.append(key, record.digestId, record as never, NOW);
+    }
+    const projection = { digestId: true, runtimeOutcome: ["kind", "finishedAt", "failures", "absentField"] } as const;
+    const narrowed = await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 2, projection);
+    assert.deepEqual(narrowed, [4, 3].map((index) => ({
+      digestId: records[index]!.digestId,
+      runtimeOutcome: {
+        kind: "WANTED",
+        finishedAt: records[index]!.runtimeOutcome.finishedAt,
+        failures: records[index]!.runtimeOutcome.failures,
+      },
+    })), "the newest two matches, newest first, without the dropped fields; a null inside a kept field stays null");
+    assert.deepEqual(
+      (await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 50, projection))
+        .map((record) => (record as { digestId: string }).digestId),
+      (await repos.ownerDigests.readWhere(key, ["runtimeOutcome", "kind"], "WANTED"))
+        .map((record) => (record as unknown as { digestId: string }).digestId)
+        .reverse(),
+      "an unconstraining limit is readWhere reversed: the same matches, no more, no fewer",
+    );
+    assert.deepEqual(await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "ABSENT", 5, projection), []);
+    assert.deepEqual(await repos.ownerDigests.readRecentWhere(key, ["runtimeOutcome", "kind"], "WANTED", 0, projection), []);
+  });
+
   test(`${provider.name}: the nightly door's four logs exist and keep history (schema v5)`, async () => {
     /*
      * RULING 242. A log that is declared in `APPEND_ONLY_LOGS` but absent from
@@ -430,7 +475,7 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
-  assert.equal(BOOTSTRAP_VERSION, 11, "the field manual adds one aggregate (cp_field_manual) after the method-candidate aggregate");
+  assert.equal(BOOTSTRAP_VERSION, 12, "the meetings-discovery attempt log (cp_log_discovery_attempts) follows the field manual aggregate");
   for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
@@ -440,6 +485,17 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
     for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults", "softwareReleaseReviews"] as const) {
       assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
     }
+  }
+});
+
+test("schema v12 declares the meetings-discovery attempt log, and every provider bundle carries it", async () => {
+  const { APPEND_ONLY_LOGS, DECLARED_TABLES } = await import("../lib/control-plane/repository/pg-schema.ts");
+  assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes("discovery_attempts"), "discovery_attempts is not declared");
+  assert.ok(DECLARED_TABLES.includes("cp_log_discovery_attempts"), "cp_log_discovery_attempts is not a declared table");
+  for (const provider of providers) {
+    const repos = await provider.open();
+    assert.equal(typeof repos.discoveryAttempts?.append, "function", `${provider.name} bundle lacks discoveryAttempts`);
+    assert.deepEqual(await repos.discoveryAttempts.readRecent("a-jurisdiction-nothing-walked", 1), [], `${provider.name} answers a walk nobody made`);
   }
 });
 

@@ -51,6 +51,7 @@ import {
   type RosterReaderDisposition,
 } from "../registry/body-rosters.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
+import { CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import { agendaDocumentRepresentation, classifyAgendaPublication, readerAgendaDocuments } from "../ask/agenda-publication.ts";
 import type { AgendaDocumentLike } from "../routing/agenda-search.ts";
 import type { ReaderProofMeetingsExpectedAuthority } from "../meetings/snapshot.ts";
@@ -721,6 +722,12 @@ function eligibility(
     return {
       state: "NOT_READER_ELIGIBLE",
       reason: "This unstamped venue-cache row is a historical adoption/node:test fixture. The permanent venue-resolutions contract requires a finite verifiedAt before a venue may enter Reader authority.",
+    };
+  }
+  if (dataset.family === "registry" && raw.unit === "bodies" && isCensusPlaceholderDivision({ ocdId: string(row.ocdId) })) {
+    return {
+      state: "NOT_READER_ELIGIBLE",
+      reason: "This frozen body sits on a Census placeholder division (LEA 99997, \"No unified school district here\"): land inside no district, where no board meets. It remains held first-seed evidence, but a placeholder is geography and never a government, so no registry promotion may carry it and no Reader may show it (lib/registry/census-placeholders.ts).",
     };
   }
   if (dataset.family === "campaign-sites" && !officeholderIdentityMayEnterReader(string(row.id), null)) {
@@ -3473,11 +3480,12 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       if (!districtType) throw new Error(`Registry division has no map district type ${record.auditId}`);
       const tier = string(raw.tier) as "national" | "state" | "local";
       if (!["national", "state", "local"].includes(tier)) throw new Error(`Registry division has no reader tier ${record.auditId}`);
-      const district = { type: districtType, tier, typeLabel: stateLabels.divisionTypeLabel(divisionType), ocdId: string(raw.ocdId), label: string(raw.label), state: string(raw.state) };
+      // A Census placeholder name reaches the Reader translated, as every registry promotion carries it.
+      const district = { type: districtType, tier, typeLabel: stateLabels.divisionTypeLabel(divisionType), ocdId: string(raw.ocdId), label: CENSUS_PLACEHOLDER_LABELS[string(raw.label)] ?? string(raw.label), state: string(raw.state) };
       const markup = renderToStaticMarkup(createElement(DistrictPopup, { district, representation: [], representationNoteState: "gap", upcomingMeetings: 0 }));
       add(record, "components/map/popup/district-popup.tsx", "canonical registry division → DistrictPopup", district, [district.ocdId], markup,
         [district.label, district.typeLabel], [], { divisions: { expected: 1, actual: occurrences(markup, "data-browsing-standing") } });
-    } else if (["lib/registry/registry.json", "lib/registry/promoted-bodies.json"].includes(record.holdingPath) && record.unit === "bodies") {
+    } else if (["lib/registry/registry.json", "lib/registry/promoted-bodies.json"].includes(record.holdingPath) && record.unit === "bodies" && record.eligibility.state === "READER_ELIGIBLE") {
       const bodyId = string(raw.id);
       const ocdId = string(raw.ocdId);
       const division = registryDivisionsById.get(ocdId) ?? {};

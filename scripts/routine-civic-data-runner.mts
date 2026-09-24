@@ -19,6 +19,10 @@ import {
   successfulRoutineRunnerReceiptIssue,
 } from "../lib/civic-data/runner-receipt.ts";
 import {
+  ROUTINE_SUPERVISOR_HISTORY_FIELDS,
+  ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+} from "../lib/civic-data/supervisor-history.ts";
+import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
@@ -78,6 +82,7 @@ import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
@@ -198,8 +203,16 @@ async function latestUnreceiptedSupervisorAttempts(): Promise<RoutineSupervisorA
      civic-data pass at its start. The read is idempotent, so retry it — same
      resilience the schema bootstrap gets. See connect-retry.ts. */
   const supervisorOutcomes = await withControlPlaneConnectRetry(
-    /* Only supervisor outcomes matter here; fetch them by kind, not the whole log. */
-    () => repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR"),
+    /* Only recent supervisor outcomes can order a task, and only the fields the
+       history validates: the newest window, narrowed by the store, oldest first
+       again so the rows keep their append order. Never every outcome whole. */
+    async () => [...await repos.ownerDigests.readRecentWhere(
+      DIGEST_LOG_KEY,
+      ["runtimeOutcome", "kind"],
+      "ROUTINE_CIVIC_DATA_SUPERVISOR",
+      ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+      ROUTINE_SUPERVISOR_HISTORY_FIELDS,
+    )].reverse(),
     {
       onRetry: ({ attempt, delayMs, error }) =>
         console.warn(
@@ -366,7 +379,7 @@ try {
     );
   }
 } catch (error) {
-  const detail = safeFailure(error instanceof Error ? error.message : String(error));
+  const detail = safeFailure(sanitizedErrorDiagnostic(error));
   supervisorFailures.push({
     taskId: "routine-civic-data-provider-frontier",
     code: "SUPERVISOR_HISTORY_READ_FAILED",
@@ -698,12 +711,12 @@ try {
   supervisorFailures.push({
     taskId: "routine-civic-data-supervisor-outcome",
     code: "SUPERVISOR_OUTCOME_NOT_DURABLE",
-    detail: safeFailure(error instanceof Error ? error.message : String(error)),
+    detail: safeFailure(sanitizedErrorDiagnostic(error)),
   });
   console.error("RCD_OPERATIONAL_OUTCOME=" + JSON.stringify({
     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
     state: "STORE_UNREACHABLE",
-    detail: safeFailure(error instanceof Error ? error.message : String(error)),
+    detail: safeFailure(sanitizedErrorDiagnostic(error)),
     durable: false,
   }));
 }

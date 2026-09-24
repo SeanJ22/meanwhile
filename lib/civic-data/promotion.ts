@@ -270,7 +270,17 @@ export async function processRegisteredFanOutCandidate(
   );
 }
 
-/** A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract. */
+/**
+ * A meeting route/body enters the plane only through its SOURCE_WIRING-derived contract.
+ *
+ * Its Reader readback is not taken here. The Reader of a meeting partition is
+ * the aggregate meetings Reader, which composes every partition, so a readback
+ * per promotion moved all 84 partitions' payloads and candidate rows (~24 MB)
+ * once per promoted partition. `repairMeetingReaderProjectionReadbacks`, the
+ * meeting Reader domain of every routine pass, appends the same typed receipt
+ * to each newly promoted partition from one aggregate read; the pass that
+ * promotes a partition records its readback before it ends.
+ */
 export async function processRegisteredMeetingPartitionCandidate(
   store: RoutineDataStore,
   partitionId: string,
@@ -293,12 +303,7 @@ export async function processRegisteredMeetingPartitionCandidate(
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
-  return appendTypedReaderProjectionReadback(
-    store,
-    contract,
-    await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification),
-    now,
-  );
+  return processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification);
 }
 
 export function manualCandidateContractIssue(contractId: ManualProductionContractId, candidate: RoutineCandidate): string | null {
@@ -523,7 +528,7 @@ export async function processRoutineCandidate(
     });
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt);
+  const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt);
   let promoted: PromotedProjection;
   try {
     promoted = await store.promote(candidate.id, validated.receipt, transitionAt);
@@ -538,5 +543,11 @@ export async function processRoutineCandidate(
     const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail });
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  return { candidate: (await store.readCandidate(candidate.id))!, promoted, readerReadback: null };
+  // The promoted row's columns, read after the move; its envelope is the
+  // durable one the VALIDATED transition returned (written once at create,
+  // never updated), so the dataset is not read back a further time.
+  const summary = await store.readCandidateSummary(candidate.id);
+  if (summary === null) throw new Error(`CANDIDATE_NOT_FOUND:${candidate.id}`);
+  const { candidate: _sameRow, ...promotedColumns } = summary;
+  return { candidate: { ...promotedColumns, candidate: validatedRecord.candidate }, promoted, readerReadback: null };
 }

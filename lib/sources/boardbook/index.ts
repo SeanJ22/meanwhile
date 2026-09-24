@@ -14,6 +14,7 @@ import {
 import {
   isPlacelessLocation,
   resolveVenue,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
@@ -49,7 +50,9 @@ import {
  *
  * The feed publishes venue name AND address per row; coordinates still come
  * from the venue cache so every pin carries a citable geocoder call — an
- * unmatched venue drops the meeting, counted, never guessed (§0c).
+ * unmatched venue is never guessed (§0c), and never suppresses the sitting: it
+ * is published with no pin and the row's own venue words as its named gap,
+ * counted as `unknownVenue` (the venue-gap class, 2026-09-23).
  */
 
 const SOURCE_NAME = "boardbook";
@@ -199,10 +202,6 @@ export function makeBoardBookSource(
         }
 
         const location = row.locationName ?? "";
-        if (!location) {
-          drops.unknownVenue += 1;
-          continue;
-        }
         /*
          * A meeting held online is KEPT (D18). No building means no
          * coordinates and no pin, but it is a real public meeting a reader
@@ -211,7 +210,7 @@ export function makeBoardBookSource(
          * publishes a join link, so joinUrl is null and renders as the gap
          * it is rather than as some other URL dressed up as a way in.
          */
-        const online = isPlacelessLocation(location)
+        const online = location && isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
         if (online) {
@@ -221,10 +220,24 @@ export function makeBoardBookSource(
           // must not be summed as one.
           keptButPlaceless += 1;
         }
-        const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
-        if (!online && !venue) {
+        const venue = online || !location ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location) ?? null;
+        /*
+         * No reviewed venue never suppresses the sitting (the venue-gap class,
+         * 2026-09-23). It is published with no pin and its gap named: the
+         * row's own three venue spans (name, street, city-state-zip) in the
+         * portal's order, or the portal's silence where the row prints none.
+         * Counted as `unknownVenue`, and produced. Both cases used to
+         * `continue`.
+         */
+        const venueGap = !online && !venue
+          ? unplacedVenueGap(
+              [row.locationName, row.addressLine, row.cityStateZip].filter(Boolean).join(", "),
+              wiring.publishingOrg,
+            )
+          : null;
+        if (venueGap) {
           drops.unknownVenue += 1;
-          continue;
+          keptButPlaceless += 1;
         }
 
         const bodyName = wiring.config.bodyName ?? wiring.jurisdiction;
@@ -247,6 +260,7 @@ export function makeBoardBookSource(
               }
             : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl:
             row.hasAgenda && row.meetingId
               ? `${BASE}/Public/Agenda/${wiring.config.orgId}?meeting=${row.meetingId}`

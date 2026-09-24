@@ -37,10 +37,16 @@
  * cleanly: it bounds each attempt, so a HUNG connect aborts and becomes one
  * more retryable transient rather than stalling the cycle.
  *
+ * The control plane's own class bounds (request-bounds.ts, 2026-09-23) name
+ * their timeout: a `ControlPlaneRequestTimeout` of kind REQUEST is retried like
+ * any transport transient, and one of kind DEADLINE — the caller's budget is
+ * spent — is never retried, because another attempt would be refused at once.
+ *
  * Shape mirrors the bounded compareAndSet retry in scout-candidates.ts (a fixed
  * attempt count, re-throw on the last), with added backoff because the
  * condition is a transient network blip, not a lost write race.
  */
+import { isControlPlaneRequestTimeout } from "./request-bounds.ts";
 
 /** Attempts INCLUDING the first try. 5 = one try plus four retries. */
 export const CONTROL_PLANE_CONNECT_MAX_ATTEMPTS = 5;
@@ -93,6 +99,10 @@ export function isTransientControlPlaneConnectError(error: unknown): boolean {
   for (let depth = 0; cursor !== null && cursor !== undefined && depth < 8; depth += 1) {
     if (seen.has(cursor)) break;
     seen.add(cursor);
+
+    // A named control-plane timeout decides for itself: its message says
+    // TIMEOUT either way, so it is read before the broad message match.
+    if (isControlPlaneRequestTimeout(cursor)) return cursor.retryable;
 
     const message = messageOf(cursor);
     if (HARD_CIRCUIT.test(message)) return false;

@@ -173,7 +173,7 @@
         "body-compositions",
         "registry"
       ],
-      "recordObligations": 3002,
+      "recordObligations": 3000,
       "selectorClasses": [
         "canonical registry body and exact division join → EntityModal",
         "exact map-entry bodySubject AST → actual EntityModal header and private DefinitionBlock/Representation leaves (collapsed children rendered independently)",
@@ -236,7 +236,7 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 511,
+      "recordObligations": 492,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
@@ -249,7 +249,7 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 552,
+      "recordObligations": 533,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
@@ -262,7 +262,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 72,
+      "recordObligations": 70,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -275,7 +275,7 @@
         "notice-summaries",
         "meetings"
       ],
-      "recordObligations": 104,
+      "recordObligations": 102,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],
@@ -397,7 +397,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 509,
+      "recordObligations": 490,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
@@ -409,7 +409,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 110,
+      "recordObligations": 119,
       "selectorClasses": [
         "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
       ],

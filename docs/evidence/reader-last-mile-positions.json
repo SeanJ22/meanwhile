@@ -1,14 +1,14 @@
 {
-  "exactHead": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-  "buildId": "djtDstfcVbQ1yHnct4Gj2",
+  "exactHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
+  "buildId": "z4r1q7YWh0rEVYmgnypiP",
   "sourceHashes": {
     "data/candidates/corpus-2026.json": "6aa106eabc191a3eddbcfd721d301fcbe094454a1a207c0aa11d06ee07bf638d",
     "data/corpus/statements.json": "01e27fd3179e311aa207d0c51f2bf26172d9baa989ee466338ce0cffd5e50b61",
     "data/states/az/identity/az-2026-candidate-registry.json": "3453038781d661d5f9c901e729a0c445cb1253157a03d13d1cc9fe503dc4fdde",
     "data/states/az/identity/az-2026-certified-lineup-reconciliation.json": "39b1cd2953b6d45d5d32bb58457c7662c41b5d66fe27757b68657986cc678f0d",
     "lib/funding/campaign-money.ts": "c114efcd4b69edfb3a251d7bed54def28a5872687d58eb1f70b801b8b8309449",
-    "lib/registry/runtime-data-plane.ts": "c091adb71d4f86a43df32d8ee865dca2d85f53953ad4a61ab3b075b212e6df87",
-    "lib/registry/runtime-read-model.ts": "21cdc6f81770e5e2b086a1fe29b862f13a4551cbc9d31b203e2337348c11350c",
+    "lib/registry/runtime-data-plane.ts": "7baaafe08ea9608add321d9241ef951296c10344d163c6184413d1196363a235",
+    "lib/registry/runtime-read-model.ts": "b59b616cfe3c6d5bb5b64793b424252eaf593a1dd548537baf79efae4a05756a",
     "lib/identity/reader-person.ts": "e6e3ce856884b353aabb6bd2911efe441688e5f91e202687310558cdf5a73b13",
     "lib/identity/az-2026.ts": "b33a3cb9cfb1c3ff8b46c4fbd2ebf672e13bc30b4d05f7d7f31c04c1a5843811",
     "lib/corpus/unified.ts": "c13590b0deee7bc342693c8f128146754f600dc5ff4a644e08cedf7883572ad8",

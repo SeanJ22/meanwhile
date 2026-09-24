@@ -290,3 +290,16 @@ test("the reader composes a state's registration beside the reviewed registry it
   assert.equal(after.bodies.some((b) => b.id === censusBody.id), false, "a government the reviewed registry now lists by its Census id");
   assert.equal(after.bodies.length, oh.bodies.length - 2);
 });
+
+test("registration never mints a body on a Census placeholder division, in any state; the division stays as geography", async () => {
+  const { isCensusPlaceholderDivision } = await import("../lib/registry/census-placeholders.ts");
+  const reviewed = reviewedFromFirstSeed();
+  let placeholderDivisions = 0;
+  for (const target of REGISTRATION_TARGETS) {
+    const model = registrationCandidate({ target, reference: loadRegistrationReference(ROOT, target.state), receipt: RECEIPT, reviewed }).readModel as RegistrationReadModel;
+    const placeholders = new Set(model.divisions.filter((d) => isCensusPlaceholderDivision(d)).map((d) => d.ocdId));
+    placeholderDivisions += placeholders.size;
+    assert.equal(model.bodies.filter((b) => placeholders.has(b.ocdId)).length, 0, `${target.state}: no body on a placeholder`);
+  }
+  assert.ok(placeholderDivisions > 0, "some state registers a placeholder division, so the rule is exercised");
+});

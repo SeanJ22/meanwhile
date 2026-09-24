@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-19 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-23 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **193 sessions.**
+Newest first. **194 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,16 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## Stop re-dispatching session (2026-09-23) · 2026-09-23
+
+**What it started.** 3 row(s) opened, 3 still open.
+
+- **NS28** — 1,975 governments in AZ, NH and NJ have a known website whose meeting calendar nobody has looked for; the gap ledger lists them. The executor that walks those sites is built and switched off. It reads each site without a model (robots.txt first on every host, identified requests), tries saved methods that worked on other governments first, and, when a site shows no meetings route, searches with Brave and Exa. Search is paid: at most 50 requests a cycle and 200 a day across both providers, about $1.40 a day at published prices, recorded apart from model spend. Turning it on is your call because it sends new outbound requests to government sites every cycle and spends on search; search can be held at zero while the walks run. *(open)*
+- **NH330** — The meetings-discovery executor (NS28) can confirm that a government's own site publishes its meetings, but a confirmed route still reaches readers only by hand-editing lib/registry/source-wiring.ts and deploying. Stage 2 is a promoted, runner-kept wiring store so a route that passes every check starts publishing meetings on its own. *(open)*
+- **NH331** — A live walk of the meetings-discovery executor on 12 Arizona cities (2026-09-23, local and unpaid) found that 6 of the 12 homepage addresses the reviewed registry holds no longer lead to the city's site. Four domains do not resolve: Cottonwood www.ci.cottonwood.az.us, Douglas www.douglasaz.org, Eloy www.ci.eloy.az.us and Holbrook www.ci.holbrook.az.us. Two now redirect to a new home: El Mirage cityofelmirage.org to elmirageaz.gov, and Flagstaff flagstaffaz.gov to flagstaff.az.gov. Discovery records these as COULD_NOT_READ and cannot find their meetings until the registry carries the current address, and the same address is the government's website a reader may be shown. *(open)*
+
+**Needs Sean.** NS28
 
 ## state-legislative-votes-nonhunt · 2026-09-19
 

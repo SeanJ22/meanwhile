@@ -288,7 +288,12 @@ export type DispositionVerdict =
   | "REPRESENTED_IN_READER"
   /** OURS: collected, keyed, carried — outside the window the app serves. */
   | "BEYOND_APP_SERVING_HORIZON"
-  /** OURS: no venue record for the room the publisher named. */
+  /**
+   * OURS: no reviewed venue record for the room the publisher named (or for a
+   * sitting whose location cell is empty). The sitting itself IS produced, with
+   * its place as a named gap (the venue-gap class, 2026-09-23); what stays open
+   * is the venue record that would put it on the map.
+   */
   | "VENUE_NOT_RESOLVED"
   /** OURS: the route published no hour, so it has no canonical identity. */
   | "TIME_NOT_PUBLISHED"
@@ -329,9 +334,10 @@ export type DispositionVerdict =
 /**
  * **THE ROUTES THIS ADAPTER CAN ACTUALLY TURN INTO A `Meeting`.**
  *
- * One, today: the portal grid is the only route that publishes a room, and a
- * meeting with no place is not one this product will put in front of a reader.
- * The RSS publishes a title and a publication instant; the Clerk's table
+ * One, today: the portal grid is the only route that publishes a room. (A grid
+ * row whose room has no reviewed venue is still produced, with its place as a
+ * named gap — the venue-gap class, 2026-09-23.) The RSS publishes a title and a
+ * publication instant; the Clerk's table
  * publishes a date, an hour and a kind. Both are CORROBORATION — promoting
  * either to an ingestion source is an ask-before under `CLAUDE.md`, and this
  * constant is the single place that fact is checkable rather than commented.

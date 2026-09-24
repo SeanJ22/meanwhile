@@ -12,6 +12,7 @@ import { allOfficialRows } from "../officials/tier-grouping.ts";
 import type { CoverageSummary, Seat } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 
+import { bodyScopeKey } from "./body-scope.ts";
 import { ALL_DISTRICT_TYPES } from "./reducer.ts";
 import type { BodyType, UiState } from "./types.ts";
 
@@ -146,11 +147,13 @@ export function applyFilters({
     const tier = tierForMeeting(meeting);
     if (tier === null || !ui.tiers.includes(tier)) return false;
 
-    // Scope. Both are OCD-IDs; `body` additionally matches on the body name
-    // within a jurisdiction, because bodies have no identifiers of their own
-    // until Phase 5 gives them a table.
+    // Scope. Jurisdiction is an OCD-ID; `body` is the division plus the body
+    // name, made only by `bodyScopeKey` — the same constructor the Body
+    // dropdown uses, so the key offered and the key matched cannot diverge
+    // (2026-09-23: a bare OCD-ID dispatched here matched nothing and emptied
+    // every surface).
     if (ui.jurisdiction && meeting.ocdId !== ui.jurisdiction) return false;
-    if (ui.body && `${meeting.ocdId}|${meeting.bodyName}` !== ui.body) return false;
+    if (ui.body && bodyScopeKey(meeting) !== ui.body) return false;
 
     if (ui.filters.statuses.length > 0) {
       if (!ui.filters.statuses.includes(meeting.status)) return false;

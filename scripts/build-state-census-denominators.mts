@@ -22,6 +22,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -73,4 +74,6 @@ writeFileSync(
   )}\n`,
   "utf8",
 );
-console.log(`states: ${byState.size}; units with no state: ${noState}`);
+// Every Census unit read is either placed in a state or counted as having none (RULING 159: a count carries its denominator).
+console.log(floorLine(floored("Census of Governments units placed in a state", "data/derived/census-unit-zips.json", units.units.length, units.units.length - noState)));
+console.log(`states and territories written: ${byState.size}`);

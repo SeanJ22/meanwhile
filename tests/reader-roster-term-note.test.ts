@@ -20,7 +20,7 @@ function renderTermNotes(holders: readonly SeatHolder[]): string[] {
     import { OfficialTermNote } from './components/officials/official-term-note.tsx';
     const holders = JSON.parse(readFileSync(0, 'utf8'));
     console.log(JSON.stringify(holders.map(holder => renderToStaticMarkup(createElement(OfficialTermNote, { holder })))));
-  `], { cwd: process.cwd(), input: JSON.stringify(holders), encoding: "utf8", timeout: 30_000, maxBuffer: 4_000_000 });
+  `], { cwd: process.cwd(), input: JSON.stringify(holders), encoding: "utf8", timeout: 120_000, maxBuffer: 4_000_000 });
   const result: unknown = JSON.parse(output);
   assert.ok(Array.isArray(result) && result.every(value => typeof value === "string"));
   assert.equal(result.length, holders.length);

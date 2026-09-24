@@ -649,7 +649,19 @@ export class FleetSafetyController {
     };
   }
 
-  guardedOpenBytes(provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenBytes {
+  /**
+   * `followRedirects: false` (2026-09-23) answers the first hop, with its
+   * `location`, instead of following it. A caller that must read permission
+   * again on every new host (the meetings-discovery executor) walks the chain
+   * itself; nothing else changes.
+   */
+  guardedOpenBytes(
+    provider: string,
+    work: string,
+    fetchImpl: typeof fetch = fetch,
+    options: { readonly followRedirects?: boolean } = {},
+  ): OpenBytes {
+    const follow = options.followRedirects !== false;
     return async ({ url, headers, timeoutMs }) => {
       const started = Date.now();
       const abort = new AbortController();
@@ -658,6 +670,7 @@ export class FleetSafetyController {
         let currentUrl = url;
         let response: Response;
         let merged: Uint8Array;
+        let location: string | null = null;
         while (true) {
           const reservation = this.reservePayloadRequest(provider, work);
           try {
@@ -673,8 +686,8 @@ export class FleetSafetyController {
             this.settlePayloadReservation(reservation, error instanceof FleetSafetyRefusal ? null : 0);
             throw error;
           }
-          const location = response.headers.get("location");
-          if (![301, 302, 303, 307, 308].includes(response.status) || location === null) break;
+          location = response.headers.get("location");
+          if (![301, 302, 303, 307, 308].includes(response.status) || location === null || !follow) break;
           currentUrl = new URL(location, currentUrl).toString();
         }
         const decoded = new TextDecoder().decode(merged.subarray(0, Math.min(merged.byteLength, 300)));
@@ -687,6 +700,7 @@ export class FleetSafetyController {
           finalUrl: response.url || null,
           durationMs: Date.now() - started,
           transportError: null,
+          ...(follow ? {} : { location: [301, 302, 303, 307, 308].includes(response.status) ? location : null }),
         };
       } catch (error) {
         if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);

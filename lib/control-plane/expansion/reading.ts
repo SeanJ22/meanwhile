@@ -137,10 +137,20 @@ export interface ExpansionCycleReading {
 
 /** A value on the research state that is not a reading reads as none, never as an empty scope list. */
 export function isExpansionCycleReading(value: unknown): value is ExpansionCycleReading {
+  return isVersionedCycleReading(value, EXPANSION_READING_FORMAT_VERSION, "scopes");
+}
+
+/**
+ * The one check every per-cycle reading on the research state passes: an
+ * object at the expected format version carrying its list. Anything else reads
+ * as no reading at all — never as an empty list (the expansion reading here,
+ * and the MW-028 dispatch-work reading).
+ */
+export function isVersionedCycleReading(value: unknown, formatVersion: number, listField: string): boolean {
   return (
     value !== null &&
     typeof value === "object" &&
-    (value as { formatVersion?: unknown }).formatVersion === EXPANSION_READING_FORMAT_VERSION &&
-    Array.isArray((value as { scopes?: unknown }).scopes)
+    (value as { formatVersion?: unknown }).formatVersion === formatVersion &&
+    Array.isArray((value as Record<string, unknown>)[listField])
   );
 }

@@ -299,9 +299,17 @@ export interface RoutineChangeSet {
  * Exact authority for removing one previously promoted record from an
  * incomplete candidate horizon. This is deliberately narrow: today only a
  * meeting (or one of its attached agenda-document versions) may age out of
- * the registered Reader serving window without a complete-universe claim.
+ * the registered Reader serving window without a complete-universe claim, or
+ * be replaced by the occurrence record that now holds its exact fact; and a
+ * registry body minted on a Census placeholder may leave.
  */
-export interface RoutineRemovalEvidence {
+export type RoutineRemovalEvidence =
+  | ServingWindowRemovalEvidence
+  | OccurrenceSupersessionRemovalEvidence
+  | PublisherExclusionRemovalEvidence
+  | CensusPlaceholderBodyRemovalEvidence;
+
+export interface ServingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "OUTSIDE_REGISTERED_SERVING_WINDOW";
@@ -314,6 +322,66 @@ export interface RoutineRemovalEvidence {
   readonly priorStartsAt: string;
   /** Required only for an agenda document; names its exact removed meeting. */
   readonly parentMeetingKey?: string;
+}
+
+/**
+ * A recurring series' single `UID`-keyed record, replaced by the occurrence
+ * record that holds the same fact (2026-09-23; see `supersedesSeriesRecord` in
+ * lib/sources/event-identity.ts). The validator re-derives every clause from
+ * the candidate itself: the successor must be a fresh member of this candidate,
+ * an occurrence of exactly the removed series id, for the same body, at the
+ * removed record's start or in its slot. An agenda document attached to the
+ * removed record inherits this authority from it, never on its own.
+ */
+export interface OccurrenceSupersessionRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
+  readonly key: string;
+  readonly code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY";
+  /** `meeting:<series id>/<slot>`, a fresh member of the same candidate. */
+  readonly successorKey: string;
+  /** The previously promoted meeting's exact `startsAt`. */
+  readonly priorStartsAt: string;
+  /** Required only for an agenda document; names its exact removed meeting. */
+  readonly parentMeetingKey?: string;
+}
+
+/**
+ * A published sitting of a recurring series that its publisher has since
+ * struck out of the series (`EXDATE`), 2026-09-23. The validator re-derives it
+ * from the candidate's own held fact `MEETING_EXCLUDED_BY_PUBLISHER`, which the
+ * same read recorded: same series, same slot, same body, and the removed
+ * record is that sitting (its occurrence id, or the series' own UID-only id at
+ * that slot's instant). A cancellation the publisher states as a STATUS is not
+ * this: it stays a status on a published sitting.
+ */
+export interface PublisherExclusionRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
+  readonly key: string;
+  readonly code: "EXCLUDED_BY_PUBLISHER";
+  /** The series' own meeting id, `<source>:<slug>:<UID>`. */
+  readonly seriesId: string;
+  /** The struck sitting's recurrence slot. */
+  readonly slot: string;
+  /** The previously promoted meeting's exact `startsAt`. */
+  readonly priorStartsAt: string;
+  /** Required only for an agenda document; names its exact removed meeting. */
+  readonly parentMeetingKey?: string;
+}
+
+/**
+ * A registry body on a Census "no district here" placeholder (LEA 99997) is
+ * geography, never a government (Sean, 2026-09-23). The validator re-derives
+ * the claim from the candidate itself and trusts nothing in this row alone:
+ * the removed record is exactly `body:<its id>`, it sat on exactly this
+ * division, and the candidate still holds that division as a placeholder by
+ * its own Census code.
+ */
+export interface CensusPlaceholderBodyRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`: `body:<body id>`. */
+  readonly key: string;
+  readonly code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT";
+  /** The removed body's division, which the candidate keeps. */
+  readonly divisionOcdId: string;
 }
 
 /** One immutable tracked input whose exact bytes were used for a PDC-v2 LKG import. */
@@ -547,3 +615,14 @@ export interface PromotedProjection<T = unknown> {
   readonly payload: T;
   readonly receipt: ValidationReceipt;
 }
+
+/**
+ * A canonical pointer named, never carried: its identity columns and none of
+ * its dataset. The payload is the Reader's value, up to tens of MB on the wire
+ * for the largest classes; code that only names, compares, or appends evidence
+ * to the current version reads this, and the typed Reader reads the payload.
+ */
+export type PromotedPointerIdentity = Pick<
+  PromotedProjection,
+  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt"
+>;

@@ -5,7 +5,7 @@
 and the RULING 227 registry. It cannot disagree with the stores, because it is
 derived from them.
 
-Generated 2026-09-19 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-23 (America/Phoenix, from `pnpm stamp`).
 
 Sorted by priority, then by **age, oldest first** — because the failure this view
 exists to fix is a row sitting unread, and a newest-first queue hides exactly the
@@ -21,13 +21,13 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**73 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**74 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
 #### T05 — Abuse policy live
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Stand up the abuse review path — the people and the process behind the written policy.
 
@@ -41,7 +41,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH108 — Four decisions before any candidate questionnaire is sent — and they are yours, not buildable
 
-*Opened 2026-08-23 · 27 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-23 · 31 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Take the four decisions that must precede any questionnaire being sent — they are yours, not buildable.
 
@@ -54,7 +54,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH306 — Rotate DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN: their values appeared in a prior session transcript (RULING 127)
 
-*Opened 2026-09-02 · 17 days old · verified still blocked (2026-09-19 · HOLDS)*
+*Opened 2026-09-02 · 21 days old · verified still blocked (2026-09-23 · HOLDS)*
 
 **Blocked while.** the values of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN appeared in a prior session's subagent transcript (scrubbed 2026-09-02); a credential that has appeared in a transcript is compromised until rotated, and rotation is an owner act this session did not perform.
 
@@ -62,7 +62,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH310 — Install GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET on the Netlify site under RULING 238 custody, then sign in once through Google on admin.meanwhileusa.com (RULING 245 live proof)
 
-*Opened 2026-09-02 · 17 days old · COULD NOT VERIFY this run — the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet.*
+*Opened 2026-09-02 · 21 days old · COULD NOT VERIFY this run — the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet.*
 
 **Blocked while.** GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET are absent from the Netlify site's environment (read back by name on 2026-09-02, both sites and account level), so the deployed Google sign-in reports NOT_CONFIGURED and the live proof of RULING 245 cannot be taken.
 
@@ -72,7 +72,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B01 — Settle the name
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Settle the product's name.
 
@@ -86,7 +86,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B03 — Entity decision
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide what legal entity this becomes.
 
@@ -100,7 +100,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B04 — Data broker registration
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether to register as a data broker in California, Vermont, Texas and Oregon, and when.
 
@@ -113,7 +113,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### T01 — Transparency page
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve the transparency page copy — what is collected, how it is used, and that anonymous totals may be sold.
 
@@ -126,7 +126,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### T03 — Security review
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Commission a security review before a single real person's political opinions are stored.
 
@@ -139,7 +139,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B09 — Counsel question: vendor terms vs. public records duty
 
-*Opened 2026-08-12 · 38 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-12 · 42 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Put the vendor-terms question to counsel: can a software vendor's terms of use narrow the public's statutory right to records a body must publish?
 
@@ -152,7 +152,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### D23 — FEC contributor information - commercial-use restriction
 
-*Opened 2026-08-13 · 37 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-13 · 41 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Record exactly what the FEC's commercial-use restriction on individual donor names and addresses covers, before any code touches it.
 
@@ -165,7 +165,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH43 — The residual: three bodies at 03255 that no branch and no manual route reached
 
-*Opened 2026-08-21 · 29 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-21 · 33 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on the three bodies at 03255 that no branch and no manual route reached.
 
@@ -178,7 +178,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS01 — Decide whether this project seeks a Meta Ad Library API token
 
-*Opened 2026-08-22 · 28 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-22 · 32 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether this project seeks a Meta Ad Library API token.
 
@@ -191,7 +191,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH105 — Approve the candidate questionnaire message before 272 real candidates receive it
 
-*Opened 2026-08-23 · 27 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-23 · 31 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve the candidate questionnaire message before 272 real candidates receive it.
 
@@ -204,7 +204,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH165 — BC-11 held queue: severe Speak Your Mind rows are waiting for you, and T05 is the reason there is nowhere to read them
 
-*Opened 2026-08-24 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-24 · 30 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide where you will read the held Speak Your Mind queue — severe rows are waiting and T05 is why there is nowhere to read them.
 
@@ -217,7 +217,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS13 — The close-out refusal collides with the merge-cadence rule, and the collision is narrow
 
-*Opened 2026-08-24 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-24 · 30 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on the narrow collision between RULING 124's close-out refusal and the merge-cadence rule.
 
@@ -230,7 +230,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS14 — VOTE411 publishes no terms of use, and restricted is the session's reading of your instruction
 
-*Opened 2026-08-24 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-24 · 30 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on VOTE411: it publishes no terms of use at all, and 'restricted' is the session's reading of your instruction rather than a finding.
 
@@ -243,7 +243,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH174 — Four door-2 portraits of sitting officials are queued and waiting on you
 
-*Opened 2026-08-25 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-25 · 29 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve the four door-2 portraits of sitting officials queued for you.
 
@@ -256,7 +256,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS16 — The 8/25 feedback document does not exist anywhere a session can reach
 
-*Opened 2026-08-25 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-25 · 29 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Supply the 8/25 feedback document, or confirm it does not exist.
 
@@ -269,7 +269,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### ASK03 — NEEDS SEAN — Ask signal capture is built and GATED OFF pending disclosure copy
 
-*Opened 2026-08-27 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-27 · 27 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve the disclosure copy that gates Ask signal capture.
 
@@ -282,7 +282,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH225 — azdor.gov disallows ClaudeBot by name while allowing everyone else
 
-*Opened 2026-08-27 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-27 · 27 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on azdor.gov, which disallows ClaudeBot by name while allowing everyone else.
 
@@ -295,7 +295,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH246 — NEEDS SEAN — the disclosure exists and a tester could not find it; draft summary copy inside
 
-*Opened 2026-08-27 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-27 · 27 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve the drafted summary copy that makes the existing transparency disclosure findable.
 
@@ -308,7 +308,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH274 — Install tesseract so the 151 Arizona Governor letters can be read
 
-*Opened 2026-08-28 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-28 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Install tesseract, or approve another OCR route for the 151 Arizona Governor letters.
 
@@ -321,7 +321,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH275 — One remote branch carries unshipped work and must not be deleted unread — claude/g17-aud03-measure
 
-*Opened 2026-08-28 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-28 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Read or release commit 33f6f520 — the single 2026-08-18 commit that could not be proved shipped. Its branch, claude/g17-aud03-measure, no longer exists on origin, but THE WORK IS INTACT: GitHub still serves 33f6f520 by SHA ('AUD-03 measurement: the eight pre-registered surfaces behind async boundaries', +52/-8 on components/map/map-entry.tsx), and the commit is present in the local object store. Nothing was lost; the ref was.
 
@@ -334,7 +334,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH277 — May a corroborating meeting route become an ingestion source? The Mesa sitting nobody can place is waiting on it
 
-*Opened 2026-08-28 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-28 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on whether a corroborating meeting route may become an ingestion source.
 
@@ -347,7 +347,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH283 — RESTRICTED_RAW evidence needs an encrypted, access-controlled store before it can be durable
 
-*Opened 2026-08-29 · 21 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-29 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve an encrypted, access-controlled store for RESTRICTED_RAW evidence.
 
@@ -360,7 +360,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH287 — Method store records outcome jurisdiction at state granularity, so a technique cannot prove itself for a specific government
 
-*Opened 2026-08-29 · 21 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-29 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on recording method outcomes at sub-state granularity.
 
@@ -373,7 +373,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH299 — The owner corpus is two facts and zero questions, against a brief that expected five and five
 
-*Opened 2026-08-30 · 20 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-30 · 24 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Fill in the owner corpus: it holds two facts and zero questions against a brief that expected five and five.
 
@@ -386,7 +386,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS22 — Author the reader-question corpus for the answerability suite
 
-*Opened 2026-08-30 · 20 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-30 · 24 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Author the reader-question corpus for the answerability suite.
 
@@ -399,7 +399,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS23 — Author the known-answer control set (the truth answer key)
 
-*Opened 2026-08-30 · 20 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-30 · 24 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Author the known-answer control set — roughly 40-60 owner-verified facts across the four pilot ZIPs, weighted toward the dangerous ones.
 
@@ -412,7 +412,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### OWN01 — WGH-20 — Body count mismatch — 7 reported, 6 listed
 
-*Opened 2026-08-31 · 19 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-31 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Send the capture you saw, or the address and date that produced the 7-versus-6 body count on Who Governs Here.
 
@@ -425,7 +425,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### OWN02 — OFF-8 — Photo resolution too low for the display
 
-*Opened 2026-08-31 · 19 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-31 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve acquiring and shipping the 5 Tucson portraits at the 480x720 resolution tucsonaz.gov publishes, and decide what happens to the other 138 low-resolution portraits.
 
@@ -439,7 +439,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### OWN04 — OFF-10 — Katie Hobbs photo renders badly on the ballot
 
-*Opened 2026-08-31 · 19 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-31 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Say what was wrong with the Katie Hobbs portrait on the ballot beyond resolution, or send a capture of it.
 
@@ -453,7 +453,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### OWN05 — BAL-36 — No legislative record captured for the governor
 
-*Opened 2026-08-31 · 19 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-31 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve adding a source for state executive-action records, and name which publisher it should be.
 
@@ -467,7 +467,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### OWN06 — BAL-37 — No address autocomplete
 
-*Opened 2026-08-31 · 19 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-31 · 23 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve adding an address-suggestion source, name which one, and decide whether partial addresses may leave this product as the reader types.
 
@@ -481,7 +481,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH304 — RULING 233 names a branch and a host the provider will not serve together - choose which half moves
 
-*Opened 2026-09-01 · 18 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-01 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on ONE WORD in RULING 233: the branch is `staging` and the host is `test.meanwhileusa.com`, and this provider will not serve both. Option A — amend the BRANCH to `test`, preserving the host you named twice and `STAGING_RENDER_ORIGIN`; the git ref name moves, and it appears on no reader-facing or owner-facing surface. Option B — keep the branch `staging` and move the host to `staging.meanwhileusa.com`, preserving the ref name and changing the host you specified. The session shipped under Option A because RULING 233 is not operative until the session after Session C closes, so nothing is decided that you cannot undo.
 
@@ -494,7 +494,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NW11 — Which record classes open first at the activation gate
 
-*Opened 2026-09-02 · 17 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-02 · 21 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Name the first record classes to open at the activation gate (zero or more of meeting-times, agendas, published-minutes, routine-filings). The open set in lib/control-plane/promotion/activation-gate.ts is EMPTY and the nightly window (RULING 242) runs in SHADOW until READER, TRUTH and FRESHNESS are GREEN and INDEPENDENTLY_REPRODUCED, so nothing waits on this today; the list must exist before the gate can open.
 
@@ -508,7 +508,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH325 — Let Deploy fleet reach a new state — Illinois first
 
-*Opened 2026-09-04 · 15 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-04 · 19 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve enumerating a state on request, so that Deploy fleet has work to dispatch there — Illinois first.
 
@@ -519,6 +519,21 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Enumerate Illinois now** — a session runs the Census jurisdiction enumeration for Illinois, adds il to the registered states and a candidate universe, and reads every publisher's permission row before any own-site route opens; the next 'deep dive on Illinois' dispatches real units.
 - **Enumerate any state the fleet is sent to, under the same rule** — a dispatch naming an unregistered state becomes a standing instruction to enumerate it first; each new state still opens no own-site route until its permission rows exist, and each enumeration is reported.
 - **Keep the fleet to Arizona, New Hampshire and New Jersey until the pilot is green** — a dispatch naming another state keeps recording the honest sentence on the dashboard; nothing new is enumerated.
+
+#### NS28 — Switch on meetings discovery: free site walks, plus capped paid search?
+
+*Opened 2026-09-23 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Decide whether the standing runner walks the gap ledger's 1,975 known government sites for their meeting calendars, whether it may pay for search when a site shows no route, and at what scope.
+
+**Why no machine can decide it.** The executor is built and inert behind WTP_MEETINGS_DISCOVERY. Turning it on sends new identified requests to government sites every cycle and makes the runner a new writer of discovery attempts and field-manual entries. Since #381 the same switch also runs Brave and Exa search wherever a key is set, which spends money: at most 50 requests a cycle and 200 a day across both providers, about $1.40 a day at published prices, recorded as DISCOVERY_SEARCH apart from model spend. The first cycle can send at most 50 search requests, about $0.35 at Exa's $7 per 1,000. What a yes demonstrates: the standing runner walking real government sites robots-first, consulting the saved methods in the field manual and, with search on, searching where no route is confirmed, with every walk and request recorded. That includes a government's own events page: the saved method official-page-events-linked-committee-page follows the homepage's own committee or board link and confirms dated events for that government. Run locally from www.tusd1.org, it confirmed Tucson Unified's 2 reconfiguration sessions in 3 requests. What it does not yet demonstrate: Tucson Unified itself, because the gap ledger's row carries a dead address (www.tusd.k12.az.us) and does not join the registry body, which has been live since #384 (NH330). A local, unpaid sample of the 12 Arizona needs one hour's rotation selects (2026-09-23) confirmed 0 routes, found 13 leads on 3 cities, met 2 real walls and 1 site showing nothing, and could not read 6 whose registry website is stale (NH331). Re-run with the official-page method, it found the same 13 leads. The method read 9 council and commission pages on those 3 cities, none with dated events, and holds off each city for 30 days. The 60-second phase then walked 10 of the 12; the 2 it cut short recorded nothing and stay owed. Sean's note of 2026-09-23 grants no new production-write, expansion or spending authority, so the scope and the go are his; no committed artifact can supply that judgement.
+
+**Your options.**
+
+- **On for all three pilot states (AZ, NH, NJ), search at the default caps** — up to 12 sites a cycle within 60 seconds, robots.txt first on every host and no model call; saved methods are tried first; Brave and Exa search runs only when a site shows no route, at most 50 requests a cycle and 200 a day (about $1.40 a day). A full pass over 1,975 sites takes about a week, and every walk and every search request is recorded. Nothing reaches readers until the Stage 2 wiring store and Admin's cutover land.
+- **On for all three pilot states, search held at zero** — the same walks and saved methods with no paid request: WTP_DISCOVERY_SEARCH_PER_DAY=0. A site whose page shows no route is recorded and rechecked later, not searched.
+- **On for owner-dispatched scopes only** — the executor walks only jurisdictions an owner dispatch materialized (MW-028); the ledger backlog waits. This needs a scope-only switch, which is a small follow-up change.
+- **Keep it off** — the 1,975 needs stay recorded in the gap ledger and unwalked; no discovery traffic, writes or search spend.
 
 ### P3
 
@@ -550,7 +565,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B02 — Trademark search
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Commission a trademark search in the three classes this product would file under.
 
@@ -563,7 +578,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B05 — Find counsel
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Retain counsel — one on privacy and one on election law.
 
@@ -577,7 +592,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### B07 — Pricing methodology
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide the pricing methodology, including for pilots.
 
@@ -590,7 +605,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### C01 — Mock export - one measure, synthetic data
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve building a mock export — one Pima County measure, synthetic clearly-labelled numbers.
 
@@ -603,7 +618,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### C02 — Buyer dashboard
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve the buyer dashboard as a product surface, and its scope.
 
@@ -616,7 +631,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### C03 — Export format and delivery
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide the export format and delivery — schema, confidence mix on every row, moderation exclusions, and the citable snapshot id.
 
@@ -629,7 +644,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### C04 — Calibration log
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether to publish a calibration log — what the signal predicted before each election and how it turned out, including the misses.
 
@@ -642,7 +657,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### T02 — Identity verification
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide the identity-verification posture: proving a real person answers without learning who they are.
 
@@ -656,7 +671,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### T06 — Manual tier calibration
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Hand-grade a hundred real answers against the verification tiers before any automatic classifier touches them.
 
@@ -669,7 +684,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### T07 — Escalation contacts file
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Supply the escalation contacts the abuse policy points at — local police, the state agency per state, the Capitol Police threat unit.
 
@@ -682,7 +697,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V01 — Five buyer calls
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Hold five buyer conversations — campaign consultants, party data staff, PAC data directors, at least one on each side — and put the exclusivity question to them.
 
@@ -695,7 +710,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V03 — Legistar prototype, 3-5 cities
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether to build the throwaway Legistar prototype against three to five cities.
 
@@ -708,7 +723,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V04 — Alignment grid, one Pima County race
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether to build the alignment grid for one real Pima County down-ballot race.
 
@@ -721,7 +736,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V05 — Beat-a-tracking-poll answer
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Write the answer to the buyer who asks why this beats a thirty-thousand-dollar tracking poll.
 
@@ -734,7 +749,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V06 — Reading-level test
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Run the reading-level test — read the plain-language output back to real people with real questions.
 
@@ -747,7 +762,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### X02 — Instagram presence
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether to pursue five Instagram content creators as a distribution channel.
 
@@ -760,7 +775,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### X03 — Podcast pitch
 
-*Opened 2026-08-11 · 39 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-11 · 43 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Write and send the podcast pitch.
 
@@ -773,7 +788,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V07 — Ed-tech / schools version (PARKED - business item)
 
-*Opened 2026-08-14 · 36 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-14 · 40 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether the ed-tech / schools version is a direction this product takes.
 
@@ -786,7 +801,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### V08 — The candidate coverage-gap report - a candidate-side product surface
 
-*Opened 2026-08-14 · 36 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-14 · 40 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether to build the candidate coverage-gap report — a candidate-facing surface showing what the product holds on them next to their opponents.
 
@@ -800,7 +815,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH164 — BC-11 copy review: the Speak Your Mind disclosure line, as shipped
 
-*Opened 2026-08-24 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-24 · 30 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Review the Speak Your Mind disclosure line as shipped, under your BC-11 ruling.
 
@@ -813,7 +828,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH166 — OFF-3 photo: Dr. Gabriel Trujillo, TUSD superintendent - not sourced this session, and the reason is worth your call
 
-*Opened 2026-08-24 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-24 · 30 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on the two questions behind the TUSD superintendent's photo, which was not sourced this session.
 
@@ -826,7 +841,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS10 — Should this project propose a tribal division type to the national identifier list?
 
-*Opened 2026-08-24 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-24 · 30 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether this project proposes a tribal division type to the national identifier list.
 
@@ -839,7 +854,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH194 — DARK-1: the dark-mode map needs a contrast proposal to react to — which two or three options do you want?
 
-*Opened 2026-08-25 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-25 · 29 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Choose a dark-mode map contrast direction, or say none of the captured options.
 
@@ -852,7 +867,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS17 — BC-14's fourth source link is on the VOTES, and removing it needs your call
 
-*Opened 2026-08-25 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-25 · 29 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether BC-14's fourth source link, the one on the VOTES, is removed.
 
@@ -865,7 +880,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS19 — BAL-12: uniform pill sizing — the proposal, with the capture behind it
 
-*Opened 2026-08-25 · 25 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-25 · 29 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Choose a uniform pill treatment for BAL-12 — the ballot page carries three in one screen.
 
@@ -878,7 +893,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH200 — DARK-1: three options for the dark map, captured — which one, or none?
 
-*Opened 2026-08-26 · 24 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-26 · 28 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Pick one of the three captured dark-map options, or none.
 
@@ -891,7 +906,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH276 — Is an owner-created branch ever retired automatically? sean/captures-0826 is waiting on the answer
 
-*Opened 2026-08-28 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-08-28 · 26 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Rule on whether an owner-created branch is ever retired automatically. The branch that prompted it, sean/captures-0826, is no longer on origin as of 2026-09-01 — so the specific case is moot and only the GENERAL rule is still open.
 
@@ -904,7 +919,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NH303 — Approve or refuse the four full-resolution AZCC portraits, which are the same photographs you already approved
 
-*Opened 2026-09-01 · 18 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-01 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Approve or refuse the four full-resolution AZCC originals — Myers, Walden, Márquez Peterson and Lopez — which are the same photographs you already approved, at 2533-3275px instead of 133-165px.
 
@@ -917,7 +932,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### RO08 — Runner backlog drain rate: keep 100 dispatches per hourly cycle, or raise it?
 
-*Opened 2026-09-01 · 18 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-01 · 22 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Choose the pilot runner's backlog drain rate: keep 100 dispatches per hourly cycle, raise the ceiling, or shorten the interval.
 
@@ -931,7 +946,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS24 — Readiness summary tiles quote gate codes in their gap sentences
 
-*Opened 2026-09-06 · 13 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-06 · 17 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide where readiness gap sentences lose their gate codes: at the publisher or at render.
 
@@ -945,7 +960,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS25 — Pilot health stacks every decision card on one page
 
-*Opened 2026-09-06 · 13 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-06 · 17 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether Pilot health keeps stacking every waiting decision card on one page.
 
@@ -959,7 +974,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS26 — Narrow-width tables on Research detail and State readiness scroll sideways inside their boxes
 
-*Opened 2026-09-06 · 13 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-06 · 17 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide whether the narrow-width tables on Research detail and State readiness become stacked cards.
 
@@ -972,7 +987,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 #### NS27 — Two owner-snapshot facts the console can only repeat: obligation denominators and fleet places
 
-*Opened 2026-09-06 · 13 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+*Opened 2026-09-06 · 17 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
 **What is needed.** Decide how the owner snapshot states its obligation denominators and what the fleet's Deployed-in pills may name.
 
@@ -990,9 +1005,9 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 **3 row(s).** The work is done or the question is answered; these are here so you know, not so you decide. Each closes on your acknowledgement.
 
-- **NH208** (P2, 24 days old) — Acknowledge the correction: nothing is wrong with your ruleset and no setting needs changing.
+- **NH208** (P2, 28 days old) — Acknowledge the correction: nothing is wrong with your ruleset and no setting needs changing.
 - **NH08** (P3, age unknown — opened date not recoverable from history) — Confirm that Newbury's Selectboard reads right now that it shows meetings from two sources at once.
-- **NS18** (P3, 25 days old) — Confirm the BC-23 answer: the Sources tab counts 2 because it is only GIVEN 2 — neither capped nor filtered.
+- **NS18** (P3, 29 days old) — Confirm the BC-23 answer: the Sources tab counts 2 because it is only GIVEN 2 — neither capped nor filtered.
 
 ---
 
@@ -1002,7 +1017,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 488 row(s) carry a date the ledger stamped directly.
+- 491 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -1012,4 +1027,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 74 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 75 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

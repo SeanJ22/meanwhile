@@ -20,7 +20,6 @@ import {
   parseDispatchTarget,
   unitMatchesTarget,
 } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { REGISTERED_STATES } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { placeFirstRows } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 /**
@@ -186,7 +185,8 @@ test("unitMatchesTarget matches state codes as bounded tokens in every id shape,
 });
 
 test("describeDispatchMatch names the missing registry, the registry failure, and the placement — with the denominator", () => {
-  assert.deepEqual([...REGISTERED_STATES], ["az", "nh", "nj"], "the premise: Illinois has no jurisdiction registry yet");
+  // The tracked states are DATA now (MW-028: the promoted registries, then the coverage set), so the premise is stated here.
+  const REGISTERED_STATES = ["az", "nh", "nj"];
 
   const illinois = describeDispatchMatch(parseDispatchTarget("deep dive on Illinois"), 0, 120, REGISTERED_STATES);
   assert.match(illinois, /matched 0 of 120 registered units/);
@@ -339,7 +339,10 @@ function checkCycleHonorsDispatch(src: string): void {
   assert.match(src, /for \(const pending of intents\.pendingDispatch\)/, "the cycle never walks pendingDispatch");
   assert.match(src, /parseDispatchTarget\(pending\.note \?\? ""\)/, "the target is not parsed from the owner's note");
   assert.match(src, /allUnits\.filter\(\(u\) =>\s*unitMatchesTarget\(target, \{ id: u\.obligation\.id, subjectId: u\.obligation\.subjectId \}\)/, "matching does not run over the whole registered universe");
-  assert.match(src, /describeDispatchMatch\(target, matched\.length, allUnits\.length, REGISTERED_STATES\)/, "the HONORED detail is not the shared sentence");
+  assert.match(src, /describeDispatchMatch\(target, matched\.length, allUnits\.length, trackedStateCodes\)/, "the HONORED detail is not the shared sentence, over the tracked states read as data");
+  // MW-028: the HONORED record is appended after the creation step, so it says what was created too.
+  assert.match(src, /honorIntent\(intent, work === null \? detail : `\$\{detail\} \$\{dispatchWorkSentence\(work\)\}`\)/, "the HONORED detail does not carry what the dispatch created");
+  assert.ok(src.indexOf("await applyDispatchWork(") < src.indexOf("honorIntent(intent, work === null"), "a DISPATCH is honored before its missing work is created");
   assert.match(src, /placeFirstRows\(dueThisCycle, dispatchPriority\)/, "the deterministic lane is not reordered behind the dispatch");
   assert.match(src, /modelOrder\.ordered\.filter\(\(b\) => dispatchPriority\.has\(b\.row\.id\)\)/, "the Scout lane is not reordered behind the dispatch");
   assert.match(src, /placeFirst: dispatchPriority,/, "the dispatcher itself is not told to place the dispatch first");

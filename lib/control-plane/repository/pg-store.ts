@@ -70,6 +70,7 @@ import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
@@ -101,6 +102,13 @@ import {
   withControlPlaneConnectRetry,
 } from "./connect-retry.ts";
 import {
+  CONTROL_PLANE_REQUEST_BOUNDS_MS,
+  boundedQuery,
+  type BoundableQueryOptions,
+  type ControlPlaneCallClass,
+  type ControlPlaneRequestBounds,
+} from "./request-bounds.ts";
+import {
   AppendOnlyViolation,
   ConcurrentModification,
   CorruptPersistedState,
@@ -118,6 +126,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** The one environment variable, named and never valued. */
@@ -145,9 +154,53 @@ export const CONTROL_PLANE_TEST_URL_VAR = "WTP_CONTROL_PLANE_TEST_DATABASE_URL";
  * provider only ever calls the parameterized `query` form, so the seam is one
  * method — which also means a test double is one function rather than a mock of
  * the whole driver.
+ *
+ * The third argument is the driver's per-query options. This provider passes
+ * only `fetchOptions.signal`, which cancels the request at its bound
+ * (request-bounds.ts); a double may ignore it.
  */
 export interface Sql {
-  query(text: string, params?: readonly unknown[]): Promise<unknown>;
+  query(text: string, params?: readonly unknown[], options?: BoundableQueryOptions): Promise<unknown>;
+}
+
+/**
+ * Tables whose ONE row is a large document, so a read, put or compare-and-set
+ * of it moves hundreds of KB to MB each way. Measured 2026-09-23: research
+ * state 1.1 MB (1.06 MB of it the FleetSafety deferral list), field manual
+ * 1.4 MB, method candidates 0.8 MB, owner snapshot 428 KB, readiness snapshot
+ * 119 KB. Every other aggregate row is under 13 KB.
+ */
+export const DOCUMENT_ROW_TABLES: ReadonlySet<string> = new Set([
+  "cp_research_state",
+  "cp_field_manual",
+  "cp_method_candidates",
+  "cp_owner_snapshots",
+  "cp_readiness_snapshots",
+]);
+
+/**
+ * Logs whose records reach tens to hundreds of KB, so an append uploads a
+ * document. Measured 2026-09-23 maximum record: owner digests 708 KB, worker
+ * results 246 KB, window runs 147 KB, scout results 73 KB. Every other log's
+ * records are under 14 KB.
+ */
+export const DOCUMENT_RECORD_LOGS: ReadonlySet<string> = new Set([
+  "owner_digests",
+  "worker_results",
+  "window_runs",
+  "scout_results",
+]);
+
+/** How one repository's calls are bounded. Omitted fields take the measured defaults. */
+export interface PgRepositoryBounds {
+  readonly bounds?: ControlPlaneRequestBounds;
+  /** The class of a single-row call; DOCUMENT for the tables in DOCUMENT_ROW_TABLES / DOCUMENT_RECORD_LOGS. */
+  readonly rowClass?: Exclude<ControlPlaneCallClass, "PAGE">;
+}
+
+function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
+  return (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) =>
+    boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
 }
 
 /**
@@ -198,6 +251,34 @@ function jsonPathLiteral(table: string, path: readonly string[]): string {
   return `{${path.join(",")}}`;
 }
 
+/* A `RecordProjection` as a Postgres expression over the `record` column:
+   `projectRecord`, built by the database, so a dropped field never leaves it.
+   Keys are CODE-PROVIDED and embedded as literals, so each is validated as a
+   plain identifier exactly as a JSON path segment is. `jsonb_each` keeps only
+   the keys the record holds, so an absent key stays absent. */
+function recordProjectionSql(table: string, projection: RecordProjection): string {
+  const literal = (key: string): string => {
+    if (!/^[A-Za-z0-9_]+$/.test(key)) {
+      throw new Error(`${table}: unsafe projection key ${JSON.stringify(key)}`);
+    }
+    return `'${key}'`;
+  };
+  const kept = Object.keys(projection);
+  if (kept.length === 0) throw new Error(`${table}: an empty projection cannot select a field`);
+  const narrowed = kept.flatMap((key) => {
+    const keep = projection[key];
+    return keep === true ? [] : [
+      `WHEN t.key = ${literal(key)} AND jsonb_typeof(t.value) = 'object' THEN ` +
+        `(SELECT coalesce(jsonb_object_agg(f.key, f.value), '{}'::jsonb) FROM jsonb_each(t.value) AS f ` +
+        `WHERE f.key IN (${keep.length === 0 ? "NULL" : keep.map(literal).join(", ")}))`,
+    ];
+  });
+  const value = narrowed.length === 0 ? "t.value" : `CASE ${narrowed.join(" ")} ELSE t.value END`;
+  return `CASE WHEN jsonb_typeof(record) = 'object' THEN ` +
+    `(SELECT coalesce(jsonb_object_agg(t.key, ${value}), '{}'::jsonb) FROM jsonb_each(record) AS t ` +
+    `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE record END`;
+}
+
 /**
  * How many aggregate rows one `list()` statement fetches.
  *
@@ -220,11 +301,16 @@ export function pgAggregateRepository<T>(
   sql: Sql,
   kind: string,
   table: string,
+  options: PgRepositoryBounds = {},
 ): AggregateRepository<T> {
   const where = `${table} in the control-plane database`;
+  const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rowClass = options.rowClass ?? (DOCUMENT_ROW_TABLES.has(table) ? "DOCUMENT" : "POINT");
 
   async function read(id: string): Promise<Persisted<T> | null> {
-    const rows = (await sql.query(
+    const rows = (await run(
+      "read",
+      rowClass,
       `SELECT id, revision, updated_at, value FROM ${table} WHERE id = $1`,
       [id],
     )) as Record<string, unknown>[];
@@ -255,7 +341,9 @@ export function pgAggregateRepository<T>(
        * decides who created; this process only decides what the difference
        * means.
        */
-      const inserted = (await sql.query(
+      const inserted = (await run(
+        "put",
+        rowClass,
         `INSERT INTO ${table} (id, revision, updated_at, value)
          VALUES ($1, 1, $2, $3::jsonb)
          ON CONFLICT (id) DO NOTHING
@@ -294,7 +382,9 @@ export function pgAggregateRepository<T>(
        * exists to prevent, and it is precisely the window a second MACHINE
        * makes reachable.
        */
-      const updated = (await sql.query(
+      const updated = (await run(
+        "compareAndSet",
+        rowClass,
         `UPDATE ${table}
             SET revision = revision + 1, updated_at = $1, value = $2::jsonb
           WHERE id = $3 AND revision = $4
@@ -328,12 +418,16 @@ export function pgAggregateRepository<T>(
       let afterId: string | null = null;
       for (;;) {
         const rows = (afterId === null
-          ? await sql.query(
+          ? await run(
+              "list",
+              "PAGE",
               `SELECT id, revision, updated_at, value FROM ${table}
                ORDER BY id ASC
                LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
             )
-          : await sql.query(
+          : await run(
+              "list",
+              "PAGE",
               `SELECT id, revision, updated_at, value FROM ${table}
                WHERE id > $1
                ORDER BY id ASC
@@ -365,14 +459,18 @@ export function pgAggregateRepository<T>(
       let afterId: string | null = null;
       for (;;) {
         const rows = (afterId === null
-          ? await sql.query(
+          ? await run(
+              "listWhere",
+              "PAGE",
               `SELECT id, revision, updated_at, value FROM ${table}
                WHERE value #>> '${jsonPath}' = $1
                ORDER BY id ASC
                LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
               [value],
             )
-          : await sql.query(
+          : await run(
+              "listWhere",
+              "PAGE",
               `SELECT id, revision, updated_at, value FROM ${table}
                WHERE value #>> '${jsonPath}' = $1 AND id > $2
                ORDER BY id ASC
@@ -418,8 +516,15 @@ export function pgAggregateRepository<T>(
  */
 export const APPEND_ONLY_LOG_READ_PAGE = 100;
 
-export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<T> {
+export function pgAppendOnlyRepository<T>(
+  sql: Sql,
+  log: string,
+  options: PgRepositoryBounds = {},
+): AppendOnlyRepository<T> {
   const table = `cp_log_${log}`;
+  const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  /* An append's probe and re-read return the held record, and its insert uploads one. */
+  const recordClass = options.rowClass ?? (DOCUMENT_RECORD_LOGS.has(log) ? "DOCUMENT" : "POINT");
 
   return {
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
@@ -447,7 +552,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
        * here so nobody later "fixes" it: position is an ORDER key, never a
        * count, and `readAll` orders by it rather than counting it.
        */
-      const already = (await sql.query(
+      const already = (await run(
+        "append:probe",
+        recordClass,
         `SELECT position, record FROM ${table} WHERE log_key = $1 AND record_id = $2`,
         [key, recordId],
       )) as Record<string, unknown>[];
@@ -464,7 +571,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
         return { appended: false, recordId, record: held, position: Number(already[0].position) };
       }
 
-      const allocated = (await sql.query(
+      const allocated = (await run(
+        "append:allocate",
+        "POINT",
         `INSERT INTO cp_log_heads (log_table, log_key, next_position)
          VALUES ($1, $2, 1)
          ON CONFLICT (log_table, log_key)
@@ -479,7 +588,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
         );
       }
 
-      const inserted = (await sql.query(
+      const inserted = (await run(
+        "append:insert",
+        recordClass,
         `INSERT INTO ${table} (log_key, record_id, position, recorded_at, record)
          VALUES ($1, $2, $3, $4, $5::jsonb)
          ON CONFLICT (log_key, record_id) DO NOTHING
@@ -496,7 +607,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
         };
       }
 
-      const existing = (await sql.query(
+      const existing = (await run(
+        "append:reread",
+        recordClass,
         `SELECT position, record FROM ${table} WHERE log_key = $1 AND record_id = $2`,
         [key, recordId],
       )) as Record<string, unknown>[];
@@ -526,7 +639,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
       const out: T[] = [];
       let afterPosition = -1;
       for (;;) {
-        const rows = (await sql.query(
+        const rows = (await run(
+          "read",
+          "PAGE",
           `SELECT position, record FROM ${table}
            WHERE log_key = $1 AND position > $2
            ORDER BY position ASC
@@ -549,7 +664,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
       const out: T[] = [];
       let afterPosition = -1;
       for (;;) {
-        const rows = (await sql.query(
+        const rows = (await run(
+          "readWhere",
+          "PAGE",
           `SELECT position, record FROM ${table}
            WHERE log_key = $1 AND position > $2 AND record #>> '${jsonPath}' = $3
            ORDER BY position ASC
@@ -563,6 +680,26 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
       return out;
     },
 
+    async readRecentWhere(key, path, value, limit, projection) {
+      /* `readWhere` newest first, stopped at `limit` matches, each record
+         narrowed in the SELECT list: the database projects only the rows it
+         returns, and `limit` bounds the response, so this needs no paging.
+         `ORDER BY position DESC` on `(log_key, position)` is a backward index
+         scan that stops at the `limit`th match. */
+      const jsonPath = jsonPathLiteral(table, path);
+      const narrowed = recordProjectionSql(table, projection);
+      const rows = (await run(
+        "readRecentWhere",
+        "PAGE",
+        `SELECT ${narrowed} AS record FROM ${table}
+         WHERE log_key = $1 AND record #>> '${jsonPath}' = $2
+         ORDER BY position DESC
+         LIMIT $3`,
+        [key, value, Math.max(0, Math.trunc(limit))],
+      )) as Record<string, unknown>[];
+      return rows.map((r) => parseValue<unknown>(r.record, `${table} ${key}`));
+    },
+
     async readAll() {
       /* Keyset-paged over the whole table in the same (log_key, position) order
          the single statement used, for the same 64 MiB reason as `read`. */
@@ -570,12 +707,16 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
       let cursor: { readonly key: string; readonly position: number } | null = null;
       for (;;) {
         const rows = (cursor === null
-          ? await sql.query(
+          ? await run(
+              "readAll",
+              "PAGE",
               `SELECT log_key, position, record FROM ${table}
                ORDER BY log_key ASC, position ASC
                LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
             )
-          : await sql.query(
+          : await run(
+              "readAll",
+              "PAGE",
               `SELECT log_key, position, record FROM ${table}
                WHERE (log_key, position) > ($1, $2)
                ORDER BY log_key ASC, position ASC
@@ -593,7 +734,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
     async readRecent(key, limit) {
       /* Newest `limit`, newest first. `limit` bounds the response, so this needs
          no paging — callers pass a small tail (e.g. a digest-history window). */
-      const rows = (await sql.query(
+      const rows = (await run(
+        "readRecent",
+        "PAGE",
         `SELECT record FROM ${table} WHERE log_key = $1 ORDER BY position DESC LIMIT $2`,
         [key, Math.max(0, Math.trunc(limit))],
       )) as Record<string, unknown>[];
@@ -601,7 +744,9 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
     },
 
     async keys() {
-      const rows = (await sql.query(
+      const rows = (await run(
+        "keys",
+        "PAGE",
         `SELECT DISTINCT log_key FROM ${table} ORDER BY log_key ASC`,
       )) as Record<string, unknown>[];
       return rows.map((r) => String(r.log_key));
@@ -618,11 +763,12 @@ export function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepo
  * requires — a silent wait in a library that promised not to read a clock is a
  * lie about both.
  */
-function pgLockManager(sql: Sql): LockManager {
+function pgLockManager(sql: Sql, bounds: ControlPlaneRequestBounds): LockManager {
+  const run = boundedRunner(sql, "pg_advisory_lock", bounds);
   return {
     async withLock<R>(name: string, fn: () => Promise<R>): Promise<R> {
       const key = advisoryLockKey(name).toString();
-      const got = (await sql.query(`SELECT pg_try_advisory_lock($1::bigint) AS ok`, [key])) as {
+      const got = (await run("try", "POINT", `SELECT pg_try_advisory_lock($1::bigint) AS ok`, [key])) as {
         ok: boolean;
       }[];
       if (!got[0]?.ok) {
@@ -640,16 +786,25 @@ function pgLockManager(sql: Sql): LockManager {
            returns normally must hand it back. A process that DIES holds
            nothing — the connection closes and Postgres releases it, which is
            the property that makes this safe across a crash. */
-        await sql.query(`SELECT pg_advisory_unlock($1::bigint)`, [key]);
+        await run("unlock", "POINT", `SELECT pg_advisory_unlock($1::bigint)`, [key]);
       }
     },
   };
 }
 
-/** Bring the schema up. Idempotent, and it records the version it reached. */
-export async function bootstrap(sql: Sql, nowIso: string): Promise<void> {
-  for (const statement of BOOTSTRAP_DDL) await sql.query(statement);
-  await sql.query(recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
+/**
+ * Bring the schema up. Idempotent, and it records the version it reached. Each
+ * statement is a POINT call: a hung statement times out by name and the
+ * connect-retry around the bootstrap tries again.
+ */
+export async function bootstrap(
+  sql: Sql,
+  nowIso: string,
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
+): Promise<void> {
+  const run = boundedRunner(sql, "cp_schema", bounds);
+  for (const statement of BOOTSTRAP_DDL) await run("bootstrap", "POINT", statement);
+  await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
 /**
@@ -675,6 +830,11 @@ export async function createPgRepositories(
      * honest reading — never a silent CREATE from a web request.
      */
     readonly skipBootstrap?: boolean;
+    /**
+     * Override the per-class request bounds (request-bounds.ts). Tests shrink
+     * them; production uses the measured defaults. No call is ever unbounded.
+     */
+    readonly requestBounds?: Partial<ControlPlaneRequestBounds>;
   } = {},
 ): Promise<ControlPlaneRepositories> {
   if (typeof connectionString !== "string" || connectionString.trim().length === 0) {
@@ -686,6 +846,13 @@ export async function createPgRepositories(
     );
   }
   const sql = neon(connectionString);
+  const bounds: ControlPlaneRequestBounds = { ...CONTROL_PLANE_REQUEST_BOUNDS_MS, ...options.requestBounds };
+  for (const [callClass, ms] of Object.entries(bounds)) {
+    if (!Number.isSafeInteger(ms) || ms <= 0) {
+      throw new Error(`CONTROL_PLANE_REQUEST_BOUND_INVALID: ${callClass}=${String(ms)}; every class needs a positive bound`);
+    }
+  }
+  const bounded: PgRepositoryBounds = { bounds };
   if (!options.skipBootstrap) {
     /* The schema bootstrap is this process's first Neon I/O, so its first query
        IS the connect. Under host load that connect can fail transiently
@@ -695,7 +862,7 @@ export async function createPgRepositories(
        bootstrap is idempotent (it records the version it reaches), so retrying
        the transient connect is safe. A latched circuit or a real SQL/status
        error is not retried; see connect-retry.ts. */
-    await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso), {
+    await withControlPlaneConnectRetry(() => bootstrap(sql, nowIso, bounds), {
       onRetry: ({ attempt, delayMs, error }) =>
         console.warn(
           `control-plane bootstrap connect: transient failure on attempt ${attempt} of ` +
@@ -704,76 +871,84 @@ export async function createPgRepositories(
         ),
     });
   }
-  const locks = pgLockManager(sql);
+  const locks = pgLockManager(sql, bounds);
 
   return {
-    workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items"),
-    routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks"),
-    attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts"),
+    workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
+    routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
+    attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts", bounded),
     obligations: pgAggregateRepository<StandingObligation>(
       sql,
       "StandingObligation",
       "cp_obligations",
+      bounded,
     ),
     occurrences: pgAggregateRepository<FreshnessOccurrence>(
       sql,
       "FreshnessOccurrence",
       "cp_occurrences",
+      bounded,
     ),
-    debts: pgAggregateRepository<FreshnessDebt>(sql, "FreshnessDebt", "cp_debts"),
-    leases: pgAggregateRepository<ExecutionLease>(sql, "ExecutionLease", "cp_leases"),
-    transitions: pgAppendOnlyRepository<RecordedTransition>(sql, "transitions"),
-    escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations"),
-    dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions"),
-    artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts"),
-    costs: pgAppendOnlyRepository<CostEntry>(sql, "costs"),
+    debts: pgAggregateRepository<FreshnessDebt>(sql, "FreshnessDebt", "cp_debts", bounded),
+    leases: pgAggregateRepository<ExecutionLease>(sql, "ExecutionLease", "cp_leases", bounded),
+    transitions: pgAppendOnlyRepository<RecordedTransition>(sql, "transitions", bounded),
+    escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
+    dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
+    artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
+    costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
     /* The owner control centre's data plane (ITEM H, schema v3). */
     ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(
       sql,
       "OwnerSnapshot",
       "cp_owner_snapshots",
+      bounded,
     ),
     readinessSnapshots: pgAggregateRepository<ReadinessStateSnapshot>(
       sql,
       "ReadinessStateSnapshot",
       "cp_readiness_snapshots",
+      bounded,
     ),
     fieldManual: pgAggregateRepository<FieldManualStore>(
       sql,
       "FieldManual",
       "cp_field_manual",
+      bounded,
     ),
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,
       "RunnerHeartbeat",
       "cp_runner_heartbeat",
+      bounded,
     ),
     cacheObservations: pgAggregateRepository<CacheObservationRecord>(
       sql,
       "CacheObservationRecord",
       "cp_cache_observations",
+      bounded,
     ),
-    ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests"),
-    ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions"),
+    ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
+    ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
     /* Level 1 — Research (schema v4). */
-    researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state"),
-    methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates"),
-    researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents"),
-    scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results"),
-    workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results"),
+    researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
+    methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
+    researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
+    scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
+    workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
     /* The nightly door (RULING 242, schema v5). */
-    promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline"),
-    windowRuns: pgAppendOnlyRepository<WindowRunRecord>(sql, "window_runs"),
-    windowIncidents: pgAppendOnlyRepository<WindowIncident>(sql, "window_incidents"),
-    windowIntents: pgAppendOnlyRepository<WindowIntent>(sql, "window_intents"),
+    promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline", bounded),
+    windowRuns: pgAppendOnlyRepository<WindowRunRecord>(sql, "window_runs", bounded),
+    windowIncidents: pgAppendOnlyRepository<WindowIncident>(sql, "window_incidents", bounded),
+    windowIntents: pgAppendOnlyRepository<WindowIntent>(sql, "window_intents", bounded),
     /* Software release review (Admin Pass B, schema v8). */
-    softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews"),
+    softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews", bounded),
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
-    adminReceipts: pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts"),
-    agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs"),
-    adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config"),
+    adminReceipts: pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts", bounded),
+    agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
+    discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
+    adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
     budget: budgetRepositoryFrom(
-      pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget"),
+      pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded),
       locks,
     ),
     locks,

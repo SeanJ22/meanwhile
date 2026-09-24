@@ -14,12 +14,17 @@
  *
  * ## What a scope can and cannot do
  *
- * A scope REORDERS and RESTRICTS. It never starts anything: selecting one opens
- * no paid lane (`lib/control-plane/scheduler/model-lane.ts` still decides that),
- * registers no body or source, promotes no jurisdiction, and changes no
- * covered state. Its budget can only refuse paid work — the Fleet's rolling
- * ceiling (`AdminConfig.fleetSpendCeiling`, fallback in `fleet-safety.ts`)
- * stays the one global cap and nothing here raises it.
+ * A scope REORDERS, RESTRICTS, and — through the runner — MATERIALIZES what
+ * is missing. Selecting one starts nothing in the request that records it: at
+ * the start of its next cycle the standing runner creates the requirement
+ * instances the promoted registry defines for the governments in the geography
+ * that no clock carries yet (MW-028, `dispatch-work.ts`), bounded per cycle and
+ * per scope. It opens no paid lane (`lib/control-plane/scheduler/model-lane.ts`
+ * still decides that), registers no body or source a registry does not define,
+ * promotes no jurisdiction, and changes no covered state. Its budget can only
+ * refuse paid work — the Fleet's rolling ceiling (`AdminConfig.fleetSpendCeiling`,
+ * fallback in `fleet-safety.ts`) stays the one global cap and nothing here
+ * raises it.
  *
  * ## Where it lives
  *

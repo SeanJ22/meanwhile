@@ -8,10 +8,13 @@ import {
   type SourceScopedMember,
 } from "../civic-data/manual-source-isolation.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "../civic-data/read-model.ts";
+import type { ManualSuccessorCandidate } from "../civic-data/manual-prior-authority.ts";
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-data/source-authority.ts";
-import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineCandidate } from "../civic-data/types.ts";
+import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineCandidate, type RoutineRemovalEvidence } from "../civic-data/types.ts";
+import { registryMemberCitedUrls } from "./cited-urls.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
+import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { officialStateVoteScopeForOfficeholderId } from "../state-rollcalls/authority.ts";
 
@@ -84,7 +87,10 @@ export interface RegistryRuntimePackage {
 export interface RegistryRuntimePrior {
   readonly versionId: string;
   readonly payload: RegistryRuntimeReadModel;
+  /** Empty for the transfer-time trusted import, whose members carry its own authority instead. */
   readonly sourceReceipt: ManualSourceSetReceipt;
+  /** The exact GOOD base's read model, bound so inherited members name the version they came from. */
+  readonly readModelSha256: string;
 }
 
 export interface RegistryRuntimeCandidateOptions {
@@ -433,8 +439,28 @@ function sourceScopedRegistryProjection(
   });
   const metadataAccepted = input.sourceReceipt.sources.every((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED") &&
     registryIsolationIssue(currentMembers[0]!) === null;
+  /*
+   * A Census placeholder is never a government. This open family keeps a prior
+   * member unless something proves it gone, so the proof is named here: a body
+   * on a division whose own Census code is the "no district here" placeholder
+   * (LEA 99997) leaves the projection whichever side holds it, and the
+   * placeholder's Census name is translated as the committed geometry's is.
+   * Without it the two bodies the 2026-09-14 version carries could never leave,
+   * and the promotion check below would then refuse every future promotion.
+   */
+  const placeholderDivisionIds = new Set(reconciled.members.flatMap((member) =>
+    member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
+  const removedKeys = new Set(reconciled.members.flatMap((member) =>
+    member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholderDivisionIds.has(member.record.value.row.ocdId) ? [member.key] : []));
+  const members = reconciled.members
+    .filter((member) => !removedKeys.has(member.key))
+    .map((member) => {
+      if (member.record.kind !== "DIVISION") return member;
+      const plain = CENSUS_PLACEHOLDER_LABELS[member.record.value.label];
+      return plain === undefined ? member : { ...member, record: { ...member.record, value: { ...member.record.value, label: plain } } };
+    });
   return {
-    payload: rebuildRegistryRuntime(input.payload, prior?.payload ?? null, reconciled.members),
+    payload: rebuildRegistryRuntime(input.payload, prior?.payload ?? null, members),
     sourceReceipt: reconciled.promotionReceipt,
     excludedFacts: [
       ...input.sourceReceipt.sources
@@ -445,7 +471,13 @@ function sourceScopedRegistryProjection(
           detail: `${source.requestedUrl} was blocked and could not authorize any current registry member: ${source.failureDetail}.`,
           record: source,
         })),
-      ...reconciled.excludedFacts,
+      ...reconciled.excludedFacts.filter((fact) => !removedKeys.has(fact.key)),
+      ...reconciled.members.filter((member) => removedKeys.has(member.key)).map((member) => ({
+        key: member.key,
+        code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT",
+        detail: `${member.key} sits on a Census "no district here" placeholder (LEA 99997): geography, never a government, so no body is registered on it.`,
+        record: member.record,
+      })),
     ],
     supportedCurrentSources: reconciled.supportedCurrentSources,
     acceptedCurrentMembers: reconciled.acceptedCurrentMembers,
@@ -470,6 +502,10 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   if (duplicate(divisions.map((division) => division.ocdId))) issues.push("DIVISION_ID_INVALID_OR_DUPLICATED");
   if (duplicate(bodies.map((body) => body.id))) issues.push("BODY_ID_INVALID_OR_DUPLICATED");
   if (bodies.some((body) => body.ocdId !== null && !divisionIds.has(body.ocdId))) issues.push("BODY_DIVISION_UNRESOLVED");
+  // A Census "no district here" placeholder is geography, never a government: no body may sit on one.
+  const placeholderDivisionIds = new Set(divisions.filter((division) => isCensusPlaceholderDivision(division)).map((division) => division.ocdId));
+  const placeholderBodies = bodies.filter((body) => body.ocdId !== null && placeholderDivisionIds.has(body.ocdId)).map((body) => body.id).sort();
+  if (placeholderBodies.length > 0) issues.push(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:${placeholderBodies.join(",")}`);
   const bodyIds = new Set(bodies.map((body) => body.id));
   if (!bodyRosters.length) issues.push("BODY_ROSTERS_EMPTY");
   if (duplicate(bodyRosters.map((roster) => roster.bodyId))) issues.push("BODY_ROSTER_ID_INVALID_OR_DUPLICATED");
@@ -539,22 +575,60 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeReadModel)
   return issues;
 }
 
-function citedRuntimeUrls(value: RegistryRuntimeReadModel): string[] {
-  return [...new Set([
-    ...value.registry.divisions.map((division) => division.provenance?.sourceUrl ?? ""),
-    ...value.registry.bodies.map((body) => body.provenance?.sourceUrl ?? ""),
-    ...value.bodyRosters.flatMap((roster) => [
-      roster.sourceUrl,
-      roster.partisanshipSourceUrl ?? "",
-      ...roster.members.flatMap((member) => [member.websiteUrl ?? "", member.partySourceUrl ?? ""]),
-    ]),
-    ...value.statewideExecutives.flatMap((row) => [row.sourceUrl, row.partySourceUrl ?? ""]),
-    // Holder identity is cross-checked against the separately promoted
-    // federal/body/statewide authority. This contract receipts the mutable
-    // ballot-side candidacy fact rather than claiming the holder publisher.
-    ...value.officialCandidacies.rows.map((row) => row.candidacy?.sourceUrl ?? ""),
-    ...value.officialPhotos.photos.map((photo) => photo.sourceUrl ?? ""),
-  ].filter((url) => /^https:\/\//.test(url)))].sort();
+/**
+ * Every source a projection's members cite, by member (lib/registry/cited-urls.ts).
+ * Holder identity on a candidacy is cross-checked against the separately
+ * promoted federal/body/statewide authority, so a candidacy receipts only its
+ * mutable ballot-side fact rather than claiming the holder publisher.
+ */
+function citedRuntimeUrlsByMember(value: RegistryRuntimeReadModel): Map<string, string[]> {
+  return new Map(civicRecordsFor("REGISTRY_RUNTIME_BINDING", value)
+    .map((member) => [member.key, registryMemberCitedUrls(member.key, member.record)] as const)
+    .filter(([, urls]) => urls.length > 0));
+}
+
+/**
+ * The prior members this successor carries on the base's own authority rather
+ * than a reviewed source (Sean, 2026-09-23): an exact, unchanged prior member
+ * that cites a source this promotion's receipt does not cover. Over the
+ * transfer-time trusted import that is every member no package has touched;
+ * over later versions it is whatever is still carried from that import. The
+ * plane re-proves each one against the exact GOOD base
+ * (lib/civic-data/manual-prior-authority.ts).
+ */
+function inheritedRegistryMembers(
+  payload: RegistryRuntimeReadModel,
+  prior: RegistryRuntimePrior | null,
+  receipted: ReadonlySet<string>,
+): Map<string, string> {
+  if (!prior) return new Map();
+  const before = new Map(civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload)
+    .map((member) => [member.key, sha256(canonicalCivicDataJson(member.record))] as const));
+  const inherited = new Map<string, string>();
+  for (const member of civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload)) {
+    const digest = sha256(canonicalCivicDataJson(member.record));
+    if (before.get(member.key) !== digest) continue;
+    if (registryMemberCitedUrls(member.key, member.record).some((url) => !receipted.has(url))) inherited.set(member.key, digest);
+  }
+  return inherited;
+}
+
+/**
+ * The removals this successor proves (Sean's rule, 2026-09-23): a body the
+ * prior held on a Census "no district here" placeholder, gone from this
+ * projection while the placeholder division stays. Named only against the
+ * prior, because the promotion counts removals against the pointer it replaces.
+ */
+function placeholderBodyRemovals(payload: RegistryRuntimeReadModel, prior: RegistryRuntimePrior | null): RoutineRemovalEvidence[] {
+  if (!prior) return [];
+  const heldDivisions = new Map(payload.registry.divisions.map((division) => [division.ocdId, division]));
+  const kept = new Set(payload.registry.bodies.map((body) => body.id));
+  return prior.payload.registry.bodies.flatMap((body) => {
+    const division = body.ocdId === null ? undefined : heldDivisions.get(body.ocdId);
+    return division && isCensusPlaceholderDivision(division) && !kept.has(body.id)
+      ? [{ key: `body:${body.id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" as const, divisionOcdId: division.ocdId }]
+      : [];
+  }).sort((left, right) => left.key.localeCompare(right.key));
 }
 
 /**
@@ -578,18 +652,40 @@ export async function readRegistryRuntimePrior(
     throw new Error(`REGISTRY_RUNTIME_BASE_UNAVAILABLE:${code}:${read.detail}`);
   }
   const candidate = await store.readCandidate(read.projection.versionId);
-  const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
+  if (!candidate) throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:BASE_CANDIDATE_UNREADABLE");
+  const readModelSha256 = sha256(canonicalCivicDataJson(candidate.candidate.readModel));
+  if (readModelSha256 !== sha256(canonicalCivicDataJson(read.value))) {
+    throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:POINTER_AND_CANDIDATE_DIFFER");
+  }
+  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256 };
+}
+
+/**
+ * The receipt a GOOD base lends its successor. The version imported at the
+ * 2026-09-14 authority transfer carries none: it was admitted, explicitly not
+ * source-authenticated, to preserve the Reader's last known good. Sean's
+ * decision (2026-09-23): the owner door builds on exactly that import, and the
+ * members a package leaves untouched carry forward on the import's own
+ * authority, recorded per member and re-proved against it by the plane.
+ * Refusing it refused every registry correction, since it is the only version
+ * production has held. Any other base without a GOOD receipt is still refused.
+ */
+export function registryBaseSourceReceipt(base: RoutineCandidate): ManualSourceSetReceipt {
+  if (base.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT" && base.retrieval.manualSourceReceipt === undefined) {
+    return { contractVersion: 1, reviewedAt: base.retrieval.retrievedAt, reviewedBy: "trusted-lkg-import", sources: [] };
+  }
+  const sourceReceipt = base.retrieval.manualSourceReceipt;
   const issue = manualSourceReceiptStructureIssue(sourceReceipt);
-  if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
+  if (!sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`REGISTRY_RUNTIME_BASE_PROOF_INVALID:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
   }
-  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt };
+  return sourceReceipt;
 }
 
 export function registryRuntimeCandidate(
   input: RegistryRuntimePackage,
   options: RegistryRuntimeCandidateOptions = {},
-): RoutineCandidate {
+): ManualSuccessorCandidate {
   const contract = requiredManualProductionContract("registry-runtime-bindings");
   const receiptIssue = manualSourceReceiptStructureIssue(input.sourceReceipt);
   if (receiptIssue) {
@@ -612,9 +708,15 @@ export function registryRuntimeCandidate(
   const promotionReceipt = isolated.sourceReceipt;
   const issues = registryRuntimeProjectionIssues(payload);
   const receipted = new Set(promotionReceipt.sources.flatMap((source) => [source.requestedUrl, source.finalUrl]));
-  for (const url of citedRuntimeUrls(payload)) {
-    if (!receipted.has(url)) issues.push(`RUNTIME_SOURCE_NOT_RECEIPTED:${url}`);
+  // A member carried on its base's authority cites nothing this review must cover; every other member's sources must be receipted.
+  const inherited = inheritedRegistryMembers(payload, options.prior ?? null, receipted);
+  const unreceipted = new Set<string>();
+  for (const [key, urls] of citedRuntimeUrlsByMember(payload)) {
+    if (inherited.has(key)) continue;
+    for (const url of urls) if (!receipted.has(url)) unreceipted.add(url);
   }
+  for (const url of [...unreceipted].sort()) issues.push(`RUNTIME_SOURCE_NOT_RECEIPTED:${url}`);
+  const removalEvidence = placeholderBodyRemovals(payload, options.prior ?? null);
   if (!isolated.hasProjectionMetadata) {
     issues.push("REGISTRY_PROJECTION_METADATA_UNSUPPORTED");
   }
@@ -724,5 +826,16 @@ export function registryRuntimeCandidate(
     readModel: payload,
     civicRecords: records,
     excludedFacts: isolated.excludedFacts,
+    ...(removalEvidence.length > 0 ? { removalEvidence } : {}),
+    ...(options.prior && inherited.size > 0
+      ? {
+        manualPriorAuthority: {
+          kind: "VALIDATED_PRIOR_PROJECTION" as const,
+          versionId: options.prior.versionId,
+          readModelSha256: options.prior.readModelSha256,
+          retainedMembers: [...inherited].map(([key, digest]) => ({ key, sha256: digest })),
+        },
+      }
+      : {}),
   };
 }

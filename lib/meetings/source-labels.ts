@@ -15,9 +15,11 @@ import { CAPABILITIES } from "../sources/composite/wiring.ts";
  * Checked against production 2026-08-17, at all four zips: NOTHING renders one
  * today. The server HTML and `/about-area` are clean of all ten ids, and the
  * one place a source could surface — a carried row's provenance — renders
- * `lastFreshAt` and the sentence "our latest check couldn't reach this
- * calendar", never `carried.source`. So this is not a fix; it is the fix's
- * precondition, put in place while the answer is still clean.
+ * `lastFreshAt` and a sentence about the calendar (one fixed sentence then;
+ * since 2026-09-23 the clause its recorded reason earns, from
+ * `carriedRowClause` in `freshness.ts`), never `carried.source`. So this is
+ * not a fix; it is the fix's precondition, put in place while the answer is
+ * still clean.
  *
  * The pressure is real and structural. `/api/meetings` ships the ids to the
  * client in three places (`sources[].source`, every meeting `id`, and
@@ -59,10 +61,17 @@ export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   iqm2: "their online agenda portal",
   revize: "their town website's meetings page",
   schedulepage: "their own published schedule page",
+  // The body's own web page for an effort it runs — a district's school
+  // reconfiguration page, say — where it dates its committee meetings and
+  // community sessions. Not a calendar product, so not called one.
+  "official-page-events": "their own website's page for these meetings",
   // Plain words for a format a reader has no reason to know the name of. Not
   // "their iCalendar feed": the reader is trying to find out when their town
   // meets, and "iCalendar" is an identifier wearing a label's clothes.
   ical: "their town website's events calendar",
+  // The college's own board pages and events calendar, read in place of its
+  // agenda portal (2026-09-23).
+  "pima-edu": "their college website's board meeting pages",
 };
 
 /** The human name, or null when there is none — never a plausible stand-in. */

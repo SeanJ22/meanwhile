@@ -241,6 +241,25 @@ export function judgeCodeIdentity(input: {
 
 interface GitAnswer { readonly ok: boolean; readonly out: string; readonly status: number | null }
 
+/** No answer: git was not asked because the read's time budget was spent. */
+const UNASKED: GitAnswer = { ok: false, out: "", status: null };
+
+/**
+ * The time left before `deadlineMs`, capped by `capMs`; undefined when neither
+ * applies, and 0 when the budget is spent (the caller then does not ask git).
+ */
+function timeLeftMs(deadlineMs: number | null | undefined, capMs?: number): number | undefined {
+  const left = deadlineMs === null || deadlineMs === undefined ? undefined : Math.max(0, Math.floor(deadlineMs - Date.now()));
+  if (left === undefined) return capMs;
+  return capMs === undefined ? left : Math.min(left, capMs);
+}
+
+function gitAnswerBy(args: readonly string[], cwd: string, deadlineMs: number | null | undefined, capMs?: number): GitAnswer {
+  const timeoutMs = timeLeftMs(deadlineMs, capMs);
+  if (timeoutMs !== undefined && timeoutMs <= 0) return UNASKED;
+  return gitAnswer(args, cwd, timeoutMs);
+}
+
 function gitAnswer(args: readonly string[], cwd: string, timeoutMs?: number): GitAnswer {
   try {
     const out = execFileSync("git", [...args], {
@@ -254,32 +273,60 @@ function gitAnswer(args: readonly string[], cwd: string, timeoutMs?: number): Gi
   }
 }
 
-/** `git merge-base --is-ancestor` distinguishes "no" (exit 1) from "could not answer" (anything else). */
-export function gitAncestry(cwd: string): AncestryOracle {
+/**
+ * `git merge-base --is-ancestor` distinguishes "no" (exit 1) from "could not answer" (anything else).
+ * A spent `deadlineMs` answers "could not answer" without asking.
+ */
+export function gitAncestry(cwd: string, deadlineMs: number | null = null): AncestryOracle {
   return (ancestor, descendant) => {
     if (ancestor === descendant) return true;
-    const answer = gitAnswer(["merge-base", "--is-ancestor", ancestor, descendant], cwd);
+    const answer = gitAnswerBy(["merge-base", "--is-ancestor", ancestor, descendant], cwd, deadlineMs);
     if (answer.ok) return true;
     return answer.status === 1 ? false : null;
   };
 }
 
 /** The first-parent changed paths of one commit; null when the diff could not be read (a root commit reads that way). */
-export function firstParentChangedPaths(sha: string, cwd: string): readonly string[] | null {
-  const parents = gitAnswer(["rev-list", "--parents", "-n", "1", sha], cwd);
+export function firstParentChangedPaths(sha: string, cwd: string, deadlineMs: number | null = null): readonly string[] | null {
+  const parents = gitAnswerBy(["rev-list", "--parents", "-n", "1", sha], cwd, deadlineMs);
   if (!parents.ok) return null;
   const [, firstParent] = parents.out.split(/\s+/);
   if (!firstParent) return null;
-  const diff = gitAnswer(["diff", "--name-only", firstParent, sha], cwd);
+  const diff = gitAnswerBy(["diff", "--name-only", firstParent, sha], cwd, deadlineMs);
   if (!diff.ok) return null;
   return diff.out.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
 }
 
-/** Main's first-parent line from `tip`, newest first, at most `bound` commits. */
-export function walkFirstParent(tip: string, cwd: string, bound: number = CODE_IDENTITY_WALK_BOUND): readonly WalkedCommit[] {
-  const list = gitAnswer(["rev-list", "--first-parent", `--max-count=${bound}`, tip], cwd);
+/**
+ * Main's first-parent line from `tip`, newest first, at most `bound` commits.
+ *
+ * Each commit's changed paths are read when first asked for, not up front.
+ * The walk stops at the first commit that is not NON_SHIPPING, so it reads one
+ * or a few diffs where reading all `bound` of them spawned two git processes
+ * per commit — 128 on every cycle's finalization (2026-09-23).
+ */
+export function walkFirstParent(
+  tip: string,
+  cwd: string,
+  bound: number = CODE_IDENTITY_WALK_BOUND,
+  deadlineMs: number | null = null,
+): readonly WalkedCommit[] {
+  const list = gitAnswerBy(["rev-list", "--first-parent", `--max-count=${bound}`, tip], cwd, deadlineMs);
   if (!list.ok) return [];
-  return list.out.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((sha) => ({ sha, changed: firstParentChangedPaths(sha, cwd) }));
+  return list.out
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((sha): WalkedCommit => {
+      let changed: readonly string[] | null | undefined;
+      return {
+        sha,
+        get changed() {
+          if (changed === undefined) changed = firstParentChangedPaths(sha, cwd, deadlineMs);
+          return changed;
+        },
+      };
+    });
 }
 
 /**
@@ -289,6 +336,10 @@ export function walkFirstParent(tip: string, cwd: string, bound: number = CODE_I
  * that fails or times out leaves the remote-tracking ref as last seen and the
  * record says so (`rawMainFetched: false`). A checkout without an `origin`
  * answers from its local `main`.
+ *
+ * `budgetMs` bounds the whole read: every git call gets the time left, and a
+ * call the budget no longer covers is not made, so its question reads as one
+ * git could not answer — CANNOT_TELL, never current (2026-09-23).
  */
 export function readCodeIdentity(input: {
   readonly cwd: string;
@@ -296,23 +347,25 @@ export function readCodeIdentity(input: {
   readonly now: string;
   readonly fetch?: boolean;
   readonly bound?: number;
+  readonly budgetMs?: number;
 }): CodeIdentity {
   const bound = input.bound ?? CODE_IDENTITY_WALK_BOUND;
   const cwd = input.cwd;
+  const deadlineMs = input.budgetMs === undefined ? null : Date.now() + Math.max(0, input.budgetMs);
   let rawMainFetched = false;
   if (input.fetch) {
-    rawMainFetched = gitAnswer(["fetch", "--quiet", "origin", "main"], cwd, CODE_IDENTITY_FETCH_TIMEOUT_MS).ok;
+    rawMainFetched = gitAnswerBy(["fetch", "--quiet", "origin", "main"], cwd, deadlineMs, CODE_IDENTITY_FETCH_TIMEOUT_MS).ok;
   }
   let rawMainSha: string | null = null;
   let rawMainRef: string | null = null;
   for (const ref of ["origin/main", "main"]) {
-    const answer = gitAnswer(["rev-parse", "--verify", "--quiet", `${ref}^{commit}`], cwd);
+    const answer = gitAnswerBy(["rev-parse", "--verify", "--quiet", `${ref}^{commit}`], cwd, deadlineMs);
     if (!answer.ok || !answer.out) continue;
     rawMainSha = answer.out;
     rawMainRef = ref;
     break;
   }
-  const walk = rawMainSha === null ? [] : walkFirstParent(rawMainSha, cwd, bound);
+  const walk = rawMainSha === null ? [] : walkFirstParent(rawMainSha, cwd, bound, deadlineMs);
   const derived: EffectiveExecutable = rawMainSha === null
     ? { effectiveExecutableSha: null, nonShippingAbove: [], executable: null, walkExhausted: false }
     : deriveEffectiveExecutable(walk, bound);
@@ -321,7 +374,7 @@ export function readCodeIdentity(input: {
     effectiveExecutableSha: derived.effectiveExecutableSha,
     runnerTestedSha: input.runnerTestedSha,
     walkExhausted: derived.walkExhausted,
-    contains: gitAncestry(cwd),
+    contains: gitAncestry(cwd, deadlineMs),
   });
   return {
     formatVersion: CODE_IDENTITY_FORMAT_VERSION,

@@ -19,10 +19,12 @@ import {
   successfulRoutineRunnerReceiptIssue,
 } from "../lib/civic-data/runner-receipt.ts";
 import {
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
-  ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_HISTORY_FIELDS,
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+} from "../lib/civic-data/supervisor-history.ts";
+import {
+  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
+  ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   readRoutineTaskClocks,
   routineFailureDomainFrontier,

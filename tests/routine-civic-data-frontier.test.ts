@@ -5,8 +5,6 @@ import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
-  ROUTINE_SUPERVISOR_HISTORY_FIELDS,
-  ROUTINE_SUPERVISOR_HISTORY_WINDOW,
   routineFailureDomainCount,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
@@ -14,6 +12,10 @@ import {
   type RoutineSourceTask,
 } from "../lib/civic-data/runner.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import {
+  ROUTINE_SUPERVISOR_HISTORY_FIELDS,
+  ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+} from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import {
   ROUTINE_CHILD_CONCURRENCY,

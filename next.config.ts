@@ -12,6 +12,29 @@ const staticGeographyTrace = [
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: process.env.WTP_ATTRIBUTION_BUILD === "1",
   /**
+   * A cold server loads the route it was asked for, not every route (C21,
+   * 2026-09-24: a load over 3 s is not a win).
+   *
+   * Netlify's runtime (`@netlify/plugin-nextjs` 5.16.0) starts Next as a full
+   * server through `getRequestHandlers`, not in minimal mode, and passes this
+   * config through unchanged. Next's default `preloadEntriesOnStart: true`
+   * therefore requires EVERY route's server code before a new function
+   * instance answers its first request, and on serverless each burst of
+   * traffic after idle lands on new instances.
+   *
+   * Measured 2026-09-24: ten concurrent `/api/build` requests after idle took
+   * 5.35-5.91 s end to end, of which the function logs put 3.2-3.8 s inside
+   * the handler (warm: 10-280 ms). On a local standalone build, spawn to first
+   * `/api/build` answer took 745-814 ms with the preload and 496-500 ms
+   * without it, three runs each.
+   *
+   * Off, an instance loads a route's code on that route's first request, so
+   * a route pays for itself and nothing else.
+   */
+  experimental: {
+    preloadEntriesOnStart: false,
+  },
+  /**
    * The build's own identity, inlined at BUILD time — the fix for a premise
    * that turned out to be false (R22, corrected 2026-08-17).
    *

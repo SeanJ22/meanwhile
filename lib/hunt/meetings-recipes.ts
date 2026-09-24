@@ -326,7 +326,9 @@ const LINK_STEP_STORY_PATH = /\/(news|news-center|newsroom|press|press-releases?
 
 export function isNavigationLink(link: { readonly url: string; readonly text: string }): boolean {
   const words = link.text.split(/\s+/).filter((w) => w !== "").length;
-  return words > 0 && words <= LINK_STEP_MAX_WORDS && !LINK_STEP_STORY_PATH.test(new URL(link.url).pathname);
+  /* An https link the page carries, resolved against it (`anchorLinks`): its path is matched, never opened. */
+  const target = new URL(link.url);
+  return words > 0 && words <= LINK_STEP_MAX_WORDS && !LINK_STEP_STORY_PATH.test(target.pathname);
 }
 
 export interface RecipeCandidate {

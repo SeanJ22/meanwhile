@@ -129,53 +129,13 @@ function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): Juris
   return { jurisdictionId, officialSite, routes: [] };
 }
 
+/*
+ * Cottonwood, Douglas, El Mirage, Eloy and Holbrook left this list on 2026-09-24: their current sites are reviewed
+ * website corrections now (C15, `lib/civic-data/website-corrections.ts`), so the gap ledger records the corrected
+ * address itself and a hint replacing the old one would name an address no longer on record.
+ */
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
-  siteHint("az:city:city-of-cottonwood", {
-    origin: "https://cottonwoodaz.gov",
-    selfName: "City of Cottonwood",
-    replaces: "http://www.ci.cottonwood.az.us",
-    recordedState: "it does not resolve: www.ci.cottonwood.az.us is a CNAME to ci.cottonwood.az.us, which has no address record",
-    evidence: [
-      `${DOTGOV} cottonwoodaz.gov, City, City of Cottonwood, Cottonwood, AZ`,
-      "its homepage answered 200, titled \"Cottonwood, AZ | Official Website\", naming the City of Cottonwood at 827 N. Main St",
-    ],
-    observed: { at: "2026-09-24T18:07:56Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-douglas", {
-    origin: "https://douglasaz.gov",
-    selfName: "City of Douglas",
-    replaces: "http://www.douglasaz.org",
-    recordedState: "it does not resolve: douglasaz.org's nameservers refuse or time out (SERVFAIL)",
-    evidence: [
-      `${DOTGOV} douglasaz.gov, City, City of Douglas, Douglas, AZ`,
-      "Cochise County's Quick Links page (www.cochise.az.gov/QuickLinks.aspx) links www.douglasaz.gov",
-      "its homepage answered 200, titled \"Douglas, AZ | Official Website\"",
-    ],
-    observed: { at: "2026-09-24T18:08:01Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-el-mirage", {
-    origin: "https://elmirageaz.gov",
-    selfName: "City of El Mirage",
-    replaces: "http://www.cityofelmirage.org",
-    recordedState: "it has moved: http and https both answer 301 to https://elmirageaz.gov/",
-    evidence: [
-      "the recorded host's own 301 names https://elmirageaz.gov/",
-      `${DOTGOV} elmirageaz.gov, City, City of El Mirage, El Mirage, AZ`,
-    ],
-    observed: { at: "2026-09-24T18:08:06Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-eloy", {
-    origin: "https://eloyaz.gov",
-    selfName: "City of Eloy",
-    replaces: "http://www.ci.eloy.az.us",
-    recordedState: "it serves a stock IIS default page (last modified 2022-05-19) over http, and https resets",
-    evidence: [
-      `${DOTGOV} eloyaz.gov, City, City of Eloy, Eloy, AZ`,
-      "Pinal County's City & Town Governments list (www.pinal.gov/QuickLinks.aspx?CID=74) links https://www.eloyaz.gov/",
-    ],
-    observed: { at: "2026-09-24T18:08:12Z", by: SITE_RESEARCH },
-  }),
   siteHint("az:city:city-of-flagstaff", {
     origin: "https://www.flagstaff.az.gov",
     selfName: "City of Flagstaff",
@@ -186,17 +146,6 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
       "its homepage answered 200, titled \"City of Flagstaff Official Website\"",
     ],
     observed: { at: "2026-09-24T18:08:17Z", by: SITE_RESEARCH },
-  }),
-  siteHint("az:city:city-of-holbrook", {
-    origin: "https://holbrookaz.gov",
-    selfName: "City of Holbrook",
-    replaces: "http://www.ci.holbrook.az.us/",
-    recordedState: "it does not resolve: ci.holbrook.az.us is delegated to nameservers that time out (SERVFAIL)",
-    evidence: [
-      `${DOTGOV} holbrookaz.gov, City, Holbrook, City of, Holbrook, AZ`,
-      "its homepage answered 200 and reads \"The Official City of Holbrook Website\"",
-    ],
-    observed: { at: "2026-09-24T18:08:23Z", by: SITE_RESEARCH },
   }),
   siteHint("az:city:city-of-winslow", {
     origin: "https://www.winslowaz.gov",

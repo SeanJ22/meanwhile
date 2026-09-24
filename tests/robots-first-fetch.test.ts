@@ -128,7 +128,11 @@ test("ONE HOST IS SPACED: two seconds between its requests, or its own Crawl-del
 test("THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFetch, and package.json names it", () => {
   const cli = readFileSync("scripts/research-fetch.mts", "utf8");
   assert.match(cli, /await researchFetch\(target, \{/);
-  assert.equal((cli.match(/\bfetch\(/g) ?? []).length, 1, "one transport, handed to researchFetch as its get");
-  assert.match(cli, /redirect: "manual"/, "the transport never follows a redirect itself");
+  assert.equal((cli.match(/\bfetch\(/g) ?? []).length, 0, "no transport of its own");
+  assert.match(cli, /\n\s+get: nodeResearchGet,\n/, "it hands researchFetch the module's one transport");
+  const lib = readFileSync("lib/hunt/robots-first-fetch.ts", "utf8");
+  const transport = lib.slice(lib.indexOf("export const nodeResearchGet"), lib.indexOf("\n};", lib.indexOf("export const nodeResearchGet")));
+  assert.equal((transport.match(/\bfetch\(/g) ?? []).length, 1, "one transport");
+  assert.match(transport, /redirect: "manual"/, "the transport never follows a redirect itself");
   assert.match(readFileSync("package.json", "utf8"), /"research:fetch": "tsx scripts\/research-fetch\.mts"/);
 });

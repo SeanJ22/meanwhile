@@ -377,6 +377,7 @@ export const SOURCE_AUTHORITIES = {
       "named covered-state government from the adopted Census source vintage",
       "reviewed filing-officer and election-custodian routing",
       "explicit adapted, discovery-owed, and requires-adapter state",
+      "a government's current website where a reviewed correction replaces a dead Census address: its homepage and its own .gov registry row name the same government, or another government's own publication names the site (C15, the website field only)",
     ],
     expectedIdentifierKeys: ["jurisdiction_id"],
     expectedTemporalFields: ["source_version", "source_through"],

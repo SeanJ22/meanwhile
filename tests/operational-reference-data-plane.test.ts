@@ -9,7 +9,9 @@ import {
   CENSUS_GOVERNMENT_UNITS_URL,
   jurisdictionReferenceAcquisitionTestOnly,
   type JurisdictionReferenceAcquisitionSuccess,
+  type JurisdictionReferenceSourceReceipt,
 } from "../lib/civic-data/jurisdiction-reference-acquisition.ts";
+import { DOTGOV_REGISTRY_URL, WEBSITE_CORRECTIONS, websiteCorrectionNote } from "../lib/civic-data/website-corrections.ts";
 import {
   clearOperationalReferenceBundle,
   installOperationalReferenceBundle,
@@ -21,7 +23,7 @@ import {
 } from "../lib/civic-data/operational-references.ts";
 import { manualCandidateContractIssue, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 
@@ -258,6 +260,38 @@ test("a semantically bad successor is refused without replacing the promoted ref
   assert.equal(refused.promoted, null);
   assert.equal(refused.candidate.state, "SEMANTIC_INVALID");
   assert.equal((await store.readPromotion(first.recordClass, first.scope))?.versionId, first.id);
+});
+
+test("C15: a reviewed website correction promotes with the receipts of the pages read again; a forged or unreceipted one is refused", async () => {
+  const acquired = (await acquire()).result;
+  assert.equal(acquired.kind, "ACQUIRED");
+  if (acquired.kind !== "ACQUIRED") return;
+  const c = WEBSITE_CORRECTIONS.find((x) => x.jurisdictionId === "az:city:city-of-cottonwood")!;
+  const withRow = (row: (j: Jurisdiction) => Jurisdiction) => {
+    const all = registries();
+    const az = all.az as unknown as { jurisdictions: Jurisdiction[] };
+    az.jurisdictions = az.jurisdictions.map((j) => (j.id === c.jurisdictionId ? row(j) : j));
+    return all;
+  };
+  const corrected = withRow((j) => ({ ...j, ownWebAddress: c.corrected, ownWebAddressCorrection: websiteCorrectionNote(c, "APPLIED_VERIFIED") }));
+  const read = [
+    { sourceId: "website-correction:dotgov-registry", requestedUrl: DOTGOV_REGISTRY_URL, finalUrl: DOTGOV_REGISTRY_URL, httpStatus: 200, retrievedAt: NOW, rawHash: sha256(Buffer.from("csv")), byteCount: 3 },
+    { sourceId: `website-correction:${c.jurisdictionId}:homepage`, requestedUrl: c.homepage!.url, finalUrl: c.homepage!.url, httpStatus: 200, retrievedAt: NOW, rawHash: sha256(Buffer.from("home")), byteCount: 4 },
+  ] as const;
+  const build = (regs: ReturnType<typeof registries>, sourceReceipts: readonly JurisdictionReferenceSourceReceipt[]) =>
+    jurisdictionOperationalReferenceCandidate({ registries: regs, sourceReceipts, workbook: acquired.workbook, retrievedAt: NOW });
+
+  const good = build(corrected, [...acquired.receipts, ...read]);
+  assert.deepEqual(good.semantics.violations, []);
+  assert.equal(good.retrieval.succeeded, true);
+  const store = new MemoryRoutineDataStore();
+  assert.equal((await processRegisteredManualCandidate(store, "jurisdiction-operational-reference", good, NOW)).candidate.state, "PROMOTED");
+
+  assert.ok(build(corrected, acquired.receipts).semantics.violations.includes(`WEBSITE_CORRECTION_UNRECEIPTED:${c.jurisdictionId}:homepage`));
+  const forged = withRow((j) => ({ ...j, ownWebAddress: "https://attacker.example", ownWebAddressCorrection: websiteCorrectionNote(c, "APPLIED_VERIFIED") }));
+  assert.ok(build(forged, [...acquired.receipts, ...read]).semantics.violations.some((v) => v.startsWith("WEBSITE_CORRECTION_ROW:")));
+  const stray = build(corrected, [...acquired.receipts, ...read, { ...read[1], sourceId: "website-correction:az:city:city-of-tucson:homepage" }]);
+  assert.equal(stray.retrieval.succeeded, false, "a receipt for a page the reviewed list does not name is refused");
 });
 
 test("standing jurisdiction obligations require the installed promoted projection and never read tracked JSON", () => {

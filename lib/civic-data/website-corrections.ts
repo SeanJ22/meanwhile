@@ -36,6 +36,9 @@
 export const WEBSITE_CORRECTION_AUTHORIZATION =
   "Owner decision C15, recorded 2026-09-24T22:43Z in the session closeout list: authorize the additional evidence for the website field only; the official homepage and federal .gov registry must identify the same government; record the evidence and the actual reviewer.";
 
+/** The short citation a corrected row carries. */
+export const WEBSITE_CORRECTION_CITATION = "C15: owner decision recorded 2026-09-24T22:43Z (website field only)" as const;
+
 /** The reviewer of every correction below: the agent session that checked it. */
 export const WEBSITE_CORRECTION_REVIEWER = "RouteTask agent session (Claude Code, claude-opus-5-5)";
 
@@ -168,6 +171,124 @@ export function websiteCorrectionListIssues(list: readonly WebsiteCorrection[]):
 /** The corrections that meet the rule, by jurisdiction id. */
 export function applicableWebsiteCorrections(list: readonly WebsiteCorrection[]): ReadonlyMap<string, WebsiteCorrection> {
   return new Map(list.filter((c) => websiteCorrectionIssues(c).length === 0).map((c) => [c.jurisdictionId, c] as const));
+}
+
+/**
+ * What a corrected row carries, so the address never reads as the Census record it replaced. REVIEWED: applied on
+ * the reviewed evidence as committed (a build that reads nothing). The others are the reference promotion's reading
+ * of the sources again (`acquireWebsiteCorrections`); a REFUSED row keeps the Census address and says why.
+ */
+export interface WebsiteAddressCorrectionNote {
+  readonly recorded: string;
+  readonly corrected: string;
+  readonly basis: "HOMEPAGE_AND_REGISTRY" | "OTHER_GOVERNMENT_PUBLICATION";
+  readonly reviewedBy: string;
+  readonly reviewedAt: string;
+  readonly reading: "REVIEWED" | "APPLIED_VERIFIED" | "APPLIED_ON_REVIEWED_EVIDENCE" | "REFUSED";
+  readonly detail?: string;
+  readonly authorization: typeof WEBSITE_CORRECTION_CITATION;
+}
+
+/** An address as a comparable key: scheme, a leading www., case and a trailing slash aside. */
+function addressKey(address: string): string {
+  const raw = /^[a-z]+:\/\//i.test(address.trim()) ? address.trim() : `http://${address.trim()}`;
+  try {
+    const url = new URL(raw);
+    return `${bareHost(url.hostname.toLowerCase())}${url.pathname.replace(/\/+$/, "")}${url.search}`;
+  } catch {
+    return address.trim().toLowerCase();
+  }
+}
+
+/**
+ * The reviewed correction for a jurisdiction, applied only while the address on record is still the one it
+ * replaces; null otherwise (no correction, one that does not meet the rule, or a record that has since changed).
+ */
+export function websiteCorrectionFor(
+  jurisdictionId: string,
+  recorded: string | null,
+  list: readonly WebsiteCorrection[] = WEBSITE_CORRECTIONS,
+): WebsiteCorrection | null {
+  if (recorded === null) return null;
+  const c = applicableWebsiteCorrections(list).get(jurisdictionId);
+  return c !== undefined && addressKey(c.recorded) === addressKey(recorded) ? c : null;
+}
+
+export function websiteCorrectionNote(
+  c: WebsiteCorrection,
+  reading: WebsiteAddressCorrectionNote["reading"],
+  detail?: string,
+): WebsiteAddressCorrectionNote {
+  return {
+    recorded: c.recorded,
+    corrected: c.corrected,
+    basis: c.homepage !== null && c.registry !== null && registryIsTheSitesOwn(c) ? "HOMEPAGE_AND_REGISTRY" : "OTHER_GOVERNMENT_PUBLICATION",
+    reviewedBy: c.reviewedBy,
+    reviewedAt: c.reviewedAt,
+    reading,
+    ...(detail === undefined ? {} : { detail }),
+    authorization: WEBSITE_CORRECTION_CITATION,
+  };
+}
+
+/**
+ * Why a row's correction note does not match the reviewed list, or null. A note must name an applicable correction
+ * exactly, and the row's address must be the corrected one, or the recorded one when the reading refused it.
+ */
+export function websiteCorrectionRowIssue(
+  row: { readonly id: string; readonly ownWebAddress: string | null; readonly ownWebAddressCorrection?: WebsiteAddressCorrectionNote },
+  list: readonly WebsiteCorrection[] = WEBSITE_CORRECTIONS,
+): string | null {
+  const note = row.ownWebAddressCorrection;
+  if (note === undefined) return null;
+  const c = applicableWebsiteCorrections(list).get(row.id);
+  if (c === undefined) return `${row.id}: carries a website correction the reviewed list does not hold`;
+  if (note.recorded !== c.recorded || note.corrected !== c.corrected || note.reviewedBy !== c.reviewedBy || note.reviewedAt !== c.reviewedAt) {
+    return `${row.id}: its website correction does not match the reviewed one`;
+  }
+  const expected = note.reading === "REFUSED" ? c.recorded : c.corrected;
+  return row.ownWebAddress === expected ? null : `${row.id}: records ${row.ownWebAddress ?? "no address"} under a ${note.reading} correction`;
+}
+
+/**
+ * Why a receipt read to confirm a correction is not one the reviewed list names, or null. The receipt's source id
+ * fixes which page it may be, so a receipt cannot stand in for another government's evidence.
+ */
+export function websiteCorrectionReceiptIssue(
+  receipt: { readonly sourceId: string; readonly requestedUrl: string; readonly finalUrl: string; readonly httpStatus: number; readonly retrievedAt: string; readonly rawHash: string; readonly byteCount: number },
+  list: readonly WebsiteCorrection[] = WEBSITE_CORRECTIONS,
+): string | null {
+  const id = receipt.sourceId;
+  let expectedUrl: string | null = null;
+  let expectedHost: string | null = null;
+  if (id === "website-correction:dotgov-registry") {
+    expectedUrl = DOTGOV_REGISTRY_URL;
+    expectedHost = hostOf(DOTGOV_REGISTRY_URL);
+  } else {
+    const m = /^website-correction:(.+):(homepage|evidence-(\d+))$/.exec(id);
+    const c = m === null ? undefined : applicableWebsiteCorrections(list).get(m[1]);
+    if (m !== null && c !== undefined) {
+      if (m[2] === "homepage" && c.homepage !== null) {
+        expectedUrl = c.homepage.url;
+        expectedHost = hostOf(c.corrected);
+      } else if (m[3] !== undefined) {
+        const o = c.other[Number(m[3])];
+        if (o !== undefined && o.kind !== "RECORDED_HOST_REDIRECT") {
+          expectedUrl = o.url;
+          expectedHost = hostOf(o.url);
+        }
+      }
+    }
+  }
+  if (expectedUrl === null || expectedHost === null) return `WEBSITE_CORRECTION_RECEIPT_UNKNOWN:${id}`;
+  if (receipt.requestedUrl !== expectedUrl) return `WEBSITE_CORRECTION_RECEIPT_REQUEST_MISMATCH:${id}`;
+  const final = /^https:\/\//.test(receipt.finalUrl) ? hostOf(receipt.finalUrl) : null;
+  if (final === null || bareHost(final) !== bareHost(expectedHost)) return `WEBSITE_CORRECTION_RECEIPT_FINAL_AUTHORITY_MISMATCH:${id}`;
+  if (receipt.httpStatus < 200 || receipt.httpStatus >= 300) return `WEBSITE_CORRECTION_RECEIPT_HTTP_STATUS:${id}`;
+  if (!/^[a-f0-9]{64}$/.test(receipt.rawHash)) return `WEBSITE_CORRECTION_RECEIPT_RAW_HASH_INVALID:${id}`;
+  if (!Number.isInteger(receipt.byteCount) || receipt.byteCount <= 0) return `WEBSITE_CORRECTION_RECEIPT_BYTE_COUNT_INVALID:${id}`;
+  if (!Number.isFinite(Date.parse(receipt.retrievedAt))) return `WEBSITE_CORRECTION_RECEIPT_RETRIEVED_AT_INVALID:${id}`;
+  return null;
 }
 
 /** Whether a homepage body still names the government as reviewed (case, spacing and common entities aside). */

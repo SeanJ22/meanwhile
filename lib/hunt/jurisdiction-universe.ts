@@ -44,6 +44,8 @@
  * established is not a denominator that happens to be small.
  */
 
+import type { WebsiteAddressCorrectionNote } from "../civic-data/website-corrections.ts";
+
 /**
  * The classes of local government this project distinguishes.
  *
@@ -138,6 +140,11 @@ export interface Jurisdiction {
    * starts, never a route that has been walked.
    */
   readonly ownWebAddress: string | null;
+  /**
+   * Present only when `ownWebAddress` is not the Census record: the reviewed website correction applied to it, or
+   * refused at promotion (C15, the website field only; `lib/civic-data/website-corrections.ts`).
+   */
+  readonly ownWebAddressCorrection?: WebsiteAddressCorrectionNote;
   /**
    * Keys into the registry's `sourceCatalog`.
    *

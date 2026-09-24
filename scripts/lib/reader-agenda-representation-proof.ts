@@ -149,7 +149,9 @@ export async function agendaRepresentationProof() {
   assert.equal(agendaDocumentRepresentation(realAgenda), "TEXT");
   assert.ok(agendaItems(realAgenda.text).length > 0);
   for (const id of ["schedulepage:newbury-planning-board:2026-07-21", "schedulepage:newbury-planning-board:2026-08-18", "schedulepage:newbury-zoning-board-of-adjustment:2026-08-13"]) {
-    const row: { representation: string; actualMarkup: string } = representations.find(candidate => candidate.meetingId === id)!;
+    const found = representations.find(candidate => candidate.meetingId === id);
+    assert.ok(found && found.setAside === undefined, `${id} is a shown sitting`);
+    const row = found as unknown as { representation: string; actualMarkup: string };
     assert.equal(row.representation, "TEXT");
     assert.ok(row.actualMarkup.includes("whitespace-pre-line"), id);
     assert.ok(row.actualMarkup.includes("Case"), id);
@@ -168,7 +170,9 @@ export async function agendaRepresentationProof() {
   }
   assert.deepEqual(representations.filter(row => row.acquisition === "ITEMS_READER_READY").map(row => row.meetingId).sort(), heldReference.map(row => row.meetingId).sort(), "Every still-held reviewed item-ready source must survive; newly eligible versions require an explicit reference update");
   for (const [meetingId, count] of [["legistar:pima:1804", 39], ["legistar:pima:1817", 32], ["legistar:pima:1821", 33], ["legistar:pima:1827", 28], ["schedulepage:mhrd:2026-06-15", 72], ["schedulepage:mhrd:2026-08-17", 38]] as const) {
-    const row: { legacyPayload: { items: string[] }; actualMarkup: string } = representations.find(candidate => candidate.meetingId === meetingId)!;
+    const found = representations.find(candidate => candidate.meetingId === meetingId);
+    assert.ok(found && found.setAside === undefined, `${meetingId} is a shown sitting`);
+    const row = found as unknown as { legacyPayload: { items: string[] }; actualMarkup: string };
     assert.equal(row.legacyPayload.items.length, count, meetingId);
     assert.ok(row.actualMarkup.includes(row.legacyPayload.items.at(-1)!.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;")), `${meetingId}: final item must render`);
   }

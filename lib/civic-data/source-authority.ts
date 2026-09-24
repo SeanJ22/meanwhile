@@ -1,3 +1,4 @@
+import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -337,6 +338,26 @@ export const SOURCE_AUTHORITIES = {
     horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. It never claims a wider geography universe and never substitutes a different Census vintage.",
     parserVersion: "census-geography-overlaps/1",
     freshnessExpectation: "Owner-invoked version promotion on a new Census relationship-file vintage; never a silent vintage substitution.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: true,
+  },
+  "census-governments-registration": {
+    id: "census-governments-registration",
+    publisher: "U.S. Census Bureau",
+    trust: "T1_AUTHORITATIVE_STRUCTURED",
+    sourceClass: "FEDERAL_AGENCY",
+    routePrefixes: [REGISTRATION_SOURCE_ROUTE_PREFIX],
+    allowedFinalHosts: ["www2.census.gov"],
+    // Every state, DC and territory in the FIPS table: registration covers the country, never a chosen list.
+    jurisdictions: REGISTRATION_TARGETS.map((t) => t.jurisdiction),
+    recordClasses: ["REGISTRATION"],
+    competentFacts: ["The governments of each state (2022 Census of Governments)", "Census division identity and GEOID (2023 cartographic boundary files)", "OCD division id built from the Census names"],
+    expectedIdentifierKeys: ["ocd_id", "geoid"],
+    expectedTemporalFields: ["version", "source_through"],
+    horizonSemantics:
+      "Complete for the pinned Census vintage: every government the 2022 Census of Governments lists in the state, each on the Census division the Census ties it to or named as unpaired, and every Census division in the state. It never claims a government the Census does not list, and a different Census file is refused rather than substituted.",
+    parserVersion: REGISTRATION_PARSER_VERSION,
+    freshnessExpectation: "Every 90 days a conditional request confirms census.gov still serves the pinned Census of Governments bytes (a 304 against the Last-Modified they were served with, or the bytes hashed); a new vintage waits for the reference to be rebuilt from it.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },

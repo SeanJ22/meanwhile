@@ -4,6 +4,7 @@ import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
+import type { RegistrationReadModel } from "../registration/candidate.ts";
 
 /**
  * Request-scoped "reader authority" edge bundle: the large families the coverage
@@ -36,11 +37,23 @@ export interface StateLegislatorsEdgeValue {
   readonly versionId: string;
 }
 
+/**
+ * Each state's promoted registration on the edge (2026-09-24). Not fetched with the bundle: a request loads only
+ * the states its divisions name. `states` is complete (`ReaderManifest.registrations`): a state it lacks has no
+ * promoted registration. `load` answers null when the artifact could not be fetched, and the caller then reads that
+ * state from the database.
+ */
+export interface RegistrationsEdge {
+  readonly states: ReadonlySet<string>;
+  readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
+}
+
 export interface ReaderAuthorityEdgeBundle {
   readonly registryRuntime?: RegistryRuntimeEdgeValue;
   readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
+  readonly registrations?: RegistrationsEdge;
 }
 
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
@@ -69,4 +82,7 @@ export function currentCampaignSitesEdge(): CampaignSitesEdgeValue | null {
 }
 export function currentStateLegislatorsEdge(): StateLegislatorsEdgeValue | null {
   return edgeStore.getStore()?.stateLegislators ?? null;
+}
+export function currentRegistrationsEdge(): RegistrationsEdge | null {
+  return edgeStore.getStore()?.registrations ?? null;
 }

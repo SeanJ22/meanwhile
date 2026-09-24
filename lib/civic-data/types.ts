@@ -33,6 +33,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "CURATED_READER_RECORD",
   "DOTGOV_REFERENCE",
   "OPERATIONAL_REFERENCE",
+  "REGISTRATION",
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 

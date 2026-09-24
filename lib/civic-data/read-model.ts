@@ -323,6 +323,12 @@ function provenPointersOf(store: CivicDataReadStore | undefined): Map<string, { 
   return pointers;
 }
 
+/** A proven projection with the newest confirmation a fresh identity read carried (or none). */
+function withLatestConfirmation<T>(projection: PromotedProjection<T>, identity: PromotedPointerIdentity): PromotedProjection<T> {
+  const { latestConfirmation: _proven, ...rest } = projection;
+  return identity.latestConfirmation ? { ...rest, latestConfirmation: identity.latestConfirmation } : rest;
+}
+
 function samePointer(identity: PromotedPointerIdentity, projection: PromotedProjection): boolean {
   return identity.key === projection.key &&
     identity.sourceId === projection.sourceId &&
@@ -479,8 +485,10 @@ async function loadPromotedCivicData<T>(
     if (known !== undefined && typeof store.readPromotionIdentity === "function") {
       const identity = await store.readPromotionIdentity(recordClass, scope);
       if (identity !== null && samePointer(identity, known.projection)) {
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: known.projection, candidate: known.candidate });
-        return promotedResult(known.projection as PromotedProjection<T>, known.candidate, now, options.maxAgeMs);
+        // The version is unchanged; its newest confirmation comes with the identity.
+        const projection = withLatestConfirmation(known.projection, identity);
+        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
+        return promotedResult(projection as PromotedProjection<T>, known.candidate, now, options.maxAgeMs);
       }
     }
     const projection = await store.readPromotion<T>(recordClass, scope);
@@ -622,8 +630,9 @@ export async function readPromotedCivicDataBatch<T>(
         const proven = pointers.get(key);
         const rows = identitiesByScope.get(scope) ?? [];
         if (proven === undefined || rows.length !== 1 || !samePointer(rows[0]!, proven.projection)) return true;
-        results.set(scope, promotedResult(proven.projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs));
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: proven.projection, candidate: proven.candidate });
+        const projection = withLatestConfirmation(proven.projection, rows[0]!);
+        results.set(scope, promotedResult(projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs));
+        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
         return false;
       });
     }
@@ -1111,9 +1120,18 @@ function promotedResult<T>(
   now: string,
   maxAgeMs: number | undefined,
 ): CivicDataReadResult<T> {
+  // A confirmation re-acquired and validated this exact version and found
+  // nothing new, so the version is as fresh as that re-check.
+  const pointedRetrievedAt = candidate.candidate.retrieval.retrievedAt;
+  const confirmedRetrievedAt = projection.latestConfirmation?.versionId === projection.versionId
+    ? projection.latestConfirmation.retrieval.retrievedAt
+    : null;
+  const retrievedAt = confirmedRetrievedAt !== null && Date.parse(confirmedRetrievedAt) > Date.parse(pointedRetrievedAt)
+    ? confirmedRetrievedAt
+    : pointedRetrievedAt;
   const temporal = temporalState({
     now,
-    retrievedAt: candidate.candidate.retrieval.retrievedAt,
+    retrievedAt,
     staleAtRetrieval: candidate.candidate.temporal.staleAtRetrieval,
     maxAgeMs,
   });
@@ -1129,7 +1147,7 @@ function promotedResult<T>(
       versionId: projection.versionId,
       lastKnownGoodVersionId: projection.lastKnownGoodVersionId,
       sourceThrough: candidate.candidate.temporal.sourceThrough,
-      retrievedAt: candidate.candidate.retrieval.retrievedAt,
+      retrievedAt,
       promotedAt: projection.promotedAt,
       ...temporal,
     },

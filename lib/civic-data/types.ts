@@ -1,3 +1,5 @@
+import type { UnchangedConfirmation } from "./unchanged-confirmation.ts";
+
 /** The four source-trust classes in the routine civic-data contract. */
 export const SOURCE_TRUST_CLASSES = [
   "T1_AUTHORITATIVE_STRUCTURED",
@@ -626,6 +628,12 @@ export interface PromotedProjection<T = unknown> {
   readonly promotedAt: string;
   readonly payload: T;
   readonly receipt: ValidationReceipt;
+  /**
+   * The pointed version's newest unchanged confirmation, when one exists: a
+   * re-check that found nothing new and kept readers on this version. Reader
+   * freshness is measured from the later of its retrieval and the version's.
+   */
+  readonly latestConfirmation?: UnchangedConfirmation;
 }
 
 /**
@@ -636,5 +644,5 @@ export interface PromotedProjection<T = unknown> {
  */
 export type PromotedPointerIdentity = Pick<
   PromotedProjection,
-  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt"
+  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation"
 >;

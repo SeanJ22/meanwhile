@@ -322,11 +322,12 @@ function frozenImportAdmission(): ReaderExecutionAuthorityArchivedSupportAdmissi
 
 test("meeting proof derives the exact 83/41 authority from admitted import membership", () => {
   const authority = readerProofMeetingsAuthorityFromImport(frozenImportAdmission());
-  // 124 imported (83 promoted / 41 zero-LKG) + 1 registered after the import
-  // (PDC_V2_POST_IMPORT_MEETING_PARTITIONS), NOT_RECORDED until the runner gains it.
-  assert.equal(authority.partitions.length, 125);
+  // 124 imported (83 promoted / 41 zero-LKG) + 2 registered after the import
+  // (PDC_V2_POST_IMPORT_MEETING_PARTITIONS: Tucson Unified's page, Chandler's
+  // schedule table), NOT_RECORDED until the runner gains them.
+  assert.equal(authority.partitions.length, 126);
   assert.equal(authority.meetingPartitionsWithLkg, 83);
-  assert.equal(authority.meetingPartitionsWithoutLkg, 42);
+  assert.equal(authority.meetingPartitionsWithoutLkg, 43);
   assert.deepEqual(authority, frozenMeetingAuthority());
 
   const admission = frozenImportAdmission();
@@ -391,11 +392,11 @@ test("meeting proof identity binds all promoted and intentional no-LKG partition
   const input = meetingProofInput();
   assert.equal(input.kind, "PROMOTED");
   if (input.kind !== "PROMOTED") return;
-  assert.equal(input.partitions.length, 125);
+  assert.equal(input.partitions.length, 126);
   assert.equal(input.partitions.filter(({ kind }) => kind === "PROMOTED").length, 83);
-  assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 42);
+  assert.equal(input.partitions.filter(({ kind }) => kind === "NOT_RECORDED").length, 43);
   assert.equal(expected.meetingPartitionsWithLkg, 83);
-  assert.equal(expected.meetingPartitionsWithoutLkg, 42);
+  assert.equal(expected.meetingPartitionsWithoutLkg, 43);
   assert.equal(requireReaderProofMeetingsProjection(input, expected), input.value);
   const identity = readerProofMeetingPartitionIdentity(input, expected);
   const reversed = meetingProofInput([...input.partitions].reverse());

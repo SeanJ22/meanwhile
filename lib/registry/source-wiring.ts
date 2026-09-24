@@ -785,6 +785,37 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-15",
   },
 
+  // Chandler, AZ — City Council (C14, 2026-09-24). Every agenda, result and
+  // minutes set is published only on destinyhosted.com, whose robots.txt reads
+  // as disallow-all and which is never requested. The city's own City Clerk
+  // page publishes the year's sittings as the "2026 City Council Meeting Dates"
+  // table (Resolution No. 5937, Exhibit A): 33 full dates in three columns
+  // (Regular and Study Sessions, Study Sessions, Regular Meetings). The table
+  // section states no time, so none is claimed. The page's own sentence that
+  // the Council "usually meets at 88 E. Chicago St. in the Council Chambers"
+  // is a usual place, not each sitting's, so `venueMatch` resolves only once a
+  // reviewed venue says so; until then each sitting is served without a pin.
+  {
+    bodyId: "ocd-division/country:us/state:az/place:chandler#governing",
+    ocdId: "ocd-division/country:us/state:az/place:chandler",
+    agendaSourceType: "SCHEDULEPAGE",
+    jurisdiction: "Chandler, AZ",
+    publishingOrg: "City of Chandler City Clerk's Office",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "chandler-city-council",
+      schedulePage:
+        "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
+      bodyName: "City Council",
+      shapes: "dated-list",
+      // The accordion section that holds the schedule table and nothing else
+      // dated: the rest of the page carries news and archive dates.
+      sectionMatch: "paragraph--id--18399",
+      venueMatch: "Council Chambers, 88 E. Chicago St.",
+    },
+    verifiedAt: "2026-09-24",
+  },
+
   // ── The browser rung (M79, 2026-08-15) ──────────────────────────────────
   // Two New Hampshire hosts answer 403 to this pipeline's civic-index client
   // and 200 to a browser, which is why these four bodies sat unwired with

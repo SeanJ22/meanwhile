@@ -168,6 +168,40 @@ test("a refused API agenda link is read through the sitting's portal link, store
   const held = agendaDocumentStore.latestFor("legistar:pima:1828");
   assert.ok(held, "the agenda is stored on the API row the reader merge keeps");
   assert.equal(held.documentUrl, PORTAL_AGENDA_1828, "and records the permitted link it was actually read from");
+  assert.equal(held.sourceUrl, PORTAL_AGENDA_1828, "its provenance is the portal URL it was read from, never the refused API link");
   assert.match(held.text ?? "", /Data Center Development Standards/);
   assert.ok(logged.some((line) => /, 1 refused link\(s\) read through the portal, 0 whose portal page links no agenda yet/.test(line)), logged.join("\n"));
+});
+
+test("a portal detail page that redirects into a refused host is not followed, and the sitting keeps its link", async () => {
+  const { retrieveAgendas } = await import("../scripts/ingest.ts");
+  const requested: string[] = [];
+  const realFetch = globalThis.fetch;
+  const detail = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=990005&GID=243&G=00000000-0000-0000-0000-000000000005";
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input instanceof Request ? input.url : input);
+    requested.push(url);
+    if (init?.redirect !== "manual") throw new Error(`the detail page was requested with redirects left to fetch: ${url}`);
+    if (url === detail) return new Response(null, { status: 302, headers: { location: "https://legistar.granicus.com/pima/meetings/2026/9/990005_A_Agenda.pdf" } });
+    return new Response("unexpected", { status: 404 });
+  }) as typeof fetch;
+  const row = {
+    id: "legistar:pima:990005", ocdId: "ocd-division/country:us/state:az/county:pima", bodyId: "ocd-division/country:us/state:az/county:pima#governing",
+    bodyName: "Board of Supervisors", title: "Board of Supervisors", startsAt: "2026-10-13T17:00:00-07:00", timeZone: "America/Phoenix",
+    location: null, agendaUrl: "https://legistar.granicus.com/pima/meetings/2026/10/990005_A_Board_of_Supervisors_26-10-13_Online_Agenda.pdf",
+    jurisdiction: "Pima County, AZ", status: "SCHEDULED" as const,
+    provenance: { sourceUrl: detail, sourceOrg: "Pima County Clerk of the Board", collectedAt: "2026-09-24T09:00:00Z", verifiedAt: null },
+  };
+  const logged: string[] = [];
+  const realLog = console.log;
+  console.log = (...args: unknown[]) => { logged.push(args.map(String).join(" ")); };
+  try {
+    await retrieveAgendas([row] as never);
+  } finally {
+    globalThis.fetch = realFetch;
+    console.log = realLog;
+  }
+  assert.deepEqual(requested, [detail], "only the permitted detail page was requested");
+  assert.equal(agendaDocumentStore.latestFor("legistar:pima:990005"), null, "nothing is stored for the sitting");
+  assert.ok(logged.some((line) => /, 1 redirect\(s\) into a refused host not followed, 0 refused link\(s\) read through the portal/.test(line)), logged.join("\n"));
 });

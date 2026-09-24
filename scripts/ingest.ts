@@ -263,10 +263,13 @@ async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): P
   const page = portalDetailPageFor(meeting);
   if (!page) return null;
   const held = agendaDocumentStore.latestFor(meeting.id)?.documentUrl ?? null;
-  if (held && isPortalAgendaLinkFor(held, page)) return held;
+  // The link passes the same refusal rule as the page before its first byte;
+  // `fetchImpl` asks it again at every redirect hop of both requests.
+  if (held && isPortalAgendaLinkFor(held, page) && agendaRetrievalRefusal(held) === null) return held;
   const response = await fetchImpl(page, { headers: { "User-Agent": sourceUserAgent() } });
   if (!response.ok) throw new Error(`HTTP ${response.status} for ${page}`);
-  return portalAgendaLinkFrom(await response.text(), page);
+  const link = portalAgendaLinkFrom(await response.text(), page);
+  return link && agendaRetrievalRefusal(link) === null ? link : null;
 }
 
 export async function retrieveAgendas(meetings: Meeting[]) {

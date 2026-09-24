@@ -1,25 +1,34 @@
 /**
- * **A DISCOVERED ROUTE BECOMES A WIRING ROW ONLY WHEN EVERY CHECK HOLDS.**
- * (NH330 Stage 2, piece 2. 2026-09-24.)
+ * **A REVIEWED CALENDAR BECOMES A WIRING ROW ONLY WHEN EVERY CHECK HOLDS, AND
+ * A PROMOTED ONE IS SUSPENDED ON A REVIEW TRIGGER, NEVER ON AN OUTAGE.**
+ * (NH330 Stage 2 / C16, 2026-09-24.)
  *
  * `lib/control-plane/discovery/derived-wiring.ts` decides each row of the
- * derived wiring store from the latest walks. Real walks, run against a
- * recorded fake transport, supply the provenance; every lookup the writer
- * needs is a stub, so each check can be failed on its own. The decisions are
- * then planned by the interface's own rule (`planDerivedVersion`), which
- * must refuse none of them.
+ * derived wiring store from the reviewed crosswalk and the latest walks. Real
+ * walks, run against a recorded fake transport, supply the provenance; every
+ * lookup the writer needs is a stub, so each check can be failed on its own.
+ * The decisions are then planned by the interface's own rule
+ * (`planDerivedVersion`), which must refuse none of them.
+ *
+ * The owner's decision, recorded 2026-09-24T22:43Z: "a page returning 'not
+ * found' is not the only reason to suspend or correct a connection. Wrong
+ * attribution, conflicting evidence, or a changed calendar must also trigger
+ * review. Preserve previously verified records through temporary outages."
  */
 
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { planDerivedVersion, type DerivedInputRef, type DerivedVersionEntry } from "../lib/civic-data/derived-authority.ts";
+import type { DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { CROSSWALK_CITATION, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import {
   attestationFor,
   deriveWiringDecisions,
   derivedWiringKey,
   wiringShapeFor,
   type DerivedWiringInputs,
+  type WiringVerification,
 } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
@@ -28,6 +37,10 @@ import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discove
 const ICS = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:Town Council\r\nDTSTART:20261001T180000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
 const ALLOW = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
 const LEDGER = { source: "GAP_LEDGER" as const, versionId: "b".repeat(64) };
+const JURISDICTION = "az:city:town-of-example";
+const OCD = "ocd-division/country:us/state:az/place:example";
+const ROUTE = "https://www.example.gov/council.ics";
+const NOW = "2026-09-25T02:00:00.000Z";
 
 type Reply = { status: number; body?: string; contentType?: string; location?: string };
 
@@ -38,7 +51,7 @@ async function walk(map: Record<string, Reply>, address: string): Promise<Meetin
   };
   let tick = 0;
   const need: MeetingsDiscoveryNeed = {
-    jurisdictionId: "az:city:town-of-example", stateCode: "AZ", name: "TOWN OF EXAMPLE", govClass: "CITY_OR_TOWN",
+    jurisdictionId: JURISDICTION, stateCode: "AZ", name: "TOWN OF EXAMPLE", govClass: "CITY_OR_TOWN",
     ownWebAddress: address, basis: "SOURCE_DISCOVERY_OWED", sources: [], addressSource: LEDGER,
   };
   return walkMeetingsDiscoveryNeed(need, {
@@ -50,47 +63,91 @@ async function walk(map: Record<string, Reply>, address: string): Promise<Meetin
   });
 }
 
-const SITE = {
+const SITE: Record<string, Reply> = {
   "https://example.gov/robots.txt": ALLOW,
   "https://example.gov/": { status: 301, location: "https://www.example.gov/" },
   "https://www.example.gov/robots.txt": ALLOW,
   "https://www.example.gov/": { status: 200, body: `<a href="/council.ics">Council calendar</a>` },
-  "https://www.example.gov/council.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  [ROUTE]: { status: 200, body: ICS, contentType: "text/calendar" },
 };
 
-const BODY = "ocd-division/country:us/state:az/place:example#governing";
-const identityInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: "US-AZ:registration:v1", versionId: "reg-1", readModelSha256: "c".repeat(64), promotedAt: "2026-09-24T20:00:00.000Z" };
-const reviewedInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-crosswalk", versionId: "xw-1", readModelSha256: "d".repeat(64), promotedAt: "2026-09-24T20:30:00.000Z" };
-
-function inputs(attempt: MeetingsDiscoveryAttempt, over: Partial<DerivedWiringInputs> = {}): DerivedWiringInputs {
+function crosswalkRow(patch: Partial<MeetingBodyCrosswalkRow> = {}): MeetingBodyCrosswalkRow {
+  const bodyId = patch.bodyId ?? `${OCD}#governing`;
+  const kind = patch.kind ?? "ICAL";
   return {
+    id: `${bodyId}|${kind}`,
+    jurisdictionId: JURISDICTION,
+    ocdId: OCD,
+    bodyId,
+    bodyRole: "GOVERNING",
+    bodyName: "Town Council",
+    kind,
+    route: ROUTE,
+    officialHost: "www.example.gov",
+    filter: { titleMatch: "Town Council" },
+    publishingOrg: "Town of Example",
+    timeZone: "America/Phoenix",
+    evidence: {
+      bodyPage: { url: "https://www.example.gov/council", sha256: "1".repeat(64), quote: "The Town Council meets monthly" },
+      calendar: { url: ROUTE, sha256: "2".repeat(64), selected: 1, total: 1 },
+      readAt: "2026-09-24T20:00:00.000Z",
+    },
+    status: "ACTIVE",
+    reviewedBy: "a reviewing agent session",
+    reviewedAt: "2026-09-24T20:10:00.000Z",
+    authorization: CROSSWALK_CITATION,
+    ...patch,
+  };
+}
+
+const crosswalkInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-AZ+US-NH+US-NJ:meeting-body-crosswalk", versionId: "xw-1", readModelSha256: "d".repeat(64), promotedAt: "2026-09-24T20:30:00.000Z" };
+const registrationInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: "US-AZ:registration:v1", versionId: "reg-1", readModelSha256: "c".repeat(64), promotedAt: "2026-09-24T20:00:00.000Z" };
+const vaulted = (artifactId: string, retrievedAt = "2026-09-24T21:00:05.000Z") =>
+  ({ kind: "VAULTED_EVIDENCE" as const, artifactId, contentHash: `sha256-${"e".repeat(64)}`, tier: "RAW" as const, retrievedAt });
+const verified = (sittings = ["2026-10-01T18:00:00Z|Town Council"]): WiringVerification => ({
+  verified: { adapter: "ical", closureDigest: "ical@0123456789ab", verifiedAt: NOW, sittings: sittings.length, evidence: vaulted("ar-calendar") },
+  selected: sittings,
+});
+
+function inputs(attempt: MeetingsDiscoveryAttempt, over: Partial<DerivedWiringInputs> = {}, rows = [crosswalkRow()]): DerivedWiringInputs {
+  return {
+    crosswalk: { input: crosswalkInput, versionId: "xw-1", rows },
+    registration: () => ({ input: registrationInput }),
     attempts: [{ attempt, recordId: attempt.attemptId, recordedAt: attempt.finishedAt }],
-    identity: () => ({ bodyId: BODY, ocdId: "ocd-division/country:us/state:az/place:example", input: identityInput }),
-    registered: () => true,
     handWired: () => false,
-    reviewed: () => ({ publishingOrg: "Town of Example", timeZone: "America/Phoenix", config: { slug: "example-council", titleMatch: "Town Council" }, input: reviewedInput }),
-    vaulted: (artifactId) => ({ kind: "VAULTED_EVIDENCE", artifactId, contentHash: `sha256-${"e".repeat(64)}`, tier: "RAW", retrievedAt: attempt.finishedAt }),
-    verify: (_row, binding, evidence) => ({ adapter: binding.adapter, closureDigest: binding.closureDigest, verifiedAt: attempt.finishedAt, sittings: 1, evidence }),
+    vaulted: (artifactId) => vaulted(artifactId),
+    vaultedBytes: (sha) => vaulted(`ar-bytes-${sha.slice(0, 6)}`),
+    verify: () => verified(),
     adapterDigest: () => "ical@0123456789ab",
     previous: [],
+    now: NOW,
     ...over,
   };
 }
 
-test("THE SHAPE: a confirmed route maps to the wiring kind the reader runs, and a route the reader cannot be configured from is held by name", () => {
+const KEY = derivedWiringKey("ICAL", `${OCD}#governing`);
+const reasonOf = (d: ReturnType<typeof deriveWiringDecisions>[number] | undefined): string =>
+  d === undefined ? "none" : d.disposition === "HOLD" ? d.reason : d.disposition === "SUSPEND" ? `SUSPEND:${d.trigger}` : d.disposition;
+
+async function promotedEntry(): Promise<DerivedVersionEntry<DerivedWiringRow>> {
+  const [d] = deriveWiringDecisions(inputs(await walk(SITE, "example.gov")));
+  assert.equal(d?.disposition, "PROMOTE");
+  if (d?.disposition !== "PROMOTE") throw new Error("not promoted");
+  return { key: d.key, row: d.row };
+}
+
+test("THE SHAPE: a confirmed route maps to a kind the reviewed filter is defined for, and anything else is held by name", () => {
   assert.deepEqual(wiringShapeFor({ vendor: "ical", url: "https://t.gov/c.ics" }), { kind: "ICAL", endpoint: { feedUrl: "https://t.gov/c.ics" } });
-  assert.deepEqual(wiringShapeFor({ vendor: "civicclerk-api", url: "https://tn.api.civicclerk.com/v1/Events?$top=5" }), { kind: "CIVICCLERK", endpoint: { apiBase: "https://tn.api.civicclerk.com" } });
-  assert.deepEqual(wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/chandler/events?$top=5" }), { kind: "LEGISTAR", endpoint: { slug: "chandler", sourceRoutes: "legistar" } });
-  assert.deepEqual(wiringShapeFor({ vendor: "boardbook", url: "https://meetings.boardbook.org/Public/Organization/1234" }), { kind: "BOARDBOOK", endpoint: { orgId: "1234" } });
+  assert.deepEqual(wiringShapeFor({ vendor: "official-page-events", url: "https://t.gov/Calendar.aspx?EID=1" }), { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: "https://t.gov/Calendar.aspx?EID=1", officialHost: "t.gov" } });
   const agenda = wiringShapeFor({ vendor: "civicplus-agendacenter", url: "https://t.gov/AgendaCenter" });
   assert.ok("held" in agenda && agenda.held === "ADAPTER_CONFIG_INCOMPLETE" && /icalUrl/.test(agenda.detail));
-  assert.ok("held" in wiringShapeFor({ vendor: "novusagenda", url: "https://x.novusagenda.com/agendapublic" }));
+  assert.ok("held" in wiringShapeFor({ vendor: "legistar-api", url: "https://webapi.legistar.com/v1/x/events" }));
 });
 
 test("THE ATTESTATION: the recorded address, each redirect, and the homepage that linked the route, each with its vaulted artifact", async () => {
   const attempt = await walk(SITE, "example.gov");
   assert.equal(attempt.outcome, "FOUND");
-  const attested = attestationFor(attempt, attempt.found[0]);
+  const attested = attestationFor(attempt, attempt.found[0]!);
   assert.ok("attestation" in attested, JSON.stringify(attested));
   assert.deepEqual(attested.attestation, {
     kind: "LINKED_FROM_ATTESTED_PAGE",
@@ -98,65 +155,93 @@ test("THE ATTESTATION: the recorded address, each redirect, and the homepage tha
     page: { kind: "REDIRECT_FROM_ATTESTED", fromUrl: "https://example.gov/", from: { kind: "RECORDED_ADDRESS", source: "GAP_LEDGER", versionId: LEDGER.versionId } },
   });
   const { site: _site, ...older } = attempt;
-  assert.deepEqual(attestationFor(older, attempt.found[0]), { held: "HOST_NOT_ATTESTED", detail: "the walk predates recorded provenance; the government is walked again" });
-  const unlinked = { ...attempt.found[0], via: null, basis: "SEARCH" as const };
-  assert.deepEqual(attestationFor(attempt, unlinked), { held: "HOST_NOT_ATTESTED", detail: "a search result is attested only when an attested page links it" });
+  assert.deepEqual(attestationFor(older, attempt.found[0]!), { held: "HOST_NOT_ATTESTED", detail: "the walk predates recorded provenance; the government is walked again" });
 });
 
-test("PROMOTE only when every check holds, and the interface's own rule refuses none of the decisions", async () => {
+test("PROMOTE only when every check holds, from a reviewed crosswalk row, never from a find alone", async () => {
   const attempt = await walk(SITE, "example.gov");
   const decisions = deriveWiringDecisions(inputs(attempt));
   assert.equal(decisions.length, 1);
   const [d] = decisions;
-  assert.equal(d.disposition, "PROMOTE");
-  if (d.disposition !== "PROMOTE") return;
-  assert.equal(d.key, derivedWiringKey("ICAL", BODY));
-  assert.deepEqual(d.row.config, { feedUrl: "https://www.example.gov/council.ics", slug: "example-council", titleMatch: "Town Council" });
-  assert.equal(d.row.agendaSourceType, "ICAL");
-  assert.ok(d.inputs.some((i) => i.kind === "VAULTED_EVIDENCE") && d.inputs.some((i) => i.kind === "DISCOVERY_ATTEMPT"));
-  const plan = planDerivedVersion([], decisions);
-  assert.deepEqual(plan.refusals, []);
-  assert.deepEqual(plan.promoted, [derivedWiringKey("ICAL", BODY)]);
+  assert.equal(d?.disposition, "PROMOTE");
+  if (d?.disposition !== "PROMOTE") return;
+  assert.equal(d.key, KEY);
+  assert.equal(d.row.kind, "ICAL");
+  assert.equal(d.row.bodyName, "Town Council");
+  assert.equal(d.row.state, "US-AZ");
+  assert.equal(d.row.config.feedUrl, ROUTE);
+  assert.equal(d.row.config.titleMatch, "Town Council");
+  assert.equal(d.reviewedAt, "2026-09-24T20:10:00.000Z");
+  assert.ok(d.inputs.some((i) => i.kind === "DISCOVERY_ATTEMPT") && d.inputs.filter((i) => i.kind === "VAULTED_EVIDENCE").length === 2, "the calendar's bytes and the page naming the body");
+  assert.deepEqual(planDerivedVersion([], decisions).refusals, []);
+
+  assert.deepEqual(deriveWiringDecisions(inputs(attempt, {}, [])), [], "a find with no reviewed crosswalk row is never a row");
 });
 
-test("HOLD BY NAME, at the first check that fails: identity, registration, attestation, a hand-wired body, the reviewed filter, the vault, the reader adapter", async () => {
+test("HOLD BY NAME at the first check that fails: registration, walk, attestation, a hand-wired body, the vault, the reader adapter", async () => {
   const attempt = await walk(SITE, "example.gov");
-  const reasonOf = (over: Partial<DerivedWiringInputs>): string => {
-    const [d] = deriveWiringDecisions(inputs(attempt, over));
-    return d.disposition === "HOLD" ? d.reason : d.disposition;
-  };
-  assert.equal(reasonOf({ identity: () => null }), "NO_REVIEWED_BODY_IDENTITY");
-  assert.equal(reasonOf({ registered: () => false }), "BODY_NOT_REGISTERED");
-  assert.equal(reasonOf({ handWired: () => true }), "ALREADY_WIRED");
-  assert.equal(reasonOf({ reviewed: () => null }), "BODY_FILTER_NOT_ESTABLISHED", "a body filter is never derived from a name");
-  assert.equal(reasonOf({ vaulted: () => null }), "EVIDENCE_NOT_VAULTED");
-  assert.equal(reasonOf({ verify: () => ({ refused: "no event names the Town Council" }) }), "ADAPTER_REFUSED");
+  const reason = (over: Partial<DerivedWiringInputs>, target = attempt) => reasonOf(deriveWiringDecisions(inputs(target, over))[0]);
+  assert.equal(reason({ registration: () => ({ notRegistered: "no such division" }) }), "BODY_NOT_REGISTERED");
+  assert.equal(reason({ attempts: [] }), "WALK_ABSENT");
   const { site: _site, ...older } = attempt;
-  const [held] = deriveWiringDecisions(inputs(older));
-  assert.equal(held.disposition === "HOLD" ? held.reason : held.disposition, "HOST_NOT_ATTESTED");
-  const agendaOnly = { ...attempt, found: [{ ...attempt.found[0], vendor: "civicplus-agendacenter", url: "https://www.example.gov/AgendaCenter" }] };
-  const [incomplete] = deriveWiringDecisions(inputs(agendaOnly));
-  assert.equal(incomplete.disposition === "HOLD" ? incomplete.reason : incomplete.disposition, "ADAPTER_CONFIG_INCOMPLETE");
-  assert.deepEqual(planDerivedVersion([], deriveWiringDecisions(inputs(attempt, { reviewed: () => null }))).refusals, []);
+  assert.equal(reason({}, older), "HOST_NOT_ATTESTED");
+  assert.equal(reason({ handWired: () => true }), "ALREADY_WIRED");
+  assert.equal(reason({ vaulted: () => null }), "EVIDENCE_NOT_VAULTED");
+  assert.equal(reason({ vaultedBytes: () => null }), "EVIDENCE_NOT_VAULTED", "the government's page naming the body must be held too");
+  assert.equal(reason({ verify: () => ({ refused: "the adapter could not run" }) }), "ADAPTER_REFUSED");
+  assert.equal(reason({ verify: () => ({ changed: "the filter selects nothing" }) }), "REVIEW_TRIGGERED", "a row never promoted waits for review, unpromoted");
+  for (const over of [{ registration: () => ({ notRegistered: "x" }) }, { vaulted: () => null }] as Partial<DerivedWiringInputs>[]) {
+    assert.deepEqual(planDerivedVersion([], deriveWiringDecisions(inputs(attempt, over))).refusals, []);
+  }
 });
 
-test("A PROMOTED ROW IS REMOVED ONLY ON ITS PUBLISHER'S OWN 404 OR 410; a walk that did not reach it holds it, carried", async () => {
-  const promoted = deriveWiringDecisions(inputs(await walk(SITE, "example.gov")))[0];
-  assert.equal(promoted.disposition, "PROMOTE");
-  if (promoted.disposition !== "PROMOTE") return;
-  const previous = [{ key: promoted.key, row: promoted.row }];
+test("C16 TRIGGERS SUSPEND A PROMOTED ROW; OUTAGES HOLD IT, CARRIED", async () => {
+  const previous = [await promotedEntry()];
+  const cases: [Record<string, Reply>, Partial<DerivedWiringInputs>, string][] = [
+    [{ ...SITE, [ROUTE]: { status: 404, body: "<html>Not Found</html>" } }, {}, "SUSPEND:ROUTE_GONE"],
+    [{ ...SITE, [ROUTE]: { status: 410, body: "Gone" } }, {}, "SUSPEND:ROUTE_GONE"],
+    [SITE, { verify: () => ({ changed: "the reviewed filter selects none of the feed's 12 events" }) }, "SUSPEND:CALENDAR_CHANGED"],
+    [SITE, { verify: () => ({ wrongAttribution: "\"Planning Board\" is another reviewed body" }) }, "SUSPEND:WRONG_ATTRIBUTION"],
+    [{ ...SITE, [ROUTE]: { status: 403, body: "Forbidden" } }, {}, "CHALLENGED"],
+    [{ ...SITE, [ROUTE]: { status: 503, body: "Service Unavailable" } }, {}, "TRANSPORT_FAILED"],
+  ];
+  for (const [site, over, expected] of cases) {
+    const [d] = deriveWiringDecisions(inputs(await walk(site, "example.gov"), { previous, ...over }));
+    assert.equal(reasonOf(d), expected);
+    const plan = planDerivedVersion(previous, [d!]);
+    assert.deepEqual(plan.refusals, [], expected);
+    assert.deepEqual(plan.rows.map((r) => r.key), [KEY], `${expected}: the row and its verified records are kept`);
+    assert.equal(plan.rows[0]!.suspension !== undefined, expected.startsWith("SUSPEND:"), `${expected}: only a trigger suspends`);
+  }
+});
 
-  const gone = await walk({ ...SITE, "https://www.example.gov/council.ics": { status: 404, body: "<html>Not Found</html>" } }, "example.gov");
-  const [removal] = deriveWiringDecisions(inputs(gone, { previous }));
-  assert.equal(removal.disposition, "REMOVE");
-  const removedPlan = planDerivedVersion(previous, [removal]);
-  assert.deepEqual(removedPlan.refusals, []);
-  assert.deepEqual(removedPlan.rows, []);
+test("C16: two reviewed bodies selecting the same sitting is conflicting evidence, and neither is published", async () => {
+  const attempt = await walk(SITE, "example.gov");
+  const board = crosswalkRow({ bodyId: subBodyId(OCD, "Planning Board"), bodyRole: "SUB_BODY", bodyName: "Planning Board", filter: { titleMatch: "Council" },
+    evidence: { ...crosswalkRow().evidence, bodyPage: { url: "https://www.example.gov/planning", sha256: "3".repeat(64), quote: "the Planning Board" } } });
+  const decisions = deriveWiringDecisions(inputs(attempt, {}, [crosswalkRow(), board]));
+  assert.deepEqual(decisions.map(reasonOf).sort(), ["REVIEW_TRIGGERED", "REVIEW_TRIGGERED"]);
+  assert.ok(decisions.every((d) => d.disposition === "HOLD" && /CONFLICTING_EVIDENCE/.test(d.detail)));
 
-  const walled = await walk({ ...SITE, "https://www.example.gov/council.ics": { status: 403, body: "Forbidden" } }, "example.gov");
-  const [held] = deriveWiringDecisions(inputs(walled, { previous }));
-  assert.equal(held.disposition === "HOLD" ? held.reason : held.disposition, "CHALLENGED");
-  const heldPlan = planDerivedVersion(previous, [held]);
-  assert.deepEqual(heldPlan.rows.map((r) => r.key), [promoted.key], "a held row that was promoted is carried, never dropped");
-  assert.equal(heldPlan.held[0]?.carried, true);
+  const previous = [await promotedEntry()];
+  const withPrior = deriveWiringDecisions(inputs(attempt, { previous }, [crosswalkRow(), board]));
+  assert.equal(reasonOf(withPrior.find((d) => d.key === KEY)), "SUSPEND:CONFLICTING_EVIDENCE");
+});
+
+test("C16: a withdrawn or vanished crosswalk row suspends its promoted row; only a review after the suspension restores it", async () => {
+  const attempt = await walk(SITE, "example.gov");
+  const previous = [await promotedEntry()];
+  const withdrawn = deriveWiringDecisions(inputs(attempt, { previous }, [crosswalkRow({ status: "WITHDRAWN", withdrawal: { reason: "the calendar is the library's" } })]));
+  assert.equal(reasonOf(withdrawn[0]), "SUSPEND:CROSSWALK_WITHDRAWN");
+  assert.equal(reasonOf(deriveWiringDecisions(inputs(attempt, { previous }, []))[0]), "SUSPEND:CROSSWALK_WITHDRAWN");
+
+  const suspended = planDerivedVersion(previous, withdrawn).rows;
+  assert.equal(suspended[0]!.suspension?.trigger, "CROSSWALK_WITHDRAWN");
+  const stale = deriveWiringDecisions(inputs(attempt, { previous: suspended }));
+  assert.equal(reasonOf(stale[0]), "REVIEW_OWED", "the old review does not restore it");
+  const reviewed = deriveWiringDecisions(inputs(attempt, { previous: suspended }, [crosswalkRow({ reviewedAt: "2026-09-25T03:00:00.000Z" })]));
+  assert.equal(reasonOf(reviewed[0]), "PROMOTE");
+  const restored = planDerivedVersion(suspended, reviewed);
+  assert.deepEqual(restored.refusals, []);
+  assert.equal(restored.rows[0]!.suspension, undefined);
 });

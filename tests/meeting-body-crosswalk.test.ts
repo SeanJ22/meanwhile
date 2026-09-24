@@ -9,7 +9,7 @@ import {
   subBodyId,
   type MeetingBodyCrosswalkRow,
 } from "../lib/civic-data/meeting-body-crosswalk.ts";
-import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
+import { manualProjectionCandidate, type CuratedReaderProjection, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
@@ -127,7 +127,7 @@ test("C16: the crosswalk promotes through the verified manual door, and a row no
       reviewedBy: "RouteTask agent session (Claude Code, claude-opus-5-5)",
       sources: Object.entries(hashes).map(([url, hash]) => source(url, hash)),
     },
-    payload: { kind: "meeting-body-crosswalk", records: rows },
+    payload: { kind: "meeting-body-crosswalk", records: rows as unknown as CuratedReaderProjection["records"] },
   });
   const hashes = {
     [good.evidence.bodyPage.url]: H1, [good.route]: H2,
@@ -141,5 +141,5 @@ test("C16: the crosswalk promotes through the verified manual door, and a row no
   /* One row now cites bytes the receipt does not hold: it alone is held, and the other is promoted. */
   const mismatched = manualProjectionCandidate(pkg([good, { ...other, evidence: { ...other.evidence, calendar: { ...other.evidence.calendar, sha256: "5".repeat(64) } } }], hashes));
   assert.deepEqual(mismatched.civicRecords?.map((m) => m.key), [`curated-reader:${good.id}`]);
-  assert.ok(mismatched.excludedFacts.some((fact) => (fact.key ?? "").includes(other.id)), JSON.stringify(mismatched.excludedFacts.map((f) => f.key)));
+  assert.ok((mismatched.excludedFacts ?? []).some((fact) => (fact.key ?? "").includes(other.id)), JSON.stringify((mismatched.excludedFacts ?? []).map((f) => f.key)));
 });

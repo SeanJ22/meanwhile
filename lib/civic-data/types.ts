@@ -1,3 +1,5 @@
+import type { DerivedInputKind, DerivedInputRef } from "./derived-authority.ts";
+
 /** The four source-trust classes in the routine civic-data contract. */
 export const SOURCE_TRUST_CLASSES = [
   "T1_AUTHORITATIVE_STRUCTURED",
@@ -129,6 +131,14 @@ export interface SourceAuthorityContract {
   readonly manualReceiptPromotion?: {
     readonly allowedSourceClasses: readonly ManualSourceClass[];
   };
+  /**
+   * A DERIVED authority has no route of its own: a candidate is authentic only as the exact inputs it names, of
+   * these kinds (`lib/civic-data/derived-door.ts`), and a promoted input is checked against the store at the door.
+   */
+  readonly derivedPromotion?: {
+    readonly inputKinds: readonly DerivedInputKind[];
+    readonly authorization: string;
+  };
 }
 
 export const MANUAL_SOURCE_CLASSES = [
@@ -173,6 +183,11 @@ export interface RetrievalEvidence {
   readonly failureDetail?: string;
   /** Required only by authorities whose publisher set is bounded by an owner-reviewed receipt. */
   readonly manualSourceReceipt?: ManualSourceSetReceipt;
+  /**
+   * Required only by a DERIVED authority: the exact inputs the candidate was computed from. `rawHash` is their
+   * canonical hash and `retrievedAt` the newest input's own time (`derivedRetrieval`); there is no final URL.
+   */
+  readonly derived?: { readonly inputs: readonly DerivedInputRef[] };
 }
 
 export interface NormalizationEvidence {

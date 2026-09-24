@@ -80,7 +80,32 @@ export type DerivedInputRef =
       readonly kind: "CROSSWALK_VERSION";
       /** The reviewed jurisdiction→body crosswalk version the body identity came from. */
       readonly versionId: string;
+    }
+  | {
+      /**
+       * One read a derived meeting family made of one wired row's route. Not recomputable: it is the read itself,
+       * authorized only by the promoted wiring version the candidate also names (checked at the door).
+       */
+      readonly kind: "MEMBER_ACQUISITION";
+      /** The wiring row whose route this read. */
+      readonly memberKey: string;
+      readonly requestedUrl: string;
+      readonly finalUrl: string;
+      readonly httpStatus: number;
+      /** sha256 (bare hex) of the bytes read. */
+      readonly rawHash: string;
+      readonly retrievedAt: string;
     };
+
+export type DerivedInputKind = DerivedInputRef["kind"];
+export const DERIVED_INPUT_KINDS = [
+  "PROMOTED_VERSION",
+  "VAULTED_EVIDENCE",
+  "DISCOVERY_ATTEMPT",
+  "COMMITTED_ROUTE_HINT",
+  "CROSSWALK_VERSION",
+  "MEMBER_ACQUISITION",
+] as const satisfies readonly DerivedInputKind[];
 
 /** Why a row's host may be read at all. A search find on a third-party host has none. */
 export type HostAttestation =
@@ -392,7 +417,7 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
   const times = inputs
     .map((input) =>
       input.kind === "PROMOTED_VERSION" ? input.promotedAt
-        : input.kind === "VAULTED_EVIDENCE" ? input.retrievedAt
+        : input.kind === "VAULTED_EVIDENCE" || input.kind === "MEMBER_ACQUISITION" ? input.retrievedAt
           : input.kind === "DISCOVERY_ATTEMPT" ? input.recordedAt
             : null)
     .filter((time): time is string => time !== null && Number.isFinite(Date.parse(time)))

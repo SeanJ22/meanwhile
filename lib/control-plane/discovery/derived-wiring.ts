@@ -1,33 +1,41 @@
 /**
- * **THE DERIVED WIRING ROW WRITER: WHAT DISCOVERY FOUND, DECIDED ROW BY ROW.**
- * (NH330 Stage 2, piece 2. 2026-09-24.)
+ * **THE DERIVED WIRING ROW WRITER: EACH REVIEWED CALENDAR, DECIDED AGAINST
+ * WHAT DISCOVERY LAST SAW OF IT.** (NH330 Stage 2 / C16, 2026-09-24.)
  *
- * The meetings-discovery walk confirms that a government's own site publishes
- * its meetings. Stage 2 lets such a route start publishing without a code
- * change: the wiring store (CURATED_READER_RECORD, US:meeting-source-wiring)
- * is a DERIVED routine authority, and every version is computed only from
- * inputs that are already promoted or vaulted
- * (`lib/civic-data/derived-authority.ts`). This module decides each row of the
- * next version. It is pure, and every lookup it needs is handed to it.
+ * The owner's decision, recorded 2026-09-24T22:43Z: agents review and promote
+ * the records connecting a calendar to its body (the crosswalk,
+ * `lib/civic-data/meeting-body-crosswalk.ts`); a promoted crosswalk row plus a
+ * route the discovery walk validated publishes through the standing runner
+ * with no code release; and "a page returning 'not found' is not the only
+ * reason to suspend or correct a connection. Wrong attribution, conflicting
+ * evidence, or a changed calendar must also trigger review. Preserve
+ * previously verified records through temporary outages."
  *
- * For each route the latest walk of a government confirmed, the row is:
+ * So every decision starts from a reviewed crosswalk row, never from a find:
+ * a body and its filter are never derived from a name or a domain. For each
+ * active crosswalk row, against the latest walk of its government:
  *
- * - **PROMOTE** only when every one of these holds: the route maps to a wiring
- *   kind the reader can run; its host is attested by the walk's recorded chain
- *   (the recorded address or a committed hint, each redirect, each linking
- *   page, each with its vaulted artifact); the government's registration pairs
- *   it with a registered body; no hand-wired route already serves that body; a
- *   reviewed crosswalk row supplies the body's own filter; and the reader
- *   adapter itself produces at least one sitting for that body from the
- *   vaulted bytes.
- * - **HOLD**, by name, at the first check that fails. A held row that was
- *   promoted before is carried, never dropped.
- * - **REMOVE** only when the publisher withdrew the route: its own 404 or 410,
- *   vaulted. A walk that did not reach the route (absent, a transport failure,
- *   a robots refusal, a challenge) holds it instead.
+ * - **PROMOTE** only when every check holds: the body is on a registered
+ *   division; the walk confirmed the reviewed route on an attested host; no
+ *   hand-wired route serves the body; the calendar's bytes and the page naming
+ *   the body are both held in the vault; and the reader adapter itself selects
+ *   at least one sitting of the body from the vaulted bytes with the reviewed
+ *   filter, none of which names another reviewed body. A suspended row is
+ *   restored only by a review later than its suspension.
+ * - **SUSPEND** a promoted row on a review trigger, with its evidence: the
+ *   route answered 404 or 410 (ROUTE_GONE); the selected sittings name another
+ *   reviewed body (WRONG_ATTRIBUTION); two reviewed bodies' filters select the
+ *   same sittings (CONFLICTING_EVIDENCE); the filter selects nothing, or the
+ *   feed moved or no longer reads as its kind (CALENDAR_CHANGED); or the
+ *   crosswalk row was withdrawn (CROSSWALK_WITHDRAWN). A row never promoted
+ *   meets the same evidence as a named hold (REVIEW_TRIGGERED).
+ * - **HOLD**, by name, anything else, including every outage: an absent walk,
+ *   a transport failure, a server error, a robots refusal, a challenge. A held
+ *   row that was promoted is carried exactly as it was.
  *
- * Nothing here is inferred. A search result on its own is not attested, a body
- * filter is never derived from a name, and a lead is never a row.
+ * Pure: every lookup is handed to it. It never reads the website correction
+ * (C15): which site is a government's says nothing about which board a
+ * calendar belongs to.
  */
 
 import type {
@@ -35,46 +43,35 @@ import type {
   AdapterVerification,
   DerivedHeldReason,
   DerivedInputRef,
+  DerivedReviewTrigger,
   DerivedRowDecision,
+  DerivedVersionEntry,
   HostAttestation,
 } from "../../civic-data/derived-authority.ts";
+import {
+  DERIVED_WIRING_SOURCE_NAMES,
+  derivedAdapterConfig,
+  derivedWiringKey,
+  type DerivedWiringKind,
+  type DerivedWiringRow,
+} from "../../civic-data/derived-meeting-wiring.ts";
+import type { MeetingBodyCrosswalkRow } from "../../civic-data/meeting-body-crosswalk.ts";
 import type { DiscoveryFind, MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 
-/** The wiring kinds a discovery find can become, with the route name `meetingSourceNamesForWiring` gives each. */
-export const DERIVED_WIRING_KINDS = {
-  ICAL: "ical",
-  CIVICCLERK: "civicclerk",
-  OFFICIAL_PAGE_EVENTS: "official-page-events",
-  IQM2: "iqm2",
-  BOARDBOOK: "boardbook",
-  LEGISTAR: "legistar",
-} as const;
-export type DerivedWiringKind = keyof typeof DERIVED_WIRING_KINDS;
+export { derivedWiringKey };
+export type { DerivedWiringRow };
 
-/** One row of the wiring store: the fields of `BodySourceWiring` a derived route can carry. */
-export interface DerivedWiringRow {
-  readonly bodyId: string;
-  readonly ocdId: string;
-  readonly agendaSourceType: DerivedWiringKind;
-  /** Display only, as `BodySourceWiring.jurisdiction`. */
-  readonly jurisdiction: string;
-  readonly publishingOrg: string;
-  readonly timeZone: string;
-  readonly config: Readonly<Record<string, string>>;
-  readonly verifiedAt: string;
-  /** The discovery route this row wires, as the walk confirmed it. */
-  readonly discoveredUrl: string;
-}
+/** The discovery vendors whose finds can confirm each wiring kind's route. */
+const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>> = {
+  ICAL: ["ical"],
+  OFFICIAL_PAGE_EVENTS: ["official-page-events"],
+};
 
-/** A route's wiring kind and the endpoint configuration the find itself supplies. */
+/** A discovery vendor's route as the wiring kind the reader runs, or why it cannot be one. */
 export type WiringShape =
   | { readonly kind: DerivedWiringKind; readonly endpoint: Readonly<Record<string, string>> }
   | { readonly held: "ADAPTER_CONFIG_INCOMPLETE"; readonly detail: string };
 
-/**
- * The wiring kind for a confirmed route, from the vendor the walk confirmed and the URL itself. A vendor whose
- * reader wiring needs something the find cannot supply is held by name.
- */
 export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): WiringShape {
   let url: URL;
   try {
@@ -82,35 +79,12 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   } catch {
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
-  switch (find.vendor) {
-    case "ical":
-      return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
-    case "civicclerk-api":
-      return { kind: "CIVICCLERK", endpoint: { apiBase: url.origin } };
-    case "official-page-events":
-      return { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: url.toString(), officialHost: url.host } };
-    case "iqm2":
-      return { kind: "IQM2", endpoint: { base: url.origin } };
-    case "boardbook": {
-      const org = /\/Public\/Organization\/(\d+)/i.exec(url.pathname)?.[1];
-      return org === undefined
-        ? { held: "ADAPTER_CONFIG_INCOMPLETE", detail: "a BoardBook route that names no organization id" }
-        : { kind: "BOARDBOOK", endpoint: { orgId: org } };
-    }
-    case "legistar-api": {
-      const slug = /^\/v1\/([^/]+)\/events/i.exec(url.pathname)?.[1];
-      return slug === undefined
-        ? { held: "ADAPTER_CONFIG_INCOMPLETE", detail: "a Legistar API route that names no client" }
-        : { kind: "LEGISTAR", endpoint: { slug, sourceRoutes: "legistar" } };
-    }
-    case "civicplus-agendacenter":
-      return {
-        held: "ADAPTER_CONFIG_INCOMPLETE",
-        detail: "CIVICPLUS wiring reads the site's iCal feed (icalUrl); an AgendaCenter page alone cannot be wired",
-      };
-    default:
-      return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `no reader wiring kind takes a ${find.vendor} route` };
+  if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };
+  if (find.vendor === "official-page-events") return { kind: "OFFICIAL_PAGE_EVENTS", endpoint: { pageUrl: url.toString(), officialHost: url.host } };
+  if (find.vendor === "civicplus-agendacenter") {
+    return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: "CIVICPLUS wiring reads the site's iCal feed (icalUrl); an AgendaCenter page alone cannot be wired" };
   }
+  return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `no reviewed-filter wiring kind takes a ${find.vendor} route yet` };
 }
 
 type Attested = { readonly attestation: HostAttestation } | { readonly held: DerivedHeldReason; readonly detail: string };
@@ -178,139 +152,250 @@ export function attestationFor(attempt: MeetingsDiscoveryAttempt, find: Discover
   }
 }
 
-/** A reviewed crosswalk row's reader configuration for one body and one wiring kind (pending the owner's authorization). */
-export interface ReviewedBodyFilter {
-  readonly publishingOrg: string;
-  readonly timeZone: string;
-  /** The body's filter and anything else its kind needs: titleMatch or categoryMatch, nameTerms, boardMatch, slug. */
-  readonly config: Readonly<Record<string, string>>;
-  readonly input: DerivedInputRef;
-}
+/** What the reader adapter made of the vaulted bytes with the reviewed filter. */
+export type WiringVerification =
+  | {
+      readonly verified: AdapterVerification;
+      /** The sittings the filter selected, as `startsAt|title`: two bodies selecting one sitting is a conflict. */
+      readonly selected: readonly string[];
+    }
+  /** The adapter could not be run on the bytes for a reason of ours: held, never a trigger. */
+  | { readonly refused: string }
+  /** The bytes no longer read as the calendar, or the filter selects nothing from them: CALENDAR_CHANGED. */
+  | { readonly changed: string }
+  /** A selected sitting names another reviewed body and not this one: WRONG_ATTRIBUTION. */
+  | { readonly wrongAttribution: string };
 
 export interface DerivedWiringInputs {
+  /** The promoted crosswalk: its version and rows. */
+  readonly crosswalk: { readonly input: DerivedInputRef; readonly versionId: string; readonly rows: readonly MeetingBodyCrosswalkRow[] };
+  /** The registration input a row's division rests on, or why the division is not registered. */
+  readonly registration: (row: MeetingBodyCrosswalkRow) => { readonly input: DerivedInputRef } | { readonly notRegistered: string };
   /** The latest walk of each government, with its log record id and time. */
   readonly attempts: readonly { readonly attempt: MeetingsDiscoveryAttempt; readonly recordId: string; readonly recordedAt: string }[];
-  /** Registration's explicit jurisdiction→body pair, or null when it has none (NH330 piece 3). */
-  readonly identity: (jurisdictionId: string) => { readonly bodyId: string; readonly ocdId: string; readonly input: DerivedInputRef } | null;
-  readonly registered: (bodyId: string) => boolean;
   /** A hand-wired SOURCE_WIRING route already serves the body: shadow-compared, never a second writer. */
   readonly handWired: (bodyId: string) => boolean;
-  /** The reviewed crosswalk row for the body and kind, or null while none is reviewed. */
-  readonly reviewed: (bodyId: string, kind: DerivedWiringKind) => ReviewedBodyFilter | null;
   /** The vault's record of an artifact, or null when it is not held. */
   readonly vaulted: (artifactId: string) => (DerivedInputRef & { readonly kind: "VAULTED_EVIDENCE" }) | null;
-  /** The reader adapter's own verification of the row against the vaulted bytes. */
-  readonly verify: (row: DerivedWiringRow, binding: AdapterBinding, evidence: DerivedInputRef & { readonly kind: "VAULTED_EVIDENCE" }) => AdapterVerification | { readonly refused: string };
+  /** The vault's record of bytes by their sha256 (bare hex), or null when no artifact holds them. */
+  readonly vaultedBytes: (sha256: string) => (DerivedInputRef & { readonly kind: "VAULTED_EVIDENCE" }) | null;
+  /** The reader adapter's own reading of the vaulted bytes with the reviewed filter. */
+  readonly verify: (
+    row: DerivedWiringRow,
+    binding: AdapterBinding,
+    evidence: DerivedInputRef & { readonly kind: "VAULTED_EVIDENCE" },
+    otherBodies: readonly string[],
+  ) => WiringVerification;
   readonly adapterDigest: (kind: DerivedWiringKind) => string;
-  /** The previous version's rows. */
-  readonly previous: readonly { readonly key: string; readonly row: DerivedWiringRow }[];
+  /** The previous wiring version's entries. */
+  readonly previous: readonly DerivedVersionEntry<DerivedWiringRow>[];
+  /** This pass's instant, the time a newly observed trigger is recorded at. */
+  readonly now: string;
 }
 
-/** The store key of a row: one route of one body, as a meeting partition names it. */
-export function derivedWiringKey(kind: DerivedWiringKind, bodyId: string): string {
-  return `${DERIVED_WIRING_KINDS[kind]}:${bodyId}`;
+/** Two URLs name the same route: scheme and host case aside, and a trailing slash aside. */
+export function sameRoute(a: string, b: string): boolean {
+  try {
+    const x = new URL(a);
+    const y = new URL(b);
+    return x.hostname.toLowerCase() === y.hostname.toLowerCase() &&
+      x.pathname.replace(/\/+$/, "") === y.pathname.replace(/\/+$/, "") && x.search === y.search;
+  } catch {
+    return false;
+  }
 }
 
-const heldBy = (key: string, reason: DerivedHeldReason, detail: string, inputs: readonly DerivedInputRef[]): DerivedRowDecision<DerivedWiringRow> =>
-  ({ disposition: "HOLD", key, reason, detail, inputs });
+/** The state a division lies in, `US-AZ`, from its OCD id. */
+function stateOf(ocdId: string): string {
+  const code = /\/state:([a-z]{2})(\/|$)/.exec(ocdId)?.[1];
+  return code === undefined ? "" : `US-${code.toUpperCase()}`;
+}
+
+/** The wiring row a crosswalk row becomes. */
+export function wiringRowFor(row: MeetingBodyCrosswalkRow): DerivedWiringRow {
+  return {
+    bodyId: row.bodyId,
+    ocdId: row.ocdId,
+    bodyName: row.bodyName,
+    kind: row.kind,
+    route: row.route,
+    officialHost: row.officialHost,
+    jurisdictionId: row.jurisdictionId,
+    state: stateOf(row.ocdId),
+    publishingOrg: row.publishingOrg,
+    timeZone: row.timeZone,
+    config: derivedAdapterConfig({ kind: row.kind, route: row.route, officialHost: row.officialHost, bodyId: row.bodyId, bodyName: row.bodyName, filter: row.filter }),
+    crosswalkRowId: row.id,
+    reviewedAt: row.reviewedAt,
+    verifiedAt: row.evidence.readAt,
+  };
+}
+
+type Decision = DerivedRowDecision<DerivedWiringRow>;
 
 /**
- * Decide every row of the next version. Each confirmed route of each government's latest walk gets one decision;
- * each previously promoted row the latest walks say nothing new about is held by what its government's latest walk
- * shows, or removed on its publisher's own withdrawal.
+ * Decide every row of the next version, one decision per reviewed crosswalk row, plus a suspension for any
+ * promoted row whose crosswalk row was withdrawn or is gone.
  */
-export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly DerivedRowDecision<DerivedWiringRow>[] {
-  const decisions = new Map<string, DerivedRowDecision<DerivedWiringRow>>();
-  const decide = (d: DerivedRowDecision<DerivedWiringRow>): void => {
-    if (!decisions.has(d.key)) decisions.set(d.key, d);
-  };
+export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Decision[] {
+  const previous = new Map(inputs.previous.map((entry) => [entry.key, entry]));
+  const decisions = new Map<string, Decision>();
+  const crosswalkInput = inputs.crosswalk.input;
+  const byJurisdiction = new Map(inputs.attempts.map((a) => [a.attempt.jurisdictionId, a]));
+  const active = inputs.crosswalk.rows.filter((row) => row.status === "ACTIVE");
+  /* Selections, to find two bodies claiming the same sittings; resolved after every row is read. */
+  const selections = new Map<string, { readonly bodyId: string; readonly selected: ReadonlySet<string> }>();
 
-  for (const { attempt, recordId, recordedAt } of inputs.attempts) {
-    const attemptInput: DerivedInputRef = { kind: "DISCOVERY_ATTEMPT", attemptId: attempt.attemptId, recordId, recordedAt };
-    const identity = inputs.identity(attempt.jurisdictionId);
-    for (const find of attempt.found) {
-      const shape = wiringShapeFor(find);
-      const provisionalKey = `unidentified:${attempt.jurisdictionId}:${find.url}`;
-      if ("held" in shape) {
-        decide(heldBy(identity === null ? provisionalKey : `unwired:${identity.bodyId}:${find.url}`, shape.held, shape.detail, [attemptInput]));
+  const hold = (key: string, reason: DerivedHeldReason, detail: string, inputsFor: readonly DerivedInputRef[]): Decision =>
+    ({ disposition: "HOLD", key, reason, detail, inputs: inputsFor });
+  /* A trigger suspends a promoted row; the same evidence holds a row never promoted, by name. */
+  const trigger = (key: string, kind: DerivedReviewTrigger, detail: string, evidence: readonly DerivedInputRef[]): Decision =>
+    previous.has(key)
+      ? { disposition: "SUSPEND", key, trigger: kind, detail, at: inputs.now, evidence }
+      : hold(key, "REVIEW_TRIGGERED", `${kind}: ${detail}`, evidence);
+
+  for (const reviewed of active) {
+    const key = derivedWiringKey(reviewed.kind, reviewed.bodyId);
+    if (decisions.has(key)) continue;
+    const base: DerivedInputRef[] = [crosswalkInput];
+    const decide = (d: Decision): void => void decisions.set(key, d);
+
+    const registration = inputs.registration(reviewed);
+    if ("notRegistered" in registration) {
+      decide(hold(key, "BODY_NOT_REGISTERED", registration.notRegistered, base));
+      continue;
+    }
+    base.push(registration.input);
+    const walked = byJurisdiction.get(reviewed.jurisdictionId);
+    if (walked === undefined) {
+      decide(hold(key, "WALK_ABSENT", `no walk of ${reviewed.jurisdictionId} is recorded`, base));
+      continue;
+    }
+    const attemptInput: DerivedInputRef = { kind: "DISCOVERY_ATTEMPT", attemptId: walked.attempt.attemptId, recordId: walked.recordId, recordedAt: walked.recordedAt };
+    base.push(attemptInput);
+    const row = wiringRowFor(reviewed);
+    const binding: AdapterBinding = { adapter: DERIVED_WIRING_SOURCE_NAMES[reviewed.kind], closureDigest: inputs.adapterDigest(reviewed.kind), config: row.config };
+    const others = active.filter((r) => r.jurisdictionId === reviewed.jurisdictionId && r.bodyId !== reviewed.bodyId).map((r) => r.bodyName);
+
+    const find = walked.attempt.found.find((f) => sameRoute(f.url, reviewed.route) && CONFIRMING_VENDORS[reviewed.kind].includes(f.vendor));
+    if (find === undefined) {
+      /* The walk did not confirm the reviewed route. Why decides whether it is an outage or a trigger. */
+      const step = [...walked.attempt.steps].reverse().find((s) => sameRoute(s.url, reviewed.route));
+      if (step === undefined) {
+        decide(hold(key, "WALK_ABSENT", `the latest walk of ${reviewed.jurisdictionId} did not reach ${reviewed.route}`, base));
         continue;
       }
-      if (identity === null) {
-        decide(heldBy(provisionalKey, "NO_REVIEWED_BODY_IDENTITY", `registration pairs ${attempt.jurisdictionId} with no body yet`, [attemptInput]));
-        continue;
+      const stepEvidence = step.artifactId === null ? null : inputs.vaulted(step.artifactId);
+      const evidence = stepEvidence === null ? base : [...base, stepEvidence];
+      if (step.status === 404 || step.status === 410) {
+        decide(trigger(key, "ROUTE_GONE", `${reviewed.route} answered ${step.status}`, evidence));
+      } else if (step.permission === "DISALLOWED" || step.permission === "RECORDED_WALL") {
+        decide(hold(key, "ROBOTS_REFUSED", `${reviewed.route}: ${step.note}`, base));
+      } else if (step.status === null) {
+        decide(hold(key, step.transportError !== null ? "TRANSPORT_FAILED" : "WALK_ABSENT", `${reviewed.route}: ${step.transportError ?? step.note}`, base));
+      } else if (step.status === 401 || step.status === 403 || step.status === 429) {
+        decide(hold(key, "CHALLENGED", `${reviewed.route} answered ${step.status}`, base));
+      } else if (step.status >= 500) {
+        decide(hold(key, "TRANSPORT_FAILED", `${reviewed.route} answered ${step.status}; a server error holds, it never suspends`, base));
+      } else if (step.status >= 300 && step.status < 400) {
+        decide(trigger(key, "CALENDAR_CHANGED", `${reviewed.route} now answers ${step.status}: the calendar moved`, evidence));
+      } else if (stepEvidence !== null) {
+        /* It answered and the walk's content check did not confirm it: the adapter reads the bytes to say why. */
+        const verification = inputs.verify(row, binding, stepEvidence, others);
+        if ("changed" in verification) decide(trigger(key, "CALENDAR_CHANGED", verification.changed, evidence));
+        else if ("wrongAttribution" in verification) decide(trigger(key, "WRONG_ATTRIBUTION", verification.wrongAttribution, evidence));
+        else decide(hold(key, "ROUTE_NOT_CONFIRMED", `the latest walk read ${reviewed.route} (${step.status}) and did not confirm it: ${step.note}`, evidence));
+      } else {
+        decide(hold(key, "ROUTE_NOT_CONFIRMED", `the latest walk read ${reviewed.route} (${step.status}) and did not confirm it: ${step.note}`, base));
       }
-      const key = derivedWiringKey(shape.kind, identity.bodyId);
-      const base = [attemptInput, identity.input];
-      if (!inputs.registered(identity.bodyId)) {
-        decide(heldBy(key, "BODY_NOT_REGISTERED", `${identity.bodyId} is not in the promoted registry`, base));
-        continue;
+      continue;
+    }
+
+    const attested = attestationFor(walked.attempt, find);
+    if ("held" in attested) {
+      decide(hold(key, attested.held, attested.detail, base));
+      continue;
+    }
+    if (inputs.handWired(reviewed.bodyId)) {
+      decide(hold(key, "ALREADY_WIRED", `a hand-wired route serves ${reviewed.bodyId}; the two are shadow-compared, never two writers`, base));
+      continue;
+    }
+    const calendar = find.artifactId === null ? null : inputs.vaulted(find.artifactId);
+    if (calendar === null) {
+      decide(hold(key, "EVIDENCE_NOT_VAULTED", `the confirming bytes of ${reviewed.route} are not held in the vault`, base));
+      continue;
+    }
+    const bodyPage = inputs.vaultedBytes(reviewed.evidence.bodyPage.sha256);
+    if (bodyPage === null) {
+      decide(hold(key, "EVIDENCE_NOT_VAULTED", `the government's page naming ${reviewed.bodyName} (${reviewed.evidence.bodyPage.url}) is not held in the vault`, [...base, calendar]));
+      continue;
+    }
+    const withEvidence = [...base, calendar, bodyPage];
+    const verification = inputs.verify(row, binding, calendar, others);
+    if ("refused" in verification) {
+      decide(hold(key, "ADAPTER_REFUSED", verification.refused, withEvidence));
+      continue;
+    }
+    if ("changed" in verification) {
+      decide(trigger(key, "CALENDAR_CHANGED", verification.changed, withEvidence));
+      continue;
+    }
+    if ("wrongAttribution" in verification) {
+      decide(trigger(key, "WRONG_ATTRIBUTION", verification.wrongAttribution, withEvidence));
+      continue;
+    }
+    const suspension = previous.get(key)?.suspension;
+    if (suspension !== undefined && !(Date.parse(reviewed.reviewedAt) > Date.parse(suspension.since))) {
+      decide(hold(key, "REVIEW_OWED", `suspended since ${suspension.since} (${suspension.trigger}); it waits for a review after that`, withEvidence));
+      continue;
+    }
+    selections.set(key, { bodyId: reviewed.bodyId, selected: new Set(verification.selected) });
+    decide({
+      disposition: "PROMOTE",
+      key,
+      row,
+      attestation: attested.attestation,
+      binding,
+      verification: verification.verified,
+      inputs: withEvidence,
+      reviewedAt: reviewed.reviewedAt,
+    });
+  }
+
+  /* Two reviewed bodies whose filters select the same sitting on one calendar: conflicting evidence, neither taken. */
+  const keys = [...selections.keys()].sort();
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      const a = selections.get(keys[i]!)!;
+      const b = selections.get(keys[j]!)!;
+      if (a.bodyId === b.bodyId) continue;
+      const shared = [...a.selected].find((sitting) => b.selected.has(sitting));
+      if (shared === undefined) continue;
+      for (const key of [keys[i]!, keys[j]!]) {
+        const promoted = decisions.get(key);
+        const evidence = promoted?.disposition === "PROMOTE" ? promoted.inputs : [crosswalkInput];
+        decisions.set(key, trigger(key, "CONFLICTING_EVIDENCE", `${a.bodyId} and ${b.bodyId} both select the sitting ${shared}`, evidence));
       }
-      const attested = attestationFor(attempt, find);
-      if ("held" in attested) {
-        decide(heldBy(key, attested.held, attested.detail, base));
-        continue;
-      }
-      if (inputs.handWired(identity.bodyId)) {
-        decide(heldBy(key, "ALREADY_WIRED", `a hand-wired route serves ${identity.bodyId}; the two are shadow-compared, never two writers`, base));
-        continue;
-      }
-      const reviewed = inputs.reviewed(identity.bodyId, shape.kind);
-      if (reviewed === null) {
-        decide(heldBy(key, "BODY_FILTER_NOT_ESTABLISHED", `no reviewed crosswalk row gives ${identity.bodyId}'s own filter for ${shape.kind}`, base));
-        continue;
-      }
-      const evidence = find.artifactId === null ? null : inputs.vaulted(find.artifactId);
-      if (evidence === null) {
-        decide(heldBy(key, "EVIDENCE_NOT_VAULTED", `the confirming body of ${find.url} is not held in the vault`, [...base, reviewed.input]));
-        continue;
-      }
-      const row: DerivedWiringRow = {
-        bodyId: identity.bodyId,
-        ocdId: identity.ocdId,
-        agendaSourceType: shape.kind,
-        jurisdiction: attempt.jurisdictionId,
-        publishingOrg: reviewed.publishingOrg,
-        timeZone: reviewed.timeZone,
-        config: { ...shape.endpoint, ...reviewed.config },
-        verifiedAt: evidence.retrievedAt,
-        discoveredUrl: find.url,
-      };
-      const binding: AdapterBinding = { adapter: DERIVED_WIRING_KINDS[shape.kind], closureDigest: inputs.adapterDigest(shape.kind), config: row.config };
-      const verification = inputs.verify(row, binding, evidence);
-      if ("refused" in verification) {
-        decide(heldBy(key, "ADAPTER_REFUSED", verification.refused, [...base, reviewed.input, evidence]));
-        continue;
-      }
-      decide({ disposition: "PROMOTE", key, row, attestation: attested.attestation, binding, verification, inputs: [...base, reviewed.input, evidence] });
     }
   }
 
-  /* A promoted row its government's latest walk did not confirm again: withdrawn by the publisher, or held by why. */
-  for (const { key, row } of inputs.previous) {
+  /* A promoted row whose reviewed crosswalk row is withdrawn, or gone, publishes nothing new until reviewed again. */
+  const reviewedKeys = new Map(inputs.crosswalk.rows.map((row) => [derivedWiringKey(row.kind, row.bodyId), row] as const));
+  for (const [key, entry] of previous) {
     if (decisions.has(key)) continue;
-    const latest = inputs.attempts.find((a) => a.attempt.jurisdictionId === row.jurisdiction);
-    if (latest === undefined) continue;
-    const step = [...latest.attempt.steps].reverse().find((s) => s.url === row.discoveredUrl);
-    const attemptInput: DerivedInputRef = { kind: "DISCOVERY_ATTEMPT", attemptId: latest.attempt.attemptId, recordId: latest.recordId, recordedAt: latest.recordedAt };
-    if (step === undefined) {
-      decide(heldBy(key, "WALK_ABSENT", `the latest walk of ${row.jurisdiction} did not reach ${row.discoveredUrl}`, [attemptInput]));
-      continue;
+    const reviewed = reviewedKeys.get(key);
+    if (reviewed === undefined || reviewed.status === "WITHDRAWN") {
+      decisions.set(key, {
+        disposition: "SUSPEND",
+        key,
+        trigger: "CROSSWALK_WITHDRAWN",
+        detail: reviewed === undefined
+          ? `the reviewed crosswalk ${inputs.crosswalk.versionId} no longer holds ${entry.row.crosswalkRowId}`
+          : `withdrawn by review: ${reviewed.withdrawal?.reason ?? "no reason recorded"}`,
+        at: inputs.now,
+        evidence: [crosswalkInput],
+      });
     }
-    if ((step.status === 404 || step.status === 410) && step.artifactId !== null) {
-      const evidence = inputs.vaulted(step.artifactId);
-      if (evidence !== null) {
-        decide({ disposition: "REMOVE", key, removal: { kind: "ROUTE_WITHDRAWN_BY_PUBLISHER", how: "ROUTE_GONE", httpStatus: step.status, evidence } });
-        continue;
-      }
-    }
-    const reason: DerivedHeldReason =
-      step.permission === "DISALLOWED" || step.permission === "RECORDED_WALL" ? "ROBOTS_REFUSED"
-        : step.status === 401 || step.status === 403 || step.status === 429 ? "CHALLENGED"
-          : step.status === null ? (step.transportError !== null ? "TRANSPORT_FAILED" : "WALK_ABSENT")
-            /* It answered, but the walk's content check no longer confirms it: held until it does, or it is withdrawn. */
-            : step.status >= 200 && step.status < 300 ? "VERIFICATION_STALE"
-              : "WALK_ABSENT";
-    decide(heldBy(key, reason, `the latest walk read ${row.discoveredUrl} as ${step.status ?? step.transportError ?? step.permission}: ${step.note}`, [attemptInput]));
   }
   return [...decisions.values()];
 }

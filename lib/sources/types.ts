@@ -270,23 +270,32 @@ export interface Meeting {
   /** IANA zone the meeting is held in, for rendering times honestly. */
   timeZone: string;
   /**
-   * Where the meeting is held — **null when it is held nowhere** (D18).
+   * Where the meeting is held — **null when there is no building to place**
+   * (D18; three readings since 2026-09-23).
    *
-   * Null is a real, load-bearing value and not a missing one: the body
-   * published a location string that names no place ("Virtual Meeting",
-   * "Microsoft Teams (Virtual)"), so there is no building, no address and no
-   * coordinates to have. `online` carries what there IS instead, and the two
-   * fields are required to agree — a null location with no `online` is a
-   * meeting nobody can attend and nothing may write one.
+   * Null is a real, load-bearing value, and `lib/meetings/online.ts` is the one
+   * place that reads it, together with the two fields beside it:
    *
-   * It is deliberately nullable rather than faked. Giving a virtual meeting
+   * - `online` set — the body published a location string that names no place
+   *   ("Virtual Meeting", "Microsoft Teams (Virtual)"): held online, no room.
+   * - `venueGap` set — a physical meeting whose room is a named gap: the
+   *   publisher stated a place we hold no reviewed coordinates for (its words
+   *   render as text), or its page states none (see `MeetingVenueGap`).
+   * - neither — a verified meeting whose place we have not recorded: our own
+   *   named gap, never "online". A missing place never suppresses an otherwise
+   *   verified meeting (the owner's directive, 2026-09-23); an adapter that
+   *   keeps one still counts it (`unknownVenue`, as Diligent does) so the gap
+   *   stays visible to the venue hunt.
+   *
+   * `online` and `venueGap` are never both set, and neither is set beside a
+   * location. It is deliberately nullable rather than faked. Giving a virtual meeting
    * its body's home coordinates would put a pin on a building nobody is going
    * to, which is the same class of invention as a constructed agenda URL.
    */
   location: MeetingLocation | null;
   /**
    * Present exactly when the meeting is held online (D18). Set together with
-   * a null `location`; see both notes.
+   * a null `location` and never with `venueGap`; see the `location` note.
    */
   online?: OnlineAccess;
   /**

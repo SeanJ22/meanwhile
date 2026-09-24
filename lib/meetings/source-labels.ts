@@ -15,9 +15,11 @@ import { CAPABILITIES } from "../sources/composite/wiring.ts";
  * Checked against production 2026-08-17, at all four zips: NOTHING renders one
  * today. The server HTML and `/about-area` are clean of all ten ids, and the
  * one place a source could surface — a carried row's provenance — renders
- * `lastFreshAt` and the sentence "our latest check couldn't reach this
- * calendar", never `carried.source`. So this is not a fix; it is the fix's
- * precondition, put in place while the answer is still clean.
+ * `lastFreshAt` and a sentence about the calendar (one fixed sentence then;
+ * since 2026-09-23 the clause its recorded reason earns, from
+ * `carriedRowClause` in `freshness.ts`), never `carried.source`. So this is
+ * not a fix; it is the fix's precondition, put in place while the answer is
+ * still clean.
  *
  * The pressure is real and structural. `/api/meetings` ships the ids to the
  * client in three places (`sources[].source`, every meeting `id`, and

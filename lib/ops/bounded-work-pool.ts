@@ -1,3 +1,5 @@
+import { sanitizedErrorDiagnostic } from "./error-diagnostic.ts";
+
 export type BoundedWorkResult<T> =
   | { readonly index: number; readonly ok: true; readonly value: T; readonly error: null }
   | { readonly index: number; readonly ok: false; readonly value: null; readonly error: string };
@@ -28,7 +30,8 @@ export async function runBoundedWorkPool<TInput, TOutput>(
           index,
           ok: false,
           value: null,
-          error: error instanceof Error ? error.message : String(error),
+          // The cause chain, sanitized: a bare message hid every transport cause.
+          error: sanitizedErrorDiagnostic(error),
         };
       }
     }

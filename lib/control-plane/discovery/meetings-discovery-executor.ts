@@ -989,7 +989,11 @@ export async function runMeetingsDiscovery(
       notDue.push(need.jurisdictionId);
       continue;
     }
-    if (input.runtime.budget.spent()) {
+    /*
+     * Too little time left for one request is a spent budget: a walk started now could only be cut short before
+     * its first request, which recorded a burst of empty cut-shorts at the end of each pass (cycle 21, 2026-09-24).
+     */
+    if (input.runtime.budget.spent() || (input.runtime.budget.remainingMs?.() ?? Number.POSITIVE_INFINITY) < MIN_REQUEST_MS) {
       deferred.push(need.jurisdictionId);
       continue;
     }

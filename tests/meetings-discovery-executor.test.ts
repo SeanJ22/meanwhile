@@ -760,3 +760,18 @@ test("A FIND RECORDED WITHOUT PROVENANCE IS WALKED AGAIN, so no route waits out 
     assert.deepEqual(again.notDue, ["az:a:found"], `${label}: once it carries provenance it waits for its recheck`);
   }
 });
+
+test("THE LAST SECONDS: with less time left than one request, the remaining needs are deferred, never recorded as a burst of empty cut-shorts", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-")) {
+    const { open, seen } = fakeOpen({});
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:a:one", "one.gov"), need("az:b:two", "two.gov"), need("az:c:three", "three.gov")],
+      runtime: runtime(open, { budget: { spent: () => false, remainingMs: () => 1_500 } }),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.deepEqual(pass.cutShort, [], label);
+    assert.deepEqual(pass.deferred, ["az:a:one", "az:b:two", "az:c:three"], label);
+    assert.deepEqual(seen, [], `${label}: nothing was requested`);
+  }
+});

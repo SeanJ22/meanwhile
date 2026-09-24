@@ -573,3 +573,68 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   if (sentences.length === 0) return null;
   return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
 }
+
+/**
+ * **A TOPIC QUESTION ABOUT THE READER'S AREA.** (2026-09-24.)
+ *
+ * *"Is there a data center coming?"* names no government. The reader's area
+ * holds several bodies, and each gets its own timeline — never a merged one,
+ * because a Board of Supervisors' vote is not a school board's agenda item.
+ * The answer leads with the most recent recorded decision anywhere in the
+ * area, then the next scheduled appearance, then one more body's most recent
+ * mention; every sentence names the body it is about. Bodies with nothing on
+ * the topic are counted, not listed.
+ */
+export function composeAreaTopicAnswer(
+  timelines: readonly TopicTimeline[],
+  now: number,
+): { answer: string; citedUrls: string[] } | null {
+  if (timelines.length === 0) return null;
+  const topic = timelines[0]!.topic;
+  const tagged = timelines.flatMap((timeline) =>
+    timeline.entries
+      .filter((entry) => salientEntry(entry, topic) || !timeline.entries.some((other) => salientEntry(other, topic)))
+      .map((entry) => ({ entry, timeline })));
+  const sentences: string[] = [];
+  const cited: string[] = [];
+  const usedBodies = new Set<string>();
+  const add = (sentence: string, entry: TopicTimelineEntry, timeline: TopicTimeline): void => {
+    const candidate = [...sentences, sentence.replace(/[.\s]+$/, "")];
+    if (overLengthBudget(`${candidate.join(". ")}.`) !== null) return;
+    sentences.push(sentence.replace(/[.\s]+$/, ""));
+    usedBodies.add(timeline.bodyName);
+    if (entry.sourceUrl && !cited.includes(entry.sourceUrl)) cited.push(entry.sourceUrl);
+  };
+  const past = tagged.filter(({ entry }) => Date.parse(entry.startsAt) < now).sort((a, b) => b.entry.startsAt.localeCompare(a.entry.startsAt));
+  const upcoming = tagged.filter(({ entry }) => Date.parse(entry.startsAt) >= now).sort((a, b) => a.entry.startsAt.localeCompare(b.entry.startsAt));
+  const decisive = past.find(({ entry }) => DECISIVE.includes(entry.status));
+  const lead = decisive ?? past[0] ?? upcoming[0] ?? null;
+  if (!lead) {
+    const searched = timelines.reduce((total, timeline) => total + (timeline.denominators.topicAgendaDocumentsSearched ?? 0), 0);
+    return {
+      answer: searched > 0
+        ? `No mention of ${topic.label} in the ${searched} agenda${searched === 1 ? "" : "s"} we hold for the ${timelines.length} bod${timelines.length === 1 ? "y" : "ies"} that govern your area.`
+        : `We don't hold any readable agendas for your area yet, so nothing was searched for ${topic.label}.`,
+      citedUrls: [],
+    };
+  }
+  add(entrySentence(lead.entry, lead.timeline.bodyName, true, lead.timeline.outcomesUnavailable), lead.entry, lead.timeline);
+  const next = upcoming.find(({ entry }) => entry.key !== lead.entry.key);
+  if (next) add(entrySentence(next.entry, next.timeline.bodyName, true, next.timeline.outcomesUnavailable), next.entry, next.timeline);
+  // The lead body's own sittings after its newest mention whose agenda we have
+  // not read: the September 22 case, named rather than implied empty.
+  const unread = lead.timeline.unreadSittings.filter((sitting) => sitting.past && sitting.localDay > (lead.timeline.entries[0]?.localDay ?? ""));
+  if (unread.length > 0) {
+    const days = unread.slice(-2).map((sitting) => formatDateLong(sitting.localDay) ?? sitting.localDay);
+    add(`We have not read the ${lead.timeline.bodyName} agenda${days.length > 1 ? "s" : ""} for ${days.join(" and ")} yet, so ${days.length > 1 ? "they are" : "it is"} not reflected here`, lead.entry, lead.timeline);
+  }
+  const other = past.find(({ entry, timeline }) => entry.key !== lead.entry.key && !usedBodies.has(timeline.bodyName));
+  if (other) add(`Also, ${entrySentence(other.entry, other.timeline.bodyName, true, other.timeline.outcomesUnavailable).replace(/^./, (c) => c.toLowerCase())}`, other.entry, other.timeline);
+  const quiet = timelines.filter((timeline) => timeline.entries.length === 0).length;
+  if (quiet > 0 && sentences.length > 0) {
+    const sentence = `No mention of ${topic.label} in the agendas we hold for the other ${quiet} bod${quiet === 1 ? "y" : "ies"} that govern your area`;
+    const candidate = [...sentences, sentence];
+    if (overLengthBudget(`${candidate.join(". ")}.`) === null) sentences.push(sentence);
+  }
+  return sentences.length > 0 ? { answer: `${sentences.join(". ")}.`, citedUrls: cited } : null;
+}

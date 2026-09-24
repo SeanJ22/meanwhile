@@ -274,6 +274,41 @@ test("ROUTE, NEW JERSEY: a place named alone suggests its governing body, and th
   assert.match(confirmed.answer ?? "", /we have not read the recorded outcome of that item/);
 });
 
+test("ROUTE, AREA: a topic question that names no government is answered from the area's body timelines, without a model", async () => {
+  resetGroundedState();
+  const az = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
+    body: JSON.stringify({ question: "Is there a data center coming?", ocdIds: [AZ, PIMA, `${AZ}/place:tucson`], approximateLocation: "85701", surface: "MAP", today: "2026-09-24" }),
+  }))).json() as { mode: string; answer: string | null; subject: unknown; trace: { interpretation: { why?: string } }; denominators: Record<string, number> };
+  assert.equal(az.subject, null, "no government was named, none is substituted");
+  assert.equal(az.trace.interpretation.why, "deterministic-area-topic-route");
+  assert.equal(az.mode, "GROUNDED_COMPOSED");
+  assert.match(az.answer ?? "", /the Pima County Board Of Supervisors passed agenda item 2 \(File ID 20637\)/, az.answer ?? "");
+  assert.ok((az.denominators.topicAreaBodies ?? 0) >= 2, "every body governing the area was examined");
+  assert.match(az.answer ?? "", /We have not read the Pima County Board Of Supervisors agenda for September 22nd, 2026 yet/);
+
+  resetGroundedState();
+  const nj = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
+    body: JSON.stringify({ question: "Is anyone voting on data centers?", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", "ocd-division/country:us/state:nj/county:morris/place:rockaway_township"], approximateLocation: "07866", surface: "MAP", today: "2026-09-24" }),
+  }))).json() as { mode: string; answer: string | null };
+  assert.equal(nj.mode, "GROUNDED_COMPOSED");
+  assert.match(nj.answer ?? "", /Rockaway Township Council/);
+  assert.match(nj.answer ?? "", /O-26-23/);
+});
+
+test("ROUTE, AREA: a pronoun or an earlier turn keeps the model reading", async () => {
+  resetGroundedState();
+  const body = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
+    body: JSON.stringify({ question: "Are they voting on data centers?", ocdIds: [AZ, PIMA], approximateLocation: "85701", surface: "MAP", today: "2026-09-24" }),
+  }))).json() as { trace: { interpretation: { why?: string } } };
+  assert.notEqual(body.trace.interpretation.why, "deterministic-area-topic-route");
+});
+
 test("ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)", async () => {
   const body = await ask("what is on the next Pima County Board of Supervisors meeting agenda about data centers", "2026-09-24");
   assert.equal(body.denominators.topicTimelineEntries, undefined);

@@ -77,6 +77,16 @@ export type PrepareMeetingSnapshotResult =
 export async function preparePublishedMeetingSnapshot(
   store: RoutineDataStore,
   now: string = new Date().toISOString(),
+  options: {
+    /**
+     * The pass's one aggregate composition, when the caller already runs the
+     * same `readMeetingsProjection({ store, now, bypassCache: true,
+     * allowUnconfiguredBootstrap: false })`. Called only when the coupling
+     * changed; a caller that composes once serves both this and its Reader
+     * readback from one read of every partition.
+     */
+    readonly aggregate?: () => Promise<MeetingsProjectionReadResult>;
+  } = {},
 ): Promise<PrepareMeetingSnapshotResult> {
   const scopes = MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope);
   const versionByScope = new Map<string, string>();
@@ -119,7 +129,9 @@ export async function preparePublishedMeetingSnapshot(
 
   let aggregate: MeetingsProjectionReadResult;
   try {
-    aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+    aggregate = options.aggregate
+      ? await options.aggregate()
+      : await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: prepared?.generatedAt ?? null };
   }
@@ -207,6 +219,47 @@ function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCouplin
 }
 
 /**
+ * The prepared row each store last served, by the store it was read from (the
+ * process's own production store is `DEFAULT_PREPARED_STORE`). Every write of
+ * the row advances its `sequence` (`writePreparedReaderProjection` is a
+ * monotonic compare-and-set), so a row read at a sequence is that sequence's
+ * row for good. A process that already holds the current sequence asks only
+ * for the coupling (sequence, generation time and versions, never the 7.5 MB
+ * composed payload) before serving it again. Without it, every request that
+ * reached this fallback read the whole row: each pinned reader-proof request
+ * does (the edge path is bypassed while a proof pin is active).
+ */
+const DEFAULT_PREPARED_STORE: object = {};
+let preparedRows = new WeakMap<object, PreparedReaderProjectionRow>();
+
+async function readPreparedRowOnceUnchanged(
+  store: RoutineDataStore,
+  scope: object,
+): Promise<PreparedReaderProjectionRow | null> {
+  const held = preparedRows.get(scope);
+  if (held !== undefined) {
+    const coupling = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+    if (
+      coupling !== null &&
+      coupling.sequence === held.sequence &&
+      coupling.generatedAt === held.generatedAt &&
+      couplingFingerprint(coupling.composedFrom) === couplingFingerprint(held.composedFrom)
+    ) {
+      return held;
+    }
+  }
+  const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  if (row === null) preparedRows.delete(scope);
+  else preparedRows.set(scope, row);
+  return row;
+}
+
+/** Forget every held prepared row (tests; a store swap). */
+export function clearPreparedMeetingsProjectionCache(): void {
+  preparedRows = new WeakMap();
+}
+
+/**
  * The reader's fast path: read the single prepared reader snapshot and serve it
  * — one query, no 124-partition haul or re-compose. It NEVER recomposes on
  * routine staleness; the last valid prepared snapshot keeps serving (with its
@@ -226,7 +279,7 @@ export async function readPreparedMeetingsProjection(
     // fixture and returns STORE_UNREACHABLE in a misconfigured prod — never
     // escape as an unhandled throw the route turns into a 503.
     const store = options.store ?? new PostgresRoutineDataStore();
-    prepared = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+    prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE);
   } catch {
     prepared = null;
   }

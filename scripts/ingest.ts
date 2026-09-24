@@ -19,6 +19,8 @@ import { pathToFileURL } from "node:url";
 import {
   agendaDocumentStore,
   retrieveAgendaDocument,
+  type AgendaDocument,
+  type AgendaDocumentStore,
 } from "../lib/meetings/agenda-documents.ts";
 import {
   CONCLUDED_LOOKBACK_DAYS,
@@ -59,7 +61,7 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
-import { occurrenceStampFromInstant, supersedesSeriesRecord } from "../lib/sources/event-identity.ts";
+import { occurrenceStampFromInstant, reissuesSitting, supersedesSeriesRecord } from "../lib/sources/event-identity.ts";
 import {
   STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
   buildCompositeSource,
@@ -73,6 +75,8 @@ import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
 import { SOURCE_WIRING, isRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { isDisallowedLegistarHost } from "../lib/sources/legistar/routes.ts";
+import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
+import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -196,6 +200,192 @@ export function agendaRetrievalRefusal(url: string): "RETIRED_ROUTE" | "RECORDED
   return null;
 }
 
+/** A permitted agenda link redirected into a host this client may not request. */
+export class AgendaRedirectRefused extends Error {
+  readonly refusal: "RETIRED_ROUTE" | "RECORDED_DISALLOWED";
+  readonly location: string;
+  constructor(from: string, location: string, refusal: "RETIRED_ROUTE" | "RECORDED_DISALLOWED") {
+    super(`${from} redirects to ${location}, whose host ${refusal === "RETIRED_ROUTE" ? "is a retired route's" : "is recorded DISALLOWED"}; the redirect was not followed`);
+    this.name = "AgendaRedirectRefused";
+    this.refusal = refusal;
+    this.location = location;
+  }
+}
+
+const AGENDA_REDIRECT_LIMIT = 5;
+
+/**
+ * **EVERY REDIRECT HOP IS A NEW REQUEST, AND IS ASKED THE SAME QUESTION.**
+ * (2026-09-24, RULING 263.)
+ *
+ * `fetch` follows redirects by itself, so {@link agendaRetrievalRefusal} held
+ * only for the first hop: a permitted link that redirects into
+ * `legistar.granicus.com` would be read. docs/sources.md already names the
+ * pattern — the host in a document URL is frequently not the host of the
+ * portal that listed it. This follows each redirect itself and refuses a hop
+ * into a refused host exactly as a refused first hop is refused: the link is
+ * held and nothing is requested from that host. The base fetch is read per
+ * call, so a stubbed global in a test is the one used.
+ */
+export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
+  return (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const impl = base ?? globalThis.fetch;
+    let url = String(input instanceof Request ? input.url : input);
+    for (let hop = 0; ; hop++) {
+      const response = await impl(url, { ...init, redirect: "manual" });
+      const location = response.status >= 300 && response.status < 400 ? response.headers.get("location") : null;
+      if (!location) return response;
+      await response.body?.cancel().catch(() => undefined);
+      if (hop >= AGENDA_REDIRECT_LIMIT) {
+        throw new Error(`${url} redirected more than ${AGENDA_REDIRECT_LIMIT} times; the chain was not followed further`);
+      }
+      const next = new URL(location, url).toString();
+      const refusal = agendaRetrievalRefusal(next);
+      if (refusal) throw new AgendaRedirectRefused(url, next, refusal);
+      url = next;
+    }
+  }) as typeof fetch;
+}
+
+/**
+ * The permitted Legistar detail page a sitting's refused agenda link can be
+ * replaced through, or null when the row holds none.
+ */
+function portalDetailPageFor(meeting: Meeting): string | null {
+  const page = meeting.provenance?.sourceUrl ?? null;
+  return isLegistarMeetingDetailUrl(page) && agendaRetrievalRefusal(page) === null ? page : null;
+}
+
+/**
+ * The portal's own agenda link for a sitting, read off its detail page. A
+ * portal link already held for the sitting is reused, because the portal keeps
+ * one link per sitting and serves its current agenda there, so the page is
+ * read once rather than on every pass.
+ */
+async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): Promise<string | null> {
+  const page = portalDetailPageFor(meeting);
+  if (!page) return null;
+  const held = agendaDocumentStore.latestFor(meeting.id)?.documentUrl ?? null;
+  // The link passes the same refusal rule as the page before its first byte;
+  // `fetchImpl` asks it again at every redirect hop of both requests.
+  if (held && isPortalAgendaLinkFor(held, page) && agendaRetrievalRefusal(held) === null) return held;
+  const response = await fetchImpl(page, { headers: { "User-Agent": sourceUserAgent() } });
+  if (!response.ok) throw new Error(`HTTP ${response.status} for ${page}`);
+  const link = portalAgendaLinkFrom(await response.text(), page);
+  return link && agendaRetrievalRefusal(link) === null ? link : null;
+}
+
+/**
+ * Held document versions in the order they were read: `retrievedAt`, then id.
+ * (2026-09-24.)
+ *
+ * The store asks "is this read new?" of a sitting's LAST version by position.
+ * The partition payload was written as the store's rows followed by the rows
+ * the store had set aside as repeats, so a sitting's held rows drifted out of
+ * order: Sunnyside 167 held its 2026-09-14 skip links interleaved with its
+ * 09-24 reads. The last row by position was then an old one, an unchanged read
+ * compared against it looked new, and Sunnyside 167 and 174 each stored the
+ * same words again on every run from 03:25Z. Seeding and writing in read order
+ * keeps "last" meaning latest. No row is added, dropped or changed.
+ */
+export function inRetrievalOrder<T extends Pick<AgendaDocument, "id" | "retrievedAt">>(
+  documents: readonly T[],
+): T[] {
+  const readAt = (document: T): number => {
+    const ms = Date.parse(document.retrievedAt);
+    return Number.isFinite(ms) ? ms : Number.NEGATIVE_INFINITY;
+  };
+  return [...documents].sort((left, right) =>
+    (readAt(left) - readAt(right)) || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
+}
+
+/**
+ * Seed the store from the previous payload's held rows, in the order they were
+ * read, so append-only semantics hold across refreshes: an unchanged agenda is
+ * recognized, a revised one is appended beside its prior version.
+ *
+ * A document held for meetings of more than one government is refused here
+ * (the rule is stated where `main` calls this).
+ */
+export function seedHeldAgendaDocuments(
+  previous: Pick<MeetingsSnapshot, "meetings" | "agendaDocuments">,
+  store: AgendaDocumentStore = agendaDocumentStore,
+): { readonly carried: number; readonly refused: number; readonly refusedUrls: ReadonlySet<string> } {
+  const govOf = new Map(previous.meetings.map((m) => [m.id, m.ocdId ?? null]));
+  const govsByUrl = new Map<string, Set<string>>();
+  for (const doc of previous.agendaDocuments) {
+    const gov = govOf.get(doc.meetingId);
+    if (!gov) continue;
+    const set = govsByUrl.get(doc.documentUrl) ?? new Set<string>();
+    set.add(gov);
+    govsByUrl.set(doc.documentUrl, set);
+  }
+
+  let carried = 0;
+  let refused = 0;
+  const refusedUrls = new Set<string>();
+  for (const doc of inRetrievalOrder(previous.agendaDocuments)) {
+    if ((govsByUrl.get(doc.documentUrl)?.size ?? 0) > 1) {
+      refused++;
+      refusedUrls.add(doc.documentUrl);
+      continue;
+    }
+    store.append(doc);
+    carried++;
+  }
+  return { carried, refused, refusedUrls };
+}
+
+/**
+ * Which linked sittings one run reads first. (2026-09-24.)
+ *
+ * The cap is politeness per run, so this order decides what a reader can ever
+ * be given. It was "holds nothing yet" first, registry order after, and two
+ * kinds of sitting starved behind it:
+ * - A sitting whose link CHANGED holds versions from its old link, so it
+ *   ranked as held. Tucson Unified's Board Actions PDFs for sittings 498, 493,
+ *   492, 491, 485 and 484, linked since 2026-09-24, were never read.
+ * - A body's notice page, given to each unlinked scheduled sitting, is refused
+ *   as a landing page on every read and so is never held by any of them, and
+ *   all of them ranked first on every run. Seven Tucson Unified sittings spent
+ *   seven of the eight reads on govboard.tusd1.org/ each hour.
+ *
+ * So the rank is the link, not the sitting: first a link never read for this
+ * sitting; then a re-read of a link it holds; last a link another sitting
+ * already holds (a landing page, or a shared agenda), read when a read is left
+ * over. A refused link read through the sitting's portal page counts as read
+ * when the sitting holds the portal's own agenda link. Within a rank, the
+ * sitting nearest `nowMs` goes first, so an upcoming agenda is re-checked
+ * before one from July.
+ */
+export function agendaRetrievalOrder(
+  meetings: readonly Meeting[],
+  nowMs: number = Date.now(),
+  store: AgendaDocumentStore = agendaDocumentStore,
+): Meeting[] {
+  const heldFromLink = (meeting: Meeting, url: string): boolean => {
+    const versions = store.versionsFor(meeting.id);
+    if (agendaRetrievalRefusal(url) === null) return versions.some(({ documentUrl }) => documentUrl === url);
+    const page = portalDetailPageFor(meeting);
+    return page !== null && versions.some(({ documentUrl }) => isPortalAgendaLinkFor(documentUrl, page));
+  };
+  const rank = (meeting: Meeting): number => {
+    const url = documentUrlFor(meeting);
+    if (url === null) return 3;
+    if (heldFromLink(meeting, url)) return 1;
+    return store.isUrlOnAnotherMeeting(url, meeting.id) ? 2 : 0;
+  };
+  const distance = (meeting: Meeting): number => {
+    const ms = Date.parse(meeting.startsAt);
+    return Number.isFinite(ms) ? Math.abs(ms - nowMs) : Number.POSITIVE_INFINITY;
+  };
+  return meetings
+    .map((meeting, index) => ({ meeting, index, rank: rank(meeting), distance: distance(meeting) }))
+    .sort((left, right) =>
+      (left.rank - right.rank) || (left.distance - right.distance) || (left.index - right.index))
+    .map(({ meeting }) => meeting);
+}
+
 export async function retrieveAgendas(meetings: Meeting[]) {
   /*
    * **A LINK INTO A RETIRED ROUTE'S HOST IS HELD AS A LINK, NEVER READ.**
@@ -209,29 +399,41 @@ export async function retrieveAgendas(meetings: Meeting[]) {
    * held link never reads as a retrieval that failed or an agenda nobody
    * posted.
    */
-  const linkedOnly = meetings.filter((m) => {
+  const refused = (m: Meeting) => {
     const url = documentUrlFor(m);
     return url !== null && agendaRetrievalRefusal(url) !== null;
-  });
+  };
+  /*
+   * **A REFUSED LINK IS NOT THE ONLY ROUTE TO ITS AGENDA.** (2026-09-24,
+   * RULING 248.) A Legistar sitting whose API agenda file sits on the
+   * DISALLOWED document host has the same agenda on the tenant's own portal.
+   * The sitting's detail page, which the row already holds, links it
+   * (lib/sources/legistar/portal-agenda-link.ts). Those sittings are read
+   * through the portal. Only a refused link with no permitted route stays
+   * held as a link.
+   */
+  const linkedOnly = meetings.filter((m) => refused(m) && portalDetailPageFor(m) === null);
+  const viaPortal = meetings.filter((m) => refused(m) && portalDetailPageFor(m) !== null);
   if (linkedOnly.length > 0) {
     console.log(
       `agenda documents: ${linkedOnly.length} link(s) held as links only — their host is a retired ` +
         "route or recorded DISALLOWED (robots.txt refuses this client), so nothing was requested from it",
     );
   }
+  if (viaPortal.length > 0) {
+    console.log(
+      `agenda documents: ${viaPortal.length} refused link(s) with a permitted route — read through the ` +
+        "agenda link on the sitting's own portal detail page, never from the refused host",
+    );
+  }
   const withAgenda = meetings.filter((m) => {
     const url = documentUrlFor(m);
-    return url !== null && agendaRetrievalRefusal(url) === null;
+    return url !== null && (agendaRetrievalRefusal(url) === null || portalDetailPageFor(m) !== null);
   });
-  // Meetings with no stored document yet go first: the cap is politeness per
-  // run, and the store is seeded from the previous snapshot, so over repeated
-  // refreshes every agenda gets retrieved before any gets re-checked.
-  const prioritized = [...withAgenda].sort((a, b) => {
-    const aHas = agendaDocumentStore.latestFor(a.id) ? 1 : 0;
-    const bHas = agendaDocumentStore.latestFor(b.id) ? 1 : 0;
-    return aHas - bHas;
-  });
-  const capped = prioritized.slice(0, AGENDA_RETRIEVAL_CAP);
+  // A link never read for its sitting goes first (`agendaRetrievalOrder`):
+  // the cap is politeness per run, so over repeated refreshes every agenda
+  // gets retrieved before any gets re-checked.
+  const capped = agendaRetrievalOrder(withAgenda).slice(0, AGENDA_RETRIEVAL_CAP);
   let stored = 0;
   let revised = 0;
   /* Documents refused as landing pages — stated, never silently dropped. */
@@ -240,15 +442,32 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   let failed = 0;
   /* Failed reads kept off a sitting that already holds a version (RULING 269). */
   let failedOverHeld = 0;
+  /* Permitted links that redirected into a refused host: held, never followed. */
+  let redirectsRefused = 0;
+  /* Refused links read through the portal, and those whose page links no agenda yet. */
+  let readViaPortal = 0;
+  let portalWithoutLink = 0;
+  const fetchImpl = refusalCheckedFetch();
 
   for (const meeting of capped) {
     try {
       const url = documentUrlFor(meeting);
+      let override = url && url !== meeting.agendaUrl ? url : null;
+      const throughPortal = url !== null && agendaRetrievalRefusal(url) !== null;
+      if (throughPortal) {
+        override = await portalAgendaLinkFor(meeting, fetchImpl);
+        if (!override) {
+          portalWithoutLink++;
+          console.log(`  agenda link held as a link for ${meeting.id}: its portal detail page links no agenda yet`);
+          continue;
+        }
+      }
       const doc = await retrieveAgendaDocument(
         meeting,
-        url && url !== meeting.agendaUrl ? { urlOverride: url } : {},
+        override ? { fetchImpl, urlOverride: override } : { fetchImpl },
       );
       if (!doc) continue;
+      if (throughPortal) readViaPortal++;
       if (doc.extraction === "failed") {
         console.warn(
           `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
@@ -308,6 +527,11 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         if (result.revised) revised++;
       }
     } catch (error) {
+      if (error instanceof AgendaRedirectRefused) {
+        redirectsRefused++;
+        console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
+        continue;
+      }
       failed++;
       console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
     }
@@ -317,7 +541,9 @@ export async function retrieveAgendas(meetings: Meeting[]) {
     `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
-      `${failedOverHeld} failed read(s) not stored over a held version`,
+      `${failedOverHeld} failed read(s) not stored over a held version, ` +
+      `${redirectsRefused} redirect(s) into a refused host not followed, ` +
+      `${readViaPortal} refused link(s) read through the portal, ${portalWithoutLink} whose portal page links no agenda yet`,
   );
 }
 
@@ -456,28 +682,7 @@ async function main() {
        * Dropped rather than kept-and-flagged: the store is append-only, so a
        * row that stays gets re-appended by every later run.
        */
-      const govOf = new Map(previous.meetings.map((m) => [m.id, m.ocdId ?? null]));
-      const govsByUrl = new Map<string, Set<string>>();
-      for (const doc of previous.agendaDocuments) {
-        const gov = govOf.get(doc.meetingId);
-        if (!gov) continue;
-        const set = govsByUrl.get(doc.documentUrl) ?? new Set<string>();
-        set.add(gov);
-        govsByUrl.set(doc.documentUrl, set);
-      }
-
-      let carried = 0;
-      let refused = 0;
-      const refusedUrls = new Set<string>();
-      for (const doc of previous.agendaDocuments) {
-        if ((govsByUrl.get(doc.documentUrl)?.size ?? 0) > 1) {
-          refused++;
-          refusedUrls.add(doc.documentUrl);
-          continue;
-        }
-        agendaDocumentStore.append(doc);
-        carried++;
-      }
+      const { carried, refused, refusedUrls } = seedHeldAgendaDocuments(previous);
       console.log(
         `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
       );
@@ -603,19 +808,31 @@ export interface SuccessfulMeetingPartitionReconciliation {
  *
  * A successful response is still an OPEN fact set. Omission therefore cannot
  * delete an in-window fact: the prior row remains, visibly marked as carried.
- * A prior row is removed on one of two authorities, and on nothing else: an
+ * A prior row is removed on one of four authorities, and on nothing else: an
  * exact prior start outside the same registered serving window used for
- * acquisition and Reader delivery, or a fresh occurrence record of the same
+ * acquisition and Reader delivery; a fresh occurrence record of the same
  * recurring series that now holds the prior row's exact fact (2026-09-23,
- * `supersedesSeriesRecord`). Agenda documents inherit either authority only
- * from their exact removed meeting.
+ * `supersedesSeriesRecord`); the publisher striking that sitting out of its
+ * series (`EXCLUDED_BY_PUBLISHER`); or a fresh row of this partition that is
+ * the same sitting, re-issued by its publisher under a new id (2026-09-24,
+ * `reissuesSitting`). Agenda documents inherit an authority only from their
+ * exact removed meeting.
  *
- * The second authority exists for one transition. Until 2026-09-23 every
+ * The series authority exists for one transition. Until 2026-09-23 every
  * sitting of an iCalendar series shared the series' `UID`-only id; each series
  * now yields one record per sitting. Without it, the first read under the new
  * identity would carry the old record forward beside the occurrence that
  * replaced it, and a reader would see that sitting twice until it aged out of
  * the window.
+ *
+ * The re-issue authority is the same failure from the publisher's side, and
+ * it is permanent: Tucson Unified's portal listed one Audit Committee sitting
+ * as meeting 495 and then as meeting 501, and the carried 495 stood beside the
+ * fresh 501. It is tested only where a row would otherwise be carried, after
+ * every other authority, so a row with no fresh twin is carried exactly as
+ * before. Both successor authorities are recorded as
+ * `SUPERSEDED_BY_OCCURRENCE_IDENTITY` naming the successor, and the promotion
+ * door re-runs both tests on the stored records.
  */
 export function reconcileSuccessfulMeetingPartition(input: {
   readonly sourceName: string;
@@ -639,6 +856,26 @@ export function reconcileSuccessfulMeetingPartition(input: {
   const meetingIds = new Set(meetings.map(({ id }) => id));
   const carriedMeetingIds: string[] = [];
   const removalEvidence: RoutineRemovalEvidence[] = [];
+  /** The prior row leaves because `successor`, fresh in this read, now holds its sitting. */
+  const supersede = (prior: Meeting, successor: Meeting): void => {
+    const meetingKey = `meeting:${prior.id}`;
+    const successorKey = `meeting:${successor.id}`;
+    removalEvidence.push({
+      key: meetingKey,
+      code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+      successorKey,
+      priorStartsAt: prior.startsAt,
+    });
+    if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
+      removalEvidence.push({
+        key: agendaDocumentRecordKey({ meetingId: prior.id }),
+        code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+        successorKey,
+        priorStartsAt: prior.startsAt,
+        parentMeetingKey: meetingKey,
+      });
+    }
+  };
 
   for (const prior of input.previous?.meetings ?? []) {
     if (meetingIds.has(prior.id)) continue;
@@ -670,23 +907,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
     }
     const successor = input.freshMeetings.find((fresh) => supersedesSeriesRecord(prior, fresh));
     if (successor) {
-      const meetingKey = `meeting:${prior.id}`;
-      const successorKey = `meeting:${successor.id}`;
-      removalEvidence.push({
-        key: meetingKey,
-        code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
-        successorKey,
-        priorStartsAt: prior.startsAt,
-      });
-      if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
-        removalEvidence.push({
-          key: agendaDocumentRecordKey({ meetingId: prior.id }),
-          code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
-          successorKey,
-          priorStartsAt: prior.startsAt,
-          parentMeetingKey: meetingKey,
-        });
-      }
+      supersede(prior, successor);
       continue;
     }
     const struck = (input.publisherExclusions ?? []).find((exclusion) =>
@@ -713,6 +934,14 @@ export function reconcileSuccessfulMeetingPartition(input: {
       }
       continue;
     }
+    // The row would be carried. If a fresh row of this partition is the same
+    // sitting, re-issued under a new id, that row holds it now: the listing
+    // that left yields to it rather than standing beside it (`reissuesSitting`).
+    const reissued = input.freshMeetings.find((fresh) => reissuesSitting(prior, fresh));
+    if (reissued) {
+      supersede(prior, reissued);
+      continue;
+    }
     const lastFreshAt = prior.carried?.lastFreshAt ?? (
       Number.isFinite(Date.parse(prior.provenance?.collectedAt ?? ""))
         ? prior.provenance.collectedAt
@@ -730,9 +959,11 @@ export function reconcileSuccessfulMeetingPartition(input: {
     carriedMeetingIds.push(prior.id);
   }
 
-  const documents = [...input.freshAgendaDocuments, ...(input.previous?.agendaDocuments ?? [])]
+  // Written in read order, so the next run's seeding compares a new read with
+  // the sitting's latest version (`inRetrievalOrder`).
+  const documents = inRetrievalOrder([...input.freshAgendaDocuments, ...(input.previous?.agendaDocuments ?? [])]
     .filter((document) => meetingIds.has(document.meetingId))
-    .filter((document, index, all) => all.findIndex(({ id }) => id === document.id) === index);
+    .filter((document, index, all) => all.findIndex(({ id }) => id === document.id) === index));
   return {
     meetings,
     agendaDocuments: documents,

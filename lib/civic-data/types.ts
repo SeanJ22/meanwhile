@@ -298,9 +298,11 @@ export interface RoutineChangeSet {
  * Exact authority for removing one previously promoted record from an
  * incomplete candidate horizon. This is deliberately narrow: today only a
  * meeting (or one of its attached agenda-document versions) may age out of
- * the registered Reader serving window without a complete-universe claim, or
- * be replaced by the occurrence record that now holds its exact fact; and a
- * registry body minted on a Census placeholder may leave.
+ * the registered Reader serving window without a complete-universe claim, be
+ * replaced by the fresh record that now holds its exact sitting or by the
+ * occurrence record that now holds its exact fact, or be struck out of its
+ * series by its publisher; and a registry body minted on a Census placeholder
+ * may leave.
  */
 export type RoutineRemovalEvidence =
   | ServingWindowRemovalEvidence
@@ -324,19 +326,30 @@ export interface ServingWindowRemovalEvidence {
 }
 
 /**
- * A recurring series' single `UID`-keyed record, replaced by the occurrence
- * record that holds the same fact (2026-09-23; see `supersedesSeriesRecord` in
- * lib/sources/event-identity.ts). The validator re-derives every clause from
- * the candidate itself: the successor must be a fresh member of this candidate,
- * an occurrence of exactly the removed series id, for the same body, at the
- * removed record's start or in its slot. An agenda document attached to the
- * removed record inherits this authority from it, never on its own.
+ * A prior meeting record replaced by the fresh record that now holds its
+ * sitting (see lib/sources/event-identity.ts): a series record since
+ * 2026-09-23, a re-issued sitting since 2026-09-24. Two tests grant it, and the
+ * validator re-derives either from the candidate itself; the successor is
+ * always a fresh member of this candidate, never a carried one:
+ *
+ * - `supersedesSeriesRecord`: a recurring series' single `UID`-keyed record,
+ *   replaced by an occurrence of exactly that series id, for the same body, at
+ *   the removed record's start or in its slot.
+ * - `reissuesSitting`: the same sitting its publisher re-issued under a new
+ *   id: the same body id, the same body key from both the body name and the
+ *   title, and the same local date and minute in the same zone.
+ *
+ * An agenda document attached to the removed record inherits this authority
+ * from it, never on its own.
  */
 export interface OccurrenceSupersessionRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY";
-  /** `meeting:<series id>/<slot>`, a fresh member of the same candidate. */
+  /**
+   * `meeting:<id>` of the fresh member of the same candidate that holds the
+   * sitting: `<series id>/<slot>` for a series record, or the re-issued id.
+   */
   readonly successorKey: string;
   /** The previously promoted meeting's exact `startsAt`. */
   readonly priorStartsAt: string;

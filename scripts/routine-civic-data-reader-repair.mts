@@ -15,6 +15,7 @@ import {
   repairRoutineReaderProjectionReadback,
 } from "../lib/civic-data/reader-verification.ts";
 import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from "../lib/meetings/prepared-snapshot.ts";
+import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
   purgeReaderCacheTags,
@@ -39,6 +40,7 @@ import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
+import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
 
 function safeFailure(value: string): string {
@@ -64,20 +66,49 @@ if (meetingAggregate === (contractId !== null && contractId !== "")) {
   throw new Error("READER_REPAIR_DOMAIN_ARGUMENT_INVALID");
 }
 
+// A one-contract child writes stage lines to stderr, so a child the runner
+// kills leaves the step it stopped in as its failure detail
+// (lib/ops/stage-trace.ts). Protocol records stay on stdout.
+const stage = meetingAggregate
+  ? null
+  : (what: string): void => {
+    process.stderr.write(`${stageLine("READER_REPAIR_STAGE", what)}\n`);
+  };
+stage?.(`modules loaded for ${contractId}`);
+
 installNeonRequestDeadline();
 const handle = resolveProductionWriteHandle();
 process.env.DATABASE_URL = handle.connection;
 process.env.WTP_DB_ROLE = "production";
 process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
 assertWriteAllowed("a routine civic data candidate/version promotion");
-const store = new PostgresRoutineDataStore();
+const store = stage
+  ? traceMethodCalls(new PostgresRoutineDataStore(), "store", stage)
+  : new PostgresRoutineDataStore();
 
 let failed = false;
 if (meetingAggregate) {
+  // One composition of every partition per pass, made only when something
+  // needs it: the Reader readbacks of newly promoted versions and the prepared
+  // snapshot's republication ask for exactly the same read, and a pass that
+  // promoted a partition needs both. Each once composed on its own (about
+  // 24 MB from the reader database apiece). A failed composition is not kept,
+  // so the second consumer tries again as it did before.
+  let composing: Promise<MeetingsProjectionReadResult> | null = null;
+  const aggregate = (): Promise<MeetingsProjectionReadResult> => {
+    composing ??= readMeetingsProjection({ store, now: observedAt, bypassCache: true, allowUnconfiguredBootstrap: false })
+      .catch((error: unknown) => {
+        composing = null;
+        throw error;
+      });
+    return composing;
+  };
   const results = await repairMeetingReaderProjectionReadbacks(
     store,
     MEETING_PARTITION_CONTRACTS,
     observedAt,
+    undefined,
+    { aggregate },
   );
   for (const result of results) {
     const contract = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === result.contractId);
@@ -98,7 +129,7 @@ if (meetingAggregate) {
   // so the last valid snapshot keeps serving; it is surfaced as a domain failure
   // (exit 2) so admin sees it, and the publication lag is readable from the
   // prepared row's coupling versus the live partitions.
-  const prepared = await preparePublishedMeetingSnapshot(store, observedAt);
+  const prepared = await preparePublishedMeetingSnapshot(store, observedAt, { aggregate });
   if (prepared.status === "FAILED") {
     failed = true;
     process.stderr.write(`PREPARED_MEETING_SNAPSHOT_FAILED: ${safeFailure(prepared.error)}\n`);
@@ -269,12 +300,15 @@ if (meetingAggregate) {
     throw new Error(`READER_REPAIR_MEETING_REQUIRES_AGGREGATE:${contract.id}`);
   }
   try {
+    stage?.("readback repair started");
     const result = await repairRoutineReaderProjectionReadback(store, contract, observedAt);
+    stage?.(`readback repair ${result.kind}`);
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,
       { ok: true, value: result },
     )));
   } catch (error) {
+    stage?.("readback repair failed");
     failed = true;
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,

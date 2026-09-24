@@ -130,7 +130,10 @@ test("Rockaway: a fetch differing only in stamps, raw hashes and collectedAt is 
 
   const refetched = await fetchAndPromote(store, ROCKAWAY_BOA, second, rows(second));
   const before = seeded.outcome.candidate.candidate;
-  const after = refetched.outcome.candidate.candidate;
+  // The re-check was validated, then confirmed on the pointed version rather
+  // than stored: it is the evaluated candidate the confirmation carries.
+  assert.ok(refetched.outcome.confirmed, "a validated no-change is confirmed, not republished");
+  const after = refetched.outcome.confirmed.recheck;
   // Everything the production diff showed moving did move...
   assert.notEqual(after.temporal.version, before.temporal.version);
   assert.notEqual(after.temporal.sourceThrough, before.temporal.sourceThrough);
@@ -145,10 +148,11 @@ test("Rockaway: a fetch differing only in stamps, raw hashes and collectedAt is 
   assert.deepEqual(after.changeSet?.removed, []);
   // The stamps stay on the stored record as provenance.
   assert.ok((after.readModel as MeetingsSnapshot).meetings.every((meeting) => meeting.provenance.collectedAt === second));
-  // The existing validated no-change path: the GOOD candidate is PROMOTED with
-  // an UNCHANGED change set (it does not hold the pointer; see the report).
-  assert.equal(refetched.outcome.candidate.state, "PROMOTED");
-  assert.equal(refetched.outcome.promoted?.versionId, after.id);
+  // RULING 283's receipted no-change: readers keep the pointed version, and
+  // the confirmation, not a new candidate, records the re-check.
+  assert.equal(refetched.outcome.candidate.candidate.id, before.id);
+  assert.equal(refetched.outcome.promoted?.versionId, before.id);
+  assert.equal(await store.readCandidate(after.id), null);
 });
 
 test("a real fact change is still a change, and only the record whose facts moved is changed", async () => {
@@ -194,9 +198,12 @@ test("Tucson Unified: the sitting's agenda is one record; re-fetches are no chan
   assert.ok(seeded.outcome.candidate.candidate.changeSet?.added.some((delta) => delta.key === key));
 
   const refetched = await fetchAndPromote(store, TUSD, t2, [meeting(t2)], [d1, d2]);
-  assert.equal(refetched.outcome.candidate.state, "PROMOTED", refetched.outcome.candidate.failureDetail ?? "");
-  assert.equal((refetched.outcome.promoted?.payload as MeetingsSnapshot).agendaDocuments.length, 2, "every stored row stays in the read model");
-  assert.equal(refetched.outcome.candidate.candidate.changeSet?.outcome, "UNCHANGED");
+  // Same words, new bytes: the re-check is a validated no-change, confirmed on
+  // the pointed version, so readers keep the one agenda row they had.
+  assert.ok(refetched.outcome.confirmed, refetched.outcome.candidate.failureDetail ?? "");
+  assert.equal(refetched.outcome.confirmed.recheck.changeSet?.outcome, "UNCHANGED");
+  assert.equal((refetched.outcome.confirmed.recheck.readModel as MeetingsSnapshot).agendaDocuments.length, 2, "the re-check saw every stored row");
+  assert.equal((refetched.outcome.promoted?.payload as MeetingsSnapshot).agendaDocuments.length, 1, "readers keep the version they had");
 
   const revised = await fetchAndPromote(store, TUSD, t3, [meeting(t3)], [d1, d2, d3]);
   const changeSet = revised.outcome.candidate.candidate.changeSet;

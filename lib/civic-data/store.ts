@@ -21,6 +21,7 @@ import {
   latestUnchangedConfirmation,
   parseUnchangedConfirmation,
   serializeUnchangedConfirmation,
+  serializeUnchangedConfirmationSources,
   type ConfirmUnchangedInput,
   type ConfirmUnchangedOutcome,
   type UnchangedConfirmation,
@@ -940,6 +941,15 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     }
     const { history, event } = this.nextEvent(input.pointerVersionId, "PROMOTED", at, serializeUnchangedConfirmation(built.confirmation));
     history.push(structuredClone(event));
+    if (input.retainedSourceResponses?.length) {
+      history.push({
+        candidateId: input.pointerVersionId,
+        sequence: event.sequence + 1,
+        state: "PROMOTED",
+        at,
+        detail: serializeUnchangedConfirmationSources(built.confirmation, input.retainedSourceResponses),
+      });
+    }
     this.history.set(input.pointerVersionId, history);
     return { kind: "CONFIRMED", versionId: input.pointerVersionId, at };
   }
@@ -1799,6 +1809,19 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
               and ${civicDataCandidateEvents.at} > ${at}::timestamptz
           )
       `).returning({ sequence: civicDataCandidateEvents.sequence }),
+      // The confirming acquisition's source bytes, kept as a promotion would
+      // have kept them; written only when the receipt above was.
+      ...(input.retainedSourceResponses?.length
+        ? [this.db.insert(civicDataCandidateEvents).select(sql`
+            select gen_random_uuid(), ${id}, ${this.nextCandidateEventSequence(id)}, ${"PROMOTED"}, ${at}::timestamptz,
+              ${serializeUnchangedConfirmationSources(built.confirmation, input.retainedSourceResponses)}
+            where exists (
+              select 1 from ${civicDataCandidateEvents}
+              where ${civicDataCandidateEvents.candidateId} = ${id}
+                and ${civicDataCandidateEvents.detail} = ${detail}
+            )
+          `)]
+        : []),
     ]);
     if (eventRows[0]) return { kind: "CONFIRMED", versionId: id, at };
     // Name the guard that refused, from identity columns only.

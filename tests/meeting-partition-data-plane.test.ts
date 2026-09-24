@@ -18,6 +18,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
+import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.ts";
@@ -741,4 +742,44 @@ test("a meeting child takes the supervisor's registry attestation, and a malform
   await run(JSON.stringify([{ ...attestation, payloadSha256: "not-a-hash" }]));
   await run(undefined);
   assert.deepEqual(seen, [{ attested: attestation }, {}, {}]);
+});
+
+test("a meeting re-check that finds no new fact is confirmed on the pointed version; a real change still promotes", async () => {
+  const store = new MemoryRoutineDataStore();
+  const run = (rows: readonly Meeting[], at: string) => promoteMeetingPartitions({
+    store,
+    partitions: [legistar],
+    meetings: [...rows],
+    agendaDocuments: [],
+    reports: [report(legistar.meetingSource, at)],
+    generatedAt: at,
+  });
+  const [first] = await run([meeting(legistar, FIRST, "unchanged")], FIRST);
+  assert.equal(first?.outcome.candidate.state, "PROMOTED");
+  const pointer = await store.readPromotion("MEETING", legistar.scope);
+  assert.ok(pointer);
+
+  // The same sitting read again: only its observation stamps moved.
+  const [second] = await run([meeting(legistar, SECOND, "unchanged")], SECOND);
+  assert.equal(second?.outcome.confirmed?.versionId, pointer.versionId);
+  assert.equal(second?.outcome.confirmed?.at, SECOND);
+  assert.equal(second?.outcome.confirmed?.recheck.changeSet?.outcome, "UNCHANGED");
+  assert.equal(second?.outcome.candidate.candidate.id, pointer.versionId, "the receipt names the pointed version");
+  assert.deepEqual(await store.readPromotion("MEETING", legistar.scope), pointer, "readers keep their version");
+  assert.equal(await store.readCandidate(second!.candidate.id), null, "no new candidate row");
+  const events = await store.events(pointer.versionId);
+  const receipts = events.map((event) => parseUnchangedConfirmation(event.detail)).filter((row) => row !== null);
+  assert.equal(receipts.length, 1);
+  assert.equal(receipts[0]!.basis, "CHANGE_SET_UNCHANGED");
+  assert.equal(receipts[0]!.readModelHash, first!.outcome.candidate.candidate.normalization.normalizedHash);
+  const clock = await store.clock(legistar.sourceId, "MEETING", legistar.scope);
+  assert.equal(clock.lastAttemptedAt, SECOND);
+  assert.equal(clock.lastSucceededObservedAt, SECOND, "the confirmation is the source's latest success");
+
+  // A changed fact is a new version, exactly as before.
+  const later = "2026-09-08T14:00:00.000Z";
+  const [third] = await run([{ ...meeting(legistar, later, "unchanged"), title: "Special session" }], later);
+  assert.equal(third?.outcome.confirmed, undefined);
+  assert.equal(third?.outcome.candidate.state, "PROMOTED");
+  assert.notEqual((await store.readPromotion("MEETING", legistar.scope))?.versionId, pointer.versionId);
 });

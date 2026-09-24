@@ -196,53 +196,6 @@ export function agendaRetrievalRefusal(url: string): "RETIRED_ROUTE" | "RECORDED
   return null;
 }
 
-/** A permitted agenda link redirected into a host this client may not request. */
-export class AgendaRedirectRefused extends Error {
-  readonly refusal: "RETIRED_ROUTE" | "RECORDED_DISALLOWED";
-  readonly location: string;
-  constructor(from: string, location: string, refusal: "RETIRED_ROUTE" | "RECORDED_DISALLOWED") {
-    super(`${from} redirects to ${location}, whose host ${refusal === "RETIRED_ROUTE" ? "is a retired route's" : "is recorded DISALLOWED"}; the redirect was not followed`);
-    this.name = "AgendaRedirectRefused";
-    this.refusal = refusal;
-    this.location = location;
-  }
-}
-
-const AGENDA_REDIRECT_LIMIT = 5;
-
-/**
- * **EVERY REDIRECT HOP IS A NEW REQUEST, AND IS ASKED THE SAME QUESTION.**
- * (2026-09-24, RULING 263.)
- *
- * `fetch` follows redirects by itself, so {@link agendaRetrievalRefusal} held
- * only for the first hop: a permitted link that redirects into
- * `legistar.granicus.com` would be read. docs/sources.md already names the
- * pattern — the host in a document URL is frequently not the host of the
- * portal that listed it. This follows each redirect itself and refuses a hop
- * into a refused host exactly as a refused first hop is refused: the link is
- * held and nothing is requested from that host. The base fetch is read per
- * call, so a stubbed global in a test is the one used.
- */
-export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
-  return (async (input: RequestInfo | URL, init?: RequestInit) => {
-    const impl = base ?? globalThis.fetch;
-    let url = String(input instanceof Request ? input.url : input);
-    for (let hop = 0; ; hop++) {
-      const response = await impl(url, { ...init, redirect: "manual" });
-      const location = response.status >= 300 && response.status < 400 ? response.headers.get("location") : null;
-      if (!location) return response;
-      await response.body?.cancel().catch(() => undefined);
-      if (hop >= AGENDA_REDIRECT_LIMIT) {
-        throw new Error(`${url} redirected more than ${AGENDA_REDIRECT_LIMIT} times; the chain was not followed further`);
-      }
-      const next = new URL(location, url).toString();
-      const refusal = agendaRetrievalRefusal(next);
-      if (refusal) throw new AgendaRedirectRefused(url, next, refusal);
-      url = next;
-    }
-  }) as typeof fetch;
-}
-
 export async function retrieveAgendas(meetings: Meeting[]) {
   /*
    * **A LINK INTO A RETIRED ROUTE'S HOST IS HELD AS A LINK, NEVER READ.**
@@ -287,16 +240,13 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   let failed = 0;
   /* Failed reads kept off a sitting that already holds a version (RULING 269). */
   let failedOverHeld = 0;
-  /* Permitted links that redirected into a refused host: held, never followed. */
-  let redirectsRefused = 0;
-  const fetchImpl = refusalCheckedFetch();
 
   for (const meeting of capped) {
     try {
       const url = documentUrlFor(meeting);
       const doc = await retrieveAgendaDocument(
         meeting,
-        url && url !== meeting.agendaUrl ? { fetchImpl, urlOverride: url } : { fetchImpl },
+        url && url !== meeting.agendaUrl ? { urlOverride: url } : {},
       );
       if (!doc) continue;
       if (doc.extraction === "failed") {
@@ -358,11 +308,6 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         if (result.revised) revised++;
       }
     } catch (error) {
-      if (error instanceof AgendaRedirectRefused) {
-        redirectsRefused++;
-        console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
-        continue;
-      }
       failed++;
       console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
     }
@@ -372,8 +317,7 @@ export async function retrieveAgendas(meetings: Meeting[]) {
     `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
-      `${failedOverHeld} failed read(s) not stored over a held version, ` +
-      `${redirectsRefused} redirect(s) into a refused host not followed`,
+      `${failedOverHeld} failed read(s) not stored over a held version`,
   );
 }
 

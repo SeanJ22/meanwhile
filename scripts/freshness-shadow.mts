@@ -309,6 +309,7 @@ import {
   stepBudgetMs,
   type CycleClock,
 } from "../lib/control-plane/scheduler/cycle-finalization.ts";
+import { CYCLE_DRAIN_GRACE_MS, chosenExitCode, exitAfterDrainGrace } from "../lib/control-plane/scheduler/cycle-exit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
@@ -3166,3 +3167,12 @@ try {
   failedStep("window-lease:release", error);
 }
 await stallDiagnostic?.stop();
+/* Nothing is left to await. A drained loop exits now; anything still holding it open is named, then the cycle exits with its own code instead of waiting for the wall (cycle-exit.ts). */
+exitAfterDrainGrace({
+  graceMs: CYCLE_DRAIN_GRACE_MS,
+  finishedAt: nowIso(),
+  exitCode: () => chosenExitCode(process.exitCode),
+  activeResources: () => process.getActiveResourcesInfo(),
+  log: (line) => console.error(line),
+  exit: (code) => process.exit(code),
+});

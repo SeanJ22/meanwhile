@@ -379,6 +379,7 @@
     "zcta:fetch": "tsx scripts/fetch-zcta-centroids.ts",
     "zcta:outlines": "tsx scripts/fetch-zcta-outlines.mts",
     "zip:add": "tsx scripts/zip-add.mts",
+    "registration:reference": "tsx scripts/build-registration-reference.mts",
     "zip:divisions": "tsx scripts/build-zip-division-shards.mts",
     "zip:governing": "tsx scripts/zip-governing-universe.mts",
     "zip:intersect": "tsx scripts/zip-district-intersect.mts",

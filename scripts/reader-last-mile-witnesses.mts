@@ -59,14 +59,15 @@ const cases: Record<string, [string, string[]]> = {
   "shuffled-facts": ["85641-phone-dark", ["about-area"]],
   "polling-lookup-fallback": ["85701-phone-dark", ["ballot-voting-outside-coverage", "ballot-voting-outside-coverage-last"]],
   "meeting-popup": ["85701-phone-dark", ["meeting-popup"]],
-  // tusd1:493 is back in ACQUIRED_IS_PUBLICATION_INDEX (2026-09-23 reader batch).
-  // Its stored rows were 54-69 characters of Diligent page header that the reader
-  // had shown as the sitting's own agenda text (READ_NO_ITEMS_EXTRACTED). The
-  // Diligent reader fix (6fd12d1e) reads every stored shape of a Diligent meeting
-  // page as the publisher's agenda portal, so this known-answer witness tracks the
-  // -publication-index surface the render now produces for it. The same surface is
-  // also proven by apptegy:vail:60703698 (85641) and diligent:newburynh:3367 (03255).
-  "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "diligent-tusd1-493-publication-index"]],
+  // tusd1:493 shows its own sitting's text again, and this time it is real
+  // (2026-09-24). On 09-23 its stored rows were 54-69 characters of Diligent page
+  // header, so the Diligent reader fix (6fd12d1e) served it as the publisher's
+  // agenda portal (-publication-index). At 14:24Z on 09-24 the runner acquired the
+  // sitting's own Board Actions PDF (govboard.tusd1.org .../actions/08-25-2026S.pdf,
+  // 14,335 characters, sitting-specific; 116 index rows set aside), so the render
+  // now opens its agenda text. The -publication-index surface stays proven by
+  // apptegy:vail:60703698 (85641) and diligent:newburynh:3367 (03255).
+  "agenda-section": ["85701-phone-dark", ["legistar-pima-1822-minutes", "diligent-tusd1-493-agenda-text"]],
   "state-money-section": ["85701-desktop-light", ["map-money", "ballot-money"]],
   "candidate-contact": ["07866-desktop-dark", ["ballot-filed-contact"]],
   "funding-section": ["85641-phone-dark", ["map-federal-money", "ballot-federal-money"]],

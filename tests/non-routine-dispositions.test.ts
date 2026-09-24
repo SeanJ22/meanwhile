@@ -54,9 +54,9 @@ test("the PDC-7 frozen denominator accounts for every source row and all 42 hold
   const problems = validatePdc7DispositionRegistry(inventory.rows, DATASET_FAMILIES.map((family) => family.id));
   assert.deepEqual(problems, []);
 
-  assert.equal(inventory.rows.length, 37);
-  // legistar-outcomes moved from the explicit-owner bindings to the standing clock.
-  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 8);
+  assert.equal(inventory.rows.length, 38);
+  // legistar-outcomes moved from the explicit-owner bindings to the standing clock; registration adds one row.
+  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 9); // + registration (56 contracts, one binding) and + pima-legistar-outcomes, moved to the standing clock
   assert.equal(NON_ROUTINE_DISPOSITIONS.length, 11);
   assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 17);
   assert.equal(PDC7_RESOLVED_SPLIT_BINDINGS.length, 1);

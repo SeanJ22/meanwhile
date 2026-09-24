@@ -64,119 +64,22 @@
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { join } from "node:path";
 
-import { readBoundaryAttributes } from "../lib/geo/shapefile.ts";
 import { readAllZipDivisions, zipShardOf, type ZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
-import { geometryFiles } from "../lib/holdings/files.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-import { countyIdentity, placeIdentity, schoolIdentity, subdivisionIdentity, type DivisionIdentity } from "../lib/ocd/divisions.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
+import { LAYERS, nationalDivisionIds } from "./lib/national-division-ids.mts";
 
 const ROOT = process.cwd();
 const TIGER = process.argv.find((a) => a.startsWith("--tiger="))?.slice(8) ?? join(ROOT, ".cache", "tiger");
 const OUT = join(ROOT, "data", "derived", "zip-divisions");
 
-type Layer = "county" | "place" | "cousub" | "unsd" | "elsd" | "scsd";
-const LAYERS: readonly Layer[] = ["county", "place", "cousub", "unsd", "elsd", "scsd"];
-const FILE: Readonly<Record<Layer, string>> = {
-  county: "cb_2023_us_county_500k.zip",
-  place: "cb_2023_us_place_500k.zip",
-  cousub: "cb_2023_us_cousub_500k.zip",
-  unsd: "cb_2023_us_unsd_500k.zip",
-  elsd: "cb_2023_us_elsd_500k.zip",
-  scsd: "cb_2023_us_scsd_500k.zip",
-};
-
-function identityOf(layer: Layer, row: Record<string, string>): DivisionIdentity | null {
-  switch (layer) {
-    case "county":
-      return countyIdentity(row.STATEFP ?? "", row.NAME ?? "");
-    case "place":
-      return placeIdentity(row.STATEFP ?? "", row.NAME ?? "", row.LSAD);
-    case "cousub":
-      return subdivisionIdentity(row.STATEFP ?? "", row.NAMELSADCO ?? "", row.NAMELSAD ?? "", row.LSAD);
-    default:
-      return schoolIdentity(row.STATEFP ?? "", row.NAME ?? "");
-  }
-}
-
-/* ------------------------------------------------------------ the committed ids, which never move */
-const COMMITTED_LAYER: Readonly<Record<string, Layer>> = { "county-us": "county", place: "place", cousub: "cousub", unsd: "unsd", elsd: "elsd", scsd: "scsd" };
-const pinned = new Map<string, string>();
-for (const file of geometryFiles(ROOT)) {
-  const stem = basename(file).replace(/\.geojson$/, "");
-  const layer = COMMITTED_LAYER[stem] ?? COMMITTED_LAYER[stem.replace(/-\d{2}$/, "")];
-  if (!layer) continue;
-  const parsed = JSON.parse(readFileSync(join(ROOT, file), "utf8")) as { features?: { properties: Record<string, string> }[] };
-  for (const f of parsed.features ?? []) {
-    const geoid = String(f.properties.geoid ?? "");
-    const ocdId = String(f.properties.ocdId ?? "");
-    if (geoid && ocdId) pinned.set(`${layer}:${geoid}`, ocdId);
-  }
-}
-
-/* ------------------------------------------------------------ every government's id, nationally */
-const members = new Map<string, { readonly key: string; readonly geoid: string; readonly label: string }[]>();
-const rowsByLayer: Record<string, number> = {};
-for (const layer of LAYERS) {
-  const path = join(TIGER, FILE[layer]);
-  if (!existsSync(path)) throw new Error(`${path} is missing. Run \`pnpm tiger:fetch\`, or pass --tiger=<the directory holding the Census files>.`);
-  const rows = readBoundaryAttributes(readFileSync(path));
-  rowsByLayer[layer] = rows.length;
-  for (const row of rows) {
-    const identity = identityOf(layer, row);
-    const geoid = row.GEOID ?? "";
-    if (identity === null || geoid === "") continue;
-    const list = members.get(identity.ocdId) ?? [];
-    list.push({ key: `${layer}:${geoid}`, geoid, label: `${identity.label} (${layer} ${geoid})` });
-    members.set(identity.ocdId, list);
-  }
-}
-
-const finalId = new Map<string, string>();
-const collisions: string[] = [];
-let pinnedKept = 0;
-for (const [id, group] of members) {
-  if (group.length === 1) {
-    const only = group[0];
-    finalId.set(only.key, pinned.get(only.key) ?? id);
-    continue;
-  }
-  collisions.push(`${id}: ${group.map((m) => m.label).join(" | ")}`);
-  for (const m of group) {
-    const pin = pinned.get(m.key);
-    if (pin !== undefined) pinnedKept++;
-    finalId.set(m.key, pin ?? `${id}_${m.geoid}`);
-  }
-}
-/*
- * No two governments may share an id — with one named exception this build
- * inherits rather than creates. The committed geometry already gives two
- * governments one id where the two sit in different layer files (New Jersey's
- * Union Township unified and elementary school districts), because the
- * committed build checks collisions one file at a time. Renaming either would
- * move a committed id; keeping both on it is exactly today's state. So a
- * shared id whose every holder is pinned to it is carried as it is and printed,
- * and any other shared id refuses the build.
- */
-const owners = new Map<string, string>();
-const inheritedCollapses = new Map<string, Set<string>>();
-for (const [key, id] of finalId) {
-  const other = owners.get(id);
-  if (other !== undefined && other !== key) {
-    if (pinned.get(key) === id && pinned.get(other) === id) {
-      const holders = inheritedCollapses.get(id) ?? new Set([other]);
-      holders.add(key);
-      inheritedCollapses.set(id, holders);
-      continue;
-    }
-    throw new Error(`${id} names two governments (${other} and ${key}). An OCD id is a join key; a shared one is a collapsed join.`);
-  }
-  owners.set(id, key);
-}
-const pinsNotNational = [...pinned.keys()].filter((key) => !finalId.has(key));
+/* ------------------------------------------------------------ every government's id, nationally (scripts/lib/national-division-ids.mts) */
+const national = nationalDivisionIds(ROOT, TIGER);
+const { pinned, collisions, pinnedKept, inheritedCollapses, pinsNotNational, rowsByLayer } = national;
+const finalId = new Map([...national.divisions].map(([key, division]) => [key, division.ocdId]));
 
 /* ------------------------------------------------------------ every ZIP */
 const zipGov = JSON.parse(readFileSync(join(ROOT, "data", "derived", "zip-governments.json"), "utf8")) as {

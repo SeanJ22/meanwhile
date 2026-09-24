@@ -54,6 +54,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   jsonTextAtPath,
+  projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -66,6 +67,7 @@ import {
   type Persisted,
   type PutOutcome,
   type RecordedTransition,
+  type RecordProjection,
 } from "./types.ts";
 
 /** One in-memory aggregate store with the full CAS contract. */
@@ -204,6 +206,22 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .slice(Math.max(0, partition.length - bounded))
         .reverse()
         .map((entry) => jsonCopy(entry.record));
+    },
+
+    readRecentWhere: async (
+      key: string,
+      jsonPath: readonly string[],
+      value: string,
+      limit: number,
+      projection: RecordProjection,
+    ): Promise<readonly unknown[]> => {
+      const matches = (partitions.get(key) ?? [])
+        .filter((entry) => jsonTextAtPath(entry.record, jsonPath) === value);
+      const bounded = Math.max(0, Math.trunc(limit));
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((entry) => projectRecord(jsonCopy(entry.record), projection));
     },
 
     readAll: async (): Promise<readonly T[]> =>

@@ -21,6 +21,8 @@ import {
 import {
   ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
+  ROUTINE_SUPERVISOR_HISTORY_FIELDS,
+  ROUTINE_SUPERVISOR_HISTORY_WINDOW,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   readRoutineTaskClocks,
   routineFailureDomainFrontier,
@@ -199,8 +201,16 @@ async function latestUnreceiptedSupervisorAttempts(): Promise<RoutineSupervisorA
      civic-data pass at its start. The read is idempotent, so retry it — same
      resilience the schema bootstrap gets. See connect-retry.ts. */
   const supervisorOutcomes = await withControlPlaneConnectRetry(
-    /* Only supervisor outcomes matter here; fetch them by kind, not the whole log. */
-    () => repos.ownerDigests.readWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR"),
+    /* Only recent supervisor outcomes can order a task, and only the fields the
+       history validates: the newest window, narrowed by the store, oldest first
+       again so the rows keep their append order. Never every outcome whole. */
+    async () => [...await repos.ownerDigests.readRecentWhere(
+      DIGEST_LOG_KEY,
+      ["runtimeOutcome", "kind"],
+      "ROUTINE_CIVIC_DATA_SUPERVISOR",
+      ROUTINE_SUPERVISOR_HISTORY_WINDOW,
+      ROUTINE_SUPERVISOR_HISTORY_FIELDS,
+    )].reverse(),
     {
       onRetry: ({ attempt, delayMs, error }) =>
         console.warn(

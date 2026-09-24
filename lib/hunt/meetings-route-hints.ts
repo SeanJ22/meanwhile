@@ -73,9 +73,10 @@ export interface OfficialSiteHint {
   /** The current official site's origin: `https://host`, no path. */
   readonly origin: string;
   /**
-   * The government's name as the site's own homepage gave it when observed ("City of El Mirage"). The walk
-   * treats the site as the government's only while its homepage still carries this name: a lapsed domain
-   * can be anyone's.
+   * The name the walk requires the homepage to carry: the government's name as its homepage gave it when
+   * observed ("City of El Mirage"), or, when the homepage served a challenge and could not be observed, the
+   * government's short name. The walk treats the site as the government's only while its homepage carries
+   * it: a lapsed domain can be anyone's.
    */
   readonly selfName: string;
   /** The address the reference records, which this replaces for the walk. */
@@ -109,8 +110,87 @@ const NH_LEDGER: HintObservation = { at: "2026-09-24T04:33:00Z", by: "Backend se
  */
 const CHANDLER_RESEARCH: HintObservation = { at: "2026-09-24T18:24:00Z", by: "RouteTask session research, robots-checked, destinyhosted.com never requested" };
 
+/**
+ * The current official sites of governments whose recorded addresses went stale, verified by the RouteTask
+ * session's research on 2026-09-24: robots.txt read first on every host, no challenge passed. The .gov rows
+ * are from CISA's registry (current-full.csv, read 2026-09-24T18:03:54Z, sha256 62de2f53…07e4f).
+ */
+const SITE_RESEARCH = "RouteTask session research, robots-checked";
+const DOTGOV = "the .gov registry (CISA current-full.csv, read 2026-09-24T18:03:54Z) lists";
+
+function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): JurisdictionRouteHints {
+  return { jurisdictionId, officialSite, routes: [] };
+}
+
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
+  siteHint("az:city:city-of-cottonwood", {
+    origin: "https://cottonwoodaz.gov",
+    selfName: "City of Cottonwood",
+    replaces: "http://www.ci.cottonwood.az.us",
+    recordedState: "it does not resolve: www.ci.cottonwood.az.us is a CNAME to ci.cottonwood.az.us, which has no address record",
+    evidence: [
+      `${DOTGOV} cottonwoodaz.gov, City, City of Cottonwood, Cottonwood, AZ`,
+      "its homepage answered 200, titled \"Cottonwood, AZ | Official Website\", naming the City of Cottonwood at 827 N. Main St",
+    ],
+    observed: { at: "2026-09-24T18:07:56Z", by: SITE_RESEARCH },
+  }),
+  siteHint("az:city:city-of-douglas", {
+    origin: "https://douglasaz.gov",
+    selfName: "City of Douglas",
+    replaces: "http://www.douglasaz.org",
+    recordedState: "it does not resolve: douglasaz.org's nameservers refuse or time out (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} douglasaz.gov, City, City of Douglas, Douglas, AZ`,
+      "Cochise County's Quick Links page (www.cochise.az.gov/QuickLinks.aspx) links www.douglasaz.gov",
+      "its homepage answered 200, titled \"Douglas, AZ | Official Website\"",
+    ],
+    observed: { at: "2026-09-24T18:08:01Z", by: SITE_RESEARCH },
+  }),
+  siteHint("az:city:city-of-el-mirage", {
+    origin: "https://elmirageaz.gov",
+    selfName: "City of El Mirage",
+    replaces: "http://www.cityofelmirage.org",
+    recordedState: "it has moved: http and https both answer 301 to https://elmirageaz.gov/",
+    evidence: [
+      "the recorded host's own 301 names https://elmirageaz.gov/",
+      `${DOTGOV} elmirageaz.gov, City, City of El Mirage, El Mirage, AZ`,
+    ],
+    observed: { at: "2026-09-24T18:08:06Z", by: SITE_RESEARCH },
+  }),
+  siteHint("az:city:city-of-eloy", {
+    origin: "https://eloyaz.gov",
+    selfName: "City of Eloy",
+    replaces: "http://www.ci.eloy.az.us",
+    recordedState: "it serves a stock IIS default page (last modified 2022-05-19) over http, and https resets",
+    evidence: [
+      `${DOTGOV} eloyaz.gov, City, City of Eloy, Eloy, AZ`,
+      "Pinal County's City & Town Governments list (www.pinal.gov/QuickLinks.aspx?CID=74) links https://www.eloyaz.gov/",
+    ],
+    observed: { at: "2026-09-24T18:08:12Z", by: SITE_RESEARCH },
+  }),
+  siteHint("az:city:city-of-flagstaff", {
+    origin: "https://www.flagstaff.az.gov",
+    selfName: "City of Flagstaff",
+    replaces: "http://www.flagstaffaz.gov",
+    recordedState: "it answers, but its root is 404 and does not redirect (flagstaffaz.gov is still registered to the City of Flagstaff)",
+    evidence: [
+      "the State of Arizona's az.gov zone (az.gov is registered to the State of Arizona) delegates flagstaff.az.gov to the city's CivicPlus host",
+      "its homepage answered 200, titled \"City of Flagstaff Official Website\"",
+    ],
+    observed: { at: "2026-09-24T18:08:17Z", by: SITE_RESEARCH },
+  }),
+  siteHint("az:city:city-of-holbrook", {
+    origin: "https://holbrookaz.gov",
+    selfName: "City of Holbrook",
+    replaces: "http://www.ci.holbrook.az.us/",
+    recordedState: "it does not resolve: ci.holbrook.az.us is delegated to nameservers that time out (SERVFAIL)",
+    evidence: [
+      `${DOTGOV} holbrookaz.gov, City, Holbrook, City of, Holbrook, AZ`,
+      "its homepage answered 200 and reads \"The Official City of Holbrook Website\"",
+    ],
+    observed: { at: "2026-09-24T18:08:23Z", by: SITE_RESEARCH },
+  }),
   {
     jurisdictionId: "az:city:city-of-chandler",
     officialSite: null,
@@ -155,6 +235,11 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:city:town-of-newbury",
+    /*
+     * The recorded newburyh.org is an unregistered typo, and the town's former newburynh.org is dead too. Its current
+     * site is likely www.newbury.nh.gov, in the State's own nh.gov zone, but its homepage served a challenge and no
+     * government page yet links it (2026-09-24): unverified, so not hinted.
+     */
     officialSite: null,
     routes: [
       {
@@ -195,7 +280,18 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:city:town-of-sutton",
-    officialSite: null,
+    officialSite: {
+      origin: "https://www.suttonnh.gov",
+      selfName: "Sutton",
+      replaces: "http://www.sutton-nh.gov",
+      recordedState: "it is not registered (NXDOMAIN): the town's former domain was sutton-nh.org",
+      evidence: [
+        `${DOTGOV} suttonnh.gov, City, Town of Sutton, Sutton Mills, NH`,
+        "the town's former domain, sutton-nh.org, which Merrimack County still links, answers 301 to https://www.suttonnh.gov/",
+        "its homepage served a challenge when observed, so the name the walk requires is the town's short name",
+      ],
+      observed: { at: "2026-09-24T18:10:39Z", by: SITE_RESEARCH },
+    },
     routes: [
       {
         url: "https://www.youtube.com/@TownofSuttonCable/streams",
@@ -212,7 +308,19 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:school:kearsarge-regional-school-dist",
-    officialSite: null,
+    officialSite: {
+      origin: "https://www.kearsarge.org",
+      selfName: "Kearsarge",
+      replaces: "http://www.kearsarge.k12.nh.us/",
+      recordedState: "it is a CNAME to ghs.google.com that answers Google's 404",
+      evidence: [
+        "a Town of Warner library newsletter (library.warnernh.gov; warnernh.gov is registered to the Town of Warner) gives " +
+          "https://www.kearsarge.org/district/school-board-mbc for the district's School Board minutes",
+        "the district's board schedule and agenda PDFs are served from www.kearsarge.org (the Backend session's ledger, below)",
+        "its homepage served a challenge when observed, so the name the walk requires is the district's short name",
+      ],
+      observed: { at: "2026-09-24T18:10:44Z", by: SITE_RESEARCH },
+    },
     routes: [
       {
         url: "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/2026-2027_school_board_schedule.pdf",

@@ -389,3 +389,22 @@ test("the history window spans a day of passes and many rotations of the largest
     `window ${ROUTINE_SUPERVISOR_HISTORY_WINDOW} passes vs one rotation of ${rotation} passes`,
   );
 });
+
+test("each Google calendar is its own lane; every other host keeps one lane per hostname", async () => {
+  const { MEETING_PARTITION_CONTRACTS } = await import("../lib/civic-data/meeting-partitions.ts");
+  const google = MEETING_PARTITION_CONTRACTS.filter((p) => p.acquisitionFailureDomain.startsWith("meeting-upstream:calendar.google.com"));
+  assert.ok(google.length > 0, "the case this guards: town calendars hosted by Google");
+  const lanes = new Set(google.map((p) => p.acquisitionFailureDomain));
+  assert.ok(lanes.size >= 2, "two towns' calendars are two lanes, not one hostname");
+  for (const lane of lanes) assert.match(lane, /^meeting-upstream:calendar\.google\.com\/[^/\s]+$/);
+  // A calendar's own partitions still share its one lane.
+  const byFeed = new Map<string, Set<string>>();
+  for (const p of google) {
+    const feed = String(p.wiring.config.feedUrl);
+    byFeed.set(feed, new Set([...(byFeed.get(feed) ?? []), p.acquisitionFailureDomain]));
+  }
+  for (const [feed, domains] of byFeed) assert.equal(domains.size, 1, `${feed} is one lane`);
+  // A small-town host is still one lane for all its bodies.
+  const newLondon = MEETING_PARTITION_CONTRACTS.filter((p) => p.acquisitionFailureDomain === "meeting-upstream:newlondon.nh.gov");
+  assert.ok(newLondon.length > 1);
+});

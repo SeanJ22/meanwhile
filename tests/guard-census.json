@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 743,
-    "named": 7337,
+    "named": 7338,
     "dynamic": 29
   },
   "files": {
@@ -407,6 +407,7 @@
         "a body read through two sources holds at least its larger source, and every total over it says it is a floor",
         "a fraction of a cent per attempt says so instead of rounding to a free-looking $0.00",
         "a ledger place key reads as the place, from its own parts",
+        "a read our own code failed is never shown as the site refusing us: the ingest's JOB_FAILURE mark reads as ours, with engineering next",
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
         "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline",

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 714,
-    "named": 7057,
+    "files": 716,
+    "named": 7066,
     "dynamic": 27
   },
   "files": {
@@ -8067,6 +8067,25 @@
         "no honest named gap is ever flagged as a refusal",
         "no refusal copy survives anywhere a reader can reach",
         "the shapes catch the two refusals this product actually shipped"
+      ],
+      "dynamic": 0
+    },
+    "tests/registration-contract.test.ts": {
+      "names": [
+        "a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month promotes UNCHANGED",
+        "one registration contract per state, DC and territory in the FIPS table, each its own scope, command and state",
+        "only the pinned Census bytes from census.gov over HTTPS are accepted; anything else is refused by name",
+        "reviewed wins: no id the reviewed registry writes is written, and a government it keys on its other division gets no second body",
+        "the largest state stays well inside the response bound, and a state with no government is a named violation"
+      ],
+      "dynamic": 0
+    },
+    "tests/registration-reference.test.ts": {
+      "names": [
+        "a government pairs by Census code wherever the Census gives one, and nothing it does not tie to a place is guessed",
+        "a government the committed registry knows lands on the id it keys, directly or through its alternate",
+        "every Census government sits in exactly one state's file, every file is what the index says, and every row pairs or says why not",
+        "the jurisdiction ids are the operational reference's own, collision suffixes included"
       ],
       "dynamic": 0
     },

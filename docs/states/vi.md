@@ -3,7 +3,7 @@
 
 The generated answer to “what do we hold for this state?” Registries, acquisitions, snapshots, databases and vaults remain authoritative. This page is a deterministic view of the inputs below, never a second source of truth.
 
-Session base: `3f9a138fd39f6160659329e17c496d2dd99cee00`. Current input digest: `63d69cdb867d057b172b73e47cc7cb12cce4e1c562f1a0f164e822d9200ab250`.
+Session base: `3f9a138fd39f6160659329e17c496d2dd99cee00`. Current input digest: `5cb724801316b9f012e9c4997beab585979a8af06a7f1fd915180336dc8a2b53`.
 Manifest obligation: within the frozen session denominator.
 Byte-current means current against committed inputs. External observations keep their own observed_at stamps; generation never refreshes them.
 
@@ -26,11 +26,13 @@ Byte-current means current against committed inputs. External observations keep 
 
 ### Canonical datasets and feeds
 
-7 of 7 current repository dataset files tagged to this state; every table row is rendered below.
+9 of 9 current repository dataset files tagged to this state; every table row is rendered below.
 
 | Dataset | Domain | Rows held / file denominator | Recorded observation | Reader surfaces | Provenance / limits |
 | --- | --- | --- | --- | --- | --- |
 | [data/congress-legislators/snapshot.json](../../data/congress-legislators/snapshot.json) | officeholders | 1 of 539 members | 2026-09-07 | [Map and government cards](../../components/map/map-entry.tsx); [Government representation](../../app/api/representation/[...division]/route.ts); [Ballot and candidate cards](../../app/ballot/page.tsx) | Federal officeholder identities, published contact and committee directories. [source](https://github.com/unitedstates/congress-legislators) | <!-- expected-future: recorded observations and source dates are copied from the linked canonical holdings, never stamped by generation -->
+| [data/derived/registration/index.json](../../data/derived/registration/index.json) | geography | state is tagged in this holding; row partition not declared (1 dataset objects in file) | 2026-09-23 | [Map and government cards](../../components/map/map-entry.tsx); [Ballot and candidate cards](../../app/ballot/page.tsx); [Government representation](../../app/api/representation/[...division]/route.ts); [Nearby meetings](../../app/api/meetings/route.ts) | Jurisdiction geometry and reader-location projections; geometry never proves bodies or records have been acquired. Provenance is in the linked holding; no acquisition date or authority is inferred. | <!-- expected-future: recorded observations and source dates are copied from the linked canonical holdings, never stamped by generation -->
+| [data/derived/registration/vi.json](../../data/derived/registration/vi.json) | geography | 35 of 35 division records | not recorded | [Map and government cards](../../components/map/map-entry.tsx); [Ballot and candidate cards](../../app/ballot/page.tsx); [Government representation](../../app/api/representation/[...division]/route.ts); [Nearby meetings](../../app/api/meetings/route.ts) | Jurisdiction geometry and reader-location projections; geometry never proves bodies or records have been acquired. Provenance is in the linked holding; no acquisition date or authority is inferred. |
 | [data/derived/zip-divisions/00.json](../../data/derived/zip-divisions/00.json) | geography | state is tagged in this holding; row partition not declared (1304 division records in file) | not recorded | [Map and government cards](../../components/map/map-entry.tsx); [Ballot and candidate cards](../../app/ballot/page.tsx); [Government representation](../../app/api/representation/[...division]/route.ts); [Nearby meetings](../../app/api/meetings/route.ts) | Jurisdiction geometry and reader-location projections; geometry never proves bodies or records have been acquired. Provenance is in the linked holding; no acquisition date or authority is inferred. |
 | [data/derived/zip-divisions/index.json](../../data/derived/zip-divisions/index.json) | geography | state is tagged in this holding; row partition not declared (1 dataset objects in file) | 2026-09-23 | [Map and government cards](../../components/map/map-entry.tsx); [Ballot and candidate cards](../../app/ballot/page.tsx); [Government representation](../../app/api/representation/[...division]/route.ts); [Nearby meetings](../../app/api/meetings/route.ts) | Jurisdiction geometry and reader-location projections; geometry never proves bodies or records have been acquired. Provenance is in the linked holding; no acquisition date or authority is inferred. | <!-- expected-future: recorded observations and source dates are copied from the linked canonical holdings, never stamped by generation -->
 | [data/dotgov/snapshot.json](../../data/dotgov/snapshot.json) | reference | 1 of 693 domains | 2026-09-02 | Acquisition inventory — no direct reader surface | Government-domain discovery inventory; domains are not a body-coverage denominator. [source](https://github.com/cisagov/dotgov-data/blob/47f9693e15cf8927aebefabc05d8c34e184080b1/current-full.csv) | <!-- expected-future: recorded observations and source dates are copied from the linked canonical holdings, never stamped by generation -->
@@ -166,11 +168,13 @@ No rows are held in these committed inputs; this is not evidence that the public
 
 ### Coverage by domain (R-C9)
 
-7 of 7 current repository dataset coverage statements; every table row is rendered below.
+9 of 9 current repository dataset coverage statements; every table row is rendered below.
 
 | Domain | Dataset | Population label | Denominator / basis |
 | --- | --- | --- | --- |
 | officeholders | [data/congress-legislators/snapshot.json](../../data/congress-legislators/snapshot.json) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
+| geography | [data/derived/registration/index.json](../../data/derived/registration/index.json) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
+| geography | [data/derived/registration/vi.json](../../data/derived/registration/vi.json) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 | geography | [data/derived/zip-divisions/00.json](../../data/derived/zip-divisions/00.json) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 | geography | [data/derived/zip-divisions/index.json](../../data/derived/zip-divisions/index.json) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |
 | reference | [data/dotgov/snapshot.json](../../data/dotgov/snapshot.json) | COVERAGE_NOT_ESTABLISHED | Held reference/registry/acquisition rows only. No source-universe completeness or reader coverage tier is inferred from state-shaped keys. |

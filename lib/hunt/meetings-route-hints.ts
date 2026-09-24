@@ -235,12 +235,21 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:city:town-of-newbury",
-    /*
-     * The recorded newburyh.org is an unregistered typo, and the town's former newburynh.org is dead too. Its current
-     * site is likely www.newbury.nh.gov, in the State's own nh.gov zone, but its homepage served a challenge and no
-     * government page yet links it (2026-09-24): unverified, so not hinted.
-     */
-    officialSite: null,
+    officialSite: {
+      origin: "https://www.newbury.nh.gov",
+      selfName: "Newbury",
+      replaces: "http://www.newburyh.org",
+      recordedState: "it is not registered (NXDOMAIN): newburyh.org is one letter short of the town's former newburynh.org, which is dead too",
+      evidence: [
+        "the State of New Hampshire's own nh.gov zone publishes the name: nh.gov's authoritative nameserver answers newbury.nh.gov " +
+          "directly (zone SOA nh.gov, hostmaster.nh.gov), and www.newbury.nh.gov is a CNAME to the town's CivicPlus host; only " +
+          "the State can publish a name there, as it does for newlondon.nh.gov, which Merrimack County links",
+        "the apex answers 301 to https://www.newbury.nh.gov/",
+        "its homepage served a challenge when observed, and Merrimack County still links the dead newburynh.org, so the name " +
+          "the walk requires is the town's short name",
+      ],
+      observed: { at: "2026-09-24T18:10:35Z", by: SITE_RESEARCH },
+    },
     routes: [
       {
         url: "https://newburynhlibrary.net/feed/",

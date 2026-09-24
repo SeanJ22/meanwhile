@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 740,
-    "named": 7286,
+    "files": 738,
+    "named": 7279,
     "dynamic": 28
   },
   "files": {
@@ -1243,13 +1243,6 @@
       ],
       "dynamic": 0
     },
-    "tests/ask-model-result-cache.test.ts": {
-      "names": [
-        "equivalent wording shares a key; different evidence never does",
-        "the cache is bounded in time and in size"
-      ],
-      "dynamic": 0
-    },
     "tests/ask-prompt-cache.test.ts": {
       "names": [
         "H1: a LOCAL PRODUCTION BUILD's harness traffic is never pooled with production readers",
@@ -1336,22 +1329,6 @@
         "a record with no source contributes no line at all",
         "an unparseable URL yields no label rather than an empty link",
         "six documents from one office are ONE source line"
-      ],
-      "dynamic": 0
-    },
-    "tests/ask-topic-timeline.test.ts": {
-      "names": [
-        "ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPlus AgendaCenter) quotes the data-center ordinance, not its neighbour",
-        "ANOTHER STATE, ANOTHER PLATFORM: a New Hampshire town calendar (iCal/schedule page) with a scheduled solar item and an unread recent sitting",
-        "PIMA, after the September 22 read: the adopted moratorium leads, from the official record, with its tally",
-        "PIMA, as held before the September 22 read: the August 11 decision leads, and the unread September 22 sitting is named",
-        "ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance",
-        "ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)",
-        "ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation",
-        "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
-        "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
-        "an agenda line with no recorded outcome says exactly that, never that nothing happened",
-        "helpers quote without inventing: the tally sentence, the salient item, a sentence-safe quote"
       ],
       "dynamic": 0
     },
@@ -2240,6 +2217,16 @@
       ],
       "dynamic": 0
     },
+    "tests/carried-row-supersession.test.ts": {
+      "names": [
+        "CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting",
+        "CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant",
+        "CARRIED-SUPERSEDE · (c) the same normalized body at another local time is another sitting: both are kept",
+        "CARRIED-SUPERSEDE · (d) another body at the same minute is another sitting: both are kept, on every source",
+        "CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim: the honest one promotes, a forged one is refused"
+      ],
+      "dynamic": 0
+    },
     "tests/carry-pins.test.ts": {
       "names": [
         "R47: a held answer NEVER carries across a zip change",
@@ -2450,7 +2437,6 @@
         "Legistar adapters cannot reopen frozen tracked venue registries",
         "a manual contract cannot reclaim a routine canonical record-class/scope authority",
         "a retired data executable cannot survive behind a renamed package command",
-        "a standing-clock contract cannot regain an owner manual-promotion door under any package name or adapter",
         "actual 673f1dd job-watch tracker commit shape is blocked at the deleted workflow/writer boundary",
         "arbitrary-checkout control-plane bootstrap/proof writers cannot return as executable or package doors",
         "candidate research holdings and statement history cannot regain production authority",
@@ -2668,18 +2654,8 @@
       ],
       "dynamic": 0
     },
-    "tests/composite-failure-kind.test.ts": {
-      "names": [
-        "a JOB failure detail says whose failure it is, once",
-        "meeting partition receipts parse with and without the additive failureKind",
-        "our own code and configuration failures are jobs, and so is an unknown",
-        "publisher-side failures are walls"
-      ],
-      "dynamic": 0
-    },
     "tests/composite.test.ts": {
       "names": [
-        "2026-09-24: an exception OUR code throws before any request is a JOB, never the publisher's wall",
         "F22: a broken NAMESPACE is a JOB failure — the run must go red",
         "F22: a failed FETCH is a WALL — named, skipped, and the run continues",
         "F22: a normalize that THROWS is a JOB failure, not a wall",
@@ -3592,6 +3568,28 @@
         "the windows are RULING 53's, exactly",
         "two branches agreeing is simply found",
         "two branches producing different values is DIVERGENT, not resolved"
+      ],
+      "dynamic": 0
+    },
+    "tests/dispatch-work.test.ts": {
+      "names": [
+        "Admin reads the creation receipt for the decision it belongs to, with every number carrying its denominator",
+        "a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with the registry named",
+        "a DISPATCH naming a registered state creates there, counts it on the owner's record, and carries its remainder forward",
+        "a cycle that may not write plans, counts and writes nothing",
+        "a geography in a state with no promoted registry is blocked by name, and nothing is invented for it",
+        "a meetings route with a known address is carried by what the partition wiring says, and held when it cannot be read",
+        "a promoted registry the runtime's reader refuses is named as that, never used and never called missing",
+        "candidate enrichment enumerates the tracked states and names one with no ballot authority",
+        "created work joins the corpus through its providers next cycle: scheduled, never re-registered, never retired",
+        "creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk",
+        "local-jurisdictions schedules the tracked states it is handed, keeps every existing id, and names a tracked state with no registry",
+        "sending the fleet to Pima County creates what the registry defines there and no clock carries, in the shape syncObligations registers",
+        "sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement",
+        "syncObligations keeps the owner's mark when a provider's signals move",
+        "the gateway and the preview say the Send creates what is missing, bounded, and name no machine constant",
+        "the meetings-discovery provider emits exactly the materialized needs, in the gap ledger's shape",
+        "the per-cycle write budget defers the rest by count, the next cycle continues, and the cap is named"
       ],
       "dynamic": 0
     },
@@ -7123,21 +7121,6 @@
         "the permission gate refuses a disallowed path before any request to it",
         "the wiring row reads permitted pima.edu hosts and never the Diligent tenant",
         "the wiring type is a registered agenda-source type (BodySourceWiring compiles)"
-      ],
-      "dynamic": 0
-    },
-    "tests/pima-legistar-outcomes-routine.test.ts": {
-      "names": [
-        "(a) Pima Legistar outcomes are one routine contract on the standing clock, not an owner-invoked manual contract",
-        "(b) a GOOD Pima candidate promotes through the routine door and a later failed read leaves that GOOD pointer as LKG",
-        "(c) no package script, installed dispatch, or firewall mapping can still promote this scope through a manual door",
-        "a Legistar UTC stamp is read as UTC, and a candidate's source-through never precedes the pointer it extends",
-        "a dry run reads the events route and writes nothing",
-        "a failed or empty events read is a durable held attempt, exits non-zero, and leaves the LKG live",
-        "a refused sitting holds the pass even when a later sitting promotes, and the receipt proves the moved LKG",
-        "a routine pass promotes every changed sitting, including one modified earlier than a sitting walked before it",
-        "an unchanged day costs one events request and ends in a validated no-change receipt",
-        "the rolling routine window ends today where the Board sits and reaches back 120 days"
       ],
       "dynamic": 0
     },

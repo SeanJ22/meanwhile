@@ -59,7 +59,7 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
-import { occurrenceStampFromInstant, supersedesSeriesRecord } from "../lib/sources/event-identity.ts";
+import { occurrenceStampFromInstant, reissuesSitting, supersedesSeriesRecord } from "../lib/sources/event-identity.ts";
 import {
   STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
   buildCompositeSource,
@@ -591,19 +591,31 @@ export interface SuccessfulMeetingPartitionReconciliation {
  *
  * A successful response is still an OPEN fact set. Omission therefore cannot
  * delete an in-window fact: the prior row remains, visibly marked as carried.
- * A prior row is removed on one of two authorities, and on nothing else: an
+ * A prior row is removed on one of four authorities, and on nothing else: an
  * exact prior start outside the same registered serving window used for
- * acquisition and Reader delivery, or a fresh occurrence record of the same
+ * acquisition and Reader delivery; a fresh occurrence record of the same
  * recurring series that now holds the prior row's exact fact (2026-09-23,
- * `supersedesSeriesRecord`). Agenda documents inherit either authority only
- * from their exact removed meeting.
+ * `supersedesSeriesRecord`); the publisher striking that sitting out of its
+ * series (`EXCLUDED_BY_PUBLISHER`); or a fresh row of this partition that is
+ * the same sitting, re-issued by its publisher under a new id (2026-09-24,
+ * `reissuesSitting`). Agenda documents inherit an authority only from their
+ * exact removed meeting.
  *
- * The second authority exists for one transition. Until 2026-09-23 every
+ * The series authority exists for one transition. Until 2026-09-23 every
  * sitting of an iCalendar series shared the series' `UID`-only id; each series
  * now yields one record per sitting. Without it, the first read under the new
  * identity would carry the old record forward beside the occurrence that
  * replaced it, and a reader would see that sitting twice until it aged out of
  * the window.
+ *
+ * The re-issue authority is the same failure from the publisher's side, and
+ * it is permanent: Tucson Unified's portal listed one Audit Committee sitting
+ * as meeting 495 and then as meeting 501, and the carried 495 stood beside the
+ * fresh 501. It is tested only where a row would otherwise be carried, after
+ * every other authority, so a row with no fresh twin is carried exactly as
+ * before. Both successor authorities are recorded as
+ * `SUPERSEDED_BY_OCCURRENCE_IDENTITY` naming the successor, and the promotion
+ * door re-runs both tests on the stored records.
  */
 export function reconcileSuccessfulMeetingPartition(input: {
   readonly sourceName: string;
@@ -627,6 +639,26 @@ export function reconcileSuccessfulMeetingPartition(input: {
   const meetingIds = new Set(meetings.map(({ id }) => id));
   const carriedMeetingIds: string[] = [];
   const removalEvidence: RoutineRemovalEvidence[] = [];
+  /** The prior row leaves because `successor`, fresh in this read, now holds its sitting. */
+  const supersede = (prior: Meeting, successor: Meeting): void => {
+    const meetingKey = `meeting:${prior.id}`;
+    const successorKey = `meeting:${successor.id}`;
+    removalEvidence.push({
+      key: meetingKey,
+      code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+      successorKey,
+      priorStartsAt: prior.startsAt,
+    });
+    if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
+      removalEvidence.push({
+        key: agendaDocumentRecordKey({ meetingId: prior.id }),
+        code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+        successorKey,
+        priorStartsAt: prior.startsAt,
+        parentMeetingKey: meetingKey,
+      });
+    }
+  };
 
   for (const prior of input.previous?.meetings ?? []) {
     if (meetingIds.has(prior.id)) continue;
@@ -658,23 +690,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
     }
     const successor = input.freshMeetings.find((fresh) => supersedesSeriesRecord(prior, fresh));
     if (successor) {
-      const meetingKey = `meeting:${prior.id}`;
-      const successorKey = `meeting:${successor.id}`;
-      removalEvidence.push({
-        key: meetingKey,
-        code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
-        successorKey,
-        priorStartsAt: prior.startsAt,
-      });
-      if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
-        removalEvidence.push({
-          key: agendaDocumentRecordKey({ meetingId: prior.id }),
-          code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
-          successorKey,
-          priorStartsAt: prior.startsAt,
-          parentMeetingKey: meetingKey,
-        });
-      }
+      supersede(prior, successor);
       continue;
     }
     const struck = (input.publisherExclusions ?? []).find((exclusion) =>
@@ -699,6 +715,14 @@ export function reconcileSuccessfulMeetingPartition(input: {
           parentMeetingKey: meetingKey,
         });
       }
+      continue;
+    }
+    // The row would be carried. If a fresh row of this partition is the same
+    // sitting, re-issued under a new id, that row holds it now: the listing
+    // that left yields to it rather than standing beside it (`reissuesSitting`).
+    const reissued = input.freshMeetings.find((fresh) => reissuesSitting(prior, fresh));
+    if (reissued) {
+      supersede(prior, reissued);
       continue;
     }
     const lastFreshAt = prior.carried?.lastFreshAt ?? (

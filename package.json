@@ -273,6 +273,7 @@
     "rewalk:candidates": "tsx scripts/rewalk-candidate-fields.mts",
     "rewalk:walls": "tsx scripts/rewalk-walls.mts",
     "robots:sweep": "tsx scripts/robots-sweep.mts",
+    "research:fetch": "tsx scripts/research-fetch.mts",
     "rollcall:walk": "tsx scripts/pima-rollcall-walk.mts",
     "roster:hunt": "tsx scripts/roster-hunt.mts",
     "roster:stale": "tsx scripts/stale-roster-sweep.mts",

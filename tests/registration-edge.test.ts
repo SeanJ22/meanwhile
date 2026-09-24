@@ -145,3 +145,20 @@ test("the reader composes a state's registration from the edge, and a state the 
   assert.deepEqual(loads, ["oh"], "only the named, registered state is fetched");
   assert.equal(found[0]!.label, county.label);
 });
+
+test("a registered body reaches the coverage card titled by its division, never as a nameless, labelless row", async () => {
+  await installRegistryRuntimeFirstSeeds();
+  const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
+  const oh = model("OH");
+  const body = oh.bodies.find((b) => b.bodyOrigin === "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS" && oh.divisions.some((d) => d.ocdId === b.ocdId && d.divisionType === "county"))!;
+  const division = oh.divisions.find((d) => d.ocdId === body.ocdId)!;
+  enterReaderAuthorityEdge({ registrations: { states: new Set(["oh"]), load: async (state) => (state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null) } });
+  // The ZIP widening hands coverage the registered divisions, exactly as /api/meetings does.
+  const resolved = await divisionsByOcdIds([division.ocdId]);
+  const coverage = await coverageAt(39.96, -83.0, 0, resolved);
+  const row = coverage.bodies.find((b) => b.bodyId === body.id);
+  assert.ok(row, "the registered county government is in the card");
+  assert.equal(row!.name, null, "its name is null until sourced");
+  assert.equal(row!.divisionLabel, division.label, "titled by its Census division");
+  assert.equal(row!.divisionType, "county");
+});

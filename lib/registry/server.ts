@@ -837,11 +837,16 @@ export async function coverageAt(
   // The governments registered on these divisions' states, beside the reviewed bodies (2026-09-23).
   const registered = await registrationsFor(exactDivisions.map((d) => d.ocdId));
   const bodies = registered.length === 0 ? registry.bodies : [...registry.bodies, ...registered.flatMap((r) => r.layer.bodies)];
+  // A registered body is titled by its division (its name is null until sourced), so the summary needs the
+  // registered divisions too, or the card would render a nameless, labelless row.
+  const divisions = registered.length === 0
+    ? divisionsById
+    : new Map<string, Division>([...divisionsById, ...registered.flatMap((r) => [...r.divisionsById])]);
   const stateLegislators = await settleCoverageStateLegislators(exactDivisions, officials);
   const coverage = summarizeCoverage(
     [lng, lat],
     features,
-    divisionsById,
+    divisions,
     bodies,
     meetingCount,
     stateLegislators.officials,

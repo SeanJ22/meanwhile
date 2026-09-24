@@ -1,0 +1,138 @@
+{
+  "documents-2026.html": {
+    "url": "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html",
+    "retrievedAt": "2026-09-23T20:03:05.927Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 35131,
+    "sha256": "83519465379bcfcf48e901580373e643ab64109078ba48f5b2b38dce564eeb06",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:50.053Z",
+      "robotsSha256": "b1eef0e76beaaf36d65c82f50ebebdcb3c10a9a4bcd9d98ab7dc25e6ddc87cf1",
+      "matchedRule": null
+    }
+  },
+  "events-board-listing.html": {
+    "url": "https://events.pima.edu/?calendar[]=3&calId=10",
+    "retrievedAt": "2026-09-23T20:04:10.732Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 45906,
+    "sha256": "e190a1d2516c28dfddd3b78d7349f4a066d022f5ec0384676972a8df6c6e487c",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:04:10.411Z",
+      "robotsSha256": "773fb8d35bb9a39d35335ee6db8dc5c912d2aacbfb823152d9c61cd647dd902d",
+      "matchedRule": null
+    }
+  },
+  "event-2026-09-25-executive-session.html": {
+    "url": "https://events.pima.edu/events/board-special-meeting-conduct-executive-session-18?date=2026-09-25",
+    "retrievedAt": "2026-09-23T20:25:27.298Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 42898,
+    "sha256": "9378f0ff14f5954fb23265d7aae370c31c3c888d72e5a67d94a921ec141c2d6c",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:04:10.411Z",
+      "robotsSha256": "773fb8d35bb9a39d35335ee6db8dc5c912d2aacbfb823152d9c61cd647dd902d",
+      "matchedRule": null
+    }
+  },
+  "event-2026-09-25-regular.html": {
+    "url": "https://events.pima.edu/events/board-regular-meeting-hybrid-1?date=2026-09-25",
+    "retrievedAt": "2026-09-23T20:04:31.881Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 42750,
+    "sha256": "e6fbbdd9325ccf6f7d8deb0e92b92054cff580184a1b7c9f8d90d7eae5daa4f3",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:04:10.411Z",
+      "robotsSha256": "773fb8d35bb9a39d35335ee6db8dc5c912d2aacbfb823152d9c61cd647dd902d",
+      "matchedRule": null
+    }
+  },
+  "event-2026-10-29-study-session.html": {
+    "url": "https://events.pima.edu/events/board-study-session-hybrid-3?date=2026-10-29",
+    "retrievedAt": "2026-09-23T20:25:27.584Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 42712,
+    "sha256": "f1f3af4cdb89f13a361479c438534a256a415ce3cc0c6b4e9511e17dd14dd98e",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:04:10.411Z",
+      "robotsSha256": "773fb8d35bb9a39d35335ee6db8dc5c912d2aacbfb823152d9c61cd647dd902d",
+      "matchedRule": null
+    }
+  },
+  "finance-audit-committee.html": {
+    "url": "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/index.html",
+    "retrievedAt": "2026-09-23T20:09:18.189Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 32990,
+    "sha256": "bf7a5801a643505600a337631273059fe5b84a6167cea49b9770d796e01c42bc",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:50.053Z",
+      "robotsSha256": "b1eef0e76beaaf36d65c82f50ebebdcb3c10a9a4bcd9d98ab7dc25e6ddc87cf1",
+      "matchedRule": null
+    }
+  },
+  "finance-audit-agendas-minutes.html": {
+    "url": "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/agendas-minutes.html",
+    "retrievedAt": "2026-09-23T20:09:25.051Z",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "bytes": 51257,
+    "sha256": "382d4207929cb284e45e1b736c034e989563bbd5ca3e285d85b20f51f003a735",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:50.053Z",
+      "robotsSha256": "b1eef0e76beaaf36d65c82f50ebebdcb3c10a9a4bcd9d98ab7dc25e6ddc87cf1",
+      "matchedRule": null
+    }
+  },
+  "agenda-2026-08-10.pdf": {
+    "url": "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/agendas-docs-2026/0810.pdf",
+    "retrievedAt": "2026-09-23T20:04:12.582Z",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "bytes": 57883,
+    "sha256": "f9bad5d633f6bf18e503f175ed59b586f97f19147f31aec97b558930e0e04616",
+    "robots": {
+      "verdict": "ALLOWED",
+      "robotsReadAt": "2026-09-23T20:02:50.053Z",
+      "robotsSha256": "b1eef0e76beaaf36d65c82f50ebebdcb3c10a9a4bcd9d98ab7dc25e6ddc87cf1",
+      "matchedRule": null
+    }
+  },
+  "robots-www.pima.edu.txt": {
+    "url": "https://www.pima.edu/robots.txt",
+    "finalUrl": "https://www.pima.edu/robots.txt",
+    "retrievedAt": "2026-09-23T20:02:50.053Z",
+    "httpStatus": 200,
+    "bytes": 280,
+    "sha256": "b1eef0e76beaaf36d65c82f50ebebdcb3c10a9a4bcd9d98ab7dc25e6ddc87cf1"
+  },
+  "robots-events.pima.edu.txt": {
+    "url": "https://events.pima.edu/robots.txt",
+    "finalUrl": "https://events.pima.edu/robots.txt",
+    "retrievedAt": "2026-09-23T20:04:10.411Z",
+    "httpStatus": 200,
+    "bytes": 2027,
+    "sha256": "773fb8d35bb9a39d35335ee6db8dc5c912d2aacbfb823152d9c61cd647dd902d"
+  },
+  "robots-pima.community.highbond.com.txt": {
+    "url": "https://pima.community.highbond.com/robots.txt",
+    "finalUrl": "https://pima.community.highbond.com/robots.txt",
+    "retrievedAt": "2026-09-23T20:02:48.825Z",
+    "httpStatus": 200,
+    "bytes": 23479,
+    "sha256": "b5cbf0b4b2cbcf184175d1a89eeb4b4565df0eda9cdd4e9cd3029733aafcf092"
+  }
+}

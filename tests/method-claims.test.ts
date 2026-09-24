@@ -811,7 +811,13 @@ test("CONTROL (e): THE REAL PIMA CASE — the false coverage claim is retracted,
   assert.ok(allClaims(k).some((c) => c.claim.id === `${SCHEDULE}#pima-september-only-as-rule`));
 
   // (d) Every C and D in this real amendment carries real provenance.
-  for (const { claim } of allClaims(k)) {
+  // SCOPED TO THE AMENDMENT'S ROUTES (2026-09-23), for the reason the count
+  // above was scoped on 2026-08-29: `allClaims(k)` is the whole store, and the
+  // first later route to carry its own DERIVED_CONCLUSION (the Diligent robots
+  // allowlist, observed 2026-09-23) failed an `observedOn` that belongs to this
+  // amendment alone. Provenance on every C and D store-wide is already the
+  // validator's rule, asserted clean above and planted in control (d).
+  for (const { claim } of applied) {
     if (claim.class === "COVERAGE_CLAIM" || claim.class === "DERIVED_CONCLUSION") {
       assert.ok(claim.provenance, `${claim.id} carries provenance`);
       assert.ok(claim.provenance!.artifact.length > 20, `${claim.id} names a real artifact`);

@@ -11,8 +11,10 @@ import { makeCivicClerkSource } from "../civicclerk/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
 import { makeIcalSource } from "../ical/index.ts";
 import { makeIqm2Source } from "../iqm2/index.ts";
+import { makePimaEduSource } from "../pima-edu/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
 import { makeSchedulePageSource } from "../schedulepage/index.ts";
+import { makeOfficialPageEventsSource } from "../official-page-events/index.ts";
 import {
   makeLegistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
@@ -190,11 +192,27 @@ export const CAPABILITIES: Array<{
       makeSchedulePageSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
+    // Pima Community College's own pages — the permitted route that replaced
+    // its robots-disallowed Diligent tenant (2026-09-23). Asks each host's
+    // robots.txt before every run; see lib/sources/permission-gate.ts.
+    name: "pima-edu",
+    types: ["PIMA_EDU"],
+    make: (rows) => makePimaEduSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
     // Not a vendor, a FORMAT. Ladder rung 8: an `.ics` feed is a calendar
     // handed to us, and one parse serves every town that publishes one.
     name: "ical",
     types: ["ICAL"],
     make: (rows) => makeIcalSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    // Not a vendor: the body's own official page, read for dated events in
+    // every shape it publishes them and verified against the body per event.
+    name: "official-page-events",
+    types: ["OFFICIAL_PAGE_EVENTS"],
+    make: (rows) =>
+      makeOfficialPageEventsSource(rows) as ReportingMeetingSource<unknown>,
   },
 ];
 

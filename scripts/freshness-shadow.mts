@@ -125,6 +125,8 @@ import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
 import { runMeetingsDiscovery, type MeetingsDiscoveryPass } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
+import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
+import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
   closeAbandonedOccurrences,
   planMovedToGapLedger,
@@ -2059,6 +2061,18 @@ console.log(
 const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY === "on";
 const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
+/*
+ * The search rung's caps (Brave and Exa combined, pointers only): per cycle
+ * here, per day in the durable shared budget ledger. The defaults are the
+ * conservative dial agreed with the data-plane owner; an env value may lower or
+ * raise them within 0..1000.
+ */
+const searchCap = (name: string, fallback: number): number => {
+  const raw = Number(process.env[name]);
+  return Number.isInteger(raw) && raw >= 0 && raw <= 1000 ? raw : fallback;
+};
+const SEARCH_PER_CYCLE = searchCap("WTP_DISCOVERY_SEARCH_PER_CYCLE", DEFAULT_SEARCH_BUDGET.perCycle);
+const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_BUDGET.perDay);
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState: string;
 if (!MEETINGS_DISCOVERY_ENABLED) {
@@ -2077,6 +2091,27 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
   try {
     /* The saved methods live in the field manual; the runner consults them on every walk. */
     const manual = await repos.fieldManual.read("live");
+    /* Search: pointers only, budgeted per cycle and per day, on FleetSafety's own key; every request is charged. */
+    const searchBudget = durableSearchBudget({
+      repos,
+      perCycle: SEARCH_PER_CYCLE,
+      perDay: SEARCH_PER_DAY,
+      admit: () => {
+        try {
+          fleetSafety.admitProviderRequest("discovery-search", "meetings-discovery-search");
+          return null;
+        } catch (error) {
+          return error instanceof Error ? error.message : String(error);
+        }
+      },
+      now: nowIso,
+    });
+    const discoverySearch = makeDiscoverySearch({
+      braveKey: process.env.BRAVE_SEARCH_API_KEY,
+      exaKey: process.env.EXA_API_KEY,
+      budget: searchBudget,
+    });
+    let costSeq = 0;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: gapLedgerRead.needs,
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
@@ -2106,6 +2141,11 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
           remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
+        ...(discoverySearch === null ? {} : { search: discoverySearch }),
+        recordCost: async (entry) => {
+          costSeq += 1;
+          await repos.costs.append(entry.workItemId, `ce-ds-${fingerprint([entry.attemptId, entry.source, entry.recordedAt, costSeq])}`, entry, nowIso());
+        },
       },
     });
     meetingsDiscoveryState = "ran";
@@ -2677,6 +2717,15 @@ const runRecord = {
         cutShort: meetingsDiscovery?.cutShort ?? [],
         recipesApplied: meetingsDiscovery?.recipeApplications ?? 0,
         recipesUpdated: meetingsDiscovery?.recipesUpdated ?? [],
+        search: {
+          perCycleCap: SEARCH_PER_CYCLE,
+          perDayCap: SEARCH_PER_DAY,
+          /* Every request sent, including those of walks the time cut short: all of them were charged. */
+          requests: [
+            ...(meetingsDiscovery?.walked ?? []).flatMap((a) => a.search.flatMap((q) => q.requests)),
+            ...(meetingsDiscovery?.cutShort ?? []).flatMap((c) => c.search.flatMap((q) => q.requests)),
+          ],
+        },
         appendFailures: meetingsDiscovery?.appendFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
       },

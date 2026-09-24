@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 725,
-    "named": 7178,
+    "files": 726,
+    "named": 7187,
     "dynamic": 28
   },
   "files": {
@@ -5823,6 +5823,20 @@
         "SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, its occurrence closes unresolved, and nothing else is written",
         "SEEDED: a spent budget defers the rest untouched, in order, and the next cycle retires them",
         "SEEDED: while the ledger cannot be read, no meetings row retires and its occurrence stays open"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-discovery-search.test.ts": {
+      "names": [
+        "BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap holds across cycles in the durable ledger",
+        "POINTERS: only the government's own domain or a known meeting publisher is worth opening",
+        "PRICES: each provider's published per-request price carries its source and date; a lost request is UNMEASURED, never zero",
+        "QUERIES: a saved method's templates first, then the defaults; unfilled slots never sent; own-site expressed as a flag",
+        "REFUSED: a request the budget refused is recorded in the walk and never charged",
+        "SEAM WORST CASE: every provider at its timeout, plus the ledger's calls",
+        "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
+        "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
+        "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
       ],
       "dynamic": 0
     },

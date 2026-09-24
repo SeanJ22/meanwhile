@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 763,
-    "named": 7500,
+    "files": 764,
+    "named": 7503,
     "dynamic": 30
   },
   "files": {
@@ -9217,6 +9217,14 @@
         "standing runtime preserves configured GitHub credentials without invoking the CLI",
         "standing runtime reuses only the existing github.com CLI login in memory",
         "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
+      ],
+      "dynamic": 0
+    },
+    "tests/schedulepage-chandler.test.ts": {
+      "names": [
+        "no time is claimed: the table states none, and the page's 'usually' sentence is not the section's",
+        "normalize serves the Council's sittings in the window, on the city's own host, cited to its page",
+        "the section scope reads the schedule table's 33 dates, and only them"
       ],
       "dynamic": 0
     },

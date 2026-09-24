@@ -213,9 +213,9 @@ function dotGovRows(changed: boolean) {
   ];
 }
 
-function dotGov(version: string, changed: boolean): RoutineCandidate {
+function dotGov(version: string, changed: boolean, sha?: string): RoutineCandidate {
   const snapshot: DotGovSnapshot = {
-    source: { sha: changed ? "b".repeat(40) : "a".repeat(40), url: "https://github.com/cisagov/dotgov-data/blob/example/current-full.csv", readAt: version },
+    source: { sha: sha ?? (changed ? "b".repeat(40) : "a".repeat(40)), url: "https://github.com/cisagov/dotgov-data/blob/example/current-full.csv", readAt: version },
     counts: { domains: 15_000, electionDomains: 500 },
     electionDomains: dotGovRows(changed),
   };
@@ -320,6 +320,29 @@ test("PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer fail
     dependentChecks: [{ consumer: "registered dotgov discovery operation", passed: false, detail: "fixture read model rejected" }],
   };
   await assertRefusalHoldsExactLkg({ store, bad, expectedState: "DEPENDENT_CONSUMER_INVALID", expectedCode: "DEPENDENT_CONSUMER_REJECTED" });
+});
+
+test("PDC-8 dotgov: a later registry commit whose hash sorts lower still promotes; the hash is an identity, not an order", async () => {
+  /*
+   * 2026-09-15 to 09-24: every daily CISA revision was refused as
+   * "11fe34b4… precedes promoted e68adb11…" because two commit hashes were
+   * compared as strings. The pointer sat on the 09-15 registry through eight
+   * upstream updates. Which publication is newer is the acquisition order.
+   */
+  const store = new MemoryRoutineDataStore();
+  const promotedOn0915 = dotGov(FIRST, false, "e68adb11" + "0".repeat(32));
+  assert.equal((await processRoutineCandidate(store, promotedOn0915, FIRST)).candidate.state, "PROMOTED");
+
+  const laterCommit = dotGov(SECOND, true, "11fe34b4" + "0".repeat(32));
+  const later = await processRoutineCandidate(store, laterCommit, SECOND);
+  assert.equal(later.candidate.state, "PROMOTED", `refused: ${later.candidate.failureCode ?? "none"}`);
+  assert.equal((await promotedPointer(store, laterCommit)).receipt.candidateId, laterCommit.id, "the pointer moves to the later commit");
+
+  // The order that remains: an acquisition older than the served one is still refused.
+  const olderRead = dotGov("2026-09-07T23:00:00.000Z", false, "f".repeat(40));
+  const refused = await processRoutineCandidate(store, olderRead, THIRD);
+  assert.equal(refused.promoted, null);
+  assert.equal(refused.candidate.failureCode, "ACQUISITION_TIME_REGRESSION");
 });
 
 test("run 34232794631 regression: software CI red cannot fail, relabel, or revert a source, and another source still promotes", async () => {

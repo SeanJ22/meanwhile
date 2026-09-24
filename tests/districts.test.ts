@@ -234,3 +234,14 @@ test("item 6b: every tool that counts the frozen registry's bodies leaves out th
     assert.doesNotMatch(readFileSync(artifact, "utf8"), /school_district_not_defined#board/, `${artifact} still carries a placeholder board`);
   }
 });
+
+test("item 6b: readiness does not count a Census placeholder as a held school-district boundary", async () => {
+  const { readFileSync } = await import("node:fs");
+  // Sean, 2026-09-23: the placeholder division stays in the registry as geography, but the readiness
+  // tally leaves it out, because the Census of Governments total it is read against counts governments.
+  const readiness = readFileSync("scripts/readiness-refresh.mts", "utf8");
+  const start = readiness.indexOf("function heldDivisions(");
+  const tally = readiness.slice(start, readiness.indexOf("return { byType, asOf };", start));
+  assert.ok(start >= 0 && tally.length > 0, "the readiness tally is where this guard looks for it");
+  assert.match(tally, /isCensusPlaceholderDivision\(d\)\) continue;/);
+});

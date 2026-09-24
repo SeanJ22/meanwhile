@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 720,
-    "named": 7138,
+    "named": 7139,
     "dynamic": 28
   },
   "files": {
@@ -3573,6 +3573,7 @@
         "feature count matches the 119th Congress after drops",
         "item 6b: every tool that counts the frozen registry's bodies leaves out the placeholder boards",
         "item 6b: no Census placeholder name reaches a reader as a district's name",
+        "item 6b: readiness does not count a Census placeholder as a held school-district boundary",
         "leading zeros are stripped rather than carried into the identifier",
         "no two features share an OCD-ID",
         "ordinary district builds a numbered OCD-ID",

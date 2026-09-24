@@ -639,6 +639,28 @@ export function proofConsistentSuccess(
   return record.candidate.retrieval.retrievedAt;
 }
 
+/**
+ * The clock of a scope whose pointer is a trusted-LKG import (the cutover
+ * successor). The import is neither an attempt nor a success, so a
+ * predecessor's attempt from before the import never postpones the first live
+ * read. A live attempt made since the import's pointer move IS an attempt: a
+ * failed first live read then waits its retry clock like any other failure,
+ * instead of reading as never-attempted and falling due on every pass: four
+ * meeting partitions whose first live read keeps failing were re-fetched about
+ * every six minutes, 964 SOURCE_BLOCKED candidates in the 24 hours to
+ * 2026-09-24T05:23Z, each child paying its full canonical preload.
+ */
+export function trustedLkgImportClock(
+  lastAttemptedAt: string | undefined,
+  importPromotedAt: string,
+): { readonly lastAttemptedAt?: string } {
+  const attempted = lastAttemptedAt === undefined ? Number.NaN : Date.parse(lastAttemptedAt);
+  const imported = Date.parse(importPromotedAt);
+  return Number.isFinite(attempted) && Number.isFinite(imported) && attempted > imported
+    ? { lastAttemptedAt: lastAttemptedAt! }
+    : {};
+}
+
 /** A whole candidate record narrowed to exactly its summary; the memory twin of the Postgres column read. */
 export function candidateVersionSummary(record: CandidateVersionRecord): CandidateVersionSummary {
   const { candidate, ...columns } = record;
@@ -887,10 +909,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const pointedRecord: RoutineClockRecord | null = pointedRow
       ? { ...pointedRow, candidate: routineClockCandidateView(pointedRow.candidate) }
       : null;
-    if (pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
-      // The cutover successor is neither an attempt nor a success. Do not let
-      // a predecessor's old attempt timestamp postpone the first live read.
-      return {};
+    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+      return trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt);
     }
     const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointer);
     return {
@@ -947,6 +967,7 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
       scope: civicDataPromotions.scope,
       currentVersionId: civicDataPromotions.currentVersionId,
       lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+      promotedAt: civicDataPromotions.promotedAt,
       validationReceipt: civicDataPromotions.validationReceipt,
     })
     .from(civicDataPromotions)
@@ -1621,7 +1642,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ? await routineClockCandidateRead(this.db, pointer.currentVersionId)
       : [];
     const pointedRecord = pointedRow ? routineClockRowToRecord(pointedRow) : null;
-    if (pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) return {};
+    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+      return trustedLkgImportClock(
+        lastAttemptedAt,
+        canonicalPostgresRoutineTimestamp(pointer.promotedAt, "clock.importPromotedAt"),
+      );
+    }
     const lastSucceededAt = proofConsistentSuccess(
       pointedRecord,
       pointer ? {

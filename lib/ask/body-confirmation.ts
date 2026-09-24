@@ -60,7 +60,13 @@ export function decideNamedBody(question: string, bodies: readonly BindableEntit
       return total + (best <= max ? 1 - best / value.length : 0);
     }, 0) / identifying.length;
     return score >= 0.7 ? [{ entity, score: score * 80 + Number(Boolean(entity.divisionType)) }] : [];
-  }).sort((a, b) => b.score - a.score || a.entity.name.localeCompare(b.entity.name) || a.entity.id.localeCompare(b.entity.id));
+  }).sort((a, b) => b.score - a.score ||
+    // Equal matches on a place's name: the place's own governing body is the
+    // suggestion, never whichever body sorts first alphabetically ("rockaway
+    // township" suggested the township's Board of Education, 2026-09-24). It
+    // is still only a suggestion the reader confirms.
+    Number(b.entity.id.endsWith("#governing")) - Number(a.entity.id.endsWith("#governing")) ||
+    a.entity.name.localeCompare(b.entity.name) || a.entity.id.localeCompare(b.entity.id));
   const candidate = scored[0]?.entity;
   if (!candidate) return mention || explicit.length || binding.kind !== "NONE" ? { kind: "CLARIFY" } : { kind: "NONE" };
   const supplied = confirmation && typeof confirmation === "object" ? confirmation as Partial<BodyConfirmation> : null;

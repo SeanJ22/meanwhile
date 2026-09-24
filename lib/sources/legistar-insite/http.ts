@@ -53,6 +53,7 @@ export class InSiteSession {
   private readonly spacingMs: number;
   private readonly impl: typeof fetch;
   private readonly signal?: AbortSignal;
+  private readonly followRedirects: boolean;
   private lastAt = 0;
 
   /** Every URL this session actually retrieved, in order. Reported, never guessed. */
@@ -62,9 +63,16 @@ export class InSiteSession {
     fetchImpl?: typeof fetch;
     spacingMs?: number;
     signal?: AbortSignal;
+    /**
+     * False for an optional read that must end on the exact URL it was
+     * registered for: a redirect is then answered as a refusal naming where
+     * the page moved, and is never followed (2026-09-24).
+     */
+    followRedirects?: boolean;
   } = {}) {
     this.impl = options.fetchImpl ?? fetch;
     this.signal = options.signal;
+    this.followRedirects = options.followRedirects ?? true;
     // An injected fetch is a test's own double: it must not sleep, and the
     // suite must never wait two seconds per fixture.
     this.spacingMs = options.spacingMs ?? (options.fetchImpl ? 0 : INSITE_SPACING_MS);
@@ -110,8 +118,22 @@ export class InSiteSession {
     const response = await this.impl(url, {
       headers: this.headers({ Accept: accept }),
       signal: this.signal,
+      ...(this.followRedirects ? {} : { redirect: "manual" as const }),
     });
     this.store(response);
+    const movedTo = !this.followRedirects && response.status >= 300 && response.status < 400
+      ? response.headers.get("location")
+      : null;
+    if (movedTo) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new SourceHttpError(
+        `HTTP ${response.status} for ${url}: the page moved to ${new URL(movedTo, url).href}, ` +
+          "which is not the route this read is registered for, so the move was not followed",
+        response.status,
+        url,
+        2,
+      );
+    }
     if (!response.ok) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }

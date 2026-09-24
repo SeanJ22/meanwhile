@@ -245,7 +245,7 @@ export function makeCivicPlusSource(
       // share one ocdId, and a set keyed on the division would let the
       // council's Tuesday suppress the planning board's Tuesday — a body's
       // meeting vanishing because a different body met the same day.
-      const rowDates = new Set<string>();
+      const rowDates = new Map<string, Meeting[]>();
 
       for (const event of parseIcalEvents(ical)) {
         considered += 1;
@@ -302,7 +302,7 @@ export function makeCivicPlusSource(
           keptButPlaceless += 1;
         }
 
-        rowDates.add(startsAt.slice(0, 10));
+        const feedDay = startsAt.slice(0, 10);
 
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${event.uid}`,
@@ -325,7 +325,8 @@ export function makeCivicPlusSource(
           ...(venueGap ? { venueGap } : {}),
           // The feed carries no per-meeting agenda link; the RSS channel lists
           // agendas for other township boards only, as observed. Null is the
-          // honest value — never a constructed AgendaCenter URL.
+          // honest value here — never a constructed AgendaCenter URL. The
+          // archive's own link for the same date is attached below.
           agendaUrl: null,
           jurisdiction: wiring.jurisdiction,
           status: isCancelledSummary(event.summary)
@@ -338,6 +339,7 @@ export function makeCivicPlusSource(
             verifiedAt: null,
           },
         });
+        rowDates.set(feedDay, [...(rowDates.get(feedDay) ?? []), meetings[meetings.length - 1]!]);
       }
 
       // ── M59: the AgendaCenter archive ────────────────────────────────────
@@ -360,10 +362,21 @@ export function makeCivicPlusSource(
         considered += 1;
         // The feed's own row for a date, with its real time, always wins —
         // for THIS body. `rowDates` is per wiring row, not per division.
-        if (rowDates.has(sitting.date)) {
+        const feedRows = rowDates.get(sitting.date);
+        if (feedRows) {
           // A-002: the feed already produced this sitting; the archive row is
           // the same logical record arriving a second way.
           duplicates += 1;
+          // 2026-09-24: ...but it is the only representation that carries the
+          // agenda. Dropping the archive row used to drop its agenda link with
+          // it, so the sitting read as "no agenda" (and no agenda was ever
+          // retrieved) while the township had posted one. Both representations
+          // are the same record: the feed row keeps its real time, and gains
+          // the archive's own link.
+          if (sitting.agendaHref) {
+            const agendaUrl = new URL(sitting.agendaHref, archiveUrl).toString();
+            for (const row of feedRows) if (row.agendaUrl === null) row.agendaUrl = agendaUrl;
+          }
           continue;
         }
         if (!venue) {

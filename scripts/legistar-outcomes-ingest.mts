@@ -1,26 +1,55 @@
 /**
- * Owner-invoked Pima Legistar acquisition and canonical promotion.
+ * Pima Legistar outcome acquisition and canonical promotion on the standing
+ * routine clock.
+ *
+ * `pima-legistar-outcomes` is a routine contract (ROUTINE_SOURCE_CONTRACTS in
+ * lib/civic-data/contracts.ts). The standing routine runner invokes this
+ * internal adapter as `--promote --slug pima` on the contract's cadence.
+ * Owner-initiated work enters through the installed runtime dispatcher as a
+ * routine-refresh request that the same standing parent executes. This scope
+ * has no manual promotion door.
  *
  * Every changed sitting becomes its own candidate. A failed items/votes read
  * is therefore a durable refused attempt while the prior GOOD pointer stays
- * live; a later unaffected sitting may still promote. This command writes no
- * tracked file and never invokes software CI or release machinery.
+ * live; a later unaffected sitting may still promote. The run then prints
+ * exactly one `RCD_RECEIPT`, naming the last candidate it wrote:
+ *
+ * - exit 0 only when that candidate is the GOOD promoted pointer: the last
+ *   changed sitting, or the validated no-change receipt written when every
+ *   sitting in the window is held and unchanged;
+ * - exit 2 when the events read failed, returned zero sittings, or any walked
+ *   sitting was refused. A refusal followed by a later promotion writes one
+ *   refused run record against the moved pointer, so the receipt still says
+ *   HELD and the retry clock, not the cadence, owns the next attempt.
+ *
+ * The default window is rolling and bounded: the last
+ * OUTCOME_ROUTINE_WINDOW_DAYS days through today in the body's own zone,
+ * because outcomes exist only for sittings already held. `refreshDecision`
+ * skips every held sitting whose publisher `EventLastModifiedUtc` is unchanged,
+ * so an unchanged day costs one events request.
+ *
+ * This command writes no tracked file and never invokes software CI or
+ * release machinery.
  *
  * @freshness-reads-here — event and sitting timestamps are captured only
  * after their corresponding official Legistar read has returned.
  */
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import type { RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { captureSourceAcquisitions, type SourceAcquisitionEvidence } from "../lib/sources/acquisition-trace.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import {
   fetchEventItemVotes,
   fetchEventItems,
   fetchEvents,
 } from "../lib/sources/legistar/client.ts";
-import { findClient } from "../lib/sources/legistar/client-registry.ts";
-import { legistarStartsAt } from "../lib/sources/legistar/index.ts";
+import { findClient, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
+import { legistarMeetingId, legistarStartsAt } from "../lib/sources/legistar/index.ts";
 import { collectEventOutcomes } from "../lib/sources/legistar/outcomes.ts";
 import type { LegistarEvent, LegistarEventItem, LegistarVote } from "../lib/sources/legistar/types.ts";
 import {
@@ -29,6 +58,7 @@ import {
   mergeSnapshot,
   refreshDecision,
   toPersistedSitting,
+  type IngestTally,
 } from "../lib/outcomes/ingest.ts";
 import {
   PIMA_LEGISTAR_OUTCOMES_CONTRACT,
@@ -37,147 +67,258 @@ import {
 import { readOutcomeProjection } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 
-interface Args {
+/** Outcomes exist only for held sittings; the routine window looks back this far. */
+export const OUTCOME_ROUTINE_WINDOW_DAYS = 120;
+const DEFAULT_MAX_SITTINGS = 40;
+const DAY_MS = 24 * 60 * 60 * 1_000;
+const CALENDAR_DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+export interface PimaOutcomeIngestArgs {
   readonly slug: string;
   readonly bodyId: number | null;
-  readonly from: string;
-  readonly to: string;
+  /** Explicit operator bounds; null takes the rolling routine window. */
+  readonly from: string | null;
+  readonly to: string | null;
   readonly maxSittings: number;
   readonly dryRun: boolean;
   readonly force: boolean;
   readonly promote: boolean;
 }
 
-function parseArgs(argv: readonly string[]): Args {
+export function parsePimaOutcomeIngestArgs(argv: readonly string[]): PimaOutcomeIngestArgs {
   const read = (flag: string): string | null => {
     const at = argv.indexOf(flag);
     return at >= 0 && at + 1 < argv.length ? String(argv[at + 1]) : null;
   };
-  const observedDay = new Date().toISOString().slice(0, 10);
   const body = read("--body");
   const max = read("--max-sittings");
   return {
     slug: read("--slug") ?? "pima",
     bodyId: body === null ? null : Number(body),
-    from: read("--from") ?? "2026-01-01",
-    to: read("--to") ?? observedDay,
-    maxSittings: max === null ? 40 : Number(max),
+    from: read("--from"),
+    to: read("--to"),
+    maxSittings: max === null ? DEFAULT_MAX_SITTINGS : Number(max),
     dryRun: argv.includes("--dry-run"),
     force: argv.includes("--force"),
     promote: argv.includes("--promote"),
   };
 }
 
-const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] };
-
-function newestSourceStamp(events: readonly LegistarEvent[], fallback: string): string {
-  return events
-    .map((event) => event.EventLastModifiedUtc)
-    .filter((value): value is string => typeof value === "string" && Number.isFinite(Date.parse(value)))
-    .sort()
-    .at(-1) ?? fallback;
+/** Legistar's `EventDate` is the body's local calendar date, so "today" is too. */
+function calendarDayIn(timeZone: string, at: Date): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(at);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((entry) => entry.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
 }
 
-async function currentSnapshot(): Promise<OutcomeSnapshot> {
-  const read = await readOutcomeProjection({ bypassCache: true });
-  if (read.kind === "PROMOTED") return read.value;
-  if (read.kind === "NOT_RECORDED") return EMPTY;
+function exactCalendarDay(flag: string, day: string): string {
+  const at = Date.parse(`${day}T00:00:00.000Z`);
+  if (!CALENDAR_DAY.test(day) || !Number.isFinite(at) || new Date(at).toISOString().slice(0, 10) !== day) {
+    throw new Error(`PIMA_OUTCOME_WINDOW_INVALID: ${flag} must be an exact YYYY-MM-DD calendar day, got ${JSON.stringify(day)}.`);
+  }
+  return day;
+}
+
+export interface OutcomeWindow {
+  readonly from: string;
+  readonly to: string;
+}
+
+/**
+ * The rolling routine window: today in the body's zone back
+ * OUTCOME_ROUTINE_WINDOW_DAYS days. `--from`/`--to` remain explicit overrides.
+ */
+export function pimaOutcomeWindow(
+  args: Pick<PimaOutcomeIngestArgs, "from" | "to">,
+  timeZone: string,
+  at: Date,
+): OutcomeWindow {
+  const to = exactCalendarDay("--to", args.to ?? calendarDayIn(timeZone, at));
+  const from = exactCalendarDay(
+    "--from",
+    args.from ?? new Date(Date.parse(`${to}T00:00:00.000Z`) - OUTCOME_ROUTINE_WINDOW_DAYS * DAY_MS).toISOString().slice(0, 10),
+  );
+  if (from > to) throw new Error(`PIMA_OUTCOME_WINDOW_INVALID: --from ${from} is after --to ${to}.`);
+  return { from, to };
+}
+
+/**
+ * Legistar's `...Utc` stamps carry no zone designator. Read them as the UTC
+ * instant their field name states rather than in whatever zone the host runs.
+ */
+export function legistarUtcInstant(value: string | null | undefined): string | null {
+  const text = typeof value === "string" ? value.trim() : "";
+  if (text === "") return null;
+  const at = Date.parse(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(text) ? text : `${text}Z`);
+  return Number.isFinite(at) ? new Date(at).toISOString() : null;
+}
+
+function newestSourceStamp(events: readonly LegistarEvent[]): string | null {
+  return events
+    .map((event) => legistarUtcInstant(event.EventLastModifiedUtc))
+    .filter((value): value is string => value !== null)
+    .sort()
+    .at(-1) ?? null;
+}
+
+/**
+ * Every candidate this contract writes is the WHOLE held projection plus the
+ * sittings this run changed, so its source-through may never precede the
+ * pointer it extends. Sittings are walked newest-sitting-first, not
+ * newest-modification-first: stamping each candidate with its own sitting's
+ * modification time made the GOOD contract refuse every later, older-modified
+ * sitting of the same run as a version regression. The observed stamp wins
+ * only when it is later by both the instant order and the string order the
+ * GOOD contract applies; otherwise the pointer's own value is kept.
+ */
+export function outcomeSourceThrough(prior: string | null, observed: string): string {
+  if (prior === null || prior === "") return observed;
+  const priorAt = Date.parse(prior);
+  const observedAt = Date.parse(observed);
+  const laterInstant = Number.isFinite(observedAt) && (!Number.isFinite(priorAt) || observedAt > priorAt);
+  return laterInstant && observed > prior ? observed : prior;
+}
+
+/** The one protocol line the standing runner correlates to this exact task. */
+export function pimaOutcomeRunnerReceiptLine(outcome: PromotionOutcome): string {
+  return "RCD_RECEIPT=" + JSON.stringify({
+    source: "pima-legistar-outcomes",
+    candidateId: outcome.candidate.candidate.id,
+    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
+    state: outcome.candidate.state,
+    decision: outcome.candidate.receipt?.decision ?? null,
+    promotedVersion: outcome.promoted?.versionId ?? null,
+    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  } satisfies RoutineRunnerReceipt);
+}
+
+const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] };
+
+async function currentProjection(store: RoutineDataStore): Promise<{
+  readonly snapshot: OutcomeSnapshot;
+  readonly sourceThrough: string | null;
+}> {
+  const read = await readOutcomeProjection({ store, bypassCache: true });
+  if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough };
+  if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null };
   if (read.kind === "BOOTSTRAP") throw new Error("PIMA_OUTCOME_PRODUCTION_BOOTSTRAP_FORBIDDEN");
   throw new Error(`PIMA_OUTCOME_STORE_UNREACHABLE:${read.code}:${read.detail}`);
 }
 
-async function persistCandidate(input: {
-  readonly store: PostgresRoutineDataStore;
-  readonly snapshot: OutcomeSnapshot;
-  readonly acquisitions: readonly SourceAcquisitionEvidence[];
-  readonly retrievedAt: string;
-  readonly sourceThrough: string;
-  readonly failureDetail?: string;
-}) {
-  const candidate = pimaLegistarOutcomesCandidate(input);
-  return processRegisteredManualCandidate(
-    input.store,
-    PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId,
-    candidate,
-    input.retrievedAt,
-  );
+export interface PimaOutcomeIngestInput {
+  readonly store: RoutineDataStore;
+  readonly client: LegistarClient;
+  readonly args: PimaOutcomeIngestArgs;
+  readonly window: OutcomeWindow;
+  /** The observation clock; production reads the wall clock after each read returns. */
+  readonly now?: () => string;
+  readonly log?: (line: string) => void;
 }
 
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2));
-  if (args.slug !== "pima") {
-    throw new Error("PIMA_OUTCOME_CONTRACT_SCOPE_MISMATCH: add a separate tenant contract before acquiring another Legistar client.");
-  }
-  if (!args.promote && !args.dryRun) {
-    throw new Error("PIMA_OUTCOME_PROMOTION_REQUIRED: use --promote, or --dry-run for a read-only plan.");
-  }
-  if (args.promote) prepareProductionCivicDataWrite();
-  if (!Number.isInteger(args.maxSittings) || args.maxSittings < 1) throw new Error("--max-sittings must be a positive integer");
-  const client = findClient(args.slug);
-  if (!client) throw new Error("PIMA_LEGISTAR_CLIENT_NOT_REGISTERED");
+export interface PimaOutcomeIngestResult {
+  /** Exactly one runner receipt for a promoting run; null for a read-only plan. */
+  readonly receiptLine: string | null;
+  readonly exitCode: 0 | 2;
+  readonly tally: IngestTally;
+  readonly promotedSittings: number;
+  readonly refusedSittings: readonly string[];
+}
 
-  let snapshot = await currentSnapshot();
+/** One bounded routine pass over the Pima events window. */
+export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): Promise<PimaOutcomeIngestResult> {
+  const { store, client, args, window: eventsWindow } = input;
+  const now = input.now ?? (() => new Date().toISOString());
+  const log = input.log ?? ((line: string) => console.log(line));
+  const writes = args.promote && !args.dryRun;
+  const tally = emptyTally();
+  const refusedSittings: string[] = [];
+  let promotedSittings = 0;
+
+  const current = await currentProjection(store);
+  let snapshot = current.snapshot;
+  let sourceThrough = current.sourceThrough;
   const heldById = new Map(snapshot.sittings.map((sitting) => [sitting.meetingId, sitting]));
-  const canonicalStore = new PostgresRoutineDataStore();
-  const attemptedAt = new Date().toISOString();
 
+  const persist = (candidate: {
+    readonly snapshot: OutcomeSnapshot;
+    readonly acquisitions: readonly SourceAcquisitionEvidence[];
+    readonly retrievedAt: string;
+    readonly sourceThrough: string;
+    readonly failureDetail?: string;
+  }): Promise<PromotionOutcome> => processRegisteredRoutineCandidate(
+    store,
+    PIMA_LEGISTAR_OUTCOMES_CONTRACT.contractId,
+    pimaLegistarOutcomesCandidate(candidate),
+    candidate.retrievedAt,
+  );
+  const settle = (last: PromotionOutcome): PimaOutcomeIngestResult => ({
+    receiptLine: pimaOutcomeRunnerReceiptLine(last),
+    exitCode: last.promoted ? 0 : 2,
+    tally,
+    promotedSittings,
+    refusedSittings,
+  });
+
+  const attemptedAt = now();
   let eventEvidence: readonly SourceAcquisitionEvidence[] = [];
   let events: readonly LegistarEvent[] = [];
   try {
     const captured = await captureSourceAcquisitions((runForSource) =>
       runForSource(PIMA_LEGISTAR_OUTCOMES_CONTRACT.sourceId, () =>
-        fetchEvents<LegistarEvent>(args.slug, { from: args.from, to: args.to }),
+        fetchEvents<LegistarEvent>(args.slug, { from: eventsWindow.from, to: eventsWindow.to }),
       ),
     );
     events = captured.value;
     eventEvidence = captured.evidence;
   } catch (error) {
-    if (args.promote) {
-      await persistCandidate({
-        store: canonicalStore,
-        snapshot,
-        acquisitions: [],
-        retrievedAt: attemptedAt,
-        sourceThrough: attemptedAt,
-        failureDetail: `Pima events acquisition failed: ${error instanceof Error ? error.message : String(error)}`,
-      });
-    }
-    throw error;
+    if (!writes) throw error;
+    const detail = error instanceof Error ? error.message : String(error);
+    log(`${args.slug}: events acquisition failed — ${detail}`);
+    return settle(await persist({
+      snapshot,
+      acquisitions: [],
+      retrievedAt: attemptedAt,
+      sourceThrough: attemptedAt,
+      failureDetail: `Pima events acquisition failed: ${detail}`,
+    }));
   }
-  const eventsRetrievedAt = new Date().toISOString();
+  const eventsRetrievedAt = now();
 
   const sittings = (args.bodyId === null ? events : events.filter((event) => event.EventBodyId === args.bodyId))
     .slice()
     .sort((left, right) => String(right.EventDate).localeCompare(String(left.EventDate)));
   const population = floored(
-    `sittings for pima${args.bodyId === null ? "" : ` body ${args.bodyId}`}`,
-    `webapi.legistar.com events ${args.from}..${args.to}`,
+    `sittings for ${args.slug}${args.bodyId === null ? "" : ` body ${args.bodyId}`}`,
+    `webapi.legistar.com events ${eventsWindow.from}..${eventsWindow.to}`,
     events.length,
     sittings.length,
     events.length === 0 ? "the events route returned no rows; this establishes no fact about the body" : undefined,
   );
-  console.log(`pima: ${sittings.length} sitting(s) ${args.from}..${args.to}\n${floorLine(population)}`);
+  log(`${args.slug}: ${sittings.length} sitting(s) ${eventsWindow.from}..${eventsWindow.to}\n${floorLine(population)}`);
 
   if (sittings.length === 0) {
-    if (args.promote) {
-      await persistCandidate({
-        store: canonicalStore,
-        snapshot,
-        acquisitions: eventEvidence,
-        retrievedAt: eventsRetrievedAt,
-        sourceThrough: eventsRetrievedAt,
-        failureDetail: "The bounded Pima events query returned zero sittings; no governmental absence is inferred.",
-      });
-    }
-    throw new Error("PIMA_LEGISTAR_ZERO_SITTINGS_HELD");
+    if (!writes) throw new Error("PIMA_LEGISTAR_ZERO_SITTINGS_HELD");
+    log("PIMA_LEGISTAR_ZERO_SITTINGS_HELD: a zero-row events read is a failed extraction.");
+    return settle(await persist({
+      snapshot,
+      acquisitions: eventEvidence,
+      retrievedAt: eventsRetrievedAt,
+      sourceThrough: eventsRetrievedAt,
+      failureDetail: "The bounded Pima events query returned zero sittings; no governmental absence is inferred.",
+    }));
   }
 
-  const tally = emptyTally();
+  let last: PromotionOutcome | null = null;
   let budgetExhausted = false;
-  let promoted = 0;
   for (const event of sittings) {
     tally.sittingsSeen += 1;
-    const meetingId = `legistar:pima:${event.EventId}`;
+    const meetingId = legistarMeetingId(args.slug, event.EventId);
     const decision = args.force ? ({ walk: true, reason: "FORCED" } as const) : refreshDecision(event, heldById.get(meetingId));
     if (!decision.walk) {
       tally.skippedUnchanged += 1;
@@ -187,8 +328,8 @@ async function main(): Promise<void> {
       budgetExhausted = true;
       break;
     }
-    if (args.dryRun) {
-      console.log(`  would walk ${meetingId} — ${decision.reason}`);
+    if (!writes) {
+      log(`  would walk ${meetingId} — ${decision.reason}`);
       tally.walked += 1;
       continue;
     }
@@ -200,6 +341,7 @@ async function main(): Promise<void> {
             sourceOrg: client.publishingOrg,
             fetchItems: (slug, id) => fetchEventItems<LegistarEventItem>(slug, id),
             fetchVotes: (slug, id) => fetchEventItemVotes<LegistarVote>(slug, id),
+            now: () => new Date(now()),
           });
           return { collected, error: null as string | null };
         } catch (error) {
@@ -218,7 +360,7 @@ async function main(): Promise<void> {
         }
       }),
     );
-    const observedAt = new Date().toISOString();
+    const observedAt = now();
     const persisted: PersistedSittingOutcomes = toPersistedSitting({
       event,
       client,
@@ -233,43 +375,93 @@ async function main(): Promise<void> {
       generatedOn: observedAt.slice(0, 10),
       generatedAt: observedAt,
     });
-    const outcome = await persistCandidate({
-      store: canonicalStore,
+    const outcome = await persist({
       snapshot: proposed,
       acquisitions: [...eventEvidence, ...detail.evidence],
       retrievedAt: observedAt,
-      sourceThrough: newestSourceStamp([event], observedAt),
+      sourceThrough: outcomeSourceThrough(sourceThrough, legistarUtcInstant(event.EventLastModifiedUtc) ?? observedAt),
       ...(detail.value.error ? { failureDetail: `Sitting ${meetingId} acquisition failed: ${detail.value.error}` } : {}),
     });
+    last = outcome;
     if (outcome.promoted) {
       snapshot = proposed;
+      sourceThrough = outcome.candidate.candidate.temporal.sourceThrough;
       heldById.set(meetingId, persisted);
-      promoted += 1;
+      promotedSittings += 1;
+    } else {
+      refusedSittings.push(`${meetingId} (${outcome.candidate.failureCode ?? outcome.candidate.state})`);
     }
-    console.log(
+    log(
       `  ${meetingId} ${String(event.EventDate).slice(0, 10)} (${decision.reason}): ` +
         `${persisted.agenda.length} item(s), ${persisted.outcomes.length} action(s), ` +
         `${persisted.rollCalls.length} roll call(s) — ${outcome.promoted ? "PROMOTED" : `HELD ${outcome.candidate.failureCode ?? outcome.candidate.state}`}`,
     );
   }
 
-  if (args.promote && promoted === 0 && tally.skippedUnchanged > 0) {
-    const observedAt = new Date().toISOString();
-    const unchanged = await persistCandidate({
-      store: canonicalStore,
+  log("MEASURED, not estimated:");
+  for (const [key, count] of Object.entries(tally)) log(`  ${key.padEnd(28)} ${count}`);
+  if (budgetExhausted) {
+    log(`STOPPED AT THE PER-RUN BUDGET of ${args.maxSittings}; the remaining sittings stay due and no completion is inferred.`);
+  }
+  if (!writes) {
+    return { receiptLine: null, exitCode: 0, tally, promotedSittings, refusedSittings };
+  }
+
+  if (last === null) {
+    // Every sitting in the window is held and its publisher stamp is
+    // unchanged: one validated no-change receipt against the live pointer.
+    const observedAt = now();
+    last = await persist({
       snapshot,
       acquisitions: eventEvidence,
       retrievedAt: observedAt,
-      sourceThrough: newestSourceStamp(events, observedAt),
+      sourceThrough: outcomeSourceThrough(sourceThrough, newestSourceStamp(events) ?? eventsRetrievedAt),
     });
-    if (!unchanged.promoted) throw new Error(`PIMA_UNCHANGED_RECEIPT_REFUSED:${unchanged.candidate.failureCode}`);
+    log(`  no-change receipt: ${last.promoted ? "PROMOTED" : `HELD ${last.candidate.failureCode ?? last.candidate.state}`}`);
+  } else if (refusedSittings.length > 0 && last.promoted) {
+    // A refused sitting's durable candidate was followed by a promotion, so it
+    // no longer describes the live pointer. Record the run's held disposition
+    // against the pointer as it now stands; the refused sittings stay due.
+    const observedAt = now();
+    last = await persist({
+      snapshot,
+      acquisitions: eventEvidence,
+      retrievedAt: observedAt,
+      sourceThrough: sourceThrough ?? eventsRetrievedAt,
+      failureDetail:
+        `${refusedSittings.length} Pima sitting acquisition(s) were refused in this run: ${refusedSittings.join("; ")}. ` +
+        "Every sitting that validated is live in the canonical pointer; the refused sittings stay due for the next attempt.",
+    });
+    log(`  run held: ${refusedSittings.length} refused sitting(s) recorded against the moved pointer`);
   }
-
-  console.log("MEASURED, not estimated:");
-  for (const [key, count] of Object.entries(tally)) console.log(`  ${key.padEnd(28)} ${count}`);
-  if (budgetExhausted) {
-    console.log(`STOPPED AT THE PER-RUN BUDGET of ${args.maxSittings}; the remaining sittings stay due and no completion is inferred.`);
-  }
+  return settle(last);
 }
 
-await main();
+async function main(): Promise<void> {
+  const args = parsePimaOutcomeIngestArgs(process.argv.slice(2));
+  if (args.slug !== "pima") {
+    throw new Error("PIMA_OUTCOME_CONTRACT_SCOPE_MISMATCH: add a separate tenant contract before acquiring another Legistar client.");
+  }
+  if (!args.promote && !args.dryRun) {
+    throw new Error("PIMA_OUTCOME_PROMOTION_REQUIRED: use --promote, or --dry-run for a read-only plan.");
+  }
+  if (args.promote && args.dryRun) {
+    throw new Error("PIMA_OUTCOME_MODE_AMBIGUOUS: --promote writes and --dry-run never does; pass exactly one.");
+  }
+  if (!Number.isInteger(args.maxSittings) || args.maxSittings < 1) throw new Error("--max-sittings must be a positive integer");
+  if (args.bodyId !== null && !Number.isInteger(args.bodyId)) throw new Error("--body must be an integer Legistar body id");
+  installNeonRequestDeadline();
+  if (args.promote) prepareProductionCivicDataWrite();
+  const client = findClient(args.slug);
+  if (!client) throw new Error("PIMA_LEGISTAR_CLIENT_NOT_REGISTERED");
+  const run = await runPimaLegistarOutcomeIngest({
+    store: new PostgresRoutineDataStore(),
+    client,
+    args,
+    window: pimaOutcomeWindow(args, client.timeZone, new Date()),
+  });
+  if (run.receiptLine !== null) console.log(run.receiptLine);
+  process.exitCode = run.exitCode;
+}
+
+if (isDirectModuleExecution(import.meta.url)) await main();

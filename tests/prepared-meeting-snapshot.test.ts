@@ -13,6 +13,7 @@ import {
   readPreparedMeetingsProjection,
 } from "../lib/meetings/prepared-snapshot.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import type { MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 
 function preparedInput(overrides: Partial<PreparedReaderProjectionInput> = {}): PreparedReaderProjectionInput {
   const generatedAt = overrides.generatedAt ?? "2026-09-01T00:00:00.000Z";
@@ -173,4 +174,139 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     assert.equal(result.coupledPartitions, contracts.length);
     assert.equal(result.sequence, 3);
   }
+});
+
+function preparedRow(sequence: number, generatedAt = "2026-09-05T00:00:00.000Z") {
+  return {
+    recordClass: "MEETING" as const,
+    scope: MEETINGS_PREPARED_SCOPE,
+    sequence,
+    payload: { formatVersion: 1, generatedAt, counts: { fresh: 0, carried: 0, total: 0 }, sources: [], meetings: [], agendaDocuments: [] },
+    composedFrom: [{ contractId: MEETING_PARTITION_CONTRACTS[0]!.id, versionId: `ver-${sequence}` }],
+    factSha256: "a".repeat(64),
+    generatedAt,
+    composedAt: generatedAt,
+    sourceThrough: null,
+    retrievedAt: null,
+    promotedThrough: null,
+  };
+}
+
+test("a reader that holds the current prepared row asks only its coupling before serving it again", async () => {
+  let current = preparedRow(4);
+  const reads = { row: 0, coupling: 0 };
+  const store = fakeStore({
+    readPreparedReaderProjection: async () => { reads.row += 1; return current; },
+    readPreparedReaderProjectionCoupling: async () => {
+      reads.coupling += 1;
+      const { recordClass, scope, sequence, composedFrom, generatedAt } = current;
+      return { recordClass, scope, sequence, composedFrom, generatedAt };
+    },
+  });
+
+  const first = await readPreparedMeetingsProjection({ store });
+  const second = await readPreparedMeetingsProjection({ store });
+  assert.equal(first.kind, "PROMOTED");
+  assert.equal(second.kind, "PROMOTED");
+  if (first.kind === "PROMOTED" && second.kind === "PROMOTED") assert.equal(second.value, first.value, "the held row is served");
+  assert.deepEqual(reads, { row: 1, coupling: 1 }, "the 7.5 MB row is read once; the second read asks only the coupling");
+
+  // The runner republishes: the sequence advances and the new row is read.
+  current = preparedRow(5, "2026-09-05T01:00:00.000Z");
+  const third = await readPreparedMeetingsProjection({ store });
+  assert.equal(reads.row, 2, "a new sequence is read whole");
+  if (third.kind === "PROMOTED") assert.equal(third.value.generatedAt, "2026-09-05T01:00:00.000Z");
+});
+
+test("a held prepared row is re-read when the coupling differs in any part", async () => {
+  const held = preparedRow(4);
+  let coupling = { recordClass: held.recordClass, scope: held.scope, sequence: 4, composedFrom: held.composedFrom, generatedAt: held.generatedAt };
+  let rowReads = 0;
+  const store = fakeStore({
+    readPreparedReaderProjection: async () => { rowReads += 1; return held; },
+    readPreparedReaderProjectionCoupling: async () => coupling,
+  });
+
+  await readPreparedMeetingsProjection({ store });
+  coupling = { ...coupling, generatedAt: "2026-09-05T02:00:00.000Z" };
+  await readPreparedMeetingsProjection({ store });
+  assert.equal(rowReads, 2, "the same sequence with another generation time is not the held row");
+
+  coupling = { ...coupling, generatedAt: held.generatedAt, composedFrom: [{ contractId: "other", versionId: "v" }] };
+  await readPreparedMeetingsProjection({ store });
+  assert.equal(rowReads, 3, "the same sequence composed from other versions is not the held row");
+});
+
+test("prepare composes through the pass's shared composition, and only when the coupling changed", async () => {
+  const contracts = MEETING_PARTITION_CONTRACTS;
+  const identities = contracts.map((contract) => ({
+    key: `MEETING:${contract.scope}`,
+    sourceId: contract.sourceId,
+    recordClass: "MEETING" as const,
+    scope: contract.scope,
+    versionId: `ver-${contract.id}`,
+    lastKnownGoodVersionId: `ver-${contract.id}`,
+    promotedAt: "2026-09-06T00:00:00.000Z",
+  }));
+  const snapshot = { formatVersion: 1, generatedAt: "2026-09-06T00:00:00.000Z", counts: { fresh: 0, carried: 0, total: 0 }, sources: [], meetings: [], agendaDocuments: [] };
+  let composed = 0;
+  const aggregate = async () => {
+    composed += 1;
+    return {
+      kind: "PROMOTED" as const,
+      value: snapshot,
+      metadata: {
+        recordClass: "MEETING" as const,
+        scope: "meetings",
+        sourceId: "meetings",
+        version: null,
+        versionId: null,
+        lastKnownGoodVersionId: null,
+        sourceThrough: null,
+        retrievedAt: null,
+        promotedAt: null,
+        stale: "CURRENT" as const,
+        staleAt: null,
+      },
+      partitions: contracts.map((contract) => ({
+        contractId: contract.id,
+        source: contract.meetingSource,
+        bodyId: contract.bodyId,
+        scope: contract.scope,
+        kind: "PROMOTED" as const,
+        versionId: `ver-${contract.id}`,
+        detail: null,
+      })),
+      detail: "composed",
+    } as unknown as MeetingsProjectionReadResult;
+  };
+  const writes: unknown[] = [];
+  let coupling: { recordClass: "MEETING"; scope: string; sequence: number; composedFrom: { contractId: string; versionId: string }[]; generatedAt: string } | null = null;
+  const store = fakeStore({
+    readPromotions: async () => { throw new Error("PREPARE_MUST_USE_THE_SHARED_COMPOSITION"); },
+    readCandidates: async () => { throw new Error("PREPARE_MUST_USE_THE_SHARED_COMPOSITION"); },
+    readPromotionIdentities: async () => identities,
+    readPreparedReaderProjectionCoupling: async () => coupling,
+    writePreparedReaderProjection: async (input) => {
+      writes.push(input);
+      return { published: true, sequence: 1 };
+    },
+  });
+
+  const published = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:05:00.000Z", { aggregate });
+  assert.equal(published.status, "PUBLISHED");
+  assert.equal(composed, 1, "the changed set is composed once, by the shared composition");
+  assert.equal(writes.length, 1);
+  assert.equal((writes[0] as { payload: unknown }).payload, snapshot, "the shared composition is what publishes");
+
+  coupling = {
+    recordClass: "MEETING",
+    scope: MEETINGS_PREPARED_SCOPE,
+    sequence: 1,
+    composedFrom: contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
+    generatedAt: snapshot.generatedAt,
+  };
+  const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });
+  assert.equal(current.status, "CURRENT");
+  assert.equal(composed, 1, "an unchanged set asks for no composition");
 });

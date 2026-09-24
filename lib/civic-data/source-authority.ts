@@ -590,7 +590,7 @@ export const SOURCE_AUTHORITIES = {
     expectedTemporalFields: ["event_last_modified_utc", "observed_at", "source_through"],
     horizonSemantics: "The events query bounds its date window; each changed sitting is an independent acquisition. Failed item or vote retrieval produces a refused durable candidate and cannot replace another sitting's LKG facts.",
     parserVersion: "pima-legistar-outcomes/2",
-    freshnessExpectation: "Explicit owner invocation; incremental reads use the publisher's EventLastModifiedUtc and no GitHub clock.",
+    freshnessExpectation: "The standing routine runner's clock under the pima-legistar-outcomes routine contract; each pass reads a rolling events window and re-walks only sittings whose publisher EventLastModifiedUtc moved. No owner or GitHub clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },

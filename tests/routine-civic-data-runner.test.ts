@@ -192,6 +192,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "census-acs-population",
     "census-geography-overlaps",
     "nj-morris-filing",
+    "pima-legistar-outcomes",
     "dotgov",
     // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
@@ -1059,6 +1060,10 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
+  // One composition per pass serves both the readbacks and the prepared snapshot.
+  assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate \},?\s*\)/);
+  assert.match(child, /preparePublishedMeetingSnapshot\(store, observedAt, \{ aggregate \}\)/);
+  assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
   assert.match(runner, /RCD_READER_READBACK[\s\S]*RECORDED \$\{status\}/);
@@ -1174,6 +1179,7 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/nh-gencourt-members.mts", "nh-members"],
     ["scripts/acs-population-promote.mts", "census-acs-population"],
     ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
+    ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
   ] as const;
   for (const [path, contractId] of fixedChildren) {

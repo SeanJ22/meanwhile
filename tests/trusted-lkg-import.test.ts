@@ -10,7 +10,8 @@ import {
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, trustedLkgImportClock } from "../lib/civic-data/store.ts";
+import { routineTaskDue, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
 import {
   PDC_V2_FROZEN_BASE_SHA,
   TRUSTED_LKG_IMPORT_AUTHORIZATION,
@@ -24,6 +25,7 @@ import {
 } from "../lib/civic-data/trusted-lkg-import.ts";
 import {
   sourceProjectionEvidence,
+  type CandidateVersionRecord,
   type RoutineCandidate,
   type CandidateEvent,
   type TrustedLkgImportEvidence,
@@ -817,4 +819,62 @@ test("Admin exposes imported LKG without claiming freshness or a source-authenti
   if (view.summary.healthy.kind === "MEASURED") assert.equal(view.summary.healthy.value, 0);
   if (view.summary.stale.kind === "MEASURED") assert.equal(view.summary.stale.value, 1);
   if (view.summary.lkgServing.kind === "MEASURED") assert.equal(view.summary.lkgServing.value, 1);
+});
+
+/*
+ * **A failed first live read after the import is an attempt (2026-09-23).**
+ * The import is neither an attempt nor a success, so it never postpones the
+ * first live read. A live read made since the import IS an attempt. Four
+ * meeting partitions whose first live read kept failing were read as never
+ * attempted and re-fetched every pass: 964 SOURCE_BLOCKED candidates in the
+ * 24 hours to 2026-09-24T05:23Z, each child paying its full canonical preload.
+ */
+function withLiveAttempt(store: MemoryRoutineDataStore, template: CandidateVersionRecord, id: string, at: string): void {
+  const { bootstrapImport: _import, ...live } = structuredClone(template.candidate);
+  const rows = store as unknown as {
+    candidates: Map<string, CandidateVersionRecord>;
+    history: Map<string, CandidateEvent[]>;
+  };
+  rows.candidates.set(id, {
+    ...structuredClone(template),
+    candidate: { ...live, id },
+    state: "SOURCE_BLOCKED",
+    acquisitionSucceeded: false,
+    receipt: null,
+    promotedVersion: null,
+    failureCode: "SOURCE_BLOCKED",
+    failureDetail: "the live read was refused",
+  });
+  rows.history.set(id, [{ candidateId: id, sequence: 1, state: "FETCHED", at, detail: "attempted" }]);
+}
+
+test("a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read", async () => {
+  const { store, outcome } = retainedHistoricalLkg();
+  const importedAt = outcome.promoted!.promotedAt;
+  const retry = { retryMs: 60 * 60 * 1000 } as RoutineSourceTask;
+
+  withLiveAttempt(store, outcome.candidate, "live-before-import", "2026-09-09T11:00:00.000Z");
+  assert.ok(Date.parse("2026-09-09T11:00:00.000Z") < Date.parse(importedAt));
+  const beforeImport = await store.clock(MANUAL_SOURCE_ID, MANUAL_RECORD_CLASS, MANUAL_SCOPE);
+  assert.deepEqual(beforeImport, {}, "an attempt older than the import does not delay the first live read");
+  assert.equal(routineTaskDue(retry, beforeImport, Date.parse(SECOND)), true);
+
+  withLiveAttempt(store, outcome.candidate, "live-after-import", SECOND);
+  const afterImport = await store.clock(MANUAL_SOURCE_ID, MANUAL_RECORD_CLASS, MANUAL_SCOPE);
+  assert.deepEqual(afterImport, { lastAttemptedAt: SECOND }, "the failed live read is the attempt");
+  assert.equal(routineTaskDue(retry, afterImport, Date.parse(SECOND) + 5 * 60 * 1000), false, "the next pass does not re-fetch");
+  assert.equal(routineTaskDue(retry, afterImport, Date.parse(SECOND) + retry.retryMs), true, "the retry clock owns the next attempt");
+});
+
+test("the trusted-LKG import clock counts only attempts strictly after the import's pointer move", () => {
+  const importedAt = "2026-09-14T04:24:22.927Z";
+  assert.deepEqual(trustedLkgImportClock(undefined, importedAt), {});
+  assert.deepEqual(trustedLkgImportClock("2026-09-14T04:24:22.927Z", importedAt), {}, "the import's own instant is not an attempt");
+  assert.deepEqual(trustedLkgImportClock("2026-09-14T04:00:00.000Z", importedAt), {});
+  assert.deepEqual(
+    trustedLkgImportClock("2026-09-24T05:15:59.400Z", importedAt),
+    { lastAttemptedAt: "2026-09-24T05:15:59.400Z" },
+  );
+  assert.deepEqual(trustedLkgImportClock("not a time", importedAt), {}, "an unreadable attempt decides nothing");
+  assert.deepEqual(trustedLkgImportClock("2026-09-24T05:15:59.400Z", "not a time"), {}, "an unreadable import time decides nothing");
 });

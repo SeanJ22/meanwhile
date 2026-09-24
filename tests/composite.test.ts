@@ -51,6 +51,8 @@ function stubChild(
   behave: {
     rows?: unknown[];
     failFetch?: boolean;
+    /** A specific thrown value, for the WALL/JOB classification tests. */
+    failWith?: unknown;
     hangFetch?: boolean;
     onAbort?: () => void;
     meetings?: (raw: unknown[]) => Meeting[];
@@ -71,7 +73,9 @@ function stubChild(
           else signal.addEventListener("abort", abort, { once: true });
         });
       }
-      if (behave.failFetch) throw new Error(`${name} upstream broke`);
+      if (behave.failWith !== undefined) throw behave.failWith;
+      // A publisher-side failure, as the shared HTTP client words one.
+      if (behave.failFetch) throw new Error(`HTTP 503 for https://${name}.example.gov/calendar`);
       return behave.rows ?? [];
     },
     normalize(raw) {
@@ -108,7 +112,7 @@ test("one child failing never blanks the map, and the failure is reported", asyn
   const broken = report.children.find((c) => c.source === "broken");
   assert.ok(broken);
   assert.equal(broken.ok, false);
-  assert.match(broken.error ?? "", /upstream broke/);
+  assert.match(broken.error ?? "", /HTTP 503 for https:\/\/broken\.example\.gov/);
   const good = report.children.find((c) => c.source === "good");
   assert.equal(good?.ok, true);
   assert.equal(good?.normalized, 2);
@@ -248,6 +252,27 @@ test("F22: a failed FETCH is a WALL — named, skipped, and the run continues", 
     1,
     "the healthy child lost its rows to the other child's wall",
   );
+});
+
+test("2026-09-24: an exception OUR code throws before any request is a JOB, never the publisher's wall", async () => {
+  /*
+   * From 2026-09-14 to 2026-09-24 the Pima Board and Mesa Legistar partitions
+   * threw VENUE_RESOLUTIONS_MISSING inside fetch() before a single request, and
+   * every attempt was filed as the publisher walling us. The kind is decided
+   * from the thrown value now; the healthy sibling still keeps its rows.
+   */
+  const composite = new CompositeSource([
+    stubChild("ours", { failWith: new Error("VENUE_RESOLUTIONS_MISSING:legistar:ocd-division/country:us/state:az/county:pima") }),
+    stubChild("programming", { failWith: new TypeError("Cannot read properties of undefined (reading 'venues')") }),
+    stubChild("network", { failWith: new TypeError("fetch failed") }),
+    stubChild("healthy", { rows: [1], meetings: () => [meetingOf("healthy:a")] }),
+  ]);
+  const meetings = composite.normalize(await composite.fetch(QUERY));
+  const kind = (source: string) => composite.lastReport?.children.find((c) => c.source === source)?.failure;
+  assert.equal(kind("ours"), "JOB");
+  assert.equal(kind("programming"), "JOB");
+  assert.equal(kind("network"), "WALL", "a network failure is still the publisher's side");
+  assert.equal(meetings.length, 1, "a JOB failure never costs a healthy sibling its rows");
 });
 
 test("F22: a broken NAMESPACE is a JOB failure — the run must go red", async () => {

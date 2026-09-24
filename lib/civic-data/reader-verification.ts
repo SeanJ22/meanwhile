@@ -552,6 +552,9 @@ export async function repairRoutineReaderProjectionReadback(
 export const MEETING_READER_EVENT_READ_CONCURRENCY = 8;
 export const MEETING_READER_EVIDENCE_WRITE_CONCURRENCY = 4;
 
+/** What the typed meetings Reader's aggregate composition returns. */
+type MeetingsAggregateRead = Awaited<ReturnType<typeof import("../meetings/snapshot.ts")["readMeetingsProjection"]>>;
+
 export type MeetingReaderReadbackRepairResult =
   | {
       readonly contractId: string;
@@ -578,6 +581,15 @@ export async function repairMeetingReaderProjectionReadbacks(
   contracts: readonly RoutineSourceContract[],
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
+  options: {
+    /**
+     * The pass's one composition of every partition: exactly
+     * `readMeetingsProjection({ store, now, bypassCache: true,
+     * allowUnconfiguredBootstrap: false })`, shared with the prepared snapshot
+     * so a pass that records readbacks and republishes composes once.
+     */
+    readonly aggregate?: () => Promise<MeetingsAggregateRead>;
+  } = {},
 ): Promise<readonly MeetingReaderReadbackRepairResult[]> {
   const ids = contracts.map(({ id }) => id);
   const scopes = contracts.map(({ scope }) => scope);
@@ -674,11 +686,15 @@ export async function repairMeetingReaderProjectionReadbacks(
   }
 
   if (pendingRecords.length > 0) {
-    let aggregate: Awaited<ReturnType<typeof import("../meetings/snapshot.ts")["readMeetingsProjection"]>> | null = null;
+    let aggregate: MeetingsAggregateRead | null = null;
     let aggregateError: string | null = null;
     try {
-      const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-      aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+      if (options.aggregate) {
+        aggregate = await options.aggregate();
+      } else {
+        const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
+        aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
+      }
     } catch (error) {
       aggregateError = sanitizedErrorDiagnostic(error);
     }

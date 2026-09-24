@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 737,
-    "named": 7274,
-    "dynamic": 28
+    "files": 738,
+    "named": 7282,
+    "dynamic": 29
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -862,6 +862,8 @@
         "read() of an absent key is one empty bounded page",
         "read() pages a log larger than one response and returns every record in position order",
         "readAll() pages the whole table in (log_key, position) order",
+        "readLatest() answers each key's newest record, only the named fields, in one statement per page of keys",
+        "readLatest() refuses an unsafe field name rather than building SQL from it",
         "readRecent() returns the newest N, newest first, bounded",
         "readWhere() of a value with no match is an empty result, not an error",
         "readWhere() refuses an unsafe JSON path segment rather than building SQL from it",
@@ -2822,7 +2824,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 9
+      "dynamic": 10
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -4333,6 +4335,17 @@
         "a body name already carrying the jurisdiction stands alone",
         "a sitting title with no body name gets the jurisdiction in front",
         "the address renders once when the source publishes it as the venue name"
+      ],
+      "dynamic": 0
+    },
+    "tests/free-walks.test.ts": {
+      "names": [
+        "A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD, names why, and hands the Scout nothing",
+        "DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, a state it cannot read named, a moved basis left out, and walked first even outside the ledger",
+        "EVERY READING REACHES ITS HOLD DECISION: found and not-walked hold, a walk that confirmed nothing or no site to walk opens, unread holds; the newest walk decides",
+        "ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site are read, and none at all when none has one",
+        "THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane can admit, and hands the reading to the hold, the Scout's brief and the walk list",
+        "THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only"
       ],
       "dynamic": 0
     },

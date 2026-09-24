@@ -894,7 +894,7 @@ test("an import is read whole by its proof: its evidence binds the complete enve
     (record) => ({ ...record, candidate: { ...record.candidate, normalizedPayload: { tampered: true } } }) as typeof whole,
     (record) => ({ ...record, candidate: { ...record.candidate, civicRecords: [] } }) as typeof whole,
     (record) => ({ ...record, candidate: { ...record.candidate, changeSet: undefined } }) as unknown as typeof whole,
-    (record) => ({ ...record, state: "SUPERSEDED" }) as typeof whole,
+    (record) => ({ ...record, state: "VALIDATED" }) as typeof whole,
   ];
   for (const tamper of tampers) {
     const issue = decide(tamper(whole));

@@ -12,7 +12,10 @@
  *   by content; its bytes are vaulted with the walk's own identity; a vendor we
  *   cannot read is a lead and is never requested.
  * - **Bounded.** A walk stops at its request bound. A spent budget defers the
- *   remaining needs untouched. A need not yet due is passed over.
+ *   remaining needs untouched. A need not yet due is passed over. Each
+ *   request's timeout is cut to the time left; a walk the time runs out on
+ *   before it confirmed anything is deferred and never recorded as a reading,
+ *   while a route it already confirmed stands.
  * - **Recorded.** Every walk is appended to `discoveryAttempts` under its
  *   jurisdiction, found or not, and finds, leads and dead doors go to the field
  *   manual. Dispatched needs are walked first; one another executor holds is
@@ -26,6 +29,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  DiscoveryTimeSpent,
   RECORDED_WALLS,
   discoveryWorkId,
   rotationWindow,
@@ -167,6 +171,103 @@ test("BOUNDED: a walk stops at its request bound and says so", async () => {
   assert.equal(seen.length, 3);
   assert.equal(attempt.requestCount, 3);
   assert.ok(attempt.steps.some((s) => /request bound/.test(s.note)));
+});
+
+test("TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route", async () => {
+  /* The transport is never offered more time than the budget has left. */
+  const offered: number[] = [];
+  const slow = fakeOpen({
+    "https://slow.gov/robots.txt": ALLOW,
+    "https://slow.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
+    "https://slow.gov/m.ics": { status: 200, body: ICS },
+  });
+  const timed: DiscoveryOpen = async (input) => {
+    offered.push(input.timeoutMs);
+    return slow.open(input);
+  };
+  const clamped = await walkMeetingsDiscoveryNeed(need("az:t:slow", "slow.gov"), runtime(timed, { budget: { spent: () => false, remainingMs: () => 7_500 } }));
+  assert.equal(clamped.outcome, "FOUND");
+  assert.deepEqual(offered, [7_500, 7_500, 7_500]);
+
+  /* Out of time after robots.txt: no further request, and no reading of the site. */
+  let left = 60_000;
+  let cutSpacings = 0;
+  const cut = fakeOpen({ "https://cut.gov/robots.txt": ALLOW, "https://cut.gov/": { status: 200, body: "<p>home</p>" } });
+  const spendOnFirst: DiscoveryOpen = async (input) => {
+    left = 0;
+    return cut.open(input);
+  };
+  await assert.rejects(
+    walkMeetingsDiscoveryNeed(need("az:t:cut", "cut.gov"), runtime(spendOnFirst, {
+      spaceOut: async () => {
+        cutSpacings += 1;
+      },
+      budget: { spent: () => left <= 0, remainingMs: () => left },
+    })),
+    (error: unknown) => error instanceof DiscoveryTimeSpent && error.jurisdictionId === "az:t:cut" && error.requestCount === 1,
+    "a walk cut short before any find is not a BLOCKED, NOTHING_DETECTED or COULD_NOT_READ reading",
+  );
+  assert.deepEqual(cut.seen, ["https://cut.gov/robots.txt"], "no request is sent once the time is spent");
+  assert.equal(cutSpacings, 1, "a spent budget does not wait for the host's spacing either");
+
+  /* The host's spacing can spend the time too: the request it was waiting for is not sent. */
+  let spacings = 0;
+  let spacedLeft = 60_000;
+  const spaced = fakeOpen({ "https://spaced.gov/robots.txt": ALLOW, "https://spaced.gov/": { status: 200, body: "<p>home</p>" } });
+  await assert.rejects(
+    walkMeetingsDiscoveryNeed(need("az:t:spaced", "spaced.gov"), runtime(spaced.open, {
+      spaceOut: async () => {
+        spacings += 1;
+        if (spacings === 2) spacedLeft = 0;
+      },
+      budget: { spent: () => spacedLeft <= 0, remainingMs: () => spacedLeft },
+    })),
+    (error: unknown) => error instanceof DiscoveryTimeSpent && error.requestCount === 1,
+  );
+  assert.deepEqual(spaced.seen, ["https://spaced.gov/robots.txt"], "the time is asked again after the spacing wait");
+
+  /* A route confirmed before the time ran out stands; the routes not reached are leads that say so. */
+  let remaining = 60_000;
+  const two = fakeOpen({
+    "https://two.gov/robots.txt": ALLOW,
+    "https://two.gov/": { status: 200, body: `<a href="/a.ics">a</a><a href="/b.ics">b</a>` },
+    "https://two.gov/a.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const spendAfterFirstFeed: DiscoveryOpen = async (input) => {
+    const reply = await two.open(input);
+    if (input.url.endsWith("/a.ics")) remaining = 0;
+    return reply;
+  };
+  const partial = await walkMeetingsDiscoveryNeed(
+    need("az:t:two", "two.gov"),
+    runtime(spendAfterFirstFeed, { budget: { spent: () => remaining <= 0, remainingMs: () => remaining } }),
+  );
+  assert.equal(partial.outcome, "FOUND");
+  assert.deepEqual(partial.found.map((f) => f.url), ["https://two.gov/a.ics"]);
+  assert.deepEqual(partial.leads.map((l) => [l.url, l.detail]), [["https://two.gov/b.ics", "not checked: the cycle's discovery time ran out first"]]);
+  assert.equal(two.seen.includes("https://two.gov/b.ics"), false);
+});
+
+test("TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-")) {
+    let left = 60_000;
+    const cut = fakeOpen({ "https://cut.gov/robots.txt": ALLOW, "https://cut.gov/": { status: 200, body: "<p>home</p>" } });
+    const spendOnFirst: DiscoveryOpen = async (input) => {
+      left = 0;
+      return cut.open(input);
+    };
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:t:cut", "cut.gov"), need("az:u:later", "later.gov")],
+      runtime: runtime(spendOnFirst, { budget: { spent: () => left <= 0, remainingMs: () => left } }),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.deepEqual(pass.walked, [], label);
+    assert.deepEqual(pass.deferred, ["az:t:cut", "az:u:later"], `${label}: the cut walk and the rest are deferred`);
+    assert.deepEqual(pass.cutShort, [{ jurisdictionId: "az:t:cut", requests: 1 }], label);
+    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:t:cut", 5), [], `${label}: nothing is recorded as a reading; the need stays due`);
+    assert.equal(pass.fieldManual.written, 0, `${label}: nothing is learned from a walk that concluded nothing`);
+  }
 });
 
 test("ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor", () => {

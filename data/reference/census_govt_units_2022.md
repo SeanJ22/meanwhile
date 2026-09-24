@@ -16,6 +16,10 @@
 - Because I did not fetch it, I **cannot independently attest that this ZIP is byte-identical to what the
   Census URL serves today.** Its internal contents are self-consistent and match published counts (below),
   which is strong but not equivalent to verifying the transfer.
+- **Attested 2026-09-23 (Phoenix):** fetched directly from the source URL above, it is 11,459,763 bytes
+  (`Last-Modified: Thu, 24 Aug 2023 12:44:48 GMT`) with sha256
+  `3ef3d93c91697b00d4d53384176dc584db9dacbd0f0a23e45657f0a3a1058c28` — byte-identical to the supplied file.
+  The registration contract (`lib/registration/`) pins exactly these bytes on every routine acquisition.
 - Archive contents: `Govt_Units_2022_Final.xlsx` (11,395,131 b, dated 2023-08-21) and
   `Government_Units_List_Documentation_2022.pdf` (206,919 b, dated 2023-08-24).
 - Source format: XLSX (4 sheets). Output format: UTF-8 CSV, header row, 25 columns.

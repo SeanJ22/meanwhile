@@ -7,6 +7,7 @@ import {
   MEETING_PARTITION_CONTRACTS,
   observableRoutineContracts,
 } from "./meeting-partitions.ts";
+import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 export type NonRoutineDisposition =
   | "EXPLICIT_VERSION_ADOPTION"
@@ -264,6 +265,8 @@ export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "nh-general-court", contractIds: ["nh-members"], contractSourceId: "nh-general-court" },
   { inventorySourceId: "census-acs-api", contractIds: ["census-acs-population"], contractSourceId: "census-data-api" },
   { inventorySourceId: "census-geography-relationships", contractIds: ["census-geography-overlaps"], contractSourceId: "census-geography-relationships" },
+  // One registration contract per state, DC and territory, from the FIPS table (lib/registration/publication.ts).
+  { inventorySourceId: "census-governments-registration", contractIds: REGISTRATION_TARGETS.map(({ contractId }) => contractId), contractSourceId: "census-governments-registration" },
 ] as const satisfies readonly RoutineInventoryBinding[];
 
 export interface ManualProductionInventoryBinding {

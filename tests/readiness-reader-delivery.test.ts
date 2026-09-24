@@ -11,6 +11,7 @@ import {
   type ReadinessStateSnapshot,
 } from "../lib/control-plane/readiness/model.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
@@ -227,10 +228,13 @@ test("ADM-39: neither summary tile is a dash — both hold a measurement with a 
 
 test("PDC: readiness authority coverage accounts for every production contract", () => {
   const contracts = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
-  assert.equal(contracts.length, 158, "the coverage guard must move when the production contract denominator moves");
+  assert.equal(contracts.length, 158 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
   assert.deepEqual(
     ROUTINE_SOURCE_CONTRACTS.map(({ id }) => id),
-    ["fec-funding", "nh-members", "az-state-legislators", "nj-state-legislators", "az-state-rollcalls", "nh-state-rollcalls", "nj-state-rollcalls", "census-acs-population", "census-geography-overlaps", "nj-morris-filing", "dotgov"],
+    [
+      "fec-funding", "nh-members", "az-state-legislators", "nj-state-legislators", "az-state-rollcalls", "nh-state-rollcalls", "nj-state-rollcalls", "census-acs-population", "census-geography-overlaps", "nj-morris-filing", "dotgov",
+      ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    ],
     "the guard must move when the canonical contract denominator moves",
   );
   assert.equal(MEETING_PARTITION_CONTRACTS.length, 124);

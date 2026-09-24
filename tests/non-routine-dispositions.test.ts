@@ -54,8 +54,8 @@ test("the PDC-7 frozen denominator accounts for every source row and all 42 hold
   const problems = validatePdc7DispositionRegistry(inventory.rows, DATASET_FAMILIES.map((family) => family.id));
   assert.deepEqual(problems, []);
 
-  assert.equal(inventory.rows.length, 37);
-  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 7);
+  assert.equal(inventory.rows.length, 38);
+  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 8);
   assert.equal(NON_ROUTINE_DISPOSITIONS.length, 11);
   assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 18);
   assert.equal(PDC7_RESOLVED_SPLIT_BINDINGS.length, 1);

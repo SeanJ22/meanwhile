@@ -539,6 +539,23 @@
       "migration_status": "ROUTINE_AUTO_PROMOTED_UNDER_RULING_292"
     },
     {
+      "source_id": "census-governments-registration",
+      "record_class": "REGISTRATION",
+      "authority": "U.S. Census Bureau 2022 Census of Governments (pinned bytes) and 2023 cartographic boundary divisions",
+      "current_writer": "scripts/registration-refresh.mts (in-memory derivation from the committed reference; writes no tracked file)",
+      "current_scheduler": "standing routine civic-data runner",
+      "current_canonical_store": "Postgres promotion pointer, one per state",
+      "tracked_paths": [],
+      "runtime_readers": ["lib/registration/reader.ts"],
+      "current_promotion_door": "atomic processRegisteredRoutineCandidate",
+      "cadence": "30 days, confirming the pinned Census of Governments bytes",
+      "retry": "6 hours",
+      "LKG_behavior": "durable DB pointer per state; a changed or unavailable Census file leaves that state's prior registration live and cannot affect another state",
+      "classification": "RUNTIME_CIVIC_DATA",
+      "target_plane": "routine candidate/version store",
+      "migration_status": "ROUTINE_AUTO_PROMOTED_UNDER_RULING_292"
+    },
+    {
       "source_id": "registry-static-identities",
       "record_class": "CURATED_BODY_DIVISION_SCHEMA_IDENTITY",
       "authority": "cited legal and official identity sources",

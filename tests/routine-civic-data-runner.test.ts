@@ -20,6 +20,7 @@ import {
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate } from "../lib/civic-data/types.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
@@ -192,6 +193,8 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "census-geography-overlaps",
     "nj-morris-filing",
     "dotgov",
+    // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
+    ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(

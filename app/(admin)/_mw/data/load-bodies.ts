@@ -9,7 +9,7 @@ import { MEETING_PARTITION_CONTRACTS } from "@/lib/civic-data/meeting-partitions
 import { buildBodyViews, type BodyView, type PublicZip, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
 import { lowestZipByDivision } from "@/lib/geo/zip-division-index.ts";
 
-import { readBodyStore } from "./body-store.ts";
+import { readBodyStanding, readBodyStore } from "./body-store.ts";
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
 
 export type BodiesRead =
@@ -103,6 +103,47 @@ async function readWatchedBodies(nowIso: string): Promise<BodiesRead> {
   } catch (error) {
     // Server log only: a driver error can carry the connection string, so the page gets the class name alone.
     console.error("[admin] watched-body read failed", error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error);
+    return {
+      kind: "UNREAD",
+      detail: `The body read did not complete (${error instanceof Error ? error.name : "error"}). No body count is claimed until it does.`,
+    };
+  }
+}
+
+/*
+ * The standing alone, for the composer's preview: each watched body's
+ * WORKING / NEEDS ATTENTION / STUCK / NOT READ YET and the records readers can
+ * see, decided from the same version, reads and readback as the full read
+ * (`readBodyStanding`), without the day tally, the change history or the ZIP
+ * destinations the preview never shows. Measured 2026-09-24: the full read held
+ * the preview's first pick at 3.08 s; a load over three seconds is not a win
+ * (Sean, 2026-09-24). Kept on its own clock so a fresh full read is not needed.
+ */
+const standingShared = sharedRead<BodiesRead>({
+  freshMs: 60_000,
+  staleMs: 5 * 60_000,
+  deadlineMs: ADMIN_READ_DEADLINE_MS,
+  keep: (r) => r.kind === "HELD",
+  late: (ms) => ({ kind: "UNREAD", detail: lateWords("The body read", ms) }),
+});
+
+export async function loadWatchedStandings(nowIso: string): Promise<BodiesRead> {
+  return standingShared.read(() => readWatchedStandings(nowIso));
+}
+
+async function readWatchedStandings(nowIso: string): Promise<BodiesRead> {
+  const connection = process.env.DATABASE_URL?.trim() ?? "";
+  if (connection === "") {
+    return {
+      kind: "UNREAD",
+      detail: "This Admin runtime has no connection to the routine civic-data store, so no body was read. That is not the same as having no bodies.",
+    };
+  }
+  try {
+    const store = await readBodyStanding(connection, nowIso);
+    return { kind: "HELD", asOf: store.asOf, views: buildBodyViews({ contracts: WATCHED_CONTRACTS, store, nowIso }) };
+  } catch (error) {
+    console.error("[admin] watched-body standing read failed", error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error);
     return {
       kind: "UNREAD",
       detail: `The body read did not complete (${error instanceof Error ? error.name : "error"}). No body count is claimed until it does.`,

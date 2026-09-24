@@ -39,6 +39,8 @@ import {
   SEED_RECIPES,
   failureStands,
   identityFor,
+  isNavigationLink,
+  recipeFailureHoldDays,
   knownRecipes,
   recipeCandidates,
   recipeEntry,
@@ -119,13 +121,53 @@ test("PROPOSALS: a recipe proposes only when the homepage shows its precondition
 
   const failed = recordRecipeOutcome(WP, {
     succeeded: false,
-    note: { at: "2026-09-10T00:00:00.000Z", jurisdictionId: benson.jurisdictionId, url: "https://benson.gov/events/list/?ical=1", conditions: "c", limit: "content check: not a calendar" },
+    note: { at: "2026-09-23T00:00:00.000Z", jurisdictionId: benson.jurisdictionId, url: "https://benson.gov/events/list/?ical=1", conditions: "c", limit: "content check: not a calendar" },
   });
   assert.equal(failureStands(failed, benson.jurisdictionId, NOW)?.limit, "content check: not a calendar");
   const held = recipeCandidates({ recipes: [failed], need: benson, origin: "https://benson.gov", homepageHtml: WP_HOME, nowIso: NOW });
   assert.deepEqual(held.candidates, []);
   assert.match(held.skipped[0].why, /failed here .* not paid for again/);
-  assert.equal(failureStands(failed, benson.jurisdictionId, "2026-10-20T00:00:00.000Z"), null, "after the hold, the method is tried again");
+  assert.equal(failureStands(failed, benson.jurisdictionId, "2026-09-26T01:00:00.000Z"), null, "after the hold, the method is tried again");
+});
+
+test("ONE FAILED ROUTE IS NOT PROOF: a first failure holds 3 days, each consecutive one doubles it up to 30, and a success clears it", () => {
+  const at = (day: number) => new Date(Date.parse("2026-09-01T00:00:00.000Z") + day * 86_400_000).toISOString();
+  const fail = (r: MeetingsRecipe, day: number) =>
+    recordRecipeOutcome(r, { succeeded: false, note: { at: at(day), jurisdictionId: "az:city:x", url: "u", conditions: "c", limit: "l" } });
+  let r = fail(WP, 0);
+  assert.equal(r.failedFor[0].streak, 1);
+  assert.equal(recipeFailureHoldDays(r.failedFor[0]), 3);
+  assert.notEqual(failureStands(r, "az:city:x", at(2.9)), null, "held for the first 3 days");
+  assert.equal(failureStands(r, "az:city:x", at(3.1)), null, "and tried again after");
+  const holds = [3];
+  for (let i = 1; i <= 5; i += 1) {
+    r = fail(r, i * 40);
+    holds.push(recipeFailureHoldDays(r.failedFor[0]));
+  }
+  assert.deepEqual(holds, [3, 6, 12, 24, 30, 30], "doubling with each consecutive failure, capped at 30");
+  assert.equal(recipeFailureHoldDays({}), 3, "a failure recorded before the count existed reads as a first failure");
+  r = recordRecipeOutcome(r, { succeeded: true, note: { at: at(300), jurisdictionId: "az:city:x", url: "u", conditions: "c" } });
+  assert.equal(r.failedFor.some((f) => f.jurisdictionId === "az:city:x"), false, "a success clears it");
+  assert.equal(fail(r, 301).failedFor[0].streak, 1, "so the next failure starts over");
+});
+
+test("A LINK STEP FOLLOWS NAVIGATION, NOT NEWS: a headline that names the council, or anything under a news section, is never followed", () => {
+  const OP = SEED_RECIPES.find((x) => x.recipeId === "official-page-events-linked-committee-page")!;
+  const home = [
+    `<a href="/government/mayor-and-council">Mayor and Council</a>`,
+    `<a href="/government/departments/city-clerks-office/city-council-meetings">City Council Meetings</a>`,
+    `<a href="/news-center/chandler-city-council-appoints-deryck-lavelle-city-attorney">Chandler City Council Appoints Deryck Lavelle City Attorney</a>`,
+    `<a href="/press/council-approves-budget">Council budget</a>`,
+  ].join(" ");
+  const chandler = need("az:city:city-of-chandler", "https://www.chandleraz.gov");
+  const got = recipeCandidates({ recipes: [OP], need: chandler, origin: "https://www.chandleraz.gov", homepageHtml: home, nowIso: NOW });
+  assert.deepEqual(got.candidates.map((c) => c.url), [
+    "https://www.chandleraz.gov/government/mayor-and-council",
+    "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
+  ]);
+  assert.equal(isNavigationLink({ url: "https://x.gov/board", text: "Board of Education" }), true);
+  assert.equal(isNavigationLink({ url: "https://x.gov/a", text: "one two three four five six seven" }), false, "a label past six words is a headline");
+  assert.equal(isNavigationLink({ url: "https://x.gov/blog/council", text: "Council" }), false);
 });
 
 test("OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded", () => {
@@ -159,7 +201,7 @@ test("A CORRECTED SEED REACHES THE RUNNER: a stored seed keeps its counts and fa
   assert.equal(wp.precondition, WP.precondition);
   assert.equal(wp.title, WP.title);
   assert.equal(wp.failures, 1, "the runner's counts are kept");
-  assert.deepEqual(wp.failedFor, [failure], "and its failure memory, so a standing failure is still not paid for twice");
+  assert.deepEqual(wp.failedFor, [{ ...failure, streak: 1 }], "and its failure memory, so a standing failure is still not paid for twice");
   assert.deepEqual(
     known.find((r) => r.recipeId === learned.recipeId)?.navigation,
     [{ kind: "path", template: "/learned" }],

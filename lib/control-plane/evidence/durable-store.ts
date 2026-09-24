@@ -257,7 +257,31 @@ export function keyToRelativePath(key: string): string {
     }
   }
 
-  return segments.join(sep);
+  return segments.map(encodePathSegment).join(sep);
+}
+
+/**
+ * WHAT A WINDOWS PATH SEGMENT CANNOT HOLD, ENCODED; EVERYTHING ELSE UNTOUCHED.
+ *
+ * The standing runner's host is Windows. A key is an object-store key, where
+ * `:` is legal, but a Windows directory name cannot hold `<>:"|?*` or a control
+ * character, and Windows silently strips a trailing `.` or space. A discovery
+ * work id with `:` failed every write with ENOENT (2026-09-24). So on disk each
+ * of those is percent-encoded, as is `%` itself so the mapping reverses. `list`
+ * decodes names back to the exact key.
+ *
+ * A segment holding none of them maps to itself, so every object already on
+ * disk keeps its path.
+ */
+const UNSAFE_IN_PATH_SEGMENT = /[<>:"|?*%\u0001-\u001f]|[. ]$/g;
+
+export function encodePathSegment(segment: string): string {
+  return segment.replace(UNSAFE_IN_PATH_SEGMENT, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0")}`);
+}
+
+/** The key segment a name on disk encodes: the inverse of {@link encodePathSegment}. */
+export function decodePathSegment(name: string): string {
+  return name.replace(/%([0-9A-F]{2})/g, (_, hex: string) => String.fromCharCode(Number.parseInt(hex, 16)));
 }
 
 /** ---------------------------------------------------------- the sidecar */
@@ -613,7 +637,8 @@ export class DurableEvidenceStore implements EvidenceStore {
     for (const entry of entries) {
       const name = entry.name;
       if (name.startsWith(TEMP_PREFIX)) continue;
-      const childKey = keyPrefix ? `${keyPrefix}/${name}` : name;
+      /* A name on disk encodes its key segment (`encodePathSegment`); the key is always the decoded one. */
+      const childKey = keyPrefix ? `${keyPrefix}/${decodePathSegment(name)}` : decodePathSegment(name);
       if (entry.isDirectory()) {
         found.push(...(await this.walk(join(directory, name), childKey)));
       } else if (name.endsWith(SIDECAR_SUFFIX)) {

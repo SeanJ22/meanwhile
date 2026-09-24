@@ -98,6 +98,18 @@ function jurisdictionAllowed(candidate: RoutineCandidate, allowed: readonly stri
   return candidate.identities.every((identity) => allowed.includes(identity.jurisdiction));
 }
 
+/**
+ * **A VERSION THAT NAMES A PUBLICATION IS NOT AN ORDER.** (2026-09-24.)
+ * CISA's registry is versioned by the git commit of `current-full.csv`, and two
+ * commit hashes compared as strings say nothing about which came first: every
+ * daily revision from 2026-09-15 to 09-24 was refused as "11fe34b4… precedes
+ * promoted e68adb11…", eight upstream updates in a row, while the pointer sat on
+ * the 09-15 registry. For these classes the version still has to equal the
+ * expected one; which publication is newer is decided by the acquisition and
+ * source-through order checked beside it, never by the hash.
+ */
+const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE"]);
+
 function temporalOrder(value: string): number | null {
   if (/^\d{4}$/.test(value)) return Number(value);
   const date = Date.parse(value);
@@ -614,7 +626,7 @@ export function validateRoutineCandidate(
     ));
   } else if (candidate.temporal.staleAtRetrieval) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "FRESH_FETCH_STALE_FACTS", "The route was freshly read but the source facts belong to an expired term/session/period."));
-  } else if (current && candidate.temporal.version < current.version) {
+  } else if (current && !UNORDERED_VERSION_CLASSES.has(candidate.recordClass) && candidate.temporal.version < current.version) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "VERSION_REGRESSION", `${candidate.temporal.version} precedes promoted ${current.version}.`));
   } else if (candidateOrder !== null && currentOrder !== null && candidateOrder < currentOrder) {
     checks.push(result("TEMPORAL_VALIDITY", "FAIL", "SOURCE_THROUGH_REGRESSION", `${candidate.temporal.sourceThrough} precedes promoted ${current!.sourceThrough}.`));

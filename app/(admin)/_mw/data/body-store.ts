@@ -5,9 +5,11 @@ import "server-only";
  *
  * A body we watch is a public body with a registered meeting source: one
  * routine meeting contract per (source, body) in the production data plane.
- * The Fleet · Now screen shows each one's standing, so this reads, in one
- * read-only transaction (one MVCC snapshot, so the figures agree with each
- * other) and under a statement limit, only what that needs:
+ * The Fleet · Now screen shows each one's standing, so this reads only what
+ * that needs, under a statement limit, in two read-only transactions sent at
+ * once over HTTP (one round trip each, no socket to open): the figures that
+ * must agree with each other in one MVCC snapshot, and the change history,
+ * which may fail alone, in the other:
  *
  * ```
  *   versions   each body's CURRENT promoted version: how many meetings it
@@ -29,12 +31,17 @@ import "server-only";
  *              versions promoted and the change counts they carried
  * ```
  *
+ * A cold server paid about three seconds for this read on 2026-09-24: a socket
+ * to open, six statements one after another, and a day tally that decoded each
+ * candidate's envelope once per change-set field (885 ms on the server; 220 ms
+ * decoding it once). A load over three seconds is not a win (Sean, 2026-09-24).
+ *
  * The heavy observability read (every candidate's full envelope) is not used:
  * unbounded it returned 3.8 GB and it times out on an Admin render.
  * Any failure is thrown to the loader, which renders the section as unread —
  * never as zero bodies.
  */
-import { Pool } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 
 import { READER_PROJECTION_READBACK_PREFIX, parseReaderProjectionReadback } from "@/lib/civic-data/reader-readback.ts";
 
@@ -147,218 +154,286 @@ function meetingsOf(value: unknown): { readonly title: string | null; readonly s
   return (Array.isArray(value) ? (value as Record<string, unknown>[]) : []).map((m) => ({ title: textOrNull(m.title), startsAt: textOrNull(m.startsAt) }));
 }
 
+/* ------------------------------------------------------------------ the statements */
+
+/** Each body's current promoted version: counts only, never the payload. */
+const VERSIONS = `SELECT p.scope, p.current_version_id, p.promoted_at,
+        jsonb_array_length(COALESCE(p.payload->'meetings', '[]'::jsonb)) AS meetings,
+        (p.payload->'counts'->>'fresh')::int AS fresh,
+        (p.payload->'counts'->>'carried')::int AS carried,
+        jsonb_array_length(COALESCE(p.payload->'agendaDocuments', '[]'::jsonb)) AS docs,
+        (SELECT count(*) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m
+          WHERE (m->>'startsAt')::timestamptz <= $1::timestamptz
+            AND COALESCE(m->>'agendaUrl', '') = ''
+            AND NOT EXISTS (
+              SELECT 1 FROM jsonb_array_elements(COALESCE(p.payload->'agendaDocuments', '[]'::jsonb)) d
+               WHERE d->>'meetingId' = m->>'id')) AS no_agenda,
+        (SELECT count(*) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m
+          WHERE (m->>'startsAt')::timestamptz > $1::timestamptz
+            AND COALESCE(m->>'agendaUrl', '') = ''
+            AND NOT EXISTS (
+              SELECT 1 FROM jsonb_array_elements(COALESCE(p.payload->'agendaDocuments', '[]'::jsonb)) d
+               WHERE d->>'meetingId' = m->>'id')) AS no_agenda_ahead,
+        (SELECT count(*) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m
+          WHERE (m->>'startsAt')::timestamptz > $1::timestamptz) AS upcoming,
+        (SELECT max((m->>'startsAt')::timestamptz) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m) AS furthest,
+        p.payload->'meetings'->0->>'bodyName' AS body_name,
+        p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,
+        cs.outcome, cs.added, cs.changed, cs.removed, cs.held
+   FROM civic_data_promotions p
+   LEFT JOIN LATERAL (
+     SELECT x.cs->>'outcome' AS outcome,
+            jsonb_array_length(COALESCE(x.cs->'added', '[]'::jsonb)) AS added,
+            jsonb_array_length(COALESCE(x.cs->'changed', '[]'::jsonb)) AS changed,
+            jsonb_array_length(COALESCE(x.cs->'removed', '[]'::jsonb)) AS removed,
+            jsonb_array_length(COALESCE(x.cs->'held', '[]'::jsonb)) AS held
+       FROM (SELECT cd.candidate->'changeSet' AS cs FROM civic_data_candidates cd WHERE cd.id = p.current_version_id OFFSET 0) x
+   ) cs ON true
+  WHERE p.record_class = 'MEETING'`;
+
+/** The last five reads per body in the last seven days, from the local attempt event. */
+const ATTEMPTS = `SELECT scope, candidate_id, state, failure_code, failure_detail, acquisition_succeeded, attempted_at FROM (
+    SELECT c.scope, c.id AS candidate_id, c.state, c.failure_code, left(c.failure_detail, 300) AS failure_detail, c.acquisition_succeeded, e.at AS attempted_at,
+           row_number() OVER (PARTITION BY c.scope ORDER BY e.at DESC, c.id DESC) AS rn
+      FROM civic_data_candidates c
+      JOIN civic_data_candidate_events e ON e.candidate_id = c.id AND e.sequence = 1
+     WHERE c.record_class = 'MEETING'
+       AND c.retrieved_at > $1::timestamptz - interval '7 days') x
+  WHERE rn <= 5`;
+
+/** The typed Reader readback of each current version. */
+const VERSION_READBACKS = `SELECT e.candidate_id, e.at, e.detail
+   FROM civic_data_candidate_events e
+   JOIN civic_data_promotions p ON p.current_version_id = e.candidate_id AND p.record_class = 'MEETING'
+  WHERE e.detail LIKE $1`;
+
+/** Per body, the last 24 hours; each candidate's change set is decoded once, and only for promoted ones. */
+const DAY = `SELECT c.scope,
+        count(*) AS reads,
+        count(*) FILTER (WHERE c.acquisition_succeeded) AS got_in,
+        count(*) FILTER (WHERE c.state = 'PROMOTED') AS versions,
+        count(*) FILTER (WHERE c.state = 'PROMOTED' AND x.cs->>'outcome' = 'CHANGED') AS changed_versions,
+        count(*) FILTER (WHERE c.state = 'CANNOT_TELL') AS cannot_tell,
+        COALESCE(sum(jsonb_array_length(COALESCE(x.cs->'added', '[]'::jsonb))) FILTER (WHERE c.state = 'PROMOTED'), 0) AS added,
+        COALESCE(sum(jsonb_array_length(COALESCE(x.cs->'changed', '[]'::jsonb))) FILTER (WHERE c.state = 'PROMOTED'), 0) AS changed,
+        COALESCE(sum(jsonb_array_length(COALESCE(x.cs->'removed', '[]'::jsonb))) FILTER (WHERE c.state = 'PROMOTED'), 0) AS removed
+   FROM civic_data_candidates c
+  CROSS JOIN LATERAL (SELECT CASE WHEN c.state = 'PROMOTED' THEN c.candidate->'changeSet' END AS cs OFFSET 0) x
+  WHERE c.record_class = 'MEETING'
+    AND c.retrieved_at > $1::timestamptz - interval '24 hours'
+  GROUP BY c.scope`;
+
+/** Each body's latest version that changed something readers are served, with its own readbacks. */
+const CHANGES = `WITH latest AS (
+     SELECT p.scope, l.id
+       FROM civic_data_promotions p
+       CROSS JOIN LATERAL (
+         SELECT x.id
+           FROM civic_data_candidates x
+          WHERE x.record_class = 'MEETING' AND x.scope = p.scope AND x.state = 'PROMOTED'
+            AND (CASE WHEN x.state = 'PROMOTED' THEN x.candidate->'changeSet'->>'outcome' END) = 'CHANGED'
+          ORDER BY x.retrieved_at DESC, x.id DESC
+          LIMIT 1) l
+      WHERE p.record_class = 'MEETING')
+   SELECT l.scope, l.id, c.retrieved_at,
+        jsonb_array_length(COALESCE(cs.cs->'added', '[]'::jsonb)) AS added,
+        jsonb_array_length(COALESCE(cs.cs->'changed', '[]'::jsonb)) AS changed,
+        jsonb_array_length(COALESCE(cs.cs->'removed', '[]'::jsonb)) AS removed,
+        jsonb_array_length(COALESCE(cs.cs->'held', '[]'::jsonb)) AS held,
+        (SELECT count(*) FROM jsonb_array_elements(COALESCE(cs.cs->'added', '[]'::jsonb)) e
+          WHERE e->>'key' LIKE 'meeting:%') AS meetings_added,
+        (SELECT jsonb_agg(x) FROM (
+           SELECT jsonb_build_object('title', e->'after'->>'title', 'startsAt', e->'after'->>'startsAt') AS x
+             FROM jsonb_array_elements(COALESCE(cs.cs->'added', '[]'::jsonb)) e
+            WHERE e->>'key' LIKE 'meeting:%'
+            ORDER BY e->'after'->>'startsAt'
+            LIMIT 3) s) AS named,
+        (SELECT count(*) FROM jsonb_array_elements(COALESCE(cs.cs->'changed', '[]'::jsonb)) e
+          WHERE e->>'key' LIKE 'meeting:%') AS meetings_changed,
+        (SELECT jsonb_agg(x) FROM (
+           SELECT jsonb_build_object('title', e->'after'->>'title', 'startsAt', e->'after'->>'startsAt') AS x
+             FROM jsonb_array_elements(COALESCE(cs.cs->'changed', '[]'::jsonb)) e
+            WHERE e->>'key' LIKE 'meeting:%'
+            ORDER BY e->'after'->>'startsAt'
+            LIMIT 3) s) AS changed_named,
+        (SELECT min(ev.at) FROM civic_data_candidate_events ev
+          WHERE ev.candidate_id = l.id AND ev.detail LIKE 'Atomic pointer %') AS promoted_at,
+        (SELECT min(ev.at) FROM civic_data_candidate_events ev
+          WHERE ev.candidate_id = l.id AND ev.detail LIKE 'Every applicable GOOD check passed%') AS validated_at,
+        (SELECT jsonb_agg(jsonb_build_object('at', ev.at, 'detail', ev.detail)) FROM civic_data_candidate_events ev
+          WHERE ev.candidate_id = l.id AND ev.detail LIKE $1) AS readbacks
+   FROM latest l
+   JOIN civic_data_candidates c ON c.id = l.id
+   CROSS JOIN LATERAL (SELECT c.candidate->'changeSet' AS cs OFFSET 0) cs`;
+
+/* ------------------------------------------------------------------ the rows */
+
+type Rows = Record<string, unknown>[];
+
+function versionsOf(rows: Rows): BodyVersionRow[] {
+  return rows.map((r) => ({
+    scope: String(r.scope),
+    versionId: String(r.current_version_id),
+    promotedAt: iso(r.promoted_at),
+    meetings: int(r.meetings),
+    fresh: intOrNull(r.fresh),
+    carried: intOrNull(r.carried),
+    docs: int(r.docs),
+    noAgendaLink: int(r.no_agenda),
+    noAgendaAhead: int(r.no_agenda_ahead),
+    upcoming: int(r.upcoming),
+    furthestAhead: isoOrNull(r.furthest),
+    bodyName: textOrNull(r.body_name),
+    jurisdiction: textOrNull(r.jurisdiction),
+    outcome: r.outcome === "CHANGED" || r.outcome === "UNCHANGED" ? r.outcome : null,
+    added: int(r.added),
+    changed: int(r.changed),
+    removed: int(r.removed),
+    held: int(r.held),
+  }));
+}
+
+function attemptsOf(rows: Rows): BodyAttemptRow[] {
+  return rows.map((r) => ({
+    scope: String(r.scope),
+    candidateId: String(r.candidate_id),
+    state: String(r.state),
+    failureCode: textOrNull(r.failure_code),
+    failureDetail: textOrNull(r.failure_detail),
+    acquisitionSucceeded: r.acquisition_succeeded === true,
+    attemptedAt: iso(r.attempted_at),
+  }));
+}
+
+/*
+ * A readback event that does not parse as the V2 receipt proves nothing about
+ * the version, so it is dropped rather than read as a pass. A version that is
+ * both current and the latest change is counted once.
+ */
+function readbacksOf(rows: readonly { readonly candidateId: string; readonly at: unknown; readonly detail: unknown }[]): BodyReadbackRow[] {
+  const seen = new Set<string>();
+  return rows.flatMap((r) => {
+    const at = iso(r.at);
+    const key = `${r.candidateId}|${at}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    const receipt = parseReaderProjectionReadback(String(r.detail ?? ""));
+    return receipt === null ? [] : [{ candidateId: r.candidateId, at, passed: receipt.status === "PASS" }];
+  });
+}
+
+function versionReadbacksOf(rows: Rows): { readonly candidateId: string; readonly at: unknown; readonly detail: unknown }[] {
+  return rows.map((r) => ({ candidateId: String(r.candidate_id), at: r.at, detail: r.detail }));
+}
+
+function dayOf(rows: Rows): BodyDayRow[] {
+  return rows.map((r) => ({
+    scope: String(r.scope),
+    reads: int(r.reads),
+    gotIn: int(r.got_in),
+    versions: int(r.versions),
+    changedVersions: int(r.changed_versions),
+    cannotTell: int(r.cannot_tell),
+    added: int(r.added),
+    changed: int(r.changed),
+    removed: int(r.removed),
+  }));
+}
+
+function changesOf(rows: Rows): BodyChangeRow[] {
+  return rows.map((r) => ({
+    scope: String(r.scope),
+    versionId: String(r.id),
+    retrievedAt: iso(r.retrieved_at),
+    promotedAt: isoOrNull(r.promoted_at),
+    validatedAt: isoOrNull(r.validated_at),
+    added: int(r.added),
+    changed: int(r.changed),
+    removed: int(r.removed),
+    held: int(r.held),
+    meetingsAdded: int(r.meetings_added),
+    named: meetingsOf(r.named),
+    meetingsChanged: int(r.meetings_changed),
+    changedNamed: meetingsOf(r.changed_named),
+  }));
+}
+
+/* ------------------------------------------------------------------ the reads */
+
 export async function readBodyStore(connection: string, nowIso: string): Promise<BodyStoreRead> {
-  const pool = new Pool({ connectionString: connection, max: 1, connectionTimeoutMillis: 15_000 });
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN READ ONLY ISOLATION LEVEL REPEATABLE READ");
-    await client.query(`SET LOCAL statement_timeout = ${BODY_STORE_STATEMENT_TIMEOUT_MS}`);
+  const sql = neon(connection);
+  const limit = `SET LOCAL statement_timeout = ${BODY_STORE_STATEMENT_TIMEOUT_MS}`;
+  const readbackLike = `${READER_PROJECTION_READBACK_PREFIX}%`;
 
-    const versions = await client.query(
-      `SELECT p.scope, p.current_version_id, p.promoted_at,
-              jsonb_array_length(COALESCE(p.payload->'meetings', '[]'::jsonb)) AS meetings,
-              (p.payload->'counts'->>'fresh')::int AS fresh,
-              (p.payload->'counts'->>'carried')::int AS carried,
-              jsonb_array_length(COALESCE(p.payload->'agendaDocuments', '[]'::jsonb)) AS docs,
-              (SELECT count(*) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m
-                WHERE (m->>'startsAt')::timestamptz <= $1::timestamptz
-                  AND COALESCE(m->>'agendaUrl', '') = ''
-                  AND NOT EXISTS (
-                    SELECT 1 FROM jsonb_array_elements(COALESCE(p.payload->'agendaDocuments', '[]'::jsonb)) d
-                     WHERE d->>'meetingId' = m->>'id')) AS no_agenda,
-              (SELECT count(*) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m
-                WHERE (m->>'startsAt')::timestamptz > $1::timestamptz
-                  AND COALESCE(m->>'agendaUrl', '') = ''
-                  AND NOT EXISTS (
-                    SELECT 1 FROM jsonb_array_elements(COALESCE(p.payload->'agendaDocuments', '[]'::jsonb)) d
-                     WHERE d->>'meetingId' = m->>'id')) AS no_agenda_ahead,
-              (SELECT count(*) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m
-                WHERE (m->>'startsAt')::timestamptz > $1::timestamptz) AS upcoming,
-              (SELECT max((m->>'startsAt')::timestamptz) FROM jsonb_array_elements(COALESCE(p.payload->'meetings', '[]'::jsonb)) m) AS furthest,
-              p.payload->'meetings'->0->>'bodyName' AS body_name,
-              p.payload->'meetings'->0->>'jurisdiction' AS jurisdiction,
-              cd.candidate->'changeSet'->>'outcome' AS outcome,
-              jsonb_array_length(COALESCE(cd.candidate->'changeSet'->'added', '[]'::jsonb)) AS added,
-              jsonb_array_length(COALESCE(cd.candidate->'changeSet'->'changed', '[]'::jsonb)) AS changed,
-              jsonb_array_length(COALESCE(cd.candidate->'changeSet'->'removed', '[]'::jsonb)) AS removed,
-              jsonb_array_length(COALESCE(cd.candidate->'changeSet'->'held', '[]'::jsonb)) AS held
-         FROM civic_data_promotions p
-         LEFT JOIN civic_data_candidates cd ON cd.id = p.current_version_id
-        WHERE p.record_class = 'MEETING'`,
-      [nowIso],
-    );
+  /* The figures that must agree: one snapshot. */
+  const snapshot = sql.transaction(
+    [sql.query(limit), sql.query(VERSIONS, [nowIso]), sql.query(ATTEMPTS, [nowIso]), sql.query(VERSION_READBACKS, [readbackLike]), sql.query(DAY, [nowIso])],
+    { readOnly: true, isolationLevel: "RepeatableRead" },
+  );
 
-    const attempts = await client.query(
-      `SELECT scope, candidate_id, state, failure_code, failure_detail, acquisition_succeeded, attempted_at FROM (
-          SELECT c.scope, c.id AS candidate_id, c.state, c.failure_code, left(c.failure_detail, 300) AS failure_detail, c.acquisition_succeeded, e.at AS attempted_at,
-                 row_number() OVER (PARTITION BY c.scope ORDER BY e.at DESC, c.id DESC) AS rn
-            FROM civic_data_candidates c
-            JOIN civic_data_candidate_events e ON e.candidate_id = c.id AND e.sequence = 1
-           WHERE c.record_class = 'MEETING'
-             AND c.retrieved_at > $1::timestamptz - interval '7 days') x
-        WHERE rn <= 5`,
-      [nowIso],
-    );
-
-    /*
-     * The latest changing version of each source serving readers, found by
-     * walking that source's versions newest first and stopping at the first
-     * change (measured 2026-09-23: 84 sources in ~140 ms on the server, where
-     * reading every version's change set took ~1.4 s). It is read under a
-     * savepoint: if it does not answer, the bodies still render, and each
-     * trail says its change history was not read rather than borrowing one.
-     */
-    await client.query("SAVEPOINT body_changes");
-    let changeRows: Record<string, unknown>[] | null;
-    try {
-      const changes = await client.query(
-        `WITH latest AS (
-           SELECT p.scope, l.id
-             FROM civic_data_promotions p
-             CROSS JOIN LATERAL (
-               SELECT x.id
-                 FROM civic_data_candidates x
-                WHERE x.record_class = 'MEETING' AND x.scope = p.scope AND x.state = 'PROMOTED'
-                  AND x.candidate->'changeSet'->>'outcome' = 'CHANGED'
-                ORDER BY x.retrieved_at DESC, x.id DESC
-                LIMIT 1) l
-            WHERE p.record_class = 'MEETING')
-         SELECT l.scope, l.id, c.retrieved_at,
-              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'added', '[]'::jsonb)) AS added,
-              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'changed', '[]'::jsonb)) AS changed,
-              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'removed', '[]'::jsonb)) AS removed,
-              jsonb_array_length(COALESCE(c.candidate->'changeSet'->'held', '[]'::jsonb)) AS held,
-              (SELECT count(*) FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'added', '[]'::jsonb)) e
-                WHERE e->>'key' LIKE 'meeting:%') AS meetings_added,
-              (SELECT jsonb_agg(x) FROM (
-                 SELECT jsonb_build_object('title', e->'after'->>'title', 'startsAt', e->'after'->>'startsAt') AS x
-                   FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'added', '[]'::jsonb)) e
-                  WHERE e->>'key' LIKE 'meeting:%'
-                  ORDER BY e->'after'->>'startsAt'
-                  LIMIT 3) s) AS named,
-              (SELECT count(*) FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'changed', '[]'::jsonb)) e
-                WHERE e->>'key' LIKE 'meeting:%') AS meetings_changed,
-              (SELECT jsonb_agg(x) FROM (
-                 SELECT jsonb_build_object('title', e->'after'->>'title', 'startsAt', e->'after'->>'startsAt') AS x
-                   FROM jsonb_array_elements(COALESCE(c.candidate->'changeSet'->'changed', '[]'::jsonb)) e
-                  WHERE e->>'key' LIKE 'meeting:%'
-                  ORDER BY e->'after'->>'startsAt'
-                  LIMIT 3) s) AS changed_named,
-              (SELECT min(ev.at) FROM civic_data_candidate_events ev
-                WHERE ev.candidate_id = l.id AND ev.detail LIKE 'Atomic pointer %') AS promoted_at,
-              (SELECT min(ev.at) FROM civic_data_candidate_events ev
-                WHERE ev.candidate_id = l.id AND ev.detail LIKE 'Every applicable GOOD check passed%') AS validated_at
-         FROM latest l JOIN civic_data_candidates c ON c.id = l.id`,
+  /*
+   * The latest changing version of each source serving readers, found by
+   * walking that source's versions newest first and stopping at the first
+   * change. It runs beside the snapshot: if it does not answer, the bodies
+   * still render, and each trail says its change history was not read rather
+   * than borrowing one. Its own readbacks come with it.
+   */
+  const history = sql
+    .transaction([sql.query(limit), sql.query(CHANGES, [readbackLike])], { readOnly: true })
+    .then((results) => results[1] as unknown as Rows)
+    .catch((error: unknown) => {
+      console.error(
+        "[admin] body change history not read",
+        error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error,
       );
-      changeRows = changes.rows;
-      await client.query("RELEASE SAVEPOINT body_changes");
-    } catch (error) {
-      await client.query("ROLLBACK TO SAVEPOINT body_changes");
-      console.error("[admin] body change history not read", error instanceof Error ? `${error.name}: ${error.message.replace(/postgres(ql)?:\/\/\S+/gi, "<connection>")}` : error);
-      changeRows = null;
-    }
+      return null;
+    });
 
-    const readbackIds = [...new Set([...versions.rows.map((r) => String(r.current_version_id)), ...(changeRows ?? []).map((r) => String(r.id))])];
-    const readbacks =
-      readbackIds.length === 0
-        ? { rows: [] as Record<string, unknown>[] }
-        : await client.query(
-            `SELECT candidate_id, at, detail FROM civic_data_candidate_events
-              WHERE candidate_id = ANY($1::text[]) AND detail LIKE $2`,
-            [readbackIds, `${READER_PROJECTION_READBACK_PREFIX}%`],
-          );
+  const [results, changeRows] = await Promise.all([snapshot, history]);
+  const [, versionRows, attemptRows, versionReadbackRows, dayRows] = results as unknown as Rows[];
+  return {
+    asOf: nowIso,
+    versions: versionsOf(versionRows),
+    attempts: attemptsOf(attemptRows),
+    readbacks: readbacksOf([
+      ...versionReadbacksOf(versionReadbackRows),
+      ...(changeRows ?? []).flatMap((r) =>
+        (Array.isArray(r.readbacks) ? (r.readbacks as Record<string, unknown>[]) : []).map((e) => ({ candidateId: String(r.id), at: e.at, detail: e.detail })),
+      ),
+    ]),
+    day: dayOf(dayRows),
+    changes: changeRows === null ? null : changesOf(changeRows),
+  };
+}
 
-    const day = await client.query(
-      `SELECT scope,
-              count(*) AS reads,
-              count(*) FILTER (WHERE acquisition_succeeded) AS got_in,
-              count(*) FILTER (WHERE state = 'PROMOTED') AS versions,
-              count(*) FILTER (WHERE state = 'PROMOTED' AND candidate->'changeSet'->>'outcome' = 'CHANGED') AS changed_versions,
-              count(*) FILTER (WHERE state = 'CANNOT_TELL') AS cannot_tell,
-              COALESCE(sum(jsonb_array_length(COALESCE(candidate->'changeSet'->'added', '[]'::jsonb))) FILTER (WHERE state = 'PROMOTED'), 0) AS added,
-              COALESCE(sum(jsonb_array_length(COALESCE(candidate->'changeSet'->'changed', '[]'::jsonb))) FILTER (WHERE state = 'PROMOTED'), 0) AS changed,
-              COALESCE(sum(jsonb_array_length(COALESCE(candidate->'changeSet'->'removed', '[]'::jsonb))) FILTER (WHERE state = 'PROMOTED'), 0) AS removed
-         FROM civic_data_candidates
-        WHERE record_class = 'MEETING'
-          AND retrieved_at > $1::timestamptz - interval '24 hours'
-        GROUP BY scope`,
-      [nowIso],
-    );
-
-    await client.query("ROLLBACK");
-
-    return {
-      asOf: nowIso,
-      versions: versions.rows.map((r) => ({
-        scope: String(r.scope),
-        versionId: String(r.current_version_id),
-        promotedAt: iso(r.promoted_at),
-        meetings: int(r.meetings),
-        fresh: intOrNull(r.fresh),
-        carried: intOrNull(r.carried),
-        docs: int(r.docs),
-        noAgendaLink: int(r.no_agenda),
-        noAgendaAhead: int(r.no_agenda_ahead),
-        upcoming: int(r.upcoming),
-        furthestAhead: isoOrNull(r.furthest),
-        bodyName: textOrNull(r.body_name),
-        jurisdiction: textOrNull(r.jurisdiction),
-        outcome: r.outcome === "CHANGED" || r.outcome === "UNCHANGED" ? r.outcome : null,
-        added: int(r.added),
-        changed: int(r.changed),
-        removed: int(r.removed),
-        held: int(r.held),
-      })),
-      attempts: attempts.rows.map((r) => ({
-        scope: String(r.scope),
-        candidateId: String(r.candidate_id),
-        state: String(r.state),
-        failureCode: textOrNull(r.failure_code),
-        failureDetail: textOrNull(r.failure_detail),
-        acquisitionSucceeded: r.acquisition_succeeded === true,
-        attemptedAt: iso(r.attempted_at),
-      })),
-      /* A readback event that does not parse as the V2 receipt proves nothing
-         about the version, so it is dropped rather than read as a pass. */
-      readbacks: readbacks.rows.flatMap((r) => {
-        const receipt = parseReaderProjectionReadback(String(r.detail ?? ""));
-        return receipt === null ? [] : [{ candidateId: String(r.candidate_id), at: iso(r.at), passed: receipt.status === "PASS" }];
-      }),
-      day: day.rows.map((r) => ({
-        scope: String(r.scope),
-        reads: int(r.reads),
-        gotIn: int(r.got_in),
-        versions: int(r.versions),
-        changedVersions: int(r.changed_versions),
-        cannotTell: int(r.cannot_tell),
-        added: int(r.added),
-        changed: int(r.changed),
-        removed: int(r.removed),
-      })),
-      changes:
-        changeRows === null
-          ? null
-          : changeRows.map((r) => ({
-              scope: String(r.scope),
-              versionId: String(r.id),
-              retrievedAt: iso(r.retrieved_at),
-              promotedAt: isoOrNull(r.promoted_at),
-              validatedAt: isoOrNull(r.validated_at),
-              added: int(r.added),
-              changed: int(r.changed),
-              removed: int(r.removed),
-              held: int(r.held),
-              meetingsAdded: int(r.meetings_added),
-              named: meetingsOf(r.named),
-              meetingsChanged: int(r.meetings_changed),
-              changedNamed: meetingsOf(r.changed_named),
-            })),
-    };
-  } catch (error) {
-    await client.query("ROLLBACK").catch(() => undefined);
-    throw error;
-  } finally {
-    client.release();
-    await pool.end();
-  }
+/**
+ * Only what a body's standing is decided from: its current version, its last
+ * reads and the readback of the version it serves (WORKING, NEEDS ATTENTION,
+ * STUCK or NOT READ YET, and how many records readers can see). One snapshot,
+ * one round trip, the same statements as `readBodyStore`. It carries no day
+ * tally and no change history, and says so (`changes: null`); a view built
+ * from it has the same standing as one built from the whole read. The
+ * composer's preview reads this, on its first pick (Sean, 2026-09-24: a load
+ * over three seconds is not a win).
+ */
+export async function readBodyStanding(connection: string, nowIso: string): Promise<BodyStoreRead> {
+  const sql = neon(connection);
+  const results = await sql.transaction(
+    [
+      sql.query(`SET LOCAL statement_timeout = ${BODY_STORE_STATEMENT_TIMEOUT_MS}`),
+      sql.query(VERSIONS, [nowIso]),
+      sql.query(ATTEMPTS, [nowIso]),
+      sql.query(VERSION_READBACKS, [`${READER_PROJECTION_READBACK_PREFIX}%`]),
+    ],
+    { readOnly: true, isolationLevel: "RepeatableRead" },
+  );
+  const [, versionRows, attemptRows, versionReadbackRows] = results as unknown as Rows[];
+  return {
+    asOf: nowIso,
+    versions: versionsOf(versionRows),
+    attempts: attemptsOf(attemptRows),
+    readbacks: readbacksOf(versionReadbacksOf(versionReadbackRows)),
+    day: [],
+    changes: null,
+  };
 }

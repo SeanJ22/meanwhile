@@ -669,23 +669,58 @@ export const NJ_FILING_SOURCES = {
  * two-week-old draft of it — and a stale filing read as current is a claim about
  * who is running, which is the one class of claim this product cannot survive
  * getting wrong.
+ *
+ * **THE CLERK'S NAMING IS NOT A CONTRACT** (2026-09-24). The same document has
+ * been published as `-082126.pdf` (MMDDYY), `-9012026.pdf` (MDDYYYY) and, on
+ * 2026-09-18 at `/v/12/`, as plain `2026-general-candidates.pdf` with no stamp
+ * at all; the `/v/11/` URL now redirects to it. So a stamp of six, seven or
+ * eight digits is read as a date, and between two revisions of one document the
+ * clerk's own asset version (`/v/<n>/`, which the CMS advances and redirects
+ * forward on every revision) decides first, the date second.
  */
 export function newestFilingPdfs(html: string, origin: string): string[] {
   const hrefs = [...html.matchAll(/href="([^"]+\.pdf)"/gi)].map((m) => m[1]!);
-  const byStem = new Map<string, { url: string; stamp: string }>();
+  const byStem = new Map<string, { url: string; revision: FilingRevision }>();
   for (const href of hrefs) {
     const url = href.startsWith("http") ? href : new URL(href, origin).toString();
     const file = url.split("/").pop() ?? "";
-    const dm = /-(\d{6})\.pdf$/.exec(file);
-    const stem = file.replace(/-\d{6}\.pdf$/, "").replace(/\.pdf$/, "");
-    const stamp = dm?.[1] ?? "";
+    const stem = file.replace(/-\d{6,8}\.pdf$/, "").replace(/\.pdf$/, "");
+    const revision = filingRevision(url);
     const prev = byStem.get(stem);
-    /* MMDDYY sorts wrong across a year boundary; reorder to YYMMDD before comparing. */
-    const key = stamp ? stamp.slice(4) + stamp.slice(0, 4) : "";
-    const prevKey = prev?.stamp ? prev.stamp.slice(4) + prev.stamp.slice(0, 4) : "";
-    if (!prev || key > prevKey) byStem.set(stem, { url, stamp });
+    if (!prev || newerRevision(revision, prev.revision)) byStem.set(stem, { url, revision });
   }
   return [...byStem.values()].map((v) => v.url);
+}
+
+interface FilingRevision {
+  /** The clerk CMS's asset version from a `/v/<n>/` path segment, when there is one. */
+  readonly assetVersion: number | null;
+  /** The filename stamp as YYYYMMDD, when there is one. */
+  readonly date: string | null;
+}
+
+function filingRevision(url: string): FilingRevision {
+  const version = /\/v\/(\d+)\//.exec(url);
+  const stamp = /-(\d{6,8})\.pdf(?:$|[?#])/i.exec(url)?.[1] ?? null;
+  return { assetVersion: version ? Number(version[1]) : null, date: stamp ? stampDate(stamp) : null };
+}
+
+/** MMDDYY, MDDYYYY or MMDDYYYY as YYYYMMDD; anything else is no date. */
+function stampDate(stamp: string): string | null {
+  const [month, day, year] =
+    stamp.length === 6 ? [stamp.slice(0, 2), stamp.slice(2, 4), `20${stamp.slice(4)}`]
+    : stamp.length === 7 ? [`0${stamp.slice(0, 1)}`, stamp.slice(1, 3), stamp.slice(3)]
+    : [stamp.slice(0, 2), stamp.slice(2, 4), stamp.slice(4)];
+  const m = Number(month);
+  const d = Number(day);
+  return m >= 1 && m <= 12 && d >= 1 && d <= 31 ? `${year}${month}${day}` : null;
+}
+
+function newerRevision(candidate: FilingRevision, held: FilingRevision): boolean {
+  if (candidate.assetVersion !== null && held.assetVersion !== null && candidate.assetVersion !== held.assetVersion) {
+    return candidate.assetVersion > held.assetVersion;
+  }
+  return (candidate.date ?? "") > (held.date ?? "");
 }
 
 export interface MorrisCurrentFilingDocumentSet {
@@ -702,6 +737,22 @@ export interface MorrisCurrentFilingDocumentSet {
  * clerk's own stable document stems; revision/version path segments remain
  * intentionally unconstrained and are still selected by `newestFilingPdfs`.
  */
+/**
+ * One current document of a class. Two names for one document (the clerk wrote
+ * `2026-general-election-candidates-9012026.pdf` and then
+ * `2026-general-candidates.pdf`) are two stems to `newestFilingPdfs`, so the
+ * class picks its strictly newest revision here. When no revision is strictly
+ * newest, every tie is returned and the caller refuses the set rather than guess.
+ */
+function currentOfClass(urls: readonly string[]): string[] {
+  if (urls.length <= 1) return [...urls];
+  const ranked = urls.map((url) => ({ url, revision: filingRevision(url) }));
+  const newest = ranked.filter((row) =>
+    ranked.every((other) => other === row || newerRevision(row.revision, other.revision)),
+  );
+  return newest.length === 1 ? [newest[0]!.url] : [...urls];
+}
+
 export function morrisCurrentFilingDocumentSet(
   discoveredUrls: readonly string[],
 ): MorrisCurrentFilingDocumentSet {
@@ -714,13 +765,17 @@ export function morrisCurrentFilingDocumentSet(
       return false;
     }
   });
-  const general = eligible.filter((url) =>
-    /(?:^|\/)2026-general(?:-election)?-candidates-(?!.*school)[^/]*\.pdf(?:$|[?#])/i.test(url) &&
+  // The date stamp is optional: the clerk's 2026-09-18 revision is
+  // `2026-general-candidates.pdf`, and requiring `-<stamp>` froze this horizon
+  // on the 09-18 13:13Z list for six days (PUBLISHER_DOCUMENT_INVALID, 136
+  // refusals) while the clerk's own page linked the current one.
+  const general = currentOfClass(eligible.filter((url) =>
+    /(?:^|\/)2026-general(?:-election)?-candidates(?:-(?![^/]*school)[^/]*)?\.pdf(?:$|[?#])/i.test(url) &&
     !/general-school-candidates/i.test(url),
-  );
-  const school = eligible.filter((url) =>
-    /(?:^|\/)2026-general-school-candidates-[^/]*\.pdf(?:$|[?#])/i.test(url),
-  );
+  ));
+  const school = currentOfClass(eligible.filter((url) =>
+    /(?:^|\/)2026-general-school-candidates(?:-[^/]*)?\.pdf(?:$|[?#])/i.test(url),
+  ));
   if (general.length !== 1 || school.length !== 1) {
     throw new Error(
       "MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE: " +

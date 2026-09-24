@@ -114,6 +114,12 @@ export interface RoutineDataStore {
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
   /** Set-oriented Reader door; production composition must not fan out per authority. */
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
+  /**
+   * The candidate exactly as a promotion proof reads it (`candidateProofView`).
+   * Optional: the Reader falls back to the whole read on a store without it.
+   */
+  readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
+  readonly readCandidateProofs?: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   /**
    * The pointer named, never carried: identity columns only. Reader-delivery
@@ -864,6 +870,18 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     });
   }
 
+  async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
+    const row = this.candidates.get(candidateId);
+    return row ? { ...structuredClone(row), candidate: candidateProofView(structuredClone(row.candidate)) } : null;
+  }
+
+  async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
+    return candidateIds.flatMap((candidateId) => {
+      const row = this.candidates.get(candidateId);
+      return row ? [{ candidateId, record: { ...structuredClone(row), candidate: candidateProofView(structuredClone(row.candidate)) } }] : [];
+    });
+  }
+
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
     const prior = this.candidates.get(candidateId);
     if (!prior) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
@@ -1067,6 +1085,70 @@ export function sittingStartsRead(db: RoutineClockDb, scope: string) {
 
 function sittingStartsFromRow(value: unknown): readonly string[] | undefined {
   return Array.isArray(value) ? value.filter((start): start is string => typeof start === "string") : undefined;
+}
+
+/**
+ * **A PROOF READS WHAT IT CHECKS** (2026-09-24).
+ *
+ * `promotionProofIssue` re-hashes a live candidate's read model and normalized
+ * payload and checks its identity, state, receipt and times. It never reads
+ * the candidate's change set, civic records or identity set, and those were
+ * most of the bytes a cold proof moved. A trusted-LKG import is read whole:
+ * its evidence binds the SHA-256 of the complete candidate envelope and
+ * re-derives its records and change set. The identity column is outside the
+ * envelope and no proof reads it. The Postgres store narrows server-side; the
+ * memory store through this twin.
+ */
+export const CANDIDATE_PROOF_OMITTED = {
+  unlessImported: ["changeSet", "civicRecords", "identities"],
+} as const;
+
+for (const field of CANDIDATE_PROOF_OMITTED.unlessImported) {
+  // The names are spliced into SQL as literals, so they stay plain identifiers.
+  if (!/^[A-Za-z]+$/.test(field)) throw new Error(`CANDIDATE_PROOF_FIELD_INVALID:${field}`);
+}
+
+export function candidateProofView(candidate: RoutineCandidate): RoutineCandidate {
+  if (Object.hasOwn(candidate, "bootstrapImport")) return candidate;
+  const omitted = new Set<string>(CANDIDATE_PROOF_OMITTED.unlessImported);
+  return Object.fromEntries(
+    Object.entries(candidate).filter(([key]) => !omitted.has(key)),
+  ) as unknown as RoutineCandidate;
+}
+
+/** `candidateProofView`, built by Postgres, with the row columns a proof reads. The identity column never leaves. */
+export function candidateProofRead(db: RoutineClockDb, candidateIds: readonly string[]) {
+  const column = civicDataCandidates.candidate;
+  const unlessImported = CANDIDATE_PROOF_OMITTED.unlessImported.map((field) => sql.raw(` - '${field}'`));
+  return db
+    .select({
+      id: civicDataCandidates.id,
+      candidate: sql`case when ${column} ? 'bootstrapImport'
+        then ${column}
+        else ${column}${sql.join(unlessImported, sql``)} end`.mapWith(civicDataCandidates.candidate),
+      state: civicDataCandidates.state,
+      acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
+      validationReceipt: civicDataCandidates.validationReceipt,
+      promotedVersionId: civicDataCandidates.promotedVersionId,
+      lastKnownGoodVersionId: civicDataCandidates.lastKnownGoodVersionId,
+      failureCode: civicDataCandidates.failureCode,
+      failureDetail: civicDataCandidates.failureDetail,
+    })
+    .from(civicDataCandidates)
+    .where(inArray(civicDataCandidates.id, [...candidateIds]));
+}
+
+function candidateProofRowToRecord(row: Awaited<ReturnType<typeof candidateProofRead>>[number]): CandidateVersionRecord {
+  return {
+    candidate: row.candidate as RoutineCandidate,
+    state: row.state as CandidateState,
+    acquisitionSucceeded: row.acquisitionSucceeded,
+    receipt: row.validationReceipt as ValidationReceipt | null,
+    promotedVersion: row.promotedVersionId,
+    lastKnownGoodVersion: row.lastKnownGoodVersionId,
+    failureCode: row.failureCode,
+    failureDetail: row.failureDetail,
+  };
 }
 
 /** The clock's pointed-candidate read: every row field, the candidate as its narrowed view. */
@@ -1537,6 +1619,17 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidateIds.length === 0) return [];
     const rows = await this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...candidateIds]));
     return rows.map((row) => ({ candidateId: row.id, record: rowToCandidate(row) }));
+  }
+
+  async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
+    const [row] = await candidateProofRead(this.db, [candidateId]);
+    return row ? candidateProofRowToRecord(row) : null;
+  }
+
+  async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
+    if (candidateIds.length === 0) return [];
+    const rows = await candidateProofRead(this.db, candidateIds);
+    return rows.map((row) => ({ candidateId: row.id, record: candidateProofRowToRecord(row) }));
   }
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {

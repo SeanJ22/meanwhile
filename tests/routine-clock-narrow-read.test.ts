@@ -7,7 +7,10 @@ import { drizzle } from "drizzle-orm/neon-http";
 
 import * as schema from "../lib/db/schema.ts";
 import {
+  CANDIDATE_PROOF_OMITTED,
   MemoryRoutineDataStore,
+  candidateProofRead,
+  candidateProofView,
   proofConsistentSuccess,
   ROUTINE_CLOCK_CANDIDATE_FIELDS,
   routineClockCandidateRead,
@@ -18,6 +21,7 @@ import {
   type RoutineClockRecord,
 } from "../lib/civic-data/store.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import {
   VALIDATION_CHECKS,
   sourceProjectionEvidence,
@@ -276,4 +280,63 @@ test("a MEETING pointer's sitting starts are built in Postgres; the promoted pay
   const observed = routineClockPointedObservedRead(drizzle.mock({ schema }), "MEETING", "source:x:body:y").toSQL().sql;
   assert.doesNotMatch(observed.slice(0, observed.indexOf(" from ")), DATASET);
   assert.match(observed, /"civic_data_candidate_events"\."sequence" = \$\d/);
+});
+
+test("a live candidate's proof reads neither its identity set nor its change set and records, and decides the same", async () => {
+  const store = new MemoryRoutineDataStore();
+  const value = candidate("proof-view", {
+    changeSet: { outcome: "CHANGED", added: [{ key: "k", after: { amount: 1 } }], changed: [], removed: [], held: [] },
+    civicRecords: [{ key: "k", record: { amount: 1 } }],
+  } as unknown as Partial<RoutineCandidate>);
+  await store.create({ ...promoted(value), state: "FETCHED", receipt: null, promotedVersion: null, lastKnownGoodVersion: null }, {
+    candidateId: value.id,
+    sequence: 1,
+    state: "FETCHED",
+    at: value.retrieval.retrievedAt,
+    detail: "persisted acquisition",
+  });
+  await store.transition(value.id, "NORMALIZED", value.retrieval.retrievedAt, "persisted normalization");
+  const receipt = receiptFor(value);
+  await store.transition(value.id, "VALIDATED", value.retrieval.retrievedAt, "persisted validation", receipt);
+  await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
+  const pointer = await store.readPromotion(value.recordClass, value.scope);
+  assert.ok(pointer);
+  const whole = await store.readCandidate(value.id);
+  const narrowed = await store.readCandidateProof(value.id);
+  assert.ok(whole && narrowed);
+  for (const field of ["identities", "changeSet", "civicRecords"]) {
+    assert.equal(Object.hasOwn(whole.candidate, field), true, `the whole row carries ${field}`);
+    assert.equal(Object.hasOwn(narrowed.candidate, field), false, `the proof never reads ${field}`);
+  }
+  assert.deepEqual(candidateProofView(whole.candidate), narrowed.candidate);
+  const decide = (record: CandidateVersionRecord) => promotionProofIssue(value.recordClass, value.scope, pointer, record);
+  assert.equal(decide(narrowed), null);
+  assert.equal(decide(whole), null);
+  const tampers: readonly ((record: CandidateVersionRecord) => CandidateVersionRecord)[] = [
+    (record) => ({ ...record, candidate: { ...record.candidate, readModel: { tampered: true } } }),
+    (record) => ({ ...record, candidate: { ...record.candidate, normalizedPayload: { tampered: true } } }),
+    (record) => ({ ...record, candidate: { ...record.candidate, id: "cv-other" } }),
+    (record) => ({ ...record, receipt: receiptFor(value, "FAIL") }),
+  ];
+  for (const tamper of tampers) {
+    const issue = decide(tamper(whole));
+    assert.ok(issue, "the whole row refuses the tamper");
+    assert.equal(decide(tamper(narrowed)), issue, "the narrowed row refuses it the same way");
+  }
+  const [batch] = await store.readCandidateProofs([value.id, "cv-missing"]);
+  assert.deepEqual(batch, { candidateId: value.id, record: narrowed });
+  const read = await readPromotedCivicData(value.recordClass, value.scope, { store, bypassCache: true, now: "2026-09-08T13:00:00.000Z" });
+  assert.equal(read.kind, "PROMOTED");
+});
+
+test("the proof view is built in Postgres; the identity column and a live row's change set, records and identities never leave", () => {
+  const text = candidateProofRead(drizzle.mock({ schema }), ["cv-example"]).toSQL().sql;
+  const select = text.slice(0, text.indexOf(" from \"civic_data_candidates\""));
+  assert.match(select, /case when "candidate" \? 'bootstrapImport'\s+then "candidate"\s+else "candidate" - 'changeSet' - 'civicRecords' - 'identities' end/);
+  assert.doesNotMatch(select, /"identity"/, "the identity column is never selected");
+  assert.doesNotMatch(select, /select "candidate"|, "candidate",/, "the whole candidate column is never selected bare");
+  for (const column of ["state", "acquisition_succeeded", "validation_receipt", "promoted_version_id", "last_known_good_version_id"]) {
+    assert.match(select, new RegExp(`"${column}"`), `the proof still reads ${column}`);
+  }
+  assert.deepEqual(CANDIDATE_PROOF_OMITTED, { unlessImported: ["changeSet", "civicRecords", "identities"] });
 });

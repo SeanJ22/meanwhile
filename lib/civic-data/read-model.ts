@@ -34,6 +34,18 @@ function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null
     : null;
 }
 
+/**
+ * The pointed candidate as its proof reads it (`candidateProofView`); a store
+ * without the narrowed door is read whole. A predecessor stays a whole read:
+ * a re-attestation's evidence re-derives its civic records.
+ */
+function readProofCandidate(
+  store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readCandidateProof">>,
+  versionId: string,
+): Promise<CandidateVersionRecord | null> {
+  return typeof store.readCandidateProof === "function" ? store.readCandidateProof(versionId) : store.readCandidate(versionId);
+}
+
 function durableProjectionHash(value: unknown): string | null {
   try {
     const encoded = JSON.stringify(value);
@@ -105,7 +117,7 @@ export type CivicDataReadStore = Pick<
 export type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate" | "readPromotions" | "readCandidates"
-> & Partial<Pick<RoutineDataStore, "readPromotionIdentities">>;
+> & Partial<Pick<RoutineDataStore, "readPromotionIdentities" | "readCandidateProof" | "readCandidateProofs">>;
 
 export interface PromotedCivicDataReadOptions {
   /** Deterministic store injection for tests and bounded readbacks. */
@@ -418,7 +430,7 @@ async function loadPromotedCivicData<T>(
         return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
       }
     }
-    const candidate = await store.readCandidate(projection.versionId);
+    const candidate = await readProofCandidate(store, projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
     const predecessor = predecessorVersionId !== null
       ? await store.readCandidate(predecessorVersionId)
@@ -572,7 +584,9 @@ export async function readPromotedCivicDataBatch<T>(
     let candidates: readonly CandidateVersionReadback[] = [];
     if (candidateIds.length > 0) {
       try {
-        candidates = await store.readCandidates(candidateIds);
+        candidates = typeof store.readCandidateProofs === "function"
+          ? await store.readCandidateProofs(candidateIds)
+          : await store.readCandidates(candidateIds);
       } catch (error) {
         for (const scope of misses) {
           const projection = projectionsByScope.get(scope)?.[0] ?? null;
@@ -791,7 +805,7 @@ export async function readPinnedPromotedCivicDataBatch<T>(
     let predecessor: CandidateVersionRecord | null = null;
     try {
       store ??= new PostgresRoutineDataStore();
-      candidate = await store.readCandidate(pin.versionId);
+      candidate = await readProofCandidate(store, pin.versionId);
       const moved = new RegExp(`^Atomic pointer ${escapeRegExp(key)} moved from \\S+ to ${escapeRegExp(pin.versionId)}\\.$`);
       promotions = candidate === null
         ? []

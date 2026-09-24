@@ -156,6 +156,10 @@ jobs:
       - name: Types (fresh checkout, no build)
         if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'types'
         timeout-minutes: 10
+        env:
+          # The same whole-program check as the build's, measured at 1.79 GB on
+          # main against the runner's ~2 GB default heap: the Build step's limit.
+          NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm exec tsc --noEmit
       - name: Governance ledger and its generated views
         if: always() && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft') && matrix.group == 'governance'
@@ -228,6 +232,11 @@ jobs:
         if: needs.admission.outputs.tier == 'yes'
         env:
           NEXT_PRIVATE_STANDALONE: ${{ matrix.mode == 'standalone' && 'true' || '' }}
+          # Next's type check of the whole program ran out of heap here at the
+          # runner's ~2 GB default (#378, 2026-09-23; tsc alone peaks near
+          # 1.8 GB on main). The deploy build gets the same heap in netlify.toml,
+          # so this step stays a rehearsal of it.
+          NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm run build
       - name: Bundle-scanning checks (need the build above)
         if: matrix.mode == 'default' && needs.admission.outputs.tier == 'yes'

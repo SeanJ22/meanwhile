@@ -743,6 +743,29 @@ export function pgAppendOnlyRepository<T>(
       return rows.map((r) => parseValue<T>(r.record, `${table} ${key}`));
     },
 
+    async readLatest(keys, projection) {
+      /* The inner statement picks each key's newest row on `(log_key, position)`; the outer one narrows only those rows,
+         with the projection `readRecentWhere` uses, so older walks and dropped fields never leave the database. */
+      const narrowed = recordProjectionSql(table, projection);
+      const unique = [...new Set(keys)];
+      const out = new Map<string, unknown>();
+      /* One statement per page of keys, so a response stays under the 64 MiB cap for the reason `read` pages. */
+      for (let at = 0; at < unique.length; at += APPEND_ONLY_LOG_READ_PAGE) {
+        const rows = (await run(
+          "readLatest",
+          "PAGE",
+          `SELECT latest.log_key, ${narrowed} AS record FROM (
+             SELECT DISTINCT ON (log_key) log_key, record FROM ${table}
+             WHERE log_key = ANY($1::text[])
+             ORDER BY log_key ASC, position DESC
+           ) AS latest`,
+          [unique.slice(at, at + APPEND_ONLY_LOG_READ_PAGE)],
+        )) as Record<string, unknown>[];
+        for (const r of rows) out.set(String(r.log_key), parseValue<unknown>(r.record, `${table} ${String(r.log_key)}`));
+      }
+      return out;
+    },
+
     async keys() {
       const rows = (await run(
         "keys",

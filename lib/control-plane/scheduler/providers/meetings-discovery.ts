@@ -122,8 +122,10 @@ export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: Meetings
  * executor walks the same governments first — the ones the owner's dispatch
  * materialized, then the gap ledger's backlog — and the paid lane may never
  * re-walk what the free lane read. So a paid Scout is admitted for one of these
- * only after the free walk read the government's own site and did not find its
- * meetings. Everything else is held by name, before any occurrence is opened.
+ * only after the free walk had its turn and confirmed nothing, or when no site
+ * is recorded for the free walk to try (NO_SITE_TO_WALK). Everything else is
+ * held by name, before any occurrence is opened. An unread walk log holds too,
+ * so a failed read never opens the paid lane.
  *
  * Returns null for any other obligation, and for one the paid lane may take.
  */
@@ -136,7 +138,7 @@ export function paidDiscoveryHold(
   const parsed = parseMeetingsDiscoveryId(obligationId);
   if (parsed === null) return null;
   const outcome = walks.latestFor(parsed.jurisdictionId);
-  if (outcome === "WALKED_NOT_FOUND") return null;
+  if (outcome === "WALKED_NOT_FOUND" || outcome === "NO_SITE_TO_WALK") return null;
   const why =
     outcome === "FOUND"
       ? "the free discovery walk already found this government's meetings, and the paid lane never re-walks what the free lane read"
@@ -144,6 +146,57 @@ export function paidDiscoveryHold(
         ? "the free discovery walk has not reached this government yet; it goes first, and the paid lane takes over only where it read the site and found nothing"
         : `the free discovery walk's record could not be read (${walks.source}), so the paid lane waits rather than risk re-walking what the free lane read`;
   return { code: FREE_WALK_FIRST, why };
+}
+
+/**
+ * The needs the owner's dispatch materialized, each with the promoted registry
+ * it derives from. There is one registry reading per state, by the gap
+ * ledger's own derivation (`meetingsDiscoveryNeeds`), never a second list.
+ *
+ * The provider emits its obligations from these. The runner hands the same
+ * needs to the free walk, which goes first on dispatched governments. The
+ * committed ledger the walk otherwise reads is a snapshot that may not hold
+ * them, for example a state promoted after it was built.
+ *
+ * An id is left out when the registry no longer records its government, or
+ * when its basis moved: the row leaves the corpus and its provider's
+ * retirement judges it. A state whose registry cannot be read is named, and
+ * none of its governments are guessed at.
+ */
+export function materializedDiscoveryNeeds(
+  ids: Iterable<string>,
+  registryFor: (stateCode: string) => JurisdictionRegistry = requiredOperationalJurisdictionRegistry,
+): {
+  readonly entries: readonly { readonly need: MeetingsDiscoveryNeed; readonly reg: JurisdictionRegistry }[];
+  readonly failures: readonly string[];
+} {
+  const entries: { need: MeetingsDiscoveryNeed; reg: JurisdictionRegistry }[] = [];
+  const failures: string[] = [];
+  const needsByState = new Map<string, { readonly reg: JurisdictionRegistry; readonly needs: Map<string, MeetingsDiscoveryNeed> } | null>();
+  for (const id of [...ids].sort()) {
+    const parsed = parseMeetingsDiscoveryId(id);
+    if (parsed === null) continue;
+    const stateCode = parsed.jurisdictionId.split(":")[0]?.toLowerCase() ?? "";
+    let held = needsByState.get(stateCode);
+    if (held === undefined) {
+      try {
+        const reg = registryFor(stateCode);
+        held = { reg, needs: new Map(meetingsDiscoveryNeeds([reg]).map((n) => [n.jurisdictionId, n])) };
+      } catch (error) {
+        failures.push(
+          `the ${stateCode.toUpperCase()} jurisdiction registry could not be read for its materialized meetings discovery ` +
+            `(${error instanceof Error ? error.message : String(error)})`,
+        );
+        held = null;
+      }
+      needsByState.set(stateCode, held);
+    }
+    if (held === null) continue;
+    const need = held.needs.get(parsed.jurisdictionId);
+    if (need === undefined || MEETINGS_DISCOVERY_ROUTE[need.basis] !== parsed.routeId) continue;
+    entries.push({ need, reg: held.reg });
+  }
+  return { entries, failures };
 }
 
 export interface MeetingsDiscoveryInput {
@@ -172,36 +225,16 @@ export function meetingsDiscoveryProvider(input: MeetingsDiscoveryInput = {}): O
           emptyReason: null,
         };
       }
-      const needsByState = new Map<string, { readonly reg: JurisdictionRegistry; readonly needs: Map<string, MeetingsDiscoveryNeed> } | null>();
-      for (const id of [...materialized.ids].sort()) {
-        const parsed = parseMeetingsDiscoveryId(id);
-        if (parsed === null) continue;
-        const stateCode = parsed.jurisdictionId.split(":")[0]?.toLowerCase() ?? "";
-        let held = needsByState.get(stateCode);
-        if (held === undefined) {
-          try {
-            const reg = requiredOperationalJurisdictionRegistry(stateCode);
-            held = { reg, needs: new Map(meetingsDiscoveryNeeds([reg]).map((n) => [n.jurisdictionId, n])) };
-          } catch (error) {
-            failures.push(
-              `the ${stateCode.toUpperCase()} jurisdiction registry could not be read for its materialized meetings discovery ` +
-                `(${error instanceof Error ? error.message : String(error)})`,
-            );
-            held = null;
-          }
-          needsByState.set(stateCode, held);
-        }
-        if (held === null) continue;
-        const need = held.needs.get(parsed.jurisdictionId);
-        /* A need the registry no longer records, or whose basis moved, is not emitted: the row leaves the corpus and its provider's retirement judges it. */
-        if (need === undefined || MEETINGS_DISCOVERY_ROUTE[need.basis] !== parsed.routeId) continue;
+      const derived = materializedDiscoveryNeeds(materialized.ids);
+      failures.push(...derived.failures);
+      for (const { need, reg } of derived.entries) {
         records.push({
           recordClass: MEETINGS_DISCOVERY_RECORD_CLASS,
           subjectId: need.jurisdictionId,
           readerImpactAt: null,
           observedChangeRateHours: null,
           lastWorkedAt: null,
-          routes: [meetingsDiscoveryRoute(held.reg, need)],
+          routes: [meetingsDiscoveryRoute(reg, need)],
         });
       }
       return {

@@ -423,6 +423,16 @@ export interface AppendOnlyRepository<T> {
   readAll(): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
   readRecent(key: string, limit: number): Promise<readonly T[]>;
+  /**
+   * The newest record under each of `keys`, narrowed to `projection` by the
+   * store as `readRecentWhere` narrows, by key. A key with no record is absent.
+   * It is one batched read: one statement per page of keys, never one per key.
+   * Only the newest record's kept fields cross the wire, so a caller that needs
+   * a few fields of many governments' latest walks does not download the walks.
+   * The records are narrowed, so they are `unknown`: a caller validates what it
+   * reads.
+   */
+  readLatest(keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>>;
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
 }

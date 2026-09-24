@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -197,6 +197,44 @@ test("PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a rea
     assert.equal(exhausted.effectiveExecutableSha, null);
     assert.equal(exhausted.walkExhausted, true);
     assert.equal(exhausted.verdict, "CANNOT_TELL");
+  } finally {
+    rmSync(dir, { recursive: true, force: true, maxRetries: 3 });
+  }
+});
+
+test("2026-09-23: the read is bounded — a spent budget asks git nothing and reads CANNOT_TELL; the walk reads a diff only when judged", () => {
+  const dir = mkdtempSync(join(tmpdir(), "wtp-code-identity-budget-"));
+  try {
+    git(dir, ["init", "--quiet"]);
+    git(dir, ["symbolic-ref", "HEAD", "refs/heads/main"]);
+    git(dir, ["config", "user.email", "prdy@example.invalid"]);
+    git(dir, ["config", "user.name", "code identity test"]);
+    git(dir, ["config", "commit.gpgsign", "false"]);
+    commit(dir, "lib/a.ts", "root");
+    const executable = commit(dir, "lib/b.ts", "shipping change");
+    const observer = commit(dir, "docs/status-ledger.md", "status ledger");
+    const now = "2026-09-23T17:43:29.000Z";
+
+    const spent = readCodeIdentity({ cwd: dir, runnerTestedSha: executable, now, budgetMs: 0 });
+    assert.equal(spent.rawMainSha, null, "no ref was read");
+    assert.equal(spent.verdict, "CANNOT_TELL", "an unasked question is never read as current");
+
+    const covered = readCodeIdentity({ cwd: dir, runnerTestedSha: executable, now, budgetMs: 30_000 });
+    assert.equal(covered.verdict, "CONSISTENT", "a budget that covers the read changes nothing");
+    assert.equal(covered.effectiveExecutableSha, executable);
+
+    /* Diffs are read when first judged, not up front: with git gone after the walk returns, the unread one is unanswerable. */
+    const walk = walkFirstParent(observer, dir, 3);
+    assert.deepEqual(walk.map((c) => c.sha).slice(0, 2), [observer, executable]);
+    const first = walk[0]!.changed;
+    assert.deepEqual(first, ["docs/status-ledger.md"]);
+    renameSync(join(dir, ".git"), join(dir, ".git-away"));
+    try {
+      assert.equal(walk[1]!.changed, null, "read on first access, after the walk had returned");
+      assert.equal(walk[0]!.changed, first, "and a read diff is kept, not asked again");
+    } finally {
+      renameSync(join(dir, ".git-away"), join(dir, ".git"));
+    }
   } finally {
     rmSync(dir, { recursive: true, force: true, maxRetries: 3 });
   }

@@ -10,7 +10,6 @@ import {
 import { readPromotedCivicData, type CivicDataReadStore } from "../civic-data/read-model.ts";
 import type { ManualSuccessorCandidate } from "../civic-data/manual-prior-authority.ts";
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-data/source-authority.ts";
-import { isTrustedLkgImportCandidate } from "../civic-data/trusted-lkg-import.ts";
 import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineCandidate, type RoutineRemovalEvidence } from "../civic-data/types.ts";
 import { registryMemberCitedUrls } from "./cited-urls.ts";
 import type { Body, Division, Registry } from "./types.ts";
@@ -658,29 +657,29 @@ export async function readRegistryRuntimePrior(
   if (readModelSha256 !== sha256(canonicalCivicDataJson(read.value))) {
     throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:POINTER_AND_CANDIDATE_DIFFER");
   }
-  /*
-   * The version imported at the 2026-09-14 authority transfer carries no
-   * source receipt: it was admitted, explicitly not source-authenticated, to
-   * preserve the Reader's last known good. Sean's decision (2026-09-23): the
-   * owner door builds on it, and the members a package leaves untouched carry
-   * forward on the import's own authority, recorded per member and re-proved
-   * against it by the plane. Refusing it instead refused every registry
-   * correction, since it is the only version production has held.
-   */
-  if (isTrustedLkgImportCandidate(candidate.candidate) && candidate.candidate.retrieval.manualSourceReceipt === undefined) {
-    return {
-      versionId: read.projection.versionId,
-      payload: read.value,
-      sourceReceipt: { contractVersion: 1, reviewedAt: candidate.candidate.retrieval.retrievedAt, reviewedBy: "trusted-lkg-import", sources: [] },
-      readModelSha256,
-    };
+  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt: registryBaseSourceReceipt(candidate.candidate), readModelSha256 };
+}
+
+/**
+ * The receipt a GOOD base lends its successor. The version imported at the
+ * 2026-09-14 authority transfer carries none: it was admitted, explicitly not
+ * source-authenticated, to preserve the Reader's last known good. Sean's
+ * decision (2026-09-23): the owner door builds on exactly that import, and the
+ * members a package leaves untouched carry forward on the import's own
+ * authority, recorded per member and re-proved against it by the plane.
+ * Refusing it refused every registry correction, since it is the only version
+ * production has held. Any other base without a GOOD receipt is still refused.
+ */
+export function registryBaseSourceReceipt(base: RoutineCandidate): ManualSourceSetReceipt {
+  if (base.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT" && base.retrieval.manualSourceReceipt === undefined) {
+    return { contractVersion: 1, reviewedAt: base.retrieval.retrievedAt, reviewedBy: "trusted-lkg-import", sources: [] };
   }
-  const sourceReceipt = candidate.candidate.retrieval.manualSourceReceipt;
+  const sourceReceipt = base.retrieval.manualSourceReceipt;
   const issue = manualSourceReceiptStructureIssue(sourceReceipt);
   if (!sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`REGISTRY_RUNTIME_BASE_PROOF_INVALID:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
   }
-  return { versionId: read.projection.versionId, payload: read.value, sourceReceipt, readModelSha256 };
+  return sourceReceipt;
 }
 
 export function registryRuntimeCandidate(

@@ -16,7 +16,8 @@ import {
   trustedLkgValidatorIds,
 } from "../lib/civic-data/trusted-lkg-import.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
-import type { RoutineCandidate, TrustedLkgImportEvidence } from "../lib/civic-data/types.ts";
+import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
+import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate, TrustedLkgImportEvidence } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -33,6 +34,7 @@ import {
   REGISTRY_RUNTIME_SCOPE,
   REGISTRY_RUNTIME_SOURCE_ID,
   readRegistryRuntimePrior,
+  registryBaseSourceReceipt,
   registryRuntimeCandidate,
   registryRuntimeProjectionIssues,
   type RegistryRuntimePackage,
@@ -378,8 +380,10 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
 /**
  * The registry production holds (2026-09-14): the transfer-time trusted import,
  * explicitly not source-authenticated, carrying both placeholder boards and New
- * Hampshire's raw Census name, shaped the way the retired importer shaped it
- * and admitted through the ordinary door into an empty pointer.
+ * Hampshire's raw Census name. Shaped the way the retired importer shaped it and
+ * validated by the real validator; the admission door itself is retired, so the
+ * validated record and its pointer are placed as retained history, exactly as
+ * the venue import fixture is.
  */
 async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
   const placeholders = frozenPlaceholders();
@@ -435,10 +439,34 @@ async function transferImportedRegistry(store: MemoryRoutineDataStore, at: strin
     candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(envelope),
     validatorIds: trustedLkgValidatorIds(envelope),
   };
-  const imported: RoutineCandidate = { ...envelope, id: trustedLkgCandidateId(evidence), bootstrapImport: evidence };
-  const admitted = await processRegisteredManualCandidate(store, "registry-runtime-bindings", imported, at);
-  assert.equal(admitted.candidate.state, "PROMOTED", JSON.stringify(admitted.candidate.receipt?.checks.filter((check) => check.verdict !== "PASS")));
-  return { imported, base, placeholders };
+  const unplaced: RoutineCandidate = { ...envelope, id: trustedLkgCandidateId(evidence), bootstrapImport: evidence };
+  const imported: RoutineCandidate = { ...unplaced, changeSet: candidateChangeSet(unplaced, null) };
+  const receiptOf = validateRoutineCandidate(imported, null, at).receipt;
+  assert.equal(receiptOf.decision, "GOOD", JSON.stringify(receiptOf.checks.filter((check) => check.verdict !== "PASS")));
+  const record: CandidateVersionRecord = {
+    candidate: imported,
+    state: "PROMOTED",
+    acquisitionSucceeded: true,
+    receipt: receiptOf,
+    promotedVersion: imported.id,
+    lastKnownGoodVersion: imported.id,
+    failureCode: null,
+    failureDetail: null,
+  };
+  const projection: PromotedProjection = {
+    key: `${imported.recordClass}:${imported.scope}`,
+    sourceId: imported.sourceId,
+    recordClass: imported.recordClass,
+    scope: imported.scope,
+    versionId: imported.id,
+    lastKnownGoodVersionId: imported.id,
+    promotedAt: at,
+    payload: base,
+    receipt: receiptOf,
+  };
+  assert.equal(promotionProofIssue(imported.recordClass, imported.scope, projection, record), null);
+  Object.assign(store, { candidates: new Map([[imported.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  return { imported, base, placeholders, record, projection };
 }
 
 /** A correction that re-reviews only the two placeholder divisions against the Census directory they cite. */
@@ -518,6 +546,23 @@ test("the owner door builds on the transfer-time import: untouched members keep 
   assert.deepEqual(secondChecks.filter((check) => check.verdict !== "PASS"), []);
 });
 
+test("the door accepts exactly the transfer import as a base without a receipt; any other receipt-less base is still refused", async () => {
+  const { record, projection } = await transferImportedRegistry(new MemoryRoutineDataStore(), T0);
+  assert.deepEqual(registryBaseSourceReceipt(record.candidate).sources, []);
+  const { bootstrapImport, ...withoutImport } = record.candidate;
+  assert.ok(bootstrapImport);
+  assert.throws(() => registryBaseSourceReceipt(withoutImport), /REGISTRY_RUNTIME_BASE_PROOF_INVALID:MANUAL_SOURCE_RECEIPT_INVALID/);
+  const reattested = { ...record.candidate, bootstrapImport: { ...bootstrapImport, kind: "TRUSTED_LKG_REATTESTATION" } } as unknown as RoutineCandidate;
+  assert.throws(() => registryBaseSourceReceipt(reattested), /REGISTRY_RUNTIME_BASE_PROOF_INVALID:MANUAL_SOURCE_RECEIPT_INVALID/);
+
+  // Through the real read: a pointer that no longer matches its candidate is never a base, whichever layer sees it first.
+  const moved = structuredClone(projection.payload) as RegistryRuntimeReadModel;
+  moved.registry.bodies = moved.registry.bodies.slice(1);
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, { ...projection, payload: moved }]]) });
+  await assert.rejects(readRegistryRuntimePrior(store, T1), /REGISTRY_RUNTIME_BASE_(?:PROOF_INVALID|UNAVAILABLE):/);
+});
+
 test("the plane refuses what the registry door does not prove: a changed carried member, an unexplained removal, a real board passed off as a placeholder", async () => {
   const store = new MemoryRoutineDataStore();
   const { imported, base, placeholders } = await transferImportedRegistry(store, T0);
@@ -545,7 +590,7 @@ test("the plane refuses what the registry door does not prove: a changed carried
   disguised.readModel.registry.bodies = disguised.readModel.registry.bodies.filter((body) => body.id !== realBoard.id);
   const disguisedCandidate: RoutineCandidate = {
     ...disguised,
-    removalEvidence: [...(next.removalEvidence ?? []), { key: `body:${realBoard.id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT", divisionOcdId: realBoard.ocdId! }]
+    removalEvidence: [...(next.removalEvidence ?? []), { key: `body:${realBoard.id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" as const, divisionOcdId: realBoard.ocdId! }]
       .sort((left, right) => left.key.localeCompare(right.key)),
   };
   assert.ok(codes(disguisedCandidate).includes("REMOVAL_EVIDENCE_MISMATCH"));

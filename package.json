@@ -263,6 +263,7 @@
     "reference:verify": "tsx scripts/reference-verify.mts",
     "regen": "tsx scripts/regen-check.mts",
     "registry:fixture": "tsx scripts/build-registry.ts",
+    "registry:placeholder-correction": "node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/registry-placeholder-correction.mts",
     "registry:promote": "node scripts/installed-runtime-command.mjs manual-promote --contract=registry-runtime-bindings",
     "release:freeze": "tsx scripts/release-freeze-gate.mts",
     "repo-map": "tsx scripts/repo-map.mts",

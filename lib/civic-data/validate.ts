@@ -14,6 +14,7 @@ import type {
   CandidateDecision,
   CandidateState,
   CandidateVersionRecord,
+  CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
   RoutineChangeSet,
@@ -138,7 +139,8 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
-  const validMeetingEvidence = new Map<string, (typeof evidence)[number]>();
+  // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;
   const currentMember = (key: string): unknown => {
@@ -149,6 +151,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   };
   for (const delta of removed.filter(({ key }) => key.startsWith("meeting:"))) {
     const row = evidenceByKey.get(delta.key)!;
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry placeholder removal cannot prove it.`);
+    }
     const before = object(delta.before);
     const meetingId = typeof before?.id === "string" ? before.id : null;
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
@@ -235,6 +240,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
+    }
     const before = object(delta.before);
     const documentId = typeof before?.id === "string" ? before.id : null;
     const meetingId = typeof before?.meetingId === "string" ? before.meetingId : null;

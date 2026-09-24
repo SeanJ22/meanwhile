@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 740,
-    "named": 7286,
+    "named": 7287,
     "dynamic": 28
   },
   "files": {
@@ -1351,6 +1351,7 @@
         "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
         "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
         "an agenda line with no recorded outcome says exactly that, never that nothing happened",
+        "an unreadable outcome store is named as our holding failure, never as 'no action'",
         "helpers quote without inventing: the tally sentence, the salient item, a sentence-safe quote"
       ],
       "dynamic": 0

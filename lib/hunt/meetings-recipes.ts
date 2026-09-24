@@ -295,6 +295,65 @@ export function recordRecipeOutcome(
   };
 }
 
+/** The publisher platform a confirmed vendor route belongs to; null for a government's own pages. */
+const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
+  ical: null,
+  "legistar-insite": "legistar",
+  "legistar-api": "legistar",
+  "civicplus-agendacenter": "civicplus",
+  "civicclerk-api": "civicclerk",
+  iqm2: "iqm2",
+  boardbook: "boardbook",
+};
+
+const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
+  ical: "a VCALENDAR with at least one VEVENT",
+  "legistar-insite": "a Legistar calendar page that publishes its calendar feed",
+  "legistar-api": "a Legistar events list whose rows carry EventId",
+  "civicplus-agendacenter": "an AgendaCenter page with at least one agenda or minutes document link",
+  "civicclerk-api": "a CivicClerk events list whose rows carry id",
+  iqm2: "an IQM2 calendar with at least one meeting row",
+  boardbook: "a BoardBook organization page with at least one meeting link",
+};
+
+/**
+ * A saved method from a route a SEARCH found and content confirmed: the query
+ * template that found it, with its identity slots, and the check that confirmed
+ * it. It is scoped to the state and government class it was proven in; the
+ * field manual widens it as it succeeds elsewhere.
+ */
+export function recipeFromSearchFind(input: {
+  readonly templateId: string;
+  readonly template: string;
+  readonly vendor: VerifiableVendor;
+  readonly need: MeetingsDiscoveryNeed;
+  readonly attemptId: string;
+}): MeetingsRecipe {
+  return {
+    formatVersion: 1,
+    recipeId: `search-${input.templateId}-${input.vendor}-${input.need.stateCode.toLowerCase()}-${input.need.govClass.toLowerCase()}`,
+    title: `Search "${input.template}", then confirm a ${input.vendor} route`,
+    missing: "the government's meetings route",
+    recordClass: "meetings",
+    bodyClass: input.need.govClass,
+    platform: VENDOR_PLATFORM[input.vendor],
+    state: input.need.stateCode.toLowerCase(),
+    precondition: null,
+    queryTemplates: [input.template],
+    navigation: [],
+    extractorId: input.vendor,
+    verification: VENDOR_VERIFICATION[input.vendor],
+    publisherTraits: [],
+    cost: { requests: 0, searchQueries: 1, usd: null },
+    successes: 0,
+    failures: 0,
+    lastSuccess: null,
+    lastFailure: null,
+    failedFor: [],
+    provenance: `learned from discovery attempt ${input.attemptId}`,
+  };
+}
+
 /** The field-manual entry a recipe is saved as. The newest observation replaces it whole. */
 export function recipeEntry(recipe: MeetingsRecipe, observedAt: string): FieldManualEntry {
   const latest = recipe.lastSuccess ?? recipe.lastFailure;

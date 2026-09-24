@@ -35,6 +35,8 @@
  */
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
+/* Re-exported so a cost reader keys on the one constant (2026-09-23). */
+export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
 /** The invariant, as a string a report can print verbatim. */
 export const COST_SCHEDULING_INVARIANT =

@@ -264,7 +264,7 @@ test("TIME, PASS: a walk cut short before any find is deferred, listed as cut sh
     });
     assert.deepEqual(pass.walked, [], label);
     assert.deepEqual(pass.deferred, ["az:t:cut", "az:u:later"], `${label}: the cut walk and the rest are deferred`);
-    assert.deepEqual(pass.cutShort, [{ jurisdictionId: "az:t:cut", requests: 1 }], label);
+    assert.deepEqual(pass.cutShort, [{ jurisdictionId: "az:t:cut", requests: 1, search: [] }], label);
     assert.deepEqual(await repos.discoveryAttempts.readRecent("az:t:cut", 5), [], `${label}: nothing is recorded as a reading; the need stays due`);
     assert.equal(pass.fieldManual.written, 0, `${label}: nothing is learned from a walk that concluded nothing`);
   }

@@ -114,6 +114,8 @@ export const ROLE_ONE_LINER: Record<WorkerRole, string> = {
   ADVERSARIAL_AUDITOR: "Tries to disprove a checked fact using independent evidence. If it survives, confidence goes up.",
   ENGINEERING: "Turns a proven, reusable method into durable code, proved in isolation and put up for review. It never merges anything itself.",
   RELEASE_ORCHESTRATOR: "Carries a release through the ordinary gates. It has never run here.",
+  DISCOVERY_SEARCH:
+    "Asks a search provider (Brave or Exa) where a government publishes its meetings. It opens nothing itself: every result is fetched with permission checked first and confirmed by its content. Its spend is counted apart from model spend.",
 };
 
 /** The group each role reports under, mirroring `FLEET_GROUPS` membership by name. */
@@ -126,6 +128,7 @@ export const ROLE_GROUP: Record<WorkerRole, FleetGroupKey | null> = {
   ADVERSARIAL_AUDITOR: "auditors",
   ENGINEERING: "engineers",
   RELEASE_ORCHESTRATOR: null,
+  DISCOVERY_SEARCH: null,
 };
 
 /** The card's own heading: one name, plural, and nothing else. */

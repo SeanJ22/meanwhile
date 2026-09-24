@@ -10,13 +10,17 @@
  *
  * ## The wall this climbs, and why it is not a wall
  *
- * A meeting with no venue is DROPPED. `lib/sources/ical/index.ts` says so in
- * its own words: an empty `LOCATION` falls through to the wiring row's
- * `venueMatch`, and with no `venueMatch` the row drops as `placeless` or
- * `unknownVenue`. That is the correct behaviour — a pin in the middle of New
- * Hampshire is a fabricated location, and pinning every board at the town
- * office because that is where boards usually meet is a guess about a specific
- * sitting dressed as a fact.
+ * A meeting with no reviewed venue is never PLACED. `lib/sources/ical/index.ts`
+ * says so in its own words: an empty `LOCATION` falls through to the wiring
+ * row's `venueMatch`, and with no `venueMatch` there is nothing to pin. That is
+ * the correct behaviour — a pin in the middle of New Hampshire is a fabricated
+ * location, and pinning every board at the town office because that is where
+ * boards usually meet is a guess about a specific sitting dressed as a fact.
+ *
+ * (Until the venue-gap class, 2026-09-23, such a sitting was also DROPPED. It
+ * is now published with no pin and its gap named, and still counted as
+ * `unknownVenue` — which is the count this hunt exists to drive to zero, one
+ * sourced venue at a time.)
  *
  * The consequence, though, was that **Sutton's eighteen bodies had a live
  * calendar carrying 1,312 events and not one meeting in this product.** Every

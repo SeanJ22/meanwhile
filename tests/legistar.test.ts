@@ -104,16 +104,49 @@ test("every meeting carries real provenance, and the org is the body not the ven
   }
 });
 
-test("a meeting with no known venue is dropped, never given an approximate pin", () => {
+/*
+ * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
+ * "a meeting with no known venue is dropped" and pinned `meetings.length === 0`.
+ * The drop was the defect: a sitting the county published was withheld because
+ * OUR venue table lacked a row, and the same rule, applied to an empty venue
+ * scope, failed Pima's whole partition from 2026-09-14. The owner's rule is that
+ * a missing or unreviewed place never suppresses a meeting. What this test
+ * still pins is the half that was always right: no approximate pin, ever.
+ */
+test("a meeting with no known venue is published with the county's own words, never given an approximate pin", () => {
   const invented: LegistarEvent = {
     ...EVENTS[0],
     EventId: 999_001,
     EventLocation: "Somewhere Nobody Has Mapped",
   };
 
-  const { meetings, drops } = normalizeWithDrops(wrap([invented]), NOW);
-  assert.equal(meetings.length, 0);
+  const { meetings, drops, accounting } = normalizeWithDrops(wrap([invented]), NOW);
+  assert.equal(meetings.length, 1, "the sitting is published, not withheld");
+  assert.equal(meetings[0].location, null, "no coordinates, so no pin");
+  assert.equal(meetings[0].online, undefined, "and never called online");
+  assert.deepEqual(meetings[0].venueGap, {
+    kind: "STATED_NOT_PLACED",
+    publishedText: "Somewhere Nobody Has Mapped",
+    publisher: "Pima County Clerk of the Board",
+  });
+  assert.equal(drops.unknownVenue, 1, "still counted, so the venue hunt sees the room");
+  assert.equal(accounting.dropped, 0, "counted and kept, never a drop");
+  assert.equal(accounting.outcome, "CONSERVED");
+});
+
+test("a meeting whose record states no location is published with the county's own gap", () => {
+  const blank: LegistarEvent = { ...EVENTS[0], EventId: 999_003, EventLocation: "  " };
+  const { meetings, drops, accounting } = normalizeWithDrops(wrap([blank]), NOW);
+  assert.equal(meetings.length, 1);
+  assert.equal(meetings[0].location, null);
+  assert.equal(meetings[0].online, undefined);
+  assert.deepEqual(meetings[0].venueGap, {
+    kind: "NOT_STATED_BY_PUBLISHER",
+    publishedText: null,
+    publisher: "Pima County Clerk of the Board",
+  });
   assert.equal(drops.unknownVenue, 1);
+  assert.equal(accounting.dropped, 0);
 });
 
 test("a virtual meeting is KEPT, with no place and no invented pin (D18)", () => {

@@ -1,5 +1,5 @@
 import { CURATED_PREFIX } from "../ocd/curated.ts";
-import type { OcdId } from "../sources/types.ts";
+import type { MeetingVenueGap, OcdId } from "../sources/types.ts";
 import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
 import { exactVenueMatchContentKey } from "./venue-record-identity.ts";
 
@@ -14,16 +14,31 @@ import { exactVenueMatchContentKey } from "./venue-record-identity.ts";
  * citation for the address and the geocoder call that produced the
  * coordinates, which is exactly what an automated writer would record.
  *
- * The contract stands regardless of who wrote the row: **an unknown venue
- * drops the meeting and counts the drop.** A pin in roughly the right place is
- * a fabricated citation wearing a map marker.
+ * The contract stands regardless of who wrote the row, and it has two halves
+ * (the venue-gap class, 2026-09-23):
+ *
+ * - **An unknown venue never places a meeting.** A pin in roughly the right
+ *   place is a fabricated citation wearing a map marker, so a sitting whose
+ *   place has no reviewed row here gets no coordinates and no pin.
+ * - **An unknown venue never suppresses a meeting, and never fails a
+ *   partition.** The sitting is published with `location: null` and its gap
+ *   named (`unplacedVenueGap` below: the publisher's own words for the place,
+ *   or the publisher's own silence), and the adapter still counts it as
+ *   `unknownVenue` — kept, not dropped — so the ingest report and the venue
+ *   hunt see every place still owed a reviewed row. The owner's rule, from the
+ *   Tucson Unified regression: *"Missing agenda text or location must never
+ *   suppress a meeting."*
  *
  * One source publishes no location string at all: Hyland OnBase's meeting list
  * has no location field anywhere (verified against both the list and the
  * ViewMeeting page). For that source the *meeting name* stands in as the raw
  * string, because it is the only observed text that distinguishes one venue
  * from another — the entry's `match` documents which published string it keys
- * on. Meetings whose name matches nothing drop as unknownVenue.
+ * on. That name is also the only thing that says a row is the wired body's
+ * sitting at all (the tenant lists other bodies' meetings too), so a name that
+ * matches nothing still drops as unknownVenue there: it is not an otherwise
+ * verified sitting of this body, and publishing it would attribute another
+ * body's meeting to this one.
  */
 export interface VenueEntry {
   /** Adapter name, e.g. "onbase". First key segment. */
@@ -62,8 +77,9 @@ export interface VenueEntry {
 /**
  * Location strings naming a real meeting with no physical place.
  *
- * Dropped like an unknown venue but counted separately — "there is nothing to
- * place" and "we could not place it" are different facts (D18).
+ * Kept as an online sitting (D18) and counted separately from an unknown
+ * venue — "there is nothing to place" and "we could not place it" are
+ * different facts.
  */
 export const PLACELESS_LOCATIONS = [
   "virtual meeting",
@@ -102,6 +118,38 @@ export function venueResolutionRecordId(
 export function isPlacelessLocation(raw: string): boolean {
   const key = venueKey(raw);
   return PLACELESS_LOCATIONS.some((p) => venueKey(p) === key);
+}
+
+/**
+ * **THE NAMED GAP FOR A SITTING KEPT WITHOUT A REVIEWED PLACE** — one
+ * construction for every adapter (the venue-gap class, 2026-09-23;
+ * `MeetingVenueGap` in `lib/sources/types.ts`, read by `lib/meetings/online.ts`).
+ *
+ * `stated` is the place exactly as the sitting's own record published it, in
+ * the words the adapter read (its location field, or the parts of it the
+ * publisher printed). Two readings, and only two:
+ *
+ * - words → `STATED_NOT_PLACED`: the publisher stated the place and the gap is
+ *   ours — no reviewed coordinates — so the words render as text, never a pin.
+ * - no words (null, empty, whitespace) → `NOT_STATED_BY_PUBLISHER`: the
+ *   record's place field is blank, and the gap is the publisher's.
+ *
+ * `publisher` is whose record it is (the wiring row's `publishingOrg`), the
+ * name the gap line cites. The caller sets it beside `location: null` and
+ * never beside `online`; a placeless string ("Virtual Meeting") is online
+ * (D18), not a venue gap, and is decided before this is reached. A route with
+ * no place field for the sitting at all (a dated archive, a name-keyed list)
+ * has nothing to quote and nothing blank to cite: it keeps our own
+ * place-not-recorded gap and does not call this.
+ */
+export function unplacedVenueGap(
+  stated: string | null | undefined,
+  publisher: string,
+): MeetingVenueGap {
+  const words = (stated ?? "").trim();
+  return words
+    ? { kind: "STATED_NOT_PLACED", publishedText: words, publisher }
+    : { kind: "NOT_STATED_BY_PUBLISHER", publishedText: null, publisher };
 }
 
 /** Initial adoption/node:test evidence; production reads `venue-resolutions`. */
@@ -1398,29 +1446,45 @@ export function currentVenueCache(): readonly VenueEntry[] {
 }
 
 /**
- * Resolve the full venue set an adapter scope is authorized to use.
+ * The reviewed venues an adapter scope may place sittings with — possibly none.
  *
  * The default projection is deliberately evaluated at property-access time:
  * production boot first reads the promoted pointer, while node:test may use
- * the explicit adoption seed above. An absent scope is a configuration/data
- * failure, not an empty venue table that may silently suppress every meeting.
+ * the explicit adoption seed above.
+ *
+ * **An empty scope is a real state, never an error** (the venue-gap class,
+ * 2026-09-23). This was `requiredVenueEntries`, and it threw
+ * `VENUE_RESOLUTIONS_MISSING` for a scope with no row, on the reasoning that an
+ * adapter handed zero venues would read them as zero meetings and silently
+ * suppress every sitting. The danger was real and the remedy was the danger:
+ * when the promoted table left out the three Legistar rows (`verifiedAt: null`),
+ * the throw failed every routine read of Pima County's Board of Supervisors
+ * (both Legistar routes) and Mesa's City Council from 2026-09-14 12:45Z, and
+ * readers were served the 14 September listing throughout. Failing the whole
+ * partition suppressed every sitting in it.
+ *
+ * The guarantee now lives where sittings are made, and it holds with an empty
+ * scope: the Legistar and InSite adapters read every client and tenant (none
+ * is skipped for want of a coordinate), a room with no reviewed row is
+ * published with no place and the publisher's words as its named gap
+ * (`unplacedVenueGap`), and each such sitting is counted as `unknownVenue` —
+ * kept, not dropped — so the unreviewed scope stays visible to the ingest
+ * report and the venue hunt. Nothing here can fail a partition for want of a
+ * venue. A projection that cannot be READ at all is a different failure, and it
+ * still fails closed in `currentCuratedReaderRecords`.
  */
-export function requiredVenueEntries(
+export function reviewedVenueEntries(
   sourceId: string,
   bodyOcdId: OcdId | null,
   tenant: string | null = null,
   projection: readonly VenueEntry[] = currentVenueCache(),
 ): VenueEntry[] {
   const scope = venueScope(bodyOcdId, tenant);
-  const matches = projection.filter(
+  return projection.filter(
     (venue) =>
       venue.sourceId === sourceId &&
       venueScope(venue.bodyOcdId, venue.tenant ?? null) === scope,
   );
-  if (matches.length === 0) {
-    throw new Error(`VENUE_RESOLUTIONS_MISSING:${sourceId}:${scope}`);
-  }
-  return matches;
 }
 
 /**
@@ -1476,7 +1540,9 @@ export function resolveVenue(
  * upcoming meetings resolve to — and it deliberately returns `undefined` when
  * a body has more than one, because "they usually meet at the complex" is a
  * guess about where a specific sitting was held and the reader would act on
- * it. Ambiguity drops the row as `unknownVenue` and it shows in the counts.
+ * it. Ambiguity (or no row at all) leaves the archived sitting unplaced: it is
+ * still published, with our own place-not-recorded gap, and counted as
+ * `unknownVenue` so it shows in the counts (the venue-gap class, 2026-09-23).
  */
 export function soleVenueForBody(
   sourceId: string,

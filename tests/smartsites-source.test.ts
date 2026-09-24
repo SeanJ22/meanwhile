@@ -86,14 +86,31 @@ test("every sitting the disallowed tenant carried is on the permitted calendar, 
   assert.equal(boardEvents.length, 13);
 });
 
-test("a sitting whose own event states no place is dropped and counted, never placed by the standing sentence", () => {
+/*
+ * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
+ * "a sitting whose own event states no place is dropped and counted" and pinned
+ * that only the Virtual sitting survived. The owner's rule is that a missing
+ * place never suppresses a verified meeting. The twelve sittings are now
+ * published with no pin and the district's own silence as their named gap; the
+ * half that stays pinned is that the standing sentence never places them.
+ */
+test("a sitting whose own event states no place is published with the district's gap, counted, never placed by the standing sentence", () => {
   const source = makeSmartSitesSource([WIRING]);
   const { meetings, drops, accounting } = source.normalizeWithDrops(RAW, NOW);
   assert.equal(accounting.outcome, "CONSERVED");
-  // Only the one sitting whose own title says Virtual is placed.
-  assert.deepEqual(meetings.map((m) => m.id), ["smartsites:susd12:1254002"]);
-  assert.deepEqual(meetings[0].online, { label: "Virtual", joinUrl: null });
-  assert.equal(Date.parse(meetings[0].startsAt), Date.parse("2026-08-04T11:30:00-07:00"), "wall clock read in the body's zone");
-  assert.equal(drops.unknownVenue, 12, "twelve Governing Board events publish an empty address");
+  assert.equal(accounting.dropped, 32 - 13, "only the calendar's other bodies and events are set aside");
+  assert.equal(meetings.length, 13, "every Governing Board sitting on the calendar is published");
+  // The one sitting whose own title says Virtual is online, as before.
+  const virtual = meetings.find((m) => m.id === "smartsites:susd12:1254002")!;
+  assert.deepEqual(virtual.online, { label: "Virtual", joinUrl: null });
+  assert.equal(Date.parse(virtual.startsAt), Date.parse("2026-08-04T11:30:00-07:00"), "wall clock read in the body's zone");
+  const unplaced = meetings.filter((m) => m.id !== virtual.id);
+  assert.equal(unplaced.length, 12);
+  for (const m of unplaced) {
+    assert.equal(m.location, null, "never placed by the standing sentence");
+    assert.equal(m.online, undefined);
+    assert.deepEqual(m.venueGap, { kind: "NOT_STATED_BY_PUBLISHER", publishedText: null, publisher: WIRING.publishingOrg });
+  }
+  assert.equal(drops.unknownVenue, 12, "twelve Governing Board events publish an empty address, each counted");
   assert.equal(drops.notConfigured, 32 - 13, "the other bodies and events sharing the district calendar");
 });

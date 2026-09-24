@@ -6,7 +6,6 @@
  * which is what the ruling asks for rather than what it forbids. Verified
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
-import { haversineKm } from "../../geo/distance.ts";
 import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
@@ -17,6 +16,7 @@ import {
   type AgendaItem,
   type MeetingBody,
 } from "../../meetings/attribution.ts";
+import { unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import {
   accountedNormalize,
@@ -34,6 +34,7 @@ import {
   findVenue,
   isPlaceless,
   LEGISTAR_CLIENTS,
+  venuesWithinRadius,
   type LegistarClient,
 } from "./client-registry.ts";
 import type { LegistarOutcomeRecord } from "./outcomes.ts";
@@ -253,7 +254,12 @@ function statusOf(
 export interface NormalizeDrops {
   /** Venue string names a real meeting with no physical place. */
   placeless: number;
-  /** Venue string is not in the client's table — needs a curated entry. */
+  /**
+   * Venue string is blank, or is not in the client's reviewed table — needs a
+   * curated entry. **Counted and KEPT** (the venue-gap class, 2026-09-23): the
+   * sitting is published with no place and its venue gap named, so this tallies
+   * a produced meeting, never a drop.
+   */
   unknownVenue: number;
   /** No usable date or time. */
   unplaceableInTime: number;
@@ -316,10 +322,6 @@ export function normalizeWithDrops(
     }
 
     const location = (event.EventLocation ?? "").trim();
-    if (!location) {
-      drops.unknownVenue++;
-      continue;
-    }
 
     /*
      * A meeting held online is KEPT (D18). It has no building, so it gets no
@@ -330,7 +332,7 @@ export function normalizeWithDrops(
      * renders as the gap it is rather than as the InSite page dressed up as a
      * way in.
      */
-    const online = isPlaceless(location) ? { label: location, joinUrl: null } : null;
+    const online = location && isPlaceless(location) ? { label: location, joinUrl: null } : null;
     if (online) {
       drops.placeless++;
       // A-002: this TALLIES a meeting that is then PRODUCED below (D18), so it
@@ -338,13 +340,24 @@ export function normalizeWithDrops(
       keptButPlaceless += 1;
     }
 
-    const venue = online ? null : findVenue(client, location);
-    // No coordinates and no venue entry. Dropping is the contract: a meeting
-    // that cannot be placed is not a pin, and an approximate pin sends someone
-    // to the wrong building.
-    if (!online && !venue) {
+    const venue = online || !location ? null : findVenue(client, location) ?? null;
+    /*
+     * **NO REVIEWED PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap class,
+     * 2026-09-23). No coordinates still means no pin — an approximate pin
+     * sends someone to the wrong building — but the sitting is published, with
+     * `location: null` and its gap named: the room exactly as the county wrote
+     * it (`STATED_NOT_PLACED`), or, where `EventLocation` is blank, the
+     * county's own silence (`NOT_STATED_BY_PUBLISHER`). It still counts as
+     * `unknownVenue`, which is now a tally of a KEPT sitting (A-002's
+     * countedButProduced), so the ingest report and the venue hunt keep seeing
+     * the room that needs a reviewed row. This used to `continue`; and a
+     * client whose reviewed venue scope was empty failed its whole partition
+     * before a single sitting was read.
+     */
+    const venueGap = !online && !venue ? unplacedVenueGap(location, client.publishingOrg) : null;
+    if (venueGap) {
       drops.unknownVenue++;
-      continue;
+      keptButPlaceless += 1;
     }
 
     const startsAt = toZonedIso(
@@ -400,6 +413,7 @@ export function normalizeWithDrops(
           }
         : null,
       ...(online ? { online } : {}),
+      ...(venueGap ? { venueGap } : {}),
       agendaUrl: event.EventAgendaFile,
       /*
        * **THE API RECORD ITSELF IS THE OBSERVED SURFACE.** (ASK-18.)
@@ -523,10 +537,11 @@ export function makeLegistarSource(
     // Serialized across clients as well as within one. This loop is the whole
     // reason the adapter is polite: nothing here runs concurrently.
     for (const client of clients) {
-      // Skip a client with no venue inside the query radius before spending a
-      // request on it. Venue coordinates are the only geography the adapter
-      // has, and they are known locally.
-      if (!withinRadius(client, query)) continue;
+      // Skip a client whose reviewed venues all lie outside the query radius
+      // before spending a request on it. Venue coordinates are the only
+      // geography the adapter has, and they are known locally; a client with
+      // none is read (see `venuesWithinRadius`).
+      if (!venuesWithinRadius(client.venues, query)) continue;
 
       const events = await fetchEvents<LegistarEvent>(client.slug, { from, to }, {
         signal: query.signal,
@@ -591,12 +606,4 @@ async function readAgendaItems(
     );
     return null;
   }
-}
-
-/** Is any of this client's known venues inside the query radius? */
-function withinRadius(client: LegistarClient, query: MeetingQuery): boolean {
-  return client.venues.some(
-    (venue) =>
-      haversineKm(query.lat, query.lng, venue.lat, venue.lng) <= query.radiusKm,
-  );
 }

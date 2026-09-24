@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 737,
-    "named": 7274,
+    "files": 738,
+    "named": 7279,
     "dynamic": 28
   },
   "files": {
@@ -2214,6 +2214,16 @@
         "each recorded carry reason earns its own plain clause, and a mark without one earns none",
         "no reader surface writes a carried-row sentence of its own; both go through the one decider",
         "the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search"
+      ],
+      "dynamic": 0
+    },
+    "tests/carried-row-supersession.test.ts": {
+      "names": [
+        "CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting",
+        "CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant",
+        "CARRIED-SUPERSEDE · (c) the same normalized body at another local time is another sitting: both are kept",
+        "CARRIED-SUPERSEDE · (d) another body at the same minute is another sitting: both are kept, on every source",
+        "CARRIED-SUPERSEDE · (e) the promotion door re-derives the re-issue claim: the honest one promotes, a forged one is refused"
       ],
       "dynamic": 0
     },

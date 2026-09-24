@@ -1818,3 +1818,59 @@ test("PDC-13: the deterministic Admin render contract leads with canonical opera
   assert.match(panel, /inspect the typed Reader readback and repair; do not reclassify or rerun the source/);
   assert.match(panel, /This is a measured zero/);
 });
+
+test("a confirmed re-check keeps Admin current: the newest confirmation is the latest attempt and success, never a second promotion", async () => {
+  const { buildUnchangedConfirmation, serializeUnchangedConfirmation } = await import("../lib/civic-data/unchanged-confirmation.ts");
+  const contract = ROUTINE_SOURCE_CONTRACTS[0];
+  const promotedAt = "2026-09-01T00:00:00.000Z";
+  const confirmedAt = "2026-09-08T11:00:00.000Z";
+  const row = candidateRow(contract, { id: "fec-confirmed", at: promotedAt });
+  const history = [...sourceHistory(row), readerEvent(contract, row)];
+  const unconfirmed = projectRoutineDataObservability(
+    { candidates: [row], events: history, promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD,
+  ).contracts[0];
+  assert.notEqual(unconfirmed.cadence.freshness, "FRESH", "a week-old promotion alone is not fresh");
+
+  const built = buildUnchangedConfirmation({
+    sourceId: contract.sourceId,
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    parserVersion: "fec-funding/2",
+    pointerVersionId: row.id,
+    readModelHash: (row.candidate as { normalization: { normalizedHash: string } }).normalization.normalizedHash,
+    basis: "READ_MODEL_RECOMPUTED",
+    retrieval: { requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: "https://api.open.fec.gov/v1/", httpStatus: 200, rawHash: "c".repeat(64), retrievedAt: "2026-09-08T10:59:58.000Z" },
+  }, `${contract.recordClass}:${contract.scope}`, confirmedAt);
+  assert.ok(built.ok);
+  if (!built.ok) return;
+  const confirmation: RoutineCandidateEventRow = {
+    id: `confirmation-${row.id}`,
+    candidateId: row.id,
+    sequence: history.length + 1,
+    state: "PROMOTED",
+    at: confirmedAt,
+    detail: serializeUnchangedConfirmation(built.confirmation),
+  };
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: [...history, confirmation], promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD,
+  );
+  const source = view.contracts[0];
+  assert.equal(source.canonicalPromotion.kind, "MEASURED", "the pointer proof is untouched by a confirmation");
+  assert.equal(source.readerVisible.kind, "MEASURED");
+  assert.deepEqual(source.lastAttemptedAcquisition, { kind: "MEASURED", value: confirmedAt });
+  assert.deepEqual(source.lastSuccessfulAcquisition, { kind: "MEASURED", value: confirmedAt });
+  assert.deepEqual(source.latestCanonicalOutcome, { kind: "MEASURED", value: "UNCHANGED" });
+  assert.equal(source.cadence.freshness, "FRESH");
+  assert.equal(source.cadence.operationalState, "HEALTHY");
+  assert.equal(source.cadence.nextDue.kind, "MEASURED");
+  if (source.cadence.nextDue.kind === "MEASURED") assert.ok(Date.parse(source.cadence.nextDue.value) > Date.parse(confirmedAt));
+  const day = source.histories["24h"];
+  assert.deepEqual(day.events.map((item) => item.domain), ["UNCHANGED_CONFIRMATION"], "labelled as a confirmation, not a source state");
+  for (const [name, count] of Object.entries(day.counts)) {
+    assert.equal(count.kind, "MEASURED", `${name}: a confirmation is not a gap`);
+  }
+  assert.equal(countValue(day.counts.promotions), 0, "a confirmation is never counted as a promotion");
+  assert.equal(countValue(day.counts.attempts), 1, "it is counted as an attempt");
+  assert.equal(countValue(day.counts.successfulAcquisitions), 1, "and as a successful acquisition");
+  assert.deepEqual(day.attempts.map((item) => [item.candidateId, item.canonicalOutcome]), [[row.id, { kind: "MEASURED", value: "UNCHANGED" }]]);
+});

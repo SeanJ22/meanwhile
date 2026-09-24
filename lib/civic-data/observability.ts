@@ -38,8 +38,10 @@ import {
   parseReaderProjectionReadback,
 } from "./reader-readback.ts";
 import {
+  UNCHANGED_CONFIRMATION_PREFIX,
   isUnchangedConfirmationDetail,
   latestUnchangedConfirmation,
+  parseUnchangedConfirmation,
   type UnchangedConfirmation,
 } from "./unchanged-confirmation.ts";
 
@@ -1859,7 +1861,31 @@ function historyWindow(
     const proof = matches[0];
     return proof.kind === "MEASURED" ? measured(proof.value.outcome.outcome) : carryGap(proof);
   };
-  const attempts = inWindow.map((row) => attemptMember(row, events, nowMs, canonicalOutcomeForAttempt(row)));
+  // A confirmed re-check is a successful source acquisition that wrote no
+  // candidate: one attempt per confirmation receipt in the window, on the
+  // version it confirmed, with an UNCHANGED outcome (never a promotion).
+  const confirmationAttempts = events.flatMap((event): AttemptHistoryMember[] => {
+    if (event.state !== "PROMOTED" || !event.detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX)) return [];
+    const at = Date.parse(event.at);
+    if (!Number.isFinite(at) || at < sinceMs || at > nowMs) return [];
+    const confirmation = parseUnchangedConfirmation(event.detail);
+    const row = candidates.find((candidate) => candidate.id === event.candidateId);
+    if (confirmation === null || !row || confirmation.versionId !== row.id) return [];
+    const receipt = parseValidationReceipt(row.validationReceipt);
+    return [{
+      candidateId: row.id,
+      attemptedAt: measured(new Date(at).toISOString()),
+      state: measured("PROMOTED" as const),
+      acquisitionSucceeded: measured(true),
+      authorityOrigin: "LIVE_SOURCE_ACQUISITION",
+      validation: receipt ? measured(receipt) : unknown(`Confirmed version ${row.id} has no readable validation receipt.`),
+      canonicalOutcome: measured("UNCHANGED" as const),
+    }];
+  });
+  const attempts = [
+    ...inWindow.map((row) => attemptMember(row, events, nowMs, canonicalOutcomeForAttempt(row))),
+    ...confirmationAttempts,
+  ];
   const attemptCount: DrilldownCount<AttemptHistoryMember> = invalidCandidateTimes.length > 0 || invalidEventTimes.length > 0
     ? {
         kind: "UNKNOWN",

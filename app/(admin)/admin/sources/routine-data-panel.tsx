@@ -128,7 +128,7 @@ function EventLine({ event }: { readonly event: ExactOutcomeEvent }) {
   return (
     <details>
       <summary>
-        <TimeEvidence value={{ kind: "MEASURED", value: event.at }} /> · {event.domain === "READER_READBACK" ? "Reader readback" : "source state"} · candidate <code>{event.candidateId}</code> ·{" "}
+        <TimeEvidence value={{ kind: "MEASURED", value: event.at }} /> · {event.domain === "READER_READBACK" ? "Reader readback" : event.domain === "UNCHANGED_CONFIRMATION" ? "re-checked, unchanged" : "source state"} · candidate <code>{event.candidateId}</code> ·{" "}
         <Evidence value={event.state}>{(state) => <Code raw={state} />}</Evidence>
       </summary>
       <p>{event.detail}</p>

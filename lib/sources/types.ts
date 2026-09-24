@@ -443,7 +443,46 @@ export interface ReportingMeetingSource<Raw = unknown>
      * the same night collapsed into one meeting silently.
      */
     duplicateIdentity?: DuplicateIdentityCounts;
+    /** What the adapter did with recurring series, by body (2026-09-23, `ical`). */
+    recurrence?: RecurrenceReport;
   }>;
+}
+
+/**
+ * **WHAT BECAME OF EACH RECURRING SERIES** (2026-09-23).
+ *
+ * A series whose rule is expanded publishes the sittings its rule states. One
+ * that is not expanded publishes only what the feed states one by one, and
+ * the reason is named here rather than left for a reader to infer from a
+ * short calendar. An in-window sitting the publisher itself struck out
+ * (`EXDATE`) is named too, because it is the one authority on which a sitting
+ * that was published may be taken down.
+ */
+export interface RecurrenceReport {
+  /** Series (per body) whose rule was expanded into its in-window sittings. */
+  expandedSeries: number;
+  exclusions: PublisherExclusion[];
+  notExpanded: SeriesNotExpanded[];
+}
+
+export interface PublisherExclusion {
+  bodyId: string;
+  /** The series' own meeting id, `<source>:<slug>:<UID>`. */
+  seriesId: string;
+  /** The excluded sitting's recurrence slot (see `occurrenceId`). */
+  slot: string;
+  /** The id that sitting has, or would have, as an occurrence. */
+  meetingId: string;
+  /** The publisher's statement, as written (`params:value`). */
+  statedBy: string;
+}
+
+export interface SeriesNotExpanded {
+  bodyId: string;
+  /** Null when the refusal is about the whole feed rather than one series. */
+  seriesId: string | null;
+  reason: "UNSUPPORTED_RULE" | "RULE_RESTATED_ON_PUBLISHED_SITTINGS";
+  detail: string;
 }
 
 export interface DuplicateIdentityCounts {

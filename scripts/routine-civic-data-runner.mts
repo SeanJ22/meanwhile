@@ -78,6 +78,7 @@ import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
@@ -366,7 +367,7 @@ try {
     );
   }
 } catch (error) {
-  const detail = safeFailure(error instanceof Error ? error.message : String(error));
+  const detail = safeFailure(sanitizedErrorDiagnostic(error));
   supervisorFailures.push({
     taskId: "routine-civic-data-provider-frontier",
     code: "SUPERVISOR_HISTORY_READ_FAILED",
@@ -698,12 +699,12 @@ try {
   supervisorFailures.push({
     taskId: "routine-civic-data-supervisor-outcome",
     code: "SUPERVISOR_OUTCOME_NOT_DURABLE",
-    detail: safeFailure(error instanceof Error ? error.message : String(error)),
+    detail: safeFailure(sanitizedErrorDiagnostic(error)),
   });
   console.error("RCD_OPERATIONAL_OUTCOME=" + JSON.stringify({
     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
     state: "STORE_UNREACHABLE",
-    detail: safeFailure(error instanceof Error ? error.message : String(error)),
+    detail: safeFailure(sanitizedErrorDiagnostic(error)),
     durable: false,
   }));
 }

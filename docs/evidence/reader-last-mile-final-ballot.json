@@ -1,6 +1,6 @@
 {
-  "exactHead": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-  "buildId": "djtDstfcVbQ1yHnct4Gj2",
+  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+  "buildId": "_v0YgXondFE6JGacMt51t",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -280,7 +280,7 @@
     },
     {
       "path": "components/map/meeting-panel.tsx",
-      "sha256": "6bdf6440af7ccfc09c8a973efc09a795cc1705e38bbba27f17aaf86e58a5fd6f"
+      "sha256": "bf0225090bb2dcf0cf2b1f5c20ee707785bfb20d0fd50ffc164574c2509605a7"
     },
     {
       "path": "components/map/meeting-status-pill.tsx",
@@ -308,7 +308,7 @@
     },
     {
       "path": "components/map/popup/meeting-popup.tsx",
-      "sha256": "12b035a48408edd2c9f9069daa888ceb0d87e7e4bb2b72ba502dd2482f9cf594"
+      "sha256": "3149dff63e91c9824f37608e041224798809793b34b000677102b7809d54d45a"
     },
     {
       "path": "components/map/popup/meeting-records.tsx",
@@ -512,7 +512,7 @@
     },
     {
       "path": "data/derived/gap-ledger.json",
-      "sha256": "eeb1f2900c4889be7bd2d376c01a3f124553b6ee9ece6dc8865928178b357275"
+      "sha256": "aac1c286c925a18974020d511ceaa080d50c1541b577ad82954e19f68114eb92"
     },
     {
       "path": "data/derived/resolver-geometry.json",
@@ -1376,7 +1376,7 @@
     },
     {
       "path": "lib/ask/agenda-publication.ts",
-      "sha256": "53c5ca227161e82e8a0d4df57074e0f5cb5f7edcd543ab2511903da8473b64b4"
+      "sha256": "6d81ba06737c44bb0c8a38a8111811c1798bbd1d809616b5438ee734de4920bf"
     },
     {
       "path": "lib/ask/agenda-sentence.ts",
@@ -1808,7 +1808,7 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "9935c5117d9b11f74ee4515ed54e0787d207c0c8981335de4c0a9843282275af"
+      "sha256": "8436facd428053cfef141e392e3cb344fec82f78650e9e867f4366b0e308fd7a"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
@@ -1816,7 +1816,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "5e045e2b5e843d9d88585934183fa2eb3b4263d929b6b14dd29b1360984d8105"
+      "sha256": "891ddf00d9a0da7882f77414108e861788a0ae97465a5db8cd62624397a00749"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -1912,7 +1912,7 @@
     },
     {
       "path": "lib/extract/html-content.ts",
-      "sha256": "ac66a059da090d6dd4366fe8c628d04513e60cc03d1e26e2229ba7c9bc3a1496"
+      "sha256": "01a3ed617d9d2ea8a73f552e7ea851c5ca576b3530e8f2d4bbd00570c1710d94"
     },
     {
       "path": "lib/funding/campaign-money.ts",
@@ -2112,11 +2112,11 @@
     },
     {
       "path": "lib/meetings/agenda-content.ts",
-      "sha256": "dc7a40d377b3beeee9ab6c0a00b28040235baf1caa00d829b1294db763c908ea"
+      "sha256": "370a262e50821f1769968dc4099e227277f4d853741889604047023dd59195c8"
     },
     {
       "path": "lib/meetings/agenda-documents.ts",
-      "sha256": "0335e22f142861efd1cfc9ad51c1713b28a7f617ed439145c8e785f989f39963"
+      "sha256": "0caacd116efa5f0e40b9e2cdd1a8feefdb14bc1cce7ed2f6fe4473f67358484d"
     },
     {
       "path": "lib/meetings/attribution.ts",
@@ -2132,7 +2132,7 @@
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "5cc35163416062571181fb1689ec79687dfd2a5de1204afd90d13c0f77518f28"
+      "sha256": "096b061bac617e0020f208188aa097105b9594a7194fd575ab747d95b3360b1e"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -2140,7 +2140,7 @@
     },
     {
       "path": "lib/meetings/freshness.ts",
-      "sha256": "75f920123a833f0f37ccbde3ab6df345e37c681c2848b4d131c2a2383a2f1282"
+      "sha256": "4f1e5eca6849de14b077e5304233c55b46666e503fbbfade7f6f5706e769d997"
     },
     {
       "path": "lib/meetings/history-gaps.ts",
@@ -2180,7 +2180,7 @@
     },
     {
       "path": "lib/meetings/prepared-snapshot.ts",
-      "sha256": "9de55e3c9f0943eae4d3b96ed4fe899aabf6e02a9d2fb9741392af0d881d0d06"
+      "sha256": "a4537f78ecdfec66b50da8a658ae3b2d4eaca50186812f4daa192898e175d229"
     },
     {
       "path": "lib/meetings/query.ts",
@@ -2636,7 +2636,7 @@
     },
     {
       "path": "lib/sources/composite/index.ts",
-      "sha256": "3b615f7c341d0fc5767042c48d2f51bbc7b56b278edef3dca43f895dc8e21c32"
+      "sha256": "071161ed2528c7c9894642035cd5ee922ecc0486dfe7b096948719b37661155b"
     },
     {
       "path": "lib/sources/composite/wiring.ts",
@@ -2648,7 +2648,7 @@
     },
     {
       "path": "lib/sources/event-identity.ts",
-      "sha256": "f92e9a8000b8741e5147236169e391af53c57cb36a3f0b5c4bc484df12499619"
+      "sha256": "a3d84fb4962b0bac1f0922b4fe200fdf209111b4707cb9a594b3488a65e340ca"
     },
     {
       "path": "lib/sources/http.ts",
@@ -2656,7 +2656,11 @@
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "4beb4372f5b8631cf31d238f33ca6333a25caf5af2715484db69d54dbc32a5fd"
+      "sha256": "10f032785c2258303fc6cddc61d05a358a5e2187bed7eca4835edac38edbc27c"
+    },
+    {
+      "path": "lib/sources/ical/recurrence.ts",
+      "sha256": "efa774b470af11852885a6d37c117b1285e0a2d0255dfd2cc54760ed871342bf"
     },
     {
       "path": "lib/sources/iqm2/index.ts",

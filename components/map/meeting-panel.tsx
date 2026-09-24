@@ -16,7 +16,7 @@ import {
   sourceCreditFor,
   type SourceCredit,
 } from "@/lib/meetings/list-attribution";
-import { relativeAge } from "@/lib/meetings/freshness";
+import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
 import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor } from "@/lib/meetings/jurisdiction-badge";
@@ -273,6 +273,8 @@ function MeetingEntry({
    * fresh first-party observation measured the publisher's own empty slot.
    */
   const agendaState = agendaSentenceFor(meeting);
+  // The carried row's reason, decided once for both surfaces that state it.
+  const carriedClause = carriedRowClause(meeting.carried);
   const { governing, zipPartial, basis, location } = useShellData();
   const jurisdiction = badgeFor(meeting, governing, basis, zipPartial);
 
@@ -423,11 +425,18 @@ function MeetingEntry({
           )}
           {/*
             hotfix-0817 (2026-08-17): this row was NOT retrieved by the run behind the
-            map's "last checked" line — its calendar refused us, and it is
-            here because a failed fetch may never silently empty a
-            previously-full surface. It does not inherit that line's
-            freshness: it states its own, on the row, where the reader
-            deciding whether to trust it is actually looking.
+            map's "last checked" line, and it is here because a failed or thin
+            fetch may never silently empty a previously-full surface. It does
+            not inherit that line's freshness: it states its own, on the row,
+            where the reader deciding whether to trust it is actually looking.
+
+            2026-09-23: and it states WHY in the words its recorded reason
+            earns. The clause after the date used to be one fixed sentence
+            about an unreachable calendar, rendered for every carried row —
+            including a calendar that answered and simply no longer held this
+            listing, which on 2026-09-23 was every carried row in production.
+            `carriedRowClause` (lib/meetings/freshness.ts) decides it for this
+            row and the popup alike; a reasonless mark gets the date alone.
           */}
           {meeting.carried && (
             <>
@@ -441,7 +450,7 @@ function MeetingEntry({
               >
                 {relativeAge(meeting.carried.lastFreshAt)}
               </time>
-              {" — our latest check couldn't reach this calendar"}
+              {carriedClause && ` — ${carriedClause}`}
             </>
           )}
         </p>

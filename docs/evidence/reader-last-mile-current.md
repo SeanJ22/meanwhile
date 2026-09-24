@@ -164,7 +164,7 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | meetings | ask | az | 287 | 7 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | meetings | map | az | 287 | 7 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | meetings | meetings | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| meetings | agenda | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| meetings | agenda | national-unattributed | 5 | 0 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
 | meetings | ask | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | map | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | meetings | nh | 341 | 36 | DELIVERY_UNPROVEN | UNMEASURED | UNMEASURED | true |
@@ -1064,4 +1064,4 @@ Canonical lifecycle readback: data/health/autonomous-agent-fleet/2026-09-03-life
 | wi-ea789908da1237c753bd85c7 | az | wtp-body/country:us/state:az/census:220681/sonoita_elgin_fire_district#governing | UNMEASURED | STAGED_NOT_ELIGIBLE | Autonomous acquisition remains outside the canonical reader snapshots and promotion boundary.; LEGACY_TRANSPORT_NOT_RECORDED:at-60aba2fe40885df94d027465:0; OFFICIAL_MEETING_DOCUMENTS_AND_EXTERNAL_AUTHORITY; Walk the bulk publication locator named by the publisher or its robots document. |
 | wi-f861b9f35191b13d48cc08d3 | nj | nj:county:county-of-atlantic | UNMEASURED | STAGED_NOT_ELIGIBLE | Autonomous acquisition remains outside the canonical reader snapshots and promotion boundary.; EXTERNAL_RECORD_VERIFICATION_AND_IDENTITY_JOIN |
 
-Closure obligations remaining: 352. The JSON artifact retains holding hashes, record IDs, eligibility reasons, identity keys, source import paths and readback evidence for every row.
+Closure obligations remaining: 353. The JSON artifact retains holding hashes, record IDs, eligibility reasons, identity keys, source import paths and readback evidence for every row.

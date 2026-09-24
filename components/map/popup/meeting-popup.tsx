@@ -15,7 +15,7 @@ import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
-import { relativeAge } from "@/lib/meetings/freshness";
+import { carriedRowClause, relativeAge } from "@/lib/meetings/freshness";
 import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
@@ -123,6 +123,8 @@ export function MeetingPopup({
   );
   const minutes = concluded ? minutesSummaryForMeeting(meeting.id) : null;
   const officePhone = concluded ? body?.readerRoster?.officePhone ?? null : null;
+  // The carried row's reason, decided once for both surfaces that state it.
+  const carriedClause = carriedRowClause(meeting.carried);
 
   return (
     <PopupCard
@@ -222,9 +224,15 @@ export function MeetingPopup({
       {/*
         hotfix-0817 (2026-08-17): a carried row does not inherit the snapshot's
         freshness. The map's "last checked" line belongs to the run that
-        fetched the fresh rows; this sitting was carried forward because its
-        calendar refused that run, so it states when we actually last reached
-        it. No badge, no colour — the fact, in the rows the card already has.
+        fetched the fresh rows; this sitting was carried forward out of an
+        earlier one, so it states when we actually last reached it. No badge,
+        no colour — the fact, in the rows the card already has.
+
+        2026-09-23: the clause beside the date is the one its recorded reason
+        earns, from `carriedRowClause` — the same decider the venue card uses.
+        It used to be one fixed sentence about an unreachable calendar for
+        every carried row, which was false of every row whose calendar had
+        answered without it. A reasonless mark renders the date alone.
       */}
       {meeting.carried && (
         <PopupRow label="Last reached">
@@ -234,9 +242,9 @@ export function MeetingPopup({
           >
             {relativeAge(meeting.carried.lastFreshAt)}
           </time>
-          <span className="ml-1.5 text-muted">
-            our latest check couldn&apos;t reach this calendar
-          </span>
+          {carriedClause && (
+            <span className="ml-1.5 text-muted">{carriedClause}</span>
+          )}
         </PopupRow>
       )}
 

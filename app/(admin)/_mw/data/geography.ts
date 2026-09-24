@@ -23,6 +23,8 @@ import zipIndex from "@/data/derived/zip-division-ids.json";
 import type { GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
 import { loadPublishedLookupState, type PublishedLookupSource } from "@/lib/census-geography/reader.ts";
 
+import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
+
 const INDEX = zipIndex as unknown as {
   readonly generatedAt: string;
   readonly zips: Readonly<Record<string, readonly string[]>>;
@@ -50,25 +52,40 @@ function unread<T>(detail: string): LookupRead<T> {
   return { kind: "UNREAD", detail };
 }
 
-/* The built lookup, kept for a minute: the promoted payload is ~15 MB of text
-   and the index built over it is the same until the pointer moves. */
-const LOOKUP_TTL_MS = 60_000;
-let lookupMemo: { readonly at: number; readonly state: Awaited<ReturnType<typeof loadPublishedLookupState>> } | null = null;
+type LookupOpened =
+  | { readonly ok: true; readonly state: Awaited<ReturnType<typeof loadPublishedLookupState>> }
+  | { readonly ok: false; readonly detail: string };
 
-async function lookupOrUnread() {
-  try {
-    const state = lookupMemo && Date.now() - lookupMemo.at < LOOKUP_TTL_MS ? lookupMemo.state : await loadPublishedLookupState();
-    if (state.source === "unavailable") {
-      return {
-        ok: false as const,
-        detail: "The Census geography lookup has not been published to this store yet, so no container can be listed. That is not a claim that none exist.",
-      };
+/*
+ * The built lookup: the promoted payload is ~15 MB of text and the index built
+ * over it is the same until the pointer moves. One load is shared by every
+ * caller that arrives while it runs — All states lists three states' counties
+ * at once and used to load it three times over — then kept a minute fresh and
+ * half an hour recent (see shared-read.ts).
+ */
+const lookupShared = sharedRead<LookupOpened>({
+  freshMs: 60_000,
+  staleMs: 30 * 60_000,
+  deadlineMs: ADMIN_READ_DEADLINE_MS,
+  keep: (o) => o.ok,
+  late: (ms) => ({ ok: false, detail: lateWords("The Census geography lookup", ms) }),
+});
+
+async function lookupOrUnread(): Promise<LookupOpened> {
+  return lookupShared.read(async () => {
+    try {
+      const state = await loadPublishedLookupState();
+      if (state.source === "unavailable") {
+        return {
+          ok: false,
+          detail: "The Census geography lookup has not been published to this store yet, so no container can be listed. That is not a claim that none exist.",
+        };
+      }
+      return { ok: true, state };
+    } catch (error) {
+      return { ok: false, detail: `The Census geography lookup could not be read (${error instanceof Error ? error.name : "error"}).` };
     }
-    lookupMemo = { at: Date.now(), state };
-    return { ok: true as const, state };
-  } catch (error) {
-    return { ok: false as const, detail: `The Census geography lookup could not be read (${error instanceof Error ? error.name : "error"}).` };
-  }
+  });
 }
 
 /** Every container of the given types that lies in, or reaches into, the state. */

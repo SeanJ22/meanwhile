@@ -42,6 +42,7 @@ import {
 } from "./runtime-authority.ts";
 import { CIVIC_DATA_PROMOTION_OPERATION } from "./production-write.ts";
 import {
+  READER_PROJECTION_READBACK_PREFIX,
   parseReaderProjectionReadback,
   sourceScopedReaderReadbackProjectionId,
 } from "./reader-readback.ts";
@@ -174,6 +175,16 @@ export interface RoutineDataStore {
   /** Append non-disposition evidence without changing the candidate's state. */
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
+  /**
+   * Each named version's newest typed Reader readback event (at most one per
+   * version): the only event readback inspection decides on. A version that
+   * stays pointed gathers a readback per re-verification and a confirmation per
+   * quiet re-check; this read stays one row however many it gathers. Optional:
+   * callers fall back to `events` (`readLatestReaderReadbacks`).
+   */
+  readonly latestReaderReadbacks?: (candidateIds: readonly string[]) => Promise<readonly CandidateEvent[]>;
+  /** A version's pointer-move events (`POINTER_MOVE_DETAIL_PREFIX`), without its readbacks or confirmations. */
+  readonly pointerMoveEvents?: (candidateId: string) => Promise<readonly CandidateEvent[]>;
   readonly clock: (
     sourceId: string,
     recordClass: RoutineRecordClass,
@@ -193,6 +204,43 @@ export interface RoutineStoreClock {
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
   readonly sittingStarts?: readonly string[];
+}
+
+/** Every pointer move's event detail begins with this (both stores' `promote`). */
+export const POINTER_MOVE_DETAIL_PREFIX = "Atomic pointer ";
+
+/** The newest typed Reader readback among `events`, ordered as readback inspection orders them. */
+export function newestReaderReadback(events: readonly CandidateEvent[]): CandidateEvent | null {
+  return events
+    .filter((event) => event.detail.startsWith(READER_PROJECTION_READBACK_PREFIX))
+    .sort((left, right) => Date.parse(right.at) - Date.parse(left.at) || right.sequence - left.sequence)[0] ?? null;
+}
+
+/** Each version's newest typed Reader readback, narrowed in the store when it can be. */
+export async function readLatestReaderReadbacks(
+  store: Pick<RoutineDataStore, "events" | "latestReaderReadbacks">,
+  candidateIds: readonly string[],
+): Promise<readonly CandidateEvent[]> {
+  if (typeof store.latestReaderReadbacks === "function") return store.latestReaderReadbacks(candidateIds);
+  const latest: CandidateEvent[] = [];
+  for (const candidateId of candidateIds) {
+    const newest = newestReaderReadback(await store.events(candidateId));
+    if (newest !== null) latest.push(newest);
+  }
+  return latest;
+}
+
+/** A version's pointer-move events, narrowed in the store when it can be. */
+export async function readPointerMoveEvents(
+  store: Pick<RoutineDataStore, "events" | "pointerMoveEvents">,
+  candidateId: string,
+): Promise<readonly CandidateEvent[]> {
+  if (typeof store.pointerMoveEvents === "function") return store.pointerMoveEvents(candidateId);
+  return (await store.events(candidateId)).filter(isPointerMoveEvent);
+}
+
+function isPointerMoveEvent(event: CandidateEvent): boolean {
+  return event.state === "PROMOTED" && event.detail.startsWith(POINTER_MOVE_DETAIL_PREFIX);
 }
 
 type RegisteredMutationContract = {
@@ -992,7 +1040,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       candidateId,
       "PROMOTED",
       at,
-      `Atomic pointer ${key} moved from ${previous?.versionId ?? "bootstrap/no-version"} to ${candidateId}.`,
+      `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${previous?.versionId ?? "bootstrap/no-version"} to ${candidateId}.`,
     );
     this.promotions.set(key, projection);
     history.push(event);
@@ -1009,6 +1057,17 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {
     return structuredClone(this.history.get(candidateId) ?? []);
+  }
+
+  async latestReaderReadbacks(candidateIds: readonly string[]): Promise<readonly CandidateEvent[]> {
+    return candidateIds
+      .map((candidateId) => newestReaderReadback(this.history.get(candidateId) ?? []))
+      .filter((event): event is CandidateEvent => event !== null)
+      .map((event) => structuredClone(event));
+  }
+
+  async pointerMoveEvents(candidateId: string): Promise<readonly CandidateEvent[]> {
+    return structuredClone((this.history.get(candidateId) ?? []).filter(isPointerMoveEvent));
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {
@@ -1502,6 +1561,44 @@ type PostgresCandidateEventRow = Pick<
   "candidateId" | "sequence" | "state" | "at" | "detail"
 >;
 
+const CANDIDATE_EVENT_COLUMNS = {
+  candidateId: civicDataCandidateEvents.candidateId,
+  sequence: civicDataCandidateEvents.sequence,
+  state: civicDataCandidateEvents.state,
+  at: civicDataCandidateEvents.at,
+  detail: civicDataCandidateEvents.detail,
+} as const;
+
+/**
+ * Each named version's newest typed Reader readback, chosen in Postgres in
+ * readback inspection's own order (newest instant, then highest sequence):
+ * one row per version, never the readbacks and confirmations it has gathered.
+ * The prefix is compared exactly (not with LIKE, whose `_` is a wildcard).
+ */
+export function latestReaderReadbacksRead(db: Pick<ReturnType<typeof getDb>, "selectDistinctOn">, candidateIds: readonly string[]) {
+  return db
+    .selectDistinctOn([civicDataCandidateEvents.candidateId], CANDIDATE_EVENT_COLUMNS)
+    .from(civicDataCandidateEvents)
+    .where(and(
+      inArray(civicDataCandidateEvents.candidateId, [...candidateIds]),
+      sql`left(${civicDataCandidateEvents.detail}, ${READER_PROJECTION_READBACK_PREFIX.length}) = ${READER_PROJECTION_READBACK_PREFIX}`,
+    ))
+    .orderBy(civicDataCandidateEvents.candidateId, desc(civicDataCandidateEvents.at), desc(civicDataCandidateEvents.sequence));
+}
+
+/** A version's pointer-move events only, chosen in Postgres. */
+export function pointerMoveEventsRead(db: RoutineClockDb, candidateId: string) {
+  return db
+    .select(CANDIDATE_EVENT_COLUMNS)
+    .from(civicDataCandidateEvents)
+    .where(and(
+      eq(civicDataCandidateEvents.candidateId, candidateId),
+      eq(civicDataCandidateEvents.state, "PROMOTED"),
+      sql`left(${civicDataCandidateEvents.detail}, ${POINTER_MOVE_DETAIL_PREFIX.length}) = ${POINTER_MOVE_DETAIL_PREFIX}`,
+    ))
+    .orderBy(civicDataCandidateEvents.sequence);
+}
+
 function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
   return {
     candidateId: row.candidateId,
@@ -1942,7 +2039,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       and ${civicDataCandidates.scope} = ${candidate.scope}
       and ${civicDataCandidates.validationReceipt} = ${receiptJson}::jsonb
     `;
-    const detail = `Atomic pointer ${key} moved from ${prior?.currentVersionId ?? "bootstrap/no-version"} to ${candidateId}.`;
+    const detail = `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${prior?.currentVersionId ?? "bootstrap/no-version"} to ${candidateId}.`;
     const nextSequence = this.nextCandidateEventSequence(candidateId);
 
     /*
@@ -2035,6 +2132,17 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {
     const rows = await this.db.select().from(civicDataCandidateEvents).where(eq(civicDataCandidateEvents.candidateId, candidateId));
     return rows.sort((a, b) => a.sequence - b.sequence).map(postgresCandidateEventRowToEvent);
+  }
+
+  async latestReaderReadbacks(candidateIds: readonly string[]): Promise<readonly CandidateEvent[]> {
+    if (candidateIds.length === 0) return [];
+    const rows = await latestReaderReadbacksRead(this.db, candidateIds);
+    return rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async pointerMoveEvents(candidateId: string): Promise<readonly CandidateEvent[]> {
+    const rows = await pointerMoveEventsRead(this.db, candidateId);
+    return rows.map(postgresCandidateEventRowToEvent);
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<RoutineStoreClock> {

@@ -117,6 +117,11 @@ class EventCountingStore extends MemoryRoutineDataStore {
     this.eventReads += 1;
     return super.events(candidateId);
   }
+
+  override async pointerMoveEvents(candidateId: string) {
+    this.eventReads += 1;
+    return super.pointerMoveEvents(candidateId);
+  }
 }
 
 /** Seed V1, capture the pin exactly as the orchestrator's capture does (strict, unpinned). */

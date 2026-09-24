@@ -11,6 +11,12 @@ import {
   MemoryRoutineDataStore,
   candidateProofRead,
   candidateProofView,
+  latestReaderReadbacksRead,
+  newestReaderReadback,
+  pointerMoveEventsRead,
+  POINTER_MOVE_DETAIL_PREFIX,
+  readLatestReaderReadbacks,
+  readPointerMoveEvents,
   proofConsistentSuccess,
   ROUTINE_CLOCK_CANDIDATE_FIELDS,
   routineClockCandidateRead,
@@ -30,7 +36,7 @@ import {
   readPromotedCivicData,
   readPromotedCivicDataBatch,
 } from "../lib/civic-data/read-model.ts";
-import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
+import { isUnchangedConfirmationEvent, parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import {
   attestedPromotionFor,
   parseAttestedPromotions,
@@ -643,4 +649,57 @@ test("pointer reads carry the newest confirmation from Postgres beside the point
   assert.match(identity, /left\(confirmation\.detail, \$\d+\) = \$\d+/, "the prefix is compared exactly, never with LIKE");
   assert.match(identity, /order by confirmation\.sequence desc\s+limit 1/);
   assert.doesNotMatch(identity, /"payload"|"validation_receipt"/, "an identity read carries no dataset");
+});
+
+test("readback inspection and the proof pin read one narrow row set, never a version's gathered confirmations", async () => {
+  const id = "cv-long-pointed";
+  const readback = (sequence: number, at: string) => ({
+    candidateId: id, sequence, state: "PROMOTED" as const, at, detail: `READER_PROJECTION_READBACK_V2 {"n":${sequence}}`,
+  });
+  const confirmation = (sequence: number, at: string) => ({
+    candidateId: id, sequence, state: "PROMOTED" as const, at, detail: `UNCHANGED_CONFIRMATION_V1 {"n":${sequence}}`,
+  });
+  const history = [
+    { candidateId: id, sequence: 1, state: "FETCHED" as const, at: "2026-09-08T12:00:00.000Z", detail: "Acquired raw a." },
+    { candidateId: id, sequence: 2, state: "NORMALIZED" as const, at: "2026-09-08T12:00:00.000Z", detail: "Normalized." },
+    { candidateId: id, sequence: 3, state: "VALIDATED" as const, at: "2026-09-08T12:00:00.000Z", detail: "Every applicable GOOD check passed." },
+    { candidateId: id, sequence: 4, state: "PROMOTED" as const, at: "2026-09-08T12:01:00.000Z", detail: `Atomic pointer MEETING:x moved from cv-old to ${id}.` },
+    readback(5, "2026-09-08T12:02:00.000Z"),
+    confirmation(6, "2026-09-08T13:00:00.000Z"),
+    { candidateId: id, sequence: 7, state: "PROMOTED" as const, at: "2026-09-08T13:00:00.000Z", detail: 'UNCHANGED_CONFIRMATION_SOURCES_V1 {"n":7}' },
+    readback(8, "2026-09-08T14:00:00.000Z"),
+    readback(9, "2026-09-08T14:00:00.000Z"),
+    confirmation(10, "2026-09-08T15:00:00.000Z"),
+  ];
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { history: new Map([[id, history]]) });
+  // A store without the narrowed doors: the helpers filter its whole history instead.
+  const plain = { events: (candidateId: string) => store.events(candidateId) };
+
+  for (const reader of [store, plain]) {
+    const [newest, ...rest] = await readLatestReaderReadbacks(reader, [id, "cv-never-read-back"]);
+    assert.equal(newest?.sequence, 9, "the newest instant, then the highest sequence: inspection's own order");
+    assert.deepEqual(rest, [], "one row per version, none for a version never read back");
+    assert.deepEqual((await readPointerMoveEvents(reader, id)).map(({ sequence }) => sequence), [4], "the move alone");
+  }
+  assert.deepEqual(
+    newestReaderReadback([...history].reverse()),
+    newestReaderReadback(history),
+    "the choice does not depend on the order events arrive in",
+  );
+  assert.equal(history.filter(isUnchangedConfirmationEvent).length, 3, "the receipts and their sources event are the confirmations");
+  assert.equal(history.every((event) => event.state !== "PROMOTED" || isUnchangedConfirmationEvent(event) || event.detail.startsWith(POINTER_MOVE_DETAIL_PREFIX) || event.detail.startsWith("READER_PROJECTION_READBACK_V2 ")), true);
+});
+
+test("the narrowed event reads are chosen in Postgres: one newest readback per version, the move alone", () => {
+  const db = drizzle.mock({ schema });
+  const readbacks = latestReaderReadbacksRead(db, ["cv-a", "cv-b"]).toSQL().sql;
+  assert.match(readbacks, /^select distinct on \("civic_data_candidate_events"\."candidate_id"\)/);
+  assert.match(readbacks, /left\("civic_data_candidate_events"\."detail", \$\d+\) = \$\d+/, "the prefix is compared exactly, never with LIKE");
+  assert.match(readbacks, /order by "civic_data_candidate_events"\."candidate_id", "civic_data_candidate_events"\."at" desc, "civic_data_candidate_events"\."sequence" desc$/);
+  const moves = pointerMoveEventsRead(db, "cv-a").toSQL();
+  assert.match(moves.sql, /"civic_data_candidate_events"\."state" = \$\d+/);
+  assert.match(moves.sql, /left\("civic_data_candidate_events"\."detail", \$\d+\) = \$\d+/);
+  assert.ok(moves.params.includes(POINTER_MOVE_DETAIL_PREFIX));
+  for (const text of [readbacks, moves.sql]) assert.doesNotMatch(text, /"id"|"payload"|"candidate"[^_]/, "event columns only");
 });

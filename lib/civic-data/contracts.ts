@@ -4,6 +4,7 @@ import {
   OFFICIAL_STATE_LEGISLATOR_TARGETS,
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
 } from "../state-rollcalls/authority.ts";
+import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -315,6 +316,40 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: ["data/dotgov/snapshot.json"],
   },
+  /*
+   * REGISTRATION (2026-09-23): one contract per state, DC and territory in the
+   * FIPS table — every state trackable from data, never a chosen list. Each
+   * confirms census.gov still serves the pinned Census of Governments bytes and
+   * registers that state's governments on their Census divisions, never an id
+   * the reviewed registry writes. They share one failure domain, so the runner
+   * takes one state per pass and one Census request at a time; the request is
+   * conditional, so an unchanged file downloads nothing (lib/registration/acquire.ts).
+   */
+  ...REGISTRATION_TARGETS.map((target): RoutineSourceContract => ({
+    id: target.contractId,
+    sourceId: REGISTRATION_SOURCE_ID,
+    recordClass: "REGISTRATION",
+    scope: target.scope,
+    acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}`,
+    acquisitionAdapter: {
+      authorityMode: "SINGLE_ROUTE",
+      command: ["scripts/registration-refresh.mts", "--promote", `--state=${target.state}`],
+      requestedUrl: REGISTRATION_SOURCE_URL,
+    },
+    parserNormalizerVersion: REGISTRATION_PARSER_VERSION,
+    // Census publishes this file every five years; each check asks conditionally, so an unchanged file is a 304 with no body.
+    cadence: { description: "every 90 days, a conditional request confirms census.gov still serves the pinned Census of Governments vintage", defaultEveryMs: 90 * DAY },
+    retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: REGISTRATION_SOURCE_ID },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `${target.state.toLowerCase()}-registration`, consumers: ["lib/registration/reader.ts"] },
+    lkgBehavior:
+      `Only the pinned Census of Governments may move ${target.jurisdiction}'s registration. A changed or unavailable Census file leaves that state's prior GOOD registration live and cannot affect another state.`,
+    autoPromotable: true,
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  })),
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

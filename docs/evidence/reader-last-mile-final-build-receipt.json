@@ -1,10 +1,10 @@
 {
-  "exactHead": "48ade9df88ce6af1e9b7814ff8c61861e68c7574",
-  "buildId": "HorkZFXcRRHYBWhFEHnKL",
+  "exactHead": "ea1f2d80291bd02450d30ae4392ef11e2cbd7779",
+  "buildId": "y8GAHk2DQIdwtr_OH8tcc",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "48ade9df88ce6af1e9b7814ff8c61861e68c7574",
-    "commitShort": "48ade9d",
+    "commit": "ea1f2d80291bd02450d30ae4392ef11e2cbd7779",
+    "commitShort": "ea1f2d8",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -19,7 +19,7 @@
       "hasContext": false,
       "contextValue": null,
       "hasDeployId": false,
-      "dbRole": "production"
+      "dbRole": "local"
     }
   },
   "buildLogSha256": "eea509f0a292d6f9bf3852b82a91c196f9018687a601d5397ce4ca42e2883a1d",
@@ -50,7 +50,7 @@
     },
     {
       "path": "app/api/demand-signal/route.ts",
-      "sha256": "fbaeb1b935b6f77f8caefed42e7d3ffd31be5201717c1925524a86408299cf83"
+      "sha256": "4fce20d3eed0c3d3257f78912f81f6491e3f6527dc41a76dfc34b39516d686fd"
     },
     {
       "path": "app/api/directory/route.ts",
@@ -2170,11 +2170,11 @@
     },
     {
       "path": "lib/civic-data/changes.ts",
-      "sha256": "a265c2bb591c47000de032d318f94b0ad60bec8d3644e34d11e9b38b4562bac0"
+      "sha256": "d2417c6bcbfba1e7901ddecfdfb8970cab9f49fee165bc72d2dd5d3c53fb1c0e"
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "8b45197a3614d448bd132bb3341687c9fd690ea2c43ef489825fb88e460ffcb3"
+      "sha256": "aeebd645f68df0fa904130c5a704c6aaa88ace82a0c356b6b6982f41acbfa59f"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -2230,7 +2230,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "d40df350a1e1cfaa187e0ba175a4169ab000c5e1dfbd6b1b8ecc937f7d1d0a51"
+      "sha256": "b8db393df2ad45912f3ec03e52a84cf518af0c82df55dca911050bf3ef14e731"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2246,7 +2246,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "378c17c2dd8ff57877837d2fad357090663fe8c55f9192cae49510a523b1d30d"
+      "sha256": "e9e2f0ba73366d38d660bbe7bfd5ff8efc45470bb52a94bf7b0bc789bb143d1a"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2466,7 +2466,7 @@
     },
     {
       "path": "lib/holdings/datasets.ts",
-      "sha256": "8509b62e5fe88f7741582770a33d8650068bee0616c0fc7d198a745d02d14879"
+      "sha256": "1dfbb6b814a7e3c6c5fb87e0acc3926d7a45ac4c2ab4a7717f79f03da799b80a"
     },
     {
       "path": "lib/holdings/paths.ts",
@@ -2566,11 +2566,11 @@
     },
     {
       "path": "lib/meetings/edge-artifacts.ts",
-      "sha256": "233e1716f57f9784b8368eaa2dbcdd549fed95d7b616a344762e811670b8c749"
+      "sha256": "e55af7a252cadc03d5e89559790dad9b61492b6f6cc1cf4e493356fc83e1d504"
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "01384255770b2ec867674c7d1ff754babbd5e31a70ad9219f934e4927b34be5e"
+      "sha256": "cf909f932bb5d47ac27c2358a1b751eedd0b2a62b9a666da1f36428ff5ccc534"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -2845,6 +2845,18 @@
       "sha256": "e363fa9f0dded7b3068f622e488d9c6070005498184c4524eceff0f980e9cafb"
     },
     {
+      "path": "lib/registration/compose.ts",
+      "sha256": "14afa063bbf7b54b24ff195737bb28593921f83c7e3edbe990b6fe7967ffba37"
+    },
+    {
+      "path": "lib/registration/publication.ts",
+      "sha256": "a20430a94290e54fc8a6d5e703b3ee582d0b8d3072af4dabf21298a783a0e16d"
+    },
+    {
+      "path": "lib/registration/reader.ts",
+      "sha256": "452ad7a459fd06c4ef6ac186388c460d74df47b0ae8cfae4e5a25e5f4eb45fe8"
+    },
+    {
       "path": "lib/registry/body-class-labels.ts",
       "sha256": "0134db936b678e5474a265ce172ca02ba31b947143bdd8da86554010597c883a"
     },
@@ -2938,7 +2950,7 @@
     },
     {
       "path": "lib/registry/runtime-edge.ts",
-      "sha256": "3b121edb1e11e97f5b11d8c35f5a92a5b259538ad1b841566d224260b0e497f3"
+      "sha256": "e3a2b1f48b3a8054e0b3147e40be0ad5be95b209902e134b3bf66b74c24246da"
     },
     {
       "path": "lib/registry/runtime-read-model.ts",
@@ -2946,7 +2958,7 @@
     },
     {
       "path": "lib/registry/server.ts",
-      "sha256": "0fc6c298384d8c32850e8e552a2c886039558860327bc071bda2f65af302965e"
+      "sha256": "182203b5c43ade295f2e68e51e2e6ceac76b6650400dd969e37cf7cea3798f61"
     },
     {
       "path": "lib/registry/source-wiring.ts",
@@ -3114,7 +3126,7 @@
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "4eca73b9947b901944c4c297e33b2559b25e533c736dc97e587bf938dd791d36"
+      "sha256": "ff5f537718855aeb4d2f601a52c6720a5c4cbc7faeebb0e754001d37e41d9f7f"
     },
     {
       "path": "lib/sources/ical/recurrence.ts",
@@ -3414,7 +3426,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "104fa2993a76078548115629e736973dd598e5737e853926c0644f24c1fb5dca"
+      "sha256": "cf90886c0037703b99f15c100003979f2a3968a933224e7a120e8b69f65a4350"
     },
     {
       "path": "pnpm-lock.yaml",

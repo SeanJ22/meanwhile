@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { PDC_V2_POST_IMPORT_MEETING_PARTITIONS } from "../lib/holdings/reader-execution-authority.ts";
 import {
   readMeetingsProjection,
   readSnapshot,
@@ -155,7 +156,25 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
 
 test("meetings candidate proves SOURCE_WIRING obligations independently of row count", async () => {
   const coverage = meetingsWiringCoverage(fixture);
-  assert.equal(coverage.accounted, coverage.denominator);
+  /*
+   * The bootstrap fixture was frozen at the permanent data-plane cutover
+   * (generatedAt 2026-09-06). A route wired after it cannot be represented in
+   * it, so each such row is NAMED here rather than the check widened: Pima
+   * Community College moved from its robots-disallowed Diligent tenant to its
+   * own pima.edu pages on 2026-09-23 (RETIRED_MEETING_ROUTES), and the fixture
+   * still holds its sittings under the retired `diligent` route.
+   */
+  const WIRED_AFTER_FIXTURE = ["curated:az/pima-community-college#governing:PIMA_EDU"];
+  // The bundled fixture is frozen at the PDC v2 import: the only other
+  // obligations it may leave unaccounted are rows whose partitions were
+  // registered after it, each named in PDC_V2_POST_IMPORT_MEETING_PARTITIONS.
+  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
+  const expectedMissing = [
+    ...WIRED_AFTER_FIXTURE,
+    ...postImport.map((p) => `${p.bodyId}:${p.wiring.agendaSourceType}`),
+  ];
+  assert.deepEqual([...coverage.missing].sort(), [...expectedMissing].sort());
+  assert.equal(coverage.accounted, coverage.denominator - expectedMissing.length);
   assert.equal(coverage.denominator > 0, true);
   assert.equal(coverage.denominator === fixture.meetings.length, false);
 

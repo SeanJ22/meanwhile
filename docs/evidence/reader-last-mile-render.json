@@ -1,17 +1,17 @@
 {
   "date": "2026-09-23",
   "base": "http://localhost:3210",
-  "buildId": "_v0YgXondFE6JGacMt51t",
-  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-  "runId": "reader-last-mile-render@2026-09-24T00:09:11.998Z",
+  "buildId": "RdQEQ5F1pnKuDMyxeoaIq",
+  "exactHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+  "runId": "reader-last-mile-render@2026-09-24T03:40:53.386Z",
   "results": [
     {
       "label": "85701-desktop-dark",
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -223,7 +223,7 @@
       "ask": {
         "question": "How much campaign money has Katie Hobbs raised and spent?",
         "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
-        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's own committee collects from donors and then pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site, read September 8, 2026. That covers activity recorded from January 1, 2025 through that date. These are the campaign's own filings, so they do not show outside groups spending for or against her. We did not resolve any county or federal filing for her, which does not prove none exists.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
+        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site, read September 8, 2026 (covering activity from January 1, 2025 onward). These are the campaign's own filings, so they do not include outside groups spending for or against her. No county filing and no federal filing were found for this answer, which does not prove none exist.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -318,7 +318,7 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2480,
+            "ms": 2152,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -381,11 +381,11 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 4473,
+            "ms": 4695,
             "cache": {
               "callerKey": "synthetic-run",
-              "cacheReadInputTokens": 14820,
-              "cacheCreationInputTokens": 0,
+              "cacheReadInputTokens": 1008,
+              "cacheCreationInputTokens": 13812,
               "uncachedInputTokens": 94
             }
           },
@@ -404,9 +404,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 9537
+          "totalMs": 12580
         },
-        "answer": "Campaign money is the cash a candidate's own committee collects from donors and then pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site, read September 8, 2026. That covers activity recorded from January 1, 2025 through that date. These are the campaign's own filings, so they do not show outside groups spending for or against her. We did not resolve any county or federal filing for her, which does not prove none exists.",
+        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site, read September 8, 2026 (covering activity from January 1, 2025 onward). These are the campaign's own filings, so they do not include outside groups spending for or against her. No county filing and no federal filing were found for this answer, which does not prove none exist.",
         "renderedRecordCount": 53,
         "renderedRecordIds": [
           "candidate-bio:ballot-az-pima:governor|Katie Hobbs",
@@ -524,9 +524,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -6343,9 +6343,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -10666,9 +10666,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -12601,9 +12601,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -12636,7 +12636,7 @@
                 "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:09:45.568Z",
+              "recheckDueAt": "2026-09-24T03:41:21.178Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -16236,8 +16236,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -16474,7 +16474,7 @@
       "ask": {
         "question": "How much campaign money has Katie Hobbs raised and spent?",
         "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
-        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's own campaign committee collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to the Arizona Secretary of State's campaign finance site, covering activity from January 1, 2025 through September 8, 2026. These are the campaign's own filings, so they don't show money spent by outside groups for or against her. No federal or county filing records were found for this answer, which doesn't prove none exist.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
+        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site (read September 8, 2026, covering activity from January 1, 2025 to that date). These are the campaign's own filings, so they do not show outside spending for or against her, and we found no county or federal filing records for her.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -16569,7 +16569,7 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2292,
+            "ms": 2525,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -16632,7 +16632,7 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 4665,
+            "ms": 4506,
             "cache": {
               "callerKey": "synthetic-run",
               "cacheReadInputTokens": 14820,
@@ -16655,9 +16655,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 9447
+          "totalMs": 11948
         },
-        "answer": "Campaign money is the cash a candidate's own campaign committee collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to the Arizona Secretary of State's campaign finance site, covering activity from January 1, 2025 through September 8, 2026. These are the campaign's own filings, so they don't show money spent by outside groups for or against her. No federal or county filing records were found for this answer, which doesn't prove none exist.",
+        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site (read September 8, 2026, covering activity from January 1, 2025 to that date). These are the campaign's own filings, so they do not show outside spending for or against her, and we found no county or federal filing records for her.",
         "renderedRecordCount": 53,
         "renderedRecordIds": [
           "candidate-bio:ballot-az-pima:governor|Katie Hobbs",
@@ -16775,9 +16775,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -16810,7 +16810,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:10:49.667Z",
+              "recheckDueAt": "2026-09-24T03:42:32.019Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -16977,8 +16977,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -17238,7 +17238,7 @@
       "ask": {
         "question": "How much campaign money has Tayfun Selen raised and spent?",
         "canonicalCandidacyId": "ballot-nj-morris:county-commissioner:selen",
-        "renderedText": "Tayfun SELEN · Member of the Board of County Commissioners\n\nCampaign money means the donations a candidate collects and the money their campaign pays out. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports covering periods through June 22, 2026, filed with the New Jersey Election Law Enforcement Commission (read September 8, 2026). These are the campaign's own filings, so they don't show outside spending for or against him. We did not resolve any county filing or any federal record for him, which doesn't mean none exists.\n\nRecords (11)\n\n“He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.” — From the candidate's site — selenformorriscounty.com, read 2026-08-14\n\nFrom the candidate's site — selenformorriscounty.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: selentayfun@gmail.com\n\nMorris County Clerk · Read September 18th, 2026\n\nFiled mailing address: 30 Woodmont Drive Chatham NJ 07928\n\nMorris County Clerk, 2026 general-election candidate filing (read 2026-08-22) · Read August 22nd, 2026\n\nOfficial page: https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://www.selenformorriscounty.com/\n\nCampaign site · Read August 22nd, 2026\n\nMember of the Board of County Commissioners appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 3 years.\n\nMorris County Clerk · Read September 18th, 2026\n\nTayfun SELEN filed for Member of the Board of County Commissioners, as Republican. The filing does not state whether they are the incumbent.\n\nMorris County Clerk · Read September 18th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… Chatham Borough Zoning Board of Adjustment, and as a Chatham Township Committeeman and Mayor. As mayor, Commissioner Selen was responsible for reducing municipal property taxes, helping the township maintain a rare AAA credit rating, and reducing municipal spending by more than 10 percent. He also holds a seat on the Montclair State University …\"\n\nwww.morriscountynj.gov · Read August 20th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… citizenship in 2008 and currently lives in Chatham Township with his wife and daughter. PROVEN CONSERVATIVE As a Mayor of Chatham Township, Tayfun cut municipal property taxes, earned a rare AAA credit rating, and reduced local spending by $200,000. PRIVATE SECTOR SUCCESS Professionally, Tayfun serves as Senior Vice President of Administration …\"\n\nwww.selenformorriscounty.com · Read August 20th, 2026\n\nTayfun Selen holds the office of County Commissioner, Republican.\n\nMorris County · Read August 14th, 2026\n\nSELEN, TAYFUN, 2026 election cycle: raised $225,025.50; spent $229,525.50. Filed with the New Jersey Election Law Enforcement Commission; read September 8th, 2026.\n\nNew Jersey Election Law Enforcement Commission · Read September 8th, 2026\n\nWe have not recorded any actions in office for Tayfun Selen.\n\nWe have not established a canonical voting-office identity for Tayfun SELEN, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Tayfun SELEN. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Tayfun SELEN.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (9)\n\nSources: From the candidate's site — selenformorriscounty.com, read 2026-08-14, Morris County Clerk, Morris County Clerk, 2026 general-election candidate filing (read 2026-08-22), Official page, Campaign site, www.morriscountynj.gov, www.selenformorriscounty.com, Morris County, New Jersey Election Law Enforcement Commission",
+        "renderedText": "Tayfun SELEN · Member of the Board of County Commissioners\n\nCampaign money is the cash a candidate's campaign collects from donors and then pays out for things like ads and staff. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports covering periods through June 22, 2026. That comes from filings with the New Jersey Election Law Enforcement Commission, read September 8, 2026. These are the campaign's own filings, so they don't show outside spending for or against him, and we did not resolve any county or federal money records for him — which doesn't prove none exist.\n\nRecords (11)\n\n“He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.” — From the candidate's site — selenformorriscounty.com, read 2026-08-14\n\nFrom the candidate's site — selenformorriscounty.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: selentayfun@gmail.com\n\nMorris County Clerk · Read September 18th, 2026\n\nFiled mailing address: 30 Woodmont Drive Chatham NJ 07928\n\nMorris County Clerk, 2026 general-election candidate filing (read 2026-08-22) · Read August 22nd, 2026\n\nOfficial page: https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://www.selenformorriscounty.com/\n\nCampaign site · Read August 22nd, 2026\n\nMember of the Board of County Commissioners appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 3 years.\n\nMorris County Clerk · Read September 18th, 2026\n\nTayfun SELEN filed for Member of the Board of County Commissioners, as Republican. The filing does not state whether they are the incumbent.\n\nMorris County Clerk · Read September 18th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… Chatham Borough Zoning Board of Adjustment, and as a Chatham Township Committeeman and Mayor. As mayor, Commissioner Selen was responsible for reducing municipal property taxes, helping the township maintain a rare AAA credit rating, and reducing municipal spending by more than 10 percent. He also holds a seat on the Montclair State University …\"\n\nwww.morriscountynj.gov · Read August 20th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… citizenship in 2008 and currently lives in Chatham Township with his wife and daughter. PROVEN CONSERVATIVE As a Mayor of Chatham Township, Tayfun cut municipal property taxes, earned a rare AAA credit rating, and reduced local spending by $200,000. PRIVATE SECTOR SUCCESS Professionally, Tayfun serves as Senior Vice President of Administration …\"\n\nwww.selenformorriscounty.com · Read August 20th, 2026\n\nTayfun Selen holds the office of County Commissioner, Republican.\n\nMorris County · Read August 14th, 2026\n\nSELEN, TAYFUN, 2026 election cycle: raised $225,025.50; spent $229,525.50. Filed with the New Jersey Election Law Enforcement Commission; read September 8th, 2026.\n\nNew Jersey Election Law Enforcement Commission · Read September 8th, 2026\n\nWe have not recorded any actions in office for Tayfun Selen.\n\nWe have not established a canonical voting-office identity for Tayfun SELEN, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Tayfun SELEN. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Tayfun SELEN.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (9)\n\nSources: From the candidate's site — selenformorriscounty.com, read 2026-08-14, Morris County Clerk, Morris County Clerk, 2026 general-election candidate filing (read 2026-08-22), Official page, Campaign site, www.morriscountynj.gov, www.selenformorriscounty.com, Morris County, New Jersey Election Law Enforcement Commission",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -17315,8 +17315,8 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2683,
-            "intent": "PERSON_RECORD",
+            "ms": 2411,
+            "intent": "UNKNOWN",
             "temporal": {
               "kind": "NONE"
             },
@@ -17371,12 +17371,12 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 3847,
+            "ms": 3931,
             "cache": {
               "callerKey": "synthetic-run",
-              "cacheReadInputTokens": 7528,
-              "cacheCreationInputTokens": 0,
-              "uncachedInputTokens": 94
+              "cacheReadInputTokens": 1008,
+              "cacheCreationInputTokens": 6520,
+              "uncachedInputTokens": 92
             }
           },
           "validation": {
@@ -17394,9 +17394,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 9509
+          "totalMs": 10257
         },
-        "answer": "Campaign money means the donations a candidate collects and the money their campaign pays out. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports covering periods through June 22, 2026, filed with the New Jersey Election Law Enforcement Commission (read September 8, 2026). These are the campaign's own filings, so they don't show outside spending for or against him. We did not resolve any county filing or any federal record for him, which doesn't mean none exists.",
+        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then pays out for things like ads and staff. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports covering periods through June 22, 2026. That comes from filings with the New Jersey Election Law Enforcement Commission, read September 8, 2026. These are the campaign's own filings, so they don't show outside spending for or against him, and we did not resolve any county or federal money records for him — which doesn't prove none exist.",
         "renderedRecordCount": 11,
         "renderedRecordIds": [
           "candidate-bio:ballot-nj-morris:county-commissioner:selen",
@@ -17450,9 +17450,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -17650,8 +17650,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -17978,7 +17978,7 @@
       "ask": {
         "question": "How much campaign money has Kelly Ayotte raised and spent?",
         "canonicalCandidacyId": "ballot-nh-merrimack:governor:ayotte-kelly",
-        "renderedText": "Kelly Ayotte · Governor\n\nCampaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62, according to the New Hampshire Secretary of State's campaign finance system as read on September 8, 2026. That filing does not tell us how much cash is left on hand. These are the campaign's own filings, so they do not cover outside groups spending for or against her, and we did not resolve any federal or county filings.\n\nRecords (9)\n\n“Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.” — In the campaign's words — kellyfornh.com, read 2026-08-14\n\nIn the campaign's words — kellyfornh.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded phone: (603) 271-2121\n\nwww.governor.nh.gov · Read August 21st, 2026\n\nFiled mailing address: PO Box 4723, Manchester NH 03108 This contact's source URL or read date was not recorded.\n\nNew Hampshire Secretary of State, 2026 candidate filing\n\nOfficial page: https://www.governor.nh.gov/meet-governor-ayotte\n\nOfficial page · Read August 21st, 2026\n\nCampaign site: https://kellyfornh.com\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte filed for Governor, as Republican. The filing does not state whether they are the incumbent.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte holds the office of Governor, Republican.\n\nOffice of the Governor of New Hampshire · Read August 14th, 2026\n\nKelly for New Hampshire, 2026 election cycle: raised $6,112,059.13; spent $3,941,563.62. Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 8th, 2026.\n\nNew Hampshire Secretary of State — Campaign Finance System · Read September 8th, 2026\n\nWe have not recorded any actions in office for Kelly Ayotte.\n\nWe have not established a canonical voting-office identity for Kelly Ayotte, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Kelly Ayotte. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Kelly Ayotte.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: In the campaign's words — kellyfornh.com, read 2026-08-14, www.governor.nh.gov, Official page, Campaign site, New Hampshire Secretary of State, Office of the Governor of New Hampshire, New Hampshire Secretary of State — Campaign Finance System",
+        "renderedText": "Kelly Ayotte · Governor\n\nCampaign money is the cash a candidate's campaign collects from donors and the money it pays out. For the 2026 election cycle, Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62, according to its filing with the New Hampshire Secretary of State's campaign finance system, read September 8, 2026. That filing covers the campaign's own money only — it does not show spending by outside groups for or against her. We have not recorded a cash-on-hand figure.\n\nRecords (9)\n\n“Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.” — In the campaign's words — kellyfornh.com, read 2026-08-14\n\nIn the campaign's words — kellyfornh.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded phone: (603) 271-2121\n\nwww.governor.nh.gov · Read August 21st, 2026\n\nFiled mailing address: PO Box 4723, Manchester NH 03108 This contact's source URL or read date was not recorded.\n\nNew Hampshire Secretary of State, 2026 candidate filing\n\nOfficial page: https://www.governor.nh.gov/meet-governor-ayotte\n\nOfficial page · Read August 21st, 2026\n\nCampaign site: https://kellyfornh.com\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte filed for Governor, as Republican. The filing does not state whether they are the incumbent.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte holds the office of Governor, Republican.\n\nOffice of the Governor of New Hampshire · Read August 14th, 2026\n\nKelly for New Hampshire, 2026 election cycle: raised $6,112,059.13; spent $3,941,563.62. Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 8th, 2026.\n\nNew Hampshire Secretary of State — Campaign Finance System · Read September 8th, 2026\n\nWe have not recorded any actions in office for Kelly Ayotte.\n\nWe have not established a canonical voting-office identity for Kelly Ayotte, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Kelly Ayotte. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Kelly Ayotte.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: In the campaign's words — kellyfornh.com, read 2026-08-14, www.governor.nh.gov, Official page, Campaign site, New Hampshire Secretary of State, Office of the Governor of New Hampshire, New Hampshire Secretary of State — Campaign Finance System",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -18027,7 +18027,7 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2603,
+            "ms": 2720,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -18083,7 +18083,7 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 3630,
+            "ms": 4408,
             "cache": {
               "callerKey": "synthetic-run",
               "cacheReadInputTokens": 1008,
@@ -18106,9 +18106,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 12484
+          "totalMs": 10791
         },
-        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62, according to the New Hampshire Secretary of State's campaign finance system as read on September 8, 2026. That filing does not tell us how much cash is left on hand. These are the campaign's own filings, so they do not cover outside groups spending for or against her, and we did not resolve any federal or county filings.",
+        "answer": "Campaign money is the cash a candidate's campaign collects from donors and the money it pays out. For the 2026 election cycle, Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62, according to its filing with the New Hampshire Secretary of State's campaign finance system, read September 8, 2026. That filing covers the campaign's own money only — it does not show spending by outside groups for or against her. We have not recorded a cash-on-hand figure.",
         "renderedRecordCount": 9,
         "renderedRecordIds": [
           "candidate-bio:ballot-nh-merrimack:governor:ayotte-kelly",
@@ -18160,9 +18160,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -18195,7 +18195,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:12:31.797Z",
+              "recheckDueAt": "2026-09-24T03:44:20.735Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -18406,8 +18406,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -18545,9 +18545,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -24364,9 +24364,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -28687,9 +28687,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -30622,9 +30622,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:09:19.671Z",
-              "retrievedAt": "2026-09-24T00:09:19.759Z",
-              "promotedAt": "2026-09-24T00:09:20.329Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -30657,7 +30657,7 @@
                 "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:14:29.572Z",
+              "recheckDueAt": "2026-09-24T03:45:58.404Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -34257,8 +34257,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -34396,9 +34396,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -34431,7 +34431,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:15:06.034Z",
+              "recheckDueAt": "2026-09-24T03:46:32.915Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -34598,8 +34598,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -34760,9 +34760,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -34960,8 +34960,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -35084,9 +35084,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -35119,7 +35119,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:16:08.785Z",
+              "recheckDueAt": "2026-09-24T03:47:21.181Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -35330,8 +35330,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -35469,9 +35469,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -41288,9 +41288,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -45611,9 +45611,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -47546,9 +47546,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -47581,7 +47581,7 @@
                 "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:17:16.415Z",
+              "recheckDueAt": "2026-09-24T03:48:19.501Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -51465,8 +51465,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -51604,9 +51604,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -51639,7 +51639,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:17:46.084Z",
+              "recheckDueAt": "2026-09-24T03:48:56.746Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -51806,8 +51806,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -51968,9 +51968,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -52542,8 +52542,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -52666,9 +52666,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:14:45.379Z",
-              "retrievedAt": "2026-09-24T00:14:46.086Z",
-              "promotedAt": "2026-09-24T00:14:46.454Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -52701,7 +52701,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:18:27.267Z",
+              "recheckDueAt": "2026-09-24T03:49:50.927Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -52912,8 +52912,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -53051,9 +53051,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:18:56.040Z",
-              "retrievedAt": "2026-09-24T00:18:56.065Z",
-              "promotedAt": "2026-09-24T00:18:56.404Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -58870,9 +58870,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:18:56.040Z",
-              "retrievedAt": "2026-09-24T00:18:56.065Z",
-              "promotedAt": "2026-09-24T00:18:56.404Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -63193,9 +63193,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:18:56.040Z",
-              "retrievedAt": "2026-09-24T00:18:56.065Z",
-              "promotedAt": "2026-09-24T00:18:56.404Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -65128,9 +65128,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:18:56.040Z",
-              "retrievedAt": "2026-09-24T00:18:56.065Z",
-              "promotedAt": "2026-09-24T00:18:56.404Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -65163,7 +65163,7 @@
                 "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:19:29.261Z",
+              "recheckDueAt": "2026-09-24T03:50:53.818Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -69047,8 +69047,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -69186,9 +69186,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:19:10.002Z",
-              "retrievedAt": "2026-09-24T00:19:15.330Z",
-              "promotedAt": "2026-09-24T00:19:17.199Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -69221,7 +69221,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:20:05.348Z",
+              "recheckDueAt": "2026-09-24T03:51:26.574Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -69388,8 +69388,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -69550,9 +69550,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:19:10.002Z",
-              "retrievedAt": "2026-09-24T00:19:15.330Z",
-              "promotedAt": "2026-09-24T00:19:17.199Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -70124,8 +70124,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -70248,9 +70248,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-24T00:19:10.002Z",
-              "retrievedAt": "2026-09-24T00:19:15.330Z",
-              "promotedAt": "2026-09-24T00:19:17.199Z",
+              "sourceThrough": "2026-09-24T03:38:14.910Z",
+              "retrievedAt": "2026-09-24T03:38:16.952Z",
+              "promotedAt": "2026-09-24T03:38:17.438Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -70283,7 +70283,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-24T00:20:43.892Z",
+              "recheckDueAt": "2026-09-24T03:52:07.678Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],

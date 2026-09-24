@@ -1,5 +1,6 @@
 import { agendaItems, agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../meetings/notice-pages.ts";
+import { agendaDocumentRepresentation } from "./agenda-publication.ts";
 import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import { localDate } from "./meeting-time.ts";
@@ -364,7 +365,12 @@ export function buildTopicTimeline(input: {
   // another body's page, or a notice page that states no agenda item, is not
   // searched, not counted among the agendas held, and does not make a sitting
   // read. CAP's meetings page held for Pima's Oct 13 study session is both.
+  // Nor is a publisher portal's shell, which the publication reading already
+  // names as a portal: Newbury Selectboard's nine held pages (four CivicWeb
+  // shells, five copies of Bradford's calendar) were answered as "the 9
+  // agendas we hold" beside a gap saying none of them was readable.
   const documents = input.documents.filter((document) =>
+    agendaDocumentRepresentation(document) !== "PUBLICATION_PORTAL" &&
     !isAnotherBodysNoticePage(document.documentUrl, { bodyId: input.bodyId, publisher: document.sourceOrg }) &&
     !(isWiredNoticePage(document.documentUrl) && agendaItems(document.text ?? "").length === 0));
   const byMeeting = new Map(input.meetings.map((meeting) => [meeting.id, meeting]));

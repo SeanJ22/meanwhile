@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { classifyAgendaPublication, readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
-import { buildTopicTimeline } from "../lib/ask/topic-timeline.ts";
+import { buildTopicTimeline, composeTopicAnswer } from "../lib/ask/topic-timeline.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import { agendaTopicFor } from "../lib/routing/agenda-search.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
@@ -118,4 +118,33 @@ test("Ask's topic timeline neither searches CAP's page nor counts Oct 13 as a re
   assert.equal(timeline.denominators.topicAgendaDocumentsSearched ?? 0, 0, "CAP's page was searched as a Pima agenda");
   assert.ok(timeline.unreadSittings.some((sitting) => sitting.meetingId === studySession.id),
     "Oct 13 read as a sitting whose agenda we hold");
+});
+
+test("Newbury Selectboard: portal shells and another town's calendar are not 'the agendas we hold'", () => {
+  /*
+   * Production, 2026-09-24: "No mention of a cell tower in the 9 agendas we
+   * hold for Newbury Selectboard", beside a gap saying none of them was
+   * readable. The nine were four CivicWeb portal shells and five copies of the
+   * Town of Bradford's calendar. Recorded read-only that day.
+   */
+  const NEWBURY = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town";
+  const HELD9 = JSON.parse(readFileSync("tests/fixtures/newbury-selectboard-held-2026-09-24.json", "utf8")) as {
+    readonly portal: { readonly url: string; readonly extraction: string; readonly text: string };
+    readonly calendar: { readonly url: string; readonly extraction: string; readonly text: string };
+  };
+  const sittings = Array.from({ length: 9 }, (_, index) => ({
+    id: `newbury-selectboard-${index}`, bodyName: "Newbury Selectboard", title: "Selectboard",
+    startsAt: new Date(Date.parse("2026-08-17T18:00:00-04:00") + index * 7 * 86_400_000).toISOString(),
+    timeZone: "America/New_York", agendaUrl: null, status: "SCHEDULED",
+    provenance: { sourceUrl: "https://www.newbury.nh.gov/calendar", sourceOrg: "Town of Newbury" },
+  }));
+  const documents = sittings.map((sitting, index) => {
+    const page = index < 4 ? HELD9.portal : HELD9.calendar;
+    return held({ meetingId: sitting.id, ocdId: NEWBURY, url: page.url, text: page.text, sourceOrg: "Town of Newbury" });
+  });
+  const timeline = buildTopicTimeline({ topic: agendaTopicFor("cell tower")!, bodyId: `${NEWBURY}#governing`,
+    bodyName: "Newbury Selectboard", meetings: sittings, documents, sittings: [], now: NOW });
+  assert.equal(timeline.denominators.topicAgendaDocumentsSearched ?? 0, 0, "portal pages and a lent calendar were counted as agendas");
+  const composed = composeTopicAnswer(timeline, NOW);
+  assert.doesNotMatch(composed?.answer ?? "", /in the \d+ agendas? we hold/, "an answer claimed agendas we do not hold");
 });

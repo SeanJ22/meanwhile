@@ -296,7 +296,8 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
    * confirms census.gov still serves the pinned Census of Governments bytes and
    * registers that state's governments on their Census divisions, never an id
    * the reviewed registry writes. They share one failure domain, so the runner
-   * takes one state per pass and one Census download at a time.
+   * takes one state per pass and one Census request at a time; the request is
+   * conditional, so an unchanged file downloads nothing (lib/registration/acquire.ts).
    */
   ...REGISTRATION_TARGETS.map((target): RoutineSourceContract => ({
     id: target.contractId,
@@ -310,7 +311,8 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       requestedUrl: REGISTRATION_SOURCE_URL,
     },
     parserNormalizerVersion: REGISTRATION_PARSER_VERSION,
-    cadence: { description: "monthly confirmation of the pinned Census of Governments vintage", defaultEveryMs: 30 * DAY },
+    // Census publishes this file every five years; each check asks conditionally, so an unchanged file is a 304 with no body.
+    cadence: { description: "every 90 days, a conditional request confirms census.gov still serves the pinned Census of Governments vintage", defaultEveryMs: 90 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: REGISTRATION_SOURCE_ID },
     validationContract: CHECKS,

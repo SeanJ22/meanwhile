@@ -8,11 +8,13 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { SOURCE_AUTHORITIES } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { notModifiedIssue, validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { acquireRegistrationSource, type RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
 import { escapedJsonBytes, registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
 import {
   REGISTRATION_MAX_CANDIDATE_BYTES,
   REGISTRATION_SOURCE_BYTES,
+  REGISTRATION_SOURCE_LAST_MODIFIED,
   REGISTRATION_SOURCE_SHA256,
   REGISTRATION_SOURCE_URL,
   REGISTRATION_TARGETS,
@@ -42,6 +44,7 @@ const RECEIPT: RegistrationSourceReceipt = {
   retrievedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   sha256: REGISTRATION_SOURCE_SHA256,
   bytes: REGISTRATION_SOURCE_BYTES,
+  confirmedBy: "BYTES_HASHED",
 };
 
 /** The reviewed registry's ids, from its committed first seed (the promoted projection's shape). */
@@ -68,7 +71,7 @@ test("one registration contract per state, DC and territory in the FIPS table, e
   for (const c of contracts) {
     assert.equal(c.acquisitionAdapter.authorityMode, "SINGLE_ROUTE");
     assert.equal(c.acquisitionAdapter.requestedUrl, REGISTRATION_SOURCE_URL);
-    assert.equal(c.cadence.defaultEveryMs, 30 * 24 * 60 * 60 * 1000);
+    assert.equal(c.cadence.defaultEveryMs, 90 * 24 * 60 * 60 * 1000, "a five-yearly Census file is confirmed every 90 days");
     assert.ok(c.readerProjection?.consumers.includes("lib/registration/reader.ts"));
   }
   assert.ok(existsSync(join(ROOT, "scripts", "registration-refresh.mts")));
@@ -144,7 +147,7 @@ test("the largest state stays well inside the response bound, and a state with n
 
 test("only the pinned Census bytes from census.gov over HTTPS are accepted; anything else is refused by name", async () => {
   const signal = new AbortController().signal;
-  const serve = (body: Uint8Array, init: { status?: number; url?: string } = {}): typeof fetch =>
+  const serve = (body: Uint8Array<ArrayBuffer>, init: { status?: number; url?: string } = {}): typeof fetch =>
     (async () => {
       const response = new Response(body, { status: init.status ?? 200, headers: { "content-length": String(body.byteLength) } });
       Object.defineProperty(response, "url", { value: init.url ?? REGISTRATION_SOURCE_URL });
@@ -163,4 +166,73 @@ test("only the pinned Census bytes from census.gov over HTTPS are accepted; anyt
   assert.equal(await refusal(serve(new Uint8Array(1024))), "PUBLISHER_DOCUMENT_INVALID");
   assert.equal(await refusal(serve(new Uint8Array(1024), { url: "https://example.org/govt_units_2022.ZIP" })), "PUBLISHER_RESPONSE_REFUSED");
   assert.equal(await refusal(serve(new Uint8Array(1024), { status: 503 })), "PUBLISHER_RESPONSE_REFUSED");
+});
+
+test("census.gov is asked conditionally: a 304 confirms the pinned file with no body, and a changed date is refused before its body is read", async () => {
+  const signal = new AbortController().signal;
+  const sent: Headers[] = [];
+  let pulled = false;
+  const answer = (status: number, headers: Record<string, string> = {}): typeof fetch =>
+    (async (_url: string | URL | Request, init?: RequestInit) => {
+      sent.push(new Headers(init?.headers));
+      // A zero high-water mark: the stream is pulled only when something reads it, never to fill its own queue.
+      const body = status === 304 ? null : new ReadableStream<Uint8Array>({ pull(controller) { pulled = true; controller.enqueue(new Uint8Array(1024)); controller.close(); } }, { highWaterMark: 0 });
+      const response = new Response(body, { status, headers });
+      Object.defineProperty(response, "url", { value: REGISTRATION_SOURCE_URL });
+      return response;
+    }) as typeof fetch;
+
+  const confirmed = await acquireRegistrationSource({ signal, fetchImpl: answer(304) });
+  assert.equal(sent[0].get("if-modified-since"), REGISTRATION_SOURCE_LAST_MODIFIED, "every check is conditional on the pinned Last-Modified");
+  assert.deepEqual(
+    { status: confirmed.httpStatus, sha256: confirmed.sha256, bytes: confirmed.bytes, confirmedBy: confirmed.confirmedBy },
+    { status: 304, sha256: REGISTRATION_SOURCE_SHA256, bytes: REGISTRATION_SOURCE_BYTES, confirmedBy: "NOT_MODIFIED_SINCE_PIN" },
+  );
+
+  pulled = false;
+  await assert.rejects(
+    acquireRegistrationSource({ signal, fetchImpl: answer(200, { "last-modified": "Tue, 01 Jun 2027 00:00:00 GMT" }) }),
+    (error: unknown) => isSourceAcquisitionFailure(error) && (error as { code: string }).code === "PUBLISHER_DOCUMENT_INVALID" && /its body was not read/.test(String((error as Error).message)),
+  );
+  assert.equal(pulled, false, "a new vintage costs no download");
+
+  // A server that ignored the condition answers 200 with the pinned date: its body is read and held to the pinned hash.
+  pulled = false;
+  await assert.rejects(
+    acquireRegistrationSource({ signal, fetchImpl: answer(200, { "last-modified": REGISTRATION_SOURCE_LAST_MODIFIED }) }),
+    (error: unknown) => isSourceAcquisitionFailure(error) && /not the pinned 11459763 bytes/.test(String((error as Error).message)),
+  );
+  assert.equal(pulled, true, "the probe sees a read, so its silence above is a real no-download");
+});
+
+test("a 304 is authentic only as registration's pinned file; any other 304 is refused by name", async () => {
+  const target = registrationTarget("NH");
+  const reviewed = reviewedFromFirstSeed();
+  const reference = loadRegistrationReference(ROOT, "NH");
+  const store = new MemoryRoutineDataStore();
+
+  // First the hashed read, then a later 304: the bound pairing promotes, and nothing changed.
+  const first = registrationCandidate({ target, reference, receipt: RECEIPT, reviewed });
+  assert.equal((await processRegisteredRoutineCandidate(store, target.contractId, first, RECEIPT.retrievedAt)).promoted?.versionId, first.id);
+  const notModified: RegistrationSourceReceipt = { ...RECEIPT, httpStatus: 304, confirmedBy: "NOT_MODIFIED_SINCE_PIN", retrievedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString() };
+  const second = registrationCandidate({ target, reference, receipt: notModified, reviewed });
+  assert.equal(notModifiedIssue(second), null);
+  const again = await processRegisteredRoutineCandidate(store, target.contractId, second, notModified.retrievedAt);
+  assert.equal(again.promoted?.versionId, second.id, `${again.candidate.failureCode ?? ""} ${again.candidate.failureDetail ?? ""}`);
+  assert.equal(again.candidate.candidate.changeSet?.outcome, "UNCHANGED", "a 304 is the validated no-change receipt");
+  assert.match(JSON.stringify(again.candidate.receipt), /304 Not Modified against the pinned Last-Modified/);
+
+  // A 304 naming some other bytes is refused.
+  const otherBytes = registrationCandidate({ target, reference, receipt: { ...notModified, sha256: "0".repeat(64) }, reviewed });
+  const refusedOther = validateRoutineCandidate(otherBytes, null, notModified.retrievedAt);
+  const authenticity = refusedOther.receipt.checks.find((c) => c.check === "SOURCE_AUTHENTICITY");
+  assert.equal(authenticity?.verdict, "FAIL");
+  assert.equal(authenticity?.code, "NOT_MODIFIED_WITHOUT_BOUND_PIN");
+
+  // A 304 whose raw hash is not built from the pinned bytes is refused.
+  const forged = { ...second, retrieval: { ...second.retrieval, rawHash: "f".repeat(64) } };
+  assert.match(notModifiedIssue(forged) ?? "", /raw hash is not the one registration builds/);
+
+  // A 304 for a class that pins no bytes to a Last-Modified is refused: nothing was acquired.
+  assert.match(notModifiedIssue({ ...second, recordClass: "MEETING" }) ?? "", /pins no bytes to a Last-Modified/);
 });

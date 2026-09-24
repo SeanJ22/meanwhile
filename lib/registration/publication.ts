@@ -26,7 +26,7 @@ export const REGISTRATION_SOURCE_URL = "https://www2.census.gov/programs-surveys
 export const REGISTRATION_SOURCE_SHA256 = "3ef3d93c91697b00d4d53384176dc584db9dacbd0f0a23e45657f0a3a1058c28" as const;
 export const REGISTRATION_SOURCE_BYTES = 11_459_763;
 /**
- * The Last-Modified census.gov serves with exactly the pinned bytes (one full read, 2026-09-24:
+ * The Last-Modified census.gov serves with exactly the pinned bytes (one full read, 2026-09-23:
  * `data/reference/census_govt_units_2022.md`). Each run asks with If-Modified-Since set to it, so an
  * unchanged file is confirmed by a 304 with no body, and a changed one is refused on its headers.
  */

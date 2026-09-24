@@ -5,7 +5,8 @@
  *
  * The standing runner invokes this for each state's REGISTRATION contract
  * (`lib/civic-data/contracts.ts`). It confirms census.gov still serves the
- * pinned Census of Governments bytes, reads the state's committed reference
+ * pinned Census of Governments bytes (a conditional request: a 304 downloads
+ * nothing), reads the state's committed reference
  * and the promoted reviewed registry, builds the candidate
  * (`lib/registration/candidate.ts`) and hands it to the promotion engine,
  * the one authorized door. It writes no file. A changed or unavailable Census
@@ -25,7 +26,7 @@ import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { acquireRegistrationSource } from "../lib/registration/acquire.ts";
+import { acquireRegistrationSource, type RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
 import { registrationTarget, type RegistrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
@@ -65,8 +66,10 @@ async function main(): Promise<void> {
   const store = new PostgresRoutineDataStore();
 
   let candidate: RoutineCandidate;
+  let confirmedBy: RegistrationSourceReceipt["confirmedBy"];
   try {
     const receipt = await withPublisherAcquisitionDeadline("Census of Governments (2022)", ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, (signal) => acquireRegistrationSource({ signal }));
+    confirmedBy = receipt.confirmedBy;
     candidate = registrationCandidate({
       target,
       reference: loadRegistrationReference(process.cwd(), target.state),
@@ -87,6 +90,7 @@ async function main(): Promise<void> {
       JSON.stringify({
         source: target.contractId,
         candidateId: candidate.id,
+        confirmedBy,
         coverage: counts,
         acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
         state: outcome.candidate.state,

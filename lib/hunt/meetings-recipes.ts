@@ -34,6 +34,14 @@ export const RECIPE_KIND = "MEETINGS_RECIPE";
 export const RECIPE_SOURCE = "meetings-recipes";
 
 /** How long a failure for one jurisdiction stands before the recipe is tried there again. */
+/**
+ * How long a method is held off one government after it failed there. One
+ * failed route is not proof the information is not there (RULING 250), so the
+ * first failure holds only RECIPE_FAILURE_FIRST_HOLD_DAYS. Each consecutive
+ * failure on the same government doubles the hold, up to
+ * RECIPE_FAILURE_HOLD_DAYS. A success clears it.
+ */
+export const RECIPE_FAILURE_FIRST_HOLD_DAYS = 3;
 export const RECIPE_FAILURE_HOLD_DAYS = 30;
 /** Failures remembered per recipe, newest kept. The counts are exact; the list is bounded. */
 const FAILED_FOR_BOUND = 200;
@@ -61,6 +69,14 @@ export interface RecipeOutcome {
 export interface RecipeFailure extends RecipeOutcome {
   /** Why the method stopped here: the rung, the verdict, the wall. */
   readonly limit: string;
+  /** Consecutive failures of this method on this government, this one included. Absent on failures recorded before the count existed, which read as 1. */
+  readonly streak?: number;
+}
+
+/** The days a failure holds its method off its government: 3 after the first, doubling with each consecutive failure, at most 30. */
+export function recipeFailureHoldDays(failure: Pick<RecipeFailure, "streak">): number {
+  const streak = Math.max(1, Math.floor(failure.streak ?? 1));
+  return Math.min(RECIPE_FAILURE_HOLD_DAYS, RECIPE_FAILURE_FIRST_HOLD_DAYS * 2 ** (streak - 1));
 }
 
 export interface MeetingsRecipe {
@@ -292,9 +308,25 @@ export function recipesFor(
 
 /** Is a failure of this recipe for this jurisdiction still standing? Then it is not tried again yet. */
 export function failureStands(recipe: MeetingsRecipe, jurisdictionId: string, nowIso: string): RecipeFailure | null {
-  const holdMs = RECIPE_FAILURE_HOLD_DAYS * 86_400_000;
-  const standing = recipe.failedFor.find((f) => f.jurisdictionId === jurisdictionId && Date.parse(nowIso) - Date.parse(f.at) < holdMs);
+  const standing = recipe.failedFor.find(
+    (f) => f.jurisdictionId === jurisdictionId && Date.parse(nowIso) - Date.parse(f.at) < recipeFailureHoldDays(f) * 86_400_000,
+  );
   return standing ?? null;
+}
+
+/**
+ * A link step follows navigation, not news. A headline that names the council
+ * ("Chandler City Council Appoints … City Attorney", 2026-09-24) is a story,
+ * not the page where a body keeps its meetings. Such a link cost a request and
+ * a 30-day hold. So a followed link carries a short label, and it does not sit
+ * under a news, press, blog or article section of the site.
+ */
+export const LINK_STEP_MAX_WORDS = 6;
+const LINK_STEP_STORY_PATH = /\/(news|news-center|newsroom|press|press-releases?|blogs?|stories|articles?|posts?)(\/|$)/i;
+
+export function isNavigationLink(link: { readonly url: string; readonly text: string }): boolean {
+  const words = link.text.split(/\s+/).filter((w) => w !== "").length;
+  return words > 0 && words <= LINK_STEP_MAX_WORDS && !LINK_STEP_STORY_PATH.test(new URL(link.url).pathname);
 }
 
 export interface RecipeCandidate {
@@ -324,7 +356,7 @@ export function recipeCandidates(input: {
     if (recipe.precondition !== null && !new RegExp(recipe.precondition, "i").test(input.homepageHtml)) continue;
     const standing = failureStands(recipe, input.need.jurisdictionId, input.nowIso);
     if (standing !== null) {
-      skipped.push({ recipeId: recipe.recipeId, why: `failed here at ${standing.at} (${standing.limit}); not paid for again until ${RECIPE_FAILURE_HOLD_DAYS} days pass` });
+      skipped.push({ recipeId: recipe.recipeId, why: `failed here at ${standing.at} (${standing.limit}); not paid for again until ${recipeFailureHoldDays(standing)} days pass` });
       continue;
     }
     for (const step of recipe.navigation) {
@@ -335,6 +367,7 @@ export function recipeCandidates(input: {
         for (const link of anchorLinks(input.homepageHtml, `${input.origin}/`)) {
           if (followed.size >= step.max) break;
           if (new URL(link.url).host.toLowerCase() !== ownHost || !pattern.test(link.text) || followed.has(link.url)) continue;
+          if (!isNavigationLink(link)) continue;
           followed.add(link.url);
           candidates.push({ recipeId: recipe.recipeId, extractorId: recipe.extractorId, url: link.url, label: link.text });
         }
@@ -364,11 +397,14 @@ export function recordRecipeOutcome(
       failedFor: recipe.failedFor.filter((f) => f.jurisdictionId !== outcome.note.jurisdictionId),
     };
   }
+  /* The streak counts this government's consecutive failures, so the hold grows only while the method keeps failing here. */
+  const prior = recipe.failedFor.find((f) => f.jurisdictionId === outcome.note.jurisdictionId);
+  const note: RecipeFailure = { ...outcome.note, streak: prior === undefined ? 1 : Math.max(1, Math.floor(prior.streak ?? 1)) + 1 };
   return {
     ...recipe,
     failures: recipe.failures + 1,
-    lastFailure: outcome.note,
-    failedFor: [outcome.note, ...recipe.failedFor.filter((f) => f.jurisdictionId !== outcome.note.jurisdictionId)].slice(0, FAILED_FOR_BOUND),
+    lastFailure: note,
+    failedFor: [note, ...recipe.failedFor.filter((f) => f.jurisdictionId !== outcome.note.jurisdictionId)].slice(0, FAILED_FOR_BOUND),
   };
 }
 

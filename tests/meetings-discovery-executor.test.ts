@@ -441,3 +441,24 @@ test("THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Window
   assert.ok(attempt.found[0].artifactId !== null, "the route's evidence was stored in the durable vault");
   assert.ok(attempt.steps.every((s) => s.status === null || s.artifactId !== null), "every page read was vaulted");
 });
+
+test("THE NEXT HOP: when nothing is confirmed, the pages the walk read are read for the routes they link; a readable one is confirmed, an unreadable publisher is a lead and is never requested", async () => {
+  const { knownRecipes } = await import("../lib/hunt/meetings-recipes.ts");
+  const { open, seen } = fakeOpen({
+    "https://www.chandler.example.gov/robots.txt": ALLOW,
+    "https://www.chandler.example.gov/": { status: 200, body: `<a href="/council-meetings">City Council Meetings</a> <a href="/news/council-appoints-attorney">Council Appoints City Attorney After Long Search Today</a>` },
+    "https://www.chandler.example.gov/council-meetings": {
+      status: 200,
+      body: `<h1>City Council Meetings</h1><p>Agendas are posted 24 hours in advance.</p>` +
+        `<a href="https://public.destinyhosted.com/agenda_publish.cfm?id=24263">Agendas</a> <a href="/calendar/council.ics">Subscribe</a>`,
+    },
+    "https://www.chandler.example.gov/calendar/council.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:city:city-of-chandler", "https://www.chandler.example.gov"), runtime(open, { recipes: knownRecipes([]) }));
+  assert.equal(attempt.outcome, "FOUND");
+  assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url]), [["ical", "https://www.chandler.example.gov/calendar/council.ics"]]);
+  assert.match(attempt.found[0].evidence, /^linked from https:\/\/www\.chandler\.example\.gov\/council-meetings/, "the evidence names the page that linked it");
+  assert.ok(attempt.leads.some((l) => l.vendor === "destiny-agenda" && l.url.startsWith("https://public.destinyhosted.com/")), "the agenda publisher is a lead");
+  assert.ok(!seen.some((u) => u.includes("destinyhosted.com")), "a lead is never requested");
+  assert.ok(!seen.some((u) => u.includes("/news/")), "and the headline was never followed");
+});

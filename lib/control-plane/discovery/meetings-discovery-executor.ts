@@ -437,6 +437,8 @@ export async function walkMeetingsDiscoveryNeed(
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
   const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
   const planned: { candidate: EndpointCandidate; recipeIds: string[]; label: string | null }[] = [];
+  /* The pages step 3 read, kept so step 3b can read the routes they link. */
+  const readPages: { url: string; body: string; finalUrl: string }[] = [];
   const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
   const learned: MeetingsRecipe[] = [];
   let checked = 0;
@@ -483,6 +485,7 @@ export async function walkMeetingsDiscoveryNeed(
     for (const { candidate, recipeIds, label } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
+      if (got !== null) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl });
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
         : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(label));
@@ -491,6 +494,38 @@ export async function walkMeetingsDiscoveryNeed(
       else if (candidate.basis !== "RECIPE") leads.push(base);
       for (const recipeId of recipeIds) {
         recipeApplied.push({ recipeId, url: candidate.url, verdict: got === null ? "NOT_READ" : check.verdict, detail: check.detail });
+      }
+    }
+
+    /*
+     * 3b. When nothing is confirmed yet, the pages this walk already read are read
+     * once more, for the routes they link. A body's meetings are often one link past
+     * the page that names them: Chandler's "City Council Meetings" page links its
+     * agenda publisher (2026-09-24). A readable route is requested and confirmed by
+     * content, within the walk's endpoint bound. An unreadable publisher is a lead.
+     * Nothing is guessed: every candidate is a link a read page carries.
+     */
+    if (found.length === 0) {
+      const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url)]);
+      const nextHop: EndpointCandidate[] = [];
+      for (const page of readPages) {
+        for (const c of meetingEndpointCandidates(page.body, page.finalUrl)) {
+          if (tried.has(c.url)) continue;
+          tried.add(c.url);
+          const linked = { ...c, evidence: `linked from ${page.url} (${c.evidence})` };
+          if (c.verifiable) nextHop.push(linked);
+          else leads.push({ vendor: c.vendor, url: c.url, basis: c.basis, evidence: linked.evidence, detail: "recognised but not readable by any content check yet" });
+        }
+      }
+      for (const candidate of nextHop.slice(0, Math.max(0, MAX_ENDPOINTS_PER_WALK - checked))) {
+        const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
+        checked += 1;
+        const check = got === null
+          ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
+          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity(null));
+        const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
+        if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
+        else leads.push(base);
       }
     }
 

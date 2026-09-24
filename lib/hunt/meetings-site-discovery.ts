@@ -80,6 +80,8 @@ export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly hos
   { vendor: "boarddocs", host: /(^|\.)boarddocs\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
   { vendor: "swagit", host: /(^|\.)swagit\.com$/i },
+  /* Destiny Agenda (public.destinyhosted.com/agenda_publish.cfm?id=…). Chandler, AZ publishes its council agendas there (2026-09-24). */
+  { vendor: "destiny-agenda", host: /(^|\.)destinyhosted\.com$/i },
 ];
 
 export interface EndpointCandidate {

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 719,
-    "named": 7124,
+    "files": 722,
+    "named": 7151,
     "dynamic": 28
   },
   "files": {
@@ -2589,6 +2589,7 @@
     },
     "tests/code-identity.test.ts": {
       "names": [
+        "2026-09-23: the read is bounded — a spent budget asks git nothing and reads CANNOT_TELL; the walk reads a diff only when judged",
         "PRDY-1: a missing SHA or an unanswerable git is CANNOT_TELL; ahead-of-main and off-main are named, never called current",
         "PRDY-1: a stored record that is not a code identity is refused, never read as consistent",
         "PRDY-1: an observer-only child of the executable head does not make a current runner look stale (ACT-1)",
@@ -3001,6 +3002,24 @@
       ],
       "dynamic": 0
     },
+    "tests/control-plane-request-bounds.test.ts": {
+      "names": [
+        "a bound that is not a positive integer is refused, so no call is ever unbounded",
+        "a budget cuts a call short as a DEADLINE, which is not retryable, and a spent budget sends nothing",
+        "a fetch that ignores the abort still cannot hold the call past its bound",
+        "a nested budget keeps the tighter deadline and its label",
+        "a store whose fetch never answers fails a POINT read by name inside its bound, and the request is cancelled",
+        "an answered call is returned untouched, and every timeout is told to the observer",
+        "connect-retry: a REQUEST timeout is a transient it retries; a DEADLINE is not, even inside a wrapper",
+        "connect-retry: a hung idempotent read times out by name, is retried, and the retry's answer is returned",
+        "connect-retry: a spent budget stops the retries at once rather than asking again",
+        "connect-retry: the real bootstrap survives a hung first connect, because the bound turns it into a retryable transient",
+        "each call class takes its own bound: a large document row is DOCUMENT, a page is PAGE, an append names its step",
+        "the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s transport backstop so the named bound fires first",
+        "the startup-read retry re-reads a hung authority read inside connect-retry's bounds"
+      ],
+      "dynamic": 0
+    },
     "tests/control-plane-shadow-run.test.ts": {
       "names": [
         "1. the WorkItem is durable — a FRESH repository instance over the same root sees it",
@@ -3289,6 +3308,29 @@
         "SEEDED: a budget already spent defers EVERY due item by name and dispatches none",
         "a budget still in the future changes nothing — dispatch proceeds as without one",
         "the clock is INJECTED — the budget is decided by the caller's clock, not the wall"
+      ],
+      "dynamic": 0
+    },
+    "tests/cycle-finalization.test.ts": {
+      "names": [
+        "a hung store call inside a step is cut at the step's budget under its own name, not the step's",
+        "a hung store: the canonical outcome's append fails by name inside its budget, and the cycle records FAILED instead of hanging",
+        "a step gets its own budget, cut so the canonical outcome and the local record keep theirs; none is started with no time",
+        "a step whose await never settles fails by name after its budget; one with no time is not started",
+        "an answering store gets the FAILED outcome, naming the timeout and what was pending",
+        "the clock: the stall diagnostic fires 90 s before the wall and every record settles 15 s before it",
+        "with no time left before the wall, the local crash record still carries the failure, and says the append was not tried"
+      ],
+      "dynamic": 0
+    },
+    "tests/cycle-stall-diagnostic.test.ts": {
+      "names": [
+        "WORKER, awaiting a hung store call: it names the labelled await and the call, with the event loop turning",
+        "WORKER, blocked main thread: near the wall it writes the pending label to stderr and the cycle's record while the event loop cannot turn",
+        "WORKER: a cycle that writes its record first is never overwritten, and the diagnostic says nothing",
+        "the account is published for another thread: last phase, nested labelled awaits, store calls in flight",
+        "the lines name the pending await, the store call, the last phase, and whether the event loop is blocked",
+        "trackStoreCalls names each repository call while it is in flight and clears it however it settles"
       ],
       "dynamic": 0
     },

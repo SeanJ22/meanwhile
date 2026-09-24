@@ -35,20 +35,21 @@
  */
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
+/* Re-exported so a cost reader keys on the one constant (2026-09-23). */
+export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
 /** The invariant, as a string a report can print verbatim. */
 export const COST_SCHEDULING_INVARIANT =
   "Cost informs SCHEDULING (what runs next, how much runs at once, when a run stops). " +
   "Cost never informs TRUTH: what a fact cost has no bearing on whether it is right.";
 
-/**
- * The discovery search rung's charges (2026-09-23): role `DISCOVERY_SEARCH`,
- * one row per request, `source` the API host (api.search.brave.com,
- * api.exa.ai), `usd` the published price — or null when none is known, never
- * 0. Search money is not model money; every view that counts model spend
- * leaves these rows out and shows them on their own line.
+/*
+ * The discovery search rung's charges (2026-09-23) carry DISCOVERY_SEARCH_ROLE
+ * (above, from attempt.ts): one row per request, `source` the API host
+ * (api.search.brave.com, api.exa.ai), `usd` the published price — or null when
+ * none is known, never 0. Search money is not model money; every view that
+ * counts model spend leaves these rows out and shows them on their own line.
  */
-export const DISCOVERY_SEARCH_ROLE = "DISCOVERY_SEARCH";
 /** The key a search charge with no host recorded is grouped under. */
 export const SEARCH_SOURCE_NOT_ON_RECORD = "(host not recorded)";
 

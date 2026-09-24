@@ -45,6 +45,7 @@ import type { FieldManualStore } from "../field-manual.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import { budgetRepositoryFrom, jsonCopy } from "./shared.ts";
@@ -280,6 +281,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
     adminReceipts: memoryAppendOnlyRepository<ActionReceipt>("admin_receipts"),
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
+    discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,

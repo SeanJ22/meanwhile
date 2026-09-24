@@ -34,6 +34,13 @@
   # Node 24 is what the repo is developed and tested on (no engines field —
   # see docs/state.md §1).
   NODE_VERSION = "24"
+  # The same heap as CI's build step (.github/workflows/build-check.yml), so CI
+  # stays a rehearsal of this build. Next's type check of the whole program ran
+  # out of the ~2 GB default heap in CI (#378, 2026-09-23). Netlify's support
+  # guide, last reviewed July 2025, gives builds "8 GiB of memory and 3 CPUs"
+  # on the Free and Starter plans and up to 11 GiB on paid plans
+  # (answers.netlify.com/t/5349), so a 4 GiB V8 limit fits.
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 # PR PREVIEWS DO NOT BUILD (g17, 2026-08-18, the author's configuration order).
 #

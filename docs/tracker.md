@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **412 open**, 544 resolved.
-- **76 waiting on Sean** — the first section below.
+- **414 open**, 544 resolved.
+- **77 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
@@ -36,7 +36,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**76 open · 77 resolved.**
+**77 open · 77 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -99,6 +99,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS22** — The reader-answerability suite (RULING 210) shipped this session and runs today with an honest zero state: '0 questions loaded — awaiting owner corpus'. It evaluates YOUR questions against the rendered DOM of the four pilot ZIPs (85701, 85641, 07866, 03255) and turns every red into a typed diagnostic WorkItem. What it cannot do is invent the corpus: the questions are the owner's definition of what a reader must be able to learn, and a session writing them would be grading its own homework. Templates like 'When does [BODY] meet next?' instantiate mechanically from the registry; hand-authored adversarial literals are a distinct class that guards against an incorrectly small generated universe. The file is data/health/reader-questions.json; the schema is lib/health/reader-question.ts; 'pnpm reader:suite' shows the zero state. THE QUESTION: how do you want to author the corpus? Options: (a) you write questions in plain language (a sentence each is enough) and a session formalizes them into the schema for your review; (b) a session drafts a candidate corpus and you strike, amend and approve each question; (c) you dictate a handful of seed questions per ZIP now and the corpus grows continuously as RULING 210 expects.
 
 **NS23** — The permanent control set (RULING 211) needs roughly 40-60 OWNER-VERIFIED facts across the four pilot ZIPs — both known-present facts and known-absence negative controls carrying their authority, period and verified-through scope — weighted toward the dangerous failure modes (a denied present fact; an asserted absent one). Controls are injected unlabeled into normal flow; only the scoring harness may read control identity (the isolation is proven by a seeded-failure test shipped this session). A session cannot verify these facts for you without the set measuring the session instead of the system. The file is data/health/control-facts.json; the schema is lib/health/control-fact.ts; 'pnpm truth:controls --prove-fixture' demonstrates the whole plumbing on synthetic data and deletes it after. THE QUESTION: how do you want to build the answer key? Options: (a) a session proposes candidate facts with their sources and you verify or strike each one — your verification is what makes them controls; (b) you name facts you already know cold (meetings you attended, filings you read) and a session formalizes them; (c) a mix, starting with the negative controls since false presence is the costlier failure.
+
+**NS28** — 1,975 governments in AZ, NH and NJ have a known website whose meeting calendar nobody has looked for; the gap ledger lists them. A free, model-free executor now exists that walks those sites (robots.txt first on every host, identified requests, no paid research) and records what it finds for wiring. It is built and switched off. Turning it on is your call because it sends new outbound requests to government sites every cycle.
 
 **NW11** — RULING 242: the nightly window promotes only APPROVED items of record classes the activation gate has opened. The open set is EMPTY and opening a class is the owner's decision. The candidates named as low-risk in lib/control-plane/promotion/activation-gate.ts are meeting-times, agendas, published-minutes and routine-filings; candidate-positions, campaign-finance, candidate-enrichment, ballot and votes stay closed until approved by name. This decision cannot take effect until READER, TRUTH and FRESHNESS are GREEN and INDEPENDENTLY_REPRODUCED, so it is not urgent; it is recorded now so the list exists when the gate can open.
 
@@ -562,7 +564,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**102 open · 123 resolved.**
+**103 open · 123 resolved.**
 
 ### P1
 
@@ -637,6 +639,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH315** — Found while re-deriving the seven VALIDATED method candidates under RULING 243: the repository's ArtifactRecord (the attribution row the control plane keeps for every vaulted artifact) records neither the permission verdict the retrieval was made under nor its retrievedAt, so the machine could derive the permission verdict only where a same-host read_permission rung exists in the Scout result. For five candidates (bensonaz agenda RSS and sitemap, cochise DocumentCenter PDF, the two Avondale routes) the honest machine statement is OPENED — the tools open only ALLOWED or NO_ROBOTS hosts, but the verdict itself was never persisted. FIX SHAPE: add permission and retrievedAt to ArtifactRecord as additive fields written by the dispatcher from the Artifact the worker handed back (both exist on the Artifact), backfill nothing (a backfilled verdict is a guess), and make provenance derivation read the record rather than the rung list. Related: RULING 244 names the Haiku model as claude-haiku-4-5-20251001 while the claude-api reference names claude-haiku-4-5; lib/control-plane/model-cost.ts carries the alias, and the owner should settle the spelling in a later ruling amendment.
 
 **NH328** — In the State Readiness admin panel, a ZIP's body count and completeness percentage are scoped by data/derived/zip-division-ids.json, a precomputed 'every division whose territory overlaps the ZIP's area' map. The public reader instead scopes its 'bodies here' by the ZIP's centroid. Where a body-rich city sits next to an unincorporated ZIP, admin over-counts: 85641 (Vail) reads 66 bodies / 62% in admin but 10 on the reader, because the area-overlap map pulls in all 58 City of Tucson bodies a Vail resident is not governed by. 85701 (downtown Tucson) matches the reader at 65. Roughly 27 AZ ZIPs carry Tucson via area-overlap; the inflated ones are those whose centroid falls outside Tucson. NH and NJ are unaffected. Pre-existing since the panel shipped (Sept 4-5), not introduced by the Sept-19 producer restore.
+
+**NH330** — The meetings-discovery executor (NS28) can confirm that a government's own site publishes its meetings, but a confirmed route still reaches readers only by hand-editing lib/registry/source-wiring.ts and deploying. Stage 2 is a promoted, runner-kept wiring store so a route that passes every check starts publishing meetings on its own.
 
 **NH46** — One of the three coverageNotes in data/states/nh/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 

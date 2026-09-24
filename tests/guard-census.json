@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 720,
-    "named": 7139,
+    "files": 727,
+    "named": 7202,
     "dynamic": 28
   },
   "files": {
@@ -2591,6 +2591,7 @@
     },
     "tests/code-identity.test.ts": {
       "names": [
+        "2026-09-23: the read is bounded — a spent budget asks git nothing and reads CANNOT_TELL; the walk reads a diff only when judged",
         "PRDY-1: a missing SHA or an unanswerable git is CANNOT_TELL; ahead-of-main and off-main are named, never called current",
         "PRDY-1: a stored record that is not a code identity is refused, never read as consistent",
         "PRDY-1: an observer-only child of the executable head does not make a current runner look stale (ACT-1)",
@@ -2816,6 +2817,7 @@
         "controlPlaneUrlFromEnv refuses an empty value rather than defaulting",
         "createPgRepositories refuses an empty connection string",
         "schema v10 places live method candidates in every canonical provider",
+        "schema v12 declares the meetings-discovery attempt log, and every provider bundle carries it",
         "schema v5 declares the four nightly-door logs, and every provider bundle carries them",
         "schema v9 declares the Action Gateway's three tables, and every provider bundle carries them",
         "the advisory lock key is STABLE — two machines computing it must agree",
@@ -3000,6 +3002,24 @@
         "rollups group by every dimension and name the unattributed bucket",
         "the minimum interval and a published crawl-delay are both honoured",
         "widening a grant beyond the role default requires stated notes"
+      ],
+      "dynamic": 0
+    },
+    "tests/control-plane-request-bounds.test.ts": {
+      "names": [
+        "a bound that is not a positive integer is refused, so no call is ever unbounded",
+        "a budget cuts a call short as a DEADLINE, which is not retryable, and a spent budget sends nothing",
+        "a fetch that ignores the abort still cannot hold the call past its bound",
+        "a nested budget keeps the tighter deadline and its label",
+        "a store whose fetch never answers fails a POINT read by name inside its bound, and the request is cancelled",
+        "an answered call is returned untouched, and every timeout is told to the observer",
+        "connect-retry: a REQUEST timeout is a transient it retries; a DEADLINE is not, even inside a wrapper",
+        "connect-retry: a hung idempotent read times out by name, is retried, and the retry's answer is returned",
+        "connect-retry: a spent budget stops the retries at once rather than asking again",
+        "connect-retry: the real bootstrap survives a hung first connect, because the bound turns it into a retryable transient",
+        "each call class takes its own bound: a large document row is DOCUMENT, a page is PAGE, an append names its step",
+        "the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s transport backstop so the named bound fires first",
+        "the startup-read retry re-reads a hung authority read inside connect-retry's bounds"
       ],
       "dynamic": 0
     },
@@ -3292,6 +3312,29 @@
         "SEEDED: a budget already spent defers EVERY due item by name and dispatches none",
         "a budget still in the future changes nothing — dispatch proceeds as without one",
         "the clock is INJECTED — the budget is decided by the caller's clock, not the wall"
+      ],
+      "dynamic": 0
+    },
+    "tests/cycle-finalization.test.ts": {
+      "names": [
+        "a hung store call inside a step is cut at the step's budget under its own name, not the step's",
+        "a hung store: the canonical outcome's append fails by name inside its budget, and the cycle records FAILED instead of hanging",
+        "a step gets its own budget, cut so the canonical outcome and the local record keep theirs; none is started with no time",
+        "a step whose await never settles fails by name after its budget; one with no time is not started",
+        "an answering store gets the FAILED outcome, naming the timeout and what was pending",
+        "the clock: the stall diagnostic fires 90 s before the wall and every record settles 15 s before it",
+        "with no time left before the wall, the local crash record still carries the failure, and says the append was not tried"
+      ],
+      "dynamic": 0
+    },
+    "tests/cycle-stall-diagnostic.test.ts": {
+      "names": [
+        "WORKER, awaiting a hung store call: it names the labelled await and the call, with the event loop turning",
+        "WORKER, blocked main thread: near the wall it writes the pending label to stderr and the cycle's record while the event loop cannot turn",
+        "WORKER: a cycle that writes its record first is never overwritten, and the diagnostic says nothing",
+        "the account is published for another thread: last phase, nested labelled awaits, store calls in flight",
+        "the lines name the pending await, the store call, the last phase, and whether the event loop is blocked",
+        "trackStoreCalls names each repository call while it is in flight and clears it however it settles"
       ],
       "dynamic": 0
     },
@@ -4193,6 +4236,7 @@
         "public redirects are counted as separate provider requests under one byte ceiling",
         "rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
+        "the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
         "the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates",
@@ -5757,6 +5801,22 @@
       ],
       "dynamic": 0
     },
+    "tests/meetings-discovery-executor.test.ts": {
+      "names": [
+        "BLOCKED: a disallowing or unreadable robots.txt sends nothing more, on either origin",
+        "BOUNDED: a walk stops at its request bound and says so",
+        "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
+        "FOUND: robots first, then the homepage, then the route it links; confirmed by content and vaulted under the walk",
+        "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
+        "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
+        "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
+        "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
+        "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
+        "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
+        "WALL: a recorded wall is never requested, not even its robots.txt"
+      ],
+      "dynamic": 0
+    },
     "tests/meetings-discovery-gap-ledger.test.ts": {
       "names": [
         "PLAN: a meetings row retires only when the ledger lists its jurisdiction; every other one is held back by name",
@@ -5768,6 +5828,44 @@
         "SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, its occurrence closes unresolved, and nothing else is written",
         "SEEDED: a spent budget defers the rest untouched, in order, and the next cycle retires them",
         "SEEDED: while the ledger cannot be read, no meetings row retires and its occurrence stays open"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-discovery-search.test.ts": {
+      "names": [
+        "BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap holds across cycles in the durable ledger",
+        "POINTERS: only the government's own domain or a known meeting publisher is worth opening",
+        "PRICES: each provider's published per-request price carries its source and date; a lost request is UNMEASURED, never zero",
+        "QUERIES: a saved method's templates first, then the defaults; unfilled slots never sent; own-site expressed as a flag",
+        "REFUSED: a request the budget refused is recorded in the walk and never charged",
+        "SEAM WORST CASE: every provider at its timeout, plus the ledger's calls",
+        "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
+        "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
+        "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-recipes.test.ts": {
+      "names": [
+        "A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here",
+        "OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded",
+        "PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here",
+        "RETRIEVAL: by body class and state; state-specific before portable, then successes, then recency",
+        "SUBSTITUTION: a template is filled from the government's identity; a missing slot leaves the query unsent",
+        "THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes it back; cycle 2 reads it and applies it in another state",
+        "THE TIME RAN OUT, NOT THE METHOD: a saved method the walk did not reach is neither credited nor charged"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-site-discovery.test.ts": {
+      "names": [
+        "CANDIDATES: a linked vendor, a linked feed, CivicPlus markup and a CivicClerk embed each name a route; verifiable ones first",
+        "CANDIDATES: a page that evidences nothing names nothing, and no tenant is ever derived from a name",
+        "LINKS: hrefs and srcs resolve against the page; webcal reads as https; mailto, javascript and fragments are dropped",
+        "ORIGINS: a recorded address becomes its https origin and its www/apex twin; an unusable one becomes nothing",
+        "OUTCOME: found beats lead beats a read homepage; refused everywhere is BLOCKED; a redirect is a hop, not an answer",
+        "VERIFY: Legistar, CivicPlus, IQM2 and CivicClerk yield only by their own content",
+        "VERIFY: an iCal route yields only with a VEVENT; an empty calendar is EMPTY, and an HTML shell at a feed URL is not a calendar"
       ],
       "dynamic": 0
     },

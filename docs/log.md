@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-23 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **193 sessions.**
+Newest first. **194 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## Stop re-dispatching session (2026-09-23) · 2026-09-23
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **NS28** — 1,975 governments in AZ, NH and NJ have a known website whose meeting calendar nobody has looked for; the gap ledger lists them. A free, model-free executor now exists that walks those sites (robots.txt first on every host, identified requests, no paid research) and records what it finds for wiring. It is built and switched off. Turning it on is your call because it sends new outbound requests to government sites every cycle. *(open)*
+- **NH330** — The meetings-discovery executor (NS28) can confirm that a government's own site publishes its meetings, but a confirmed route still reaches readers only by hand-editing lib/registry/source-wiring.ts and deploying. Stage 2 is a promoted, runner-kept wiring store so a route that passes every check starts publishing meetings on its own. *(open)*
+
+**Needs Sean.** NS28
 
 ## state-legislative-votes-nonhunt · 2026-09-19
 

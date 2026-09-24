@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**73 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**74 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -520,6 +520,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Enumerate any state the fleet is sent to, under the same rule** — a dispatch naming an unregistered state becomes a standing instruction to enumerate it first; each new state still opens no own-site route until its permission rows exist, and each enumeration is reported.
 - **Keep the fleet to Arizona, New Hampshire and New Jersey until the pilot is green** — a dispatch naming another state keeps recording the honest sentence on the dashboard; nothing new is enumerated.
 
+#### NS28 — Switch on the unpaid meetings-discovery executor?
+
+*Opened 2026-09-23 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Decide whether the standing runner walks the gap ledger's 1,975 known government sites for their meeting calendars, and at what scope.
+
+**Why no machine can decide it.** The executor is built and inert behind WTP_MEETINGS_DISCOVERY. Turning it on sends new identified requests to government sites every cycle and makes the runner a new writer of discovery attempts and field-manual entries. Sean's note of 2026-09-23 grants no new production-write or expansion authority, so the scope and the go are his; no committed artifact can supply that judgement.
+
+**Your options.**
+
+- **On for all three pilot states (AZ, NH, NJ)** — up to 12 sites a cycle within 60 seconds, robots.txt first on every host and no model call; a full pass over 1,975 sites takes about a week, and every walk is recorded. Nothing reaches readers until the Stage 2 wiring store and Admin's cutover land.
+- **On for owner-dispatched scopes only** — the executor walks only jurisdictions an owner dispatch materialized (MW-028); the ledger backlog waits. This needs a scope-only switch, which is a small follow-up change.
+- **Keep it off** — the 1,975 needs stay recorded in the gap ledger and unwalked; no discovery traffic or writes.
+
 ### P3
 
 #### D70 — Agenda-platform tenant enumeration crawler (replaces the h2 enumeration approach)
@@ -1002,7 +1016,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 488 row(s) carry a date the ledger stamped directly.
+- 490 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -1012,4 +1026,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 74 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 75 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

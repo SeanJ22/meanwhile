@@ -53,6 +53,7 @@ import {
 } from "../../hunt/meetings-recipes.ts";
 import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
 import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
+import { fingerprint } from "../ids.ts";
 import type { SearchHit } from "../scheduler/scout-contract.ts";
 import {
   decideOutcome,
@@ -205,9 +206,17 @@ const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calen
 const ACCEPT_ROBOTS = "text/plain,*/*;q=0.5";
 const SOURCE_ID = "meetings-discovery";
 
-/** The work identity every artifact of a walk carries: the need, not a WorkItem. */
+/**
+ * The work identity every artifact of a walk carries: the need, not a WorkItem.
+ * The evidence vault writes it as a directory name (`workItemPrefix`), and the
+ * standing runner's host is Windows, where `:` is not a legal path character:
+ * `discovery:meetings:az:school:x` failed every walk's first write (ENOENT, the
+ * first cycle after NS28, 2026-09-24). So every character outside
+ * `[A-Za-z0-9._-]` becomes `_`, and a short fingerprint of the id keeps two ids
+ * that differ only there in different directories.
+ */
 export function discoveryWorkId(jurisdictionId: string): string {
-  return `discovery:meetings:${jurisdictionId}`;
+  return `discovery-meetings-${jurisdictionId.replace(/[^A-Za-z0-9._-]/g, "_")}-${fingerprint([jurisdictionId]).slice(0, 8)}`;
 }
 
 export function discoveryAttemptId(jurisdictionId: string, startedAt: string): string {

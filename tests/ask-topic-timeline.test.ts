@@ -295,6 +295,35 @@ test("ROUTE, NEW JERSEY: a place named alone suggests its governing body, and th
   assert.equal(pronoun.trace.sourcesLoaded, "ALL", "an unsettled question takes the full path");
 });
 
+test("TRACE, C20: every read inside sourcePreloads is timed by name, on an early return too", async () => {
+  // A cold Pima topic request spent 2,525 ms in sourcePreloads with no
+  // breakdown (production, 2026-09-24); Sean's bar is 3 s end to end on the
+  // first attempt. The named timings are the measurement the fix starts from.
+  const ROCKAWAY = "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
+  const ask = async (question: string) => {
+    resetGroundedState();
+    return await (await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
+      body: JSON.stringify({ question, ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24" }),
+    }))).json() as { mode: string; trace: { sourcesLoaded?: string; preloads?: Record<string, number>; preloadRetries?: string[] } };
+  };
+  const confirmStep = await ask("is rockaway township voting on data centers");
+  assert.equal(confirmStep.mode, "CLARIFY", "an early return");
+  const essential = confirmStep.trace.preloads ?? {};
+  for (const name of ["registry", "federalDirectory", "outcomes", "edgeManifest"]) {
+    assert.ok(Number.isFinite(essential[name]) && essential[name]! >= 0, `${name} is not timed`);
+  }
+  assert.equal(essential.funding, undefined, "a deferrable source the topic route never read is timed as if it were");
+  assert.equal(confirmStep.trace.preloadRetries, undefined, "no read here needed a second attempt");
+
+  const full = await ask("are they voting on data centers");
+  assert.equal(full.trace.sourcesLoaded, "ALL");
+  for (const name of ["registry", "federalDirectory", "outcomes", "funding", "federalVotes", "executiveActions"]) {
+    assert.ok(Number.isFinite(full.trace.preloads?.[name]), `${name} is not timed on the full path`);
+  }
+});
+
 test("ROUTE, AREA: a topic question that names no government is answered from the area's body timelines, without a model", async () => {
   resetGroundedState();
   const az = await (await POST(new Request("https://wtp.test/api/ask/grounded", {

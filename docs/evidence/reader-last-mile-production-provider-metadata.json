@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "source": "NEON_API_BRANCH_READBACK",
+  "observedAt": "2026-09-23T22:00:06.995Z",
+  "projectId": "tiny-hill-13996172",
+  "branchId": "br-delicate-lab-ax02xuo5",
+  "branchName": "production",
+  "parentBranchId": null,
+  "defaultBranchId": "br-delicate-lab-ax02xuo5",
+  "endpointId": "ep-dry-river-axwtolzc",
+  "endpointHost": "ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech"
+}

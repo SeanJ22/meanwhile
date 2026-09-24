@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 755,
-    "named": 7445,
+    "named": 7451,
     "dynamic": 30
   },
   "files": {
@@ -5969,15 +5969,21 @@
     },
     "tests/meetings-discovery-executor.test.ts": {
       "names": [
+        "A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN",
+        "A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE",
+        "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
+        "A STALE RECORDED ADDRESS: the current official site a route hint records is walked first, and the walk says what it replaced",
         "BOUNDED: a walk stops at its request bound and says so",
         "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
         "FOUND: robots first, then the homepage, then the route it links; confirmed by content and vaulted under the walk",
+        "HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed by content; any other is requested and recorded as a lead, a witness is never a sitting, and a binary body is never vaulted as text",
         "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
         "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
         "PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall",
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
+        "THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, replaces exactly the address it records, and the runner passes them to every walk",
         "THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds",
         "THE NEXT HOP: when nothing is confirmed, the pages the walk read are read for the routes they link; a readable one is confirmed, an unreadable publisher is a lead and is never requested",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",

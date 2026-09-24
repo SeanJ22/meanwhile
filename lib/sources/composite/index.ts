@@ -6,6 +6,7 @@ import type {
   MeetingSource,
   NormalizeDropCounts,
   PartialScopeFailure,
+  RecurrenceReport,
   ReportingMeetingSource,
 } from "../types.ts";
 import {
@@ -128,6 +129,12 @@ export interface ChildRunReport {
    * carried none. Absent when the child has nothing to say.
    */
   duplicateIdentity?: DuplicateIdentityCounts;
+  /**
+   * What the child did with recurring series (2026-09-23), forwarded verbatim
+   * so each body's partition can carry its own publisher exclusions and its
+   * own named refusals to expand.
+   */
+  recurrence?: RecurrenceReport;
   /**
    * The child's own `publishedLookbackDays` (g13), forwarded verbatim so
    * carry-forward can judge a carried row against the window that child
@@ -476,7 +483,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
       }
 
       try {
-        const { meetings, drops, unreachableOcdIds, partialScopes, duplicateIdentity } =
+        const { meetings, drops, unreachableOcdIds, partialScopes, duplicateIdentity, recurrence } =
           child.normalizeWithDrops(
           byChild.get(child.name) ?? [],
           now,
@@ -587,6 +594,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           // carry-forward can preserve the failed scope and no other.
           ...(partialScopes && partialScopes.length > 0 ? { partialScopes } : {}),
           ...(duplicateIdentity ? { duplicateIdentity } : {}),
+          ...(recurrence ? { recurrence } : {}),
           ...declaredWindow,
         });
       } catch (error) {

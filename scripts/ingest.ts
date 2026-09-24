@@ -58,6 +58,7 @@ import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { CompositeSource } from "../lib/sources/composite/index.ts";
+import { occurrenceStampFromInstant, supersedesSeriesRecord } from "../lib/sources/event-identity.ts";
 import {
   STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
   buildCompositeSource,
@@ -73,7 +74,7 @@ import { SOURCE_WIRING, wiringForTypes } from "../lib/registry/source-wiring.ts"
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
-import type { Meeting, MeetingSource } from "../lib/sources/types.ts";
+import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingResearchWitness,
   type RetainedSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
@@ -182,7 +183,7 @@ function documentUrlFor(meeting: Meeting): string | null {
   return distinct.size === 1 ? (onDivision[0].noticeUrl ?? null) : null;
 }
 
-async function retrieveAgendas(meetings: Meeting[]) {
+export async function retrieveAgendas(meetings: Meeting[]) {
   const withAgenda = meetings.filter((m) => documentUrlFor(m));
   // Meetings with no stored document yet go first: the cap is politeness per
   // run, and the store is seeded from the previous snapshot, so over repeated
@@ -199,6 +200,8 @@ async function retrieveAgendas(meetings: Meeting[]) {
   let landingPages = 0;
   let unchanged = 0;
   let failed = 0;
+  /* Failed reads kept off a sitting that already holds a version (RULING 269). */
+  let failedOverHeld = 0;
 
   for (const meeting of capped) {
     try {
@@ -246,6 +249,20 @@ async function retrieveAgendas(meetings: Meeting[]) {
         continue;
       }
 
+      /*
+       * **A FAILED READ IS NEVER A NEW VERSION OVER ONE WE HOLD.** (RULING 269,
+       * 2026-09-23.) It is reported above and counted below, and nothing is
+       * stored: the store compares a failed row by its bytes alone, so a page
+       * whose bytes change on every request (Diligent's ViewState) would add a
+       * "version" every hour, and a failed read stored newest would stand in
+       * front of the text a reader was being shown. A sitting that holds
+       * nothing yet still records the failed read, so the gap is named.
+       */
+      if (doc.extraction === "failed" && agendaDocumentStore.latestFor(doc.meetingId)) {
+        failedOverHeld++;
+        continue;
+      }
+
       const result = agendaDocumentStore.append(doc);
       if (!result.stored) unchanged++;
       else {
@@ -261,7 +278,8 @@ async function retrieveAgendas(meetings: Meeting[]) {
   console.log(
     `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
-      `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed`,
+      `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
+      `${failedOverHeld} failed read(s) not stored over a held version`,
   );
 }
 
@@ -547,9 +565,19 @@ export interface SuccessfulMeetingPartitionReconciliation {
  *
  * A successful response is still an OPEN fact set. Omission therefore cannot
  * delete an in-window fact: the prior row remains, visibly marked as carried.
- * The sole removal authority is an exact prior start outside the same
- * registered serving window used for acquisition and Reader delivery. Agenda
- * documents inherit that authority only from their exact removed meeting.
+ * A prior row is removed on one of two authorities, and on nothing else: an
+ * exact prior start outside the same registered serving window used for
+ * acquisition and Reader delivery, or a fresh occurrence record of the same
+ * recurring series that now holds the prior row's exact fact (2026-09-23,
+ * `supersedesSeriesRecord`). Agenda documents inherit either authority only
+ * from their exact removed meeting.
+ *
+ * The second authority exists for one transition. Until 2026-09-23 every
+ * sitting of an iCalendar series shared the series' `UID`-only id; each series
+ * now yields one record per sitting. Without it, the first read under the new
+ * identity would carry the old record forward beside the occurrence that
+ * replaced it, and a reader would see that sitting twice until it aged out of
+ * the window.
  */
 export function reconcileSuccessfulMeetingPartition(input: {
   readonly sourceName: string;
@@ -557,6 +585,12 @@ export function reconcileSuccessfulMeetingPartition(input: {
   readonly freshMeetings: readonly Meeting[];
   readonly freshAgendaDocuments: MeetingsSnapshot["agendaDocuments"];
   readonly previous: MeetingsSnapshot | null;
+  /**
+   * In-window sittings this read's publisher struck out of their series
+   * (`EXDATE`), for this partition's body only. A prior row that is one of
+   * them is removed under `EXCLUDED_BY_PUBLISHER`, never carried.
+   */
+  readonly publisherExclusions?: readonly PublisherExclusion[];
 }): SuccessfulMeetingPartitionReconciliation {
   const window = meetingReaderServingWindowAt(input.generatedAt);
   if (window === null) throw new Error(`MEETING_RECONCILIATION_CLOCK_INVALID:${input.generatedAt}`);
@@ -590,6 +624,51 @@ export function reconcileSuccessfulMeetingPartition(input: {
           windowContract: window.contract,
           lowerBound,
           upperBound,
+          priorStartsAt: prior.startsAt,
+          parentMeetingKey: meetingKey,
+        });
+      }
+      continue;
+    }
+    const successor = input.freshMeetings.find((fresh) => supersedesSeriesRecord(prior, fresh));
+    if (successor) {
+      const meetingKey = `meeting:${prior.id}`;
+      const successorKey = `meeting:${successor.id}`;
+      removalEvidence.push({
+        key: meetingKey,
+        code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+        successorKey,
+        priorStartsAt: prior.startsAt,
+      });
+      if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
+        removalEvidence.push({
+          key: agendaDocumentRecordKey({ meetingId: prior.id }),
+          code: "SUPERSEDED_BY_OCCURRENCE_IDENTITY",
+          successorKey,
+          priorStartsAt: prior.startsAt,
+          parentMeetingKey: meetingKey,
+        });
+      }
+      continue;
+    }
+    const struck = (input.publisherExclusions ?? []).find((exclusion) =>
+      exclusion.meetingId === prior.id ||
+      (exclusion.seriesId === prior.id && occurrenceStampFromInstant(prior.startsAt) === exclusion.slot));
+    if (struck) {
+      const meetingKey = `meeting:${prior.id}`;
+      removalEvidence.push({
+        key: meetingKey,
+        code: "EXCLUDED_BY_PUBLISHER",
+        seriesId: struck.seriesId,
+        slot: struck.slot,
+        priorStartsAt: prior.startsAt,
+      });
+      if ((input.previous?.agendaDocuments ?? []).some((document) => document.meetingId === prior.id)) {
+        removalEvidence.push({
+          key: agendaDocumentRecordKey({ meetingId: prior.id }),
+          code: "EXCLUDED_BY_PUBLISHER",
+          seriesId: struck.seriesId,
+          slot: struck.slot,
           priorStartsAt: prior.startsAt,
           parentMeetingKey: meetingKey,
         });
@@ -649,11 +728,50 @@ export function meetingsWiringCoverage(
   };
 }
 
+/**
+ * **THE RECURRENCE RECORD ONE PARTITION CARRIES.** (2026-09-23.)
+ *
+ * Each in-window sitting this body's publisher struck out of a series
+ * (`EXDATE`), and each series of this body whose rule was not expanded with
+ * the reason, held as named facts on the candidate. The held exclusion is the
+ * statement the validator reads back before it accepts an
+ * `EXCLUDED_BY_PUBLISHER` removal, so the audit trail and the authority are one
+ * record. A series that was not expanded is never a silent success: it is
+ * named here on every read that meets it.
+ */
+export function recurrenceHeldFacts(
+  recurrence: RecurrenceReport | undefined,
+  bodyId: string,
+): { readonly exclusions: readonly PublisherExclusion[]; readonly held: NonNullable<RoutineCandidate["excludedFacts"]> } {
+  if (!recurrence) return { exclusions: [], held: [] };
+  const exclusions = recurrence.exclusions.filter((exclusion) => exclusion.bodyId === bodyId);
+  const held = [
+    ...exclusions.map((exclusion) => ({
+      key: `meeting:${exclusion.meetingId}`,
+      code: "MEETING_EXCLUDED_BY_PUBLISHER",
+      detail: `The publisher struck the ${exclusion.slot} sitting out of series ${exclusion.seriesId} (EXDATE${exclusion.statedBy}).`,
+      record: { ...exclusion },
+    })),
+    ...recurrence.notExpanded
+      .filter((refusal) => refusal.bodyId === bodyId)
+      .map((refusal) => ({
+        key: refusal.seriesId ? `meeting-series:${refusal.seriesId}` : `meeting-series-feed:${bodyId}`,
+        code: refusal.reason === "UNSUPPORTED_RULE"
+          ? "ICAL_SERIES_RULE_UNSUPPORTED"
+          : "ICAL_RULE_RESTATED_ON_PUBLISHED_SITTINGS",
+        detail: refusal.seriesId ? `${refusal.seriesId}: ${refusal.detail}` : refusal.detail,
+        record: { ...refusal },
+      })),
+  ];
+  return { exclusions, held };
+}
+
 export function candidateForMeetingPartition(
   partition: MeetingPartitionContract,
   snapshot: MeetingsSnapshot,
   additionalViolations: readonly string[] = [],
   removalEvidence: readonly RoutineRemovalEvidence[] = [],
+  heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
 ): RoutineCandidate {
   const successful = snapshot.sources.filter((source) => source.ok);
   const acquisitions = successful.flatMap((source) => source.acquisitions ?? []);
@@ -717,6 +835,7 @@ export function candidateForMeetingPartition(
         detail: `This candidate contains exactly the registered ${partition.meetingSource}/${partition.bodyId} authority partition.`,
       },
     ],
+    ...(heldFacts.length > 0 ? { excludedFacts: [...(base.excludedFacts ?? []), ...heldFacts] } : {}),
   };
 }
 
@@ -727,12 +846,17 @@ export async function promoteMeetingPartition(
   additionalViolations: readonly string[] = [],
   removalEvidence: readonly RoutineRemovalEvidence[] = [],
   retainedResponses: readonly RetainedSourceResponse[] = [],
+  heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
   validateSnapshot(snapshot);
-  const candidate = retainMeetingCandidateEvidence(candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence), snapshot, retainedResponses);
+  const candidate = retainMeetingCandidateEvidence(
+    candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts),
+    snapshot,
+    retainedResponses,
+  );
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt);
   return { candidate, outcome };
 }
@@ -841,12 +965,17 @@ export async function promoteMeetingPartitions(input: {
     const previous = input.previousByContract?.has(partition.id)
       ? input.previousByContract.get(partition.id) ?? null
       : await readPreviousMeetingPartition(input.store, partition);
+    const recurrence = recurrenceHeldFacts(report.recurrence, partition.bodyId);
+    for (const fact of recurrence.held) {
+      if (fact.code !== "MEETING_EXCLUDED_BY_PUBLISHER") console.warn(`  ${partition.id}: ${fact.code}: ${fact.detail}`);
+    }
     const reconciled = reconcileSuccessfulMeetingPartition({
       sourceName: partition.meetingSource,
       generatedAt: input.generatedAt,
       freshMeetings: freshRows,
       freshAgendaDocuments: freshDocuments,
       previous,
+      publisherExclusions: recurrence.exclusions,
     });
     const scopeFailures = [
       ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
@@ -882,6 +1011,7 @@ export async function promoteMeetingPartitions(input: {
       scopeFailures,
       reconciled.removalEvidence,
       input.retainedResponses,
+      recurrence.held,
     );
     printMeetingPartitionReceipt(
       partition,

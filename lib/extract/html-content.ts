@@ -75,6 +75,29 @@
  *   `page-template-elementor_header_footer`, so the page classed itself as
  *   chrome and the extractor believed it.
  *
+ * ## A form is a control, until it is the page (2026-09-23)
+ *
+ * `form` sits in `NON_CONTENT` because a search box, a sign-in panel or a
+ * newsletter field is a control, not content. But an ASP.NET WebForms page
+ * opens ONE `<form id="aspnetForm">` straight after `<body>` and closes it at
+ * the end: the whole page is inside it. Diligent Community's meeting pages are
+ * built that way, and removing the form whole left exactly what sat outside
+ * it — "Skip Navigation Jump to SideBar Tucson Unified School District", 62
+ * characters — stored 2,308 times across 18 sittings as though it were each
+ * one's agenda.
+ *
+ * So the WebForms server form — the one carrying `__VIEWSTATE` — is unwrapped
+ * instead of cut when it holds MOST of the page's text: its content goes on to
+ * the landmark, vocabulary and region passes like any other markup, and its
+ * controls are still removed — every `<input>` (the hidden ones carry
+ * `__VIEWSTATE`, `__EVENTVALIDATION` and toolkit tokens, which must never
+ * reach text), `<button>`, `<label>` and `<textarea>`. Share is measured with
+ * those controls already gone, so field labels cannot make a form look like
+ * the page. Every other form is still a control and still removed whole,
+ * including one nested inside the page's form. `removeForms` records why the
+ * rule needs both conditions. A page with no such form extracts exactly as it
+ * did before.
+ *
  * ## What this deliberately does NOT do
  *
  * It never invents a description. A page that genuinely says nothing extracts
@@ -95,6 +118,20 @@ const NON_CONTENT = new Set([
   "option",
   "form",
 ]);
+
+/**
+ * A form's own controls, removed even from a page-wrapping form that is kept.
+ * `<input>` is void and is removed by its tag (see `inputTags`); `<select>`
+ * and `<option>` are already `NON_CONTENT`.
+ */
+const FORM_CONTROLS = new Set(["button", "label", "textarea"]);
+
+/**
+ * A form is the page, not a control on it, when it holds MORE than this share
+ * of the page's text (controls excluded on both sides). A WebForms wrapper
+ * holds nearly all of it; a search box or sign-in panel holds a sliver.
+ */
+const PAGE_FORM_SHARE = 0.5;
 
 /** Structural landmarks that ARE chrome by definition. */
 const CHROME_TAGS = new Set(["nav", "header", "footer", "aside"]);
@@ -236,6 +273,93 @@ function stripTags(html: string): string {
     .trim();
 }
 
+/**
+ * Every `<input>` tag, by the same quote-aware tokenizer `elementsOf` uses, so
+ * an attribute value can never end the tag early and leak into text.
+ */
+function inputTags(html: string): { range: [number, number]; attrs: string }[] {
+  const out: { range: [number, number]; attrs: string }[] = [];
+  TAG_RE.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = TAG_RE.exec(html))) {
+    if (!m[1] && m[2].toLowerCase() === "input") {
+      out.push({ range: [m.index, m.index + m[0].length], attrs: m[3] });
+    }
+  }
+  return out;
+}
+
+const within = (range: readonly [number, number], outer: HtmlElement): boolean =>
+  outer.start <= range[0] && range[1] <= outer.end;
+
+/** The text of `html[start, end)` with the given ranges cut, for measurement. */
+function textLengthWithout(
+  html: string,
+  start: number,
+  end: number,
+  exclusions: readonly (readonly [number, number])[],
+): number {
+  const inside = exclusions
+    .filter(([s, e]) => start <= s && e <= end)
+    .map(([s, e]): [number, number] => [s - start, e - start]);
+  return stripTags(cut(html.slice(start, end), inside)).length;
+}
+
+/**
+ * Remove every form that is a control, and unwrap the one that is the page.
+ *
+ * Runs after the other `NON_CONTENT` elements are gone, so scripts and styles
+ * inside a form never count toward its share, and measures that share with
+ * every form's controls excluded.
+ *
+ * **Two conditions, both measured against stored pages before they were
+ * adopted (2026-09-23).** Share alone was tried first over the 1,569 HTML
+ * bodies in the runtime evidence vault: 40 changed, and 36 of those were a
+ * search engine's bot challenge and a parked domain's captcha — walls whose
+ * words live inside their own form. Keeping those would turn a wall into
+ * content. So the form must ALSO carry `__VIEWSTATE`, the hidden field ASP.NET
+ * WebForms renders inside the one server form that wraps its page, and which a
+ * challenge or a sign-in widget never has. With both, 4 of those 1,569 bodies
+ * change — an IQM2 meeting page, a Legistar meeting-detail page, a candidate
+ * profile and a state senate roster, each a WebForms page that had extracted
+ * to nothing or to a skip link and now yields its own content — and so do the
+ * nine WebForms calendar fixtures under `tests/fixtures`. No other page does.
+ */
+function removeForms(doc: string): { doc: string; removed: number; pageForms: number } {
+  const els = elementsOf(doc);
+  const forms = els.filter((el) => el.name === "form");
+  if (forms.length === 0) return { doc, removed: 0, pageForms: 0 };
+
+  const inputs = inputTags(doc).filter(({ range }) => forms.some((form) => within(range, form)));
+  const controls: [number, number][] = [
+    ...els
+      .filter((el) => FORM_CONTROLS.has(el.name))
+      .map((el): [number, number] => [el.start, el.end])
+      .filter((range) => forms.some((form) => within(range, form))),
+    ...inputs.map(({ range }) => range),
+  ];
+
+  const serverForms = forms.filter(
+    (form) =>
+      !forms.some((other) => other !== form && within([form.start, form.end], other)) &&
+      inputs.some(({ range, attrs }) => within(range, form) && attr(attrs, "name") === "__VIEWSTATE"),
+  );
+  // `<head>` is already gone, so the whole document's text is the page's.
+  const pageText = serverForms.length > 0 ? textLengthWithout(doc, 0, doc.length, controls) : 0;
+  const pageForms = new Set(
+    serverForms.filter(
+      (form) => pageText > 0 && textLengthWithout(doc, form.start, form.end, controls) / pageText > PAGE_FORM_SHARE,
+    ),
+  );
+  const widgets = forms.filter((form) => !pageForms.has(form));
+  return {
+    // A kept form loses its controls; a widget goes whole, controls and all.
+    doc: cut(doc, [...controls, ...widgets.map((form): [number, number] => [form.start, form.end])]),
+    removed: widgets.length,
+    pageForms: pageForms.size,
+  };
+}
+
 export type ContentRegion =
   | "main"
   | "role-main"
@@ -255,6 +379,11 @@ export interface ReadableContent {
     vocabulary: number;
     linkDense: number;
   };
+  /**
+   * Page-wrapping forms whose content was kept, controls removed. Zero on a
+   * page with no such form, which is nearly every page.
+   */
+  pageForms: number;
 }
 
 /**
@@ -280,15 +409,22 @@ export function readableContent(html: string): ReadableContent {
 
   // ---- 1. elements that are never content -------------------------------
   let doc = html;
+  let pageForms = 0;
   {
     const ranges: [number, number][] = [];
     for (const el of elementsOf(doc)) {
-      if (NON_CONTENT.has(el.name)) {
+      // Forms are judged below, once nothing that is never content is left
+      // inside them to inflate their share of the page.
+      if (NON_CONTENT.has(el.name) && el.name !== "form") {
         ranges.push([el.start, el.end]);
         removed.nonContent++;
       }
     }
     doc = cut(doc, ranges);
+    const forms = removeForms(doc);
+    doc = forms.doc;
+    removed.nonContent += forms.removed;
+    pageForms = forms.pageForms;
   }
 
   // ---- 2. chrome: landmarks, roles, aria-hidden, then the vocabulary -----
@@ -395,5 +531,5 @@ export function readableContent(html: string): ReadableContent {
     doc = cut(doc, innermost);
   }
 
-  return { html: doc, region, removed };
+  return { html: doc, region, removed, pageForms };
 }

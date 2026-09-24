@@ -23,6 +23,23 @@ export interface AgendaContentRow {
   readonly contentHash?: string | null;
 }
 
+/**
+ * **THE NAME OF THE SIGNAL THAT A READ WAS THE PUBLISHER'S PAGE.** (2026-09-23.)
+ *
+ * An HTML page whose readable text is word for word what the same publisher
+ * serves for a DIFFERENT sitting says nothing about either sitting: the words
+ * are the page, not the document. The retrieval records such a read as a
+ * failed extraction whose note opens with this name (RULING 269: a read that
+ * returned nothing of the document is a failed read), and the reader
+ * recognises the note by the same constant, so the two cannot drift.
+ */
+export const PUBLISHER_PAGE_SIGNAL = "Same words as another meeting's page";
+
+/** Is this extraction note the publisher-page signal? */
+export function isPublisherPageNote(note: string | null | undefined): boolean {
+  return typeof note === "string" && note.startsWith(`${PUBLISHER_PAGE_SIGNAL}:`);
+}
+
 /** Readable text as a reader meets it, or null when the row holds none. */
 export function agendaReadableText(row: AgendaContentRow): string | null {
   const text = row.text?.replace(/\s+/g, " ").trim();

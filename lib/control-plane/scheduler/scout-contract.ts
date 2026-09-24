@@ -162,6 +162,11 @@ export interface BytesOutcome {
   readonly finalUrl: string | null;
   readonly durationMs: number;
   readonly transportError: string | null;
+  /**
+   * The redirect target when the opener was asked not to follow redirects
+   * (2026-09-23); null when the answer was not a redirect. Absent otherwise.
+   */
+  readonly location?: string | null;
 }
 
 export type OpenBytes = (input: {

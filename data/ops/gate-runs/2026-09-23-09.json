@@ -1,51 +1,51 @@
 {
-  "runId": "gates@2026-09-24T04:54:47.043Z",
-  "testedSha": "3d169d4a81c8a2f9db60a2921afa452f1a45be39",
-  "finishedAt": "2026-09-24T04:54:47.043Z",
+  "runId": "gates@2026-09-24T06:16:41.937Z",
+  "testedSha": "9fe061c0933edb9fb1089a7301e827fd3dd62c72",
+  "finishedAt": "2026-09-24T06:16:41.937Z",
   "gates": [
     {
       "id": "lint",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm lint",
       "status": "PASS",
-      "seconds": 136,
+      "seconds": 82,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 26
+      "nodeProcessesAtStart": 13
     },
     {
       "id": "tsc",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsc --noEmit",
       "status": "PASS",
-      "seconds": 53,
+      "seconds": 99,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 9
+      "nodeProcessesAtStart": 21
     },
     {
       "id": "governance:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm governance:check",
       "status": "PASS",
-      "seconds": 3,
+      "seconds": 7,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 30
     },
     {
       "id": "orchestration:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm orchestration:check",
       "status": "PASS",
-      "seconds": 1,
+      "seconds": 2,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 30
     },
     {
       "id": "method:check",
@@ -56,40 +56,40 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 30
     },
     {
       "id": "control-plane:gate",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm control-plane:gate",
       "status": "PASS",
-      "seconds": 1,
+      "seconds": 2,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 31
     },
     {
       "id": "state-holdings:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm state-holdings:check",
       "status": "PASS",
-      "seconds": 6,
+      "seconds": 15,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 30
     },
     {
       "id": "state-manifest",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm state-manifest --check",
       "status": "PASS",
-      "seconds": 97,
+      "seconds": 109,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 16
+      "nodeProcessesAtStart": 46
     },
     {
       "id": "feedback:sweep",
@@ -100,7 +100,7 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 16
     },
     {
       "id": "assert:browser",
@@ -111,28 +111,28 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 16
     },
     {
       "id": "test",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm test",
       "status": "FAIL",
-      "seconds": 756,
+      "seconds": 990,
       "failureKind": "ASSERTION_FAILURE",
       "failingTests": [
-        "a reused publisher portal is classified identically by the real route and agenda renderer"
+        "no real credential value appears anywhere in the repository"
       ],
       "suiteTotals": {
-        "tests": 7294,
-        "pass": 7288,
+        "tests": 7390,
+        "pass": 7388,
         "fail": 1,
         "suites": 32,
-        "skipped": 5,
+        "skipped": 1,
         "todo": 0,
         "cancelled": 0
       },
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 16
     },
     {
       "id": "db:gate",
@@ -143,36 +143,36 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 27
     },
     {
       "id": "release:freeze",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsx scripts/release-freeze-gate.mts",
       "status": "PASS",
-      "seconds": 7,
+      "seconds": 2,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 27
     },
     {
       "id": "build",
       "ciJob": "build (default)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 80,
+      "seconds": 92,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 27
     },
     {
       "id": "test:bundle",
       "ciJob": "build (default)",
       "command": "pnpm run test:bundle",
       "status": "PASS",
-      "seconds": 2,
+      "seconds": 3,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": {
@@ -184,18 +184,18 @@
         "todo": 0,
         "cancelled": 0
       },
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 23
     },
     {
       "id": "build:standalone",
       "ciJob": "build (standalone)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 55,
+      "seconds": 47,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 21
     }
   ],
   "provenance": {
@@ -207,11 +207,11 @@
   "suiteDenominator": {
     "gate": "test",
     "read": true,
-    "tests": 7294,
-    "pass": 7288,
+    "tests": 7390,
+    "pass": 7388,
     "fail": 1,
     "suites": 32,
-    "skipped": 5,
+    "skipped": 1,
     "todo": 0,
     "cancelled": 0
   },

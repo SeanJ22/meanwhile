@@ -195,16 +195,23 @@ export interface JurisdictionRegistry {
  * which reads downstream as a government that never had one.
  */
 export function sourcesOf(reg: JurisdictionRegistry, j: Jurisdiction): JurisdictionSource[] {
-  return j.sourceIds.map((id) => {
-    const s = reg.sourceCatalog[id];
-    if (!s) {
-      throw new Error(
-        `jurisdiction ${j.id} references source \`${id}\`, which is not in ${reg.stateCode}'s source ` +
-          "catalog. A dangling reference dropped silently is a government quietly losing a route.",
-      );
-    }
-    return s;
-  });
+  return j.sourceIds.map((id) => sourceOf(reg, j, id));
+}
+
+/**
+ * One of a jurisdiction's sources, by its catalog key, under the same rule:
+ * a key with no catalog entry THROWS. For a caller that needs the key beside the
+ * source (the key is the requirement's identity, MW-028).
+ */
+export function sourceOf(reg: JurisdictionRegistry, j: Jurisdiction, id: string): JurisdictionSource {
+  const s = reg.sourceCatalog[id];
+  if (!s) {
+    throw new Error(
+      `jurisdiction ${j.id} references source \`${id}\`, which is not in ${reg.stateCode}'s source ` +
+        "catalog. A dangling reference dropped silently is a government quietly losing a route.",
+    );
+  }
+  return s;
 }
 
 export function countByClass(reg: JurisdictionRegistry): Map<JurisdictionClass, number> {

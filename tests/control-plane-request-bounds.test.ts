@@ -127,6 +127,7 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
       [() => repos.costs.readAll(), "cp_log_costs.readAll", "PAGE", TINY.PAGE],
       [() => repos.occurrences.list(), "cp_occurrences.list", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.readWhere("owner-digest", ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"), "cp_log_owner_digests.readWhere", "PAGE", TINY.PAGE],
+      [() => repos.ownerDigests.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "ROUTINE_CIVIC_DATA_SUPERVISOR", 288, { digestId: true }), "cp_log_owner_digests.readRecentWhere", "PAGE", TINY.PAGE],
       [() => repos.ownerDigests.append("owner-digest", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_owner_digests.append:probe", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.costs.append("k", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_costs.append:probe", "POINT", TINY.POINT],
     ];

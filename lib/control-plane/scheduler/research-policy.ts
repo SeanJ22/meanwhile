@@ -222,6 +222,15 @@ export interface ResearchState {
    * selected: both read as "nothing measured", never as an empty scope.
    */
   readonly expansion?: import("../expansion/reading.ts").ExpansionCycleReading | null;
+  /**
+   * MW-028: what this cycle created for the owner's DISPATCH targets and
+   * selected scopes — created, reordered and blocked, each with its
+   * denominator, and the deferred remainder. A DISPATCH target with work still
+   * owed is carried from here into the next cycle. Absent on states written
+   * before MW-028, and null when nothing was sent: both read as "nothing
+   * measured", never as zero.
+   */
+  readonly dispatchWork?: import("../expansion/dispatch-work.ts").DispatchWorkReading | null;
 }
 
 /**
@@ -233,7 +242,11 @@ export interface ResearchState {
  *   DISPATCH               "deploy the fleet": the owner's words in `note`, e.g.
  *                          "deep dive on Illinois"; the cycle puts every registered
  *                          unit that matches the target first and records what
- *                          matched — it never invents an obligation
+ *                          matched. Where the words name a state, the cycle also
+ *                          creates what the registry defines there that no clock
+ *                          carries (MW-028, `expansion/dispatch-work.ts`), bounded
+ *                          and counted; a requirement no registry defines is never
+ *                          invented
  *   PAUSE_RUNNER           the owner's own record that the WHOLE runner is stopped on
  *                          purpose (`note` = the reason). Written by the dashboard or
  *                          by `pnpm pilot:stop`, so a red SILENT can be told from a
@@ -252,6 +265,12 @@ export interface OwnerDispatchRecord {
   readonly states: readonly string[];
   readonly matched: number;
   readonly registered: number;
+  /**
+   * MW-028: what this DISPATCH created, reordered and could not reach. Absent
+   * on records written before MW-028; null when the cycle planned nothing for
+   * it. The full receipt is `dispatchWork.targets` under `work.key`.
+   */
+  readonly work?: import("../expansion/dispatch-work.ts").OwnerDispatchWork | null;
 }
 
 export const RESEARCH_INTENT_ACTIONS = [

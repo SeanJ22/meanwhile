@@ -10,8 +10,10 @@
  * For one need it:
  *
  * 1. reads robots.txt for the government's own origin before any other
- *    request, and walks only what the verdict allows (DISALLOWED and
- *    CANNOT_TELL send nothing);
+ *    request, following its redirects as RFC 9309 asks, and walks only what
+ *    the verdict allows (DISALLOWED and CANNOT_TELL send nothing). Only a real
+ *    wall makes the walk BLOCKED; rules that could not be read make it
+ *    COULD_NOT_READ;
  * 2. reads the homepage, following redirects one hop at a time. Each new host
  *    is asked for permission before anything is requested from it;
  * 3. names the meeting routes the page itself evidences
@@ -195,6 +197,8 @@ const DEFAULT_TIMEOUT_MS = 20_000;
 /** Less time than this left, and a request is not sent: it could not come back inside the budget. */
 const MIN_REQUEST_MS = 2_000;
 const MAX_REDIRECT_HOPS = 4;
+/** RFC 9309 §2.3.1.2: at least five consecutive redirects are followed for robots.txt. */
+const MAX_ROBOTS_REDIRECTS = 5;
 const MAX_ENDPOINTS_PER_WALK = 6;
 const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calendar,*/*;q=0.8";
 const ACCEPT_ROBOTS = "text/plain,*/*;q=0.5";
@@ -320,7 +324,27 @@ export async function walkMeetingsDiscoveryNeed(
       skipped("robots", robotsUrl.toString(), "CANNOT_TELL", capped.detail);
       return capped;
     }
-    const got = await hop(robotsUrl, ACCEPT_ROBOTS);
+    /*
+     * RFC 9309 §2.3.1.2: robots.txt is followed through at least five consecutive
+     * redirects, across hosts too, and the document found governs the host asked
+     * about. Each hop is a request inside the walk's time and request bounds; a hop
+     * to a non-public address is never taken. A chain that does not end on a robots
+     * document leaves the verdict CANNOT_TELL.
+     */
+    let got = await hop(robotsUrl, ACCEPT_ROBOTS);
+    let at = robotsUrl;
+    const via: string[] = [];
+    while (got.status !== null && got.status >= 300 && got.status < 400 && got.location !== null && via.length < MAX_ROBOTS_REDIRECTS && requests < maxRequests) {
+      let next: URL;
+      try {
+        next = assertPublicUrl(new URL(got.location, at).toString());
+      } catch {
+        break;
+      }
+      via.push(next.toString());
+      at = next;
+      got = await hop(next, ACCEPT_ROBOTS);
+    }
     const reading = evaluatePermission(
       { robotsText: got.transportError === null ? got.body : null, status: got.status, transportError: got.transportError, contentType: got.contentType },
       url.toString(),
@@ -328,11 +352,11 @@ export async function walkMeetingsDiscoveryNeed(
     );
     const verdict: StepPermission = reading.verdict;
     const artifactId = got.status !== null && got.transportError === null
-      ? await vaultBody(robotsUrl.toString(), got.status, got.contentType, got.body, "ALLOWED")
+      ? await vaultBody(at.toString(), got.status, got.contentType, got.body, "ALLOWED")
       : null;
     steps.push({
       purpose: "robots", url: robotsUrl.toString(), permission: verdict, status: got.status, transportError: got.transportError,
-      bytes: got.bytes, artifactId, rung: 2, note: reading.detail,
+      bytes: got.bytes, artifactId, rung: 2, note: via.length === 0 ? reading.detail : `${reading.detail} (followed ${via.length} redirect(s): ${via.join(" → ")})`,
     });
     const entry = { verdict, detail: reading.detail };
     robotsByHost.set(host, entry);
@@ -578,7 +602,7 @@ function noteFor(
     default:
       return origins === 0
         ? `${who}: no usable website is recorded, so there was nothing to walk.`
-        : `${who}: the site could not be read this walk (transport failure or a wall). Due again at the recheck date.`;
+        : `${who}: the site could not be read this walk (a transport failure, a server error, or permission rules that could not be read). Not a wall; due again at the recheck date.`;
   }
 }
 
@@ -657,10 +681,13 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
       { attemptId: attempt.attemptId, ...l }));
   }
   if (attempt.outcome === "BLOCKED") {
-    const refused = attempt.steps.filter((s) => s.status === null && s.permission !== "ALLOWED" && s.permission !== "NO_ROBOTS");
-    entries.push(entry("DEAD_DOOR", "BLOCKED", "own-site", refused[0]?.url ?? attempt.ownWebAddress,
-      `${attempt.jurisdictionId}: permission refused the site's own origins (${[...new Set(refused.map((s) => s.permission))].join(", ")}).`,
-      { attemptId: attempt.attemptId, steps: refused }));
+    /* What refused each origin: its rules or a recorded wall (the step's permission), or its own 401, 403 or 429 to this client. */
+    const walls = attempt.steps.filter((s) =>
+      s.purpose === "homepage" && (s.status === null ? s.permission !== "ALLOWED" && s.permission !== "NO_ROBOTS" : [401, 403, 429].includes(s.status)));
+    const why = [...new Set(walls.map((s) => (s.status === null ? s.permission : `HTTP ${s.status}`)))].join(", ");
+    entries.push(entry("DEAD_DOOR", "BLOCKED", "own-site", walls[0]?.url ?? attempt.ownWebAddress,
+      `${attempt.jurisdictionId}: the site's own origins refused this client (${why}).`,
+      { attemptId: attempt.attemptId, steps: walls }));
   }
   return entries;
 }

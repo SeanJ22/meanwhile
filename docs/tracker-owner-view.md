@@ -520,19 +520,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Enumerate any state the fleet is sent to, under the same rule** — a dispatch naming an unregistered state becomes a standing instruction to enumerate it first; each new state still opens no own-site route until its permission rows exist, and each enumeration is reported.
 - **Keep the fleet to Arizona, New Hampshire and New Jersey until the pilot is green** — a dispatch naming another state keeps recording the honest sentence on the dashboard; nothing new is enumerated.
 
-#### NS28 — Switch on the unpaid meetings-discovery executor?
+#### NS28 — Switch on meetings discovery: free site walks, plus capped paid search?
 
 *Opened 2026-09-23 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
-**What is needed.** Decide whether the standing runner walks the gap ledger's 1,975 known government sites for their meeting calendars, and at what scope.
+**What is needed.** Decide whether the standing runner walks the gap ledger's 1,975 known government sites for their meeting calendars, whether it may pay for search when a site shows no route, and at what scope.
 
-**Why no machine can decide it.** The executor is built and inert behind WTP_MEETINGS_DISCOVERY. Turning it on sends new identified requests to government sites every cycle and makes the runner a new writer of discovery attempts and field-manual entries. Sean's note of 2026-09-23 grants no new production-write or expansion authority, so the scope and the go are his; no committed artifact can supply that judgement.
+**Why no machine can decide it.** The executor is built and inert behind WTP_MEETINGS_DISCOVERY. Turning it on sends new identified requests to government sites every cycle and makes the runner a new writer of discovery attempts and field-manual entries. Since #381 the same switch also runs Brave and Exa search wherever a key is set, which spends money: at most 50 requests a cycle and 200 a day across both providers, about $1.40 a day at published prices, recorded as DISCOVERY_SEARCH apart from model spend. The first cycle can send at most 50 search requests, about $0.35 at Exa's $7 per 1,000. What a yes demonstrates: the standing runner walking real government sites robots-first, consulting the saved methods in the field manual and, with search on, searching where no route is confirmed, with every walk and request recorded. What it does not yet demonstrate: confirming an official-page event listing such as Tucson Unified's reconfiguration page (live since #384 as its own partition); discovery cannot yet verify that kind of page, and that is the next change. A local, unpaid sample of the 12 Arizona needs one hour's rotation selects (2026-09-23) confirmed 0 routes, found 13 leads on 3 cities, met 2 real walls and 1 site showing nothing, and could not read 6 whose registry website is stale (NH row filed). Sean's note of 2026-09-23 grants no new production-write, expansion or spending authority, so the scope and the go are his; no committed artifact can supply that judgement.
 
 **Your options.**
 
-- **On for all three pilot states (AZ, NH, NJ)** — up to 12 sites a cycle within 60 seconds, robots.txt first on every host and no model call; a full pass over 1,975 sites takes about a week, and every walk is recorded. Nothing reaches readers until the Stage 2 wiring store and Admin's cutover land.
+- **On for all three pilot states (AZ, NH, NJ), search at the default caps** — up to 12 sites a cycle within 60 seconds, robots.txt first on every host and no model call; saved methods are tried first; Brave and Exa search runs only when a site shows no route, at most 50 requests a cycle and 200 a day (about $1.40 a day). A full pass over 1,975 sites takes about a week, and every walk and every search request is recorded. Nothing reaches readers until the Stage 2 wiring store and Admin's cutover land.
+- **On for all three pilot states, search held at zero** — the same walks and saved methods with no paid request: WTP_DISCOVERY_SEARCH_PER_DAY=0. A site whose page shows no route is recorded and rechecked later, not searched.
 - **On for owner-dispatched scopes only** — the executor walks only jurisdictions an owner dispatch materialized (MW-028); the ledger backlog waits. This needs a scope-only switch, which is a small follow-up change.
-- **Keep it off** — the 1,975 needs stay recorded in the gap ledger and unwalked; no discovery traffic or writes.
+- **Keep it off** — the 1,975 needs stay recorded in the gap ledger and unwalked; no discovery traffic, writes or search spend.
 
 ### P3
 
@@ -1016,7 +1017,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 490 row(s) carry a date the ledger stamped directly.
+- 491 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 

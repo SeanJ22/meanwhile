@@ -31,6 +31,7 @@ import test from "node:test";
 import {
   DiscoveryTimeSpent,
   RECORDED_WALLS,
+  discoveryFieldManualEntries,
   discoveryWorkId,
   rotationWindow,
   runMeetingsDiscovery,
@@ -112,18 +113,83 @@ test("FOUND: robots first, then the homepage, then the route it links; confirmed
   assert.equal(attempt.found[0].artifactId, rt.vaulted[2].id);
 });
 
-test("BLOCKED: a disallowing or unreadable robots.txt sends nothing more, on either origin", async () => {
+test("PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall", async () => {
   const { open, seen } = fakeOpen({
     "https://www.benson.gov/robots.txt": DENY,
     "https://benson.gov/robots.txt": { status: 500, body: "oops" },
   });
   const attempt = await walkMeetingsDiscoveryNeed(need("az:city:city-of-benson", "www.benson.gov"), runtime(open));
   assert.deepEqual(seen, ["https://www.benson.gov/robots.txt", "https://benson.gov/robots.txt"], "only robots.txt was ever requested");
-  assert.equal(attempt.outcome, "BLOCKED");
   assert.deepEqual(
     attempt.steps.filter((s) => s.purpose === "homepage").map((s) => [s.url, s.permission, s.status]),
     [["https://www.benson.gov/", "DISALLOWED", null], ["https://benson.gov/", "CANNOT_TELL", null]],
   );
+  assert.equal(attempt.outcome, "COULD_NOT_READ", "a 500 at robots.txt is a server failure, not the host refusing us");
+});
+
+test("WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door", async () => {
+  const cases: [string, Readonly<Record<string, Reply>>, string][] = [
+    ["az:t:walled", { "https://walled.gov/robots.txt": { status: 403, body: "Forbidden" }, "https://www.walled.gov/robots.txt": { status: 429, body: "Too many" } }, "BLOCKED"],
+    ["az:t:closed", { "https://closed.gov/robots.txt": DENY, "https://www.closed.gov/robots.txt": { status: 401, body: "Auth" } }, "BLOCKED"],
+    ["az:t:gone", { "https://gone.gov/robots.txt": { transportError: "getaddrinfo ENOTFOUND gone.gov" }, "https://www.gone.gov/robots.txt": { transportError: "getaddrinfo ENOTFOUND www.gone.gov" } }, "COULD_NOT_READ"],
+    ["az:t:erroring", { "https://erroring.gov/robots.txt": { status: 503, body: "down" }, "https://www.erroring.gov/robots.txt": { status: 502, body: "bad gateway" } }, "COULD_NOT_READ"],
+    ["az:t:shell", { "https://shellrobots.gov/robots.txt": { status: 200, body: "<!DOCTYPE html><html>home</html>" }, "https://www.shellrobots.gov/robots.txt": { transportError: "ECONNRESET" } }, "COULD_NOT_READ"],
+    ["az:t:waf", {
+      "https://waf.gov/robots.txt": ALLOW,
+      "https://waf.gov/": { status: 403, body: "Access denied" },
+      "https://www.waf.gov/robots.txt": { status: 301, location: "https://waf.gov/" },
+    }, "BLOCKED"],
+    ["az:t:missing", {
+      "https://missing.gov/robots.txt": { status: 404 },
+      "https://missing.gov/": { status: 404, body: "not here" },
+      "https://www.missing.gov/robots.txt": { transportError: "ETIMEDOUT" },
+    }, "COULD_NOT_READ"],
+  ];
+  for (const [id, map, expected] of cases) {
+    const host = Object.keys(map)[0].replace(/^https:\/\//, "").replace(/\/robots\.txt$/, "");
+    const { open, seen } = fakeOpen(map);
+    const attempt = await walkMeetingsDiscoveryNeed(need(id, host), runtime(open));
+    assert.equal(attempt.outcome, expected, `${id}: ${attempt.steps.filter((s) => s.purpose === "robots").map((s) => s.note).join(" | ")}`);
+    if (Object.keys(map).every((u) => u.endsWith("/robots.txt"))) {
+      assert.equal(seen.every((u) => u.endsWith("/robots.txt")), true, `${id}: nothing past robots.txt was requested`);
+    }
+    const deadDoors = discoveryFieldManualEntries(attempt).filter((e) => e.kind === "DEAD_DOOR");
+    assert.equal(deadDoors.length, expected === "BLOCKED" ? 1 : 0, `${id}: a dead door is taught only for a wall`);
+    if (id === "az:t:waf") assert.match(deadDoors[0].summary, /refused this client (.*HTTP 403.*)/, "the dead door names what refused: the homepage's own 403");
+  }
+});
+
+test("ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about", async () => {
+  const followed = fakeOpen({
+    "https://red.gov/robots.txt": { status: 301, location: "https://www.red.gov/robots.txt" },
+    "https://www.red.gov/robots.txt": ALLOW,
+    "https://red.gov/": { status: 200, body: `<a href="/m.ics">Meetings</a>` },
+    "https://red.gov/m.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const found = await walkMeetingsDiscoveryNeed(need("az:t:red", "red.gov"), runtime(followed.open));
+  assert.deepEqual(followed.seen, ["https://red.gov/robots.txt", "https://www.red.gov/robots.txt", "https://red.gov/", "https://red.gov/m.ics"]);
+  assert.equal(found.outcome, "FOUND");
+  const robotsStep = found.steps.find((s) => s.purpose === "robots")!;
+  assert.deepEqual([robotsStep.url, robotsStep.permission, robotsStep.status], ["https://red.gov/robots.txt", "ALLOWED", 200]);
+  assert.match(robotsStep.note, /followed 1 redirect\(s\): https:\/\/www\.red\.gov\/robots\.txt/);
+
+  /* Six redirects in a row: five are followed, the sixth is not, and nothing is concluded about a wall. */
+  const loopMap: Record<string, Reply> = { "https://www.loop.gov/robots.txt": { transportError: "ECONNRESET" } };
+  loopMap["https://loop.gov/robots.txt"] = { status: 302, location: "https://loop.gov/r1.txt" };
+  for (let i = 1; i <= 5; i += 1) loopMap[`https://loop.gov/r${i}.txt`] = { status: 302, location: `https://loop.gov/r${i + 1}.txt` };
+  const loop = fakeOpen(loopMap);
+  const looped = await walkMeetingsDiscoveryNeed(need("az:t:loop", "loop.gov"), runtime(loop.open));
+  assert.deepEqual(loop.seen.filter((u) => u.startsWith("https://loop.gov/")), ["https://loop.gov/robots.txt", ...[1, 2, 3, 4, 5].map((i) => `https://loop.gov/r${i}.txt`)]);
+  assert.equal(looped.outcome, "COULD_NOT_READ");
+
+  /* A redirect to a private address is never followed. */
+  const priv = fakeOpen({
+    "https://priv.gov/robots.txt": { status: 302, location: "http://127.0.0.1/robots.txt" },
+    "https://www.priv.gov/robots.txt": { status: 302, location: "http://localhost/robots.txt" },
+  });
+  const refused = await walkMeetingsDiscoveryNeed(need("az:t:priv", "priv.gov"), runtime(priv.open));
+  assert.deepEqual(priv.seen, ["https://priv.gov/robots.txt", "https://www.priv.gov/robots.txt"]);
+  assert.equal(refused.outcome, "COULD_NOT_READ");
 });
 
 test("REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed", async () => {

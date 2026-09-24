@@ -24,6 +24,7 @@ import {
   APPEND_ONLY_LOG_READ_PAGE,
   pgAppendOnlyRepository,
 } from "../lib/control-plane/repository/pg-store.ts";
+import { projectRecord } from "../lib/control-plane/repository/types.ts";
 
 interface Row {
   readonly log_key: string;
@@ -53,6 +54,24 @@ function fakeLogSql(rows: readonly Row[]) {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push(text);
       const litLimit = /LIMIT\s+(\d+)/.exec(text);
+      // readRecentWhere: a content filter, newest first, LIMIT a parameter, and
+      // the record narrowed in the SELECT list. The fake reads the kept keys
+      // from the statement itself, so a statement naming the wrong keys fails.
+      const recentWhere = /record #>> '\{([^}]*)\}' = \$2/.exec(text);
+      if (recentWhere !== null && /ORDER BY\s+position DESC/i.test(text)) {
+        const [key, value, limit] = params as [string, string, number];
+        const path = recentWhere[1].split(",");
+        const keys = (list: string) => [...list.matchAll(/'([A-Za-z0-9_]+)'/g)].map((m) => m[1]!);
+        const top = /WHERE t\.key IN \(([^)]*)\)\) ELSE record END AS record/.exec(text);
+        if (top === null) throw new Error(`readRecentWhere must narrow the record in the SELECT list: ${text}`);
+        const projection: Record<string, true | string[]> = Object.fromEntries(keys(top[1]).map((k) => [k, true]));
+        for (const nested of text.matchAll(/WHEN t\.key = '([A-Za-z0-9_]+)' AND jsonb_typeof\(t\.value\) = 'object' THEN \(SELECT coalesce\(jsonb_object_agg\(f\.key, f\.value\), '\{\}'::jsonb\) FROM jsonb_each\(t\.value\) AS f WHERE f\.key IN \(([^)]*)\)\)/g)) {
+          projection[nested[1]!] = keys(nested[2]!);
+        }
+        return rows.filter((r) => r.log_key === key && textAt(r.record, path) === value)
+          .sort((a, b) => b.position - a.position).slice(0, Number(limit))
+          .map((r) => ({ record: projectRecord(r.record, projection) }));
+      }
       // readRecent: newest first, LIMIT is a parameter.
       if (/ORDER BY\s+position DESC/i.test(text)) {
         const [key, limit] = params as [string, number];
@@ -168,4 +187,50 @@ test("readRecent() returns the newest N, newest first, bounded", async () => {
   const out = await repo.readRecent("owner-digest", 5);
   assert.deepEqual(out.map((r) => r.seq), [49, 48, 47, 46, 45], "newest first, exactly the tail");
   assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
+});
+
+test("readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database", async () => {
+  const rows: Row[] = seq(40, "owner-digest", (i) => ({
+    digestId: `d${i}`,
+    lines: ["a long rendered line"],
+    runtimeOutcome: {
+      kind: i % 3 === 0 ? "OTHER" : "WANT",
+      finishedAt: `t${i}`,
+      readerReadbacks: [{ big: "x".repeat(100) }],
+    },
+  }));
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "owner_digests");
+
+  const out = await repo.readRecentWhere(
+    "owner-digest",
+    ["runtimeOutcome", "kind"],
+    "WANT",
+    3,
+    { digestId: true, runtimeOutcome: ["kind", "finishedAt"] },
+  );
+  assert.deepEqual(out, [38, 37, 35].map((i) => ({
+    digestId: `d${i}`,
+    runtimeOutcome: { kind: "WANT", finishedAt: `t${i}` },
+  })), "only matches, newest first, and nothing the projection drops");
+  assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
+  assert.match(calls[0]!, /LIMIT \$3/, "the limit is a parameter");
+  assert.doesNotMatch(calls[0]!, /SELECT\s+(position,\s*)?record\s+FROM/i, "the whole record is never selected");
+});
+
+test("readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it", async () => {
+  const { sql } = fakeLogSql([]);
+  const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "owner_digests");
+  await assert.rejects(
+    () => repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "x", 1, { "digestId'); drop": true }),
+    /unsafe projection key/,
+  );
+  await assert.rejects(
+    () => repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind"], "x", 1, { runtimeOutcome: ["kind'); drop"] }),
+    /unsafe projection key/,
+  );
+  await assert.rejects(
+    () => repo.readRecentWhere("owner-digest", ["runtimeOutcome", "kind'); drop"], "x", 1, { digestId: true }),
+    /unsafe JSON path/,
+  );
 });

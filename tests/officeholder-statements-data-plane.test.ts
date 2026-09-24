@@ -353,7 +353,9 @@ test("tracked statement and candidate-universe writer doors stay deleted", () =>
 
   for (const path of ["scripts/freshness-shadow.mts", "scripts/scout-denominator.mts"]) {
     const source = readFileSync(join(ROOT, path), "utf8");
-    assert.ok(source.indexOf("await preloadCandidateEnrichmentAuthorities()") < source.indexOf("candidateEnrichmentProvider()"), path);
+    // The provider may be handed its tracked states (MW-028), so the anchor is the call, not an empty argument list.
+    const built = source.search(/candidateEnrichmentProvider\(/);
+    assert.ok(built >= 0 && source.indexOf("await preloadCandidateEnrichmentAuthorities()") < built, path);
   }
   const pilot = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
   assert.match(pilot, /scripts\/freshness-shadow\.mts/);

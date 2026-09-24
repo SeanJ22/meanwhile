@@ -423,6 +423,30 @@ test("partial computation lost before commit stays nonterminal, then lease recov
   assert.equal((await reopened.attempts.mustRead(attempt.id)).value.outcome, "LEASE_EXPIRED");
 }));
 
+test("a work item's completion evidence and inherited results read only that item's rows", async () => {
+  // 2026-09-24: each call listed every RouteTask and Attempt and read every
+  // worker result (~11 MB), twice per work item in every research cycle.
+  const h = await harness();
+  const artifact = await h.hold(CAPTURE);
+  const parser = await run(h, artifact, "PARSER");
+  const validator = await run(h, artifact, "VALIDATOR", { producerResultId: parser.id });
+  const expected = await loadWorkerCompletionEvidence(h.repos, h.item.id);
+  const expectedResults = await readCompletedWorkerResults(h.repos, h.item.id);
+  const whole = async (): Promise<never> => { throw new Error("a whole-table read for one work item"); };
+  const narrow: ControlPlaneRepositories = { ...h.repos,
+    routeTasks: { ...h.repos.routeTasks, list: whole },
+    attempts: { ...h.repos.attempts, list: whole },
+    workerResults: { ...h.repos.workerResults, readAll: whole },
+  };
+  assert.deepEqual(await loadWorkerCompletionEvidence(narrow, h.item.id), expected);
+  assert.deepEqual(await readCompletedWorkerResults(narrow, h.item.id), expectedResults);
+  assert.equal(expected.managed, true);
+  assert.equal(expected.validations[0]?.passed, true, "and the narrow read is not vacuous");
+  assert.deepEqual(expectedResults.map((record) => record.id).sort(), [parser.id, validator.id].sort());
+  assert.deepEqual(await loadWorkerCompletionEvidence(narrow, "wi-no-such-item"),
+    { managed: false, latestProducerAttemptId: null, validations: [], audits: [] });
+});
+
 test("diagnostic replay preserves workflow and captured-only audit cannot discharge whole-obligation completion", async () => {
   const h = await harness();
   const artifact = await h.hold(CAPTURE);

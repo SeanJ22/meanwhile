@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 758,
-    "named": 7472,
+    "files": 759,
+    "named": 7478,
     "dynamic": 30
   },
   "files": {
@@ -8814,6 +8814,17 @@
         "the rhythm token scales are declared in app/globals.css"
       ],
       "dynamic": 1
+    },
+    "tests/robots-first-fetch.test.ts": {
+      "names": [
+        "A DISALLOW REFUSES, AND EVERY PATH IS EVALUATED FOR ITSELF against the one reading of its origin",
+        "A ROBOTS.TXT THAT ENDS UNREAD IS NEVER 'NO ROBOTS FILE': a chain past five redirects, a 5xx and a transport failure all refuse, and nothing else is requested",
+        "ONE HOST IS SPACED: two seconds between its requests, or its own Crawl-delay when it asks for more",
+        "ROBOTS FIRST, EVERY ORIGIN: a redirect onto a new origin asks that origin's robots.txt before anything else",
+        "THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFetch, and package.json names it",
+        "WALLS AND HOSTS AWAITING THE OWNER ARE NEVER ASKED ANYTHING, not even robots.txt, and not by a redirect"
+      ],
+      "dynamic": 0
     },
     "tests/route-floor-applicability.test.ts": {
       "names": [

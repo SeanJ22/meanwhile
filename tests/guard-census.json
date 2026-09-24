@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 755,
-    "named": 7442,
+    "files": 756,
+    "named": 7450,
     "dynamic": 30
   },
   "files": {
@@ -354,6 +354,19 @@
         "the start route reports NOT_CONFIGURED by class when a variable is absent — no cookie, no 500, no Google",
         "the state cookie round-trips under the session key",
         "with the flag on, an unreachable incident log REFUSES the break-glass — a correct secret issues nothing"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-promoted-slices.test.ts": {
+      "names": [
+        "a code's memberships match the lookup's reverse index, and a code outside the universe says so",
+        "a failed read names the error and never the connection",
+        "a state's slice holds exactly the refs the whole lookup lists for that state, type by type",
+        "every statement is scoped to the promoted pointer, the state is matched upper-case",
+        "no pointer is 'not published', never an empty list",
+        "one container carries the lookup's own codes and plan",
+        "the registry slice carries each body's six fields and skips a row with no id",
+        "the watched-bodies read opens no socket, runs read only, and decodes each change set once"
       ],
       "dynamic": 0
     },

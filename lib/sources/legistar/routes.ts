@@ -276,20 +276,26 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
     note:
       "The human page for one sitting. Carries the item TEXT and the attachment " +
       "links, neither of which any JSON route in this portfolio can see. Its URL is " +
-      "already held on every event as EventInSiteURL; nothing parses it yet.",
+      "already held on every event as EventInSiteURL. The ingest reads one thing off " +
+      "it (2026-09-24): the sitting's agenda link on the portal host (`_hypAgenda`), " +
+      "used when the API's agenda file sits on the DISALLOWED document host " +
+      "(lib/sources/legistar/portal-agenda-link.ts). The item text is still unparsed.",
   },
   {
     id: "INSITE_ACCESSIBLE_AGENDA",
     routeClass: "ACCESSIBLE_CONTENT",
     transport: "HTML",
-    urlShape: "https://{insiteHost}/View.ashx?M=A&ID={eventId}&GUID={guid}",
+    urlShape: "https://{insiteHost}/View.ashx?M=AADA&ID={portalId}&GUID={guid}",
     bears: ["AGENDA_ITEM_LIST", "ITEM_FULL_TEXT", "SUPPORTING_DOCUMENT"],
     disposition: "REQUIRES_NEW_ADAPTER",
     note:
       "The accessible HTML rendering Legistar publishes beside the agenda PDF, on " +
       "the PORTAL host rather than the disallowed document host. It is the highest " +
       "-value unbuilt route in this portfolio: it is permitted, it is text, and it " +
-      "carries what the API structurally cannot.",
+      "carries what the API structurally cannot. `M=AADA`, as the recorded calendar " +
+      "grids and detail pages link it. `M=A` on the same host is the agenda PDF " +
+      "itself (measured 2026-09-24: 200 application/pdf, no redirect), and {portalId} " +
+      "is the portal's own sitting id, not the API's EventId.",
   },
   {
     id: "INSITE_ACCESSIBLE_MINUTES",
@@ -325,7 +331,9 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
       "2026-08-29 by three clients under three user agents, so a RULE and not a " +
       "RULING 182 transport artefact. Recorded here, never fetched. It stays in the " +
       "portfolio because deleting it would convert a permission wall into an " +
-      "absence of documents (RULING 184).",
+      "absence of documents (RULING 184). The same agenda is published on the " +
+      "tenant's portal host as `View.ashx?M=A`, linked from the sitting's detail " +
+      "page, and the ingest reads it there (2026-09-24).",
   },
   {
     id: "GRANICUS_MINUTES_PDF",

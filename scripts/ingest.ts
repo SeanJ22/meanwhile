@@ -72,6 +72,8 @@ import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
 import { SOURCE_WIRING, isRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { isDisallowedLegistarHost } from "../lib/sources/legistar/routes.ts";
+import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
+import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -242,6 +244,31 @@ export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   }) as typeof fetch;
 }
 
+/**
+ * The permitted Legistar detail page a sitting's refused agenda link can be
+ * replaced through, or null when the row holds none.
+ */
+function portalDetailPageFor(meeting: Meeting): string | null {
+  const page = meeting.provenance?.sourceUrl ?? null;
+  return isLegistarMeetingDetailUrl(page) && agendaRetrievalRefusal(page) === null ? page : null;
+}
+
+/**
+ * The portal's own agenda link for a sitting, read off its detail page. A
+ * portal link already held for the sitting is reused, because the portal keeps
+ * one link per sitting and serves its current agenda there, so the page is
+ * read once rather than on every pass.
+ */
+async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): Promise<string | null> {
+  const page = portalDetailPageFor(meeting);
+  if (!page) return null;
+  const held = agendaDocumentStore.latestFor(meeting.id)?.documentUrl ?? null;
+  if (held && isPortalAgendaLinkFor(held, page)) return held;
+  const response = await fetchImpl(page, { headers: { "User-Agent": sourceUserAgent() } });
+  if (!response.ok) throw new Error(`HTTP ${response.status} for ${page}`);
+  return portalAgendaLinkFrom(await response.text(), page);
+}
+
 export async function retrieveAgendas(meetings: Meeting[]) {
   /*
    * **A LINK INTO A RETIRED ROUTE'S HOST IS HELD AS A LINK, NEVER READ.**
@@ -255,19 +282,36 @@ export async function retrieveAgendas(meetings: Meeting[]) {
    * held link never reads as a retrieval that failed or an agenda nobody
    * posted.
    */
-  const linkedOnly = meetings.filter((m) => {
+  const refused = (m: Meeting) => {
     const url = documentUrlFor(m);
     return url !== null && agendaRetrievalRefusal(url) !== null;
-  });
+  };
+  /*
+   * **A REFUSED LINK IS NOT THE ONLY ROUTE TO ITS AGENDA.** (2026-09-24,
+   * RULING 248.) A Legistar sitting whose API agenda file sits on the
+   * DISALLOWED document host has the same agenda on the tenant's own portal.
+   * The sitting's detail page, which the row already holds, links it
+   * (lib/sources/legistar/portal-agenda-link.ts). Those sittings are read
+   * through the portal. Only a refused link with no permitted route stays
+   * held as a link.
+   */
+  const linkedOnly = meetings.filter((m) => refused(m) && portalDetailPageFor(m) === null);
+  const viaPortal = meetings.filter((m) => refused(m) && portalDetailPageFor(m) !== null);
   if (linkedOnly.length > 0) {
     console.log(
       `agenda documents: ${linkedOnly.length} link(s) held as links only — their host is a retired ` +
         "route or recorded DISALLOWED (robots.txt refuses this client), so nothing was requested from it",
     );
   }
+  if (viaPortal.length > 0) {
+    console.log(
+      `agenda documents: ${viaPortal.length} refused link(s) with a permitted route — read through the ` +
+        "agenda link on the sitting's own portal detail page, never from the refused host",
+    );
+  }
   const withAgenda = meetings.filter((m) => {
     const url = documentUrlFor(m);
-    return url !== null && agendaRetrievalRefusal(url) === null;
+    return url !== null && (agendaRetrievalRefusal(url) === null || portalDetailPageFor(m) !== null);
   });
   // Meetings with no stored document yet go first: the cap is politeness per
   // run, and the store is seeded from the previous snapshot, so over repeated
@@ -288,16 +332,30 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   let failedOverHeld = 0;
   /* Permitted links that redirected into a refused host: held, never followed. */
   let redirectsRefused = 0;
+  /* Refused links read through the portal, and those whose page links no agenda yet. */
+  let readViaPortal = 0;
+  let portalWithoutLink = 0;
   const fetchImpl = refusalCheckedFetch();
 
   for (const meeting of capped) {
     try {
       const url = documentUrlFor(meeting);
+      let override = url && url !== meeting.agendaUrl ? url : null;
+      const throughPortal = url !== null && agendaRetrievalRefusal(url) !== null;
+      if (throughPortal) {
+        override = await portalAgendaLinkFor(meeting, fetchImpl);
+        if (!override) {
+          portalWithoutLink++;
+          console.log(`  agenda link held as a link for ${meeting.id}: its portal detail page links no agenda yet`);
+          continue;
+        }
+      }
       const doc = await retrieveAgendaDocument(
         meeting,
-        url && url !== meeting.agendaUrl ? { fetchImpl, urlOverride: url } : { fetchImpl },
+        override ? { fetchImpl, urlOverride: override } : { fetchImpl },
       );
       if (!doc) continue;
+      if (throughPortal) readViaPortal++;
       if (doc.extraction === "failed") {
         console.warn(
           `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
@@ -372,7 +430,8 @@ export async function retrieveAgendas(meetings: Meeting[]) {
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
       `${failedOverHeld} failed read(s) not stored over a held version, ` +
-      `${redirectsRefused} redirect(s) into a refused host not followed`,
+      `${redirectsRefused} redirect(s) into a refused host not followed, ` +
+      `${readViaPortal} refused link(s) read through the portal, ${portalWithoutLink} whose portal page links no agenda yet`,
   );
 }
 

@@ -92,7 +92,8 @@ test("both rows reach readers as sittings of their registered bodies", async () 
     return new Response(body, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
   }) as typeof fetch;
   const source = makeSchedulePageSource(rows, fetchImpl);
-  const raw = await source.fetch();
+  // Neither shape walks month pages, so the query only has to be a valid one.
+  const raw = await source.fetch({ lat: 43.32, lng: -72.03, radiusKm: 40 });
   const now = new Date("2026-09-24T18:30:00Z");
   const { meetings } = source.normalizeWithDrops(raw, now);
 

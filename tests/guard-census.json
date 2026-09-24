@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 726,
-    "named": 7187,
+    "files": 727,
+    "named": 7204,
     "dynamic": 28
   },
   "files": {
@@ -3558,6 +3558,28 @@
         "the windows are RULING 53's, exactly",
         "two branches agreeing is simply found",
         "two branches producing different values is DIVERGENT, not resolved"
+      ],
+      "dynamic": 0
+    },
+    "tests/dispatch-work.test.ts": {
+      "names": [
+        "Admin reads the creation receipt for the decision it belongs to, with every number carrying its denominator",
+        "a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with the registry named",
+        "a DISPATCH naming a registered state creates there, counts it on the owner's record, and carries its remainder forward",
+        "a cycle that may not write plans, counts and writes nothing",
+        "a geography in a state with no promoted registry is blocked by name, and nothing is invented for it",
+        "a meetings route with a known address is carried by what the partition wiring says, and held when it cannot be read",
+        "a promoted registry the runtime's reader refuses is named as that, never used and never called missing",
+        "candidate enrichment enumerates the tracked states and names one with no ballot authority",
+        "created work joins the corpus through its providers next cycle: scheduled, never re-registered, never retired",
+        "creating work opens no paid lane: the owner's PAUSE stands, nothing but obligations is written, and paid discovery waits for the free walk",
+        "local-jurisdictions schedules the tracked states it is handed, keeps every existing id, and names a tracked state with no registry",
+        "sending the fleet to Pima County creates what the registry defines there and no clock carries, in the shape syncObligations registers",
+        "sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement",
+        "syncObligations keeps the owner's mark when a provider's signals move",
+        "the gateway and the preview say the Send creates what is missing, bounded, and name no machine constant",
+        "the meetings-discovery provider emits exactly the materialized needs, in the gap ledger's shape",
+        "the per-cycle write budget defers the rest by count, the next cycle continues, and the cap is named"
       ],
       "dynamic": 0
     },

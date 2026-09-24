@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 763,
-    "named": 7500,
+    "files": 764,
+    "named": 7501,
     "dynamic": 30
   },
   "files": {
@@ -2695,6 +2695,12 @@
         "PRDY-1: executable code above the runner is the real stale case, undiminished",
         "PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a real repository, with no network",
         "PRDY-1: unclassifiable and mixed commits are executable; the walk bound refuses rather than guesses"
+      ],
+      "dynamic": 0
+    },
+    "tests/cold-boot.test.ts": {
+      "names": [
+        "a cold server instance loads only the route it was asked for: Next's preload of every route stays off"
       ],
       "dynamic": 0
     },

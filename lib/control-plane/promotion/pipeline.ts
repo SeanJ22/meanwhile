@@ -393,14 +393,30 @@ export async function appendTransition(
   return { accepted: decided.ok, appended: outcome.appended, record: decided.record, state: after };
 }
 
-/** Every item's derived state, by item id order. Keys holding no pipeline record are not items. */
+/**
+ * Every item's derived state, by item id order. Keys holding no pipeline record are not items.
+ *
+ * The log is read whole in bounded pages and grouped by item: `appendTransition`
+ * appends every record, held, offered or refused, under its own `itemId`, so
+ * an item's group is exactly what reading its key returns. One read per key
+ * issued 629 sequential requests on 2026-09-24, and a research cycle reached
+ * its 15-minute wall waiting on them.
+ */
 export async function readPipelineStates(repos: ControlPlaneRepositories): Promise<PipelineItemState[]> {
-  const keys = await repos.promotionPipeline.keys();
+  const [keys, records] = await Promise.all([repos.promotionPipeline.keys(), repos.promotionPipeline.readAll()]);
+  const byItem = new Map<string, PromotionPipelineRecord[]>();
+  for (const record of records) {
+    /* A foreign row under this log (the conformance suite writes one per run) is not a transition. */
+    if (!isPipelineRecord(record)) continue;
+    const itemRecords = byItem.get(record.itemId);
+    if (itemRecords) itemRecords.push(record);
+    else byItem.set(record.itemId, [record]);
+  }
   const out: PipelineItemState[] = [];
   for (const key of keys) {
-    const records = await readItemRecords(repos, key);
-    if (records.length === 0) continue;
-    out.push(deriveItemState(key, records));
+    const itemRecords = byItem.get(key);
+    if (itemRecords === undefined || itemRecords.length === 0) continue;
+    out.push(deriveItemState(key, itemRecords));
   }
   return out;
 }
@@ -410,9 +426,11 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
   const artifacts = new Map<string, ArtifactRecord>();
   for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
   const roles = new Map<string, WorkerRole>();
-  for (const a of await repos.attempts.list()) roles.set(a.id, a.value.worker.role);
+  /* One listing serves both maps; each was a whole read of the Attempts. */
+  const attemptRows = await repos.attempts.list();
+  for (const a of attemptRows) roles.set(a.id, a.value.worker.role);
   const results = await repos.workerResults.readAll();
-  const attempts = new Map((await repos.attempts.list()).map(a => [a.id, a.value]));
+  const attempts = new Map(attemptRows.map(a => [a.id, a.value]));
   const workItems = new Map((await repos.workItems.list()).map(w => [w.id, w.value]));
   const completion = new Map(await Promise.all([...new Set(results.map(r => r.workItemId))].map(async id => [id, await loadWorkerCompletionEvidence(repos, id)] as const)));
   return {

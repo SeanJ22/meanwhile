@@ -137,6 +137,29 @@ function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): Juris
  */
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
+  {
+    /*
+     * C16's first reviewed calendar (2026-09-24): the walk confirms this feed so the reviewed crosswalk rows for the
+     * city's commissions can connect to it. The feed never names a body on its own; each crosswalk row's reviewed
+     * title filter does, on the city's own event page naming the commission.
+     */
+    jurisdictionId: "az:city:city-of-flagstaff",
+    officialSite: null,
+    routes: [
+      {
+        url: "https://www.flagstaff.az.gov/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar",
+        kind: "FEED",
+        body: "Boards and Commissions: the Housing, Tourism and Indigenous Commissions among 18 bodies",
+        platform: "civicplus",
+        verifyAs: "ical",
+        evidence:
+          "The city's own CivicPlus \"Boards & Commissions\" iCal feed (catID=49): 440 events with America/Phoenix start times, " +
+          "among them 16 \"Housing Commission\", 17 \"Tourism Commission Meeting\" and 33 \"Indigenous Commission Meeting\" " +
+          "sittings; read robots-first (sha256 ce54348d…). The commissions' own event pages (Calendar.aspx?EID=2823, 3031, 3778) name each body.",
+        observed: { at: "2026-09-24T23:16:02Z", by: "RouteTask session research, robots-checked" },
+      },
+    ],
+  },
   siteHint("az:city:city-of-winslow", {
     origin: "https://www.winslowaz.gov",
     selfName: "City Of Winslow",

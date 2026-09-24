@@ -1138,8 +1138,10 @@ test("the routine runner derives its clock from durable candidate history", () =
   assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
-  const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs)");
-  assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < dueDecision);
+  // Sitting windows are decided once, at the frozen instant, from the same reads.
+  const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs)");
+  const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot)");
+  assert.ok(frozenAdmission > 0 && frozenAdmission < clockReads && clockReads < sittingSignals && sittingSignals < dueDecision);
   assert.doesNotMatch(source, /routine-civic-data-runner\.json|readState\(|writeState\(/);
 });
 
@@ -1532,6 +1534,13 @@ test("the durable receipt check proves exactly one pointer through the full proo
       return super.readCandidate(candidateId);
     }
 
+    // The proof's own narrowed read: the read model and normalized payload it
+    // checks, never the change set, records or identities (candidateProofView).
+    override async readCandidateProof(candidateId: string) {
+      this.whole.push(`candidate-proof:${candidateId}`);
+      return super.readCandidateProof(candidateId);
+    }
+
     override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
       this.whole.push(`promotion:${recordClass}:${scope}`);
       return super.readPromotion<T>(recordClass, scope);
@@ -1556,7 +1565,7 @@ test("the durable receipt check proves exactly one pointer through the full proo
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
   assert.equal(await durableRoutineRunnerReceiptIssue(success, task, store, "SUCCESS"), null);
-  assert.deepEqual(store.whole, [pointer, `candidate:${good.id}`], "success: the new pointer's proof, once");
+  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "success: the new pointer's proof, once, narrowed");
 
   const failure = failedAcquisitionCandidate({
     sourceId: task.sourceId,
@@ -1580,7 +1589,7 @@ test("the durable receipt check proves exactly one pointer through the full proo
     lastKnownGoodVersion: good.id,
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }, task, store, "HELD"), null);
-  assert.deepEqual(store.whole, [pointer, `candidate:${good.id}`], "held: the unchanged LKG's proof, once; never the refused envelope");
+  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "held: the unchanged LKG's proof, once, narrowed; never the refused envelope");
 
   // The proof is still whole: a pointer whose payload no longer matches its
   // candidate's read model is refused on both paths.
@@ -1593,4 +1602,16 @@ test("the durable receipt check proves exactly one pointer through the full proo
   const tampered = new TamperedStore();
   await processRegisteredRoutineCandidate(tampered, task.id, good, T0);
   assert.match(await durableRoutineRunnerReceiptIssue(success, task, tampered, "SUCCESS") ?? "", /does not prove the reported GOOD candidate/);
+});
+
+test("the supervisor proves the registry once for two or more meeting children and hands only them the attestation", () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const admitted = source.indexOf("attempted = pendingRuns.length;");
+  const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
+  const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
+  const launch = source.indexOf("const childRuns = await runBoundedChildPass(");
+  assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
+  assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
+  assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
+  assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);
 });

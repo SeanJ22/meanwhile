@@ -168,7 +168,13 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
   // The bundled fixture is frozen at the PDC v2 import: the only other
   // obligations it may leave unaccounted are rows whose partitions were
   // registered after it, each named in PDC_V2_POST_IMPORT_MEETING_PARTITIONS.
-  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) => PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id));
+  // Coverage represents a wiring row by its source name, so a post-import
+  // partition on a source the fixture already holds (C9's two Newbury schedule
+  // pages, on `schedulepage`) is represented; only a route on a source the
+  // fixture never held is missing.
+  const fixtureSources = new Set(fixture.sources.map((source) => source.source));
+  const postImport = MEETING_PARTITION_CONTRACTS.filter((p) =>
+    PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id) && !fixtureSources.has(p.meetingSource));
   const expectedMissing = [
     ...WIRED_AFTER_FIXTURE,
     ...postImport.map((p) => `${p.bodyId}:${p.wiring.agendaSourceType}`),
@@ -307,8 +313,10 @@ test("validated curl-rung bytes retain curl's effective redirect URL", async () 
 });
 
 test("the live Pima Legistar/InSite schedule bridge is an exact registered authority route", () => {
-  const route = "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule";
+  // The county's current page (C18, 2026-09-24) and the /2559/ address it moved from.
+  const route = "https://www.pima.gov/board-of-supervisors-meeting-schedule";
   assert.equal(authorityFor("meetings-public-bodies", "MEETING", route).ok, true);
+  assert.equal(authorityFor("meetings-public-bodies", "MEETING", "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule").ok, true);
   assert.equal(
     authorityFor("meetings-public-bodies", "MEETING", "https://www.pima.gov/unregistered-page").ok,
     false,

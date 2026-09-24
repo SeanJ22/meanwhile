@@ -8,9 +8,12 @@
  */
 import {
   cadenceMsAt,
+  sittingWindowDueAtMs,
+  sittingWindowHot,
   type RoutineSourceContract,
 } from "./contracts.ts";
-import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "./meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, sittingWindowSourceIds } from "./meeting-partitions.ts";
+import { meetingPayloadSittingStarts } from "./store.ts";
 import {
   MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   type ManualProductionSourceContract,
@@ -1170,6 +1173,7 @@ function nextDue(
   events: readonly RoutineCandidateEventRow[],
   nowMs: number,
   latestOrderIssue: string | null = null,
+  sittingHot?: boolean,
 ): Observation<string> {
   if (isManualContract(contract)) return notApplicable("Manual production contract: no next-due clock exists.");
   if (latest && authorityOrigin(latest) === "TRUSTED_LKG_IMPORT") {
@@ -1194,7 +1198,34 @@ function nextDue(
   if (!Number.isFinite(succeeded) || attempted > succeeded) {
     return measured(new Date(attempted + contract.retry.afterMs).toISOString());
   }
+  const schedule = "schedule" in contract ? contract.schedule : undefined;
+  if (schedule?.kind === "SITTING_WINDOW") {
+    return measured(new Date(sittingWindowDueAtMs(schedule, succeeded, sittingHot)).toISOString());
+  }
   return measured(new Date(succeeded + cadenceMsAt(contract, nowMs)).toISOString());
+}
+
+/**
+ * Each sitting-window contract's hot signal at `nowMs`, from the promoted
+ * MEETING payloads this projection already read: the same sitting starts, and
+ * the same rule, the runner admits on.
+ */
+function sittingWindowSignalsFromPromotions(
+  contracts: readonly ObservableCivicDataContract[],
+  promotions: readonly RoutinePromotionRow[],
+  nowMs: number,
+): ReadonlyMap<string, boolean | undefined> {
+  const startsByScope = new Map(promotions
+    .filter((row) => row.recordClass === "MEETING")
+    .map((row) => [row.scope, meetingPayloadSittingStarts(row.payload)] as const));
+  const startsById = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, startsByScope.get(partition.scope)]));
+  const signals = new Map<string, boolean | undefined>();
+  for (const contract of contracts) {
+    const schedule = "schedule" in contract ? contract.schedule : undefined;
+    if (schedule?.kind !== "SITTING_WINDOW") continue;
+    signals.set(contract.id, sittingWindowHot(schedule, sittingWindowSourceIds(contract.id).map((id) => startsById.get(id)), nowMs));
+  }
+  return signals;
 }
 
 const TERMINAL_REFUSAL_STATES = new Set<CandidateState>([
@@ -1883,6 +1914,7 @@ function projectContract(
   rows: RoutineObservabilityRows,
   nowMs: number,
   currentReaderBuild: CurrentReaderBuildIdentity,
+  sittingHot?: boolean,
 ): RoutineContractObservation {
   const contractCandidates = rows.candidates
     .filter((row) => row.sourceId === contract.sourceId && row.recordClass === contract.recordClass && row.scope === contract.scope);
@@ -2057,7 +2089,7 @@ function projectContract(
       description: isManualContract(contract) ? "explicit owner invocation only" : contract.cadence.description,
       activeEveryMs: isManualContract(contract) ? 0 : cadenceMsAt(contract, nowMs),
       retryDescription: isManualContract(contract) ? "explicit owner rerun after inspecting the durable refusal" : contract.retry.description,
-      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue),
+      nextDue: nextDue(contract, latest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot),
       operationalState: operation.state,
       operationalDetail: operation.detail,
       freshness: fresh.state,
@@ -2210,7 +2242,8 @@ function projectRoutineDataObservabilityUncached(
 ): RoutineObservabilityView {
   const nowMs = Date.parse(now);
   if (!Number.isFinite(nowMs)) throw new Error(`Routine observability requires a valid now instant, received ${now}.`);
-  const projected = contracts.map((contract) => projectContract(contract, rows, nowMs, currentReaderBuild));
+  const sittingSignals = sittingWindowSignalsFromPromotions(contracts, rows.promotions, nowMs);
+  const projected = contracts.map((contract) => projectContract(contract, rows, nowMs, currentReaderBuild, sittingSignals.get(contract.id)));
   const members = projected.map(contractMember);
   const lkgServing = projected.flatMap((row, index) => row.lkg.kind === "MEASURED" && row.lkg.value.currentlyServing ? [members[index]] : []);
   const changed = projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "MEASURED" && row.latestCanonicalOutcome.value === "CHANGED" ? [members[index]] : []);

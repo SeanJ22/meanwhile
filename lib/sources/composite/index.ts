@@ -173,6 +173,18 @@ const ZERO_DROPS: NormalizeDropCounts = {
   notConfigured: 0,
 };
 
+/** A raw row an adapter kept only to record that its retrieval was refused. */
+interface RefusedRawRow {
+  readonly refused: true;
+  readonly refusedReason?: string;
+  readonly refusedKind?: "WALL" | "JOB";
+  readonly refusedRung?: number;
+}
+
+function isRefusedRow(raw: unknown): raw is RefusedRawRow {
+  return typeof raw === "object" && raw !== null && (raw as { refused?: unknown }).refused === true;
+}
+
 interface CacheEntry {
   at: number;
   raw: TaggedRaw[];
@@ -556,9 +568,45 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
          *
          * The sweep for the shape found 2 sites and replaced 2.
          */
+        /*
+         * **A REFUSED ROW IS NOT A DOCUMENT IN HAND.** (2026-09-24.) An adapter
+         * may keep a row whose retrieval the publisher refused, as
+         * `{ refused: true }`, so carry-forward can keep that body's sittings.
+         * Sutton, NH's feed intermittently answers a Cloudflare managed
+         * challenge (403, "Just a moment..."). The fetch layer named it, the
+         * iCal row kept it as a refusal, and this guard then counted the row as
+         * a document, reported "fetched 1 document(s) and extracted 0
+         * meeting(s)" and filed the town's wall as our JOB. Refused rows are
+         * now not documents. When every row a child fetched was refused, the
+         * child fails with the refusal's own kind and words.
+         */
+        const refusedRows = (byChild.get(child.name) ?? []).filter(isRefusedRow);
+        if (meetings.length === 0 && refusedRows.length > 0 && refusedRows.length >= fetched.fetched) {
+          const reasons = [...new Set(refusedRows.map((row) => row.refusedReason).filter((reason): reason is string => Boolean(reason)))];
+          const failure = refusedRows.some((row) => row.refusedKind === "JOB") ? "JOB" : "WALL";
+          const rungs = refusedRows.map((row) => row.refusedRung).filter((rung): rung is number => typeof rung === "number");
+          children.push({
+            source: child.name,
+            ok: false,
+            error:
+              `every row this source fetched was refused (${refusedRows.length})` +
+              (reasons.length > 0 ? `: ${reasons.slice(0, 3).join("; ")}` : ""),
+            failure,
+            // The furthest rung the refused retrieval reached, recorded as the
+            // fetch-failure branch above records it; absent stays absent.
+            ...(failure === "WALL" && rungs.length > 0
+              ? { walledAtRung: Math.max(...rungs), rungProvenance: "CANONICAL" as const }
+              : {}),
+            fetched: fetched.fetched,
+            normalized: 0,
+            drops,
+            ...declaredWindow,
+          });
+          continue;
+        }
         if (
           isZeroRowExtraction({
-            documentsInHand: fetched.fetched,
+            documentsInHand: fetched.fetched - refusedRows.length,
             produced: meetings.length,
             dropped: totalDropped(drops),
             outOfWindow: 0,

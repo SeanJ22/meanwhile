@@ -1,10 +1,10 @@
 {
-  "exactHead": "ea1f2d80291bd02450d30ae4392ef11e2cbd7779",
-  "buildId": "y8GAHk2DQIdwtr_OH8tcc",
+  "exactHead": "ae0e18f5ca12129b92ce3d40050b956237a21c9c",
+  "buildId": "zko_LtZSbyFf2L04SQz8x",
   "buildCompleted": true,
   "servedBuild": {
-    "commit": "ea1f2d80291bd02450d30ae4392ef11e2cbd7779",
-    "commitShort": "ea1f2d8",
+    "commit": "ae0e18f5ca12129b92ce3d40050b956237a21c9c",
+    "commitShort": "ae0e18f",
     "branch": "unknown",
     "context": "unknown",
     "deployId": "unknown",
@@ -19,10 +19,10 @@
       "hasContext": false,
       "contextValue": null,
       "hasDeployId": false,
-      "dbRole": "local"
+      "dbRole": "production"
     }
   },
-  "buildLogSha256": "eea509f0a292d6f9bf3852b82a91c196f9018687a601d5397ce4ca42e2883a1d",
+  "buildLogSha256": "c2d6148237a7015acbc2ebec614c571c0f9c81a7921b54cd922b7fc432fc1fd1",
   "traceRoutes": 10,
   "traceRequirements": 14,
   "requiredHoldingFiles": 128,
@@ -38,7 +38,7 @@
     },
     {
       "path": "app/api/agenda/route.ts",
-      "sha256": "85eb4003f7514243154934367ec9fdba8a8cae98a0df5c8735924fce8b5ad3a8"
+      "sha256": "55c2629bf125d1e08e1367100c55fa74e1598c77520f51c6af4b3638df764cb7"
     },
     {
       "path": "app/api/ask/classify/route.ts",
@@ -46,7 +46,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "890df033ab645dffbf30de5807d5ced5d6e6b69e21e3a427dbec0d193ce76c63"
+      "sha256": "b6bc0a4a6d1356982e0bd2acdc1acff32819b6a571aca93f32bda74f48d871f0"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -258,7 +258,7 @@
     },
     {
       "path": "components/map/coverage-notice.tsx",
-      "sha256": "f00856da6b63385756857c34f088f16d5e4e860635556f54dbdc4d8edc66b7dd"
+      "sha256": "26f38cb39487b4cb4a6378578dd0f5d899e3b431699ad099f889f243f8543b6d"
     },
     {
       "path": "components/map/data-freshness.tsx",
@@ -294,7 +294,7 @@
     },
     {
       "path": "components/map/map-entry.tsx",
-      "sha256": "eb7f8f7ac89967d1acff70c5f7757eec4a6585c0ebfae5c2251188d37b021932"
+      "sha256": "0b126bafeedde028cbc7028b00245fe6057dc1fc8677ea3fc259ec98f4e29808"
     },
     {
       "path": "components/map/map-flight.module.css",
@@ -1798,7 +1798,7 @@
     },
     {
       "path": "lib/ask/agenda-publication.ts",
-      "sha256": "c9cbc61e9a03274995747af61242915cc283626070ecd45a6ce7415376a57ae6"
+      "sha256": "84190df8fdee15d8601f02ba37722cfa3c0fd479d5539223435efe6e72b2e973"
     },
     {
       "path": "lib/ask/agenda-sentence.ts",
@@ -1962,11 +1962,11 @@
     },
     {
       "path": "lib/ask/topic-timeline.ts",
-      "sha256": "6f9684ae284e81ec8b7fdc93919f4dff69e44f419a26176299c59749d1679a42"
+      "sha256": "27d46d52ef07b55303f0103839ae7e0c2994a855761f6147ac42a03c6baa83e6"
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "df9f9aec8b82f1853411aee362f30d882a158ab98e65b598bcabc6089303ab65"
+      "sha256": "f417632b6ab9e4134fffd8be8d7ac738b41cc49f6c173a9de0dfc64a241d166b"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2165,6 +2165,10 @@
       "sha256": "8af5eb5d3c538c03054b740b7ad1a94839fa457bf1f04d4a91cfa9d47cec06f7"
     },
     {
+      "path": "lib/civic-data/attested-promotion.ts",
+      "sha256": "21d8f8d8ac9cb8b7b6c1f2b239c678fd7c5458738791187be638355c9e4ff7ed"
+    },
+    {
       "path": "lib/civic-data/candidate-builders.ts",
       "sha256": "3234ec46df0b61b8bfe70f0a62a96ca2670b44e84e7688f349871e60f6b0fa40"
     },
@@ -2174,7 +2178,7 @@
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "aeebd645f68df0fa904130c5a704c6aaa88ace82a0c356b6b6982f41acbfa59f"
+      "sha256": "013174dcdf7aae63297d3b5e70899901c39c48785db502e879cd64daa7a4d0f3"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -2202,7 +2206,7 @@
     },
     {
       "path": "lib/civic-data/meeting-partitions.ts",
-      "sha256": "a379bc54ec33911e37e5b45132dcb18ed0b951053f8e77320a5085014c43eed9"
+      "sha256": "7814cbcc465addaffee2867b05cb50b0fa449b4b874ddd64de6aa56db29866ab"
     },
     {
       "path": "lib/civic-data/production-write.ts",
@@ -2210,7 +2214,7 @@
     },
     {
       "path": "lib/civic-data/read-model.ts",
-      "sha256": "cbb340507089d8c9117efd1f75e6c78823810453904041d6e85e3d0311c5266b"
+      "sha256": "7c9cc6bc8adb491bcf2aa9999eb796557983e68a05fbd839219c7a1acacf8ab1"
     },
     {
       "path": "lib/civic-data/reader-readback.ts",
@@ -2230,7 +2234,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "b8db393df2ad45912f3ec03e52a84cf518af0c82df55dca911050bf3ef14e731"
+      "sha256": "292dfa853b6cd90e40066c82663ad6410078e2d812cf82aa520d91a0c0f4d5b7"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2238,7 +2242,7 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "baab056d2545d642bd0e226132d42bfb9e6b267f91f65fec0ea2b4b31bd6e77e"
+      "sha256": "bd7c522182eacfec994ccf28a4fba7953ed86a0d79ff76185f527924debdbb71"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
@@ -2578,7 +2582,7 @@
     },
     {
       "path": "lib/meetings/freshness.ts",
-      "sha256": "4f1e5eca6849de14b077e5304233c55b46666e503fbbfade7f6f5706e769d997"
+      "sha256": "efeeef6efca4f85437abbfc455ecd21b7331fc281d49a9b715a57f4468e06c33"
     },
     {
       "path": "lib/meetings/history-gaps.ts",
@@ -2599,6 +2603,10 @@
     {
       "path": "lib/meetings/minutes-summaries.ts",
       "sha256": "57c6c620c08281b20b23702f805810201b3c699ec70faab063dd257ced670a90"
+    },
+    {
+      "path": "lib/meetings/notice-pages.ts",
+      "sha256": "7dd543c5fbaa309679fa669d9578a423fa78d0369c7d75347c9639994785d0ea"
     },
     {
       "path": "lib/meetings/notice-summary.ts",
@@ -2650,7 +2658,7 @@
     },
     {
       "path": "lib/meetings/venue-cache.ts",
-      "sha256": "3339b11c2fbcdecc3d83e75e5d77d101ac3fa2398c0256ad85fc573005910c60"
+      "sha256": "0089598ba390ca7cc976980e6369003c34cf6072ad88b84d69406e446378d110"
     },
     {
       "path": "lib/meetings/venue-record-identity.ts",
@@ -2962,7 +2970,7 @@
     },
     {
       "path": "lib/registry/source-wiring.ts",
-      "sha256": "01d7743ed196513706c185428c66431a30185a7b7d8ab387e52a7fe65acbcc42"
+      "sha256": "41e9ec28ead6ee9155f541a9d30061d7ea9a9e2da66596a9b40ec594f773b352"
     },
     {
       "path": "lib/registry/street-index-summary.json",
@@ -3102,7 +3110,7 @@
     },
     {
       "path": "lib/sources/composite/index.ts",
-      "sha256": "767109d85b22f5e655360f1c1b668aecc0213dff56dc6f58ce9cd4dbc52fa2ad"
+      "sha256": "2186b635cea4ab70ef6c3bd51d4c961fac6fb8845e72d98bc4e17d2b953140cc"
     },
     {
       "path": "lib/sources/composite/wiring.ts",
@@ -3126,7 +3134,7 @@
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "ff5f537718855aeb4d2f601a52c6720a5c4cbc7faeebb0e754001d37e41d9f7f"
+      "sha256": "b7160266df8fbb6299ecbd6040bfa25b71dcc77420c84a72f9a779e4c9ce3274"
     },
     {
       "path": "lib/sources/ical/recurrence.ts",
@@ -3150,7 +3158,7 @@
     },
     {
       "path": "lib/sources/legistar-insite/clerk-schedule.ts",
-      "sha256": "f5070891e3c62eb2e82c60f9e483880f60fcf6e2a680a0ef320571ddc58cd453"
+      "sha256": "76c4ae048f5ebba7f130e9d518adf49cd03ffc4612e0b2f4216b796922812f01"
     },
     {
       "path": "lib/sources/legistar-insite/horizon.ts",
@@ -3162,7 +3170,7 @@
     },
     {
       "path": "lib/sources/legistar-insite/index.ts",
-      "sha256": "e339206acd7792535591db1e9d244646967031c7151d2547229987c1bfdd6145"
+      "sha256": "ad942b3ff322473c9bd34a2a521a4032e47135854025c14034938fd58298e989"
     },
     {
       "path": "lib/sources/legistar-insite/tenant-registry.ts",
@@ -3234,7 +3242,7 @@
     },
     {
       "path": "lib/sources/schedulepage/index.ts",
-      "sha256": "659b62c66fda5bdf8b67a8c5b05b96f7704e8d4b95b3a9e41d1d7c04d7cc7453"
+      "sha256": "3efd3e1f1f13ebaa207b807ec9bb28847539cbd18aa48d6542eeecdcfada1425"
     },
     {
       "path": "lib/sources/sitting-status.ts",
@@ -3426,7 +3434,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "cf90886c0037703b99f15c100003979f2a3968a933224e7a120e8b69f65a4350"
+      "sha256": "4a1167fa323011fa42824ee52deb164126af5c22f774396685d0124de377a28d"
     },
     {
       "path": "pnpm-lock.yaml",

@@ -878,3 +878,29 @@ test("the trusted-LKG import clock counts only attempts strictly after the impor
   assert.deepEqual(trustedLkgImportClock("not a time", importedAt), {}, "an unreadable attempt decides nothing");
   assert.deepEqual(trustedLkgImportClock("2026-09-24T05:15:59.400Z", "not a time"), {}, "an unreadable import time decides nothing");
 });
+
+test("an import is read whole by its proof: its evidence binds the complete envelope", async () => {
+  const { store, outcome } = retainedHistoricalLkg();
+  assert.ok(outcome.promoted);
+  const whole = outcome.candidate;
+  const narrowed = await store.readCandidateProof(whole.candidate.id);
+  assert.ok(narrowed);
+  assert.deepEqual(narrowed, whole, "the envelope hash covers every field, identities included");
+  const decide = (record: typeof whole) => promotionProofIssue(MANUAL_RECORD_CLASS, MANUAL_SCOPE, outcome.promoted!, record);
+  assert.equal(decide(narrowed), null);
+  // Every tamper the whole row refuses, the narrowed row refuses the same way.
+  const tampers: readonly ((record: typeof whole) => typeof whole)[] = [
+    (record) => ({ ...record, candidate: { ...record.candidate, readModel: { tampered: true } } }) as typeof whole,
+    (record) => ({ ...record, candidate: { ...record.candidate, normalizedPayload: { tampered: true } } }) as typeof whole,
+    (record) => ({ ...record, candidate: { ...record.candidate, civicRecords: [] } }) as typeof whole,
+    (record) => ({ ...record, candidate: { ...record.candidate, changeSet: undefined } }) as unknown as typeof whole,
+    (record) => ({ ...record, state: "VALIDATED" }) as typeof whole,
+  ];
+  for (const tamper of tampers) {
+    const issue = decide(tamper(whole));
+    assert.ok(issue, "the whole row refuses the tamper");
+    assert.equal(decide(tamper(narrowed)), issue);
+  }
+  const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, { store, bypassCache: true, now: SECOND });
+  assert.equal(read.kind, "PROMOTED", "the Reader proves an import through the narrowed door");
+});

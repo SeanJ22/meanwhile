@@ -79,6 +79,13 @@ import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom
 import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
+import {
+  ATTESTED_PROMOTIONS_ENV,
+  attestedPromotionFor,
+  parseAttestedPromotions,
+} from "../lib/civic-data/attested-promotion.ts";
+import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
 import { currentVenueCache } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
@@ -139,13 +146,21 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
 
 export async function preloadCanonicalMeetingDependencies(input: {
   readonly sourceName: string;
-  readonly refreshRegistry?: () => Promise<unknown>;
+  readonly refreshRegistry?: (options: PromotedCivicDataReadOptions) => Promise<unknown>;
   readonly refreshVenues?: () => Promise<unknown>;
+  readonly env?: Readonly<Record<string, string | undefined>>;
 }): Promise<void> {
   const refreshRegistry = input.refreshRegistry ?? refreshRegistryRuntimeFromPromoted;
   const refreshVenues = input.refreshVenues ?? refreshVenueResolutionsFromPromoted;
+  // The supervisor proved the registry once for this pass; a malformed or
+  // absent attestation leaves this child's own full proof in place.
+  const attested = attestedPromotionFor(
+    parseAttestedPromotions((input.env ?? process.env)[ATTESTED_PROMOTIONS_ENV]),
+    "REGISTRY_RUNTIME_BINDING",
+    REGISTRY_RUNTIME_SCOPE,
+  );
   await Promise.all([
-    refreshRegistry(),
+    refreshRegistry(attested ? { attested } : {}),
     ...(input.sourceName === "composite" || input.sourceName === "legistar"
       ? [refreshVenues()]
       : []),

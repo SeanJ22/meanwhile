@@ -212,23 +212,33 @@ test("the real agenda route over the committed holding returns one row per disti
   }
   assert.ok(heldByMeeting.size > 100);
   let indexOnlyMultiContent = 0;
+  let anotherBodysOnly = 0;
   for (const [meetingId, held] of heldByMeeting) {
     const response = await GET(new Request(`http://localhost/api/agenda?meetingId=${encodeURIComponent(meetingId)}`));
     assert.equal(response.status, 200, meetingId);
     const payload = await response.json() as {
       documents: ReturnType<typeof view>[];
       documentCount: number;
-      documentAccounting: { heldRows: number; shown: number; identicalContentRows: number; publicationIndexRowsSetAside: number; sittingSpecific: boolean };
+      documentAccounting: { heldRows: number; shown: number; identicalContentRows: number; publicationIndexRowsSetAside: number; anotherBodysPagesSetAside: number; sittingSpecific: boolean };
       publication: ReturnType<typeof classifyAgendaPublication>;
     };
     assert.equal(payload.documentCount, payload.documents.length, meetingId);
     assert.equal(payload.documentAccounting.shown, payload.documents.length, meetingId);
     assert.equal(payload.documentAccounting.heldRows, held.length, meetingId);
     assert.equal(payload.documentAccounting.heldRows,
-      payload.documentAccounting.shown + payload.documentAccounting.identicalContentRows + payload.documentAccounting.publicationIndexRowsSetAside, meetingId);
+      payload.documentAccounting.shown + payload.documentAccounting.identicalContentRows + payload.documentAccounting.publicationIndexRowsSetAside +
+        payload.documentAccounting.anotherBodysPagesSetAside, meetingId);
     const contents = payload.documents.map((document) => document.text?.replace(/\s+/g, " ").trim() || document.contentHash);
     assert.equal(new Set(contents).size, contents.length, `${meetingId}: a shown row repeats another's content`);
     assert.equal(payload.publication.revised, payload.documentAccounting.sittingSpecific && payload.documents.length > 1, meetingId);
+    if (payload.documents.length === 0) {
+      // D1 (2026-09-24): a sitting holding only another body's notice page (the
+      // Town of Bradford's calendar, held for Newbury sittings) is shown none
+      // of it, and every held row is stated as set aside.
+      assert.equal(payload.documentAccounting.anotherBodysPagesSetAside, held.length, meetingId);
+      anotherBodysOnly += 1;
+      continue;
+    }
     const markup = renderToStaticMarkup(createElement(AgendaDocuments, { documents: payload.documents, meetingId,
       agendaUrl: payload.documents[0]!.documentUrl, agendaSentence: "", publication: payload.publication }));
     for (const document of payload.documents) {
@@ -241,4 +251,5 @@ test("the real agenda route over the committed holding returns one row per disti
     }
   }
   assert.ok(indexOnlyMultiContent >= 1, "the committed Bradford calendar sitting holds two distinct listing-page contents");
+  assert.ok(anotherBodysOnly >= 1, "the committed holding has a Newbury sitting that held only the Town of Bradford's calendar");
 });

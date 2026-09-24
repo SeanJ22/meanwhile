@@ -9,6 +9,7 @@ import type {
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { parseValidationReceipt } from "./receipt.ts";
+import { promotedPayloadSha256, type AttestedPromotion } from "./attested-promotion.ts";
 import {
   mayUseTestFixture,
   type CivicDataFixtureEnvironment,
@@ -32,6 +33,18 @@ function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null
   return evidence?.kind === "TRUSTED_LKG_IMPORT"
     ? evidence.pimaOutcomeUnion?.predecessorVersionId ?? null
     : null;
+}
+
+/**
+ * The pointed candidate as its proof reads it (`candidateProofView`); a store
+ * without the narrowed door is read whole. A predecessor stays a whole read:
+ * a re-attestation's evidence re-derives its civic records.
+ */
+function readProofCandidate(
+  store: Pick<RoutineDataStore, "readCandidate"> & Partial<Pick<RoutineDataStore, "readCandidateProof">>,
+  versionId: string,
+): Promise<CandidateVersionRecord | null> {
+  return typeof store.readCandidateProof === "function" ? store.readCandidateProof(versionId) : store.readCandidate(versionId);
 }
 
 function durableProjectionHash(value: unknown): string | null {
@@ -105,7 +118,7 @@ export type CivicDataReadStore = Pick<
 export type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate" | "readPromotions" | "readCandidates"
-> & Partial<Pick<RoutineDataStore, "readPromotionIdentities">>;
+> & Partial<Pick<RoutineDataStore, "readPromotionIdentities" | "readCandidateProof" | "readCandidateProofs">>;
 
 export interface PromotedCivicDataReadOptions {
   /** Deterministic store injection for tests and bounded readbacks. */
@@ -114,6 +127,82 @@ export interface PromotedCivicDataReadOptions {
   /** Age from the actual retrieval instant, not from process start. */
   readonly maxAgeMs?: number;
   readonly bypassCache?: boolean;
+  /**
+   * A version the standing supervisor proved in this pass (see
+   * `AttestedPromotion`). Used only for its own class and scope, only when the
+   * pointer still names it and its payload hashes to the proven payload, and
+   * never by verification (`bypassCache`).
+   */
+  readonly attested?: AttestedPromotion;
+}
+
+/** Whether a freshly read pointer is exactly the attested, proven version. */
+function attestationHolds(
+  attested: AttestedPromotion,
+  recordClass: RoutineRecordClass,
+  scope: string,
+  projection: PromotedProjection<unknown>,
+): boolean {
+  return attested.recordClass === recordClass &&
+    attested.scope === scope &&
+    projection.recordClass === recordClass &&
+    projection.scope === scope &&
+    projection.key === projectionKey(recordClass, scope) &&
+    projection.versionId === attested.versionId &&
+    projection.lastKnownGoodVersionId === attested.versionId &&
+    promotedPayloadSha256(projection.payload) === attested.payloadSha256;
+}
+
+/** The proven candidate fields a promoted result reports, as the attestation carries them. */
+function attestedCandidate(attested: AttestedPromotion, projection: PromotedProjection<unknown>): CandidateVersionRecord {
+  return {
+    candidate: {
+      id: attested.versionId,
+      sourceId: projection.sourceId,
+      recordClass: attested.recordClass,
+      scope: attested.scope,
+      retrieval: { retrievedAt: attested.retrievedAt },
+      temporal: {
+        staleAtRetrieval: attested.staleAtRetrieval,
+        version: attested.version,
+        sourceThrough: attested.sourceThrough,
+      },
+    } as unknown as CandidateVersionRecord["candidate"],
+    state: "PROMOTED",
+    acquisitionSucceeded: true,
+    receipt: projection.receipt,
+    promotedVersion: attested.versionId,
+    lastKnownGoodVersion: attested.versionId,
+    failureCode: null,
+    failureDetail: null,
+  };
+}
+
+/**
+ * The attestation of the version this process proved for a scope through
+ * `store`, for the supervisor to hand its children; null when nothing is proven.
+ */
+export function attestPromotedVersion(
+  recordClass: RoutineRecordClass,
+  scope: string,
+  store: CivicDataReadStore,
+): AttestedPromotion | null {
+  const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
+  if (!proven) return null;
+  const { projection, candidate } = proven;
+  const temporal = candidate.candidate.temporal;
+  const retrievedAt = candidate.candidate.retrieval?.retrievedAt;
+  if (typeof retrievedAt !== "string" || !temporal) return null;
+  return {
+    recordClass,
+    scope,
+    versionId: projection.versionId,
+    payloadSha256: promotedPayloadSha256(projection.payload),
+    retrievedAt,
+    staleAtRetrieval: temporal.staleAtRetrieval === true,
+    version: temporal.version ?? null,
+    sourceThrough: temporal.sourceThrough ?? null,
+  };
 }
 
 function hasBatchReadDoor(store: CivicDataReadStore): store is CivicDataBatchReadStore {
@@ -405,6 +494,15 @@ async function loadPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
+    // The supervisor proved this exact version in this pass: the pointer names
+    // it and its payload hashes to the proven payload, so the candidate is not
+    // read again. The attested record stays local to this read and its scope
+    // cache; it never enters the proven-version memo.
+    if (!options.bypassCache && options.attested && attestationHolds(options.attested, recordClass, scope, projection)) {
+      const candidate = attestedCandidate(options.attested, projection);
+      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      return promotedResult(projection, candidate, now, options.maxAgeMs);
+    }
     // Attest, never re-run (RULING 288): if this exact version is already proven
     // GOOD in this instance, reuse its candidate — skip the second fetch and the
     // whole proof — and refresh the scope cache. The pointer was just read
@@ -418,7 +516,7 @@ async function loadPromotedCivicData<T>(
         return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
       }
     }
-    const candidate = await store.readCandidate(projection.versionId);
+    const candidate = await readProofCandidate(store, projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
     const predecessor = predecessorVersionId !== null
       ? await store.readCandidate(predecessorVersionId)
@@ -572,7 +670,9 @@ export async function readPromotedCivicDataBatch<T>(
     let candidates: readonly CandidateVersionReadback[] = [];
     if (candidateIds.length > 0) {
       try {
-        candidates = await store.readCandidates(candidateIds);
+        candidates = typeof store.readCandidateProofs === "function"
+          ? await store.readCandidateProofs(candidateIds)
+          : await store.readCandidates(candidateIds);
       } catch (error) {
         for (const scope of misses) {
           const projection = projectionsByScope.get(scope)?.[0] ?? null;
@@ -791,7 +891,7 @@ export async function readPinnedPromotedCivicDataBatch<T>(
     let predecessor: CandidateVersionRecord | null = null;
     try {
       store ??= new PostgresRoutineDataStore();
-      candidate = await store.readCandidate(pin.versionId);
+      candidate = await readProofCandidate(store, pin.versionId);
       const moved = new RegExp(`^Atomic pointer ${escapeRegExp(key)} moved from \\S+ to ${escapeRegExp(pin.versionId)}\\.$`);
       promotions = candidate === null
         ? []

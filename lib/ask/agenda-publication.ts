@@ -76,6 +76,7 @@
  */
 
 import { agendaContentGroups, isPublisherPageNote } from "../meetings/agenda-content.ts";
+import { isAnotherBodysNoticePage, isWiredNoticePage } from "../meetings/notice-pages.ts";
 import { agendaItems, type AgendaDocumentLike } from "../routing/agenda-search.ts";
 import type { EvidenceGap } from "./evidence.ts";
 
@@ -534,7 +535,8 @@ export function agendaDocumentRepresentation(
 /** Corpus context shared by the publication reading and the reader document projection. */
 export interface AgendaCorpusContext {
   readonly documentsAcrossCorpus: readonly AgendaDocumentLike[];
-  readonly meetingsAcrossCorpus?: readonly { id: string; ocdId: string | null }[];
+  /** `bodyId`, when the caller has it, lets a notice page be matched to its own body (D1). */
+  readonly meetingsAcrossCorpus?: readonly { id: string; ocdId: string | null; bodyId?: string | null }[];
 }
 
 interface HeldDocumentReading {
@@ -543,6 +545,13 @@ interface HeldDocumentReading {
   readonly items: readonly string[];
   /** The body's publication index (portal, listing page, shared landing page), not a sitting's own document. */
   readonly publicationIndex: boolean;
+  /**
+   * A wired notice page that is neither this sitting's body's nor its
+   * publisher's (D1, 2026-09-24): CAP's meetings page held for a Pima Board
+   * sitting, Bradford's calendar held for a Newbury one. It is nobody's
+   * document for this sitting and is never shown for it.
+   */
+  readonly anotherBodysNoticePage: boolean;
 }
 
 /**
@@ -554,6 +563,7 @@ interface HeldDocumentReading {
  */
 function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocumentLike) => HeldDocumentReading {
   const governmentByMeeting = new Map((context.meetingsAcrossCorpus ?? []).map((meeting) => [meeting.id, meeting.ocdId]));
+  const bodyByMeeting = new Map((context.meetingsAcrossCorpus ?? []).map((meeting) => [meeting.id, meeting.bodyId ?? null]));
   const meetingsByUrl = new Map<string, Set<string>>();
   for (const document of context.documentsAcrossCorpus) {
     const meetings = meetingsByUrl.get(document.documentUrl) ?? new Set<string>();
@@ -565,7 +575,10 @@ function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocu
     // A row with no text is told apart by its note: two failed reads of one
     // URL can be different findings (no text at all, or the publisher's page).
     const note = (document as { readonly extractionNote?: string | null }).extractionNote ?? "";
-    const memoKey = `${document.documentUrl}\u0000${document.extraction}\u0000${document.text ?? `\u0001null\u0000${note}`}`;
+    // The notice-page verdict depends on the sitting's body and publisher, so
+    // both are part of the key (D1).
+    const memoKey = `${document.documentUrl}\u0000${document.extraction}\u0000${document.text ?? `\u0001null\u0000${note}`}` +
+      `\u0000${bodyByMeeting.get(document.meetingId) ?? ""}\u0000${document.sourceOrg ?? ""}`;
     const known = memo.get(memoKey);
     if (known) return known;
     const holders = meetingsByUrl.get(document.documentUrl) ?? new Set<string>();
@@ -575,14 +588,22 @@ function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocu
       [...holders].map((meetingId) => governmentByMeeting.get(meetingId)).filter((id): id is string => Boolean(id)),
     ).size > 1;
     const items = !sharedAcrossGovernments && representation === "TEXT" && document.text ? agendaItems(document.text) : [];
+    // A wired notice page is the body's page by its URL alone; one that states
+    // no agenda item is an index however its bytes read (D1).
+    const noticePage = isWiredNoticePage(document.documentUrl);
     const reading: HeldDocumentReading = {
       representation,
       sharedAcrossGovernments,
       items,
       // Unreadable bytes are named as unreadable first, exactly as the
-      // publication reading orders it; an index needs readable evidence.
-      publicationIndex: representation !== "UNREADABLE" &&
-        (sharedAcrossGovernments || representation === "PUBLICATION_PORTAL" || (sharedWith > 1 && items.length === 0)),
+      // publication reading orders it; an index needs readable evidence, which
+      // for a wired notice page is its URL.
+      publicationIndex: (noticePage && items.length === 0) || (representation !== "UNREADABLE" &&
+        (sharedAcrossGovernments || representation === "PUBLICATION_PORTAL" || (sharedWith > 1 && items.length === 0))),
+      anotherBodysNoticePage: isAnotherBodysNoticePage(document.documentUrl, {
+        bodyId: bodyByMeeting.get(document.meetingId) ?? null,
+        publisher: document.sourceOrg ?? null,
+      }),
     };
     memo.set(memoKey, reading);
     return reading;
@@ -612,6 +633,8 @@ export interface ReaderAgendaDocumentProjection<T> {
   readonly identicalContentRows: number;
   /** Held publication-index rows not shown because the sitting's own document is held. */
   readonly publicationIndexRowsSetAside: number;
+  /** Held rows not shown because they are another body's notice page (D1). */
+  readonly anotherBodysPagesSetAside: number;
 }
 
 /**
@@ -645,7 +668,10 @@ export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly 
   context: AgendaCorpusContext,
 ): ReaderAgendaDocumentProjection<T> {
   const read = heldDocumentReader(context);
-  const newestFirst = [...documentsForMeeting].sort(retrievedAtOrder);
+  const held = [...documentsForMeeting].sort(retrievedAtOrder);
+  // Another body's notice page is never shown for this sitting, not even as
+  // an index: it is not this body's publication either (D1).
+  const newestFirst = held.filter((document) => !read(document).anotherBodysNoticePage);
   const sittingRows = newestFirst.filter((document) => !read(document).publicationIndex);
   const sittingSpecific = sittingRows.length > 0;
   const candidates = sittingSpecific ? sittingRows : newestFirst;
@@ -657,6 +683,7 @@ export function readerAgendaDocuments<T extends AgendaDocumentLike & { readonly 
     heldRows: documentsForMeeting.length,
     identicalContentRows: candidates.length - documents.length,
     publicationIndexRowsSetAside: sittingSpecific ? newestFirst.length - sittingRows.length : 0,
+    anotherBodysPagesSetAside: held.length - newestFirst.length,
   };
 }
 
@@ -712,7 +739,11 @@ export function classifyAgendaPublication(
       : discoveredDocumentUrl
         ? "REPRESENTATION_DISCOVERED"
         : "NOT_ACQUIRED"
-    : representation === "UNREADABLE"
+    : reading?.publicationIndex && isWiredNoticePage(newest.documentUrl)
+      // A body's notice page is its publication index whether or not its
+      // bytes could be read: its URL says what it is (D1).
+      ? "ACQUIRED_IS_PUBLICATION_INDEX"
+      : representation === "UNREADABLE"
       ? "ACQUIRED_NOT_READABLE"
       : reading?.publicationIndex
         ? "ACQUIRED_IS_PUBLICATION_INDEX"

@@ -189,6 +189,40 @@ export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartiti
   return HELD_MEETING_PARTITIONS.find((row) => row.successorId === successorId) ?? null;
 }
 
+/**
+ * The meeting partitions whose sittings drive a sitting-window task: its own
+ * id for a partition, the named partitions for a routine that `follows` them,
+ * none for any other task. Refused at load, rather than silently cooled to the
+ * base cadence, when a followed partition is not registered.
+ */
+function buildSittingWindowSources(): ReadonlyMap<string, readonly string[]> {
+  const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
+  const sources = new Map<string, readonly string[]>();
+  for (const partition of MEETING_PARTITION_CONTRACTS) {
+    if (partition.schedule?.kind === "SITTING_WINDOW") sources.set(partition.id, [partition.id]);
+  }
+  for (const contract of ROUTINE_SOURCE_CONTRACTS) {
+    if (contract.schedule?.kind !== "SITTING_WINDOW") continue;
+    const follows = contract.schedule.follows;
+    // Only a meeting partition carries sittings of its own.
+    if (!follows) throw new Error(`SITTING_WINDOW_WITHOUT_SITTINGS:${contract.id}`);
+    if (follows.length === 0) throw new Error(`SITTING_WINDOW_FOLLOWS_NOTHING:${contract.id}`);
+    const ids = follows.map((row) => meetingPartitionId(row.meetingSource, row.bodyId));
+    for (const id of ids) {
+      if (!registered.has(id)) throw new Error(`SITTING_WINDOW_PARTITION_NOT_REGISTERED:${contract.id}->${id}`);
+    }
+    sources.set(contract.id, ids);
+  }
+  return sources;
+}
+
+const SITTING_WINDOW_SOURCES = buildSittingWindowSources();
+
+/** The partition ids whose sittings decide whether a task is hot; empty when the task has no sitting window. */
+export function sittingWindowSourceIds(taskId: string): readonly string[] {
+  return SITTING_WINDOW_SOURCES.get(taskId) ?? [];
+}
+
 export function meetingPartitionContract(id: string): MeetingPartitionContract | null {
   return MEETING_PARTITION_CONTRACTS.find((partition) => partition.id === id) ?? null;
 }

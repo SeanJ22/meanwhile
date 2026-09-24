@@ -1,6 +1,14 @@
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
-import { ROUTINE_SOURCE_CONTRACTS, cadenceMsAt, type RoutineSourceContract } from "./contracts.ts";
-import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
+import {
+  ROUTINE_DATA_ADMISSION_MS,
+  ROUTINE_SOURCE_CONTRACTS,
+  cadenceMsAt,
+  sittingWindowDueAtMs,
+  sittingWindowHot,
+  type RoutineSourceContract,
+  type SittingWindowSchedule,
+} from "./contracts.ts";
+import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { SOURCE_AUTHORITIES, authorityFor } from "./source-authority.ts";
 import {
   parseRoutineRunnerReceipt,
@@ -100,8 +108,7 @@ export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = [
  * partition, using durable source attempts plus append-only supervisor faults.
  */
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
-/** Polling admission is not acquisition; source contracts retain their own cadence. */
-export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
+export { ROUTINE_DATA_ADMISSION_MS };
 /** Canonical clock reads are independent HTTP queries, not one serial failure chain. */
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
 /** `PostgresRoutineDataStore.clock` performs one batch plus at most one candidate read. */
@@ -414,6 +421,15 @@ export function routineTaskSelection(
 export interface RoutineTaskClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
+  /**
+   * The pointed candidate's store-observed first event, reported under the same
+   * pointer/receipt proof as `lastSucceededAt`: the success in the attempt
+   * clock's own units. Sitting-window tasks schedule from it; every other task
+   * keeps `lastSucceededAt` until its own schedule is decided.
+   */
+  readonly lastSucceededObservedAt?: string;
+  /** MEETING partitions only: the start of every sitting in the current promoted payload. */
+  readonly sittingStarts?: readonly string[];
 }
 
 export type RoutineTaskClockRead =
@@ -442,7 +458,55 @@ export async function readRoutineTaskClocks(
     : { task: tasks[read.index]!, ok: false as const, clock: undefined, error: read.error });
 }
 
-export function routineTaskDue(task: RoutineSourceTask, clock: RoutineTaskClock | undefined, nowMs: number): boolean {
+/**
+ * Every sitting-window task's hot signal for one admission instant, from the
+ * same pass's clock reads. A failed or missing read counts as unknown.
+ */
+export function sittingWindowSignals(
+  reads: readonly { readonly task: RoutineSourceTask; readonly ok: boolean; readonly clock?: RoutineTaskClock }[],
+  nowMs: number,
+): ReadonlyMap<string, boolean | undefined> {
+  const clocks = new Map(reads.map((read) => [read.task.id, read.ok ? read.clock ?? {} : undefined]));
+  const signals = new Map<string, boolean | undefined>();
+  for (const read of reads) {
+    const schedule = read.task.contract.schedule;
+    if (schedule?.kind !== "SITTING_WINDOW") continue;
+    const lists = sittingWindowSourceIds(read.task.id).map((id) => clocks.get(id)?.sittingStarts);
+    signals.set(read.task.id, sittingWindowHot(schedule, lists, nowMs));
+  }
+  return signals;
+}
+
+/**
+ * A sitting-window task is due at `sittingWindowDueAtMs` after its last
+ * success. Both instants are store-observed first events, so a success is
+ * never mistaken for a later failed attempt. A failed later attempt keeps the
+ * retry clock exactly, as every other task does.
+ */
+function sittingWindowTaskDue(
+  task: RoutineSourceTask,
+  schedule: SittingWindowSchedule,
+  clock: RoutineTaskClock | undefined,
+  nowMs: number,
+  hot: boolean | undefined,
+): boolean {
+  if (!clock?.lastAttemptedAt) return true;
+  const attempted = Date.parse(clock.lastAttemptedAt);
+  const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
+  if (!Number.isFinite(attempted)) return true;
+  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
+  if (!Number.isFinite(succeeded) || attempted > succeeded) return nowMs - attempted >= task.retryMs;
+  return nowMs >= sittingWindowDueAtMs(schedule, succeeded, hot);
+}
+
+export function routineTaskDue(
+  task: RoutineSourceTask,
+  clock: RoutineTaskClock | undefined,
+  nowMs: number,
+  sittingHot?: boolean,
+): boolean {
+  const schedule = task.contract?.schedule;
+  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);
   if (!clock?.lastAttemptedAt) return true;
   const attempted = Date.parse(clock.lastAttemptedAt);
   const succeeded = clock.lastSucceededAt ? Date.parse(clock.lastSucceededAt) : Number.NaN;

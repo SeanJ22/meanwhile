@@ -455,7 +455,7 @@ test("the per-route table states each route's mechanism, counts, span and comple
 
   const clerk = byRoute.get("CLERK_SCHEDULE_PAGE")!;
   assert.equal(clerk.uniqueFutureCount, 14);
-  assert.equal(clerk.mechanism, "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule");
+  assert.equal(clerk.mechanism, "https://www.pima.gov/board-of-supervisors-meeting-schedule");
 
   for (const route of result.routes) {
     assert.ok(route.observedAt, "a count with no observation time is not a measurement");

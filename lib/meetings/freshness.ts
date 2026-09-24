@@ -217,3 +217,61 @@ export function carriedRowClause(
     ? CARRIED_ROW_CLAUSE[reason as CarriedReason]
     : null;
 }
+
+/**
+ * **WHEN EACH DIVISION'S CALENDAR WAS LAST READ, FROM THE ROWS ON SCREEN.**
+ * (2026-09-24.)
+ *
+ * The footer's "Last checked" is the newest read of ANY partition in the
+ * corpus, so it read "minutes ago" to a reader at 85701 while the Pima County
+ * Board's calendar had not been read since September 8 — a regenerated
+ * response is not refreshed evidence. This is the per-division fact.
+ *
+ * A division read by two routes can be current on one and weeks old on the
+ * other. At 85701 the Board's API route was read at 11:14Z and carried no
+ * upcoming sitting, while every upcoming sitting shown came from the portal's
+ * September 8 read. So the upcoming listings are dated by the OLDEST read
+ * among them. Only a division with nothing upcoming on screen is dated by its
+ * newest read of any listing.
+ */
+export interface DivisionRead {
+  readonly at: string;
+  /** True when {@link at} dates the division's upcoming listings. */
+  readonly upcoming: boolean;
+}
+
+export function lastReadByDivision(
+  meetings: readonly {
+    readonly ocdId: string | null;
+    readonly startsAt?: string | null;
+    readonly provenance?: { readonly collectedAt?: string | null } | null;
+  }[],
+  now: number = Date.now(),
+): Record<string, DivisionRead> {
+  const newest: Record<string, string> = {};
+  const oldestUpcoming: Record<string, string> = {};
+  for (const meeting of meetings) {
+    const at = meeting.provenance?.collectedAt ?? null;
+    if (!meeting.ocdId || !at || !Number.isFinite(Date.parse(at))) continue;
+    if (!newest[meeting.ocdId] || at > newest[meeting.ocdId]!) newest[meeting.ocdId] = at;
+    const starts = meeting.startsAt ? Date.parse(meeting.startsAt) : Number.NaN;
+    if (Number.isFinite(starts) && starts >= now && (!oldestUpcoming[meeting.ocdId] || at < oldestUpcoming[meeting.ocdId]!)) {
+      oldestUpcoming[meeting.ocdId] = at;
+    }
+  }
+  const out: Record<string, DivisionRead> = {};
+  for (const [ocdId, at] of Object.entries(newest)) {
+    out[ocdId] = oldestUpcoming[ocdId] ? { at: oldestUpcoming[ocdId]!, upcoming: true } : { at, upcoming: false };
+  }
+  return out;
+}
+
+/** A division's calendar read older than this is dated on the card. */
+export const DIVISION_READ_STALE_MS = 36 * 3_600_000;
+
+/** The read to date on the card, or null while it is recent. */
+export function staleDivisionRead(read: DivisionRead | undefined, now: number = Date.now()): DivisionRead | null {
+  if (!read) return null;
+  const at = Date.parse(read.at);
+  return Number.isFinite(at) && now - at > DIVISION_READ_STALE_MS ? read : null;
+}

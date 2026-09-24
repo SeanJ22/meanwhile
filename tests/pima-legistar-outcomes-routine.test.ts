@@ -230,11 +230,24 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   assert.deepEqual(contract.readerProjection, { id: CONTRACT_ID, consumers: ["agenda", "Ask", "meeting Reader records", "map"] });
   assert.deepEqual(contract.bootstrapFixturePaths, ["data/states/az/outcomes/legistar-outcomes.json"]);
 
-  // Every three hours through election day, then daily; one hour after a failure.
-  assert.equal(cadenceMsAt(contract, Date.parse("2026-09-24T12:00:00.000Z")), 3 * HOUR);
-  assert.equal(cadenceMsAt(contract, Date.parse("2026-11-03T23:59:59.999Z")), 3 * HOUR);
+  // Reader freshness: fourteen hours through election day, then a day, so the
+  // twelve-hour re-read plus one failed retry lands before STALE.
+  assert.equal(cadenceMsAt(contract, Date.parse("2026-09-24T12:00:00.000Z")), 14 * HOUR);
+  assert.equal(cadenceMsAt(contract, Date.parse("2026-11-03T23:59:59.999Z")), 14 * HOUR);
   assert.equal(cadenceMsAt(contract, Date.parse("2026-11-04T00:00:00.000Z")), 24 * HOUR);
   assert.equal(contract.retry.afterMs, HOUR);
+  // Re-reads follow the Board's sittings (owner decision 2026-09-24): hourly
+  // within seven days of a sitting on either of its partitions, else twice daily.
+  assert.deepEqual(contract.schedule, {
+    kind: "SITTING_WINDOW",
+    windowMs: 7 * 24 * HOUR,
+    hotEveryMs: HOUR,
+    baseEveryMs: 12 * HOUR,
+    follows: [
+      { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+      { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+    ],
+  });
 
   // The standing runner accepts it with no special case.
   const task = routineTaskFromContract(contract);
@@ -243,9 +256,17 @@ test("(a) Pima Legistar outcomes are one routine contract on the standing clock,
   assert.equal(task.acquisitionFailureDomain, "routine-source:pima-legistar-outcomes");
   assert.equal(task.retryMs, HOUR);
   const succeededAt = Date.parse("2026-09-24T09:00:00.000Z");
-  const clock = { lastAttemptedAt: "2026-09-24T09:00:00.000Z", lastSucceededAt: "2026-09-24T09:00:00.000Z" };
-  assert.equal(routineTaskDue(task, clock, succeededAt + 3 * HOUR - 1), false);
-  assert.equal(routineTaskDue(task, clock, succeededAt + 3 * HOUR), true);
+  const clock = {
+    lastAttemptedAt: "2026-09-24T09:00:00.000Z",
+    lastSucceededAt: "2026-09-24T08:59:58.000Z",
+    lastSucceededObservedAt: "2026-09-24T09:00:00.000Z",
+  };
+  const PASS = 5 * 60_000;
+  assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - PASS - 1, false), false);
+  assert.equal(routineTaskDue(task, clock, succeededAt + 12 * HOUR - PASS, false), true);
+  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - PASS - 1, true), false);
+  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - PASS, true), true);
+  assert.equal(routineTaskDue(task, clock, succeededAt + HOUR - PASS, undefined), true, "an unreadable window is read as hot");
   assert.equal(routineTaskDue(task, undefined, succeededAt), true, "a never-run task is due at once");
 
   // Its frozen inventory row now binds the standing clock and nothing else.

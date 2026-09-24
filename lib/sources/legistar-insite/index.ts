@@ -1507,8 +1507,10 @@ export function makeLegistarInSiteSource(
          *
          * Not paced by `InSiteSession` — that session paces the Legistar
          * vendor, and this is Pima County. `www.pima.gov/robots.txt` (read
-         * 2026-08-28) publishes no `Crawl-delay` for `User-agent: *`; one
-         * request per tenant per refresh is well inside anything it could ask.
+         * 2026-09-24) puts `User-agent: *` in one group with Siteimprove, so
+         * `*` is asked for `Crawl-delay: 20` and nothing is disallowed; one
+         * request per tenant per refresh is within it. (The 2026-08-28 reading
+         * took the group for Siteimprove's alone.)
          */
         /*
          * **A MOVED PAGE IS A REFUSAL HERE, NEVER A NEW ROUTE.** (2026-09-24.)
@@ -1520,8 +1522,10 @@ export function makeLegistarInSiteSource(
          * final URL refused the WHOLE partition, with the 14 upcoming
          * sittings the grid carries. So this read does not follow redirects:
          * a move ends it here with no corroboration, the move is named in the
-         * route's note, and nothing from the new URL is retained. Registering
-         * the new URL waits on reading its permission.
+         * route's note, and nothing from the new URL is retained. The move
+         * to /board-of-supervisors-meeting-schedule was registered on
+         * 2026-09-24 (C18) once its permission was read; a further move is
+         * refused the same way until it is.
          */
         let clerkScheduleHtml: string | null = null;
         let clerkScheduleNote: string | null = null;

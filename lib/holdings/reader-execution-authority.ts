@@ -57,6 +57,9 @@ export const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
 export const PDC_V2_POST_IMPORT_MEETING_PARTITIONS: readonly string[] = [
   // Tucson Unified's own reconfiguration page (official-page events, 2026-09-23).
   "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+  // Newbury, NH bodies the town iCal never carries, read from their own pages (C9, 2026-09-24).
+  "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23library-trustees",
+  "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23energy-committee",
 ];
 
 type Row = Record<string, unknown>;

@@ -409,6 +409,9 @@ export const SOURCE_AUTHORITIES = {
       "https://www.susd12.org/api/calendars/150042/events",
       "https://susd-12.community.highbond.com/", "https://tucsonaz.hylandcloud.com/",
       "https://pima.legistar.com/",
+      // The Clerk of the Board's schedule: the county's current page, and the
+      // /2559/ address it moved from (2026-09-24, C18), which earlier reads retain.
+      "https://www.pima.gov/board-of-supervisors-meeting-schedule",
       "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
       "https://tusd1-schooldesk.community.diligentoneplatform.com/", "https://vailschooldistrictaz.thrillshare.com/",
       "https://warnernh.gov/", "https://www.cap-az.com/", "https://www.kearsarge.org/", "https://www.merrimackcounty.net/",

@@ -148,6 +148,7 @@ export async function GET(request: Request) {
       shown: documents.length,
       identicalContentRows: shown.identicalContentRows,
       publicationIndexRowsSetAside: shown.publicationIndexRowsSetAside,
+      anotherBodysPagesSetAside: shown.anotherBodysPagesSetAside,
       sittingSpecific: shown.sittingSpecific,
     },
     holdingStatus: "HELD", dataState: read.kind, dataMetadata: read.metadata,

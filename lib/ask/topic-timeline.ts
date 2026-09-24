@@ -1,4 +1,6 @@
-import { agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
+import { agendaItems, agendaTopicFor, searchAgendas, type AgendaDocumentLike, type AgendaTopic } from "../routing/agenda-search.ts";
+import { isAnotherBodysNoticePage, isWiredNoticePage } from "../meetings/notice-pages.ts";
+import { agendaDocumentRepresentation } from "./agenda-publication.ts";
 import type { PersistedSittingOutcomes } from "../outcomes/types.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import { localDate } from "./meeting-time.ts";
@@ -97,8 +99,13 @@ export interface TopicTimeline {
   readonly entries: readonly TopicTimelineEntry[];
   /** Recent or imminent sittings of this body whose agenda we have not read. */
   readonly unreadSittings: readonly UnreadSitting[];
-  /** The newest instant any of this body's calendar listings was read from the publisher. */
+  /**
+   * When the body's calendar listings were read: the OLDEST read among its
+   * upcoming listings, or, with none upcoming, the newest read of any.
+   */
   readonly calendarLastReadAt: string | null;
+  /** True when {@link calendarLastReadAt} dates the upcoming listings. */
+  readonly calendarReadBoundsUpcoming: boolean;
   readonly records: EvidenceRecord[];
   readonly gaps: EvidenceGap[];
   readonly denominators: Record<string, number>;
@@ -354,9 +361,21 @@ export function buildTopicTimeline(input: {
   }
 
   // 2. Lines in held agenda documents, for sittings the structured records did not cover.
+  // A body's notice page is never one of its sittings' agendas (D1, 2026-09-24):
+  // another body's page, or a notice page that states no agenda item, is not
+  // searched, not counted among the agendas held, and does not make a sitting
+  // read. CAP's meetings page held for Pima's Oct 13 study session is both.
+  // Nor is a publisher portal's shell, which the publication reading already
+  // names as a portal: Newbury Selectboard's nine held pages (four CivicWeb
+  // shells, five copies of Bradford's calendar) were answered as "the 9
+  // agendas we hold" beside a gap saying none of them was readable.
+  const documents = input.documents.filter((document) =>
+    agendaDocumentRepresentation(document) !== "PUBLICATION_PORTAL" &&
+    !isAnotherBodysNoticePage(document.documentUrl, { bodyId: input.bodyId, publisher: document.sourceOrg }) &&
+    !(isWiredNoticePage(document.documentUrl) && agendaItems(document.text ?? "").length === 0));
   const byMeeting = new Map(input.meetings.map((meeting) => [meeting.id, meeting]));
-  const { hits, searched, unreadable } = searchAgendas(input.documents, topic);
-  for (const document of input.documents) {
+  const { hits, searched, unreadable } = searchAgendas(documents, topic);
+  for (const document of documents) {
     const meeting = byMeeting.get(document.meetingId);
     if (meeting && document.text && document.text.trim()) readDays.add(dayOf(meeting.startsAt, meeting.timeZone));
   }
@@ -364,7 +383,7 @@ export function buildTopicTimeline(input: {
   // capped at 400 characters and, on a line that runs items together, can end
   // before the phrase it matched. Versions of one agenda collapse by content.
   const seenWindow = new Set<string>();
-  const newestFirst = [...input.documents].sort((a, b) => String(b.retrievedAt).localeCompare(String(a.retrievedAt)));
+  const newestFirst = [...documents].sort((a, b) => String(b.retrievedAt).localeCompare(String(a.retrievedAt)));
   for (const document of newestFirst) {
     if (!document.text || hits.every((hit) => hit.documentUrl !== document.documentUrl || hit.meetingId !== document.meetingId)) continue;
     const meeting = byMeeting.get(document.meetingId);
@@ -420,11 +439,27 @@ export function buildTopicTimeline(input: {
   }
   const unreadSittings = [...unreadByDay.values()].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
-  let calendarLastReadAt: string | null = null;
-  for (const meeting of input.meetings) {
+  /*
+   * **THE READ THAT BOUNDS WHAT IS COMING.** (2026-09-24.) A body read by two
+   * routes can be current on one and weeks old on the other. At 85701 the
+   * Pima Board's API route was read at 11:14Z and carries no upcoming
+   * sitting, while every upcoming sitting shown came from the portal's
+   * September 8 read. Dating the body by its newest read of ANY row hid that.
+   * The upcoming listings are therefore dated by the OLDEST read among them.
+   * Only when none is upcoming is the body dated by its newest read.
+   */
+  const readOf = (meeting: TopicMeetingLike) => {
     const at = meeting.provenance?.collectedAt ?? null;
-    if (at && Number.isFinite(Date.parse(at)) && (!calendarLastReadAt || at > calendarLastReadAt)) calendarLastReadAt = at;
-  }
+    return at && Number.isFinite(Date.parse(at)) ? at : null;
+  };
+  const upcomingReads = input.meetings
+    .filter((meeting) => meeting.status !== "CANCELED" && Date.parse(meeting.startsAt) >= now)
+    .map(readOf)
+    .filter((at): at is string => at !== null)
+    .sort();
+  const anyReads = input.meetings.map(readOf).filter((at): at is string => at !== null).sort();
+  const calendarReadBoundsUpcoming = upcomingReads.length > 0;
+  const calendarLastReadAt = calendarReadBoundsUpcoming ? upcomingReads[0]! : (anyReads.at(-1) ?? null);
 
   for (const sitting of unreadSittings) {
     const spelled = formatDateLong(sitting.localDay) ?? sitting.localDay;
@@ -432,13 +467,16 @@ export function buildTopicTimeline(input: {
       whose: "OURS",
       statement: sitting.past
         ? `We have not read the agenda of the ${input.bodyName} meeting held ${spelled}, so this answer cannot say whether ${topic.label} was on it.`
-        : `We have not read an agenda for the ${input.bodyName} meeting on ${spelled}.`,
+        : `The ${input.bodyName} meets next on ${spelled}; we do not yet hold an agenda for that meeting.`,
     });
   }
   if (calendarLastReadAt && now - Date.parse(calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
+    const readDay = formatDateLong(calendarLastReadAt.slice(0, 10)) ?? calendarLastReadAt.slice(0, 10);
     gaps.push({
       whose: "OURS",
-      statement: `Our most recent read of the ${input.bodyName} meeting calendar was ${formatDateLong(calendarLastReadAt.slice(0, 10)) ?? calendarLastReadAt.slice(0, 10)}; anything posted since then is not in this answer yet.`,
+      statement: calendarReadBoundsUpcoming
+        ? `The upcoming ${input.bodyName} meetings in this answer were last read from its calendar on ${readDay}; anything posted since then is not in this answer yet.`
+        : `Our most recent read of the ${input.bodyName} meeting calendar was ${readDay}; anything posted since then is not in this answer yet.`,
     });
   }
 
@@ -465,7 +503,7 @@ export function buildTopicTimeline(input: {
     topicSittingsWithUnreadAgenda: unreadSittings.length,
   };
 
-  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, records, gaps, denominators };
+  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, calendarReadBoundsUpcoming, records, gaps, denominators };
 }
 
 function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
@@ -564,12 +602,80 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
     const days = unreadPast.slice(-2).map((sitting) => formatDateLong(sitting.localDay) ?? sitting.localDay);
     add(`We have not read the agenda of the ${days.length > 1 ? `${days.join(" and ")} meetings` : `${days[0]} meeting`} yet, so ${days.length > 1 ? "they are" : "it is"} not reflected here`);
   } else if (unreadNext.length > 0 && !nextUp) {
-    add(`We have not read an agenda for the next meeting on ${formatDateLong(unreadNext[0].localDay) ?? unreadNext[0].localDay}`);
+    add(`The next meeting is ${formatDateLong(unreadNext[0].localDay) ?? unreadNext[0].localDay}; we do not yet hold an agenda for it`);
   }
   if (timeline.calendarLastReadAt && now - Date.parse(timeline.calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
-    add(`Our most recent read of the board's calendar was ${formatDateLong(timeline.calendarLastReadAt.slice(0, 10)) ?? timeline.calendarLastReadAt.slice(0, 10)}`);
+    const readDay = formatDateLong(timeline.calendarLastReadAt.slice(0, 10)) ?? timeline.calendarLastReadAt.slice(0, 10);
+    add(timeline.calendarReadBoundsUpcoming
+      ? `The board's upcoming meetings shown here were last read from its calendar on ${readDay}`
+      : `Our most recent read of the board's calendar was ${readDay}`);
   }
 
   if (sentences.length === 0) return null;
   return { answer: `${sentences.join(". ")}.`, citedUrls: cited };
+}
+
+/**
+ * **A TOPIC QUESTION ABOUT THE READER'S AREA.** (2026-09-24.)
+ *
+ * *"Is there a data center coming?"* names no government. The reader's area
+ * holds several bodies, and each gets its own timeline — never a merged one,
+ * because a Board of Supervisors' vote is not a school board's agenda item.
+ * The answer leads with the most recent recorded decision anywhere in the
+ * area, then the next scheduled appearance, then one more body's most recent
+ * mention; every sentence names the body it is about. Bodies with nothing on
+ * the topic are counted, not listed.
+ */
+export function composeAreaTopicAnswer(
+  timelines: readonly TopicTimeline[],
+  now: number,
+): { answer: string; citedUrls: string[] } | null {
+  if (timelines.length === 0) return null;
+  const topic = timelines[0]!.topic;
+  const tagged = timelines.flatMap((timeline) =>
+    timeline.entries
+      .filter((entry) => salientEntry(entry, topic) || !timeline.entries.some((other) => salientEntry(other, topic)))
+      .map((entry) => ({ entry, timeline })));
+  const sentences: string[] = [];
+  const cited: string[] = [];
+  const usedBodies = new Set<string>();
+  const add = (sentence: string, entry: TopicTimelineEntry, timeline: TopicTimeline): void => {
+    const candidate = [...sentences, sentence.replace(/[.\s]+$/, "")];
+    if (overLengthBudget(`${candidate.join(". ")}.`) !== null) return;
+    sentences.push(sentence.replace(/[.\s]+$/, ""));
+    usedBodies.add(timeline.bodyName);
+    if (entry.sourceUrl && !cited.includes(entry.sourceUrl)) cited.push(entry.sourceUrl);
+  };
+  const past = tagged.filter(({ entry }) => Date.parse(entry.startsAt) < now).sort((a, b) => b.entry.startsAt.localeCompare(a.entry.startsAt));
+  const upcoming = tagged.filter(({ entry }) => Date.parse(entry.startsAt) >= now).sort((a, b) => a.entry.startsAt.localeCompare(b.entry.startsAt));
+  const decisive = past.find(({ entry }) => DECISIVE.includes(entry.status));
+  const lead = decisive ?? past[0] ?? upcoming[0] ?? null;
+  if (!lead) {
+    const searched = timelines.reduce((total, timeline) => total + (timeline.denominators.topicAgendaDocumentsSearched ?? 0), 0);
+    return {
+      answer: searched > 0
+        ? `No mention of ${topic.label} in the ${searched} agenda${searched === 1 ? "" : "s"} we hold for the ${timelines.length} bod${timelines.length === 1 ? "y" : "ies"} that govern your area.`
+        : `We don't hold any readable agendas for your area yet, so nothing was searched for ${topic.label}.`,
+      citedUrls: [],
+    };
+  }
+  add(entrySentence(lead.entry, lead.timeline.bodyName, true, lead.timeline.outcomesUnavailable), lead.entry, lead.timeline);
+  const next = upcoming.find(({ entry }) => entry.key !== lead.entry.key);
+  if (next) add(entrySentence(next.entry, next.timeline.bodyName, true, next.timeline.outcomesUnavailable), next.entry, next.timeline);
+  // The lead body's own sittings after its newest mention whose agenda we have
+  // not read: the September 22 case, named rather than implied empty.
+  const unread = lead.timeline.unreadSittings.filter((sitting) => sitting.past && sitting.localDay > (lead.timeline.entries[0]?.localDay ?? ""));
+  if (unread.length > 0) {
+    const days = unread.slice(-2).map((sitting) => formatDateLong(sitting.localDay) ?? sitting.localDay);
+    add(`We have not read the ${lead.timeline.bodyName} agenda${days.length > 1 ? "s" : ""} for ${days.join(" and ")} yet, so ${days.length > 1 ? "they are" : "it is"} not reflected here`, lead.entry, lead.timeline);
+  }
+  const other = past.find(({ entry, timeline }) => entry.key !== lead.entry.key && !usedBodies.has(timeline.bodyName));
+  if (other) add(`Also, ${entrySentence(other.entry, other.timeline.bodyName, true, other.timeline.outcomesUnavailable).replace(/^./, (c) => c.toLowerCase())}`, other.entry, other.timeline);
+  const quiet = timelines.filter((timeline) => timeline.entries.length === 0).length;
+  if (quiet > 0 && sentences.length > 0) {
+    const sentence = `No mention of ${topic.label} in the agendas we hold for the other ${quiet} bod${quiet === 1 ? "y" : "ies"} that govern your area`;
+    const candidate = [...sentences, sentence];
+    if (overLengthBudget(`${candidate.join(". ")}.`) === null) sentences.push(sentence);
+  }
+  return sentences.length > 0 ? { answer: `${sentences.join(". ")}.`, citedUrls: cited } : null;
 }

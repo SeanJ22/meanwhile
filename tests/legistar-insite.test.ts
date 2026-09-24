@@ -1009,7 +1009,9 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
   const { authorityFor } = await import("../lib/civic-data/source-authority.ts");
   const pima = INSITE_TENANTS.find((t) => t.slug === "pima")!;
   assert.ok(pima.clerkScheduleUrl, "Pima declares its clerk schedule page");
-  const MOVED = "https://www.pima.gov/board-of-supervisors-meeting-schedule";
+  // The 2026-09-24 move is registered (C18); the guard is for the next one,
+  // so the page is made to move again, to an address nobody has read.
+  const MOVED = "https://www.pima.gov/government/board-of-supervisors/schedule";
   const BY_RANGE: Record<string, string> = {
     "Last Month": PIMA_LAST_MONTH,
     "This Month": PIMA_THIS_MONTH,
@@ -1063,7 +1065,7 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
   assert.ok(!requested.includes(MOVED), "the page it moved to is never requested");
   const reading = captured.value[0]!;
   assert.equal(reading.clerkScheduleHtml, null);
-  assert.match(reading.clerkScheduleNote ?? "", /moved to https:\/\/www\.pima\.gov\/board-of-supervisors-meeting-schedule/);
+  assert.match(reading.clerkScheduleNote ?? "", /moved to https:\/\/www\.pima\.gov\/government\/board-of-supervisors\/schedule/);
 
   assert.ok(captured.evidence.length > 0, "the grid's responses are retained as evidence");
   for (const row of captured.evidence) {
@@ -1078,6 +1080,66 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
   assert.ok(normalized.meetings.length > 0, "the grid's sittings are still produced");
   const clerk = normalized.routes.find((r) => r.route === "CLERK_SCHEDULE_PAGE")!;
   assert.equal(clerk.enumeration, "NOT_RETRIEVED");
-  assert.match(clerk.note ?? "", /moved to https:\/\/www\.pima\.gov\/board-of-supervisors-meeting-schedule/);
+  assert.match(clerk.note ?? "", /moved to https:\/\/www\.pima\.gov\/government\/board-of-supervisors\/schedule/);
   assert.match(clerk.note ?? "", /UNKNOWN, not absent/);
+});
+
+/*
+ * C18 (2026-09-24): Pima County's schedule now lives at
+ * www.pima.gov/board-of-supervisors-meeting-schedule. robots.txt read that day
+ * groups `User-agent: *` with Siteimprove (Crawl-delay: 20, nothing
+ * disallowed), so the page is read there, and its answer is a registered route.
+ * The body is the page's own tables as read that day.
+ */
+test("Pima's clerk schedule is read at the county's current page, and that page is a registered route", async () => {
+  const { captureSourceAcquisitions } = await import("../lib/sources/acquisition-trace.ts");
+  const { authorityFor } = await import("../lib/civic-data/source-authority.ts");
+  const pima = INSITE_TENANTS.find((t) => t.slug === "pima")!;
+  assert.equal(pima.clerkScheduleUrl, "https://www.pima.gov/board-of-supervisors-meeting-schedule");
+  const CURRENT = readFileSync(join(FIXTURES, "legistar-insite-pima-clerk-schedule-2026-09-24.html"), "utf8");
+  const BY_RANGE: Record<string, string> = {
+    "Last Month": PIMA_LAST_MONTH,
+    "This Month": PIMA_THIS_MONTH,
+    "Next Month": PIMA_NEXT_MONTH,
+    "This Year": PIMA_THIS_YEAR,
+    "Next Year": PIMA_NEXT_YEAR,
+  };
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input instanceof Request ? input.url : input);
+    if (url === pima.clerkScheduleUrl) {
+      const page = new Response(CURRENT, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+      Object.defineProperty(page, "url", { value: url });
+      return page;
+    }
+    if (url.includes("Feed.ashx")) {
+      return new Response(PIMA_FEED, { status: 200, headers: { "content-type": "application/xml" } });
+    }
+    const body = typeof init?.body === "string" ? init.body : null;
+    const asked = body ? new URLSearchParams(body).get("ctl00$ContentPlaceHolder1$lstYears") : null;
+    return new Response((asked && BY_RANGE[asked]) || PIMA_THIS_MONTH, { status: 200, headers: { "content-type": "text/html" } });
+  }) as typeof fetch;
+  let captured: Awaited<ReturnType<typeof captureSourceAcquisitions<LegistarInSiteRaw[]>>>;
+  try {
+    const source = makeLegistarInSiteSource({
+      fetchImpl: ((u: RequestInfo | URL, i?: RequestInit) => globalThis.fetch(u, i)) as typeof fetch,
+      tenants: [pima],
+    });
+    captured = await captureSourceAcquisitions((run) =>
+      run("legistar-insite", () => source.fetch({ lat: 32.2217, lng: -110.974, radiusKm: 40 })),
+    );
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  const reading = captured.value[0]!;
+  assert.ok(reading.clerkScheduleHtml, "the county's schedule page was not read");
+  assert.equal(reading.clerkScheduleNote, undefined, "a read page carries no refusal note");
+  assert.ok(captured.evidence.some((row) => row.finalUrl === pima.clerkScheduleUrl), "the page's answer is retained as evidence");
+  for (const row of captured.evidence) {
+    const final = authorityFor("meetings-public-bodies", "MEETING", row.finalUrl);
+    assert.ok(final.ok, `${row.finalUrl} would refuse the partition: ${final.ok ? "" : final.code}`);
+  }
+  const clerk = normalizeWithDrops(captured.value, NOW).routes.find((r) => r.route === "CLERK_SCHEDULE_PAGE")!;
+  assert.notEqual(clerk.enumeration, "NOT_RETRIEVED");
+  assert.equal(clerk.mechanism, pima.clerkScheduleUrl);
 });

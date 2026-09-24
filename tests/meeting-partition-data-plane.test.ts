@@ -337,7 +337,12 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal(healthyClock.lastSucceededAt, SECOND);
   assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 30 * 60_000), false);
   assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 60 * 60_000), true);
-  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000), false);
+  // The healthy sibling keeps its own sitting-window clock: twice daily when
+  // its body has no sitting within seven days, hourly when it does.
+  assert.equal(healthyClock.lastSucceededObservedAt, SECOND);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000, false), false);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 55 * 60_000 - 1, true), false);
+  assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 55 * 60_000, true), true);
 });
 
 test("meeting Reader repair composes the shared aggregate once and correlates exact partition receipts", async () => {
@@ -712,4 +717,28 @@ test("production Reader configuration cannot reopen live composite acquisition",
     if (priorMeetingSource === undefined) delete env.WTP_MEETING_SOURCE;
     else env.WTP_MEETING_SOURCE = priorMeetingSource;
   }
+});
+
+test("a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof", async () => {
+  const attestation = {
+    recordClass: "REGISTRY_RUNTIME_BINDING",
+    scope: "US:reader-registry-runtime-bindings",
+    versionId: "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
+    payloadSha256: "d".repeat(64),
+    retrievedAt: "2026-09-14T04:24:35.148Z",
+    staleAtRetrieval: false,
+    version: "2026",
+    sourceThrough: null,
+  };
+  const seen: unknown[] = [];
+  const run = (value: string | undefined) => preloadCanonicalMeetingDependencies({
+    sourceName: "composite",
+    refreshRegistry: async (options) => { seen.push(options); },
+    refreshVenues: async () => undefined,
+    env: { WTP_ROUTINE_ATTESTED_PROMOTIONS: value },
+  });
+  await run(JSON.stringify([attestation]));
+  await run(JSON.stringify([{ ...attestation, payloadSha256: "not-a-hash" }]));
+  await run(undefined);
+  assert.deepEqual(seen, [{ attested: attestation }, {}, {}]);
 });

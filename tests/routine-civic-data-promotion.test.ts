@@ -513,6 +513,12 @@ test("a Reader readback moves identity around the typed Reader, never another co
       return super.readCandidate(candidateId);
     }
 
+    // The typed Reader's proof reads its candidate through the narrowed door.
+    override async readCandidateProof(candidateId: string) {
+      this.reads.candidate += 1;
+      return super.readCandidateProof(candidateId);
+    }
+
     override async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string) {
       this.reads.identity += 1;
       return super.readPromotionIdentity(recordClass, scope);

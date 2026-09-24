@@ -32,6 +32,7 @@ import {
   routineSupervisorCycleId,
   routineTaskDue,
   routineTaskSelection,
+  sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
   type RoutineTaskClock,
@@ -42,6 +43,10 @@ import {
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
+import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 import {
   ROUTINE_CHILD_CONCURRENCY,
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
@@ -348,6 +353,9 @@ const clockReads = FORCE
       selectedTasks,
       (task) => store.clock(task.sourceId, task.recordClass, task.scope),
     );
+// Meeting sources follow their bodies' sittings; the window is decided once,
+// at the same frozen instant, from this pass's own clock reads.
+const sittingSignals = sittingWindowSignals(clockReads, admissionNowMs);
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -357,8 +365,11 @@ for (const read of clockReads) {
     continue;
   }
   const durableClock: RoutineTaskClock | undefined = read.clock;
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs)) {
-    console.log(`RCD_SKIP ${task.id}: cadence not due`);
+  const sittingHot = sittingSignals.get(task.id);
+  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot)) {
+    console.log(`RCD_SKIP ${task.id}: cadence not due${
+      sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
+    }`);
     continue;
   }
   dueCandidates.push({
@@ -415,6 +426,31 @@ for (const candidate of dueCandidates) {
 }
 attempted = pendingRuns.length;
 
+// Every meeting partition child proves the registry-runtime pointer before it
+// acquires anything: 24.47 MB each, 19.81 MB of it the pointed candidate read
+// only for that proof. With two or more in a pass, prove it once here and hand
+// each child the attestation; a child whose pointer or payload no longer
+// matches runs its own full proof. One child keeps its own proof: attesting it
+// would cost the same read twice.
+const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
+let meetingChildAttestations: Readonly<Record<string, string>> = {};
+if (meetingPartitionRuns >= 2) {
+  step = "proving the registry once for this pass";
+  try {
+    const registry = await readRegistryRuntimeProjection({ store });
+    const attestation = registry.kind === "PROMOTED"
+      ? attestPromotedVersion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, store)
+      : null;
+    if (attestation) meetingChildAttestations = { [ATTESTED_PROMOTIONS_ENV]: serializeAttestedPromotions([attestation]) };
+    console.log(
+      `RCD_PASS registry ${attestation ? `proved once as ${attestation.versionId}` : `not attested (${registry.kind})`} ` +
+        `for ${meetingPartitionRuns} meeting partition child(ren)`,
+    );
+  } catch (error) {
+    console.log(`RCD_PASS registry not attested; each meeting child proves it — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
+  }
+}
+
 console.log(
   `RCD_PASS launching ${pendingRuns.length} isolated command(s) through a bounded pool; ` +
     `concurrency=${ROUTINE_CHILD_CONCURRENCY}; ` +
@@ -430,12 +466,15 @@ const childRuns = await runBoundedChildPass(
     failureDomain: pending.task.acquisitionFailureDomain,
     executable: process.execPath,
     args: ["--experimental-strip-types", ...pending.command],
-    env: admittedRuntimeChildEnvironment({
-      parentEnv: process.env,
-      capability: "ROUTINE_CONTRACT",
-      contract: pending.task.id,
-      parentPid: process.pid,
-    }),
+    env: {
+      ...admittedRuntimeChildEnvironment({
+        parentEnv: process.env,
+        capability: "ROUTINE_CONTRACT",
+        contract: pending.task.id,
+        parentPid: process.pid,
+      }),
+      ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
+    },
   })),
   {
     cwd: ROOT,

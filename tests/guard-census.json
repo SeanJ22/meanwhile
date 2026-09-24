@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 765,
-    "named": 7511,
+    "files": 770,
+    "named": 7553,
     "dynamic": 30
   },
   "files": {
@@ -1416,10 +1416,15 @@
         "ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPlus AgendaCenter) quotes the data-center ordinance, not its neighbour",
         "ANOTHER STATE, ANOTHER PLATFORM: a New Hampshire town calendar (iCal/schedule page) with a scheduled solar item and an unread recent sitting",
         "PIMA, after the September 22 read: the adopted moratorium leads, from the official record, with its tally",
+        "PIMA, agenda text and recorded outcome both held: September 22 is stated once, led by the recorded decision",
+        "PIMA, agenda text held and the outcome not yet read: September 22 leads as on the agenda with its outcome unread, and August 11 follows",
         "PIMA, as held before the September 22 read: the August 11 decision leads, and the unread September 22 sitting is named",
+        "ROUTE, AREA: a pronoun or an earlier turn keeps the model reading",
+        "ROUTE, AREA: a topic question that names no government is answered from the area's body timelines, without a model",
         "ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance",
         "ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)",
         "ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation",
+        "TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, not by a fresh route that carries none of them",
         "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
         "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
         "an agenda line with no recorded outcome says exactly that, never that nothing happened",
@@ -2672,6 +2677,13 @@
       ],
       "dynamic": 0
     },
+    "tests/clerksboards-zoom-virtual.test.ts": {
+      "names": [
+        "board 49's sittings are kept online, with no place, no pin and no venue gap",
+        "the recorded board 49 page states its meeting location as Zoom (Virtual)"
+      ],
+      "dynamic": 0
+    },
     "tests/clerksboards.test.ts": {
       "names": [
         "D67: a published per-month date override wins over the recurrence",
@@ -2767,9 +2779,13 @@
     "tests/composite-failure-kind.test.ts": {
       "names": [
         "a JOB failure detail says whose failure it is, once",
+        "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
+        "a challenge served with HTTP 200 is the same wall",
+        "a real calendar we extract nothing from is still OUR zero-row JOB",
         "meeting partition receipts parse with and without the additive failureKind",
         "our own code and configuration failures are jobs, and so is an unknown",
-        "publisher-side failures are walls"
+        "publisher-side failures are walls",
+        "the town feed answering a Cloudflare challenge is the town's WALL, in its own words"
       ],
       "dynamic": 0
     },
@@ -3797,6 +3813,14 @@
         "ordinary district builds a numbered OCD-ID",
         "territory keeps the territory prefix and still carries a cd segment",
         "water and unassigned codes are dropped"
+      ],
+      "dynamic": 0
+    },
+    "tests/division-read-freshness.test.ts": {
+      "names": [
+        "a division is dated by its upcoming listings' oldest read, or by its newest read when nothing is upcoming",
+        "a read is dated only once it is older than a day and a half",
+        "the card dates an old read for divisions with listings on screen, never for one already named as failed"
       ],
       "dynamic": 0
     },
@@ -5433,6 +5457,7 @@
         "(f) Pima and Mesa are the same shape, measured the same way",
         "(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the API alone",
         "(g) NEGATIVE CONTROL: a viewable sitting carried by BOTH routes is not double-counted",
+        "Pima's clerk schedule is read at the county's current page, and that page is a registered route",
         "a PAGED grid is an incomplete enumeration, and it is reported rather than counted",
         "a clerk schedule page that moved is not followed: the grid's sittings survive, no retained response leaves the registered routes, and the move is named",
         "a page target is READ OFF THE PAGER, never derived from the control index",
@@ -5970,6 +5995,7 @@
       "names": [
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
+        "a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof",
         "a pass that records readbacks and republishes the prepared snapshot composes every partition once",
         "a semantic refusal holds only the exact source/body partition",
         "a successful thin response retains unexplained in-window rows with exact held evidence",
@@ -5984,6 +6010,18 @@
         "production membership and scopes are one-to-one and the global disposition is absent",
         "the batched Reader bounds database calls and isolates a corrupt partition",
         "the executable promotion door accepts exactly one registered partition"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-sitting-window.test.ts": {
+      "names": [
+        "Pima outcomes follow both Board partitions; an unreadable partition never cools them",
+        "a meeting partition is re-read hourly when hot and twice daily otherwise, never drifting past the hour",
+        "a sitting within seven days on either side makes a body hot, to the millisecond",
+        "no other data family's schedule is changed: only meeting partitions and meeting outcomes carry a sitting window",
+        "the policy is the owner's: seven days either side, hourly when hot, twice daily otherwise",
+        "the success is read in the attempt clock's own units, so a success is never mistaken for a failure",
+        "the window rolls: a sitting coming within seven days makes a twice-daily source due at that instant"
       ],
       "dynamic": 0
     },
@@ -6666,6 +6704,18 @@
         "a body's own notice page stating no agenda item is held by no sitting, and is read once per run",
         "a notice page that states agenda items is still held",
         "a sitting reached only through its body's notice page is read after every sitting's own link"
+      ],
+      "dynamic": 0
+    },
+    "tests/notice-page-reader.test.ts": {
+      "names": [
+        "Ask's topic timeline neither searches CAP's page nor counts Oct 13 as a read agenda",
+        "Mesa 1343183: the council's own meetings page is its publication index, never a read agenda",
+        "Newbury Selectboard: portal shells and another town's calendar are not 'the agendas we hold'",
+        "Pima 1381578: CAP's meetings page is never shown for a Pima Board sitting, and the sitting holds no agenda",
+        "Warner: a failed read of the town calendar is the body's page, not a document we could not read",
+        "an agenda posted on a body's notice page is still that sitting's agenda",
+        "the wiring decides whose notice page a URL is"
       ],
       "dynamic": 0
     },
@@ -9113,16 +9163,23 @@
         "the standing authority envelope is narrowed independently for every runtime child",
         "the standing parent durably accounts for a routine child killed outside source attribution",
         "the standing portfolio invokes data-plane scripts only",
-        "the standing scheduler advances a free lane on a later tick without overlapping a hung lane"
+        "the standing scheduler advances a free lane on a later tick without overlapping a hung lane",
+        "the supervisor proves the registry once for two or more meeting children and hands only them the attestation"
       ],
       "dynamic": 0
     },
     "tests/routine-clock-narrow-read.test.ts": {
       "names": [
+        "a MEETING clock reports its sitting starts, and the pointed success as its store-observed first event",
+        "a MEETING pointer's sitting starts are built in Postgres; the promoted payload never leaves the database",
+        "a live candidate's proof reads neither its identity set nor its change set and records, and decides the same",
+        "an attested version is served from its pointer alone; any mismatch runs the full proof",
+        "attestations parse whole or not at all",
         "both stores' clocks read through the narrowed view, never a whole row",
         "the clock view names exactly the fields the clock proves; widening it is a visible cost decision",
         "the memory store's clock, read through the view, keeps its attempt and success instants",
         "the narrowed view decides exactly what the whole candidate decides",
+        "the proof view is built in Postgres; the identity column and a live row's change set, records and identities never leave",
         "the routine clock builds its candidate view in Postgres; the payload and read model never leave the database",
         "the routine clock reads a pointer's identity and proof, never its promoted payload"
       ],
@@ -9238,6 +9295,15 @@
         "standing runtime preserves configured GitHub credentials without invoking the CLI",
         "standing runtime reuses only the existing github.com CLI login in memory",
         "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
+      ],
+      "dynamic": 0
+    },
+    "tests/schedulepage-own-routes.test.ts": {
+      "names": [
+        "a notice with no year takes the year after its own posting",
+        "both rows reach readers as sittings of their registered bodies",
+        "the Energy Committee's home page yields its next sitting in its own words",
+        "the library's feed yields one sitting per trustees notice and counts every other post"
       ],
       "dynamic": 0
     },
@@ -10470,6 +10536,7 @@
         "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
         "a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read",
+        "an import is read whole by its proof: its evidence binds the complete envelope",
         "retired trusted-LKG doors refuse new imports while retained history remains due",
         "the trusted-LKG import clock counts only attempts strictly after the import's pointer move",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"

@@ -229,7 +229,8 @@ test("ADM-39: neither summary tile is a dash — both hold a measurement with a 
 test("PDC: readiness authority coverage accounts for every production contract", () => {
   const contracts = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
   // 159 from 2026-09-23: + meetings:official-page-events for Tucson Unified's own page.
-  assert.equal(contracts.length, 159 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
+  // 161 from 2026-09-24: + the Newbury Library Trustees' and Energy Committee's own pages (C9).
+  assert.equal(contracts.length, 161 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
   assert.deepEqual(
     ROUTINE_SOURCE_CONTRACTS.map(({ id }) => id),
     [
@@ -238,7 +239,7 @@ test("PDC: readiness authority coverage accounts for every production contract",
     ],
     "the guard must move when the canonical contract denominator moves",
   );
-  assert.equal(MEETING_PARTITION_CONTRACTS.length, 125);
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, 127);
   assert.equal(contracts.some(({ id }) => id === "meetings"), false);
   assert.deepEqual(readinessAuthorityCoverageIssues(), []);
   assert.deepEqual(

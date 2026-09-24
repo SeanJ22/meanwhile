@@ -151,7 +151,8 @@ test("a registered body reaches the coverage card titled by its division, never 
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
   const body = oh.bodies.find((b) => b.bodyOrigin === "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS" && oh.divisions.some((d) => d.ocdId === b.ocdId && d.divisionType === "county"))!;
-  const division = oh.divisions.find((d) => d.ocdId === body.ocdId)!;
+  const bodyDivisionId = body.ocdId;
+  const division = oh.divisions.find((d) => d.ocdId === bodyDivisionId)!;
   enterReaderAuthorityEdge({ registrations: { states: new Set(["oh"]), load: async (state) => (state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null) } });
   // The ZIP widening hands coverage the registered divisions, exactly as /api/meetings does.
   const resolved = await divisionsByOcdIds([division.ocdId]);

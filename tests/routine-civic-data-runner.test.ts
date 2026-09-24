@@ -1531,6 +1531,13 @@ test("the durable receipt check proves exactly one pointer through the full proo
       return super.readCandidate(candidateId);
     }
 
+    // The proof's own narrowed read: the read model and normalized payload it
+    // checks, never the change set, records or identities (candidateProofView).
+    override async readCandidateProof(candidateId: string) {
+      this.whole.push(`candidate-proof:${candidateId}`);
+      return super.readCandidateProof(candidateId);
+    }
+
     override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
       this.whole.push(`promotion:${recordClass}:${scope}`);
       return super.readPromotion<T>(recordClass, scope);
@@ -1555,7 +1562,7 @@ test("the durable receipt check proves exactly one pointer through the full proo
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
   assert.equal(await durableRoutineRunnerReceiptIssue(success, task, store, "SUCCESS"), null);
-  assert.deepEqual(store.whole, [pointer, `candidate:${good.id}`], "success: the new pointer's proof, once");
+  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "success: the new pointer's proof, once, narrowed");
 
   const failure = failedAcquisitionCandidate({
     sourceId: task.sourceId,
@@ -1579,7 +1586,7 @@ test("the durable receipt check proves exactly one pointer through the full proo
     lastKnownGoodVersion: good.id,
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }, task, store, "HELD"), null);
-  assert.deepEqual(store.whole, [pointer, `candidate:${good.id}`], "held: the unchanged LKG's proof, once; never the refused envelope");
+  assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "held: the unchanged LKG's proof, once, narrowed; never the refused envelope");
 
   // The proof is still whole: a pointer whose payload no longer matches its
   // candidate's read model is refused on both paths.

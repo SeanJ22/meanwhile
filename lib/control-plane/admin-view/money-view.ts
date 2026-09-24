@@ -40,7 +40,9 @@ import {
   providerDefinition,
   type BillingFact,
 } from "../billing-facts.ts";
+import { SEARCH_PRICES } from "../../hunt/discovery-search.ts";
 import { DISCOVERY_SEARCH_ROLE, SEARCH_SOURCE_NOT_ON_RECORD } from "../cost.ts";
+import { DEFAULT_SEARCH_BUDGET } from "../discovery/search-runtime.ts";
 import { modelName } from "../plain-words.ts";
 
 export type Tone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
@@ -103,8 +105,35 @@ export function modelSpendUsd(month: LedgerMonth): number | null {
 
 const SEARCH_HOSTS: Readonly<Record<string, string>> = { "api.search.brave.com": "Brave Search", "api.exa.ai": "Exa" };
 
+const READ_ON = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
+
+/**
+ * What one search request costs and how many the runner starts out allowed to
+ * send: the published prices the charges are written at, and the caps in the
+ * code the runner runs. The runner may be set to other caps, and the day's count
+ * lives in its budget ledger; this page reads neither, and says so.
+ */
+function searchLimits(): string {
+  const prices = Object.values(SEARCH_PRICES);
+  const each = prices
+    .map((p) => `${SEARCH_HOSTS[p.host] ?? p.host} ${p.usdPerRequest === null ? "has no published price" : `$${p.usdPerRequest.toFixed(3)} a request`} (its pricing page, read ${READ_ON.format(new Date(`${p.readOn}T12:00:00Z`))})`)
+    .join("; ");
+  const known = prices.every((p) => p.usdPerRequest !== null);
+  const most = known ? ` — at most ${usd(Math.max(...prices.map((p) => p.usdPerRequest ?? 0)) * DEFAULT_SEARCH_BUDGET.perDay)} a day` : " — the most a day is unknown while a price is unpublished";
+  return (
+    ` Prices: ${each}.` +
+    ` The runner starts with ${plural(DEFAULT_SEARCH_BUDGET.perCycle, "request")} a cycle and ${DEFAULT_SEARCH_BUDGET.perDay} a day across both${most}.` +
+    " It may be set to other limits, and it keeps the day's count in its budget ledger; this page reads neither."
+  );
+}
+
 /** The search line: measured per host, a request with no published price named as unknown, and a month with no request a measured zero. */
 function searchLine(month: LedgerMonth | null): { readonly amount: string | null; readonly how: string } {
+  const line = searchSpend(month);
+  return { amount: line.amount, how: `${line.how}${searchLimits()}` };
+}
+
+function searchSpend(month: LedgerMonth | null): { readonly amount: string | null; readonly how: string } {
   if (month === null) return { amount: null, how: "The published snapshot was not read, so search spend is not shown. Not a zero." };
   const all = searchCharges(month);
   if (all === null) return { amount: usd(0), how: "No search request is on the ledger this month. The search rung writes one row per request, so this is a count, not a gap." };

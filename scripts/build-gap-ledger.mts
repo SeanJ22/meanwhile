@@ -31,6 +31,11 @@ import {
   COVERAGE_TIER_ZIP_HEADLINE,
 } from "../lib/coverage/tier.ts";
 import type { CoverageTier } from "../lib/coverage/tier.ts";
+import {
+  meetingsDiscoveryNeeds,
+  type JurisdictionRegistryFile,
+  type MeetingsDiscoveryNeed,
+} from "../lib/hunt/meetings-discovery.ts";
 import { bodyAccountingFor } from "../lib/registry/body-name-match.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { readTable } from "../lib/reference/index.ts";
@@ -155,7 +160,8 @@ const [PID6, NAME, TYPE, FIPS_ST, FIPS_CTY, CITY, STATE] = [
  * See the file's own note; a district absent from it stays UNRESOLVED.
  */
 const districtTerritory = JSON.parse(
-  readFileSync(join(DERIVED, "special-district-territory.json"), "utf8"),
+  /* Moved beside the NH jurisdiction registry by 9b62fb9c; the old `data/derived` path left this ledger unbuildable from 2026-08-24. */
+  readFileSync(join(process.cwd(), "data", "states", "nh", "jurisdictions", "special-district-territory.json"), "utf8"),
 ) as {
   evidenceDoc: string;
   districts: {
@@ -593,6 +599,74 @@ w(
 );
 w();
 
+/* ---- meetings discovery owed, by jurisdiction (2026-09-23) --------------- */
+
+/*
+ * **THE MEETINGS DISCOVERY NEED LIVES HERE NOW.** Since 902f5c50 no freshness
+ * obligation carries it: local-jurisdictions schedules no MEETINGS route. The
+ * old `freshness:jurisdiction:<id>#meetings-N` rows retire only once their
+ * jurisdiction is listed here, so the need moves home and does not vanish.
+ * Built from the committed registries, the same inputs as every other section.
+ */
+const REGISTRY_PATHS = ["az", "nh", "nj"].map((st) => `data/states/${st}/jurisdictions/${st}.json`);
+const registries = REGISTRY_PATHS.map(
+  (p) => JSON.parse(readFileSync(join(process.cwd(), p), "utf8")) as JurisdictionRegistryFile,
+);
+const meetingNeeds = meetingsDiscoveryNeeds(registries);
+const enumeratedGovernments = registries.reduce((n, r) => n + r.jurisdictions.length, 0);
+const owedWithSource = meetingNeeds.filter((n) => n.basis === "SOURCE_DISCOVERY_OWED");
+const noMeetingsSource = meetingNeeds.filter((n) => n.basis === "NO_MEETINGS_SOURCE_RECORDED");
+
+w("## Meetings discovery owed, by jurisdiction");
+w();
+w(
+  `Measured from the committed jurisdiction registries: ${registries
+    .map((r, i) => `\`${REGISTRY_PATHS[i]}\` (generated ${r.generatedOn})`)
+    .join(", ")}.`,
+);
+w();
+w(`Of **${enumeratedGovernments}** enumerated governments:`);
+w();
+w(
+  `- **${owedWithSource.length}** have their own website on record and owe a walk of it for their meeting notices, ` +
+    "agendas, minutes and roster. This is the registry's own-site MEETINGS source, state `DISCOVERY_OWED`.",
+);
+w(
+  `- **${noMeetingsSource.length}** have no MEETINGS source recorded, because no website was recorded. For these, the ` +
+    "first step is finding the site.",
+);
+w();
+w(
+  "**No scheduler turns an entry here into work.** Since `902f5c50` (2026-09-10), `local-jurisdictions` schedules no " +
+    "MEETINGS route. The routine meeting-partition contracts (`lib/civic-data/meeting-partitions.ts`) are the only " +
+    "production meeting clock, and they are keyed by the bodies wired in SOURCE_WIRING, not by these jurisdictions. " +
+    "The one executor that walks a government's site for its meeting pages is the Scout lane, which is paid research. " +
+    "Which executor works this list, and at what spend, is the owner's decision.",
+);
+w();
+w(
+  "**Not subtracted:** jurisdictions a meeting partition already covers. The partitions reach about 22 governments, " +
+    "but no reviewed jurisdiction→body crosswalk exists, and `lib/control-plane/zip-gap-resolution.ts` refuses to infer " +
+    "one from names. This list therefore names at most that many jurisdictions whose meetings are already acquired.",
+);
+w();
+w(
+  "The standing runner retires an old `freshness:jurisdiction:<id>#meetings-N` row only when `<id>` is listed in " +
+    "`data/derived/gap-ledger.json` → `meetingsDiscovery.needs`. The retirement reason names this ledger.",
+);
+w();
+for (const r of registries) {
+  const rows = meetingNeeds.filter((n) => n.stateCode === r.stateCode);
+  w(`### ${r.stateCode}: ${rows.length} of ${r.jurisdictions.length}`);
+  w();
+  w("| Jurisdiction | Class | Website | Basis |");
+  w("| --- | --- | --- | --- |");
+  for (const n of rows) {
+    w(`| ${n.name} (\`${n.jurisdictionId}\`) | ${n.govClass} | ${n.ownWebAddress ?? "none recorded"} | ${n.basis} |`);
+  }
+  w();
+}
+
 /*
  * **THE READABLE HALF LIVES IN `docs/`** (Prompt E item 11, 2026-08-20).
  *
@@ -617,9 +691,27 @@ writeFileSync(
         specialDistrictDenominator: sd.total,
       },
       pilots: perZipJson,
+      meetingsDiscovery: {
+        registries: registries.map((r, i) => ({
+          path: REGISTRY_PATHS[i],
+          stateCode: r.stateCode,
+          generatedOn: r.generatedOn,
+          enumerated: r.jurisdictions.length,
+        })),
+        counts: {
+          enumerated: enumeratedGovernments,
+          sourceDiscoveryOwed: owedWithSource.length,
+          noMeetingsSourceRecorded: noMeetingsSource.length,
+        },
+        needs: "__MEETINGS_NEEDS__",
+      },
     },
     null,
     2,
+  ).replace(
+    /* One need per line: pretty-printing all of them would make them most of the file, and most of every diff. */
+    '"__MEETINGS_NEEDS__"',
+    `[\n${(meetingNeeds satisfies readonly MeetingsDiscoveryNeed[]).map((n) => `      ${JSON.stringify(n)}`).join(",\n")}\n    ]`,
   )}\n`,
   "utf8",
 );

@@ -1,10 +1,10 @@
 import type { RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
-import type { CandidateEvent, PromotedProjection } from "./types.ts";
-import { readPromotedCivicData } from "./read-model.ts";
+import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -310,14 +310,51 @@ export async function verifyRoutineReaderProjection(
   }
 }
 
+const POINTER_READBACK_VERIFIER_ID = "lib/civic-data/store.ts#readPromotionIdentity";
+
+/**
+ * The canonical pointer, named by identity alone, still names exactly the
+ * promoted version. Its payload is not read here: the typed Reader reads it.
+ */
+async function promotedPointerReadbackIssue(
+  store: RoutineDataStore,
+  contract: ReaderContract,
+  promoted: PromotedPointerIdentity,
+): Promise<string | null> {
+  let pointer: PromotedPointerIdentity | null;
+  try {
+    pointer = await store.readPromotionIdentity(contract.recordClass, promoted.scope);
+  } catch (error) {
+    return `Reading canonical pointer ${promoted.key} failed (${sanitizedErrorDiagnostic(error)}). We could not ask the store.`;
+  }
+  if (
+    pointer === null ||
+    pointer.key !== promoted.key ||
+    pointer.sourceId !== contract.sourceId ||
+    pointer.versionId !== promoted.versionId ||
+    pointer.lastKnownGoodVersionId !== promoted.versionId
+  ) {
+    return `Promoted pointer readback expected ${promoted.versionId}; canonical pointer ${promoted.key} is ` +
+      `${pointer === null ? "NOT_RECORDED" : `${pointer.sourceId}:${pointer.versionId}`}.`;
+  }
+  return null;
+}
+
 /**
  * Persist one typed Reader observation without changing candidate disposition,
  * the canonical pointer, or LKG. A failed delivery remains a delivery fact.
+ *
+ * The typed Reader is the one read of the dataset: every registered verifier
+ * reads its pointer and candidate through the proven read model
+ * (`promotionProofIssue`). Around it this door moves identity only: the
+ * pointer by `readPromotionIdentity`, the evidence append by its narrow
+ * candidate read. A readback therefore transfers what the Reader transfers,
+ * never a second or third copy of the dataset.
  */
 export async function recordRoutineReaderProjectionReadback(
   store: RoutineDataStore,
   contract: ReaderContract,
-  promoted: PromotedProjection,
+  promoted: PromotedPointerIdentity,
   observedAt: string,
   verifierCodeSha: string | null = headSha(),
 ): Promise<ReaderProjectionReadbackReceipt | null> {
@@ -327,22 +364,9 @@ export async function recordRoutineReaderProjectionReadback(
   // is the contract scope; for a fan-out it is the member or marker scope this
   // promotion wrote, so the readback verifies that write and never assumes the
   // per-state marker scope for a member.
-  const pointerReadback = await readPromotedCivicData(contract.recordClass, promoted.scope, {
-    store,
-    now: observedAt,
-    bypassCache: true,
-  });
-  const readerVerification = (
-    pointerReadback.kind !== "PROMOTED" ||
-    pointerReadback.metadata.versionId !== promoted.versionId ||
-    pointerReadback.metadata.sourceId !== contract.sourceId ||
-    pointerReadback.projection.key !== promoted.key
-  )
-    ? {
-        verifierId: "lib/civic-data/read-model.ts#readPromotedCivicData",
-        status: "FAIL" as const,
-        detail: `Promoted pointer readback expected ${promoted.versionId}; canonical read returned ${pointerReadback.kind}:${pointerReadback.metadata.versionId ?? "none"}.`,
-      }
+  const pointerIssue = await promotedPointerReadbackIssue(store, contract, promoted);
+  const readerVerification = pointerIssue !== null
+    ? fail(POINTER_READBACK_VERIFIER_ID, pointerIssue)
     : await verifyRoutineReaderProjection(contract, {
         store,
         now: observedAt,
@@ -362,7 +386,7 @@ export async function recordRoutineReaderProjectionReadback(
 async function appendReaderProjectionReadback(
   store: RoutineDataStore,
   contract: ReaderContract,
-  promoted: PromotedProjection,
+  promoted: PromotedPointerIdentity,
   observedAt: string,
   normalizedVerifierCodeSha: string | null,
   readerVerification: RoutineReaderVerification,
@@ -416,10 +440,10 @@ export type ReaderReadbackRepairOutcome =
 
 interface ReaderReadbackInspection {
   readonly outcome: ReaderReadbackRepairOutcome | null;
-  readonly promotion: PromotedProjection | null;
+  readonly promotion: PromotedPointerIdentity | null;
 }
 
-function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedProjection): string | null {
+function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
   const expectedKey = `${contract.recordClass}:${contract.scope}`;
   if (
     promotion.key !== expectedKey ||
@@ -434,7 +458,7 @@ function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPro
 
 function inspectReaderReadbackEvents(
   contract: ReaderContract,
-  promotion: PromotedProjection,
+  promotion: PromotedPointerIdentity,
   events: readonly CandidateEvent[],
   now: string,
   normalizedVerifierCodeSha: string | null,
@@ -482,7 +506,9 @@ async function inspectReaderReadback(
   if (contract.readerProjection === null) {
     return { outcome: { kind: "NOT_APPLICABLE", receipt: null }, promotion: null };
   }
-  const promotion = await store.readPromotion(contract.recordClass, contract.scope);
+  // Identity only: most passes end CURRENT here, and none needs the payload
+  // to learn which version its durable receipt must name.
+  const promotion = await store.readPromotionIdentity(contract.recordClass, contract.scope);
   if (promotion === null) return { outcome: { kind: "NO_PROMOTION", receipt: null }, promotion: null };
   const identityIssue = promotionIdentityIssue(contract, promotion);
   if (identityIssue !== null) throw new Error(identityIssue);
@@ -556,21 +582,23 @@ export async function repairMeetingReaderProjectionReadbacks(
   if (contracts.length === 0) return [];
 
   const results = new Map<string, MeetingReaderReadbackRepairResult>();
-  let promotions: readonly PromotedProjection[];
+  let promotions: readonly PromotedPointerIdentity[];
   try {
-    promotions = await store.readPromotions("MEETING", scopes);
+    // Identity only; the aggregate Reader below reads every payload, once,
+    // and only when some partition's receipt is not already current.
+    promotions = await store.readPromotionIdentities("MEETING", scopes);
   } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
+    const detail = sanitizedErrorDiagnostic(error);
     return contracts.map(({ id }) => ({ contractId: id, ok: false, value: null, error: detail }));
   }
-  const promotionsByScope = new Map<string, PromotedProjection[]>();
+  const promotionsByScope = new Map<string, PromotedPointerIdentity[]>();
   for (const promotion of promotions) {
     const rows = promotionsByScope.get(promotion.scope) ?? [];
     rows.push(promotion);
     promotionsByScope.set(promotion.scope, rows);
   }
 
-  const eventInputs: { readonly contract: RoutineSourceContract; readonly promotion: PromotedProjection }[] = [];
+  const eventInputs: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
   for (const contract of contracts) {
     const matching = promotionsByScope.get(contract.scope) ?? [];
     if (matching.length === 0) {
@@ -606,7 +634,7 @@ export async function repairMeetingReaderProjectionReadbacks(
     MEETING_READER_EVENT_READ_CONCURRENCY,
     ({ promotion }) => store.events(promotion.versionId),
   );
-  const pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedProjection }[] = [];
+  const pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
   for (const read of eventReads) {
     const input = eventInputs[read.index]!;
     if (!read.ok) {
@@ -644,7 +672,7 @@ export async function repairMeetingReaderProjectionReadbacks(
       const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
       aggregate = await readMeetingsProjection({ store, now, bypassCache: true, allowUnconfiguredBootstrap: false });
     } catch (error) {
-      aggregateError = error instanceof Error ? error.message : String(error);
+      aggregateError = sanitizedErrorDiagnostic(error);
     }
 
     if (aggregateError !== null || aggregate === null) {

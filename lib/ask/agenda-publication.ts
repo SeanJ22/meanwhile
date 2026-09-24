@@ -75,7 +75,7 @@
  * supplies `now`), no disk, no network.
  */
 
-import { agendaContentGroups } from "../meetings/agenda-content.ts";
+import { agendaContentGroups, isPublisherPageNote } from "../meetings/agenda-content.ts";
 import { agendaItems, type AgendaDocumentLike } from "../routing/agenda-search.ts";
 import type { EvidenceGap } from "./evidence.ts";
 
@@ -464,14 +464,48 @@ function governingObservation(
 }
 
 /**
+ * **THE THREE TEXTS A DILIGENT/iCOMPASS MEETING PAGE HAS BEEN STORED AS.**
+ * (2026-09-23.)
+ *
+ * The page is the same portal page each time; what changed is the extractor
+ * that read it, and every one of its readings is held in production:
+ *
+ * - **The whole page** (before 2026-08-28): the skip links, "Quick Menu", the
+ *   sidebar's schedules and the board-application picker.
+ * - **The skip links alone** (2026-08-28 until the server form was unwrapped):
+ *   "Skip Navigation Jump to SideBar Tucson Unified School District", because
+ *   the ASP.NET form holding everything else was removed whole. 2,308 rows
+ *   across 18 sittings, and the reader called each one an agenda it could not
+ *   read the items of.
+ * - **The page's own content** (after): the meeting type's title and standing
+ *   notice and the document panel ("Private Version For: … Accessible Web
+ *   Version"), still the portal, because the sitting's agenda is the linked
+ *   document and never the page.
+ */
+function diligentPortalPageText(text: string): boolean {
+  const wholePage = /Skip Navigation\s+Jump to SideBar\s+Quick Menu/i.test(text)
+    && /(?:Board Application:|Schedule of Meetings|Upcoming Meetings)/i.test(text);
+  const skipLinksAlone = /^\s*Skip Navigation\s+Jump to SideBar\b/i.test(text);
+  const documentPanel = /Private Version For:/i.test(text) && /Accessible Web Version/i.test(text);
+  return wholePage || skipLinksAlone || documentPanel;
+}
+
+/**
  * The stored extraction label is not evidence that its bytes are an agenda.
  * Older HTML readers stored document-viewer shells, portal navigation, and
  * even ZIP/DOCX bytes as text. These are representation facts, not a claim
  * about whether the publisher has posted an agenda. Keep the original bytes;
  * classify their reader use here, for both Ask and the meeting card.
  */
-export function agendaDocumentRepresentation(document: AgendaDocumentLike):
-  "TEXT" | "PUBLICATION_PORTAL" | "UNREADABLE" {
+export function agendaDocumentRepresentation(
+  document: AgendaDocumentLike & { readonly extractionNote?: string | null },
+): "TEXT" | "PUBLICATION_PORTAL" | "UNREADABLE" {
+  // A read the retrieval recorded as failed because its words were the same
+  // publisher page another sitting's read carries (RULING 269, 2026-09-23):
+  // what is held is the publisher's page, named as such, not unread bytes.
+  if (document.extraction === "failed" && isPublisherPageNote(document.extractionNote)) {
+    return "PUBLICATION_PORTAL";
+  }
   const text = document.text;
   if (!text?.trim() || /^(?:PK\u0003\u0004|%PDF-)/.test(text) || text.includes("\u0000")) {
     return "UNREADABLE";
@@ -482,9 +516,7 @@ export function agendaDocumentRepresentation(document: AgendaDocumentLike):
 
   // Diligent/iCompass's meeting-specific URL is still a portal, even when
   // no other sitting shares the URL. Its accessible agenda is a linked file.
-  if (/\/Portal\/(?:MeetingInformation\.aspx)?\/?$/i.test(url.pathname)
-      && /Skip Navigation\s+Jump to SideBar\s+Quick Menu/i.test(text)
-      && /(?:Board Application:|Schedule of Meetings|Upcoming Meetings)/i.test(text)) {
+  if (/\/Portal\/(?:MeetingInformation\.aspx)?\/?$/i.test(url.pathname) && diligentPortalPageText(text)) {
     return "PUBLICATION_PORTAL";
   }
   // The browser application has not loaded a document into these shells.
@@ -530,7 +562,10 @@ function heldDocumentReader(context: AgendaCorpusContext): (document: AgendaDocu
   }
   const memo = new Map<string, HeldDocumentReading>();
   return (document) => {
-    const memoKey = `${document.documentUrl}\u0000${document.extraction}\u0000${document.text ?? "\u0001null"}`;
+    // A row with no text is told apart by its note: two failed reads of one
+    // URL can be different findings (no text at all, or the publisher's page).
+    const note = (document as { readonly extractionNote?: string | null }).extractionNote ?? "";
+    const memoKey = `${document.documentUrl}\u0000${document.extraction}\u0000${document.text ?? `\u0001null\u0000${note}`}`;
     const known = memo.get(memoKey);
     if (known) return known;
     const holders = meetingsByUrl.get(document.documentUrl) ?? new Set<string>();

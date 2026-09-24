@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { readableContent } from "../lib/extract/html-content.ts";
@@ -149,4 +150,87 @@ test("DATA-1: entity decoding and mojibake repair still run after the region pas
   const html = `<html><body><main><p>Rates &amp; Fees &#8212; 9:00 a.m.</p></main></body></html>`;
   const out = text(html);
   assert.match(out, /Rates & Fees/);
+});
+
+/* ---------------------------- the page-wrapping WebForms form (2026-09-23) --- */
+
+/*
+ * Recorded Diligent Community meeting pages, read 2026-09-23 by the session
+ * that diagnosed the defect (TUSD sitting 502 and Pima Community College
+ * sitting 698). The ASP.NET page-state values, the Telerik combined-script
+ * token and the WebResource identifiers are replaced by fixed placeholders;
+ * every other byte is as served. Before the fix these extracted to exactly
+ * the text production holds 2,308 times across 18 sittings.
+ */
+const tusd502 = readFileSync("tests/fixtures/diligent/meeting-information-tusd-502.html", "utf8");
+const pcc698 = readFileSync("tests/fixtures/diligent/meeting-information-pcc-698.html", "utf8");
+
+test("a WebForms page is not deleted with its server form: the page's own content survives", () => {
+  // What was stored before: the only words outside `<form id="aspnetForm">`.
+  const stored = "Skip Navigation Jump to SideBar Tucson Unified School District";
+  const r = readableContent(tusd502);
+  assert.equal(r.pageForms, 1, "the server form wrapping the page was not recognised");
+  assert.equal(r.region, "role-main", "the page's own main region is inside the form");
+  const out = text(tusd502);
+  assert.notEqual(out, stored);
+  assert.match(out, /Bond Oversight Committee Meeting Agenda/);
+  assert.match(out, /Names and details, including available support documents/);
+  assert.match(text(pcc698), /Finance and Audit Committee Meeting/);
+});
+
+test("the kept server form still loses its controls: no page state, no sign-in panel, no buttons", () => {
+  for (const html of [tusd502, pcc698]) {
+    const out = text(html);
+    assert.doesNotMatch(out, /SANITIZED-|VIEWSTATE|EVENTVALIDATION|TSM/, "page state reached the text");
+    // The separate sign-in form after the page form is a control, and goes whole.
+    assert.doesNotMatch(out, /Remember me next time|Forgot password|User name/);
+    // The meeting carousel and the document-type toolbar are <button>s.
+    assert.doesNotMatch(out, /Live Meeting|Show Map/);
+  }
+});
+
+test("a hidden field can never leak into text, even when its value holds a '>'", () => {
+  const html = `<html><body><form id="aspnetForm" action="./Page.aspx">
+      <input type="hidden" name="__VIEWSTATE" value="dDwt>LEAKED-STATE<x" />
+      <input type="hidden" name="token" value='a>LEAKED-TOKEN' />
+      <div><p>The board will hear the annual audit report and adopt the calendar.</p></div>
+    </form></body></html>`;
+  const out = text(html);
+  assert.match(out, /annual audit report/);
+  assert.doesNotMatch(out, /LEAKED/);
+});
+
+test("a form nested inside the page form is still a control and goes whole", () => {
+  const html = `<html><body><form id="aspnetForm">
+      <input type="hidden" name="__VIEWSTATE" value="x" />
+      <form id="search"><span>Search the archive</span></form>
+      <div><p>Item 1. Approval of the consent agenda and the minutes of June 3.</p></div>
+    </form></body></html>`;
+  const out = text(html);
+  assert.match(out, /Approval of the consent agenda/);
+  assert.doesNotMatch(out, /Search the archive/);
+});
+
+test("negative control: a form that is not a WebForms server form is removed whole, however much it holds", () => {
+  // The measured case: a search engine's bot challenge keeps its words inside
+  // its own form. Keeping them would turn a wall into content.
+  const html = `<html><body><h1>Example Search</h1>
+      <form id="challenge-form"><p>Unfortunately, bots use this service too. Please
+      complete the following challenge to confirm this search was made by a human.
+      Select all squares containing a duck.</p></form></body></html>`;
+  assert.equal(readableContent(html).pageForms, 0);
+  assert.doesNotMatch(text(html), /bots use this service/);
+});
+
+test("negative control: a WebForms form holding a sliver of the page is a control and goes whole", () => {
+  const html = `<html><body>
+      <div id="content"><p>The Planning Board meets on the first Wednesday of each
+      month at 7:00 p.m. in the Town Office meeting room, and the public may speak
+      on every item before the board votes.</p></div>
+      <form id="aspnetForm"><input type="hidden" name="__VIEWSTATE" value="x" />
+      <span>Subscribe</span></form></body></html>`;
+  assert.equal(readableContent(html).pageForms, 0);
+  const out = text(html);
+  assert.match(out, /first Wednesday of each month/);
+  assert.doesNotMatch(out, /Subscribe/);
 });

@@ -4,6 +4,7 @@ import {
   artifactKey,
   authorityArtifactKey,
   mergeScopeArtifacts,
+  registrationArtifactKey,
   partitionSnapshotByScope,
   scopesForStates,
   sha256OfJson,
@@ -20,6 +21,7 @@ import type { FederalDirectoryReadModel } from "../officials/federal-directory-d
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
+import type { RegistrationReadModel } from "../registration/candidate.ts";
 import {
   resolveReaderArtifactStore,
   resolveReaderArtifactWriteStore,
@@ -116,6 +118,21 @@ export interface PublishAuthorityCarried {
 }
 /** The authority families the runner may publish, keyed by family id. */
 export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+/**
+ * Every state's promoted registration the runner publishes, keyed by lower-case state: a proven value, or the
+ * version the manifest already serves. The set is COMPLETE, one entry per promoted registration pointer, because the
+ * reader reads a state it does not name as having none (`ReaderManifest.registrations`).
+ */
+export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
+
+interface RegistrationArtifactEnvelope {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly family: "registration";
+  readonly state: string;
+  readonly versionId: string;
+  readonly generatedAt: string;
+  readonly value: unknown;
+}
 
 /** The version a manifest serves for one authority family, or null when it serves none. */
 export function servedAuthorityVersion(
@@ -200,6 +217,30 @@ async function fetchScopeArtifact(
   return artifact;
 }
 
+// Each state's registration artifact, fetched only when a request names the state, at most once per version.
+const registrationEdgeCache = new Map<string, { version: string; value: RegistrationReadModel }>();
+
+async function fetchRegistrationArtifact(
+  state: string,
+  ref: AuthorityArtifactRef | undefined,
+  store: ReaderArtifactStore,
+): Promise<{ value: RegistrationReadModel; versionId: string } | null> {
+  if (!ref?.key || !ref.version) return null;
+  const cached = registrationEdgeCache.get(state);
+  if (cached?.version === ref.version) return { value: cached.value, versionId: ref.version };
+  try {
+    const bytes = await store.readBytes(ref.key);
+    if (!bytes) return null;
+    const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as RegistrationArtifactEnvelope;
+    if (envelope.family !== "registration" || envelope.state !== state || envelope.versionId !== ref.version) return null;
+    const value = envelope.value as RegistrationReadModel;
+    registrationEdgeCache.set(state, { version: ref.version, value });
+    return { value, versionId: ref.version };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Fetch (and cache in-process) the reader-authority edge bundle the manifest
  * points at — registry-runtime, the federal directory, and campaign-site URLs —
@@ -208,11 +249,16 @@ async function fetchScopeArtifact(
  * path for THAT family on THAT request only. Never reads Neon.
  */
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts">,
+  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations">,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
 ): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
-  if (!refs || !store) return {};
+  const registrationRefs = manifest.registrations;
+  // Registration is loaded per state on demand, never with the bundle (lib/registry/runtime-edge.ts RegistrationsEdge).
+  const registrations = registrationRefs && store
+    ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
+    : {};
+  if (!refs || !store) return registrations;
   const bundle: {
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
@@ -227,7 +273,7 @@ export async function ensureReaderAuthorityEdge(
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
   const legislators = await fetchAuthorityValue("state-legislators", refs["state-legislators"], store);
   if (legislators !== null) bundle.stateLegislators = { value: legislators as Record<string, OfficialStateLegislatorReadModel>, versionId: refs["state-legislators"]!.version };
-  return bundle;
+  return { ...bundle, ...registrations };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
@@ -250,6 +296,7 @@ export async function publishReaderEdgeArtifacts(
     readonly now?: string;
     readonly extras?: PublishReaderExtras;
     readonly authority?: PublishAuthority;
+    readonly registrations?: PublishRegistrations;
   } = {},
 ): Promise<PublishReaderEdgeResult> {
   const store = options.store ?? resolveReaderArtifactWriteStore();
@@ -269,6 +316,11 @@ export async function publishReaderEdgeArtifacts(
   const newAuthorityVersions = AUTHORITY_FAMILIES
     .map((f) => `${f}=${options.authority?.[f]?.versionId ?? ""}`)
     .join("|");
+  const registrationVersions = (entries: readonly (readonly [string, string])[] | null) =>
+    entries === null ? "none" : entries.map(([state, version]) => `${state}=${version}`).sort().join("|");
+  const newRegistrationVersions = registrationVersions(
+    options.registrations === undefined ? null : Object.entries(options.registrations).map(([state, entry]) => [state, entry.versionId] as const),
+  );
 
   let current;
   try {
@@ -289,12 +341,19 @@ export async function publishReaderEdgeArtifacts(
       everydayRouting: current.manifest.everydayRouting,
     }) === extrasSha;
     const sameAuthority = authorityVersions(current.manifest) === newAuthorityVersions;
-    if (sameSet && sameExtras && sameAuthority) return { status: "CURRENT", sequence: current.manifest.sequence, scopes: artifacts.length };
+    const sameRegistrations = registrationVersions(
+      current.manifest.registrations === undefined ? null : Object.entries(current.manifest.registrations).map(([state, ref]) => [state, ref.version] as const),
+    ) === newRegistrationVersions;
+    if (sameSet && sameExtras && sameAuthority && sameRegistrations) return { status: "CURRENT", sequence: current.manifest.sequence, scopes: artifacts.length };
   }
 
   const sequence = (current?.manifest.sequence ?? 0) + 1;
   const manifestScopes: ReaderManifestScope[] = [];
   const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = {};
+  const registrations: Record<string, AuthorityArtifactRef> = {};
+  // Complete or absent: one carried state the manifest no longer serves at that version drops the whole section this
+  // pass (the reader then reads registration from the database), so a registered state never reads as having none.
+  let registrationsComplete = options.registrations !== undefined;
   try {
     for (const artifact of artifacts) {
       const key = artifactKey(sequence, artifact.scope);
@@ -331,6 +390,26 @@ export async function publishReaderEdgeArtifacts(
       await store.writeBytes(key, gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")));
       authorityArtifacts[family] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }
+    // Each state's registration: one compressed, immutable artifact per state, written only when its version moved.
+    for (const [state, entry] of Object.entries(options.registrations ?? {})) {
+      if ("carried" in entry) {
+        const served = current?.manifest.registrations?.[state];
+        if (served && served.version === entry.versionId) registrations[state] = served;
+        else registrationsComplete = false;
+        continue;
+      }
+      const key = registrationArtifactKey(sequence, state);
+      const envelope: RegistrationArtifactEnvelope = {
+        formatVersion: READER_ARTIFACT_FORMAT_VERSION,
+        family: "registration",
+        state,
+        versionId: entry.versionId,
+        generatedAt: now,
+        value: entry.value,
+      };
+      await store.writeBytes(key, gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")));
+      registrations[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
+    }
   } catch (error) {
     // Artifacts are content-addressed by this new sequence; a partial write
     // leaves the previous manifest untouched, so the last valid set keeps serving.
@@ -349,6 +428,7 @@ export async function publishReaderEdgeArtifacts(
     ...(options.extras?.commentAccess !== undefined ? { commentAccess: options.extras.commentAccess } : {}),
     ...(options.extras?.everydayRouting !== undefined ? { everydayRouting: options.extras.everydayRouting } : {}),
     ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
+    ...(registrationsComplete ? { registrations } : {}),
   };
   let result;
   try {

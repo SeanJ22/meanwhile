@@ -101,6 +101,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "venue-resolutions": return "lib/civic-data/curated-reader-read-model.ts#readCuratedReaderProjection";
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
+      if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
       return contract.recordClass === "MEETING"
         ? "lib/meetings/snapshot.ts#readMeetingsProjection"
         : `unavailable:${contract.id}`;
@@ -291,6 +292,13 @@ export async function verifyRoutineReaderProjection(
         return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "census-geography");
       }
       default: {
+        if (contract.recordClass === "REGISTRATION") {
+          // One state per contract: the scope names it (`US-OH:registration:v1`).
+          const state = /^US-([A-Z]{2}):registration:v1$/.exec(options.scope ?? contract.scope)?.[1];
+          if (state === undefined) return fail(verifierId, `A registration scope must name one state; ${options.scope ?? contract.scope} does not.`);
+          const { readRegistrationProjection } = await import("../registration/reader.ts");
+          return verifyExactVersion(verifierId, await readRegistrationProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} registration`);
+        }
         if (contract.recordClass === "MEETING") {
           const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
           const result = await readMeetingsProjection({ store: options.store, now: options.now, bypassCache: true });

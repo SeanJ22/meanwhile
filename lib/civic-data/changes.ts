@@ -306,6 +306,20 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       }
       return members.sort((left, right) => left.key.localeCompare(right.key));
     }
+    case "REGISTRATION": {
+      // One civic record per Census division and per registered body. A
+      // division is keyed by its OCD id and Census GEOID together, because the
+      // committed geometry already gives one id to two school districts; a body
+      // by its id. The records carry the reference's build date, never the
+      // run's clock, so an unchanged month compares equal.
+      const divisions = array(root.divisions).map((record) => {
+        const row = object(record);
+        const ocdId = row && typeof row.ocdId === "string" ? row.ocdId : "";
+        const geoid = row && typeof row.geoid === "string" ? row.geoid : "";
+        return { key: ocdId && geoid ? `division:${ocdId}|${geoid}` : "", record };
+      });
+      return [...divisions, ...keyed("body", array(root.bodies), ["id"])].sort((left, right) => left.key.localeCompare(right.key));
+    }
     case "MEETING":
       return [
         ...keyed("meeting", array(root.meetings), ["id"]),

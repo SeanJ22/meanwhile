@@ -109,6 +109,20 @@ export interface ReaderManifest {
    * database for an ordinary visitor.
    */
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
+  /**
+   * **Each state's promoted REGISTRATION (`lib/registration/`), one artifact per
+   * state** (2026-09-24). Registration is per state by construction (82.6 MB for
+   * all 56, the largest about 5 MB), so it is never one national artifact: the
+   * reader fetches only the states a request's divisions name, once per version.
+   * The runner writes a state's artifact only after its registration pointer
+   * promotes, and carries every unchanged state's reference forward.
+   *
+   * Present, it is complete: a state it does not name has no promoted
+   * registration, and the reader composes nothing for it without waking the
+   * database. Absent (the family was never published), the reader reads the
+   * state from the database.
+   */
+  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
 }
 
 export type AuthorityFamily =
@@ -137,6 +151,11 @@ export function artifactKey(sequence: number, scope: string): string {
 /** The gzip-compressed artifact key for one authority family at a sequence. */
 export function authorityArtifactKey(sequence: number, family: AuthorityFamily): string {
   return `reader/v${sequence}/${family}.json.gz`;
+}
+
+/** One state's registration artifact, immutable within its manifest sequence. */
+export function registrationArtifactKey(sequence: number, state: string): string {
+  return `reader/v${sequence}/registration-${state.toLowerCase()}.json.gz`;
 }
 
 export function sha256OfJson(value: unknown): string {

@@ -248,6 +248,8 @@ test("ICAL-OCC · an edited sitting belongs to its series' body, and replaces th
    * the town had edited. The series decides the body; the edited copy's own
    * DTSTART decides when; its title is shown as the town wrote it. The
    * series' own copy of that sitting is a counted duplicate, never a meeting.
+   * The title says the sitting moved to 9/15, so it was not held on 9/8
+   * (`movedOffItsDay`, 2026-09-24): this expectation read CONCLUDED until then.
    */
   const wiring = wiringFor("warner-select-board");
   const selectBoard = (ics: string) =>
@@ -262,7 +264,7 @@ test("ICAL-OCC · an edited sitting belongs to its series' body, and replaces th
       id: `${SB_SERIES}/20260908T220000Z`,
       bodyId: body,
       startsAt: "2026-09-08T22:00:00.000Z",
-      status: "CONCLUDED",
+      status: "CANCELED",
       title: "RESCHEDULED Select Brd -9/15",
     },
     // The second Tuesday at 6pm, as the series states it after its first sitting.

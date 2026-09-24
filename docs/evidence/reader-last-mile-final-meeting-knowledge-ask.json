@@ -1,5 +1,5 @@
 {
-  "exactHead": "48ade9df88ce6af1e9b7814ff8c61861e68c7574",
+  "exactHead": "ea1f2d80291bd02450d30ae4392ef11e2cbd7779",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
@@ -124,7 +124,7 @@
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
         "sittingsThatLocalDay": 2,
-        "agendaDocumentsForThatMeeting": 2,
+        "agendaDocumentsForThatMeeting": 4,
         "publisherPublicationObservationsForThatMeeting": 2,
         "agendaItemsExtracted": 20,
         "minutesSummaryRecordsReturned": 1,
@@ -133,12 +133,12 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f2304484488d51ad917b58c952123d51672b294d01373afef6b2394411d49a68",
+      "payloadSha256": "91337d086d45b96dc59e2d8ce8d227fdb117466e483ca65d23c8049f105f5008",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 34,
-      "traceRecordCount": 34,
+      "actualRecordCount": 36,
+      "traceRecordCount": 36,
       "status": "PROVEN"
     },
     {
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0b10481d17e82a81313ffdce665618c199f6f194bd22efb4b878f51308ea5bab",
+      "payloadSha256": "64d8b93d7e11b26d8356ef4998822820936005e3da8f3bb633dcc81ccb0f13f7",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -436,7 +436,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "1a6765bb5e38424c8f60490f1a82b1c42eb1327afb6f84366dc8844f7a71057f",
+      "payloadSha256": "ed3aedabe067ea40e344011a05418dfab70fa2ca6d1f3e408eb00881a31d55af",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -564,6 +564,10 @@
       "gaps": [
         {
           "whose": "OURS",
+          "statement": "The link we hold for that meeting is Pima County Board Of Supervisors's agenda portal rather than the agenda itself."
+        },
+        {
+          "whose": "OURS",
           "statement": "We have not yet acquired the agenda for that Pima County Board Of Supervisors meeting."
         }
       ],
@@ -581,7 +585,7 @@
         "calendarListingsThatLocalDay": 2,
         "uniqueMeetingCountUnresolvedGroups": 0,
         "sittingsThatLocalDay": 2,
-        "agendaDocumentsForThatMeeting": 0,
+        "agendaDocumentsForThatMeeting": 1,
         "publisherPublicationObservationsForThatMeeting": 0,
         "minutesSummaryRecordsReturned": 0,
         "noticeSummaryRecordsReturned": 0,
@@ -589,12 +593,12 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "8e169641836b025548fdfa6d68b65ae43458c717a4fb4271d9b05109cd196dba",
+      "payloadSha256": "c89a64378f4c47d88e7f1721d46a46764c706e75e6e1bdde49433c3671e218e4",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 11,
-      "traceRecordCount": 11,
+      "actualRecordCount": 13,
+      "traceRecordCount": 13,
       "status": "PROVEN"
     },
     {
@@ -774,7 +778,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e81875b09f460b82ecda34c493d1ec20c01c752983620397a15da77600af2839",
+      "payloadSha256": "77852e061666df187f52038dc8ed359d34880034a88dc33205f31f447157e3f0",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -959,7 +963,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d09c0f2aa28ed08e28b8701b99f511f5acbb0e5d08dbde1560466b0f3c05c0ae",
+      "payloadSha256": "506055cd3ba8662ce2477366dc681a382cfc9da99a96f2729566b2ccdff9d3b5",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1144,7 +1148,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d13df5b00c9fb656183bbbe8b347c5fa507d1ea8e8db8f25def4b5efcaea6900",
+      "payloadSha256": "75cb86ae424449e47cad82b83b55c122e34be5a96daeee2fd12b8009ce26492e",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1353,7 +1357,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0f4ebf3d43a72b23ce2acbe56f7ebe398ffa45c364094fae00272a1e9fe1f8a2",
+      "payloadSha256": "6fcb64b729a6a91369b378ce31c1f339329c4d64d52a90465d0bf58f33b0b5a9",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1566,7 +1570,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "dfa0995df810d5fdfc794cd708fc244cad77293c29a523db8032668881999434",
+      "payloadSha256": "aab46a6591309eb4075e80663c23bfeca5faedd2d61314800ae0e6d7233608d2",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1712,7 +1716,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "7427b7f4c1b5111660f1740c6520e3f40e9add44b8cd2ec49928eb2739837b2c",
+      "payloadSha256": "83e9275213274422cf25945b88027ce9f3957a4ac63cb159a747077b35ca8a3b",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1925,7 +1929,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "243ce73539dc1993cbc8aacf8b92d58630beacf520d5300422cbd01a79dea224",
+      "payloadSha256": "2046e8db2cb55e7889dde18a6b939d08b79cfc6e80a2da47cf10a3135c9a846b",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2102,7 +2106,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "1dcad8984165f215dcb4243dc514f51028c5c2d56ba50460bff0a1902599d8a5",
+      "payloadSha256": "6199535d8325585a30bc05dd416f7b260e18a04a08a6429095291ad61ae0954e",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2255,7 +2259,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "c006892f4b3c5379d5263062f7db935bc1a6c19b96cd70a8c2cc4b6a26e02b03",
+      "payloadSha256": "2e137b3c5e7a62150f56791006fd5fd0bd5a54c395cb2350736abb91573a4078",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2450,8 +2454,8 @@
         "meetingLoaderFailures": 0,
         "officeholderLoaderFailures": 0,
         "publicCommentAccessRecordsReturned": 5,
-        "calendarListingsHeldForThisBody": 29,
-        "meetingsHeldForThisBody": 29,
+        "calendarListingsHeldForThisBody": 28,
+        "meetingsHeldForThisBody": 28,
         "archivedOutcomeSittingsForThatDate": 0,
         "calendarListingsThatLocalDay": 1,
         "uniqueMeetingCountUnresolvedGroups": 0,
@@ -2464,7 +2468,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "55580c71d1916531353db2b84d623233a50154719f0845233ba19b5c71022255",
+      "payloadSha256": "96fd90349a34c4a940b79a7f1462473699ae58c424cf50d5b813679241b73d5a",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2673,7 +2677,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "73ace8dbec39077e935c2c61a1cf0e0a9678625cb89a2a3cb35718113f47c388",
+      "payloadSha256": "9d44b4352755dff30e1a9b4474e719e64cbe82de6f55960770a6522ebfec06dc",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2881,7 +2885,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "375f623ea77f120196775fe611afa4732d3b19613731e81677503b19f637a01c",
+      "payloadSha256": "6a3766b38c2db7eeb994c8072306539fc3bfb6ea94f8de9d02e6977dbf47caf6",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3062,7 +3066,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "debfa58671f779e1d4cc54ac38d4b05288979196ca8a7b61361905f09e40ed9d",
+      "payloadSha256": "93097fc8f5922226db7a17c8d521493118a206f0cbc1bca5678209994ad9fe48",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3243,7 +3247,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "7691cd89788e3154fb758b48c183b2c570cc2f68a156bb07ab525429bb82afba",
+      "payloadSha256": "7f32e7d78eb72b5063f9405312fc4d7bb1ad0d30d9c05ca4ce66e4595f319c4b",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3396,7 +3400,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0119964b1ee37ed30ede1537085dba567e0533c70d7baf4fe22dd965ab0d3dd5",
+      "payloadSha256": "78e266ccafbb7845060086db4f8ee584230b9c6ddcb3a99ed3ec627438ff0d41",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3549,7 +3553,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "3afa4ae9fbc368457e4c74c4bbbcce56425b08e4a56626e932ea0aac794be6e6",
+      "payloadSha256": "f926c25bb927e7cb220d6b6690e65177cf73eb276306428831b3659674e54320",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

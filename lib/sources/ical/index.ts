@@ -104,8 +104,81 @@ const SOURCE_NAME = "ical";
 const WINDOW_FORWARD_DAYS = UPCOMING_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = CONCLUDED_LOOKBACK_DAYS;
 
-/** The body itself says so, in its own summary. */
-const CANCELED = /\bcancell?ed\b/i;
+/**
+ * The body itself says so, in its own summary. Warner also writes the bare
+ * verb: "CANCEL Select Board Meeting" (2025-11-11), "CANCEL Bee Keepers".
+ */
+const CANCELED = /\bcancel(?:l?ed)?\b/i;
+
+const MOVED = /\b(reschedul\w*|postpon\w*)\b/i;
+/** A month/day a summary names, with the word that points at it, if any. */
+const NAMED_DAY = /\b(from|to)?[\s-]*(\d{1,2})\/(\d{1,2})(?:\/(\d{4}|\d{2}))?(?![\d/])/gi;
+
+/** A sitting's calendar day on the body's own wall clock. */
+function localDayOf(iso: string, zone: string): number | null {
+  const dtf = zoneFormatter(zone);
+  const at = Date.parse(iso);
+  if (!dtf || !Number.isFinite(at)) return null;
+  const parts = Object.fromEntries(dtf.formatToParts(new Date(at)).map((p) => [p.type, p.value]));
+  return dayNumber(Number(parts.year), Number(parts.month), Number(parts.day));
+}
+
+/** The real calendar day nearest `own` that a month/day (and optional year) names. */
+function namedDay(own: number, month: number, day: number, year: string | undefined): number | null {
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  const ownYear = dateOfDay(own).y;
+  const years = year ? [year.length === 2 ? 2000 + Number(year) : Number(year)] : [ownYear - 1, ownYear, ownYear + 1];
+  let best: number | null = null;
+  for (const y of years) {
+    const candidate = dayNumber(y, month, day);
+    const back = dateOfDay(candidate);
+    if (back.m !== month || back.d !== day) continue;
+    if (best === null || Math.abs(candidate - own) < Math.abs(best - own)) best = candidate;
+  }
+  return best;
+}
+
+/**
+ * **A SITTING THE BODY MOVED OFF ITS DAY WAS NOT HELD ON IT.** (2026-09-24.)
+ *
+ * A town edits the sitting it moved rather than deleting it. Warner's Select
+ * Board sitting of 2026-09-08 reads "RESCHEDULED Select Brd -9/15", its 09-14
+ * Parks and Recreation sitting "P&R Rescheduled to 9/21", and Bradford's
+ * 2025-02-06 sitting "Budget Mgts Rescheduled to 2/13". Once the hour passed,
+ * the clock called each of them CONCLUDED, telling a reader that a meeting
+ * was held when the body itself said it was moved.
+ *
+ * So a summary that says rescheduled or postponed is read for the day it
+ * names:
+ * - "to <day>" names where the sitting went. A later bare day does too
+ *   ("-9/15" on 9/8). This sitting was not held here.
+ * - "from <day>" names where it came from, as in "Select Board (rescheduled
+ *   from 10/13)" on 10/6. An earlier bare day does too ("SB Rescheduled
+ *   12/15/25 SB Mtg" on 12/16), and so does the sitting's own day. This
+ *   sitting is the moved one, on its new day, so it keeps the clock's status.
+ * - A summary that names no day says "postponed" of this sitting
+ *   ("Postponed-Cemetery Commission"). But it can say "rescheduled" of either
+ *   end ("Select Board Meeting Rescheduled" on 9/29 is the moved sitting), so
+ *   only "postponed" counts.
+ */
+export function movedOffItsDay(title: string, startsAt: string, zone: string): boolean {
+  const said = MOVED.exec(title);
+  if (!said) return false;
+  const own = localDayOf(startsAt, zone);
+  if (own === null) return false;
+  let went = false;
+  let came = false;
+  for (const [, word, month, day, year] of title.matchAll(NAMED_DAY)) {
+    const named = namedDay(own, Number(month), Number(day), year);
+    if (named === null) continue;
+    const pointer = word?.toLowerCase();
+    if (named === own || pointer === "from" || (pointer !== "to" && named < own)) came = true;
+    else went = true;
+  }
+  if (went) return true;
+  if (came) return false;
+  return /^postpon/i.test(said[1]!);
+}
 
 export interface IcalRaw {
   wiring: BodySourceWiring;
@@ -1067,7 +1140,8 @@ export function makeIcalSource(
             agendaUrl: null,
             jurisdiction: wiring.jurisdiction,
             status:
-              CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "")
+              CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "") ||
+                movedOffItsDay(title, sitting.iso, wiring.timeZone)
                 ? "CANCELED"
                 : statusOf(sitting.iso, now),
             provenance: {

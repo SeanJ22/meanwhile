@@ -15,6 +15,7 @@ import {
   type ListedSittingFacts,
 } from "../sources/event-identity.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
+import { REGISTRATION_SOURCE_LAST_MODIFIED, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -33,6 +34,36 @@ const SHA256 = /^[a-f0-9]{64}$/;
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
+}
+
+/**
+ * A 304 Not Modified carries no bytes. It is authentic only where a contract
+ * pins exact bytes to the Last-Modified they were served with, and only for a
+ * candidate built from exactly those bytes. Today that is registration's Census
+ * of Governments file (`lib/registration/publication.ts`, bound by one full
+ * read); a 304 anywhere else acquired nothing. The raw hash must be the one
+ * registration builds from the pinned sha, its reference and the reviewed
+ * registry version, so a 304 cannot carry another file's provenance.
+ */
+export function notModifiedIssue(candidate: RoutineCandidate): string | null {
+  if (candidate.recordClass !== "REGISTRATION") {
+    return `HTTP 304 carries no bytes, and ${candidate.recordClass} pins no bytes to a Last-Modified, so nothing was acquired.`;
+  }
+  if (candidate.retrieval.requestedUrl !== REGISTRATION_SOURCE_URL) {
+    return `A registration 304 is bound only to ${REGISTRATION_SOURCE_URL}, not ${candidate.retrieval.requestedUrl}.`;
+  }
+  const payload = (candidate.normalizedPayload ?? {}) as {
+    readonly sourceSha256?: unknown;
+    readonly referenceSha256?: unknown;
+    readonly reviewedRegistryVersionId?: unknown;
+  };
+  if (payload.sourceSha256 !== REGISTRATION_SOURCE_SHA256) {
+    return `The 304 names source bytes ${String(payload.sourceSha256)}, not the pinned ${REGISTRATION_SOURCE_SHA256} bound to Last-Modified ${REGISTRATION_SOURCE_LAST_MODIFIED}.`;
+  }
+  if (candidate.retrieval.rawHash !== sha256(`${REGISTRATION_SOURCE_SHA256}\n${String(payload.referenceSha256)}\n${String(payload.reviewedRegistryVersionId)}`)) {
+    return "The 304's raw hash is not the one registration builds from the pinned bytes, its reference and the reviewed registry version.";
+  }
+  return null;
 }
 
 function durableCanonicalJson(value: unknown): { readonly canonical: string | null; readonly issue: string | null } {
@@ -426,13 +457,18 @@ export function validateRoutineCandidate(
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", authority.code, authority.detail));
   } else if (!candidate.retrieval.rawHash || !SHA256.test(candidate.retrieval.rawHash)) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "RAW_HASH_INVALID", "Acquired bytes do not carry a lowercase SHA-256 hash."));
+  } else if (candidate.retrieval.httpStatus === 304 && notModifiedIssue(candidate) !== null) {
+    checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "NOT_MODIFIED_WITHOUT_BOUND_PIN", notModifiedIssue(candidate) ?? ""));
   } else if (inheritedAuthorityIssue !== null) {
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "MANUAL_PRIOR_AUTHORITY_INVALID", inheritedAuthorityIssue));
   } else if (inheritedAuthority) {
     checks.push(result("SOURCE_AUTHENTICITY", "PASS", "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID",
       `${authority.contract.publisher}; current acquired sources plus ${inheritedAuthority.retainedMembers.length} unchanged members inherited from GOOD version ${inheritedAuthority.versionId}. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
   } else {
-    checks.push(result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}; raw ${candidate.retrieval.rawHash}.`));
+    const confirmed = candidate.retrieval.httpStatus === 304
+      ? `; 304 Not Modified against the pinned Last-Modified ${REGISTRATION_SOURCE_LAST_MODIFIED}, confirming the pinned bytes ${REGISTRATION_SOURCE_SHA256} without a download`
+      : "";
+    checks.push(result("SOURCE_AUTHENTICITY", "PASS", "AUTHORITY_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; ${candidate.retrieval.finalUrl}${confirmed}; raw ${candidate.retrieval.rawHash}.`));
   }
 
   if (!candidate.normalization.succeeded) {

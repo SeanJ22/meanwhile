@@ -33,6 +33,11 @@
  *
  * Reached only by the ingest, never by a reader surface. Nothing calls it
  * until the matcher's follow-up wires it in.
+ *
+ * @freshness-reads-here: `retrievedAt` is stamped in `requestOnce`, the one
+ * function that sends the request, at the moment it is sent. A request that
+ * got no answer keeps its attempt time with status 0 and no bytes; it never
+ * claims a read it did not make.
  */
 import { createHash } from "node:crypto";
 

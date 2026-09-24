@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 754,
-    "named": 7434,
+    "named": 7435,
     "dynamic": 30
   },
   "files": {
@@ -2990,6 +2990,7 @@
     },
     "tests/control-plane-evidence-durability.test.ts": {
       "names": [
+        "A key segment Windows cannot hold is encoded on disk and listed back exactly; every legal segment keeps its path",
         "DURABILITY: RAW and SANITIZED_DERIVED artifacts survive a FRESH store instance over the same root",
         "DURABILITY: the retention policy survives the round trip through a fresh instance",
         "DURABLE IDEMPOTENCY: two concurrent putArtifact calls leave ONE object and no error",

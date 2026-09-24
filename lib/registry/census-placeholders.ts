@@ -28,6 +28,6 @@ export const CENSUS_PLACEHOLDER_LABELS: Readonly<Record<string, string>> = {
 
 export function isCensusPlaceholderDivision(division: { readonly ocdId: string; readonly divisionType?: string | null; readonly geoid?: string | null }): boolean {
   if (division.divisionType !== undefined && division.divisionType !== null && division.divisionType !== "school_district") return false;
-  if (typeof division.geoid === "string" && /^\d{2}99997$/.test(division.geoid)) return true;
+  if (typeof division.geoid === "string") return /^\d{2}99997$/.test(division.geoid);
   return /\/school_district:school_district_not_defined$/.test(division.ocdId);
 }

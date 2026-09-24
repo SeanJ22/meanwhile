@@ -296,11 +296,14 @@ export interface RoutineChangeSet {
 
 /**
  * Exact authority for removing one previously promoted record from an
- * incomplete candidate horizon. This is deliberately narrow: today only a
- * meeting (or one of its attached agenda-document versions) may age out of
- * the registered Reader serving window without a complete-universe claim.
+ * incomplete candidate horizon. This is deliberately narrow: a meeting (or one
+ * of its attached agenda-document versions) may age out of the registered
+ * Reader serving window, and a registry body minted on a Census placeholder
+ * may leave, without a complete-universe claim. Nothing else may.
  */
-export interface RoutineRemovalEvidence {
+export type RoutineRemovalEvidence = MeetingWindowRemovalEvidence | CensusPlaceholderBodyRemovalEvidence;
+
+export interface MeetingWindowRemovalEvidence {
   /** Exact `RoutineChangeSet.removed[].key`; evidence is never positional. */
   readonly key: string;
   readonly code: "OUTSIDE_REGISTERED_SERVING_WINDOW";
@@ -313,6 +316,20 @@ export interface RoutineRemovalEvidence {
   readonly priorStartsAt: string;
   /** Required only for an agenda document; names its exact removed meeting. */
   readonly parentMeetingKey?: string;
+}
+
+/**
+ * A registry body on a Census "no district here" placeholder (LEA 99997) is
+ * geography, never a government (Sean, 2026-09-23). The validator re-proves the
+ * claim from the candidate itself: the removed body sat on exactly this
+ * division, and the candidate still holds that division as a placeholder.
+ */
+export interface CensusPlaceholderBodyRemovalEvidence {
+  /** Exact `RoutineChangeSet.removed[].key`: `body:<body id>`. */
+  readonly key: string;
+  readonly code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT";
+  /** The removed body's division, which the candidate keeps. */
+  readonly divisionOcdId: string;
 }
 
 /** One immutable tracked input whose exact bytes were used for a PDC-v2 LKG import. */

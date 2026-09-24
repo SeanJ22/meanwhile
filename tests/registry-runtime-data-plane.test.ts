@@ -4,7 +4,19 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { civicRecordsFor } from "../lib/civic-data/changes.ts";
+import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor, rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import {
+  PDC_V2_FROZEN_BASE_SHA,
+  TRUSTED_LKG_IMPORT_AUTHORIZATION,
+  TRUSTED_LKG_IMPORT_PURPOSE,
+  trustedLkgCandidateEnvelopeSha256,
+  trustedLkgCandidateId,
+  trustedLkgFixtureSetSha256,
+  trustedLkgImportUrl,
+  trustedLkgValidatorIds,
+} from "../lib/civic-data/trusted-lkg-import.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
+import type { RoutineCandidate, TrustedLkgImportEvidence } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -20,6 +32,7 @@ import { federalDirectoryFirstSeed, readFederalDirectoryProjection } from "../li
 import {
   REGISTRY_RUNTIME_SCOPE,
   REGISTRY_RUNTIME_SOURCE_ID,
+  readRegistryRuntimePrior,
   registryRuntimeCandidate,
   registryRuntimeProjectionIssues,
   type RegistryRuntimePackage,
@@ -245,17 +258,15 @@ test("one blocked registry publisher holds only its dependent members while an u
         }
       : source),
   };
+  const prior = await readRegistryRuntimePrior(store, T1);
+  assert.equal(prior?.versionId, first.id);
   const next = registryRuntimeCandidate({
     ...nextPackage,
     payload: changedPayload,
     sourceReceipt: partialReceipt,
-  }, {
-    prior: {
-      versionId: first.id,
-      payload: first.readModel as RegistryRuntimeReadModel,
-      sourceReceipt: first.retrieval.manualSourceReceipt!,
-    },
-  });
+  }, { prior });
+  // A receipted base carries its members' sources forward; nothing is inherited on authority alone.
+  assert.equal(next.manualPriorAuthority, undefined);
   const outcome = await processRegisteredManualCandidate(
     store,
     "registry-runtime-bindings",
@@ -326,7 +337,12 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   priorPayload.registry.bodies = [...priorPayload.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
   priorPayload.registry.divisions = priorPayload.registry.divisions.map((division) =>
     division.state === "NH" && placeholders.ids.has(division.ocdId) ? { ...division, label: "School District Not Defined" } : division);
-  const prior = { versionId: "placeholder-prior", payload: priorPayload, sourceReceipt: receipt(priorPayload, T0, "placeholder-prior") };
+  const prior = {
+    versionId: "placeholder-prior",
+    payload: priorPayload,
+    sourceReceipt: receipt(priorPayload, T0, "placeholder-prior"),
+    readModelSha256: hash(canonicalCivicDataJson(priorPayload)),
+  };
   const plainNames = (model: RegistryRuntimeReadModel) =>
     model.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).map((division) => division.label);
   const removals = (candidate: ReturnType<typeof registryRuntimeCandidate>) =>
@@ -342,6 +358,8 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   assert.deepEqual(plainNames(fromPriorModel), ["No unified school district here", "No unified school district here"]);
   assert.deepEqual(removals(fromPrior), expectedRemovals);
   assert.equal((fromPrior.excludedFacts ?? []).some((fact) => fact.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING" && expectedRemovals.includes(fact.key ?? "")), false);
+  // The removals it proves to the plane are the prior's, named by their division.
+  assert.deepEqual(fromPrior.removalEvidence, placeholders.bodies.map((body) => ({ key: `body:${body.id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT", divisionOcdId: body.ocdId })).sort((left, right) => left.key.localeCompare(right.key)));
 
   // Carried by the package itself, raw name and all.
   const carryingPayload = structuredClone(priorPayload);
@@ -352,8 +370,185 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   assert.equal(fromPackageModel.registry.bodies.some((body) => body.ocdId !== null && placeholders.ids.has(body.ocdId)), false);
   assert.deepEqual(plainNames(fromPackageModel), ["No unified school district here", "No unified school district here"]);
   assert.deepEqual(removals(fromPackage), expectedRemovals);
+  assert.equal(fromPackage.removalEvidence, undefined, "no pointer held them, so nothing is removed from one");
   const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "registry-runtime-bindings", fromPackage, T1);
   assert.equal(outcome.candidate.state, "PROMOTED");
+});
+
+/**
+ * The registry production holds (2026-09-14): the transfer-time trusted import,
+ * explicitly not source-authenticated, carrying both placeholder boards and New
+ * Hampshire's raw Census name, shaped the way the retired importer shaped it
+ * and admitted through the ordinary door into an empty pointer.
+ */
+async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
+  const placeholders = frozenPlaceholders();
+  const shape = registryRuntimeCandidate(await registryPackage(at, "transfer-shape"));
+  const base = structuredClone(shape.readModel as RegistryRuntimeReadModel);
+  base.registry.bodies = [...base.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
+  base.registry.divisions = base.registry.divisions.map((division) =>
+    division.state === "NH" && placeholders.ids.has(division.ocdId) ? { ...division, label: "School District Not Defined" } : division);
+  const digest = hash(canonicalCivicDataJson(base));
+  const records = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", base);
+  const bytes = readFileSync("lib/registry/registry.json");
+  const fixtures = [{ path: "lib/registry/registry.json", sha256: createHash("sha256").update(bytes).digest("hex"), bytes: bytes.length }];
+  const fixtureSetSha256 = trustedLkgFixtureSetSha256(fixtures);
+  const envelope: RoutineCandidate = {
+    ...shape,
+    id: "content-addressed below",
+    retrieval: { succeeded: true, requestedUrl: trustedLkgImportUrl("registry-runtime-bindings"), finalUrl: null, httpStatus: null, retrievedAt: at, rawHash: fixtureSetSha256 },
+    normalization: { ...shape.normalization, normalizedHash: digest, normalizedPayloadHash: digest, inputRecords: records.length, outputRecords: records.length, droppedRecords: 0 },
+    identities: [...shape.identities, ...placeholders.bodies.map((body) => ({
+      subjectId: body.id,
+      jurisdiction: "US",
+      identifiers: { body_id: body.id, division_ocd_id: body.ocdId ?? "" },
+      matchBasis: "EXACT_SCOPED_ID" as const,
+      ambiguous: false,
+    }))],
+    temporal: { ...shape.temporal, staleAtRetrieval: true },
+    horizon: { ...shape.horizon, returnedRecords: records.length },
+    normalizedPayload: base,
+    readModel: base,
+    civicRecords: records,
+    excludedFacts: [],
+  };
+  const evidence: TrustedLkgImportEvidence = {
+    contractVersion: 1,
+    kind: "TRUSTED_LKG_IMPORT",
+    authorization: TRUSTED_LKG_IMPORT_AUTHORIZATION,
+    purpose: TRUSTED_LKG_IMPORT_PURPOSE,
+    sourceAuthenticated: false,
+    contractId: "registry-runtime-bindings",
+    sourceId: shape.sourceId,
+    recordClass: shape.recordClass,
+    scope: shape.scope,
+    parserVersion: shape.normalization.parserVersion,
+    sourceVersion: shape.temporal.version,
+    sourceThrough: shape.temporal.sourceThrough,
+    importedAt: at,
+    frozenBaseSha: PDC_V2_FROZEN_BASE_SHA,
+    importerCodeSha: "0".repeat(40),
+    fixtureSetSha256,
+    fixtures,
+    normalizedPayloadSha256: digest,
+    readModelSha256: digest,
+    candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(envelope),
+    validatorIds: trustedLkgValidatorIds(envelope),
+  };
+  const imported: RoutineCandidate = { ...envelope, id: trustedLkgCandidateId(evidence), bootstrapImport: evidence };
+  const admitted = await processRegisteredManualCandidate(store, "registry-runtime-bindings", imported, at);
+  assert.equal(admitted.candidate.state, "PROMOTED", JSON.stringify(admitted.candidate.receipt?.checks.filter((check) => check.verdict !== "PASS")));
+  return { imported, base, placeholders };
+}
+
+/** A correction that re-reviews only the two placeholder divisions against the Census directory they cite. */
+function placeholderCorrection(base: RegistryRuntimeReadModel, placeholderIds: ReadonlySet<string>, at: string): RegistryRuntimePackage {
+  const divisions = base.registry.divisions
+    .filter((division) => placeholderIds.has(division.ocdId))
+    .map((division) => ({ ...division, label: "No unified school district here" }));
+  const payload: RegistryRuntimeReadModel = {
+    ...base,
+    registry: { generatedAt: base.registry.generatedAt, divisions, bodies: [] },
+    bodyRosters: [],
+    rosterReaderDispositions: [],
+    statewideExecutives: [],
+    officialCandidacies: { ...base.officialCandidacies, rows: [] },
+    officialPhotos: { photos: [] },
+    rosterPhotos: {},
+  };
+  const census = divisions[0]!.provenance!.sourceUrl!;
+  return {
+    contractId: "registry-runtime-bindings",
+    version: at,
+    sourceThrough: at,
+    payload,
+    sourceReceipt: {
+      contractVersion: 1,
+      reviewedAt: at,
+      reviewedBy: "owner-test",
+      sources: [{
+        requestedUrl: census,
+        finalUrl: census,
+        publisher: "U.S. Census Bureau",
+        sourceClass: "OFFICIAL_PUBLISHER",
+        retrievedAt: at,
+        httpStatus: 200,
+        rawHash: hash(`census:${at}`),
+        reviewedEvidence: "TIGER unified school districts: LEA 99997, School District Not Defined, is land inside no unified district.",
+      }],
+    },
+  };
+}
+
+test("the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both", async () => {
+  const store = new MemoryRoutineDataStore();
+  const { imported, base, placeholders } = await transferImportedRegistry(store, T0);
+  const prior = await readRegistryRuntimePrior(store, T1);
+  assert.ok(prior);
+  assert.equal(prior.versionId, imported.id);
+  assert.deepEqual(prior.sourceReceipt.sources, [], "the import has no source receipt to carry");
+
+  const next = registryRuntimeCandidate(placeholderCorrection(base, placeholders.ids, T1), { prior });
+  assert.deepEqual(next.semantics.violations, []);
+  const phantomKeys = placeholders.bodies.map((body) => `body:${body.id}`).sort();
+  assert.deepEqual((next.removalEvidence ?? []).map((row) => row.key), phantomKeys);
+  const inherited = new Set(next.manualPriorAuthority?.retainedMembers.map((member) => member.key));
+  assert.ok(inherited.size > 1_000, `every untouched cited member carries the import's authority (${inherited.size})`);
+  assert.equal([...placeholders.ids].some((id) => inherited.has(`division:${id}`)), false, "the reviewed divisions stand on the review");
+
+  const outcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", next, T1, imported.id);
+  assert.equal(outcome.candidate.state, "PROMOTED", JSON.stringify(outcome.candidate.receipt?.checks.filter((check) => check.verdict !== "PASS")));
+  assert.equal(outcome.candidate.receipt?.checks.find((check) => check.check === "SOURCE_AUTHENTICITY")?.code, "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID");
+  const changes = outcome.candidate.candidate.changeSet!;
+  assert.deepEqual(changes.removed.map((delta) => delta.key).sort(), phantomKeys);
+  assert.deepEqual(changes.changed.map((delta) => delta.key), [`division:${placeholders.divisions.find((division) => division.state === "NH")!.ocdId}`]);
+  assert.deepEqual(changes.added, []);
+  const served = outcome.promoted!.payload as RegistryRuntimeReadModel;
+  assert.equal(served.registry.bodies.length, base.registry.bodies.length - 2);
+  assert.deepEqual(served.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).map((division) => division.label), ["No unified school district here", "No unified school district here"]);
+
+  // The next correction builds on that one; what is still carried from the import keeps carrying.
+  const secondPrior = await readRegistryRuntimePrior(store, T1);
+  assert.equal(secondPrior?.versionId, next.id);
+  const later = "2026-09-08T12:02:00.000Z";
+  const second = registryRuntimeCandidate(placeholderCorrection(served, placeholders.ids, later), { prior: secondPrior });
+  assert.equal(second.manualPriorAuthority?.versionId, next.id);
+  const lkg = await store.readCandidate(next.id);
+  const secondChecks = validateRoutineCandidate({ ...second, changeSet: candidateChangeSet(second, served) }, lkg, later).receipt.checks;
+  assert.deepEqual(secondChecks.filter((check) => check.verdict !== "PASS"), []);
+});
+
+test("the plane refuses what the registry door does not prove: a changed carried member, an unexplained removal, a real board passed off as a placeholder", async () => {
+  const store = new MemoryRoutineDataStore();
+  const { imported, base, placeholders } = await transferImportedRegistry(store, T0);
+  const prior = await readRegistryRuntimePrior(store, T1);
+  const next = registryRuntimeCandidate(placeholderCorrection(base, placeholders.ids, T1), { prior });
+  const lkg = await store.readCandidate(imported.id);
+  const codes = (candidate: RoutineCandidate) =>
+    validateRoutineCandidate({ ...candidate, changeSet: candidateChangeSet(candidate, base) }, lkg, T1).receipt.checks
+      .filter((check) => check.verdict !== "PASS").map((check) => check.code);
+  assert.deepEqual(codes(next), []);
+
+  // A member carried on the import's authority may not change.
+  const changed = structuredClone(next) as RoutineCandidate & { readModel: RegistryRuntimeReadModel };
+  const carriedBody = changed.readModel.registry.bodies.find((body) => next.manualPriorAuthority!.retainedMembers.some((member) => member.key === `body:${body.id}`))!;
+  carriedBody.name = `${carriedBody.name ?? "A body"} (unreviewed)`;
+  assert.ok(codes(changed).includes("MANUAL_PRIOR_AUTHORITY_INVALID"), JSON.stringify(codes(changed)));
+
+  // A removal with no evidence stays unexplained.
+  const unexplained = { ...next, removalEvidence: undefined };
+  assert.deepEqual(codes(unexplained), ["INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED"]);
+
+  // A real board removed under the placeholder code is refused.
+  const realBoard = base.registry.bodies.find((body) => body.id.endsWith("#board") && body.ocdId !== null && !placeholders.ids.has(body.ocdId))!;
+  const disguised = structuredClone(next) as RoutineCandidate & { readModel: RegistryRuntimeReadModel };
+  disguised.readModel.registry.bodies = disguised.readModel.registry.bodies.filter((body) => body.id !== realBoard.id);
+  const disguisedCandidate: RoutineCandidate = {
+    ...disguised,
+    removalEvidence: [...(next.removalEvidence ?? []), { key: `body:${realBoard.id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT", divisionOcdId: realBoard.ocdId! }]
+      .sort((left, right) => left.key.localeCompare(right.key)),
+  };
+  assert.ok(codes(disguisedCandidate).includes("REMOVAL_EVIDENCE_MISMATCH"));
 });
 
 test("the version production serves keeps reading until its correction promotes; no other defect is tolerated", async () => {

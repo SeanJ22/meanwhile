@@ -8,12 +8,16 @@ import {
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import type {
   CandidateDecision,
   CandidateState,
   CandidateVersionRecord,
   DependentCheck,
+  MeetingWindowRemovalEvidence,
   RoutineCandidate,
+  RoutineChangeSet,
+  RoutineRemovalEvidence,
   ValidationCheck,
   ValidationCheckName,
   ValidationReceipt,
@@ -102,7 +106,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
         );
   }
 
-  if (candidate.recordClass !== "MEETING") {
+  if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(
       "COMPLETENESS_HORIZON_VALIDITY",
       evidence.length === 0 ? "CANNOT_TELL" : "FAIL",
@@ -131,11 +135,15 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       `${missing.length}/${removed.length} removal(s) lack exact competent evidence: ${missing.slice(0, 3).map(({ key }) => key).join(", ")}.`,
     );
   }
+  if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
-  const validMeetingEvidence = new Map<string, (typeof evidence)[number]>();
+  const validMeetingEvidence = new Map<string, MeetingWindowRemovalEvidence>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
   for (const delta of removed.filter(({ key }) => key.startsWith("meeting:"))) {
     const row = evidenceByKey.get(delta.key)!;
+    if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven outside its explicit registered serving window.`);
+    }
     const before = object(delta.before);
     const meetingId = typeof before?.id === "string" ? before.id : null;
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
@@ -161,6 +169,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
+    if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
+    }
     const before = object(delta.before);
     const documentId = typeof before?.id === "string" ? before.id : null;
     const meetingId = typeof before?.meetingId === "string" ? before.meetingId : null;
@@ -180,6 +191,44 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
   const unsupported = removed.find(({ key }) => !key.startsWith("meeting:") && !key.startsWith("agenda-document:"));
   if (unsupported) {
     return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_UNSUPPORTED", `${unsupported.key} is not a meeting or attached agenda-document key.`);
+  }
+  return null;
+}
+
+/**
+ * A registry member may leave an open fact set only as a body minted on a
+ * Census "no district here" placeholder (Sean, 2026-09-23): the evidence names
+ * the body's exact division, the removed body sat on it, and the candidate
+ * still holds that division, a placeholder by its own Census code
+ * (lib/registry/census-placeholders.ts). Every other removal stays refused.
+ */
+function registryPlaceholderRemovalCheck(
+  candidate: RoutineCandidate,
+  removed: RoutineChangeSet["removed"],
+  evidenceByKey: ReadonlyMap<string, RoutineRemovalEvidence>,
+): ValidationCheck | null {
+  const registry = object(object(candidate.readModel)?.registry);
+  const divisions = new Map<string, Record<string, unknown>>();
+  for (const value of Array.isArray(registry?.divisions) ? registry.divisions : []) {
+    const division = object(value);
+    if (division && typeof division.ocdId === "string") divisions.set(division.ocdId, division);
+  }
+  for (const delta of removed) {
+    const row = evidenceByKey.get(delta.key)!;
+    const before = object(delta.before);
+    const division = row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" ? divisions.get(row.divisionOcdId) : undefined;
+    if (
+      row.code !== "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" ||
+      typeof before?.id !== "string" || delta.key !== `body:${before.id}` ||
+      before.ocdId !== row.divisionOcdId || !division ||
+      !isCensusPlaceholderDivision({
+        ocdId: row.divisionOcdId,
+        divisionType: typeof division.divisionType === "string" ? division.divisionType : null,
+        geoid: typeof division.geoid === "string" ? division.geoid : null,
+      })
+    ) {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven to be a body on a Census placeholder division this candidate keeps.`);
+    }
   }
   return null;
 }

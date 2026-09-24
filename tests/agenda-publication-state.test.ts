@@ -231,10 +231,19 @@ test("RED: a sitting we hold no agenda for never becomes a claim that none was p
     "the acquisition gap must say what it actually is",
   );
   /* RULING 139 — the attribution is required, the verdict on ourselves is
-     struck. And the wording must keep the hunt OPEN, not close it. */
+     struck. And the wording must keep the hunt OPEN, not close it: "not yet".
+     2026-09-24 (author directive): the sentence no longer promises "we are
+     still looking" — this path cannot know that looking is happening (the Pima
+     Board sittings carried that promise for ten days while every re-read failed
+     in our own code), and a progress claim is said only where actionable work
+     is known to exist. */
   assert.ok(
-    publicationGaps.some((g) => /still (?:looking|checking|going after)/i.test(g.statement)),
+    publicationGaps.some((g) => /have not yet acquired/i.test(g.statement)),
     "the acquisition obligation must stay open in the words a reader reads",
+  );
+  assert.ok(
+    publicationGaps.every((g) => !/still looking/i.test(g.statement)),
+    "no unverifiable progress claim",
   );
 });
 

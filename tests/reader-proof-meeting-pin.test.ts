@@ -221,6 +221,29 @@ test("a mid-run promotion splits the unpinned harness's two reads, and the pin h
   assert.equal(partitionVersion(await read(LATER, true)), v2);
 });
 
+test("a pinned version proven once serves the proof run's later requests without being re-read", async () => {
+  // A proof run asks for the meetings on every Ask request; each one re-read
+  // every moved partition's candidate and event log (about 2,000 whole
+  // candidate reads in four minutes on 2026-09-24). A pinned version is
+  // immutable, so it is proven once per process.
+  const { store, v1, pin } = await seededRun();
+  await promoteVersion(store, PROMOTED_MID_RUN);
+  const read = (bypassCache: boolean) => readMeetingsProjection({ store, bypassCache, allowUnconfiguredBootstrap: false, now: LATER });
+  await withEnv(harnessEnv(writePin(pin)), async () => {
+    clearPromotedReadModelCache();
+    const first = await read(false);
+    const afterFirst = store.eventReads;
+    assert.ok(afterFirst > 0, "the first pinned read re-reads the captured version by id");
+    const second = await read(false);
+    const third = await read(false);
+    assert.equal(store.eventReads, afterFirst, "later pinned reads serve the proven version without re-reading it");
+    for (const pinned of [first, second, third]) assert.equal(partitionVersion(pinned), v1);
+    assert.deepEqual(sitting(third), sitting(first));
+    await read(true);
+    assert.ok(store.eventReads > afterFirst, "a verification read still re-reads and re-proves");
+  });
+});
+
 test("the pinned read still refuses an unverified version: never promoted, or tampered after promotion", async () => {
   const { store, v1, pin } = await seededRun();
   // A candidate that the runner refused and that the pointer never named.

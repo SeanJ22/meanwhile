@@ -2,6 +2,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { UPCOMING_HORIZON_DAYS } from "../../meetings/constants.ts";
 import { isPlacelessLocation, resolveVenue } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
+import { sittingBodyKey } from "../event-identity.ts";
 import { saysCanceled, sittingStatus } from "../sitting-status.ts";
 import { bodyNameOf, parseCalendarFragment } from "../tusd-govboard/index.ts";
 import type { Meeting } from "../types.ts";
@@ -45,27 +46,12 @@ import type { Meeting } from "../types.ts";
  * calendar row inherits the id readers already have instead of appearing twice.
  */
 
-/** Words that name a sitting's kind or the notice, never which body sits. */
-const NOT_THE_BODY = new Set([
-  "agenda", "for", "meeting", "meetings", "regular", "special", "executive",
-  "session", "committee", "the", "of", "via", "zoom", "and", "a",
-]);
-
 /**
- * The body a sitting belongs to, as both publications spell it: "GOVERNING
- * BOARD AGENDA SPECIAL MEETING" and "Governing Board Meeting - via Zoom" are
- * both `governing-board`; "Employee Benefit Trust Committee" and "Employee
- * Benefits Trust Meeting" are both `employee-benefit-trust`.
+ * The body a sitting belongs to, as both publications spell it. Defined once,
+ * in lib/sources/event-identity.ts, where the partition writer's
+ * re-issued-sitting test reads the same key (2026-09-24).
  */
-export function sittingBodyKey(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .split(" ")
-    .filter((word) => word && !NOT_THE_BODY.has(word))
-    .map((word) => (word.length > 4 ? word.replace(/s$/, "") : word))
-    .join("-");
-}
+export { sittingBodyKey };
 
 /** `<YYYY-MM-DD>T<HHMM>-<body key>` from the publisher's own wall clock. */
 export function sittingKey(

@@ -281,6 +281,7 @@ export function transportFailure(): AskAnswerPayload {
  */
 export const ANSWER_MODES: AnswerMode[] = [
   "GROUNDED_CLAUDE",
+  "GROUNDED_COMPOSED",
   "STRUCTURED_GROUNDED",
   "CLARIFY",
   "UNRESOLVED",

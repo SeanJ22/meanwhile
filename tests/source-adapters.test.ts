@@ -11,6 +11,7 @@ import {
 } from "../lib/registry/source-wiring.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import {
+  parseAgendaCenter,
   makeCivicPlusSource,
   parseIcalEvents,
 } from "../lib/sources/civicplus/index.ts";
@@ -223,6 +224,35 @@ test("civicplus: two bodies on one division do not suppress each other's archive
       planningArchive.length >= 7,
     "a planning sitting vanished because the council met that day",
   );
+});
+
+test("civicplus: the archive's agenda link is kept on the feed's own row for the same date, never dropped with the duplicate", () => {
+  /*
+   * 2026-09-24. When the live feed and the AgendaCenter archive both list a
+   * sitting, the feed row (with its real time) stands and the archive row is a
+   * duplicate — but the archive row was the only one carrying the agenda link,
+   * and it was discarded whole. The sitting then read "no agenda" and no agenda
+   * was ever retrieved, while the township had posted one.
+   */
+  const council = civicPlusRow("governing");
+  const html = fixture("civicplus-rockaway-agendacenter.html");
+  const archived = parseAgendaCenter(html, council.config.agendaCenterCategoryId!).find((sitting) => sitting.agendaHref);
+  assert.ok(archived, "the recorded AgendaCenter page carries at least one council agenda");
+  const location = /^LOCATION:(.*)$/m.exec(fixture("civicplus-rockaway.ics"))![1].trim();
+  const day = archived.date.replaceAll("-", "");
+  const ical = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "BEGIN:VEVENT", `UID:feed-${day}`,
+    `DTSTART;TZID=America/New_York:${day}T190000`, `SUMMARY:${council.config.summaryMatch ?? "Township Council"}`,
+    `LOCATION:${location}`, "END:VEVENT", "END:VCALENDAR",
+  ].join("\r\n");
+  const { meetings } = makeCivicPlusSource([council]).normalizeWithDrops(
+    [{ wiring: council, ical, agendaCenter: html, collectedAt: NOW.toISOString() }],
+    NOW,
+  );
+  const sameDay = meetings.filter((m) => m.startsAt.slice(0, 10) === archived.date);
+  assert.equal(sameDay.length, 1, "one sitting, not two");
+  assert.notEqual(sameDay[0]!.startPrecision, "DAY", "the feed's real time stands");
+  assert.equal(sameDay[0]!.agendaUrl, new URL(archived.agendaHref!, council.config.agendaCenterUrl).toString(), "and it carries the archive's agenda link");
 });
 
 // ── OnBase (Tucson) ────────────────────────────────────────────────────────

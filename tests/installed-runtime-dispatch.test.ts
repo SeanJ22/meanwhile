@@ -94,6 +94,8 @@ test("package production doors either disappear or enter the installed dispatche
     "fec:fetch",
     "fec:promote",
     "nh:members:promote",
+    // Pima Legistar outcomes moved to the standing clock; the owner alias is gone.
+    "outcomes:ingest",
     "ingest",
   ]) {
     assert.equal(scripts[retired], undefined, `${retired} restores a direct production child`);
@@ -116,7 +118,6 @@ test("package production doors either disappear or enter the installed dispatche
     "voting-sites:fetch",
     "prl:fetch",
     "official-actions:promote",
-    "outcomes:ingest",
   ]) {
     assert.match(
       scripts[wrapped] ?? "",
@@ -131,8 +132,9 @@ test("active adapter guidance cannot restore retired direct production doors", (
     "scripts/fetch-fec.mts",
     "scripts/fetch-dotgov.mts",
     "scripts/nh-gencourt-members.mts",
+    "scripts/legistar-outcomes-ingest.mts",
   ];
-  const forbiddenDirectAlias = /\b(?:fec:fetch|fec:promote|dotgov:fetch|nh:members:promote)\b/;
+  const forbiddenDirectAlias = /\b(?:fec:fetch|fec:promote|dotgov:fetch|nh:members:promote|outcomes:ingest)\b/;
   for (const path of adapterPaths) {
     const source = readFileSync(join(ROOT, path), "utf8");
     assert.doesNotMatch(source, forbiddenDirectAlias, `${path} tells an operator to bypass installed authority`);

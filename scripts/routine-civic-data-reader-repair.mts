@@ -15,6 +15,7 @@ import {
   repairRoutineReaderProjectionReadback,
 } from "../lib/civic-data/reader-verification.ts";
 import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from "../lib/meetings/prepared-snapshot.ts";
+import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
   purgeReaderCacheTags,
@@ -87,10 +88,27 @@ const store = stage
 
 let failed = false;
 if (meetingAggregate) {
+  // One composition of every partition per pass, made only when something
+  // needs it: the Reader readbacks of newly promoted versions and the prepared
+  // snapshot's republication ask for exactly the same read, and a pass that
+  // promoted a partition needs both. Each once composed on its own (about
+  // 24 MB from the reader database apiece). A failed composition is not kept,
+  // so the second consumer tries again as it did before.
+  let composing: Promise<MeetingsProjectionReadResult> | null = null;
+  const aggregate = (): Promise<MeetingsProjectionReadResult> => {
+    composing ??= readMeetingsProjection({ store, now: observedAt, bypassCache: true, allowUnconfiguredBootstrap: false })
+      .catch((error: unknown) => {
+        composing = null;
+        throw error;
+      });
+    return composing;
+  };
   const results = await repairMeetingReaderProjectionReadbacks(
     store,
     MEETING_PARTITION_CONTRACTS,
     observedAt,
+    undefined,
+    { aggregate },
   );
   for (const result of results) {
     const contract = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === result.contractId);
@@ -111,7 +129,7 @@ if (meetingAggregate) {
   // so the last valid snapshot keeps serving; it is surfaced as a domain failure
   // (exit 2) so admin sees it, and the publication lag is readable from the
   // prepared row's coupling versus the live partitions.
-  const prepared = await preparePublishedMeetingSnapshot(store, observedAt);
+  const prepared = await preparePublishedMeetingSnapshot(store, observedAt, { aggregate });
   if (prepared.status === "FAILED") {
     failed = true;
     process.stderr.write(`PREPARED_MEETING_SNAPSHOT_FAILED: ${safeFailure(prepared.error)}\n`);

@@ -329,6 +329,103 @@ export function sittingKeyFromLocal(fields: LocalSittingKeyFields): string | nul
   return [who, fields.date, fields.time].join(UNIT_SEPARATOR);
 }
 
+/** Words that name a sitting's kind or the notice, never which body sits. */
+const NOT_THE_BODY = new Set([
+  "agenda", "for", "meeting", "meetings", "regular", "special", "executive",
+  "session", "committee", "the", "of", "via", "zoom", "and", "a",
+]);
+
+/**
+ * The body a sitting belongs to, as its own published words name it:
+ * "GOVERNING BOARD AGENDA SPECIAL MEETING" and "Governing Board Meeting - via
+ * Zoom" are both `governing-board`; "Employee Benefit Trust Committee" and
+ * "Employee Benefits Trust Meeting" are both `employee-benefit-trust`.
+ *
+ * Written for the Diligent schedule union (lib/sources/diligent/schedule-union.ts,
+ * which still exports it) and kept here beside the other sitting identities
+ * since 2026-09-24, because the partition writer's re-issued-sitting test
+ * (`reissuesSitting`, below) reads the same key: the two can never disagree
+ * about which body a listing names.
+ */
+export function sittingBodyKey(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(" ")
+    .filter((word) => word && !NOT_THE_BODY.has(word))
+    .map((word) => (word.length > 4 ? word.replace(/s$/, "") : word))
+    .join("-");
+}
+
+/** The part of a listed meeting a re-issued-sitting claim is checked against. */
+export interface ListedSittingFacts extends OccurrenceSupersessionFacts {
+  readonly bodyName?: string | null;
+  readonly title?: string | null;
+  /** Absent means `MINUTE`, as on `Meeting`. */
+  readonly startPrecision?: string | null;
+  readonly timeZone?: string | null;
+}
+
+/**
+ * **A SITTING ITS PUBLISHER RE-ISSUED UNDER A NEW ID.** (2026-09-24.)
+ *
+ * ## What was wrong
+ *
+ * A publisher can stop listing a sitting under one id and list it again under
+ * another. Tucson Unified's Diligent portal listed its Audit Committee's
+ * 16 September 14:30 sitting as meeting 495, then as meeting 501. A successful
+ * read that no longer holds an in-window row carries it forward, because an
+ * omission alone never deletes a fact; nothing named 501 as the successor, so
+ * a reader saw one meeting twice, the stale carried listing beside the fresh
+ * one, and every count stated for the body included both.
+ *
+ * ## What the same sitting is
+ *
+ * A fresh row of the same partition holds a prior row's sitting only when
+ * every clause holds, each read off the two rows' own published fields:
+ *
+ * - the same registry body (`bodyId`), present on both;
+ * - the same body in the listings' own words: `sittingBodyKey` of the
+ *   `bodyName` agrees and names something, AND `sittingBodyKey` of the
+ *   `title` agrees;
+ * - the same local calendar date and minute in the same `timeZone`
+ *   (`sittingKey`), with both rows dated to the minute. A date-only listing
+ *   (`startPrecision: "DAY"`) carries midnight as an ordering artifact, never a
+ *   claim, so it proves no time.
+ *
+ * There is no fuzzy match. Keys that differ at all, or starts a minute apart,
+ * are two sittings, and the prior row takes the ordinary path. The title is
+ * required as well as the body name because some feeds give every row one
+ * body name (an iCalendar feed that serves a whole town names each committee
+ * only in its titles), and there two committees meeting at the same minute are
+ * two sittings. A source whose titles do not normalize to a shared key simply
+ * never matches.
+ */
+export function reissuesSitting(prior: ListedSittingFacts, successor: ListedSittingFacts): boolean {
+  if (prior.id === successor.id) return false;
+  const bodyId = prior.bodyId ?? null;
+  if (!bodyId || (successor.bodyId ?? null) !== bodyId) return false;
+  const timeZone = prior.timeZone ?? null;
+  if (!timeZone || (successor.timeZone ?? null) !== timeZone) return false;
+  if ((prior.startPrecision ?? "MINUTE") !== "MINUTE" || (successor.startPrecision ?? "MINUTE") !== "MINUTE") {
+    return false;
+  }
+  const body = sittingBodyKey(prior.bodyName ?? "");
+  if (!body || sittingBodyKey(successor.bodyName ?? "") !== body) return false;
+  if (sittingBodyKey(prior.title ?? "") !== sittingBodyKey(successor.title ?? "")) return false;
+  const at = (startsAt: string): string | null => {
+    try {
+      return sittingKey({ bodyId, startsAt, timeZone });
+    } catch (error) {
+      // A zone Intl cannot resolve places nothing in time, so it proves nothing.
+      if (error instanceof RangeError) return null;
+      throw error;
+    }
+  };
+  const before = at(prior.startsAt);
+  return before !== null && before === at(successor.startsAt);
+}
+
 /**
  * **WHICH ROUTE SUPPLIED THIS FIELD.**
  *

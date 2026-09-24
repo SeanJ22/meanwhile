@@ -204,7 +204,6 @@
     "official-actions:promote": "node scripts/installed-runtime-command.mjs manual-promote --contract=az-official-actions",
     "orchestration:check": "tsx scripts/orchestration-check.mts",
     "orchestration:closeout": "tsx scripts/orchestration-check.mts --closeout",
-    "outcomes:ingest": "node scripts/installed-runtime-command.mjs manual-promote --contract=pima-legistar-outcomes",
     "outcomes:probe": "tsx scripts/legistar-outcomes-probe.mts",
     "overlaps": "tsx scripts/overlap-audit.mts",
     "own03:stage": "tsx scripts/stage-own03-portraits.mts",
@@ -386,6 +385,7 @@
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "ci:certified": "node scripts/certified-tree.mjs",
     "ship:amplification": "tsx scripts/shipping-amplification.mts",
+    "method:learn-legistar-outcomes": "tsx scripts/method/learn-legistar-outcome-routes.mts",
     "method:learn-pima-schedule-union": "tsx scripts/method/learn-pima-schedule-union.mts"
   },
   "dependencies": {

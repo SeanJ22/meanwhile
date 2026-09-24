@@ -974,7 +974,7 @@ test("all standing routine-source destructive classes are enumerated by the cont
   const covered = new Set<RoutineRecordClass>([
     "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
     "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
-    "STATE_LEGISLATOR_VOTES",
+    "STATE_LEGISLATOR_VOTES", "MEETING_OUTCOME",
   ]);
   const standingClasses = new Set(ROUTINE_SOURCE_TASKS.map((task) => task.recordClass));
   assert.deepEqual([...covered].sort(), [...standingClasses].sort());

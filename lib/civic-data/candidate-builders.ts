@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { AcsFetch, AcsPopulationRow } from "../sources/census-acs-population/index.ts";
@@ -1501,12 +1502,15 @@ export function njMorrisFilingCandidate(input: {
   const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
   const contestIds = new Set(contests.map((contest) => contest.id));
   const violations: string[] = [];
-  const generalDocumentIsCurrent = /^https:\/\/www\.morriscountyclerk\.org\/.*\/2026-general(?:-election)?-candidates-[^/]*\.pdf(?:$|[?#])/i.test(
-    input.currentDocumentSet.generalCandidatesUrl,
-  ) && !/general-school-candidates/i.test(input.currentDocumentSet.generalCandidatesUrl);
-  const schoolDocumentIsCurrent = /^https:\/\/www\.morriscountyclerk\.org\/.*\/2026-general-school-candidates-[^/]*\.pdf(?:$|[?#])/i.test(
-    input.currentDocumentSet.schoolCandidatesUrl,
-  );
+  // The clerk's host, and the one naming rule the selector also reads
+  // (morris-filing-documents.ts, RULING 103). This copy demanded a date stamp
+  // after the selector stopped, and refused the clerk's 2026-09-18 revision
+  // `2026-general-candidates.pdf` as "not both acquired".
+  const onClerkHost = (url: string) => /^https:\/\/www\.morriscountyclerk\.org\//i.test(url);
+  const generalDocumentIsCurrent = onClerkHost(input.currentDocumentSet.generalCandidatesUrl) &&
+    isMorrisGeneralCandidatesDocument(input.currentDocumentSet.generalCandidatesUrl);
+  const schoolDocumentIsCurrent = onClerkHost(input.currentDocumentSet.schoolCandidatesUrl) &&
+    isMorrisSchoolCandidatesDocument(input.currentDocumentSet.schoolCandidatesUrl);
   const completeDocumentSet =
     input.rawBodies.length >= 3 &&
     generalDocumentIsCurrent &&

@@ -7,6 +7,7 @@ import {
   meetingsCandidate,
   njMorrisFilingCandidate,
 } from "../lib/civic-data/candidate-builders.ts";
+import { morrisCurrentFilingDocumentSet } from "../lib/hunt/nj-filing.ts";
 import { processRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "../lib/civic-data/types.ts";
@@ -297,6 +298,42 @@ test("PDC-8 NJ filing: candidate/contact/removal changes and refused rows are ex
     semantics: { ...next.semantics, violations: ["fixture filing contradicts its contest"] },
   };
   await assertRefusalHoldsExactLkg({ store, bad, expectedState: "SEMANTIC_INVALID", expectedCode: "SEMANTIC_CONTRACT_VIOLATION" });
+});
+
+test("PDC-8 NJ filing: the clerk's unstamped 2026-09-18 revision is a current document set, to the validator as to the selector", async () => {
+  /*
+   * Production, 2026-09-24 21:13Z: with the selector fixed (#403), the
+   * candidate was refused SEMANTIC_INVALID, "The clerk page's current
+   * general-candidate and school-candidate documents were not both acquired",
+   * because the validator kept its own copy of the naming rule and it still
+   * demanded a date stamp. One rule now serves both (RULING 103). The URLs are
+   * the clerk page's own hrefs as read that day.
+   */
+  const CLERK = "https://www.morriscountyclerk.org/files/sharedassets/clerk";
+  const general = `${CLERK}/v/12/elections/past-results/2026-general-candidates.pdf`;
+  const school = `${CLERK}/v/14/elections/past-results/2026-general-school-candidates-082126.pdf`;
+  const ballot = njBallot(false);
+  const build = (generalCandidatesUrl: string) => njMorrisFilingCandidate({
+    ballot,
+    contacts: njContacts(false),
+    rawBodies: ["official clerk page", "general PDF", "school PDF"],
+    currentDocumentSet: { generalCandidatesUrl, schoolCandidatesUrl: school },
+    finalUrl: "https://www.morriscountyclerk.org/files/current-general-election-candidates.pdf",
+    retrievedAt: FIRST,
+    inputRecords: ballot.candidacies?.length ?? 0,
+    refused: [],
+  });
+
+  assert.deepEqual(morrisCurrentFilingDocumentSet([general, school]), { generalCandidatesUrl: general, schoolCandidatesUrl: school },
+    "the selector takes the unstamped revision");
+  const current = build(general);
+  assert.deepEqual(current.semantics.violations, [], "the validator refused what the selector chose");
+  assert.equal((await processRoutineCandidate(new MemoryRoutineDataStore(), current, FIRST)).candidate.state, "PROMOTED");
+
+  // The rule still knows the clerk's other PDFs from the candidate list.
+  const orderOfBallot = build(`${CLERK}/v/1/elections/past-results/2026-general-candidate-order-081026.pdf`);
+  assert.ok(orderOfBallot.semantics.violations.some((violation) => /not both acquired/.test(violation)),
+    "the candidate-order PDF was taken for the general candidate list");
 });
 
 test("PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG", async () => {

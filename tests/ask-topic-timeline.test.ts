@@ -227,6 +227,26 @@ test("ROUTE: the exact reader question is answered from the timeline, composed w
   assert.equal(new Set(statements).size, statements.length, "no gap sentence is repeated");
 });
 
+test("ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance", async () => {
+  const ROCKAWAY = "ocd-division/country:us/state:nj/county:morris/place:rockaway_township";
+  const post = async (extra: Record<string, unknown>) => {
+    resetGroundedState();
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
+      body: JSON.stringify({ question: "is rockaway township voting on data centers", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24", ...extra }),
+    }));
+    return await response.json() as { mode: string; answer: string | null; confirmation?: { bodyId: string; name: string; question: string } };
+  };
+  const first = await post({});
+  assert.equal(first.mode, "CLARIFY");
+  assert.equal(first.confirmation?.bodyId, `${ROCKAWAY}#governing`, "the township's own council, not whichever body sorts first");
+  const confirmed = await post({ confirmation: first.confirmation });
+  assert.equal(confirmed.mode, "GROUNDED_COMPOSED");
+  assert.match(confirmed.answer ?? "", /O-26-23 .*DESIGNATE DATA CENTERS AS A PROHIBITED USE/);
+  assert.match(confirmed.answer ?? "", /we have not read the recorded outcome of that item/);
+});
+
 test("ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)", async () => {
   const body = await ask("what is on the next Pima County Board of Supervisors meeting agenda about data centers", "2026-09-24");
   assert.equal(body.denominators.topicTimelineEntries, undefined);

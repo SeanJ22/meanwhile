@@ -80,6 +80,8 @@ import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import { currentVenueCache } from "../lib/meetings/venue-cache.ts";
+import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingResearchWitness,
@@ -695,10 +697,34 @@ async function main() {
     }
 
     await retrieveAgendas(meetings);
+    /*
+     * **A SITTING'S PLACE, AS ITS OWN AGENDA STATES IT.** (2026-09-24. The
+     * owner: "use the address published by the official meeting source".) An
+     * unplaced sitting whose held agenda states a street address that a
+     * promoted reviewed venue of its division carries is placed with the
+     * agenda's own words and the venue's coordinates. See
+     * scripts/lib/agenda-meeting-location.ts.
+     */
+    const agendaPlaced = placeUnplacedFromAgendas(
+      source.lastPartitionRows,
+      (meetingId) => {
+        const document = agendaDocumentStore.latestFor(meetingId);
+        return document && document.extraction !== "failed" ? document.text : null;
+      },
+      currentVenueCache(),
+    );
+    const placedReport = agendaPlaced.report;
+    if (placedReport.placed + placedReport.noReviewedVenue + placedReport.ambiguous > 0) {
+      console.log(
+        `agenda-stated places: ${placedReport.placed} sitting(s) placed from their own agenda, ` +
+          `${placedReport.noReviewedVenue} stating an address no reviewed venue carries, ${placedReport.ambiguous} ambiguous`,
+      );
+      for (const line of placedReport.lines) console.log(line);
+    }
     if (!promotionStore) throw new Error("composite promotion store was not initialized");
     await promoteSelectedMeetingPartitions(
       source,
-      source.lastPartitionRows,
+      agendaPlaced.rows,
       previous,
       promotionStore,
       partitions,

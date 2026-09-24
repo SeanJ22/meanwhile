@@ -1,0 +1,26 @@
+{
+  "note": "Recorded 2026-09-24 read-only from production: the first characters of each official agenda PDF's extracted text as the ingest stores it (whitespace collapsed). Read from the tenant portals, never from a refused host.",
+  "headers": [
+    {
+      "meetingId": "legistar-insite:pima:1381577",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "documentUrl": "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0",
+      "retrievedAt": "2026-09-24T15:43:40.888Z",
+      "text": "Board of Supervisors Pima County Meeting Agenda MEETING LOCATION Administration Bldg - East 130 W. Congress Street 1st Floor Tucson, AZ 85701 Public Access to Hearing Room at 4:40 p.m. Board of Supervisors' Hearing Room 5:00 PM Tuesday, September 22, 2026 PIMA COUNTY BOARD OF SUPERVISORS Jennifer Allen, Chair, District 3 Dr. Matt Heinz, Vice Chair, District 2 Rex Scott, Member, District 1 Steve Christy, Member, District 4 Andrés Cano, Member, District 5 AGENDA/ADDENDUM AND BROADCAST INFORMATION At least 24 hours before each scheduled meeting, the agenda/addendum is available online at www.pima.gov and in the Clerk of the Board’s Office, 130 W. Congress Street, 1st Floor, Tucson, AZ 85701, Mo"
+    },
+    {
+      "meetingId": "legistar-insite:mesa:1343168",
+      "ocdId": "ocd-division/country:us/state:az/place:mesa",
+      "documentUrl": "https://mesa.legistar.com/View.ashx?M=A&ID=1343168&GUID=4E22FA6A-2B9E-403F-BF1B-0E5040A7B69E",
+      "retrievedAt": "2026-09-24T14:23:49.212Z",
+      "text": "City Council Study Session City of Mesa Meeting Agenda - Final City Hall 20 East Main Street Mayor Mark Freeman Vice Mayor Scott Somers - District 6 Councilmember Rich Adams - District 1 Councilmember Dorean Taylor - District 2 Councilmember Francisco Heredia - District 3 Councilmember Jennifer Duff - District 4 Councilmember Alicia Goforth - District 5 Study Session 7:30 AM Thursday, July 16, 2026 Roll Call 1 Convene an Executive Session."
+    },
+    {
+      "meetingId": "legistar-insite:mesa:1343177",
+      "ocdId": "ocd-division/country:us/state:az/place:mesa",
+      "documentUrl": null,
+      "retrievedAt": "2026-09-24",
+      "text": "City Council Strategic Planning Session City of Mesa Meeting Agenda - Final Mesa Arts Center 1 East Main Street Mesa, AZ 85201 Mayor Mark Freeman Vice Mayor Scott Somers - District 6 Councilmember Rich Adams - District 1 Councilmember Dorean Taylor - District 2 Councilmember Francisco Heredia - District 3 Councilmember Jennifer Duff - District 4 Councilmember Alicia Goforth - District 5 Piper Thea"
+    }
+  ]
+}

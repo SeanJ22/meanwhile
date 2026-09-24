@@ -140,12 +140,12 @@ test("search API spend is its own line beside model spend, per host, and an unpr
   const unread = providerRows({ month: null, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
   assert.equal(unread.amount, null);
 
-  // Whatever the ledger says, the line states what a request costs and the limits the runner starts with,
-  // and that the runner's own setting and the day's count are not read here.
+  // Whatever the ledger says, the line states what a request costs and, until the runner has acknowledged the
+  // limits it enforces (NS28), the limits it starts with, said as such, and that the day's count is not read here.
   for (const row of [line, none, older, unread]) {
     assert.match(row.how, /Prices: Brave Search \$0\.005 a request \(its pricing page, read Sep 23, 2026\); Exa \$0\.007 a request \(its pricing page, read Sep 23, 2026\)\./);
     assert.match(row.how, /The runner starts with 50 requests a cycle and 200 a day across both — at most \$1\.40 a day\./);
-    assert.match(row.how, /It may be set to other limits, and it keeps the day's count in its budget ledger; this page reads neither\.$/);
+    assert.match(row.how, /It has not yet said which limits it enforces, and it keeps the day's count in its budget ledger, which this page does not read\.$/);
   }
 
   assert.equal(modelProviderWords(MONTH), "Every paid model call so far went to one provider: Anthropic.");

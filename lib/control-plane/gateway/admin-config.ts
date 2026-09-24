@@ -111,7 +111,31 @@ export interface AdminConfig {
    * Optional because a config written before this field existed carries none.
    */
   readonly billingFacts?: readonly BillingFact[] | null;
+  /**
+   * The owner's decision about PAID discovery search: Brave and Exa, returning
+   * pointers only, used by the meetings-discovery walk when a government's own
+   * site shows no route. Absent or null means he never decided, which reads as
+   * OFF, so a fresh control plane, a failed write and a corrupt row all answer
+   * OFF.
+   *
+   * The walks themselves are free and always on; this governs only the paid
+   * step. The runner reads it at cycle start and builds no search step unless it
+   * is on, and even then only inside its per-cycle and per-day caps. Optional
+   * because a config written before this field existed carries no decision.
+   */
+  readonly discoverySearch?: DiscoverySearchDecision | null;
   readonly updatedAt: string;
+}
+
+/** One owner decision about paid discovery search. */
+export interface DiscoverySearchDecision {
+  /** May the discovery walk send paid search requests at all. */
+  readonly enabled: boolean;
+  readonly decidedAt: string;
+  /** The admin session reference that decided it. Never a person's name. */
+  readonly decidedBy: string;
+  /** The gateway receipt that carries the decision. */
+  readonly receiptId: string;
 }
 
 /**
@@ -245,6 +269,43 @@ export function withBillingFacts(
     billingFacts: [...change.facts],
     updatedAt: change.decidedAt,
   };
+}
+
+/**
+ * The next policy after an owner decides about paid discovery search.
+ *
+ * Pure, like its siblings: the caller reads, this computes, the caller
+ * compare-and-sets. Every other decision on the row is carried through.
+ */
+export function withDiscoverySearch(
+  current: AdminConfig,
+  change: {
+    readonly enabled: boolean;
+    readonly decidedAt: string;
+    readonly decidedBy: string;
+    readonly receiptId: string;
+  },
+): AdminConfig {
+  return {
+    ...current,
+    formatVersion: ADMIN_CONFIG_FORMAT_VERSION,
+    discoverySearch: {
+      enabled: change.enabled,
+      decidedAt: change.decidedAt,
+      decidedBy: change.decidedBy,
+      receiptId: change.receiptId,
+    },
+    updatedAt: change.decidedAt,
+  };
+}
+
+/**
+ * Whether the owner has allowed paid discovery search. Only an explicit `true`
+ * is ON; an absent decision, a malformed one and an unreadable row all read
+ * OFF, so no failure path starts paid search.
+ */
+export function discoverySearchEnabled(config: AdminConfig | null): boolean {
+  return config?.discoverySearch?.enabled === true;
 }
 
 /**

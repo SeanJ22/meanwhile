@@ -273,7 +273,7 @@ import {
   scheduledBlackoutAt,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
-import { ADMIN_CONFIG_ID, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -1386,10 +1386,27 @@ try {
  * binds when the dial is raised.
  */
 let ceilingOverrideUsd: number | null = null;
+/*
+ * The owner's switch for PAID discovery search (`AdminConfig.discoverySearch`),
+ * read from the same row at the same moment, so a change in the console
+ * governs this cycle. Absent, malformed or unreadable reads OFF.
+ */
+let discoverySearchOn = false;
+/* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
+let discoverySearchReceiptId: string | null = null;
+let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
 try {
   const cfg = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   ceilingOverrideUsd = cfg !== null && isAdminConfig(cfg.value) ? fleetSpendCeilingOverrideUsd(cfg.value) : null;
+  const config = cfg !== null && isAdminConfig(cfg.value) ? cfg.value : null;
+  discoverySearchOn = discoverySearchEnabled(config);
+  if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
+    discoverySearchReceiptId = config.discoverySearch.receiptId;
+    discoverySearchDecision =
+      `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
+  }
 } catch (error) {
+  discoverySearchDecision = `OFF: the owner's switch could not be read (${error instanceof Error ? error.message : String(error)})`;
   runtimeConditions.push(
     `the Fleet spend-ceiling override could not be read (${error instanceof Error ? error.message : String(error)}); the built-in fallback $${FLEET_SAFETY_BOUNDS.rolling24HourModelUsd.toFixed(2)} governs this cycle`,
   );
@@ -2286,7 +2303,8 @@ console.log(
  * provider key, `discovery-web`, so a latch it trips never stops the routine
  * lanes, and shares the cycle's host spacing and vault.
  */
-const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY === "on";
+/* On unless the kill switch says off (NS28, decided by the owner 2026-09-24: meetings discovery is always on). */
+const MEETINGS_DISCOVERY_ENABLED = process.env.WTP_MEETINGS_DISCOVERY !== "off";
 const MEETINGS_DISCOVERY_BUDGET_MS = 60_000;
 const MEETINGS_DISCOVERY_MAX_WALKS = 12;
 /*
@@ -2304,7 +2322,7 @@ const SEARCH_PER_DAY = searchCap("WTP_DISCOVERY_SEARCH_PER_DAY", DEFAULT_SEARCH_
 let meetingsDiscovery: MeetingsDiscoveryPass | null = null;
 let meetingsDiscoveryState: string;
 if (!MEETINGS_DISCOVERY_ENABLED) {
-  meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY is not \"on\"; activation waits for the owner's go";
+  meetingsDiscoveryState = "OFF: WTP_MEETINGS_DISCOVERY=off, the kill switch";
 } else if (dry || canary || scheduledBlackout || ONLY !== null || IDS !== null) {
   meetingsDiscoveryState = "not run: a dry, canary, filtered or blackout cycle walks nothing";
 } else if ("unreadable" in gapLedgerRead) {
@@ -2319,8 +2337,13 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
   try {
     /* The saved methods live in the field manual; the runner consults them on every walk. */
     const manual = await repos.fieldManual.read("live");
-    /* Search: pointers only, budgeted per cycle and per day, on FleetSafety's own key; every request is charged. */
-    const searchBudget = durableSearchBudget({
+    /*
+     * Search: pointers only, and PAID, so it exists only while the owner's switch in Admin allows it
+     * (`AdminConfig.discoverySearch`, read at cycle start). Otherwise no search step is built at all: no request,
+     * no refusal, no budget-ledger write. When it is on, the env caps bind it per cycle and per day, on FleetSafety's
+     * own key, and every request sent is charged.
+     */
+    const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
       repos,
       perCycle: SEARCH_PER_CYCLE,
       perDay: SEARCH_PER_DAY,
@@ -2334,7 +2357,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
       },
       now: nowIso,
     });
-    const discoverySearch = makeDiscoverySearch({
+    const discoverySearch = searchBudget === null ? null : makeDiscoverySearch({
       braveKey: process.env.BRAVE_SEARCH_API_KEY,
       exaKey: process.env.EXA_API_KEY,
       budget: searchBudget,
@@ -2747,6 +2770,15 @@ const heartbeat: RunnerHeartbeat = {
   /* A working beat: the runner is not idling on a PAUSE_RUNNER (ADM-5). */
   pause: null,
   codeIdentity,
+  /* NS28: what this cycle applied for paid discovery search, so the console can show the runner acknowledged it. */
+  discoverySearch: {
+    receiptId: discoverySearchReceiptId,
+    enabled: discoverySearchOn,
+    perCycle: SEARCH_PER_CYCLE,
+    perDay: SEARCH_PER_DAY,
+    appliedAt: NOW,
+    detail: discoverySearchDecision,
+  },
 };
 try {
   await finalStep("heartbeat", CYCLE_FINALIZATION_BUDGETS_MS.heartbeat, DIGEST_AND_RECORD_RESERVE_MS, async () => {
@@ -2969,6 +3001,8 @@ const runRecord = {
         recipesApplied: meetingsDiscovery?.recipeApplications ?? 0,
         recipesUpdated: meetingsDiscovery?.recipesUpdated ?? [],
         search: {
+          /* The owner's switch in Admin: paid search runs only while it is ON, and then only inside the caps below. */
+          ownerSwitch: discoverySearchDecision,
           perCycleCap: SEARCH_PER_CYCLE,
           perDayCap: SEARCH_PER_DAY,
           /* Every request sent, including those of walks the time cut short: all of them were charged. */

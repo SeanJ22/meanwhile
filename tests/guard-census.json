@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 758,
-    "named": 7455,
+    "files": 755,
+    "named": 7442,
     "dynamic": 30
   },
   "files": {
@@ -3638,6 +3638,19 @@
       ],
       "dynamic": 0
     },
+    "tests/discovery-search-switch.test.ts": {
+      "names": [
+        "A CORRUPT ROW NEVER TURNS PAID SEARCH ON, and turning it off over one writes a real row",
+        "AN OWNER DECISION, SAID TWICE TO TURN ON, RECORDED DURABLY",
+        "NO SILENT RESUME: only the owner's action writes the switch; no env var can turn it on; each paid search path sits behind its own gate",
+        "OFF UNTIL HE SAYS SO: a fresh store, a never-decided row, a malformed decision and a corrupt row all read off",
+        "THE CONSOLE POSTS IT: the switch rides the search line, and turning it on posts the confirmation",
+        "THE LIMITS BESIDE IT: the search line reads the caps the runner acknowledged, and says the code's starting caps are only that until it has",
+        "THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt",
+        "THE RUNNER OBEYS IT: the switch is read at cycle start, no search step is built unless it is on, and discovery is on unless killed"
+      ],
+      "dynamic": 0
+    },
     "tests/discovery-tree.test.ts": {
       "names": [
         "RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale",
@@ -4922,14 +4935,6 @@
       ],
       "dynamic": 0
     },
-    "tests/ical-moved-sittings.test.ts": {
-      "names": [
-        "Warner's three moved sittings of September 2026 are served as not held; the moved-to sitting is scheduled",
-        "a sitting whose summary says CANCEL, without the -ed, is served as canceled",
-        "every rescheduled or postponed summary in the recorded feeds is read for the day it names"
-      ],
-      "dynamic": 0
-    },
     "tests/ical-occurrence-identity.test.ts": {
       "names": [
         "ICAL-OCC · Warner's 8 September record is replaced by the edited sitting: not duplicated, not carried",
@@ -5973,6 +5978,7 @@
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
+        "THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
         "WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door",
@@ -8532,40 +8538,6 @@
         "no honest named gap is ever flagged as a refusal",
         "no refusal copy survives anywhere a reader can reach",
         "the shapes catch the two refusals this product actually shipped"
-      ],
-      "dynamic": 0
-    },
-    "tests/registration-contract.test.ts": {
-      "names": [
-        "a 304 is authentic only as registration's pinned file; any other 304 is refused by name",
-        "a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month promotes UNCHANGED",
-        "census.gov is asked conditionally: a 304 confirms the pinned file with no body, and a changed date is refused before its body is read",
-        "one registration contract per state, DC and territory in the FIPS table, each its own scope, command and state",
-        "only the pinned Census bytes from census.gov over HTTPS are accepted; anything else is refused by name",
-        "registration emits the registry's own shapes, so the reader composes it without translation",
-        "registration never mints a body on a Census placeholder division, in any state; the division stays as geography",
-        "reviewed wins: no id the reviewed registry writes is written, and a government it keys on its other division gets no second body",
-        "the largest state stays well inside the response bound, and a state with no government is a named violation",
-        "the reader composes a state's registration beside the reviewed registry it holds now, and reviewed still wins"
-      ],
-      "dynamic": 0
-    },
-    "tests/registration-edge.test.ts": {
-      "names": [
-        "a registered body reaches the coverage card titled by its division, never as a nameless, labelless row",
-        "each state's registration is its own compressed artifact, read back losslessly and only when named",
-        "the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all",
-        "the runner reads a state only when its pointer moved; every other promoted state carries by reference",
-        "unchanged states carry forward, a moved state re-publishes alone, and a stale carried state drops the whole section"
-      ],
-      "dynamic": 0
-    },
-    "tests/registration-reference.test.ts": {
-      "names": [
-        "a government pairs by Census code wherever the Census gives one, and nothing it does not tie to a place is guessed",
-        "a government the committed registry knows lands on the id it keys, directly or through its alternate",
-        "every Census government sits in exactly one state's file, every file is what the index says, and every row pairs or says why not",
-        "the jurisdiction ids are the operational reference's own, collision suffixes included"
       ],
       "dynamic": 0
     },

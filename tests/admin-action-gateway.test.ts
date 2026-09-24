@@ -113,14 +113,14 @@ function ask(over: Partial<ActionRequest> = {}): ActionRequest {
 test("ADM-C6: the registry is closed and every entry carries a full definition", () => {
   const definitions = actionDefinitions();
   /*
-   * THE DENOMINATOR. Sixteen actions are registered today (the expansion
+   * THE DENOMINATOR. Seventeen actions are registered today (the expansion
    * controls added the scope set/remove pair; the Money screen added the
-   * billing-figure record/remove pair). Pinning the count is what makes
+   * billing-figure record/remove pair and the paid discovery search switch). Pinning the count is what makes
    * the loop below a sweep rather than a coincidence: an entry silently
    * dropped in a refactor would otherwise leave every assertion passing over a
    * smaller population.
    */
-  assert.equal(definitions.length, 16, "the registry no longer holds the sixteen actions declared");
+  assert.equal(definitions.length, 17, "the registry no longer holds the seventeen actions declared");
   assert.deepEqual(
     [...ACTION_TYPES],
     [
@@ -134,6 +134,7 @@ test("ADM-C6: the registry is closed and every entry carries a full definition",
       "fleet.requestReadback",
       "config.setApiFallback",
       "config.setFleetSpendCeiling",
+      "config.setDiscoverySearch",
       "expansion.scope.set",
       "expansion.scope.remove",
       "billing.fact.record",

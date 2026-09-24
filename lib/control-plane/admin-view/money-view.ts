@@ -107,30 +107,43 @@ const SEARCH_HOSTS: Readonly<Record<string, string>> = { "api.search.brave.com":
 
 const READ_ON = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
 
+/** The caps the runner last said it enforced (its heartbeat's discovery-search acknowledgement), or null before it has said. */
+export interface SearchCapsApplied {
+  readonly perCycle: number;
+  readonly perDay: number;
+  readonly appliedAt: string;
+}
+
 /**
- * What one search request costs and how many the runner starts out allowed to
- * send: the published prices the charges are written at, and the caps in the
- * code the runner runs. The runner may be set to other caps, and the day's count
- * lives in its budget ledger; this page reads neither, and says so.
+ * What one search request costs and how many the runner may send: the
+ * published prices the charges are written at, and the caps the runner last
+ * acknowledged enforcing. Before its first acknowledgement, the caps in the code
+ * it starts with, said as such. The day's count lives in its budget ledger,
+ * which this page does not read.
  */
-function searchLimits(): string {
+function searchLimits(applied: SearchCapsApplied | null): string {
   const prices = Object.values(SEARCH_PRICES);
   const each = prices
     .map((p) => `${SEARCH_HOSTS[p.host] ?? p.host} ${p.usdPerRequest === null ? "has no published price" : `$${p.usdPerRequest.toFixed(3)} a request`} (its pricing page, read ${READ_ON.format(new Date(`${p.readOn}T12:00:00Z`))})`)
     .join("; ");
   const known = prices.every((p) => p.usdPerRequest !== null);
-  const most = known ? ` — at most ${usd(Math.max(...prices.map((p) => p.usdPerRequest ?? 0)) * DEFAULT_SEARCH_BUDGET.perDay)} a day` : " — the most a day is unknown while a price is unpublished";
+  const perCycle = applied?.perCycle ?? DEFAULT_SEARCH_BUDGET.perCycle;
+  const perDay = applied?.perDay ?? DEFAULT_SEARCH_BUDGET.perDay;
+  const most = known ? ` — at most ${usd(Math.max(...prices.map((p) => p.usdPerRequest ?? 0)) * perDay)} a day` : " — the most a day is unknown while a price is unpublished";
   return (
     ` Prices: ${each}.` +
-    ` The runner starts with ${plural(DEFAULT_SEARCH_BUDGET.perCycle, "request")} a cycle and ${DEFAULT_SEARCH_BUDGET.perDay} a day across both${most}.` +
-    " It may be set to other limits, and it keeps the day's count in its budget ledger; this page reads neither."
+    (applied === null
+      ? ` The runner starts with ${plural(perCycle, "request")} a cycle and ${perDay} a day across both${most}.` +
+        " It has not yet said which limits it enforces, and it keeps the day's count in its budget ledger, which this page does not read."
+      : ` The runner enforces ${plural(perCycle, "request")} a cycle and ${perDay} a day across both${most}, as it said at ${eastern(applied.appliedAt)}.` +
+        " It keeps the day's count in its budget ledger, which this page does not read.")
   );
 }
 
 /** The search line: measured per host, a request with no published price named as unknown, and a month with no request a measured zero. */
-function searchLine(month: LedgerMonth | null): { readonly amount: string | null; readonly how: string } {
+function searchLine(month: LedgerMonth | null, applied: SearchCapsApplied | null): { readonly amount: string | null; readonly how: string } {
   const line = searchSpend(month);
-  return { amount: line.amount, how: `${line.how}${searchLimits()}` };
+  return { amount: line.amount, how: `${line.how}${searchLimits(applied)}` };
 }
 
 function searchSpend(month: LedgerMonth | null): { readonly amount: string | null; readonly how: string } {
@@ -289,10 +302,12 @@ export function providerRows(input: {
   readonly rolling: RollingSpend | null;
   readonly maptiler: MapTilerReading | null;
   readonly facts: readonly BillingFact[];
+  /** The discovery-search caps the runner last acknowledged; null (or absent) before it has. */
+  readonly searchCaps?: SearchCapsApplied | null;
 }): ProviderRow[] {
   const m = input.month;
   const modelUsd = m ? modelSpendUsd(m) : null;
-  const search = searchLine(m);
+  const search = searchLine(m, input.searchCaps ?? null);
   const rows: ProviderRow[] = [
     {
       key: "ledger-month",

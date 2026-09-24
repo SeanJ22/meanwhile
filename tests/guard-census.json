@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 762,
-    "named": 7496,
+    "named": 7497,
     "dynamic": 30
   },
   "files": {
@@ -6018,6 +6018,7 @@
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
         "THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, replaces exactly the address it records, and the runner passes them to every walk",
         "THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds",
+        "THE LAST SECONDS: with less time left than one request, the remaining needs are deferred, never recorded as a burst of empty cut-shorts",
         "THE NEXT HOP: when nothing is confirmed, the pages the walk read are read for the routes they link; a readable one is confirmed, an unreadable publisher is a lead and is never requested",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 738,
-    "named": 7291,
+    "files": 739,
+    "named": 7297,
     "dynamic": 29
   },
   "files": {
@@ -3311,6 +3311,17 @@
         "SEEDED: a budget already spent defers EVERY due item by name and dispatches none",
         "a budget still in the future changes nothing — dispatch proceeds as without one",
         "the clock is INJECTED — the budget is decided by the caller's clock, not the wall"
+      ],
+      "dynamic": 0
+    },
+    "tests/cycle-exit.test.ts": {
+      "names": [
+        "a process still alive after the grace names what holds it open and exits with the cycle's own code",
+        "resource names are counted types only, and an empty list says so",
+        "the exit code is the one the cycle chose when the grace ends, not when it was armed",
+        "the exit code reads Node's own process.exitCode shapes",
+        "the grace timer is unref'd, so a drained loop still exits the moment it drains",
+        "the research cycle arms the grace as its last statement, after the stall worker stops"
       ],
       "dynamic": 0
     },

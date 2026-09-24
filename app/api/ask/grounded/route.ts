@@ -96,7 +96,12 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
-import { askModelStartupLine } from "@/lib/ask/model";
+import { askModelStartupLine, resolveAskEffort, resolveAskModel } from "@/lib/ask/model";
+import {
+  BoundedTtlCache,
+  interpretationCacheKey,
+  synthesisCacheKey,
+} from "@/lib/ask/model-result-cache";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { meetingDateInQuestion } from "@/lib/ask/meeting-date";
@@ -232,10 +237,18 @@ function allowCall(): boolean {
   spent += 1;
   return true;
 }
-/** Test seam — the suite must never inherit another test's counter. */
+/* Successful model results, keyed by their exact inputs (lib/ask/model-result-cache.ts). */
+const interpretationCache = new BoundedTtlCache<InterpretReadOutcome>();
+const synthesisCache = new BoundedTtlCache<SynthesisWroteOutcome>();
+type InterpretReadOutcome = Extract<Awaited<ReturnType<typeof interpretQuestion>>, { kind: "READ" }>;
+type SynthesisWroteOutcome = Extract<Awaited<ReturnType<typeof synthesizeAnswer>>, { kind: "WROTE" }>;
+
+/** Test seam — the suite must never inherit another test's counter or cached model result. */
 export function resetGroundedState(): void {
   spentOn = "";
   spent = 0;
+  interpretationCache.clear();
+  synthesisCache.clear();
 }
 
 /** Run unrelated canonical Reader preloads as independent failure domains. */
@@ -832,21 +845,21 @@ export async function POST(request: Request) {
   }
   let interpretation: AskInterpretation = unavailableInterpretation();
   const interpretationStarted = Date.now();
-  const outcome = deterministicTopicRoute ? null : await interpretQuestion(
-    question,
-    {
-      inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType })),
-      today,
-      approximateLocation:
-        typeof body.approximateLocation === "string" ? body.approximateLocation : null,
-      surface,
-      priorTurns: Array.isArray(body.priorTurns)
-        ? (body.priorTurns as { question: string; resolvedSubject: string | null }[]).slice(-4)
-        : [],
-      activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
-    },
-    { allowCall },
-  );
+  const interpretContext = {
+    inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType })),
+    today,
+    approximateLocation:
+      typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+    surface,
+    priorTurns: Array.isArray(body.priorTurns)
+      ? (body.priorTurns as { question: string; resolvedSubject: string | null }[]).slice(-4)
+      : [],
+    activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
+  };
+  const interpretationKey = deterministicTopicRoute ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
+  const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
+  const outcome = deterministicTopicRoute ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
+  if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
   if (outcome === null) {
     /* The deterministic topic route above: the topic is curated code and the
@@ -862,11 +875,12 @@ export async function POST(request: Request) {
       fellBackToDeterministic: true,
     };
   } else if (outcome.kind === "READ") {
-    interpretation = outcome.interpretation;
+    interpretation = structuredClone(outcome.interpretation);
     trace.interpretation = {
       ran: true,
       model: outcome.model,
-      ms: outcome.ms,
+      ms: cachedInterpretation ? 0 : outcome.ms,
+      ...(cachedInterpretation ? { cached: true } : {}),
       intent: interpretation.intent,
       temporal: interpretation.temporal,
       mentionCount: interpretation.entityMentions.length,
@@ -1943,10 +1957,13 @@ export async function POST(request: Request) {
    */
   lap("resolutionAndRetrieval");
   const composed = topicTimeline ? composeTopicAnswer(topicTimeline, selectionNow) : null;
-  const synthesis = composed ? null : await synthesizeAnswer(pack, {
+  const synthesisKey = composed ? null : synthesisCacheKey(pack, resolveAskModel(), resolveAskEffort());
+  const cachedSynthesis = synthesisKey ? synthesisCache.get(synthesisKey) : null;
+  const synthesis = composed ? null : cachedSynthesis ?? await synthesizeAnswer(pack, {
     allowCall,
     callerKey: askCallerKey(process.env, markerFromRequest(request).runClass),
   });
+  if (synthesisKey && !cachedSynthesis && synthesis?.kind === "WROTE") synthesisCache.set(synthesisKey, synthesis);
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
@@ -1980,7 +1997,9 @@ export async function POST(request: Request) {
          unrecorded is exactly the un-attributable answer §5 exists to stop. */
       model: synthesis.model,
       effort: synthesis.effort,
-      ms: synthesis.ms,
+      ms: cachedSynthesis ? 0 : synthesis.ms,
+      /* Reused from byte-identical evidence on this instance: no model call was made. */
+      ...(cachedSynthesis ? { cached: true } : {}),
       /*
        * H1. The cache numbers travel with the answer, per caller key, so a
        * regression in prompt assembly shows up as a collapsed hit rate in the
@@ -1996,7 +2015,7 @@ export async function POST(request: Request) {
     /* And into the server console, so a collapsed hit rate is visible in the
        deployment log rather than only in a trace somebody has to go and read.
        Caller key and token counts only — no reader fact reaches this line. */
-    console.log(cacheCallLine(synthesis.callerKey, synthesis.usage));
+    if (!cachedSynthesis) console.log(cacheCallLine(synthesis.callerKey, synthesis.usage));
     /*
      * The body inventory rides along as the known-subject universe, so the
      * substitution check can refuse prose that NAMES a different government we

@@ -29,6 +29,11 @@ export interface RungTrace {
   why?: string;
   model?: string;
   ms?: number;
+  /**
+   * The model's result was reused from byte-identical inputs on this server
+   * instance (lib/ask/model-result-cache.ts): no call was made for this request.
+   */
+  cached?: boolean;
 }
 
 export interface AskTrace {

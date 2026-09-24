@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 722,
-    "named": 7151,
+    "files": 724,
+    "named": 7171,
     "dynamic": 28
   },
   "files": {
@@ -2815,6 +2815,7 @@
         "controlPlaneUrlFromEnv refuses an empty value rather than defaulting",
         "createPgRepositories refuses an empty connection string",
         "schema v10 places live method candidates in every canonical provider",
+        "schema v12 declares the meetings-discovery attempt log, and every provider bundle carries it",
         "schema v5 declares the four nightly-door logs, and every provider bundle carries them",
         "schema v9 declares the Action Gateway's three tables, and every provider bundle carries them",
         "the advisory lock key is STABLE — two machines computing it must agree",
@@ -4230,6 +4231,7 @@
         "public redirects are counted as separate provider requests under one byte ceiling",
         "rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals",
         "scheduler aggregate refusal leaves the exact registered obligation durably owed",
+        "the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
         "the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates",
@@ -5794,6 +5796,22 @@
       ],
       "dynamic": 0
     },
+    "tests/meetings-discovery-executor.test.ts": {
+      "names": [
+        "BLOCKED: a disallowing or unreadable robots.txt sends nothing more, on either origin",
+        "BOUNDED: a walk stops at its request bound and says so",
+        "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
+        "FOUND: robots first, then the homepage, then the route it links; confirmed by content and vaulted under the walk",
+        "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
+        "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
+        "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
+        "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
+        "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
+        "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
+        "WALL: a recorded wall is never requested, not even its robots.txt"
+      ],
+      "dynamic": 0
+    },
     "tests/meetings-discovery-gap-ledger.test.ts": {
       "names": [
         "PLAN: a meetings row retires only when the ledger lists its jurisdiction; every other one is held back by name",
@@ -5805,6 +5823,18 @@
         "SEEDED: a recorded jurisdiction's meetings row retires naming the ledger, its occurrence closes unresolved, and nothing else is written",
         "SEEDED: a spent budget defers the rest untouched, in order, and the next cycle retires them",
         "SEEDED: while the ledger cannot be read, no meetings row retires and its occurrence stays open"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-site-discovery.test.ts": {
+      "names": [
+        "CANDIDATES: a linked vendor, a linked feed, CivicPlus markup and a CivicClerk embed each name a route; verifiable ones first",
+        "CANDIDATES: a page that evidences nothing names nothing, and no tenant is ever derived from a name",
+        "LINKS: hrefs and srcs resolve against the page; webcal reads as https; mailto, javascript and fragments are dropped",
+        "ORIGINS: a recorded address becomes its https origin and its www/apex twin; an unusable one becomes nothing",
+        "OUTCOME: found beats lead beats a read homepage; refused everywhere is BLOCKED; a redirect is a hop, not an answer",
+        "VERIFY: Legistar, CivicPlus, IQM2 and CivicClerk yield only by their own content",
+        "VERIFY: an iCal route yields only with a VEVENT; an empty calendar is EMPTY, and an HTML shell at a feed URL is not a calendar"
       ],
       "dynamic": 0
     },

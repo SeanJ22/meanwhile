@@ -223,6 +223,29 @@ test("the guarded fetch fails loud on a truncated 206 rather than handing up a p
   assert.equal(completeResult.bytes.byteLength, 3);
 });
 
+test("the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default", async () => {
+  const controller = new FleetSafetyController({ now: NIGHT, costs: [], clock: () => Date.parse(NIGHT) });
+  const requested: string[] = [];
+  const fetchImpl = (async (url: string | URL | Request) => {
+    requested.push(String(url));
+    return String(url).endsWith("/start")
+      ? new Response(null, { status: 302, headers: { location: "https://other.test/next" } })
+      : new Response("arrived", { status: 200 });
+  }) as typeof fetch;
+
+  const oneHop = controller.guardedOpenBytes("discovery-web", "one-hop", fetchImpl, { followRedirects: false });
+  const first = await oneHop({ url: "https://example.test/start", headers: {}, timeoutMs: 1_000 });
+  assert.equal(first.status, 302);
+  assert.equal(first.location, "https://other.test/next", "the caller gets the target to ask permission of");
+  assert.deepEqual(requested, ["https://example.test/start"], "nothing on the new host was requested");
+
+  requested.length = 0;
+  const followed = await controller.guardedOpenBytes("public-web", "followed", fetchImpl)({ url: "https://example.test/start", headers: {}, timeoutMs: 1_000 });
+  assert.equal(followed.status, 200);
+  assert.equal("location" in followed, false, "the default opener is unchanged");
+  assert.deepEqual(requested, ["https://example.test/start", "https://other.test/next"]);
+});
+
 test("scheduler aggregate refusal leaves the exact registered obligation durably owed", async () => {
   const repos = createMemoryRepositories();
   const obligation = {

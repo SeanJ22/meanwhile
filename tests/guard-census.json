@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 770,
-    "named": 7553,
+    "files": 771,
+    "named": 7557,
     "dynamic": 30
   },
   "files": {
@@ -1424,6 +1424,7 @@
         "ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance",
         "ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)",
         "ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation",
+        "TRACE, C20: every read inside sourcePreloads is timed by name, on an early return too",
         "TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, not by a fresh route that carries none of them",
         "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
         "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
@@ -7955,6 +7956,14 @@
       "names": [
         "a missing deployed directory fails instead of claiming empty committees and offices",
         "all normalized directory entries survive exact Bioguide projection"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-edge-context.test.ts": {
+      "names": [
+        "Ask reads the registry and the federal directory from the edge it entered",
+        "Campaign money reads the registry from the edge it entered, and names every read's time",
+        "Node 24: an edge entered inside a helper never reaches the reads chained on it; entered by the caller, it does"
       ],
       "dynamic": 0
     },

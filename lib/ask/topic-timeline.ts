@@ -537,6 +537,15 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
   const newestPast = past[0] ?? null;
   const lead = decisive[0] && (!newestPast || decisive[0].localDay >= newestPast.localDay) ? decisive[0] : newestPast ?? upcoming[0] ?? null;
 
+  if (!lead) {
+    // Nothing held carries the topic: say what was searched, in the sweep's
+    // own words (lib/ask/agenda-topic.ts), so a reader never reads silence as
+    // "no". The unread-sitting sentence below says what the search could not see.
+    const searched = timeline.denominators.topicAgendaDocumentsSearched ?? 0;
+    add(searched > 0
+      ? `No mention of ${timeline.topic.label} in the ${searched} agenda${searched === 1 ? "" : "s"} we hold for ${timeline.bodyName}`
+      : `We don't hold any readable agendas for ${timeline.bodyName} yet, so nothing was searched for ${timeline.topic.label}`);
+  }
   if (lead && !add(entrySentence(lead, timeline.bodyName, true, timeline.outcomesUnavailable), lead)) {
     // The lead is the answer; a long clerk's line is shortened, never dropped.
     add(entrySentence({ ...lead, itemText: quotable(lead.itemText, 110), basis: "STRUCTURED_AGENDA_RECORD" }, timeline.bodyName, true, timeline.outcomesUnavailable), lead);

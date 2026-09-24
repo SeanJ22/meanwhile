@@ -191,6 +191,18 @@ test("an unreadable outcome store is named as our holding failure, never as 'no 
   assert.doesNotMatch(composed.answer, /we have not read the recorded outcome/, "a failed read is not an unread record");
 });
 
+test("held agendas that never mention the topic say what was searched, and what was not read", () => {
+  const meetings = [
+    { id: "x:1", bodyName: "Council", title: "Council", startsAt: "2026-09-01T18:00:00-07:00", timeZone: "America/Phoenix", agendaUrl: "https://example.gov/1.pdf", provenance: { collectedAt: "2026-09-24T10:00:00Z" } },
+    { id: "x:2", bodyName: "Council", title: "Council", startsAt: "2026-09-15T18:00:00-07:00", timeZone: "America/Phoenix", provenance: { collectedAt: "2026-09-24T10:00:00Z" } },
+  ];
+  const documents = [{ meetingId: "x:1", documentUrl: "https://example.gov/1.pdf", sourceUrl: "https://example.gov/1.pdf", sourceOrg: "Clerk", retrievedAt: "2026-09-02T00:00:00Z", text: "1. Call to order. 2. Budget amendment for parks.", extraction: "text" }];
+  const timeline = buildTopicTimeline({ topic: DATA_CENTER, bodyId: "b", bodyName: "Example City Council", meetings, documents, sittings: [], now: NOW });
+  const composed = composeTopicAnswer(timeline, NOW)!;
+  assert.match(composed.answer, /^No mention of a data center in the 1 agenda we hold for Example City Council\./);
+  assert.match(composed.answer, /We have not read the agenda of the September 15th, 2026 meeting yet/);
+});
+
 test("a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either", () => {
   const meetings = [
     { id: "x:1", bodyName: "Council", title: "Council", startsAt: "2026-09-20T18:00:00-07:00", timeZone: "America/Phoenix", status: "CANCELED", provenance: { collectedAt: "2026-09-24T10:00:00Z" } },
@@ -198,7 +210,11 @@ test("a canceled sitting is not named as an unread agenda, and a sitting beyond 
   ];
   const timeline = buildTopicTimeline({ topic: DATA_CENTER, bodyId: "b", bodyName: "Council", meetings, documents: [], sittings: [], now: NOW });
   assert.deepEqual(timeline.unreadSittings, []);
-  assert.equal(composeTopicAnswer(timeline, NOW), null, "nothing to say is not an empty sentence");
+  assert.equal(
+    composeTopicAnswer(timeline, NOW)?.answer,
+    "We don't hold any readable agendas for Council yet, so nothing was searched for a data center.",
+    "nothing searched is said as nothing searched, never as nothing found",
+  );
 });
 
 const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");

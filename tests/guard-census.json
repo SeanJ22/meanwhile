@@ -2,8 +2,8 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 736,
-    "named": 7255,
-    "dynamic": 28
+    "named": 7262,
+    "dynamic": 29
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -863,6 +863,8 @@
         "read() pages a log larger than one response and returns every record in position order",
         "readAll() pages the whole table in (log_key, position) order",
         "readRecent() returns the newest N, newest first, bounded",
+        "readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database",
+        "readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it",
         "readWhere() of a value with no match is an empty result, not an error",
         "readWhere() refuses an unsafe JSON path segment rather than building SQL from it",
         "readWhere() returns EVERY match by content, paged, regardless of position"
@@ -2822,7 +2824,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 9
+      "dynamic": 10
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -7392,6 +7394,7 @@
         "a foreign row under the pipeline log is not an item",
         "a stage out of order is refused, the refusal is APPENDED as history, and it refuses the OFFER, not the item",
         "an identical re-offer of a held record is a NO-OP SUCCESS, so a re-map cannot refuse what it already mapped",
+        "item states come from one paged read of the log, equal to reading every item's key",
         "mapping: CONFIRMED exists only where an ACQUIRER artifact at the same URL comes from another Attempt",
         "mapping: ROUTE_CANDIDATE and EVIDENCE_FOUND become SCOUTED; refused and absence-shaped results map to nothing",
         "mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED",
@@ -8604,6 +8607,9 @@
         "frontier configuration and identities fail closed",
         "one pass admits one least-recently-considered task per provider domain",
         "repeated supervisor faults rotate fairly within one provider without changing other domains",
+        "the frontier decides the same from narrowed outcomes as from whole ones",
+        "the history window spans a day of passes and many rotations of the largest provider domain",
+        "the narrowed supervisor history holds every field the frontier's history reads",
         "the real pass ceiling is based on provider domains, not every partition in a failed provider tail"
       ],
       "dynamic": 0
@@ -10691,6 +10697,7 @@
       "names": [
         "BROKE remains blocking through captured audit/replay until a newer exact independent source-universe chain survives",
         "a Validator-passing captured result is broken by another official route and dependent work reopens",
+        "a work item's completion evidence and inherited results read only that item's rows",
         "actual isolated Parser → Validator → Auditor dispatch persists the existing durable execution contract",
         "completed worker history recovers with bulk reads and no per-result replay calls",
         "completion aggregates every artifact chain and a newer failed Validator overrides its own old pass",

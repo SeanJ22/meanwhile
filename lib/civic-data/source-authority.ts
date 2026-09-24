@@ -420,6 +420,14 @@ export const SOURCE_AUTHORITIES = {
       // Tucson Unified's own reconfiguration page (official-page events,
       // 2026-09-23): the district host, scoped to the one page wired.
       "https://www.tusd1.org/Reconfiguration",
+      // Two Newbury bodies the town calendar never carries, read from their
+      // own publications (C9, 2026-09-24), each scoped to the one route wired:
+      // the Library Trustees' notices feed on the library's site, and the
+      // Energy Committee's own home page. Wired in #411 without these routes,
+      // every production attempt threw FINAL_HOST_NOT_AUTHORIZED before
+      // writing a candidate or a receipt (measured 23:01Z and 23:06Z).
+      "https://newburynhlibrary.net/feed/",
+      "https://www.newburyenergynh.org/",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
@@ -432,6 +440,7 @@ export const SOURCE_AUTHORITIES = {
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
       "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
       "www.tusd1.org",
+      "newburynhlibrary.net", "www.newburyenergynh.org",
     ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],

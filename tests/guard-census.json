@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 749,
-    "named": 7400,
-    "dynamic": 29
+    "files": 758,
+    "named": 7455,
+    "dynamic": 30
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -407,6 +407,7 @@
         "a body read through two sources holds at least its larger source, and every total over it says it is a floor",
         "a fraction of a cent per attempt says so instead of rounding to a free-looking $0.00",
         "a ledger place key reads as the place, from its own parts",
+        "a read our own code failed is never shown as the site refusing us: the ingest's JOB_FAILURE mark reads as ours, with engineering next",
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
         "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline",
@@ -636,9 +637,25 @@
     },
     "tests/agenda-retrieval-disallowed-hosts.test.ts": {
       "names": [
+        "a permitted agenda link that redirects into a refused host is held as a link, and the refused host is never requested",
+        "a portal detail page that redirects into a refused host is not followed, and the sitting keeps its link",
+        "a refused API agenda link is read through the sitting's portal link, stored on the API row, and the page is read once",
         "an agenda link on a disallowed host is held as a link, never read; permitted hosts are unaffected",
         "the ingest's agenda retrieval never requests a DISALLOWED host, and still requests a permitted one",
+        "the recorded detail page's agenda link is read, never the accessible copy, and an unposted agenda reads as none",
         "the refused hosts are derived from the catalogue's own DISALLOWED routes"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-retrieval-order.test.ts": {
+      "names": [
+        "a link never read goes first, re-reads by nearness to today, and another sitting's page last",
+        "a refused link read through its portal page ranks as read once the sitting holds the portal's link",
+        "one run reads all six Board Actions links and no landing page; the next run reads no link twice",
+        "read order is retrievedAt, then id, whatever order the rows arrive in",
+        "seeded in payload order an unchanged read is stored again; seeded in read order it is not",
+        "the recorded Sunnyside 167 rows are out of read order, as production holds them",
+        "two runs of seed, re-read and reconcile add no row and write the rows in read order"
       ],
       "dynamic": 0
     },
@@ -872,6 +889,8 @@
         "read() of an absent key is one empty bounded page",
         "read() pages a log larger than one response and returns every record in position order",
         "readAll() pages the whole table in (log_key, position) order",
+        "readLatest() answers each key's newest record, narrowed by the database, in one statement per page of keys",
+        "readLatest() refuses an unsafe projection key rather than building SQL from it",
         "readRecent() returns the newest N, newest first, bounded",
         "readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database",
         "readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it",
@@ -2892,7 +2911,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 10
+      "dynamic": 11
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -4420,6 +4439,18 @@
       ],
       "dynamic": 0
     },
+    "tests/free-walks.test.ts": {
+      "names": [
+        "A FAILED READ HOLDS EVERY ROW: the log that cannot be read answers UNREAD, names why, and hands the Scout nothing",
+        "A WALK RECORD THE LANE CANNOT READ HOLDS ITS ROW: no known outcome or no finish time is never guessed at, and a lead without an address is dropped",
+        "DISPATCHED NEEDS REACH THE FREE WALK: derived from each state's registry, a state it cannot read named, a moved basis left out, and walked first even outside the ledger",
+        "EVERY READING REACHES ITS HOLD DECISION: found and not-walked hold, a walk that confirmed nothing or no site to walk opens, unread holds; the newest walk decides",
+        "ONE BATCHED READ, CUT TO THREE FIELDS: only the governments with a site are read, and none at all when none has one",
+        "THE RUNNER IS WIRED: it reads the walk before dispatch while the paid lane can admit, and hands the reading to the hold, the Scout's brief and the walk list",
+        "THE SCOUT STARTS FROM THE LEADS: the brief names the walk's outcome and what it could not confirm, as evidence only"
+      ],
+      "dynamic": 0
+    },
     "tests/freshness-provenance.test.ts": {
       "names": [
         "RULING 107: a run date never renders as a data date",
@@ -4881,6 +4912,21 @@
         "statesFor reconciles presence against the record, field by field",
         "the file's migratedAt is a wall-clock stamp, not a plausible date",
         "the migration promoted nothing to VERIFIED_ABSENT"
+      ],
+      "dynamic": 0
+    },
+    "tests/ical-exdate-first-sitting.test.ts": {
+      "names": [
+        "a refused rule whose EXDATE is its first sitting publishes nothing for the series, and names both",
+        "an expanded series whose EXDATE is its first sitting publishes from the second, and names the first"
+      ],
+      "dynamic": 0
+    },
+    "tests/ical-moved-sittings.test.ts": {
+      "names": [
+        "Warner's three moved sittings of September 2026 are served as not held; the moved-to sitting is scheduled",
+        "a sitting whose summary says CANCEL, without the -ed, is served as canceled",
+        "every rescheduled or postponed summary in the recorded feeds is read for the day it names"
       ],
       "dynamic": 0
     },
@@ -8489,6 +8535,40 @@
       ],
       "dynamic": 0
     },
+    "tests/registration-contract.test.ts": {
+      "names": [
+        "a 304 is authentic only as registration's pinned file; any other 304 is refused by name",
+        "a state's registration promotes through the engine, reads back through its typed reader, and an unchanged month promotes UNCHANGED",
+        "census.gov is asked conditionally: a 304 confirms the pinned file with no body, and a changed date is refused before its body is read",
+        "one registration contract per state, DC and territory in the FIPS table, each its own scope, command and state",
+        "only the pinned Census bytes from census.gov over HTTPS are accepted; anything else is refused by name",
+        "registration emits the registry's own shapes, so the reader composes it without translation",
+        "registration never mints a body on a Census placeholder division, in any state; the division stays as geography",
+        "reviewed wins: no id the reviewed registry writes is written, and a government it keys on its other division gets no second body",
+        "the largest state stays well inside the response bound, and a state with no government is a named violation",
+        "the reader composes a state's registration beside the reviewed registry it holds now, and reviewed still wins"
+      ],
+      "dynamic": 0
+    },
+    "tests/registration-edge.test.ts": {
+      "names": [
+        "a registered body reaches the coverage card titled by its division, never as a nameless, labelless row",
+        "each state's registration is its own compressed artifact, read back losslessly and only when named",
+        "the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all",
+        "the runner reads a state only when its pointer moved; every other promoted state carries by reference",
+        "unchanged states carry forward, a moved state re-publishes alone, and a stale carried state drops the whole section"
+      ],
+      "dynamic": 0
+    },
+    "tests/registration-reference.test.ts": {
+      "names": [
+        "a government pairs by Census code wherever the Census gives one, and nothing it does not tie to a place is guessed",
+        "a government the committed registry knows lands on the id it keys, directly or through its alternate",
+        "every Census government sits in exactly one state's file, every file is what the index says, and every row pairs or says why not",
+        "the jurisdiction ids are the operational reference's own, collision suffixes included"
+      ],
+      "dynamic": 0
+    },
     "tests/registry-oracle.test.ts": {
       "names": [
         "07866 resolves the township, not the neighbouring borough",
@@ -8754,6 +8834,16 @@
         "numeric() refuses absent, empty and malformed rather than coercing",
         "numericInRange() states the range it refused against",
         "rejectUnknown() names the parameter back and lists what is accepted"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-child-fatal-line.test.ts": {
+      "names": [
+        "a rejected top-level await exits 1 through one sanitized fatal line naming the step",
+        "an unhandled rejection and a thrown callback end the same way",
+        "the parent reads the child's fatal line and still never its raw stderr",
+        "the pilot's outer incident quotes the fatal line it reads",
+        "the routine runner installs the fatal line before its first statement that can throw"
       ],
       "dynamic": 0
     },
@@ -9656,6 +9746,16 @@
         "the groups are stable — the same collision fans the same way every time",
         "the pool moves markers by OFFSET, and puts every one of them back",
         "two pins closer than the collision radius are one group"
+      ],
+      "dynamic": 0
+    },
+    "tests/stage-trace.test.ts": {
+      "names": [
+        "a child killed mid-call leaves that call, started and never settled, as its last stderr line",
+        "a failing call writes a failed line and rethrows the same error",
+        "a stage line names the process time and the step",
+        "a traced call writes a line when it starts and when it settles, and passes its result through",
+        "the method runs on the original object, and plain values and synchronous results pass through"
       ],
       "dynamic": 0
     },

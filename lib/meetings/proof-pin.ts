@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 import { MEETING_PARTITION_CONTRACTS } from "../civic-data/meeting-partitions.ts";
 
@@ -196,7 +197,14 @@ export function activeReaderProofMeetingPin(
     return null;
   }
   if (loaded?.path === admission.path) return loaded.pin;
-  const pin = parseReaderProofMeetingPin(JSON.parse(readFileSync(admission.path, "utf8")) as unknown);
+  // The pin path is runtime-computed on purpose (the harness names it). Without
+  // the ignore marks, Turbopack traces the whole project into every route that
+  // reads meetings: /api/ask/grounded traced 7,278 files against a ceiling of
+  // 310 (the R23 shape). A deployed build never admits a pin anyway.
+  const pinPath = resolve(/* turbopackIgnore: true */ admission.path);
+  const pin = parseReaderProofMeetingPin(
+    JSON.parse(readFileSync(/* turbopackIgnore: true */ pinPath, "utf8")) as unknown,
+  );
   loaded = { path: admission.path, pin };
   return pin;
 }

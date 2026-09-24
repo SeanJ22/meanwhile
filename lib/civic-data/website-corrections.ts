@@ -67,7 +67,7 @@ export interface HomepageEvidence {
 }
 
 export interface OtherEvidence {
-  readonly kind: "STATE_LISTING" | "COUNTY_PAGE" | "MEMBER_TOWN_PAGE" | "FEDERAL_LISTING" | "RECORDED_HOST_REDIRECT";
+  readonly kind: "STATE_LISTING" | "STATE_PUBLICATION" | "COUNTY_PAGE" | "MEMBER_TOWN_PAGE" | "FEDERAL_LISTING" | "RECORDED_HOST_REDIRECT";
   readonly publisher: string;
   readonly url: string;
   /** A short excerpt of the page, as printed, that names the site as this government's. */
@@ -418,5 +418,131 @@ export const WEBSITE_CORRECTIONS: readonly WebsiteCorrection[] = [
     other: [{ kind: "RECORDED_HOST_REDIRECT", publisher: "City of El Mirage", url: "http://www.cityofelmirage.org", quote: "http://www.cityofelmirage.org/ -> 301 -> https://elmirageaz.gov/ (https://www.cityofelmirage.org/ also 301s to the same target)", sha256: "f17d17d5166afee4e0d9803c3820af0cbc47f7432a353090ce1f11c99eeeffdf", readAt: "2026-09-24T18:08:06Z" }],
     reviewedBy: WEBSITE_CORRECTION_REVIEWER,
     reviewedAt: "2026-09-24T18:08:06Z",
+  },
+  /*
+   * The three below are not their own .gov registrations: flagstaff.az.gov and newbury.nh.gov are names inside
+   * their states' zones (the registry row is the state's), and kearsarge.org is not .gov. Each rests on another
+   * government's own page naming the site, read robots-first by the session's research subagent and checked here
+   * (every sha256 recomputed from the saved bytes, every quote found in them).
+   */
+  {
+    jurisdictionId: "az:city:city-of-flagstaff",
+    governmentName: "City of Flagstaff",
+    recorded: "http://www.flagstaffaz.gov",
+    corrected: "https://www.flagstaff.az.gov",
+    registry: {
+      domain: "az.gov", domainType: "State or territory", organization: "State of Arizona, Executive Branch", city: "Phoenix", state: "AZ",
+      source: { ...CISA_READ, readAt: "2026-09-24T22:56:24Z" },
+    },
+    homepage: { url: "https://www.flagstaff.az.gov/", title: "City of Flagstaff Official Website | Official Website", selfName: "City of Flagstaff", sha256: "5828ea09673bb6b15cf8b1902be67d198eb6e0a0dca76a5578685c01a42d289d", readAt: "2026-09-24T22:53:59Z" },
+    other: [
+      {
+        kind: "STATE_LISTING",
+        publisher: "Superior Court of Arizona in Maricopa County, Law Library Resource Center (the Judicial Branch of Arizona), 'Arizona Cities': links to city government websites",
+        url: "https://superiorcourt.maricopa.gov/llrc/arizona-cities/",
+        quote: "<li><a href=\"http://www.flagstaff.az.gov/\">Flagstaff</a></li>",
+        sha256: "8d561a43212742f8e544d6d10486ec55f9d722c626f10ddeb509890f13a5da5f",
+        readAt: "2026-09-24T22:54:23Z",
+      },
+      {
+        kind: "STATE_PUBLICATION",
+        publisher: "Arizona Secretary of State, news release of 2025-05-07 on the May Hicks Curtis House",
+        url: "https://azsos.gov/news/942",
+        quote: "please visit Flagstaff.az.gov/HicksHouse or contact City of Flagstaff Senior Planner Lauren Clementino",
+        sha256: "8c9bd7bac823beee04f8fc8783cb14764ea0ac261de2f8b529236e249c1ad67a",
+        readAt: "2026-09-24T22:55:35Z",
+      },
+    ],
+    reviewedBy: `${WEBSITE_CORRECTION_REVIEWER}; evidence gathered by its research subagent`,
+    reviewedAt: "2026-09-24T23:18:43Z",
+  },
+  {
+    jurisdictionId: "nh:city:town-of-newbury",
+    governmentName: "Town of Newbury",
+    recorded: "http://www.newburyh.org",
+    corrected: "https://www.newbury.nh.gov",
+    registry: {
+      domain: "nh.gov", domainType: "State or territory", organization: "State of New Hampshire", city: "Concord", state: "NH",
+      source: { ...CISA_READ, readAt: "2026-09-24T22:56:24Z" },
+    },
+    /* Its homepage answered a Cloudflare challenge (HTTP 403) to the research read, so it is not a reading. */
+    homepage: null,
+    other: [
+      {
+        kind: "STATE_LISTING",
+        publisher: "State of New Hampshire, Department of Business and Economic Affairs, Office of Planning and Development, 'Municipalities, Counties and Regions' (links to municipal websites; the State portal's Cities & Towns list)",
+        url: "https://www.nheconomy.com/office-of-planning-and-development/what-we-do/state-data-center-(census-data)/municipalities,-counties-and-regions",
+        quote: "<td><a href=\"https://www.newbury.nh.gov/\" target=\"_blank\">Newbury</a></td>",
+        sha256: "0119595111e5a9453c1aaf16b4eebe911795edbe0bdb005937d8a270a92d4d28",
+        readAt: "2026-09-24T22:59:25Z",
+      },
+    ],
+    reviewedBy: `${WEBSITE_CORRECTION_REVIEWER}; evidence gathered by its research subagent`,
+    reviewedAt: "2026-09-24T23:18:43Z",
+  },
+  {
+    jurisdictionId: "nh:school:kearsarge-regional-school-dist",
+    governmentName: "Kearsarge Regional School District",
+    recorded: "http://www.kearsarge.k12.nh.us/",
+    corrected: "https://www.kearsarge.org",
+    registry: null,
+    /* Its homepage answered a Cloudflare challenge (HTTP 403) to the research read, so it is not a reading. */
+    homepage: null,
+    other: [
+      {
+        kind: "MEMBER_TOWN_PAGE",
+        publisher: "Town of Warner, NH (warnernh.gov, registered to the Town of Warner), 'Links of Interest'",
+        url: "https://warnernh.gov/links/",
+        quote: "href=\"http://www.kearsarge.org/\" >Kearsarge Regional School District SAU #65</a>",
+        sha256: "d797103e914466ff606214e7b95a0037a8642c082d4374c2b71c312356d90d40",
+        readAt: "2026-09-24T23:07:09Z",
+      },
+      {
+        kind: "MEMBER_TOWN_PAGE",
+        publisher: "Town of Bradford, NH (bradfordnh.gov, registered to the Town of Bradford, NH), 'Helpful Links'",
+        url: "https://bradfordnh.gov/pages/helpful-links",
+        quote: "<a href=\"http://www.kearsarge.org/\" rel=\"nofollow\" target=\"_blank\">Kearsarge Regional School District</a>",
+        sha256: "bcb05248e190512433d945d5adbec7d7785009ac80091b5a72af8d775e3c3bf5",
+        readAt: "2026-09-24T23:07:13Z",
+      },
+    ],
+    reviewedBy: `${WEBSITE_CORRECTION_REVIEWER}; evidence gathered by its research subagent`,
+    reviewedAt: "2026-09-24T23:18:43Z",
+  },
+];
+
+/**
+ * A case the rule does not resolve, named with what would resolve it (the owner's words: "report the specific
+ * unresolved case"). Its Census address stays until one of those holds; nothing here is applied.
+ */
+export interface UnresolvedWebsiteCase {
+  readonly jurisdictionId: string;
+  readonly governmentName: string;
+  readonly recorded: string;
+  readonly candidate: string;
+  readonly why: string;
+  readonly wouldResolve: readonly string[];
+  readonly reviewedBy: string;
+  readonly reviewedAt: string;
+}
+
+export const UNRESOLVED_WEBSITE_CASES: readonly UnresolvedWebsiteCase[] = [
+  {
+    jurisdictionId: "nh:city:town-of-sutton",
+    governmentName: "Town of Sutton",
+    recorded: "http://www.sutton-nh.gov",
+    candidate: "https://www.suttonnh.gov",
+    why:
+      "The .gov registry lists suttonnh.gov for the Town of Sutton (its own row), but the homepage answered a Cloudflare " +
+      "challenge (HTTP 403) to the robots-first read, so the homepage cannot confirm the registry. No government's own page " +
+      "names suttonnh.gov: the State's planning office table, the NH DOT officials directory (September 2025), Merrimack " +
+      "County and the Town of Warner all link the town's former sutton-nh.org.",
+    wouldResolve: [
+      "a readable homepage at www.suttonnh.gov that names the Town of Sutton",
+      "any government's own page naming suttonnh.gov",
+      "the owner deciding whether a government listing of sutton-nh.org, that address's redirect to www.suttonnh.gov, and the registry row together suffice",
+    ],
+    reviewedBy: `${WEBSITE_CORRECTION_REVIEWER}; evidence gathered by its research subagent`,
+    reviewedAt: "2026-09-24T23:18:43Z",
   },
 ];

@@ -130,23 +130,13 @@ function siteHint(jurisdictionId: string, officialSite: OfficialSiteHint): Juris
 }
 
 /*
- * Cottonwood, Douglas, El Mirage, Eloy and Holbrook left this list on 2026-09-24: their current sites are reviewed
- * website corrections now (C15, `lib/civic-data/website-corrections.ts`), so the gap ledger records the corrected
- * address itself and a hint replacing the old one would name an address no longer on record.
+ * Cottonwood, Douglas, El Mirage, Eloy, Flagstaff and Holbrook left this list on 2026-09-24, and Newbury's and
+ * Kearsarge's official-site parts with them: their current sites are reviewed website corrections now (C15,
+ * `lib/civic-data/website-corrections.ts`), so the gap ledger records the corrected address itself and a hint
+ * replacing the old one would name an address no longer on record. Newbury's and Kearsarge's routes stay.
  */
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
-  siteHint("az:city:city-of-flagstaff", {
-    origin: "https://www.flagstaff.az.gov",
-    selfName: "City of Flagstaff",
-    replaces: "http://www.flagstaffaz.gov",
-    recordedState: "it answers, but its root is 404 and does not redirect (flagstaffaz.gov is still registered to the City of Flagstaff)",
-    evidence: [
-      "the State of Arizona's az.gov zone (az.gov is registered to the State of Arizona) delegates flagstaff.az.gov to the city's CivicPlus host",
-      "its homepage answered 200, titled \"City of Flagstaff Official Website\"",
-    ],
-    observed: { at: "2026-09-24T18:08:17Z", by: SITE_RESEARCH },
-  }),
   siteHint("az:city:city-of-winslow", {
     origin: "https://www.winslowaz.gov",
     selfName: "City Of Winslow",
@@ -455,21 +445,7 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:city:town-of-newbury",
-    officialSite: {
-      origin: "https://www.newbury.nh.gov",
-      selfName: "Newbury",
-      replaces: "http://www.newburyh.org",
-      recordedState: "it is not registered (NXDOMAIN): newburyh.org is one letter short of the town's former newburynh.org, which is dead too",
-      evidence: [
-        "the State of New Hampshire's own nh.gov zone publishes the name: nh.gov's authoritative nameserver answers newbury.nh.gov " +
-          "directly (zone SOA nh.gov, hostmaster.nh.gov), and www.newbury.nh.gov is a CNAME to the town's CivicPlus host; only " +
-          "the State can publish a name there, as it does for newlondon.nh.gov, which Merrimack County links",
-        "the apex answers 301 to https://www.newbury.nh.gov/",
-        "its homepage served a challenge when observed, and Merrimack County still links the dead newburynh.org, so the name " +
-          "the walk requires is the town's short name",
-      ],
-      observed: { at: "2026-09-24T18:10:35Z", by: SITE_RESEARCH },
-    },
+    officialSite: null,
     routes: [
       {
         url: "https://newburynhlibrary.net/feed/",
@@ -537,19 +513,7 @@ export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
   },
   {
     jurisdictionId: "nh:school:kearsarge-regional-school-dist",
-    officialSite: {
-      origin: "https://www.kearsarge.org",
-      selfName: "Kearsarge",
-      replaces: "http://www.kearsarge.k12.nh.us/",
-      recordedState: "it is a CNAME to ghs.google.com that answers Google's 404",
-      evidence: [
-        "a Town of Warner library newsletter (library.warnernh.gov; warnernh.gov is registered to the Town of Warner) gives " +
-          "https://www.kearsarge.org/district/school-board-mbc for the district's School Board minutes",
-        "the district's board schedule and agenda PDFs are served from www.kearsarge.org (the Backend session's ledger, below)",
-        "its homepage served a challenge when observed, so the name the walk requires is the district's short name",
-      ],
-      observed: { at: "2026-09-24T18:10:44Z", by: SITE_RESEARCH },
-    },
+    officialSite: null,
     routes: [
       {
         url: "https://www.kearsarge.org/sites/g/files/vyhlif731/f/pages/2026-2027_school_board_schedule.pdf",

@@ -11,6 +11,7 @@ import {
   governmentNamesMatch,
   normalizedGovernmentName,
   registryRowFor,
+  UNRESOLVED_WEBSITE_CASES,
   WEBSITE_CORRECTIONS,
   websiteCorrectionFor,
   websiteCorrectionIssues,
@@ -47,6 +48,29 @@ test("C15: every reviewed correction meets the owner's rule, once per government
     assert.doesNotMatch(c.reviewedBy, /sean/i, "the reviewer is the agent session that checked it, never the owner");
     assert.doesNotMatch(c.reviewedBy, /^</, "a draft's placeholder reviewer is never committed (pnpm website:check)");
   }
+});
+
+test("C15: the nine named governments are each corrected on the rule or named unresolved, never both", () => {
+  const nine = [
+    "az:city:city-of-cottonwood", "az:city:city-of-douglas", "az:city:city-of-eloy", "az:city:city-of-flagstaff",
+    "az:city:city-of-holbrook", "az:city:city-of-el-mirage", "nh:city:town-of-newbury", "nh:city:town-of-sutton",
+    "nh:school:kearsarge-regional-school-dist",
+  ];
+  const corrected = new Set(WEBSITE_CORRECTIONS.map((c) => c.jurisdictionId));
+  const unresolved = new Set(UNRESOLVED_WEBSITE_CASES.map((c) => c.jurisdictionId));
+  for (const id of nine) assert.ok(corrected.has(id) !== unresolved.has(id), `${id} is corrected or named unresolved, exactly one`);
+  for (const u of UNRESOLVED_WEBSITE_CASES) {
+    assert.ok(u.why.trim() !== "" && u.wouldResolve.length > 0, `${u.jurisdictionId} says why and what would resolve it`);
+    assert.equal(websiteCorrectionFor(u.jurisdictionId, u.recorded), null, `${u.jurisdictionId} is never applied`);
+    assert.doesNotMatch(u.reviewedBy, /sean/i);
+  }
+  /* Sutton, as the rule reads it: its own registry row, a homepage that could not be read, no other government's page. */
+  const sutton = variant({
+    jurisdictionId: "nh:city:town-of-sutton", governmentName: "Town of Sutton", recorded: "http://www.sutton-nh.gov", corrected: "https://www.suttonnh.gov",
+    registry: { ...COTTONWOOD.registry!, domain: "suttonnh.gov", organization: "Town of Sutton", city: "Sutton Mills", state: "NH" },
+    homepage: null, other: [],
+  });
+  assert.match(websiteCorrectionIssues(sutton)[0]!, /UNRESOLVED — its homepage could not be read to confirm the registry/);
 });
 
 test("C15: the registry's inverted names read as the government's own", () => {

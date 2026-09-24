@@ -156,7 +156,7 @@ export async function preloadCanonicalMeetingDependencies(input: {
  * board posts on its own site is the content a reader needs while the
  * vendor portal's agenda is still unpublished.
  */
-function documentUrlFor(meeting: Meeting): string | null {
+export function documentUrlFor(meeting: Meeting): string | null {
   if (meeting.agendaUrl) return meeting.agendaUrl;
   if (meeting.status !== "SCHEDULED") return null;
   /*
@@ -185,8 +185,42 @@ function documentUrlFor(meeting: Meeting): string | null {
     (row) => (row.config.bodyName ?? row.publishingOrg) === meeting.bodyName,
   );
   if (forBody) return forBody.noticeUrl ?? null;
-  const distinct = new Set(onDivision.map((row) => row.noticeUrl));
-  return distinct.size === 1 ? (onDivision[0].noticeUrl ?? null) : null;
+  /*
+   * **A DIVISION'S ONLY NOTICE PAGE CAN BELONG TO ANOTHER GOVERNMENT.**
+   * (2026-09-24.)
+   *
+   * "Every notice URL on the division agrees" was also true when the
+   * division carried exactly one, and that one was another publisher's. The
+   * Lake Todd Village District row is keyed on Newbury and publishes on the
+   * Town of Bradford's calendar, so every unlinked Newbury sitting was lent
+   * Bradford's calendar. The Central Arizona Water Conservation District is
+   * the only notice page on Pima County's division, so Pima's Board of
+   * Supervisors study session of 2026-10-13 was served CAP's board page as
+   * its agenda, under "Pima County Clerk of the Board". Production held 27
+   * such documents on 2026-09-24, every one served by /api/agenda.
+   *
+   * So only the sitting's own publisher's page is lent across bodies.
+   */
+  const publisher = meeting.provenance?.sourceOrg ?? null;
+  const own = onDivision.filter((row) => publisher !== null && row.publishingOrg === publisher);
+  const distinct = new Set(own.map((row) => row.noticeUrl));
+  return distinct.size === 1 ? (own[0]!.noticeUrl ?? null) : null;
+}
+
+/**
+ * Whether a held document is a wiring notice page that the sitting's own
+ * publisher does not publish: a page the division-wide fallback lent it before
+ * the rule above. Its own agenda link is never one.
+ */
+export function isAnotherPublishersNoticePage(
+  meeting: Pick<Meeting, "agendaUrl" | "provenance">,
+  url: string,
+): boolean {
+  if (meeting.agendaUrl === url) return false;
+  const rows = SOURCE_WIRING.filter((row) => row.noticeUrl === url);
+  if (rows.length === 0) return false;
+  const publisher = meeting.provenance?.sourceOrg ?? null;
+  return !rows.some((row) => row.publishingOrg === publisher);
 }
 
 /**
@@ -310,8 +344,15 @@ export function inRetrievalOrder<T extends Pick<AgendaDocument, "id" | "retrieve
 export function seedHeldAgendaDocuments(
   previous: Pick<MeetingsSnapshot, "meetings" | "agendaDocuments">,
   store: AgendaDocumentStore = agendaDocumentStore,
-): { readonly carried: number; readonly refused: number; readonly refusedUrls: ReadonlySet<string> } {
+): {
+  readonly carried: number;
+  readonly refused: number;
+  readonly refusedUrls: ReadonlySet<string>;
+  readonly lentNotices: number;
+  readonly lentNoticeUrls: ReadonlySet<string>;
+} {
   const govOf = new Map(previous.meetings.map((m) => [m.id, m.ocdId ?? null]));
+  const meetingOf = new Map(previous.meetings.map((m) => [m.id, m]));
   const govsByUrl = new Map<string, Set<string>>();
   for (const doc of previous.agendaDocuments) {
     const gov = govOf.get(doc.meetingId);
@@ -324,16 +365,24 @@ export function seedHeldAgendaDocuments(
   let carried = 0;
   let refused = 0;
   const refusedUrls = new Set<string>();
+  let lentNotices = 0;
+  const lentNoticeUrls = new Set<string>();
   for (const doc of inRetrievalOrder(previous.agendaDocuments)) {
     if ((govsByUrl.get(doc.documentUrl)?.size ?? 0) > 1) {
       refused++;
       refusedUrls.add(doc.documentUrl);
       continue;
     }
+    const meeting = meetingOf.get(doc.meetingId);
+    if (meeting && isAnotherPublishersNoticePage(meeting, doc.documentUrl)) {
+      lentNotices++;
+      lentNoticeUrls.add(doc.documentUrl);
+      continue;
+    }
     store.append(doc);
     carried++;
   }
-  return { carried, refused, refusedUrls };
+  return { carried, refused, refusedUrls, lentNotices, lentNoticeUrls };
 }
 
 /**
@@ -682,7 +731,7 @@ async function main() {
        * Dropped rather than kept-and-flagged: the store is append-only, so a
        * row that stays gets re-appended by every later run.
        */
-      const { carried, refused, refusedUrls } = seedHeldAgendaDocuments(previous);
+      const { carried, refused, refusedUrls, lentNotices, lentNoticeUrls } = seedHeldAgendaDocuments(previous);
       console.log(
         `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
       );
@@ -690,6 +739,12 @@ async function main() {
         console.warn(
           `  ${refused} REFUSED — attached to meetings of more than one government, ` +
             `so they are nobody's agenda: ${[...refusedUrls].join(", ")}`,
+        );
+      }
+      if (lentNotices > 0) {
+        console.warn(
+          `  ${lentNotices} SET ASIDE — another publisher's notice page, lent to a sitting ` +
+            `whose own publisher does not publish it: ${[...lentNoticeUrls].join(", ")}`,
         );
       }
     }

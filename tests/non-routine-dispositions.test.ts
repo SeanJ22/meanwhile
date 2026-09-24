@@ -55,9 +55,10 @@ test("the PDC-7 frozen denominator accounts for every source row and all 42 hold
   assert.deepEqual(problems, []);
 
   assert.equal(inventory.rows.length, 37);
-  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 7);
+  // legistar-outcomes moved from the explicit-owner bindings to the standing clock.
+  assert.equal(ROUTINE_INVENTORY_BINDINGS.length, 8);
   assert.equal(NON_ROUTINE_DISPOSITIONS.length, 11);
-  assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 18);
+  assert.equal(MANUAL_PRODUCTION_INVENTORY_BINDINGS.length, 17);
   assert.equal(PDC7_RESOLVED_SPLIT_BINDINGS.length, 1);
   assert.equal(PDC7_MIGRATION_BLOCKERS.length, 0);
   assert.equal(DATASET_FAMILIES.length, 42);

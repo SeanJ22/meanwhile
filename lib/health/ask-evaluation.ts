@@ -171,7 +171,7 @@ export type ReaderExpectation =
  * added to the engine tomorrow is NOT silently green here. An unknown mode
  * falls through to RED with the mode named, which is the safe direction.
  */
-export const GROUNDED_MODES: readonly string[] = ["GROUNDED_CLAUDE", "STRUCTURED_GROUNDED"];
+export const GROUNDED_MODES: readonly string[] = ["GROUNDED_CLAUDE", "GROUNDED_COMPOSED", "STRUCTURED_GROUNDED"];
 
 /**
  * Every non-grounded mode, mapped to the failure class it actually is.

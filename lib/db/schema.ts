@@ -1169,6 +1169,7 @@ export const askInteractions = pgTable(
     answerMode: text("answer_mode", {
       enum: [
         "GROUNDED_CLAUDE",
+        "GROUNDED_COMPOSED",
         "STRUCTURED_GROUNDED",
         "CLARIFY",
         "UNRESOLVED",

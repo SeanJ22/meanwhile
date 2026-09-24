@@ -39,6 +39,7 @@ import {
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
 import { failedAcquisitionCandidate, meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
 import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import {
   processRegisteredMeetingPartitionCandidate,
@@ -891,6 +892,7 @@ export function printMeetingPartitionReceipt(
   candidate: RoutineCandidate,
   outcome: PromotionOutcome,
   failureDetail: string | null = null,
+  failureKind: "WALL" | "JOB" | null = null,
 ): void {
   console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({
     source: partition.id,
@@ -905,6 +907,10 @@ export function printMeetingPartitionReceipt(
     promotedVersion: outcome.promoted?.versionId ?? null,
     lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
     failureDetail,
+    // WALL (the publisher's side stopped the read) or JOB (our code or
+    // configuration failed first); absent on success. Additive: the durable
+    // receipt contract reads the fields above and ignores this one.
+    ...(failureKind ? { failureKind } : {}),
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
 }
@@ -966,7 +972,13 @@ export async function promoteMeetingPartitions(input: {
     if (!report || !report.ok) {
       // Current source failure is always receipted. A historical research
       // approval cannot relabel the failed fetch or its LKG as new progress.
-      const failureDetail = report?.error ?? `The composite produced no report for ${partition.meetingSource}.`;
+      // A JOB failure says so in the durable detail, so no surface (Admin, a
+      // report, a later session) can read our own exception as the publisher
+      // walling us — the ten-day VENUE_RESOLUTIONS_MISSING freeze did exactly that.
+      const failureKind = report ? (report.failure ?? "WALL") : "JOB";
+      const failureDetail = report?.error
+        ? failureKind === "JOB" ? jobFailureDetail(report.error) : report.error
+        : jobFailureDetail(`The composite produced no report for ${partition.meetingSource}.`);
       const failed = failedAcquisitionCandidate({
         sourceId: MEETINGS_SOURCE_ID,
         recordClass: MEETINGS_RECORD_CLASS,
@@ -977,7 +989,7 @@ export async function promoteMeetingPartitions(input: {
         parserVersion: "meetings-composite/2",
       });
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, failed, input.generatedAt);
-      printMeetingPartitionReceipt(partition, failed, outcome, failureDetail);
+      printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind);
       results.push({ partition, candidate: failed, outcome });
       continue;
     }

@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import {
+  processRegisteredManualCandidate,
+  processRegisteredRoutineCandidate,
+} from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import {
@@ -177,7 +180,8 @@ test("a failed Legistar sitting is durable, cannot replace LKG, and cannot affec
     retrievedAt: "2026-09-08T19:00:00.000Z",
     sourceThrough: "2026-09-08T18:59:00.000Z",
   });
-  const promoted = await processRegisteredManualCandidate(memory, "pima-legistar-outcomes", good, "2026-09-08T19:01:00.000Z");
+  // The standing runner's routine door is this scope's only writer.
+  const promoted = await processRegisteredRoutineCandidate(memory, "pima-legistar-outcomes", good, "2026-09-08T19:01:00.000Z");
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
 
@@ -192,7 +196,7 @@ test("a failed Legistar sitting is durable, cannot replace LKG, and cannot affec
     sourceThrough: "2026-09-08T19:02:00.000Z",
     failureDetail: "seeded source timeout",
   });
-  const refused = await processRegisteredManualCandidate(memory, "pima-legistar-outcomes", failed, "2026-09-08T19:03:00.000Z");
+  const refused = await processRegisteredRoutineCandidate(memory, "pima-legistar-outcomes", failed, "2026-09-08T19:03:00.000Z");
   assert.equal(refused.candidate.state, "SOURCE_BLOCKED");
   assert.equal(refused.promoted, null);
   assert.equal((await memory.events(failed.id)).at(-1)?.state, "SOURCE_BLOCKED");

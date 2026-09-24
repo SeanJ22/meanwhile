@@ -29,6 +29,11 @@ export interface RungTrace {
   why?: string;
   model?: string;
   ms?: number;
+  /**
+   * The model's result was reused from byte-identical inputs on this server
+   * instance (lib/ask/model-result-cache.ts): no call was made for this request.
+   */
+  cached?: boolean;
 }
 
 export interface AskTrace {
@@ -119,6 +124,13 @@ export interface AskTrace {
     checked?: string[];
     failed?: string[];
   };
+  /**
+   * Wall-clock milliseconds per stage of the request, in order (2026-09-24):
+   * source preloads, the meetings projection, officeholders and ballot,
+   * interpretation, resolution and retrieval, then composition or synthesis.
+   * Absent on an early return. Facts about our machinery, never about a reader.
+   */
+  stages?: Record<string, number>;
   /** What the reader actually got. The single most important line here. */
   answerMode: AnswerMode;
   totalMs: number;
@@ -136,6 +148,13 @@ export interface AskTrace {
 export type AnswerMode =
   /** Claude wrote it from an evidence pack and validation passed. */
   | "GROUNDED_CLAUDE"
+  /**
+   * Deterministic code composed the prose from structured, dated records (a
+   * topic timeline: quoted items, recorded actions, dates held) and the same
+   * validator a model answer faces passed it. No model wrote it, and saying so
+   * is the point: a measurement of model answers must never count these.
+   */
+  | "GROUNDED_COMPOSED"
   /** The records are real and rendered; no generated prose. */
   | "STRUCTURED_GROUNDED"
   /** A government was named and more than one thing fits. Nothing chosen. */

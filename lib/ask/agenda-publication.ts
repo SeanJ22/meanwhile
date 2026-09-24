@@ -840,10 +840,17 @@ function gapFor(args: {
    * product's state at a moment. "has not been published" was a fact about a
    * government that nothing measured.
    */
+  /*
+   * 2026-09-24: the OURS sentence no longer ends "We are still looking for
+   * it." Nothing on this path knows that looking is happening — the Pima Board
+   * sittings carried that promise for ten days while every re-read failed in
+   * our own code — and a progress claim is only true where actionable work is
+   * known to exist. The fact stands alone: we have not acquired it.
+   */
   const tail =
     publication === "REPORTS_AVAILABLE" && observation
       ? ` ${observation.sourceOrg} shows one posted, and we are going after it.`
-      : ` We are still looking for it.`;
+      : ``;
   const middle =
     acquisition === "ROUTE_BLOCKED"
       ? ` The route we tried did not land.`

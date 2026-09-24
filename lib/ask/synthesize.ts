@@ -71,6 +71,9 @@ export {
   type AskEffort,
 } from "./model.ts";
 
+/** The synthesis rung's whole budget, request to parsed reply. Measured cold 3.5-7.2 s at medium effort. */
+export const ASK_SYNTHESIS_TIMEOUT_MS = 12_000;
+
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 export type SynthesisOutcome =
@@ -520,6 +523,10 @@ export async function synthesizeAnswer(
        * fragment the model-scoped prompt cache.
        */
       body: JSON.stringify(synthesisRequestBody(pack, { model, cached: true, effort })),
+      // A bounded wait (2026-09-24). Past the bound the records still ship as
+      // the structured answer; an unbounded call could outlive the platform
+      // limit and deliver the reader nothing at all.
+      signal: AbortSignal.timeout(ASK_SYNTHESIS_TIMEOUT_MS),
     });
     if (!response.ok) {
       /* The status, and Anthropic's own error TYPE token if it sent one. The

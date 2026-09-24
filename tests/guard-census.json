@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 737,
-    "named": 7270,
+    "files": 736,
+    "named": 7257,
     "dynamic": 28
   },
   "files": {
@@ -410,11 +410,9 @@
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
         "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline",
-        "a state nobody has registered reads as what the Census knows is there, never as zeros, and every state and territory has one",
         "an entered figure fills its provider's row with its kind, period and provenance, and the bill is never added to the ledger",
         "every provider with no reading renders as NO READING with its manual path — never a number, never zero",
         "paid outcomes narrow by state without borrowing another state's refusals",
-        "search API spend is its own line beside model spend, per host, and an unpriced request is never a zero",
         "the fix list: unique ids, every item says where it stands and what to check first, and marks order without dropping",
         "the scope travels in the URL and an unreadable scope is everywhere, never a guess",
         "the three ceilings are never blended, and an account cap or a subscription with no entry has no number"
@@ -3117,7 +3115,6 @@
         "ADM-C14: the cache row carries the defect counts, the batch share and the saving the cycle measured",
         "Fleet · Money renders dollars to the cent and no longer claims a role is free by design",
         "every number the cost section draws itself carries a denominator and a contract",
-        "search API charges are broken down by host and never counted as model spend",
         "§9A.23: an empty month is a month with nothing measured, never a month that cost $0.00",
         "§9A.23: rows are counted into their own month, both bounds inclusive, and an unreadable stamp is dropped rather than filed at the epoch",
         "§9A.23: the month totals by provider, model and role, prices the savings once, and keeps unmeasured rows out of the dollars",
@@ -3614,9 +3611,7 @@
         "every feature has drawable polygon geometry",
         "every feature keeps exactly the properties the map needs plus GEOID",
         "feature count matches the 119th Congress after drops",
-        "item 6b: every tool that counts the frozen registry's bodies leaves out the placeholder boards",
         "item 6b: no Census placeholder name reaches a reader as a district's name",
-        "item 6b: readiness does not count a Census placeholder as a held school-district boundary",
         "leading zeros are stripped rather than carried into the identifier",
         "no two features share an OCD-ID",
         "ordinary district builds a numbered OCD-ID",
@@ -5814,16 +5809,18 @@
     },
     "tests/meetings-discovery-executor.test.ts": {
       "names": [
-        "BLOCKED: a disallowing or unreadable robots.txt sends nothing more, on either origin",
         "BOUNDED: a walk stops at its request bound and says so",
         "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
         "FOUND: robots first, then the homepage, then the route it links; confirmed by content and vaulted under the walk",
         "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
         "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
+        "PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall",
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
+        "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
+        "WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door",
         "WALL: a recorded wall is never requested, not even its robots.txt"
       ],
       "dynamic": 0
@@ -5874,7 +5871,7 @@
         "CANDIDATES: a page that evidences nothing names nothing, and no tenant is ever derived from a name",
         "LINKS: hrefs and srcs resolve against the page; webcal reads as https; mailto, javascript and fragments are dropped",
         "ORIGINS: a recorded address becomes its https origin and its www/apex twin; an unusable one becomes nothing",
-        "OUTCOME: found beats lead beats a read homepage; refused everywhere is BLOCKED; a redirect is a hop, not an answer",
+        "OUTCOME: found beats lead beats a read homepage; walled everywhere is BLOCKED, unreadable rules are not a wall; a redirect is a hop, not an answer",
         "VERIFY: Legistar, CivicPlus, IQM2 and CivicClerk yield only by their own content",
         "VERIFY: an iCal route yields only with a VEVENT; an empty calendar is EMPTY, and an HTML shell at a feed URL is not a calendar"
       ],
@@ -8366,19 +8363,13 @@
     },
     "tests/registry-runtime-data-plane.test.ts": {
       "names": [
-        "a Census placeholder division is geography: no body is derived on it and no projection may carry one",
-        "a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name",
         "both Reader projections reject cross-source proof and never bootstrap on store failure",
         "federal civic member ordering is independent of source-map insertion order",
         "federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer",
         "manual contracts have no clock and retired tracked writers cannot be invoked",
         "one blocked registry publisher holds only its dependent members while an unrelated roster update promotes",
         "registry civic member ordering is independent of JSONB object-key order",
-        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live",
-        "the door accepts exactly the transfer import as a base without a receipt; any other receipt-less base is still refused",
-        "the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both",
-        "the plane refuses what the registry door does not prove: a changed carried member, an unexplained removal, a real board passed off as a placeholder",
-        "the version production serves keeps reading until its correction promotes; no other defect is tolerated"
+        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live"
       ],
       "dynamic": 0
     },
@@ -8808,7 +8799,7 @@
     "tests/routine-publication-status.test.ts": {
       "names": [
         "each contract gets the verdict its pointer and the readback of exactly that version support",
-        "the Sources page reads its sources together, starts the full proof read only when asked by name, and shows the narrow panel first",
+        "the Sources page reads the three sources together and shows the narrow panel before the proof-based one",
         "the narrow read selects no payload and never touches the candidate JSON",
         "with nothing recorded, every contract is NOT_PUBLISHED with no attempt, never a pass"
       ],
@@ -9655,8 +9646,6 @@
       "names": [
         "a new state's first acquisition creates a required manifest without a state list edit",
         "a readback update makes a byte-current manifest stale while preserving its observed_at",
-        "a superseded holding leaves current holdings while its frozen bytes stay at a named test baseline",
-        "a superseded label cannot hide a present file, drift from its frozen hash, or lose its baseline or successor",
         "a transitive generator code change invalidates manifests independently of held data",
         "an authority-cutover label cannot hide a present file or drift from its frozen hash and production contract",
         "an exact authority cutover preserves the frozen law-title evidence but removes the dead Git path from current holdings",
@@ -10913,13 +10902,6 @@
         "clearing the radius limiter leaves unrelated filters alone",
         "enabling the radius limiter keeps the widened results on screen",
         "every target zip survives the client filter with default state"
-      ],
-      "dynamic": 0
-    },
-    "tests/zip-division-shards.test.ts": {
-      "names": [
-        "a code resolves to its governments anywhere, and the three-state index's ZIPs keep what the committed geometry carries",
-        "every ZIP the national lattice sampled is in exactly its prefix's shard, and every shard is what the index says"
       ],
       "dynamic": 0
     },

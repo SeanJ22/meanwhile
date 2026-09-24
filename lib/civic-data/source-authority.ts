@@ -425,6 +425,14 @@ export const SOURCE_AUTHORITIES = {
       "https://www.chandleraz.gov/robots.txt",
       "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
       "https://www.chandleraz.gov/rest/events/day/",
+      // Two Newbury bodies the town calendar never carries, read from their
+      // own publications (C9, 2026-09-24), each scoped to the one route wired:
+      // the Library Trustees' notices feed on the library's site, and the
+      // Energy Committee's own home page. Wired in #411 without these routes,
+      // every production attempt threw FINAL_HOST_NOT_AUTHORIZED before
+      // writing a candidate or a receipt (measured 23:01Z and 23:06Z).
+      "https://newburynhlibrary.net/feed/",
+      "https://www.newburyenergynh.org/",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
@@ -438,6 +446,7 @@ export const SOURCE_AUTHORITIES = {
       "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
       "www.tusd1.org",
       "www.chandleraz.gov",
+      "newburynhlibrary.net", "www.newburyenergynh.org",
     ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],

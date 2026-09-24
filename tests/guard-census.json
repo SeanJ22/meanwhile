@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 774,
-    "named": 7587,
+    "files": 775,
+    "named": 7589,
     "dynamic": 30
   },
   "files": {
@@ -6053,6 +6053,13 @@
         "MTG-4: a created event carries the venue in its location field",
         "MTG-4: a source publishing the ADDRESS as the venue name does not double it",
         "MTG-4: an online meeting's event still carries no invented address"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-wiring-authority.test.ts": {
+      "names": [
+        "every https route a meeting wiring row configures inherits meetings-public-bodies authority",
+        "the two Newbury publications C9 wired are authorized routes"
       ],
       "dynamic": 0
     },

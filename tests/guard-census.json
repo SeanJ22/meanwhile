@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 759,
-    "named": 7478,
+    "files": 760,
+    "named": 7483,
     "dynamic": 30
   },
   "files": {
@@ -5407,6 +5407,7 @@
         "(f) Pima and Mesa are the same shape, measured the same way",
         "(f) UNNAMED CONTROL: Mesa loses 12 of 15 September sittings through the API alone",
         "(g) NEGATIVE CONTROL: a viewable sitting carried by BOTH routes is not double-counted",
+        "Pima's clerk schedule is read at the county's current page, and that page is a registered route",
         "a PAGED grid is an incomplete enumeration, and it is reported rather than counted",
         "a clerk schedule page that moved is not followed: the grid's sittings survive, no retained response leaves the registered routes, and the move is named",
         "a page target is READ OFF THE PAGER, never derived from the control index",
@@ -9174,6 +9175,15 @@
         "standing runtime preserves configured GitHub credentials without invoking the CLI",
         "standing runtime reuses only the existing github.com CLI login in memory",
         "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
+      ],
+      "dynamic": 0
+    },
+    "tests/schedulepage-own-routes.test.ts": {
+      "names": [
+        "a notice with no year takes the year after its own posting",
+        "both rows reach readers as sittings of their registered bodies",
+        "the Energy Committee's home page yields its next sitting in its own words",
+        "the library's feed yields one sitting per trustees notice and counts every other post"
       ],
       "dynamic": 0
     },

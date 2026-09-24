@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 764,
-    "named": 7503,
+    "named": 7507,
     "dynamic": 30
   },
   "files": {
@@ -2401,6 +2401,7 @@
         "0C: a long document quoting the phrase is still a document",
         "0C: a real page is never called a challenge",
         "0C: an ordinary 200 still comes back exactly as before",
+        "A PRECONNECT HINT IS NOT A CHALLENGE: a real page that only warms the Turnstile host stays a page",
         "NHHUNT: the ambiguous marks keep their floor, so a real page stays a page",
         "NHHUNT: the modern managed challenge is caught at 30 KB, not missed"
       ],
@@ -9222,6 +9223,9 @@
     },
     "tests/schedulepage-chandler.test.ts": {
       "names": [
+        "FETCH: one day file per scheduled date inside the window, and a refused day keeps its sitting date-only",
+        "NORMALIZE: a scheduled date the day file answers becomes its Council sittings with time and place; one it does not stays date-only",
+        "THE DAY FILE: each Council sitting the city posted for a scheduled date, with its own start and street address; the city's other events are not the Council's",
         "no time is claimed: the table states none, and the page's 'usually' sentence is not the section's",
         "normalize serves the Council's sittings in the window, on the city's own host, cited to its page",
         "the section scope reads the schedule table's 33 dates, and only them"

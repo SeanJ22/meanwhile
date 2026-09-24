@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 760,
-    "named": 7483,
+    "named": 7484,
     "dynamic": 30
   },
   "files": {
@@ -6638,6 +6638,7 @@
       "names": [
         "Ask's topic timeline neither searches CAP's page nor counts Oct 13 as a read agenda",
         "Mesa 1343183: the council's own meetings page is its publication index, never a read agenda",
+        "Newbury Selectboard: portal shells and another town's calendar are not 'the agendas we hold'",
         "Pima 1381578: CAP's meetings page is never shown for a Pima Board sitting, and the sitting holds no agenda",
         "Warner: a failed read of the town calendar is the body's page, not a document we could not read",
         "an agenda posted on a body's notice page is still that sitting's agenda",

@@ -92,6 +92,9 @@ export const PLACELESS_LOCATIONS = [
   // Tucson Clerk's boards pages publish these for virtual-only bodies.
   "microsoft teams (virtual)",
   "microsoft teams virtual",
+  // …and "Zoom (Virtual)" (the Public Art and Community Design Committee's
+  // page, 2026-09-24): filed as a stated place with no pin until then.
+  "zoom (virtual)",
   // CivicClerk's own value for an online sitting (CAWCD, 2026-08-27).
   "virtual event",
 ];

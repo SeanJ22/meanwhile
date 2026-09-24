@@ -9,7 +9,7 @@ import {
   readNjMorrisFiling,
   type NjMorrisReadModel,
 } from "../lib/sources/ballot-nj-morris/index.ts";
-import { morrisCurrentFilingDocumentSet } from "../lib/hunt/nj-filing.ts";
+import { morrisCurrentFilingDocumentSet, newestFilingPdfs } from "../lib/hunt/nj-filing.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 
 test("Morris filing horizon requires the clerk's current general and school documents", () => {
@@ -33,6 +33,57 @@ test("Morris filing horizon requires the clerk's current general and school docu
       "https://untrusted.example/2026-general-school-candidates-090126.pdf",
     ]),
     /MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE.*school=0/,
+  );
+});
+
+const CLERK = "https://www.morriscountyclerk.org";
+
+test("Morris: the clerk's unstamped 2026-09-18 revision is the current general document", () => {
+  // The clerk page's own PDF hrefs, as read on 2026-09-24. Requiring a date
+  // stamp refused this set 136 times from 2026-09-18 14:18Z.
+  const page = [
+    '<a href="/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf">General</a>',
+    '<a href="/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf">School</a>',
+    '<a href="/files/sharedassets/clerk/v/1/elections/past-results/2026-general-candidate-order-081026.pdf">Order</a>',
+  ].join("\n");
+  assert.deepEqual(
+    morrisCurrentFilingDocumentSet(newestFilingPdfs(page, `${CLERK}/Elections/Current-Election-Candidates`)),
+    {
+      generalCandidatesUrl: `${CLERK}/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf`,
+      schoolCandidatesUrl: `${CLERK}/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf`,
+    },
+  );
+});
+
+test("Morris: between revisions the clerk's asset version decides, then the stamp in any of its formats", () => {
+  const links = (...hrefs: string[]) => hrefs.map((href) => `<a href="${href}">pdf</a>`).join("");
+  const renamed = `${CLERK}/files/sharedassets/clerk/v/12/e/2026-general-candidates.pdf`;
+  const replaced = `${CLERK}/files/sharedassets/clerk/v/11/e/2026-general-candidates-090126.pdf`;
+  // A renamed revision listed beside the one it replaced wins on /v/<n>/, in either order.
+  assert.deepEqual(newestFilingPdfs(links(replaced, renamed), CLERK), [renamed]);
+  assert.deepEqual(newestFilingPdfs(links(renamed, replaced), CLERK), [renamed]);
+  // MDDYYYY is a date: 9012026 (September 1) is newer than 082126 (August 21).
+  assert.deepEqual(
+    newestFilingPdfs(links("/files/2026-general-candidates-9012026.pdf", "/files/2026-general-candidates-082126.pdf"), CLERK),
+    [`${CLERK}/files/2026-general-candidates-9012026.pdf`],
+  );
+  // MMDDYY still orders across a year boundary.
+  assert.deepEqual(
+    newestFilingPdfs(links("/files/2026-general-candidates-010227.pdf", "/files/2026-general-candidates-123126.pdf"), CLERK),
+    [`${CLERK}/files/2026-general-candidates-010227.pdf`],
+  );
+
+  // Two NAMES for one document are resolved inside the class...
+  const school = `${CLERK}/files/sharedassets/clerk/v/14/e/2026-general-school-candidates-082126.pdf`;
+  assert.equal(
+    morrisCurrentFilingDocumentSet([`${CLERK}/files/sharedassets/clerk/v/11/e/2026-general-election-candidates-9012026.pdf`, renamed, school])
+      .generalCandidatesUrl,
+    renamed,
+  );
+  // ...and a tie nothing orders is refused, never guessed.
+  assert.throws(
+    () => morrisCurrentFilingDocumentSet([`${CLERK}/files/2026-general-election-candidates.pdf`, `${CLERK}/files/2026-general-candidates.pdf`, school]),
+    /MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE.*general=2/,
   );
 });
 

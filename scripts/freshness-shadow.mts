@@ -160,6 +160,7 @@ import {
   type MeetingsDiscoveryPass,
 } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
+import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import {
@@ -2392,6 +2393,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
           remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
         },
         recipes: knownRecipes(manual?.value.entries ?? []),
+        /* Committed route hints: the current official site where the recorded address is stale, and routes found on a government's own publications. */
+        routeHints: ROUTE_HINTS,
         ...(discoverySearch === null ? {} : { search: discoverySearch }),
         recordCost: async (entry) => {
           costSeq += 1;
@@ -2417,7 +2420,8 @@ console.log(
       ? ""
       : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
         `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)` +
-        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "")),
+        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
+        (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side: ${meetingsDiscovery.walkFailures.map((f) => f.jurisdictionId).join(", ")}` : "")),
 );
 finishPhase("meetings-discovery");
 
@@ -2884,7 +2888,8 @@ const lines = [
         `${meetingsDiscovery.deferred.length} deferred (budget)` +
         (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
         ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
-        (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "")),
+        (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "") +
+        (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side` : "")),
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -3012,6 +3017,8 @@ const runRecord = {
           ],
         },
         appendFailures: meetingsDiscovery?.appendFailures ?? [],
+        /* Walks that failed on something of ours, named; the pass went on without them and each need stays due. */
+        walkFailures: meetingsDiscovery?.walkFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
       },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */

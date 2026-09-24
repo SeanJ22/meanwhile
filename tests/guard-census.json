@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 760,
-    "named": 7472,
+    "files": 762,
+    "named": 7494,
     "dynamic": 30
   },
   "files": {
@@ -357,19 +357,6 @@
       ],
       "dynamic": 0
     },
-    "tests/admin-promoted-slices.test.ts": {
-      "names": [
-        "a code's memberships match the lookup's reverse index, and a code outside the universe says so",
-        "a failed read names the error and never the connection",
-        "a state's slice holds exactly the refs the whole lookup lists for that state, type by type",
-        "every statement is scoped to the promoted pointer, the state is matched upper-case",
-        "no pointer is 'not published', never an empty list",
-        "one container carries the lookup's own codes and plan",
-        "the registry slice carries each body's six fields and skips a row with no id",
-        "the watched-bodies read opens no socket, runs read only, and decodes each change set once"
-      ],
-      "dynamic": 0
-    },
     "tests/admin-reader-intel.test.ts": {
       "names": [
         "ADM-C12: 500 synthetic rows never reach a figure the page prints",
@@ -616,6 +603,26 @@
         "retrieveAgendaDocument extracts HTML text and records provenance",
         "the recorded Diligent page read beside a same-type sitting's page is the publisher's page",
         "the same words another sitting's page says are the publisher's page: failed, witness named"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-meeting-location.test.ts": {
+      "names": [
+        "a Mesa study session is placed at City Hall from its own agenda: the agenda's words, the reviewed venue's pin",
+        "an agenda address with no reviewed venue keeps the sitting's named gap, and says so",
+        "never across divisions, never over an adapter's placement or an online sitting, and never between disagreeing venues",
+        "the agenda header's own place and street are read, with city and ZIP when printed",
+        "the ingest places unplaced sittings from their own agendas before a partition is promoted",
+        "two spellings of one building agree; units, spelled numbers and suffix-less streets are handled"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-notice-page-publisher.test.ts": {
+      "names": [
+        "a body's own notice page, and its own publisher's shared page, still reach its sittings",
+        "a division's only notice page is not lent to a sitting of another publisher",
+        "a lent page is recognized as another publisher's; a sitting's own link never is",
+        "held notice pages that are not their sitting's agenda are left out of the run's store"
       ],
       "dynamic": 0
     },
@@ -3003,6 +3010,7 @@
     },
     "tests/control-plane-evidence-durability.test.ts": {
       "names": [
+        "A key segment Windows cannot hold is encoded on disk and listed back exactly; every legal segment keeps its path",
         "DURABILITY: RAW and SANITIZED_DERIVED artifacts survive a FRESH store instance over the same root",
         "DURABILITY: the retention policy survives the round trip through a fresh instance",
         "DURABLE IDEMPOTENCY: two concurrent putArtifact calls leave ONE object and no error",
@@ -5990,16 +5998,25 @@
     },
     "tests/meetings-discovery-executor.test.ts": {
       "names": [
+        "A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FROM THE GOVERNMENT'S OWN",
+        "A HINTED GOVERNMENT IS WALKED WHEN DUE, BEFORE THE ROTATION; A NEW OR CHANGED HINT MAKES IT DUE AT ONCE",
+        "A HINTED SITE IS THE GOVERNMENT'S ONLY WHILE IT SAYS SO: a homepage that no longer names it is not walked, and the recorded address is tried behind it",
+        "A PAGE CARRYING A CREDENTIAL IS READ AS ITS SANITIZED DERIVATIVE, AND A VAULT THAT REFUSES ITS BYTES NEVER ENDS THE WALK",
+        "A STALE RECORDED ADDRESS: the current official site a route hint records is walked first, and the walk says what it replaced",
+        "A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other walks are recorded and their field manual is written",
         "BOUNDED: a walk stops at its request bound and says so",
         "DISPATCH: an owner-dispatched need is walked first, and one another executor holds is never walked by this one",
         "FOUND: robots first, then the homepage, then the route it links; confirmed by content and vaulted under the walk",
+        "HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed by content; any other is requested and recorded as a lead, a witness is never a sitting, and a binary body is never vaulted as text",
         "NOT A ROUTE: a linked feed that answers an HTML shell is a lead, never a find; an unreachable site is COULD_NOT_READ",
         "PASS: every walk is appended under its jurisdiction; a need not yet due is passed over; a spent budget defers the rest untouched",
         "PERMISSION: a disallowing or unreadable robots.txt sends nothing more, on either origin; an origin whose rules could not be read is not a wall",
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
+        "THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, replaces exactly the address it records, and the runner passes them to every walk",
         "THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds",
+        "THE NEXT HOP: when nothing is confirmed, the pages the walk read are read for the routes they link; a readable one is confirmed, an unreadable publisher is a lead and is never requested",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
         "WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door",
@@ -6063,6 +6080,8 @@
       "names": [
         "A CORRECTED SEED REACHES THE RUNNER: a stored seed keeps its counts and failure memory and takes the code's method; a learned recipe is the stored one",
         "A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here",
+        "A LINK STEP FOLLOWS NAVIGATION, NOT NEWS: a headline that names the council, or anything under a news section, is never followed",
+        "ONE FAILED ROUTE IS NOT PROOF: a first failure holds 3 days, each consecutive one doubles it up to 30, and a success clears it",
         "OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded",
         "PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here",
         "RETRIEVAL: by body class and state; state-specific before portable, then successes, then recency",
@@ -6548,6 +6567,8 @@
     "tests/nj-morris-data-plane.test.ts": {
       "names": [
         "Morris filing horizon requires the clerk's current general and school documents",
+        "Morris: between revisions the clerk's asset version decides, then the stamp in any of its formats",
+        "Morris: the clerk's unstamped 2026-09-18 revision is the current general document",
         "NJ Reader uses the promoted ballot/contact projection and exposes its exact LKG",
         "NJ ballot and filed contacts bootstrap only after an answered missing pointer",
         "NJ store failure is not disguised as a successful bundled ballot read"
@@ -6614,6 +6635,16 @@
         "the family classifier preserves the frozen split-family semantics without UNKNOWN",
         "the formerly mixed curated Reader row has an exact truthful path partition and no PDC-7 blocker",
         "the registry fails closed for a new source, lost family, scheduled non-routine row, and research runtime fallback"
+      ],
+      "dynamic": 0
+    },
+    "tests/notice-page-not-an-agenda.test.ts": {
+      "names": [
+        "Newbury's sittings are never given the Town of Bradford's calendar",
+        "a Pima Board sitting with no agenda link is never given the water district's meetings page",
+        "a body's own notice page stating no agenda item is held by no sitting, and is read once per run",
+        "a notice page that states agenda items is still held",
+        "a sitting reached only through its body's notice page is read after every sitting's own link"
       ],
       "dynamic": 0
     },
@@ -7100,6 +7131,7 @@
       "names": [
         "PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG",
         "PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG",
+        "PDC-8 dotgov: a later registry commit whose hash sorts lower still promotes; the hash is an identity, not an order",
         "PDC-8 meetings: changed rows promote with exact added/changed/removed/held evidence; source-auth failure holds LKG",
         "PDC-8 trusted bootstrap fixtures project byte-for-structure through the three candidate builders",
         "run 34232794631 regression: software CI red cannot fail, relabel, or revert a source, and another source still promotes"

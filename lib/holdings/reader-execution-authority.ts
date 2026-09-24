@@ -60,6 +60,8 @@ export const PDC_V2_POST_IMPORT_MEETING_PARTITIONS: readonly string[] = [
   // Newbury, NH bodies the town iCal never carries, read from their own pages (C9, 2026-09-24).
   "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23library-trustees",
   "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcounty%3Amerrimack%2Fplace%3Anewbury_town%23energy-committee",
+  // Chandler's City Council schedule table (C14, 2026-09-24).
+  "meetings:schedulepage:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Achandler%23governing",
 ];
 
 type Row = Record<string, unknown>;

@@ -420,6 +420,11 @@ export const SOURCE_AUTHORITIES = {
       // Tucson Unified's own reconfiguration page (official-page events,
       // 2026-09-23): the district host, scoped to the one page wired.
       "https://www.tusd1.org/Reconfiguration",
+      // Chandler's City Clerk page and its rules (C14, 2026-09-24): the schedule
+      // table on the city's own host, scoped to the one page wired.
+      "https://www.chandleraz.gov/robots.txt",
+      "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
+      "https://www.chandleraz.gov/rest/events/day/",
     ],
     allowedFinalHosts: [
       "api.thrillshare.com", "bradfordnh.gov", "calendar.google.com", "capaz.api.civicclerk.com",
@@ -432,6 +437,7 @@ export const SOURCE_AUTHORITIES = {
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
       "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
       "www.tusd1.org",
+      "www.chandleraz.gov",
     ],
     jurisdictions: ["US-AZ", "US-NH", "US-NJ", "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
     recordClasses: ["MEETING"],

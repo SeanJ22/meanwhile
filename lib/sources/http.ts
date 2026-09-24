@@ -421,9 +421,15 @@ const CHALLENGE_SIGNATURES: readonly {
    * from both, and all three are present in the 29,809-byte interstitial
    * Kearsarge served on 2026-08-20.
    */
+  /*
+   * The Turnstile host counts only as a script the page loads. A resource hint
+   * is not a challenge: Chandler, AZ's real City Clerk page (2026-09-24, 210 KB,
+   * 33 sittings) carries `<link rel="preconnect" href="https://challenges.cloudflare.com">`
+   * for its forms, and reading the bare host as a wall marked it refused.
+   */
   {
     name: "Cloudflare managed challenge",
-    test: /window\._cf_chl_opt|challenges\.cloudflare\.com|Performing security verification/i,
+    test: /window\._cf_chl_opt|<script\b[^>]*challenges\.cloudflare\.com|Performing security verification/i,
   },
   { name: "Cloudflare attention-required", test: /Attention Required!\s*\|\s*Cloudflare/i },
   { name: "Imperva/Incapsula", test: /_Incapsula_Resource|Incapsula incident ID/i },

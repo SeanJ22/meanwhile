@@ -232,3 +232,57 @@ test("an Arizona document failure is durable and cannot replace either its LKG o
   assert.deepEqual(await store.readPromotion("STATE_LEGISLATOR", "US-AZ"), pointer);
   assert.deepEqual(await store.readPromotion("STATE_LEGISLATOR", "US-NJ"), njPointer);
 });
+
+test("an hourly New Jersey roster re-read of the same bytes is confirmed, not re-promoted, and its receipt names the pointed version", async () => {
+  const { routineReceiptFields, durableRoutineRunnerReceiptIssue } = await import("../lib/civic-data/runner-receipt.ts");
+  const { ZERO_RELEASE_EVENTS } = await import("../lib/civic-data/release.ts");
+  const store = new MemoryRoutineDataStore();
+  const read = (at: string) => {
+    const parsed = parseNjLegislatureRoster(njFixture(), at);
+    return officialStateLegislatorsCandidate({
+      sourceId: "nj-legislature",
+      jurisdiction: "US-NJ",
+      rawBodies: [njFixture()],
+      requestedUrl: NJ_LEGISLATURE_ROSTER_URL,
+      finalUrl: NJ_LEGISLATURE_ROSTER_URL,
+      httpStatus: 200,
+      retrievedAt: at,
+      term: parsed.term,
+      expectedTerm: parsed.term,
+      declaredTotal: 120,
+      roster: parsed.roster,
+      sourceAudit: { observedRecords: parsed.observedRecords, excludedRecords: [], legislature: parsed.legislature, session: null },
+    });
+  };
+  const first = read(NOW);
+  const promoted = await processRegisteredRoutineCandidate(store, "nj-state-legislators", first, NOW);
+  assert.equal(promoted.candidate.state, "PROMOTED");
+  const pointer = await store.readPromotionIdentity("STATE_LEGISLATOR", "US-NJ");
+
+  // The same bytes an hour later: every member's collectedAt/verifiedAt moved, nothing else.
+  const again = read(LATER);
+  assert.notEqual(again.normalization.normalizedHash, first.normalization.normalizedHash, "the stamps still move the hash");
+  const outcome = await processRegisteredRoutineCandidate(store, "nj-state-legislators", again, LATER, undefined, { confirmUnchanged: true });
+  assert.equal(outcome.confirmed?.versionId, first.id, "confirmed on the pointed version");
+  assert.equal((await store.readPromotionIdentity("STATE_LEGISLATOR", "US-NJ"))?.versionId, pointer?.versionId, "readers keep their version");
+  assert.equal(await store.readCandidateSummary(again.id), null, "no candidate was written for the re-read");
+  assert.equal(outcome.readerReadback, null, "a confirmation takes no second readback");
+
+  const receipt = { source: "nj-state-legislators", ...routineReceiptFields(again, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+  assert.equal(receipt.candidateId, first.id);
+  assert.equal(receipt.confirmedAt, outcome.confirmed?.at);
+  assert.equal(await durableRoutineRunnerReceiptIssue(receipt, {
+    id: "nj-state-legislators", sourceId: "nj-legislature", recordClass: "STATE_LEGISLATOR", scope: "US-NJ",
+  }, store, "SUCCESS"), null);
+
+  // A member who really changed is a promotion again.
+  const changed = read(LATER);
+  const roster = (changed.readModel as { roster: { officeholders: { name: string }[] } }).roster;
+  roster.officeholders[0]!.name = `${roster.officeholders[0]!.name} Jr.`;
+  const moved = await processRegisteredRoutineCandidate(store, "nj-state-legislators", {
+    ...changed,
+    id: `${changed.id}-renamed`,
+    normalization: { ...changed.normalization, normalizedHash: `${"f".repeat(63)}0` },
+  }, "2026-09-09T14:00:00.000Z", undefined, { confirmUnchanged: true });
+  assert.equal(moved.confirmed, undefined, "a real change is never confirmed");
+});

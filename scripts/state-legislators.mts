@@ -17,6 +17,7 @@ import {
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
   isSourceAcquisitionFailure,
   readPublisherBody,
@@ -171,15 +172,12 @@ async function main(): Promise<void> {
     target.contractId,
     candidate,
     retrievedAt,
+    undefined,
+    { confirmUnchanged: true },
   );
   console.log("RCD_RECEIPT=" + JSON.stringify({
     source: target.contractId,
-    candidateId: candidate.id,
-    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
-    state: outcome.candidate.state,
-    decision: outcome.candidate.receipt?.decision ?? null,
-    promotedVersion: outcome.promoted?.versionId ?? null,
-    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+    ...routineReceiptFields(candidate, outcome),
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
   if (!outcome.promoted) process.exitCode = 2;

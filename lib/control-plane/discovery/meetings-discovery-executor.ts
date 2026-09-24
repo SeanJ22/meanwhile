@@ -45,7 +45,7 @@ import {
   type RecipeCandidate,
 } from "../../hunt/meetings-recipes.ts";
 import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
-import type { CostEntry } from "../cost.ts";
+import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
 import type { SearchHit } from "../scheduler/scout-contract.ts";
 import {
   decideOutcome,
@@ -146,7 +146,7 @@ export function searchCostEntry(input: {
     source: input.host,
     jurisdiction: input.jurisdictionId,
     project: FRESHNESS_PROJECT,
-    role: "DISCOVERY_SEARCH",
+    role: DISCOVERY_SEARCH_ROLE,
     cost: {
       inputTokens: null,
       outputTokens: null,

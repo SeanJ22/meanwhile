@@ -71,6 +71,9 @@ export const RECLAIMABLE_OUTCOMES: readonly AttemptOutcome[] = [
   "CRASHED",
 ];
 
+/** The cost role of a discovery search request. One name, used by the ledger, the Money screen and the executor. */
+export const DISCOVERY_SEARCH_ROLE = "DISCOVERY_SEARCH" as const;
+
 export const WORKER_ROLES = [
   "SCOUT",
   "ACQUIRER",
@@ -85,7 +88,7 @@ export const WORKER_ROLES = [
    * (2026-09-23). Not a model worker: it exists so search spend is accounted
    * apart from model spend, one CostEntry per provider request.
    */
-  "DISCOVERY_SEARCH",
+  DISCOVERY_SEARCH_ROLE,
 ] as const;
 export type WorkerRole = (typeof WORKER_ROLES)[number];
 

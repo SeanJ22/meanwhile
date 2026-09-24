@@ -245,15 +245,27 @@ function isRecipe(value: unknown): value is MeetingsRecipe {
 
 /**
  * The recipes the runner knows: every MEETINGS_RECIPE in the field manual,
- * then any seed the manual does not hold yet. A stored recipe wins over its
- * seed, because it carries the runner's own counts.
+ * then any seed the manual does not hold yet. A learned recipe is the stored
+ * one. A seed the manual holds takes its method from the code and only its
+ * counts and failure memory from the store: the runner saves the whole recipe
+ * after every application, so a stored copy of a seed would otherwise keep the
+ * method as it stood that day, and a corrected seed would never reach the
+ * runner.
  */
 export function knownRecipes(entries: readonly FieldManualEntry[]): readonly MeetingsRecipe[] {
   const stored = new Map<string, MeetingsRecipe>();
   for (const e of entries) {
     if (e.kind === RECIPE_KIND && isRecipe(e.payload)) stored.set(e.payload.recipeId, e.payload);
   }
-  for (const s of SEED_RECIPES) if (!stored.has(s.recipeId)) stored.set(s.recipeId, s);
+  for (const s of SEED_RECIPES) {
+    const saved = stored.get(s.recipeId);
+    stored.set(
+      s.recipeId,
+      saved === undefined
+        ? s
+        : { ...s, successes: saved.successes, failures: saved.failures, lastSuccess: saved.lastSuccess, lastFailure: saved.lastFailure, failedFor: saved.failedFor },
+    );
+  }
   return [...stored.values()];
 }
 

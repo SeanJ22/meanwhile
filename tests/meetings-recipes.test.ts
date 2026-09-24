@@ -16,6 +16,8 @@
  *   and applies the method, with its counts, to a government in another state.
  * - **Failures are kept.** A failed application is recorded with its limit;
  *   while it stands, the same method is not tried on the same government again.
+ * - **A corrected seed reaches the runner.** A stored copy of a seed keeps the
+ *   runner's counts and failure memory; its method comes from the code.
  * - **The time ran out, not the method.** A saved method the walk did not reach
  *   before the phase's time ran out is neither credited nor charged.
  *
@@ -139,8 +141,31 @@ test("OUTCOMES: counts move, a success clears the government's standing failure,
   const entry = recipeEntry(r, LATER);
   assert.equal(entry.kind, RECIPE_KIND);
   assert.equal(entry.outcome, "YIELDED");
-  assert.deepEqual(knownRecipes([entry]).find((x) => x.recipeId === WP.recipeId)?.successes, 1, "a stored recipe wins over its seed");
+  assert.deepEqual(knownRecipes([entry]).find((x) => x.recipeId === WP.recipeId)?.successes, 1, "a stored seed keeps the runner's counts");
   assert.equal(knownRecipes([]).length, SEED_RECIPES.length, "the seeds are known before anything is stored");
+});
+
+test("A CORRECTED SEED REACHES THE RUNNER: a stored seed keeps its counts and failure memory and takes the code's method; a learned recipe is the stored one", () => {
+  const failure = { at: NOW, jurisdictionId: "az:city:city-of-benson", url: "https://benson.gov/events/list/?ical=1", conditions: "c", limit: "l" };
+  /* The runner saved the seed as it stood that day, with its own counts. */
+  const asSaved = recordRecipeOutcome(
+    recipe({ title: "the method as it stood", precondition: "old-marker", navigation: [{ kind: "path", template: "/old-events/?ical=1" }] }),
+    { succeeded: false, note: failure },
+  );
+  const learned = recipe({ recipeId: "search-x-ical-az-city_or_town", navigation: [{ kind: "path", template: "/learned" }], successes: 3 });
+  const known = knownRecipes([recipeEntry(asSaved, NOW), recipeEntry(learned, NOW)]);
+  const wp = known.find((r) => r.recipeId === WP.recipeId)!;
+  assert.deepEqual(wp.navigation, WP.navigation, "the method is the code's");
+  assert.equal(wp.precondition, WP.precondition);
+  assert.equal(wp.title, WP.title);
+  assert.equal(wp.failures, 1, "the runner's counts are kept");
+  assert.deepEqual(wp.failedFor, [failure], "and its failure memory, so a standing failure is still not paid for twice");
+  assert.deepEqual(
+    known.find((r) => r.recipeId === learned.recipeId)?.navigation,
+    [{ kind: "path", template: "/learned" }],
+    "a learned recipe has no seed: the store is its method",
+  );
+  assert.equal(known.length, SEED_RECIPES.length + 1);
 });
 
 test("THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes it back; cycle 2 reads it and applies it in another state", async () => {

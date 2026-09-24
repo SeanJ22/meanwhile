@@ -22,9 +22,10 @@
  *
  * ZIP → body applicability is computed from two committed stores:
  *
- *   1. `data/derived/zip-division-ids.json` — every division whose territory
- *      reaches inside the ZIP, derived from TIGER polygons (`NJ01`: a ZCTA
- *      crosses boundaries, so the AREA index is the honest zip answer).
+ *   1. The national ZIP index (`lib/geo/zip-division-index.ts`) — every
+ *      division whose territory reaches inside the ZIP, derived from TIGER
+ *      polygons (`NJ01`: a ZCTA crosses boundaries, so the AREA index is the
+ *      honest zip answer).
  *   2. `lib/registry/registry.json` — the bodies associated with those
  *      divisions, matching on `ocdId` OR `alsoServesOcdIds` (RULING 121).
  *
@@ -43,7 +44,6 @@
  * enumerate.
  */
 
-import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 
@@ -55,6 +55,7 @@ import type { ProofClass } from "../ops/run-provenance.ts";
 import type { ReaderExpectation } from "./ask-evaluation.ts";
 import type { Body, Registry } from "../registry/types.ts";
 import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
+import { ZIP_DIVISIONS_DIR, readAllZipDivisions } from "../geo/zip-division-index.ts";
 
 /* ---------------------------------------------------------------- classes */
 
@@ -270,7 +271,7 @@ export async function loadZipBodyUniverses(
   zips: readonly string[],
   root: string = process.cwd(),
 ): Promise<ZipBodyUniverse[]> {
-  const indexPath = join(root, "data", "derived", "zip-division-ids.json");
+  const indexPath = join(root, ...ZIP_DIVISIONS_DIR);
 
   const registryRead = await readRegistryRuntimeProjection();
   if (registryRead.kind !== "PROMOTED" && registryRead.kind !== "BOOTSTRAP") {
@@ -279,7 +280,7 @@ export async function loadZipBodyUniverses(
   const registry = registryRead.value.registry as Registry;
   let index: { zips: Record<string, string[]> };
   try {
-    index = JSON.parse(await readFile(indexPath, "utf8")) as { zips: Record<string, string[]> };
+    index = { zips: Object.fromEntries([...readAllZipDivisions(root)].map(([zip, entry]) => [zip, [...entry.ids]])) };
   } catch (error) {
     throw new Error(`the zip-division index at ${indexPath} could not be read: ${String(error)}`);
   }

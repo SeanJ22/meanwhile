@@ -6,8 +6,8 @@ import "server-only";
  * A failed read is UNREAD with its reason — never an empty body list.
  */
 import { MEETING_PARTITION_CONTRACTS } from "@/lib/civic-data/meeting-partitions.ts";
-import zipIndex from "@/data/derived/zip-division-ids.json";
-import { buildBodyViews, type BodyView, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
+import { buildBodyViews, type BodyView, type PublicZip, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
+import { lowestZipByDivision } from "@/lib/geo/zip-division-index.ts";
 
 import { readBodyStore } from "./body-store.ts";
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
@@ -43,28 +43,33 @@ export function watchedContractOf(c: AnyContract): WatchedContract {
 export const WATCHED_CONTRACTS: readonly WatchedContract[] = MEETING_PARTITION_CONTRACTS.map(watchedContractOf);
 
 /*
- * A ZIP whose readers are served each division, from the repository's own ZIP
- * index — the public destination a body's meetings reach (`/?zip=`). The
- * lowest ZIP is taken so the link is stable; a division no indexed ZIP carries
- * has no destination to name.
+ * A ZIP whose readers are served each division, from the national ZIP index —
+ * the public destination a body's meetings reach (`/?zip=`). The lowest ZIP is
+ * taken so the link is stable; a division no indexed ZIP carries has no
+ * destination to name, and a state whose index could not be read says so.
  */
-const ZIP_BY_DIVISION: ReadonlyMap<string, string> = (() => {
-  const zips = (zipIndex as unknown as { readonly zips: Readonly<Record<string, readonly string[]>> }).zips;
-  const out = new Map<string, string>();
-  for (const zip of Object.keys(zips).sort()) for (const division of zips[zip]) if (!out.has(division)) out.set(division, zip);
-  return out;
-})();
+function stateOf(ocdId: string): string | null {
+  return /\/(?:state|district|territory):([a-z]{2})(?:\/|$|#)/.exec(ocdId)?.[1] ?? null;
+}
 
-function zipOf(ocdId: string | null): string | null {
-  if (ocdId === null) return null;
-  // A body's division, or the nearest enclosing division the index carries (a place inside a county).
-  let id = ocdId.split("#")[0];
-  while (id.includes("/")) {
-    const hit = ZIP_BY_DIVISION.get(id);
-    if (hit) return hit;
-    id = id.slice(0, id.lastIndexOf("/"));
-  }
-  return null;
+async function zipsFor(contracts: readonly WatchedContract[]): Promise<(ocdId: string | null) => PublicZip> {
+  const states = [...new Set(contracts.map((c) => (c.ocdId === null ? null : stateOf(c.ocdId))).filter((s): s is string => s !== null))];
+  const byState = new Map(await Promise.all(states.map(async (st) => [st, await lowestZipByDivision(st)] as const)));
+  return (ocdId) => {
+    if (ocdId === null) return { kind: "NONE" };
+    const st = stateOf(ocdId);
+    const index = st === null ? undefined : byState.get(st);
+    if (index === null) return { kind: "UNREAD" };
+    if (index === undefined) return { kind: "NONE" };
+    // A body's division, or the nearest enclosing division the index carries (a place inside a county).
+    let id = ocdId.split("#")[0];
+    while (id.includes("/")) {
+      const hit = index.get(id);
+      if (hit) return { kind: "ZIP", zip: hit };
+      id = id.slice(0, id.lastIndexOf("/"));
+    }
+    return { kind: "NONE" };
+  };
 }
 
 /*
@@ -93,7 +98,7 @@ async function readWatchedBodies(nowIso: string): Promise<BodiesRead> {
     };
   }
   try {
-    const store = await readBodyStore(connection, nowIso);
+    const [store, zipOf] = await Promise.all([readBodyStore(connection, nowIso), zipsFor(WATCHED_CONTRACTS)]);
     return { kind: "HELD", asOf: store.asOf, views: buildBodyViews({ contracts: WATCHED_CONTRACTS, store, nowIso, zipOf }) };
   } catch (error) {
     // Server log only: a driver error can carry the connection string, so the page gets the class name alone.

@@ -7,6 +7,7 @@
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
+import { isPlacelessLocation, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { decodeEntities, politeGetJson } from "../http.ts";
 import type {
   Meeting,
@@ -186,6 +187,9 @@ export function makeApptegySource(
      */
     let considered = 0;
     let duplicates = 0;
+    // A-002 · `placeless` and `unknownVenue` tally sittings that are then
+    // PRODUCED (the venue-gap class, 2026-09-23), so neither is a drop.
+    let keptButPlaceless = 0;
 
     for (const { wiring, events, collectedAt, sourceUrl } of raw) {
       const titleMatch = wiring.config.titleMatch ?? "";
@@ -213,12 +217,35 @@ export function makeApptegySource(
           continue;
         }
 
-        const lat = Number(event.latitude);
-        const lng = Number(event.longitude);
+        // A blank coordinate is no coordinate: `Number("")` and `Number(null)`
+        // are both 0, and a pin at 0°, 0° is a fabricated place.
+        const coordinate = (value: string | null) =>
+          value == null || String(value).trim() === "" ? Number.NaN : Number(value);
+        const lat = coordinate(event.latitude);
+        const lng = coordinate(event.longitude);
         const venueName = (event.venue ?? "").trim();
-        if (!venueName || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+        const placed = Boolean(venueName) && Number.isFinite(lat) && Number.isFinite(lng);
+        /*
+         * **NO PLACEABLE VENUE NEVER SUPPRESSES THE SITTING** (the venue-gap
+         * class, 2026-09-23). The district publishes its own coordinates;
+         * where it publishes none, or no venue at all, this used to
+         * `continue`. The sitting is now published with no pin: a venue naming
+         * no building is online (D18, `placeless`); any other venue renders in
+         * the district's own words (`STATED_NOT_PLACED`); no venue is the
+         * district's own gap (`NOT_STATED_BY_PUBLISHER`). Counted as before,
+         * and kept.
+         */
+        const online = !placed && venueName && isPlacelessLocation(venueName)
+          ? { label: venueName, joinUrl: null }
+          : null;
+        const venueGap = !placed && !online ? unplacedVenueGap(venueName, wiring.publishingOrg) : null;
+        if (online) {
+          drops.placeless++;
+          keptButPlaceless += 1;
+        }
+        if (venueGap) {
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         seen.add(id);
@@ -231,13 +258,17 @@ export function makeApptegySource(
           title,
           startsAt: new Date(event.start_at).toISOString(),
           timeZone: wiring.timeZone,
-          location: {
-            name: venueName,
-            // The venue string is the district's own published address text.
-            address: venueName,
-            lat,
-            lng,
-          },
+          location: placed
+            ? {
+                name: venueName,
+                // The venue string is the district's own published address text.
+                address: venueName,
+                lat,
+                lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl: agendaLinkFrom(event.description),
           jurisdiction: wiring.jurisdiction,
           status: isCancelled(event)
@@ -258,6 +289,7 @@ export function makeApptegySource(
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
       logicalInput: considered,
       duplicates,
+      countedButProduced: keptButPlaceless,
     });
   };
 

@@ -3,11 +3,11 @@
   "generatedBy": "scripts/stamp-body-forms.mts",
   "note": "The FORM of each body's government, stamped from committed data alone — TIGER's legal type code for the municipal layer, the Census independent/dependent classification for school districts, the division type for counties. It is NOT a form-specific definition: it names which form a body is, so the charter or statute read that writes those definitions is done once per distinct form rather than once per body. Every unstampable body is named with the input that was missing.",
   "counts": {
-    "bodiesWithADivision": 1256,
-    "alreadyCarryingAFormDefinition": 631,
-    "owedAFormDefinition": 625,
+    "bodiesWithADivision": 1254,
+    "alreadyCarryingAFormDefinition": 630,
+    "owedAFormDefinition": 624,
     "stamped": 622,
-    "unstampable": 3,
+    "unstampable": 2,
     "distinctForms": 10
   },
   "distinctForms": {
@@ -30,14 +30,6 @@
       "divisionLabel": "Princeton",
       "reason": "TIGER legal type code 00 states no legal municipal type — this is a place with no legal form of its own recorded",
       "basisDetail": "lsad=00"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined#board",
-      "bodyName": null,
-      "ocdId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined",
-      "divisionLabel": "School District Not Defined",
-      "reason": "the Census does not classify this district as independent or dependent, and the two are different governments",
-      "basisDetail": "schoolDependency=UNCLASSIFIED"
     },
     {
       "bodyId": "ocd-division/country:us/state:nh/school_district:prospect_mountain_high_school_joint_maintenance_agreement_district#board",
@@ -4010,14 +4002,6 @@
       "basisDetail": "schoolDependency=INDEPENDENT"
     },
     {
-      "bodyId": "ocd-division/country:us/state:az/school_district:school_district_not_defined#board",
-      "ocdId": "ocd-division/country:us/state:az/school_district:school_district_not_defined",
-      "hasFormDefinition": true,
-      "formKey": null,
-      "basis": null,
-      "basisDetail": "schoolDependency=UNCLASSIFIED"
-    },
-    {
       "bodyId": "ocd-division/country:us/state:az/school_district:payson_unified_district#board",
       "ocdId": "ocd-division/country:us/state:az/school_district:payson_unified_district",
       "hasFormDefinition": true,
@@ -4912,14 +4896,6 @@
       "formKey": "nh:school_district_dependent",
       "basis": "census-school-dependency",
       "basisDetail": "schoolDependency=DEPENDENT"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined#board",
-      "ocdId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined",
-      "hasFormDefinition": false,
-      "formKey": null,
-      "basis": null,
-      "basisDetail": "schoolDependency=UNCLASSIFIED"
     },
     {
       "bodyId": "ocd-division/country:us/state:nh/school_district:claremont_school_district#board",

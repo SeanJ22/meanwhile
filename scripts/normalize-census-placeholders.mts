@@ -30,16 +30,12 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// The placeholder strings and their plain words live beside the registry's placeholder rule (lib/registry/census-placeholders.ts).
+import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * The Census placeholder strings we have actually seen, and what each one
- * means in plain words. Extended only when a new one is SEEN — a mapping
- * for a string nobody has met is a guess.
- */
-export const CENSUS_PLACEHOLDER_LABELS: Readonly<Record<string, string>> = {
-  "School District Not Defined": "No unified school district here",
-};
+export { CENSUS_PLACEHOLDER_LABELS };
 
 /*
  * **`lib/registry/registry.json` is deliberately NOT here** (NH232, 2026-08-27).
@@ -49,15 +45,22 @@ export const CENSUS_PLACEHOLDER_LABELS: Readonly<Record<string, string>> = {
  * silently delete 731 promoted bodies. The registry derives its division labels
  * from the canonical state geometry, which IS in this list, so rewriting the boundary
  * file and rebuilding produces the normalised label through the generator
- * instead of behind its back. Verified on 2026-08-27: the geojson already
- * carries `No unified school district here` and the placeholder string appears
- * nowhere in a freshly built registry.
+ * instead of behind its back. Verified on 2026-08-27 for Arizona: the geojson
+ * already carries `No unified school district here`. New Hampshire's unified
+ * layer carried the same placeholder and was missed until 2026-09-23: the
+ * guard in tests/districts.test.ts never read New Hampshire's file, and its
+ * pattern could not match the registry's pretty-printed label. The registry
+ * is now frozen first-seed evidence that still carries New Hampshire's raw
+ * label; its first-seed composition and every registry promotion translate it
+ * (lib/registry/census-placeholders.ts).
  */
 const TARGETS = [
   join(ROOT, "data", "states", "az", "geo", "unsd-04.geojson"),
   join(ROOT, "data", "states", "az", "streets", "85321.json"),
   join(ROOT, "data", "states", "az", "streets", "85601.json"),
   join(ROOT, "data", "states", "az", "streets", "85602.json"),
+  // New Hampshire's unified layer carries the same placeholder (GEOID 3399997); found 2026-09-23, its guard having never read this file.
+  join(ROOT, "data", "states", "nh", "geo", "unsd-33.geojson"),
 ];
 
 let changedFiles = 0;

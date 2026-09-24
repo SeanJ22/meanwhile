@@ -56,6 +56,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
+
 const ROOT = process.cwd();
 
 /** Census LSAD codes that mark a statistical area rather than a government. */
@@ -84,9 +86,10 @@ const zipGov = JSON.parse(
   readFileSync(join(ROOT, "data/derived/zip-governments.json"), "utf8"),
 ) as { zips: Record<string, Unit[]>; method: Record<string, unknown> };
 
-const registry = JSON.parse(
+// A body minted on a Census "no district here" placeholder is not a government and is never counted.
+const registry = withoutPlaceholderBodies(JSON.parse(
   readFileSync(join(ROOT, "lib/registry/registry.json"), "utf8"),
-) as { divisions: Division[]; bodies: Body[] };
+) as { divisions: Division[]; bodies: Body[] });
 
 const zips = process.argv.slice(2).filter((a) => /^\d{5}$/.test(a));
 const targets = zips.length > 0 ? zips : ["07866", "03255"];
@@ -113,7 +116,7 @@ for (const b of bodiesWithDivision) {
 }
 
 console.log("THE WHOLE-REGISTRY NUMBER, and what it is a number about\n");
-console.log(`  bodies in lib/registry/registry.json           ${registry.bodies.length}`);
+console.log(`  bodies in lib/registry/registry.json, less the Census placeholders  ${registry.bodies.length}`);
 console.log(`  ...carrying a division that exists             ${bodiesWithDivision.length}`);
 console.log("  ...by state:");
 for (const [s, n] of [...byState].sort((a, b) => b[1] - a[1])) {

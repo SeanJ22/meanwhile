@@ -28,6 +28,7 @@ import { definitionsForBody } from "../lib/officials/body-definitions.ts";
 import type { BodyDivisionType } from "../lib/officials/body-description.ts";
 import { schoolDependency } from "../lib/officials/school-dependency.ts";
 import { runsSomething } from "../lib/officials/top-offices.ts";
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 
 interface Division {
   ocdId: string;
@@ -42,9 +43,10 @@ interface Body {
   coverageStatus: string;
 }
 
-const registry = JSON.parse(
+// A body minted on a Census "no district here" placeholder is not a government and is never counted.
+const registry = withoutPlaceholderBodies(JSON.parse(
   readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
-) as { divisions: Division[]; bodies: Body[] };
+) as { divisions: Division[]; bodies: Body[] });
 
 const byId = new Map(registry.divisions.map((d) => [d.ocdId, d]));
 
@@ -131,7 +133,7 @@ for (const division of registry.divisions) {
 const M = bodies.length;
 
 console.log(`\nTHE HONEST DENOMINATOR, BOTH WAYS (DATA-4)\n`);
-console.log(`  every body in the registry                     ${ALL}`);
+console.log(`  every body in the registry, less placeholders  ${ALL}`);
 console.log(
   `    carrying ANY definition                     ${describedOverAll.length} of ${ALL}  (${((describedOverAll.length / ALL) * 100).toFixed(1)}%)`,
 );

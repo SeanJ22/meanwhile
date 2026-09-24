@@ -83,6 +83,7 @@ import { coverageAt } from "../lib/registry/server.ts";
 import { membersOfBody } from "../lib/registry/body-membership.ts";
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { seatHoldersForOffice } from "../lib/registry/server.ts";
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import type { Body, Registry } from "../lib/registry/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
@@ -125,9 +126,10 @@ interface Unmeasured {
 
 /* ------------------------------------------------------------- the stores */
 
-const registry = JSON.parse(
+// A body minted on a Census "no district here" placeholder is not a government and is never counted.
+const registry = withoutPlaceholderBodies(JSON.parse(
   readFileSync(join(ROOT, "lib/registry/registry.json"), "utf8"),
-) as Registry;
+) as Registry);
 
 const snapshot = JSON.parse(
   readFileSync(join(ROOT, "data/meetings-snapshot.json"), "utf8"),

@@ -28,6 +28,7 @@ import { geometryFiles } from "../lib/holdings/files.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { readAllZipDivisions } from "../lib/geo/zip-division-index.ts";
 import {
   boundingBoxOf,
   contains,
@@ -85,10 +86,12 @@ function prefiltered(point: [number, number]): { hits: Set<string>; tested: numb
 /**
  * **EVERY ZIP THIS PRODUCT SUPPORTS**, not a sample of four.
  *
- * `data/derived/zip-division-ids.json` is the committed index of every zip the
- * product resolves — 279 of them, built from the same TIGER polygons the
- * resolver reads. Checking the four pilot zips would have been a sample, and a
- * sample cannot support the sentence this gate exists to say.
+ * The national ZIP index (`lib/geo/zip-division-index.ts`) names every
+ * division whose territory reaches each ZIP code in the country; the zips this
+ * gate checks are every one of them that reaches a division the committed
+ * resolver geometry holds — the zips where the resolver has anything to say.
+ * Checking the four pilot zips would have been a sample, and a sample cannot
+ * support the sentence this gate exists to say.
  *
  * `--zips` adds more on top; it never narrows the set.
  */
@@ -97,10 +100,8 @@ const extra = (() => {
   return i === -1 ? [] : (process.argv[i + 1] ?? "").split(",").filter(Boolean);
 })();
 
-const index = JSON.parse(
-  readFileSync(join(ROOT, "data", "derived", "zip-division-ids.json"), "utf8"),
-) as { zips: Record<string, unknown> };
-const SUPPORTED_ZIPS = Object.keys(index.zips);
+const resolverIds = new Set([...oldFeatures, ...newFeatures].map((f) => f.properties.ocdId));
+const SUPPORTED_ZIPS = [...readAllZipDivisions(ROOT)].filter(([, entry]) => entry.ids.some((id) => resolverIds.has(id))).map(([zip]) => zip);
 
 const centroids = JSON.parse(
   readFileSync(join(ROOT, "lib", "geo", "zcta-centroids.json"), "utf8"),

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 729,
-    "named": 7191,
+    "named": 7192,
     "dynamic": 28
   },
   "files": {
@@ -8058,6 +8058,7 @@
     "tests/reader-venue-gap-surfaces.test.ts": {
       "names": [
         "a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line",
+        "the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none",
         "the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap"
       ],
       "dynamic": 0

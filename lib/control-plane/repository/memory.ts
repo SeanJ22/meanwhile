@@ -224,6 +224,16 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .map((entry) => projectRecord(jsonCopy(entry.record), projection));
     },
 
+    readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
+      const out = new Map<string, unknown>();
+      for (const key of new Set(keys)) {
+        const partition = partitions.get(key) ?? [];
+        const newest = partition[partition.length - 1];
+        if (newest !== undefined) out.set(key, projectRecord(jsonCopy(newest.record), projection));
+      }
+      return out;
+    },
+
     readAll: async (): Promise<readonly T[]> =>
       [...partitions.entries()]
         .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))

@@ -711,6 +711,25 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
   return entries;
 }
 
+/** Whether the free walk can walk a need at all: its site is owed and recorded at an address it can open. */
+export function walkableByFreeWalk(need: Pick<MeetingsDiscoveryNeed, "basis" | "ownWebAddress">): boolean {
+  return need.basis === "SOURCE_DISCOVERY_OWED" && siteOrigins(need.ownWebAddress).length > 0;
+}
+
+/**
+ * The needs a pass may walk: every need the owner's dispatch materialized, as
+ * its registry records it now, then the committed ledger's others. A dispatched
+ * government the ledger does not hold is still walked, and the ledger's older
+ * copy of one it does hold gives way.
+ */
+export function discoveryNeedsToWalk(
+  ledger: readonly MeetingsDiscoveryNeed[],
+  dispatched: readonly MeetingsDiscoveryNeed[],
+): readonly MeetingsDiscoveryNeed[] {
+  const ids = new Set(dispatched.map((n) => n.jurisdictionId));
+  return [...dispatched, ...ledger.filter((n) => !ids.has(n.jurisdictionId))];
+}
+
 /**
  * Walk the cycle's window of needs within the budget, append every walk, and
  * write what they taught to the field manual. Never throws for a site; an
@@ -730,9 +749,7 @@ export async function runMeetingsDiscovery(
   },
 ): Promise<MeetingsDiscoveryPass> {
   const skip = input.skipIds ?? new Set<string>();
-  const walkable = input.needs.filter(
-    (n) => n.basis === "SOURCE_DISCOVERY_OWED" && siteOrigins(n.ownWebAddress).length > 0 && !skip.has(n.jurisdictionId),
-  );
+  const walkable = input.needs.filter((n) => walkableByFreeWalk(n) && !skip.has(n.jurisdictionId));
   const first = walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) === true);
   const rotation = rotationWindow(walkable.filter((n) => input.firstIds?.has(n.jurisdictionId) !== true), input.cycleIndex, input.maxWalks);
   const window = [...first, ...rotation];

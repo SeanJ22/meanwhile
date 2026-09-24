@@ -21,6 +21,9 @@
  * rebuilt from it. The response is read only under the acquisition deadline's
  * signal, capped at twice the pinned size, and accepted only from census.gov
  * over HTTPS.
+ *
+ * `@freshness-reads-here` — `retrievedAt` is stamped the moment census.gov
+ * answers this run's request, whether a 304 or the bytes themselves.
  */
 import { createHash } from "node:crypto";
 

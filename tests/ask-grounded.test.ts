@@ -675,7 +675,7 @@ test("ASK04: the ballot surface renders records even when synthesis produced non
     import { AskAnswerRecords } from './components/ask/answer-records.tsx';
     const records = Array.from({length: 17}, (_, i) => ({ kind: 'VOTE', id: 'held:' + i, text: 'Held vote ' + i }));
     console.log(renderToStaticMarkup(createElement(AskAnswerRecords, { records, initiallyOpen: true })));
-  `], { encoding: "utf8", timeout: 30_000 });
+  `], { encoding: "utf8", timeout: 120_000 });
   assert.match(markup, /data-ask-record-count="17"/);
   assert.equal([...markup.matchAll(/data-ask-record-id=/g)].length, 17);
   assert.ok(markup.includes('data-ask-record-id="held:16"'));

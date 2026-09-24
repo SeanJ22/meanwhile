@@ -56,7 +56,13 @@ function agendaRecordsFor(records: readonly EvidenceRecord[], meetingId: string)
   return records.filter((record) => record.kind === "AGENDA_DOCUMENT" && record.meetingId === meetingId);
 }
 
-test("one reading per sitting: Tucson Unified 499's 89 stored rows are ONE shown document, the newest read of its own page", () => {
+test("one reading per sitting: Tucson Unified 499's 89 stored rows are its two index pages, the portal page's newest read first", () => {
+  /*
+   * Corrected 2026-09-23: the 88 re-reads are the Diligent portal page's skip
+   * links (the extractor had removed the ASP.NET server form holding the rest
+   * of the page), so the sitting holds two publication-index pages and no
+   * agenda. Identical re-reads are still ONE shown document.
+   */
   const base = readSnapshot();
   assert.ok(base);
   const documents = [...base.agendaDocuments, ...tusd499Rereads()];
@@ -64,12 +70,13 @@ test("one reading per sitting: Tucson Unified 499's 89 stored rows are ONE shown
   const meeting = base.meetings.find((candidate) => candidate.id === TUSD_499)!;
   const sitting = { ...meeting, bodyId: meeting.bodyId ?? null };
   const holdings = sittingAgendaHoldings(sitting, documents, base.meetings);
-  assert.equal(holdings.documents.length, 1);
-  assert.equal(holdings.documents[0]!.documentUrl, OWN_PAGE);
+  assert.deepEqual(holdings.documents.map((document) => document.documentUrl), [OWN_PAGE, SITE_ROOT]);
   assert.equal(holdings.documents[0]!.retrievedAt, NEWEST_REREAD);
-  assert.equal(holdings.records.length, 1);
-  assert.equal(holdings.records[0]!.documentId, holdings.documents[0]!.id);
-  for (const record of holdings.records) assert.doesNotMatch(record.text, REVISION_LANGUAGE);
+  assert.deepEqual(holdings.records.map((record) => record.documentId), holdings.documents.map((document) => document.id));
+  for (const record of holdings.records) {
+    assert.equal(record.agendaDocument?.publicationIndex, true);
+    assert.doesNotMatch(record.text, REVISION_LANGUAGE);
+  }
 });
 
 test("the document every agenda item cites is the one the reading was taken over, never a newer index page", () => {
@@ -91,7 +98,7 @@ test("the document every agenda item cites is the one the reading was taken over
   assert.ok(reading.items.length > 0);
 });
 
-test("the real grounded route hands the answer model ONE Tucson Unified 499 document, the projection's newest, and cites Pima items to the agenda", () => {
+test("the real grounded route hands the answer model Tucson Unified 499's two index pages, the projection's, and cites Pima items to the agenda", () => {
   const base = readSnapshot();
   assert.ok(base);
   // Preconditions on the committed holding this case extends (not a case built for this fix).
@@ -133,13 +140,16 @@ test("the real grounded route hands the answer model ONE Tucson Unified 499 docu
   const [tusd, pima] = results;
   assert.equal(tusd!.status, 200);
   assert.equal(tusd!.payload.subject?.id, TUSD_BOARD);
+  // Corrected 2026-09-23: the 88 re-reads are the Diligent portal page's skip
+  // links, so 499 holds two publication-index pages, each named as one.
   const tusdDocuments = agendaRecordsFor(tusd!.payload.records, TUSD_499);
-  assert.equal(tusdDocuments.length, 1, "one agenda document, not 89 stored rows");
-  assert.equal(tusdDocuments[0]!.sourceUrl, OWN_PAGE);
+  assert.deepEqual(tusdDocuments.map((record) => record.sourceUrl), [OWN_PAGE, SITE_ROOT], "two distinct index pages, not 89 stored rows");
   assert.equal(tusdDocuments[0]!.retrievedAt, NEWEST_REREAD, "the projection's newest read of that content");
-  const siteRootDocuments = tusd!.payload.records.filter((record) => record.kind === "AGENDA_DOCUMENT" && record.sourceUrl === SITE_ROOT);
-  assert.deepEqual(siteRootDocuments, [], "the site root is set aside, never an agenda document of the sitting");
-  assert.equal(tusd!.payload.denominators.agendaDocumentsForThatMeeting, 1);
+  for (const record of tusdDocuments) {
+    assert.equal(record.agendaDocument?.publicationIndex, true, "an index page is never presented as the sitting's agenda");
+  }
+  assert.ok(tusd!.payload.gaps.some((gap) => /agenda portal rather than the agenda itself/.test(gap.statement)), JSON.stringify(tusd!.payload.gaps));
+  assert.equal(tusd!.payload.denominators.agendaDocumentsForThatMeeting, 2);
   for (const text of [tusd!.payload.answer ?? "", ...tusd!.payload.records.map((record) => record.text), ...tusd!.payload.gaps.map((gap) => gap.statement)]) {
     assert.doesNotMatch(text, REVISION_LANGUAGE);
   }
@@ -149,8 +159,8 @@ test("the real grounded route hands the answer model ONE Tucson Unified 499 docu
     subject: tusd!.payload.subject as never, records: tusd!.payload.records, gaps: tusd!.payload.gaps as never,
     denominators: tusd!.payload.denominators, today: "2026-09-22",
   })) as { whatWasSearched: Record<string, number>; records: EvidenceRecord[] };
-  assert.equal(modelContext.whatWasSearched.agendaDocumentsForThatMeeting, 1);
-  assert.equal(agendaRecordsFor(modelContext.records, TUSD_499).length, 1);
+  assert.equal(modelContext.whatWasSearched.agendaDocumentsForThatMeeting, 2);
+  assert.equal(agendaRecordsFor(modelContext.records, TUSD_499).length, 2);
 
   assert.equal(pima!.status, 200);
   assert.equal(pima!.payload.subject?.id, PIMA_BOARD);

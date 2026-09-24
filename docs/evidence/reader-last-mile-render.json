@@ -1,17 +1,17 @@
 {
-  "date": "2026-09-22",
+  "date": "2026-09-23",
   "base": "http://localhost:3210",
-  "buildId": "djtDstfcVbQ1yHnct4Gj2",
-  "exactHead": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-  "runId": "reader-last-mile-render@2026-09-23T05:49:16.763Z",
+  "buildId": "_v0YgXondFE6JGacMt51t",
+  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+  "runId": "reader-last-mile-render@2026-09-24T00:09:11.998Z",
   "results": [
     {
       "label": "85701-desktop-dark",
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -223,7 +223,7 @@
       "ask": {
         "question": "How much campaign money has Katie Hobbs raised and spent?",
         "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
-        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the money her campaign committee collects from donors and the money it pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to the Arizona Secretary of State's campaign-money site, read September 8, 2026. That covers activity recorded from January 1, 2025 through that date. These are the campaign's own filings, so they do not show money spent by outside groups for or against her, and no federal or county filing was found for this answer.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
+        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's own committee collects from donors and then pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site, read September 8, 2026. That covers activity recorded from January 1, 2025 through that date. These are the campaign's own filings, so they do not show outside groups spending for or against her. We did not resolve any county or federal filing for her, which does not prove none exists.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -318,8 +318,8 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2295,
-            "intent": "UNKNOWN",
+            "ms": 2480,
+            "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
             },
@@ -381,12 +381,12 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 4589,
+            "ms": 4473,
             "cache": {
               "callerKey": "synthetic-run",
-              "cacheReadInputTokens": 1008,
-              "cacheCreationInputTokens": 13812,
-              "uncachedInputTokens": 92
+              "cacheReadInputTokens": 14820,
+              "cacheCreationInputTokens": 0,
+              "uncachedInputTokens": 94
             }
           },
           "validation": {
@@ -404,9 +404,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 7966
+          "totalMs": 9537
         },
-        "answer": "Campaign money is the money her campaign committee collects from donors and the money it pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to the Arizona Secretary of State's campaign-money site, read September 8, 2026. That covers activity recorded from January 1, 2025 through that date. These are the campaign's own filings, so they do not show money spent by outside groups for or against her, and no federal or county filing was found for this answer.",
+        "answer": "Campaign money is the cash a candidate's own committee collects from donors and then pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to Arizona's state campaign-finance site, read September 8, 2026. That covers activity recorded from January 1, 2025 through that date. These are the campaign's own filings, so they do not show outside groups spending for or against her. We did not resolve any county or federal filing for her, which does not prove none exists.",
         "renderedRecordCount": 53,
         "renderedRecordIds": [
           "candidate-bio:ballot-az-pima:governor|Katie Hobbs",
@@ -524,9 +524,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -6343,9 +6343,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -10666,9 +10666,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -12571,15 +12571,26 @@
                 "extractionNote": null,
                 "text": "Skip Navigation Jump to SideBar Tucson Unified School District",
                 "sourceOrg": "Tucson Unified School District Governing Board"
+              },
+              {
+                "id": "diligent:tusd1:493@afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "documentUrl": "https://govboard.tusd1.org/",
+                "contentHash": "afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "retrievedAt": "2026-08-14T03:15:45.987Z",
+                "contentType": "text/html; charset=utf-8",
+                "extraction": "html",
+                "extractionNote": null,
+                "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+                "sourceOrg": "Tucson Unified School District Governing Board"
               }
             ],
-            "documentCount": 1,
+            "documentCount": 2,
             "documentAccounting": {
               "heldRows": 116,
-              "shown": 1,
+              "shown": 2,
               "identicalContentRows": 114,
-              "publicationIndexRowsSetAside": 1,
-              "sittingSpecific": true
+              "publicationIndexRowsSetAside": 0,
+              "sittingSpecific": false
             },
             "holdingStatus": "HELD",
             "dataState": "PROMOTED",
@@ -12590,9 +12601,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -12615,17 +12626,17 @@
               "sourceOrg": null
             },
             "publication": {
-              "state": "UNKNOWN/READ_NO_ITEMS_EXTRACTED",
+              "state": "UNKNOWN/ACQUIRED_IS_PUBLICATION_INDEX",
               "publication": "UNKNOWN",
-              "acquisition": "READ_NO_ITEMS_EXTRACTED",
+              "acquisition": "ACQUIRED_IS_PUBLICATION_INDEX",
               "documentSharedAcrossGovernments": false,
               "observation": null,
               "gap": {
                 "whose": "OURS",
-                "statement": "We hold the agenda document for that meeting but could not extract its items."
+                "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:49:40.636Z",
+              "recheckDueAt": "2026-09-24T00:09:45.568Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -12660,8 +12671,8 @@
       "voting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -14352,8 +14363,8 @@
       "ballotVoting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -16225,8 +16236,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -16463,7 +16474,7 @@
       "ask": {
         "question": "How much campaign money has Katie Hobbs raised and spent?",
         "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
-        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's committee collects from donors and the cash it pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising about $11.1 million and spending about $14.4 million, according to Arizona Secretary of State records covering January 1, 2025 through September 8, 2026. These are the campaign's own filings, so they do not show money spent by outside groups for or against her. We did not find a federal or county filing for this answer, which does not prove none exists.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
+        "renderedText": "Katie Hobbs · Governor\n\nCampaign money is the cash a candidate's own campaign committee collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to the Arizona Secretary of State's campaign finance site, covering activity from January 1, 2025 through September 8, 2026. These are the campaign's own filings, so they don't show money spent by outside groups for or against her. No federal or county filing records were found for this answer, which doesn't prove none exist.\n\nRecords (53)\n\n“Born and raised in the Grand Canyon State, Katie Hobbs has dedicated her life to listening to her community and helping solve difficult challenges for the people of Arizona.” — From the candidate's site — katiehobbs.org, read 2026-08-14\n\nFrom the candidate's site — katiehobbs.org, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: info@katiehobbs.org This contact's source URL or read date was not recorded.\n\nCandidate-card contact record\n\nOfficial page: https://azgovernor.gov\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://katiehobbs.org\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 4 years.\n\nArizona Secretary of State · Read August 14th, 2026\n\nThe current general-election nominees are recorded from the certified primary canvass.\n\nArizona Secretary of State · Read August 13th, 2026\n\nKatie Hobbs filed for Governor, as Democratic. The filing does not state whether they are the incumbent.\n\nArizona Secretary of State · Read August 14th, 2026\n\nKatie Hobbs is on the general-election ballot for Governor, filed as Democratic.\n\nArizona Secretary of State · Read August 13th, 2026\n\nSearching Katie Hobbs's published material for water found this passage: \"… Navajo Nation Sign MOU to Create Economic... Governor Hobbs Erases Historic $1 Billion of Medical Debt for Arizonans Governor Katie Hobbs Releases Statement on Colorado River Final... WATCH: STATE OF THE STATE 2026 Priorities Resources Contact Us\"\n\nazgovernor.gov · Read August 20th, 2026\n\nKatie Hobbs holds the office of Governor, Democratic.\n\nOffice of the Arizona Governor · Read August 14th, 2026\n\nExecutive Order 2026-02, \"Protecting the Public Trust by Prohibiting State Government Workers from Using Nonpublic Information for Personal Profit\", signed 2026-07-08.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2026-01, \"Protecting Paychecks for Hard-Working Arizonans\", signed 2026-05-20.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nSB1252, \"uniform assignment; benefit of creditors\", signed by the Governor on 2026-04-09 and chaptered as Chapter 29 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1126, \"DCS caseworkers; schools; required disclosures\", signed by the Governor on 2026-04-09 and chaptered as Chapter 28 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1092, \"dangerous crimes against children; probation\", signed by the Governor on 2026-04-09 and chaptered as Chapter 27 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2861, \"firearm destruction ( NOW: postnuptial agreements; enforcement )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 26 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2857, \"technical correction; national guard ( NOW: inmate medical records; electronic storage )\", signed by the Governor on 2026-04-07 and chaptered as Chapter 25 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2264, \"mining; mineral; museum; state history\", signed by the Governor on 2026-04-07 and chaptered as Chapter 24 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2255, \"teachers academy; community college students\", signed by the Governor on 2026-04-07 and chaptered as Chapter 23 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2223, \"name change petition; sex offenders\", signed by the Governor on 2026-04-07 and chaptered as Chapter 22 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2131, \"trafficking weapons or explosives\", signed by the Governor on 2026-04-07 and chaptered as Chapter 21 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2057, \"special plate; centennial; fleet discount\", signed by the Governor on 2026-04-07 and chaptered as Chapter 20 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1473, \"assisted living homes; occupancy; zoning\", signed by the Governor on 2026-04-07 and chaptered as Chapter 19 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1216, \"traumatic event counseling\", signed by the Governor on 2026-04-07 and chaptered as Chapter 18 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1181, \"certified public accountants; certification; alternative\", signed by the Governor on 2026-04-07 and chaptered as Chapter 17 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1166, \"accommodation schools; high school equivalency\", signed by the Governor on 2026-04-07 and chaptered as Chapter 16 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1097, \"appropriation; named claimants\", signed by the Governor on 2026-04-07 and chaptered as Chapter 15 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1247, \"assisted living centers; occupants ( NOW: assisted living; occupants )\", signed by the Governor on 2026-04-06 and chaptered as Chapter 14 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1020, \"special plate; Arizona space commission\", signed by the Governor on 2026-04-06 and chaptered as Chapter 13 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2307, \"technical correction; critical infrastructure information ( NOW: dangerous incompetent defendants; study committee )\", signed by the Governor on 2026-04-02 and chaptered as Chapter 12 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1415, \"insurance adjuster license; eligibility\", signed by the Governor on 2026-04-02 and chaptered as Chapter 11 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1125, \"DCS; memorandum of understanding; tribes\", signed by the Governor on 2026-04-02 and chaptered as Chapter 10 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2072, \"lactation care providers; certification ( NOW: Cesar Chavez day; repeal )\", signed by the Governor on 2026-04-01 and chaptered as Chapter 9 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1211, \"aggravated harassment; lifetime injunctions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 8 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1029, \"candidate committees; posthumous closure\", signed by the Governor on 2026-03-27 and chaptered as Chapter 7 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nSB1023, \"optometrists; eye exams; prescriptions\", signed by the Governor on 2026-03-27 and chaptered as Chapter 6 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2938, \"mandatory rounding method; cash transactions\", signed by the Governor on 2026-03-13 and chaptered as Chapter 5 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2312, \"patriotic youth groups; school access.\", signed by the Governor on 2026-03-13 and chaptered as Chapter 4 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2190, \"physician assistants; licensure compact\", signed by the Governor on 2026-02-20 and chaptered as Chapter 3 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2792, \"property tax; exemption; veterans\", signed by the Governor on 2026-02-12 and chaptered as Chapter 2 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nHB2022, \"elections; July primary; curing; observers\", signed by the Governor on 2026-02-06 and chaptered as Chapter 1 of the 57leg/2r session.\n\nArizona State Legislature · Read August 28th, 2026\n\nExecutive Order 2025-15, \"Cutting Taxes for Hard-Working Arizonans\", signed 2025-11-25.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-14, \"Granting Authority to the Arizona Department of Homeland Security to Receive Criminal History Record Information\", signed 2025-11-05.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-13, \"Removing Barriers to Delivering Affordable Energy for Arizona\", signed 2025-09-15.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-12, \"Protecting Arizonans’ Healthcare Freedom\", signed 2025-09-11.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-11, \"Rescinding Outdated Executive Orders\", signed 2025-08-13.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-10, \"Lowering the Cost of Prescription Drugs for Arizonans\", signed 2025-08-06.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-09, \"Protecting Arizonans from Heat Risk in the Workplace\", signed 2025-05-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-08, \"Arizona Launching Reentry 2030 Initiative to Create Pathways to Work and Strengthen Public Safety\", signed 2025-04-22.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-07, \"Continuing the Governor’s Commission to Prevent Intimate Partner and Gender-Based Violence\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nExecutive Order 2025-06, \"Continuing the Governor’s Council on Child Safety and Family Empowerment\", signed 2025-04-02.\n\nOffice of the Arizona Governor · Read August 28th, 2026\n\nHB2003 — the Governor sent the legislature a letter about this bill. We have the letter but have not read it yet, so we cannot say what it decided.\n\nArizona State Legislature · Read August 28th, 2026\n\nElect Katie Hobbs, 2026 election cycle: raised $11,109,719.95; spent $14,355,612.69. Filed with the Arizona Secretary of State — See The Money; read September 8th, 2026.\n\nArizona Secretary of State — See The Money · Read September 8th, 2026\n\nArizona's legislature lists 264 bills that became law in the 57leg/2r session. We have read 29 of them so far, so anything here about bills she signed is a partial account and not the whole session.\n\nShe also sent the legislature 151 letters about individual bills. We have retrieved 1 of those letters and have not been able to read 1 of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.\n\nWe read 12 of the 37 executive orders we indexed, and the index continues past what we walked.\n\nWe have not established a canonical voting-office identity for Katie Hobbs, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Katie Hobbs. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Katie Hobbs.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: From the candidate's site — katiehobbs.org, read 2026-08-14, Official page, Campaign site, Arizona Secretary of State, azgovernor.gov, Office of the Arizona Governor, Arizona State Legislature, Arizona Secretary of State — See The Money",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -16558,7 +16569,7 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2425,
+            "ms": 2292,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -16621,7 +16632,7 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 3981,
+            "ms": 4665,
             "cache": {
               "callerKey": "synthetic-run",
               "cacheReadInputTokens": 14820,
@@ -16644,9 +16655,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 7752
+          "totalMs": 9447
         },
-        "answer": "Campaign money is the cash a candidate's committee collects from donors and the cash it pays out for things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising about $11.1 million and spending about $14.4 million, according to Arizona Secretary of State records covering January 1, 2025 through September 8, 2026. These are the campaign's own filings, so they do not show money spent by outside groups for or against her. We did not find a federal or county filing for this answer, which does not prove none exists.",
+        "answer": "Campaign money is the cash a candidate's own campaign committee collects from donors and then spends on things like ads and staff. For the 2026 election cycle, the committee \"Elect Katie Hobbs\" reported raising $11,109,719.95 and spending $14,355,612.69, according to the Arizona Secretary of State's campaign finance site, covering activity from January 1, 2025 through September 8, 2026. These are the campaign's own filings, so they don't show money spent by outside groups for or against her. No federal or county filing records were found for this answer, which doesn't prove none exist.",
         "renderedRecordCount": 53,
         "renderedRecordIds": [
           "candidate-bio:ballot-az-pima:governor|Katie Hobbs",
@@ -16764,9 +16775,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -16799,7 +16810,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:50:26.218Z",
+              "recheckDueAt": "2026-09-24T00:10:49.667Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -16966,8 +16977,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -17227,7 +17238,7 @@
       "ask": {
         "question": "How much campaign money has Tayfun Selen raised and spent?",
         "canonicalCandidacyId": "ballot-nj-morris:county-commissioner:selen",
-        "renderedText": "Tayfun SELEN · Member of the Board of County Commissioners\n\nCampaign money is the cash a candidate's campaign collects from donors and then pays out for things like ads, staff and mailers. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports filed with New Jersey's Election Law Enforcement Commission, covering the period through June 22, 2026 (read September 8, 2026). Those records are the campaign's own filings, so they don't show any outside spending for or against him. We did not resolve any county or federal campaign-finance filings for him, which doesn't mean none exist.\n\nRecords (11)\n\n“He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.” — From the candidate's site — selenformorriscounty.com, read 2026-08-14\n\nFrom the candidate's site — selenformorriscounty.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: selentayfun@gmail.com\n\nMorris County Clerk · Read September 18th, 2026\n\nFiled mailing address: 30 Woodmont Drive Chatham NJ 07928\n\nMorris County Clerk, 2026 general-election candidate filing (read 2026-08-22) · Read August 22nd, 2026\n\nOfficial page: https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://www.selenformorriscounty.com/\n\nCampaign site · Read August 22nd, 2026\n\nMember of the Board of County Commissioners appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 3 years.\n\nMorris County Clerk · Read September 18th, 2026\n\nTayfun SELEN filed for Member of the Board of County Commissioners, as Republican. The filing does not state whether they are the incumbent.\n\nMorris County Clerk · Read September 18th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… Chatham Borough Zoning Board of Adjustment, and as a Chatham Township Committeeman and Mayor. As mayor, Commissioner Selen was responsible for reducing municipal property taxes, helping the township maintain a rare AAA credit rating, and reducing municipal spending by more than 10 percent. He also holds a seat on the Montclair State University …\"\n\nwww.morriscountynj.gov · Read August 20th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… citizenship in 2008 and currently lives in Chatham Township with his wife and daughter. PROVEN CONSERVATIVE As a Mayor of Chatham Township, Tayfun cut municipal property taxes, earned a rare AAA credit rating, and reduced local spending by $200,000. PRIVATE SECTOR SUCCESS Professionally, Tayfun serves as Senior Vice President of Administration …\"\n\nwww.selenformorriscounty.com · Read August 20th, 2026\n\nTayfun Selen holds the office of County Commissioner, Republican.\n\nMorris County · Read August 14th, 2026\n\nSELEN, TAYFUN, 2026 election cycle: raised $225,025.50; spent $229,525.50. Filed with the New Jersey Election Law Enforcement Commission; read September 8th, 2026.\n\nNew Jersey Election Law Enforcement Commission · Read September 8th, 2026\n\nWe have not recorded any actions in office for Tayfun Selen.\n\nWe have not established a canonical voting-office identity for Tayfun SELEN, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Tayfun SELEN. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Tayfun SELEN.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (9)\n\nSources: From the candidate's site — selenformorriscounty.com, read 2026-08-14, Morris County Clerk, Morris County Clerk, 2026 general-election candidate filing (read 2026-08-22), Official page, Campaign site, www.morriscountynj.gov, www.selenformorriscounty.com, Morris County, New Jersey Election Law Enforcement Commission",
+        "renderedText": "Tayfun SELEN · Member of the Board of County Commissioners\n\nCampaign money means the donations a candidate collects and the money their campaign pays out. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports covering periods through June 22, 2026, filed with the New Jersey Election Law Enforcement Commission (read September 8, 2026). These are the campaign's own filings, so they don't show outside spending for or against him. We did not resolve any county filing or any federal record for him, which doesn't mean none exists.\n\nRecords (11)\n\n“He immigrated to America in 1996, served as Mayor of Chatham Township, and is Senior Vice President of Administration for Lincoln Educational Services; a CPA.” — From the candidate's site — selenformorriscounty.com, read 2026-08-14\n\nFrom the candidate's site — selenformorriscounty.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded email: selentayfun@gmail.com\n\nMorris County Clerk · Read September 18th, 2026\n\nFiled mailing address: 30 Woodmont Drive Chatham NJ 07928\n\nMorris County Clerk, 2026 general-election candidate filing (read 2026-08-22) · Read August 22nd, 2026\n\nOfficial page: https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Tayfun-Selen\n\nOfficial page · Read August 13th, 2026\n\nCampaign site: https://www.selenformorriscounty.com/\n\nCampaign site · Read August 22nd, 2026\n\nMember of the Board of County Commissioners appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 3 years.\n\nMorris County Clerk · Read September 18th, 2026\n\nTayfun SELEN filed for Member of the Board of County Commissioners, as Republican. The filing does not state whether they are the incumbent.\n\nMorris County Clerk · Read September 18th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… Chatham Borough Zoning Board of Adjustment, and as a Chatham Township Committeeman and Mayor. As mayor, Commissioner Selen was responsible for reducing municipal property taxes, helping the township maintain a rare AAA credit rating, and reducing municipal spending by more than 10 percent. He also holds a seat on the Montclair State University …\"\n\nwww.morriscountynj.gov · Read August 20th, 2026\n\nSearching Tayfun SELEN's published material for taxes found this passage: \"… citizenship in 2008 and currently lives in Chatham Township with his wife and daughter. PROVEN CONSERVATIVE As a Mayor of Chatham Township, Tayfun cut municipal property taxes, earned a rare AAA credit rating, and reduced local spending by $200,000. PRIVATE SECTOR SUCCESS Professionally, Tayfun serves as Senior Vice President of Administration …\"\n\nwww.selenformorriscounty.com · Read August 20th, 2026\n\nTayfun Selen holds the office of County Commissioner, Republican.\n\nMorris County · Read August 14th, 2026\n\nSELEN, TAYFUN, 2026 election cycle: raised $225,025.50; spent $229,525.50. Filed with the New Jersey Election Law Enforcement Commission; read September 8th, 2026.\n\nNew Jersey Election Law Enforcement Commission · Read September 8th, 2026\n\nWe have not recorded any actions in office for Tayfun Selen.\n\nWe have not established a canonical voting-office identity for Tayfun SELEN, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Tayfun SELEN. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Tayfun SELEN.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (9)\n\nSources: From the candidate's site — selenformorriscounty.com, read 2026-08-14, Morris County Clerk, Morris County Clerk, 2026 general-election candidate filing (read 2026-08-22), Official page, Campaign site, www.morriscountynj.gov, www.selenformorriscounty.com, Morris County, New Jersey Election Law Enforcement Commission",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -17304,7 +17315,7 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 2833,
+            "ms": 2683,
             "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
@@ -17360,11 +17371,11 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 6241,
+            "ms": 3847,
             "cache": {
               "callerKey": "synthetic-run",
-              "cacheReadInputTokens": 1008,
-              "cacheCreationInputTokens": 6520,
+              "cacheReadInputTokens": 7528,
+              "cacheCreationInputTokens": 0,
               "uncachedInputTokens": 94
             }
           },
@@ -17383,9 +17394,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 10481
+          "totalMs": 9509
         },
-        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then pays out for things like ads, staff and mailers. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports filed with New Jersey's Election Law Enforcement Commission, covering the period through June 22, 2026 (read September 8, 2026). Those records are the campaign's own filings, so they don't show any outside spending for or against him. We did not resolve any county or federal campaign-finance filings for him, which doesn't mean none exist.",
+        "answer": "Campaign money means the donations a candidate collects and the money their campaign pays out. For the 2026 election cycle, Tayfun Selen's campaign reported raising $225,025.50 and spending $229,525.50, across 14 reports covering periods through June 22, 2026, filed with the New Jersey Election Law Enforcement Commission (read September 8, 2026). These are the campaign's own filings, so they don't show outside spending for or against him. We did not resolve any county filing or any federal record for him, which doesn't mean none exists.",
         "renderedRecordCount": 11,
         "renderedRecordIds": [
           "candidate-bio:ballot-nj-morris:county-commissioner:selen",
@@ -17439,9 +17450,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -17639,8 +17650,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -17967,7 +17978,7 @@
       "ask": {
         "question": "How much campaign money has Kelly Ayotte raised and spent?",
         "canonicalCandidacyId": "ballot-nh-merrimack:governor:ayotte-kelly",
-        "renderedText": "Kelly Ayotte · Governor\n\nCampaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62 for the 2026 election cycle, according to the New Hampshire Secretary of State's campaign finance filings read on September 8, 2026. These are the campaign's own filings, so they don't show money spent by outside groups for or against her. We did not resolve any county or federal filings for this answer, which doesn't mean none exist.\n\nRecords (9)\n\n“Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.” — In the campaign's words — kellyfornh.com, read 2026-08-14\n\nIn the campaign's words — kellyfornh.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded phone: (603) 271-2121\n\nwww.governor.nh.gov · Read August 21st, 2026\n\nFiled mailing address: PO Box 4723, Manchester NH 03108 This contact's source URL or read date was not recorded.\n\nNew Hampshire Secretary of State, 2026 candidate filing\n\nOfficial page: https://www.governor.nh.gov/meet-governor-ayotte\n\nOfficial page · Read August 21st, 2026\n\nCampaign site: https://kellyfornh.com\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte filed for Governor, as Republican. The filing does not state whether they are the incumbent.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte holds the office of Governor, Republican.\n\nOffice of the Governor of New Hampshire · Read August 14th, 2026\n\nKelly for New Hampshire, 2026 election cycle: raised $6,112,059.13; spent $3,941,563.62. Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 8th, 2026.\n\nNew Hampshire Secretary of State — Campaign Finance System · Read September 8th, 2026\n\nWe have not recorded any actions in office for Kelly Ayotte.\n\nWe have not established a canonical voting-office identity for Kelly Ayotte, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Kelly Ayotte. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Kelly Ayotte.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: In the campaign's words — kellyfornh.com, read 2026-08-14, www.governor.nh.gov, Official page, Campaign site, New Hampshire Secretary of State, Office of the Governor of New Hampshire, New Hampshire Secretary of State — Campaign Finance System",
+        "renderedText": "Kelly Ayotte · Governor\n\nCampaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62, according to the New Hampshire Secretary of State's campaign finance system as read on September 8, 2026. That filing does not tell us how much cash is left on hand. These are the campaign's own filings, so they do not cover outside groups spending for or against her, and we did not resolve any federal or county filings.\n\nRecords (9)\n\n“Governor Kelly Ayotte is working every day to keep our state safe, prosperous and free.” — In the campaign's words — kellyfornh.com, read 2026-08-14\n\nIn the campaign's words — kellyfornh.com, read 2026-08-14 · Read August 14th, 2026\n\nRecorded phone: (603) 271-2121\n\nwww.governor.nh.gov · Read August 21st, 2026\n\nFiled mailing address: PO Box 4723, Manchester NH 03108 This contact's source URL or read date was not recorded.\n\nNew Hampshire Secretary of State, 2026 candidate filing\n\nOfficial page: https://www.governor.nh.gov/meet-governor-ayotte\n\nOfficial page · Read August 21st, 2026\n\nCampaign site: https://kellyfornh.com\n\nCampaign site · Read August 13th, 2026\n\nGovernor appears on this ballot for 2026 General Election on November 3rd, 2026. Voters choose 1, for a term of 2 years. Candidates shown are everyone who filed for the September 8, 2026 state primary (Secretary of State cumulative filing, July 16 revision). The general-election lineup narrows to the primary winners after September 8.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte filed for Governor, as Republican. The filing does not state whether they are the incumbent.\n\nNew Hampshire Secretary of State · Read August 14th, 2026\n\nKelly Ayotte holds the office of Governor, Republican.\n\nOffice of the Governor of New Hampshire · Read August 14th, 2026\n\nKelly for New Hampshire, 2026 election cycle: raised $6,112,059.13; spent $3,941,563.62. Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 8th, 2026.\n\nNew Hampshire Secretary of State — Campaign Finance System · Read September 8th, 2026\n\nWe have not recorded any actions in office for Kelly Ayotte.\n\nWe have not established a canonical voting-office identity for Kelly Ayotte, so no other person's voting record has been attached.\n\nCounty filings: no applicable county filing was resolved for this answer about Kelly Ayotte. That does not establish that none exists.\n\nState filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against Kelly Ayotte.\n\nFederal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.\n\nWho this is (1)\n\nSources: In the campaign's words — kellyfornh.com, read 2026-08-14, www.governor.nh.gov, Official page, Campaign site, New Hampshire Secretary of State, Office of the Governor of New Hampshire, New Hampshire Secretary of State — Campaign Finance System",
         "retrievedRecords": [
           {
             "kind": "FINANCE_SUMMARY",
@@ -18016,8 +18027,8 @@
           "interpretation": {
             "ran": true,
             "model": "claude-opus-5",
-            "ms": 3150,
-            "intent": "UNKNOWN",
+            "ms": 2603,
+            "intent": "PERSON_RECORD",
             "temporal": {
               "kind": "NONE"
             },
@@ -18072,12 +18083,12 @@
             "ran": true,
             "model": "claude-opus-5",
             "effort": "medium",
-            "ms": 4955,
+            "ms": 3630,
             "cache": {
               "callerKey": "synthetic-run",
               "cacheReadInputTokens": 1008,
               "cacheCreationInputTokens": 4660,
-              "uncachedInputTokens": 93
+              "uncachedInputTokens": 95
             }
           },
           "validation": {
@@ -18095,9 +18106,9 @@
             ]
           },
           "answerMode": "GROUNDED_CLAUDE",
-          "totalMs": 15205
+          "totalMs": 12484
         },
-        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62 for the 2026 election cycle, according to the New Hampshire Secretary of State's campaign finance filings read on September 8, 2026. These are the campaign's own filings, so they don't show money spent by outside groups for or against her. We did not resolve any county or federal filings for this answer, which doesn't mean none exist.",
+        "answer": "Campaign money is the cash a candidate's campaign collects from donors and then spends on things like ads and staff. For the 2026 election cycle, Kelly Ayotte's campaign committee, Kelly for New Hampshire, reported raising $6,112,059.13 and spending $3,941,563.62, according to the New Hampshire Secretary of State's campaign finance system as read on September 8, 2026. That filing does not tell us how much cash is left on hand. These are the campaign's own filings, so they do not cover outside groups spending for or against her, and we did not resolve any federal or county filings.",
         "renderedRecordCount": 9,
         "renderedRecordIds": [
           "candidate-bio:ballot-nh-merrimack:governor:ayotte-kelly",
@@ -18149,9 +18160,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -18184,7 +18195,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:51:37.034Z",
+              "recheckDueAt": "2026-09-24T00:12:31.797Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -18213,7 +18224,7 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 294,
+        "renderedListingCount": 295,
         "groups": [
           {
             "sourceIds": [
@@ -18395,8 +18406,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -18534,9 +18545,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -24353,9 +24364,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -28676,9 +28687,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -30581,15 +30592,26 @@
                 "extractionNote": null,
                 "text": "Skip Navigation Jump to SideBar Tucson Unified School District",
                 "sourceOrg": "Tucson Unified School District Governing Board"
+              },
+              {
+                "id": "diligent:tusd1:493@afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "documentUrl": "https://govboard.tusd1.org/",
+                "contentHash": "afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "retrievedAt": "2026-08-14T03:15:45.987Z",
+                "contentType": "text/html; charset=utf-8",
+                "extraction": "html",
+                "extractionNote": null,
+                "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+                "sourceOrg": "Tucson Unified School District Governing Board"
               }
             ],
-            "documentCount": 1,
+            "documentCount": 2,
             "documentAccounting": {
               "heldRows": 116,
-              "shown": 1,
+              "shown": 2,
               "identicalContentRows": 114,
-              "publicationIndexRowsSetAside": 1,
-              "sittingSpecific": true
+              "publicationIndexRowsSetAside": 0,
+              "sittingSpecific": false
             },
             "holdingStatus": "HELD",
             "dataState": "PROMOTED",
@@ -30600,9 +30622,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:09:19.671Z",
+              "retrievedAt": "2026-09-24T00:09:19.759Z",
+              "promotedAt": "2026-09-24T00:09:20.329Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -30625,17 +30647,17 @@
               "sourceOrg": null
             },
             "publication": {
-              "state": "UNKNOWN/READ_NO_ITEMS_EXTRACTED",
+              "state": "UNKNOWN/ACQUIRED_IS_PUBLICATION_INDEX",
               "publication": "UNKNOWN",
-              "acquisition": "READ_NO_ITEMS_EXTRACTED",
+              "acquisition": "ACQUIRED_IS_PUBLICATION_INDEX",
               "documentSharedAcrossGovernments": false,
               "observation": null,
               "gap": {
                 "whose": "OURS",
-                "statement": "We hold the agenda document for that meeting but could not extract its items."
+                "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:52:52.270Z",
+              "recheckDueAt": "2026-09-24T00:14:29.572Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -30670,8 +30692,8 @@
       "voting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -32362,8 +32384,8 @@
       "ballotVoting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -34235,8 +34257,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -34374,9 +34396,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -34409,7 +34431,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:53:21.411Z",
+              "recheckDueAt": "2026-09-24T00:15:06.034Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -34576,8 +34598,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -34738,9 +34760,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:48:50.990Z",
-              "retrievedAt": "2026-09-23T05:48:51.008Z",
-              "promotedAt": "2026-09-23T05:48:51.255Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -34938,8 +34960,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -35062,9 +35084,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -35097,7 +35119,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:53:58.670Z",
+              "recheckDueAt": "2026-09-24T00:16:08.785Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -35126,7 +35148,7 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 294,
+        "renderedListingCount": 295,
         "groups": [
           {
             "sourceIds": [
@@ -35308,8 +35330,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -35447,9 +35469,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -41266,9 +41288,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -45589,9 +45611,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -47494,15 +47516,26 @@
                 "extractionNote": null,
                 "text": "Skip Navigation Jump to SideBar Tucson Unified School District",
                 "sourceOrg": "Tucson Unified School District Governing Board"
+              },
+              {
+                "id": "diligent:tusd1:493@afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "documentUrl": "https://govboard.tusd1.org/",
+                "contentHash": "afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "retrievedAt": "2026-08-14T03:15:45.987Z",
+                "contentType": "text/html; charset=utf-8",
+                "extraction": "html",
+                "extractionNote": null,
+                "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+                "sourceOrg": "Tucson Unified School District Governing Board"
               }
             ],
-            "documentCount": 1,
+            "documentCount": 2,
             "documentAccounting": {
               "heldRows": 116,
-              "shown": 1,
+              "shown": 2,
               "identicalContentRows": 114,
-              "publicationIndexRowsSetAside": 1,
-              "sittingSpecific": true
+              "publicationIndexRowsSetAside": 0,
+              "sittingSpecific": false
             },
             "holdingStatus": "HELD",
             "dataState": "PROMOTED",
@@ -47513,9 +47546,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -47538,17 +47571,17 @@
               "sourceOrg": null
             },
             "publication": {
-              "state": "UNKNOWN/READ_NO_ITEMS_EXTRACTED",
+              "state": "UNKNOWN/ACQUIRED_IS_PUBLICATION_INDEX",
               "publication": "UNKNOWN",
-              "acquisition": "READ_NO_ITEMS_EXTRACTED",
+              "acquisition": "ACQUIRED_IS_PUBLICATION_INDEX",
               "documentSharedAcrossGovernments": false,
               "observation": null,
               "gap": {
                 "whose": "OURS",
-                "statement": "We hold the agenda document for that meeting but could not extract its items."
+                "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:54:39.656Z",
+              "recheckDueAt": "2026-09-24T00:17:16.415Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -47583,8 +47616,8 @@
       "voting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -49283,8 +49316,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 33.448300455978,
-                "lng": -112.076399571212
+                "lat": 33.448302410199,
+                "lng": -112.076397995695
               },
               "jurisdictions": [],
               "outsideCoverage": true,
@@ -49324,8 +49357,8 @@
         "answer": {
           "match": true,
           "point": {
-            "lat": 33.448300455978,
-            "lng": -112.076399571212
+            "lat": 33.448302410199,
+            "lng": -112.076397995695
           },
           "jurisdictions": [],
           "outsideCoverage": true,
@@ -49394,8 +49427,8 @@
       "ballotVoting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -51094,8 +51127,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 33.448300455978,
-                "lng": -112.076399571212
+                "lat": 33.448302410199,
+                "lng": -112.076397995695
               },
               "jurisdictions": [],
               "outsideCoverage": true,
@@ -51135,8 +51168,8 @@
         "answer": {
           "match": true,
           "point": {
-            "lat": 33.448300455978,
-            "lng": -112.076399571212
+            "lat": 33.448302410199,
+            "lng": -112.076397995695
           },
           "jurisdictions": [],
           "outsideCoverage": true,
@@ -51432,8 +51465,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -51571,9 +51604,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -51606,7 +51639,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:54:54.764Z",
+              "recheckDueAt": "2026-09-24T00:17:46.084Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -51773,8 +51806,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -51935,9 +51968,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -52054,8 +52087,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 40.896344345374,
-                "lng": -74.52979431467
+                "lat": 40.896345902797,
+                "lng": -74.529792237273
               },
               "jurisdictions": [
                 {
@@ -52243,8 +52276,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 40.896344345374,
-                "lng": -74.52979431467
+                "lat": 40.896345902797,
+                "lng": -74.529792237273
               },
               "jurisdictions": [
                 {
@@ -52509,8 +52542,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -52633,9 +52666,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:14:45.379Z",
+              "retrievedAt": "2026-09-24T00:14:46.086Z",
+              "promotedAt": "2026-09-24T00:14:46.454Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -52668,7 +52701,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:55:22.435Z",
+              "recheckDueAt": "2026-09-24T00:18:27.267Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -52697,7 +52730,7 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 294,
+        "renderedListingCount": 295,
         "groups": [
           {
             "sourceIds": [
@@ -52879,8 +52912,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -53018,9 +53051,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:18:56.040Z",
+              "retrievedAt": "2026-09-24T00:18:56.065Z",
+              "promotedAt": "2026-09-24T00:18:56.404Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -58837,9 +58870,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:18:56.040Z",
+              "retrievedAt": "2026-09-24T00:18:56.065Z",
+              "promotedAt": "2026-09-24T00:18:56.404Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -63160,9 +63193,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:18:56.040Z",
+              "retrievedAt": "2026-09-24T00:18:56.065Z",
+              "promotedAt": "2026-09-24T00:18:56.404Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -65065,15 +65098,26 @@
                 "extractionNote": null,
                 "text": "Skip Navigation Jump to SideBar Tucson Unified School District",
                 "sourceOrg": "Tucson Unified School District Governing Board"
+              },
+              {
+                "id": "diligent:tusd1:493@afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "documentUrl": "https://govboard.tusd1.org/",
+                "contentHash": "afbbca07a6910525e545c94156982a078aeed9f8e8e9ec31d48114c052457e58",
+                "retrievedAt": "2026-08-14T03:15:45.987Z",
+                "contentType": "text/html; charset=utf-8",
+                "extraction": "html",
+                "extractionNote": null,
+                "text": "Tucson Unified Governing Board Next Meeting View the Governing Board Meeting Live. Governing Board Meeting 8/25/2026 4:30pm - 8:30pm &times; Governing Board Meeting Date & Time: 8/25/2026 4:30pm - 8:30pm Governing Board meetings are held at the Duffy Community Center, 5145 E. 5 th Street, 85711, in the Multipurpose Room. All meeting notices, agendas, minutes, actions, recordings, and other resources are available on Diligent Community . Audio-video recordings are available shortly after the meetings also on Diligent Community . Close Board Members Dr. Ravi Shah Email Dr. Ravi Shah Board President Term expires: December 31, 2028 Natalie Luna Rose Email Natalie Luna Rose Board Clerk Term expires: December 31, 2028 Jennifer Eckstrom Email Jennifer Eckstrom Term expires: December 31, 2026 Val Romero Email Val Romero Term Expires: December 31, 2026 Sadie Shaw Email Sadie Shaw Term expires: December 31, 2028 Current Members' Bios Members: 1867-Present (PDF) Contact the Board Email Governing Board ( [email&#160;protected] ) Phone: (520) 225-6070 FAX: (520) 798-8767 Policies for Review: When the Governing Board is soliciting feedback on policies proposed for elimination, revision, and adoption, please click here to: Share your feedback Board Meeting The Governing Board will hold a Special Meeting on Tuesday, August 25, 2026 with Executive Session beginning at 4:30 p.m. and the Public meeting scheduled to begin at 5:30 p.m. at the Duffy Community Center - Multipurpose Room, 5145 E. Fifth Street, Tucson, AZ 85711. There will be a Public Hearing at the August 25th meeting for the Revision of Instructional Time Model (ITM) for Palo Verde High Magnet School Effective for the 2026-2027 School Year. Public access for each meeting will begin 15 minutes prior to the vote to go into Executive Session. Meeting notices are posted outside the front door at the TUSD District Office at 1010 E. Tenth Street, Tucson, AZ 85719. Call to the Audience The following procedures related to the Call to the Audience portion of Board meetings will be observed: Members of the public who wish to address the Board shall complete a Request to Address Board form and submit electronically to the Board office by noon the day of the meeting or physically to Board Staff at the start of the meeting before the close of Call to the Audience. Submission must include name of speaker, topic of comments and should indicate which agenda item your comments relate to. Submission must indicate whether individuals will address the Board in person or will submit written comments to be read into the record (email written comments to [email&#160;protected] ) by noon the day of the meeting. The complete rules for Call to the Audience are located in Governing Board Policy BEDH - Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Se observar&aacute;n los siguientes procedimientos relacionados con la porci&oacute;n del Llamado a la Audiencia: Los miembros del p&uacute;blico que deseen abordar a la Mesa Directiva deben llenar la forma Petici&oacute;n para Dirigirse a La Mesa Directiva y someta esta forma electronicamente a la oficina de la Mesa Directiva para el mediodia el dia de la junta, o fisicamente al personal de la Mesa Directiva en la reuni&oacute;n en cualquier momento antes del cierre del Llamado a la Audiencia. Debe incluir su nombre, tema de los comentarios y debe incluir cu&aacute;l asunto de la agenda se relacionan sus comentarios. Debe indicar si desea dirigirse a la Mesa Directiva en persona o someter sus comentarios escritos para ser leidos (comentarios escritos pueden ser eviados por correo electr&oacute;nico al [email&#160;protected] ) para el mediodia del dia de la junta. Las reglas completes para la Llamado a la Audiencia pueden encontrar en la Pol&iacute;tica de la Mesa Directiva BEDH &ndash; Public Participation at Board Meetings, Policy-Code-BEDH (tusd1.org) . Meeting Materials Beginning January 13, 2026, Tucson Unified will be using Diligent Community to provide easy access to support materials, greater efficiency for the district, and increased transparency. To access agenda items and support materials go to Diligent Community . Recordings Audio-video recordings are available after the meetings on Diligent Community just choose the meeting you wish to view and then select video. Vacancies Events with 3 or More Members Impact Tucson Community and Family Resource Fair - July 25, 2026 Proclamations Resolutions National School Counseling Week Proclamation - February 2-6, 2026 Career & Technical Education (CTE) Month Proclamation - February 2026 Purchasing Month Proclamation - March 2026 Social Worker Month Proclamation - March 2026 Live Meeting Videos Governing Board meetings will be available here when meetings are in session. August 11, 2026 Meeting Vote to Convene On district Windows devices, students and staff may find that these videos on YouTube are blocked. If so, please log into Google with your district credentials . Error Message: For more details and instructions, please visit our TS Article on YouTube Videos (Sharepoint) . Thank you for your patience, as we work to resolve this.",
+                "sourceOrg": "Tucson Unified School District Governing Board"
               }
             ],
-            "documentCount": 1,
+            "documentCount": 2,
             "documentAccounting": {
               "heldRows": 116,
-              "shown": 1,
+              "shown": 2,
               "identicalContentRows": 114,
-              "publicationIndexRowsSetAside": 1,
-              "sittingSpecific": true
+              "publicationIndexRowsSetAside": 0,
+              "sittingSpecific": false
             },
             "holdingStatus": "HELD",
             "dataState": "PROMOTED",
@@ -65084,9 +65128,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:18:56.040Z",
+              "retrievedAt": "2026-09-24T00:18:56.065Z",
+              "promotedAt": "2026-09-24T00:18:56.404Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -65109,17 +65153,17 @@
               "sourceOrg": null
             },
             "publication": {
-              "state": "UNKNOWN/READ_NO_ITEMS_EXTRACTED",
+              "state": "UNKNOWN/ACQUIRED_IS_PUBLICATION_INDEX",
               "publication": "UNKNOWN",
-              "acquisition": "READ_NO_ITEMS_EXTRACTED",
+              "acquisition": "ACQUIRED_IS_PUBLICATION_INDEX",
               "documentSharedAcrossGovernments": false,
               "observation": null,
               "gap": {
                 "whose": "OURS",
-                "statement": "We hold the agenda document for that meeting but could not extract its items."
+                "statement": "The link we hold for that meeting is GOVERNING BOARD AGENDA SPECIAL MEETING's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:55:54.220Z",
+              "recheckDueAt": "2026-09-24T00:19:29.261Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
               "supersededDocumentUrls": [],
@@ -65154,8 +65198,8 @@
       "voting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -66854,8 +66898,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 33.448300455978,
-                "lng": -112.076399571212
+                "lat": 33.448302410199,
+                "lng": -112.076397995695
               },
               "jurisdictions": [],
               "outsideCoverage": true,
@@ -66895,8 +66939,8 @@
         "answer": {
           "match": true,
           "point": {
-            "lat": 33.448300455978,
-            "lng": -112.076399571212
+            "lat": 33.448302410199,
+            "lng": -112.076397995695
           },
           "jurisdictions": [],
           "outsideCoverage": true,
@@ -66965,8 +67009,8 @@
       "ballotVoting": {
         "match": true,
         "point": {
-          "lat": 32.225355814177,
-          "lng": -110.971644424395
+          "lat": 32.225359593809,
+          "lng": -110.971644556809
         },
         "jurisdictions": [
           {
@@ -68665,8 +68709,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 33.448300455978,
-                "lng": -112.076399571212
+                "lat": 33.448302410199,
+                "lng": -112.076397995695
               },
               "jurisdictions": [],
               "outsideCoverage": true,
@@ -68706,8 +68750,8 @@
         "answer": {
           "match": true,
           "point": {
-            "lat": 33.448300455978,
-            "lng": -112.076399571212
+            "lat": 33.448302410199,
+            "lng": -112.076397995695
           },
           "jurisdictions": [],
           "outsideCoverage": true,
@@ -69003,8 +69047,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -69142,9 +69186,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:19:10.002Z",
+              "retrievedAt": "2026-09-24T00:19:15.330Z",
+              "promotedAt": "2026-09-24T00:19:17.199Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -69177,7 +69221,7 @@
                 "statement": "The link we hold for that meeting is Governing Board Meeting (Virtual Only)'s agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:56:09.093Z",
+              "recheckDueAt": "2026-09-24T00:20:05.348Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://vailschooldistrict.community.highbond.com/Portal/",
               "supersededDocumentUrls": [],
@@ -69344,8 +69388,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -69506,9 +69550,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:19:10.002Z",
+              "retrievedAt": "2026-09-24T00:19:15.330Z",
+              "promotedAt": "2026-09-24T00:19:17.199Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -69625,8 +69669,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 40.896344345374,
-                "lng": -74.52979431467
+                "lat": 40.896345902797,
+                "lng": -74.529792237273
               },
               "jurisdictions": [
                 {
@@ -69814,8 +69858,8 @@
             "answer": {
               "match": true,
               "point": {
-                "lat": 40.896344345374,
-                "lng": -74.52979431467
+                "lat": 40.896345902797,
+                "lng": -74.529792237273
               },
               "jurisdictions": [
                 {
@@ -70080,8 +70124,8 @@
       "result": "PASS",
       "error": null,
       "build": {
-        "commit": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
-        "commitShort": "dec3fa3",
+        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
+        "commitShort": "ae04884",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -70204,9 +70248,9 @@
               "version": null,
               "versionId": null,
               "lastKnownGoodVersionId": null,
-              "sourceThrough": "2026-09-23T05:53:25.752Z",
-              "retrievedAt": "2026-09-23T05:53:25.764Z",
-              "promotedAt": "2026-09-23T05:53:25.946Z",
+              "sourceThrough": "2026-09-24T00:19:10.002Z",
+              "retrievedAt": "2026-09-24T00:19:15.330Z",
+              "promotedAt": "2026-09-24T00:19:17.199Z",
               "stale": "STALE",
               "staleAt": null
             },
@@ -70239,7 +70283,7 @@
                 "statement": "The link we hold for that meeting is Selectboard's agenda portal rather than the agenda itself."
               },
               "obligationOpen": true,
-              "recheckDueAt": "2026-09-23T05:56:37.246Z",
+              "recheckDueAt": "2026-09-24T00:20:43.892Z",
               "alternateSearchOpen": true,
               "currentDocumentUrl": "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3367",
               "supersededDocumentUrls": [],
@@ -70268,7 +70312,7 @@
         }
       ],
       "listingMultiplicity": {
-        "renderedListingCount": 294,
+        "renderedListingCount": 295,
         "groups": [
           {
             "sourceIds": [
@@ -70463,7 +70507,7 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-legistar-pima-1822-agenda-text.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-legistar-pima-1827-agenda.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-legistar-pima-1827-agenda-text.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-diligent-tusd1-493-agenda-text.png",
+    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-diligent-tusd1-493-publication-index.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-voting-sites.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-voting-sites-source.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-dark-ballot-money.png",
@@ -70547,7 +70591,7 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-legistar-pima-1822-agenda-text.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-legistar-pima-1827-agenda.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-legistar-pima-1827-agenda-text.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-diligent-tusd1-493-agenda-text.png",
+    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-diligent-tusd1-493-publication-index.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-voting-sites.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-voting-sites-source.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-desktop-light-ballot-money.png",
@@ -70622,7 +70666,7 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-legistar-pima-1822-agenda-text.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-legistar-pima-1827-agenda.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-legistar-pima-1827-agenda-text.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-diligent-tusd1-493-agenda-text.png",
+    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-diligent-tusd1-493-publication-index.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-voting-sites.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-voting-sites-source.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-dark-voting-outside-coverage.png",
@@ -70706,7 +70750,7 @@
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-legistar-pima-1822-agenda-text.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-legistar-pima-1827-agenda.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-legistar-pima-1827-agenda-text.png",
-    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-diligent-tusd1-493-agenda-text.png",
+    "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-diligent-tusd1-493-publication-index.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-voting-sites.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-voting-sites-source.png",
     "C:\\Users\\seanj\\dev\\we-the-people\\.claude\\worktrees\\meanwhile-admin-cost-visibility-870c84\\screenshots\\reader-last-mile\\85701-phone-light-voting-outside-coverage.png",

@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { BillingFact } from "@/lib/control-plane/billing-facts.ts";
-import { buildBodyViews, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
+import { buildBodyViews, nowFigures, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
+import { lateWords, sharedRead } from "@/app/(admin)/_mw/data/shared-read.ts";
 import { FIX_ITEMS, orderByMarks } from "@/lib/control-plane/admin-view/fix-list.ts";
 import { routineDetail } from "@/lib/control-plane/admin-view/work-view.ts";
 import {
@@ -246,6 +247,90 @@ test("a routine assignment's trail follows the version that changed what readers
   const unread = trailOf({ ...store, changes: null });
   assert.match(unread.get("Last change") ?? "", /^Not read this time/);
   assert.equal(unread.get("What changed"), "Nothing — this version re-confirmed what readers already had", "the version serving now is still shown as it is");
+});
+
+test("a body read through two sources holds at least its larger source, and every total over it says it is a floor", () => {
+  // Pima County's Board of Supervisors on 2026-09-23: 12 meetings through Legistar InSite (the newer version), 15 through Legistar.
+  const contract = (id: string, source: string): WatchedContract => ({
+    id: `meetings:${source}:pima-bos`,
+    scope: `source:${source}:body:pima-bos`,
+    bodyId: "ocd-division/country:us/state:az/county:pima#board-of-supervisors",
+    ocdId: "ocd-division/country:us/state:az/county:pima",
+    meetingSource: source,
+    jurisdiction: "Pima County",
+    publishingOrg: "Pima County",
+    sourceUrl: null,
+    verifiedAt: null,
+    cadence: { description: "every hour", defaultEveryMs: 3_600_000 },
+    retry: { afterMs: 900_000, description: "fifteen minutes later" },
+  });
+  const version = (source: string, versionId: string, promotedAt: string, meetings: number): VersionFacts => ({
+    scope: `source:${source}:body:pima-bos`, versionId, promotedAt, meetings, fresh: meetings, carried: 0, docs: 0, noAgendaLink: 0, noAgendaAhead: 0,
+    upcoming: 2, furthestAhead: null, bodyName: "Board of Supervisors", jurisdiction: "Pima County", outcome: "UNCHANGED", added: 0, changed: 0, removed: 0, held: 0,
+  });
+  const views = buildBodyViews({
+    contracts: [contract("a", "legistar"), contract("b", "legistar-insite")],
+    nowIso: NOW,
+    store: {
+      asOf: NOW,
+      versions: [version("legistar", "cv-legistar", "2026-09-23T14:00:00.000Z", 15), version("legistar-insite", "cv-insite", "2026-09-23T15:00:00.000Z", 12)],
+      attempts: [],
+      readbacks: [{ candidateId: "cv-insite", at: "2026-09-23T15:00:05.000Z", passed: true }, { candidateId: "cv-legistar", at: "2026-09-23T14:00:05.000Z", passed: true }],
+      day: [],
+    },
+  });
+  assert.equal(views.length, 1, "two sources, one body (MW-003)");
+  assert.equal(views[0].records, 15, "the larger source, not the newer one's 12");
+  assert.equal(views[0].recordSources, 2);
+  assert.equal(views[0].readerVisible, 15);
+  const figures = nowFigures(views);
+  assert.equal(figures.records, 15);
+  assert.equal(figures.recordsFloor, true, "a total over a two-source body is a floor");
+});
+
+test("a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline", async () => {
+  let clock = 0;
+  let loads = 0;
+  type R = { readonly kind: "HELD"; readonly n: number } | { readonly kind: "UNREAD"; readonly detail: string };
+  const reader = sharedRead<R>(
+    { freshMs: 100, staleMs: 1_000, deadlineMs: 30, keep: (r) => r.kind === "HELD", late: (ms) => ({ kind: "UNREAD", detail: lateWords("The test read", ms) }) },
+    () => clock,
+  );
+  const slow = (n: number, ms: number) => () => {
+    loads += 1;
+    return new Promise<R>((resolve) => setTimeout(() => resolve({ kind: "HELD", n }), ms));
+  };
+
+  // Three callers at once share one load (All states used to load the Census lookup three times over).
+  const three = await Promise.all([reader.read(slow(1, 5)), reader.read(slow(1, 5)), reader.read(slow(1, 5))]);
+  assert.equal(loads, 1);
+  assert.deepEqual(three.map((r) => (r.kind === "HELD" ? r.n : null)), [1, 1, 1]);
+
+  // Fresh: no load at all.
+  clock = 50;
+  assert.deepEqual(await reader.read(slow(2, 5)), { kind: "HELD", n: 1 });
+  assert.equal(loads, 1);
+
+  // Recent: the held read is served at once and a fresh one runs behind it.
+  clock = 500;
+  assert.deepEqual(await reader.read(slow(2, 5)), { kind: "HELD", n: 1 });
+  assert.equal(loads, 2);
+  await new Promise((r) => setTimeout(r, 20));
+  assert.deepEqual(await reader.read(slow(3, 5)), { kind: "HELD", n: 2 }, "the refreshed read replaced the recent one");
+
+  // Too old to serve, and slower than the deadline: named as not read, never a blank; the late answer is kept for the next caller.
+  clock = 5_000;
+  const late = await reader.read(slow(4, 80));
+  assert.equal(late.kind, "UNREAD");
+  assert.match(late.kind === "UNREAD" ? late.detail : "", /^The test read did not answer within 0 seconds, so it is not shown this time\. .*not the same as there being none\.$/);
+  await new Promise((r) => setTimeout(r, 100));
+  assert.deepEqual(await reader.read(slow(5, 5)), { kind: "HELD", n: 4 });
+
+  // A failed read is never kept.
+  reader.reset();
+  const failed = await reader.read(async () => ({ kind: "UNREAD", detail: "down" }) as R);
+  assert.equal(failed.kind, "UNREAD");
+  assert.deepEqual(await reader.read(slow(6, 5)), { kind: "HELD", n: 6 }, "the next caller reads again");
 });
 
 test("the scope travels in the URL and an unreadable scope is everywhere, never a guess", () => {

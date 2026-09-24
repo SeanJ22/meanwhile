@@ -105,6 +105,14 @@ export interface CarryForwardResult {
  * second failed run did not make the row any fresher, and restamping it would
  * walk the timestamp forward one refusal at a time until a row nobody has
  * fetched in a week claimed to be hours old.
+ *
+ * It records no `reason`, and a reader surface therefore states none for it
+ * (`carriedRowClause`, `lib/meetings/freshness.ts`, 2026-09-23). That is not an
+ * omission to fill in at read time: this function marks three conditions — a
+ * failed source, an unreachable division, and a refused ARCHIVE scope whose
+ * upcoming feed answered (A-004) — and the mark does not say which. Two are
+ * refusals; the third is a partial read. No single sentence is true of all
+ * three, so none is chosen.
  */
 function mark(meeting: Meeting, source: string, previousGeneratedAt: string): Meeting {
   if (meeting.carried) return meeting;

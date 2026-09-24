@@ -251,6 +251,29 @@ import {
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { loadExpansionPlan } from "../lib/control-plane/expansion/runner-load.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
+import {
+  isControlPlaneRequestTimeout,
+  observeControlPlaneTimeouts,
+  withStoreBudget,
+} from "../lib/control-plane/repository/request-bounds.ts";
+import {
+  CYCLE_STALL_LEAD_MS,
+  PendingOperations,
+  startCycleStallDiagnostic,
+  trackStoreCalls,
+  type CycleStallDiagnostic,
+} from "../lib/control-plane/scheduler/cycle-stall.ts";
+import {
+  CYCLE_FINALIZATION_BUDGETS_MS,
+  DIGEST_AND_RECORD_RESERVE_MS,
+  LOCAL_RECORD_RESERVE_MS,
+  cycleClock,
+  recordFailedCycle,
+  runBoundedStep,
+  stepBudgetMs,
+  type CycleClock,
+} from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
@@ -268,6 +291,45 @@ const HOST = hostname();
 const nowIso = (): string => new Date().toISOString();
 
 /*
+ * **THE CYCLE'S IDENTITY, ITS ONE RECORD PATH, AND WHAT IT IS WAITING ON.**
+ * (Runner bounded store calls, 2026-09-23.)
+ *
+ * The SHA and the run provenance are read once, here: they are of the code
+ * this process loaded and the tree it started from, and every later read
+ * spawned git again, unbounded, inside finalization. The run record's path is
+ * reserved at start, so the stall diagnostic, the crash handler and the cycle's
+ * own record all write the one record. `pending` is the main thread's account
+ * of the last phase, the labelled await and the store calls in flight, which
+ * the stall diagnostic reads from its own thread (cycle-stall.ts).
+ */
+const PROCESS_STARTED_MS = Math.round(performance.timeOrigin);
+const RUNNING_CODE_SHA = headSha(ROOT);
+/* The provenance is of the tree this run STARTED from (run-provenance.ts): read here, not by git calls in finalization. */
+const RUN_PROVENANCE = readRunProvenance(RUNNING_CODE_SHA, ROOT);
+const CYCLE_ID = `freshness-cycle:${HOST}:${NOW}`;
+const RUN_RECORD_PATH = nextRunRecordPath(RUNS_DIR, today());
+const pending = new PendingOperations();
+/** Set once the argv is read; before that the wall is the Fleet ceiling. */
+let CLOCK: CycleClock = cycleClock({
+  processStartedMs: PROCESS_STARTED_MS,
+  wallMs: FLEET_SAFETY_BOUNDS.maxWallMsPerCycle,
+  stallLeadMs: CYCLE_STALL_LEAD_MS,
+});
+let stallDiagnostic: CycleStallDiagnostic | null = null;
+/** True once the cycle wrote its own record; a later failure must not overwrite it. */
+let finalRecordWritten = false;
+
+/** The cycle's local record at the reserved path, carrying the stall block forward if the diagnostic fired. */
+function writeCycleRecord(record: Readonly<Record<string, unknown>>): string {
+  const stallBlock = finalRecordWritten ? null : (stallDiagnostic?.claimRecord() ?? null);
+  const path = finalRecordWritten ? nextRunRecordPath(RUNS_DIR, today()) : RUN_RECORD_PATH;
+  mkdirSync(RUNS_DIR, { recursive: true });
+  writeFileSync(path, `${JSON.stringify(stallBlock === null ? record : { ...record, stallDiagnostic: stallBlock }, null, 2)}\n`, "utf8");
+  finalRecordWritten = true;
+  return path;
+}
+
+/*
  * **A CRASHED CYCLE WRITES A LEGIBLE RECORD; IT DOES NOT VANISH.**
  * (Autonomy-recovery session, 2026-09-01.)
  *
@@ -277,6 +339,10 @@ const nowIso = (): string => new Date().toISOString();
  * and exits non-zero. A rejected top-level await surfaces here as
  * `uncaughtException` on this runtime; both events are handled and the handler
  * fires at most once.
+ *
+ * Bounded since 2026-09-23 (recordFailedCycle): the FAILED outcome's append
+ * has its own budget, cut to what is left before the wall, and the record names
+ * what the cycle was waiting on when it failed.
  */
 let crashRecorded = false;
 let crashRepos: ControlPlaneRepositories | null = null;
@@ -285,90 +351,29 @@ async function recordCrash(error: unknown): Promise<void> {
   crashRecorded = true;
   const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
   const headline = message.split("\n")[0];
-  const finishedAt = new Date().toISOString();
-  const cycleId = `freshness-cycle:${HOST}:${NOW}`;
-  if (crashRepos !== null) {
-    try {
-      await appendFreshnessCycleDigest(crashRepos, {
-        outcome: {
-          kind: "FRESHNESS_CYCLE",
-          state: "FAILED",
-          cycleId,
-          startedAt: NOW,
-          finishedAt,
-          testedSha: headSha(ROOT),
-          host: HOST,
-          provider: crashRepos.describe(),
-          durable: crashRepos.durable,
-          executor: null,
-          registry: null,
-          obligations: null,
-          occurrencesOpened: null,
-          debtInherited: null,
-          debtPersisted: null,
-          debtCleared: null,
-          scheduled: null,
-          unscheduled: [],
-          dueCount: null,
-          dispatched: null,
-          worked: [],
-          dispositions: [],
-          dispatchDetails: [],
-          research: null,
-          deferred: null,
-          debts: null,
-          incidents: [],
-          risk: null,
-          health: null,
-          promotedToReaderTruth: false,
-          failure: { code: "CYCLE_CRASHED", detail: message },
-        },
-        lines: [
-          "PILOT HEALTH",
-          "  the cycle CRASHED before completing — a failed cycle, never an idle one",
-          `      ${headline}`,
-          "  ROLLUP    NOT GREEN — the cycle did not finish",
-        ],
-      });
-      console.error(`\n  canonical outcome: ${cycleId}`);
-    } catch (recordError) {
-      console.error(
-        `\n  freshness:shadow CRASHED and the canonical outcome append failed (${recordError instanceof Error ? recordError.message : String(recordError)}).`,
-      );
-    }
-  }
-  try {
-    mkdirSync(RUNS_DIR, { recursive: true });
-    const path = nextRunRecordPath(RUNS_DIR, today());
-    writeFileSync(
-      path,
-      `${JSON.stringify(
-        {
-          startedAt: NOW,
-          finishedAt,
-          testedSha: headSha(ROOT),
-          crashed: true,
-          error: message,
-          digest: [
-            "PILOT HEALTH",
-            "  the cycle CRASHED before completing — a failed cycle, never an idle one",
-            `      ${headline}`,
-            "  ROLLUP    NOT GREEN — the cycle did not finish",
-          ],
-        },
-        null,
-        2,
-      )}\n`,
-      "utf8",
-    );
+  /* What the cycle was waiting on when it failed, taken before the crash's own label is entered. */
+  const pendingAtCrash = pending.snapshot();
+  const result = await pending.step("crash:record", () => recordFailedCycle({
+    repos: crashRepos,
+    error,
+    cycleId: CYCLE_ID,
+    startedAt: NOW,
+    finishedAt: new Date().toISOString(),
+    testedSha: RUNNING_CODE_SHA,
+    host: HOST,
+    pending: pendingAtCrash,
+    digestBudgetMs: stepBudgetMs({
+      nowMs: Date.now(),
+      budgetMs: CYCLE_FINALIZATION_BUDGETS_MS.crashDigest,
+      deadlineMs: CLOCK.recordsDeadlineMs,
+      reservedAfterMs: LOCAL_RECORD_RESERVE_MS,
+    }),
+    writeLocalRecord: writeCycleRecord,
+    log: (line) => console.error(line),
+  }));
+  if (result.recordPath !== null) {
     console.error(`\n  freshness:shadow CRASHED — ${headline}`);
-    console.log(`  local diagnostic: ${path}`);
-  } catch (writeError) {
-    console.error(
-      `\n  freshness:shadow CRASHED and could not write a run record (${
-        writeError instanceof Error ? writeError.message : String(writeError)
-      }): ${headline}`,
-    );
+    console.log(`  local diagnostic: ${result.recordPath}`);
   }
   process.exit(1);
 }
@@ -439,6 +444,28 @@ const FINALIZATION_RESERVE_MS = 2 * 60_000;
 const DISPATCH_DEADLINE_MS = CYCLE_STARTED_MS + Math.max(0, BUDGET_MIN * 60_000 - FINALIZATION_RESERVE_MS);
 const scheduledBlackout = scheduledBlackoutAt(NOW);
 
+/*
+ * **THE STALL DIAGNOSTIC AND THE LOUD STORE.** (2026-09-23.) The wall is the
+ * budget above, from process start. About 90 s before it, a worker thread
+ * writes what the cycle is waiting on to stderr and to the reserved record,
+ * unless the cycle already wrote its record; it never ends the cycle. And every
+ * control-plane timeout is said on stderr as it happens, even where its caller
+ * absorbs it into a named runtime condition: before this, a killed cycle's
+ * stderr was empty (request-bounds.ts, cycle-stall.ts).
+ */
+CLOCK = cycleClock({ processStartedMs: PROCESS_STARTED_MS, wallMs: BUDGET_MIN * 60_000, stallLeadMs: CYCLE_STALL_LEAD_MS });
+stallDiagnostic = startCycleStallDiagnostic({
+  pending,
+  fireAtMs: CLOCK.stallAtMs,
+  processStartedMs: PROCESS_STARTED_MS,
+  wallAtMs: CLOCK.wallAtMs,
+  recordPath: RUN_RECORD_PATH,
+  startedAt: NOW,
+  cycleId: CYCLE_ID,
+  testedSha: RUNNING_CODE_SHA,
+});
+observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
+
 /* ------------------------------------------------------------- provider --- */
 
 let repos: ControlPlaneRepositories;
@@ -463,16 +490,18 @@ if (wantsPostgres) {
     );
     process.exit(1);
   }
-  repos = await createPgRepositories(url, NOW);
+  repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW));
 } else {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
 }
 const cycleObservation = observeCyclePhases(repos);
-repos = cycleObservation.repos;
+/* Every repository call is tracked while in flight, for the stall diagnostic. */
+repos = trackStoreCalls(cycleObservation.repos, pending);
 crashRepos = repos;
 const finishPhase = (name: string) => {
   const phase = cycleObservation.finish(name);
+  pending.phaseFinished(name);
   console.log(`  phase ${phase.name}: ${phase.durationMs}ms; ${phase.repositoryCalls} repository calls`);
 };
 
@@ -1545,7 +1574,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     beatAt: nowIso(),
     cycleStartedAt: NOW,
     cycleFinishedAt,
-    testedSha: headSha(ROOT),
+    testedSha: RUNNING_CODE_SHA,
     host: HOST,
     modelLaneEnabled,
     modelLaneDisabledReason: laneDisabledReason,
@@ -1602,20 +1631,32 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
   };
 }
 
+/*
+ * Up to four read-and-compare-and-set tries, inside one budget, and every
+ * failed try said on stderr (2026-09-23). The row is 1.1 MB, so each try moves
+ * about 3.3 MB; the four tries used to fail silently, and at 30 s a request
+ * they could hold a finalization for four minutes without a word.
+ */
 async function writeResearchState(cycleFinishedAt: string | null): Promise<void> {
-  for (let tries = 0; tries < 4; tries += 1) {
-    try {
-      const current = await repos.researchState.read(RESEARCH_STATE_ID);
-      const next = researchState(cycleFinishedAt);
-      if (current === null) await repos.researchState.put(RESEARCH_STATE_ID, next, nowIso());
-      else await repos.researchState.compareAndSet(RESEARCH_STATE_ID, current.revision, next, nowIso());
-      return;
-    } catch (error) {
-      if (tries === 3) {
-        runtimeConditions.push(`the research state could not be written: ${error instanceof Error ? error.message : String(error)}`);
+  await withStoreBudget("research-state", CYCLE_FINALIZATION_BUDGETS_MS.researchState, async () => {
+    for (let tries = 0; tries < 4; tries += 1) {
+      try {
+        const current = await repos.researchState.read(RESEARCH_STATE_ID);
+        const next = researchState(cycleFinishedAt);
+        if (current === null) await repos.researchState.put(RESEARCH_STATE_ID, next, nowIso());
+        else await repos.researchState.compareAndSet(RESEARCH_STATE_ID, current.revision, next, nowIso());
+        return;
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : String(error);
+        const budgetSpent = isControlPlaneRequestTimeout(error) && !error.retryable;
+        console.error(`freshness:shadow · research state write, try ${tries + 1} of 4, failed: ${detail}`);
+        if (tries === 3 || budgetSpent) {
+          runtimeConditions.push(`the research state could not be written: ${detail}`);
+          return;
+        }
       }
     }
-  }
+  });
 }
 
 await writeResearchState(null);
@@ -1980,19 +2021,19 @@ console.log(
 /* ------------------------------------------------- close, and persist debt --- */
 
 /* Dispatched and recovered occurrences close by one rule; a recovered one by the disposition it already carries. */
-await closeCycleOccurrences(repos, {
+await pending.step("occurrences:close", () => closeCycleOccurrences(repos, {
   cycle,
   occurrenceFor: (obligationId) => occurrenceByObligation.get(obligationId)?.id ?? null,
   now: NOW,
-});
+}));
 
-const persisted = await persistDebts(
+const persisted = await pending.step("debts:persist", () => persistDebts(
   repos,
   cycle.debts,
   NOW,
   canary ? corpus.map((obligation) => obligation.id) : null,
   retiredDebtReasons,
-);
+));
 finishPhase("occurrence-and-debt-commit");
 console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared` +
@@ -2045,6 +2086,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
 } else {
   const discoveryStartedMs = Date.now();
   const openDiscovery = fleetSafety.guardedOpenBytes("discovery-web", "meetings-discovery", fetch, { followRedirects: false });
+  /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
+  const leaveDiscovery = pending.enter("meetings-discovery");
   try {
     /* The saved methods live in the field manual; the runner consults them on every walk. */
     const manual = await repos.fieldManual.read("live");
@@ -2109,6 +2152,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
   } catch (error) {
     meetingsDiscoveryState = `could not run: ${error instanceof Error ? error.message : String(error)}`;
     runtimeConditions.push(`meetings discovery ${meetingsDiscoveryState}`);
+  } finally {
+    leaveDiscovery();
   }
 }
 const meetingsDiscoveryByOutcome = (meetingsDiscovery?.walked ?? []).reduce<Record<string, number>>(
@@ -2141,7 +2186,8 @@ if (!dry && !canary) {
   for (const r of scoutResultsThisCycle) {
     if (!isArguedAbsence(r, MIN_DISTINCT_RUNGS)) continue;
     try {
-      await recordArguedAbsence(repos, { obligationId: r.obligationId, absentUntil: until, now: NOW });
+      await pending.step("absences:record", () =>
+        recordArguedAbsence(repos, { obligationId: r.obligationId, absentUntil: until, now: NOW }));
       absencesRecorded += 1;
     } catch (error) {
       console.error(
@@ -2157,6 +2203,7 @@ if (!dry && !canary) {
 // Registered autonomous plans use the same dispatcher, vault, host spacing and
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
 if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
+  const leaveAutonomous = pending.enter("autonomous-workers");
   try {
     const meetingsReceipt: PermanentMeetingsReceipt = RESEARCH_CYCLE_MEETINGS_RECEIPT;
     if (meetingsReceipt.kind === "UNAVAILABLE") {
@@ -2197,16 +2244,18 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
     autonomousDispatchedThisCycle = fleetDispatches.filter(row => row.attemptId !== null).length;
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     /* PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result keeps the generic offer. */
-    const factReport = await projectFleetPipeline(repos, {
+    const factReport = await pending.step("autonomous-workers:fact-projection", () => projectFleetPipeline(repos, {
       readArtifactText: async (id) => (await fleet.readEvidence(id)).text,
       now: nowIso(),
       root: ROOT,
       freshness: async (input) => factFreshnessFromPermanentMeetings(meetingsReceipt, input),
-    });
+    }));
     if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
+  } finally {
+    leaveAutonomous();
   }
 }
 finishPhase("autonomous-workers-and-projection");
@@ -2218,6 +2267,7 @@ finishPhase("autonomous-workers-and-projection");
  * snapshot -> STAGED. Promotion itself is OFF and a session carries the last
  * mile, so nothing below writes outside ignored `.runtime/control-plane/staging/` diagnostics.
  */
+const leavePromotionTail = pending.enter("promotion-tail");
 const staged: StagedEntry[] = [];
 for (const result of cycle.dispatched) {
   const unit = units.find((u) => u.obligation.id === result.obligationId);
@@ -2296,6 +2346,7 @@ for (const recovered of cycle.recovered) {
   );
 }
 const manifest = writeStagingManifest(ROOT, staged, today());
+leavePromotionTail();
 
 /* ------------------------------------------------- research metrics --- */
 
@@ -2365,19 +2416,28 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
 }
 /** This cycle's cache rows, for the run record's COST section (null until computed, or when the ledger could not be re-read). */
 let cacheThisCycle: CacheHitRate[] | null = null;
+/*
+ * The metrics and the research progression are the cycle's largest reads
+ * (about 49 MB across eleven logs and aggregates on 2026-09-23), and both are
+ * withheld by name when a read fails. From the stall diagnostic's moment they
+ * yield: their store calls are refused by name so the records below keep their
+ * time. A cycle on its usual ten minutes never meets this deadline.
+ */
+const lateWorkBudgetMs = (): number => Math.max(0, CLOCK.stallAtMs - Date.now());
 if (canary) {
   runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
   metrics = null;
 } else {
-  metrics = await computeMetrics();
+  metrics = await pending.step("metrics", () => withStoreBudget("metrics", lateWorkBudgetMs(), computeMetrics));
 }
 
 /* -------------------------------------------- research state, heartbeat --- */
 
 const finishedAt = nowIso();
 if (!dry && !canary) {
+  const leaveProgression = pending.enter("research-progression");
   try {
-    researchProgression = await readResearchProgression(repos, {
+    researchProgression = await withStoreBudget("research-progression", lateWorkBudgetMs(), async () => readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
       candidates: (await readMethodCandidateStore(repos)).candidates,
       knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
@@ -2386,14 +2446,42 @@ if (!dry && !canary) {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
-    });
+    }));
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);
+  } finally {
+    leaveProgression();
   }
 }
 finishPhase("metrics-and-finalization");
-await writeResearchState(finishedAt);
+
+/*
+ * **FINALIZATION: EVERY STEP COMPLETES OR FAILS BY NAME INSIDE ITS OWN BUDGET.**
+ * (2026-09-23; the budgets and why are in cycle-finalization.ts.) Each step is
+ * labelled for the stall diagnostic and bounded: its store calls are cut at its
+ * budget, and the steps before the canonical outcome leave it and the local
+ * record their time before the wall. A step that fails is named — on stderr, in
+ * the runtime conditions — and the cycle goes on to its records; only a failed
+ * canonical append ends the cycle, through the crash handler, with a FAILED
+ * outcome and a local crash record.
+ */
+const finalStepBudgetMs = (budgetMs: number, reservedAfterMs: number): number =>
+  stepBudgetMs({ nowMs: Date.now(), budgetMs, deadlineMs: CLOCK.recordsDeadlineMs, reservedAfterMs });
+const finalStep = <T,>(label: string, budgetMs: number, reservedAfterMs: number, fn: () => Promise<T>): Promise<T> =>
+  pending.step(label, () => runBoundedStep({ label, budgetMs: finalStepBudgetMs(budgetMs, reservedAfterMs), fn }));
+const failedStep = (step: string, error: unknown): string => {
+  const detail = error instanceof Error ? error.message : String(error);
+  console.error(`freshness:shadow · finalization step ${step} failed: ${detail}`);
+  return detail;
+};
+
+try {
+  await finalStep("research-state:final", CYCLE_FINALIZATION_BUDGETS_MS.researchState, DIGEST_AND_RECORD_RESERVE_MS, () =>
+    writeResearchState(finishedAt));
+} catch (error) {
+  runtimeConditions.push(`the final research state was not written: ${failedStep("research-state:final", error)}`);
+}
 const finalState = researchState(finishedAt);
 
 /*
@@ -2401,16 +2489,23 @@ const finalState = researchState(finishedAt);
  * cycle refreshes origin/main with a bounded fetch; a dry or canary cycle reads
  * the refs as last seen so no test reaches the network. A read that throws
  * leaves the field null — the beat still says the cycle ran; it never says the
- * code identity is consistent.
+ * code identity is consistent. The whole read is bounded (2026-09-23): a git
+ * call it no longer has time for is not made, and reads as CANNOT_TELL.
  */
-const codeIdentity = (() => {
+const codeIdentity = pending.sync("code-identity", () => {
   try {
-    return readCodeIdentity({ cwd: ROOT, runnerTestedSha: headSha(ROOT), now: finishedAt, fetch: !dry && !canary });
+    return readCodeIdentity({
+      cwd: ROOT,
+      runnerTestedSha: RUNNING_CODE_SHA,
+      now: finishedAt,
+      fetch: !dry && !canary,
+      budgetMs: finalStepBudgetMs(CYCLE_FINALIZATION_BUDGETS_MS.codeIdentity, DIGEST_AND_RECORD_RESERVE_MS),
+    });
   } catch (error) {
     runtimeConditions.push(`the code identity could not be read: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   }
-})();
+});
 
 const heartbeat: RunnerHeartbeat = {
   formatVersion: OWNER_SURFACE_FORMAT_VERSION,
@@ -2419,25 +2514,29 @@ const heartbeat: RunnerHeartbeat = {
   lastCycleFinishedAt: finishedAt,
   nextCycleDueAt: INTERVAL_MIN === null ? null : new Date(Date.now() + INTERVAL_MIN * 60_000).toISOString(),
   lastCycleOk: true,
-  testedSha: headSha(ROOT),
+  testedSha: RUNNING_CODE_SHA,
   host: HOST,
   /* A working beat: the runner is not idling on a PAUSE_RUNNER (ADM-5). */
   pause: null,
   codeIdentity,
 };
 try {
-  const beat = await repos.runnerHeartbeat.read(RUNNER_ID);
-  const nextHeartbeat: RunnerHeartbeat = {
-    ...heartbeat,
-    /* The intake observer runs immediately after this child. Preserve its
-       latest durable receipt while refreshing cycle/liveness fields; a cycle
-       crash before the observer runs must not erase the last known reading. */
-    intakeRuntime: beat?.value.intakeRuntime ?? null,
-  };
-  if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);
-  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, nextHeartbeat, finishedAt);
+  await finalStep("heartbeat", CYCLE_FINALIZATION_BUDGETS_MS.heartbeat, DIGEST_AND_RECORD_RESERVE_MS, async () => {
+    const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
+    const nextHeartbeat: RunnerHeartbeat = {
+      ...heartbeat,
+      /* The intake observer runs immediately after this child. Preserve its
+         latest durable receipt while refreshing cycle/liveness fields; a cycle
+         crash before the observer runs must not erase the last known reading. */
+      intakeRuntime: beat?.value.intakeRuntime ?? null,
+    };
+    await pending.step("heartbeat:write", async () => {
+      if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);
+      else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, nextHeartbeat, finishedAt);
+    });
+  });
 } catch (error) {
-  runtimeConditions.push(`the runner heartbeat could not be written: ${error instanceof Error ? error.message : String(error)}`);
+  runtimeConditions.push(`the runner heartbeat could not be written: ${failedStep("heartbeat", error)}`);
 }
 
 /* ------------------------------------------------------------- the digest --- */
@@ -2557,7 +2656,7 @@ const runRecord = {
       finishedAt,
       researchProgression: researchProgression?.windowId === researchWindowId ? researchProgression : null,
       researchProgressionFailure,
-      testedSha: headSha(ROOT),
+      testedSha: RUNNING_CODE_SHA,
       provider: repos.describe(),
       durable: repos.durable,
       executor: dry ? "SIMULATED" : "route-aware + scout",
@@ -2734,11 +2833,11 @@ const runRecord = {
       health: cycle.health,
       promotedToReaderTruth: cycle.promotedToReaderTruth,
       digest: lines,
-      provenance: readRunProvenance(headSha(ROOT), ROOT),
+      provenance: RUN_PROVENANCE,
       codeIdentity,
 } as const;
 
-const cycleId = `freshness-cycle:${HOST}:${NOW}`;
+const cycleId = CYCLE_ID;
 const canonicalOutcome: FreshnessCycleOutcome = {
   kind: "FRESHNESS_CYCLE",
   state: "SUCCEEDED",
@@ -2788,12 +2887,30 @@ const canonicalOutcome: FreshnessCycleOutcome = {
   failure: null,
 };
 
-/* Canonical append happens first. A local file is disposable diagnostics only. */
-await appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines });
+/*
+ * Canonical append happens first. A local file is disposable diagnostics only.
+ * The append is bounded and retried while its budget lasts: the append-only
+ * identity makes an uncertain retry a no-op success, never a second record. A
+ * failure here is the cycle's crash — a FAILED outcome and a local crash record.
+ */
+await finalStep("digest:append", CYCLE_FINALIZATION_BUDGETS_MS.digestAppend, LOCAL_RECORD_RESERVE_MS, () =>
+  withControlPlaneConnectRetry(() => appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines }), {
+    maxAttempts: 3,
+    onRetry: ({ attempt, delayMs, error }) =>
+      console.error(
+        `freshness:shadow · canonical outcome append, attempt ${attempt} of 3, failed ` +
+          `(${error instanceof Error ? error.message : String(error)}); retrying in ${delayMs}ms`,
+      ),
+  }));
 console.log(`\n  canonical outcome: ${cycleId}`);
 
-mkdirSync(RUNS_DIR, { recursive: true });
-const path = nextRunRecordPath(RUNS_DIR, today());
-writeFileSync(path, `${JSON.stringify(runRecord, null, 2)}\n`, "utf8");
+const path = pending.sync("local-record:write", () => writeCycleRecord(runRecord));
 console.log(`  local diagnostic: ${path}`);
-await releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso());
+/* The lease's TTL and the runner's exited-holder release cover a miss; it is named, never a crash after a recorded outcome. */
+try {
+  await finalStep("window-lease:release", CYCLE_FINALIZATION_BUDGETS_MS.windowLease, 0, () =>
+    releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso()));
+} catch (error) {
+  failedStep("window-lease:release", error);
+}
+await stallDiagnostic?.stop();

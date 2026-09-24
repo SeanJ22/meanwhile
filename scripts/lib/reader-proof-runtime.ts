@@ -19,7 +19,7 @@ import {
   refreshNhBallotFromPromoted,
 } from "../../lib/civic-data/manual-read-models.ts";
 import { refreshOfficeholderStatementsFromPromoted } from "../../lib/corpus/data-plane.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
+import { HELD_MEETING_PARTITIONS, MEETING_PARTITION_CONTRACTS } from "../../lib/civic-data/meeting-partitions.ts";
 import { pdcV2CanonicalMeetingFactEvidence } from "../../lib/civic-data/store.ts";
 import {
   STATE_CAMPAIGN_FINANCE_SOURCES,
@@ -118,7 +118,10 @@ export function readerProofMeetingPartitionIdentity(
     throw new Error("Meeting Reader proof has zero meeting rows.");
   }
   const identity = result.partitions
-    .map(({ contractId, kind, versionId }) => `${contractId}|${kind}|${versionId ?? ""}`)
+    .map(({ contractId, kind, versionId, heldFrom }) =>
+      `${contractId}|${kind}|${versionId ?? ""}` +
+      // A held version is part of what was composed, so it is part of the identity.
+      (heldFrom ? `|held:${heldFrom.contractId}@${heldFrom.versionId}` : ""))
     .sort()
     .join("\n");
   return `meeting-partitions:${createHash("sha256").update(identity).digest("hex")}`;
@@ -128,13 +131,22 @@ export function readerProofMeetingsAuthorityFromImport(
   admission: ReaderExecutionAuthorityArchivedSupportAdmission,
 ): ReaderProofMeetingsExpectedAuthority {
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map(({ id }) => id));
-  const unexpected = admission.dispositionSet.filter(({ contractId }) =>
+  // A partition retired by a proved cutover (RETIRED_MEETING_ROUTES) is carried
+  // by its registered successor for the same body, so the import's disposition
+  // for the retired identity is the authority the successor inherits: a
+  // promoted body stays promoted, and losing it remains a hard failure. An
+  // import that named both identities is a duplicate and is refused below.
+  const successorOf = new Map(HELD_MEETING_PARTITIONS.map(({ id, successorId }) => [id, successorId]));
+  const dispositions = admission.dispositionSet.map((row) =>
+    successorOf.has(row.contractId) ? { ...row, contractId: successorOf.get(row.contractId)! } : row
+  );
+  const unexpected = dispositions.filter(({ contractId }) =>
     contractId.startsWith("meetings:") && !registered.has(contractId)
   );
   if (unexpected.length) {
     throw new Error("Reader phase import names an unregistered meeting partition.");
   }
-  const promotedRows = admission.dispositionSet.filter(({ contractId }) => registered.has(contractId));
+  const promotedRows = dispositions.filter(({ contractId }) => registered.has(contractId));
   const promotedById = new Map(promotedRows.map((row) => [row.contractId, row]));
   if (promotedById.size !== promotedRows.length) {
     throw new Error("Reader phase import duplicates a meeting partition disposition.");

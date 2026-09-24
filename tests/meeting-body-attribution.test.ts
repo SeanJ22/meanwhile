@@ -105,7 +105,19 @@ test("the snapshot reports EVERY wired source, including one that returned nothi
   const registered = [...wiringSource.matchAll(/^\s*name: "([a-z0-9-]+)",$/gm)].map((m) => m[1]);
 
   assert.ok(registered.length >= 10, `only ${registered.length} adapter names parsed — this guard is stale`);
-  const silent = registered.filter((n) => !reported.has(n));
+  /*
+   * The snapshot is the bootstrap fixture frozen at the permanent data-plane
+   * cutover (generatedAt 2026-09-06); live acquisition now writes one partition
+   * per source/body and never this file. An adapter registered after it froze
+   * cannot have a row in it, so each one is NAMED here — never a pattern that
+   * would let the next unreported adapter through.
+   */
+  const REGISTERED_AFTER_FIXTURE = new Set(["pima-edu"]);
+  const silent = registered.filter((n) => !reported.has(n) && !REGISTERED_AFTER_FIXTURE.has(n));
+  for (const late of REGISTERED_AFTER_FIXTURE) {
+    assert.ok(registered.includes(late), `${late} is exempted but no longer registered — remove the exemption`);
+    assert.ok(!reported.has(late), `${late} now has a fixture row — remove the exemption`);
+  }
   assert.deepEqual(
     silent,
     [],

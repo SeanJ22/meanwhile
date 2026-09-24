@@ -15,7 +15,10 @@ import {
 } from "../civic-data/read-model.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
 import {
+  HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
+  heldMeetingPartitionFor,
+  type HeldMeetingPartition,
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
@@ -595,6 +598,19 @@ export interface MeetingPartitionReadback {
   readonly kind: CivicDataReadResult<MeetingsSnapshot>["kind"];
   readonly versionId: string | null;
   readonly detail: string | null;
+  /**
+   * Present only on a successor with no pointer of its own whose retired
+   * predecessor's last promoted version is composed in its place
+   * (`HELD_MEETING_PARTITIONS`). `kind` stays the successor's own truth —
+   * NOT_RECORDED — and this names exactly which version the rows came from.
+   */
+  readonly heldFrom?: MeetingPartitionHeldFrom;
+}
+
+export interface MeetingPartitionHeldFrom {
+  readonly contractId: string;
+  readonly scope: string;
+  readonly versionId: string;
 }
 
 export type MeetingsProjectionReadResult =
@@ -627,7 +643,7 @@ export async function readMeetingPartitionProjection(
 }
 
 function validateMeetingPartitionProjection(
-  partition: MeetingPartitionContract,
+  partition: Pick<MeetingPartitionContract | HeldMeetingPartition, "id" | "meetingSource" | "bodyId">,
   result: CivicDataReadResult<MeetingsSnapshot>,
 ): CivicDataReadResult<MeetingsSnapshot> {
   if (result.kind !== "PROMOTED") return result;
@@ -688,21 +704,59 @@ export async function readMeetingsProjection(
   const allowUnconfiguredBootstrap =
     process.env.NODE_ENV !== "production" &&
     (options.allowUnconfiguredBootstrap ?? mayUseTestFixture());
+  const readOptions = {
+    ...(options.store ? { store: options.store } : {}),
+    now,
+    maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
+    bypassCache: options.bypassCache,
+  };
   const partitionResults = await readPromotedCivicDataBatch<MeetingsSnapshot>(
     MEETINGS_RECORD_CLASS,
     MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
-    {
-      ...(options.store ? { store: options.store } : {}),
-      now,
-      maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
-      bypassCache: options.bypassCache,
-    },
+    readOptions,
   );
-  const reads = MEETING_PARTITION_CONTRACTS.map((partition, index) => ({
-    partition,
-    result: validateMeetingPartitionProjection(partition, partitionResults[index]!),
-  }));
-  const rawPromoted = reads.filter((row): row is typeof row & { result: Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "PROMOTED" }> } => row.result.kind === "PROMOTED");
+  const ownResults = MEETING_PARTITION_CONTRACTS.map((partition, index) =>
+    validateMeetingPartitionProjection(partition, partitionResults[index]!)
+  );
+  // A retired route's last promoted version, proved like any pointer, and
+  // composed in its successor's place only while the successor has none. It
+  // is read only then — one more batch in that window, and none once every
+  // successor has promoted.
+  const awaiting = HELD_MEETING_PARTITIONS.filter((held) =>
+    ownResults[MEETING_PARTITION_CONTRACTS.findIndex((partition) => partition.id === held.successorId)]?.kind === "NOT_RECORDED"
+  );
+  const heldReads = await readPromotedCivicDataBatch<MeetingsSnapshot>(
+    MEETINGS_RECORD_CLASS,
+    awaiting.map((held) => held.scope),
+    readOptions,
+  );
+  const heldResults = new Map(awaiting.map((held, index) => [
+    held.successorId,
+    { held, result: validateMeetingPartitionProjection(held, heldReads[index]!) },
+  ]));
+  type PromotedRead = Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "PROMOTED" }>;
+  const reads = MEETING_PARTITION_CONTRACTS.map((partition, index) => {
+    const result = ownResults[index]!;
+    const predecessor = heldResults.get(partition.id);
+    const held = result.kind === "NOT_RECORDED" && predecessor?.result.kind === "PROMOTED"
+      ? { partition: predecessor.held, result: predecessor.result as PromotedRead }
+      : null;
+    return { partition, result, held };
+  });
+  // What is composed for each registered partition: its own proved version,
+  // or the held version of the route it replaced.
+  type ComposedRead = {
+    readonly partition: MeetingPartitionContract;
+    readonly result: PromotedRead;
+    readonly held: HeldMeetingPartition | null;
+  };
+  const rawPromoted: ComposedRead[] = reads.flatMap(({ partition, result, held }): ComposedRead[] =>
+    result.kind === "PROMOTED"
+      ? [{ partition, result: result as PromotedRead, held: null }]
+      : held
+        ? [{ partition, result: held.result, held: held.partition }]
+        : [],
+  );
   const invalid = new Map(
     reads.flatMap(({ partition, result }) =>
       result.kind === "STORE_UNREACHABLE" && result.code === "PROMOTION_PROOF_INVALID"
@@ -735,15 +789,24 @@ export async function readMeetingsProjection(
   }
 
   const promoted = rawPromoted.filter(({ partition }) => !invalid.has(partition.id));
-  const partitionReadbacks: MeetingPartitionReadback[] = reads.map(({ partition, result }) => ({
-    contractId: partition.id,
-    source: partition.meetingSource,
-    bodyId: partition.bodyId,
-    scope: partition.scope,
-    kind: invalid.has(partition.id) ? "STORE_UNREACHABLE" : result.kind,
-    versionId: result.metadata.versionId,
-    detail: invalid.get(partition.id) ?? ("detail" in result ? result.detail : null),
-  }));
+  const partitionReadbacks: MeetingPartitionReadback[] = reads.map(({ partition, result, held }) => {
+    const heldFrom = held && !invalid.has(partition.id) && held.result.metadata.versionId
+      ? { contractId: held.partition.id, scope: held.partition.scope, versionId: held.result.metadata.versionId }
+      : null;
+    return {
+      contractId: partition.id,
+      source: partition.meetingSource,
+      bodyId: partition.bodyId,
+      scope: partition.scope,
+      kind: invalid.has(partition.id) ? "STORE_UNREACHABLE" : result.kind,
+      versionId: result.metadata.versionId,
+      detail: invalid.get(partition.id) ?? (heldFrom
+        ? `No pointer of its own yet; the retired route's last promoted version ${heldFrom.contractId}@${heldFrom.versionId} ` +
+          `(retired ${held!.partition.retiredOn}) is composed in its place until this partition's first promotion.`
+        : "detail" in result ? result.detail : null),
+      ...(heldFrom ? { heldFrom } : {}),
+    };
+  });
 
   if (promoted.length > 0) {
     const meetings: Meeting[] = [];
@@ -775,7 +838,9 @@ export async function readMeetingsProjection(
     const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
     const promotedAt = promoted.map(({ result }) => result.metadata.promotedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
-    const allPartitionsProofValid = promoted.length === MEETING_PARTITION_CONTRACTS.length;
+    // A held version is proved, but it is not its successor's own pointer.
+    const heldCount = promoted.filter(({ held }) => held !== null).length;
+    const allPartitionsProofValid = promoted.length - heldCount === MEETING_PARTITION_CONTRACTS.length;
     const stale = promoted.some(({ result }) => result.metadata.stale === "STALE")
       ? "STALE" as const
       : !allPartitionsProofValid || promoted.some(({ result }) => result.metadata.stale === "UNKNOWN")
@@ -809,7 +874,8 @@ export async function readMeetingsProjection(
         staleAt: null,
       },
       partitions: partitionReadbacks,
-      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.`,
+      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.` +
+        (heldCount > 0 ? ` ${heldCount} composed from a retired route's held version until its successor's first promotion (heldFrom).` : ""),
     };
   }
 
@@ -1006,6 +1072,7 @@ export function requireReaderProofMeetingsProjection(
   // NOT_RECORDED that the standing runner has since PROMOTED are accepted gains. They are
   // collected and reported below so a drift of one cannot silently become two hundred.
   const gained: string[] = [];
+  const heldPartitions: string[] = [];
   for (const partition of result.partitions) {
     const contract = registered.get(partition.contractId)!;
     if (
@@ -1015,24 +1082,48 @@ export function requireReaderProofMeetingsProjection(
     ) {
       throw new Error(`${partition.contractId} meeting partition readback identity differs from its registered contract.`);
     }
-    if (partition.kind === "PROMOTED") {
+    // A successor with no pointer of its own that composes its retired
+    // predecessor's held version carries that body's LKG: the partition is
+    // served, and is counted as the promoted authority it inherited
+    // (HELD_MEETING_PARTITIONS). The held version must be the registered
+    // succession for exactly this contract — never another partition's.
+    let effectiveKind: string = partition.kind;
+    if (partition.heldFrom !== undefined) {
+      const succession = heldMeetingPartitionFor(partition.contractId);
+      if (
+        partition.kind !== "NOT_RECORDED" ||
+        !succession ||
+        succession.id !== partition.heldFrom.contractId ||
+        succession.scope !== partition.heldFrom.scope ||
+        !partition.heldFrom.versionId
+      ) {
+        throw new Error(`${partition.contractId} names a held version that is not its registered succession.`);
+      }
+      effectiveKind = "PROMOTED";
+      heldPartitions.push(partition.contractId);
+    }
+    if (partition.kind === "NOT_RECORDED" && partition.versionId !== null) {
+      throw new Error(`${partition.contractId} NOT_RECORDED meeting partition names a version.`);
+    }
+    if (effectiveKind === "PROMOTED") {
       promoted += 1;
-      if (!partition.versionId) throw new Error(`${partition.contractId} promoted meeting partition has no version identity.`);
+      if (!partition.versionId && partition.heldFrom === undefined) {
+        throw new Error(`${partition.contractId} promoted meeting partition has no version identity.`);
+      }
     } else if (partition.kind === "NOT_RECORDED") {
       notRecorded += 1;
-      if (partition.versionId !== null) throw new Error(`${partition.contractId} NOT_RECORDED meeting partition names a version.`);
     } else {
       throw new Error(`${partition.contractId} meeting partition is ${partition.kind}: ${partition.detail ?? "no detail"}`);
     }
     const expected = expectedById.get(partition.contractId)!;
-    if (partition.kind !== expected.kind) {
+    if (effectiveKind !== expected.kind) {
       // RULING 290: the standing runner is the sole freshness clock and advances past the
       // frozen cutover import. A GAIN (import NOT_RECORDED -> now PROMOTED = a newly acquired
       // meeting) is accepted — the census reads current production, so the gained partition is
       // PROVEN here, not skipped, and coverage grows. A LOSS (PROMOTED -> NOT_RECORDED = data
       // disappearing) stays a hard failure. Version drift on an already-promoted partition is
       // likewise accepted (exact version match not required, above).
-      if (expected.kind === "NOT_RECORDED" && partition.kind === "PROMOTED") {
+      if (expected.kind === "NOT_RECORDED" && effectiveKind === "PROMOTED") {
         gained.push(partition.contractId);
       } else {
         throw new Error(
@@ -1045,6 +1136,11 @@ export function requireReaderProofMeetingsProjection(
   if (gained.length > 0) {
     console.error(
       `[reader-proof] RULING 290: accepted ${gained.length} runner-promoted meeting partition gain(s) past the frozen import: ${[...gained].sort().join(", ")}`,
+    );
+  }
+  if (heldPartitions.length > 0) {
+    console.error(
+      `[reader-proof] RULING 283: ${heldPartitions.length} successor partition(s) served from a retired route's held version until their first promotion: ${[...heldPartitions].sort().join(", ")}`,
     );
   }
   if (

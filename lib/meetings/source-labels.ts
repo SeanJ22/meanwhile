@@ -65,6 +65,9 @@ export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   // "their iCalendar feed": the reader is trying to find out when their town
   // meets, and "iCalendar" is an identifier wearing a label's clothes.
   ical: "their town website's events calendar",
+  // The college's own board pages and events calendar, read in place of its
+  // agenda portal (2026-09-23).
+  "pima-edu": "their college website's board meeting pages",
 };
 
 /** The human name, or null when there is none — never a plausible stand-in. */

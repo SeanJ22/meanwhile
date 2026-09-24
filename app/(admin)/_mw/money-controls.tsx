@@ -8,6 +8,10 @@
  *   CeilingDial      the Fleet spend dial, moved here unchanged: the same
  *                    `config.setFleetSpendCeiling` action, input, validation and
  *                    fetch → JSON → refresh path it has had since #336
+ *   DiscoverySearchSwitch
+ *                    the owner's switch for PAID discovery search, on the
+ *                    search line → `config.setDiscoverySearch`. Off by default;
+ *                    turning it on is said twice
  *   BillingEntry     a figure read where the system cannot look, or a usage
  *                    export summed in the browser → `billing.fact.record`
  *   RemoveFact       → `billing.fact.remove`
@@ -116,6 +120,75 @@ export function CeilingDial(props: { readonly currentUsd: number; readonly maxUs
       <span className={s.note}>
         The runner reads it at the start of its next cycle. Raising it removes a brake; it starts no run and opens no paid lane.
       </span>
+      {sent && <span className={sent.ok ? s.cTeal : s.refusal}>{sent.says}</span>}
+    </div>
+  );
+}
+
+/* ==================================================================== *
+ * THE PAID DISCOVERY SEARCH SWITCH
+ * ==================================================================== */
+
+/**
+ * The owner's switch for paid discovery search (Brave and Exa). The runner reads
+ * it at the start of each cycle and builds no search step unless it is on; the
+ * free site walks run either way. Turning it ON spends money, so that direction
+ * asks again before it posts.
+ */
+export function DiscoverySearchSwitch(props: {
+  readonly on: boolean;
+  readonly decidedWords: string | null;
+  /** The runner's acknowledgement, in words the server composed from its heartbeat. */
+  readonly acknowledgement: string;
+  readonly returnTo: string;
+}) {
+  const router = useRouter();
+  const [confirming, setConfirming] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState<Sent>(null);
+
+  async function set(enabled: boolean) {
+    setSending(true);
+    setSent(null);
+    const out = await post(
+      "config.setDiscoverySearch",
+      "paid discovery search",
+      enabled ? { enabled: true, confirmed: true } : { enabled: false },
+      `set-discovery-search:${enabled ? "on" : "off"}:${Date.now()}`,
+      props.returnTo,
+    );
+    setSending(false);
+    setConfirming(false);
+    setSent(out);
+    if (out.ok) router.refresh();
+  }
+
+  return (
+    <div className={s.stack8}>
+      <span className={s.note}>
+        Paid discovery search is {props.on ? "on" : "off"}
+        {props.decidedWords ? ` (you set it ${props.decidedWords}).` : " (the default)."} It runs only while this is on, and then only
+        inside the runner&apos;s caps. The research pause does not stop it; only this switch does. The free site walks run either way.
+      </span>
+      <span className={s.note}>{props.acknowledgement}</span>
+      {props.on ? (
+        <button type="button" className={s.btnSecondary} disabled={sending} onClick={() => void set(false)}>
+          {sending ? "Turning it off…" : "Turn paid discovery search off"}
+        </button>
+      ) : confirming ? (
+        <div className={s.row10}>
+          <button type="button" className={s.btnPrimary} disabled={sending} onClick={() => void set(true)}>
+            {sending ? "Turning it on…" : "Yes, allow paid discovery search"}
+          </button>
+          <button type="button" className={s.btnSecondary} disabled={sending} onClick={() => setConfirming(false)}>
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <button type="button" className={s.btnLink} onClick={() => setConfirming(true)}>
+          Allow paid discovery search
+        </button>
+      )}
       {sent && <span className={sent.ok ? s.cTeal : s.refusal}>{sent.says}</span>}
     </div>
   );

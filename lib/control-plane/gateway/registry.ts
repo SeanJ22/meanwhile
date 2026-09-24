@@ -64,6 +64,7 @@ import {
   isAdminConfig,
   withApiFallback,
   withBillingFacts,
+  withDiscoverySearch,
   withExpansionScopes,
   withFleetSpendCeiling,
   API_FALLBACK_MISSING_SEAM,
@@ -726,6 +727,68 @@ const REGISTRY: readonly RegisteredAction[] = [
         openedWork: [],
         readBackAt: "/admin",
         undo: `Set it back to $${previousUsd.toFixed(2)}.`,
+      };
+    },
+  },
+
+  /* ------------------------------------------------- config.setDiscoverySearch */
+  {
+    definition: {
+      type: "config.setDiscoverySearch",
+      label: "Allow paid discovery search",
+      does:
+        "Records whether the meetings-discovery walk may send paid search requests (Brave and Exa), durably, so a restart cannot lose it. The runner reads it at the start of its next cycle.",
+      doesNot:
+        "Does not raise the runner's per-cycle and per-day search caps, resume paid research, or spend anything by itself. The free site walks run either way.",
+      authority: "OWNER_DECISION_REQUIRED",
+      subjectKind: "how the system may spend",
+      // As with the ceiling dial, the compare-and-set on the config row is the
+      // version check; no rendered card can go stale between draw and click.
+      requiresStateVersion: false,
+      refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
+    },
+    validate(input) {
+      const enabled = input.enabled;
+      const on = enabled === true || enabled === "true" || enabled === "on" || enabled === 1;
+      const off = enabled === false || enabled === "false" || enabled === "off" || enabled === 0;
+      if (!on && !off) return bad("say whether paid discovery search is allowed or not allowed");
+      const confirmed = input.confirmed;
+      // Turning it ON spends money, so that is the direction that must be said twice.
+      if (on && !(confirmed === true || confirmed === "true" || confirmed === "on" || confirmed === 1)) {
+        return bad("turning paid discovery search on needs an explicit confirmation");
+      }
+      return { ok: true, value: { enabled: on } };
+    },
+    async execute(deps, context, input) {
+      const enabled = input.enabled === true;
+      const at = context.at;
+      try {
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        // A stored value that is not a config reads as the default, which has no
+        // decision, which reads OFF: a corrupt row never turns paid search on.
+        const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
+        const next = withDiscoverySearch(current, {
+          enabled,
+          decidedAt: at,
+          decidedBy: context.request.actorRef,
+          receiptId: context.receiptId,
+        });
+        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+      } catch (error) {
+        return storeRefusal("your decision about paid discovery search", error);
+      }
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: "paid discovery search",
+        says: enabled
+          ? "Recorded: the meetings-discovery walk may now use paid search, inside the runner's per-cycle and per-day caps. " +
+            "The runner reads this at the start of its next cycle; every request it sends is charged as DISCOVERY_SEARCH."
+          : "Recorded: paid discovery search is off. That is also the default. The free site walks continue.",
+        openedWork: [],
+        readBackAt: "/admin",
+        undo: enabled ? "Turn paid discovery search off." : "Allow it again, with an explicit confirmation.",
       };
     },
   },

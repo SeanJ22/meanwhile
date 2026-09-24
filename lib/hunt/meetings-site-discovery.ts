@@ -16,6 +16,10 @@
  * - **SERVED_BY**: the vendor's markup on the government's own domain.
  * - **EMBEDDED**: a vendor tenant named in the page's own script.
  *
+ * The executor adds one more, **RECIPE**: a saved method's path on the
+ * government's own origin, proposed only when this page shows the method's
+ * precondition (`lib/hunt/meetings-recipes.ts`).
+ *
  * No tenant slug is derived from a name. The measured traps (`docs/source-ladder.md`)
  * are why: every `*.novusagenda.com/agendapublic/` answers 200, and a guessed
  * Legistar tenant looks like a real one until a control query says otherwise.
@@ -38,8 +42,13 @@
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 
-/** How a candidate was evidenced by the government's own page. */
-export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED";
+/**
+ * How a candidate was evidenced. The first three come from the government's
+ * own page; RECIPE is a saved method's path on the government's own origin,
+ * proposed only when the page shows the method's precondition
+ * (`lib/hunt/meetings-recipes.ts`). All four are confirmed by content alike.
+ */
+export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED" | "RECIPE";
 
 /** The endpoint families this module can confirm by content. */
 export const VERIFIABLE_VENDORS = [
@@ -348,6 +357,16 @@ export interface MeetingsDiscoveryAttempt {
   readonly found: readonly DiscoveryFind[];
   readonly leads: readonly Omit<DiscoveryFind, "count" | "artifactId">[];
   readonly steps: readonly DiscoveryStep[];
+  /** Saved methods this walk applied, and those it passed over and why (`lib/hunt/meetings-recipes.ts`). */
+  readonly recipes: {
+    readonly applied: readonly {
+      readonly recipeId: string;
+      readonly url: string;
+      readonly verdict: EndpointVerdict | "NOT_READ";
+      readonly detail: string;
+    }[];
+    readonly skipped: readonly { readonly recipeId: string; readonly why: string }[];
+  };
   readonly requestCount: number;
   /** When the need is due to be walked again. A schedule, never a disposition. */
   readonly recheckAfter: string;

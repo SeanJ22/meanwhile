@@ -39,6 +39,13 @@ import { createHash } from "node:crypto";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import {
+  recipeCandidates,
+  recipeEntry,
+  recordRecipeOutcome,
+  type MeetingsRecipe,
+  type RecipeCandidate,
+} from "../../hunt/meetings-recipes.ts";
+import {
   decideOutcome,
   meetingEndpointCandidates,
   recheckAfter,
@@ -89,6 +96,11 @@ export interface DiscoveryRuntime {
   readonly budget: { readonly spent: () => boolean; readonly remainingMs?: () => number };
   readonly maxRequestsPerWalk?: number;
   readonly timeoutMs?: number;
+  /**
+   * The saved methods the runner knows (`knownRecipes` over the field manual).
+   * Consulted on every walk; each application's outcome is written back.
+   */
+  readonly recipes?: readonly MeetingsRecipe[];
 }
 
 /**
@@ -106,7 +118,7 @@ const DEFAULT_TIMEOUT_MS = 20_000;
 /** Less time than this left, and a request is not sent: it could not come back inside the budget. */
 const MIN_REQUEST_MS = 2_000;
 const MAX_REDIRECT_HOPS = 4;
-const MAX_ENDPOINTS_PER_WALK = 4;
+const MAX_ENDPOINTS_PER_WALK = 6;
 const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calendar,*/*;q=0.8";
 const ACCEPT_ROBOTS = "text/plain,*/*;q=0.5";
 const SOURCE_ID = "meetings-discovery";
@@ -289,10 +301,13 @@ export async function walkMeetingsDiscoveryNeed(
   }
 
   let candidates: readonly EndpointCandidate[] = [];
+  let proposals: readonly RecipeCandidate[] = [];
+  const recipeSkips: { recipeId: string; why: string }[] = [];
   const origins = siteOrigins(need.ownWebAddress);
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
-  const verifiable = (): readonly EndpointCandidate[] => candidates.filter((c) => c.verifiable).slice(0, MAX_ENDPOINTS_PER_WALK);
+  const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
+  const planned: { candidate: EndpointCandidate; recipeIds: string[] }[] = [];
   let checked = 0;
   try {
     /* 1–2. The homepage, on each recorded origin in turn, until one is read. */
@@ -300,12 +315,38 @@ export async function walkMeetingsDiscoveryNeed(
       const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
       if (home !== null) {
         candidates = meetingEndpointCandidates(home.body, home.finalUrl);
+        /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
+        const proposed = recipeCandidates({
+          recipes: runtime.recipes ?? [],
+          need,
+          origin: new URL(home.finalUrl).origin,
+          homepageHtml: home.body,
+          nowIso: runtime.now(),
+        });
+        proposals = proposed.candidates;
+        recipeSkips.push(...proposed.skipped);
         break;
       }
     }
 
-    /* 3. The verifiable routes the page evidences, confirmed by content. */
-    for (const candidate of verifiable()) {
+    /*
+     * 3. The verifiable routes, confirmed by content: the page's own evidence
+     * first, then the saved methods. A saved method that proposes a route the page
+     * already links is credited with that route's outcome.
+     */
+    for (const candidate of candidates.filter((c) => c.verifiable)) planned.push({ candidate, recipeIds: [] });
+    for (const p of proposals) {
+      const same = planned.find((x) => x.candidate.url === p.url);
+      if (same) {
+        same.recipeIds.push(p.recipeId);
+        continue;
+      }
+      planned.push({
+        candidate: { vendor: p.extractorId, url: p.url, basis: "RECIPE", evidence: `saved method ${p.recipeId}`, verifiable: true },
+        recipeIds: [p.recipeId],
+      });
+    }
+    for (const { candidate, recipeIds } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
       const check = got === null
@@ -313,13 +354,22 @@ export async function walkMeetingsDiscoveryNeed(
         : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
-      else leads.push(base);
+      else if (candidate.basis !== "RECIPE") leads.push(base);
+      for (const recipeId of recipeIds) {
+        recipeApplied.push({ recipeId, url: candidate.url, verdict: got === null ? "NOT_READ" : check.verdict, detail: check.detail });
+      }
     }
   } catch (error) {
     if (!(error instanceof OutOfTime)) throw error;
     /* A route already confirmed by content stands. Anything less concludes nothing about the site. */
     if (found.length === 0) throw new DiscoveryTimeSpent(need.jurisdictionId, requests);
-    for (const candidate of verifiable().slice(checked)) {
+    /*
+     * The routes the page evidenced but the walk did not reach are leads that say
+     * so. A saved method not reached is neither credited nor charged: the time ran
+     * out, not the method.
+     */
+    for (const { candidate } of planned.slice(checked, MAX_ENDPOINTS_PER_WALK)) {
+      if (candidate.basis === "RECIPE") continue;
       leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first" });
     }
   }
@@ -341,6 +391,7 @@ export async function walkMeetingsDiscoveryNeed(
     found,
     leads,
     steps,
+    recipes: { applied: recipeApplied, skipped: recipeSkips },
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
     note: noteFor(need, outcome, found, leads, origins.length),
@@ -385,6 +436,9 @@ export interface MeetingsDiscoveryPass {
    */
   readonly cutShort: readonly { readonly jurisdictionId: string; readonly requests: number }[];
   readonly appendFailures: readonly { readonly jurisdictionId: string; readonly why: string }[];
+  /** Saved methods whose counts this pass moved, and how many applications it made. */
+  readonly recipesUpdated: readonly string[];
+  readonly recipeApplications: number;
   readonly fieldManual: { readonly written: number; readonly error?: string };
 }
 
@@ -506,6 +560,42 @@ export async function runMeetingsDiscovery(
     }
   }
 
-  const fieldManual = await writeFieldManualDiscoveries(repos, walked.flatMap(discoveryFieldManualEntries), input.runtime.now());
-  return { walked, notDue, deferred, cutShort, appendFailures, fieldManual };
+  /*
+   * Write back every saved method's outcome, success and failure alike, so the
+   * next cycle ranks by what worked and does not pay again for a failure that
+   * still stands (lib/hunt/meetings-recipes.ts).
+   */
+  const recipesById = new Map((input.runtime.recipes ?? []).map((r) => [r.recipeId, r] as const));
+  const touched = new Set<string>();
+  let recipeApplications = 0;
+  for (const attempt of walked) {
+    for (const a of attempt.recipes.applied) {
+      const recipe = recipesById.get(a.recipeId);
+      if (recipe === undefined) continue;
+      recipeApplications += 1;
+      const note = { at: attempt.finishedAt, jurisdictionId: attempt.jurisdictionId, url: a.url, conditions: `walk ${attempt.attemptId}: ${a.detail}` };
+      recipesById.set(
+        a.recipeId,
+        a.verdict === "YIELDED"
+          ? recordRecipeOutcome(recipe, { succeeded: true, note })
+          : recordRecipeOutcome(recipe, {
+              succeeded: false,
+              note: {
+                ...note,
+                limit: a.verdict === "NOT_READ"
+                  ? "the route was not read: permission, a wall, or transport"
+                  : a.verdict === "EMPTY" ? "the route answered but held no meetings" : `content check: ${a.detail}`,
+              },
+            }),
+      );
+      touched.add(a.recipeId);
+    }
+  }
+  const recipeEntries = [...touched].map((id) => recipeEntry(recipesById.get(id)!, input.runtime.now()));
+  const fieldManual = await writeFieldManualDiscoveries(
+    repos,
+    [...walked.flatMap(discoveryFieldManualEntries), ...recipeEntries],
+    input.runtime.now(),
+  );
+  return { walked, notDue, deferred, cutShort, appendFailures, recipesUpdated: [...touched], recipeApplications, fieldManual };
 }

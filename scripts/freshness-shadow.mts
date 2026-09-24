@@ -124,6 +124,7 @@ import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
 import { runMeetingsDiscovery, type MeetingsDiscoveryPass } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import {
   closeAbandonedOccurrences,
   planMovedToGapLedger,
@@ -2074,6 +2075,8 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
   /* Named to the stall diagnostic while it runs: its waits on government sites are not store calls, so nothing else would name them. */
   const leaveDiscovery = pending.enter("meetings-discovery");
   try {
+    /* The saved methods live in the field manual; the runner consults them on every walk. */
+    const manual = await repos.fieldManual.read("live");
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
       needs: gapLedgerRead.needs,
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
@@ -2102,6 +2105,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
           spent: () => Date.now() - discoveryStartedMs >= MEETINGS_DISCOVERY_BUDGET_MS,
           remainingMs: () => discoveryStartedMs + MEETINGS_DISCOVERY_BUDGET_MS - Date.now(),
         },
+        recipes: knownRecipes(manual?.value.entries ?? []),
       },
     });
     meetingsDiscoveryState = "ran";
@@ -2579,6 +2583,7 @@ const lines = [
         `${meetingsDiscoveryByOutcome.COULD_NOT_READ ?? 0} could not read) · ${meetingsDiscovery.notDue.length} not yet due · ` +
         `${meetingsDiscovery.deferred.length} deferred (budget)` +
         (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
+        ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
         (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "")),
   ...(abandonedOccurrences.length === 0
     ? []
@@ -2670,6 +2675,8 @@ const runRecord = {
         notDue: meetingsDiscovery?.notDue ?? [],
         deferred: meetingsDiscovery?.deferred ?? [],
         cutShort: meetingsDiscovery?.cutShort ?? [],
+        recipesApplied: meetingsDiscovery?.recipeApplications ?? 0,
+        recipesUpdated: meetingsDiscovery?.recipesUpdated ?? [],
         appendFailures: meetingsDiscovery?.appendFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
       },

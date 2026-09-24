@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 736,
-    "named": 7255,
+    "files": 737,
+    "named": 7266,
     "dynamic": 28
   },
   "files": {
@@ -2427,6 +2427,7 @@
         "Legistar adapters cannot reopen frozen tracked venue registries",
         "a manual contract cannot reclaim a routine canonical record-class/scope authority",
         "a retired data executable cannot survive behind a renamed package command",
+        "a standing-clock contract cannot regain an owner manual-promotion door under any package name or adapter",
         "actual 673f1dd job-watch tracker commit shape is blocked at the deleted workflow/writer boundary",
         "arbitrary-checkout control-plane bootstrap/proof writers cannot return as executable or package doors",
         "candidate research holdings and statement history cannot regain production authority",
@@ -7087,6 +7088,21 @@
         "the permission gate refuses a disallowed path before any request to it",
         "the wiring row reads permitted pima.edu hosts and never the Diligent tenant",
         "the wiring type is a registered agenda-source type (BodySourceWiring compiles)"
+      ],
+      "dynamic": 0
+    },
+    "tests/pima-legistar-outcomes-routine.test.ts": {
+      "names": [
+        "(a) Pima Legistar outcomes are one routine contract on the standing clock, not an owner-invoked manual contract",
+        "(b) a GOOD Pima candidate promotes through the routine door and a later failed read leaves that GOOD pointer as LKG",
+        "(c) no package script, installed dispatch, or firewall mapping can still promote this scope through a manual door",
+        "a Legistar UTC stamp is read as UTC, and a candidate's source-through never precedes the pointer it extends",
+        "a dry run reads the events route and writes nothing",
+        "a failed or empty events read is a durable held attempt, exits non-zero, and leaves the LKG live",
+        "a refused sitting holds the pass even when a later sitting promotes, and the receipt proves the moved LKG",
+        "a routine pass promotes every changed sitting, including one modified earlier than a sitting walked before it",
+        "an unchanged day costs one events request and ends in a validated no-change receipt",
+        "the rolling routine window ends today where the Board sits and reaches back 120 days"
       ],
       "dynamic": 0
     },

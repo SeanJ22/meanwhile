@@ -231,7 +231,7 @@ test("PDC: readiness authority coverage accounts for every production contract",
   assert.equal(contracts.length, 159, "the coverage guard must move when the production contract denominator moves");
   assert.deepEqual(
     ROUTINE_SOURCE_CONTRACTS.map(({ id }) => id),
-    ["fec-funding", "nh-members", "az-state-legislators", "nj-state-legislators", "az-state-rollcalls", "nh-state-rollcalls", "nj-state-rollcalls", "census-acs-population", "census-geography-overlaps", "nj-morris-filing", "dotgov"],
+    ["fec-funding", "nh-members", "az-state-legislators", "nj-state-legislators", "az-state-rollcalls", "nh-state-rollcalls", "nj-state-rollcalls", "census-acs-population", "census-geography-overlaps", "nj-morris-filing", "pima-legistar-outcomes", "dotgov"],
     "the guard must move when the canonical contract denominator moves",
   );
   assert.equal(MEETING_PARTITION_CONTRACTS.length, 125);

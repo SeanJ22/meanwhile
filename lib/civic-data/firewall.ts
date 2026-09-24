@@ -943,7 +943,8 @@ const RETIRED_ACTION_OUTCOME_SEEDS = [
     allowed: new Set([
       "lib/outcomes/store.ts",
       "lib/civic-data/firewall.ts",
-      "lib/civic-data/manual-contracts.ts",
+      // The routine contract names it as bootstrap/test material only.
+      "lib/civic-data/contracts.ts",
       "lib/civic-data/non-routine-dispositions.ts",
       // This is a filename-classification table used only by the engineering
       // holdings census. It neither opens nor serves the historical seed.
@@ -1352,6 +1353,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   // to claim the same Reader authority.
   const authorityKeys = new Map<string, string>();
   const commands = new Set<string>();
+  const routineAdaptersReachingManualDoor = new Set<string>();
   const certificationPaths = new Set<string>();
   const releaseInvocationPaths = new Set<string>();
   const repositoryWriterPaths = new Set<string>();
@@ -1453,6 +1455,17 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     commands.add(commandSignature);
     if (/^(?:data|lib\/registry)\//.test(contract.canonicalProductionStore)) {
       add("TRACKED_RUNTIME_CANONICAL_STORE", "lib/civic-data/contracts.ts", `${contract.id}: ${contract.canonicalProductionStore}`);
+    }
+    // A standing-clock scope has exactly one writer. An adapter that can still
+    // reach the owner-invoked manual door would give it a second, clockless one.
+    if (!routineAdaptersReachingManualDoor.has(commandPath) &&
+        /\bprocessRegisteredManualCandidate\b/.test(stripExecutableComments(tree.files[commandPath] ?? ""))) {
+      routineAdaptersReachingManualDoor.add(commandPath);
+      add(
+        "ROUTINE_ADAPTER_REACHES_MANUAL_DOOR",
+        commandPath,
+        `${contract.id} is clocked by the standing runner; its adapter may promote only through its registered routine door.`,
+      );
     }
     inspectDataCommandClosure(commandPath, "routine");
   }
@@ -1587,7 +1600,6 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
 
   for (const [name, commandPath, contract] of [
     ["official-actions:promote", "scripts/promote-az-official-actions.mts", "az-official-actions"],
-    ["outcomes:ingest", "scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
   ] as const) {
     const command = packageCommand(name);
     if (command !== installedManualCommand(contract)) add("ACTION_OUTCOME_COMMAND_NOT_PROMOTING", "package.json", `${name} must enter ${commandPath}'s exact installed-runtime contract ${contract}.`);
@@ -1633,6 +1645,21 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   if (packageCommand("civic-data:promote-manual") !== "node scripts/installed-runtime-command.mjs manual-promote") {
     add("MANUAL_PACKAGE_AUTHORITY_BYPASS", "package.json", "civic-data:promote-manual must enter the closed installed-runtime dispatcher, which then requires one registered contract.");
   }
+  // Class-wide: whatever a package alias is called, it may name an owner
+  // manual promotion only for an explicit-owner contract. A routine contract's
+  // sole production clock and writer is the standing runner.
+  const explicitOwnerContracts = new Set(tree.manualContracts.map(({ id }) => id));
+  for (const [, name, command] of packageJson.matchAll(/"([^"]+)"\s*:\s*"([^"]*installed-runtime-command\.mjs\s+manual-promote\b[^"]*)"/g)) {
+    for (const [, contract] of command!.matchAll(/--contract=([^\s"]+)/g)) {
+      if (!explicitOwnerContracts.has(contract!)) {
+        add(
+          "MANUAL_PACKAGE_CONTRACT_NOT_MANUAL",
+          "package.json",
+          `${name} names an owner manual promotion for ${contract}, which is not an explicit-owner contract; a routine contract promotes only on the standing runner's clock.`,
+        );
+      }
+    }
+  }
   for (const [name, expected] of [
     ["window:run", "node scripts/installed-runtime-command.mjs window"],
     ["agent-bridge:job", "node scripts/installed-runtime-command.mjs agent-bridge-job"],
@@ -1657,6 +1684,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
     "fec:fetch",
     "fec:promote",
     "nh:members:promote",
+    "outcomes:ingest",
     "ingest",
   ]) {
     if (packageCommand(name) !== "") {

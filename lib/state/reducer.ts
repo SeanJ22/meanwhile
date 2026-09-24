@@ -76,7 +76,7 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       return { ...state, jurisdiction: action.ocdId, body: null };
 
     case "scope/body":
-      return { ...state, body: action.ocdId };
+      return { ...state, body: action.key };
 
     case "filter/toggleBodyType":
       return {
@@ -253,6 +253,7 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
         /* A toggle is never a focused open. */
         listFocusBodyId: null,
         listFocusBodyName: null,
+        listFocusDivision: null,
       };
 
     case "list/open":
@@ -265,6 +266,8 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
            reader has moved on from. */
         listFocusBodyId: action.open ? (action.focusBodyId ?? null) : null,
         listFocusBodyName: action.open ? (action.focusBodyName ?? null) : null,
+        /* 2026-09-23: the district card's count, with the same lifetime. */
+        listFocusDivision: action.open ? (action.focusDivision ?? null) : null,
       };
 
     // 8a: the sidebar-count doors. One large surface at a time — opening a

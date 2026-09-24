@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 
 import {
+  HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
 } from "../lib/civic-data/meeting-partitions.ts";
@@ -371,7 +372,14 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  assert.equal(store.readPromotionsCalls, 1, "the payloads cross once, in the actual aggregate Reader read");
+  // The payloads cross once, in the actual aggregate Reader read, plus one
+  // batch for the held pointers of successors with none yet
+  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+  assert.equal(
+    store.readPromotionsCalls,
+    1 + (HELD_MEETING_PARTITIONS.length > 0 ? 1 : 0),
+    "the payloads cross once, in the actual aggregate Reader read, and its held-pointer batch",
+  );
   assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
     { contractId: legistar.id, ok: true },
     { contractId: insite.id, ok: true },
@@ -463,7 +471,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   let scalarCandidateReads = 0;
   let promotionBatchReads = 0;
   let candidateBatchReads = 0;
-  let requestedScopes: readonly string[] = [];
+  const requestedScopeBatches: string[][] = [];
   let requestedCandidateIds: readonly string[] = [];
   const corruptingStore = {
     async readPromotion<_T>(_recordClass: RoutineRecordClass, _scope: string) {
@@ -476,7 +484,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
     },
     async readPromotions<T>(recordClass: RoutineRecordClass, scopes: readonly string[]) {
       promotionBatchReads += 1;
-      requestedScopes = [...scopes];
+      requestedScopeBatches.push([...scopes]);
       return (await store.readPromotions<T>(recordClass, scopes)).map((pointer) =>
         pointer.versionId === corruptId
           ? { ...pointer, payload: structuredClone(corruptPayload) as T }
@@ -518,9 +526,15 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  assert.equal(promotionBatchReads, 1);
+  // One batch for every registered partition, and one more only for the held
+  // pointers of successors that have none yet (HELD_MEETING_PARTITIONS) — the
+  // college's successor has none in this store.
+  assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
-  assert.deepEqual(requestedScopes, MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope));
+  assert.deepEqual(requestedScopeBatches, [
+    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+    HELD_MEETING_PARTITIONS.map((held) => held.scope),
+  ]);
   assert.deepEqual(new Set(requestedCandidateIds), new Set(seeded.map((row) => row.candidate.id)));
 });
 

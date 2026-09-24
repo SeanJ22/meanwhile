@@ -39,6 +39,20 @@ import { createHash } from "node:crypto";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import {
+  failureStands,
+  identityFor,
+  recipeCandidates,
+  recipeEntry,
+  recipeFromSearchFind,
+  recipesFor,
+  recordRecipeOutcome,
+  type MeetingsRecipe,
+  type RecipeCandidate,
+} from "../../hunt/meetings-recipes.ts";
+import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
+import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
+import type { SearchHit } from "../scheduler/scout-contract.ts";
+import {
   decideOutcome,
   meetingEndpointCandidates,
   recheckAfter,
@@ -50,8 +64,10 @@ import {
   type EndpointCandidate,
   type MeetingsDiscoveryAttempt,
   type StepPermission,
+  type VerifiableVendor,
 } from "../../hunt/meetings-site-discovery.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
+import { FRESHNESS_PROJECT } from "../scheduler/durable.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { fieldManualEntryId, type FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -89,6 +105,79 @@ export interface DiscoveryRuntime {
   readonly budget: { readonly spent: () => boolean; readonly remainingMs?: () => number };
   readonly maxRequestsPerWalk?: number;
   readonly timeoutMs?: number;
+  /**
+   * The saved methods the runner knows (`knownRecipes` over the field manual).
+   * Consulted on every walk; each application's outcome is written back.
+   */
+  readonly recipes?: readonly MeetingsRecipe[];
+  /**
+   * The search seam (Brave and Exa, pointers only). Absent, the walk never
+   * searches. Every provider request it reports is charged to the cost ledger.
+   */
+  readonly search?: DiscoverySearch;
+  /** Writes one CostEntry per provider request actually sent (role DISCOVERY_SEARCH). */
+  readonly recordCost?: (entry: CostEntry) => Promise<void>;
+  readonly maxQueriesPerWalk?: number;
+}
+
+/** One provider request the search seam made, refused, or lost in transport. */
+export interface SearchRequestRecord {
+  readonly provider: SearchProvider;
+  readonly status: "DELIVERED" | "BUDGET_REFUSED" | "FAILED";
+  readonly error: string | null;
+  readonly bytes: number;
+  readonly hitCount: number;
+}
+
+/** Search for pointers. Restricting to the government's own domain is the seam's to express per provider. */
+export type DiscoverySearch = ((input: {
+  readonly query: string;
+  readonly ownSiteDomain: string | null;
+}) => Promise<{ readonly hits: readonly SearchHit[]; readonly requests: readonly SearchRequestRecord[] }>) & {
+  /** The longest one query can take, every provider at its timeout. The walk starts a query only with this much time left. */
+  readonly worstCaseMs?: number;
+};
+
+const MAX_HITS_FOLLOWED_PER_QUERY = 2;
+const DEFAULT_MAX_QUERIES_PER_WALK = 2;
+/** A seam that does not state its worst case is given this much: two providers at eight seconds each, and the budget ledger's calls. */
+const DEFAULT_SEARCH_WORST_CASE_MS = 20_000;
+
+/** The cost-ledger row for one search request: role DISCOVERY_SEARCH, never mixed with model spend. */
+export function searchCostEntry(input: {
+  readonly attemptId: string;
+  readonly jurisdictionId: string;
+  readonly routeId: string;
+  readonly host: string;
+  readonly usd: number | null;
+  readonly bytes: number;
+  readonly recordedAt: string;
+}): CostEntry {
+  return {
+    attemptId: input.attemptId,
+    workItemId: discoveryWorkId(input.jurisdictionId),
+    routeTaskId: null,
+    routeId: input.routeId,
+    source: input.host,
+    jurisdiction: input.jurisdictionId,
+    project: FRESHNESS_PROJECT,
+    role: DISCOVERY_SEARCH_ROLE,
+    cost: {
+      inputTokens: null,
+      outputTokens: null,
+      usd: input.usd,
+      durationMs: null,
+      bytesFetched: input.bytes,
+      requestCount: 1,
+      cacheReadInputTokens: null,
+      cacheCreationInputTokens: null,
+      cacheCreation5mInputTokens: null,
+      cacheCreation1hInputTokens: null,
+      uncachedInputTokens: null,
+      batch: false,
+    },
+    recordedAt: input.recordedAt,
+  };
 }
 
 /**
@@ -106,7 +195,7 @@ const DEFAULT_TIMEOUT_MS = 20_000;
 /** Less time than this left, and a request is not sent: it could not come back inside the budget. */
 const MIN_REQUEST_MS = 2_000;
 const MAX_REDIRECT_HOPS = 4;
-const MAX_ENDPOINTS_PER_WALK = 4;
+const MAX_ENDPOINTS_PER_WALK = 6;
 const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calendar,*/*;q=0.8";
 const ACCEPT_ROBOTS = "text/plain,*/*;q=0.5";
 const SOURCE_ID = "meetings-discovery";
@@ -133,8 +222,10 @@ export class DiscoveryTimeSpent extends Error {
   /* Explicit field declarations: a parameter property does not parse under --experimental-strip-types. */
   readonly jurisdictionId: string;
   readonly requestCount: number;
+  /** The search queries the walk had sent. Their requests were charged, so they are reported with the cut walk. */
+  readonly search: MeetingsDiscoveryAttempt["search"];
 
-  constructor(jurisdictionId: string, requestCount: number) {
+  constructor(jurisdictionId: string, requestCount: number, search: MeetingsDiscoveryAttempt["search"] = []) {
     super(
       `${jurisdictionId}: the discovery time ran out after ${requestCount} request(s), before the walk confirmed ` +
         "anything; nothing is recorded as a reading and the need stays due",
@@ -142,6 +233,7 @@ export class DiscoveryTimeSpent extends Error {
     this.name = "DiscoveryTimeSpent";
     this.jurisdictionId = jurisdictionId;
     this.requestCount = requestCount;
+    this.search = search;
   }
 }
 
@@ -289,23 +381,58 @@ export async function walkMeetingsDiscoveryNeed(
   }
 
   let candidates: readonly EndpointCandidate[] = [];
+  let proposals: readonly RecipeCandidate[] = [];
+  let homeOrigin: string | null = null;
+  let homeHtml: string | null = null;
+  const recipeSkips: { recipeId: string; why: string }[] = [];
   const origins = siteOrigins(need.ownWebAddress);
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
-  const verifiable = (): readonly EndpointCandidate[] => candidates.filter((c) => c.verifiable).slice(0, MAX_ENDPOINTS_PER_WALK);
+  const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
+  const planned: { candidate: EndpointCandidate; recipeIds: string[] }[] = [];
+  const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
+  const learned: MeetingsRecipe[] = [];
   let checked = 0;
   try {
     /* 1–2. The homepage, on each recorded origin in turn, until one is read. */
     for (const origin of origins) {
       const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
       if (home !== null) {
+        homeOrigin = new URL(home.finalUrl).origin;
+        homeHtml = home.body;
         candidates = meetingEndpointCandidates(home.body, home.finalUrl);
+        /* The saved methods whose precondition this homepage shows (lib/hunt/meetings-recipes.ts). */
+        const proposed = recipeCandidates({
+          recipes: runtime.recipes ?? [],
+          need,
+          origin: homeOrigin,
+          homepageHtml: home.body,
+          nowIso: runtime.now(),
+        });
+        proposals = proposed.candidates;
+        recipeSkips.push(...proposed.skipped);
         break;
       }
     }
 
-    /* 3. The verifiable routes the page evidences, confirmed by content. */
-    for (const candidate of verifiable()) {
+    /*
+     * 3. The verifiable routes, confirmed by content: the page's own evidence
+     * first, then the saved methods. A saved method that proposes a route the page
+     * already links is credited with that route's outcome.
+     */
+    for (const candidate of candidates.filter((c) => c.verifiable)) planned.push({ candidate, recipeIds: [] });
+    for (const p of proposals) {
+      const same = planned.find((x) => x.candidate.url === p.url);
+      if (same) {
+        same.recipeIds.push(p.recipeId);
+        continue;
+      }
+      planned.push({
+        candidate: { vendor: p.extractorId, url: p.url, basis: "RECIPE", evidence: `saved method ${p.recipeId}`, verifiable: true },
+        recipeIds: [p.recipeId],
+      });
+    }
+    for (const { candidate, recipeIds } of planned.slice(0, MAX_ENDPOINTS_PER_WALK)) {
       const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
       checked += 1;
       const check = got === null
@@ -313,13 +440,95 @@ export async function walkMeetingsDiscoveryNeed(
         : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
-      else leads.push(base);
+      else if (candidate.basis !== "RECIPE") leads.push(base);
+      for (const recipeId of recipeIds) {
+        recipeApplied.push({ recipeId, url: candidate.url, verdict: got === null ? "NOT_READ" : check.verdict, detail: check.detail });
+      }
+    }
+
+    /*
+     * 4. Search, only when nothing was confirmed and a search seam exists: the
+     * saved methods' queries first, then the defaults. A result is a pointer: it
+     * is followed only on the government's own domain or a known publisher host,
+     * opened robots-first, and confirmed by content. Every request is charged.
+     */
+    if (found.length === 0 && runtime.search !== undefined && origins.length > 0) {
+      const search = runtime.search;
+      const identity = identityFor(need, homeOrigin ?? origins[0], new Date(startedAt).getUTCFullYear());
+      /* A saved method searches only where its precondition shows (or it has none) and no failure of it stands here. */
+      const applicable = recipesFor(runtime.recipes ?? [], { bodyClass: need.govClass, state: need.stateCode }).filter(
+        (r) =>
+          (r.precondition === null || (homeHtml !== null && new RegExp(r.precondition, "i").test(homeHtml))) &&
+          failureStands(r, need.jurisdictionId, startedAt) === null,
+      );
+      const tried = new Set(planned.map((p) => p.candidate.url));
+      for (const q of plannedQueries(applicable, identity, runtime.maxQueriesPerWalk ?? DEFAULT_MAX_QUERIES_PER_WALK)) {
+        /* A query starts only with time left for its worst case: the time never cuts off a request already paid for. */
+        if (timeLeftMs() < (search.worstCaseMs ?? DEFAULT_SEARCH_WORST_CASE_MS)) throw new OutOfTime();
+        const res = await search({ query: q.query, ownSiteDomain: q.ownSiteOnly ? identity.domain : null });
+        const requests = res.requests.map((r) => {
+          const { usd, price } = requestPrice(r.provider, r.status === "DELIVERED");
+          return {
+            provider: r.provider, host: price.host, status: r.status, error: r.error, hitCount: r.hitCount,
+            usd: r.status === "BUDGET_REFUSED" ? null : usd, priceSource: price.source, priceReadOn: price.readOn, bytes: r.bytes,
+          };
+        });
+        for (const r of requests) {
+          if (r.status === "BUDGET_REFUSED") continue;
+          await runtime.recordCost?.(searchCostEntry({
+            attemptId, jurisdictionId: need.jurisdictionId, routeId: q.recipeId ?? `discovery-search:${q.templateId}`,
+            host: r.host, usd: r.usd, bytes: r.bytes, recordedAt: runtime.now(),
+          }));
+        }
+        /* Recorded before its results are followed, so a query the time cuts off still reports what it cost. */
+        const followed: string[] = [];
+        queryTrail.push({
+          templateId: q.templateId, recipeId: q.recipeId, query: q.query, ownSiteOnly: q.ownSiteOnly,
+          requests: requests.map(({ bytes: _bytes, ...rest }) => rest), followed,
+        });
+        for (const hit of res.hits) {
+          if (found.length > 0 || followed.length >= MAX_HITS_FOLLOWED_PER_QUERY) break;
+          if (hitStanding(hit.url, identity.domain) === null || tried.has(hit.url)) continue;
+          tried.add(hit.url);
+          const page = await get(hit.url, "endpoint", ACCEPT_PAGE);
+          /* Listed once asked for: a result the time cut off before its request is not "followed". */
+          followed.push(hit.url);
+          if (page === null) continue;
+          /* The result may itself be a route; otherwise it is read as a page for the routes it evidences. */
+          const direct = meetingEndpointCandidates(`<a href="${hit.url.replace(/"/g, "%22")}"></a>`, page.finalUrl).filter((c) => c.verifiable);
+          const onPage = meetingEndpointCandidates(page.body, page.finalUrl).filter((c) => c.verifiable && !tried.has(c.url));
+          for (const c of [...direct, ...onPage].slice(0, 3)) {
+            const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
+            if (body === null) continue;
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl });
+            const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail };
+            if (check.verdict !== "YIELDED") {
+              leads.push(base);
+              continue;
+            }
+            found.push({ ...base, count: check.count, artifactId: body.artifactId });
+            if (q.recipeId !== null) recipeApplied.push({ recipeId: q.recipeId, url: c.url, verdict: "YIELDED", detail: check.detail });
+            else learned.push(recipeFromSearchFind({ templateId: q.templateId, template: q.template, vendor: c.vendor as VerifiableVendor, need, attemptId }));
+            break;
+          }
+        }
+        if (q.recipeId !== null && found.length === 0) {
+          recipeApplied.push({ recipeId: q.recipeId, url: `search:${q.query}`, verdict: "NOT_CONFIRMED", detail: followed.length === 0 ? "the search returned no result on the government's own domain or a known publisher" : "no result the search pointed to was confirmed by content" });
+        }
+        if (found.length > 0) break;
+      }
     }
   } catch (error) {
     if (!(error instanceof OutOfTime)) throw error;
     /* A route already confirmed by content stands. Anything less concludes nothing about the site. */
-    if (found.length === 0) throw new DiscoveryTimeSpent(need.jurisdictionId, requests);
-    for (const candidate of verifiable().slice(checked)) {
+    if (found.length === 0) throw new DiscoveryTimeSpent(need.jurisdictionId, requests, queryTrail);
+    /*
+     * The routes the page evidenced but the walk did not reach are leads that say
+     * so. A saved method not reached is neither credited nor charged: the time ran
+     * out, not the method.
+     */
+    for (const { candidate } of planned.slice(checked, MAX_ENDPOINTS_PER_WALK)) {
+      if (candidate.basis === "RECIPE") continue;
       leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first" });
     }
   }
@@ -341,6 +550,8 @@ export async function walkMeetingsDiscoveryNeed(
     found,
     leads,
     steps,
+    recipes: { applied: recipeApplied, skipped: recipeSkips, learned },
+    search: queryTrail,
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
     note: noteFor(need, outcome, found, leads, origins.length),
@@ -383,8 +594,16 @@ export interface MeetingsDiscoveryPass {
    * Walks the time ran out on before they confirmed anything. Nothing was
    * recorded as a reading; each is also in `deferred`, and its need stays due.
    */
-  readonly cutShort: readonly { readonly jurisdictionId: string; readonly requests: number }[];
+  readonly cutShort: readonly {
+    readonly jurisdictionId: string;
+    readonly requests: number;
+    /** The search queries it had sent, with their charged requests. */
+    readonly search: MeetingsDiscoveryAttempt["search"];
+  }[];
   readonly appendFailures: readonly { readonly jurisdictionId: string; readonly why: string }[];
+  /** Saved methods whose counts this pass moved, and how many applications it made. */
+  readonly recipesUpdated: readonly string[];
+  readonly recipeApplications: number;
   readonly fieldManual: { readonly written: number; readonly error?: string };
 }
 
@@ -474,7 +693,7 @@ export async function runMeetingsDiscovery(
   const walked: MeetingsDiscoveryAttempt[] = [];
   const notDue: string[] = [];
   const deferred: string[] = [];
-  const cutShort: { jurisdictionId: string; requests: number }[] = [];
+  const cutShort: { jurisdictionId: string; requests: number; search: MeetingsDiscoveryAttempt["search"] }[] = [];
   const appendFailures: { jurisdictionId: string; why: string }[] = [];
   const nowMs = Date.parse(input.runtime.now());
 
@@ -495,7 +714,7 @@ export async function runMeetingsDiscovery(
     } catch (error) {
       if (!(error instanceof DiscoveryTimeSpent)) throw error;
       deferred.push(need.jurisdictionId);
-      cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount });
+      cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount, search: error.search });
       continue;
     }
     walked.push(attempt);
@@ -506,6 +725,49 @@ export async function runMeetingsDiscovery(
     }
   }
 
-  const fieldManual = await writeFieldManualDiscoveries(repos, walked.flatMap(discoveryFieldManualEntries), input.runtime.now());
-  return { walked, notDue, deferred, cutShort, appendFailures, fieldManual };
+  /*
+   * Write back every saved method's outcome, success and failure alike, so the
+   * next cycle ranks by what worked and does not pay again for a failure that
+   * still stands (lib/hunt/meetings-recipes.ts).
+   */
+  const recipesById = new Map((input.runtime.recipes ?? []).map((r) => [r.recipeId, r] as const));
+  const touched = new Set<string>();
+  let recipeApplications = 0;
+  for (const attempt of walked) {
+    /* A method a search success taught: added, or credited when it is already known. */
+    for (const fresh of attempt.recipes.learned) {
+      const known = recipesById.get(fresh.recipeId) ?? fresh;
+      const note = { at: attempt.finishedAt, jurisdictionId: attempt.jurisdictionId, url: attempt.found[0]?.url ?? "", conditions: `walk ${attempt.attemptId}: found by search` };
+      recipesById.set(fresh.recipeId, recordRecipeOutcome(known, { succeeded: true, note }));
+      touched.add(fresh.recipeId);
+    }
+    for (const a of attempt.recipes.applied) {
+      const recipe = recipesById.get(a.recipeId);
+      if (recipe === undefined) continue;
+      recipeApplications += 1;
+      const note = { at: attempt.finishedAt, jurisdictionId: attempt.jurisdictionId, url: a.url, conditions: `walk ${attempt.attemptId}: ${a.detail}` };
+      recipesById.set(
+        a.recipeId,
+        a.verdict === "YIELDED"
+          ? recordRecipeOutcome(recipe, { succeeded: true, note })
+          : recordRecipeOutcome(recipe, {
+              succeeded: false,
+              note: {
+                ...note,
+                limit: a.verdict === "NOT_READ"
+                  ? "the route was not read: permission, a wall, or transport"
+                  : a.verdict === "EMPTY" ? "the route answered but held no meetings" : `content check: ${a.detail}`,
+              },
+            }),
+      );
+      touched.add(a.recipeId);
+    }
+  }
+  const recipeEntries = [...touched].map((id) => recipeEntry(recipesById.get(id)!, input.runtime.now()));
+  const fieldManual = await writeFieldManualDiscoveries(
+    repos,
+    [...walked.flatMap(discoveryFieldManualEntries), ...recipeEntries],
+    input.runtime.now(),
+  );
+  return { walked, notDue, deferred, cutShort, appendFailures, recipesUpdated: [...touched], recipeApplications, fieldManual };
 }

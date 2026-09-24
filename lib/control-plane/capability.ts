@@ -133,6 +133,8 @@ export interface CapabilityGrant {
  *     independence from becoming a second, unreviewed writer.
  */
 export const DEFAULT_GRANTS: Record<WorkerRole, readonly Capability[]> = {
+  /* A search-API request, not a worker: it holds no capability (2026-09-23). */
+  DISCOVERY_SEARCH: [],
   SCOUT: [
     "NETWORK_PUBLIC_READ",
     "BROWSER_DRIVE",

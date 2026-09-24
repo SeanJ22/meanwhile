@@ -1,0 +1,1545 @@
+{
+  "recordedFrom": "GET <PUBLIC_SITE_ORIGIN, lib/ops/origins.ts>/api/meetings?lat=32.2217&lng=-110.9695&zip=85701 (header x-wtp-synthetic-run), saved 2026-09-23 ~22:56Z for the owner's Tucson Unified report. Rows kept: every Tucson Unified (school_district:tucson_unified_district) and Pima County (county:pima) row, and every Pima Community College (diligent:pcc) row, verbatim. coverage.bodies trimmed to those rows' bodies, readerRoster removed.",
+  "recordedAt": "2026-09-23T22:56:10.369Z",
+  "listingIdentity": {
+    "recordCount": 181,
+    "sourceListingCount": 181,
+    "groups": [],
+    "unresolvedBodySourceIds": [],
+    "unresolvedTimeSourceIds": [],
+    "duplicateNativeIds": []
+  },
+  "coverage": {
+    "bodies": [
+      {
+        "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+        "ocdId": "ocd-division/country:us/state:az/county:pima",
+        "name": "Central Arizona Water Conservation District Board of Directors",
+        "divisionLabel": "Pima",
+        "divisionType": "county",
+        "lsad": null,
+        "schoolDependency": "UNCLASSIFIED",
+        "bodyClass": "GOVERNING",
+        "coverageStatus": "LIVE",
+        "homepageUrl": "https://www.cap-az.com/board/board-members/",
+        "agendaSourceRef": "https://capaz.portal.civicclerk.com",
+        "lookedAt": true,
+        "tier": "local"
+      },
+      {
+        "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+        "ocdId": "ocd-division/country:us/state:az/county:pima",
+        "name": null,
+        "divisionLabel": "Pima",
+        "divisionType": "county",
+        "lsad": null,
+        "schoolDependency": "UNCLASSIFIED",
+        "bodyClass": "GOVERNING",
+        "coverageStatus": "LIVE",
+        "homepageUrl": "https://www.pima.gov/government/board_of_supervisors/",
+        "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+        "lookedAt": true,
+        "tier": "local"
+      },
+      {
+        "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+        "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+        "name": null,
+        "divisionLabel": "Tucson Unified District",
+        "divisionType": "school_district",
+        "lsad": null,
+        "schoolDependency": "INDEPENDENT",
+        "bodyClass": "GOVERNING",
+        "coverageStatus": "LIVE",
+        "homepageUrl": "https://www.tusd1.org/",
+        "agendaSourceRef": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/",
+        "lookedAt": true,
+        "tier": "local"
+      }
+    ]
+  },
+  "meetings": [
+    {
+      "id": "legistar:pima:1820",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-07-14T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1820_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1820&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 10,
+          "meetingId": "legistar:pima:1820",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:484",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Jul 14 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-07-14T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=484",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1821",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-07-14T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1821&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 3,
+          "meetingId": "legistar:pima:1821",
+          "attribution": "HOST_BODY"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "FLOOD CONTROL DISTRICT BOARD",
+          "itemCount": 3,
+          "meetingId": "legistar:pima:1821",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 16,
+          "meetingId": "legistar:pima:1821",
+          "attribution": "HOST_BODY"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "LIBRARY DISTRICT BOARD",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1821",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 42,
+          "meetingId": "legistar:pima:1821",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:489",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "AGENDA FOR AUDIT COMMITTEE MEETING - Jul 15 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Audit Committee Meeting Agenda",
+      "location": {
+        "lat": 32.222464,
+        "lng": -110.956126,
+        "name": "Morrow Education Center, Board Conference Room",
+        "address": "1010 E. Tenth Street, Tucson, AZ 85719"
+      },
+      "startsAt": "2026-07-15T14:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=489",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:490",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING - Jul 21 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL EXECUTIVE SESSION MEETING",
+      "location": null,
+      "startsAt": "2026-07-21T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=490",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1869",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-07-28T15:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1869",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:485",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Jul 28 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-07-28T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=485",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1822",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-07-28T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/7/1822_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1822&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 3,
+          "meetingId": "legistar:pima:1822",
+          "attribution": "HOST_BODY"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "FLOOD CONTROL DISTRICT BOARD",
+          "itemCount": 2,
+          "meetingId": "legistar:pima:1822",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "LIBRARY DISTRICT BOARD",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1822",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 37,
+          "meetingId": "legistar:pima:1822",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar:pima:1851",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Special Meeting",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "online": {
+        "label": "Virtual Meeting",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": null,
+      "startsAt": "2026-08-03T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1851_A_Board_of_Supervisors_26-08-03_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1851",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:491",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 04 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": null,
+      "startsAt": "2026-08-04T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=491",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:pcc:706",
+      "ocdId": null,
+      "title": "Study Session - Aug 10 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Study Session",
+      "location": {
+        "lat": 32.221683,
+        "lng": -110.887102,
+        "name": "PCC District Office",
+        "address": "4905 E. Broadway Blvd., Tucson, AZ 85709"
+      },
+      "startsAt": "2026-08-10T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=706",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "legistar:pima:1823",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-08-11T13:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1823_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1823&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 8,
+          "meetingId": "legistar:pima:1823",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:492",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Aug 11 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-08-11T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=492",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1824",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-08-11T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1824_A_Board_of_Supervisors_26-08-11_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 3,
+          "meetingId": "legistar:pima:1824",
+          "attribution": "HOST_BODY"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "AJO DOMESTIC WATER IMPROVEMENT DISTRICT",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1824",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "LIBRARY DISTRICT BOARD",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1824",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 44,
+          "meetingId": "legistar:pima:1824",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar:pima:1854",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Joint Meeting",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221075,
+        "lng": -110.971059,
+        "name": "1 E. Broadway Blvd, 4th Floor",
+        "address": "1 E. Broadway Blvd, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-08-13T12:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1854_A_Board_of_Supervisors_26-08-13_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1854&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 2,
+          "meetingId": "legistar:pima:1854",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar:pima:1864",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Special Meeting",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "online": {
+        "label": "Virtual Meeting",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": null,
+      "startsAt": "2026-08-17T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1864_A_Board_of_Supervisors_26-08-17_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1864&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 2,
+          "meetingId": "legistar:pima:1864",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:494",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Alternative Education Advisory Committee Meeting Agenda - Aug 17 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-08-17T18:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=494",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:496",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting Agenda - Aug 20 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Bond Oversight Committee Meeting Agenda",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-08-20T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=496",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1873",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-08-25T15:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1873_A_Board_of_Supervisors_26-08-25_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1873&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1873",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:493",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Aug 25 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-08-25T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=493",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1825",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-08-25T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/8/1825_A_Board_of_Supervisors_26-08-25_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1825&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 1,
+          "meetingId": "legistar:pima:1825",
+          "attribution": "HOST_BODY"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "FLOOD CONTROL DISTRICT BOARD",
+          "itemCount": 5,
+          "meetingId": "legistar:pima:1825",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 52,
+          "meetingId": "legistar:pima:1825",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:pcc:698",
+      "ocdId": null,
+      "title": "Finance and Audit Committee Meeting  - Aug 28 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "online": {
+        "label": "VIRTUAL MEETING",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Finance and Audit Committee Meeting",
+      "location": null,
+      "startsAt": "2026-08-28T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "civicclerk:capaz:696",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "CAP University:  Deeper Dive on How Water is Accounted for in the Lower Basin",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+      "online": {
+        "label": "Virtual Event",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "CAP University",
+      "location": null,
+      "startsAt": "2026-08-31T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Central Arizona Water Conservation District",
+        "sourceUrl": "https://capaz.portal.civicclerk.com/event/696",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:59:05.102Z"
+      },
+      "jurisdiction": "Central Arizona Water Conservation District, AZ"
+    },
+    {
+      "id": "legistar:pima:1826",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-09-08T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/9/1826_A_Board_of_Supervisors_26-09-08_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1826&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 5,
+          "meetingId": "legistar:pima:1826",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:498",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA REGULAR MEETING - Sep 08 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA REGULAR MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-09-08T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=498",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=498",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar:pima:1827",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-09-08T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/9/1827_A_Board_of_Supervisors_26-09-08_Online_Agenda.pdf",
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1827&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.432Z"
+      },
+      "actingBodies": [
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "Board of Supervisors",
+          "itemCount": 4,
+          "meetingId": "legistar:pima:1827",
+          "attribution": "HOST_BODY"
+        },
+        {
+          "role": "SITTING_AS",
+          "ocdId": null,
+          "bodyId": null,
+          "evidence": "FLOOD CONTROL DISTRICT BOARD",
+          "itemCount": 3,
+          "meetingId": "legistar:pima:1827",
+          "attribution": "UNRESOLVED"
+        },
+        {
+          "role": "HOST",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "bodyId": null,
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 45,
+          "meetingId": "legistar:pima:1827",
+          "attribution": "HOST_BODY"
+        }
+      ],
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:tusd1:500",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "CANCELLED DUE TO LACK OF QUORUM Budget Advisory Committee Meeting Agenda - Sep 11 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-09-11T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=500",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:497",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Employee Benefit Trust Committee - Sep 14 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "bodyName": "Employee Benefit Trust Committee",
+      "location": null,
+      "startsAt": "2026-09-14T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=497",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:495",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "AGENDA FOR AUDIT COMMITTEE MEETING - Sep 16 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "CONCLUDED",
+      "carried": {
+        "reason": "UNEXPLAINED_DISAPPEARANCE",
+        "source": "diligent",
+        "lastFreshAt": "2026-09-08T21:40:32.007Z"
+      },
+      "bodyName": "AGENDA FOR AUDIT COMMITTEE MEETING",
+      "location": null,
+      "startsAt": "2026-09-16T14:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=495",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:32.007Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:502",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Bond Oversight Committee Meeting Agenda - Sep 17 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "Bond Oversight Committee Meeting Agenda",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-09-17T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=502",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:499",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "GOVERNING BOARD AGENDA SPECIAL MEETING  - Sep 22 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "status": "CONCLUDED",
+      "bodyName": "GOVERNING BOARD AGENDA SPECIAL MEETING",
+      "location": {
+        "lat": 32.228998,
+        "lng": -110.883029,
+        "name": "Duffy Community Center, Multipurpose Room",
+        "address": "5145 E. 5th Street, Tucson, AZ 85711"
+      },
+      "startsAt": "2026-09-22T16:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=499",
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=499",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381577",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "CONCLUDED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-09-22T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:pcc:707",
+      "ocdId": null,
+      "title": "Executive Session Meeting - Sep 25 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Executive Session Meeting",
+      "location": {
+        "lat": 32.221683,
+        "lng": -110.887102,
+        "name": "PCC District Office, Board Conference Room C-228",
+        "address": "4905 E. Broadway Blvd., Tucson, AZ 85709"
+      },
+      "startsAt": "2026-09-25T16:15:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=707",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "diligent:pcc:705",
+      "ocdId": null,
+      "title": "Regular Governing Board  - Sep 25 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Regular Governing Board",
+      "location": {
+        "lat": 32.221683,
+        "lng": -110.887102,
+        "name": "PCC District Office, Community/Board Room C-105",
+        "address": "4905 E. Broadway Blvd., Tucson, AZ 85709"
+      },
+      "startsAt": "2026-09-25T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=705",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:503",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Alternative Education Advisory Committee Meeting Agenda - Sep 28 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Alternative Education Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-09-28T18:15:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=503",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:505",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Budget Advisory Committee Meeting Agenda - Sep 30 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Budget Advisory Committee Meeting Agenda",
+      "location": null,
+      "startsAt": "2026-09-30T16:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=505",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "diligent:tusd1:504",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "title": "Employee Benefit Trust Committee - Oct 05 2026",
+      "bodyId": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "online": {
+        "label": "Via Zoom Webinar",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Employee Benefit Trust Committee",
+      "location": null,
+      "startsAt": "2026-10-05T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Tucson Unified School District Governing Board",
+        "sourceUrl": "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=504",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T22:50:35.255Z"
+      },
+      "jurisdiction": "Tucson Unified School District, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381578",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-10-13T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381579",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-10-13T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:pcc:708",
+      "ocdId": null,
+      "title": "Regular Governing Board  - Oct 14 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Regular Governing Board",
+      "location": {
+        "lat": 32.221683,
+        "lng": -110.887102,
+        "name": "PCC District Office, Community/Board Room C-105",
+        "address": "4905 E. Broadway Blvd., Tucson, AZ 85709"
+      },
+      "startsAt": "2026-10-14T17:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=708",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "diligent:pcc:699",
+      "ocdId": null,
+      "title": "Finance and Audit Committee Meeting  - Oct 16 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "online": {
+        "label": "VIRTUAL MEETING",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Finance and Audit Committee Meeting",
+      "location": null,
+      "startsAt": "2026-10-16T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=699",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1437191",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Special Meeting",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-10-20T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381580",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-10-27T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381581",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-11-10T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381582",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-11-10T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1415754",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Special Meeting",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "online": {
+        "label": "Virtual Meeting",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": null,
+      "startsAt": "2026-11-19T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381583",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-11-24T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381584",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Study Session",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-12-08T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381585",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-12-08T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    },
+    {
+      "id": "diligent:pcc:700",
+      "ocdId": null,
+      "title": "Finance and Audit Committee Meeting  - Dec 11 2026",
+      "bodyId": "curated:az/pima-community-college#governing",
+      "online": {
+        "label": "VIRTUAL MEETING",
+        "joinUrl": null
+      },
+      "status": "SCHEDULED",
+      "bodyName": "Finance and Audit Committee Meeting",
+      "location": null,
+      "startsAt": "2026-12-11T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima Community College Governing Board",
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=700",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-23T21:58:19.836Z"
+      },
+      "jurisdiction": "Pima Community College District, AZ"
+    },
+    {
+      "id": "legistar-insite:pima:1381586",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "title": "Board of Supervisors",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "status": "SCHEDULED",
+      "bodyName": "Board of Supervisors",
+      "location": {
+        "lat": 32.221618,
+        "lng": -110.974036,
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701"
+      },
+      "startsAt": "2026-12-15T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "agendaUrl": null,
+      "provenance": {
+        "sourceOrg": "Pima County Clerk of the Board",
+        "sourceUrl": "https://pima.legistar.com/Calendar.aspx",
+        "verifiedAt": null,
+        "collectedAt": "2026-09-08T21:40:43.908Z"
+      },
+      "jurisdiction": "Pima County, AZ"
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 724,
-    "named": 7176,
-    "dynamic": 29
+    "files": 736,
+    "named": 7255,
+    "dynamic": 28
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -863,8 +863,6 @@
         "read() pages a log larger than one response and returns every record in position order",
         "readAll() pages the whole table in (log_key, position) order",
         "readRecent() returns the newest N, newest first, bounded",
-        "readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database",
-        "readRecentWhere() refuses an unsafe projection key or path rather than building SQL from it",
         "readWhere() of a value with no match is an empty result, not an error",
         "readWhere() refuses an unsafe JSON path segment rather than building SQL from it",
         "readWhere() returns EVERY match by content, paged, regardless of position"
@@ -2824,7 +2822,7 @@
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
-      "dynamic": 10
+      "dynamic": 9
     },
     "tests/control-plane-connect-retry.test.ts": {
       "names": [
@@ -4654,6 +4652,17 @@
       ],
       "dynamic": 0
     },
+    "tests/held-meeting-partition.test.ts": {
+      "names": [
+        "a Reader proof pin captured while the succession is held keeps composing the held version for the whole run",
+        "every retired route is a held partition whose successor is registered and whose own identity is not",
+        "the held pointer is read only while its successor has none; a superseded route costs no further reads",
+        "the prepared reader snapshot couples to the held version, then recomposes on the successor's first promotion",
+        "the successor's first promotion supersedes the held version, which stays in the store untouched",
+        "until its successor promotes, the retired route's held version is composed in its place and named"
+      ],
+      "dynamic": 0
+    },
     "tests/holdings-readback.test.ts": {
       "names": [
         "holdings instrument observes one database snapshot without schema initialization or mutations",
@@ -5828,6 +5837,32 @@
       ],
       "dynamic": 0
     },
+    "tests/meetings-discovery-search.test.ts": {
+      "names": [
+        "BUDGET: the cycle's cap and the day's cap refuse by name; the day's cap holds across cycles in the durable ledger",
+        "POINTERS: only the government's own domain or a known meeting publisher is worth opening",
+        "PRICES: each provider's published per-request price carries its source and date; a lost request is UNMEASURED, never zero",
+        "QUERIES: a saved method's templates first, then the defaults; unfilled slots never sent; own-site expressed as a flag",
+        "REFUSED: a request the budget refused is recorded in the walk and never charged",
+        "SEAM WORST CASE: every provider at its timeout, plus the ledger's calls",
+        "SEAM: own-site is Brave's site: and Exa's includeDomains; a refused request is never sent; a failed one is named",
+        "TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported",
+        "WALK: search runs only when nothing was confirmed, follows own-site results robots-first, charges each request, and saves the method"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-recipes.test.ts": {
+      "names": [
+        "A FAILURE IS NOT PAID FOR TWICE: a method that answered a shell is recorded, and the next cycle does not request it again here",
+        "OUTCOMES: counts move, a success clears the government's standing failure, and the failure memory is bounded",
+        "PROPOSALS: a recipe proposes only when the homepage shows its precondition, and not while a failure of it stands here",
+        "RETRIEVAL: by body class and state; state-specific before portable, then successes, then recency",
+        "SUBSTITUTION: a template is filled from the government's identity; a missing slot leaves the query unsent",
+        "THE RUNNER USES WHAT IT SAVED: cycle 1 confirms a saved method and writes it back; cycle 2 reads it and applies it in another state",
+        "THE TIME RAN OUT, NOT THE METHOD: a saved method the walk did not reach is neither credited nor charged"
+      ],
+      "dynamic": 0
+    },
     "tests/meetings-site-discovery.test.ts": {
       "names": [
         "CANDIDATES: a linked vendor, a linked feed, CivicPlus markup and a CivicClerk embed each name a route; verifiable ones first",
@@ -6498,6 +6533,19 @@
       ],
       "dynamic": 0
     },
+    "tests/official-page-events.test.ts": {
+      "names": [
+        "TUSD wiring: official host is the registry body's homepageUrl, its own partition and failure domain, authorized route",
+        "TUSD: the reconfiguration page yields the Oct 1 Joint Committee meeting and the 9/23 and 9/26 sessions with venues and times",
+        "TUSD: the wired adapter publishes five partition rows with named gaps and district attribution",
+        "a scheduled event with no agenda and no venue is still published, as a named gap",
+        "cross-state transfer: the same extractor reads Santa Fe Public Schools (NM) with NM identity only",
+        "negative: an Arizona fact cannot satisfy a New Mexico verification, nor the reverse",
+        "structured shapes: JSON-LD with an offset, cancellation only in the publisher's words, microdata, and a linked .ics",
+        "verification holds, by name, what cannot be verified — and an empty page is EMPTY"
+      ],
+      "dynamic": 0
+    },
     "tests/officials-surface.test.ts": {
       "names": [
         "contact fields survive the lookup to the surface",
@@ -7023,6 +7071,22 @@
         "the Windows launcher drains Git and requires its successful exact single HEAD",
         "the standing runner has no installable nightly-window backup clock and install/uninstall retire the old task",
         "verify-triggers exits on the derived presence and prove-relaunch writes the typed record"
+      ],
+      "dynamic": 0
+    },
+    "tests/pima-edu-source.test.ts": {
+      "names": [
+        "a first-party agenda's header places its OWN sitting and ignores a later date it mentions",
+        "a place nothing sitting-specific states drops the sitting, counted, never guessed",
+        "an event page states start, end and room as data in its own calendar link",
+        "normalize: every Diligent sitting in the window is re-found, conserved, with cited places",
+        "the committee's schedule and document table parse",
+        "the documents page parses every 2026 sitting row, month notes counted apart",
+        "the events listing yields the board's eight upcoming sittings with times",
+        "the gate reads robots once per origin and admits a permitted path",
+        "the permission gate refuses a disallowed path before any request to it",
+        "the wiring row reads permitted pima.edu hosts and never the Diligent tenant",
+        "the wiring type is a registered agenda-source type (BodySourceWiring compiles)"
       ],
       "dynamic": 0
     },
@@ -7995,10 +8059,23 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-proof-meeting-pin.test.ts": {
+      "names": [
+        "a deployed build, a function runtime, or a process outside the harness never admits the pin",
+        "a mid-run promotion splits the unpinned harness's two reads, and the pin holds both on the captured version",
+        "a pinned store failure stays a failure and a pinned absence stays absent",
+        "an admitted pin that is malformed or edited is refused loudly, never read as no pin",
+        "the pinned read still refuses an unverified version: never promoted, or tampered after promotion",
+        "the proof server's prepared row serves only when it was composed from exactly the pinned versions"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-proof-runtime.test.ts": {
       "names": [
         "Reader proof authority binds the actual read-only connection without exposing it",
         "Reader proof authority permits a descendant only for an unchanged validated production merge",
+        "a partition retired by a proved cutover hands its imported authority to its registered successor",
+        "a successor served from its predecessor's held version keeps the body's authority; without it the loss is refused",
         "deployed Reader runtime closure admits documentary-only descendants and rejects source drift",
         "documentary Reader meeting authority fails closed before explicit phase admission",
         "documentary Reader proof initializes every required promoted authority exactly once",
@@ -8065,6 +8142,22 @@
         "source renewal accepts an exact removed dependency only beside current execution and complete graph absence",
         "source-only reader renewal cannot inherit a changed canonical identity or eligibility projection",
         "successive source renewal inherits only byte-identical already-classified dependencies"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-upcoming-meetings.test.ts": {
+      "names": [
+        "every reader surface that lists meetings renders the upcoming sittings, with honest gaps and matching counts",
+        "the district card's door opens exactly the rows its count counted, never a Body scope",
+        "the recorded rows are the owner's case: scheduled, no agenda, no building"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-venue-gap-surfaces.test.ts": {
+      "names": [
+        "a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line",
+        "the card's calendar entry carries the stated place as its LOCATION, and invents none where the page states none",
+        "the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap"
       ],
       "dynamic": 0
     },
@@ -8437,6 +8530,17 @@
       ],
       "dynamic": 0
     },
+    "tests/retired-meeting-routes.test.ts": {
+      "names": [
+        "a link into a retired host is recognised as held-as-link, and nothing else is",
+        "agenda retrieval consults the retired-host rule before any request",
+        "every retired route has exactly one wired successor for the same body, and no clock of its own",
+        "no wiring row names a retired host, and meetings authority no longer reaches it",
+        "re-opening a retired (route, body) pair fails at registration, loudly",
+        "the retired tenant's recorded robots.txt refuses this client and admits named search crawlers"
+      ],
+      "dynamic": 0
+    },
     "tests/returning-reader.test.ts": {
       "names": [
         "a district is never assumed from a zip — the key says what the value is",
@@ -8500,9 +8604,6 @@
         "frontier configuration and identities fail closed",
         "one pass admits one least-recently-considered task per provider domain",
         "repeated supervisor faults rotate fairly within one provider without changing other domains",
-        "the frontier decides the same from narrowed outcomes as from whole ones",
-        "the history window spans a day of passes and many rotations of the largest provider domain",
-        "the narrowed supervisor history holds every field the frontier's history reads",
         "the real pass ceiling is based on provider domains, not every partition in a failed provider tail"
       ],
       "dynamic": 0
@@ -9183,6 +9284,15 @@
         "the contact pills stack in one column, primary channels only",
         "the party pill stays — it is banned from the list, not from the card",
         "the small popup renders identity only — no role line, no chips, no in-seat"
+      ],
+      "dynamic": 0
+    },
+    "tests/smartsites-source.test.ts": {
+      "names": [
+        "a sitting whose own event states no place is dropped and counted, never placed by the standing sentence",
+        "every sitting the disallowed tenant carried is on the permitted calendar, at the same wall clock",
+        "the API URL is the calendar component's own call on the district origin",
+        "the recorded payload is a success envelope configured in the wrong zone"
       ],
       "dynamic": 0
     },
@@ -10002,6 +10112,35 @@
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
         "retired trusted-LKG doors refuse new imports while retained history remains due",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"
+      ],
+      "dynamic": 0
+    },
+    "tests/tusd-govboard-source.test.ts": {
+      "names": [
+        "Board Actions map each Governing Board sitting to its own record",
+        "September's fragment carries the board AND its committees, with the district's own clock",
+        "a Board Actions record is the agenda's numbered items with their actions",
+        "normalize: places only what the district's sentence places, carries Board Actions on concluded board sittings",
+        "the WIRED Diligent row links a concluded board sitting's own Board Actions record, not the portal page",
+        "the window's months are the ones fetched"
+      ],
+      "dynamic": 0
+    },
+    "tests/tusd-schedule-union.test.ts": {
+      "names": [
+        "Sunnyside: the district's own SmartSites calendar is unioned the same way, and a sitting with no stated place still publishes",
+        "a calendar sitting that names no place is published with no place, never withheld",
+        "a portal row with no published place is published, not dropped",
+        "a sitting keeps its identity when the portal starts listing it",
+        "an upcoming sitting already published under a portal id keeps it if the portal stops returning it",
+        "both publications' names for one body reduce to one key",
+        "recorded, planted: a portal row whose place is blanked is published with the gap named, never dropped",
+        "recorded: row 500's own title says CANCELLED, so it is CANCELED, not CONCLUDED",
+        "recorded: the first promotion keeps all 17 portal ids and adds exactly the four calendar-only Governing Board sittings",
+        "the calendar is read only under a permission verdict; a refusal fails the run, never half a union",
+        "the calendar route reads exactly the forward window's months",
+        "the partition publishes every forward sitting either source verifies, and portal ids stay put",
+        "the portal's cancellation note is the sitting's status"
       ],
       "dynamic": 0
     },

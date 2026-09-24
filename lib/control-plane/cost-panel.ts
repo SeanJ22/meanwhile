@@ -538,6 +538,11 @@ export const ROLE_COST_POLICY: Readonly<Record<WorkerRole, RoleCostPolicy>> = {
     access: "NO_MODEL_STEP_ROUTED",
     provenIn: "lib/control-plane/promotion/fact-chain.ts — the fact approver is declared deterministic and opens no Attempt against a provider",
   },
+  DISCOVERY_SEARCH: {
+    role: "DISCOVERY_SEARCH",
+    access: "NO_MODEL_STEP_ROUTED",
+    provenIn: "lib/control-plane/discovery/meetings-discovery-executor.ts — pointer-only search-API requests priced per query (lib/hunt/discovery-search.ts); no model transport is reachable from the executor",
+  },
 };
 
 /** The policy for a ledger key when the key is a worker role; null for a model key. */

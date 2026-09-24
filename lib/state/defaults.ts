@@ -97,6 +97,8 @@ export const INITIAL_STATE: UiState = {
   /* ASK-22: an unfocused list is the default; a focus arrives only from an answer. */
   listFocusBodyId: null,
   listFocusBodyName: null,
+  /* 2026-09-23: a count-scoped focus arrives only from the district card's door. */
+  listFocusDivision: null,
   listSort: "date",
   listGroupBy: "jurisdiction",
   // Every group starts CLOSED (g4 item 11). Empty means none is open.

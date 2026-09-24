@@ -1,95 +1,95 @@
 {
-  "runId": "gates@2026-09-24T04:54:47.043Z",
-  "testedSha": "3d169d4a81c8a2f9db60a2921afa452f1a45be39",
-  "finishedAt": "2026-09-24T04:54:47.043Z",
+  "runId": "gates@2026-09-24T04:36:21.004Z",
+  "testedSha": "a17accb6f9ddc0db83d57aec07d598b8d8195908",
+  "finishedAt": "2026-09-24T04:36:21.004Z",
   "gates": [
     {
       "id": "lint",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm lint",
       "status": "PASS",
-      "seconds": 136,
+      "seconds": 105,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 26
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "tsc",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsc --noEmit",
       "status": "PASS",
-      "seconds": 53,
+      "seconds": 68,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 9
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "governance:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm governance:check",
       "status": "PASS",
-      "seconds": 3,
+      "seconds": 4,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 17
     },
     {
       "id": "orchestration:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm orchestration:check",
       "status": "PASS",
-      "seconds": 1,
+      "seconds": 2,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "method:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm method:check",
       "status": "PASS",
-      "seconds": 1,
+      "seconds": 3,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 17
     },
     {
       "id": "control-plane:gate",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm control-plane:gate",
       "status": "PASS",
-      "seconds": 1,
+      "seconds": 3,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "state-holdings:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm state-holdings:check",
       "status": "PASS",
-      "seconds": 6,
+      "seconds": 7,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 18
     },
     {
       "id": "state-manifest",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm state-manifest --check",
       "status": "PASS",
-      "seconds": 97,
+      "seconds": 102,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 16
+      "nodeProcessesAtStart": 18
     },
     {
       "id": "feedback:sweep",
@@ -100,79 +100,79 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "assert:browser",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm run assert:browser",
       "status": "PASS",
-      "seconds": 2,
+      "seconds": 3,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "test",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm test",
       "status": "FAIL",
-      "seconds": 756,
+      "seconds": 603,
       "failureKind": "ASSERTION_FAILURE",
       "failingTests": [
-        "a reused publisher portal is classified identically by the real route and agenda renderer"
+        "no real credential value appears anywhere in the repository"
       ],
       "suiteTotals": {
-        "tests": 7294,
-        "pass": 7288,
+        "tests": 7371,
+        "pass": 7369,
         "fail": 1,
         "suites": 32,
-        "skipped": 5,
+        "skipped": 1,
         "todo": 0,
         "cancelled": 0
       },
-      "nodeProcessesAtStart": 13
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "db:gate",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsx scripts/db-shipping-gate.mts",
       "status": "PASS",
-      "seconds": 2,
+      "seconds": 3,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 17
     },
     {
       "id": "release:freeze",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsx scripts/release-freeze-gate.mts",
       "status": "PASS",
-      "seconds": 7,
+      "seconds": 4,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 20
     },
     {
       "id": "build",
       "ciJob": "build (default)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 80,
+      "seconds": 86,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 21
     },
     {
       "id": "test:bundle",
       "ciJob": "build (default)",
       "command": "pnpm run test:bundle",
       "status": "PASS",
-      "seconds": 2,
+      "seconds": 4,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": {
@@ -184,18 +184,18 @@
         "todo": 0,
         "cancelled": 0
       },
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 22
     },
     {
       "id": "build:standalone",
       "ciJob": "build (standalone)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 55,
+      "seconds": 47,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 18
+      "nodeProcessesAtStart": 20
     }
   ],
   "provenance": {
@@ -207,11 +207,11 @@
   "suiteDenominator": {
     "gate": "test",
     "read": true,
-    "tests": 7294,
-    "pass": 7288,
+    "tests": 7371,
+    "pass": 7369,
     "fail": 1,
     "suites": 32,
-    "skipped": 5,
+    "skipped": 1,
     "todo": 0,
     "cancelled": 0
   },

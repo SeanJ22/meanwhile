@@ -41,6 +41,23 @@ const PDC_V2_FINAL_PROMOTION_COUNT =
 // Exact production registry: 10 routine + 124 meeting + 23 manual contracts.
 const PDC_V2_REGISTERED_CONTRACT_COUNT = 157;
 export const PDC_V2_ZERO_LKG_MEETING_PARTITIONS = 41;
+/**
+ * Meeting partitions registered AFTER the frozen PDC v2 import.
+ *
+ * The import's permanent 83/41 authority covers exactly the 124 partitions
+ * that existed when it ran, and the bundled trusted-LKG snapshot predates
+ * every partition registered since. A partition added later has, by
+ * construction, no import disposition, no zero-LKG refusal and no row in the
+ * frozen snapshot: its pointer is born by routine promotion through the one
+ * production door, which the Reader proof already accepts as a GAIN (RULING
+ * 290). Each is named here by id — one reviewed line per partition — so a
+ * registry change can never move the frozen denominator by inference, and
+ * the import may never claim to have promoted one.
+ */
+export const PDC_V2_POST_IMPORT_MEETING_PARTITIONS: readonly string[] = [
+  // Tucson Unified's own reconfiguration page (official-page events, 2026-09-23).
+  "meetings:official-page-events:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
+];
 
 type Row = Record<string, unknown>;
 const row = (value: unknown): Row | null =>

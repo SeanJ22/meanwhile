@@ -17,6 +17,7 @@ import {
 } from "../map/format.ts";
 import type { Meeting } from "../sources/types.ts";
 import { PRODUCT_NAME } from "../brand.ts";
+import { statedVenueText } from "../meetings/online.ts";
 
 export interface CalendarEventInput {
   /** Stable id for the ICS UID. */
@@ -183,9 +184,18 @@ export function meetingCalendarEvent(
      * was created in, and it is the one place a duplicated address is hardest
      * to notice and most annoying to fix.
      */
+    /*
+     * 2026-09-23 (official-page events): a physical sitting whose room is a
+     * named gap carries the place its publisher STATED, verbatim ("Cholla High
+     * School South Gym") — the same words the card shows, never an address we
+     * do not hold. A page that states no place leaves the line out, as it
+     * always has for a sitting with nothing published about where it is.
+     */
     location: meeting.location
       ? locationLine(meeting.location.name, meeting.location.address)
-      : [meeting.online?.label, meeting.online?.joinUrl].filter(Boolean).join(" — "),
+      : meeting.venueGap
+        ? statedVenueText(meeting.venueGap) ?? ""
+        : [meeting.online?.label, meeting.online?.joinUrl].filter(Boolean).join(" — "),
     description: lines.join("\n"),
   };
 }

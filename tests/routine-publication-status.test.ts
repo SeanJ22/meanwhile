@@ -135,7 +135,7 @@ test("the narrow read selects no payload and never touches the candidate JSON", 
 test("the Sources page reads its sources together, starts the full proof read only when asked by name, and shows the narrow panel first", () => {
   const page = readFileSync("app/(admin)/admin/sources/page.tsx", "utf8");
   const together = /await Promise\.all\(\[([\s\S]*?)\]\);/.exec(page)?.[1] ?? "";
-  // 2026-09-24: the full proof read selects every promotion's payload and cannot finish inside a page request, and
+  // 2026-09-23: the full proof read selects every promotion's payload and cannot finish inside a page request, and
   // it was billed for what it had read when its timeout cancelled it. Opening the page never starts it.
   assert.match(page, /const runProof = \(await searchParams\)\.proof === "full";/);
   assert.match(together, /runProof \? readRoutineDataObservability\(\{ now: now\.toISOString\(\) \}\) : Promise\.resolve\(null\)/);

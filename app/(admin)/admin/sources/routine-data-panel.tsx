@@ -406,7 +406,7 @@ function EdgeServing({
 }
 
 /**
- * What a visit shows in place of the full proof-based read (2026-09-24). That read selects every
+ * What a visit shows in place of the full proof-based read (2026-09-23). That read selects every
  * promotion's full payload and every selected candidate's history, cannot finish inside a page request,
  * and was billed for whatever it had read when its timeout cancelled it, so opening the page no longer
  * starts it. The owner can still ask for it by name, and the reader edge reading, which the timed-out

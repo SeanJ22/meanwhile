@@ -1,17 +1,17 @@
 {
   "date": "2026-09-23",
   "base": "http://localhost:3210",
-  "buildId": "_v0YgXondFE6JGacMt51t",
-  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-  "runId": "reader-last-mile-render@2026-09-24T00:21:41.829Z",
+  "buildId": "RdQEQ5F1pnKuDMyxeoaIq",
+  "exactHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+  "runId": "reader-last-mile-render@2026-09-24T03:53:05.075Z",
   "results": [
     {
       "label": "85641-desktop-dark",
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -696,13 +696,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-0e035e2da058e9226506852d8186087d",
-          "lastKnownGoodVersionId": "cv-0e035e2da058e9226506852d8186087d",
+          "versionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
+          "lastKnownGoodVersionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-23T18:24:08.790Z",
-          "promotedAt": "2026-09-23T18:24:09.528Z",
+          "retrievedAt": "2026-09-24T00:56:13.244Z",
+          "promotedAt": "2026-09-24T00:56:13.684Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-30T18:24:08.790Z"
+          "staleAt": "2026-10-01T00:56:13.244Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
@@ -717,8 +717,8 @@
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -1403,13 +1403,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-0e035e2da058e9226506852d8186087d",
-          "lastKnownGoodVersionId": "cv-0e035e2da058e9226506852d8186087d",
+          "versionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
+          "lastKnownGoodVersionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-23T18:24:08.790Z",
-          "promotedAt": "2026-09-23T18:24:09.528Z",
+          "retrievedAt": "2026-09-24T00:56:13.244Z",
+          "promotedAt": "2026-09-24T00:56:13.684Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-30T18:24:08.790Z"
+          "staleAt": "2026-10-01T00:56:13.244Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
@@ -1424,8 +1424,8 @@
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -2110,13 +2110,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-0e035e2da058e9226506852d8186087d",
-          "lastKnownGoodVersionId": "cv-0e035e2da058e9226506852d8186087d",
+          "versionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
+          "lastKnownGoodVersionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-23T18:24:08.790Z",
-          "promotedAt": "2026-09-23T18:24:09.528Z",
+          "retrievedAt": "2026-09-24T00:56:13.244Z",
+          "promotedAt": "2026-09-24T00:56:13.684Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-30T18:24:08.790Z"
+          "staleAt": "2026-10-01T00:56:13.244Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
@@ -2131,8 +2131,8 @@
       "result": "PASS",
       "focus": "federal-money",
       "build": {
-        "commit": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
-        "commitShort": "ae04884",
+        "commit": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+        "commitShort": "570529e",
         "branch": "unknown",
         "context": "unknown",
         "deployId": "unknown",
@@ -2817,13 +2817,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-0e035e2da058e9226506852d8186087d",
-          "lastKnownGoodVersionId": "cv-0e035e2da058e9226506852d8186087d",
+          "versionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
+          "lastKnownGoodVersionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-23T18:24:08.790Z",
-          "promotedAt": "2026-09-23T18:24:09.528Z",
+          "retrievedAt": "2026-09-24T00:56:13.244Z",
+          "promotedAt": "2026-09-24T00:56:13.684Z",
           "stale": "CURRENT",
-          "staleAt": "2026-09-30T18:24:08.790Z"
+          "staleAt": "2026-10-01T00:56:13.244Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []

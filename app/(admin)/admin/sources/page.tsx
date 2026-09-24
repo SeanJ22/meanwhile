@@ -252,7 +252,7 @@ function Row({ row }: { row: SourceRow }) {
 export default async function SourcesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const now = new Date();
   /* The full proof-based routine read selects every promotion's payload and cannot finish inside a page request, so a
-     visit does not start it (2026-09-24): it runs only when asked for by name, ?proof=full. The narrow publication read
+     visit does not start it (2026-09-23): it runs only when asked for by name, ?proof=full. The narrow publication read
      answers the page's question, published versus reader-visible, in about 3 s. Independent reads run together, so
      the page costs the slowest one, not their sum. */
   const runProof = (await searchParams).proof === "full";

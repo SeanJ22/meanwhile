@@ -1,4 +1,5 @@
 import {
+  RETIRED_MEETING_ROUTES,
   SOURCE_WIRING,
   meetingSourceNamesForWiring,
   type BodySourceWiring,
@@ -56,6 +57,8 @@ export function meetingAcquisitionFailureDomain(
       case "schedulepage": return wiring.config.schedulePage;
       case "ical": return wiring.config.feedUrl;
       case "civicclerk": return wiring.config.apiBase;
+      case "pima-edu": return wiring.config.documentsUrl;
+      case "official-page-events": return wiring.config.pageUrl;
       default: throw new Error(`MEETING_FAILURE_DOMAIN_ADAPTER_UNKNOWN:${sourceName}`);
     }
   })()?.trim();
@@ -113,6 +116,78 @@ function buildMeetingPartitions(): readonly MeetingPartitionContract[] {
 
 /** One permanent contract and canonical pointer per registered route/body. */
 export const MEETING_PARTITION_CONTRACTS = buildMeetingPartitions();
+
+/**
+ * **A RETIRED ROUTE'S LAST PROMOTED VERSION, HELD UNTIL ITS SUCCESSOR PROMOTES.**
+ * (2026-09-23, the Pima school-agenda routes session. RULING 283, RULING 254.)
+ *
+ * A cutover for permission (`RETIRED_MEETING_ROUTES`) moves a body from one
+ * route to another, and the partition identity moves with it:
+ * `meetings:<source>:<body>` names the route. The retired partition has no
+ * contract, no clock and no writer from the moment the change lands — never two
+ * authoritative writers. But its successor has no pointer until the standing
+ * runner's first promotion of it, and a body whose sittings vanish in between
+ * is the other unlawful state: none.
+ *
+ * So the retired partition's last promoted version is HELD — read-only, proved
+ * like any pointer, composed in the successor's place — for exactly as long as
+ * the successor has no pointer, and marked on the successor's readback
+ * (`heldFrom`) so nothing downstream mistakes it for the successor's own
+ * version. The successor's first promotion supersedes it; nothing writes,
+ * moves or deletes the held pointer, which stays in the store as the record of
+ * what the retired route acquired. Readers ask for the held pointer only
+ * while its successor has none, so a superseded route costs no further reads.
+ *
+ * Every retired pair must name a REGISTERED successor for the same body and
+ * must itself be unregistered; a registry that breaks either is refused here,
+ * at load, rather than composed wrongly.
+ */
+export interface HeldMeetingPartition {
+  /** The retired partition identity, `meetings:<retired source>:<body>`. */
+  readonly id: string;
+  readonly scope: string;
+  readonly meetingSource: string;
+  readonly bodyId: string;
+  /** The registered partition that now carries the body. */
+  readonly successorId: string;
+  readonly successorScope: string;
+  readonly retiredOn: string;
+}
+
+function buildHeldMeetingPartitions(): readonly HeldMeetingPartition[] {
+  const registered = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
+  const held = RETIRED_MEETING_ROUTES.map((route) => {
+    const id = meetingPartitionId(route.meetingSource, route.bodyId);
+    const successorId = meetingPartitionId(route.replacedBy, route.bodyId);
+    if (registered.has(id)) throw new Error(`MEETING_PARTITION_RETIRED_BUT_REGISTERED:${id}`);
+    const successor = registered.get(successorId);
+    if (!successor || successor.bodyId !== route.bodyId) {
+      throw new Error(`MEETING_PARTITION_SUCCESSOR_NOT_REGISTERED:${id}->${successorId}`);
+    }
+    return {
+      id,
+      scope: meetingPartitionScope(route.meetingSource, route.bodyId),
+      meetingSource: route.meetingSource,
+      bodyId: route.bodyId,
+      successorId,
+      successorScope: successor.scope,
+      retiredOn: route.retiredOn,
+    };
+  });
+  const successors = new Set<string>();
+  for (const row of held) {
+    if (successors.has(row.successorId)) throw new Error(`MEETING_PARTITION_SUCCESSOR_HOLDS_TWO:${row.successorId}`);
+    successors.add(row.successorId);
+  }
+  return held;
+}
+
+export const HELD_MEETING_PARTITIONS = buildHeldMeetingPartitions();
+
+/** The retired partition a registered successor holds until its first promotion, if any. */
+export function heldMeetingPartitionFor(successorId: string): HeldMeetingPartition | null {
+  return HELD_MEETING_PARTITIONS.find((row) => row.successorId === successorId) ?? null;
+}
 
 export function meetingPartitionContract(id: string): MeetingPartitionContract | null {
   return MEETING_PARTITION_CONTRACTS.find((partition) => partition.id === id) ?? null;

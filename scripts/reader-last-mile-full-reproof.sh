@@ -102,7 +102,22 @@ proof() { local out="$1" script="$2" ldr="${3:-tsx}"; local cmd; [ "$ldr" = test
 echo "### 1. BUILD (COMMIT_REF=$COMMIT_REF)"
 run "pnpm build" bash -c 'pnpm build'   # postbuild's reader-trace-check ignores the receipt, so a stale closure does not block the build
 
-echo "### 2. PREPARE + census projection"
+echo "### 2. PIN the run's meeting versions, then PREPARE + census projection"
+# ONE version per meeting partition for the whole run (lib/meetings/proof-pin.ts).
+# The standing runner promotes routine meeting versions for as long as the run
+# lasts (Newbury NH arrives in bursts every 1.5-2 h). When the render read one
+# version at its start and /api/agenda served the next, every 03255 case failed
+# on the listing group's `collectedAt`. The pin is captured once, from the strict
+# proven read, BEFORE prepare. Every later process then reads that version of
+# each partition, and so does the proof server started below, which inherits this
+# environment. Each pinned read is still proven: the pin chooses the version and
+# the proof still has to pass. A deployed build never admits the pin.
+# A RESUMED run must re-export the SAME pin file and must not recapture: it
+# keeps the versions its reused evidence was proven on.
+READER_PROOF_MEETING_PIN_FILE="../reader-last-mile-meeting-pin.json"
+rm -f "$READER_PROOF_MEETING_PIN_FILE"
+run "meeting pin" env -u READER_PROOF_MEETING_PIN $tsx scripts/reader-proof-meeting-pin.mts "$READER_PROOF_MEETING_PIN_FILE"
+export READER_PROOF_MEETING_PIN="$READER_PROOF_MEETING_PIN_FILE"
 run "finalize --prepare" $tsx scripts/reader-last-mile-finalize.mts --prepare
 run "census --project"   $tsx scripts/reader-last-mile-census.mts --project --render-components
 
@@ -168,7 +183,7 @@ echo "### 8. VERIFY the required reader gate (the actual proof of a renewed clos
 # CLEAN ENV IS MANDATORY: the census gate seeds the registry from BOOTSTRAP with
 # an in-memory store; a live DATABASE_URL (exported above for the executors)
 # pollutes that path and fails with STORE_UNREACHABLE. Unset the prod handles.
-env -u DATABASE_URL -u READER_EXECUTION_AUTHORITY_EVIDENCE -u READER_FINAL_PREPARED_CENSUS -u READER_PROOF_SOURCES \
+env -u DATABASE_URL -u READER_EXECUTION_AUTHORITY_EVIDENCE -u READER_FINAL_PREPARED_CENSUS -u READER_PROOF_SOURCES -u READER_PROOF_MEETING_PIN \
   node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs \
   tests/reader-last-mile-census.test.ts >"$LOG" 2>&1
 e=$?; tail -12 "$LOG" | mask

@@ -156,6 +156,8 @@
     "method:learn-money-routes": "tsx scripts/learn-money-routes.mts",
     "method:learn-nh-cfs": "tsx scripts/learn-nh-cfs.mts",
     "method:learn-novus": "tsx scripts/learn-novus-controls.mts",
+    "method:learn-official-page-events": "tsx scripts/method/learn-official-page-events.mts",
+    "method:learn-pima-school-agenda": "tsx scripts/method/learn-pima-school-agenda-routes.mts",
     "method:learn-schedule-vs-events": "tsx scripts/learn-schedule-vs-events.mts",
     "method:learn-statewide-execs": "tsx scripts/learn-statewide-executive-routes.mts",
     "method:learn-statute": "tsx scripts/learn-statute-routes.mts",
@@ -383,7 +385,8 @@
     "zip:universe": "tsx scripts/zip-universe.mts",
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "ci:certified": "node scripts/certified-tree.mjs",
-    "ship:amplification": "tsx scripts/shipping-amplification.mts"
+    "ship:amplification": "tsx scripts/shipping-amplification.mts",
+    "method:learn-pima-schedule-union": "tsx scripts/method/learn-pima-schedule-union.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

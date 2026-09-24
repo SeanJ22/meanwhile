@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import { bodyScopeKey, type BodyScopeKey } from "@/lib/state/body-scope";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
@@ -42,12 +43,13 @@ export function ScopeSelectors() {
   }, [allMeetings, tiers]);
 
   const bodies = useMemo(() => {
-    const seen = new Map<string, string>();
+    const seen = new Map<BodyScopeKey, string>();
     for (const meeting of allMeetings) {
       const tier = tierForMeeting(meeting);
       if (tier === null || !tiers.includes(tier)) continue;
       if (jurisdiction && meeting.ocdId !== jurisdiction) continue;
-      const key = `${meeting.ocdId}|${meeting.bodyName}`;
+      // The filter's own constructor, so the option offered is the key matched.
+      const key = bodyScopeKey(meeting);
       if (!seen.has(key)) seen.set(key, meeting.bodyName);
     }
     // 6d (2026-08-17): governing bodies before advisory ones — the City
@@ -113,7 +115,12 @@ export function ScopeSelectors() {
           value={body ?? ""}
           disabled={bodies.length === 0}
           onChange={(e) =>
-            dispatch({ type: "scope/body", ocdId: e.target.value || null })
+            // Resolved back through the offered options rather than cast: the
+            // DOM hands back a string, and only a key this list made may scope.
+            dispatch({
+              type: "scope/body",
+              key: bodies.find(([key]) => key === e.target.value)?.[0] ?? null,
+            })
           }
         >
           <option value="">All bodies</option>

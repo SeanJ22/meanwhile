@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 736,
-    "named": 7255,
+    "named": 7269,
     "dynamic": 28
   },
   "files": {
@@ -2479,8 +2479,16 @@
     },
     "tests/civic-data-read-model-memo.test.ts": {
       "names": [
+        "a bypassCache batch read never asks identities",
+        "a bypassCache read never asks the identity and always proves again",
         "a bypassCache read never uses the memo — it re-proves the version every time",
+        "a failed batch identity read decides nothing: every scope is read whole",
+        "a moved pointer is read whole and proved again, never served from the old proof",
         "a pointer move to a new version is fetched and re-proved, never masked by the memo",
+        "a pointer whose identity changed in any field is read whole",
+        "a proof is served only to the store that made it",
+        "an unmoved pointer is served from this store's proof after asking only its identity",
+        "the batch read asks identities for proved scopes and reads only the moved one whole",
         "the batch read fetches candidate envelopes only for versions not yet proven",
         "the batch read hauls only the moved partition's envelope when one pointer advances",
         "the single read proves a version once, then attests without re-reading the candidate"
@@ -5761,6 +5769,7 @@
       "names": [
         "a canonical preload outage emits no fabricated source attempt",
         "a cross-partition id collision holds every claimant and never hides an unrelated good row",
+        "a pass that records readbacks and republishes the prepared snapshot composes every partition once",
         "a semantic refusal holds only the exact source/body partition",
         "a successful thin response retains unexplained in-window rows with exact held evidence",
         "an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence",
@@ -7258,6 +7267,9 @@
     },
     "tests/prepared-meeting-snapshot.test.ts": {
       "names": [
+        "a held prepared row is re-read when the coupling differs in any part",
+        "a reader that holds the current prepared row asks only its coupling before serving it again",
+        "prepare composes through the pass's shared composition, and only when the coupling changed",
         "preparing over an unchanged promoted set is idempotent and never recomposes",
         "the prepared projection publishes monotonically — an older composition can never overwrite a newer one",
         "the reader fast-path falls back to the composing reader only when no prepared row exists",
@@ -10110,7 +10122,9 @@
       "names": [
         "Admin exposes imported LKG without claiming freshness or a source-authenticated success",
         "Reader proof fails closed if durable trusted-LKG evidence is altered",
+        "a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read",
         "retired trusted-LKG doors refuse new imports while retained history remains due",
+        "the trusted-LKG import clock counts only attempts strictly after the import's pointer move",
         "trusted LKG evidence is content-bound and cannot replace an existing authority"
       ],
       "dynamic": 0

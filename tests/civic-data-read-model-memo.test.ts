@@ -30,6 +30,7 @@ import {
 import type { CandidateVersionReadback } from "../lib/civic-data/store.ts";
 import type {
   CandidateVersionRecord,
+  PromotedPointerIdentity,
   PromotedProjection,
   RoutineRecordClass,
 } from "../lib/civic-data/types.ts";
@@ -122,8 +123,25 @@ interface SpyCounts {
   readPromotion: number;
   readCandidate: number;
   readPromotions: number;
+  /** One entry per `readPromotions` call, each the scopes it was asked for. */
+  readPromotionScopes: string[][];
   /** One entry per `readCandidates` call, each the versionIds it was asked for. */
   readCandidates: string[][];
+  readPromotionIdentity: number;
+  /** One entry per `readPromotionIdentities` call, each the scopes it was asked for. */
+  readPromotionIdentities: string[][];
+}
+
+function identityOf(projection: PromotedProjection): PromotedPointerIdentity {
+  return {
+    key: projection.key,
+    sourceId: projection.sourceId,
+    recordClass: projection.recordClass,
+    scope: projection.scope,
+    versionId: projection.versionId,
+    lastKnownGoodVersionId: projection.lastKnownGoodVersionId,
+    promotedAt: projection.promotedAt,
+  };
 }
 
 /**
@@ -131,8 +149,24 @@ interface SpyCounts {
  * cumulative version→candidate map (old versions remain fetchable). Counts every
  * read so a test can prove which the memo skipped.
  */
-function spyStore(pointers: Map<string, Version>) {
-  const counts: SpyCounts = { readPromotion: 0, readCandidate: 0, readPromotions: 0, readCandidates: [] };
+function spyStore(
+  pointers: Map<string, Version>,
+  options: {
+    /** Expose the identity-only pointer reads (every production store has them). */
+    readonly identity?: boolean;
+    /** Make the batch identity read fail. */
+    readonly identitiesFail?: boolean;
+  } = {},
+) {
+  const counts: SpyCounts = {
+    readPromotion: 0,
+    readCandidate: 0,
+    readPromotions: 0,
+    readPromotionScopes: [],
+    readCandidates: [],
+    readPromotionIdentity: 0,
+    readPromotionIdentities: [],
+  };
   const byVersion = new Map<string, CandidateVersionRecord>();
   const record = (v: Version) => byVersion.set(v.projection.versionId, v.candidate);
   for (const v of pointers.values()) record(v);
@@ -147,6 +181,7 @@ function spyStore(pointers: Map<string, Version>) {
     },
     readPromotions: async <R>(_recordClass: RoutineRecordClass, scopes: readonly string[]) => {
       counts.readPromotions += 1;
+      counts.readPromotionScopes.push([...scopes]);
       return scopes.flatMap((scope) => {
         const projection = pointers.get(scope)?.projection;
         return projection ? [projection as PromotedProjection<R>] : [];
@@ -159,6 +194,23 @@ function spyStore(pointers: Map<string, Version>) {
         return rec ? [{ candidateId: id, record: rec }] : [];
       });
     },
+    ...(options.identity
+      ? {
+          readPromotionIdentity: async (_recordClass: RoutineRecordClass, scope: string) => {
+            counts.readPromotionIdentity += 1;
+            const projection = pointers.get(scope)?.projection;
+            return projection ? identityOf(projection) : null;
+          },
+          readPromotionIdentities: async (_recordClass: RoutineRecordClass, scopes: readonly string[]) => {
+            counts.readPromotionIdentities.push([...scopes]);
+            if (options.identitiesFail) throw new Error("identity read failed");
+            return scopes.flatMap((scope) => {
+              const projection = pointers.get(scope)?.projection;
+              return projection ? [identityOf(projection)] : [];
+            });
+          },
+        }
+      : {}),
   };
   /** Advance a scope's pointer to a new version, keeping the old fetchable. */
   const advance = (scope: string, next: Version) => {
@@ -254,4 +306,134 @@ test("the batch read hauls only the moved partition's envelope when one pointer 
   const b = second[1];
   assert.equal(b.kind, "PROMOTED");
   if (b.kind === "PROMOTED") assert.equal(b.value.answer, 3);
+});
+
+/*
+ * **Version before contents (2026-09-23).** A promotion's payload is immutable
+ * per version, so once this store has proved a pointer, a later read asks only
+ * which version the pointer names and re-serves the proof when it has not
+ * moved. Every whole payload used to be read again each time a scope's 30 s
+ * cache expired, to learn that nothing had changed.
+ */
+
+test("an unmoved pointer is served from this store's proof after asking only its identity", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts } = spyStore(pointers, { identity: true });
+
+  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  const third = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+
+  assert.equal(first.kind, "PROMOTED");
+  assert.deepEqual(second, first, "the proved result is served unchanged");
+  assert.deepEqual(third, first);
+  assert.equal(counts.readPromotion, 1, "the payload is read once");
+  assert.equal(counts.readCandidate, 1, "the candidate is read and proved once");
+  assert.equal(counts.readPromotionIdentity, 2, "each later read asks only which version the pointer names");
+});
+
+test("a moved pointer is read whole and proved again, never served from the old proof", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts, advance } = spyStore(pointers, { identity: true });
+
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+  advance("federal-supported", version("federal-supported", "v-b", { answer: 2 }));
+  const moved = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+
+  assert.equal(moved.kind, "PROMOTED");
+  if (moved.kind === "PROMOTED") assert.equal(moved.value.answer, 2, "the new version is served");
+  assert.equal(counts.readPromotionIdentity, 1);
+  assert.equal(counts.readPromotion, 2, "the moved pointer's payload is read");
+  assert.equal(counts.readCandidate, 2, "the new version is proved");
+
+  const again = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  if (again.kind === "PROMOTED") assert.equal(again.value.answer, 2);
+  assert.equal(counts.readPromotion, 2, "the new proof is the one re-served");
+});
+
+test("a pointer whose identity changed in any field is read whole", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts, advance } = spyStore(pointers, { identity: true });
+
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+  const same = version("federal-supported", "v-a", { answer: 1 });
+  advance("federal-supported", { ...same, projection: { ...same.projection, promotedAt: "2026-09-03T00:00:00.000Z" } });
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+
+  assert.equal(counts.readPromotion, 2, "a different promotedAt is not the proved pointer");
+});
+
+test("a bypassCache read never asks the identity and always proves again", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const { store, counts } = spyStore(pointers, { identity: true });
+
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
+
+  assert.equal(counts.readPromotionIdentity, 0, "the verification path never takes the shortcut");
+  assert.equal(counts.readPromotion, 3);
+  assert.equal(counts.readCandidate, 3);
+});
+
+test("a proof is served only to the store that made it", async () => {
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
+  const a = spyStore(pointers, { identity: true });
+  const b = spyStore(pointers, { identity: true });
+
+  await readPromotedCivicData(CLASS, "federal-supported", { store: a.store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store: b.store });
+
+  assert.equal(b.counts.readPromotionIdentity, 0, "store b has proved nothing yet");
+  assert.equal(b.counts.readPromotion, 1, "store b reads its own pointer whole");
+});
+
+test("the batch read asks identities for proved scopes and reads only the moved one whole", async () => {
+  const pointers = new Map([
+    ["scope-a", version("scope-a", "v-a", { answer: 1 })],
+    ["scope-b", version("scope-b", "v-b", { answer: 2 })],
+  ]);
+  const { store, counts, advance } = spyStore(pointers, { identity: true });
+
+  await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
+  const unchanged = await readPromotedCivicDataBatch<{ answer: number }>(CLASS, ["scope-a", "scope-b"], { store });
+  assert.deepEqual(unchanged.map((r) => r.kind), ["PROMOTED", "PROMOTED"]);
+  assert.deepEqual(counts.readPromotionScopes, [["scope-a", "scope-b"]], "nothing moved: no payload is read again");
+  assert.deepEqual(counts.readPromotionIdentities, [["scope-a", "scope-b"]]);
+
+  advance("scope-b", version("scope-b", "v-b2", { answer: 3 }));
+  const moved = await readPromotedCivicDataBatch<{ answer: number }>(CLASS, ["scope-a", "scope-b"], { store });
+  assert.deepEqual(counts.readPromotionScopes[1], ["scope-b"], "only the moved scope's payload is read");
+  assert.deepEqual(counts.readCandidates[1], ["v-b2"], "only the moved scope is proved");
+  const [a, b] = moved;
+  assert.equal(a?.kind, "PROMOTED");
+  assert.equal(b?.kind, "PROMOTED");
+  if (a?.kind === "PROMOTED") assert.equal(a.value.answer, 1);
+  if (b?.kind === "PROMOTED") assert.equal(b.value.answer, 3);
+});
+
+test("a failed batch identity read decides nothing: every scope is read whole", async () => {
+  const pointers = new Map([
+    ["scope-a", version("scope-a", "v-a", { answer: 1 })],
+    ["scope-b", version("scope-b", "v-b", { answer: 2 })],
+  ]);
+  const { store, counts } = spyStore(pointers, { identity: true, identitiesFail: true });
+
+  await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
+  const second = await readPromotedCivicDataBatch(CLASS, ["scope-a", "scope-b"], { store });
+
+  assert.deepEqual(second.map((r) => r.kind), ["PROMOTED", "PROMOTED"]);
+  assert.equal(counts.readPromotionIdentities.length, 1, "the identity read was attempted");
+  assert.deepEqual(counts.readPromotionScopes[1], ["scope-a", "scope-b"], "the failure falls back to the whole read");
+});
+
+test("a bypassCache batch read never asks identities", async () => {
+  const pointers = new Map([["scope-a", version("scope-a", "v-a", { answer: 1 })]]);
+  const { store, counts } = spyStore(pointers, { identity: true });
+
+  await readPromotedCivicDataBatch(CLASS, ["scope-a"], { store });
+  await readPromotedCivicDataBatch(CLASS, ["scope-a"], { store, bypassCache: true });
+
+  assert.deepEqual(counts.readPromotionIdentities, []);
+  assert.equal(counts.readPromotions, 2);
 });

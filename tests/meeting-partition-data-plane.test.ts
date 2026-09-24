@@ -8,6 +8,7 @@ import {
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingsProjection, type MeetingPartitionReadback } from "../lib/meetings/snapshot.ts";
+import { MEETINGS_PREPARED_SCOPE, preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { getMeetingSource } from "../lib/meetings/registry.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
@@ -415,6 +416,45 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
   assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
   assert.equal(store.readPromotionIdentitiesCalls, 1);
   assert.equal(store.readPromotionsCalls, 0, "a current pass reads no partition payload");
+});
+
+test("a pass that records readbacks and republishes the prepared snapshot composes every partition once", async () => {
+  const store = new CountingMeetingStore();
+  const promoted = await promoteMeetingPartitions({
+    store,
+    partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "shared-pima"), meeting(insite, FIRST, "shared-mesa")],
+    agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
+    generatedAt: FIRST,
+  });
+  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
+  store.readPromotionsCalls = 0;
+
+  // Exactly the reader-repair child's provider: one composition, kept once made.
+  let compositions = 0;
+  let composing: ReturnType<typeof readMeetingsProjection> | null = null;
+  const aggregate = () => {
+    if (composing === null) {
+      compositions += 1;
+      composing = readMeetingsProjection({ store, now: SECOND, bypassCache: true, allowUnconfiguredBootstrap: false });
+    }
+    return composing;
+  };
+  const repairs = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], SECOND, "f".repeat(40), { aggregate });
+  const readsForOneComposition = store.readPromotionsCalls;
+  const prepared = await preparePublishedMeetingSnapshot(store, SECOND, { aggregate });
+
+  assert.deepEqual(repairs.map((repair) => repair.ok && repair.value.kind === "RECORDED" ? repair.value.receipt.status : "not recorded"), ["PASS", "PASS"]);
+  assert.equal(prepared.status, "PUBLISHED");
+  assert.equal(compositions, 1, "the readbacks and the prepared snapshot share one composition");
+  assert.equal(store.readPromotionsCalls, readsForOneComposition, "prepare read no partition payload of its own");
+  const row = await store.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE);
+  assert.deepEqual(
+    new Set(row?.composedFrom.map(({ contractId }) => contractId)),
+    new Set([legistar.id, insite.id]),
+    "the published row is coupled to the versions that composition read",
+  );
 });
 
 test("a semantic refusal holds only the exact source/body partition", async () => {

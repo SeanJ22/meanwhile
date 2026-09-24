@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 755,
-    "named": 7441,
+    "named": 7445,
     "dynamic": 30
   },
   "files": {
@@ -2731,9 +2731,13 @@
     "tests/composite-failure-kind.test.ts": {
       "names": [
         "a JOB failure detail says whose failure it is, once",
+        "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
+        "a challenge served with HTTP 200 is the same wall",
+        "a real calendar we extract nothing from is still OUR zero-row JOB",
         "meeting partition receipts parse with and without the additive failureKind",
         "our own code and configuration failures are jobs, and so is an unknown",
-        "publisher-side failures are walls"
+        "publisher-side failures are walls",
+        "the town feed answering a Cloudflare challenge is the town's WALL, in its own words"
       ],
       "dynamic": 0
     },

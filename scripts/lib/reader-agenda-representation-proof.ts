@@ -36,6 +36,30 @@ export async function agendaRepresentationProof() {
     const response = await GET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(meetingId)}`));
     const raw = await response.text();
     const payload = JSON.parse(raw);
+    if (latest === undefined) {
+      // D1: every row held for this sitting is another body's notice page (the
+      // Town of Bradford's calendar under Newbury sittings). The reader is shown
+      // none of them, and the route says how many were set aside.
+      assert.equal(response.status, 200);
+      assert.equal(shown.anotherBodysPagesSetAside, held.length, meetingId);
+      assert.equal(payload.documentCount, 0, meetingId);
+      assert.deepEqual(payload.documents, [], meetingId);
+      assert.deepEqual(payload.documentAccounting, {
+        heldRows: held.length,
+        shown: 0,
+        identicalContentRows: shown.identicalContentRows,
+        publicationIndexRowsSetAside: shown.publicationIndexRowsSetAside,
+        anotherBodysPagesSetAside: shown.anotherBodysPagesSetAside,
+        sittingSpecific: shown.sittingSpecific,
+      }, meetingId);
+      const listingIdentity: MeetingListingIdentityReadback = meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback;
+      assert.deepEqual(payload.listingIdentity, listingIdentity);
+      representations.push({ meetingId, heldNativeIds: held.map(row => row.id), nativeIds: [], documents: [],
+        accounting: payload.documentAccounting, representation: null, setAside: "ANOTHER_BODYS_PAGES",
+        acquisition: payload.publication?.acquisition ?? null, publication: payload.publication, listingIdentity,
+        payloadSha256: hash(raw), returnedIds: [], countAgrees: payload.documentCount === 0, status: "PROVEN" });
+      continue;
+    }
     const markup = renderToStaticMarkup(createElement(AgendaDocuments, { documents: payload.documents, meetingId, agendaUrl: latest.documentUrl, agendaSentence: "", publication: payload.publication }));
     const reading = classifyAgendaPublication({ meetingId, bodyName: latest.sourceOrg, documentsForMeeting: held, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, now: Date.now() });
     const isPortal = reading.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
@@ -45,12 +69,13 @@ export async function agendaRepresentationProof() {
     assert.equal(payload.publication.revised, reading.revised);
     assert.equal(payload.documentCount, expected.length);
     assert.equal(payload.documentCount, payload.documents.length);
-    assert.equal(shown.heldRows, expected.length + shown.identicalContentRows + shown.publicationIndexRowsSetAside, meetingId);
+    assert.equal(shown.heldRows, expected.length + shown.identicalContentRows + shown.publicationIndexRowsSetAside + shown.anotherBodysPagesSetAside, meetingId);
     assert.deepEqual(payload.documentAccounting, {
       heldRows: held.length,
       shown: expected.length,
       identicalContentRows: shown.identicalContentRows,
       publicationIndexRowsSetAside: shown.publicationIndexRowsSetAside,
+      anotherBodysPagesSetAside: shown.anotherBodysPagesSetAside,
       sittingSpecific: shown.sittingSpecific,
     }, meetingId);
     // Every document the route returns is reachable from what the reader sees.

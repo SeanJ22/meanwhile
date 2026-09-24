@@ -20,7 +20,7 @@ import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 
 import { loadContainer } from "../../../(admin)/_mw/data/geography.ts";
-import { loadWatchedBodies } from "../../../(admin)/_mw/data/load-bodies.ts";
+import { loadWatchedStandings } from "../../../(admin)/_mw/data/load-bodies.ts";
 import { loadRegistryBodies } from "../../../(admin)/_mw/data/registry.ts";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Name a county, district, metro area or legislative district by its type and Census id." }, { status: 400 });
   }
   const nowIso = new Date().toISOString();
-  const [container, registry, bodies] = await Promise.all([loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedBodies(nowIso)]);
+  const [container, registry, bodies] = await Promise.all([loadContainer(type as GeographyType, geoid), loadRegistryBodies(), loadWatchedStandings(nowIso)]);
   if (container.kind === "UNREAD") return NextResponse.json({ ok: false, says: container.detail }, { status: 200 });
   const g = container.value.geography;
   const stateCode = g.stateAbbr.toLowerCase();

@@ -184,7 +184,9 @@ test("the registry slice carries each body's six fields and skips a row with no 
 test("the watched-bodies read opens no socket, runs read only, and decodes each change set once", () => {
   const source = readFileSync("app/(admin)/_mw/data/body-store.ts", "utf8");
   assert.doesNotMatch(source, /\bPool\b/, "HTTP transactions, no socket to open");
-  assert.equal(source.match(/readOnly: true/g)?.length, 2, "both transactions are read only");
+  const transactions = source.match(/\.transaction\(/g)?.length ?? 0;
+  assert.ok(transactions >= 2, "the body read runs in transactions");
+  assert.equal(source.match(/readOnly: true/g)?.length, transactions, "every transaction is read only");
   assert.match(source, /isolationLevel: "RepeatableRead"/, "the figures that must agree share one snapshot");
   assert.match(source, /CROSS JOIN LATERAL \(SELECT CASE WHEN c\.state = 'PROMOTED' THEN c\.candidate->'changeSet' END AS cs OFFSET 0\) x/);
 });

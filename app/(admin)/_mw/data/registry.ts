@@ -8,14 +8,13 @@ import "server-only";
  *
  * Production reads the six fields each body shows, cut out of the pointer row
  * by Postgres (`lib/control-plane/admin-view/promoted-slices.ts`: 1,996 bodies
- * in ~0.4 s from a distant host). A cold server used to read the 3.6 MB pointer and prove it against its
- * candidate first (6.1 s, 2026-09-24), and a load over three seconds is not a
- * win (Sean, 2026-09-24). The whole projection is read only outside production
+ * in ~0.4 s from a distant host). A cold server used to read the 3.6 MB
+ * pointer and prove it against its candidate first (6.1 s, 2026-09-24), and a
+ * load over three seconds is not a win (Sean, 2026-09-24). The whole projection is read only outside production
  * where the store holds no pointer: the first-seed bootstrap local work reads.
  */
 import { registryBodyOf, type RegistryBody } from "@/lib/control-plane/admin-view/coverage.ts";
 import { registryBodies } from "@/lib/control-plane/admin-view/promoted-slices.ts";
-import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model.ts";
 
 import { readerQuery } from "./reader-query.ts";
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
@@ -55,6 +54,8 @@ async function readRegistryBodies(): Promise<RegistryRead> {
 /** Outside production only: the whole projection, which carries the first-seed bootstrap. */
 async function readWholeProjection(): Promise<RegistryRead> {
   try {
+    // Loaded only here: production never reads the whole projection, and the module is heavy to load (~0.6 s).
+    const { readRegistryRuntimeProjection } = await import("@/lib/registry/runtime-read-model.ts");
     const r = await readRegistryRuntimeProjection();
     if (r.kind === "PROMOTED" || r.kind === "BOOTSTRAP") {
       const registry = (r.value as unknown as { registry?: { bodies?: readonly Record<string, unknown>[] } }).registry;

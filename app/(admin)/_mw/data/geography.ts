@@ -30,7 +30,7 @@ import "server-only";
  * and tests read.
  */
 import type { GeographyRef, GeographyType } from "@/lib/census-geography/contract.ts";
-import { loadPublishedLookupState, type PublishedLookupSource } from "@/lib/census-geography/reader.ts";
+import type { PublishedLookupSource, PublishedLookupState } from "@/lib/census-geography/reader.ts";
 import { containersOfCode, oneContainer, stateContainers, type Slice } from "@/lib/control-plane/admin-view/promoted-slices.ts";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index.ts";
 
@@ -101,7 +101,7 @@ function readsWholeLookup(slice: Slice<unknown> | null): boolean {
 /* ------------------------------------------------ the whole lookup (not prod) */
 
 type LookupOpened =
-  | { readonly ok: true; readonly state: Awaited<ReturnType<typeof loadPublishedLookupState>> }
+  | { readonly ok: true; readonly state: PublishedLookupState }
   | { readonly ok: false; readonly detail: string };
 
 const lookupShared = sharedRead<LookupOpened>({
@@ -115,6 +115,8 @@ const lookupShared = sharedRead<LookupOpened>({
 async function lookupOrUnread(): Promise<LookupOpened> {
   return lookupShared.read(async () => {
     try {
+      // Loaded only here: production reads slices and never builds the whole lookup.
+      const { loadPublishedLookupState } = await import("@/lib/census-geography/reader.ts");
       const state = await loadPublishedLookupState();
       if (state.source === "unavailable") return { ok: false, detail: NOT_PUBLISHED };
       return { ok: true, state };

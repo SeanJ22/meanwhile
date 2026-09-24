@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 774,
-    "named": 7586,
+    "named": 7587,
     "dynamic": 30
   },
   "files": {
@@ -9015,6 +9015,7 @@
         "a malformed exact receipt cannot suppress a valid prior supervisor attempt",
         "an all-unavailable provider rotates deterministically across frozen admission slots",
         "an exact task receipt excludes that task from the supervisor-only attempt clock",
+        "each Google calendar is its own lane; every other host keeps one lane per hostname",
         "frontier configuration and identities fail closed",
         "one pass admits one least-recently-considered task per provider domain",
         "repeated supervisor faults rotate fairly within one provider without changing other domains",

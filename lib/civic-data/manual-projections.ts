@@ -24,6 +24,12 @@ import {
   type SourceScopedMember,
 } from "./manual-source-isolation.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts";
+import {
+  crosswalkListIssues,
+  crosswalkReceiptIssue,
+  crosswalkRowIssue,
+  type MeetingBodyCrosswalkRow,
+} from "./meeting-body-crosswalk.ts";
 import { manualSourceReceiptStructureIssue, sourceAuthority } from "./source-authority.ts";
 import type {
   CivicRecordMember,
@@ -44,6 +50,7 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "campaign-sites",
   "venue-resolutions",
   "everyday-routing",
+  "meeting-body-crosswalk",
 ] as const;
 export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)[number];
 
@@ -78,7 +85,7 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
-  readonly kind: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing";
+  readonly kind: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   /** Present on denominator-governed Reader families such as everyday routing. */
@@ -173,6 +180,7 @@ const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
   "campaign-sites",
   "venue-resolutions",
   "everyday-routing",
+  "meeting-body-crosswalk",
 ]);
 
 interface IsolatedManualProjection {
@@ -185,10 +193,11 @@ interface IsolatedManualProjection {
 }
 
 function curatedRecordIssue(
-  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing",
+  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
   row: Record<string, unknown>,
 ): string | null {
   if (!string(row.id)) return `A ${contractId} row has no stable id.`;
+  if (contractId === "meeting-body-crosswalk") return crosswalkRowIssue(row);
   if (contractId === "everyday-routing") {
     const contact = object(row.contact);
     const kind = string(row.kind);
@@ -285,7 +294,7 @@ function sourceScopedMembers(
   if (contractId === "officeholder-statements") return statementMembers(payload);
   if (contractId === "comment-access" || contractId === "ballot-navigation" ||
       contractId === "campaign-sites" || contractId === "venue-resolutions" ||
-      contractId === "everyday-routing") {
+      contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
     return curatedMembers(payload);
   }
   return [];
@@ -366,9 +375,12 @@ function sourceScopedMemberIssue(
   }
   if (contractId === "comment-access" || contractId === "ballot-navigation" ||
       contractId === "campaign-sites" || contractId === "venue-resolutions" ||
-      contractId === "everyday-routing") {
+      contractId === "everyday-routing" || contractId === "meeting-body-crosswalk") {
     const row = object(member.record);
-    return row ? curatedRecordIssue(contractId, row) : `${member.key} is not a curated Reader record.`;
+    if (!row) return `${member.key} is not a curated Reader record.`;
+    const issue = curatedRecordIssue(contractId, row);
+    /* A crosswalk row cites exactly the receipted bytes of the pages it rests on (C16). */
+    return issue ?? (contractId === "meeting-body-crosswalk" ? crosswalkReceiptIssue(row as unknown as MeetingBodyCrosswalkRow, receipt.sources) : null);
   }
   return null;
 }
@@ -762,7 +774,7 @@ function officeholderStatementProjection(
 }
 
 function curatedReaderProjection(
-  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing",
+  contractId: "comment-access" | "ballot-navigation" | "campaign-sites" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
 ): BuiltProjection {
@@ -791,10 +803,18 @@ function curatedReaderProjection(
   if (contractId === "everyday-routing") {
     shapeProblems.push(...everydayRoutingProjectionProblems(payload as EverydayRoutingProjection));
   }
+  if (contractId === "meeting-body-crosswalk") {
+    shapeProblems.push(...crosswalkListIssues(records).filter((issue) => issue.startsWith("CONFLICTING_EVIDENCE") || issue.endsWith("reviewed twice")));
+    for (const row of records) {
+      if (crosswalkRowIssue(row) !== null) continue;
+      const issue = crosswalkReceiptIssue(row as unknown as MeetingBodyCrosswalkRow, sourceReceipt.sources);
+      if (issue) shapeProblems.push(issue);
+    }
+  }
 
   const identities = records.map((row) => {
     const value = object(row.value);
-    const subjectId = contractId === "comment-access"
+    const subjectId = contractId === "comment-access" || contractId === "meeting-body-crosswalk"
       ? string(row.bodyId)
       : contractId === "campaign-sites"
         ? string(row.officeholderId)
@@ -830,7 +850,9 @@ function curatedReaderProjection(
             ? "directory/map/ballot campaign-site binding"
             : contractId === "venue-resolutions"
               ? "meeting acquisition venue-resolution dependency"
-              : "meetings preload/Ask/Admin everyday-service routing",
+              : contractId === "meeting-body-crosswalk"
+                ? "derived meeting-source wiring: the exact body and the filter selecting its meetings"
+                : "meetings preload/Ask/Admin everyday-service routing",
       passed: records.length > 0 && shapeProblems.length === 0,
       detail: `${records.length} exact ${contractId} record(s); this check has no software-suite or other-source input.`,
     }],

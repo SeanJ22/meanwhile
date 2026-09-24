@@ -12,23 +12,31 @@
  * no HTTP acquisition of its own, so no route or final URL can authorize it.
  * What authorizes it is the exact identity of those inputs.
  *
- * This module is the interface. It holds the shapes the row writer (the
- * discovery session's piece 2) produces, and the one pure rule every version
- * obeys. The door is the same as every routine contract's: the standing runner
- * promotes through processRoutineCandidate (RULING 282/283). Adding the door's
- * DERIVED branches to runner.ts, promotion.ts and validate.ts, the typed
- * reader verifier, and the cutover of meeting partitions from SOURCE_WIRING
- * comes after this, in one reader batch with one re-proof (B4).
+ * This module is the interface. It holds the shapes the row writer
+ * (`lib/control-plane/discovery/derived-wiring.ts`) produces, and the one pure
+ * rule every version obeys. The door is the same as every routine contract's:
+ * the standing runner promotes through processRoutineCandidate (RULING
+ * 282/283), with the DERIVED branches in runner.ts, promotion.ts and
+ * validate.ts. The wiring store's ACTIVE rows are the members of the derived
+ * meeting families (`lib/civic-data/derived-meeting-family.ts`), so a promoted
+ * row publishes through the runner with no code release.
  *
  * **The rule** (`planDerivedVersion`):
  * - A row is promoted only with its inputs, its host attestation, its adapter
  *   binding and the reader adapter's own verification for that body.
  * - A row the writer holds by name is never removed: an absent walk, a
- *   transport failure, a robots refusal or a challenge holds it.
- * - A row is removed only on ROUTE_WITHDRAWN_BY_PUBLISHER evidence: the route
- *   answered 404 or 410, or the attested page that linked it no longer links
- *   it (with that page's new sha256). This is the removal evidence the
- *   validator's horizon rule will accept for this class.
+ *   transport failure, a server error, a robots refusal or a challenge holds
+ *   it. An outage never suspends or removes a connection; what was verified
+ *   stays served.
+ * - A promoted row is SUSPENDED, never silently kept publishing, when its
+ *   evidence says the connection may be wrong (the owner's decision C16,
+ *   recorded 2026-09-24T22:43Z): the route answered 404 or 410; its events
+ *   now name another body; the evidence conflicts; or the calendar changed
+ *   (the filter no longer selects, or the feed moved or changed shape). A
+ *   suspended row stays in the version, marked, so its previously verified
+ *   records are preserved, and it publishes nothing new until a review later
+ *   than the suspension restores or corrects it.
+ * - A row is removed only on ROUTE_WITHDRAWN_BY_PUBLISHER evidence, vaulted.
  * - A row the writer says nothing about this version is carried byte-exactly.
  * - A hand-wired route (SOURCE_WIRING) that covers the body holds the derived
  *   row as ALREADY_WIRED: the two are shadow-compared, never two writers.
@@ -128,8 +136,48 @@ export const DERIVED_HELD_REASONS = [
   "TRANSPORT_FAILED",
   "ROBOTS_REFUSED",
   "CHALLENGED",
+  /** The latest walk read the reviewed route but did not confirm it; nothing new is published from it. */
+  "ROUTE_NOT_CONFIRMED",
+  /** A row that has never been promoted meets a review trigger: it waits for the review, unpromoted. */
+  "REVIEW_TRIGGERED",
+  /** A suspended row waits for a review later than its suspension. */
+  "REVIEW_OWED",
 ] as const;
 export type DerivedHeldReason = (typeof DERIVED_HELD_REASONS)[number];
+
+/**
+ * What suspends a promoted connection until it is reviewed (C16). Each is evidence the connection may be wrong,
+ * never an outage: a timeout, a server error, a refused connection or a challenge holds the row as it is.
+ */
+export const DERIVED_REVIEW_TRIGGERS = [
+  /** The route answered 404 or 410. */
+  "ROUTE_GONE",
+  /** The events the filter selects now name another body. */
+  "WRONG_ATTRIBUTION",
+  /** Two reviewed rows claim the same route and meetings for different bodies, or the reviewed evidence disagrees. */
+  "CONFLICTING_EVIDENCE",
+  /** The filter no longer selects any event, or the feed moved or changed shape. */
+  "CALENDAR_CHANGED",
+  /** The reviewed crosswalk row the connection rested on is no longer promoted. */
+  "CROSSWALK_WITHDRAWN",
+] as const;
+export type DerivedReviewTrigger = (typeof DERIVED_REVIEW_TRIGGERS)[number];
+
+/** A promoted row's suspension, carried on the row until a later review restores or corrects it. */
+export interface DerivedSuspension {
+  readonly trigger: DerivedReviewTrigger;
+  readonly detail: string;
+  /** When the trigger was first recorded. Only a review after it may restore the row. */
+  readonly since: string;
+  readonly evidence: readonly DerivedInputRef[];
+}
+
+/** One row of a derived version: the row, and its suspension when it has one. */
+export interface DerivedVersionEntry<Row> {
+  readonly key: string;
+  readonly row: Row;
+  readonly suspension?: DerivedSuspension;
+}
 
 /** The only evidence that removes a derived row. */
 export type RouteWithdrawnByPublisher =
@@ -158,6 +206,17 @@ export type DerivedRowDecision<Row> =
       readonly binding: AdapterBinding;
       readonly verification: AdapterVerification;
       readonly inputs: readonly DerivedInputRef[];
+      /** When the reviewed row this promotion rests on was reviewed; a suspended row is restored only by a later review. */
+      readonly reviewedAt?: string;
+    }
+  | {
+      readonly disposition: "SUSPEND";
+      readonly key: string;
+      readonly trigger: DerivedReviewTrigger;
+      readonly detail: string;
+      /** When this pass observed the trigger. */
+      readonly at: string;
+      readonly evidence: readonly DerivedInputRef[];
     }
   | {
       readonly disposition: "HOLD";
@@ -173,10 +232,12 @@ export type DerivedRowDecision<Row> =
     };
 
 export interface DerivedVersionPlan<Row> {
-  /** The next version's rows, keyed and sorted. */
-  readonly rows: readonly { readonly key: string; readonly row: Row }[];
+  /** The next version's rows, keyed and sorted; a suspended row carries its suspension. */
+  readonly rows: readonly DerivedVersionEntry<Row>[];
   readonly promoted: readonly string[];
   readonly carried: readonly string[];
+  /** Suspended rows, by trigger; `newly` when this version suspends them. */
+  readonly suspended: readonly { readonly key: string; readonly trigger: DerivedReviewTrigger; readonly since: string; readonly newly: boolean }[];
   /** Held by name this version: a held row that was promoted before is carried, never dropped. */
   readonly held: readonly { readonly key: string; readonly reason: DerivedHeldReason; readonly detail: string; readonly carried: boolean }[];
   readonly removed: readonly { readonly key: string; readonly removal: RouteWithdrawnByPublisher }[];
@@ -193,7 +254,10 @@ export type DerivedPlanRefusal =
   | "VERIFICATION_NOT_THIS_BINDING"
   | "VERIFICATION_PRODUCED_NOTHING"
   | "REMOVE_OF_UNKNOWN_ROW"
-  | "REMOVAL_EVIDENCE_NOT_VAULTED";
+  | "REMOVAL_EVIDENCE_NOT_VAULTED"
+  | "SUSPEND_OF_UNKNOWN_ROW"
+  | "SUSPEND_WITHOUT_EVIDENCE"
+  | "PROMOTE_OF_SUSPENDED_WITHOUT_REVIEW";
 
 const inputKey = (input: DerivedInputRef): string => canonicalCivicDataJson(input);
 
@@ -202,12 +266,13 @@ const inputKey = (input: DerivedInputRef): string => canonicalCivicDataJson(inpu
  * version's decisions. Pure: it reads nothing and writes nothing.
  */
 export function planDerivedVersion<Row>(
-  previous: readonly { readonly key: string; readonly row: Row }[],
+  previous: readonly DerivedVersionEntry<Row>[],
   decisions: readonly DerivedRowDecision<Row>[],
 ): DerivedVersionPlan<Row> {
-  const before = new Map(previous.map((entry) => [entry.key, entry.row]));
+  const before = new Map(previous.map((entry) => [entry.key, entry]));
   const next = new Map(before);
   const promoted: string[] = [];
+  const suspended: { key: string; trigger: DerivedReviewTrigger; since: string; newly: boolean }[] = [];
   const held: { key: string; reason: DerivedHeldReason; detail: string; carried: boolean }[] = [];
   const removed: { key: string; removal: RouteWithdrawnByPublisher }[] = [];
   const refusals: { key: string; code: DerivedPlanRefusal; detail: string }[] = [];
@@ -243,10 +308,35 @@ export function planDerivedVersion<Row>(
         refusals.push({ key: decision.key, code: "VERIFICATION_PRODUCED_NOTHING", detail: "the reader adapter produced no sitting for this body" });
         continue;
       }
-      next.set(decision.key, decision.row);
+      const suspension = before.get(decision.key)?.suspension;
+      if (suspension !== undefined && !(decision.reviewedAt !== undefined && Date.parse(decision.reviewedAt) > Date.parse(suspension.since))) {
+        refusals.push({
+          key: decision.key,
+          code: "PROMOTE_OF_SUSPENDED_WITHOUT_REVIEW",
+          detail: `suspended since ${suspension.since} (${suspension.trigger}); only a review after that restores it`,
+        });
+        continue;
+      }
+      next.set(decision.key, { key: decision.key, row: decision.row });
       promoted.push(decision.key);
       decided.add(decision.key);
       for (const input of [...decision.inputs, verification.evidence]) inputs.set(inputKey(input), input);
+    } else if (decision.disposition === "SUSPEND") {
+      const prior = before.get(decision.key);
+      if (prior === undefined) {
+        refusals.push({ key: decision.key, code: "SUSPEND_OF_UNKNOWN_ROW", detail: "only a promoted row is suspended; a new row is held" });
+        continue;
+      }
+      if (decision.evidence.length === 0) {
+        refusals.push({ key: decision.key, code: "SUSPEND_WITHOUT_EVIDENCE", detail: "a suspension names the evidence that triggered it" });
+        continue;
+      }
+      /* A row already suspended keeps its first suspension, so the review it waits for is the one it has waited for. */
+      const suspension: DerivedSuspension = prior.suspension ?? { trigger: decision.trigger, detail: decision.detail, since: decision.at, evidence: decision.evidence };
+      next.set(decision.key, { key: decision.key, row: prior.row, suspension });
+      suspended.push({ key: decision.key, trigger: suspension.trigger, since: suspension.since, newly: prior.suspension === undefined });
+      decided.add(decision.key);
+      for (const input of suspension.evidence) inputs.set(inputKey(input), input);
     } else if (decision.disposition === "HOLD") {
       held.push({ key: decision.key, reason: decision.reason, detail: decision.detail, carried: before.has(decision.key) });
       decided.add(decision.key);
@@ -268,10 +358,17 @@ export function planDerivedVersion<Row>(
   }
 
   const carried = [...before.keys()].filter((key) => next.has(key) && !promoted.includes(key)).sort();
+  /* A suspended row this version said nothing new about stays suspended, and is listed as such. */
+  for (const [key, entry] of next) {
+    if (entry.suspension !== undefined && !suspended.some((s) => s.key === key)) {
+      suspended.push({ key, trigger: entry.suspension.trigger, since: entry.suspension.since, newly: false });
+    }
+  }
   return {
-    rows: [...next.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([key, row]) => ({ key, row })),
+    rows: [...next.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, entry]) => entry),
     promoted: promoted.sort(),
     carried,
+    suspended: suspended.sort((a, b) => (a.key < b.key ? -1 : 1)),
     held: held.sort((a, b) => (a.key < b.key ? -1 : 1)),
     removed: removed.sort((a, b) => (a.key < b.key ? -1 : 1)),
     refusals,

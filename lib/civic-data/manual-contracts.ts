@@ -28,6 +28,14 @@ export interface ManualProductionSourceContract {
   readonly classification: RoutineDataClassification;
   readonly bootstrapFixturePaths: readonly string[];
   readonly lkgBehavior: string;
+  /**
+   * Who besides the owner may invoke it, and on whose decision. Still explicit invocation, never a clock: the
+   * reviewing agent session runs the same verified door the owner does.
+   */
+  readonly delegatedInvocation?: {
+    readonly to: "REVIEWING_AGENT_SESSION";
+    readonly authorization: string;
+  };
 }
 
 const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_promotions" as const;
@@ -396,6 +404,26 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["lib/meetings/venue-cache.ts"],
     lkgBehavior: "A bad address, coordinate, scope key, or source receipt holds only venue resolutions and leaves their prior GOOD version available to meeting acquisition.",
+  },
+  {
+    id: "meeting-body-crosswalk",
+    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
+    sourceId: "curated-reader-primary-sources",
+    recordClass: "CURATED_READER_RECORD",
+    scope: "US-AZ+US-NH+US-NJ:meeting-body-crosswalk",
+    command: ["scripts/promote-manual-civic-projection.mts", "--contract=meeting-body-crosswalk"],
+    parserNormalizerVersion: "curated-reader-records/2",
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
+    validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: "meeting-body-crosswalk", consumers: ["derived meeting-source wiring"] },
+    classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: ["lib/civic-data/meeting-body-crosswalk.ts"],
+    lkgBehavior: "A row whose evidence is not its receipted bytes, whose body or filter is not established, or that conflicts with another row holds only itself; every other reviewed row and the prior GOOD crosswalk stay live. A row leaves only when a later review withdraws it.",
+    delegatedInvocation: {
+      to: "REVIEWING_AGENT_SESSION",
+      authorization: "C16: owner decision recorded 2026-09-24T22:43Z — \"Agents may review and promote the records connecting a calendar to its governing body.\"",
+    },
   },
   {
     id: "everyday-routing",

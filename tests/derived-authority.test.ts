@@ -71,6 +71,43 @@ test("only the publisher withdraws a row, with vaulted evidence", () => {
   assert.deepEqual(unknown.refusals.map((r) => r.code), ["REMOVE_OF_UNKNOWN_ROW"]);
 });
 
+/**
+ * C16 (the owner's decision recorded 2026-09-24T22:43Z): "a page returning 'not found' is not the only reason to
+ * suspend or correct a connection. Wrong attribution, conflicting evidence, or a changed calendar must also trigger
+ * review. Preserve previously verified records through temporary outages."
+ */
+test("C16: a trigger suspends a promoted row, which stays marked until a later review restores it", () => {
+  const previous = [{ key: "trustees", row: trustees }];
+  const at = "2026-09-25T02:00:00.000Z";
+  for (const trigger of ["ROUTE_GONE", "WRONG_ATTRIBUTION", "CONFLICTING_EVIDENCE", "CALENDAR_CHANGED", "CROSSWALK_WITHDRAWN"] as const) {
+    const plan = planDerivedVersion(previous, [{ disposition: "SUSPEND", key: "trustees", trigger, detail: "seen this pass", at, evidence: [evidence("art-trigger")] }]);
+    assert.deepEqual(plan.refusals, []);
+    assert.equal(plan.rows.length, 1, `${trigger} keeps the row, so its verified records are preserved`);
+    assert.equal(plan.rows[0]!.row, trustees);
+    assert.deepEqual(plan.rows[0]!.suspension, { trigger, detail: "seen this pass", since: at, evidence: [evidence("art-trigger")] });
+    assert.deepEqual(plan.suspended, [{ key: "trustees", trigger, since: at, newly: true }]);
+    assert.ok(plan.inputs.some((i) => i.kind === "VAULTED_EVIDENCE" && i.artifactId === "art-trigger"), "the trigger's evidence is an input");
+  }
+
+  const suspendedBefore = planDerivedVersion(previous, [{ disposition: "SUSPEND", key: "trustees", trigger: "WRONG_ATTRIBUTION", detail: "d", at, evidence: [evidence("art-trigger")] }]).rows;
+  const held = planDerivedVersion(suspendedBefore, [{ disposition: "HOLD", key: "trustees", reason: "TRANSPORT_FAILED", detail: "timeout", inputs: [] }]);
+  assert.equal(held.rows[0]!.suspension?.trigger, "WRONG_ATTRIBUTION", "an outage neither restores nor removes a suspended row");
+  assert.deepEqual(held.suspended, [{ key: "trustees", trigger: "WRONG_ATTRIBUTION", since: at, newly: false }]);
+  const again = planDerivedVersion(suspendedBefore, [{ disposition: "SUSPEND", key: "trustees", trigger: "ROUTE_GONE", detail: "later", at: "2026-09-26T00:00:00.000Z", evidence: [evidence("art-later")] }]);
+  assert.equal(again.rows[0]!.suspension?.since, at, "the first suspension stands, so the review it waits for does not move");
+
+  const unreviewed = planDerivedVersion(suspendedBefore, [promote("trustees", trustees, { reviewedAt: "2026-09-24T23:00:00.000Z" })]);
+  assert.deepEqual(unreviewed.refusals.map((r) => r.code), ["PROMOTE_OF_SUSPENDED_WITHOUT_REVIEW"]);
+  assert.deepEqual(planDerivedVersion(suspendedBefore, [promote("trustees", trustees)]).refusals.map((r) => r.code), ["PROMOTE_OF_SUSPENDED_WITHOUT_REVIEW"]);
+  const reviewed = planDerivedVersion(suspendedBefore, [promote("trustees", trustees, { reviewedAt: "2026-09-25T03:00:00.000Z" })]);
+  assert.deepEqual(reviewed.refusals, []);
+  assert.equal(reviewed.rows[0]!.suspension, undefined, "a review after the suspension restores the row");
+  assert.deepEqual(reviewed.suspended, []);
+
+  assert.deepEqual(planDerivedVersion([], [{ disposition: "SUSPEND", key: "new", trigger: "ROUTE_GONE", detail: "d", at, evidence: [evidence("x")] }]).refusals.map((r) => r.code), ["SUSPEND_OF_UNKNOWN_ROW"]);
+  assert.deepEqual(planDerivedVersion(previous, [{ disposition: "SUSPEND", key: "trustees", trigger: "ROUTE_GONE", detail: "d", at, evidence: [] }]).refusals.map((r) => r.code), ["SUSPEND_WITHOUT_EVIDENCE"]);
+});
+
 test("a promotion without evidence, verified by another adapter, or producing nothing is refused by name", () => {
   const cases: [DerivedRowDecision<WiringRow>, string][] = [
     [promote("a", trustees, { inputs: [] }), "PROMOTE_WITHOUT_INPUTS"],

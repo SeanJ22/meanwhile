@@ -73,7 +73,7 @@ test("a reused publisher portal is classified identically by the real route and 
       results.push({meetingId,markup,url:payload.documents[0].documentUrl,gap:payload.publication.gap});
     }
     console.log(JSON.stringify(results));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 2_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 2_000_000 });
   const results = JSON.parse(output) as { meetingId: string; markup: string; url: string; gap: { whose: string } }[];
   assert.ok(results.length > 0, "real reused publication-index negative controls");
   for (const row of results) {

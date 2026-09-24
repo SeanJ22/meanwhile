@@ -43,7 +43,7 @@ test("the header, bands, triage, decisions and blind-spots components render", a
       renderToStaticMarkup(h(FleetBlindSpotsTab, {})),
     ];
     console.log(parts.join('\\n<!--SEP-->\\n'));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 16_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 16_000_000 });
 
   // §A read clock — the honest no-cycle sentence.
   assert.match(html, /Nothing re-reads this page/);

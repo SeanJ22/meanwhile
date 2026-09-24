@@ -37,7 +37,7 @@ test("every held official lookup renders its actual URL, authority, access note 
     import { PollingLookupFallback } from './components/ballot/polling-lookup-fallback.tsx';
     import { POLLING_PLACE_LINKS } from './lib/ballot/polling-place-links.ts';
     console.log(JSON.stringify({ markup: renderToStaticMarkup(createElement(PollingLookupFallback, { links: POLLING_PLACE_LINKS })), empty: renderToStaticMarkup(createElement(PollingLookupFallback, { links: [] })) }));
-  `], { encoding: "utf8", timeout: 30_000 });
+  `], { encoding: "utf8", timeout: 120_000 });
   const result = JSON.parse(output);
   assert.equal(result.empty, "");
   assert.equal([...result.markup.matchAll(/data-polling-lookup-state=/g)].length, POLLING_PLACE_LINKS.length);

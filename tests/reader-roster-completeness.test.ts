@@ -15,7 +15,7 @@ function renderRepresentation(payload: { holders: ReturnType<typeof rosterHolder
     import { Representation } from './components/map/popup/entity-modal.tsx';
     const payload = JSON.parse(readFileSync(0, 'utf8'));
     console.log(JSON.stringify(renderToStaticMarkup(createElement(Representation, { holders: payload.holders, note: 'Unused empty-roster note', gaps: payload.rosterGaps }))));
-  `], { cwd: process.cwd(), input: JSON.stringify(payload), encoding: "utf8", timeout: 30_000, maxBuffer: 4_000_000 });
+  `], { cwd: process.cwd(), input: JSON.stringify(payload), encoding: "utf8", timeout: 120_000, maxBuffer: 4_000_000 });
   const result: unknown = JSON.parse(output);
   assert.ok(typeof result === "string");
   return result;

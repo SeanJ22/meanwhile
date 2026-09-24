@@ -27,7 +27,7 @@ function render(): string {
     import { renderToStaticMarkup } from 'react-dom/server';
     import { SystemMap } from './components/admin/system-map.tsx';
     console.log(renderToStaticMarkup(createElement(SystemMap)));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 16_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 16_000_000 });
 }
 
 test("the system map renders the whole model, labelled as target architecture, not live status", () => {

@@ -38,10 +38,11 @@ import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
-import { groupByVenue, type Venue } from "@/lib/meetings/venues";
+import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
-import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
+import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
+import { divisionUpcoming, showDivisionUpcoming } from "@/lib/state/list-focus";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import {
@@ -669,6 +670,18 @@ function MapEntryInner() {
   const selectedVenue = useMemo(
     () => venues.find((v) => v.key === ui.selectedVenueKey) ?? null,
     [venues, ui.selectedVenueKey],
+  );
+  /*
+   * 2026-09-23 (the Tucson Unified report): the same bodies' sittings that have
+   * no building. The panel behind a pin is headed with the body's name, and
+   * without these it listed only the room's sittings — eight concluded ones —
+   * while the district's three upcoming online committee meetings were on no
+   * panel at all. Read from the same filtered `meetings`, so every filter the
+   * reader set still applies. See `placelessSittingsOfVenueBodies`.
+   */
+  const selectedVenuePlaceless = useMemo(
+    () => (selectedVenue ? placelessSittingsOfVenueBodies(selectedVenue, meetings) : []),
+    [selectedVenue, meetings],
   );
 
   /*
@@ -2217,6 +2230,7 @@ function MapEntryInner() {
               <div className="pointer-events-auto hidden sm:block">
                 <MeetingPanel
                   venue={selectedVenue}
+                  placeless={selectedVenuePlaceless}
                   onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
@@ -2257,6 +2271,7 @@ function MapEntryInner() {
               <div className="bottom-sheet pointer-events-auto sm:hidden">
                 <MeetingPanel
                   venue={selectedVenue}
+                  placeless={selectedVenuePlaceless}
                   onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
@@ -2313,23 +2328,25 @@ function MapEntryInner() {
               homeZip={clusterZip}
               upcomingMeetings={
                 // A failed fetch may not stand behind "Upcoming: 0" — the
-                // popup renders couldn't-check instead (2a).
-                failure
-                  ? null
-                  : meetings.filter(
-                      (m) =>
-                        m.ocdId === districtPopup.ocdId &&
-                        m.status === "SCHEDULED",
-                    ).length
+                // popup renders couldn't-check instead (2a). The count is
+                // `divisionUpcoming`, the SAME predicate the door's list uses.
+                failure ? null : divisionUpcoming(meetings, districtPopup.ocdId).length
               }
-              listingCount={failure ? undefined : readerMeetingCount(meetings.filter(m => m.ocdId === districtPopup.ocdId && m.status === "SCHEDULED"), pinned?.listingIdentity)}
-              /* BC-8: minimize the card, scope the list to this body, open it.
-                 Three dispatches rather than a new action, because each one
-                 already exists and already means exactly this. */
+              listingCount={failure ? undefined : readerMeetingCount(divisionUpcoming(meetings, districtPopup.ocdId), pinned?.listingIdentity)}
+              /* BC-8: minimize the card and open the list on this division's
+                 upcoming sittings.
+
+                 2026-09-23 (the Tucson Unified report): this dispatched a Body
+                 scope keyed on the division's bare OCD-ID. The Body scope's key
+                 is `<ocdId>|<bodyName>`, so no meeting could match it: the door
+                 under "Upcoming 3" opened "0 meetings — Nothing matches the
+                 current filters", and the scope then emptied every pin and list
+                 until "Reset all". It now opens the list FOCUSED on exactly the
+                 rows counted above — one-opening, named in a chip, cleared on
+                 close — through `showDivisionUpcoming`, and the Body scope's key
+                 is a type only `bodyScopeKey` can make. */
               onShowMeetings={() => {
-                dispatch({ type: "scope/body", ocdId: districtPopup.ocdId });
-                dispatch({ type: "select/district", ocdId: null, districtType: null });
-                dispatch({ type: "list/open", open: true });
+                for (const action of showDivisionUpcoming(districtPopup)) dispatch(action);
               }}
               onClose={() =>
                 dispatch({ type: "select/district", ocdId: null, districtType: null })
@@ -2631,9 +2648,11 @@ function meetingSubject(
         : {
             // D18. MTG-14 (2026-08-28): the sentence is no longer written out
             // here — it stood in two places, this and meeting-popup.tsx, for
-            // one claim about a government's meeting.
+            // one claim about a government's meeting. 2026-09-23: and it is
+            // the online sentence only where the body published an online
+            // access; a sitting whose place we do not hold says so instead.
             label: "Where",
-            value: ONLINE_ONLY_LINE,
+            value: placelessWhereLine(meeting),
           },
       ...(() => {
         const access = onlineAccessFor(meeting);

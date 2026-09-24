@@ -40,6 +40,27 @@ import type { Meeting, MeetingLocation, OnlineAccess } from "@/lib/sources/types
  * It does not produce a coordinate, a venue key or a pin. `lib/meetings/venues.ts`
  * keeps online sittings off the map and that gate is CORRECT: a marker on the
  * body's home address would put a reader outside a building nobody is going to.
+ *
+ * ## No room is NOT the same as online (2026-09-23, the owner's directive)
+ *
+ * This module used to answer "online only" for every sitting with no building,
+ * on the reasoning that `location === null` is where the pair's meaning lives.
+ * The owner's rule for the Tucson Unified report says otherwise: *"Represent
+ * unknown details honestly … Missing agenda text or a missing location must not
+ * automatically suppress an otherwise verified meeting."* A sitting whose place
+ * we simply do not hold is not a sitting "with no room to attend in person" —
+ * that sentence is a claim about the government, and nothing established it.
+ *
+ * So there are three states, and each has one answer:
+ *
+ * - a BUILDING (`location` set) — the venue gate pins it;
+ * - ONLINE (`location` null, the body published an online access) — the
+ *   online sentence, the join line, never a pin;
+ * - PLACE NOT RECORDED (`location` null and no online access) — our own named
+ *   gap, `PLACE_UNRECORDED_LINE`, never a pin and never "online".
+ *
+ * All three stay listed. `hasPhysicalLocation` is unchanged, so the venue gate
+ * is unchanged.
  */
 
 /** The shape any surface needs to answer the question. Meetings satisfy it. */
@@ -48,11 +69,23 @@ type OnlineShaped = Pick<Meeting, "location"> & { online?: OnlineAccess };
 /**
  * **Whether this sitting happens online, with no room to attend in person.**
  *
- * The single derivation. Written on `location` rather than on `online` because
- * `location === null` is what makes the claim true: there is nowhere to go.
+ * The single derivation. It needs BOTH halves: no building, and an online
+ * access the body published. A sitting with no building and no published
+ * online access is `isPlaceUnrecorded` instead — see the 2026-09-23 note above.
  */
 export function isOnlineOnly(meeting: OnlineShaped): boolean {
-  return meeting.location === null;
+  return meeting.location === null && meeting.online != null;
+}
+
+/**
+ * **No building and no published online access: we do not hold its place.**
+ *
+ * Still a real, listed meeting. What renders is `PLACE_UNRECORDED_LINE`, which
+ * is a fact about this product — never "online", which would be a claim about
+ * the government that nothing established.
+ */
+export function isPlaceUnrecorded(meeting: OnlineShaped): boolean {
+  return meeting.location === null && meeting.online == null;
 }
 
 /**
@@ -72,10 +105,10 @@ export function hasPhysicalLocation<T extends OnlineShaped>(
 /**
  * The published online access for a sitting, or null.
  *
- * Returns null for a physical meeting AND for an online-only one whose `online`
- * half is missing — the pair broken. Both are the absence of a published way
- * in, and a surface reading this renders the named gap rather than inventing
- * one.
+ * Returns null for a physical meeting AND for a sitting whose place is not
+ * recorded (no building, no published online access). Both are the absence of
+ * a published way in, and a surface reading this renders the named gap rather
+ * than inventing one.
  */
 export function onlineAccessFor(meeting: OnlineShaped): OnlineAccess | null {
   if (!isOnlineOnly(meeting)) return null;
@@ -91,6 +124,25 @@ export function onlineAccessFor(meeting: OnlineShaped): OnlineAccess | null {
  * rather than a word.
  */
 export const ONLINE_ONLY_LINE = "Online only — there is no room to attend in person.";
+
+/**
+ * What a sitting with no building and no published online access says about
+ * where it is held. OURS, in the house register ("We haven't recorded …"),
+ * because nothing we hold says whether the body has published a place — the
+ * same default `lib/ask/agenda-sentence.ts` applies to a missing agenda.
+ */
+export const PLACE_UNRECORDED_LINE = "We haven't recorded a place for this meeting yet.";
+
+/** The same gap, short enough for a list row's metadata line. */
+export const PLACE_UNRECORDED_MARK = "place not recorded yet";
+
+/**
+ * The "Where" row for a sitting with no building: the online sentence where the
+ * body published an online access, our own named gap where it did not.
+ */
+export function placelessWhereLine(meeting: OnlineShaped): string {
+  return isOnlineOnly(meeting) ? ONLINE_ONLY_LINE : PLACE_UNRECORDED_LINE;
+}
 
 /**
  * What the "How to join" row says when the body published no link.

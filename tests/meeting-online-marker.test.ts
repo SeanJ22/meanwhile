@@ -41,6 +41,7 @@ import { fileURLToPath } from "node:url";
 import {
   hasPhysicalLocation,
   isOnlineOnly,
+  isPlaceUnrecorded,
   joinLine,
   onlineAccessFor,
   ONLINE_MARK_WORD,
@@ -337,10 +338,20 @@ test("MTG-14: location === null and online !== undefined agree, both sides compu
 
   // Stated as a set difference too, so a failure names the rows rather than a
   // number: "some meeting somewhere" is not an actionable finding.
-  const onlyLocation = byLocation.filter((m) => !byOnline.includes(m)).map((m) => m.id);
   const onlyOnline = byOnline.filter((m) => !byLocation.includes(m)).map((m) => m.id);
-  assert.deepEqual(onlyLocation, [], "these have no room and no published online access");
   assert.deepEqual(onlyOnline, [], "these have a room AND online access");
+
+  /*
+   * 2026-09-23 (the owner's Tucson Unified directive): a sitting with no room
+   * AND no published online access is no longer a broken pair read as "online
+   * only" — that sentence claimed there was no room, which nothing
+   * established. It is its own named state, `isPlaceUnrecorded`, and it stays
+   * listed. So the no-room rows must PARTITION exactly into online and
+   * place-not-recorded, each computed, neither typed in.
+   */
+  const noRoom = meetings.filter((m) => !hasPhysicalLocation(m));
+  const partitioned = noRoom.filter((m) => isOnlineOnly(m) !== isPlaceUnrecorded(m));
+  assert.equal(partitioned.length, noRoom.length, "a no-room sitting is neither or both of online / place-not-recorded");
 });
 
 test("MTG-14: the snapshot still contains online sittings for the marker to be about", () => {

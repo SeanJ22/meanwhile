@@ -155,6 +155,7 @@ export const NON_CONTROL_FIELDS: Partial<Record<keyof UiState, string>> = {
    */
   listFocusBodyId: "an answer-scoped focus, cleared by the reducer when the list closes",
   listFocusBodyName: "an answer-scoped focus, cleared by the reducer when the list closes",
+  listFocusDivision: "a count-scoped focus (the district card's door), cleared by the reducer when the list closes",
   listSort: "list presentation, constrains nothing",
   listGroupBy: "list presentation",
   expandedGroups: "list presentation",

@@ -56,3 +56,35 @@ export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListi
 
   return [...venues.values()];
 }
+
+/**
+ * **THE SITTINGS OF THIS BUILDING'S BODIES THAT HAVE NO BUILDING.**
+ * (2026-09-23, the owner's Tucson Unified report.)
+ *
+ * The gate above is right: a sitting with no building gets no pin. But the
+ * panel behind a pin is headed with the BODY's name when one body meets there
+ * — "Tucson Unified School District · 8 public meetings" — and it listed only
+ * the eight sittings held in that room, all of them concluded. The district's
+ * three upcoming committee meetings, published as "Via Zoom Webinar" with no
+ * agenda yet, were on no pin and so on no panel. A reader looking at Tucson
+ * Unified's card was shown a body with nothing scheduled.
+ *
+ * So the panel also lists the same bodies' sittings that have no building —
+ * online ones and ones whose place we have not recorded — each marked as such.
+ * The join is the exact `bodyId`, never a name or a division: a division holds
+ * many bodies, and a sitting with no `bodyId` belongs to no building's docket
+ * (it stays in the meeting list, which is division-scoped). Nothing here gives
+ * such a sitting a coordinate or a pin.
+ */
+export function placelessSittingsOfVenueBodies(
+  venue: Pick<Venue, "meetings">,
+  meetings: readonly Meeting[],
+): Meeting[] {
+  const bodies = new Set<string>();
+  for (const meeting of venue.meetings) if (meeting.bodyId) bodies.add(meeting.bodyId);
+  if (bodies.size === 0) return [];
+  return meetings.filter(
+    (meeting) =>
+      !hasPhysicalLocation(meeting) && meeting.bodyId !== undefined && bodies.has(meeting.bodyId),
+  );
+}

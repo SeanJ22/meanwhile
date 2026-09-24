@@ -60,7 +60,7 @@ import {
 import { Band, GapNote, QueueButton, QueueForm, When, gapLabel } from "../../console-ui.tsx";
 import { Bar, Code, DefinedTile, NeedsYouLine, Plain, StatusBlock, type NeedsYou } from "../../status-ui.tsx";
 import { PublicationStatusPanel } from "./publication-status-panel.tsx";
-import { RoutineDataPanel } from "./routine-data-panel.tsx";
+import { RoutineDataNotRead, RoutineDataPanel } from "./routine-data-panel.tsx";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -249,12 +249,15 @@ function Row({ row }: { row: SourceRow }) {
  * THE PAGE
  * ------------------------------------------------------------------ */
 
-export default async function SourcesPage() {
+export default async function SourcesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const now = new Date();
-  /* Three independent reads, so the page costs the slowest one, not their sum: the proof-based routine read is
-     bounded and currently times out by name (READ_TIMED_OUT), and the narrow publication read answers in about 3 s. */
+  /* The full proof-based routine read selects every promotion's payload and cannot finish inside a page request, so a
+     visit does not start it (2026-09-24): it runs only when asked for by name, ?proof=full. The narrow publication read
+     answers the page's question, published versus reader-visible, in about 3 s. Independent reads run together, so
+     the page costs the slowest one, not their sum. */
+  const runProof = (await searchParams).proof === "full";
   const [routineData, publication, readerEdge] = await Promise.all([
-    readRoutineDataObservability({ now: now.toISOString() }),
+    runProof ? readRoutineDataObservability({ now: now.toISOString() }) : Promise.resolve(null),
     readRoutinePublicationStatus(),
     readReaderEdgeObservation(now.toISOString()),
   ]);
@@ -283,7 +286,7 @@ export default async function SourcesPage() {
           source and credential capability inventory follows as a separate static view.
         </p>
         <PublicationStatusPanel read={publication} />
-        <RoutineDataPanel outcome={routineData} edge={readerEdge} />
+        {routineData === null ? <RoutineDataNotRead edge={readerEdge} proofHref={`${HERE}?proof=full`} /> : <RoutineDataPanel outcome={routineData} edge={readerEdge} />}
         <h2>Source and credential capability inventory</h2>
         <p className="refusal">
           <strong>The capability inventory numbers did not check out against themselves, so none of them is shown.</strong>{" "}
@@ -311,7 +314,7 @@ export default async function SourcesPage() {
         on this page calls a public source — a key is never spent to draw a screen.
       </p>
       <PublicationStatusPanel read={publication} />
-        <RoutineDataPanel outcome={routineData} edge={readerEdge} />
+        {routineData === null ? <RoutineDataNotRead edge={readerEdge} proofHref={`${HERE}?proof=full`} /> : <RoutineDataPanel outcome={routineData} edge={readerEdge} />}
 
       <h2>Source and credential capability inventory</h2>
       <p className="note">

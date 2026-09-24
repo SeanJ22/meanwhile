@@ -132,16 +132,28 @@ test("the narrow read selects no payload and never touches the candidate JSON", 
   assert.match(code, /like\(civicDataCandidateEvents\.detail, `\$\{READER_PROJECTION_READBACK_PREFIX\}%`\)/);
 });
 
-test("the Sources page reads the three sources together and shows the narrow panel before the proof-based one", () => {
+test("the Sources page reads its sources together, starts the full proof read only when asked by name, and shows the narrow panel first", () => {
   const page = readFileSync("app/(admin)/admin/sources/page.tsx", "utf8");
   const together = /await Promise\.all\(\[([\s\S]*?)\]\);/.exec(page)?.[1] ?? "";
-  assert.match(together, /readRoutineDataObservability\(/);
+  // 2026-09-24: the full proof read selects every promotion's payload and cannot finish inside a page request, and
+  // it was billed for what it had read when its timeout cancelled it. Opening the page never starts it.
+  assert.match(page, /const runProof = \(await searchParams\)\.proof === "full";/);
+  assert.match(together, /runProof \? readRoutineDataObservability\(\{ now: now\.toISOString\(\) \}\) : Promise\.resolve\(null\)/);
+  assert.equal(page.match(/readRoutineDataObservability\(/g)?.length, 1, "no other path starts the full proof read");
   assert.match(together, /readRoutinePublicationStatus\(\)/);
   assert.match(together, /readReaderEdgeObservation\(/);
-  for (const at of [...page.matchAll(/<RoutineDataPanel /g)].map((m) => m.index!)) {
+  const sections = [...page.matchAll(/\{routineData === null \? <RoutineDataNotRead edge=\{readerEdge\} proofHref=\{`\$\{HERE\}\?proof=full`\} \/> : <RoutineDataPanel /g)].map((m) => m.index!);
+  assert.equal(sections.length, 2, "both of the page's renders choose between the not-read section and the full panel");
+  for (const at of sections) {
     const panel = page.lastIndexOf("<PublicationStatusPanel read={publication} />", at);
-    assert.ok(panel > 0 && at - panel < 120, "the narrow panel sits directly before each proof-based panel");
+    assert.ok(panel > 0 && at - panel < 120, "the narrow panel sits directly before the routine section");
   }
+  // The reader edge reading stands without the full read, and an edge not compared with the prepared snapshot is never called current.
+  const routinePanel = readFileSync("app/(admin)/admin/sources/routine-data-panel.tsx", "utf8");
+  assert.match(routinePanel, /<EdgeServing edge=\{edge\} preparedGeneratedAt=\{null\} \/>/);
+  assert.match(routinePanel, /const compared = Number\.isFinite\(preparedMs\) && Number\.isFinite\(edgeMs\);/);
+  assert.match(routinePanel, /\(!compared \? "PUBLISHED" : behind \? "BEHIND" : "CURRENT"\)/);
+  assert.match(routinePanel, /\(!compared \? "UNKNOWN" : behind \? "AMBER" : "GREEN"\)/);
   const server = readFileSync("lib/civic-data/observability-server.ts", "utf8");
   assert.match(server, /readPublicationStatusRows\(connection, ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS\)/);
   assert.match(server, /No publication count is claimed/);

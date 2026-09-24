@@ -375,6 +375,35 @@ export const LEGISTAR_ROUTES: readonly LegistarRoute[] = [
   },
 ];
 
+/**
+ * **A HOST THIS CATALOGUE RECORDS AS DISALLOWED IS NEVER REQUESTED.**
+ * (2026-09-24.)
+ *
+ * `GRANICUS_AGENDA_PDF` and `GRANICUS_MINUTES_PDF` say "recorded here, never
+ * fetched", but the ingest's agenda retrieval refused only retired routes'
+ * hosts, so Pima's agenda PDFs were still requested from legistar.granicus.com
+ * (robots `Disallow: /`) on 2026-09-02. The hosts are derived from the
+ * catalogue itself — a concrete host in a DISALLOWED route's URL shape — so a
+ * route recorded DISALLOWED later is refused the moment it is recorded. A
+ * link into one is kept on the meeting as a link; the document is not read.
+ */
+export const DISALLOWED_LEGISTAR_HOSTS: readonly string[] = [
+  ...new Set(
+    LEGISTAR_ROUTES.filter((route) => route.disposition === "DISALLOWED").flatMap((route) => {
+      const host = /^https?:\/\/([^/{}]+)\//.exec(route.urlShape)?.[1]?.toLowerCase();
+      return host ? [host] : [];
+    }),
+  ),
+];
+
+export function isDisallowedLegistarHost(url: string): boolean {
+  try {
+    return DISALLOWED_LEGISTAR_HOSTS.includes(new URL(url).hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
 /** One route, by id. Undefined for an id this portfolio does not know. */
 export function findRoute(id: string): LegistarRoute | undefined {
   return LEGISTAR_ROUTES.find((route) => route.id === id);

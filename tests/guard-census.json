@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 742,
-    "named": 7334,
+    "files": 743,
+    "named": 7337,
     "dynamic": 29
   },
   "files": {
@@ -631,6 +631,14 @@
         "a publisher that says the agenda IS up, while we hold nothing, is still OURS",
         "an amended agenda is CURRENT plus SUPERSEDED, never one flat document",
         "the freshness window is bounded at both ends"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-retrieval-disallowed-hosts.test.ts": {
+      "names": [
+        "an agenda link on a disallowed host is held as a link, never read; permitted hosts are unaffected",
+        "the ingest's agenda retrieval never requests a DISALLOWED host, and still requests a permitted one",
+        "the refused hosts are derived from the catalogue's own DISALLOWED routes"
       ],
       "dynamic": 0
     },

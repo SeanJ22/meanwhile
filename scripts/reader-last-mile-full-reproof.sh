@@ -100,7 +100,12 @@ proof() { local out="$1" script="$2" ldr="${3:-tsx}"; local cmd; [ "$ldr" = test
   else run "$(basename "$script")" $cmd "$script"; fi; }
 
 echo "### 1. BUILD (COMMIT_REF=$COMMIT_REF)"
-run "pnpm build" bash -c 'pnpm build'   # postbuild's reader-trace-check ignores the receipt, so a stale closure does not block the build
+# The build receipt (stage 5) hashes THIS build's log. Nothing else wrote it,
+# so every run until 2026-09-24 hashed whatever stale file sat at that path
+# (a 2026-09-19 log in one checkout). Remove it first: a missing log is a
+# refusal, never an old one.
+export READER_BUILD_LOG="../reader-final-build.log"; rm -f "$READER_BUILD_LOG"
+run "pnpm build" bash -c 'pnpm build 2>&1 | tee "$0"; exit "${PIPESTATUS[0]}"' "$READER_BUILD_LOG"   # postbuild's reader-trace-check ignores the receipt, so a stale closure does not block the build
 
 echo "### 2. PIN the run's meeting versions, then PREPARE + census projection"
 # ONE version per meeting partition for the whole run (lib/meetings/proof-pin.ts).

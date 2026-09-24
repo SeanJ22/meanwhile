@@ -236,7 +236,7 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 489,
+      "recordObligations": 488,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
@@ -249,7 +249,7 @@
         "minutes-summaries",
         "meetings"
       ],
-      "recordObligations": 529,
+      "recordObligations": 528,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],
@@ -397,7 +397,7 @@
       "families": [
         "meetings"
       ],
-      "recordObligations": 487,
+      "recordObligations": 486,
       "selectorClasses": [
         "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup"
       ],

@@ -32,7 +32,7 @@ for (const meetingId of [...new Set(documents.map(row => row.meetingId))].sort()
   // Every held row is accounted for below as shown, identical, or set aside.
   const shown = readerAgendaDocuments(held, { documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings });
   const expected = shown.documents;
-  assert.equal(shown.heldRows, expected.length + shown.identicalContentRows + shown.publicationIndexRowsSetAside);
+  assert.equal(shown.heldRows, expected.length + shown.identicalContentRows + shown.publicationIndexRowsSetAside + shown.anotherBodysPagesSetAside);
   const response = await fetch(`${base}/api/agenda?meetingId=${encodeURIComponent(meetingId)}`);
   assert.equal(response.status, 200);
   const result = await response.json();
@@ -45,6 +45,7 @@ for (const meetingId of [...new Set(documents.map(row => row.meetingId))].sort()
     shown: expected.length,
     identicalContentRows: shown.identicalContentRows,
     publicationIndexRowsSetAside: shown.publicationIndexRowsSetAside,
+    anotherBodysPagesSetAside: shown.anotherBodysPagesSetAside,
     sittingSpecific: shown.sittingSpecific,
   });
   const meeting = snapshot.meetings.find(row => row.id === meetingId);
@@ -57,5 +58,5 @@ for (const meetingId of [...new Set(documents.map(row => row.meetingId))].sort()
 }
 const readerVisible = records.reduce((n, row) => n + row.expectedIds.length, 0);
 floored("agenda document delivery", "every reader-visible agenda document (one per distinct content)", readerVisible, records.reduce((n, row) => n + row.returnedCount, 0));
-writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: Object.fromEntries(["app/api/agenda/route.ts", "lib/ask/agenda-publication.ts", "lib/meetings/agenda-content.ts", "lib/meetings/snapshot.ts", "lib/civic-data/meeting-partitions.ts", "scripts/lib/reader-proof-runtime.ts"].map(path => [path, hash(readFileSync(path, "utf8"))])), heldCount: documents.length, expectedCount: readerVisible, returnedCount: records.reduce((n, row) => n + row.returnedCount, 0), execution: "Actual HTTP agenda route against local deployed production build; every reader-visible document (readerAgendaDocuments over the exact promoted rows: one per distinct content, publication-index pages set aside once the sitting's own document is held) compared by identity, text, extraction state and provenance, and every held row accounted for as shown, identical content, or set-aside index page.", records }, null, 2) + "\n");
+writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: Object.fromEntries(["app/api/agenda/route.ts", "lib/ask/agenda-publication.ts", "lib/meetings/agenda-content.ts", "lib/meetings/snapshot.ts", "lib/civic-data/meeting-partitions.ts", "scripts/lib/reader-proof-runtime.ts"].map(path => [path, hash(readFileSync(path, "utf8"))])), heldCount: documents.length, expectedCount: readerVisible, returnedCount: records.reduce((n, row) => n + row.returnedCount, 0), execution: "Actual HTTP agenda route against local deployed production build; every reader-visible document (readerAgendaDocuments over the exact promoted rows: one per distinct content, publication-index pages set aside once the sitting's own document is held) compared by identity, text, extraction state and provenance, and every held row accounted for as shown, identical content, a set-aside index page, or another body's notice page set aside (D1).", records }, null, 2) + "\n");
 console.log(JSON.stringify({ meetings: records.length, documents: documents.length, readerVisible }));

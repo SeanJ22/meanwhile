@@ -11,6 +11,7 @@ import {
   isPlacelessLocation,
   resolveVenue,
   soleVenueForBody,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
@@ -42,7 +43,10 @@ import {
  *
  * The venue string is cryptic ("OCH - Concord") and resolves through the
  * venue cache; the expansion — OCH, 163 N. Main St., Concord — was read from
- * the county's own 7/27 public-notice PDF, cited on the cache row.
+ * the county's own 7/27 public-notice PDF, cited on the cache row. A venue
+ * string with no reviewed row is never placed and never suppresses its
+ * sitting: it is published with no pin and the block's own words as its named
+ * gap, counted as `unknownVenue` (the venue-gap class, 2026-09-23).
  */
 
 const SOURCE_NAME = "revize";
@@ -205,6 +209,9 @@ export function makeRevizeSource(
     // logical records — an upcoming-block item, or a dated document set.
     let considered = 0;
     let duplicates = 0;
+    // A-002 · `placeless` and `unknownVenue` tally sittings that are then
+    // PRODUCED (D18; the venue-gap class, 2026-09-23), so neither is a drop.
+    let keptButPlaceless = 0;
 
     for (const { wiring, homepageHtml, agendaPageHtml, collectedAt } of raw) {
       const documents = parseAgendaDocuments(
@@ -248,18 +255,31 @@ export function makeRevizeSource(
           wiring.timeZone,
         );
 
-        if (!item.venueText) {
-          drops.unknownVenue++;
-          continue;
-        }
-        if (isPlacelessLocation(item.venueText)) {
+        /*
+         * **NO PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap class,
+         * 2026-09-23). Each of these used to `continue`; each is now KEPT
+         * with no pin and counted as before: a venue line naming no building
+         * is online (D18, `placeless`), a venue line with no reviewed row is
+         * the county's own words (`STATED_NOT_PLACED`), and an item with no
+         * venue line is the county's own gap (`NOT_STATED_BY_PUBLISHER`), both
+         * `unknownVenue`. A sitting noticed for a venue other than the keyed
+         * one (the board alternates venues) now reaches the reader in the
+         * county's words instead of vanishing.
+         */
+        const online = item.venueText && isPlacelessLocation(item.venueText)
+          ? { label: item.venueText, joinUrl: null }
+          : null;
+        if (online) {
           drops.placeless++;
-          continue;
+          keptButPlaceless += 1;
         }
-        const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, item.venueText);
-        if (!venue) {
+        const venue = online || !item.venueText
+          ? null
+          : resolveVenue(SOURCE_NAME, wiring.ocdId, item.venueText) ?? null;
+        const venueGap = !online && !venue ? unplacedVenueGap(item.venueText, wiring.publishingOrg) : null;
+        if (venueGap) {
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         // The agenda (or, failing that, the statutory notice) whose filename
@@ -284,12 +304,16 @@ export function makeRevizeSource(
           title: item.title,
           startsAt,
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl: agenda ? documentUrl(wiring.config.base, agenda.href) : null,
           jurisdiction: wiring.jurisdiction,
           status: Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED",
@@ -334,8 +358,16 @@ export function makeRevizeSource(
         }
 
         if (!venue) {
+          /*
+           * The notices page states no place for any sitting — its rows are
+           * dated documents — and this body has no one reviewed venue to place
+           * them with. That never suppresses the sitting (the venue-gap class,
+           * 2026-09-23): it is published with no place and our own
+           * place-not-recorded gap (there are no publisher words to quote),
+           * counted as `unknownVenue` and kept. This used to `continue`.
+           */
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         const [y, m, d] = key.split("-").map(Number);
@@ -357,12 +389,14 @@ export function makeRevizeSource(
           startsAt,
           startPrecision: "DAY",
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
           agendaUrl: agenda ? documentUrl(wiring.config.base, agenda.href) : null,
           jurisdiction: wiring.jurisdiction,
           status:
@@ -380,8 +414,10 @@ export function makeRevizeSource(
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
       logicalInput: considered,
       duplicates,
-      // Every `placeless` here has a `continue` behind it, so this adapter's
-      // counter really is a drop (A-002).
+      // Every `placeless` and `unknownVenue` here tallies a sitting that is
+      // then produced (A-002). Until the venue-gap class (2026-09-23) both had
+      // a `continue` behind them and were real drops.
+      countedButProduced: keptButPlaceless,
     });
   };
 

@@ -1,4 +1,4 @@
-import { requiredVenueEntries } from "../../meetings/venue-cache.ts";
+import { reviewedVenueEntries } from "../../meetings/venue-cache.ts";
 import {
   wiringForMeetingSource,
   type BodySourceWiring,
@@ -52,11 +52,17 @@ export function inSiteTenantsFromWiring(
       jurisdiction: row.jurisdiction,
       publishingOrg: row.publishingOrg,
       timeZone: row.timeZone,
+      /*
+       * The reviewed venues for this tenant's scope — possibly none, which is
+       * a real state and never a failed read (the venue-gap class,
+       * 2026-09-23): the adapter publishes every sitting, a room with no
+       * reviewed row carrying its named venue gap. A tenant with no division
+       * is scoped by its own slug (D31), as every division-less body is, so it
+       * can never read another division-less body's rooms and never throws
+       * for want of a scope.
+       */
       get venues() {
-        if (ocdId === null) {
-          throw new Error(`LEGISTAR_INSITE_VENUE_SCOPE_MISSING:${row.bodyId}`);
-        }
-        return requiredVenueEntries(venueSourceId, ocdId);
+        return reviewedVenueEntries(venueSourceId, ocdId, ocdId === null ? slug : null);
       },
       clerkScheduleUrl: row.config.insiteClerkScheduleUrl?.trim() || null,
     };

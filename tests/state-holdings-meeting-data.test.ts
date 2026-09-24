@@ -7,7 +7,7 @@ import test from "node:test";
 import ts from "typescript";
 
 import { NOTICE_SUMMARIES, noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
-import { requiredVenueEntries } from "../lib/meetings/venue-cache.ts";
+import { reviewedVenueEntries } from "../lib/meetings/venue-cache.ts";
 import { findClient, findVenue } from "../lib/sources/legistar/client-registry.ts";
 import { findTenant, findTenantVenue } from "../lib/sources/legistar-insite/tenant-registry.ts";
 
@@ -118,14 +118,23 @@ test("meeting consumers use the canonical venue test seam and retain version and
   assert.equal(findTenantVenue(mesa, "unrecorded room"), undefined);
 });
 
-test("a missing canonical Legistar venue scope fails closed", () => {
-  assert.throws(
-    () => requiredVenueEntries(
-      "legistar",
-      "ocd-division/country:us/state:az/county:pima",
-      null,
-      [],
-    ),
-    /VENUE_RESOLUTIONS_MISSING:legistar:ocd-division\/country:us\/state:az\/county:pima/,
+/*
+ * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
+ * "a missing canonical Legistar venue scope fails closed" and pinned a throw.
+ * That throw is what failed every routine read of Pima County's Board of
+ * Supervisors and Mesa's City Council from 2026-09-14, when the promoted table
+ * left out their three reviewed rooms: readers were served the 14 September
+ * listing for the whole outage. An empty scope is now a real state — the
+ * adapters publish every sitting with its venue gap named — so what is pinned
+ * is that it returns nothing, and never throws.
+ */
+test("an empty canonical Legistar venue scope is an empty list, never a failure", () => {
+  const scope = (): unknown[] => reviewedVenueEntries(
+    "legistar",
+    "ocd-division/country:us/state:az/county:pima",
+    null,
+    [],
   );
+  assert.doesNotThrow(scope);
+  assert.deepEqual(scope(), []);
 });

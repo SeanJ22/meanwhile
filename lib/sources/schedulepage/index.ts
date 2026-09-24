@@ -11,7 +11,7 @@ import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
-import { resolveVenue } from "../../meetings/venue-cache.ts";
+import { resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
 import type {
@@ -785,6 +785,9 @@ export function makeSchedulePageSource(
     let considered = 0;
     let duplicates = 0;
     let outOfWindow = 0;
+    // A-002 · `unknownVenue` tallies a sitting that is then PRODUCED with no
+    // place (the venue-gap class, 2026-09-23), so it is not a drop.
+    let keptUnplaced = 0;
 
     for (const { wiring, schedule, documents, collectedAt, error } of raw) {
       // A refused row publishes nothing THIS run. It is counted, not skipped:
@@ -891,18 +894,28 @@ export function makeSchedulePageSource(
         }
 
         // A row naming a different room than the page's own sentence is
-        // resolved on ITS OWN string, so an uncurated venue drops and counts
-        // rather than inheriting an address that would send a reader to the
-        // wrong building.
+        // resolved on ITS OWN string, so an uncurated venue is never placed
+        // at an inherited address that would send a reader to the wrong
+        // building.
         const marker = otherVenues.find((v) =>
           sitting.note ? sitting.note.includes(v) : false,
         );
         const rowVenue = marker
           ? resolveVenue(SOURCE_NAME, wiring.ocdId, marker)
           : venue;
+        /*
+         * **NO REVIEWED PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap
+         * class, 2026-09-23). This used to `continue`. The sitting is now
+         * published with no pin, counted `unknownVenue` and kept: a row that
+         * names its own room renders that room in the row's own words
+         * (`STATED_NOT_PLACED`, the marker as printed); a row that inherits
+         * the page's sentence keeps our own place-not-recorded gap, because
+         * `venueMatch` is our key for that sentence and not a quotation of it.
+         */
+        const venueGap = !rowVenue && marker ? unplacedVenueGap(marker, wiring.publishingOrg) : null;
         if (!rowVenue) {
           drops.unknownVenue += 1;
-          continue;
+          keptUnplaced += 1;
         }
 
         const href = sitting.href ?? docs.get(sitting.date) ?? null;
@@ -918,12 +931,15 @@ export function makeSchedulePageSource(
           startsAt,
           ...(time ? {} : { startPrecision: "DAY" as const }),
           timeZone: wiring.timeZone,
-          location: {
-            name: rowVenue.name,
-            address: rowVenue.address,
-            lat: rowVenue.lat,
-            lng: rowVenue.lng,
-          },
+          location: rowVenue
+            ? {
+                name: rowVenue.name,
+                address: rowVenue.address,
+                lat: rowVenue.lat,
+                lng: rowVenue.lng,
+              }
+            : null,
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl: href ? new URL(href, base).toString() : null,
           jurisdiction: wiring.jurisdiction,
           status: sitting.canceled ? "CANCELED" : statusOf(startsAt, now),
@@ -941,7 +957,7 @@ export function makeSchedulePageSource(
       SOURCE_NAME,
       raw,
       { meetings, drops, unreachableOcdIds: [...unreachable] },
-      { logicalInput: considered, duplicates, outOfWindow },
+      { logicalInput: considered, duplicates, outOfWindow, countedButProduced: keptUnplaced },
     );
   };
 

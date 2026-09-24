@@ -148,7 +148,18 @@ test("normalize: places only what the district's sentence places, carries Board 
   assert.equal(jul15.location, null);
   assert.match(jul15.online!.joinUrl!, /^https:\/\/tusd1\.zoom\.us\/j\/\d+/);
 
-  // "Committee meeting location TBD" (Sep 16) is dropped, counted, never placed.
-  assert.equal(byDay("2026-09-16", /Audit/), undefined);
-  assert.equal(drops.unknownVenue, 1);
+  // "Committee meeting location TBD" (Sep 16) is counted and never placed.
+  // CHANGED ON PURPOSE (the venue-gap class, 2026-09-23): it used to be
+  // DROPPED as well, and the owner's rule is that a missing place never
+  // suppresses a meeting the district's own calendar verifies. It is now
+  // published with no pin and our own place-not-recorded gap (the details
+  // sentence is prose, not a place field to quote) — exactly as the wired
+  // union publishes the same calendar row.
+  const sep16 = byDay("2026-09-16", /Audit/)!;
+  assert.ok(sep16, "the TBD sitting is published");
+  assert.equal(sep16.location, null);
+  assert.equal(sep16.online, undefined, "never called online");
+  assert.equal(sep16.venueGap, undefined, "our own gap: place not recorded");
+  assert.equal(drops.unknownVenue, 1, "still counted");
+  assert.equal(accounting.dropped, 0);
 });

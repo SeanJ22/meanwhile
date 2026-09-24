@@ -65,6 +65,7 @@ import {
   type DiscoveryStep,
   type EndpointCandidate,
   type MeetingsDiscoveryAttempt,
+  type OfficialPageIdentity,
   type StepPermission,
   type VerifiableVendor,
 } from "../../hunt/meetings-site-discovery.ts";
@@ -410,6 +411,18 @@ export async function walkMeetingsDiscoveryNeed(
   let homeHtml: string | null = null;
   const recipeSkips: { recipeId: string; why: string }[] = [];
   const origins = siteOrigins(need.ownWebAddress);
+  /*
+   * The body an official page is verified for. Its official host is the homepage's final host, which the walk
+   * attested (the recorded address, or a host that address's own redirect named); before any homepage is read,
+   * the recorded address itself.
+   */
+  const pageIdentity = (): OfficialPageIdentity => ({
+    bodyId: need.jurisdictionId,
+    name: need.name,
+    officialHost: new URL(homeOrigin ?? origins[0] ?? "https://invalid.invalid").host,
+    stateCode: need.stateCode,
+    now: runtime.now(),
+  });
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
   const recipeApplied: MeetingsDiscoveryAttempt["recipes"]["applied"][number][] = [];
@@ -461,7 +474,7 @@ export async function walkMeetingsDiscoveryNeed(
       checked += 1;
       const check = got === null
         ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
+        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, pageIdentity());
       const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
       else if (candidate.basis !== "RECIPE") leads.push(base);
@@ -521,10 +534,14 @@ export async function walkMeetingsDiscoveryNeed(
           /* The result may itself be a route; otherwise it is read as a page for the routes it evidences. */
           const direct = meetingEndpointCandidates(`<a href="${hit.url.replace(/"/g, "%22")}"></a>`, page.finalUrl).filter((c) => c.verifiable);
           const onPage = meetingEndpointCandidates(page.body, page.finalUrl).filter((c) => c.verifiable && !tried.has(c.url));
-          for (const c of [...direct, ...onPage].slice(0, 3)) {
+          /* A result on the government's own domain may itself be the page that dates its sessions: checked from the body already read. */
+          const selfPage = hitStanding(hit.url, identity.domain) === "OWN_SITE"
+            ? [{ vendor: "official-page-events", url: hit.url, basis: "SEARCH" as const, evidence: hit.url, verifiable: true }]
+            : [];
+          for (const c of [...direct, ...selfPage, ...onPage].slice(0, 3)) {
             const body = c.url === hit.url ? page : (tried.add(c.url), await get(c.url, "endpoint", ACCEPT_PAGE));
             if (body === null) continue;
-            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl });
+            const check = verifyEndpointBody(c, { status: body.status, body: body.body, finalUrl: body.finalUrl }, pageIdentity());
             const base = { vendor: c.vendor, url: c.url, basis: "SEARCH" as const, evidence: `search "${q.query}" found ${hit.url}`, detail: check.detail };
             if (check.verdict !== "YIELDED") {
               leads.push(base);

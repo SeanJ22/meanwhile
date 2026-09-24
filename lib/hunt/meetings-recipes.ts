@@ -27,7 +27,7 @@
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { fieldManualEntryId } from "../control-plane/field-manual.ts";
 import type { MeetingsDiscoveryNeed } from "./meetings-discovery.ts";
-import type { VerifiableVendor } from "./meetings-site-discovery.ts";
+import { anchorLinks, OFFICIAL_PAGE_EVENTS_VERSION, type VerifiableVendor } from "./meetings-site-discovery.ts";
 
 export const RECIPE_KIND = "MEETINGS_RECIPE";
 export const RECIPE_SOURCE = "meetings-recipes";
@@ -37,8 +37,17 @@ export const RECIPE_FAILURE_HOLD_DAYS = 30;
 /** Failures remembered per recipe, newest kept. The counts are exact; the list is bounded. */
 const FAILED_FOR_BOUND = 200;
 
-/** One navigation step. A path is resolved against the government's own origin, after substitution. */
-export type RecipeStep = { readonly kind: "path"; readonly template: string };
+/**
+ * One navigation step.
+ * - `path`: a path resolved against the government's own origin, after
+ *   substitution.
+ * - `link`: follow up to `max` links on the government's homepage that stay on
+ *   its own host and whose visible text matches `anchorPattern`
+ *   (case-insensitive). The page evidences the route; nothing is guessed.
+ */
+export type RecipeStep =
+  | { readonly kind: "path"; readonly template: string }
+  | { readonly kind: "link"; readonly anchorPattern: string; readonly max: number };
 
 export interface RecipeOutcome {
   readonly at: string;
@@ -144,6 +153,46 @@ export const SEED_RECIPES: readonly MeetingsRecipe[] = [
     publisherTraits: ["the feed without catID covers every calendar category; a category filter is the body filter"],
     cost: { requests: 1, searchQueries: 0, usd: null },
     provenance: "lib/sources/civicplus/index.ts header: /common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar",
+  }),
+  /*
+   * THE TUSD METHOD, saved after the initial repair (2026-09-23). Tucson
+   * Unified's reconfiguration sessions were missing from the reader because they
+   * are on the district's own page, not its Diligent portal. #384 wired that page
+   * by hand. This is the method that finds such a page without a hand: the
+   * homepage links it ("Reconfiguration Committee"), and the page dates its
+   * sessions. It is portable because nothing in it names Tucson. The body's
+   * identity is substituted at verification, and the Santa Fe transfer test
+   * proves it in another state. Counts start at zero: only runner walks move them.
+   */
+  seed({
+    recipeId: "official-page-events-linked-committee-page",
+    title: "The body's own page that dates its committee meetings and public sessions",
+    missing: "dated public meetings a body announces on its own site, outside any agenda vendor",
+    bodyClass: null,
+    platform: null,
+    state: null,
+    precondition: null,
+    queryTemplates: ["{bodyName} committee meeting community engagement site:{domain}"],
+    navigation: [
+      {
+        kind: "link",
+        anchorPattern: "\\b(committee|commission|council|board of education|governing board|community engagement|public meetings?)\\b",
+        max: 3,
+      },
+    ],
+    extractorId: "official-page-events",
+    verification:
+      `at least one dated event verified by ${OFFICIAL_PAGE_EVENTS_VERSION} for this body: on its official host, ` +
+      "named for the body in its title (its name, the name without class words, or its initials), dated in its state's zone",
+    publisherTraits: [
+      "a district or city CMS page, not an agenda vendor",
+      "events appear as JSON-LD, microdata, .ics links, event cards or dated headings",
+      "the homepage links the page by a committee or engagement name, not by the word 'meetings'",
+    ],
+    cost: { requests: 3, searchQueries: 0, usd: null },
+    provenance:
+      "the TUSD repair, #384: lib/registry/source-wiring.ts `tusd1-reconfiguration`; www.tusd1.org links /Reconfiguration " +
+      "as \"Reconfiguration Committee\" (tests/fixtures/official-page-events/tusd-home.html, recorded 2026-09-23)",
   }),
 ];
 
@@ -263,6 +312,18 @@ export function recipeCandidates(input: {
       continue;
     }
     for (const step of recipe.navigation) {
+      if (step.kind === "link") {
+        const pattern = new RegExp(step.anchorPattern, "i");
+        const ownHost = new URL(input.origin).host.toLowerCase();
+        const followed = new Set<string>();
+        for (const link of anchorLinks(input.homepageHtml, `${input.origin}/`)) {
+          if (followed.size >= step.max) break;
+          if (new URL(link.url).host.toLowerCase() !== ownHost || !pattern.test(link.text) || followed.has(link.url)) continue;
+          followed.add(link.url);
+          candidates.push({ recipeId: recipe.recipeId, extractorId: recipe.extractorId, url: link.url });
+        }
+        continue;
+      }
       const path = substitute(step.template, identity);
       if (path === null) {
         skipped.push({ recipeId: recipe.recipeId, why: `a navigation template names a slot this government's identity lacks: ${step.template}` });
@@ -304,6 +365,7 @@ const VENDOR_PLATFORM: Readonly<Record<VerifiableVendor, string | null>> = {
   "civicclerk-api": "civicclerk",
   iqm2: "iqm2",
   boardbook: "boardbook",
+  "official-page-events": null,
 };
 
 const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
@@ -314,6 +376,7 @@ const VENDOR_VERIFICATION: Readonly<Record<VerifiableVendor, string>> = {
   "civicclerk-api": "a CivicClerk events list whose rows carry id",
   iqm2: "an IQM2 calendar with at least one meeting row",
   boardbook: "a BoardBook organization page with at least one meeting link",
+  "official-page-events": "a page on the body's own host with at least one dated event verified for the body",
 };
 
 /**

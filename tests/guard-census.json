@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 764,
-    "named": 7508,
+    "files": 765,
+    "named": 7511,
     "dynamic": 30
   },
   "files": {
@@ -117,6 +117,14 @@
         "§9A.22: a corrupt policy row reads as the default, which is OFF",
         "§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothing has written",
         "§9A.22: turning paid API fallback on needs an explicit confirmation, and is recorded durably"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-body-standing.test.ts": {
+      "names": [
+        "the light read decides every standing exactly as the full read does",
+        "the preview reads the standing alone, and production never loads the whole-payload readers",
+        "the preview's counts are the same from either read"
       ],
       "dynamic": 0
     },

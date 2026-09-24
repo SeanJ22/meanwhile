@@ -687,44 +687,80 @@ export async function POST(request: Request) {
    * request or relabelling every unrelated source as unavailable.
    */
   const topicRoute = topicFocusedQuestion(question);
-  const edgeManifest = await readReaderManifest().catch(() => null);
-  if (edgeManifest?.authorityArtifacts) {
-    const authorityEdge = await ensureReaderAuthorityEdge(edgeManifest).catch(() => null);
-    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  }
+  /*
+   * **WHICH READ A COLD REQUEST WAITS ON, NAMED.** (2026-09-24, C20.) A cold
+   * Pima topic request spent 2,525 ms in `sourcePreloads` with no breakdown,
+   * and Sean's bar is 3 s end to end on the first attempt. Every read inside
+   * the stage is timed under its own name; the source preloads run in
+   * parallel, so theirs overlap rather than sum. The map reaches the trace
+   * when the stage ends, early returns included.
+   */
+  const preloadMs: Record<string, number> = {};
+  const timed = <T,>(name: string, read: () => Promise<T>) => async (): Promise<T> => {
+    const started = Date.now();
+    try {
+      return await read();
+    } finally {
+      preloadMs[name] = Date.now() - started;
+    }
+  };
+  /*
+   * **ONLY WHAT READS THE AUTHORITY EDGE WAITS FOR IT.** (2026-09-24, C20.)
+   * The edge manifest and the authority edge used to be awaited before any
+   * source was read, and the comment-access read after all of them: three
+   * serial steps on a cold instance. The registry and the federal directory
+   * read from the authority edge once it is entered, so they wait for it;
+   * the recorded outcomes and the comment-access rules read the database and
+   * start at once, beside it.
+   */
+  const edgeReady = (async () => {
+    const manifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
+    if (manifest?.authorityArtifacts) {
+      const authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(manifest).catch(() => null))();
+      if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+    }
+    return manifest;
+  })();
+  const afterEdge = <T,>(read: () => Promise<T>) => (): Promise<T> => edgeReady.then(read);
   const essentialPreloads = [
-    () => settleRegistryAuthorityReads("REGISTRY"),
-    settleFederalDirectoryRead,
-    refreshOutcomeSnapshotFromPromoted,
-  ];
-  const deferrablePreloads = [
-    refreshFundingFromPromoted,
-    refreshStateMoneyFromPromoted,
-    refreshAzPimaFinanceFromPromoted,
-    ...[...stateVoteScopes].map((scope) => () => refreshStateVotesFromPromoted(scope)),
-    refreshFederalVotesFromPromoted,
-    refreshFederalKeyVotesFromPromoted,
-    refreshAzBallotFromPromoted,
-    refreshCandidateProfilesFromPromoted,
-    refreshCandidateCorpusFromPromoted,
-    refreshOfficeholderStatementsFromPromoted,
-    refreshExecutiveActionsFromPromoted,
-  ];
-  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
-  // The recorded outcomes are what a topic answer leads with. A cold read that
-  // failed (a transient connect timeout on the first request) is retried once
-  // rather than silently answering from agenda lines alone.
-  if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
-    await refreshOutcomeSnapshotFromPromoted().catch(() => undefined);
-  }
-  if (process.env.NODE_ENV === "production") {
+    afterEdge(timed("registry", () => settleRegistryAuthorityReads("REGISTRY"))),
+    afterEdge(timed("federalDirectory", settleFederalDirectoryRead)),
+    timed("outcomes", refreshOutcomeSnapshotFromPromoted),
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
-    await refreshCommentAccessFromPromoted().catch(() => undefined);
+    ...(process.env.NODE_ENV === "production"
+      ? [timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))]
+      : []),
+  ];
+  const deferrablePreloads = [
+    timed("funding", refreshFundingFromPromoted),
+    timed("stateMoney", refreshStateMoneyFromPromoted),
+    timed("azPimaFinance", refreshAzPimaFinanceFromPromoted),
+    ...[...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))),
+    timed("federalVotes", refreshFederalVotesFromPromoted),
+    timed("federalKeyVotes", refreshFederalKeyVotesFromPromoted),
+    timed("azBallot", refreshAzBallotFromPromoted),
+    timed("candidateProfiles", refreshCandidateProfilesFromPromoted),
+    timed("candidateCorpus", refreshCandidateCorpusFromPromoted),
+    timed("officeholderStatements", refreshOfficeholderStatementsFromPromoted),
+    timed("executiveActions", refreshExecutiveActionsFromPromoted),
+  ].map(afterEdge);
+  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
+  // The recorded outcomes are what a topic answer leads with. A cold read that
+  // failed (a transient connect timeout on the first request) is retried once
+  // rather than silently answering from agenda lines alone. A retry that
+  // succeeds is a second-attempt success, and the trace names it (C20).
+  if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
+    await timed("outcomesRetry", () => refreshOutcomeSnapshotFromPromoted().catch(() => undefined))();
+    if (["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
+      trace.preloadRetries = [...(trace.preloadRetries ?? []), "outcomes"];
+    }
   }
+  const edgeManifest = await edgeReady;
 
   lap("sourcePreloads");
+  trace.preloads = preloadMs;
   let snapshot: MeetingsSnapshot | null = null;
   let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" =
     "STORE_UNREACHABLE";

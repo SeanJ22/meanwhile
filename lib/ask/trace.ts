@@ -132,6 +132,20 @@ export interface AskTrace {
    */
   stages?: Record<string, number>;
   /**
+   * Wall-clock milliseconds per read inside the `sourcePreloads` stage
+   * (2026-09-24, C20: a cold request spent 2.5 s there with no breakdown): the
+   * edge manifest and authority edge, each named source preload (these run in
+   * parallel, so they overlap rather than sum), any retry, and the
+   * comment-access read. Present from the moment the preloads settle, early
+   * returns included. Facts about our machinery, never about a reader.
+   */
+  preloads?: Record<string, number>;
+  /**
+   * Source reads that succeeded only on a second attempt. Sean (2026-09-24):
+   * a second-attempt success is not a win, so it is named, never hidden.
+   */
+  preloadRetries?: string[];
+  /**
    * Which promoted sources this request loaded (2026-09-24): ESSENTIAL (the
    * registry, the federal directory and the recorded outcomes) on a topic
    * route, ALL otherwise. A fact about our machinery, never about a reader.

@@ -1,5 +1,7 @@
 import { execFile } from "node:child_process";
 
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+
 /** One source gets a full acquisition window without serially taxing siblings. */
 export const ROUTINE_CHILD_TIMEOUT_MS = 30 * 60_000;
 /** `execFile` applies this cap independently to stdout and stderr. */
@@ -169,14 +171,14 @@ export async function runBoundedChildPass(
         stdout: "",
         stderr: "",
         termination: "SPAWN_FAILED",
-        errorMessage: error instanceof Error ? error.message : String(error),
+        errorMessage: sanitizedErrorDiagnostic(error),
       };
     }
     let settlementErrorMessage: string | null = null;
     try {
       await options.onSettled?.(result, index);
     } catch (error) {
-      settlementErrorMessage = error instanceof Error ? error.message : String(error);
+      settlementErrorMessage = sanitizedErrorDiagnostic(error);
     }
     results[index] = {
       ...result,

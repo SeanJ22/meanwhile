@@ -1,5 +1,5 @@
 {
-  "exactHead": "dec3fa37c21bea69d59acfa3e3bee172238dfe0e",
+  "exactHead": "ae04884b21e9e5cd88a4fc0058daf6ffd01aa810",
   "executionLevel": "REAL_ROUTE_HANDLER",
   "modelDisabled": true,
   "sourceHashes": [
@@ -133,7 +133,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "1f3b90f9853fdeba3fc9708571bc50bb5794f4d2d05f92f91084f6ab2cafd12e",
+      "payloadSha256": "180c35c2d9fc91a61764ef48a525123533546947686746ace481d729af48e1ef",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -225,7 +225,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e07552ce30c0d19d11d12a65f7e5def6fe1ece8225b9b6a6e7bdd666bb13aff4",
+      "payloadSha256": "8fa39254e790e1f1bdc22feeb8365eff4bf5604a1e66771ea101811afcd1c1a0",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -407,11 +407,11 @@
       "gaps": [
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "The link we hold for that meeting is Pima Community College Governing Board's agenda portal rather than the agenda itself."
         },
         {
           "whose": "OURS",
-          "statement": "We hold the agenda document for that meeting but could not extract its items."
+          "statement": "The link we hold for that meeting is Pima Community College Governing Board's agenda portal rather than the agenda itself."
         },
         {
           "whose": "OURS",
@@ -440,12 +440,12 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "51bdf1f3050ccb3dffc7968847be818f2013ad0f36f4498198151aed1a63f551",
+      "payloadSha256": "0c6788161f3b497767514fd72007762b1983ef9d72f81a79d84daccd3c519f2d",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
-      "actualRecordCount": 10,
-      "traceRecordCount": 10,
+      "actualRecordCount": 12,
+      "traceRecordCount": 12,
       "status": "PROVEN"
     },
     {
@@ -597,7 +597,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "3711b71f8adb2062201d1e0ee96a5a795489ae0ba92ab0bf1ca604cbb5181039",
+      "payloadSha256": "49c892c9c0d90746282d58ba344fed724260ca872217d509321f988ab4b7017a",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -782,7 +782,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "f66bc811631d4090c5f569687eaa2c9ae8015d3a743fb1f7caaa3ada6f311755",
+      "payloadSha256": "c270dfd08f9a315e2878965e5ab682674f7ff5d7afea6dc4a3ded2344d77e0b3",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -967,7 +967,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "e92a01c492e42e43407f16a20a2e985abfd76dfa09a51e0beddfef8e43fdf3b4",
+      "payloadSha256": "be3b0f53d729d34579f11afa1618a46630edeb4141d7e7699c4376ff4014cf49",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1152,7 +1152,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "06c79d15d4b748b3947562f069372b0ecf80790ee13ee9f7ba97c9ef8da6b09d",
+      "payloadSha256": "9ee4f9cec15675bff3ab6a5f6afe5ecfff48b963016423def45ec68b95f9eee7",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1365,7 +1365,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "00693cb4011a2a3082c97b065d42d3a7b8ce4c15fe9216de7906d9502266d215",
+      "payloadSha256": "d6fb5a52a66eccd9d796f68d233b4c5c7918009ebd853c14bf70ba987baedfc8",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1578,7 +1578,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "8137e75f635b1cc45324312d4339418f83a4ca1030bd10930726cfd68c312e03",
+      "payloadSha256": "d34045630a908c7e27f1be7aef0e56684b828e66ca5446a607f1e0e75dd8e455",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1724,7 +1724,7 @@
         "verifiedContacts": 8,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "658d19ac42d61939c2c1fb1488d9a29a57f356c7ec0279e4a3325d07f65967e3",
+      "payloadSha256": "7d4075c5400a8eb34af2a26a0bcffabb2dc1358653678c70869241b2b87a9137",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -1937,7 +1937,7 @@
         "verifiedContacts": 0,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "5c585acbea5073da5a143ceb942d2680b8d1c0f6cb6fd64b9e2facef2bea4481",
+      "payloadSha256": "497bc4d7c24146001551eeb5d39cb4309d7bacd647bc39daab3c2da3c253316b",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2114,7 +2114,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "d50ebb7397128b212cdf5a6fe3cf8841124cc6dae5ecd2888a870245420a2e9a",
+      "payloadSha256": "6938c52852047d3cbbf1d37977d6520c0e206efffee8638e6070a7b6c4bfe5e8",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2267,7 +2267,7 @@
         "verifiedContacts": 5,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "147c4c0f95df75a298ac3fb5f626784abaa214edb2936f27d2fef5a72bff2a04",
+      "payloadSha256": "e7b12107dbcac6b3582ec4d575831f0d058adc4ccb48f129b078135230b437b8",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2476,7 +2476,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "a4d6a0e637f785ccbb748a6be875f4625fda0286a33ccd37effeac0734a00af2",
+      "payloadSha256": "ff3fefff71b4cdbb08231b61407078ce7b9f3943baae508e881dd22b099e4391",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2685,7 +2685,7 @@
         "verifiedContacts": 6,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "8df452cda1ec849d504b76a1fb12e39329ed12b2b4f21752b3f627c4352955b9",
+      "payloadSha256": "a6e4f9224ffe062817f34fba1fcd2872ca2a68e87439eb57955454255f40dbf9",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -2893,7 +2893,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0dd209bd855d8c46deaa81906c4b90be65e8c2c1ffe2684a469532af56374ac4",
+      "payloadSha256": "a9d55038c3e96bde8cdbaca685e9a837b6ad8c81b256f6c1cf36e737815242e9",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3074,7 +3074,7 @@
         "verifiedContacts": 3,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "0f13e559d0db6cbd8ac2c1ffe9db7417b8d5f4a31b6f3d9a1441194d03d0896b",
+      "payloadSha256": "839c47b6bed4278375edcad9d5f4f2a198ab97d1ce2a6bacbdd7b4d3e550b7cf",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3255,7 +3255,7 @@
         "verifiedContacts": 10,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "629be471c416c55743ee068c9dcb4ff0c8ce6162d2ce2cd1c3636570c1f79072",
+      "payloadSha256": "f7338096884c18b86a5da026f693ca7cb5f3e0b07ed9101673f790479ca711e0",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3412,7 +3412,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "80e029b13a45971342b6e5ae1d7a27b07a90af48d7ef1f283d91f7023f4bdac1",
+      "payloadSha256": "b4a40109ce70050c85a35ea9d18e23dc2d62ae79f48d14863ffc83ed3fb3306e",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,
@@ -3565,7 +3565,7 @@
         "verifiedContacts": 7,
         "recordsExcludedOffSubject": 0
       },
-      "payloadSha256": "90b75cb9c32511d9a39cd4f374c8028d500a265d0eb5e863ef56508f0d266891",
+      "payloadSha256": "55798f14169ab0aa62eadf87bf978032bbdd25ffb01b634d7a889916148ddcb1",
       "countAgrees": true,
       "synthesisReceivesEveryRecord": true,
       "modelAnswer": null,

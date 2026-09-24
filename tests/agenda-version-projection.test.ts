@@ -82,35 +82,45 @@ function render(documents: readonly AgendaDocument[], publication: ReturnType<ty
   }));
 }
 
-test("Tucson Unified 499: 88 identical re-fetches plus the board's site root are ONE version, never a revision", () => {
+test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version", () => {
+  /*
+   * Corrected 2026-09-23. The 88 re-reads are Diligent's skip links alone:
+   * the extractor removed the ASP.NET server form holding the rest of the
+   * page, so what production stored is the publisher's portal page, not the
+   * sitting's agenda, and 499 holds only publication-index pages. What this
+   * test protects is unchanged: 88 identical re-reads are ONE content, and
+   * nothing here is a version or a revision.
+   */
   const corpus = tusd499Corpus();
   const held = corpus.filter((document) => document.meetingId === "diligent:tusd1:499");
   assert.equal(held.length, 89);
   assert.equal(new Set(held.map((document) => document.contentHash)).size, 89, "every fetch hashed differently");
 
   const shown = readerAgendaDocuments(held, { documentsAcrossCorpus: corpus, meetingsAcrossCorpus: meetings });
-  assert.equal(shown.documents.length, 1);
-  assert.equal(shown.documents[0]!.documentUrl, OWN_PAGE);
-  assert.equal(shown.documents[0]!.retrievedAt, held.map((document) => document.retrievedAt).sort().at(-1), "the newest read speaks for the version");
-  assert.equal(shown.sittingSpecific, true);
+  assert.equal(shown.sittingSpecific, false, "the portal page is not the sitting's own document");
+  assert.deepEqual(shown.documents.map((document) => document.documentUrl), [OWN_PAGE, SITE_ROOT]);
+  assert.equal(shown.documents[0]!.retrievedAt, held.map((document) => document.retrievedAt).sort().at(-1), "the newest read speaks for its content");
   assert.equal(shown.heldRows, 89);
   assert.equal(shown.identicalContentRows, 87);
-  assert.equal(shown.publicationIndexRowsSetAside, 1);
+  assert.equal(shown.publicationIndexRowsSetAside, 0, "nothing is set aside when index pages are all it holds");
   assert.equal(shown.heldRows, shown.documents.length + shown.identicalContentRows + shown.publicationIndexRowsSetAside);
 
   const publication = classifyAgendaPublication({ meetingId: "diligent:tusd1:499", bodyName: "Governing Board",
     documentsForMeeting: held, documentsAcrossCorpus: corpus, meetingsAcrossCorpus: meetings, now: Date.parse("2026-09-22T18:00:00.000Z") });
+  assert.equal(publication.acquisition, "ACQUIRED_IS_PUBLICATION_INDEX");
+  assert.equal(publication.gap?.statement, "The link we hold for that meeting is Governing Board's agenda portal rather than the agenda itself.");
   assert.equal(publication.revised, false);
   assert.deepEqual(publication.supersededDocumentUrls, []);
   assert.equal(publication.currentDocumentUrl, OWN_PAGE);
-  assert.notEqual(publication.acquisition, "ACQUIRED_IS_PUBLICATION_INDEX");
 
   const markup = render(shown.documents, publication);
+  assert.ok(markup.includes('data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX"'), markup);
   assert.ok(!markup.includes("versions on file"), markup);
   assert.ok(!markup.includes("revised"), markup);
   assert.ok(!markup.includes("data-agenda-versions"), markup);
   assert.ok(markup.includes(`href="${OWN_PAGE.replaceAll("&", "&amp;")}"`));
-  assert.ok(!markup.includes(SITE_ROOT), "the site root is never presented as a version of this sitting's agenda");
+  assert.ok(markup.includes("another listing page"), "the site root is linked as the listing page it is, never as a version");
+  assert.ok(!markup.includes("Skip Navigation"), "the skip links are never shown as the sitting's document text");
 });
 
 test("a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording", () => {

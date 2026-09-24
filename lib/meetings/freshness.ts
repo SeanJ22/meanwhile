@@ -8,6 +8,8 @@
  * basemap, the vector tiles) — the freshness line is what keeps it loud.
  */
 
+import type { CarriedForward } from "../sources/types.ts";
+
 export interface SnapshotFailureNote {
   source: string;
   /** Divisions whose calendars this source serves — the bodies now dark. */
@@ -136,4 +138,82 @@ export function freshnessDisclosure(status: Pick<SnapshotStatus, "carried">): Fr
   return {
     carried: status.carried && status.carried.count > 0 ? carriedListingsDisclosure(status.carried) : null,
   };
+}
+
+/*
+ * THE CARRIED ROW'S OWN REASON, AS ONE CONTRACT (2026-09-23).
+ *
+ * A carried row says "Last reached <when>" on the venue card and in the popup,
+ * and both surfaces used to follow it with one fixed sentence: our latest check
+ * could not reach this calendar. That was true of the only writer there was
+ * when it was written (hotfix-0817, a source that refused the run). The
+ * permanent data plane (2026-09-10) added a second writer and a second reason:
+ * a partition whose calendar ANSWERED, with authenticated and hashed bytes, but
+ * whose answer no longer held a listing the last one did, is retained as
+ * `UNEXPLAINED_DISAPPEARANCE` (`reconcileSuccessfulMeetingPartition` in
+ * `scripts/ingest.ts`). On 2026-09-23 that was every carried row production
+ * held, 12 of 12, and each told the reader that a calendar we had just read
+ * was one we could not reach.
+ *
+ * So the clause is chosen here, once, from the reason recorded at write time,
+ * and both surfaces render what this returns. Three reasons, three facts:
+ *
+ * - `SOURCE_UNAVAILABLE`: the calendar refused or failed the run.
+ * - `PARTIAL_SCOPE_UNAVAILABLE`: part of it answered and part of it did not.
+ * - `UNEXPLAINED_DISAPPEARANCE`: it answered, and the answer did not hold this
+ *   LISTING. The clause is about our check and about the listing, and neither
+ *   word is an accident. A response is an open fact set, and "unexplained" is
+ *   the writer saying it does not know why. Some of these listings left the
+ *   body's own list (Tucson Unified's 16 September audit committee, absent
+ *   since 8 September). Others aged off a feed that lists only what is
+ *   upcoming: Rockaway Township's 22 September council sitting left the
+ *   township's upcoming-only feed the morning after it met, and the SAME check
+ *   read the same sitting fresh from the township's agenda archive, a second
+ *   listing that renders beside the carried one (a date without a time, so
+ *   the Reader's same-instant merge does not join them). "This calendar no
+ *   longer lists this sitting" would be false there, a claim about a
+ *   government; so would "our check didn't find this meeting". What is true of
+ *   every such row is that this listing was not in the answer.
+ *
+ * A missing or unrecognised reason renders NO clause: the date stands alone,
+ * and it is true on its own. Marks older than the discriminator come from
+ * `lib/meetings/carry-forward.ts`, which records no reason, and its three
+ * conditions are not one fact. A whole-source failure and an unreachable
+ * division are refusals, but a refused archive feed (A-004) is a partial read
+ * of a calendar whose upcoming feed answered. Nothing on such a row says which,
+ * so nothing is chosen for it: the `calendarLabel` rule in `source-labels.ts`,
+ * where an unknown gets null and never a plausible phrase.
+ *
+ * `CarriedForward`'s doc in `lib/sources/types.ts` predates the second writer
+ * and speaks of every carried row as a refusal; read this block for what each
+ * value means to a reader. The union itself is derived from that type, never
+ * restated, so this contract cannot drift from the writers.
+ */
+
+/** The reasons a writer records, read off `CarriedForward` rather than retyped. */
+export type CarriedReason = NonNullable<CarriedForward["reason"]>;
+
+/** The clause each recorded carry reason earns. Plain words; never the enum value. */
+export const CARRIED_ROW_CLAUSE: Readonly<Record<CarriedReason, string>> = {
+  SOURCE_UNAVAILABLE: "our latest check couldn't reach this calendar",
+  PARTIAL_SCOPE_UNAVAILABLE: "our latest check couldn't read all of this calendar",
+  UNEXPLAINED_DISAPPEARANCE: "our latest check of this calendar didn't find this listing",
+};
+
+/**
+ * What a carried row says after "Last reached <when>", or null.
+ *
+ * Null for a row that is not carried, for a mark older than the discriminator,
+ * and for any value this contract does not name, including one that happens to
+ * share a name with an object property. The argument is typed loosely because
+ * it arrives over the wire, where nothing guarantees the union.
+ */
+export function carriedRowClause(
+  carried: { readonly reason?: unknown } | null | undefined,
+): string | null {
+  const reason = carried?.reason;
+  if (typeof reason !== "string") return null;
+  return Object.prototype.hasOwnProperty.call(CARRIED_ROW_CLAUSE, reason)
+    ? CARRIED_ROW_CLAUSE[reason as CarriedReason]
+    : null;
 }

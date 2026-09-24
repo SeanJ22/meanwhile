@@ -76,7 +76,9 @@ export async function preparePublishedMeetingSnapshot(
   const scopes = MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope);
   let promotions;
   try {
-    promotions = await store.readPromotions(MEETINGS_RECORD_CLASS, scopes);
+    // Every pass asks only which versions are current: identity, not the
+    // partitions' payloads (7.8 MB per pass on 2026-09-23).
+    promotions = await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes);
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: null };
   }
@@ -87,7 +89,9 @@ export async function preparePublishedMeetingSnapshot(
   });
   const currentFingerprint = couplingFingerprint(currentCoupling);
 
-  const prepared = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
+  // The serving copy's coupling, sequence and generation time: never its
+  // composed payload (7.5 MB), which this decision does not read.
+  const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
   if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
     return { status: "CURRENT", sequence: prepared.sequence, coupledPartitions: currentCoupling.length, generatedAt: prepared.generatedAt };
   }

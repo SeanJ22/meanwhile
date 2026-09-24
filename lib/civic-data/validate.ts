@@ -8,13 +8,13 @@ import {
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { occurrenceStampFromInstant, supersedesSeriesRecord } from "../sources/event-identity.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import type {
   CandidateDecision,
   CandidateState,
   CandidateVersionRecord,
   DependentCheck,
-  MeetingWindowRemovalEvidence,
   RoutineCandidate,
   RoutineChangeSet,
   RoutineRemovalEvidence,
@@ -135,23 +135,89 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
       `${missing.length}/${removed.length} removal(s) lack exact competent evidence: ${missing.slice(0, 3).map(({ key }) => key).join(", ")}.`,
     );
   }
+
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
-  const validMeetingEvidence = new Map<string, MeetingWindowRemovalEvidence>();
+  const validMeetingEvidence = new Map<string, (typeof evidence)[number]>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  let currentMembers: ReadonlyMap<string, unknown> | null = null;
+  const currentMember = (key: string): unknown => {
+    currentMembers ??= new Map(
+      civicRecordsFor(candidate.recordClass, candidate.readModel).map((member) => [member.key, member.record]),
+    );
+    return currentMembers.get(key);
+  };
   for (const delta of removed.filter(({ key }) => key.startsWith("meeting:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
-      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven outside its explicit registered serving window.`);
-    }
     const before = object(delta.before);
     const meetingId = typeof before?.id === "string" ? before.id : null;
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
+    if (row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY") {
+      /*
+       * A series record replaced by the occurrence that holds its fact
+       * (2026-09-23). Nothing in the evidence row is taken on trust: the
+       * successor is looked up among THIS candidate's own members, must be a
+       * fresh row rather than a carried one, and must pass the same test the
+       * reconciliation applied, re-run here on the stored records.
+       */
+      const successor = typeof row.successorKey === "string" ? object(currentMember(row.successorKey)) : null;
+      const successorId = typeof successor?.id === "string" ? successor.id : null;
+      const successorStartsAt = typeof successor?.startsAt === "string" ? successor.startsAt : null;
+      const bodyOf = (record: Record<string, unknown> | null) =>
+        typeof record?.bodyId === "string" ? record.bodyId : null;
+      if (
+        row.parentMeetingKey !== undefined ||
+        !meetingId || delta.key !== `meeting:${meetingId}` ||
+        !startsAt || startsAt !== row.priorStartsAt ||
+        !successorId || !successorStartsAt || row.successorKey !== `meeting:${successorId}` ||
+        (successor?.carried !== undefined && successor?.carried !== null) ||
+        !supersedesSeriesRecord(
+          { id: meetingId, bodyId: bodyOf(before), startsAt },
+          { id: successorId, bodyId: bodyOf(successor), startsAt: successorStartsAt },
+        )
+      ) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven replaced by a fresh occurrence of the same series.`);
+      }
+      validMeetingEvidence.set(delta.key, row);
+      continue;
+    }
+    if (row.code === "EXCLUDED_BY_PUBLISHER") {
+      /*
+       * A sitting the publisher struck out of its series (2026-09-23). The
+       * statement must be one THIS read recorded, as a held fact of this
+       * candidate, for this record's own body; the removed record must be
+       * that very sitting; and the candidate must not publish it anyway.
+       */
+      const stated = (candidate.excludedFacts ?? [])
+        .filter((fact) => fact.code === "MEETING_EXCLUDED_BY_PUBLISHER")
+        .map((fact) => object(fact.record))
+        .find((record) => record?.seriesId === row.seriesId && record?.slot === row.slot);
+      const statedMeetingId = typeof stated?.meetingId === "string" ? stated.meetingId : null;
+      const thatSitting =
+        meetingId !== null && startsAt !== null && (
+          meetingId === statedMeetingId ||
+          (meetingId === row.seriesId && occurrenceStampFromInstant(startsAt) === row.slot)
+        );
+      if (
+        row.parentMeetingKey !== undefined ||
+        !meetingId || delta.key !== `meeting:${meetingId}` ||
+        !startsAt || startsAt !== row.priorStartsAt ||
+        !stated || !statedMeetingId || stated.bodyId !== (typeof before?.bodyId === "string" ? before.bodyId : null) ||
+        !thatSitting ||
+        currentMember(`meeting:${statedMeetingId}`) !== undefined
+      ) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven struck out by its publisher in this read.`);
+      }
+      validMeetingEvidence.set(delta.key, row);
+      continue;
+    }
+    if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} names no removal authority this validator recognizes.`);
+    }
     const lower = Date.parse(row.lowerBound);
     const upper = Date.parse(row.upperBound);
     const prior = Date.parse(row.priorStartsAt);
     if (
-      row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW" ||
       row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
       registeredWindow === null ||
       row.lowerBound !== registeredWindow.lowerBound ||
@@ -169,21 +235,23 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") {
-      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
-    }
     const before = object(delta.before);
     const documentId = typeof before?.id === "string" ? before.id : null;
     const meetingId = typeof before?.meetingId === "string" ? before.meetingId : null;
     const parentKey = meetingId ? `meeting:${meetingId}` : null;
     const parent = parentKey ? validMeetingEvidence.get(parentKey) : null;
-    if (
-      row.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW" ||
-      row.windowContract !== MEETING_READER_SERVING_WINDOW_CONTRACT ||
-      !documentId || delta.key !== `agenda-document:${documentId}` ||
-      !parentKey || row.parentMeetingKey !== parentKey || !removedKeys.has(parentKey) || !parent ||
-      row.lowerBound !== parent.lowerBound || row.upperBound !== parent.upperBound || row.priorStartsAt !== parent.priorStartsAt
-    ) {
+    const inherits =
+      !!documentId && delta.key === `agenda-document:${documentId}` &&
+      !!parentKey && row.parentMeetingKey === parentKey && removedKeys.has(parentKey) && !!parent &&
+      row.code === parent.code && row.priorStartsAt === parent.priorStartsAt &&
+      (row.code === "OUTSIDE_REGISTERED_SERVING_WINDOW" && parent.code === "OUTSIDE_REGISTERED_SERVING_WINDOW"
+        ? row.windowContract === MEETING_READER_SERVING_WINDOW_CONTRACT &&
+          row.lowerBound === parent.lowerBound && row.upperBound === parent.upperBound
+        : row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY" && parent.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY"
+          ? row.successorKey === parent.successorKey
+          : row.code === "EXCLUDED_BY_PUBLISHER" && parent.code === "EXCLUDED_BY_PUBLISHER" &&
+            row.seriesId === parent.seriesId && row.slot === parent.slot);
+    if (!inherits) {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
   }
@@ -197,10 +265,12 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
 
 /**
  * A registry member may leave an open fact set only as a body minted on a
- * Census "no district here" placeholder (Sean, 2026-09-23): the evidence names
- * the body's exact division, the removed body sat on it, and the candidate
- * still holds that division, a placeholder by its own Census code
- * (lib/registry/census-placeholders.ts). Every other removal stays refused.
+ * Census "no district here" placeholder (Sean, 2026-09-23). Nothing in the
+ * evidence row is taken on trust; every clause is re-derived from this
+ * candidate: the removed record is exactly `body:<its id>`, it sat on exactly
+ * the named division, and the candidate still holds that division, a
+ * placeholder by its own Census code (lib/registry/census-placeholders.ts).
+ * Every other registry removal stays refused.
  */
 function registryPlaceholderRemovalCheck(
   candidate: RoutineCandidate,

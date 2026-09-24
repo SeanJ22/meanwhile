@@ -47,6 +47,7 @@
  */
 
 import { extracted, zeroRows, type ExtractResult } from "../extract/types.ts";
+import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "../civic-data/morris-filing-documents.ts";
 
 /** One candidate, as the filing itself states them. */
 export interface FiledCandidate {
@@ -769,13 +770,10 @@ export function morrisCurrentFilingDocumentSet(
   // `2026-general-candidates.pdf`, and requiring `-<stamp>` froze this horizon
   // on the 09-18 13:13Z list for six days (PUBLISHER_DOCUMENT_INVALID, 136
   // refusals) while the clerk's own page linked the current one.
-  const general = currentOfClass(eligible.filter((url) =>
-    /(?:^|\/)2026-general(?:-election)?-candidates(?:-(?![^/]*school)[^/]*)?\.pdf(?:$|[?#])/i.test(url) &&
-    !/general-school-candidates/i.test(url),
-  ));
-  const school = currentOfClass(eligible.filter((url) =>
-    /(?:^|\/)2026-general-school-candidates(?:-[^/]*)?\.pdf(?:$|[?#])/i.test(url),
-  ));
+  // One naming rule for this selector and the candidate validator (RULING 103):
+  // lib/civic-data/morris-filing-documents.ts.
+  const general = currentOfClass(eligible.filter(isMorrisGeneralCandidatesDocument));
+  const school = currentOfClass(eligible.filter(isMorrisSchoolCandidatesDocument));
   if (general.length !== 1 || school.length !== 1) {
     throw new Error(
       "MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE: " +

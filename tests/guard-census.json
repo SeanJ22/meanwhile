@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 764,
-    "named": 7508,
+    "named": 7509,
     "dynamic": 30
   },
   "files": {
@@ -7143,6 +7143,7 @@
     "tests/permanent-civic-data-plane-pdc8.test.ts": {
       "names": [
         "PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG",
+        "PDC-8 NJ filing: the clerk's unstamped 2026-09-18 revision is a current document set, to the validator as to the selector",
         "PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG",
         "PDC-8 dotgov: a later registry commit whose hash sorts lower still promotes; the hash is an identity, not an order",
         "PDC-8 meetings: changed rows promote with exact added/changed/removed/held evidence; source-auth failure holds LKG",

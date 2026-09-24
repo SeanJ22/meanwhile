@@ -8,7 +8,12 @@ import {
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
-import { occurrenceStampFromInstant, supersedesSeriesRecord } from "../sources/event-identity.ts";
+import {
+  occurrenceStampFromInstant,
+  reissuesSitting,
+  supersedesSeriesRecord,
+  type ListedSittingFacts,
+} from "../sources/event-identity.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -149,29 +154,43 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate): ValidationC
     const startsAt = typeof before?.startsAt === "string" ? before.startsAt : null;
     if (row.code === "SUPERSEDED_BY_OCCURRENCE_IDENTITY") {
       /*
-       * A series record replaced by the occurrence that holds its fact
-       * (2026-09-23). Nothing in the evidence row is taken on trust: the
-       * successor is looked up among THIS candidate's own members, must be a
-       * fresh row rather than a carried one, and must pass the same test the
-       * reconciliation applied, re-run here on the stored records.
+       * A prior record replaced by the fresh record that now holds its
+       * sitting: an occurrence of its recurring series (2026-09-23,
+       * `supersedesSeriesRecord`), or the same sitting its publisher re-issued
+       * under a new id (2026-09-24, `reissuesSitting`). Nothing in the evidence
+       * row is taken on trust: the successor is looked up among THIS
+       * candidate's own members, must be a fresh row rather than a carried
+       * one, and must pass the same tests the reconciliation applied, re-run
+       * here on the stored records.
        */
       const successor = typeof row.successorKey === "string" ? object(currentMember(row.successorKey)) : null;
       const successorId = typeof successor?.id === "string" ? successor.id : null;
       const successorStartsAt = typeof successor?.startsAt === "string" ? successor.startsAt : null;
-      const bodyOf = (record: Record<string, unknown> | null) =>
-        typeof record?.bodyId === "string" ? record.bodyId : null;
+      const textOf = (record: Record<string, unknown> | null, field: string): string | null => {
+        const value = record?.[field];
+        return typeof value === "string" ? value : null;
+      };
+      const sittingOf = (record: Record<string, unknown> | null, id: string, at: string): ListedSittingFacts => ({
+        id,
+        bodyId: textOf(record, "bodyId"),
+        bodyName: textOf(record, "bodyName"),
+        title: textOf(record, "title"),
+        startsAt: at,
+        startPrecision: textOf(record, "startPrecision"),
+        timeZone: textOf(record, "timeZone"),
+      });
       if (
         row.parentMeetingKey !== undefined ||
         !meetingId || delta.key !== `meeting:${meetingId}` ||
         !startsAt || startsAt !== row.priorStartsAt ||
         !successorId || !successorStartsAt || row.successorKey !== `meeting:${successorId}` ||
         (successor?.carried !== undefined && successor?.carried !== null) ||
-        !supersedesSeriesRecord(
-          { id: meetingId, bodyId: bodyOf(before), startsAt },
-          { id: successorId, bodyId: bodyOf(successor), startsAt: successorStartsAt },
+        !(
+          supersedesSeriesRecord(sittingOf(before, meetingId, startsAt), sittingOf(successor, successorId, successorStartsAt)) ||
+          reissuesSitting(sittingOf(before, meetingId, startsAt), sittingOf(successor, successorId, successorStartsAt))
         )
       ) {
-        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven replaced by a fresh occurrence of the same series.`);
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven replaced by a fresh record of the same sitting.`);
       }
       validMeetingEvidence.set(delta.key, row);
       continue;

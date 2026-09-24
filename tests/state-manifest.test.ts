@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve, sep } from "node:path";
@@ -143,6 +144,74 @@ test("an authority-cutover label cannot hide a present file or drift from its fr
   mkdirSync(dirname(join(presentRoot, LAW_TITLES_PATH)), { recursive: true });
   writeFileSync(join(presentRoot, LAW_TITLES_PATH), "{}\n");
   assert.throws(() => loadManifestContext(presentRoot), /retired tracked authority still exists/);
+});
+
+const ZIP_INDEX_PATH = "data/derived/zip-division-ids.json";
+const ZIP_INDEX_BASELINE = "tests/fixtures/zip-division-ids-three-state.json";
+const ZIP_INDEX_BYTES = '{"zips":{"07866":["ocd-division/country:us/state:nj/county:morris"]}}\n';
+const ZIP_INDEX_SHA256 = createHash("sha256").update(ZIP_INDEX_BYTES).digest("hex");
+
+/** The three-state ZIP index superseded by the national shards (2026-09-23), in miniature. */
+function installSupersededZipIndex(root: string, overrides: Record<string, unknown> = {}, baselineBytes = ZIP_INDEX_BYTES): void {
+  const input = JSON.parse(readFileSync(join(root, INPUT_PATH), "utf8"));
+  input.files.push({ path: ZIP_INDEX_PATH, basePath: ZIP_INDEX_PATH, sha256: ZIP_INDEX_SHA256, source: "SESSION_BASE" });
+  input.supersededHoldings = [{
+    formerPath: ZIP_INDEX_PATH,
+    frozenSha256: ZIP_INDEX_SHA256,
+    disposition: "SUPERSEDED_BY_SUCCESSOR_HOLDING",
+    successorDirectory: "data/derived/zip-divisions",
+    baselinePath: ZIP_INDEX_BASELINE,
+    reason: "The same fact for every ZIP code, one shard per ZIP prefix.",
+    ...overrides,
+  }];
+  writeFileSync(join(root, INPUT_PATH), JSON.stringify(input));
+  const plan = JSON.parse(readFileSync(join(root, PLAN_PATH), "utf8"));
+  plan.exemptions.push({ oldPath: ZIP_INDEX_PATH, newPath: ZIP_INDEX_PATH, disposition: "EXEMPT", sha256: ZIP_INDEX_SHA256, referenceCount: 0, references: [] });
+  writeFileSync(join(root, PLAN_PATH), JSON.stringify(plan));
+  mkdirSync(dirname(join(root, ZIP_INDEX_BASELINE)), { recursive: true });
+  writeFileSync(join(root, ZIP_INDEX_BASELINE), baselineBytes);
+  const shard = "data/derived/zip-divisions/07.json";
+  fixtureConsumers(root, shard);
+  mkdirSync(dirname(join(root, shard)), { recursive: true });
+  writeFileSync(join(root, shard), JSON.stringify({ formatVersion: 1, divisions: ["ocd-division/country:us/state:nj/county:morris"], zips: { "07866": [0] }, partial: {}, zipSamples: { "07866": 1 } }));
+}
+
+test("a superseded holding leaves current holdings while its frozen bytes stay at a named test baseline", (t) => {
+  const root = fixture(t);
+  installSupersededZipIndex(root);
+  const context = loadManifestContext(root);
+  assert.equal(canonicalDatasetPaths(root).includes(ZIP_INDEX_PATH), false);
+  assert.ok(canonicalDatasetPaths(root).includes("data/derived/zip-divisions/07.json"), "the successor is a current holding");
+  assert.equal(context.supersededHoldings.length, 1);
+  const az = expectedManifests(context).get("docs/states/az.md")!;
+  assert.match(az, /Tracked holdings superseded by a successor holding/);
+  assert.match(az, /SUPERSEDED_BY_SUCCESSOR_HOLDING/);
+  assert.ok(az.includes(`[${ZIP_INDEX_BASELINE}](../../${ZIP_INDEX_BASELINE})`));
+  assert.ok(!az.includes(`[${ZIP_INDEX_PATH}](../../${ZIP_INDEX_PATH})`), "the former path is never linked as a current holding");
+});
+
+test("a superseded label cannot hide a present file, drift from its frozen hash, or lose its baseline or successor", (t) => {
+  const wrongHash = fixture(t);
+  installSupersededZipIndex(wrongHash, { frozenSha256: "0".repeat(64) });
+  assert.throws(() => loadManifestContext(wrongHash), /does not bind the exact frozen manifest input/);
+
+  const present = fixture(t);
+  installSupersededZipIndex(present);
+  mkdirSync(dirname(join(present, ZIP_INDEX_PATH)), { recursive: true });
+  writeFileSync(join(present, ZIP_INDEX_PATH), ZIP_INDEX_BYTES);
+  assert.throws(() => loadManifestContext(present), /superseded tracked holding still exists/);
+
+  const driftedBaseline = fixture(t);
+  installSupersededZipIndex(driftedBaseline, {}, '{"zips":{}}\n');
+  assert.throws(() => loadManifestContext(driftedBaseline), /exact frozen bytes are not kept at a test baseline/);
+
+  const baselineAsHolding = fixture(t);
+  installSupersededZipIndex(baselineAsHolding, { baselinePath: "data/derived/zip-index-baseline.json" });
+  assert.throws(() => loadManifestContext(baselineAsHolding), /exact frozen bytes are not kept at a test baseline/);
+
+  const noSuccessor = fixture(t);
+  installSupersededZipIndex(noSuccessor, { successorDirectory: "data/derived/nowhere" });
+  assert.throws(() => loadManifestContext(noSuccessor), /holds no dataset/);
 });
 
 test("every migrated contract bootstrap fixture rendered by a state manifest is labeled evidence, never live Reader authority", () => {

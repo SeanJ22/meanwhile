@@ -13,6 +13,7 @@ import { extractPdfText } from "../../meetings/agenda-documents.ts";
 import {
   isPlacelessLocation,
   resolveVenue,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetBytes } from "../http.ts";
@@ -74,9 +75,13 @@ import type {
  * - **Time and place come from a sitting-specific statement or not at all.**
  *   The event page's own calendar link, the committee schedule's row, or the
  *   first-party agenda's header (`August 10, 2026 at 5:00 p.m. … VIRTUAL
- *   MEETING*`). A sitting none of them places is DROPPED as `unknownVenue` and
- *   counted — a standing "board meetings are held at the District Office" is a
- *   habit, not a statement about that sitting.
+ *   MEETING*`). A sitting none of them places is never placed by habit — a
+ *   standing "board meetings are held at the District Office" is a habit, not
+ *   a statement about that sitting — and never suppressed either (the
+ *   venue-gap class, 2026-09-23): it is published with no pin and counted as
+ *   `unknownVenue`, its gap named as the college's own words for a place we
+ *   hold no reviewed row for, or as our own place-not-recorded gap where no
+ *   sitting-specific statement names a place at all.
  * - **An unlinked "Agenda" cell is not recorded as an empty slot.** This page
  *   mirrors the college's agenda platform and can lag it, so "the page linked
  *   nothing yet" is not "the college posted nothing"; the reader keeps the OURS
@@ -642,18 +647,25 @@ export function makePimaEduSource(
           outOfWindow += 1;
           continue;
         }
-        if (!s.place) {
-          drops.unknownVenue += 1;
-          continue;
-        }
-        const online = isPlacelessLocation(s.place) ? { label: s.place, joinUrl: null } : null;
-        const spelling = online ? null : reviewedVenueSpelling(s.place, cfg);
+        const online = s.place && isPlacelessLocation(s.place) ? { label: s.place, joinUrl: null } : null;
+        const spelling = online || !s.place ? null : reviewedVenueSpelling(s.place, cfg);
         const venue = spelling
           ? resolveVenue(cfg.venueSourceId ?? SOURCE_NAME, wiring.ocdId, spelling, cfg.venueTenant ?? cfg.slug)
           : undefined;
+        /*
+         * No reviewed place never suppresses the sitting (the venue-gap class,
+         * 2026-09-23): it is published with no pin, counted `unknownVenue` and
+         * kept. A place the college printed for THIS sitting renders as its
+         * words (`STATED_NOT_PLACED`); a sitting no sitting-specific statement
+         * places keeps our own place-not-recorded gap — several surfaces were
+         * read and none of them named one, which is a fact about what we hold,
+         * not a claim that the college's page is silent. Both used to
+         * `continue`.
+         */
+        const venueGap = !online && !venue && s.place ? unplacedVenueGap(s.place, wiring.publishingOrg) : null;
         if (!online && !venue) {
           drops.unknownVenue += 1;
-          continue;
+          keptButPlaceless += 1;
         }
         if (online) {
           drops.placeless += 1;
@@ -671,6 +683,7 @@ export function makePimaEduSource(
             ? { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng }
             : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl: s.agendaHref,
           jurisdiction: wiring.jurisdiction,
           status: sittingStatus(startsAt, s.canceled, now),

@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
-  "buildId": "RdQEQ5F1pnKuDMyxeoaIq",
+  "exactHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
+  "buildId": "z4r1q7YWh0rEVYmgnypiP",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-24T03:55:17.943Z",
+  "runId": "reader-last-mile-final-render@2026-09-24T09:30:01.238Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -503,7 +503,7 @@
     },
     {
       "path": "data/derived/body-forms.json",
-      "sha256": "46f9f13293924ce224735cf12576410170d67f45ff3dfd62092460c8ca59240c"
+      "sha256": "f02f816206974092d4752fb817dae5f03d8fd3a0681ab4bd0356d313bf36e002"
     },
     {
       "path": "data/derived/census-nces-crosswalk.csv",
@@ -534,8 +534,404 @@
       "sha256": "3c87f83a357a9963e01f187cdacd1def24aeee39fcad06f9fdd8ac7b828b107a"
     },
     {
-      "path": "data/derived/zip-division-ids.json",
-      "sha256": "823606e9c052a0961b03dd236cc4123870b1baa857e6e7bb29f0fa5aaa9c33cd"
+      "path": "data/derived/zip-divisions/00.json",
+      "sha256": "7bc2f72412a97266b663646ce277d4fa4d251665bf5f6745a625cfda0dd3a6f4"
+    },
+    {
+      "path": "data/derived/zip-divisions/01.json",
+      "sha256": "8cde25f2845f8905cf1416198e068a897320faf3b9cf8b7dbaf3be6a46abfacf"
+    },
+    {
+      "path": "data/derived/zip-divisions/02.json",
+      "sha256": "28c11e3c63c185e39620ef07d4129f25046d3f93c7e99e8335d6e374af4b5f3f"
+    },
+    {
+      "path": "data/derived/zip-divisions/03.json",
+      "sha256": "8d337f61ac74e63cdf7fcc04788deec4a79c2449e1d8d578b091ca2217a20530"
+    },
+    {
+      "path": "data/derived/zip-divisions/04.json",
+      "sha256": "1e07ae49f4d6a64e9287aba8c4f7125e9a1e32e719df1ff7d3e5eb05529dd5fc"
+    },
+    {
+      "path": "data/derived/zip-divisions/05.json",
+      "sha256": "2c795e5b114ea7e68fe643f1137375742c19644fa73d4cbf9c0993ca1fd6a3c6"
+    },
+    {
+      "path": "data/derived/zip-divisions/06.json",
+      "sha256": "4206e01733573d29d6ed59ea8b275e3c716ed03ee3d96f4f68a5e6d21fa0e1ec"
+    },
+    {
+      "path": "data/derived/zip-divisions/07.json",
+      "sha256": "5b33ccd536e961077306d06abff46444daf2ac1de18f216a2274fbc664cabc0a"
+    },
+    {
+      "path": "data/derived/zip-divisions/08.json",
+      "sha256": "09fb961efab43f9360c73f13e33f93e5f8f8b7a7a0589ac4889341aa4a7043e5"
+    },
+    {
+      "path": "data/derived/zip-divisions/10.json",
+      "sha256": "f30a8fee76f87030ef5b423e3b8d96c5514701dd537da9eaaf6102649dca79a5"
+    },
+    {
+      "path": "data/derived/zip-divisions/11.json",
+      "sha256": "d976663410f86b3473c839575514dc46f2ca5f02356ecc5c295b683cda662d21"
+    },
+    {
+      "path": "data/derived/zip-divisions/12.json",
+      "sha256": "7b2ee48210899f9d9334469c5e2323a1efd1dc878930f018e2445b2ac652efe2"
+    },
+    {
+      "path": "data/derived/zip-divisions/13.json",
+      "sha256": "794e19d1d389d60db4366beed288108c7eaab418750b986ab4917c4f47e653f5"
+    },
+    {
+      "path": "data/derived/zip-divisions/14.json",
+      "sha256": "2eac2c83801fd9758bde524346d696cfae097890e6c92ad96a4884f3f100393c"
+    },
+    {
+      "path": "data/derived/zip-divisions/15.json",
+      "sha256": "4f8493131e99bc50d4637e4f810fbe8c099e3670f1ab98bf48b0815300c7598e"
+    },
+    {
+      "path": "data/derived/zip-divisions/16.json",
+      "sha256": "0f181d77c59e6bbf16ed5e99af2b39c09d40c32115f929b38d403c248daa26d7"
+    },
+    {
+      "path": "data/derived/zip-divisions/17.json",
+      "sha256": "0a959e8fa5effc23f8713fcbcd0e087c6e8e85f832b4268830600236f287297f"
+    },
+    {
+      "path": "data/derived/zip-divisions/18.json",
+      "sha256": "58fa871f08dd686d259e22e17d22bb4d4275811f6818e76750eeea372b95f20d"
+    },
+    {
+      "path": "data/derived/zip-divisions/19.json",
+      "sha256": "bfe5f1ef563a96dd1d0634dbb286cf4234a592152da98d01723e725fc19b50e2"
+    },
+    {
+      "path": "data/derived/zip-divisions/20.json",
+      "sha256": "3dbcd147a28bb4bf378b27222d8126d0101fb1e5eec9e442e96f759c7db8ae70"
+    },
+    {
+      "path": "data/derived/zip-divisions/21.json",
+      "sha256": "eb54d6692d7649f516b44fbeade83a6c11b89a9ab859f5a509be6f32483bd8cb"
+    },
+    {
+      "path": "data/derived/zip-divisions/22.json",
+      "sha256": "022939d7b7bac1fe1dc0882c0936d6bd487b714c913edf0e345a2535fd06281b"
+    },
+    {
+      "path": "data/derived/zip-divisions/23.json",
+      "sha256": "e72099690401d4d9f040fb9cc8bf78cd028e56dca8611e00436d3c8509624f7a"
+    },
+    {
+      "path": "data/derived/zip-divisions/24.json",
+      "sha256": "10d92018961307807c54235382e2b09f498a4bed9b0bceca159dbed85b5a6fa6"
+    },
+    {
+      "path": "data/derived/zip-divisions/25.json",
+      "sha256": "a9d0bc67b21770bf9ad4d5aa75a2dbff6b9b630da9fff1f2925c426adc70a534"
+    },
+    {
+      "path": "data/derived/zip-divisions/26.json",
+      "sha256": "fdcab0957ce6547ddc076775a14fc058fb3d4ac90e67565b398818ebaa9be1f3"
+    },
+    {
+      "path": "data/derived/zip-divisions/27.json",
+      "sha256": "118627619e63416a03a75fa8b8386cefb64b54dfc8003d2d3cd9adfe4eae8cf8"
+    },
+    {
+      "path": "data/derived/zip-divisions/28.json",
+      "sha256": "90c82a45792dce5d32c62cf7aca1ad447eaf24ea44e8fb646a71ae20e14d5d0d"
+    },
+    {
+      "path": "data/derived/zip-divisions/29.json",
+      "sha256": "5af6fe4642f9801c0be0e27ed035cee571bba43514a9b564cc21f831cd7c4efb"
+    },
+    {
+      "path": "data/derived/zip-divisions/30.json",
+      "sha256": "6cdafc5ffdcd5e0a3c97ff5a4f49691ec2704ae90d22fdd779fd0a384d5699ae"
+    },
+    {
+      "path": "data/derived/zip-divisions/31.json",
+      "sha256": "f2ff915e0179d90b8ad8d4d4d9dd7fc402c4757425de2f29e882ba3f0f3f0db6"
+    },
+    {
+      "path": "data/derived/zip-divisions/32.json",
+      "sha256": "302976df8f7670dcd80d59a5600a512b9df3af3e0f334915c6910b227efee7bd"
+    },
+    {
+      "path": "data/derived/zip-divisions/33.json",
+      "sha256": "a561df1ff90967cc0cb0b603c9e2086c7f1e45c027d6c7f320906f85f50c2dcd"
+    },
+    {
+      "path": "data/derived/zip-divisions/34.json",
+      "sha256": "bc82a283954359fe773fc631562e2ae9b0d9ee8f830c54cab11df0bb7fa323af"
+    },
+    {
+      "path": "data/derived/zip-divisions/35.json",
+      "sha256": "eddc218d80df2da4f25076a417bfd2c53918f9032757a481d60dcedc59c78f2c"
+    },
+    {
+      "path": "data/derived/zip-divisions/36.json",
+      "sha256": "f668162cd95e82985d260fde68d2a7fe87f118e2be70f7f550f7da446b2ac155"
+    },
+    {
+      "path": "data/derived/zip-divisions/37.json",
+      "sha256": "1cc3b0870e1236ec245e7f623eec4c54485623ff522a8041781a395fd08856d9"
+    },
+    {
+      "path": "data/derived/zip-divisions/38.json",
+      "sha256": "0d1a722464e3ff30b24202155111ca58eff158e09fbd434ec2c27a1991d31cc1"
+    },
+    {
+      "path": "data/derived/zip-divisions/39.json",
+      "sha256": "ff2099efc1596d3b26dda5cf4fdf401d94efbcb0edc1ce0b751600a03c5bbca9"
+    },
+    {
+      "path": "data/derived/zip-divisions/40.json",
+      "sha256": "cbbb26f4ad8cdb8b5a844b0976a291a95999b090082b46c8a1b550c965a23f3b"
+    },
+    {
+      "path": "data/derived/zip-divisions/41.json",
+      "sha256": "8993aacf893358cfc1ebf1f12df573b972f59aea0820154ff3d3f7b60739c0cf"
+    },
+    {
+      "path": "data/derived/zip-divisions/42.json",
+      "sha256": "7c4e2960fffdeaf25754d29cb4ed83e349687d6ededcd09d55f4c693f53228a5"
+    },
+    {
+      "path": "data/derived/zip-divisions/43.json",
+      "sha256": "904dfb1ab6522fddd0a82aa9583866b9dd9002cb17a6447c3815cdd6b829e049"
+    },
+    {
+      "path": "data/derived/zip-divisions/44.json",
+      "sha256": "a468d0ea097264f1b01e79ac3607edeefdcf38460f8695c804e34ce64f162abc"
+    },
+    {
+      "path": "data/derived/zip-divisions/45.json",
+      "sha256": "fc343c0baa928bbc1780ba984d220a3506f060882319bf581a6775d9b3abd6d3"
+    },
+    {
+      "path": "data/derived/zip-divisions/46.json",
+      "sha256": "2bba4d231286b67eda288b40c321ce5892173fa838052109db6bcac58ae9434e"
+    },
+    {
+      "path": "data/derived/zip-divisions/47.json",
+      "sha256": "6e2c5f7c5fdbd244d23ddab99b039753e6b194d373efbf9bb34ec1dbe477b71b"
+    },
+    {
+      "path": "data/derived/zip-divisions/48.json",
+      "sha256": "fd122e0156db2448ea700fa7313e6f581e80fe98a12ddcf722bee41255ae9139"
+    },
+    {
+      "path": "data/derived/zip-divisions/49.json",
+      "sha256": "0ef92071a79aebc08f600d4fac17f2ea6f4960caacbf8631f4bd29cf48f970da"
+    },
+    {
+      "path": "data/derived/zip-divisions/50.json",
+      "sha256": "c0af17b0c1c3ddc7bd7b0174ace5dbaa2c94383bb3883c09804465e6c297fb02"
+    },
+    {
+      "path": "data/derived/zip-divisions/51.json",
+      "sha256": "0fc3ae2a30f87795165f783d5cfb0a606dd912ca3e37c92d8d234b3e559d698b"
+    },
+    {
+      "path": "data/derived/zip-divisions/52.json",
+      "sha256": "5e483459bc51f2b2c80c736aed448e634cb826285ee4918e9983f98726a3bff9"
+    },
+    {
+      "path": "data/derived/zip-divisions/53.json",
+      "sha256": "975c3f330f85b370fd7c6556c8697afcf9a9d5d645a83923aa1eaa547e2439a7"
+    },
+    {
+      "path": "data/derived/zip-divisions/54.json",
+      "sha256": "9a2dba72af4a16340948aeed1102990c436ca611b190ff968d3339d6637b2023"
+    },
+    {
+      "path": "data/derived/zip-divisions/55.json",
+      "sha256": "85a915a66ad8d387dafd3d5ddfa2d145d0062adf53bf706e74554471e60e8ca4"
+    },
+    {
+      "path": "data/derived/zip-divisions/56.json",
+      "sha256": "0cc5f739b0c7b4ea7c18623caeb3aff5a7f5115775afcb8056790a198fc3311d"
+    },
+    {
+      "path": "data/derived/zip-divisions/57.json",
+      "sha256": "0e815dc6fc9e52052423f66cc272dcb113b06dfaea070a1e94ec5decc42a38ff"
+    },
+    {
+      "path": "data/derived/zip-divisions/58.json",
+      "sha256": "8a0bdd8d877f083f937e3d1c03251ce869a44ce40e7eba1d47c0001c7fbb9bc8"
+    },
+    {
+      "path": "data/derived/zip-divisions/59.json",
+      "sha256": "6c9bfa2255aa178ffe2d6a3289be5b92cd6934cd6dc38929de657223c2b639d4"
+    },
+    {
+      "path": "data/derived/zip-divisions/60.json",
+      "sha256": "128d982a9b3b26e5e364370e1bceb5fa46839a9524d6cbfe67cef85c2e3ee83e"
+    },
+    {
+      "path": "data/derived/zip-divisions/61.json",
+      "sha256": "a6bf44ba8993a026f58dcfd3942423b05d13472bee749c8ed7a18ad9cf07bac3"
+    },
+    {
+      "path": "data/derived/zip-divisions/62.json",
+      "sha256": "3ab14cf574a56edee577f931795a7ce2ee6f91aee44d11dbcf7c0b90a0bb20ee"
+    },
+    {
+      "path": "data/derived/zip-divisions/63.json",
+      "sha256": "b3efe07254a5973209e3156680293f69dc7eec673a342fb65e66070798ead5c9"
+    },
+    {
+      "path": "data/derived/zip-divisions/64.json",
+      "sha256": "991ef74cad0d02fe992e730161397aa28f08cb9601e2a6177200ba16baf240cc"
+    },
+    {
+      "path": "data/derived/zip-divisions/65.json",
+      "sha256": "402147ca8f48faa77e8e030da02d569e27cbae86c64538ebae490f31546d6c63"
+    },
+    {
+      "path": "data/derived/zip-divisions/66.json",
+      "sha256": "8de1219298fdd1a73ae5fddcef8ad6c3f95ea841ae1b909ff1286c63c170d7d1"
+    },
+    {
+      "path": "data/derived/zip-divisions/67.json",
+      "sha256": "066bba86fd5c0258ce47dc81f796592ceed51861d095dc260916899851721440"
+    },
+    {
+      "path": "data/derived/zip-divisions/68.json",
+      "sha256": "a059c253590241b3eea17497b1bd41df6b6c886c33d493521ee02b88c7ca31e3"
+    },
+    {
+      "path": "data/derived/zip-divisions/69.json",
+      "sha256": "5006d39cece72e50d1382c823f4509887507b1b561b83cbf3835271cc09b9b56"
+    },
+    {
+      "path": "data/derived/zip-divisions/70.json",
+      "sha256": "4723b08b91cd746752a20e20bab4eeacb624f0e1d2f76b75fec8c5399b3dc321"
+    },
+    {
+      "path": "data/derived/zip-divisions/71.json",
+      "sha256": "9aeb0bbe2d24b41db773e20ae53c16a1763632efdf0d0cc2397e90976c921b04"
+    },
+    {
+      "path": "data/derived/zip-divisions/72.json",
+      "sha256": "3d708e16ea3ceb62fba5a6e8bce94c9866722b3367d36bc76faa4bcddd9e9423"
+    },
+    {
+      "path": "data/derived/zip-divisions/73.json",
+      "sha256": "6bddbb552372e7dc7fca74c9ce29750204de2013a4ef609fd2526828a29277c4"
+    },
+    {
+      "path": "data/derived/zip-divisions/74.json",
+      "sha256": "6e5004be7288f1313c3a3f9e2c9c0407a8103e6cf51922057a18b0da18eaeee0"
+    },
+    {
+      "path": "data/derived/zip-divisions/75.json",
+      "sha256": "5e468210db4a41ad6fd8e6262c02245986707d34d82bc9f5c1837a9b85030dd1"
+    },
+    {
+      "path": "data/derived/zip-divisions/76.json",
+      "sha256": "82ed102c47c71d7f9140d75cd863f79d546e568177f263fd090cbc0668b717ad"
+    },
+    {
+      "path": "data/derived/zip-divisions/77.json",
+      "sha256": "325b692459d49bab47aa3b95e52780922393e2f7031f21718e6f34af64ad6673"
+    },
+    {
+      "path": "data/derived/zip-divisions/78.json",
+      "sha256": "2e4af8dae59a44495fb5906d5f36c0e71ca65d60b7bad498a3ce3f77daf6fa43"
+    },
+    {
+      "path": "data/derived/zip-divisions/79.json",
+      "sha256": "06eab4d658b497cf57db37eb649bb27a0beed501cc282ff4a8c1b2523712238d"
+    },
+    {
+      "path": "data/derived/zip-divisions/80.json",
+      "sha256": "6a6165f9d48500828b4f6d46dd1bb5ac6b3cbc885e844f3d288f25659aad443f"
+    },
+    {
+      "path": "data/derived/zip-divisions/81.json",
+      "sha256": "d17bb120ba72ef6818f070b5c407c4a3bcc4d1190e16ebf51d34dd222de22d8f"
+    },
+    {
+      "path": "data/derived/zip-divisions/82.json",
+      "sha256": "4e45ff946ac3c0029f575f7232f97fc2a74b315b9b79e5ab4d74503662bacb80"
+    },
+    {
+      "path": "data/derived/zip-divisions/83.json",
+      "sha256": "e663d1cd3487defabc4c0d50c97be278fb2c3b268e29bf8bde4470942c6383f2"
+    },
+    {
+      "path": "data/derived/zip-divisions/84.json",
+      "sha256": "1034148f50d41f5200d8abfe02b9b313538bd2f5442291df6dc34ee3c8a514b5"
+    },
+    {
+      "path": "data/derived/zip-divisions/85.json",
+      "sha256": "dfab1a70df954dfeaed67315502de5da27a1965c12e8d29258a9cf3abda4771f"
+    },
+    {
+      "path": "data/derived/zip-divisions/86.json",
+      "sha256": "3184493586bc86330283f12c114c736a92630f00ecc7d01008eb07ae50f23c78"
+    },
+    {
+      "path": "data/derived/zip-divisions/87.json",
+      "sha256": "c7177195924da0d026ef5df2de6ee8bb5a465df457e37d8680294e6f9674ed3c"
+    },
+    {
+      "path": "data/derived/zip-divisions/88.json",
+      "sha256": "2c4ab2689cb15a4d5cceb1f4bb1080026b550f52194a7bcf126fc51275995361"
+    },
+    {
+      "path": "data/derived/zip-divisions/89.json",
+      "sha256": "51984fe383fe8dcef69df655d74fbe9dda443cdca7474707d530ad925b5f02eb"
+    },
+    {
+      "path": "data/derived/zip-divisions/90.json",
+      "sha256": "3efa38ce9350e2cef7f0933bf80cdff8ea267a7f5189379b4a95f5fc35dbe2b6"
+    },
+    {
+      "path": "data/derived/zip-divisions/91.json",
+      "sha256": "d36d690ad4e27b54d38e4ce030e911c626a2e25b8a7d521af4311f7be4961082"
+    },
+    {
+      "path": "data/derived/zip-divisions/92.json",
+      "sha256": "ad15d26dac61287240eedc8bd81827f97bc0b0dea946178eebb9db9bc0e00ce7"
+    },
+    {
+      "path": "data/derived/zip-divisions/93.json",
+      "sha256": "2c95d50beae23b973e4fb9a22acf2af9c181d26a230ce1f3019f21c299401c70"
+    },
+    {
+      "path": "data/derived/zip-divisions/94.json",
+      "sha256": "43fb0f4897807457446aadd5fdd3164352653cd19f1fa1bc5e61b83143463f5c"
+    },
+    {
+      "path": "data/derived/zip-divisions/95.json",
+      "sha256": "2c6fe340b64129dff81be577a2c5647745793815648876c26cb7601f5775ec28"
+    },
+    {
+      "path": "data/derived/zip-divisions/96.json",
+      "sha256": "9b133f56b141abb36cbfde94a07a62899021d2d4c04c65e39debd7a9960aa8a2"
+    },
+    {
+      "path": "data/derived/zip-divisions/97.json",
+      "sha256": "efefbbbd6fcb9ad16fe837b988fbc847b7e3db3199b70a046e865f903653d0bb"
+    },
+    {
+      "path": "data/derived/zip-divisions/98.json",
+      "sha256": "356557b05f1fccb7e24147aa581eb74acc12bc581054a408faa7be095cd7ff8b"
+    },
+    {
+      "path": "data/derived/zip-divisions/99.json",
+      "sha256": "4affe456e8fc4a56ab4a254fffdb7ef1fdab76596d7edfbb770c07ad094cf426"
+    },
+    {
+      "path": "data/derived/zip-divisions/index.json",
+      "sha256": "0185ff3f30f37db618c2d062884dda5b07f76baf213ed7e0792316318ac78414"
     },
     {
       "path": "data/derived/zip-governments.json",
@@ -879,7 +1275,7 @@
     },
     {
       "path": "data/states/nh/geo/unsd-33.geojson",
-      "sha256": "c6a459aeeab2fece1df24f2cd875742c4cbfb296349d4b36e5e6fe1a0845f655"
+      "sha256": "159098dbe835adc220aee7e962aa5184a7bdfd1278c820df416dc1d7c796652b"
     },
     {
       "path": "data/states/nh/hunt/nh-gencourt-members.json",
@@ -1711,7 +2107,7 @@
     },
     {
       "path": "lib/ballot/zip-divisions.ts",
-      "sha256": "20224e2a4f95a5fb98cdc06f4a0a6583dfa33f0ac0dbce971934a68b88843225"
+      "sha256": "c07abc7d2327d7b73f53611df96c62b2afa252668aa1b7c9ce223e44e8ae1ac1"
     },
     {
       "path": "lib/brand.ts",
@@ -1819,7 +2215,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "891ddf00d9a0da7882f77414108e861788a0ae97465a5db8cd62624397a00749"
+      "sha256": "8896860a6c37b244fe1d7793f1b9d975a4ba748114f234715b9632769db8700d"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2031,7 +2427,11 @@
     },
     {
       "path": "lib/geo/zip-certainty.ts",
-      "sha256": "90c9b57bd8519a99060cb02979337a108a472eeb689919808bc519ccffd2b7e7"
+      "sha256": "d00e27966283cf47663ead2f1281a21b0cf8a41c4ef5ddc40cd82ef720f7a10b"
+    },
+    {
+      "path": "lib/geo/zip-division-index.ts",
+      "sha256": "8b4ae14c3add888b5193557f4dfa1f32376f7578a2185bbd075b7b49b24a7ed9"
     },
     {
       "path": "lib/holdings/datasets.ts",
@@ -2195,7 +2595,7 @@
     },
     {
       "path": "lib/meetings/query.ts",
-      "sha256": "784a1cd85d89345d2e3eb7ec3e5231e41f9baefdbbb008afe320f51bfcddbed7"
+      "sha256": "2c8276cfe6986ffdd2e491eea3669b1b711a57e30dec38dc1661301ef37a95b8"
     },
     {
       "path": "lib/meetings/reader-listing-count.ts",
@@ -2219,7 +2619,7 @@
     },
     {
       "path": "lib/meetings/venue-cache.ts",
-      "sha256": "4d9054abfdfbc7efb526b1b90bac8154c90f81ca031a4d032680952371917fad"
+      "sha256": "3339b11c2fbcdecc3d83e75e5d77d101ac3fa2398c0256ad85fc573005910c60"
     },
     {
       "path": "lib/meetings/venue-record-identity.ts",
@@ -2438,6 +2838,14 @@
       "sha256": "5bc59eb303bb6d07e3d4c05ae7a074c0b0a8df74355cffaef73682803895263e"
     },
     {
+      "path": "lib/registry/census-placeholders.ts",
+      "sha256": "30028e6e9aa09dba3dbcc3e668062f7a80e0ce31fe31f5b5ba4bc7ec599d8267"
+    },
+    {
+      "path": "lib/registry/cited-urls.ts",
+      "sha256": "efc62d688006c77de20196f4900e578079861fe9c130b2a1c2700ee967940878"
+    },
+    {
       "path": "lib/registry/comment-access-client.ts",
       "sha256": "f5c5203260f5af16c4ba39bd2f4e5d42fe4ba8c14fe8e17e104114d4b54d994b"
     },
@@ -2495,7 +2903,7 @@
     },
     {
       "path": "lib/registry/runtime-data-plane.ts",
-      "sha256": "c091adb71d4f86a43df32d8ee865dca2d85f53953ad4a61ab3b075b212e6df87"
+      "sha256": "7baaafe08ea9608add321d9241ef951296c10344d163c6184413d1196363a235"
     },
     {
       "path": "lib/registry/runtime-edge.ts",
@@ -2503,7 +2911,7 @@
     },
     {
       "path": "lib/registry/runtime-read-model.ts",
-      "sha256": "21cdc6f81770e5e2b086a1fe29b862f13a4551cbc9d31b203e2337348c11350c"
+      "sha256": "b59b616cfe3c6d5bb5b64793b424252eaf593a1dd548537baf79efae4a05756a"
     },
     {
       "path": "lib/registry/server.ts",
@@ -2615,7 +3023,7 @@
     },
     {
       "path": "lib/sources/apptegy/index.ts",
-      "sha256": "bd29e2f05652a920c273b3c105152881c2d8aaa25c2481e710226299746c3399"
+      "sha256": "b7160577690546b3678d2d064f638792ef8dd64a83dc8c2b02a223a3beab6fae"
     },
     {
       "path": "lib/sources/ballot-curated/index.ts",
@@ -2627,7 +3035,7 @@
     },
     {
       "path": "lib/sources/boardbook/index.ts",
-      "sha256": "27732e1141862bc803adbc4b97d95f091a26f6de1eb9f679602aaa637e2167d1"
+      "sha256": "aa30de50ed2b567e29b6b480bec89a8a25cc7f2c5a46da2e3b127cd76f89af4b"
     },
     {
       "path": "lib/sources/census-acs-population/index.ts",
@@ -2635,15 +3043,15 @@
     },
     {
       "path": "lib/sources/civicclerk/index.ts",
-      "sha256": "97524f8a4f4d131c6fcf23ffe0db845530eddfc645ea88c6e6e875ea43f49527"
+      "sha256": "399fb338a3171231ad4b7499e9f4d7ef91be8fe519d78e5710f1cca9b36c1708"
     },
     {
       "path": "lib/sources/civicplus/index.ts",
-      "sha256": "50790a0bd93a4f1205edd034674fdd6c8a450bf6fea5786da432a78b91afebcd"
+      "sha256": "62fde723194ddce4223a5d0789e34a63e611195efad698e3d6a1d9e8d7f8053e"
     },
     {
       "path": "lib/sources/clerksboards/index.ts",
-      "sha256": "7d637484f01316ab4f6f74a14e488e4bd6ec0da9eeb8b8f182aaa42b16835df7"
+      "sha256": "09dd69bbdd26d33a700fa44e4c3a3b3c1ff6e09c2be2db72e38538db1d22769a"
     },
     {
       "path": "lib/sources/composite/index.ts",
@@ -2655,7 +3063,7 @@
     },
     {
       "path": "lib/sources/diligent/index.ts",
-      "sha256": "f43610bc555097be60d20b9e080a26dee9c00b8e23212024b044339394d0ee8c"
+      "sha256": "978495acd2f6d52ded29b0e1b874749219c0cbb662f9116bbdb4560815d95fd7"
     },
     {
       "path": "lib/sources/diligent/schedule-union.ts",
@@ -2671,7 +3079,7 @@
     },
     {
       "path": "lib/sources/ical/index.ts",
-      "sha256": "10f032785c2258303fc6cddc61d05a358a5e2187bed7eca4835edac38edbc27c"
+      "sha256": "4eca73b9947b901944c4c297e33b2559b25e533c736dc97e587bf938dd791d36"
     },
     {
       "path": "lib/sources/ical/recurrence.ts",
@@ -2679,7 +3087,7 @@
     },
     {
       "path": "lib/sources/iqm2/index.ts",
-      "sha256": "0a784f813f1d3c916a5c1c44c1ea304312251acd69f7e8e8992fd540f047ab6c"
+      "sha256": "41b81d8e529d930fb9d9398629676e46809daaa15714cd902c06b1123a07964c"
     },
     {
       "path": "lib/sources/legiscan/snapshot.ts",
@@ -2699,7 +3107,7 @@
     },
     {
       "path": "lib/sources/legistar-insite/horizon.ts",
-      "sha256": "021888bdda672ec305ca74f9688e9e87868e1aaedb878b075bb87b9d6bf55c3c"
+      "sha256": "669d26e1cbe819c0cd30b747b4a92d7e04a54e22c2bbf9181ddf939cf3aa9d08"
     },
     {
       "path": "lib/sources/legistar-insite/http.ts",
@@ -2707,15 +3115,15 @@
     },
     {
       "path": "lib/sources/legistar-insite/index.ts",
-      "sha256": "10c4d71a4777cbd3f0820ad31db5afffadd7ac0b76d1592eaf0dfa7695be4e1b"
+      "sha256": "7b1626191dd83f38da870c758cf88e657ae730c46987fa2314cf2a16d7800b53"
     },
     {
       "path": "lib/sources/legistar-insite/tenant-registry.ts",
-      "sha256": "e1c8494d7b0d06c7e6d716c10410fa9239647219016f7b5dbeffe38fde832a9a"
+      "sha256": "b5125178342b79c947037c089698754728b4be480965097d8db91ad49e5a43f1"
     },
     {
       "path": "lib/sources/legistar/client-registry.ts",
-      "sha256": "53a9907c1bb5bec1bc0ed4caa08eec60b5a46578512974a1e0e0fa868d02623d"
+      "sha256": "4e0bcbed74db8138d4c586b11b631920bcb3a83e06fe288552bc158414862b9e"
     },
     {
       "path": "lib/sources/legistar/client.ts",
@@ -2723,7 +3131,7 @@
     },
     {
       "path": "lib/sources/legistar/index.ts",
-      "sha256": "428003838da6e84662c8c91fe802a757574a414d7c33d56916711a84c90dfd24"
+      "sha256": "b20549042139347beb9c414e1ec575ab007c990789310acb9fbed061dad73054"
     },
     {
       "path": "lib/sources/legistar/outcomes.ts",
@@ -2747,7 +3155,7 @@
     },
     {
       "path": "lib/sources/onbase/index.ts",
-      "sha256": "4ec531d1837b1f3e7b7480862729b9d0e605c0eb20ee479d32d607536bfd4aa5"
+      "sha256": "6d51f1f037d39ff5bb452505a9ff22790d0105c0dd791aebf35e3949603ed144"
     },
     {
       "path": "lib/sources/permission-gate.ts",
@@ -2755,7 +3163,7 @@
     },
     {
       "path": "lib/sources/pima-edu/index.ts",
-      "sha256": "c8788320604ba516fedd17cd208c0332af5bdcd279bc010d5b42771e9ce46523"
+      "sha256": "deb114737ab618c2b936eb76d87fd8df5a1cc9a542530f67f928f2069212687e"
     },
     {
       "path": "lib/sources/prl/data-plane.ts",
@@ -2775,11 +3183,11 @@
     },
     {
       "path": "lib/sources/revize/index.ts",
-      "sha256": "4058905a0da20ccaf9280ca04d7603caf66ceac33b80796a4a3eda6663ff5ef2"
+      "sha256": "12c84e5b9c749d6138890e832ee3b50766e194fe697ea2dfc9973d8b8ad681f5"
     },
     {
       "path": "lib/sources/schedulepage/index.ts",
-      "sha256": "5f824d1164bc6bdde9e7d84462061fe621b015fb2167c71274b0c84c834c9e19"
+      "sha256": "659b62c66fda5bdf8b67a8c5b05b96f7704e8d4b95b3a9e41d1d7c04d7cc7453"
     },
     {
       "path": "lib/sources/sitting-status.ts",
@@ -2787,7 +3195,7 @@
     },
     {
       "path": "lib/sources/smartsites/index.ts",
-      "sha256": "c320dd32b0c45706fe5be25efcc5f268c9bc5dc4c8a8ffc2346c845d5eee67cc"
+      "sha256": "5515ea80d17d879fe54dce98bbdc201de9e298cc8c7dda7050360124da7e6989"
     },
     {
       "path": "lib/sources/snapshot/index.ts",
@@ -2799,7 +3207,7 @@
     },
     {
       "path": "lib/sources/tusd-govboard/index.ts",
-      "sha256": "509a93fb6308a51aa0b508d24cf4d5b4feff7566c65d91af821590ef0f3b62aa"
+      "sha256": "578cf897ab69aef8263f30ad3b1fb560b15e2e3066c1ae28197226cfa217df9d"
     },
     {
       "path": "lib/speak/client.ts",
@@ -2859,7 +3267,7 @@
     },
     {
       "path": "lib/state/division-levels.ts",
-      "sha256": "8879d379c24d569dd2ec9cadc70195f5c9fecc5038a20be54bdd116cfb591931"
+      "sha256": "e4736817628bd0926631f55eb60ede0d8bdfb7cbe10bf360f90ede6dfe429e52"
     },
     {
       "path": "lib/state/list-focus.ts",
@@ -2967,11 +3375,11 @@
     },
     {
       "path": "next.config.ts",
-      "sha256": "cf75880c7d74cd04276e885c0c78828eb72b413b1ed816e0cf65a676f1a09655"
+      "sha256": "71665461c4485c4d946f0541da9ac652a16a59c64694f43c658e666ef46e8314"
     },
     {
       "path": "package.json",
-      "sha256": "ce7ee41c9c19f4712ca9bb4e25c989cee2785f0b13f608162540f5922e491b11"
+      "sha256": "b78a022b813838aae6ed54d7025ab0faa992681c7c39beface60b54985a3bfa5"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -7832,8 +8240,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
-                "verifiedAt": "2026-09-23",
-                "collectedAt": "2026-09-23"
+                "verifiedAt": "2026-09-24",
+                "collectedAt": "2026-09-24"
               },
               "committeeId": "C00825810",
               "designation": "J",
@@ -7924,8 +8332,8 @@
               "provenance": {
                 "sourceOrg": "Federal Election Commission",
                 "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
-                "verifiedAt": "2026-09-23",
-                "collectedAt": "2026-09-23"
+                "verifiedAt": "2026-09-24",
+                "collectedAt": "2026-09-24"
               },
               "committeeId": "C00858373",
               "designation": "J",
@@ -8037,7 +8445,7 @@
           ],
           "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
           "sourceOrg": "Federal Election Commission",
-          "collectedAt": "2026-09-23"
+          "collectedAt": "2026-09-24"
         },
         "dataState": "PROMOTED",
         "dataMetadata": {
@@ -8045,19 +8453,19 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
-          "lastKnownGoodVersionId": "cv-c20e7d60a3a95324beeddd7c20f2e798",
+          "versionId": "cv-4043c8475ce2914a8e32af6c2a2b3c19",
+          "lastKnownGoodVersionId": "cv-4043c8475ce2914a8e32af6c2a2b3c19",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-24T00:56:13.244Z",
-          "promotedAt": "2026-09-24T00:56:13.684Z",
+          "retrievedAt": "2026-09-24T07:05:11.568Z",
+          "promotedAt": "2026-09-24T07:05:12.902Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-01T00:56:13.244Z"
+          "staleAt": "2026-10-01T07:05:11.568Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
       },
-      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 23rd, 2026",
-      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 23rd, 2026",
+      "mapText": "Campaign money This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 24th, 2026",
+      "ballotText": "Campaign money CAMPAIGN MONEY · FEC This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. How do you feel about how this campaign is funded? Love it Like it Don't like it Hate it Don't care LARGEST REPORTED CONTRIBUTIONS The biggest contributions this campaign's main committee has reported, listed exactly as filed — biggest first, in two groups. COMMITTEES & ORGANIZATIONS GROW THE MAJORITY · ALEXANDRIA, VA $324,332 JOINT FUNDRAISING COMMITTEE 3 transfers · $324,332 Give me the tea CISCOMANI VICTORY FUND · TUCSON, AZ $288,000 JOINT FUNDRAISING COMMITTEE 2 transfers · $288,000 Give me the tea INDIVIDUAL DONORS 5 people · 5 filings $35,000 AZ · 2 people $14,000 TX · 2 people $14,000 UT · 1 person $7,000 How do you feel about these contributions? Love it Like it Don't like it Hate it Don't care › Where that money came from › What kind of money it was Federal Election Commission · reported through July 1st, 2026 · read September 24th, 2026",
       "componentReadback": {
         "contacts": 7,
         "committees": 0,
@@ -8094,7 +8502,7 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42306",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T23:10:55.145Z"
+              "collectedAt": "2026-09-24T04:54:51.847Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43886.field_date_and_time.0@www.newbury.nh.gov",
@@ -8122,14 +8530,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42321",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T23:10:55.145Z"
+              "collectedAt": "2026-09-24T04:54:51.847Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43901",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T23:10:55.145Z"
+              "collectedAt": "2026-09-24T04:54:51.847Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8150,14 +8558,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42976",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44076",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8178,14 +8586,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42981",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44081",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8206,14 +8614,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42986",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44086",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8234,14 +8642,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42991",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44091",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8262,14 +8670,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42996",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44096",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8290,14 +8698,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/43001",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44101",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8318,20 +8726,20 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/43006",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44106",
               "verifiedAt": null,
-              "collectedAt": "2026-09-23T22:56:08.119Z"
+              "collectedAt": "2026-09-24T02:39:36.392Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
         }
       ],
-      "renderedListingRows": 295,
+      "renderedListingRows": 378,
       "failedRefreshDisclosure": {
         "carried": {
           "count": 12,
@@ -8349,7 +8757,7 @@
     {
       "id": "current-participation",
       "result": "PASS",
-      "meetingId": "diligent:pcc:707",
+      "meetingId": "pima-edu:pcc:2026-09-25-executive-session",
       "bodyId": "curated:az/pima-community-college#governing",
       "startsAt": "2026-09-25T16:15:00-07:00",
       "expectedLines": [
@@ -8368,7 +8776,7 @@
       "verifiedAt": "2026-08-14",
       "screenshot": {
         "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-        "sha256": "6b1e3d21279796592ef57e859024ce57b314fe1fa60a8749d192d07316f67b01"
+        "sha256": "20040b804240e977ae4c440eaf4d65703f3f2544b42965b7a23e582f8568ccc6"
       }
     }
   ],
@@ -8391,7 +8799,7 @@
     },
     {
       "path": "screenshots/reader-last-mile/final/85701-current-participation.png",
-      "sha256": "6b1e3d21279796592ef57e859024ce57b314fe1fa60a8749d192d07316f67b01"
+      "sha256": "20040b804240e977ae4c440eaf4d65703f3f2544b42965b7a23e582f8568ccc6"
     }
   ],
   "denominatorFloors": [

@@ -74,9 +74,7 @@
  * NOT_EVALUABLE with the missing evidence NAMED.
  */
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
+import { readAllZipDivisions } from "../geo/zip-division-index.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import type { Body } from "../registry/types.ts";
 
@@ -159,7 +157,5 @@ export function bodyDenominatorFor(
  * point of the file.
  */
 export function divisionIndexFor(root: string = process.cwd()): Record<string, string[]> {
-  const indexPath = join(root, "data", "derived", "zip-division-ids.json");
-  const index = JSON.parse(readFileSync(indexPath, "utf8")) as { zips: Record<string, string[]> };
-  return index.zips;
+  return Object.fromEntries([...readAllZipDivisions(root)].map(([zip, entry]) => [zip, [...entry.ids]]));
 }

@@ -55,13 +55,13 @@ const nextConfig: NextConfig = {
       // reaches it because every GET writes a search-log row and that row
       // carries the tier.
       "./data/derived/zip-coverage-tiers-runtime.json",
-      // A ZIP IS AN AREA, on the map too (NJ Hunt 3 item 3.1). This route widens
-      // a typed zip to its area so the "Who governs here" card names Rockaway
-      // Borough as well as Rockaway Township. Read through process.cwd(), so
-      // the tracer cannot see it; untraced, the widening silently does nothing
-      // in production and the card goes back to naming one of the two — a
-      // regression that looks exactly like honest missing data.
-      "./data/derived/zip-division-ids.json",
+      // A ZIP IS AN AREA, on the map too (NJ Hunt 3 item 3.1): this route
+      // widens a typed zip to its area with the national ZIP index. Its shards
+      // are read from a literal folder (`lib/geo/zip-division-index.ts`), so the
+      // tracer follows them itself; naming them here too would list each twice.
+      // The postbuild reader-trace check fails the build if one is missing —
+      // untraced, the widening would silently do nothing, which looks exactly
+      // like honest missing data.
     ],
     /*
      * THE LEDGER IS READ THROUGH `process.cwd()`, WHICH NEXT CANNOT SEE.
@@ -86,15 +86,10 @@ const nextConfig: NextConfig = {
      * path may even import the work queue. `candidate-hunt-state.json` is
      * therefore no longer traced here — it is read by scripts and tests only.
      */
-    "/ballot": [
-      "./data/derived/zip-coverage-tiers-runtime.json",
-      // A ZIP IS AN AREA (NJ01). Built by `pnpm zip:divisions`, read through
-      // `process.cwd()`, so the tracer cannot see it. Absent from the deploy,
-      // the ballot silently narrows back to the centroid answer and Rockaway
-      // Borough disappears again — a regression that looks exactly like
-      // honest missing data, which is why it is named per route.
-      "./data/derived/zip-division-ids.json",
-    ],
+    // A ZIP IS AN AREA (NJ01): the ballot widens a ZIP with the national
+    // index, traced by the tracer from its literal folder and proved present
+    // by the postbuild reader-trace check (see `/api/meetings`).
+    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],
@@ -110,10 +105,13 @@ const nextConfig: NextConfig = {
     // Ask still needs the static geographic indexes used to resolve an area.
     // Its civic facts come from promoted pointers and are intentionally not
     // deployment-traced from tracked first-seed JSON.
+    // The ZIP index's shards are named for Ask because its declared ZIP-area
+    // requirement (`lib/holdings/reader-trace.ts`) includes them while its
+    // import graph does not reach the index, so the tracer alone would not.
     "/api/ask/grounded": [
       ...staticGeographyTrace,
       "./data/derived/zip-coverage-tiers-runtime.json",
-      "./data/derived/zip-division-ids.json",
+      "./data/derived/zip-divisions/*.json",
     ],
   },
   // The demo is unlisted. Platform-level visibility is the access control;

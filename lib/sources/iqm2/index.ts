@@ -14,6 +14,7 @@ import {
 import {
   isPlacelessLocation,
   resolveVenue,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
@@ -181,6 +182,9 @@ export function makeIqm2Source(
     // A-002 · counted in the unit the disposition happens in. One raw row is
     // one calendar page and carries many rows.
     let considered = 0;
+    // A-002 · `placeless` and `unknownVenue` tally sittings that are then
+    // PRODUCED (D18; the venue-gap class, 2026-09-23), so neither is a drop.
+    let keptButPlaceless = 0;
 
     for (const { wiring, html, collectedAt } of raw) {
       for (const row of parseCalendarRows(html)) {
@@ -200,18 +204,33 @@ export function makeIqm2Source(
           continue;
         }
 
-        if (!row.location) {
-          drops.unknownVenue++;
-          continue;
-        }
-        if (isPlacelessLocation(row.location)) {
+        /*
+         * **NO PLACE NEVER SUPPRESSES THE SITTING** (the venue-gap class,
+         * 2026-09-23). Three cases used to `continue`, and each is now KEPT
+         * with no pin and counted as before:
+         *
+         * - a tooltip venue that names no building ("Virtual") is online
+         *   (D18), counted `placeless` — this adapter was the one that still
+         *   dropped an online sitting;
+         * - a venue with no reviewed row renders as the county's own words
+         *   (`STATED_NOT_PLACED`), counted `unknownVenue`;
+         * - a row whose tooltip states no venue is the county's own gap
+         *   (`NOT_STATED_BY_PUBLISHER`), counted `unknownVenue`.
+         */
+        const online = row.location && isPlacelessLocation(row.location)
+          ? { label: row.location, joinUrl: null }
+          : null;
+        if (online) {
           drops.placeless++;
-          continue;
+          keptButPlaceless += 1;
         }
-        const venue = resolveVenue(SOURCE_NAME, wiring.ocdId, row.location);
-        if (!venue) {
+        const venue = online || !row.location
+          ? null
+          : resolveVenue(SOURCE_NAME, wiring.ocdId, row.location) ?? null;
+        const venueGap = !online && !venue ? unplacedVenueGap(row.location, wiring.publishingOrg) : null;
+        if (venueGap) {
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         const detailUrl = `${wiring.config.base}/Citizens/Detail_Meeting.aspx?ID=${row.detailId}`;
@@ -226,12 +245,16 @@ export function makeIqm2Source(
           title: row.type ? `${row.board} - ${row.type}` : row.board,
           startsAt,
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
+          ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           agendaUrl: row.agendaHref
             ? `${wiring.config.base}/Citizens/${row.agendaHref}`
             : null,
@@ -253,9 +276,11 @@ export function makeIqm2Source(
 
     return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
       logicalInput: considered,
-      // Every `placeless` here has a `continue` behind it, so this adapter's
-      // counter really is a drop — unlike boardbook, civicplus and diligent,
-      // where the same field name tallies a meeting that is kept (A-002).
+      // Every `placeless` and `unknownVenue` here tallies a sitting that is
+      // then produced, as in boardbook, civicplus and diligent (A-002). Until
+      // the venue-gap class (2026-09-23) both had a `continue` behind them and
+      // were real drops.
+      countedButProduced: keptButPlaceless,
     });
   };
 

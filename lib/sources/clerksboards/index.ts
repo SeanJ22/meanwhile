@@ -14,6 +14,7 @@ import {
 import {
   isPlacelessLocation,
   resolveVenue,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
@@ -47,8 +48,10 @@ import {
  * same content as the statutory annual Public Notice Statement — so an
  * instance expanded from it is a sourced claim citing the page. A schedule
  * this parser cannot read produces zero instances and a counted drop, never
- * a guess; a location that is virtual-only is placeless and drops counted
- * (D18); a location the venue cache cannot cite drops counted.
+ * a guess; a location that is virtual-only is kept online, counted placeless
+ * (D18); a location the venue cache cannot cite, or a blank one, is kept with
+ * no pin and its gap named, counted as unknownVenue (the venue-gap class,
+ * 2026-09-23).
  *
  * Cancellation is claimed only from the Clerk's own published signal: a
  * current-agenda title containing "(Canceled)" cancels exactly the instance
@@ -560,10 +563,6 @@ export function makeClerksBoardsSource(
       considered += instances.length;
 
       const location = page.location?.trim() ?? "";
-      if (!location) {
-        drops.unknownVenue += instances.length;
-        continue;
-      }
       /*
        * A meeting held online is KEPT (D18). No building means no coordinates
        * and no pin, but it is a real public meeting a reader could attend.
@@ -571,7 +570,7 @@ export function makeClerksBoardsSource(
        * meet this way and no join link beside it, so joinUrl is null and
        * renders as the gap it is.
        */
-      const online = isPlacelessLocation(location)
+      const online = location && isPlacelessLocation(location)
         ? { label: location, joinUrl: null }
         : null;
       if (online) {
@@ -580,10 +579,18 @@ export function makeClerksBoardsSource(
         // not a drop and must not be summed as one.
         keptButPlaceless += instances.length;
       }
-      const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
-      if (!online && !venue) {
+      const venue = online || !location ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location) ?? null;
+      /*
+       * No reviewed venue never suppresses a sitting (the venue-gap class,
+       * 2026-09-23): every instance is published with no pin and its gap
+       * named — the page's own "Meeting Location" text verbatim, or the page's
+       * silence where it states none — and counted as `unknownVenue`, kept.
+       * Both cases used to `continue` past every instance of the body.
+       */
+      const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
+      if (venueGap) {
         drops.unknownVenue += instances.length;
-        continue;
+        keptButPlaceless += instances.length;
       }
 
       const canceled =
@@ -627,6 +634,7 @@ export function makeClerksBoardsSource(
               }
             : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           // The Clerk posts one current agenda; it belongs to the instance
           // whose date its title names, and to no other.
           agendaUrl:

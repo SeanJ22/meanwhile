@@ -1,13 +1,19 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
+import { censusUniverseWords, type CensusStateEntry } from "@/lib/control-plane/admin-view/census-universe.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+
 import type { BillingFact } from "@/lib/control-plane/billing-facts.ts";
-import { buildBodyViews, nowFigures, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
+import { buildBodyViews, nowFigures, type BodyStoreFacts, type PublicZip, type VersionFacts, type WatchedContract } from "@/lib/control-plane/admin-view/bodies.ts";
 import { lateWords, sharedRead } from "@/app/(admin)/_mw/data/shared-read.ts";
 import { FIX_ITEMS, orderByMarks } from "@/lib/control-plane/admin-view/fix-list.ts";
 import { routineDetail } from "@/lib/control-plane/admin-view/work-view.ts";
 import {
   ceilingCards,
+  modelProviderWords,
   outcomesInScope,
   perAttempt,
   placeWords,
@@ -46,6 +52,7 @@ const MONTH: LedgerMonth = {
     { key: "no model (deterministic work)", usd: null, measuredRows: 0, unmeasuredRows: 2312 },
   ],
   byRole: [],
+  bySearchSource: [],
 };
 
 function fact(over: Partial<BillingFact>): BillingFact {
@@ -93,6 +100,55 @@ test("an entered figure fills its provider's row with its kind, period and prove
   assert.match(never.text, /the gap between them, \$13\.21/, "the same month: the difference is stated, not smoothed");
   assert.doesNotMatch(recon.map((l) => l.text).join(" "), /\$359\.41/, "the bill and the ledger are never added");
   assert.match(recon.find((l) => l.pill === "UNKNOWN IS NOT ZERO")!.text, /floor, not a total/);
+});
+
+test("search API spend is its own line beside model spend, per host, and an unpriced request is never a zero", () => {
+  const withSearch: LedgerMonth = {
+    ...MONTH,
+    measuredUsd: 186.33,
+    byRole: [
+      { key: "SCOUT", usd: 186.31, measuredRows: 2238, unmeasuredRows: 2 },
+      { key: "DISCOVERY_SEARCH", usd: 0.02, measuredRows: 3, unmeasuredRows: 1 },
+    ],
+    bySearchSource: [
+      { key: "api.search.brave.com", usd: 0.01, measuredRows: 2, unmeasuredRows: 0 },
+      { key: "api.exa.ai", usd: null, measuredRows: 0, unmeasuredRows: 1 },
+      { key: "(host not recorded)", usd: 0.01, measuredRows: 1, unmeasuredRows: 0 },
+    ],
+  };
+  const rows = providerRows({ month: withSearch, rolling: null, maptiler: null, facts: [] });
+  assert.equal(rows.find((r) => r.key === "ledger-month")?.amount, "$186.31", "the Anthropic line is model spend, without the search charges");
+  const line = rows.find((r) => r.key === "ledger-search")!;
+  assert.equal(line.name, "Search APIs — measured here");
+  assert.equal(line.amount, "$0.02");
+  assert.match(line.how, /Brave Search \$0\.01 · 2 requests; Exa no price · 1 request; Host not recorded \$0\.01 · 1 request\./);
+  assert.match(line.how, /1 request had no published price — unknown, not free, so the figure is a floor\./);
+
+  const bill = fact({ id: "anthropic-api:MONTH_TO_DATE:2026-09-01" });
+  const recon = reconciliation({ month: withSearch, facts: [bill], unread: 3, proofAssignments: null });
+  assert.match(recon.find((l) => l.pill === "NEVER ADDED")!.text, /the gap between them, \$13\.21/, "the Anthropic bill is set against model spend, not search");
+  assert.match(recon.find((l) => l.pill === "UNKNOWN IS NOT ZERO")!.text, /at least \$186\.31 this month in model usage alone/);
+
+  // A month the ledger was read for, with no search request: a measured zero, said as a count.
+  const none = providerRows({ month: MONTH, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
+  assert.equal(none.amount, "$0.00");
+  assert.match(none.how, /^No search request is on the ledger this month/);
+  // A snapshot from before the breakdown: the total stands and the split is said to be missing, never shown as none.
+  const older = providerRows({ month: { ...withSearch, bySearchSource: null }, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
+  assert.match(older.how, /Not broken down by provider in this snapshot\./);
+  // The snapshot unread: no figure at all.
+  const unread = providerRows({ month: null, rolling: null, maptiler: null, facts: [] }).find((r) => r.key === "ledger-search")!;
+  assert.equal(unread.amount, null);
+
+  // Whatever the ledger says, the line states what a request costs and the limits the runner starts with,
+  // and that the runner's own setting and the day's count are not read here.
+  for (const row of [line, none, older, unread]) {
+    assert.match(row.how, /Prices: Brave Search \$0\.005 a request \(its pricing page, read Sep 23, 2026\); Exa \$0\.007 a request \(its pricing page, read Sep 23, 2026\)\./);
+    assert.match(row.how, /The runner starts with 50 requests a cycle and 200 a day across both — at most \$1\.40 a day\./);
+    assert.match(row.how, /It may be set to other limits, and it keeps the day's count in its budget ledger; this page reads neither\.$/);
+  }
+
+  assert.equal(modelProviderWords(MONTH), "Every paid model call so far went to one provider: Anthropic.");
 });
 
 test("the three ceilings are never blended, and an account cap or a subscription with no entry has no number", () => {
@@ -214,11 +270,15 @@ test("a routine assignment's trail follows the version that changed what readers
       added: 1, changed: 0, removed: 0, held: 0, meetingsAdded: 1, named: [{ title: "Commission on Disability Issues", startsAt: "2027-01-20T15:30:00-07:00" }],
     }],
   };
-  const trailOf = (facts: BodyStoreFacts) => {
-    const [body] = buildBodyViews({ contracts: [contract], store: facts, nowIso: NOW, zipOf: () => "85701" });
+  const trailOf = (facts: BodyStoreFacts, where: PublicZip = { kind: "ZIP", zip: "85701" }) => {
+    const [body] = buildBodyViews({ contracts: [contract], store: facts, nowIso: NOW, zipOf: () => where });
     const [promoted] = routineDetail(body).promoted;
     return new Map(promoted.trail);
   };
+
+  // A division the index carries no ZIP for, and an index that did not answer, are different sentences.
+  assert.equal(trailOf(store, { kind: "NONE" }).get("Public destination"), "No indexed ZIP carries this body's division, so no page is named");
+  assert.equal(trailOf(store, { kind: "UNREAD" }).get("Public destination"), "The ZIP index was not read this time, so no page is named");
 
   const trail = trailOf(store);
   assert.equal(trail.get("Source"), "Clerk's board page — https://www.tucsonaz.gov/clerks/boards");
@@ -331,6 +391,29 @@ test("a shared read loads once for every caller at once, serves a recent read wh
   const failed = await reader.read(async () => ({ kind: "UNREAD", detail: "down" }) as R);
   assert.equal(failed.kind, "UNREAD");
   assert.deepEqual(await reader.read(slow(6, 5)), { kind: "HELD", n: 6 }, "the next caller reads again");
+});
+
+test("a state nobody has registered reads as what the Census knows is there, never as zeros, and every state and territory has one", () => {
+  const ohio: CensusStateEntry = {
+    governments: {
+      COUNTY: { total: 88, onAZip: 88 },
+      MUNICIPAL: { total: 926, onAZip: 926 },
+      TOWNSHIP: { total: 1_308, onAZip: 1_308 },
+      "SPECIAL DISTRICT": { total: 949, onAZip: 0 },
+      "SCHOOL DISTRICT": { total: 665, onAZip: 452 },
+    },
+    zips: 1_234,
+  };
+  assert.equal(
+    censusUniverseWords("Ohio", ohio),
+    "The Census lists 3,936 governments in Ohio — 88 counties, 926 municipalities, 1,308 townships, 665 school districts and 949 special districts — across 1,234 ZIP codes.",
+  );
+  assert.equal(censusUniverseWords("Puerto Rico", { governments: {}, zips: 132 }), "The Census of Governments does not survey Puerto Rico; its 132 ZIP codes are known.");
+  assert.equal(censusUniverseWords("Guam", null), "The Census figures for Guam are not on file here.");
+
+  const file = JSON.parse(readFileSync(join(import.meta.dirname, "..", "app", "(admin)", "_mw", "data", "state-census-denominators.json"), "utf8")) as { states: Record<string, CensusStateEntry> };
+  for (const st of US_STATES) assert.ok(file.states[st.code.toUpperCase()], `${st.name} has a Census row`);
+  assert.equal(file.states.OH.zips, 1_234);
 });
 
 test("the scope travels in the URL and an unreadable scope is everywhere, never a guess", () => {

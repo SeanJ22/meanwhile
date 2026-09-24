@@ -1,9 +1,9 @@
 {
-  "exactHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
-  "buildId": "RdQEQ5F1pnKuDMyxeoaIq",
+  "exactHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
+  "buildId": "z4r1q7YWh0rEVYmgnypiP",
   "sourceInventory": "docs/evidence/reader-last-mile-active-portraits.json",
-  "sourceInventorySha256": "98bac00e96ddefa9a70e80ee5575bbaba6f908c1309aafca2c8bcc13e4e61107",
-  "holdingsDigest": "95ec8a77526a6222a216fad11830481c01159dfc687b053791a58c7cb9370e98",
+  "sourceInventorySha256": "1b7c1024ce99c169e507c333a3463b72458f60f3e7ffe794f693357d65e5dbbb",
+  "holdingsDigest": "c5a0721d24684dfa1c1fceb8ac830c5bc57af8ad1e9c5603c54b63d50cb78c6a",
   "execution": "Actual HTTP requests to every active canonical portrait URL on the local Next production server. Response image MIME and full bytes checked against committed vault SHA256.",
   "expectedCount": 575,
   "returnedCount": 575,

@@ -11,6 +11,7 @@ import {
 import {
   isPlacelessLocation,
   resolveVenue,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { toZonedIso } from "../../time/zoned.ts";
@@ -110,8 +111,9 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
  * The venue string, assembled from the published address parts.
  *
  * Nothing is invented: a row whose location object carries no usable part
- * yields an empty string and is counted as an unknown venue, which is a drop
- * with a reason rather than a meeting pinned to a guess.
+ * yields an empty string and is counted as an unknown venue — kept, with the
+ * portal's own silence as its named gap, rather than pinned to a guess (the
+ * venue-gap class, 2026-09-23).
  */
 function locationTextOf(e: CivicClerkEvent): string {
   const L = e.eventLocation;
@@ -199,25 +201,29 @@ export function makeCivicClerkSource(
         }
 
         const location = locationTextOf(e);
-        if (!location) {
-          drops.unknownVenue++;
-          continue;
-        }
 
         /* A meeting held online is KEPT (D18) — it is a real public meeting. */
-        const online = isPlacelessLocation(location)
+        const online = location && isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
         if (online) {
           drops.placeless++;
           keptButPlaceless += 1;
         }
-        const venue = online
+        const venue = online || !location
           ? null
-          : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug);
-        if (!online && !venue) {
+          : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
+        /*
+         * No reviewed venue never suppresses the sitting (the venue-gap class,
+         * 2026-09-23): it is published with no pin and its gap named — the
+         * published address parts verbatim, or the portal's silence where the
+         * row carries none — and counted as `unknownVenue`, kept. Both cases
+         * used to `continue`.
+         */
+        const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
+        if (venueGap) {
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         /* The portal's own permalink for one event. */
@@ -241,6 +247,7 @@ export function makeCivicClerkSource(
               }
             : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           /* `hasAgenda` is the portal's own flag for a published agenda. */
           agendaUrl: e.hasAgenda ? meetingUrl : null,
           jurisdiction: wiring.jurisdiction,

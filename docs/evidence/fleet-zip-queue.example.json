@@ -1,5 +1,5 @@
 {
-  "baseSha": "713e4e06f9fba7319c14d8af90f12ac1a38e3e8f",
+  "baseSha": "6245d812a38540499d75701d98209c723c03f947",
   "evidenceBasis": "Committed historical holdings only; no live verification or freshness verdict. The new ZIP is an inert candidate already used by tests/new-zip-readiness.test.ts, not a selected live expansion.",
   "queues": {
     "contract": "fleet/zip-preparation@1",
@@ -474,6 +474,9 @@
           "candidacy:az:2026:state-az:superintendent-of-public-instruction:newby-brett-matthew",
           "candidacy:az:2026:state-az:superintendent-of-public-instruction:yee-kimberly",
           "jurisdiction:ocd-division/country:us/state:az",
+          "jurisdiction:ocd-division/country:us/state:az/county:pinal",
+          "jurisdiction:ocd-division/country:us/state:az/county:pinal/place:casa_grande_ccd",
+          "jurisdiction:ocd-division/country:us/state:az/place:casa_grande",
           "jurisdiction:ocd-division/country:us/state:az/school_district:casa_grande_elementary_district",
           "jurisdiction:ocd-division/country:us/state:az/school_district:casa_grande_union_high_school_district",
           "source-corpus:data/states/az/ballot/az-pima-2026.json",
@@ -1398,6 +1401,33 @@
         "zipConsumers": [
           "85641",
           "85701"
+        ],
+        "action": "REUSE_HELD_EVIDENCE_AND_METHODS_BEFORE_ANY_ACQUISITION"
+      },
+      {
+        "ref": "jurisdiction:ocd-division/country:us/state:az/county:pinal",
+        "kind": "jurisdiction",
+        "canonicalId": "ocd-division/country:us/state:az/county:pinal",
+        "zipConsumers": [
+          "85122"
+        ],
+        "action": "REUSE_HELD_EVIDENCE_AND_METHODS_BEFORE_ANY_ACQUISITION"
+      },
+      {
+        "ref": "jurisdiction:ocd-division/country:us/state:az/county:pinal/place:casa_grande_ccd",
+        "kind": "jurisdiction",
+        "canonicalId": "ocd-division/country:us/state:az/county:pinal/place:casa_grande_ccd",
+        "zipConsumers": [
+          "85122"
+        ],
+        "action": "REUSE_HELD_EVIDENCE_AND_METHODS_BEFORE_ANY_ACQUISITION"
+      },
+      {
+        "ref": "jurisdiction:ocd-division/country:us/state:az/place:casa_grande",
+        "kind": "jurisdiction",
+        "canonicalId": "ocd-division/country:us/state:az/place:casa_grande",
+        "zipConsumers": [
+          "85122"
         ],
         "action": "REUSE_HELD_EVIDENCE_AND_METHODS_BEFORE_ANY_ACQUISITION"
       },

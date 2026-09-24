@@ -1,5 +1,5 @@
 {
-  "recordedFrom": "GET https://meanwhileusa.com/api/meetings?lat=32.2217&lng=-110.9695&zip=85701 (header x-wtp-synthetic-run), saved 2026-09-23 ~22:56Z for the owner's Tucson Unified report. Rows kept: every Tucson Unified (school_district:tucson_unified_district) and Pima County (county:pima) row, and every Pima Community College (diligent:pcc) row, verbatim. coverage.bodies trimmed to those rows' bodies, readerRoster removed.",
+  "recordedFrom": "GET <PUBLIC_SITE_ORIGIN, lib/ops/origins.ts>/api/meetings?lat=32.2217&lng=-110.9695&zip=85701 (header x-wtp-synthetic-run), saved 2026-09-23 ~22:56Z for the owner's Tucson Unified report. Rows kept: every Tucson Unified (school_district:tucson_unified_district) and Pima County (county:pima) row, and every Pima Community College (diligent:pcc) row, verbatim. coverage.bodies trimmed to those rows' bodies, readerRoster removed.",
   "recordedAt": "2026-09-23T22:56:10.369Z",
   "listingIdentity": {
     "recordCount": 181,

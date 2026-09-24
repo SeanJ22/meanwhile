@@ -42,6 +42,7 @@ import { INITIAL_STATE } from "../lib/state/defaults.ts";
 import { applyFilters } from "../lib/state/derive.ts";
 import { uiReducer } from "../lib/state/reducer.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { readerText as text, rowIds, rowMarkup } from "./helpers/reader-markup.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURE = "tests/fixtures/reader-upcoming-meetings-85701.json";
@@ -65,20 +66,6 @@ const UNRECORDED = "diligent:tusd1:505";
 
 const byId = new Map(fixture.meetings.map((m) => [m.id, m]));
 
-/** renderToStaticMarkup escapes these; the assertions read reader text. */
-const text = (html: string) =>
-  html.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-
-/** The rendered row ids, in order, for a `data-meeting-id` surface. */
-const rowIds = (html: string) => [...html.matchAll(/data-meeting-id="([^"]+)"/g)].map((m) => m[1]);
-
-/** One row's markup: from its `data-meeting-id` to the next one. */
-function rowMarkup(html: string, id: string): string {
-  const start = html.indexOf(`data-meeting-id="${id}"`);
-  if (start < 0) return "";
-  const next = html.indexOf("data-meeting-id=", start + 20);
-  return html.slice(start, next < 0 ? undefined : next);
-}
 
 test("the recorded rows are the owner's case: scheduled, no agenda, no building", () => {
   for (const id of UPCOMING) {

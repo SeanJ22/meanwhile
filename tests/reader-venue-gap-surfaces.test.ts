@@ -44,6 +44,7 @@ import {
 import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
 import { makeOfficialPageEventsSource, type OfficialPageRaw } from "../lib/sources/official-page-events/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { readerText as text, rowIds, rowMarkup } from "./helpers/reader-markup.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURE = "tests/fixtures/reader-upcoming-meetings-85701.json";
@@ -168,15 +169,6 @@ test("the list, the body's pin panel and the meeting card show the stated place 
     duffyPlaceless: string[];
     duffy: string;
     popups: Record<string, string>;
-  };
-  const text = (html: string) =>
-    html.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  const rowIds = (html: string) => [...html.matchAll(/data-meeting-id="([^"]+)"/g)].map((m) => m[1]);
-  const rowMarkup = (html: string, id: string) => {
-    const start = html.indexOf(`data-meeting-id="${id}"`);
-    if (start < 0) return "";
-    const next = html.indexOf("data-meeting-id=", start + 20);
-    return html.slice(start, next < 0 ? undefined : next);
   };
   const fails: string[] = [];
   const check = (ok: boolean, what: string) => {

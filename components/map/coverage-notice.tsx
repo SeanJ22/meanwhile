@@ -1,7 +1,7 @@
 "use client";
 
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
-import { staleDivisionRead } from "@/lib/meetings/freshness";
+import { staleDivisionRead, type DivisionRead } from "@/lib/meetings/freshness";
 import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
 import {
@@ -117,8 +117,8 @@ interface CoverageNoticeProps {
    * than inventing one.
    */
   lastCheckedAt?: string | null;
-  /** Newest calendar read per division, from the rows on screen (lastReadByDivision). */
-  lastReadByOcdId?: Readonly<Record<string, string>>;
+  /** Each division's calendar read, from the rows on screen (lastReadByDivision). */
+  lastReadByOcdId?: Readonly<Record<string, DivisionRead>>;
   /**
    * The answer under this card is the previous area's, and a fresher one is
    * in flight (6f). The card DIMS rather than un-rendering — un-rendering is
@@ -561,7 +561,7 @@ function CoverageBody({
   ocdIdsWithMeetings?: string[];
   /** When the meetings snapshot was last refreshed, for the per-body notes. */
   lastCheckedAt?: string | null;
-  lastReadByOcdId?: Readonly<Record<string, string>>;
+  lastReadByOcdId?: Readonly<Record<string, DivisionRead>>;
   onOpenOfficial?: OpenOfficial;
   onOpenBody?: (body: CoveredBody) => void;
   /** WGH-5: the reader settled their address, on any surface. */
@@ -1363,8 +1363,11 @@ function CoverageBody({
             staleDivisionRead(lastReadByOcdId[body.ocdId]) !== null,
         ),
         (body) => {
-          const lastRead = formatDateLong(staleDivisionRead(lastReadByOcdId[body.ocdId!]));
-          return lastRead ? `the listings shown for them were last read from their calendar on ${lastRead}.` : null;
+          const read = staleDivisionRead(lastReadByOcdId[body.ocdId!]);
+          const lastRead = formatDateLong(read?.at);
+          return read && lastRead
+            ? `the ${read.upcoming ? "upcoming " : ""}listings shown for them were last read from their calendar on ${lastRead}.`
+            : null;
         },
       ).map((footnote) => (
         <p

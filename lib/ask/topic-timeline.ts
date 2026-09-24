@@ -97,8 +97,13 @@ export interface TopicTimeline {
   readonly entries: readonly TopicTimelineEntry[];
   /** Recent or imminent sittings of this body whose agenda we have not read. */
   readonly unreadSittings: readonly UnreadSitting[];
-  /** The newest instant any of this body's calendar listings was read from the publisher. */
+  /**
+   * When the body's calendar listings were read: the OLDEST read among its
+   * upcoming listings, or, with none upcoming, the newest read of any.
+   */
   readonly calendarLastReadAt: string | null;
+  /** True when {@link calendarLastReadAt} dates the upcoming listings. */
+  readonly calendarReadBoundsUpcoming: boolean;
   readonly records: EvidenceRecord[];
   readonly gaps: EvidenceGap[];
   readonly denominators: Record<string, number>;
@@ -420,11 +425,27 @@ export function buildTopicTimeline(input: {
   }
   const unreadSittings = [...unreadByDay.values()].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
-  let calendarLastReadAt: string | null = null;
-  for (const meeting of input.meetings) {
+  /*
+   * **THE READ THAT BOUNDS WHAT IS COMING.** (2026-09-24.) A body read by two
+   * routes can be current on one and weeks old on the other. At 85701 the
+   * Pima Board's API route was read at 11:14Z and carries no upcoming
+   * sitting, while every upcoming sitting shown came from the portal's
+   * September 8 read. Dating the body by its newest read of ANY row hid that.
+   * The upcoming listings are therefore dated by the OLDEST read among them.
+   * Only when none is upcoming is the body dated by its newest read.
+   */
+  const readOf = (meeting: TopicMeetingLike) => {
     const at = meeting.provenance?.collectedAt ?? null;
-    if (at && Number.isFinite(Date.parse(at)) && (!calendarLastReadAt || at > calendarLastReadAt)) calendarLastReadAt = at;
-  }
+    return at && Number.isFinite(Date.parse(at)) ? at : null;
+  };
+  const upcomingReads = input.meetings
+    .filter((meeting) => meeting.status !== "CANCELED" && Date.parse(meeting.startsAt) >= now)
+    .map(readOf)
+    .filter((at): at is string => at !== null)
+    .sort();
+  const anyReads = input.meetings.map(readOf).filter((at): at is string => at !== null).sort();
+  const calendarReadBoundsUpcoming = upcomingReads.length > 0;
+  const calendarLastReadAt = calendarReadBoundsUpcoming ? upcomingReads[0]! : (anyReads.at(-1) ?? null);
 
   for (const sitting of unreadSittings) {
     const spelled = formatDateLong(sitting.localDay) ?? sitting.localDay;
@@ -436,9 +457,12 @@ export function buildTopicTimeline(input: {
     });
   }
   if (calendarLastReadAt && now - Date.parse(calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
+    const readDay = formatDateLong(calendarLastReadAt.slice(0, 10)) ?? calendarLastReadAt.slice(0, 10);
     gaps.push({
       whose: "OURS",
-      statement: `Our most recent read of the ${input.bodyName} meeting calendar was ${formatDateLong(calendarLastReadAt.slice(0, 10)) ?? calendarLastReadAt.slice(0, 10)}; anything posted since then is not in this answer yet.`,
+      statement: calendarReadBoundsUpcoming
+        ? `The upcoming ${input.bodyName} meetings in this answer were last read from its calendar on ${readDay}; anything posted since then is not in this answer yet.`
+        : `Our most recent read of the ${input.bodyName} meeting calendar was ${readDay}; anything posted since then is not in this answer yet.`,
     });
   }
 
@@ -465,7 +489,7 @@ export function buildTopicTimeline(input: {
     topicSittingsWithUnreadAgenda: unreadSittings.length,
   };
 
-  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, records, gaps, denominators };
+  return { topic, bodyName: input.bodyName, outcomesUnavailable: Boolean(input.outcomesUnavailable), entries, unreadSittings, calendarLastReadAt, calendarReadBoundsUpcoming, records, gaps, denominators };
 }
 
 function spelledDay(entry: Pick<TopicTimelineEntry, "localDay">): string {
@@ -567,7 +591,10 @@ export function composeTopicAnswer(timeline: TopicTimeline, now: number): { answ
     add(`The next meeting is ${formatDateLong(unreadNext[0].localDay) ?? unreadNext[0].localDay}; we do not yet hold an agenda for it`);
   }
   if (timeline.calendarLastReadAt && now - Date.parse(timeline.calendarLastReadAt) > CALENDAR_READ_STALE_MS) {
-    add(`Our most recent read of the board's calendar was ${formatDateLong(timeline.calendarLastReadAt.slice(0, 10)) ?? timeline.calendarLastReadAt.slice(0, 10)}`);
+    const readDay = formatDateLong(timeline.calendarLastReadAt.slice(0, 10)) ?? timeline.calendarLastReadAt.slice(0, 10);
+    add(timeline.calendarReadBoundsUpcoming
+      ? `The board's upcoming meetings shown here were last read from its calendar on ${readDay}`
+      : `Our most recent read of the board's calendar was ${readDay}`);
   }
 
   if (sentences.length === 0) return null;

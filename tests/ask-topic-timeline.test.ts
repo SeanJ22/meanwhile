@@ -156,7 +156,7 @@ test("ANOTHER STATE, ANOTHER PLATFORM: a New Hampshire town calendar (iCal/sched
   assert.equal(timeline.entries[0]!.status, "SCHEDULED");
   const composed = composeTopicAnswer(timeline, NOW)!;
   assert.match(composed.answer, /^The Newbury Planning Board has an agenda item, "3\. Site plan review: 5 MW solar array off Route 103, continued public hearing" on its agenda for October 6th, 2026/);
-  assert.match(composed.answer, /Our most recent read of the board's calendar was September 10th, 2026/, "a two-week-old calendar read is dated, not presented as current");
+  assert.match(composed.answer, /The board's upcoming meetings shown here were last read from its calendar on September 10th, 2026/, "a two-week-old read of the upcoming listings is dated, not presented as current");
   assert.equal(overLengthBudget(composed.answer), null);
 });
 
@@ -313,4 +313,24 @@ test("ROUTE: a question pointing at one sitting keeps the sitting selection (no 
   const body = await ask("what is on the next Pima County Board of Supervisors meeting agenda about data centers", "2026-09-24");
   assert.equal(body.denominators.topicTimelineEntries, undefined);
   assert.notEqual(body.mode, "GROUNDED_COMPOSED");
+});
+
+test("TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, not by a fresh route that carries none of them", () => {
+  // 85701 on 2026-09-24: the Board's API route was read at 11:14Z and carries only the September 22 sittings;
+  // every upcoming sitting shown came from the portal's September 8 read.
+  const meetings = [
+    { id: "legistar:pima:1828", bodyName: "Board of Supervisors", title: "Board of Supervisors", startsAt: "2026-09-22T17:00:00-07:00", timeZone: "America/Phoenix", agendaUrl: "https://legistar.granicus.com/pima/meetings/2026/9/1828_A_Board_of_Supervisors_26-09-22_Online_Agenda.pdf", provenance: { collectedAt: "2026-09-24T11:14:30.415Z" } },
+    { id: "legistar-insite:pima:1381579", bodyName: "Board of Supervisors", title: "Board of Supervisors", startsAt: "2026-10-13T17:00:00-07:00", timeZone: "America/Phoenix", agendaUrl: null, provenance: { collectedAt: "2026-09-08T21:40:43.908Z" } },
+    { id: "legistar-insite:pima:1381580", bodyName: "Board of Supervisors", title: "Board of Supervisors", startsAt: "2026-10-27T17:00:00-07:00", timeZone: "America/Phoenix", agendaUrl: null, provenance: { collectedAt: "2026-09-08T21:40:43.908Z" } },
+  ];
+  const timeline = buildTopicTimeline({ topic: DATA_CENTER, bodyId: PIMA_BOARD, bodyName: "Pima County Board Of Supervisors", meetings, documents: [], sittings: [], now: NOW });
+  assert.equal(timeline.calendarLastReadAt, "2026-09-08T21:40:43.908Z", "the upcoming listings' own read, not the fresh route's");
+  assert.equal(timeline.calendarReadBoundsUpcoming, true);
+  assert.ok(timeline.gaps.some((gap) => /The upcoming Pima County Board Of Supervisors meetings in this answer were last read from its calendar on September 8th, 2026/.test(gap.statement)), JSON.stringify(timeline.gaps));
+
+  // With nothing upcoming, the body is dated by its newest read, and a fresh read states nothing.
+  const pastOnly = buildTopicTimeline({ topic: DATA_CENTER, bodyId: PIMA_BOARD, bodyName: "Pima County Board Of Supervisors", meetings: meetings.slice(0, 1), documents: [], sittings: [], now: NOW });
+  assert.equal(pastOnly.calendarReadBoundsUpcoming, false);
+  assert.equal(pastOnly.calendarLastReadAt, "2026-09-24T11:14:30.415Z");
+  assert.ok(!pastOnly.gaps.some((gap) => /last read|most recent read/.test(gap.statement)), "a read from this morning is not dated as old");
 });

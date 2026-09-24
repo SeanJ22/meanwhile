@@ -1874,7 +1874,7 @@ function historyWindow(
     const receipt = parseValidationReceipt(row.validationReceipt);
     return [{
       candidateId: row.id,
-      attemptedAt: measured(new Date(at).toISOString()),
+      attemptedAt: measured(iso(event.at)!), // the recorded event instant (checked finite above)
       state: measured("PROMOTED" as const),
       acquisitionSucceeded: measured(true),
       authorityOrigin: "LIVE_SOURCE_ACQUISITION",

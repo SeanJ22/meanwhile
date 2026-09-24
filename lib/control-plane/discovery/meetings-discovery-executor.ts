@@ -391,7 +391,7 @@ export async function walkMeetingsDiscoveryNeed(
    * is followed only on the government's own domain or a known publisher host,
    * opened robots-first, and confirmed by content. Every request is charged.
    */
-  const searchLog: MeetingsDiscoveryAttempt["search"][number][] = [];
+  const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
   const learned: MeetingsRecipe[] = [];
   if (found.length === 0 && runtime.search !== undefined && origins.length > 0) {
     const identity = identityFor(need, homeOrigin ?? origins[0], new Date(startedAt).getUTCFullYear());
@@ -444,7 +444,7 @@ export async function walkMeetingsDiscoveryNeed(
           break;
         }
       }
-      searchLog.push({
+      queryTrail.push({
         templateId: q.templateId, recipeId: q.recipeId, query: q.query, ownSiteOnly: q.ownSiteOnly,
         requests: requests.map(({ bytes: _bytes, ...rest }) => rest), followed,
       });
@@ -470,7 +470,7 @@ export async function walkMeetingsDiscoveryNeed(
     leads,
     steps,
     recipes: { applied: recipeApplied, skipped: recipeSkips, learned },
-    search: searchLog,
+    search: queryTrail,
     requestCount: requests,
     recheckAfter: recheckAfter(outcome, finishedAt),
     note: noteFor(need, outcome, found, leads, origins.length),

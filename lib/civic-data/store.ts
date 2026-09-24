@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, like, sql } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections } from "../db/schema.ts";
@@ -15,6 +15,16 @@ import {
   type ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
+import {
+  UNCHANGED_CONFIRMATION_PREFIX,
+  buildUnchangedConfirmation,
+  latestUnchangedConfirmation,
+  parseUnchangedConfirmation,
+  serializeUnchangedConfirmation,
+  type ConfirmUnchangedInput,
+  type ConfirmUnchangedOutcome,
+  type UnchangedConfirmation,
+} from "./unchanged-confirmation.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import {
   isTrustedLkgImportCandidate,
@@ -120,6 +130,13 @@ export interface RoutineDataStore {
    */
   readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateProofs?: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
+  /**
+   * A re-check that found nothing new: an append-only confirmation event on the
+   * pointed candidate (see `UnchangedConfirmation`). Refused, never partly
+   * written, when the pointer moved, it is a trusted-LKG import, the read model
+   * differs, or the evidence is malformed.
+   */
+  readonly confirmUnchanged?: (input: ConfirmUnchangedInput, at: string) => Promise<ConfirmUnchangedOutcome>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   /**
    * The pointer named, never carried: identity columns only. Reader-delivery
@@ -900,6 +917,33 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return structuredClone(event);
   }
 
+  async confirmUnchanged(input: ConfirmUnchangedInput, at: string): Promise<ConfirmUnchangedOutcome> {
+    const key = projectionKey(input.recordClass, input.scope);
+    const built = buildUnchangedConfirmation(input, key, at);
+    if (!built.ok) return { kind: "EVIDENCE_INVALID", detail: built.detail };
+    const pointer = this.promotions.get(key);
+    const row = this.candidates.get(input.pointerVersionId);
+    if (
+      !pointer || !row ||
+      pointer.sourceId !== input.sourceId ||
+      pointer.versionId !== input.pointerVersionId ||
+      pointer.lastKnownGoodVersionId !== input.pointerVersionId ||
+      row.state !== "PROMOTED"
+    ) {
+      return { kind: "POINTER_MOVED", detail: `The pointer ${key} no longer names ${input.pointerVersionId}.` };
+    }
+    if (isTrustedLkgImportCandidate(row.candidate)) {
+      return { kind: "POINTER_IS_IMPORT", detail: `${input.pointerVersionId} is a trusted-LKG import; a live read of it promotes.` };
+    }
+    if (row.candidate.normalization.normalizedHash !== input.readModelHash) {
+      return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s read model is not ${input.readModelHash}.` };
+    }
+    const { history, event } = this.nextEvent(input.pointerVersionId, "PROMOTED", at, serializeUnchangedConfirmation(built.confirmation));
+    history.push(structuredClone(event));
+    this.history.set(input.pointerVersionId, history);
+    return { kind: "CONFIRMED", versionId: input.pointerVersionId, at };
+  }
+
   async promote(candidateId: string, receipt: ValidationReceipt, at: string): Promise<PromotedProjection> {
     const record = this.candidates.get(candidateId);
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
@@ -976,17 +1020,14 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
       return { ...trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt), ...sittings };
     }
-    const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointer);
-    const pointedObservedAt = pointedRow
-      ? this.history.get(pointedRow.candidate.id)?.find((event) => event.sequence === 1)?.at
-      : undefined;
-    const lastSucceededObservedAt = proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt);
-    return {
-      ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
-      ...(lastSucceededAt ? { lastSucceededAt } : {}),
-      ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
-      ...sittings,
-    };
+    const pointedHistory = pointedRow ? this.history.get(pointedRow.candidate.id) ?? [] : [];
+    const pointedObservedAt = pointedHistory.find((event) => event.sequence === 1)?.at;
+    const confirmation = pointedRow ? latestUnchangedConfirmation(pointedHistory, pointedRow.candidate.id) : null;
+    return confirmedClock({
+      lastAttemptedAt,
+      lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
+      lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
+    }, confirmation, sittings);
   }
 }
 
@@ -1042,6 +1083,54 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
     })
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
+    .limit(1);
+}
+
+function laterInstant(left: string | undefined, right: string | undefined): string | undefined {
+  if (left === undefined) return right;
+  if (right === undefined) return left;
+  return Date.parse(right) > Date.parse(left) ? right : left;
+}
+
+/**
+ * A pointed version's newest unchanged confirmation is its newest attempt and,
+ * when the pointer proof holds, its newest success: observed in the attempt
+ * clock's units, claimed as the confirming acquisition's retrieval. A later
+ * failed attempt still reads as later than it, so the retry clock owns it.
+ */
+function confirmedClock(
+  clock: { readonly lastAttemptedAt?: string; readonly lastSucceededAt?: string; readonly lastSucceededObservedAt?: string },
+  confirmation: UnchangedConfirmation | null,
+  sittings: { readonly sittingStarts?: readonly string[] },
+): RoutineStoreClock {
+  const lastAttemptedAt = laterInstant(clock.lastAttemptedAt, confirmation?.observedAt);
+  const lastSucceededAt = clock.lastSucceededAt === undefined
+    ? undefined
+    : laterInstant(clock.lastSucceededAt, confirmation?.retrieval.retrievedAt);
+  const lastSucceededObservedAt = clock.lastSucceededObservedAt === undefined
+    ? undefined
+    : laterInstant(clock.lastSucceededObservedAt, confirmation?.observedAt);
+  return {
+    ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
+    ...(lastSucceededAt ? { lastSucceededAt } : {}),
+    ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+    ...sittings,
+  };
+}
+
+/** The pointed candidate's newest unchanged confirmation, if any: one event's detail, never a payload. */
+export function routineClockConfirmationRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
+  return db
+    .select({ detail: civicDataCandidateEvents.detail })
+    .from(civicDataPromotions)
+    .innerJoin(civicDataCandidateEvents, eq(civicDataCandidateEvents.candidateId, civicDataPromotions.currentVersionId))
+    .where(and(
+      eq(civicDataPromotions.recordClass, recordClass),
+      eq(civicDataPromotions.scope, scope),
+      // `_` is a LIKE wildcard; the prefix is matched literally.
+      like(civicDataCandidateEvents.detail, `${UNCHANGED_CONFIRMATION_PREFIX.replaceAll("_", "\\_")}%`),
+    ))
+    .orderBy(desc(civicDataCandidateEvents.sequence))
     .limit(1);
 }
 
@@ -1674,6 +1763,72 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return postgresCandidateEventRowToEvent(event);
   }
 
+  async confirmUnchanged(input: ConfirmUnchangedInput, at: string): Promise<ConfirmUnchangedOutcome> {
+    const key = projectionKey(input.recordClass, input.scope);
+    const built = buildUnchangedConfirmation(input, key, at);
+    if (!built.ok) return { kind: "EVIDENCE_INVALID", detail: built.detail };
+    const id = input.pointerVersionId;
+    this.assertCandidateMutationAuthority({ id, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
+    const detail = serializeUnchangedConfirmation(built.confirmation);
+    const nextSequence = this.nextCandidateEventSequence(id);
+    // One guarded insert: the pointer still names exactly this live version,
+    // its read model is the confirmed one, and time never runs backward.
+    const [, eventRows] = await this.db.batch([
+      this.candidateEventLock(id),
+      this.db.insert(civicDataCandidateEvents).select(sql`
+        select gen_random_uuid(), ${id}, ${nextSequence}, ${"PROMOTED"}, ${at}::timestamptz, ${detail}
+        from ${civicDataCandidates}
+        where ${civicDataCandidates.id} = ${id}
+          and ${civicDataCandidates.state} = ${"PROMOTED"}
+          and ${civicDataCandidates.sourceId} = ${input.sourceId}
+          and ${civicDataCandidates.recordClass} = ${input.recordClass}
+          and ${civicDataCandidates.scope} = ${input.scope}
+          and ${civicDataCandidates.normalizedHash} = ${input.readModelHash}
+          and not (${civicDataCandidates.candidate} ? 'bootstrapImport')
+          and exists (
+            select 1 from ${civicDataPromotions}
+            where ${civicDataPromotions.recordClass} = ${civicDataCandidates.recordClass}
+              and ${civicDataPromotions.scope} = ${civicDataCandidates.scope}
+              and ${civicDataPromotions.sourceId} = ${civicDataCandidates.sourceId}
+              and ${civicDataPromotions.currentVersionId} = ${id}
+              and ${civicDataPromotions.lastKnownGoodVersionId} = ${id}
+          )
+          and not exists (
+            select 1 from ${civicDataCandidateEvents}
+            where ${civicDataCandidateEvents.candidateId} = ${id}
+              and ${civicDataCandidateEvents.at} > ${at}::timestamptz
+          )
+      `).returning({ sequence: civicDataCandidateEvents.sequence }),
+    ]);
+    if (eventRows[0]) return { kind: "CONFIRMED", versionId: id, at };
+    // Name the guard that refused, from identity columns only.
+    const [pointerRows, candidateRows] = await this.db.batch([
+      this.db.select({
+        sourceId: civicDataPromotions.sourceId,
+        currentVersionId: civicDataPromotions.currentVersionId,
+        lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+      }).from(civicDataPromotions)
+        .where(and(eq(civicDataPromotions.recordClass, input.recordClass), eq(civicDataPromotions.scope, input.scope)))
+        .limit(1),
+      this.db.select({
+        state: civicDataCandidates.state,
+        normalizedHash: civicDataCandidates.normalizedHash,
+        imported: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
+      }).from(civicDataCandidates).where(eq(civicDataCandidates.id, id)).limit(1),
+    ]);
+    const pointer = pointerRows[0];
+    const candidate = candidateRows[0];
+    if (
+      !pointer || !candidate || candidate.state !== "PROMOTED" ||
+      pointer.sourceId !== input.sourceId || pointer.currentVersionId !== id || pointer.lastKnownGoodVersionId !== id
+    ) {
+      return { kind: "POINTER_MOVED", detail: `The pointer ${key} no longer names ${id}.` };
+    }
+    if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} is a trusted-LKG import; a live read of it promotes.` };
+    if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
+    throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
+  }
+
   async promote(candidateId: string, receipt: ValidationReceipt, at: string): Promise<PromotedProjection> {
     this.assertMutationAuthority();
     // Whole row: its read model is the payload the insert below copies and the
@@ -1819,9 +1974,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     // dataset on every pass (see ROUTINE_CLOCK_CANDIDATE_FIELDS).
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
-    const [rows, pointerRows, observedRows, sittingRows] = recordClass === "MEETING"
-      ? await this.db.batch([attemptQuery, pointerQuery, observedQuery, sittingStartsRead(this.db, scope)])
-      : [...await this.db.batch([attemptQuery, pointerQuery, observedQuery]), null] as const;
+    const confirmationQuery = routineClockConfirmationRead(this.db, recordClass, scope);
+    const [rows, pointerRows, observedRows, confirmationRows, sittingRows] = recordClass === "MEETING"
+      ? await this.db.batch([attemptQuery, pointerQuery, observedQuery, confirmationQuery, sittingStartsRead(this.db, scope)])
+      : [...await this.db.batch([attemptQuery, pointerQuery, observedQuery, confirmationQuery]), null] as const;
     // The first event is the store-observed attempt clock. A refused
     // candidate's claimed retrievedAt is evidence, never scheduler authority.
     const lastAttemptedAt = rows[0]?.attemptedAt === undefined
@@ -1862,11 +2018,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       pointerProof,
       observed === undefined ? undefined : canonicalPostgresRoutineTimestamp(observed, "clock.lastSucceededObservedAt"),
     );
-    return {
-      ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
-      ...(canonicalLastSucceededAt ? { lastSucceededAt: canonicalLastSucceededAt } : {}),
-      ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
-      ...sittings,
-    };
+    const confirmationRow = confirmationRows[0];
+    const confirmation = pointer && confirmationRow ? parseUnchangedConfirmation(confirmationRow.detail) : null;
+    return confirmedClock({
+      lastAttemptedAt,
+      lastSucceededAt: canonicalLastSucceededAt,
+      lastSucceededObservedAt,
+    }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings);
   }
 }

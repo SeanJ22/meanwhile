@@ -100,8 +100,59 @@ export interface JurisdictionRouteHints {
  */
 const NH_LEDGER: HintObservation = { at: "2026-09-24T04:33:00Z", by: "Backend session ledger, 2026-09-24 04:03-04:33Z, robots-checked" };
 
+/**
+ * Chandler's own publications, found by the RouteTask session's research on 2026-09-24 (robots.txt read first on
+ * every host; about 90 requests, none to destinyhosted.com). Every agenda, result and set of minutes is published
+ * only on destinyhosted.com, whose robots.txt reads as disallow-all and which is never requested: that is the
+ * owner's decision. The city's own pages date the sittings. The official-page-events check reads no dated event
+ * from them yet, so the walk records them as leads until it does; then they are finds with no change here.
+ */
+const CHANDLER_RESEARCH: HintObservation = { at: "2026-09-24T18:24:00Z", by: "RouteTask session research, robots-checked, destinyhosted.com never requested" };
+
 /** The committed hints. Each entry names what it was observed on; the walk re-checks all of it. */
 export const ROUTE_HINTS: readonly JurisdictionRouteHints[] = [
+  {
+    jurisdictionId: "az:city:city-of-chandler",
+    officialSite: null,
+    routes: [
+      {
+        url: "https://www.chandleraz.gov/events",
+        kind: "PAGE",
+        body: "City Council",
+        platform: "drupal",
+        verifyAs: "official-page-events",
+        evidence:
+          "The city's own \"City Meetings Calendar\", as the city links it: one /events/<slug> page per sitting with its date, " +
+          "time, venue and an America/Phoenix start, for the Council and about a dozen boards and commissions, posted 4-6 days " +
+          "ahead. Robots allow it (only /events/*? with a query string is disallowed). Its pages' \"View Current Agenda\" links " +
+          "go to destinyhosted.com.",
+        observed: CHANDLER_RESEARCH,
+      },
+      {
+        url: "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
+        kind: "PAGE",
+        body: "City Council",
+        platform: "drupal",
+        verifyAs: "official-page-events",
+        evidence:
+          "The \"2026 City Council Meeting Dates\" table (Resolution No. 5937, Exhibit A): 33 dates in three columns, one row a " +
+          "month; the time and place are stated once, in prose: the Council usually meets at 88 E. Chicago St., Council " +
+          "Chambers, at 6 p.m. Robots allowed.",
+        observed: CHANDLER_RESEARCH,
+      },
+      {
+        url: "https://chandleraz.new.swagit.com/views/155/",
+        kind: "WITNESS",
+        body: "City Council, Planning and Zoning Commission, Public Housing Authority Commission",
+        platform: "swagit",
+        verifyAs: null,
+        evidence:
+          "456 past recordings, 2018-01-03 to 2026-09-17: proof a sitting was held, never a sitting on its own. Robots allowed. " +
+          "Its Agenda links redirect to destinyhosted.com and are not followed.",
+        observed: CHANDLER_RESEARCH,
+      },
+    ],
+  },
   {
     jurisdictionId: "nh:city:town-of-newbury",
     officialSite: null,

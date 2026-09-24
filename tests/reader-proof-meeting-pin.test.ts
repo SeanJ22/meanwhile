@@ -94,15 +94,18 @@ function report(source: string, version: string, ok = true): ChildRunReport {
 }
 
 async function promoteVersion(store: MemoryRoutineDataStore, collectedAt: string): Promise<string> {
+  // Each version carries a real fact change: a re-read that changes nothing is
+  // confirmed on the pointed version and never moves the pointer.
   const [result] = await promoteMeetingPartitions({
     store,
     partitions: [legistar],
-    meetings: [meeting(legistar, collectedAt, "newbury-shaped-sitting")],
+    meetings: [{ ...meeting(legistar, collectedAt, "newbury-shaped-sitting"), title: `Newbury-shaped sitting, agenda of ${collectedAt}` }],
     agendaDocuments: [],
     reports: [report(legistar.meetingSource, collectedAt)],
     generatedAt: collectedAt,
   });
   assert.equal(result?.outcome.candidate.state, "PROMOTED");
+  assert.equal(result?.outcome.confirmed, undefined, "each version is a real promotion");
   return result!.candidate.id;
 }
 

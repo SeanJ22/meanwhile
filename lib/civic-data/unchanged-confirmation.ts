@@ -23,11 +23,16 @@ export const UNCHANGED_CONFIRMATION_PREFIX = "UNCHANGED_CONFIRMATION_V1 ";
 
 /**
  * READ_MODEL_RECOMPUTED: the source was acquired and normalized, and the read
- * model hashed equal to the pointer's. PUBLISHER_STAMPS_UNCHANGED: the
- * publisher's own change stamps for every held record equal the held ones, so
- * the read model is unchanged by construction; the stamps are the evidence.
+ * model hashed equal to the pointer's. CHANGE_SET_UNCHANGED: the source was
+ * acquired, normalized and validated, and its change set against the pointed
+ * version added, changed and removed nothing, with the same held records; only
+ * observation stamps (a meeting row's collectedAt, the snapshot's generatedAt
+ * and counts) differ, and those never decide a change (civicRecordFacts).
+ * PUBLISHER_STAMPS_UNCHANGED: the publisher's own change stamps for every held
+ * record equal the held ones, so the read model is unchanged by construction;
+ * the stamps are the evidence.
  */
-export type UnchangedBasis = "READ_MODEL_RECOMPUTED" | "PUBLISHER_STAMPS_UNCHANGED";
+export type UnchangedBasis = "READ_MODEL_RECOMPUTED" | "CHANGE_SET_UNCHANGED" | "PUBLISHER_STAMPS_UNCHANGED";
 
 export interface UnchangedConfirmationRetrieval {
   readonly requestedUrl: string;
@@ -97,7 +102,7 @@ export function unchangedConfirmationShapeIssue(value: unknown): string | null {
     if (typeof row[field] !== "string" || !(row[field] as string).trim()) return `${field} is missing`;
   }
   if (typeof row.readModelHash !== "string" || !SHA256.test(row.readModelHash)) return "readModelHash is not a SHA-256";
-  if (row.basis !== "READ_MODEL_RECOMPUTED" && row.basis !== "PUBLISHER_STAMPS_UNCHANGED") return "unknown basis";
+  if (row.basis !== "READ_MODEL_RECOMPUTED" && row.basis !== "CHANGE_SET_UNCHANGED" && row.basis !== "PUBLISHER_STAMPS_UNCHANGED") return "unknown basis";
   if (!isInstant(row.observedAt)) return "observedAt is not an instant";
   const retrieval = row.retrieval as Record<string, unknown> | null | undefined;
   if (
@@ -136,6 +141,8 @@ export interface ConfirmUnchangedInput {
   readonly basis: UnchangedBasis;
   readonly retrieval: UnchangedConfirmationRetrieval;
   readonly stamps?: readonly PublisherStampComparison[] | null;
+  /** The confirming acquisition's retained source bytes, kept in a companion event. */
+  readonly retainedSourceResponses?: readonly unknown[] | null;
 }
 
 export type ConfirmUnchangedOutcome =
@@ -192,4 +199,23 @@ export function latestUnchangedConfirmation(
     if (latest === null || event.sequence > latest.sequence) latest = { sequence: event.sequence, confirmation };
   }
   return latest?.confirmation ?? null;
+}
+
+/**
+ * The confirming acquisition's retained source bytes, preserved exactly as a
+ * promoted candidate would have preserved them (source history is kept), in a
+ * companion event written in the same guarded step. Nothing routine reads it:
+ * the clock and Reader freshness read only the small receipt.
+ */
+export const UNCHANGED_CONFIRMATION_SOURCES_PREFIX = "UNCHANGED_CONFIRMATION_SOURCES_V1 ";
+
+export function serializeUnchangedConfirmationSources(
+  confirmation: Pick<UnchangedConfirmation, "versionId" | "observedAt">,
+  retainedSourceResponses: readonly unknown[],
+): string {
+  return `${UNCHANGED_CONFIRMATION_SOURCES_PREFIX}${canonicalCivicDataJson({
+    versionId: confirmation.versionId,
+    observedAt: confirmation.observedAt,
+    retainedSourceResponses,
+  })}`;
 }

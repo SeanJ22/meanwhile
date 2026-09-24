@@ -290,6 +290,9 @@ test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, w
     generatedAt: NEXT_READ,
   });
   assert.equal(next?.outcome.candidate.state, "PROMOTED", next?.outcome.candidate.failureDetail ?? "");
+  // Still unlisted, still carried: nothing new, so the re-check is confirmed on
+  // the pointed version and readers keep the carried row as it was.
+  assert.ok(next!.outcome.confirmed, "a re-check with no new fact is confirmed, not republished");
   const payload = next!.outcome.promoted!.payload as MeetingsSnapshot;
   assert.deepEqual(payload.meetings.map(({ id }) => id).sort(), ["diligent:tusd1:495", "diligent:tusd1:502"]);
   assert.deepEqual(
@@ -297,14 +300,14 @@ test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, w
     { source: "diligent", lastFreshAt: LAST_LISTED_495, reason: "UNEXPLAINED_DISAPPEARANCE" },
   );
   assert.deepEqual([payload.counts.fresh, payload.counts.carried, payload.counts.total], [1, 1, 2]);
-  const changeSet = next!.outcome.candidate.candidate.changeSet!;
+  const changeSet = next!.outcome.confirmed.recheck.changeSet!;
   assert.deepEqual(changeSet.removed, []);
   assert.deepEqual(next!.candidate.removalEvidence ?? [], []);
   assert.deepEqual(
     changeSet.held.filter(({ code }) => code === "MEETING_UNEXPLAINED_DISAPPEARANCE_RETAINED").map(({ key }) => key),
     ["meeting:diligent:tusd1:495"],
   );
-  assert.notEqual(next!.outcome.promoted!.versionId, versionId);
+  assert.equal(next!.outcome.promoted!.versionId, versionId);
 });
 
 /* ── (c) the same body at another time ───────────────────────────────────── */

@@ -1141,7 +1141,9 @@ export async function promoteMeetingPartition(
     snapshot,
     retainedResponses,
   );
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt);
+  // An ordinary routine re-check that found nothing new is confirmed on the
+  // pointed version, not republished (RULING 283's receipted no-change).
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: true });
   return { candidate, outcome };
 }
 
@@ -1158,7 +1160,9 @@ export function printMeetingPartitionReceipt(
     meetingSource: partition.meetingSource,
     bodyId: partition.bodyId,
     scope: partition.scope,
-    candidateId: candidate.id,
+    // The durable candidate: the new one, or the pointed version a no-change
+    // re-check confirmed (then no new candidate exists).
+    candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,
     decision: outcome.candidate.receipt?.decision ?? null,

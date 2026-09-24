@@ -589,7 +589,9 @@ test("ICAL-OCC · the first read under occurrence identity replaces the series r
     reports: [report(READ_2, second.length)],
     generatedAt: "2026-09-23T16:12:00.000Z",
   });
-  const repeat = again!.outcome.candidate.candidate.changeSet!;
+  // A validated no-change is confirmed on the pointed version, not republished.
+  assert.ok(again!.outcome.confirmed, "the unchanged second read is a confirmation");
+  const repeat = again!.outcome.confirmed.recheck.changeSet!;
   assert.deepEqual([repeat.added, repeat.changed, repeat.removed], [[], [], []], "the flip is gone");
 });
 

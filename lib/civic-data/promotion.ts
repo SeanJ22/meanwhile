@@ -89,6 +89,17 @@ export interface PromotionOutcome {
   readonly candidate: CandidateVersionRecord;
   readonly promoted: PromotedProjection | null;
   readonly readerReadback: ReaderProjectionReadbackReceipt | null;
+  /**
+   * Present when a validated re-check found nothing new and was confirmed on
+   * the pointed version instead of promoted: `candidate` is then the pointed
+   * record and `promoted` the unchanged pointer (see UnchangedConfirmation).
+   */
+  readonly confirmed?: {
+    readonly versionId: string;
+    readonly at: string;
+    /** The validated re-check that found nothing new; never stored as a candidate. */
+    readonly recheck: RoutineCandidate;
+  };
 }
 
 async function appendTypedReaderProjectionReadback(
@@ -287,6 +298,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
   const boundedCandidate = durableCandidateSnapshot(candidate);
@@ -303,7 +315,15 @@ export async function processRegisteredMeetingPartitionCandidate(
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
-  return processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification);
+  return processRoutineCandidate(
+    store,
+    boundedCandidate,
+    now,
+    expectedBaseVersionId,
+    REGISTERED_PRODUCTION_DOOR,
+    sourceProjectionVerification,
+    options,
+  );
 }
 
 export function manualCandidateContractIssue(contractId: ManualProductionContractId, candidate: RoutineCandidate): string | null {
@@ -387,6 +407,16 @@ function invalidLkgReceipt(receipt: ValidationReceipt, code: string, detail: str
  * The only transition driver. A successful fetch is persisted even when a
  * later check refuses promotion; the existing pointer is never cleared.
  */
+/**
+ * A record newly held (the source stopped listing it) or newly released is
+ * evidence the pointed version does not carry, so such a re-check promotes.
+ */
+function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  const keys = (value: RoutineCandidate) => [...new Set((value.excludedFacts ?? []).map((fact) => fact.key))].sort();
+  const [left, right] = [keys(candidate), keys(pointed)];
+  return left.length === right.length && left.every((key, index) => key === right[index]);
+}
+
 export async function processRoutineCandidate(
   store: RoutineDataStore,
   inputCandidate: RoutineCandidate,
@@ -394,6 +424,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
   if (productionStore && registeredDoor !== REGISTERED_PRODUCTION_DOOR) {
@@ -470,6 +501,52 @@ export async function processRoutineCandidate(
       detail: sourceProjectionVerification.detail,
     }],
   );
+  // A validated re-check whose read model is exactly the pointed one is a
+  // durably receipted no-change (RULING 283): readers keep their version and
+  // nothing is recomposed, read back or republished. Any refusal (the pointer
+  // moved, an import is pointed, the hash differs, the evidence is malformed)
+  // falls through to the ordinary candidate and promotion below.
+  if (
+    options.confirmUnchanged === true &&
+    typeof store.confirmUnchanged === "function" &&
+    current !== null && lkg !== null && lkgProofIssue === null && !preloadedBaseChanged &&
+    current.versionId === current.lastKnownGoodVersionId && lkg.candidate.id === current.versionId &&
+    candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+    validated.state === "VALIDATED" && validated.receipt.decision === "GOOD" &&
+    candidate.changeSet?.outcome === "UNCHANGED" &&
+    typeof lkg.candidate.normalization.normalizedHash === "string" &&
+    sameHeldRecords(candidate, lkg.candidate)
+  ) {
+    const retained = (candidate as { readonly retainedSourceResponses?: readonly unknown[] }).retainedSourceResponses;
+    const confirmed = await store.confirmUnchanged({
+      sourceId: candidate.sourceId,
+      recordClass: candidate.recordClass,
+      scope: candidate.scope,
+      parserVersion: candidate.normalization.parserVersion,
+      pointerVersionId: current.versionId,
+      // The pointed version's read model is the one this re-check confirms.
+      readModelHash: lkg.candidate.normalization.normalizedHash,
+      basis: candidate.normalization.normalizedHash === lkg.candidate.normalization.normalizedHash
+        ? "READ_MODEL_RECOMPUTED"
+        : "CHANGE_SET_UNCHANGED",
+      retrieval: {
+        requestedUrl: candidate.retrieval.requestedUrl,
+        finalUrl: candidate.retrieval.finalUrl ?? candidate.retrieval.requestedUrl,
+        httpStatus: candidate.retrieval.httpStatus ?? 0,
+        rawHash: candidate.retrieval.rawHash ?? "",
+        retrievedAt: candidate.retrieval.retrievedAt,
+      },
+      retainedSourceResponses: retained ?? null,
+    }, transitionAt);
+    if (confirmed.kind === "CONFIRMED") {
+      return {
+        candidate: lkg,
+        promoted: current,
+        readerReadback: null,
+        confirmed: { versionId: confirmed.versionId, at: confirmed.at, recheck: candidate },
+      };
+    }
+  }
   const acquisitionFailure = candidate.retrieval.succeeded ? null : failureOf(validated.receipt);
   await store.create({
     candidate,

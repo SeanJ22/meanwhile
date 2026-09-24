@@ -1,9 +1,10 @@
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
-import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
+import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
-import { seatHolderById } from "@/lib/registry/server";
+import { seatHolderById, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -71,8 +72,7 @@ import {
 } from "@/lib/state-rollcalls/authority";
 import { refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
 import { refreshFederalKeyVotesFromPromoted } from "@/lib/votes/key-votes-projection";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+
 import {
   refreshAzBallotFromPromoted,
   refreshCandidateCorpusFromPromoted,
@@ -663,25 +663,52 @@ export async function POST(request: Request) {
   let stageMark = Date.now();
   const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
 
-  // Each authority owns its own read state and failure gap. A missing or
-  // invalid pointer must fail that source closed without rejecting the whole
-  // Ask request or relabelling every unrelated source as unavailable.
-  await settleGroundedSourcePreloads([
+  /*
+   * **A COLD REQUEST PAID FOR EVERY SOURCE, WHATEVER WAS ASKED.** (2026-09-24.)
+   *
+   * Fourteen promoted projections — money, votes, key votes, ballot, candidate
+   * profiles, statements, executive actions — were read from the database
+   * before every question. On a cold instance that was ~21 s measured (the
+   * first live Pima request timed out; a Rockaway request returned 504 after
+   * 31 s), and a question about a body's agenda needs none of them.
+   *
+   * 1. The registry and federal directory are served from the runner-published
+   *    edge bundle when one exists, exactly as /api/meetings serves them; the
+   *    database read remains the fallback.
+   * 2. A topic question loads what its timeline needs — the registry and the
+   *    recorded outcomes — and the other sources only if it turns out not to
+   *    name its government in plain words (see the topic route below), in
+   *    which case every source is loaded exactly as before.
+   *
+   * Each authority still owns its own read state and failure gap. A missing or
+   * invalid pointer fails that source closed without rejecting the whole Ask
+   * request or relabelling every unrelated source as unavailable.
+   */
+  const topicRoute = topicFocusedQuestion(question);
+  const edgeManifest = await readReaderManifest().catch(() => null);
+  if (edgeManifest?.authorityArtifacts) {
+    const authorityEdge = await ensureReaderAuthorityEdge(edgeManifest).catch(() => null);
+    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+  }
+  const essentialPreloads = [
+    () => settleRegistryAuthorityReads("REGISTRY"),
+    settleFederalDirectoryRead,
+    refreshOutcomeSnapshotFromPromoted,
+  ];
+  const deferrablePreloads = [
     refreshFundingFromPromoted,
     refreshStateMoneyFromPromoted,
     refreshAzPimaFinanceFromPromoted,
     ...[...stateVoteScopes].map((scope) => () => refreshStateVotesFromPromoted(scope)),
     refreshFederalVotesFromPromoted,
     refreshFederalKeyVotesFromPromoted,
-    refreshFederalDirectoryFromPromoted,
-    refreshRegistryRuntimeFromPromoted,
     refreshAzBallotFromPromoted,
     refreshCandidateProfilesFromPromoted,
     refreshCandidateCorpusFromPromoted,
     refreshOfficeholderStatementsFromPromoted,
     refreshExecutiveActionsFromPromoted,
-    refreshOutcomeSnapshotFromPromoted,
-  ]);
+  ];
+  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : [...essentialPreloads, ...deferrablePreloads]);
   if (process.env.NODE_ENV === "production") {
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
@@ -702,7 +729,7 @@ export async function POST(request: Request) {
      * (~1.4-2.3 s measured). One read path also means Ask and the map can
      * never describe two different versions of a body's calendar.
      */
-    const read = await readReaderEdgeMeetings();
+    const read = await readReaderEdgeMeetings({ manifest: edgeManifest });
     meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
     meetingDataDetail = read.kind === "PROMOTED"
       ? `Canonical meetings projection ${read.metadata.versionId ?? "unknown"} was read.`
@@ -731,6 +758,27 @@ export async function POST(request: Request) {
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
     (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
   const bodies = snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId));
+  /*
+   * **THE DETERMINISTIC TOPIC ROUTE.** (2026-09-24, the Pima data-center miss.)
+   *
+   * A question that names a curated topic and names its government in plain
+   * words ("is pima county voting on data centers") needs nothing a model adds:
+   * the topic detector is curated code, and the body binds lexically from the
+   * question itself. The model interpretation cost ~3 s and, worse, turned
+   * "is ... voting" into NEXT, which chose the wrong evidence. The resolver the
+   * route uses below is probed with the deterministic reading over the held
+   * bodies; only a LEXICAL binding of a body (the reader's own words, never
+   * page context, a prior turn or a model expansion) takes this route. Anything
+   * else — a pronoun, a follow-up, an unnamed government — loads every source
+   * and goes to the model exactly as before.
+   */
+  let deterministicTopicRoute = false;
+  if (topicRoute) {
+    const probe = resolveInterpretation(interpretWithoutModel(question), question, bodies, { activeSubjects: [], priorSubjects: [] });
+    deterministicTopicRoute = probe.binding.kind === "BOUND" && probe.binding.entity.level === "BODY" &&
+      (probe.basis === "WHOLE_QUESTION" || probe.basis === "READER_WORDS");
+    if (!deterministicTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
+  }
   const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
   try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
@@ -754,7 +802,9 @@ export async function POST(request: Request) {
    * page. Ballot truth is not duplicated — this reads the same committed set
    * `app/ballot/page.tsx` renders from, through the same source registry.
    */
-  const ballot = await loadBallotForDivisions(ocdIds);
+  // A topic question bound lexically to a body is not a ballot question; its
+  // ballot is not read (loadBallotForDivisions([]) is the empty holding).
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute ? [] : ocdIds);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
@@ -827,27 +877,6 @@ export async function POST(request: Request) {
 
   lap("officeholdersAndBallot");
   // ── 1. INTERPRETATION ────────────────────────────────────────────────
-  /*
-   * **THE DETERMINISTIC TOPIC ROUTE.** (2026-09-24, the Pima data-center miss.)
-   *
-   * A question that names a curated topic and names its government in plain
-   * words ("is pima county voting on data centers") needs nothing a model adds:
-   * the topic detector is curated code, and the body binds lexically from the
-   * question itself. The model interpretation cost ~3 s and, worse, turned
-   * "is … voting" into NEXT, which chose the wrong evidence. So the same
-   * resolver the route uses below is probed with the deterministic reading
-   * first; only a LEXICAL binding of a body (the reader's own words, never page
-   * context, a prior turn or a model expansion) takes this route. Anything
-   * else — a pronoun, a follow-up, an unnamed government — still goes to the
-   * model exactly as before.
-   */
-  const topicRoute = topicFocusedQuestion(question);
-  let deterministicTopicRoute = false;
-  if (topicRoute) {
-    const probe = resolveInterpretation(interpretWithoutModel(question), question, inventory, { activeSubjects, priorSubjects });
-    deterministicTopicRoute = probe.binding.kind === "BOUND" && probe.binding.entity.level === "BODY" &&
-      (probe.basis === "WHOLE_QUESTION" || probe.basis === "READER_WORDS");
-  }
   let interpretation: AskInterpretation = unavailableInterpretation();
   const interpretationStarted = Date.now();
   const interpretContext = {

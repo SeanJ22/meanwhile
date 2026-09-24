@@ -334,3 +334,53 @@ test("TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, 
   assert.equal(pastOnly.calendarLastReadAt, "2026-09-24T11:14:30.415Z");
   assert.ok(!pastOnly.gaps.some((gap) => /last read|most recent read/.test(gap.statement)), "a read from this morning is not dated as old");
 });
+
+/**
+ * The production state after #393 (2026-09-24 13:19Z): the Sept 22 agenda is held as a
+ * document read from the county's own portal, and the recorded outcome arrives with the
+ * outcomes routine. The excerpt is the portal PDF's extracted text around item 18, as
+ * the ingest stored it (pima.legistar.com View.ashx ID 1381577, 24,403 characters).
+ */
+const SEPT22_PORTAL_AGENDA = {
+  meetingId: "legistar:pima:1828",
+  documentUrl: "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+  sourceUrl: "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+  sourceOrg: "Pima County Clerk of the Board",
+  retrievedAt: "2026-09-24T13:19:36.340Z",
+  extraction: "pdf",
+  text: "17. County Administrator Hiring Process Discussion/Direction/Action regarding the County Administrator Hiring Process. (District 3) COUNTY ADMINISTRATOR 18. Moratorium on Data Center Development RESOLUTION NO. 2026 - 56 , of the Board of Supervisors, implementing a moratorium on data center development. 19. Call to the Public",
+};
+const SEPT22_ROW = {
+  id: "legistar:pima:1828", bodyId: PIMA_BOARD, bodyName: "Board of Supervisors", title: "Board of Supervisors",
+  startsAt: "2026-09-22T17:00:00-07:00", timeZone: "America/Phoenix",
+  agendaUrl: "https://legistar.granicus.com/pima/meetings/2026/9/1828_A_Board_of_Supervisors_26-09-22_Online_Agenda.pdf",
+  provenance: { sourceUrl: "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1828&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394", sourceOrg: "Pima County Clerk of the Board", collectedAt: "2026-09-24T13:19:29.153Z" },
+};
+
+test("PIMA, agenda text and recorded outcome both held: September 22 is stated once, led by the recorded decision", () => {
+  const timeline = buildTopicTimeline({
+    topic: DATA_CENTER, bodyId: PIMA_BOARD, bodyName: "Pima County Board Of Supervisors",
+    meetings: [...pimaMeetings, SEPT22_ROW], documents: [...pimaDocuments, SEPT22_PORTAL_AGENDA], sittings: [september22Sitting(), ...pimaSittings], now: NOW,
+  });
+  const composed = composeTopicAnswer(timeline, NOW)!;
+  assert.match(composed.answer, /^On September 22nd, 2026, the Pima County Board Of Supervisors passed agenda item 18 \(File ID 20801\)/);
+  assert.equal((composed.answer.match(/September 22nd/g) ?? []).length, 1, `September 22 is stated once: ${composed.answer}`);
+  assert.match(composed.answer, /Earlier, on August 11th, 2026, the board passed agenda item 2/);
+  assert.equal(overLengthBudget(composed.answer), null);
+});
+
+test("PIMA, agenda text held and the outcome not yet read: September 22 leads as on the agenda with its outcome unread, and August 11 follows", () => {
+  const timeline = buildTopicTimeline({
+    topic: DATA_CENTER, bodyId: PIMA_BOARD, bodyName: "Pima County Board Of Supervisors",
+    meetings: [...pimaMeetings, SEPT22_ROW], documents: [...pimaDocuments, SEPT22_PORTAL_AGENDA], sittings: pimaSittings, now: NOW,
+  });
+  const sept22 = timeline.entries.find((entry) => entry.localDay === "2026-09-22");
+  assert.ok(sept22, "the portal agenda's item 18 is on the timeline");
+  assert.equal(sept22.status, "OUTCOME_NOT_READ");
+  const composed = composeTopicAnswer(timeline, NOW)!;
+  assert.match(composed.answer, /Moratorium on Data Center Development/);
+  assert.match(composed.answer, /September 22nd, 2026; we have not read the recorded outcome of that item/);
+  assert.match(composed.answer, /Earlier, on August 11th, 2026, the board passed agenda item 2/);
+  assert.doesNotMatch(composed.answer, /no record|still looking/i);
+  assert.equal(overLengthBudget(composed.answer), null);
+});

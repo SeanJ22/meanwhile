@@ -1,0 +1,312 @@
+/**
+ * **A CONTROL-PLANE STORE CALL IS BOUNDED BY ITS CLASS AND TIMES OUT BY NAME.**
+ * (Runner bounded store calls, 2026-09-23.)
+ *
+ * On 2026-09-23 four research cycles ran into the supervisor's 15-minute wall
+ * with nothing on stderr and no record. These tests hold the fix at the
+ * repository seam, with no network: the driver's own fetch hook
+ * (`neonConfig.fetchFunction`) is replaced by one that never answers, and the
+ * real `createPgRepositories` must fail each call by name inside its bound,
+ * cancel the request, and hand connect-retry a timeout it can retry — or, when
+ * the caller's budget is spent, one it must not.
+ */
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { neonConfig } from "@neondatabase/serverless";
+
+import {
+  isTransientControlPlaneConnectError,
+  withControlPlaneConnectRetry,
+} from "../lib/control-plane/repository/connect-retry.ts";
+import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import {
+  CONTROL_PLANE_REQUEST_BOUNDS_MS,
+  ControlPlaneRequestTimeout,
+  boundedQuery,
+  currentStoreBudget,
+  isControlPlaneRequestTimeout,
+  observeControlPlaneTimeouts,
+  withStoreBudget,
+  type BoundableSql,
+} from "../lib/control-plane/repository/request-bounds.ts";
+import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
+import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
+
+const URL = "postgresql://user:pass@ep-request-bounds-proof.us-east-2.aws.neon.tech/neondb";
+const TINY = { POINT: 60, DOCUMENT: 90, PAGE: 120 } as const;
+
+interface HungFetch {
+  readonly calls: { readonly signal: AbortSignal | null }[];
+}
+
+/**
+ * Install a driver fetch that never answers. `honorAbort` makes it reject with
+ * the signal's reason when aborted, as undici does; without it the promise stays
+ * pending forever, so only the call's own timer can settle it.
+ */
+async function withHungFetch<T>(honorAbort: boolean, fn: (hung: HungFetch) => Promise<T>): Promise<T> {
+  const original = neonConfig.fetchFunction;
+  const hung: HungFetch = { calls: [] };
+  neonConfig.fetchFunction = ((_input: unknown, init?: { signal?: AbortSignal }) => {
+    const signal = init?.signal ?? null;
+    hung.calls.push({ signal });
+    return new Promise<Response>((_resolve, reject) => {
+      if (honorAbort && signal) signal.addEventListener("abort", () => reject(signal.reason), { once: true });
+    });
+  }) as typeof neonConfig.fetchFunction;
+  try {
+    return await fn(hung);
+  } finally {
+    neonConfig.fetchFunction = original;
+  }
+}
+
+/** Resolve an answered query: the driver's JSON shape for one text column. */
+function answer(rows: readonly Record<string, string>[]): Response {
+  const names = rows.length > 0 ? Object.keys(rows[0]!) : ["id"];
+  return new Response(
+    JSON.stringify({
+      command: "SELECT",
+      fields: names.map((name) => ({ name, dataTypeID: 25 })),
+      rows: rows.map((row) => names.map((name) => row[name] ?? null)),
+      rowCount: rows.length,
+      rowAsArray: true,
+    }),
+    { status: 200, headers: { "content-type": "application/json" } },
+  );
+}
+
+async function elapsed<T>(fn: () => Promise<T>): Promise<{ readonly ms: number; readonly outcome: T | unknown }> {
+  const started = performance.now();
+  try {
+    const value = await fn();
+    return { ms: performance.now() - started, outcome: value };
+  } catch (error) {
+    return { ms: performance.now() - started, outcome: error };
+  }
+}
+
+test("a store whose fetch never answers fails a POINT read by name inside its bound, and the request is cancelled", async () => {
+  await withHungFetch(true, async (hung) => {
+    const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    const { ms, outcome } = await elapsed(() => repos.runnerHeartbeat.read("pilot-runner"));
+    assert.ok(isControlPlaneRequestTimeout(outcome), `a named timeout, not ${String(outcome)}`);
+    const timeout = outcome as ControlPlaneRequestTimeout;
+    assert.equal(timeout.name, "ControlPlaneRequestTimeout");
+    assert.equal(timeout.code, "CONTROL_PLANE_REQUEST_TIMEOUT");
+    assert.equal(timeout.operation, "cp_runner_heartbeat.read");
+    assert.equal(timeout.callClass, "POINT");
+    assert.equal(timeout.kind, "REQUEST");
+    assert.equal(timeout.timeoutMs, TINY.POINT);
+    assert.equal(timeout.retryable, true);
+    assert.match(timeout.message, /cp_runner_heartbeat\.read \(POINT\) did not settle within its 60 ms request bound/);
+    assert.ok(ms >= TINY.POINT - 5 && ms < TINY.POINT + 1_000, `settled in ${Math.round(ms)} ms`);
+    assert.equal(hung.calls.length, 1);
+    assert.equal(hung.calls[0]!.signal?.aborted, true, "the driver's request was aborted, not abandoned");
+    assert.equal(hung.calls[0]!.signal?.reason, timeout, "and aborted with the named reason");
+  });
+});
+
+test("a fetch that ignores the abort still cannot hold the call past its bound", async () => {
+  await withHungFetch(false, async () => {
+    const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    const { ms, outcome } = await elapsed(() => repos.leases.read("nightly-window"));
+    assert.ok(isControlPlaneRequestTimeout(outcome));
+    assert.equal((outcome as ControlPlaneRequestTimeout).operation, "cp_leases.read");
+    assert.ok(ms < TINY.POINT + 1_000, `settled in ${Math.round(ms)} ms`);
+  });
+});
+
+test("each call class takes its own bound: a large document row is DOCUMENT, a page is PAGE, an append names its step", async () => {
+  await withHungFetch(true, async () => {
+    const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    const cases: [() => Promise<unknown>, string, string, number][] = [
+      [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
+      [() => repos.fieldManual.read("live"), "cp_field_manual.read", "DOCUMENT", TINY.DOCUMENT],
+      [() => repos.costs.readAll(), "cp_log_costs.readAll", "PAGE", TINY.PAGE],
+      [() => repos.occurrences.list(), "cp_occurrences.list", "PAGE", TINY.PAGE],
+      [() => repos.ownerDigests.readWhere("owner-digest", ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE"), "cp_log_owner_digests.readWhere", "PAGE", TINY.PAGE],
+      [() => repos.ownerDigests.append("owner-digest", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_owner_digests.append:probe", "DOCUMENT", TINY.DOCUMENT],
+      [() => repos.costs.append("k", "id", { x: 1 } as never, "2026-09-23T00:00:00.000Z"), "cp_log_costs.append:probe", "POINT", TINY.POINT],
+    ];
+    for (const [call, operation, callClass, bound] of cases) {
+      const { outcome } = await elapsed(call);
+      assert.ok(isControlPlaneRequestTimeout(outcome), `${operation}: ${String(outcome)}`);
+      const timeout = outcome as ControlPlaneRequestTimeout;
+      assert.equal(timeout.operation, operation);
+      assert.equal(timeout.callClass, callClass, operation);
+      assert.equal(timeout.timeoutMs, bound, operation);
+    }
+  });
+});
+
+test("the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s transport backstop so the named bound fires first", () => {
+  const { POINT, DOCUMENT, PAGE } = CONTROL_PLANE_REQUEST_BOUNDS_MS;
+  assert.ok(POINT > 0 && POINT < DOCUMENT && DOCUMENT < PAGE, JSON.stringify(CONTROL_PLANE_REQUEST_BOUNDS_MS));
+  assert.ok(PAGE < STANDING_NEON_REQUEST_DEADLINE_MS, "a page bound at or over the backstop would surface as the driver's unnamed TimeoutError");
+  /* Each is ~30x the slowest request measured in its class on 2026-09-23 (324 ms, 615 ms, 950 ms). */
+  assert.ok(POINT >= 324 * 20 && DOCUMENT >= 615 * 20 && PAGE >= 950 * 20);
+});
+
+test("a budget cuts a call short as a DEADLINE, which is not retryable, and a spent budget sends nothing", async () => {
+  await withHungFetch(true, async (hung) => {
+    const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true });
+    const { ms, outcome } = await elapsed(() => withStoreBudget("digest:append", 40, () => repos.researchState.read("level-1")));
+    assert.ok(isControlPlaneRequestTimeout(outcome));
+    const timeout = outcome as ControlPlaneRequestTimeout;
+    assert.equal(timeout.kind, "DEADLINE");
+    assert.equal(timeout.budget, "digest:append");
+    assert.equal(timeout.retryable, false);
+    assert.match(timeout.message, /left in the budget of digest:append/);
+    assert.ok(ms < CONTROL_PLANE_REQUEST_BOUNDS_MS.DOCUMENT, `the budget, not the 20 s class bound, ended it (${Math.round(ms)} ms)`);
+
+    const before = hung.calls.length;
+    const spent = await elapsed(() => withStoreBudget("heartbeat", 0, () => repos.runnerHeartbeat.read("pilot-runner")));
+    assert.ok(isControlPlaneRequestTimeout(spent.outcome));
+    assert.equal((spent.outcome as ControlPlaneRequestTimeout).timeoutMs, 0);
+    assert.match((spent.outcome as Error).message, /was not sent; the budget of heartbeat was already spent/);
+    assert.equal(hung.calls.length, before, "no request was issued");
+  });
+});
+
+test("a nested budget keeps the tighter deadline and its label", async () => {
+  await withStoreBudget("outer", 50, async () => {
+    await withStoreBudget("inner", 10_000, async () => {
+      assert.equal(currentStoreBudget()?.label, "outer");
+    });
+    await withStoreBudget("inner", 5, async () => {
+      assert.equal(currentStoreBudget()?.label, "inner");
+    });
+  });
+  assert.equal(currentStoreBudget(), undefined, "no budget leaks out of its scope");
+});
+
+test("an answered call is returned untouched, and every timeout is told to the observer", async () => {
+  const seen: string[] = [];
+  const stop = observeControlPlaneTimeouts((timeout) => seen.push(timeout.operation));
+  const original = neonConfig.fetchFunction;
+  try {
+    neonConfig.fetchFunction = (async () => answer([{ id: "pilot-runner", revision: "3", updated_at: "2026-09-23T00:00:00.000Z", value: "{\"beatAt\":\"x\"}" }])) as typeof neonConfig.fetchFunction;
+    const answered = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    const row = await answered.runnerHeartbeat.read("pilot-runner");
+    assert.equal(row?.revision, 3);
+    assert.deepEqual(row?.value, { beatAt: "x" });
+    assert.deepEqual(seen, []);
+  } finally {
+    neonConfig.fetchFunction = original;
+  }
+  await withHungFetch(true, async () => {
+    const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    await assert.rejects(repos.debts.list());
+    assert.deepEqual(seen, ["cp_debts.list"]);
+  });
+  stop();
+});
+
+test("a bound that is not a positive integer is refused, so no call is ever unbounded", async () => {
+  await assert.rejects(
+    createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: { POINT: 0 } }),
+    /CONTROL_PLANE_REQUEST_BOUND_INVALID: POINT=0/,
+  );
+});
+
+/* ------------------------------------------------ the connect-retry seam --- */
+
+function hangThenAnswer(hangs: number): { readonly sql: BoundableSql; readonly calls: () => number } {
+  let calls = 0;
+  return {
+    sql: {
+      query: (_text, _params, options) => {
+        calls += 1;
+        if (calls <= hangs) {
+          return new Promise((_resolve, reject) => {
+            const signal = options?.fetchOptions?.signal;
+            signal?.addEventListener("abort", () => reject(signal.reason), { once: true });
+          });
+        }
+        return Promise.resolve([{ ok: true }]);
+      },
+    },
+    calls: () => calls,
+  };
+}
+
+test("connect-retry: a REQUEST timeout is a transient it retries; a DEADLINE is not, even inside a wrapper", () => {
+  const request = new ControlPlaneRequestTimeout({ operation: "cp_debts.list", callClass: "PAGE", timeoutMs: 25_000, kind: "REQUEST", budget: null });
+  const deadline = new ControlPlaneRequestTimeout({ operation: "cp_debts.list", callClass: "PAGE", timeoutMs: 12, kind: "DEADLINE", budget: "metrics" });
+  assert.equal(isTransientControlPlaneConnectError(request), true);
+  assert.equal(isTransientControlPlaneConnectError(deadline), false, "its message says TIMEOUT, and it is still not retried");
+  assert.equal(isTransientControlPlaneConnectError(Object.assign(new Error("read failed"), { cause: request })), true, "found down the cause chain");
+  assert.equal(isTransientControlPlaneConnectError(Object.assign(new Error("read failed"), { cause: deadline })), false);
+});
+
+test("connect-retry: a hung idempotent read times out by name, is retried, and the retry's answer is returned", async () => {
+  const { sql, calls } = hangThenAnswer(2);
+  const retries: string[] = [];
+  const rows = await withControlPlaneConnectRetry(
+    () => boundedQuery(sql, { operation: "cp_method_candidates.read", callClass: "DOCUMENT" }, "SELECT 1", [], { bounds: TINY }),
+    { sleep: async () => {}, onRetry: ({ error }) => retries.push((error as Error).name) },
+  );
+  assert.deepEqual(rows, [{ ok: true }]);
+  assert.equal(calls(), 3);
+  assert.deepEqual(retries, ["ControlPlaneRequestTimeout", "ControlPlaneRequestTimeout"]);
+});
+
+test("connect-retry: a spent budget stops the retries at once rather than asking again", async () => {
+  const { sql, calls } = hangThenAnswer(99);
+  const retries: unknown[] = [];
+  const { outcome } = await elapsed(() =>
+    withStoreBudget("heartbeat", 30, () =>
+      withControlPlaneConnectRetry(
+        () => boundedQuery(sql, { operation: "cp_runner_heartbeat.read", callClass: "POINT" }, "SELECT 1", [], { bounds: { POINT: 5_000, DOCUMENT: 5_000, PAGE: 5_000 } }),
+        { sleep: async () => {}, onRetry: (info) => retries.push(info) },
+      )));
+  assert.ok(isControlPlaneRequestTimeout(outcome));
+  assert.equal((outcome as ControlPlaneRequestTimeout).kind, "DEADLINE");
+  assert.equal(calls(), 1, "one request, then the budget named the end");
+  assert.deepEqual(retries, []);
+});
+
+test("connect-retry: the real bootstrap survives a hung first connect, because the bound turns it into a retryable transient", async () => {
+  const original = neonConfig.fetchFunction;
+  let fetches = 0;
+  const warnings: string[] = [];
+  const warn = console.warn;
+  try {
+    console.warn = (line: string) => warnings.push(line);
+    neonConfig.fetchFunction = ((_input: unknown, init?: { signal?: AbortSignal }) => {
+      fetches += 1;
+      if (fetches === 1) {
+        return new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => reject(init.signal?.reason), { once: true });
+        });
+      }
+      return Promise.resolve(
+        new Response(JSON.stringify({ command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+      );
+    }) as typeof neonConfig.fetchFunction;
+    const repos = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { requestBounds: TINY });
+    assert.ok(repos.durable);
+    assert.ok(fetches > 2, `the bootstrap ran again after the timed-out statement (${fetches} fetches)`);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0]!, /CONTROL_PLANE_REQUEST_TIMEOUT: cp_schema\.bootstrap \(POINT\)/);
+  } finally {
+    console.warn = warn;
+    neonConfig.fetchFunction = original;
+  }
+});
+
+test("the startup-read retry re-reads a hung authority read inside connect-retry's bounds", async () => {
+  const { sql, calls } = hangThenAnswer(1);
+  const rows = await retryStartupRead(
+    () => boundedQuery(sql, { operation: "cp_method_candidates.read", callClass: "DOCUMENT" }, "SELECT 1", [], { bounds: TINY }),
+    () => null,
+    { circuitLatched: () => false, sleep: async () => {} },
+  );
+  assert.deepEqual(rows, [{ ok: true }]);
+  assert.equal(calls(), 2);
+});

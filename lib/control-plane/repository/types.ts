@@ -107,6 +107,7 @@ import type {
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 
@@ -694,6 +695,12 @@ export interface ControlPlaneRepositories {
    */
   readonly adminReceipts: AppendOnlyRepository<ActionReceipt>;
   readonly agentJobs: AppendOnlyRepository<AgentJobRecord>;
+  /**
+   * Every walk of a government's own site for its meeting route, one append
+   * per walk, keyed by jurisdiction id (v12, 2026-09-23). Written only by the
+   * unpaid meetings-discovery executor; a walk is a reading taken at a time.
+   */
+  readonly discoveryAttempts: AppendOnlyRepository<MeetingsDiscoveryAttempt>;
   readonly adminConfig: AggregateRepository<AdminConfig>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;

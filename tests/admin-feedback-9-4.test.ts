@@ -516,9 +516,10 @@ test("ADM-2: the console header navigates inside a transition, shows the choice 
   // The bootstrap call is now wrapped in a bounded connect-retry (connect-retry.ts)
   // so a transient Neon fetch failure at cycle start does not abort the cycle, but it
   // stays gated by !skipBootstrap, so the admin read path still skips it entirely.
+  // Since 2026-09-23 it also carries the per-class request bounds (request-bounds.ts).
   assert.match(
     src("lib/control-plane/repository/pg-store.ts"),
-    /if \(!options\.skipBootstrap\) \{[\s\S]*?bootstrap\(sql, nowIso\)/,
+    /if \(!options\.skipBootstrap\) \{[\s\S]*?bootstrap\(sql, nowIso(?:, bounds)?\)/,
   );
 });
 

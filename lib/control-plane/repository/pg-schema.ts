@@ -84,7 +84,18 @@
  * lost. Additive: no existing table, column or statement moved, and the one new
  * table is created when the next installed runtime opens the durable repository.
  */
-export const BOOTSTRAP_VERSION = 11;
+/*
+ * ## What version 12 adds, and why (meetings discovery attempts, 2026-09-23)
+ *
+ * `cp_log_discovery_attempts` — the unpaid meetings-discovery executor's record
+ * of every walk of a government's own site: what it read, what permission it
+ * walked under, what it found or why it stopped, and when the need is due
+ * again. It is the per-need attempt record RULING 250 asks for; nothing else
+ * held one. Additive: no existing table, column or statement moved, and the
+ * one new table is created when the next installed runtime opens the durable
+ * repository.
+ */
+export const BOOTSTRAP_VERSION = 12;
 
 /**
  * The tables, and the shape each one carries.
@@ -306,9 +317,17 @@ export const APPEND_ONLY_LOGS = [
    *                   `lib/control-plane/gateway/agent-job.ts` so the storage
    *                   is in place and versioned before the bridge that writes
    *                   it, rather than arriving as a second schema move later.
+   *
+   *   discovery_attempts  one append per walk of a government's own site for
+   *                   its meeting route (v12, 2026-09-23), keyed by
+   *                   jurisdiction id. Record shape: `MeetingsDiscoveryAttempt`
+   *                   in `lib/hunt/meetings-site-discovery.ts`. Append-only
+   *                   because a walk is a reading taken at a time; a later walk
+   *                   never rewrites what an earlier one saw.
    */
   "admin_receipts",
   "agent_jobs",
+  "discovery_attempts",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

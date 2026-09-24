@@ -221,3 +221,15 @@ export function serializeUnchangedConfirmationSources(
     retainedSourceResponses,
   })}`;
 }
+
+/**
+ * A confirmation receipt or its companion sources event: the two events a
+ * version gathers on every quiet re-check while it stays pointed. Only the
+ * clock and Reader freshness read them, through their own one-row reads.
+ */
+export function isUnchangedConfirmationEvent(event: { readonly state: string; readonly detail: string }): boolean {
+  return event.state === "PROMOTED" && (
+    event.detail.startsWith(UNCHANGED_CONFIRMATION_PREFIX) ||
+    event.detail.startsWith(UNCHANGED_CONFIRMATION_SOURCES_PREFIX)
+  );
+}

@@ -1,4 +1,4 @@
-import type { RoutineDataStore } from "./store.ts";
+import { readLatestReaderReadbacks, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
@@ -512,7 +512,9 @@ async function inspectReaderReadback(
   if (promotion === null) return { outcome: { kind: "NO_PROMOTION", receipt: null }, promotion: null };
   const identityIssue = promotionIdentityIssue(contract, promotion);
   if (identityIssue !== null) throw new Error(identityIssue);
-  const events = await store.events(promotion.versionId);
+  // The newest readback alone: a long-pointed version's readbacks and
+  // confirmations never cross the wire to decide it.
+  const events = await readLatestReaderReadbacks(store, [promotion.versionId]);
   return inspectReaderReadbackEvents(contract, promotion, events, now, normalizedVerifierCodeSha);
 }
 
@@ -644,7 +646,7 @@ export async function repairMeetingReaderProjectionReadbacks(
   const eventReads = await runBoundedWorkPool(
     eventInputs,
     MEETING_READER_EVENT_READ_CONCURRENCY,
-    ({ promotion }) => store.events(promotion.versionId),
+    ({ promotion }) => readLatestReaderReadbacks(store, [promotion.versionId]),
   );
   const pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
   for (const read of eventReads) {

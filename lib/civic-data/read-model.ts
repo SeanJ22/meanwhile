@@ -20,6 +20,7 @@ import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import {
   PostgresRoutineDataStore,
   projectionKey,
+  readPointerMoveEvents,
   type CandidateVersionReadback,
   type RoutineDataStore,
 } from "./store.ts";
@@ -904,7 +905,7 @@ export async function readPinnedPromotedCivicDataBatch<T>(
       const moved = new RegExp(`^Atomic pointer ${escapeRegExp(key)} moved from \\S+ to ${escapeRegExp(pin.versionId)}\\.$`);
       promotions = candidate === null
         ? []
-        : (await store.events(pin.versionId)).filter((event) => event.state === "PROMOTED" && moved.test(event.detail));
+        : (await readPointerMoveEvents(store, pin.versionId)).filter((event) => moved.test(event.detail));
       const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
       if (predecessorVersionId !== null) predecessor = await store.readCandidate(predecessorVersionId);
     } catch (error) {

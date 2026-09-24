@@ -217,3 +217,35 @@ export function carriedRowClause(
     ? CARRIED_ROW_CLAUSE[reason as CarriedReason]
     : null;
 }
+
+/**
+ * **WHEN EACH DIVISION'S CALENDAR WAS LAST READ, FROM THE ROWS ON SCREEN.**
+ * (2026-09-24.)
+ *
+ * The footer's "Last checked" is the newest read of ANY partition in the
+ * corpus, so it read "minutes ago" to a reader at 85701 while the Pima County
+ * Board's calendar had not been read since September 8 — a regenerated
+ * response is not refreshed evidence. This is the per-division fact: the
+ * newest `provenance.collectedAt` among the meetings shown for that division.
+ */
+export function lastReadByDivision(
+  meetings: readonly { readonly ocdId: string | null; readonly provenance?: { readonly collectedAt?: string | null } | null }[],
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const meeting of meetings) {
+    const at = meeting.provenance?.collectedAt ?? null;
+    if (!meeting.ocdId || !at || !Number.isFinite(Date.parse(at))) continue;
+    if (!out[meeting.ocdId] || at > out[meeting.ocdId]!) out[meeting.ocdId] = at;
+  }
+  return out;
+}
+
+/** A division's calendar read older than this is dated on the card. */
+export const DIVISION_READ_STALE_MS = 36 * 3_600_000;
+
+/** The instant to date on the card, or null while the read is recent. */
+export function staleDivisionRead(lastRead: string | undefined, now: number = Date.now()): string | null {
+  if (!lastRead) return null;
+  const at = Date.parse(lastRead);
+  return Number.isFinite(at) && now - at > DIVISION_READ_STALE_MS ? lastRead : null;
+}

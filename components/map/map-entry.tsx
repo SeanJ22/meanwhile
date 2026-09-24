@@ -40,6 +40,7 @@ import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { lastReadByDivision } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import { joinLine, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import { divisionUpcoming, showDivisionUpcoming } from "@/lib/state/list-focus";
@@ -1912,6 +1913,9 @@ function MapEntryInner() {
                unscoped site-wide failure list never puts another area's board
                on this card. */
             lastCheckedAt={shown.snapshot?.generatedAt ?? null}
+            /* 2026-09-24: each division's own newest calendar read, from the
+               same rows the pins are drawn from. */
+            lastReadByOcdId={lastReadByDivision(shown.meetings ?? [])}
             /* F01 7.2: what the MAP is actually showing, so the card
                cannot say “may be missing” about a body whose pins the
                reader can see. Read off the same meeting array the pins

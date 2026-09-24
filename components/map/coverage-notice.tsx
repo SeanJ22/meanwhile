@@ -1,6 +1,7 @@
 "use client";
 
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import { staleDivisionRead } from "@/lib/meetings/freshness";
 import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
 import {
@@ -116,6 +117,8 @@ interface CoverageNoticeProps {
    * than inventing one.
    */
   lastCheckedAt?: string | null;
+  /** Newest calendar read per division, from the rows on screen (lastReadByDivision). */
+  lastReadByOcdId?: Readonly<Record<string, string>>;
   /**
    * The answer under this card is the previous area's, and a fresher one is
    * in flight (6f). The card DIMS rather than un-rendering — un-rendering is
@@ -545,6 +548,7 @@ function CoverageBody({
   failedSourceOcdIds = [],
   ocdIdsWithMeetings = [],
   lastCheckedAt = null,
+  lastReadByOcdId = {},
   onOpenOfficial,
   onOpenBody,
   onAddressResolved,
@@ -557,6 +561,7 @@ function CoverageBody({
   ocdIdsWithMeetings?: string[];
   /** When the meetings snapshot was last refreshed, for the per-body notes. */
   lastCheckedAt?: string | null;
+  lastReadByOcdId?: Readonly<Record<string, string>>;
   onOpenOfficial?: OpenOfficial;
   onOpenBody?: (body: CoveredBody) => void;
   /** WGH-5: the reader settled their address, on any surface. */
@@ -1345,6 +1350,32 @@ function CoverageBody({
         </p>
       ))}
 
+      {/* 2026-09-24 — the calendar READ date, per division, when it is old.
+          "Last checked" in the footer is the newest read anywhere; a division
+          whose own calendar has not been read for a day and a half says so,
+          dated, as a fact about our read and never as a verdict on the body. */}
+      {collapseFootnotes(
+        shown.filter(
+          (body) =>
+            body.ocdId !== null &&
+            !failedSourceOcdIds.includes(body.ocdId) &&
+            ocdIdsWithMeetings.includes(body.ocdId) &&
+            staleDivisionRead(lastReadByOcdId[body.ocdId]) !== null,
+        ),
+        (body) => {
+          const lastRead = formatDateLong(staleDivisionRead(lastReadByOcdId[body.ocdId!]));
+          return lastRead ? `the listings shown for them were last read from their calendar on ${lastRead}.` : null;
+        },
+      ).map((footnote) => (
+        <p
+          key={`source-read:${footnote.subjects}`}
+          className="mt-1.5 text-[0.6875rem] leading-relaxed text-signal"
+        >
+          <span className="text-paper-dim">{footnote.subjects}</span> —{" "}
+          {footnote.note}
+        </p>
+      ))}
+
       {collapseFootnotes(shown, (body) =>
         agendaAbsenceNote(body.ocdId, body.coverageStatus),
       ).map((footnote) => (
@@ -1654,6 +1685,7 @@ export function CoverageNotice({
   failedSourceOcdIds,
   ocdIdsWithMeetings,
   lastCheckedAt,
+  lastReadByOcdId,
   refreshing = false,
   onOpenOfficial,
   onOpenBody,
@@ -1803,6 +1835,7 @@ export function CoverageNotice({
           failedSourceOcdIds={failedSourceOcdIds}
           ocdIdsWithMeetings={ocdIdsWithMeetings}
           lastCheckedAt={lastCheckedAt}
+          lastReadByOcdId={lastReadByOcdId}
           onOpenOfficial={onOpenOfficial}
           onOpenBody={onOpenBody}
           onAddressResolved={onAddressResolved}

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 739,
-    "named": 7294,
+    "files": 743,
+    "named": 7337,
     "dynamic": 29
   },
   "files": {
@@ -410,9 +410,11 @@
         "a read that got in but listed no meetings is never counted as confirming nothing changed",
         "a routine assignment's trail follows the version that changed what readers see, and names the version serving now beside it",
         "a shared read loads once for every caller at once, serves a recent read while refreshing, and says so when it misses its deadline",
+        "a state nobody has registered reads as what the Census knows is there, never as zeros, and every state and territory has one",
         "an entered figure fills its provider's row with its kind, period and provenance, and the bill is never added to the ledger",
         "every provider with no reading renders as NO READING with its manual path — never a number, never zero",
         "paid outcomes narrow by state without borrowing another state's refusals",
+        "search API spend is its own line beside model spend, per host, and an unpriced request is never a zero",
         "the fix list: unique ids, every item says where it stands and what to check first, and marks order without dropping",
         "the scope travels in the URL and an unreadable scope is everywhere, never a guess",
         "the three ceilings are never blended, and an account cap or a subscription with no entry has no number"
@@ -1684,7 +1686,7 @@
     },
     "tests/boardbook.test.ts": {
       "names": [
-        "an unobserved venue drops the meeting, counted, never guessed",
+        "an unobserved venue is published with the row's own words, counted, never guessed",
         "normalize emits windowed meetings with cited venues and real agenda links",
         "the org page parses to at least 15 dated rows"
       ],
@@ -3125,6 +3127,7 @@
         "ADM-C14: the cache row carries the defect counts, the batch share and the saving the cycle measured",
         "Fleet · Money renders dollars to the cent and no longer claims a role is free by design",
         "every number the cost section draws itself carries a denominator and a contract",
+        "search API charges are broken down by host and never counted as model spend",
         "§9A.23: an empty month is a month with nothing measured, never a month that cost $0.00",
         "§9A.23: rows are counted into their own month, both bounds inclusive, and an unreadable stamp is dropped rather than filed at the epoch",
         "§9A.23: the month totals by provider, model and role, prices the savings once, and keeps unmeasured rows out of the dollars",
@@ -3643,7 +3646,9 @@
         "every feature has drawable polygon geometry",
         "every feature keeps exactly the properties the map needs plus GEOID",
         "feature count matches the 119th Congress after drops",
+        "item 6b: every tool that counts the frozen registry's bodies leaves out the placeholder boards",
         "item 6b: no Census placeholder name reaches a reader as a district's name",
+        "item 6b: readiness does not count a Census placeholder as a held school-district boundary",
         "leading zeros are stripped rather than carried into the identifier",
         "no two features share an OCD-ID",
         "ordinary district builds a numbered OCD-ID",
@@ -5369,7 +5374,8 @@
     },
     "tests/legistar.test.ts": {
       "names": [
-        "a meeting with no known venue is dropped, never given an approximate pin",
+        "a meeting whose record states no location is published with the county's own gap",
+        "a meeting with no known venue is published with the county's own words, never given an approximate pin",
         "a meeting with no usable time is dropped rather than placed at midnight",
         "a study session with no other-body business reports none",
         "a virtual meeting is KEPT, with no place and no invented pin (D18)",
@@ -5726,9 +5732,9 @@
         "PRDY-2: a CivicClerk tenant with no wiring row (the live Avondale shape) yields no fact and BODY_IDENTITY_UNRESOLVED",
         "PRDY-2: a URL inventory class, an ambiguous extraction, and mismatched bytes are refused by name — nothing is renamed into a meeting",
         "PRDY-2: a later reading of the same source confirms the same fact, contradicts a changed one, and says nothing about a row it no longer carries",
-        "PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, never a fact with a guessed venue",
+        "PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, and an unknown venue is a fact with its gap named, never a guessed venue",
         "PRDY-2: real Pima bytes become meeting-time and agenda facts through the canonical adapter, cross-checked against the validated extraction",
-        "PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on the row is a dropped row, and a placed row is a fact whose agenda link is the adapter's own derivation"
+        "PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on the row is a fact with the publisher's gap named, and a placed row is a fact whose agenda link is the adapter's own derivation"
       ],
       "dynamic": 0
     },
@@ -5896,6 +5902,16 @@
         "TUSD PROOF: the executor alone, from TUSD's homepage, confirms the reconfiguration page's sessions for Tucson Unified",
         "VALUE CLOSURE: an import or re-export that carries only types is left out; any value, side effect or dynamic import is kept",
         "VERSION: the extractor id names the digest of the adapter's value-import closure, so a runtime change re-keys it"
+      ],
+      "dynamic": 0
+    },
+    "tests/meetings-online-sitting-visibility.test.ts": {
+      "names": [
+        "(a) a division-less body's online concluded sittings are in view by its upcoming building",
+        "(b) with none of the body's buildings in radius in either list, none of its online sittings is in view",
+        "(c) the division clause still reaches an online sitting whose division contains the centre",
+        "(d) the widened tier behaves as before, and the rule holds at the rung it lands on",
+        "the reverse holds too: a building among concluded sittings keeps the body's online upcoming ones in view"
       ],
       "dynamic": 0
     },
@@ -8411,13 +8427,19 @@
     },
     "tests/registry-runtime-data-plane.test.ts": {
       "names": [
+        "a Census placeholder division is geography: no body is derived on it and no projection may carry one",
+        "a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name",
         "both Reader projections reject cross-source proof and never bootstrap on store failure",
         "federal civic member ordering is independent of source-map insertion order",
         "federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer",
         "manual contracts have no clock and retired tracked writers cannot be invoked",
         "one blocked registry publisher holds only its dependent members while an unrelated roster update promotes",
         "registry civic member ordering is independent of JSONB object-key order",
-        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live"
+        "registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live",
+        "the door accepts exactly the transfer import as a base without a receipt; any other receipt-less base is still refused",
+        "the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both",
+        "the plane refuses what the registry door does not prove: a changed carried member, an unexplained removal, a real board passed off as a placeholder",
+        "the version production serves keeps reading until its correction promotes; no other defect is tolerated"
       ],
       "dynamic": 0
     },
@@ -8850,7 +8872,7 @@
     "tests/routine-publication-status.test.ts": {
       "names": [
         "each contract gets the verdict its pointer and the readback of exactly that version support",
-        "the Sources page reads the three sources together and shows the narrow panel before the proof-based one",
+        "the Sources page reads its sources together, starts the full proof read only when asked by name, and shows the narrow panel first",
         "the narrow read selects no payload and never touches the candidate JSON",
         "with nothing recorded, every contract is NOT_PUBLISHED with no attempt, never a pass"
       ],
@@ -9342,7 +9364,7 @@
     },
     "tests/smartsites-source.test.ts": {
       "names": [
-        "a sitting whose own event states no place is dropped and counted, never placed by the standing sentence",
+        "a sitting whose own event states no place is published with the district's gap, counted, never placed by the standing sentence",
         "every sitting the disallowed tenant carried is on the permitted calendar, at the same wall clock",
         "the API URL is the calendar component's own call on the district origin",
         "the recorded payload is a success envelope configured in the wrong zone"
@@ -9657,7 +9679,7 @@
     },
     "tests/state-holdings-meeting-data.test.ts": {
       "names": [
-        "a missing canonical Legistar venue scope fails closed",
+        "an empty canonical Legistar venue scope is an empty list, never a failure",
         "meeting consumers use the canonical venue test seam and retain version and venue matching"
       ],
       "dynamic": 1
@@ -9697,6 +9719,8 @@
       "names": [
         "a new state's first acquisition creates a required manifest without a state list edit",
         "a readback update makes a byte-current manifest stale while preserving its observed_at",
+        "a superseded holding leaves current holdings while its frozen bytes stay at a named test baseline",
+        "a superseded label cannot hide a present file, drift from its frozen hash, or lose its baseline or successor",
         "a transitive generator code change invalidates manifests independently of held data",
         "an authority-cutover label cannot hide a present file or drift from its frozen hash and production contract",
         "an exact authority cutover preserves the frozen law-title evidence but removes the dead Git path from current holdings",
@@ -10208,6 +10232,38 @@
         "ASK-12: the flag exists, is NAMED, and is ON for the testing window",
         "ASK-12: the mark is PLAIN LANGUAGE, and it is not a footnote",
         "ASK-12: the out-of-scope class Sean named DOES fall back"
+      ],
+      "dynamic": 0
+    },
+    "tests/venue-gap-adapters.test.ts": {
+      "names": [
+        "apptegy: a board meeting with no venue, or a venue with no coordinates, is published and never pinned at 0,0",
+        "civicclerk: an unreviewed room and a blank one are published with the gap, a reviewed room still placed",
+        "civicplus: an archived sitting with no one reviewed venue is published with our own gap",
+        "civicplus: an event whose LOCATION has no reviewed row is published in the feed's words",
+        "clerksboards: a Meeting Location with no reviewed row publishes every instance in the Clerk's words",
+        "diligent: a portal row naming an unreviewed room, or none, is published with the gap the portal states",
+        "ical: a LOCATION with no reviewed row, a blank one, and an online one are all published",
+        "ical: with a standing venue that has no reviewed row, the feed's words still render, and a blank keeps our own gap",
+        "iqm2: an unreviewed room, a blank tooltip venue and a virtual sitting are all published",
+        "onbase: an unmatched meeting name still drops, counted — the name key is its only body filter",
+        "pima-edu: a room code with no reviewed spelling renders in the college's words; a sitting nothing places keeps our gap",
+        "revize: an archived sitting with no one reviewed venue is published with our own gap",
+        "revize: an upcoming sitting in an unreviewed room, or online, is published; nothing is dropped for its place",
+        "schedulepage: a row naming an unreviewed room renders its words; the page's room with no reviewed row keeps our gap",
+        "unplacedVenueGap: words are the stated place, verbatim; blank is the publisher's silence"
+      ],
+      "dynamic": 0
+    },
+    "tests/venue-gap-class.test.ts": {
+      "names": [
+        "(a) Mesa InSite, rooms left out: every City Council sitting is published with the grid's words, drops none",
+        "(a) Mesa InSite, rooms left out: the tenant is read on the runner's own query, not skipped",
+        "(a) Pima County Legistar InSite, rooms left out: every grid sitting is published with the grid's words, drops none",
+        "(a) Pima County Legistar, rooms left out: the partition reads, publishes every sitting with the county's words, drops none",
+        "(b) Pima County Legistar, rooms restored: the same sittings are placed exactly as before",
+        "(b) Pima County and Mesa InSite, rooms restored: the same sittings are placed exactly as before",
+        "production's table: the three Legistar rooms cannot pass the door, and an empty scope is a list, never a throw"
       ],
       "dynamic": 0
     },
@@ -10954,6 +11010,13 @@
         "clearing the radius limiter leaves unrelated filters alone",
         "enabling the radius limiter keeps the widened results on screen",
         "every target zip survives the client filter with default state"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-division-shards.test.ts": {
+      "names": [
+        "a code resolves to its governments anywhere, and the three-state index's ZIPs keep what the committed geometry carries",
+        "every ZIP the national lattice sampled is in exactly its prefix's shard, and every shard is what the index says"
       ],
       "dynamic": 0
     },

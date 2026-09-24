@@ -133,7 +133,15 @@ test("PRDY-2: a URL inventory class, an ambiguous extraction, and mismatched byt
   assert.equal(notClean.refusals[0].code, "EXTRACTION_NOT_CLEAN");
 });
 
-test("PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, never a fact with a guessed venue", () => {
+/*
+ * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). The unknown-venue row
+ * used to be DROPPED by the canonical adapter and so refused here. The owner's
+ * rule is that a missing or unreviewed place never suppresses a meeting, so the
+ * adapter now produces it with no place and the county's own words as its
+ * named venue gap — a fact, still never one with a guessed venue. The row with
+ * no usable time is still the adapter's drop, refused with its accounting.
+ */
+test("PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, and an unknown venue is a fact with its gap named, never a guessed venue", () => {
   const rows = JSON.parse(TEXT) as Record<string, unknown>[];
   rows[0] = { ...rows[0], EventLocation: "Somewhere the venue table has never heard of" };
   rows[1] = { ...rows[1], EventTime: null };
@@ -141,9 +149,18 @@ test("PRDY-2: a row the canonical adapter drops is a refusal with the adapter's 
   const parser = parserRecord(text, CONTRACT, artifact(text));
   const bridge = bridgeMeetingFacts({ parser, validator: null, auditor: null, artifact: artifact(text), text, now: NOW });
   const dropped = bridge.refusals.filter((r) => r.code === "NORMALIZER_DROPPED").map((r) => r.recordId).sort();
-  assert.deepEqual(dropped, ["legistar:pima:1801", "legistar:pima:1802"]);
+  assert.deepEqual(dropped, ["legistar:pima:1802"]);
   assert.match(bridge.refusals[0].detail, /unknownVenue 1, unplaceableInTime 1/);
-  assert.equal(bridge.facts.filter((f) => f.recordClass === "meeting-times").length, 16);
+  const times = bridge.facts.filter((f) => f.recordClass === "meeting-times");
+  assert.equal(times.length, 17);
+  const unplaced = times.find((f) => f.meetingId === "legistar:pima:1801")!;
+  assert.equal(unplaced.meeting.location, null, "never a guessed venue");
+  assert.equal(unplaced.meeting.online, undefined);
+  assert.deepEqual(unplaced.meeting.venueGap, {
+    kind: "STATED_NOT_PLACED",
+    publishedText: "Somewhere the venue table has never heard of",
+    publisher: "Pima County Clerk of the Board",
+  });
 });
 
 const AVONDALE_CONTRACT: LegacyCivicExtractionContract = {
@@ -165,7 +182,14 @@ test("PRDY-2: a CivicClerk tenant with no wiring row (the live Avondale shape) y
   assert.match(bridge.refusals[0].detail, /avondaleaz/);
 });
 
-test("PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on the row is a dropped row, and a placed row is a fact whose agenda link is the adapter's own derivation", () => {
+/*
+ * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). "No venue on the row"
+ * used to be a dropped row, refused here with NORMALIZER_DROPPED. The owner's
+ * rule is that a missing place never suppresses a meeting, so the adapter now
+ * produces it with no place and the portal's own silence as its named gap
+ * (NOT_STATED_BY_PUBLISHER), which is a fact and not a guessed venue.
+ */
+test("PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on the row is a fact with the publisher's gap named, and a placed row is a fact whose agenda link is the adapter's own derivation", () => {
   const wiring: BodySourceWiring = {
     bodyId: "ocd-division/country:us/state:az/place:avondale#governing", ocdId: "ocd-division/country:us/state:az/place:avondale",
     agendaSourceType: "CIVICCLERK", jurisdiction: "Avondale, AZ", publishingOrg: "City of Avondale", timeZone: "America/Phoenix",
@@ -174,9 +198,14 @@ test("PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on t
   };
   const parser = parserRecord(AVONDALE_TEXT, AVONDALE_CONTRACT, AVONDALE_ARTIFACT);
   const noVenue = bridgeMeetingFacts({ parser, validator: null, auditor: null, artifact: AVONDALE_ARTIFACT, text: AVONDALE_TEXT, now: NOW, wiring: [wiring] });
-  assert.equal(noVenue.facts.length, 0);
-  assert.deepEqual(noVenue.refusals.map((r) => r.code), ["NORMALIZER_DROPPED"]);
-  assert.match(noVenue.refusals[0].detail, /unknownVenue 1/);
+  assert.deepEqual(noVenue.refusals, []);
+  assert.equal(noVenue.facts.length, 1, "one meeting-time fact; the row states no agenda");
+  const unplaced = noVenue.facts[0];
+  assert.equal(unplaced.meetingId, "civicclerk:avondaleaz:1404");
+  assert.equal(unplaced.meeting.location, null);
+  assert.equal(unplaced.meeting.online, undefined);
+  assert.deepEqual(unplaced.meeting.venueGap, { kind: "NOT_STATED_BY_PUBLISHER", publishedText: null, publisher: "City of Avondale" });
+  assert.equal(noVenue.source?.drops?.unknownVenue, 1, "still counted as the adapter's own accounting");
 
   const placed = JSON.stringify({ "@odata.context": "https://avondaleaz.api.civicclerk.com/v1/$metadata#Events", value: [
     { id: 1404, eventName: "City Council Meeting", eventDate: "2027-12-06T19:00:00", startDateTime: "2027-12-06T19:00:00", categoryId: 4, eventCategoryName: "City Council", isPublished: true, hasAgenda: true, isDeleted: false,

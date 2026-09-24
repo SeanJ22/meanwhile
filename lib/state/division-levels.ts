@@ -49,7 +49,8 @@
  * ## The measurement (not the reasoning)
  *
  * Every level key present in the shipped data, counted across
- * `lib/registry/registry.json`, `data/derived/zip-division-ids.json`,
+ * `lib/registry/registry.json`, the three-state ZIP index of the day (now the
+ * baseline `tests/fixtures/zip-division-ids-three-state.json`),
  * `data/derived/body-forms.json` and every layer in `public/geo`:
  *
  * ```

@@ -19,6 +19,7 @@ import {
 } from "./runtime-data-plane.ts";
 import type { Body, Registry } from "./types.ts";
 import { BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, type BodyRoster } from "./body-rosters.ts";
+import { CENSUS_PLACEHOLDER_BODY_ISSUE, CENSUS_PLACEHOLDER_LABELS, withoutPlaceholderBodies } from "./census-placeholders.ts";
 import { STATEWIDE_EXECUTIVES } from "../officials/statewide-executives.ts";
 
 let cache: RegistryRuntimeReadModel | null = null;
@@ -28,17 +29,39 @@ let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotI
   "The Reader registry runtime pointer has not been read for this process.",
 );
 
+/*
+ * A read validates structure; a promotion validates everything. The one
+ * difference: a body on a Census placeholder division is refused at promotion
+ * (`registryRuntimeProjectionIssues` via `registryRuntimeCandidate`) but does
+ * not fail a read, because the version promoted 2026-09-14 still carries two
+ * such bodies until the owner promotes its correction. Throwing here would
+ * turn a counting defect into a reader outage for as long as that took.
+ */
 function validate(value: RegistryRuntimeReadModel, versionId: string): void {
-  const issues = registryRuntimeProjectionIssues(value);
+  const issues = registryRuntimeProjectionIssues(value).filter((issue) => !issue.startsWith(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:`));
   if (issues.length) throw new Error(`Registry runtime projection ${versionId} is invalid: ${issues.join(", ")}.`);
 }
 
-/** Exact frozen-Git payload and provenance for one explicit durable first-seed import. */
+/**
+ * Exact frozen-Git payload and provenance for one explicit durable first-seed
+ * import, composed under today's derivation: the frozen registry was built
+ * before the rule that a Census placeholder division is never a government,
+ * so its two bodies on "School District Not Defined" are left out here (the
+ * file itself stays byte-identical; its bytes are proof-bound).
+ */
 export function registryRuntimeFirstSeed(): CivicDataBootstrap<RegistryRuntimeReadModel> {
   const registry = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8")) as Registry;
   const promoted = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "promoted-bodies.json"), "utf8")) as { bodies?: Body[] };
   const held = new Set(registry.bodies.map((body) => body.id));
-  const bodies = [...registry.bodies, ...(promoted.bodies ?? []).filter((body) => !held.has(body.id))];
+  const { bodies } = withoutPlaceholderBodies({
+    divisions: registry.divisions,
+    bodies: [...registry.bodies, ...(promoted.bodies ?? []).filter((body) => !held.has(body.id))],
+  });
+  // The same translation a promotion applies: a Census placeholder name never reaches a reader as a district's name.
+  const divisions = registry.divisions.map((division) => {
+    const plain = CENSUS_PLACEHOLDER_LABELS[division.label];
+    return plain === undefined ? division : { ...division, label: plain };
+  });
   const officialPhotos = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "official-photos.json"), "utf8"));
   const rosterPhotos = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "roster-photos.json"), "utf8"));
   const legacyCandidacies = JSON.parse(readFileSync(join(process.cwd(), "lib", "registry", "fixtures", "official-candidacies-first-seed.json"), "utf8")) as {
@@ -86,7 +109,7 @@ export function registryRuntimeFirstSeed(): CivicDataBootstrap<RegistryRuntimeRe
   };
   const value: RegistryRuntimeReadModel = {
     formatVersion: 1,
-    registry: { ...registry, bodies },
+    registry: { ...registry, divisions, bodies },
     bodyRosters: BODY_ROSTERS,
     rosterReaderDispositions: ROSTER_READER_DISPOSITIONS,
     statewideExecutives: STATEWIDE_EXECUTIVES,

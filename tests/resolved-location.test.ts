@@ -686,8 +686,8 @@ test("WGH-16: SCHOOL DISTRICTS overlap, so one of them never excludes another", 
    * simultaneously — two features from the same layer."* Measured over the
    * committed geometry, 39 of 104 sampled interior points and 105 of 250
    * sampled Arizona points sit inside two school districts at once, and
-   * `data/derived/zip-division-ids.json` carries the same shape — 85122 lists
-   * Casa Grande Elementary and Casa Grande Union High School together.
+   * the national ZIP index carries the same shape — 85122 lists Casa Grande
+   * Elementary and Casa Grande Union High School together.
    *
    * Every one of those polygons is CLICKABLE. `districtsAt` returns them,
    * `DistrictHit.ocdId` carries them into `BrowsingSubjectLine`, and the same

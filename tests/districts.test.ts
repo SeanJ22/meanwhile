@@ -155,11 +155,10 @@ test("every feature has drawable polygon geometry", async () => {
 });
 
 test("item 6b: no Census placeholder name reaches a reader as a district's name", async () => {
-  const { readFileSync } = await import("node:fs");
+  const { readFileSync, readdirSync } = await import("node:fs");
   const { join } = await import("node:path");
-  const { CENSUS_PLACEHOLDER_LABELS } = await import(
-    "../scripts/normalize-census-placeholders.mts"
-  );
+  const { CENSUS_PLACEHOLDER_LABELS } = await import("../lib/registry/census-placeholders.ts");
+  const { registryRuntimeFirstSeed } = await import("../lib/registry/runtime-read-model.ts");
 
   // The author's finding at the Tohono O'odham reservation area: the map
   // rendered a district called "School District Not Defined". Both halves
@@ -168,29 +167,81 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
   // Oasis-Baboquivari rather than on top of it), and it WAS a labeling
   // defect. The geometry stays because it is a true fact about the place;
   // the NAME becomes the fact.
-  const files = [
-    join(process.cwd(), "lib", "registry", "registry.json"),
-    join(process.cwd(), "data", "states", "az", "geo", "unsd-04.geojson"),
-  ];
+  //
+  // Every committed school-district boundary of every state, never a hand-kept
+  // list. New Hampshire's placeholder (GEOID 3399997) stayed on its map until
+  // 2026-09-23 through two holes: this guard read Arizona's boundary file only,
+  // and its pattern, built with an unescaped `\s` (a literal `s`), could never
+  // match the pretty-printed registry where New Hampshire's raw label sits.
+  const pattern = (placeholder: string) => new RegExp(`"(?:label|name|NAME)"\\s*:\\s*"${placeholder}"`);
+  assert.ok(pattern("School District Not Defined").test('{"NAME": "School District Not Defined"}'), "the guard's own pattern matches what it exists to catch");
+  const states = join(process.cwd(), "data", "states");
+  const files = readdirSync(states).flatMap((state) => {
+    try {
+      return readdirSync(join(states, state, "geo")).filter((f) => /^(unsd|elsd|scsd)-\d{2}\.geojson$/.test(f)).map((f) => join(states, state, "geo", f));
+    } catch {
+      return [];
+    }
+  });
+  assert.ok(files.length >= 3, "every committed school-district boundary file is checked");
   for (const file of files) {
     const text = readFileSync(file, "utf8");
-    for (const [placeholder, plain] of Object.entries(CENSUS_PLACEHOLDER_LABELS)) {
-      assert.ok(
-        !new RegExp(`"(?:label|name|NAME)"\s*:\s*"${placeholder}"`).test(text),
-        `${file} still labels a division "${placeholder}" — run scripts/normalize-census-placeholders.mts`,
-      );
-      assert.ok(
-        text.includes(plain),
-        `${file} lost the honest label "${plain}" — the geometry must stay, only the name changes`,
-      );
+    for (const placeholder of Object.keys(CENSUS_PLACEHOLDER_LABELS)) {
+      assert.ok(!pattern(placeholder).test(text), `${file} still labels a division "${placeholder}" — run scripts/normalize-census-placeholders.mts`);
     }
+  }
+  for (const [state, fips] of [["az", "04"], ["nh", "33"]]) {
+    const text = readFileSync(join(states, state, "geo", `unsd-${fips}.geojson`), "utf8");
+    assert.ok(text.includes("No unified school district here"), `${state} lost the honest label — the geometry must stay, only the name changes`);
+  }
+
+  // The registry as a reader gets it names no division by a placeholder. The
+  // frozen first seed still carries New Hampshire's raw label; its composition
+  // (and every registry promotion) translates it.
+  const seed = registryRuntimeFirstSeed().value;
+  for (const division of seed.registry.divisions) {
+    assert.ok(!Object.hasOwn(CENSUS_PLACEHOLDER_LABELS, division.label), `${division.ocdId} is labelled "${division.label}" in the composed registry`);
   }
 
   // The slug stays: it is a join key, never rendered, and renaming it would
   // break every stored reference for a cosmetic reason.
-  const registry = readFileSync(files[0], "utf8");
+  const registry = readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8");
   assert.ok(
     registry.includes("school_district:school_district_not_defined"),
     "the ocdId must not have been rewritten — it is a join key",
   );
+});
+
+test("item 6b: every tool that counts the frozen registry's bodies leaves out the placeholder boards", async () => {
+  const { readFileSync } = await import("node:fs");
+  // The frozen first seed still holds the two boards once minted on Census
+  // placeholders, and its bytes are proof-bound, so each tool that counts or
+  // emits its bodies reads them through withoutPlaceholderBodies
+  // (lib/registry/census-placeholders.ts). class-stamp-sweep takes its bodies
+  // from body-forms.json, which stamp-body-forms writes through the same view.
+  for (const tool of [
+    "scripts/stamp-body-forms.mts",
+    "scripts/stamp-coverage-tiers.mts",
+    "scripts/denominator-reconcile.mts",
+    "scripts/embedded-json-census.mts",
+    "scripts/measure-definitions-0823.mts",
+    "scripts/coverage-four-layer.mts",
+    "scripts/census-who-governs.mts",
+  ]) {
+    assert.match(readFileSync(tool, "utf8"), /withoutPlaceholderBodies\(JSON\.parse\(/, `${tool} reads the frozen registry's bodies without the placeholder rule`);
+  }
+  for (const artifact of ["data/derived/body-forms.json", "data/derived/class-stamp-sweep.json"]) {
+    assert.doesNotMatch(readFileSync(artifact, "utf8"), /school_district_not_defined#board/, `${artifact} still carries a placeholder board`);
+  }
+});
+
+test("item 6b: readiness does not count a Census placeholder as a held school-district boundary", async () => {
+  const { readFileSync } = await import("node:fs");
+  // Sean, 2026-09-23: the placeholder division stays in the registry as geography, but the readiness
+  // tally leaves it out, because the Census of Governments total it is read against counts governments.
+  const readiness = readFileSync("scripts/readiness-refresh.mts", "utf8");
+  const start = readiness.indexOf("function heldDivisions(");
+  const tally = readiness.slice(start, readiness.indexOf("return { byType, asOf };", start));
+  assert.ok(start >= 0 && tally.length > 0, "the readiness tally is where this guard looks for it");
+  assert.match(tally, /isCensusPlaceholderDivision\(d\)\) continue;/);
 });

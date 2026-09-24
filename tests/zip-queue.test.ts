@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { prepareZipQueues, type ZipQueueInput } from "../lib/control-plane/zip-queue.ts";
 import type { CandidateUniverse } from "../lib/hunt/candidate-universe.ts";
 import type { StampedZipRow } from "../lib/coverage/zip-tier.ts";
 import { applicableDivisions, projectOntoZip } from "../lib/hunt/zip-projection.ts";
+import { readAllZipDivisions } from "../lib/geo/zip-division-index.ts";
 import { COVERAGE_TIER_NEXT_STEP } from "../lib/coverage/tier.ts";
 import { emptyStateSnapshot } from "../lib/control-plane/readiness/compute.ts";
 import { READINESS_DERIVATION_CONTRACT } from "../lib/control-plane/readiness/model.ts";
@@ -12,7 +14,8 @@ import { READINESS_DERIVATION_CONTRACT } from "../lib/control-plane/readiness/mo
 const root = new URL("../", import.meta.url);
 const json = (path: string) => JSON.parse(readFileSync(new URL(path, root), "utf8"));
 const ledger = json("data/derived/zip-coverage-tiers.json") as { zips: Record<string, StampedZipRow> };
-const geometry = json("data/derived/zip-division-ids.json") as { zips: Record<string, string[]> };
+// The national ZIP index, read once: each ZIP's divisions as the reader knows them.
+const geometry = { zips: Object.fromEntries([...readAllZipDivisions(fileURLToPath(root))].map(([zip, e]) => [zip, [...e.ids]])) as Record<string, string[]> };
 function input(zip: string, stateCode = "az", lane: ZipQueueInput["lane"] = "existing-completion"): ZipQueueInput {
   const citation = `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-2026.json`;
   return {

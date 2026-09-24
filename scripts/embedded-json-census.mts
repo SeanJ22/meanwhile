@@ -60,6 +60,7 @@ import { writeFileSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 import { today } from "./doc-dates.mjs";
 
@@ -67,6 +68,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 interface Body {
   id: string;
+  ocdId: string | null;
   name: string | null;
   bodyClass: string;
   coverageStatus: string;
@@ -75,9 +77,10 @@ interface Body {
   homepageUrl: string | null;
 }
 
-const registry = JSON.parse(
+// A body minted on a Census "no district here" placeholder is not a government and is never counted.
+const registry = withoutPlaceholderBodies(JSON.parse(
   readFileSync(join(ROOT, "lib", "registry", "registry.json"), "utf8"),
-) as { bodies: Body[] };
+) as { divisions: { ocdId: string; divisionType: string; geoid: string | null }[]; bodies: Body[] });
 
 const PLATFORMS = [
   {
@@ -149,7 +152,7 @@ const candidates = registry.bodies.filter((b) => b.homepageUrl);
 const heldTotal = registry.bodies.length;
 
 console.log("=== embedded-JSON census (SIZING ONLY — RULING 12) ===\n");
-console.log(`bodies held in the registry            ${heldTotal}`);
+console.log(`bodies in the registry, less placeholders  ${heldTotal}`);
 console.log(`bodies carrying a homepage URL         ${candidates.length}`);
 console.log(`bodies with NO homepage URL to fetch   ${heldTotal - candidates.length}`);
 console.log(

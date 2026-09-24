@@ -49,8 +49,8 @@ function minimalFiles(): Record<string, string> {
   files["scripts/promote-registry-runtime.mts"] = federalManualAdapter;
   files["scripts/promote-manual-civic-projection.mts"] = "MANUAL_PROMOTION_PACKAGE_MUST_BE_OUTSIDE_REPOSITORY; prepareProductionCivicDataWrite(); processRegisteredManualCandidate();";
   files["scripts/ingest.ts"] = 'input.sourceName === "composite" || input.sourceName === "legistar"; refreshVenueResolutionsFromPromoted(); source.lastPartitionRows; readPreviousMeetingPartition(); readMeetingPartitionProjection(); processRegisteredMeetingPartitionCandidate(); console.log("RCD_MEETING_PARTITION_RECEIPT="); MEETING_PARTITION_EXACTLY_ONE_REQUIRED; MEETING_PARTITION_BATCH_ARGUMENT_RETIRED;';
-  files["lib/sources/legistar/client-registry.ts"] = 'function legistarClientsFromWiring(rows = wiringForMeetingSource("legistar")) { return requiredVenueEntries("legistar", ocdId); }';
-  files["lib/sources/legistar-insite/tenant-registry.ts"] = 'function inSiteTenantsFromWiring(rows = wiringForMeetingSource("legistar-insite")) { return requiredVenueEntries("legistar-insite", ocdId); }';
+  files["lib/sources/legistar/client-registry.ts"] = 'function legistarClientsFromWiring(rows = wiringForMeetingSource("legistar")) { return reviewedVenueEntries("legistar", ocdId); }';
+  files["lib/sources/legistar-insite/tenant-registry.ts"] = 'function inSiteTenantsFromWiring(rows = wiringForMeetingSource("legistar-insite")) { return reviewedVenueEntries("legistar-insite", ocdId); }';
   files["lib/registry/source-wiring.ts"] = "const TUCSON_CLERKSBOARDS_ROUTES = []; export function meetingSourceNamesForWiring() {} export function wiringForMeetingSource() {}";
   files["lib/civic-data/meeting-partitions.ts"] = "SOURCE_WIRING; meetingSourceNamesForWiring(); export const MEETING_PARTITION_CONTRACTS = [];";
   files["lib/sources/composite/wiring.ts"] = "wiringForMeetingSource(); capability.make(rows);";
@@ -1331,7 +1331,7 @@ test("meetings cannot regain an aggregate pointer, receipt, or hidden membership
     "const exit = EXIT_WRITTEN_WITH_JOB_FAILURES;",
   ].join("\n");
   files["lib/sources/legistar/client-registry.ts"] =
-    'const LEGISTAR_CLIENTS = [{ slug: "pima" }]; requiredVenueEntries("legistar", ocdId);';
+    'const LEGISTAR_CLIENTS = [{ slug: "pima" }]; reviewedVenueEntries("legistar", ocdId);';
   files["lib/registry/source-wiring.ts"] =
     'import { TUCSON_CLERKSBOARDS } from "./curated-bodies.ts"; function meetingSourceNamesForWiring() {} function wiringForMeetingSource() {} const TUCSON_CLERKSBOARDS_ROUTES = [];';
 

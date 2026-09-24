@@ -55,8 +55,13 @@ import type {
  * ## Place comes from the sitting's own details sentence or not at all
  *
  * `venueMatch:<phrase>` config keys map a phrase the district prints to a
- * reviewed venue spelling; "via Zoom" is kept placeless; "location TBD" drops
- * the sitting as `unknownVenue`, counted.
+ * reviewed venue spelling; "via Zoom" is kept placeless; a sentence no phrase
+ * places ("location TBD", or a room with no reviewed spelling) is never
+ * placed and never suppresses the sitting (the venue-gap class, 2026-09-23):
+ * it is published with no pin and our own place-not-recorded gap — a details
+ * sentence is prose, not a place field this adapter could quote — and counted
+ * as `unknownVenue`, exactly as the wired union
+ * (lib/sources/diligent/schedule-union.ts) publishes the same calendar.
  */
 
 const SOURCE_NAME = "tusd-govboard";
@@ -191,8 +196,10 @@ export function makeTusdGovboardSource(
             ? resolveVenue(cfg.venueSourceId ?? SOURCE_NAME, wiring.ocdId, cfg[phrase], cfg.venueTenant ?? null)
             : undefined;
           if (!online && !venue) {
+            // Kept with no pin and our own place-not-recorded gap, counted
+            // (the venue-gap class, 2026-09-23). This used to `continue`.
             drops.unknownVenue += 1;
-            continue;
+            keptButPlaceless += 1;
           }
           if (online) {
             drops.placeless += 1;

@@ -35,10 +35,12 @@ import {
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { routineAssignmentId } from "@/lib/control-plane/assignment-routine.ts";
 
 import { BodyList } from "../_mw/body-list.tsx";
 import { AuditFooter, EmptyScope, NotAsked } from "../_mw/blocks.tsx";
+import { censusEntryOf } from "../_mw/data/census-universe.ts";
 import { divisionsOf, loadContainer } from "../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../_mw/data/load-bodies.ts";
 import { stateName } from "../_mw/load-shell.ts";
@@ -102,7 +104,7 @@ export default async function FleetNowPage({ searchParams }: { searchParams: Pro
     const name = base.scope.kind === "all" ? "Everywhere" : stateName(base.scope.state);
     return (
       <MwShell {...shellProps}>
-        <EmptyScope name={name} scope={base.scope} />
+        <EmptyScope name={name} scope={base.scope} census={base.scope.kind === "all" ? undefined : censusUniverseWords(name, censusEntryOf(base.scope.state))} />
       </MwShell>
     );
   }

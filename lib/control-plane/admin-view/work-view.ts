@@ -484,7 +484,10 @@ export function routineCard(body: BodyView, contractId: string): CardView {
 type TrailRow = readonly [string, string];
 
 function destinationWords(body: BodyView): string {
-  return body.publicZip ? `${new URL(PUBLIC_SITE_ORIGIN).host}/?zip=${body.publicZip} — its meetings list` : "No indexed ZIP carries this body's division, so no page is named";
+  const where = body.publicZip;
+  if (where.kind === "ZIP") return `${new URL(PUBLIC_SITE_ORIGIN).host}/?zip=${where.zip} — its meetings list`;
+  if (where.kind === "NONE") return "No indexed ZIP carries this body's division, so no page is named";
+  return "The ZIP index was not read this time, so no page is named";
 }
 
 function countWords(c: { readonly added: number; readonly changed: number; readonly removed: number; readonly held: number }): string {

@@ -40,7 +40,28 @@ export interface FrozenInputs {
    * The original file/hash row remains immutable historical evidence.
    */
   authorityCutovers?: RuntimeAuthorityCutover[];
+  /**
+   * Append-only classifications for a frozen static holding whose tracked path
+   * was replaced by a successor static holding: the same fact in a new layout.
+   * The original file/hash row remains immutable historical evidence.
+   */
+  supersededHoldings?: SupersededHolding[];
   rule: string;
+}
+/**
+ * A frozen static holding replaced in the repository by a successor holding —
+ * as the three-state ZIP index was by one shard per ZIP prefix for every ZIP code
+ * (2026-09-23). Its exact frozen bytes stay in Git at a test baseline that the
+ * successor's build and tests compare against, and the successor's files are
+ * current datasets in their own right.
+ */
+export interface SupersededHolding {
+  formerPath: string;
+  frozenSha256: string;
+  disposition: "SUPERSEDED_BY_SUCCESSOR_HOLDING";
+  successorDirectory: string;
+  baselinePath: string;
+  reason: string;
 }
 export interface RuntimeAuthorityCutover {
   formerPath: string;
@@ -92,6 +113,7 @@ export interface ManifestContext {
   inputDigest: string;
   inputs: { path: string; sha256: string }[];
   authorityCutovers: ValidatedRuntimeAuthorityCutover[];
+  supersededHoldings: SupersededHolding[];
   bootstrapFixtureContracts: Map<string, ManualProductionSourceContract[]>;
   obligationStates: Map<string, string[]>;
   workItemStates: Map<string, string[]>;
@@ -219,6 +241,42 @@ export function validateRuntimeAuthorityCutovers(
   });
 }
 
+/**
+ * A frozen holding can also leave its path by being superseded: the same fact
+ * re-laid out as a successor holding. Fail-closed like a cutover — the exact
+ * frozen hash, an exempt in-place plan row, the old path gone, the frozen bytes
+ * kept at a test baseline, and a successor that holds datasets.
+ */
+export function validateSupersededHoldings(root: string, plan: Plan, frozen: FrozenInputs | null): SupersededHolding[] {
+  const classifications = frozen?.supersededHoldings ?? [];
+  const cutovers = new Set((frozen?.authorityCutovers ?? []).map((c) => c.formerPath));
+  const seen = new Set<string>();
+  const planByCurrentPath = new Map(entries(plan).map((entry) => [entry.newPath ?? entry.oldPath, entry]));
+  const frozenByPath = new Map((frozen?.files ?? []).map((entry) => [entry.path, entry]));
+  for (const c of classifications) {
+    const at = c.formerPath;
+    if (seen.has(at) || cutovers.has(at)) throw new Error(`${at}: duplicate retirement classification`);
+    seen.add(at);
+    if (c.disposition !== "SUPERSEDED_BY_SUCCESSOR_HOLDING") throw new Error(`${at}: unknown superseded-holding disposition`);
+    if (!c.reason.trim()) throw new Error(`${at}: superseded holding has no reason`);
+    const frozenEntry = frozenByPath.get(at);
+    if (!frozenEntry || frozenEntry.sha256 !== c.frozenSha256) throw new Error(`${at}: superseded holding does not bind the exact frozen manifest input`);
+    const planEntry = planByCurrentPath.get(at);
+    if (!planEntry || planEntry.sha256 !== c.frozenSha256 || !/exempt/i.test(planEntry.disposition ?? planEntry.classification ?? "")) {
+      throw new Error(`${at}: superseded holding does not bind an exact frozen in-place holding`);
+    }
+    if (existsSync(join(root, at))) throw new Error(`${at}: superseded tracked holding still exists`);
+    const baseline = join(root, c.baselinePath);
+    if (!c.baselinePath.startsWith("tests/fixtures/") || !existsSync(baseline) || hash(readFileSync(baseline)) !== c.frozenSha256) {
+      throw new Error(`${at}: its exact frozen bytes are not kept at a test baseline`);
+    }
+    if (!walkFiles(root, c.successorDirectory).some((path) => datasetFamily(path) !== null)) {
+      throw new Error(`${at}: its successor holding ${c.successorDirectory} holds no dataset`);
+    }
+  }
+  return classifications;
+}
+
 /** Snapshot the base, before the atomic sweep; it does not depend on current moved paths. */
 export function snapshotManifestInputs(root: string, baseSha: string): FrozenInputs {
   if (!/^[0-9a-f]{40}$/.test(baseSha)) throw new Error("snapshot requires an exact 40-character base SHA");
@@ -254,7 +312,10 @@ export function snapshotManifestInputs(root: string, baseSha: string): FrozenInp
 export function canonicalDatasetPaths(root: string): string[] {
   const plan = existsSync(join(root, PLAN_PATH)) ? readJson<Plan>(root, PLAN_PATH) : {};
   const frozen = existsSync(join(root, INPUT_PATH)) ? readJson<FrozenInputs>(root, INPUT_PATH) : null;
-  const retiredPaths = new Set(validateRuntimeAuthorityCutovers(root, plan, frozen).map(({ classification }) => classification.formerPath));
+  const retiredPaths = new Set([
+    ...validateRuntimeAuthorityCutovers(root, plan, frozen).map(({ classification }) => classification.formerPath),
+    ...validateSupersededHoldings(root, plan, frozen).map(({ formerPath }) => formerPath),
+  ]);
   const planned = entries(plan).filter((e) => e.newPath || /exempt/i.test(e.disposition ?? e.classification ?? ""));
   const repositoryFiles = tracked(root);
   const base = repositoryFiles.filter((path) =>
@@ -349,6 +410,7 @@ export function loadManifestContext(root: string): ManifestContext {
   const plan = readJson<Plan>(root, PLAN_PATH);
   const frozen = existsSync(join(root, INPUT_PATH)) ? readJson<FrozenInputs>(root, INPUT_PATH) : null;
   const authorityCutovers = validateRuntimeAuthorityCutovers(root, plan, frozen);
+  const supersededHoldings = validateSupersededHoldings(root, plan, frozen);
   const bootstrapFixtureContracts = new Map<string, ManualProductionSourceContract[]>();
   for (const contract of MANUAL_PRODUCTION_SOURCE_CONTRACTS) for (const path of contract.bootstrapFixturePaths) {
     bootstrapFixtureContracts.set(path, [...(bootstrapFixtureContracts.get(path) ?? []), contract]);
@@ -379,8 +441,14 @@ export function loadManifestContext(root: string): ManifestContext {
     for (const member of array(row.members)) addIdentity(string(member.id), states);
     if (d.family === "meetings" && typeof row.id === "string" && row.id.split(":").length >= 3) addIdentity(`sourceTenant:${row.id.split(":").slice(0, 2).join(":")}`, states);
   }
-  const zipProjection = asRow(datasets.find((d) => d.path === "data/derived/zip-division-ids.json")?.value);
-  for (const [zip, divisions] of Object.entries(asRow(zipProjection.zips))) addIdentity(`zip:${zip}`, Array.isArray(divisions) ? unique(divisions.flatMap(statesFromIdentity)) : []);
+  // The national ZIP index, one shard per two-digit ZIP prefix: each shard lists its divisions once and its ZIPs refer to them by position.
+  for (const d of datasets.filter((d) => /^data\/derived\/zip-divisions\/\d{2}\.json$/.test(d.path))) {
+    const shard = asRow(d.value);
+    const divisions = Array.isArray(shard.divisions) ? shard.divisions.map(String) : [];
+    for (const [zip, refs] of Object.entries(asRow(shard.zips))) {
+      addIdentity(`zip:${zip}`, Array.isArray(refs) ? unique(refs.flatMap((i) => (divisions[Number(i)] === undefined ? [] : statesFromIdentity(divisions[Number(i)])))) : []);
+    }
+  }
   for (const d of datasets.filter((d) => d.path.endsWith(".ts"))) {
     const rows = dataRows(d.value, d.path).rows;
     d.rowsByState.clear();
@@ -421,7 +489,7 @@ export function loadManifestContext(root: string): ManifestContext {
   const engineInputs = sourceClosure(root, join(root, "scripts/state-manifest.mts"));
   const inputPaths = unique([...paths, ...moduleDatasetInputPaths(paths), ...engineInputs, CONTROL_PATH, VAULT_PATH, PLAN_PATH, INPUT_PATH, "lib/holdings/manifest.ts", "lib/holdings/datasets.ts", "lib/holdings/module-datasets.ts", "lib/ops/generator-digest.ts", "lib/reference/index.ts", "lib/hunt/jurisdiction-universe.ts", "lib/candidates/population-label.ts", "lib/ocd/fips.ts"]);
   const inputs = inputPaths.filter((p) => existsSync(join(root, p))).map((path) => ({ path, sha256: hash(readFileSync(join(root, path))) }));
-  return { root, datasets, control, vault, discoveredStates, frozen, inputDigest: hash(JSON.stringify(inputs)), inputs, authorityCutovers, bootstrapFixtureContracts, obligationStates, workItemStates, vaultStates, assetObjects };
+  return { root, datasets, control, vault, discoveredStates, frozen, inputDigest: hash(JSON.stringify(inputs)), inputs, authorityCutovers, supersededHoldings, bootstrapFixtureContracts, obligationStates, workItemStates, vaultStates, assetObjects };
 }
 
 /** Explicit bootstrap only. Later discoveries never rewrite the session's completion denominator. */
@@ -548,6 +616,12 @@ export function renderStateManifest(context: ManifestContext, state: string): st
       ];
     }),
     "retired tracked authorities with exact permanent data-plane replacements",
+  ));
+  out.push(...table(
+    "Tracked holdings superseded by a successor holding",
+    ["Former tracked holding", "Disposition", "Successor holding", "Frozen bytes kept at", "Reason"],
+    context.supersededHoldings.map((c) => [`\`${c.formerPath}\` (frozen SHA-256 \`${c.frozenSha256}\`)`, c.disposition, link(c.successorDirectory), link(c.baselinePath), c.reason]),
+    "tracked holdings superseded by a successor holding",
   ));
   const curatedDatasets = context.datasets.filter((d) => !context.bootstrapFixtureContracts.has(d.path) && (d.path.endsWith(".ts") || asRow(d.value).schemaVersion === 1 && asRow(d.value).records && !Array.isArray(asRow(d.value).records)));
   const curatedRecords = curatedDatasets.flatMap((d) => dataRows(d.value, d.path).rows.map((row, index) => ({ d, row, index })).filter(({ row }) => taggedStates(row).includes(state) || /^data\/states\/([^/]+)\//.exec(d.path)?.[1] === state));

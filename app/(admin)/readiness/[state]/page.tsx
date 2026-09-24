@@ -37,6 +37,7 @@ import {
   type CoverageCounts,
   type RegistryBody,
 } from "@/lib/control-plane/admin-view/coverage.ts";
+import { censusUniverseWords } from "@/lib/control-plane/admin-view/census-universe.ts";
 import { bodyFreshness, collectionStatus, gridCounts, readingCards, type ReadingCard } from "@/lib/control-plane/admin-view/readiness-view.ts";
 import type { GeographyType } from "@/lib/census-geography/contract.ts";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
@@ -45,6 +46,7 @@ import { auditRenderedNumbers, checkStatedEqualsRendered, pilotHealthView, type 
 import { readReadinessSnapshot } from "@/lib/control-plane/readiness/read.ts";
 
 import { AuditFooter, EmptyScope, NotAsked } from "../../_mw/blocks.tsx";
+import { censusEntryOf } from "../../_mw/data/census-universe.ts";
 import { loadContainersWithCodes, membershipsOfCode, type ContainerWithCodes } from "../../_mw/data/geography.ts";
 import { loadWatchedBodies } from "../../_mw/data/load-bodies.ts";
 import { loadRegistryBodies } from "../../_mw/data/registry.ts";
@@ -143,7 +145,7 @@ export default async function ReadinessStatePage({
     return (
       <MwShell {...shellProps}>
         {crumbs([])}
-        <EmptyScope name={name} scope={scope} />
+        <EmptyScope name={name} scope={scope} census={censusUniverseWords(name, censusEntryOf(code))} />
       </MwShell>
     );
   }

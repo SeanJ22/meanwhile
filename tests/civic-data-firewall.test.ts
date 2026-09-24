@@ -26,7 +26,6 @@ function minimalFiles(): Record<string, string> {
       "congress:fetch": "node scripts/installed-runtime-command.mjs manual-promote --contract=congress-bulk-roster",
       "registry:promote": "node scripts/installed-runtime-command.mjs manual-promote --contract=registry-runtime-bindings",
       "official-actions:promote": "node scripts/installed-runtime-command.mjs manual-promote --contract=az-official-actions",
-      "outcomes:ingest": "node scripts/installed-runtime-command.mjs manual-promote --contract=pima-legistar-outcomes",
       "jurisdictions:promote": "node scripts/installed-runtime-command.mjs manual-promote --contract=jurisdiction-operational-reference",
       "money:az": "node scripts/installed-runtime-command.mjs manual-promote --contract=az-sos-campaign-finance",
       "money:nh": "node scripts/installed-runtime-command.mjs manual-promote --contract=nh-sos-campaign-finance",
@@ -101,6 +100,61 @@ test("package aliases must preserve the exact installed-dispatcher contract mapp
   assert.ok(codes.includes("MANUAL_PACKAGE_AUTHORITY_BYPASS"));
   assert.ok(codes.includes("RUNTIME_PACKAGE_AUTHORITY_BYPASS"));
   assert.ok(codes.includes("DIRECT_PRODUCTION_CHILD_COMMAND"));
+});
+
+test("a standing-clock contract cannot regain an owner manual-promotion door under any package name or adapter", () => {
+  const contract = ROUTINE_SOURCE_CONTRACTS.find(({ id }) => id === "pima-legistar-outcomes");
+  assert.ok(contract, "Pima Legistar outcomes are registered on the standing clock");
+  assert.ok(!MANUAL_PRODUCTION_SOURCE_CONTRACTS.some(({ id }) => id === contract.id));
+  const withScript = (name: string, command: string) => {
+    const files = minimalFiles();
+    const parsed = JSON.parse(files["package.json"]!) as { scripts: Record<string, string> };
+    parsed.scripts[name] = command;
+    files["package.json"] = JSON.stringify(parsed);
+    return audit(files);
+  };
+
+  // The retired owner alias cannot come back in either shape.
+  for (const command of [
+    "node scripts/installed-runtime-command.mjs manual-promote --contract=pima-legistar-outcomes",
+    "node --experimental-strip-types scripts/legistar-outcomes-ingest.mts --promote --slug pima",
+  ]) {
+    assert.deepEqual(
+      withScript("outcomes:ingest", command)
+        .filter(({ code }) => code === "DIRECT_PRODUCTION_CHILD_COMMAND")
+        .map(({ detail }) => detail),
+      ["outcomes:ingest restores a direct production child outside the installed authority graph."],
+      command,
+    );
+  }
+
+  // A renamed alias is caught by class, for every routine contract.
+  for (const routine of [contract, ROUTINE_SOURCE_CONTRACTS[0]!]) {
+    assert.deepEqual(
+      withScript("meeting-outcomes:refresh", `node scripts/installed-runtime-command.mjs manual-promote --contract=${routine.id} --force`)
+        .filter(({ code }) => code === "MANUAL_PACKAGE_CONTRACT_NOT_MANUAL")
+        .map(({ detail }) => detail),
+      [`meeting-outcomes:refresh names an owner manual promotion for ${routine.id}, which is not an explicit-owner contract; a routine contract promotes only on the standing runner's clock.`],
+    );
+  }
+  assert.deepEqual(
+    audit(minimalFiles()).filter(({ code }) => code === "MANUAL_PACKAGE_CONTRACT_NOT_MANUAL"),
+    [],
+    "every explicit-owner alias in the admitted package still names an explicit-owner contract",
+  );
+
+  // The adapter itself may promote only through its registered routine door.
+  const files = minimalFiles();
+  const adapter = contract.acquisitionAdapter.command[0]!;
+  files[adapter] = 'await processRegisteredManualCandidate(store, "pima-legistar-outcomes", candidate, now);';
+  assert.deepEqual(
+    audit(files)
+      .filter(({ code }) => code === "ROUTINE_ADAPTER_REACHES_MANUAL_DOOR")
+      .map(({ path }) => path),
+    [adapter],
+  );
+  files[adapter] = "// processRegisteredManualCandidate was the retired owner door.\nawait processRegisteredRoutineCandidate(store, \"pima-legistar-outcomes\", candidate, now);";
+  assert.deepEqual(audit(files).filter(({ code }) => code === "ROUTINE_ADAPTER_REACHES_MANUAL_DOOR"), []);
 });
 
 test("production executables cannot bypass source-scoped evidence through the generic transition driver", () => {

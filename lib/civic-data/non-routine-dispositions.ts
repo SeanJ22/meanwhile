@@ -264,6 +264,9 @@ export const ROUTINE_INVENTORY_BINDINGS = [
   { inventorySourceId: "nh-general-court", contractIds: ["nh-members"], contractSourceId: "nh-general-court" },
   { inventorySourceId: "census-acs-api", contractIds: ["census-acs-population"], contractSourceId: "census-data-api" },
   { inventorySourceId: "census-geography-relationships", contractIds: ["census-geography-overlaps"], contractSourceId: "census-geography-relationships" },
+  // Formerly an explicit-owner contract; the standing runner is now its only
+  // clock and writer, so it carries no manual binding below.
+  { inventorySourceId: "legistar-outcomes", contractIds: ["pima-legistar-outcomes"], contractSourceId: "pima-legistar-outcomes" },
 ] as const satisfies readonly RoutineInventoryBinding[];
 
 export interface ManualProductionInventoryBinding {
@@ -334,10 +337,6 @@ export const MANUAL_PRODUCTION_INVENTORY_BINDINGS = [
   {
     inventorySourceId: "az-governor-actions", contractId: "az-official-actions", contractSourceId: "az-official-actions",
     reason: "Owner-reviewed Arizona Governor/Legislature source bytes promote exact official-action records; the former tracked action snapshot is test/history evidence and has no production Reader or writer.",
-  },
-  {
-    inventorySourceId: "legistar-outcomes", contractId: "pima-legistar-outcomes", contractSourceId: "pima-legistar-outcomes",
-    reason: "Each Pima Legistar sitting acquisition writes a durable candidate and only GOOD source-scoped evidence moves the canonical Reader pointer; no tracked outcome writer remains.",
   },
   {
     inventorySourceId: "voting-sites", contractId: "voting-sites", contractSourceId: "voting-sites",

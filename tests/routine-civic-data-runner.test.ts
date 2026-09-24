@@ -191,6 +191,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "census-acs-population",
     "census-geography-overlaps",
     "nj-morris-filing",
+    "pima-legistar-outcomes",
     "dotgov",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
@@ -1171,6 +1172,7 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/nh-gencourt-members.mts", "nh-members"],
     ["scripts/acs-population-promote.mts", "census-acs-population"],
     ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
+    ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
   ] as const;
   for (const [path, contractId] of fixedChildren) {

@@ -836,7 +836,15 @@ export async function readPinnedPromotedCivicDataBatch<T>(
       );
     }
     try {
-      return resultFromPromotionProof(recordClass, pin.scope, projection, candidate, predecessor, now, options.maxAgeMs);
+      const result = resultFromPromotionProof(recordClass, pin.scope, projection, candidate, predecessor, now, options.maxAgeMs);
+      // Attest, never re-run (RULING 288): a pinned version proven once is
+      // proven for this process, so a proof run's later requests serve it from
+      // the memo above instead of re-reading its candidate and event log. A
+      // proof run once re-read every moved partition on every Ask request
+      // (about 2,000 whole candidate reads in four minutes, 2026-09-24).
+      // Only the proof harness admits a pin; bypassCache still re-proves.
+      if (result.kind === "PROMOTED" && !options.bypassCache) provenByVersion.set(pin.versionId, { projection, candidate });
+      return result;
     } catch (error) {
       return promotionProofInvalidResult(
         recordClass,

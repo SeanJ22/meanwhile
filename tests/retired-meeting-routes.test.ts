@@ -99,10 +99,15 @@ test("a link into a retired host is recognised as held-as-link, and nothing else
 
 test("agenda retrieval consults the retired-host rule before any request", () => {
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
+  // 2026-09-24: one refusal helper holds both rules — a retired route's host,
+  // and a host a route catalogue records DISALLOWED (legistar.granicus.com).
+  const helper = ingest.slice(ingest.indexOf("export function agendaRetrievalRefusal"), ingest.indexOf("export async function retrieveAgendas"));
+  assert.match(helper, /isRetiredMeetingHost\(url\)/, "the refusal consults the retired-host rule");
+  assert.match(helper, /isDisallowedLegistarHost\(url\)/, "and the recorded-DISALLOWED rule");
   const body = ingest.slice(ingest.indexOf("async function retrieveAgendas"), ingest.indexOf("async function main"));
-  assert.match(body, /isRetiredMeetingHost\(url\)/, "retrieveAgendas must filter retired hosts");
+  assert.match(body, /agendaRetrievalRefusal\(url\)/, "retrieveAgendas must filter refused hosts");
   assert.ok(
-    body.indexOf("isRetiredMeetingHost") < body.indexOf("retrieveAgendaDocument("),
+    body.indexOf("agendaRetrievalRefusal") < body.indexOf("retrieveAgendaDocument("),
     "the filter must run before the fetch",
   );
 });

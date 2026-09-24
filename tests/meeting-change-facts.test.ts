@@ -28,7 +28,7 @@ const ROCKAWAY_BOA = partitionFor("rockaway_township#board-of-adjustment");
 const TUSD = partitionFor("tucson_unified_district#board");
 
 function routeOf(partition: MeetingPartitionContract): string {
-  const url = partition.wiring.config.icalUrl ?? partition.wiring.config.serviceBase;
+  const url = partition.wiring!.config.icalUrl ?? partition.wiring!.config.serviceBase;
   assert.ok(url, partition.id);
   return url;
 }
@@ -59,17 +59,17 @@ function sitting(partition: MeetingPartitionContract, nativeId: string, collecte
     id: `${partition.meetingSource}:${nativeId}`,
     ocdId: partition.ocdId,
     bodyId: partition.bodyId,
-    bodyName: partition.wiring.config.bodyName ?? partition.wiring.publishingOrg,
-    title: `${partition.wiring.config.bodyName ?? partition.wiring.publishingOrg} Meeting`,
+    bodyName: partition.wiring!.config.bodyName ?? partition.wiring!.publishingOrg,
+    title: `${partition.wiring!.config.bodyName ?? partition.wiring!.publishingOrg} Meeting`,
     startsAt: "2026-10-07T23:30:00.000Z",
-    timeZone: partition.wiring.timeZone,
+    timeZone: partition.wiring!.timeZone,
     location: { name: "Municipal Building", address: "65 Mount Hope Road, Rockaway, NJ 07866", lat: 40.93, lng: -74.51 },
     agendaUrl: null,
-    jurisdiction: partition.wiring.jurisdiction,
+    jurisdiction: partition.wiring!.jurisdiction,
     status: "SCHEDULED",
     provenance: {
       sourceUrl: `${routeOf(partition)}#${nativeId}`,
-      sourceOrg: partition.wiring.publishingOrg,
+      sourceOrg: partition.wiring!.publishingOrg,
       collectedAt,
       verifiedAt: null,
     },

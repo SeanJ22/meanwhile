@@ -1,5 +1,6 @@
 import type { AgendaSourceType } from "../../registry/types.ts";
 import {
+  meetingSourceNamesForWiring,
   wiringForMeetingSource,
   type BodySourceWiring,
 } from "../../registry/source-wiring.ts";
@@ -280,8 +281,17 @@ export function buildCompositeSource(
     captureAcquisitionEvidence?: boolean;
     sourceNames?: readonly string[];
     meetingPartitions?: readonly MeetingPartitionSelection[];
+    /**
+     * A derived meeting family's member rows (C16), read from the promoted meeting-source wiring by the family's
+     * own child and authorized at its promotion door. Exclusive of `meetingPartitions`: a family never reads a
+     * SOURCE_WIRING row, and a SOURCE_WIRING partition never reads a derived one.
+     */
+    derivedRows?: readonly BodySourceWiring[];
   } = {},
 ): CompositeSource {
+  if (options.derivedRows !== undefined && options.meetingPartitions !== undefined) {
+    throw new Error("MEETING_DERIVED_ROWS_AND_PARTITIONS_ARE_EXCLUSIVE");
+  }
   if (options.meetingPartitions) {
     for (const selection of options.meetingPartitions) {
       if (!wiringForMeetingSource(selection.sourceName).some((row) => row.bodyId === selection.bodyId)) {
@@ -292,7 +302,9 @@ export function buildCompositeSource(
   const children: ReportingMeetingSource<unknown>[] = [];
   for (const capability of CAPABILITIES) {
     if (options.sourceNames && !options.sourceNames.includes(capability.name)) continue;
-    const rows = wiringForSelectedMeetingSource(capability.name, options.meetingPartitions);
+    const rows = options.derivedRows !== undefined
+      ? options.derivedRows.filter((row) => meetingSourceNamesForWiring(row).includes(capability.name))
+      : wiringForSelectedMeetingSource(capability.name, options.meetingPartitions);
     // No wired body, no child — including Legistar, whose own client list is
     // only consulted once a wiring row routes a body to it.
     if (rows.length === 0) continue;

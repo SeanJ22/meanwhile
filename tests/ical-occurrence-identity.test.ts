@@ -77,14 +77,14 @@ const ZBA_SERIES =
 
 function partition(slug: string) {
   const found = MEETING_PARTITION_CONTRACTS.find(
-    (row) => row.meetingSource === "ical" && row.wiring.config.slug === slug,
+    (row) => row.meetingSource === "ical" && row.wiring!.config.slug === slug,
   );
   assert.ok(found, `no ${slug} partition is wired — this guard is stale`);
   return found;
 }
 
 function wiringFor(...slugs: string[]): BodySourceWiring[] {
-  return slugs.map((slug) => partition(slug).wiring);
+  return slugs.map((slug) => partition(slug).wiring!);
 }
 
 function normalize(wiring: BodySourceWiring[], ics: string, now = NOW) {
@@ -207,8 +207,8 @@ test("ICAL-OCC · an event outside any series keeps its id exactly", () => {
   // Wilmot's feed carries no recurrence at all: every id is `ical:<slug>:<UID>`.
   const wilmot = readFileSync(join(FIXTURES, "wilmot-2026-08-19.ics"), "utf8");
   const rows = MEETING_PARTITION_CONTRACTS.filter(
-    (row) => row.meetingSource === "ical" && (row.wiring.config.feedUrl ?? "").includes("wilmotnh.org"),
-  ).map((row) => row.wiring);
+    (row) => row.meetingSource === "ical" && (row.wiring!.config.feedUrl ?? "").includes("wilmotnh.org"),
+  ).map((row) => row.wiring!);
   const events = parseIcs(wilmot);
   const produced = normalize(rows, wilmot, "2026-08-19T12:00:00.000Z").meetings;
   assert.ok(produced.length >= 10);
@@ -504,7 +504,7 @@ async function seedLegacySeriesRecord(
 test("ICAL-OCC · Warner's 8 September record is replaced by the edited sitting: not duplicated, not carried", async () => {
   const store = new MemoryRoutineDataStore();
   const sb = partition("warner-select-board");
-  const fresh = normalize([sb.wiring], WARNER).meetings;
+  const fresh = normalize([sb.wiring!], WARNER).meetings;
   const edited = fresh.find((row) => row.id === `${SB_SERIES}/20260908T220000Z`);
   assert.ok(edited, "the edited 8 September sitting is produced for the Select Board");
   // Production's record: the series' unedited copy, "Select Board Meeting", 8 September.
@@ -546,7 +546,7 @@ test("ICAL-OCC · Warner's 8 September record is replaced by the edited sitting:
 test("ICAL-OCC · the first read under occurrence identity replaces the series record: no ghost, no false reschedule", async () => {
   const store = new MemoryRoutineDataStore();
   const cc = partition("bradford-conservation-commission");
-  const fresh = normalize([cc.wiring], READ_1).meetings;
+  const fresh = normalize([cc.wiring!], READ_1).meetings;
   const legacy = await seedLegacySeriesRecord(
     store,
     fresh.find((row) => row.startsAt === "2026-09-15T23:00:00.000Z")!,
@@ -582,7 +582,7 @@ test("ICAL-OCC · the first read under occurrence identity replaces the series r
   assert.equal(payload.meetings.some((row) => row.carried), false, "no ghost of the old record");
 
   // The second read, in its own order, changes nothing at all.
-  const second = normalize([cc.wiring], READ_2, "2026-09-23T16:12:00.000Z").meetings;
+  const second = normalize([cc.wiring!], READ_2, "2026-09-23T16:12:00.000Z").meetings;
   const [again] = await promoteMeetingPartitions({
     store,
     partitions: [cc],
@@ -597,7 +597,7 @@ test("ICAL-OCC · the first read under occurrence identity replaces the series r
 
 test("ICAL-OCC · a series record whose fact no current occurrence holds is carried, never removed", () => {
   const cc = partition("bradford-conservation-commission");
-  const fresh = normalize([cc.wiring], READ_1).meetings;
+  const fresh = normalize([cc.wiring!], READ_1).meetings;
   const stale: Meeting = { ...fresh[0]!, id: CC_SERIES, startsAt: "2026-08-04T23:00:00.000Z" };
   const reconciled = reconcileSuccessfulMeetingPartition({
     sourceName: "ical",
@@ -619,7 +619,7 @@ test("ICAL-OCC · a series record whose fact no current occurrence holds is carr
 
 test("ICAL-OCC · the promotion door re-derives a supersession claim and refuses one the candidate does not hold", async () => {
   const cc = partition("bradford-conservation-commission");
-  const fresh = normalize([cc.wiring], READ_1).meetings;
+  const fresh = normalize([cc.wiring!], READ_1).meetings;
   const snapshot = {
     formatVersion: 1 as const,
     generatedAt: NOW,
@@ -697,8 +697,8 @@ const FULL_READ_AT = "2026-09-23T17:30:01.000Z";
 
 function rowsOn(feedNeedle: string): BodySourceWiring[] {
   return MEETING_PARTITION_CONTRACTS
-    .filter((row) => row.meetingSource === "ical" && (row.wiring.config.feedUrl ?? "").includes(feedNeedle))
-    .map((row) => row.wiring);
+    .filter((row) => row.meetingSource === "ical" && (row.wiring!.config.feedUrl ?? "").includes(feedNeedle))
+    .map((row) => row.wiring!);
 }
 
 /** "Tue Oct 20, 2026" and "7pm" / "6:30pm", exactly as the published view writes them. */
@@ -823,7 +823,7 @@ test("ICAL-OCC · a sitting the publisher struck out (EXDATE) is not published, 
 
 test("ICAL-OCC · a published sitting the publisher later strikes out is removed under EXCLUDED_BY_PUBLISHER, and only then", async () => {
   const ec = partition("bradford-energy-committee");
-  const result = normalize([ec.wiring], BRADFORD_FULL, FULL_READ_AT);
+  const result = normalize([ec.wiring!], BRADFORD_FULL, FULL_READ_AT);
   const fresh = result.meetings;
   const struck: Meeting = {
     ...fresh[0]!,
@@ -956,7 +956,7 @@ test("ICAL-OCC · a rule part not supported is a named failure: the series' own 
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
-  const result = normalize([sb.wiring], ics);
+  const result = normalize([sb.wiring!], ics);
   const series = "ical:warner-select-board:monthday-1@example.org";
   assert.deepEqual(result.meetings.map(({ id, startsAt }) => ({ id, startsAt })), [
     { id: `${series}/20261015T230000Z`, startsAt: "2026-10-15T23:00:00.000Z" },
@@ -1037,7 +1037,7 @@ test("ICAL-OCC · the rule reader names every part it refuses", () => {
 
 test("ICAL-OCC · a feed that restates the series' rule on every sitting is read event by event", () => {
   const governing = partition("newbury-ical-governing");
-  const result = normalize([governing.wiring], NEWBURY_SELECTBOARD, FULL_READ_AT);
+  const result = normalize([governing.wiring!], NEWBURY_SELECTBOARD, FULL_READ_AT);
   const uids = new Set(parseIcs(NEWBURY_SELECTBOARD).map((event) => event.uid));
   assert.equal(result.meetings.length, 21);
   for (const meeting of result.meetings) {

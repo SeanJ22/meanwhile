@@ -177,7 +177,7 @@ test("meetings candidate proves SOURCE_WIRING obligations independently of row c
     PDC_V2_POST_IMPORT_MEETING_PARTITIONS.includes(p.id) && !fixtureSources.has(p.meetingSource));
   const expectedMissing = [
     ...WIRED_AFTER_FIXTURE,
-    ...postImport.map((p) => `${p.bodyId}:${p.wiring.agendaSourceType}`),
+    ...postImport.map((p) => `${p.bodyId}:${p.wiring!.agendaSourceType}`),
   ];
   assert.deepEqual([...coverage.missing].sort(), [...expectedMissing].sort());
   assert.equal(coverage.accounted, coverage.denominator - expectedMissing.length);

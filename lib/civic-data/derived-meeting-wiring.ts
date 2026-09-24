@@ -20,15 +20,25 @@
  * only when a connection does; each pass's walks, verifications and inputs are
  * the candidate's evidence, not its read model.
  */
+import { createHash } from "node:crypto";
+
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
-import type { DerivedSuspension } from "./derived-authority.ts";
+import { canonicalCivicDataJson } from "./changes.ts";
+import {
+  derivedRetrieval,
+  type DerivedInputRef,
+  type DerivedSuspension,
+  type DerivedVersionEntry,
+  type DerivedVersionPlan,
+} from "./derived-authority.ts";
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
-import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "./derived-door.ts";
+import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl } from "./derived-door.ts";
+import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
 /** The adapter kinds a derived row wires, as the crosswalk names them. */
 export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS";
@@ -169,4 +179,146 @@ export function derivedMeetingWiringReadState(): CivicDataReadResult<DerivedWiri
 /** A family's members: the version's records for one state, ACTIVE and SUSPENDED, in key order. */
 export function familyMembers(projection: DerivedWiringProjection, state: string): readonly DerivedWiringRecord[] {
   return projection.records.filter((record) => record.row.state === state).sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}
+
+const WIRING_SOURCE_ID = "meeting-source-wiring" as const;
+const WIRING_PARSER = "meeting-source-wiring/1" as const;
+const sha256Hex = (value: string): string => createHash("sha256").update(value).digest("hex");
+
+/** The version a plan becomes: ACTIVE and SUSPENDED records, and nothing that changes pass by pass. */
+export function derivedWiringProjection(plan: DerivedVersionPlan<DerivedWiringRow>): DerivedWiringProjection {
+  return {
+    kind: "meeting-source-wiring",
+    formatVersion: 1,
+    records: plan.rows.map((entry) => ({
+      id: entry.key,
+      status: entry.suspension === undefined ? "ACTIVE" as const : "SUSPENDED" as const,
+      row: entry.row,
+      ...(entry.suspension === undefined ? {} : { suspension: entry.suspension }),
+    })),
+  };
+}
+
+/** The previous version's records as the plan reads them. */
+export function derivedWiringEntries(projection: DerivedWiringProjection | null): DerivedVersionEntry<DerivedWiringRow>[] {
+  return (projection?.records ?? []).map((record) => ({
+    key: record.id,
+    row: record.row,
+    ...(record.suspension === undefined ? {} : { suspension: record.suspension }),
+  }));
+}
+
+/**
+ * The wiring candidate: authentic only as the inputs it was computed from (`retrieval.derived`). A plan with any
+ * refused decision is never a GOOD version: its refusals are its semantic violations.
+ */
+export function derivedWiringCandidate(
+  plan: DerivedVersionPlan<DerivedWiringRow>,
+  extraInputs: readonly DerivedInputRef[],
+  attemptedAt: string,
+): RoutineCandidate {
+  const readModel = derivedWiringProjection(plan);
+  const byKey = new Map<string, DerivedInputRef>();
+  for (const input of [...plan.inputs, ...extraInputs]) byKey.set(canonicalCivicDataJson(input), input);
+  const inputs = [...byKey.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, input]) => input);
+  const retrieval = derivedRetrieval(inputs);
+  const succeeded = retrieval.retrievedAt !== null;
+  const retrievedAt = retrieval.retrievedAt ?? attemptedAt;
+  const normalizedPayload = {
+    readModel,
+    decisions: {
+      promoted: plan.promoted,
+      carried: plan.carried,
+      held: plan.held,
+      suspended: plan.suspended,
+      removed: plan.removed.map((r) => r.key),
+      refusals: plan.refusals,
+    },
+  };
+  const shapeIssue = derivedWiringProjectionIssue(readModel);
+  const normalized = sha256Hex(canonicalCivicDataJson(readModel));
+  return {
+    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${DERIVED_WIRING_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}`).slice(0, 32)}`,
+    sourceId: WIRING_SOURCE_ID,
+    recordClass: DERIVED_WIRING_RECORD_CLASS,
+    scope: DERIVED_WIRING_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(WIRING_SOURCE_ID, DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE),
+    retrieval: {
+      succeeded,
+      requestedUrl: derivedRequestedUrl(WIRING_SOURCE_ID, DERIVED_WIRING_SCOPE),
+      finalUrl: null,
+      httpStatus: null,
+      retrievedAt,
+      rawHash: succeeded ? retrieval.rawHash : null,
+      ...(succeeded ? {} : { failureDetail: "No timed input: the wiring cannot claim when it was computed from." }),
+      derived: { inputs },
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: WIRING_PARSER,
+      schemaVersion: "meeting-source-wiring:1",
+      normalizedHash: normalized,
+      normalizedPayloadHash: sha256Hex(canonicalCivicDataJson(normalizedPayload)),
+      inputRecords: readModel.records.length,
+      outputRecords: readModel.records.length,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
+    identities: readModel.records.map((record) => ({
+      subjectId: record.id,
+      jurisdiction: "US",
+      identifiers: { record_id: record.id, body_id: record.row.bodyId },
+      matchBasis: "EXACT_SCOPED_ID" as const,
+      ambiguous: false,
+    })),
+    temporal: { version: DERIVED_WIRING_SCOPE, expectedVersion: DERIVED_WIRING_SCOPE, sourceThrough: retrievedAt, staleAtRetrieval: false },
+    semantics: {
+      factKind: "reviewed calendar-to-body connections recomputed from promoted and vaulted inputs",
+      violations: [
+        ...plan.refusals.map((r) => `${r.code}: ${r.key}: ${r.detail}`),
+        ...(shapeIssue === null ? [] : [`the version is not a meeting-source wiring: ${shapeIssue}`]),
+      ],
+    },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "every reviewed crosswalk row's connection, as its latest walk and the vault show it; no wider universe claim",
+      returnedRecords: readModel.records.length,
+      declaredTotal: null,
+      paginationComplete: false,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [{
+      consumer: "derived meeting families (lib/civic-data/derived-meeting-family.ts)",
+      passed: shapeIssue === null,
+      detail: `${readModel.records.filter((r) => r.status === "ACTIVE").length} active and ${readModel.records.filter((r) => r.status === "SUSPENDED").length} suspended connection(s).`,
+    }],
+    normalizedPayload,
+    readModel,
+    excludedFacts: plan.held.map((h) => ({ key: `derived-wiring:${h.key}`, code: `DERIVED_ROW_HELD_${h.reason}`, detail: h.detail })),
+  };
+}
+
+/** A pass that cannot read its inputs records a refused candidate; the last known good wiring stays live. */
+export function derivedWiringFailedCandidate(attemptedAt: string, failureDetail: string): RoutineCandidate {
+  return {
+    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${DERIVED_WIRING_SCOPE}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
+    sourceId: WIRING_SOURCE_ID,
+    recordClass: DERIVED_WIRING_RECORD_CLASS,
+    scope: DERIVED_WIRING_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(WIRING_SOURCE_ID, DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE),
+    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(WIRING_SOURCE_ID, DERIVED_WIRING_SCOPE), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
+    normalization: {
+      succeeded: false, parserVersion: WIRING_PARSER, schemaVersion: "meeting-source-wiring:1", normalizedHash: null,
+      inputRecords: 0, outputRecords: 0, droppedRecords: 0, missingRequiredFields: [], failureDetail,
+    },
+    identities: [],
+    temporal: { version: DERIVED_WIRING_SCOPE, expectedVersion: DERIVED_WIRING_SCOPE, sourceThrough: attemptedAt, staleAtRetrieval: false },
+    semantics: { factKind: "reviewed calendar-to-body connections recomputed from promoted and vaulted inputs", violations: [] },
+    horizon: { kind: "OPEN_FACT_SET", query: "no inputs read", returnedRecords: 0, declaredTotal: null, paginationComplete: false, claimsComplete: false },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [],
+    normalizedPayload: null,
+    readModel: null,
+  };
 }

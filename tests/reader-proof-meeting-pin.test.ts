@@ -58,15 +58,15 @@ function meeting(partition: typeof legistar, collectedAt: string, suffix: string
     id: `${partition.meetingSource}:${suffix}`,
     ocdId: partition.ocdId,
     bodyId: partition.bodyId,
-    bodyName: partition.wiring.config.insiteBodyName ?? partition.wiring.publishingOrg,
-    title: `${partition.wiring.jurisdiction} meeting ${suffix}`,
+    bodyName: partition.wiring!.config.insiteBodyName ?? partition.wiring!.publishingOrg,
+    title: `${partition.wiring!.jurisdiction} meeting ${suffix}`,
     startsAt: "2026-10-20T17:00:00.000Z",
-    timeZone: partition.wiring.timeZone,
+    timeZone: partition.wiring!.timeZone,
     location: null,
     agendaUrl: null,
-    jurisdiction: partition.wiring.jurisdiction,
+    jurisdiction: partition.wiring!.jurisdiction,
     status: "SCHEDULED",
-    provenance: { sourceUrl: urlFor(partition.meetingSource), sourceOrg: partition.wiring.publishingOrg, collectedAt, verifiedAt: null },
+    provenance: { sourceUrl: urlFor(partition.meetingSource), sourceOrg: partition.wiring!.publishingOrg, collectedAt, verifiedAt: null },
   };
 }
 

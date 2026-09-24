@@ -75,11 +75,11 @@ const CARRIED_495: Meeting = {
   location: null,
   online: { label: "Via Zoom Webinar", joinUrl: null },
   agendaUrl: null,
-  jurisdiction: TUSD.wiring.jurisdiction,
+  jurisdiction: TUSD.wiring!.jurisdiction,
   status: "SCHEDULED",
   provenance: {
     sourceUrl: `${PORTAL}495`,
-    sourceOrg: TUSD.wiring.publishingOrg,
+    sourceOrg: TUSD.wiring!.publishingOrg,
     collectedAt: LAST_LISTED_495,
     verifiedAt: null,
   },
@@ -98,9 +98,9 @@ function fresh501(collectedAt: string, over: Partial<Meeting> = {}): Meeting {
     timeZone: "America/Phoenix",
     location: null,
     agendaUrl: `${PORTAL}501`,
-    jurisdiction: TUSD.wiring.jurisdiction,
+    jurisdiction: TUSD.wiring!.jurisdiction,
     status: "CONCLUDED",
-    provenance: { sourceUrl: `${PORTAL}501`, sourceOrg: TUSD.wiring.publishingOrg, collectedAt, verifiedAt: null },
+    provenance: { sourceUrl: `${PORTAL}501`, sourceOrg: TUSD.wiring!.publishingOrg, collectedAt, verifiedAt: null },
     ...over,
   };
 }
@@ -122,9 +122,9 @@ function bondOversight502(collectedAt: string): Meeting {
       lng: -110.883029,
     },
     agendaUrl: `${PORTAL}502`,
-    jurisdiction: TUSD.wiring.jurisdiction,
+    jurisdiction: TUSD.wiring!.jurisdiction,
     status: "CONCLUDED",
-    provenance: { sourceUrl: `${PORTAL}502`, sourceOrg: TUSD.wiring.publishingOrg, collectedAt, verifiedAt: null },
+    provenance: { sourceUrl: `${PORTAL}502`, sourceOrg: TUSD.wiring!.publishingOrg, collectedAt, verifiedAt: null },
   };
 }
 
@@ -136,13 +136,13 @@ function budgetAdvisoryAtSameMinute(collectedAt: string): Meeting {
     bodyName: "Budget Advisory Committee Meeting Agenda",
     title: "Budget Advisory Committee Meeting Agenda - Sep 16 2026",
     agendaUrl: `${PORTAL}506`,
-    provenance: { sourceUrl: `${PORTAL}506`, sourceOrg: TUSD.wiring.publishingOrg, collectedAt, verifiedAt: null },
+    provenance: { sourceUrl: `${PORTAL}506`, sourceOrg: TUSD.wiring!.publishingOrg, collectedAt, verifiedAt: null },
   };
 }
 
 /** One authenticated answer from the portal's meetings service, with exact-byte evidence. */
 function answered(at: string, rows: number): ChildRunReport {
-  const service = TUSD.wiring.config.serviceBase!;
+  const service = TUSD.wiring!.config.serviceBase!;
   const bytes = `diligent tusd1 MeetingsService answer read at ${at}`;
   return {
     source: "diligent",
@@ -230,8 +230,8 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
     TUSD.scope,
     "source:diligent:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fschool_district%3Atucson_unified_district%23board",
   );
-  assert.equal(`${TUSD.wiring.config.serviceBase}${TUSD.wiring.config.meetingPath}`, PORTAL);
-  assert.equal(TUSD.wiring.timeZone, "America/Phoenix");
+  assert.equal(`${TUSD.wiring!.config.serviceBase}${TUSD.wiring!.config.meetingPath}`, PORTAL);
+  assert.equal(TUSD.wiring!.timeZone, "America/Phoenix");
 
   const store = new MemoryRoutineDataStore();
   await seedMeasuredVersion(store);
@@ -359,9 +359,9 @@ test("CARRIED-SUPERSEDE · (d) another body at the same minute is another sittin
   // A feed that gives every row one body name and names each committee only in
   // its title (the iCalendar adapter writes the wiring row's body name).
   const ical = MEETING_PARTITION_CONTRACTS.find((partition) => partition.meetingSource === "ical")!;
-  const town = ical.wiring.config.bodyName ?? ical.wiring.publishingOrg;
+  const town = ical.wiring!.config.bodyName ?? ical.wiring!.publishingOrg;
   const townSitting = (uid: string, title: string, carried?: Meeting["carried"]): Meeting => ({
-    id: `ical:${ical.wiring.config.slug}:${uid}`,
+    id: `ical:${ical.wiring!.config.slug}:${uid}`,
     ocdId: ical.ocdId,
     bodyId: ical.bodyId,
     bodyName: town,
@@ -370,9 +370,9 @@ test("CARRIED-SUPERSEDE · (d) another body at the same minute is another sittin
     timeZone: "America/New_York",
     location: null,
     agendaUrl: null,
-    jurisdiction: ical.wiring.jurisdiction,
+    jurisdiction: ical.wiring!.jurisdiction,
     status: "SCHEDULED",
-    provenance: { sourceUrl: ical.wiring.config.feedUrl ?? "", sourceOrg: ical.wiring.publishingOrg, collectedAt: MEASURED_READ, verifiedAt: null },
+    provenance: { sourceUrl: ical.wiring!.config.feedUrl ?? "", sourceOrg: ical.wiring!.publishingOrg, collectedAt: MEASURED_READ, verifiedAt: null },
     ...(carried ? { carried } : {}),
   });
   const planning = townSitting("planning-board@example", "Planning Board", {

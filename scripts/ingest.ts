@@ -91,6 +91,21 @@ import { currentVenueCache } from "../lib/meetings/venue-cache.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
+import {
+  bodySourceWiringFor,
+  DERIVED_WIRING_SOURCE_NAMES,
+  familyMembers,
+  readDerivedMeetingWiring,
+  type DerivedWiringRecord,
+} from "../lib/civic-data/derived-meeting-wiring.ts";
+import {
+  buildDerivedFamily,
+  derivedFamilyCandidate,
+  derivedFamilyFailedCandidate,
+  type FamilyMemberRead,
+} from "../lib/civic-data/derived-meeting-family.ts";
 import { retainMeetingFetchBytes, retainMeetingCandidateEvidence, readMeetingResearchWitness,
   type RetainedSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
 
@@ -672,6 +687,120 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   );
 }
 
+/** Read one ACTIVE member of a derived family on its own row, through the same composite adapters a partition uses. */
+async function readDerivedFamilyMember(member: DerivedWiringRecord): Promise<FamilyMemberRead> {
+  const sourceName = DERIVED_WIRING_SOURCE_NAMES[member.row.kind];
+  try {
+    const source = buildCompositeSource({
+      timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
+      captureAcquisitionEvidence: true,
+      sourceNames: [sourceName],
+      derivedRows: [bodySourceWiringFor(member.row)],
+    });
+    const now = Date.now();
+    const raw = await source.fetch({
+      lat: 39.5,
+      lng: -98.35,
+      radiusKm: 5000,
+      startsAfter: new Date(now - CONCLUDED_LOOKBACK_DAYS * 86_400_000).toISOString(),
+      startsBefore: new Date(now + UPCOMING_HORIZON_DAYS * 86_400_000).toISOString(),
+    });
+    const meetings: Meeting[] = resolveAttribution((source as MeetingSource<unknown>).normalize(raw as unknown[]));
+    const report = source.lastReport?.children.find((child) => child.source === sourceName);
+    return {
+      member,
+      acquisitions: report?.acquisitions ?? [],
+      ok: report?.ok === true,
+      error: report?.ok === true ? null : report?.error ?? `the composite produced no report for ${sourceName}`,
+      freshMeetings: meetings,
+      freshAgendaDocuments: [],
+      retrievedAt: new Date().toISOString(),
+    };
+  } catch (error) {
+    return {
+      member,
+      acquisitions: [],
+      ok: false,
+      error: jobFailureDetail(error instanceof Error ? error.message : String(error)),
+      freshMeetings: [],
+      freshAgendaDocuments: [],
+      retrievedAt: new Date().toISOString(),
+    };
+  }
+}
+
+/**
+ * **ONE STATE'S DERIVED MEETING FAMILY, ONE CANDIDATE, EVERY MEMBER ON ITS OWN EVIDENCE** (C16).
+ *
+ * The members are the promoted meeting-source wiring's rows for the state. Each ACTIVE member is read on its own
+ * row; a SUSPENDED or failed member keeps its last verified sittings (`lib/civic-data/derived-meeting-family.ts`).
+ * An unreadable wiring store builds nothing: a refused candidate is recorded and the family's last known good stays.
+ */
+export async function promoteDerivedMeetingFamily(store: RoutineDataStore, partition: MeetingPartitionContract): Promise<void> {
+  const generatedAt = new Date().toISOString();
+  const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
+    const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
+    const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, failed, generatedAt);
+    printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
+  };
+  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
+  if (wiring.kind !== "PROMOTED") {
+    await refuse(
+      wiring.kind === "NOT_RECORDED"
+        ? "No meeting-source wiring version is promoted yet, so this family has no member to read."
+        : jobFailureDetail(`The meeting-source wiring could not be read (${wiring.kind}): ${"detail" in wiring ? wiring.detail : ""}`),
+      "JOB",
+    );
+    return;
+  }
+  const members = familyMembers(wiring.value, partition.derivedFamily!);
+  if (members.length === 0) {
+    await refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
+    return;
+  }
+  const previous = await readPreviousMeetingPartition(store, partition);
+  const reads: FamilyMemberRead[] = [];
+  for (const member of members) {
+    if (member.status !== "ACTIVE") continue;
+    const read = await readDerivedFamilyMember(member);
+    console.log(`  ${member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
+    reads.push(read);
+  }
+  const versionId = wiring.metadata.versionId;
+  const promotedAt = wiring.metadata.promotedAt;
+  if (versionId === null || promotedAt === null) {
+    await refuse(jobFailureDetail("The promoted meeting-source wiring carries no version id or promotion time."), "JOB");
+    return;
+  }
+  const build = buildDerivedFamily({
+    wiringInput: {
+      kind: "PROMOTED_VERSION",
+      recordClass: DERIVED_WIRING_RECORD_CLASS,
+      scope: DERIVED_WIRING_SCOPE,
+      versionId,
+      readModelSha256: sha256(canonicalCivicDataJson(wiring.value)),
+      promotedAt,
+    },
+    members,
+    reads,
+    previous,
+    generatedAt,
+    reconcile: (read, previousSlice) => {
+      const reconciled = reconcileSuccessfulMeetingPartition({
+        sourceName: DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
+        generatedAt,
+        freshMeetings: read.freshMeetings,
+        freshAgendaDocuments: read.freshAgendaDocuments,
+        previous: previousSlice,
+      });
+      return { meetings: reconciled.meetings, agendaDocuments: reconciled.agendaDocuments, removalEvidence: reconciled.removalEvidence };
+    },
+  });
+  const candidate = derivedFamilyCandidate(partition, build);
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, generatedAt);
+  printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
+}
+
 async function main() {
   installNeonRequestDeadline();
   const name = process.argv[2];
@@ -705,6 +834,11 @@ async function main() {
   await preloadCanonicalMeetingDependencies({ sourceName: name });
   REGISTRY = getRegistryRuntimeReadModel().registry;
   const promotionStore = promote ? new PostgresRoutineDataStore() : null;
+  /* A derived family (C16) reads its members from the promoted wiring, never from SOURCE_WIRING. */
+  if (partitions.length === 1 && partitions[0]!.derivedFamily !== null && promotionStore) {
+    await promoteDerivedMeetingFamily(promotionStore, partitions[0]!);
+    return;
+  }
 
   const source = name === "composite"
     ? buildCompositeSource({
@@ -744,7 +878,7 @@ async function main() {
   }), "legistar", value => {
     const url = new URL(value);
     return url.protocol === "https:" && url.hostname === "webapi.legistar.com" && partitions.some(partition =>
-      partition.meetingSource === "legistar" && url.pathname.toLowerCase() === `/v1/${partition.wiring.config.slug}/events`);
+      partition.meetingSource === "legistar" && url.pathname.toLowerCase() === `/v1/${partition.wiring?.config.slug}/events`);
   });
   const raw = retained.value;
 

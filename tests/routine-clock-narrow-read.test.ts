@@ -16,6 +16,7 @@ import {
   routineClockCandidateRead,
   routineClockCandidateView,
   routineClockConfirmationRead,
+  promotedPointerIdentityRead,
   routineClockPointedObservedRead,
   routineClockPointerRead,
   sittingStartsRead,
@@ -27,6 +28,7 @@ import {
   clearPromotedReadModelCache,
   promotionProofIssue,
   readPromotedCivicData,
+  readPromotedCivicDataBatch,
 } from "../lib/civic-data/read-model.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import {
@@ -482,7 +484,9 @@ test("an unchanged re-check is a confirmation on the pointed version: readers ke
   };
   const outcome = await store.confirmUnchanged(input, "2026-09-08T18:00:03.000Z");
   assert.deepEqual(outcome, { kind: "CONFIRMED", versionId: value.id, at: "2026-09-08T18:00:03.000Z" });
-  assert.deepEqual(await store.readPromotion(value.recordClass, value.scope), pointerBefore, "the pointer does not move");
+  const { latestConfirmation, ...pointerAfter } = (await store.readPromotion(value.recordClass, value.scope))!;
+  assert.deepEqual(pointerAfter, pointerBefore, "the pointer does not move");
+  assert.equal(latestConfirmation?.observedAt, "2026-09-08T18:00:03.000Z", "the read carries the version's newest confirmation");
   const events = await store.events(value.id);
   assert.deepEqual(events.map(({ state }) => state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
   assert.equal(parseUnchangedConfirmation(events.at(-1)!.detail)?.retrieval.retrievedAt, "2026-09-08T18:00:00.000Z");
@@ -585,4 +589,58 @@ test("the Postgres confirmation is one guarded insert, and the clock reads one e
   const select = selectList(routineClockConfirmationRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
   assert.doesNotMatch(select, DATASET);
   assert.match(select, /"detail"/);
+});
+
+test("a confirmed version is as fresh as its confirmation, on the cold, warm and batch reads", async () => {
+  const value = candidate("fresh-by-confirmation");
+  const store = await promotedStore(value);
+  const week = 7 * 24 * 3_600_000;
+  const maxAgeMs = week;
+  // Two days past the version's own retrieval plus a week: stale by the version alone.
+  const now = new Date(Date.parse(value.retrieval.retrievedAt) + week + 2 * 24 * 3_600_000).toISOString();
+  clearPromotedReadModelCache();
+  const unconfirmed = await readPromotedCivicData(value.recordClass, value.scope, { store, now, maxAgeMs });
+  assert.equal(unconfirmed.metadata.stale, "STALE");
+
+  const confirmedAt = new Date(Date.parse(now) - 3_600_000).toISOString();
+  const outcome = await store.confirmUnchanged({
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    parserVersion: value.normalization.parserVersion,
+    pointerVersionId: value.id,
+    readModelHash: value.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED",
+    retrieval: { ...CONFIRMING_RETRIEVAL, retrievedAt: confirmedAt },
+  }, confirmedAt);
+  assert.equal(outcome.kind, "CONFIRMED");
+
+  // Warm: this store already proved the version, so the identity read decides.
+  const warm = await readPromotedCivicData(value.recordClass, value.scope, { store, now, maxAgeMs });
+  assert.equal(warm.metadata.stale, "CURRENT");
+  assert.equal(warm.metadata.retrievedAt, confirmedAt);
+  assert.equal(warm.metadata.versionId, value.id, "readers keep the confirmed version");
+
+  // Cold: a fresh process proves the version and reads its confirmation with it.
+  clearPromotedReadModelCache();
+  const cold = await readPromotedCivicData(value.recordClass, value.scope, { store, now, maxAgeMs });
+  assert.equal(cold.metadata.stale, "CURRENT");
+  assert.equal(cold.metadata.retrievedAt, confirmedAt);
+
+  // Batch: the set-oriented read, cold and then warm.
+  clearPromotedReadModelCache();
+  for (const pass of ["cold", "warm"]) {
+    const [batch] = await readPromotedCivicDataBatch(value.recordClass, [value.scope], { store, now, maxAgeMs });
+    assert.equal(batch?.metadata.stale, "CURRENT", pass);
+    assert.equal(batch?.metadata.retrievedAt, confirmedAt, pass);
+  }
+});
+
+test("pointer reads carry the newest confirmation from Postgres beside the pointer, never a payload", () => {
+  const identity = promotedPointerIdentityRead(drizzle.mock({ schema }), "FEC_FUNDING", ["federal-supported"]).toSQL().sql;
+  assert.match(identity, /select confirmation\.detail from civic_data_candidate_events as confirmation/);
+  assert.match(identity, /confirmation\.candidate_id = "civic_data_promotions"\."current_version_id"/);
+  assert.match(identity, /left\(confirmation\.detail, \$\d+\) = \$\d+/, "the prefix is compared exactly, never with LIKE");
+  assert.match(identity, /order by confirmation\.sequence desc\s+limit 1/);
+  assert.doesNotMatch(identity, /"payload"|"validation_receipt"/, "an identity read carries no dataset");
 });

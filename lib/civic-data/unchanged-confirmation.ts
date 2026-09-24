@@ -152,8 +152,10 @@ export type ConfirmUnchangedOutcome =
        * POINTER_MOVED: the pointer no longer names the version. HASH_DIFFERS: its read
        * model is not the confirmed one. POINTER_IS_IMPORT: a trusted-LKG import is
        * never confirmed; a live read of it promotes. EVIDENCE_INVALID: malformed.
+       * STORE_REFUSED: the database's event rule does not yet admit the receipt
+       * (its migration is not applied); the caller promotes exactly as before.
        */
-      readonly kind: "POINTER_MOVED" | "HASH_DIFFERS" | "POINTER_IS_IMPORT" | "EVIDENCE_INVALID";
+      readonly kind: "POINTER_MOVED" | "HASH_DIFFERS" | "POINTER_IS_IMPORT" | "EVIDENCE_INVALID" | "STORE_REFUSED";
       readonly detail: string;
     };
 

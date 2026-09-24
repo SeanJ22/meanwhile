@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { and, desc, eq, inArray, like, sql } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections } from "../db/schema.ts";
@@ -749,6 +749,7 @@ export function promotedPointerIdentity(pointer: PromotedPointerIdentity): Promo
     versionId: pointer.versionId,
     lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
     promotedAt: pointer.promotedAt,
+    ...(pointer.latestConfirmation ? { latestConfirmation: pointer.latestConfirmation } : {}),
   };
 }
 
@@ -811,8 +812,16 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return row ? candidateVersionSummary(structuredClone(row)) : null;
   }
 
-  async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
+  /** The pointer as a read returns it: with its version's newest confirmation, when one exists. */
+  private pointerRead(recordClass: RoutineRecordClass, scope: string): PromotedProjection | null {
     const row = this.promotions.get(projectionKey(recordClass, scope));
+    if (!row) return null;
+    const confirmation = latestUnchangedConfirmation(this.history.get(row.versionId) ?? [], row.versionId);
+    return confirmation === null ? row : { ...row, latestConfirmation: confirmation };
+  }
+
+  async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
+    const row = this.pointerRead(recordClass, scope);
     return row ? structuredClone(row) as PromotedProjection<T> : null;
   }
 
@@ -821,13 +830,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     scopes: readonly string[],
   ): Promise<readonly PromotedProjection<T>[]> {
     return scopes.flatMap((scope) => {
-      const row = this.promotions.get(projectionKey(recordClass, scope));
+      const row = this.pointerRead(recordClass, scope);
       return row ? [structuredClone(row) as PromotedProjection<T>] : [];
     });
   }
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
-    const row = this.promotions.get(projectionKey(recordClass, scope));
+    const row = this.pointerRead(recordClass, scope);
     return row ? promotedPointerIdentity(row) : null;
   }
 
@@ -836,7 +845,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     scopes: readonly string[],
   ): Promise<readonly PromotedPointerIdentity[]> {
     return scopes.flatMap((scope) => {
-      const row = this.promotions.get(projectionKey(recordClass, scope));
+      const row = this.pointerRead(recordClass, scope);
       return row ? [promotedPointerIdentity(row)] : [];
     });
   }
@@ -1096,6 +1105,19 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
     .limit(1);
 }
 
+/** The event rule's own refusal of a repeated PROMOTED event that is not typed Reader evidence. */
+function unchangedConfirmationRefusedByEventRule(error: unknown): boolean {
+  const chain: unknown[] = [];
+  for (let value: unknown = error; value !== null && value !== undefined && chain.length < 4; value = (value as { cause?: unknown }).cause) {
+    chain.push(value);
+  }
+  return chain.some((value) => {
+    const row = value as { code?: unknown; message?: unknown };
+    return typeof value === "object" && row.code === "23514" &&
+      typeof row.message === "string" && row.message.includes("repeated PROMOTED event is not typed Reader evidence");
+  });
+}
+
 function laterInstant(left: string | undefined, right: string | undefined): string | undefined {
   if (left === undefined) return right;
   if (right === undefined) return left;
@@ -1304,7 +1326,7 @@ export function promotedPointerIdentityRead(
   scopes: readonly string[],
 ) {
   return db
-    .select(PROMOTED_POINTER_IDENTITY_COLUMNS)
+    .select(PROMOTED_POINTER_READ_COLUMNS)
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.scope, [...scopes])));
 }
@@ -1321,9 +1343,30 @@ export const PROMOTED_POINTER_COLUMNS = {
 type PostgresPromotedPointerIdentityRow = Pick<
   typeof civicDataPromotions.$inferSelect,
   keyof typeof PROMOTED_POINTER_IDENTITY_COLUMNS
->;
+> & { readonly latestConfirmation?: string | null };
+
+/**
+ * The pointed version's newest unchanged-confirmation detail, built in
+ * Postgres beside a pointer read: one short event detail, never a payload,
+ * and none when the version was never confirmed. The prefix is compared
+ * exactly (not with LIKE, whose `_` is a wildcard).
+ */
+const LATEST_CONFIRMATION_DETAIL = sql<string | null>`(
+  select confirmation.detail from civic_data_candidate_events as confirmation
+  where confirmation.candidate_id = "civic_data_promotions"."current_version_id"
+    and left(confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+  order by confirmation.sequence desc
+  limit 1
+)`;
+
+/** A pointer read's columns: identity, plus the newest confirmation of the pointed version. */
+const PROMOTED_POINTER_READ_COLUMNS = {
+  ...PROMOTED_POINTER_IDENTITY_COLUMNS,
+  latestConfirmation: LATEST_CONFIRMATION_DETAIL,
+} as const;
 
 function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow): PromotedPointerIdentity {
+  const confirmation = typeof row.latestConfirmation === "string" ? parseUnchangedConfirmation(row.latestConfirmation) : null;
   return {
     key: row.key,
     sourceId: row.sourceId,
@@ -1332,11 +1375,13 @@ function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow
     versionId: row.currentVersionId,
     lastKnownGoodVersionId: row.lastKnownGoodVersionId,
     promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
+    // A confirmation of another version, or one that does not parse, is not this pointer's.
+    ...(confirmation !== null && confirmation.versionId === row.currentVersionId ? { latestConfirmation: confirmation } : {}),
   };
 }
 
 function postgresPromotionRowToProjection<T = unknown>(
-  row: typeof civicDataPromotions.$inferSelect,
+  row: typeof civicDataPromotions.$inferSelect & { readonly latestConfirmation?: string | null },
 ): PromotedProjection<T> {
   return {
     ...postgresPromotedPointerIdentity(row),
@@ -1613,7 +1658,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
-    const [row] = await this.db.select().from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope))).limit(1);
+    const [row] = await this.db
+      .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: LATEST_CONFIRMATION_DETAIL })
+      .from(civicDataPromotions)
+      .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
+      .limit(1);
     return row ? postgresPromotionRowToProjection<T>(row) : null;
   }
 
@@ -1622,10 +1671,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     scopes: readonly string[],
   ): Promise<readonly PromotedProjection<T>[]> {
     if (scopes.length === 0) return [];
-    const rows = await this.db.select().from(civicDataPromotions).where(and(
-      eq(civicDataPromotions.recordClass, recordClass),
-      inArray(civicDataPromotions.scope, [...scopes]),
-    ));
+    const rows = await this.db
+      .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: LATEST_CONFIRMATION_DETAIL })
+      .from(civicDataPromotions)
+      .where(and(
+        eq(civicDataPromotions.recordClass, recordClass),
+        inArray(civicDataPromotions.scope, [...scopes]),
+      ));
     return rows.map((row) => postgresPromotionRowToProjection<T>(row));
   }
 
@@ -1783,7 +1835,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const nextSequence = this.nextCandidateEventSequence(id);
     // One guarded insert: the pointer still names exactly this live version,
     // its read model is the confirmed one, and time never runs backward.
-    const [, eventRows] = await this.db.batch([
+    let eventRows: readonly { readonly sequence: number }[];
+    try {
+    [, eventRows] = await this.db.batch([
       this.candidateEventLock(id),
       this.db.insert(civicDataCandidateEvents).select(sql`
         select gen_random_uuid(), ${id}, ${nextSequence}, ${"PROMOTED"}, ${at}::timestamptz, ${detail}
@@ -1823,6 +1877,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           `)]
         : []),
     ]);
+    } catch (error) {
+      // The event rule (enforce_civic_data_candidate_event_insert) admits this
+      // receipt only once its migration is applied; until then a refusal is a
+      // no-confirmation, and the caller promotes exactly as before.
+      if (unchangedConfirmationRefusedByEventRule(error)) {
+        return { kind: "STORE_REFUSED", detail: "The database's event rule does not admit unchanged confirmations yet." };
+      }
+      throw error;
+    }
     if (eventRows[0]) return { kind: "CONFIRMED", versionId: id, at };
     // Name the guard that refused, from identity columns only.
     const [pointerRows, candidateRows] = await this.db.batch([

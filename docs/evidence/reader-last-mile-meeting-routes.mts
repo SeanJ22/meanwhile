@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
@@ -28,7 +28,38 @@ const windowStart = asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
 const windowEnd = asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
 const expected = snapshot.meetings.filter(meeting => Date.parse(meeting.startsAt) >= windowStart && Date.parse(meeting.startsAt) <= windowEnd);
 const dispositions = snapshot.meetings.filter(meeting => !expected.includes(meeting)).map(meeting => ({ id: meeting.id, startsAt: meeting.startsAt, state: "INTENTIONALLY_OUT_OF_SCOPE", selector: "searchMeetings current canonical serving window", reason: `Current reader window is ${CONCLUDED_LOOKBACK_DAYS} days back and ${UPCOMING_HORIZON_DAYS} days forward at ${asOf.toISOString()}. This historical event remains held and can support dated Ask/agenda answers; it is not a current map-calendar event.` }));
-const points = [...new Map(snapshot.meetings.flatMap(meeting => meeting.location ? [[`${meeting.location.lat},${meeting.location.lng}`, { lat: meeting.location.lat, lng: meeting.location.lng }] as const] : [])).values()];
+const points: { lat: number; lng: number; zip?: string }[] = [...new Map(snapshot.meetings.flatMap(meeting => meeting.location ? [[`${meeting.location.lat},${meeting.location.lng}`, { lat: meeting.location.lat, lng: meeting.location.lng }] as const] : [])).values()];
+// A meeting its publisher gives no place (location null) reaches a reader through its
+// division: the route returns it to a reader who types a ZIP that division reaches. Query
+// each such division once, at the first ZIP (in the committed ZIP-area index) it reaches,
+// with that ZIP, exactly as the reader's request is made. Before 2026-09-24 every current
+// placeless meeting sat beside a located one; Mesa's live partition (32 placeless sittings)
+// was the first to have none, and a proof that only asked at meeting coordinates never
+// asked where those sittings are served.
+const placelessDivisions = [...new Set(expected.flatMap(meeting => !meeting.location && meeting.ocdId ? [meeting.ocdId] : []))].sort();
+if (placelessDivisions.length > 0) {
+  const centroids = (JSON.parse(readFileSync("lib/geo/zcta-centroids.json", "utf8")) as { centroids: Record<string, [number, number]> }).centroids;
+  const zipFor = new Map<string, string>();
+  const shards = readdirSync("data/derived/zip-divisions").filter(name => /^\d{2}\.json$/.test(name)).sort();
+  for (const shard of shards) {
+    if (zipFor.size === placelessDivisions.length) break;
+    const index = JSON.parse(readFileSync(`data/derived/zip-divisions/${shard}`, "utf8")) as { divisions: string[]; zips: Record<string, number[]> };
+    const wanted = new Map(placelessDivisions.flatMap(ocdId => { const at = index.divisions.indexOf(ocdId); return at >= 0 && !zipFor.has(ocdId) ? [[at, ocdId] as const] : []; }));
+    if (wanted.size === 0) continue;
+    for (const zip of Object.keys(index.zips).sort()) {
+      for (const at of index.zips[zip]!) {
+        const ocdId = wanted.get(at);
+        if (ocdId && !zipFor.has(ocdId) && centroids[zip]) zipFor.set(ocdId, zip);
+      }
+    }
+  }
+  for (const ocdId of placelessDivisions) {
+    const zip = zipFor.get(ocdId);
+    assert.ok(zip, `No ZIP in the committed ZIP-area index reaches ${ocdId}, so its placeless meetings cannot be asked for`);
+    const [lat, lng] = centroids[zip]!;
+    points.push({ lat, lng, zip });
+  }
+}
 const seen = new Set<string>();
 const records: unknown[] = [];
 // RULING 290: the standing runner re-collects meetings live, so provenance.collectedAt (a
@@ -38,7 +69,7 @@ const records: unknown[] = [];
 // working (the same reason version/aggregate drift is already tolerated above).
 const stripCollectedAt = (m: Meeting) => { const c = JSON.parse(JSON.stringify(m)); if (c && c.provenance) delete c.provenance.collectedAt; return c; };
 for (let start = 0; start < points.length; start += 4) await Promise.all(points.slice(start, start + 4).map(async point => {
-  const request = `/api/meetings?${new URLSearchParams({ lat: String(point.lat), lng: String(point.lng), radiusKm: "150" })}`;
+  const request = `/api/meetings?${new URLSearchParams({ lat: String(point.lat), lng: String(point.lng), radiusKm: "150", ...(point.zip ? { zip: point.zip } : {}) })}`;
   const response = await fetch(`${base}${request}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-meeting-routes" } });
   assert.equal(response.status, 200, request);
   const actual = await response.json() as { meetings: Meeting[]; listingIdentity: MeetingListingIdentityReadback; coverage: unknown; tier: string; radiusKm: number };

@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
-  "buildId": "z4r1q7YWh0rEVYmgnypiP",
+  "exactHead": "48ade9df88ce6af1e9b7814ff8c61861e68c7574",
+  "buildId": "HorkZFXcRRHYBWhFEHnKL",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-24T09:30:01.238Z",
+  "runId": "reader-last-mile-final-render@2026-09-24T13:18:24.698Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -23,7 +23,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "ad1b1d89960c06c847601ec00b0d6cdea33bfded0a8b9bfe5d88601f3319232b"
+      "sha256": "890df033ab645dffbf30de5807d5ced5d6e6b69e21e3a427dbec0d193ce76c63"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1775,7 +1775,7 @@
     },
     {
       "path": "lib/ask/agenda-publication.ts",
-      "sha256": "6d81ba06737c44bb0c8a38a8111811c1798bbd1d809616b5438ee734de4920bf"
+      "sha256": "c9cbc61e9a03274995747af61242915cc283626070ecd45a6ce7415376a57ae6"
     },
     {
       "path": "lib/ask/agenda-sentence.ts",
@@ -1787,7 +1787,7 @@
     },
     {
       "path": "lib/ask/answer.ts",
-      "sha256": "0facc8e7f1a9ea01f2a4c7da7260211e39638f806ecbc5732f0476a8b19cf702"
+      "sha256": "227b807758d040af3e458c5cd99d07557392a7afc697e1d971b1ec038cb3af17"
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
@@ -1795,7 +1795,7 @@
     },
     {
       "path": "lib/ask/body-confirmation.ts",
-      "sha256": "ba90b28e2baa8801c79bf3def9da7fba9ada39bc01e3a1e5c72fe2c2c453600c"
+      "sha256": "435834064aa0fee7244c23313c7ccf90f2a1ab2c6a7c3d52701f32ec2bf409f1"
     },
     {
       "path": "lib/ask/body-identity.ts",
@@ -1839,7 +1839,7 @@
     },
     {
       "path": "lib/ask/interpret.ts",
-      "sha256": "cafa45315084efc7990e49378a40cdda7961016d7888912f64d184e0fc0d6bf6"
+      "sha256": "cfd371a1c768aa51f61fb7d288956876325fef5aeb6922894777c6d9963d5c5c"
     },
     {
       "path": "lib/ask/inventory.ts",
@@ -1872,6 +1872,10 @@
     {
       "path": "lib/ask/meeting-time.ts",
       "sha256": "37113e16958cf79b2c4bb7f2c9a77d17b857768ac3db800caf85978f77b7d083"
+    },
+    {
+      "path": "lib/ask/model-result-cache.ts",
+      "sha256": "7f395a7dded59bd0753f096c14b24abc45bc4224bc849ed9f229d59e737b6a43"
     },
     {
       "path": "lib/ask/model.ts",
@@ -1931,11 +1935,15 @@
     },
     {
       "path": "lib/ask/synthesize.ts",
-      "sha256": "2e2944ca0f4f805d715f48d07edbfd7316eaba6355e7357b8c6fb5685e568088"
+      "sha256": "abade06297b83ab8ac7574fe5775103404e88f35b28b3e20f50ad99a9e672da3"
+    },
+    {
+      "path": "lib/ask/topic-timeline.ts",
+      "sha256": "6f9684ae284e81ec8b7fdc93919f4dff69e44f419a26176299c59749d1679a42"
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "70cdb73ff607e6ae33c6f543980b2cf53877d7887543654af272f082079d9355"
+      "sha256": "df9f9aec8b82f1853411aee362f30d882a158ab98e65b598bcabc6089303ab65"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2143,7 +2151,7 @@
     },
     {
       "path": "lib/civic-data/contracts.ts",
-      "sha256": "40793eb5763b7c2c06f939e63d769d944b74ddf51eaf786275c3f507f496803f"
+      "sha256": "8b45197a3614d448bd132bb3341687c9fd690ea2c43ef489825fb88e460ffcb3"
     },
     {
       "path": "lib/civic-data/curated-reader-read-model.ts",
@@ -2155,7 +2163,7 @@
     },
     {
       "path": "lib/civic-data/manual-contracts.ts",
-      "sha256": "3a0a19cb9d1c8112374c522e2865af86abd61045ad173a32ae75e7a944d8e37d"
+      "sha256": "51cff702706ce863f2d3f186a7b44e12f2f3881501708f29e2c21c97d693d30f"
     },
     {
       "path": "lib/civic-data/manual-projections.ts",
@@ -2179,7 +2187,7 @@
     },
     {
       "path": "lib/civic-data/read-model.ts",
-      "sha256": "18c33be8287d636bc86019f673ae04d913980ef0cd8b4681493d55c6c41afd03"
+      "sha256": "cbb340507089d8c9117efd1f75e6c78823810453904041d6e85e3d0311c5266b"
     },
     {
       "path": "lib/civic-data/reader-readback.ts",
@@ -2199,7 +2207,7 @@
     },
     {
       "path": "lib/civic-data/source-authority.ts",
-      "sha256": "21dc587303287e32791a74f8d2541a2bc805391edd86d52f835e4455acba549b"
+      "sha256": "d40df350a1e1cfaa187e0ba175a4169ab000c5e1dfbd6b1b8ecc937f7d1d0a51"
     },
     {
       "path": "lib/civic-data/state-members.ts",
@@ -2207,7 +2215,7 @@
     },
     {
       "path": "lib/civic-data/store.ts",
-      "sha256": "8436facd428053cfef141e392e3cb344fec82f78650e9e867f4366b0e308fd7a"
+      "sha256": "baab056d2545d642bd0e226132d42bfb9e6b267f91f65fec0ea2b4b31bd6e77e"
     },
     {
       "path": "lib/civic-data/trusted-lkg-import.ts",
@@ -2215,7 +2223,7 @@
     },
     {
       "path": "lib/civic-data/types.ts",
-      "sha256": "8896860a6c37b244fe1d7793f1b9d975a4ba748114f234715b9632769db8700d"
+      "sha256": "378c17c2dd8ff57877837d2fad357090663fe8c55f9192cae49510a523b1d30d"
     },
     {
       "path": "lib/control-plane/campaign-finance/held-records.ts",
@@ -2291,7 +2299,7 @@
     },
     {
       "path": "lib/db/schema.ts",
-      "sha256": "fa3d5eafd78316c19fbf70623b62b4f96d1dc44b4a7130041728434c7407422c"
+      "sha256": "e57c147a2958f50a1324f78ab89880733b8f7ce3ede45cd3302a4a67c4fcc1cc"
     },
     {
       "path": "lib/db/search-log.ts",
@@ -2587,7 +2595,7 @@
     },
     {
       "path": "lib/meetings/prepared-snapshot.ts",
-      "sha256": "47279ffa95a7ee41a73b0dc44bd214aa434538df0a325e12c9ba9b2454d10e49"
+      "sha256": "9d468ed13d9f18975381912b4e271e1cefd53f883021f96480894d845a1a767d"
     },
     {
       "path": "lib/meetings/proof-pin.ts",
@@ -2915,7 +2923,7 @@
     },
     {
       "path": "lib/registry/server.ts",
-      "sha256": "3a066d0e4aca88d0f0cc740db7bf34aa0dc2e7b703ac5754a6cf934a724dc933"
+      "sha256": "0fc6c298384d8c32850e8e552a2c886039558860327bc071bda2f65af302965e"
     },
     {
       "path": "lib/registry/source-wiring.ts",
@@ -3047,15 +3055,19 @@
     },
     {
       "path": "lib/sources/civicplus/index.ts",
-      "sha256": "62fde723194ddce4223a5d0789e34a63e611195efad698e3d6a1d9e8d7f8053e"
+      "sha256": "a158111fb1515a7a545af8041823b045e97bf60b4da00ed92566eed0cfc2e2d7"
     },
     {
       "path": "lib/sources/clerksboards/index.ts",
       "sha256": "09dd69bbdd26d33a700fa44e4c3a3b3c1ff6e09c2be2db72e38538db1d22769a"
     },
     {
+      "path": "lib/sources/composite/failure-kind.ts",
+      "sha256": "9463af1fefaf47f0c8c321787bad595f37c294da34d510c1eb6f82c57d54a647"
+    },
+    {
       "path": "lib/sources/composite/index.ts",
-      "sha256": "071161ed2528c7c9894642035cd5ee922ecc0486dfe7b096948719b37661155b"
+      "sha256": "767109d85b22f5e655360f1c1b668aecc0213dff56dc6f58ce9cd4dbc52fa2ad"
     },
     {
       "path": "lib/sources/composite/wiring.ts",
@@ -3067,11 +3079,11 @@
     },
     {
       "path": "lib/sources/diligent/schedule-union.ts",
-      "sha256": "62f2eb2875c048fb507a2d639d80c5a3d1bb3821e9bb643d5e223e9c08ca8f12"
+      "sha256": "0efedfa831ad36f4557644702b4ecbfa7210f86597651c7541ea164a8f5d520f"
     },
     {
       "path": "lib/sources/event-identity.ts",
-      "sha256": "a3d84fb4962b0bac1f0922b4fe200fdf209111b4707cb9a594b3488a65e340ca"
+      "sha256": "45aff5664a2445d695990b5f9b75fb78bd31f2770298be31f6349cb090976dcb"
     },
     {
       "path": "lib/sources/http.ts",
@@ -3111,11 +3123,11 @@
     },
     {
       "path": "lib/sources/legistar-insite/http.ts",
-      "sha256": "0846d8209726a6caec6cabe1256974b18c99da66fbace630647325e8eec2f043"
+      "sha256": "7599491a5f2dd1e92bbfe02eb499b76423612daa085f8b98e494a7f7f063f4eb"
     },
     {
       "path": "lib/sources/legistar-insite/index.ts",
-      "sha256": "7b1626191dd83f38da870c758cf88e657ae730c46987fa2314cf2a16d7800b53"
+      "sha256": "e339206acd7792535591db1e9d244646967031c7151d2547229987c1bfdd6145"
     },
     {
       "path": "lib/sources/legistar-insite/tenant-registry.ts",
@@ -3379,7 +3391,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "b78a022b813838aae6ed54d7025ab0faa992681c7c39beface60b54985a3bfa5"
+      "sha256": "104fa2993a76078548115629e736973dd598e5737e853926c0644f24c1fb5dca"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -7765,8 +7777,8 @@
             "votes": 285
           },
           "documentCount": 1,
-          "meetingPanel": true,
-          "meetingPopup": true,
+          "meetingPanel": false,
+          "meetingPopup": false,
           "agendaSection": true,
           "meetingRecords": true,
           "participation": null
@@ -8453,13 +8465,13 @@
           "scope": "federal-supported",
           "sourceId": "fec-open-api",
           "version": "2026",
-          "versionId": "cv-4043c8475ce2914a8e32af6c2a2b3c19",
-          "lastKnownGoodVersionId": "cv-4043c8475ce2914a8e32af6c2a2b3c19",
+          "versionId": "cv-7556f13dd3c63ccdaa2f9215c9406adb",
+          "lastKnownGoodVersionId": "cv-7556f13dd3c63ccdaa2f9215c9406adb",
           "sourceThrough": "2026-08-19",
-          "retrievedAt": "2026-09-24T07:05:11.568Z",
-          "promotedAt": "2026-09-24T07:05:12.902Z",
+          "retrievedAt": "2026-09-24T13:12:37.925Z",
+          "promotedAt": "2026-09-24T13:12:38.323Z",
           "stale": "CURRENT",
-          "staleAt": "2026-10-01T07:05:11.568Z"
+          "staleAt": "2026-10-01T13:12:37.925Z"
         },
         "holdingStatus": "HELD",
         "unavailableAuthorities": []
@@ -8502,7 +8514,7 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42306",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T04:54:51.847Z"
+              "collectedAt": "2026-09-24T08:49:13.770Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43886.field_date_and_time.0@www.newbury.nh.gov",
@@ -8530,14 +8542,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/42321",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T04:54:51.847Z"
+              "collectedAt": "2026-09-24T08:49:13.770Z"
             },
             {
               "id": "ical:newbury-ical-conservation-commission:calendar.43901.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/conservation-commission/events/43901",
               "verifiedAt": null,
-              "collectedAt": "2026-09-24T04:54:51.847Z"
+              "collectedAt": "2026-09-24T08:49:13.770Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8739,11 +8751,11 @@
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
         }
       ],
-      "renderedListingRows": 378,
+      "renderedListingRows": 388,
       "failedRefreshDisclosure": {
         "carried": {
-          "count": 12,
-          "lead": "12 calendar listings are older than that:",
+          "count": 15,
+          "lead": "15 calendar listings are older than that:",
           "form": "EACH_ON_ITS_OWN",
           "reached": "each one says when we last reached it",
           "lastFreshAt": null

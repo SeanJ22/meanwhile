@@ -20,6 +20,11 @@
  * 4. appends the walk, found and not found alike, to `discoveryAttempts`, and
  *    writes found routes, leads and dead doors to the field manual.
  *
+ * It keeps to the caller's time. Each request's timeout is cut to the time
+ * left, and no request is sent once too little remains. A walk the time runs
+ * out on concludes nothing unless it already confirmed a route: it is not
+ * recorded as a reading, and the need stays due.
+ *
  * It never promotes, never wires a body, and never writes reader truth: a find
  * is a candidate for the verification path. A walk that finds nothing is never
  * an absence (RULING 250); it is a reading with a recheck date.
@@ -75,8 +80,13 @@ export interface DiscoveryRuntime {
   readonly spaceOut: (host: string) => Promise<void>;
   readonly vault: VaultPut;
   readonly now: () => string;
-  /** Asked before each walk. Once spent, the remaining needs are deferred untouched. */
-  readonly budget: { readonly spent: () => boolean };
+  /**
+   * Asked before each walk. Once spent, the remaining needs are deferred
+   * untouched. `remainingMs`, when given, also bounds the walk in progress:
+   * each request's timeout is cut to the time left, and no request is sent
+   * with less than MIN_REQUEST_MS of it.
+   */
+  readonly budget: { readonly spent: () => boolean; readonly remainingMs?: () => number };
   readonly maxRequestsPerWalk?: number;
   readonly timeoutMs?: number;
 }
@@ -93,6 +103,8 @@ export const RECORDED_WALLS: readonly { readonly host: string; readonly why: str
 
 export const DEFAULT_MAX_REQUESTS_PER_WALK = 12;
 const DEFAULT_TIMEOUT_MS = 20_000;
+/** Less time than this left, and a request is not sent: it could not come back inside the budget. */
+const MIN_REQUEST_MS = 2_000;
 const MAX_REDIRECT_HOPS = 4;
 const MAX_ENDPOINTS_PER_WALK = 4;
 const ACCEPT_PAGE = "text/html,application/xhtml+xml,application/json,text/calendar,*/*;q=0.8";
@@ -108,6 +120,31 @@ export function discoveryAttemptId(jurisdictionId: string, startedAt: string): s
   return `da-${createHash("sha256").update(`${jurisdictionId}|${startedAt}`).digest("hex").slice(0, 24)}`;
 }
 
+/** Raised by a request the caller's time no longer covers. It never leaves the walk. */
+class OutOfTime extends Error {}
+
+/**
+ * Thrown by a walk the caller's time ran out on before it confirmed anything.
+ * Nothing about the site was concluded, so nothing is recorded as a reading:
+ * the need stays due, and the requests already made keep their evidence in the
+ * vault under the walk's attempt id.
+ */
+export class DiscoveryTimeSpent extends Error {
+  /* Explicit field declarations: a parameter property does not parse under --experimental-strip-types. */
+  readonly jurisdictionId: string;
+  readonly requestCount: number;
+
+  constructor(jurisdictionId: string, requestCount: number) {
+    super(
+      `${jurisdictionId}: the discovery time ran out after ${requestCount} request(s), before the walk confirmed ` +
+        "anything; nothing is recorded as a reading and the need stays due",
+    );
+    this.name = "DiscoveryTimeSpent";
+    this.jurisdictionId = jurisdictionId;
+    this.requestCount = requestCount;
+  }
+}
+
 function transportOf(status: number | null, transportError: string | null): TransportState {
   if (transportError !== null) return /abort|timeout|timed out/i.test(transportError) ? "TIMEOUT" : "OTHER_NAMED_FAILURE";
   if (status === null) return "OTHER_NAMED_FAILURE";
@@ -119,7 +156,11 @@ function permissionState(p: StepPermission): PermissionState {
   return p === "ALLOWED" ? "ALLOWED" : p === "NO_ROBOTS" ? "NOT_APPLICABLE" : p === "DISALLOWED" ? "DISALLOWED" : "CANNOT_TELL";
 }
 
-/** Walk one need's site. Never throws for a site-level failure; the attempt says what happened. */
+/**
+ * Walk one need's site. Never throws for a site-level failure; the attempt says
+ * what happened. Throws DiscoveryTimeSpent when the caller's time ran out before
+ * the walk confirmed anything.
+ */
 export async function walkMeetingsDiscoveryNeed(
   need: MeetingsDiscoveryNeed,
   runtime: DiscoveryRuntime,
@@ -158,10 +199,20 @@ export async function walkMeetingsDiscoveryNeed(
     return stored.stored ? artifact.id : null;
   }
 
+  const timeLeftMs = (): number => runtime.budget.remainingMs?.() ?? Number.POSITIVE_INFINITY;
+
+  /* The time is asked before the host's spacing and again after it, and the request's timeout never outlasts it. */
   async function hop(url: URL, accept: string) {
-    requests += 1;
+    if (timeLeftMs() < MIN_REQUEST_MS) throw new OutOfTime();
     await runtime.spaceOut(url.host.toLowerCase());
-    return runtime.open({ url: url.toString(), headers: { "user-agent": DEFAULT_USER_AGENT, accept }, timeoutMs });
+    const left = timeLeftMs();
+    if (left < MIN_REQUEST_MS) throw new OutOfTime();
+    requests += 1;
+    return runtime.open({
+      url: url.toString(),
+      headers: { "user-agent": DEFAULT_USER_AGENT, accept },
+      timeoutMs: Math.min(timeoutMs, Math.floor(left)),
+    });
   }
 
   /** The permission verdict for a URL's host, read once per walk. */
@@ -237,28 +288,40 @@ export async function walkMeetingsDiscoveryNeed(
     return null;
   }
 
-  /* 1–2. The homepage, on each recorded origin in turn, until one is read. */
   let candidates: readonly EndpointCandidate[] = [];
   const origins = siteOrigins(need.ownWebAddress);
-  for (const origin of origins) {
-    const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
-    if (home !== null) {
-      candidates = meetingEndpointCandidates(home.body, home.finalUrl);
-      break;
-    }
-  }
-
-  /* 3. The verifiable routes the page evidences, confirmed by content. */
   const found: DiscoveryFind[] = [];
   const leads: Omit<DiscoveryFind, "count" | "artifactId">[] = [];
-  for (const candidate of candidates.filter((c) => c.verifiable).slice(0, MAX_ENDPOINTS_PER_WALK)) {
-    const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
-    const check = got === null
-      ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-      : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
-    const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
-    if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
-    else leads.push(base);
+  const verifiable = (): readonly EndpointCandidate[] => candidates.filter((c) => c.verifiable).slice(0, MAX_ENDPOINTS_PER_WALK);
+  let checked = 0;
+  try {
+    /* 1–2. The homepage, on each recorded origin in turn, until one is read. */
+    for (const origin of origins) {
+      const home = await get(`${origin}/`, "homepage", ACCEPT_PAGE);
+      if (home !== null) {
+        candidates = meetingEndpointCandidates(home.body, home.finalUrl);
+        break;
+      }
+    }
+
+    /* 3. The verifiable routes the page evidences, confirmed by content. */
+    for (const candidate of verifiable()) {
+      const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
+      checked += 1;
+      const check = got === null
+        ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
+        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
+      const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail };
+      if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
+      else leads.push(base);
+    }
+  } catch (error) {
+    if (!(error instanceof OutOfTime)) throw error;
+    /* A route already confirmed by content stands. Anything less concludes nothing about the site. */
+    if (found.length === 0) throw new DiscoveryTimeSpent(need.jurisdictionId, requests);
+    for (const candidate of verifiable().slice(checked)) {
+      leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "not checked: the cycle's discovery time ran out first" });
+    }
   }
   for (const candidate of candidates.filter((c) => !c.verifiable).slice(0, 8)) {
     leads.push({ vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: "recognised but not readable by any content check yet" });
@@ -316,6 +379,11 @@ export interface MeetingsDiscoveryPass {
   readonly notDue: readonly string[];
   /** Needs selected but not walked because the budget was spent. Walked in a later cycle. */
   readonly deferred: readonly string[];
+  /**
+   * Walks the time ran out on before they confirmed anything. Nothing was
+   * recorded as a reading; each is also in `deferred`, and its need stays due.
+   */
+  readonly cutShort: readonly { readonly jurisdictionId: string; readonly requests: number }[];
   readonly appendFailures: readonly { readonly jurisdictionId: string; readonly why: string }[];
   readonly fieldManual: { readonly written: number; readonly error?: string };
 }
@@ -406,6 +474,7 @@ export async function runMeetingsDiscovery(
   const walked: MeetingsDiscoveryAttempt[] = [];
   const notDue: string[] = [];
   const deferred: string[] = [];
+  const cutShort: { jurisdictionId: string; requests: number }[] = [];
   const appendFailures: { jurisdictionId: string; why: string }[] = [];
   const nowMs = Date.parse(input.runtime.now());
 
@@ -420,7 +489,15 @@ export async function runMeetingsDiscovery(
       deferred.push(need.jurisdictionId);
       continue;
     }
-    const attempt = await walkMeetingsDiscoveryNeed(need, input.runtime);
+    let attempt: MeetingsDiscoveryAttempt;
+    try {
+      attempt = await walkMeetingsDiscoveryNeed(need, input.runtime);
+    } catch (error) {
+      if (!(error instanceof DiscoveryTimeSpent)) throw error;
+      deferred.push(need.jurisdictionId);
+      cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount });
+      continue;
+    }
     walked.push(attempt);
     try {
       await repos.discoveryAttempts.append(need.jurisdictionId, attempt.attemptId, attempt, attempt.finishedAt);
@@ -430,5 +507,5 @@ export async function runMeetingsDiscovery(
   }
 
   const fieldManual = await writeFieldManualDiscoveries(repos, walked.flatMap(discoveryFieldManualEntries), input.runtime.now());
-  return { walked, notDue, deferred, appendFailures, fieldManual };
+  return { walked, notDue, deferred, cutShort, appendFailures, fieldManual };
 }

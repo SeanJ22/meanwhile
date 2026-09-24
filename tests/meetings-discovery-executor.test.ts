@@ -648,3 +648,67 @@ test("THE COMMITTED HINTS ARE SOUND: each names a government the ledger owes, re
   }
   assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /\n\s+routeHints: ROUTE_HINTS,\n/, "the runner passes the committed hints to its walks");
 });
+
+/* -------------------------------------------- what the vault will not hold */
+
+/* Synthesized, never a literal: the shape the credential scanner confirms (tests/control-plane-evidence-durability.test.ts). */
+const FAKE_MAPS_KEY = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
+
+/** The durable vault as the runner builds it today: no RestrictedEvidenceProvider, so a RESTRICTED_RAW body is refused by name. */
+function refusingVault(vaulted: Artifact[]): DiscoveryRuntime["vault"] {
+  return async (artifact) => {
+    if (artifact.tier === "RESTRICTED_RAW") {
+      throw new Error(`Key ${artifact.id} carries a RESTRICTED_RAW body and this store was constructed without a RestrictedEvidenceProvider.`);
+    }
+    vaulted.push(artifact);
+    return { stored: true, where: `vault/${artifact.id}`, why: "stored" };
+  };
+}
+
+test("A PAGE CARRYING A CREDENTIAL IS READ AS ITS SANITIZED DERIVATIVE, AND A VAULT THAT REFUSES ITS BYTES NEVER ENDS THE WALK", async () => {
+  const { open } = fakeOpen({
+    "https://gilabend.example.org/robots.txt": ALLOW,
+    "https://gilabend.example.org/": {
+      status: 200,
+      body: `<a href="/m.ics">Board Meetings</a><script>var clerkEmbedProps = { "mapsKey": "${FAKE_MAPS_KEY}", "tenant": "gilabendexample" };</script>`,
+    },
+    "https://gilabend.example.org/m.ics": { status: 200, body: ICS, contentType: "text/calendar" },
+  });
+  const vaulted: Artifact[] = [];
+  const attempt = await walkMeetingsDiscoveryNeed(need("az:school:gila-bend-example", "gilabend.example.org"), runtime(open, { vault: refusingVault(vaulted) }));
+
+  assert.equal(attempt.outcome, "FOUND", "the walk goes on past a body the vault will not hold");
+  assert.deepEqual(attempt.found.map((f) => f.url), ["https://gilabend.example.org/m.ics"], "the sanitized page still carries its links");
+  const home = attempt.steps.find((s) => s.purpose === "homepage")!;
+  assert.match(home.note, /the body carries a confirmed credential, so the walk read its sanitized derivative; its exact bytes were not kept \(Key .* carries a RESTRICTED_RAW body/);
+  const kept = vaulted.find((a) => a.canonicalUrl === "https://gilabend.example.org/")!;
+  assert.equal(kept.tier, "SANITIZED_DERIVED", "the page's evidence is its sanitized derivative");
+  assert.equal(home.artifactId, kept.id);
+  assert.ok(!vaulted.some((a) => a.tier === "RESTRICTED_RAW"));
+  assert.ok(!JSON.stringify(attempt).includes(FAKE_MAPS_KEY), "no credential value reaches the record");
+});
+
+test("A WALK THAT FAILS ON OUR SIDE IS NAMED, AND THE PASS GOES ON: the other walks are recorded and their field manual is written", async () => {
+  for (const [label, repos] of await eachStore("wtp-discovery-")) {
+    const { open: base } = fakeOpen({
+      "https://found.gov/robots.txt": ALLOW,
+      "https://found.gov/": { status: 200, body: `<a href="/m.ics">m</a>` },
+      "https://found.gov/m.ics": { status: 200, body: ICS },
+    });
+    const open: DiscoveryOpen = async (req) => {
+      if (req.url.startsWith("https://broken.gov/")) throw new Error("the transport adapter threw: not a site failure");
+      return base(req);
+    };
+    const pass = await runMeetingsDiscovery(repos, {
+      needs: [need("az:a:broken", "broken.gov"), need("az:b:found", "found.gov")],
+      runtime: runtime(open),
+      cycleIndex: 0,
+      maxWalks: 5,
+    });
+    assert.deepEqual(pass.walked.map((a) => [a.jurisdictionId, a.outcome]), [["az:b:found", "FOUND"]], `${label}: the pass went on`);
+    assert.deepEqual(pass.walkFailures, [{ jurisdictionId: "az:a:broken", why: "the transport adapter threw: not a site failure" }], label);
+    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:a:broken", 5), [], `${label}: nothing is recorded as a reading, so the need stays due`);
+    assert.equal(pass.fieldManual.written, 1, `${label}: the other walk's route reached the field manual`);
+  }
+  assert.match(readFileSync("scripts/freshness-shadow.mts", "utf8"), /walkFailures: meetingsDiscovery\?\.walkFailures \?\? \[\],/, "the cycle record names them");
+});

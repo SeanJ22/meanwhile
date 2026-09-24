@@ -73,7 +73,7 @@ import {
 } from "../../hunt/meetings-site-discovery.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import { FRESHNESS_PROJECT } from "../scheduler/durable.ts";
-import { recordAcquisition } from "../evidence/artifact.ts";
+import { deriveSanitized, recordAcquisition, type Artifact } from "../evidence/artifact.ts";
 import { fieldManualEntryId, type FieldManualEntry } from "../field-manual.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { writeFieldManualDiscoveries } from "../scheduler/field-manual-scout.ts";
@@ -298,8 +298,30 @@ export async function walkMeetingsDiscoveryNeed(
     steps.push({ purpose, url, permission, status: null, transportError: null, bytes: 0, artifactId: null, rung: null, note });
   };
 
-  async function vaultBody(url: string, status: number, contentType: string, body: string, permission: StepPermission): Promise<string | null> {
-    if (body.length === 0) return null;
+  /**
+   * Vault a body the walk read, and say what of it the walk may read. A body carrying a confirmed third-party
+   * credential (`classifyAcquisition`) is RESTRICTED_RAW. Its exact bytes are offered to the vault, which keeps
+   * them only on an encrypted, access-controlled substrate, and the walk reads and keeps its sanitized
+   * derivative instead (`lib/control-plane/evidence/artifact.ts`). A vault that refuses a body is a fact about
+   * our storage, recorded on the step; it never ends the walk. One school district's homepage carrying a key
+   * stopped every remaining walk of a pass on 2026-09-24.
+   */
+  async function vaultBody(
+    url: string,
+    status: number,
+    contentType: string,
+    body: string,
+    permission: StepPermission,
+  ): Promise<{ readonly artifactId: string | null; readonly readable: string; readonly note: string | null }> {
+    if (body.length === 0) return { artifactId: null, readable: body, note: null };
+    const put = async (artifact: Artifact, bytes: string): Promise<{ readonly id: string | null; readonly why: string | null }> => {
+      try {
+        const stored = await runtime.vault(artifact, bytes);
+        return stored.stored ? { id: artifact.id, why: null } : { id: null, why: stored.why };
+      } catch (error) {
+        return { id: null, why: (error instanceof Error ? error.message : String(error)).slice(0, 300) };
+      }
+    };
     const { artifact } = recordAcquisition(
       {
         canonicalUrl: url,
@@ -315,8 +337,29 @@ export async function walkMeetingsDiscoveryNeed(
       },
       body,
     );
-    const stored = await runtime.vault(artifact, body);
-    return stored.stored ? artifact.id : null;
+    const exact = await put(artifact, body);
+    if (artifact.tier !== "RESTRICTED_RAW") {
+      return { artifactId: exact.id, readable: body, note: exact.why === null ? null : `not vaulted: ${exact.why}` };
+    }
+    const unkept = exact.id === null ? `; its exact bytes were not kept (${exact.why})` : "";
+    let derived: ReturnType<typeof deriveSanitized>;
+    try {
+      derived = deriveSanitized(artifact, body, runtime.now());
+    } catch (error) {
+      /* A body the sanitizer cannot make safe is not read at all. */
+      return {
+        artifactId: exact.id,
+        readable: "",
+        note: `the body carries a confirmed credential and could not be sanitized, so the walk read none of it${unkept} (${error instanceof Error ? error.message.slice(0, 200) : String(error)})`,
+      };
+    }
+    const kept = await put(derived.artifact, derived.text);
+    return {
+      artifactId: exact.id ?? kept.id,
+      readable: derived.text,
+      note: `the body carries a confirmed credential, so the walk read its sanitized derivative${unkept}` +
+        (kept.id === null ? `; the derivative was not vaulted (${kept.why})` : ""),
+    };
   }
 
   const timeLeftMs = (): number => runtime.budget.remainingMs?.() ?? Number.POSITIVE_INFINITY;
@@ -375,12 +418,14 @@ export async function walkMeetingsDiscoveryNeed(
       DEFAULT_ROBOTS_TOKEN,
     );
     const verdict: StepPermission = reading.verdict;
-    const artifactId = got.status !== null && got.transportError === null
+    const kept = got.status !== null && got.transportError === null
       ? await vaultBody(at.toString(), got.status, got.contentType, got.body, "ALLOWED")
       : null;
     steps.push({
       purpose: "robots", url: robotsUrl.toString(), permission: verdict, status: got.status, transportError: got.transportError,
-      bytes: got.bytes, artifactId, rung: 2, note: via.length === 0 ? reading.detail : `${reading.detail} (followed ${via.length} redirect(s): ${via.join(" → ")})`,
+      bytes: got.bytes, artifactId: kept?.artifactId ?? null, rung: 2,
+      note: (via.length === 0 ? reading.detail : `${reading.detail} (followed ${via.length} redirect(s): ${via.join(" → ")})`) +
+        (kept?.note ? `; ${kept.note}` : ""),
     });
     const entry = { verdict, detail: reading.detail };
     robotsByHost.set(host, entry);
@@ -419,15 +464,17 @@ export async function walkMeetingsDiscoveryNeed(
       const ok = got.status !== null && got.status >= 200 && got.status < 300 && got.transportError === null;
       /* The body reaches the walk as decoded text, so a binary one (a PDF) would be vaulted as something it is not. */
       const binary = ok && !textualType(got.contentType);
-      const artifactId = ok && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
+      const kept = ok && !binary ? await vaultBody(url.toString(), got.status!, got.contentType, got.body, permission.verdict) : null;
+      const artifactId = kept?.artifactId ?? null;
       steps.push({
         purpose, url: url.toString(), permission: permission.verdict, status: got.status, transportError: got.transportError, bytes: got.bytes,
         artifactId, rung: 2,
         note: binary
           ? `read ${got.bytes} bytes of ${got.contentType}; not vaulted: a binary body does not survive the text decode`
-          : ok ? `read ${got.bytes} bytes` : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
+          : ok ? `read ${got.bytes} bytes${kept?.note ? `; ${kept.note}` : ""}` : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
       });
-      return ok ? { finalUrl: url.toString(), status: got.status!, body: got.body, bytes: got.bytes, contentType: got.contentType, artifactId } : null;
+      /* What the walk reads of a body is what it may keep: a credential-bearing page is read as its sanitized derivative. */
+      return ok ? { finalUrl: url.toString(), status: got.status!, body: kept?.readable ?? got.body, bytes: got.bytes, contentType: got.contentType, artifactId } : null;
     }
     skipped(purpose, current, "ALLOWED", `not requested: more than ${MAX_REDIRECT_HOPS} redirects`);
     return null;
@@ -771,6 +818,8 @@ export interface MeetingsDiscoveryPass {
     readonly search: MeetingsDiscoveryAttempt["search"];
   }[];
   readonly appendFailures: readonly { readonly jurisdictionId: string; readonly why: string }[];
+  /** Walks that failed on something of ours (not the site). Nothing was recorded as a reading; each need stays due. */
+  readonly walkFailures: readonly { readonly jurisdictionId: string; readonly why: string }[];
   /** Saved methods whose counts this pass moved, and how many applications it made. */
   readonly recipesUpdated: readonly string[];
   readonly recipeApplications: number;
@@ -895,6 +944,7 @@ export async function runMeetingsDiscovery(
   const deferred: string[] = [];
   const cutShort: { jurisdictionId: string; requests: number; search: MeetingsDiscoveryAttempt["search"] }[] = [];
   const appendFailures: { jurisdictionId: string; why: string }[] = [];
+  const walkFailures: { jurisdictionId: string; why: string }[] = [];
   const nowMs = Date.parse(input.runtime.now());
 
   for (const need of window) {
@@ -914,9 +964,16 @@ export async function runMeetingsDiscovery(
     try {
       attempt = await walkMeetingsDiscoveryNeed(need, input.runtime);
     } catch (error) {
-      if (!(error instanceof DiscoveryTimeSpent)) throw error;
-      deferred.push(need.jurisdictionId);
-      cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount, search: error.search });
+      if (error instanceof DiscoveryTimeSpent) {
+        deferred.push(need.jurisdictionId);
+        cutShort.push({ jurisdictionId: need.jurisdictionId, requests: error.requestCount, search: error.search });
+        continue;
+      }
+      /*
+       * A walk that failed on something of ours is named, and the pass goes on: one government's page must not
+       * cost every other walk of the cycle its record. Nothing is recorded as a reading, so the need stays due.
+       */
+      walkFailures.push({ jurisdictionId: need.jurisdictionId, why: (error instanceof Error ? error.message : String(error)).slice(0, 400) });
       continue;
     }
     walked.push(attempt);
@@ -971,5 +1028,5 @@ export async function runMeetingsDiscovery(
     [...walked.flatMap(discoveryFieldManualEntries), ...recipeEntries],
     input.runtime.now(),
   );
-  return { walked, notDue, deferred, cutShort, appendFailures, recipesUpdated: [...touched], recipeApplications, fieldManual };
+  return { walked, notDue, deferred, cutShort, appendFailures, walkFailures, recipesUpdated: [...touched], recipeApplications, fieldManual };
 }

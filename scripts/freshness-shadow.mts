@@ -2420,7 +2420,8 @@ console.log(
       ? ""
       : ` · ${meetingsDiscovery.walked.length} walked ${JSON.stringify(meetingsDiscoveryByOutcome)} · ` +
         `${meetingsDiscovery.notDue.length} not yet due · ${meetingsDiscovery.deferred.length} deferred (budget)` +
-        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "")),
+        (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
+        (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side: ${meetingsDiscovery.walkFailures.map((f) => f.jurisdictionId).join(", ")}` : "")),
 );
 finishPhase("meetings-discovery");
 
@@ -2887,7 +2888,8 @@ const lines = [
         `${meetingsDiscovery.deferred.length} deferred (budget)` +
         (meetingsDiscovery.cutShort.length > 0 ? `, ${meetingsDiscovery.cutShort.length} of them cut short before any find` : "") +
         ` · ${meetingsDiscovery.recipeApplications} saved-method application(s)` +
-        (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "")),
+        (meetingsDiscovery.appendFailures.length > 0 ? ` · ${meetingsDiscovery.appendFailures.length} walk(s) not recorded` : "") +
+        (meetingsDiscovery.walkFailures.length > 0 ? ` · ${meetingsDiscovery.walkFailures.length} walk(s) failed on our side` : "")),
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -3015,6 +3017,8 @@ const runRecord = {
           ],
         },
         appendFailures: meetingsDiscovery?.appendFailures ?? [],
+        /* Walks that failed on something of ours, named; the pass went on without them and each need stays due. */
+        walkFailures: meetingsDiscovery?.walkFailures ?? [],
         fieldManual: meetingsDiscovery?.fieldManual ?? null,
       },
       /* Rows outside the corpus: what was planned, held back by code, and actually written (2026-09-23). */

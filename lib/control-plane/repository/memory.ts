@@ -54,6 +54,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   jsonTextAtPath,
+  pickFields,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -204,6 +205,16 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .slice(Math.max(0, partition.length - bounded))
         .reverse()
         .map((entry) => jsonCopy(entry.record));
+    },
+
+    readLatest: async <K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>> => {
+      const out = new Map<string, Pick<T, K>>();
+      for (const key of new Set(keys)) {
+        const partition = partitions.get(key) ?? [];
+        const newest = partition[partition.length - 1];
+        if (newest !== undefined) out.set(key, pickFields(jsonCopy(newest.record), fields));
+      }
+      return out;
     },
 
     readAll: async (): Promise<readonly T[]> =>

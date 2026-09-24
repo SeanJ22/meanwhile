@@ -408,6 +408,14 @@ export interface AppendOnlyRepository<T> {
   readAll(): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
   readRecent(key: string, limit: number): Promise<readonly T[]>;
+  /**
+   * The newest record under each of `keys`, cut down to the top-level `fields`,
+   * by key. A key with no record is absent, and a field the record lacks reads
+   * null. It is one batched read, never one read per key, and only the named
+   * fields travel. A caller that needs three fields of many large records does
+   * not download the records.
+   */
+  readLatest<K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>>;
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
 }
@@ -426,6 +434,18 @@ export function jsonTextAtPath(record: unknown, path: readonly string[]): string
   }
   if (cursor === null || cursor === undefined || typeof cursor === "object") return null;
   return String(cursor);
+}
+
+/**
+ * A record cut down to its top-level `fields`, a missing field read as null:
+ * the in-process mirror of Postgres `jsonb_build_object('f', record -> 'f')`,
+ * so the file and memory providers' `readLatest` answers as the pg one does.
+ */
+export function pickFields<T, K extends keyof T & string>(record: T, fields: readonly K[]): Pick<T, K> {
+  const source = record as unknown as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  for (const field of fields) out[field] = source[field] === undefined ? null : source[field];
+  return out as Pick<T, K>;
 }
 
 /**

@@ -113,14 +113,22 @@ import {
   candidateEnrichmentProvider,
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
-import { meetingsDiscoveryProvider, paidDiscoveryHold } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
+import {
+  MEETINGS_DISCOVERY_NAMESPACE,
+  materializedDiscoveryNeeds,
+  meetingsDiscoveryProvider,
+  paidDiscoveryHold,
+  parseMeetingsDiscoveryId,
+} from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
   UNREAD_MEETING_PARTITIONS,
   promotedRegistries,
   trackedStatesFromOperationalReference,
+  type FreeDiscoveryWalks,
   type MaterializedReading,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
+import { readFreeDiscoveryWalks, type FreeWalkSubject } from "../lib/control-plane/discovery/free-walks.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import {
   applyDispatchWork,
@@ -145,7 +153,12 @@ import {
 import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import { GAP_LEDGER_PATH, recordedMeetingsDiscovery } from "../lib/hunt/meetings-discovery.ts";
-import { runMeetingsDiscovery, type MeetingsDiscoveryPass } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import {
+  discoveryNeedsToWalk,
+  runMeetingsDiscovery,
+  walkableByFreeWalk,
+  type MeetingsDiscoveryPass,
+} from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
@@ -799,6 +812,24 @@ const gapLedgerRead = (() => {
     return { unreadable: `${GAP_LEDGER_PATH} could not be read (${error instanceof Error ? error.message : String(error)})` };
   }
 })();
+/*
+ * The meetings discovery the owner's dispatch materialized (MW-028). Each
+ * government's need is derived from its promoted registry, as the provider
+ * derives it. The free walk goes first on these even where the committed ledger
+ * does not hold them. The paid lane reads what the walk found (`freeWalks`,
+ * read before dispatch); a need that cannot be derived reads UNREAD, which
+ * holds.
+ */
+const dispatchedDiscoveryIds = sync.all.map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
+const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
+const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, e.need]));
+const freeWalkSubjects: readonly FreeWalkSubject[] = [
+  ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
+].map((jurisdictionId) => {
+  const need = dispatchedNeeds.get(jurisdictionId);
+  return { jurisdictionId, walkable: need === undefined ? null : walkableByFreeWalk(need) };
+});
+let freeWalks: FreeDiscoveryWalks = UNREAD_FREE_DISCOVERY_WALKS;
 const gapLedger = retirementOutside === null ? null : gapLedgerRead;
 const movedPlan =
   retirementOutside === null || gapLedger === null
@@ -1595,6 +1626,10 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (permission ${d.permission}, transport ${d.transport}) — ${d.note.slice(0, 300)}`);
   }
   if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
+  /* A dispatched discovery row starts from what the free walk saw: its outcome and the leads it could not confirm. */
+  const discovery = parseMeetingsDiscoveryId(id);
+  const freeWalk = discovery === null ? null : (freeWalks.evidenceFor?.(discovery.jurisdictionId) ?? null);
+  if (freeWalk !== null) lines.push(freeWalk);
   /*
    * RULING 244: the recorded rung list is the resume cursor, and a durably
    * failed rung is not re-walked. RULING 243: an inherited artifact may be
@@ -2061,6 +2096,15 @@ if (!canary && !scheduledBlackout) {
 }
 finishPhase("settled-occurrence-scan");
 
+/*
+ * What the free walk last recorded for each dispatched government, in one
+ * batched read. It is taken only when the paid lane can admit anyone: while the
+ * lane is closed, admission never reaches the hold, and nothing is read.
+ */
+if (modelLaneEnabled && freeWalkSubjects.length > 0) {
+  freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
+}
+
 const cycle = await runCycle({
   repos,
   obligations: sync.all,
@@ -2101,7 +2145,7 @@ const cycle = await runCycle({
     admitScout: (row) => {
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
       /* MW-028: a materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */
-      const freeWalkFirst = paidDiscoveryHold(row.obligation.id, UNREAD_FREE_DISCOVERY_WALKS);
+      const freeWalkFirst = paidDiscoveryHold(row.obligation.id, freeWalks);
       if (freeWalkFirst !== null) return { admit: false, code: freeWalkFirst.code, why: freeWalkFirst.why };
       if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
@@ -2296,7 +2340,7 @@ if (!MEETINGS_DISCOVERY_ENABLED) {
     });
     let costSeq = 0;
     meetingsDiscovery = await runMeetingsDiscovery(repos, {
-      needs: gapLedgerRead.needs,
+      needs: discoveryNeedsToWalk(gapLedgerRead.needs, [...dispatchedNeeds.values()]),
       cycleIndex: Math.floor(Date.parse(NOW) / 3_600_000),
       maxWalks: MEETINGS_DISCOVERY_MAX_WALKS,
       /* An owner-dispatched meetings-discovery obligation goes first; one with an open occurrence is another executor's. */
@@ -2882,6 +2926,21 @@ const runRecord = {
       })),
       /* Open occurrences their obligation moved past without closing (2026-09-23). */
       abandonedOccurrences: { found: abandonedOccurrences, applied: abandonedClosed },
+      /*
+       * What the paid lane read of the free walk for the dispatched discovery rows (MW-028's hold): whether it was
+       * read (only while the lane can admit), each government's reading, and any registry that could not be read.
+       */
+      freeWalks: {
+        dispatched: freeWalkSubjects.length,
+        read: freeWalks !== UNREAD_FREE_DISCOVERY_WALKS,
+        source: freeWalks.source,
+        byReading: freeWalkSubjects.reduce<Record<string, number>>((m, s) => {
+          const reading = freeWalks.latestFor(s.jurisdictionId);
+          m[reading] = (m[reading] ?? 0) + 1;
+          return m;
+        }, {}),
+        registryFailures: dispatchedDiscovery.failures,
+      },
       /* The unpaid meetings-discovery phase: whether it ran, and every walk it made (2026-09-23). */
       meetingsDiscovery: {
         enabled: MEETINGS_DISCOVERY_ENABLED,

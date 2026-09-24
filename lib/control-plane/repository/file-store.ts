@@ -102,6 +102,7 @@ import {
   UnknownAggregate,
   canonicalJson,
   jsonTextAtPath,
+  pickFields,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
@@ -588,6 +589,16 @@ export function fileAppendOnlyRepository<T>(
       const records = (await readLines(key)).map((line) => line.record);
       const bounded = Math.max(0, Math.trunc(limit));
       return records.slice(Math.max(0, records.length - bounded)).reverse();
+    },
+
+    readLatest: async <K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>> => {
+      const out = new Map<string, Pick<T, K>>();
+      for (const key of new Set(keys)) {
+        const lines = await readLines(key);
+        const newest = lines[lines.length - 1];
+        if (newest !== undefined) out.set(key, pickFields(newest.record, fields));
+      }
+      return out;
     },
 
     readAll: async (): Promise<readonly T[]> =>

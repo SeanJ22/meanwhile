@@ -694,6 +694,26 @@ export function pgAppendOnlyRepository<T>(
       return rows.map((r) => parseValue<T>(r.record, `${table} ${key}`));
     },
 
+    async readLatest<K extends keyof T & string>(keys: readonly string[], fields: readonly K[]): Promise<ReadonlyMap<string, Pick<T, K>>> {
+      /* Each field is embedded as a validated path literal, as `readWhere` embeds its path; the keys are the parameter. */
+      const projection = fields.map((f) => `'${f}', record #> '${jsonPathLiteral(table, [f])}'`).join(", ");
+      const unique = [...new Set(keys)];
+      const out = new Map<string, Pick<T, K>>();
+      /* One statement per page of keys, so a response stays under the 64 MiB cap for the reason `read` pages. */
+      for (let at = 0; at < unique.length; at += APPEND_ONLY_LOG_READ_PAGE) {
+        const rows = (await run(
+          "readLatest",
+          "PAGE",
+          `SELECT DISTINCT ON (log_key) log_key, jsonb_build_object(${projection}) AS picked FROM ${table}
+           WHERE log_key = ANY($1::text[])
+           ORDER BY log_key ASC, position DESC`,
+          [unique.slice(at, at + APPEND_ONLY_LOG_READ_PAGE)],
+        )) as Record<string, unknown>[];
+        for (const r of rows) out.set(String(r.log_key), parseValue<Pick<T, K>>(r.picked, `${table} ${String(r.log_key)}`));
+      }
+      return out;
+    },
+
     async keys() {
       const rows = (await run(
         "keys",

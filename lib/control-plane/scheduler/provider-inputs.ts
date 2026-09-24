@@ -30,9 +30,11 @@
  *                              a second clock
  *   FreeDiscoveryWalks         what the unpaid discovery walk last recorded for
  *                              a government's meetings, so the paid lane never
- *                              re-walks what the free lane read. The attempt
- *                              log is RouteTask's; until it is injected every
- *                              answer is UNREAD, which holds the paid lane
+ *                              re-walks what the free lane read. Read from the
+ *                              walk's own attempt log once a cycle
+ *                              (`readFreeDiscoveryWalks`); a reading that is
+ *                              not handed in, or cannot be taken, answers
+ *                              UNREAD, which holds the paid lane
  *   MaterializedReading        the obligations the owner's dispatch created
  *                              (MW-028), read back from the store so a provider
  *                              keeps them in its corpus
@@ -170,19 +172,32 @@ export const UNREAD_MEETING_PARTITIONS: MeetingPartitionOwnership = {
 /**
  * What the free (deterministic, unpaid) discovery walk last recorded for a
  * government's meetings. The walk and its attempt log are the discovery
- * executor's (RouteTask); until that reading is handed in, every answer is
- * UNREAD.
+ * executor's (RouteTask); the runner hands in `readFreeDiscoveryWalks`
+ * (lib/control-plane/discovery/free-walks.ts), and until a reading is handed
+ * in, every answer is UNREAD.
  *
  *   FOUND             the free walk found where the meetings are published
- *   WALKED_NOT_FOUND  the free walk read the government's own site and did
- *                     not find them: only now may a paid Scout take it up
+ *   WALKED_NOT_FOUND  the free walk had its turn and confirmed nothing: the
+ *                     site showed nothing or only leads, was a wall, or could
+ *                     not be read. Only now may a paid Scout take it up; for a
+ *                     wall or an unreadable site the paid lane is the other
+ *                     path (RULING 248)
  *   NOT_WALKED        the free walk has not reached this government yet
+ *   NO_SITE_TO_WALK   no website the free walk can open is recorded (the
+ *                     find-own-site route), so the free lane has nothing to
+ *                     try and the paid lane may go
  *   UNREAD            the attempt log could not be read, or is not wired
  */
-export type FreeWalkOutcome = "FOUND" | "WALKED_NOT_FOUND" | "NOT_WALKED" | "UNREAD";
+export type FreeWalkOutcome = "FOUND" | "WALKED_NOT_FOUND" | "NOT_WALKED" | "NO_SITE_TO_WALK" | "UNREAD";
 
 export interface FreeDiscoveryWalks {
   latestFor(jurisdictionId: string): FreeWalkOutcome;
+  /**
+   * What the free walk saw, as one line for a Scout's brief: its outcome and
+   * the leads it could not confirm, so paid work starts from them. Evidence
+   * only; the Scout still confirms. Null when there is nothing to say.
+   */
+  evidenceFor?(jurisdictionId: string): string | null;
   readonly source: string;
 }
 

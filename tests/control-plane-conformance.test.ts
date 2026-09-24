@@ -292,6 +292,22 @@ for (const provider of providers) {
     );
   });
 
+  test(`${provider.name}: readLatest answers each key's newest record, cut to the named fields, and nothing for a key with none`, async () => {
+    const repos = await provider.open();
+    /* Namespaced: these rows persist in the isolated Postgres test database. */
+    const key = (s: string) => `j-${RUN_NAMESPACE}-${s}`;
+    const walk = (id: string, outcome: string, at: string, leads?: readonly unknown[]) =>
+      ({ attemptId: id, outcome, finishedAt: at, ...(leads === undefined ? {} : { leads }), steps: [{ note: "x".repeat(64) }] }) as never;
+    await repos.discoveryAttempts.append(key("a"), "a1", walk("a1", "LEAD", NOW, [{ vendor: "v", url: "https://a.example/1" }]), NOW);
+    await repos.discoveryAttempts.append(key("a"), "a2", walk("a2", "FOUND", LATER, []), LATER);
+    await repos.discoveryAttempts.append(key("b"), "b1", walk("b1", "BLOCKED", NOW), NOW);
+    const latest = await repos.discoveryAttempts.readLatest([key("a"), key("b"), key("none"), key("a")], ["outcome", "finishedAt", "leads"]);
+    assert.deepEqual([...latest.keys()].sort(), [key("a"), key("b")].sort(), "a key with no record is absent, and a repeated key is read once");
+    assert.deepEqual(latest.get(key("a")), { outcome: "FOUND", finishedAt: LATER, leads: [] }, "the newest record, and only the named fields");
+    assert.deepEqual(latest.get(key("b")), { outcome: "BLOCKED", finishedAt: NOW, leads: null }, "a field the record lacks reads null");
+    assert.equal((await repos.discoveryAttempts.readLatest([], ["outcome"])).size, 0);
+  });
+
   test(`${provider.name}: list is ordered by id, so a report is diffable`, async () => {
     const repos = await provider.open();
     for (const subject of ["z", "m", "a"]) {

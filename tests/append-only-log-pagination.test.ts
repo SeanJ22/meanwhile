@@ -59,6 +59,19 @@ function fakeLogSql(rows: readonly Row[]) {
         return rows.filter((r) => r.log_key === key).sort((a, b) => b.position - a.position).slice(0, Number(limit))
           .map((r) => ({ record: r.record }));
       }
+      // readLatest: DISTINCT ON (log_key) over WHERE log_key = ANY($1): bounded by the page of keys it names.
+      if (/SELECT DISTINCT ON \(log_key\)/i.test(text)) {
+        const [keys] = params as [string[]];
+        if (keys.length > APPEND_ONLY_LOG_READ_PAGE) throw new Error(`one readLatest statement named ${keys.length} keys, over a page`);
+        const fields = [...text.matchAll(/'(\w+)', record #> '\{(\w+)\}'/g)].map((m) => m[1]);
+        /* DISTINCT ON keeps each key's FIRST row in the statement's own order, as Postgres does. */
+        const order = /ORDER BY log_key ASC, position (ASC|DESC)/i.exec(text)?.[1]?.toUpperCase();
+        if (order === undefined) throw new Error(`a readLatest statement must order each key by position: ${text.replace(/\s+/g, " ").trim()}`);
+        return keys.flatMap((key) => {
+          const first = rows.filter((r) => r.log_key === key).sort((a, b) => (order === "DESC" ? b.position - a.position : a.position - b.position))[0];
+          return first === undefined ? [] : [{ log_key: key, picked: Object.fromEntries(fields.map((f) => [f, first.record[f] ?? null])) }];
+        });
+      }
       if (litLimit === null) {
         throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
       }
@@ -168,4 +181,38 @@ test("readRecent() returns the newest N, newest first, bounded", async () => {
   const out = await repo.readRecent("owner-digest", 5);
   assert.deepEqual(out.map((r) => r.seq), [49, 48, 47, 46, 45], "newest first, exactly the tail");
   assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
+});
+
+test("readLatest() answers each key's newest record, only the named fields, in one statement per page of keys", async () => {
+  const keys = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 20 }, (_, i) => `j${i}`);
+  const rows: Row[] = keys.flatMap((key, i) =>
+    i % 3 === 0
+      ? []
+      : [
+          { log_key: key, position: 0, record: { seq: 0, outcome: "LEAD", steps: "x".repeat(40) } },
+          { log_key: key, position: 1, record: { seq: 1, outcome: i % 2 === 0 ? "FOUND" : "BLOCKED", steps: "y".repeat(40) } },
+        ],
+  );
+  const { sql, calls } = fakeLogSql(rows);
+  const repo = pgAppendOnlyRepository<{ seq: number; outcome: string; steps: string }>(sql, "discovery_attempts");
+
+  const latest = await repo.readLatest([...keys, "j1"], ["outcome", "seq"]);
+  assert.equal(calls.length, 2, "one statement per page of keys, never one per key");
+  assert.ok(
+    calls.every((c) => /SELECT DISTINCT ON \(log_key\) log_key, jsonb_build_object\('outcome', record #> '\{outcome\}', 'seq', record #> '\{seq\}'\) AS picked/.test(c)),
+    "only the named fields travel, never the record",
+  );
+  assert.equal(latest.size, keys.filter((_, i) => i % 3 !== 0).length, "a key with no record is absent");
+  assert.deepEqual(latest.get("j1"), { outcome: "BLOCKED", seq: 1 }, "the newest record by position");
+  assert.deepEqual(latest.get("j2"), { outcome: "FOUND", seq: 1 });
+  assert.equal(latest.has("j0"), false);
+  assert.equal((await repo.readLatest([], ["outcome"])).size, 0);
+  assert.equal(calls.length, 2, "no keys, no statement");
+});
+
+test("readLatest() refuses an unsafe field name rather than building SQL from it", async () => {
+  const { sql, calls } = fakeLogSql([]);
+  const repo = pgAppendOnlyRepository<Record<string, unknown>>(sql, "discovery_attempts");
+  await assert.rejects(() => repo.readLatest(["j"], ["outcome'); drop" as never]), /unsafe JSON path/);
+  assert.equal(calls.length, 0);
 });

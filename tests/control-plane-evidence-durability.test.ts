@@ -672,3 +672,27 @@ test("DURABLE REPLAY: the manifest rebuilt from the durable store links the raw 
   assert.equal(after.artifacts.length, 1, "the durable index did not rebuild in place");
   assert.equal(objectClassOf((await new DurableEvidenceStore(root).head(key))!), "MUTABLE_INDEX");
 });
+
+/* ====================== A KEY SEGMENT WINDOWS REFUSES IS ENCODED ON DISK, NEVER LOST */
+
+test("A key segment Windows cannot hold is encoded on disk and listed back exactly; every legal segment keeps its path", async (t) => {
+  const { encodePathSegment, decodePathSegment } = await import("../lib/control-plane/evidence/durable-store.ts");
+  for (const legal of ["wi-0000000000000000000000ab", "api.wikimedia.org", "2026", "sha256-abc.html", "discovery-meetings-az_city_x-1a2b3c4d"]) {
+    assert.equal(encodePathSegment(legal), legal, `${legal} is legal on every host and must not move`);
+  }
+  for (const unsafe of ["discovery:meetings:az:school:x", 'a<b>c"d|e?f*g', "100%", "trailing.", "trailing ", "tab\there"]) {
+    const encoded = encodePathSegment(unsafe);
+    assert.doesNotMatch(encoded, /[<>:"|?*\u0001-\u001f]|[. ]$/, `${JSON.stringify(encoded)} is still not a legal Windows segment`);
+    assert.equal(decodePathSegment(encoded), unsafe, "the encoding reverses");
+  }
+
+  /* The runner's host is Windows: a colon in the work-id segment failed every write (ENOENT, 2026-09-24). */
+  const store = new DurableEvidenceStore(await makeRoot(t));
+  const { artifact } = recordAcquisition({ ...ACQUISITION, workItemId: "discovery:meetings:az:school:central-arizona-college" }, PUBLIC_PAGE);
+  const key = objectKey(PROJECT, artifact);
+  assert.match(key, /discovery:meetings:az:school:central-arizona-college/, "the key keeps its exact bytes");
+  assert.equal((await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE))).written, true);
+  assert.equal(decode((await store.get(key))?.bytes ?? new Uint8Array()), PUBLIC_PAGE, "and reads back by that key");
+  assert.ok((await store.list(`project/${PROJECT}/`)).includes(key), "and lists back as that key, decoded");
+  assert.doesNotMatch(keyToRelativePath(key), /:/, "while its path on disk holds no colon");
+});

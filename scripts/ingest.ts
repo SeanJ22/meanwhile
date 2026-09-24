@@ -71,6 +71,7 @@ import { legistarSource } from "../lib/sources/legistar/index.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { mockSource } from "../lib/sources/mock/index.ts";
 import { SOURCE_WIRING, isRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
+import { isDisallowedLegistarHost } from "../lib/sources/legistar/routes.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -183,6 +184,17 @@ function documentUrlFor(meeting: Meeting): string | null {
   return distinct.size === 1 ? (onDivision[0].noticeUrl ?? null) : null;
 }
 
+/**
+ * Why an agenda link is held as a link and not read: its host is a retired
+ * route's, or a route catalogue records the host as DISALLOWED (robots.txt
+ * refuses this client). Null when the document may be requested.
+ */
+export function agendaRetrievalRefusal(url: string): "RETIRED_ROUTE" | "RECORDED_DISALLOWED" | null {
+  if (isRetiredMeetingHost(url)) return "RETIRED_ROUTE";
+  if (isDisallowedLegistarHost(url)) return "RECORDED_DISALLOWED";
+  return null;
+}
+
 export async function retrieveAgendas(meetings: Meeting[]) {
   /*
    * **A LINK INTO A RETIRED ROUTE'S HOST IS HELD AS A LINK, NEVER READ.**
@@ -198,17 +210,17 @@ export async function retrieveAgendas(meetings: Meeting[]) {
    */
   const linkedOnly = meetings.filter((m) => {
     const url = documentUrlFor(m);
-    return url !== null && isRetiredMeetingHost(url);
+    return url !== null && agendaRetrievalRefusal(url) !== null;
   });
   if (linkedOnly.length > 0) {
     console.log(
       `agenda documents: ${linkedOnly.length} link(s) held as links only — their host is a retired ` +
-        "route (robots.txt refuses this client), so nothing was requested from it",
+        "route or recorded DISALLOWED (robots.txt refuses this client), so nothing was requested from it",
     );
   }
   const withAgenda = meetings.filter((m) => {
     const url = documentUrlFor(m);
-    return url !== null && !isRetiredMeetingHost(url);
+    return url !== null && agendaRetrievalRefusal(url) === null;
   });
   // Meetings with no stored document yet go first: the cap is politeness per
   // run, and the store is seeded from the previous snapshot, so over repeated

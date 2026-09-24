@@ -71,3 +71,23 @@ test("other record classes still compare whole records", () => {
   const next = { candidates: [{ fecCandidateId: "H0NJ00001", name: "A", retrievedAt: LATER }] };
   assert.equal(candidateChangeSet(candidate("FEC_FUNDING", next), prior).outcome, "CHANGED");
 });
+
+test("a re-check whose cited roster moved is not a no-change, even when its records are unchanged", async () => {
+  const { sameCitedAuthority } = await import("../lib/civic-data/promotion.ts");
+  const cite = (versionId: string) => candidate("STATE_ROLL_CALL", {
+    rollCalls: [roll("r1", LATER)],
+    officialIdentityAuthority: { contractId: "nj-legislators", sourceId: "nj-legislature", scope: "US-NJ", versionId, currentOfficeholderIdsSha256: "d".repeat(64) },
+  });
+  assert.equal(sameCitedAuthority(cite("cv-roster-1"), cite("cv-roster-1")), true);
+  assert.equal(sameCitedAuthority(cite("cv-roster-2"), cite("cv-roster-1")), false, "a moved roster promotes, so the pointer never names a superseded one");
+  // Classes that cite no authority compare equal: the rule adds nothing for them.
+  assert.equal(sameCitedAuthority(candidate("MEETING", { meetings: [] }), candidate("MEETING", { meetings: [] })), true);
+});
+
+test("the confirmation door requires the cited authority, and a confirmation takes no second readback", async () => {
+  const { readFileSync } = await import("node:fs");
+  const source = readFileSync(new URL("../lib/civic-data/promotion.ts", import.meta.url), "utf8");
+  const eligibility = source.slice(source.indexOf("options.confirmUnchanged === true &&"), source.indexOf("const retained ="));
+  assert.match(eligibility, /sameHeldRecords\(candidate, lkg\.candidate\) &&\s+sameCitedAuthority\(candidate, lkg\.candidate\)/);
+  assert.match(source, /if \(outcome\.promoted === null \|\| outcome\.confirmed \|\| contract\.readerProjection === null\) return outcome;/);
+});

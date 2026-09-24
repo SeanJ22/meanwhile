@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 755,
-    "named": 7442,
+    "files": 756,
+    "named": 7446,
     "dynamic": 30
   },
   "files": {
@@ -9119,6 +9119,15 @@
         "standing runtime preserves configured GitHub credentials without invoking the CLI",
         "standing runtime reuses only the existing github.com CLI login in memory",
         "the exact served, integrity-held, fully certified SHA is current or requires one handoff"
+      ],
+      "dynamic": 0
+    },
+    "tests/schedulepage-own-routes.test.ts": {
+      "names": [
+        "a notice with no year takes the year after its own posting",
+        "both rows reach readers as sittings of their registered bodies",
+        "the Energy Committee's home page yields its next sitting in its own words",
+        "the library's feed yields one sitting per trustees notice and counts every other post"
       ],
       "dynamic": 0
     },

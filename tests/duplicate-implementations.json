@@ -34,11 +34,6 @@
       "reason": "A .mjs helper run under plain node cannot import TypeScript, and scripts/tracker.mjs, scripts/handoff.mjs and the pre-commit hook all run without tsx. Consolidating would either break the hook or move the date rule into a module the hook cannot read. Both bodies compute the Phoenix day identically and tests/doc-dates.test.ts pins the rule itself."
     },
     {
-      "id": "exact:lib/ballot/zip-divisions.ts#index,lib/geo/zip-certainty.ts#index",
-      "disposition": "OWED",
-      "reason": "Two copies of the same derived-index loader. One lazy loader for the zip-division index."
-    },
-    {
       "id": "exact:lib/registry/resolve.ts#contains,tests/district-hits.test.ts#contains",
       "disposition": "OWED",
       "reason": "Same as inRing above — the test reimplements its subject."
@@ -82,11 +77,6 @@
       "id": "shape:lib/hunt/jurisdiction-universe.ts#adaptedSplit,lib/sources/az-legislature/roster.ts#currentAzLegislativeTerm,lib/sources/nj-legislature/roster.ts#currentNjLegislature",
       "disposition": "ALLOWED",
       "reason": "This collision exists only after domain identifiers are erased: adaptedSplit counts registry adaptation states, while the two roster helpers enforce source-specific legislative calendars, base legislature numbers, and term bounds. AZ changes on its official first-Monday rule and NJ on its statutory second-Tuesday rule, so parameterizing those authorities together—or coupling either to a jurisdiction census—would hide source law rather than consolidate shared policy; their genuinely shared ordinal formatter is imported from lib/text/format-date.ts."
-    },
-    {
-      "id": "shape:lib/officials/federal-directory-read-model.ts#validate,lib/registry/runtime-read-model.ts#validate",
-      "disposition": "ALLOWED",
-      "reason": "Each adapter delegates to a different domain validator and only supplies its projection-specific diagnostic. The repeated issues-and-throw shell contains no validation rule; sharing it would merely parameterize a callback and noun while obscuring which authority refused its payload."
     },
     {
       "id": "shape:lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection,lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection,lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection,lib/votes/snapshot.ts#readFederalRollCallsProjection",

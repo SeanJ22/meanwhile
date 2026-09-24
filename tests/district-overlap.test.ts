@@ -201,9 +201,10 @@ test("WGH-16: an unmeasured territory answers NULL, never an empty list", () => 
 
 test("WGH-16: lookups key on (layer, district), never on the id alone", () => {
   /*
-   * `scripts/build-zip-division-ids.mts` records a GEOID collision that produced
-   * this exact defect shape in a different join — Morris County NJ 34027 against
-   * NJ sldu:27 34027 — fixed by keying on (layer, GEOID). The same district
+   * The ZIP index build recorded a GEOID collision that produced this exact
+   * defect shape in a different join — Morris County NJ 34027 against NJ sldu:27
+   * 34027 — fixed by keying on (layer, GEOID), as build-zip-division-shards.mts
+   * still does. The same district
    * STRING is live in several layers here and means a different government in
    * each, so a bare-id lookup would silently cross them.
    */

@@ -237,14 +237,7 @@ while (queue.length > 0) {
 
 /* ── Reconciling against the registry ───────────────────────────────────── */
 
-const registry = JSON.parse(
-  (await import("node:fs")).readFileSync(
-    join(process.cwd(), "data", "derived", "zip-division-ids.json"),
-    "utf8",
-  ),
-) as Record<string, unknown>;
-const zipIndex = (registry.zips ?? {}) as Record<string, string[]>;
-const held = Array.isArray(zipIndex[zip]) ? zipIndex[zip] : [];
+const held = (await (await import("../lib/geo/zip-division-index.ts")).zipDivisionEntry(zip))?.ids ?? [];
 
 const expanded = [...nodes.values()].filter((n) => n.expanded);
 const governmentalNodes = expanded.filter((n) => n.classification.governmental || n.depth === 0);

@@ -87,16 +87,41 @@ test("normalize emits windowed meetings with cited venues and real agenda links"
   }
 });
 
-test("an unobserved venue drops the meeting, counted, never guessed", () => {
+/*
+ * CHANGED ON PURPOSE (the venue-gap class, 2026-09-23). This test used to be
+ * "an unobserved venue drops the meeting" — the sitting was withheld because our
+ * venue table lacked a row. The owner's rule is that a missing or unreviewed
+ * place never suppresses a meeting. The sitting is now published with no pin
+ * and the row's own venue spans as its named gap; it is still counted, and it
+ * is still never guessed.
+ */
+test("an unobserved venue is published with the row's own words, counted, never guessed", () => {
   const source = makeBoardBookSource([WIRING]);
+  const collectedAt = "2026-08-14T12:00:00Z";
+  const recorded = source.normalizeWithDrops!([{ wiring: WIRING, html: FIXTURE, collectedAt }], NOW);
   const doctored = FIXTURE.replaceAll(
     "Leadership and Professional Development Center",
     "Some Room The Cache Has Never Seen",
   );
-  const raw = [{ wiring: WIRING, html: doctored, collectedAt: "2026-08-14T12:00:00Z" }];
-  const { meetings, drops } = source.normalizeWithDrops!(raw, NOW);
-  assert.ok(drops.unknownVenue >= 1, "unknown venue was not counted");
-  for (const m of meetings) {
-    assert.notEqual(m.location!.name, "Some Room The Cache Has Never Seen");
+  const raw = [{ wiring: WIRING, html: doctored, collectedAt }];
+  const { meetings, drops, accounting } = source.normalizeWithDrops!(raw, NOW);
+  assert.deepEqual(
+    meetings.map((m) => m.id),
+    recorded.meetings.map((m) => m.id),
+    "every sitting the recorded page produced is still produced",
+  );
+  const unplaced = meetings.filter((m) => m.location === null);
+  assert.ok(unplaced.length >= 1, "the planted room placed nothing");
+  assert.equal(drops.unknownVenue, unplaced.length, "each unplaced sitting is counted");
+  for (const m of unplaced) {
+    assert.equal(m.online, undefined, "a room is not an online sitting");
+    assert.equal(m.venueGap?.kind, "STATED_NOT_PLACED");
+    assert.match(m.venueGap!.publishedText!, /^Some Room The Cache Has Never Seen, 701 W Wetmore Road/);
+    assert.equal(m.venueGap?.publisher, WIRING.publishingOrg);
   }
+  for (const m of meetings.filter((x) => x.location !== null)) {
+    assert.notEqual(m.location!.name, "Some Room The Cache Has Never Seen", "never guessed");
+  }
+  assert.equal(accounting.dropped, 0, "counted and kept, never a drop");
+  assert.equal(accounting.outcome, "CONSERVED");
 });

@@ -6,16 +6,16 @@
     "joinedOn": "FIPS state+place, or state+county for counties — never a name string"
   },
   "counts": {
-    "swept": 1256,
+    "swept": 1254,
     "verified": 729,
     "mismatched": 0,
     "adjudicated": 1,
-    "noSource": 526
+    "noSource": 524
   },
   "mismatches": [],
   "noSourceByReason": {
     "the roster names it \"…\", which states no municipal form": 1,
-    "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced": 525
+    "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced": 523
   },
   "rows": [
     {
@@ -4969,16 +4969,6 @@
       "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
     },
     {
-      "bodyId": "ocd-division/country:us/state:az/school_district:school_district_not_defined#board",
-      "label": "No unified school district here",
-      "state": "AZ",
-      "stamped": null,
-      "rosterName": null,
-      "rosterForm": null,
-      "verdict": "NO-SOURCE",
-      "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
-    },
-    {
       "bodyId": "ocd-division/country:us/state:az/school_district:payson_unified_district#board",
       "label": "Payson Unified District",
       "state": "AZ",
@@ -6093,16 +6083,6 @@
       "label": "Laconia School District",
       "state": "NH",
       "stamped": "school_district_dependent",
-      "rosterName": null,
-      "rosterForm": null,
-      "verdict": "NO-SOURCE",
-      "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined#board",
-      "label": "School District Not Defined",
-      "state": "NH",
-      "stamped": null,
       "rosterName": null,
       "rosterForm": null,
       "verdict": "NO-SOURCE",

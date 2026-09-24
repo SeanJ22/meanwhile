@@ -238,7 +238,7 @@ export interface BodyView {
   /** The typed Reader's readback of that version, when one is recorded. */
   readonly readback: { readonly at: string; readonly passed: boolean } | null;
   /** A ZIP whose readers are served this body, for the public destination. */
-  readonly publicZip: string | null;
+  readonly publicZip: PublicZip;
   /**
    * The latest version that changed what readers are served, with its trail:
    * the source and when it was read, what changed, when it validated and was
@@ -430,9 +430,12 @@ export interface BodyModelInput {
   readonly contracts: readonly WatchedContract[];
   readonly store: BodyStoreFacts;
   readonly nowIso: string;
-  /** A ZIP whose readers are served this body's division, for the public destination; absent when not known. */
-  readonly zipOf?: (ocdId: string | null) => string | null;
+  /** A ZIP whose readers are served this body's division, for the public destination; unread when not given. */
+  readonly zipOf?: (ocdId: string | null) => PublicZip;
 }
+
+/** Where a body's readers are served: a ZIP the index gives its division, none, or an index that was not read. */
+export type PublicZip = { readonly kind: "ZIP"; readonly zip: string } | { readonly kind: "NONE" } | { readonly kind: "UNREAD" };
 
 /** Every watched body, in the order the page lists them: needing attention first, then by name. */
 export function buildBodyViews(input: BodyModelInput): BodyView[] {
@@ -465,7 +468,7 @@ export function buildBodyViews(input: BodyModelInput): BodyView[] {
   }
 
   const views = [...groups.values()].map((g) =>
-    bodyView(g, { versionByScope, dayByScope, attemptsByScope, readbackByCandidate, firstPassByCandidate, changeByScope, changeRead, nowMs, zipOf: input.zipOf ?? (() => null) }),
+    bodyView(g, { versionByScope, dayByScope, attemptsByScope, readbackByCandidate, firstPassByCandidate, changeByScope, changeRead, nowMs, zipOf: input.zipOf ?? (() => ({ kind: "UNREAD" })) }),
   );
   const order: Record<BodyStatus, number> = { STUCK: 0, "NEEDS ATTENTION": 1, "NOT READ YET": 2, WORKING: 3 };
   return views.sort((a, b) => order[a.status] - order[b.status] || a.name.localeCompare(b.name));
@@ -474,7 +477,7 @@ export function buildBodyViews(input: BodyModelInput): BodyView[] {
 interface Lookups {
   readonly versionByScope: ReadonlyMap<string, VersionFacts>;
   readonly dayByScope: ReadonlyMap<string, DayFacts>;
-  readonly zipOf: (ocdId: string | null) => string | null;
+  readonly zipOf: (ocdId: string | null) => PublicZip;
   readonly attemptsByScope: ReadonlyMap<string, readonly AttemptFacts[]>;
   readonly readbackByCandidate: ReadonlyMap<string, ReadbackFacts>;
   readonly firstPassByCandidate: ReadonlyMap<string, ReadbackFacts>;

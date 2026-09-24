@@ -58,10 +58,10 @@
  *   layers, never a statement that the district does not govern this ZIP."*
  *   {@link spansAtLayer} therefore returns `null` for a territory it has no
  *   findings for — distinct from `[]`, which would be a claim.
- * - **It never keys on a bare id.** `scripts/build-zip-division-ids.mts` records
- *   a GEOID collision that produced this exact defect shape in a different join
- *   — Morris County NJ `34027` against NJ `sldu:27` `34027` — and was fixed by
- *   keying on `(layer, GEOID)`. Every lookup here is keyed on
+ * - **It never keys on a bare id.** The ZIP index build recorded a GEOID
+ *   collision that produced this exact defect shape in a different join —
+ *   Morris County NJ `34027` against NJ `sldu:27` `34027` — fixed by keying on
+ *   `(layer, GEOID)`, as `scripts/build-zip-division-shards.mts` still does. Every lookup here is keyed on
  *   `(layer, district)` for the same reason: a district number is unique inside
  *   its layer and meaningless outside it.
  * - **It never invents geometry.** It reads recorded probe results. A finer

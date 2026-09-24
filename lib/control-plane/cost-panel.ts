@@ -32,7 +32,17 @@
  *                   ours, named as such, one short line
  */
 import type { WorkerRole } from "./attempt.ts";
-import { cacheMeteringOf, entriesInWindow, sumMetric, utcMonthWindow, type CostEntry, type LedgerWindow, type MeasuredTotal } from "./cost.ts";
+import {
+  DISCOVERY_SEARCH_ROLE,
+  SEARCH_SOURCE_NOT_ON_RECORD,
+  cacheMeteringOf,
+  entriesInWindow,
+  sumMetric,
+  utcMonthWindow,
+  type CostEntry,
+  type LedgerWindow,
+  type MeasuredTotal,
+} from "./cost.ts";
 import { cacheSavingUsd } from "./model-cost.ts";
 import { gap, held, measured, type Held, type Measured, type RenderedNumber } from "./owner-surface.ts";
 import { modelName, usdCents, usdOf } from "./plain-words.ts";
@@ -913,8 +923,14 @@ export interface MonthlySpendView {
   readonly asOf: string;
   readonly total: MeasuredTotal;
   readonly byProvider: readonly MonthlyBreakdownRow[];
+  /** Model charges by model. Search charges (`DISCOVERY_SEARCH`) are not model charges and are not here. */
   readonly byModel: readonly MonthlyBreakdownRow[];
   readonly byRole: readonly MonthlyBreakdownRow[];
+  /**
+   * Search charges by API host. Absent from snapshots published before
+   * 2026-09-23 — a reader treats absence as "not broken down", never as none.
+   */
+  readonly bySearchSource?: readonly MonthlyBreakdownRow[];
   /**
    * What cache reads saved against sending the same tokens uncached, at the
    * list prices in `model-cost.ts`. A counterfactual, stated as one; null when
@@ -1019,6 +1035,9 @@ function breakdown(
     .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
 }
 
+/* Search money is not model money: broken down by host on its own and kept out of `byModel`, where a row with no model would read as the cache pre-warm. */
+const isSearchCharge = (e: CostEntry): boolean => String(e.role) === DISCOVERY_SEARCH_ROLE;
+
 export function buildMonthlySpend(input: {
   readonly costs: readonly CostEntry[];
   readonly attempts: readonly AttemptRef[];
@@ -1087,7 +1106,7 @@ export function buildMonthlySpend(input: {
     total: { ...total, total: total.total === null ? null : round(total.total) },
     byProvider: breakdown(rows, (e) => providerOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD),
     byModel: breakdown(
-      rows,
+      rows.filter((e) => !isSearchCharge(e)),
       (e) => modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD,
       /* Per-model saving needs the model's own list price; `cacheSavingUsd`
          returns null for an unpriced or unknown key, so a stray non-model key
@@ -1101,6 +1120,7 @@ export function buildMonthlySpend(input: {
       },
     ),
     byRole: breakdown(rows, (e) => e.role),
+    bySearchSource: breakdown(rows.filter(isSearchCharge), (e) => e.source ?? SEARCH_SOURCE_NOT_ON_RECORD),
     cacheSavingUsd: cacheSavingRows === 0 ? null : round(cacheSaving),
     cacheSavingRows,
     cacheHitRate: hitRateFromTokens(monthTokens),

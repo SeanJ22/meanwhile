@@ -4,9 +4,30 @@ import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
+import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
+
+/**
+ * The classes whose successor may inherit unchanged members from its exact GOOD
+ * base. The registry joined on 2026-09-23 (Sean): its owner door builds on the
+ * transfer-time import, whose untouched members carry that import's authority.
+ */
+const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING"]);
+
+/**
+ * A member's identity and the sources it asserts. A curated record is its own
+ * id and cites every HTTPS value it holds. A registry member is keyed as the
+ * change accounting keys it and cites its named source fields only
+ * (lib/registry/cited-urls.ts, the rule its promotion also applies).
+ */
+function memberIdentity(recordClass: string, member: { readonly key: string; readonly record: unknown }): string {
+  return recordClass === "REGISTRY_RUNTIME_BINDING" ? member.key : (member.record as { readonly id: string }).id;
+}
+function assertedSources(recordClass: string, key: string, record: unknown): Iterable<string> {
+  return recordClass === "REGISTRY_RUNTIME_BINDING" ? registryMemberCitedUrls(key, record) : directPositiveSourceUrls(record);
+}
 
 export interface ManualPriorAuthority {
   readonly kind: "VALIDATED_PRIOR_PROJECTION";
@@ -22,10 +43,10 @@ export const manualPriorAuthorityOf = (candidate: RoutineCandidate): ManualPrior
 export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: CandidateVersionRecord | null): string | null {
   const prior = manualPriorAuthorityOf(candidate);
   if (!prior) return null;
-  if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || candidate.recordClass !== "CURATED_READER_RECORD" ||
+  if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
       candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt ||
       !Array.isArray(prior.retainedMembers) || prior.retainedMembers.length === 0) {
-    return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader successor.";
+    return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader or registry successor.";
   }
   const receipt = base ? parseValidationReceipt(base.receipt) : null;
   if (!base || base.state !== "PROMOTED" || !base.acquisitionSucceeded || receipt?.decision !== "GOOD" ||
@@ -45,10 +66,11 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
     base.candidate.retrieval.manualSourceReceipt, base.candidate.retrieval.finalUrl).ok) {
     return "The ordinary manual base has no valid source authority; it cannot become inherited authority.";
   }
-  // The source-isolation member id is the payload's exact id. civicRecordsFor
-  // adds a record-class prefix for change accounting; that is a different key.
+  // A curated member is the payload's exact id; civicRecordsFor adds a
+  // record-class prefix for change accounting, which is a different key. A
+  // registry member has no one id field, so its change-accounting key is it.
   const members = (value: RoutineCandidate) => new Map(civicRecordsFor(value.recordClass, value.readModel)
-    .map((row) => [(row.record as { readonly id: string }).id, row.record]));
+    .map((row) => [memberIdentity(value.recordClass, row), row.record]));
   const before = members(base.candidate);
   const after = members(candidate);
   const retained = new Set<string>();
@@ -64,7 +86,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
     .filter((source) => source.reviewOutcome !== "BLOCKED").flatMap((source) => [source.requestedUrl, source.finalUrl]));
   for (const [key, record] of after) {
     if (retained.has(key)) continue;
-    for (const url of directPositiveSourceUrls(record)) {
+    for (const url of assertedSources(candidate.recordClass, key, record)) {
       if (!sourceUrls.has(url)) return `Changed or new member ${key} lacks an exact current source review for ${url}.`;
     }
   }

@@ -49,6 +49,7 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { coverageTierForZip } from "../lib/coverage/zip-tier.ts";
+import { readAllZipDivisions, ZIP_DIVISIONS_DIR } from "../lib/geo/zip-division-index.ts";
 import {
   READINESS_AUTHORITY_COVERAGE,
   readinessAuthorityCoverageIssues,
@@ -73,6 +74,7 @@ import {
   computeReadinessSnapshot,
 } from "../lib/control-plane/readiness/compute.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { isCensusPlaceholderDivision } from "../lib/registry/census-placeholders.ts";
 
 const ROOT = process.cwd();
 const NOW = new Date().toISOString();
@@ -96,6 +98,7 @@ const FIXTURE_INPUT_OVERLAY = fixtureInputOverlay === undefined ? null : resolve
 interface Division {
   readonly ocdId: string;
   readonly divisionType: string;
+  readonly geoid?: string | null;
   readonly state?: string;
   readonly provenance?: { readonly collectedAt?: string };
 }
@@ -115,9 +118,6 @@ interface Registry {
   readonly divisions: readonly Division[];
   readonly bodies: readonly Body[];
 }
-interface ZipDivisionIds {
-  readonly zips?: Record<string, readonly string[]>;
-}
 interface GeoJson {
   readonly features?: readonly unknown[];
 }
@@ -136,7 +136,10 @@ function readJsonIf<T>(rel: string): T | null {
 }
 
 const REGISTRY = readJson<Registry>("lib/registry/registry.json");
-const ZIP_DIVISION_IDS = readJson<ZipDivisionIds>("data/derived/zip-division-ids.json");
+// The national ZIP index (every ZIP code in the country, one shard per ZIP prefix); a test overlay may carry its own.
+const ZIP_DIVISIONS = readAllZipDivisions(
+  FIXTURE_INPUT_OVERLAY !== null && existsSync(join(FIXTURE_INPUT_OVERLAY, ...ZIP_DIVISIONS_DIR)) ? FIXTURE_INPUT_OVERLAY : ROOT,
+);
 const DIV_BY_OCD = new Map<string, Division>(REGISTRY.divisions.map((d) => [d.ocdId, d]));
 
 /* ------------------------------------------------------------- instrument tallies */
@@ -147,13 +150,16 @@ const maxDate = (a: string | null, b: string | null): string | null =>
   a === null ? b : b === null ? a : a >= b ? a : b;
 
 /** Held divisions of a state, counted by type, with the newest collectedAt.
- *  NOTE: `division.state` is UPPERCASE (e.g. "AZ") in the registry. */
+ *  NOTE: `division.state` is UPPERCASE (e.g. "AZ") in the registry.
+ *  A Census "no district here" placeholder stays in the registry as geography
+ *  but is not a held district boundary: the Census of Governments total it is
+ *  read against counts governments (Sean, 2026-09-23). */
 function heldDivisions(code: string): { byType: Record<string, number>; asOf: string | null } {
   const upper = code.toUpperCase();
   const byType: Record<string, number> = {};
   let asOf: string | null = null;
   for (const d of REGISTRY.divisions) {
-    if (d.state !== upper) continue;
+    if (d.state !== upper || isCensusPlaceholderDivision(d)) continue;
     byType[d.divisionType] = (byType[d.divisionType] ?? 0) + 1;
     asOf = maxDate(asOf, dateOf(d.provenance?.collectedAt));
   }
@@ -255,7 +261,7 @@ function staticDeliveryFor(spec: StateSpec): ReaderDelivery[] {
  * would be the same class of error rendered the other way round.
  */
 function placeFor(zip: string): string {
-  const ocdIds = ZIP_DIVISION_IDS.zips?.[zip] ?? [];
+  const ocdIds = ZIP_DIVISIONS.get(zip)?.ids ?? [];
   const divs = ocdIds.map((id) => DIV_BY_OCD.get(id)).filter((d): d is Division => d !== undefined) as {
     divisionType: string;
     label?: string;
@@ -315,7 +321,7 @@ function bodyCellState(coverageStatus: string | undefined) {
 
 /** A zip row derived from REAL committed data: its overlapping registry bodies. */
 function realZip(zip: string): ZipInput {
-  const ocdIds = ZIP_DIVISION_IDS.zips?.[zip] ?? [];
+  const ocdIds = ZIP_DIVISIONS.get(zip)?.ids ?? [];
   const idSet = new Set<string>(ocdIds);
   const bodies = REGISTRY.bodies.filter(
     (b) => (b.ocdId ? idSet.has(b.ocdId) : false) || (b.alsoServesOcdIds ?? []).some((x) => idSet.has(x)),
@@ -340,11 +346,11 @@ function realZip(zip: string): ZipInput {
   };
 }
 
-/** Every zip researched for a state — auto-captured from the committed index. */
+/** Every zip in a state — every ZIP the national index gives a division of that state. */
 function stateZips(code: string): string[] {
-  const zips = ZIP_DIVISION_IDS.zips ?? {};
-  return Object.keys(zips)
-    .filter((zip) => (zips[zip] ?? []).some((id) => id.includes(`state:${code}`)))
+  return [...ZIP_DIVISIONS]
+    .filter(([, entry]) => entry.ids.some((id) => id.includes(`state:${code}`)))
+    .map(([zip]) => zip)
     .sort();
 }
 

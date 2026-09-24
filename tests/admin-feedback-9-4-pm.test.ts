@@ -781,7 +781,7 @@ test("ADM-23: population-weighted completeness is a measured share of the state'
   assert.ok(complete.held);
   assert.equal(complete.value.value, 5498);
   assert.equal(complete.value.denominator, 7_378_838);
-  assert.match(complete.value.contract, /1 of 2 researched ZIP\(s\) with a population on file/);
+  assert.match(complete.value.contract, /1 of 2 ZIP\(s\) in Arizona with a population on file/);
   const none = populationInCompleteZip(a, [zip("85641", 34752, ["BLOCKED"])]);
   assert.ok(none.held && none.value.value === 0, "a measured zero: nothing is complete yet, and that is a fact");
   assert.ok(!populationInCompleteZip({ ...a, statePopulation: null }, [zip("85701", 5498, ["CURRENT"])]).held);

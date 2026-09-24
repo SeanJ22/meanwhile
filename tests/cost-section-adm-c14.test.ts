@@ -459,6 +459,30 @@ test("ADM-C14: subscription jobs are three different readings, and an absent log
   assert.notEqual(subscriptionJobsReading(null).says, subscriptionJobsReading([]).says, "never collapsed into one sentence");
 });
 
+test("search API charges are broken down by host and never counted as model spend", () => {
+  // The discovery search rung (RouteTask, 2026-09-23): one DISCOVERY_SEARCH row per request, source = the API host, usd the published price or null.
+  const now = "2026-09-23T18:00:00.000Z";
+  const search = (id: string, usd: number | null, source: string | null): CostEntry => ({ ...entry(id, "DISCOVERY_SEARCH" as WorkerRole, usd, "2026-09-23T12:00:00.000Z"), source });
+  const costs = [
+    entry("s1", "SCOUT", 0.5, "2026-09-23T11:00:00.000Z"),
+    search("b1", 0.005, "api.search.brave.com"),
+    search("b2", 0.005, "api.search.brave.com"),
+    search("e1", null, "api.exa.ai"),
+    search("n1", 0.01, null),
+  ];
+  const view = buildMonthlySpend({ costs, attempts: [{ id: "s1", worker: { version: "claude-opus-5", provider: "anthropic" } }], nowIso: now });
+
+  assert.equal(view.total.total, 0.52, "the ledger's total still carries every charge");
+  assert.deepEqual(view.byModel.map((r) => r.key), ["claude-opus-5"], "a search request has no model and is not read as the cache pre-warm");
+  const role = view.byRole.find((r) => r.key === "DISCOVERY_SEARCH")!;
+  assert.deepEqual([role.usd, role.measuredRows, role.unmeasuredRows], [0.02, 3, 1]);
+  assert.deepEqual(
+    view.bySearchSource?.map((r) => [r.key, r.usd, r.measuredRows, r.unmeasuredRows]),
+    [["(host not recorded)", 0.01, 1, 0], ["api.search.brave.com", 0.01, 2, 0], ["api.exa.ai", null, 0, 1]],
+    "dollars first, then the key; an unpriced request is unmeasured, never a zero; a row with no host is its own group",
+  );
+});
+
 test("ADM-36 and ADM-33: a role bar carries a role class and a model renders as its name", () => {
   assert.equal(roleBarClass("SCOUT"), "role-scout");
   assert.equal(roleBarClass("ADVERSARIAL_AUDITOR"), "role-adversarial-auditor");

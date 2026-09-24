@@ -1,14 +1,14 @@
 {
   "formatVersion": 1,
-  "exactReaderHead": "570529e36d0611dd2daf138bbe1551a2dd76351b",
+  "exactReaderHead": "6c96e5e1f986c64de2fdf45b1eab11a517d4a5b7",
   "inheritedRows": 0,
-  "invalidatedRows": 353,
-  "recomputedRows": 687,
-  "invalidatedApplicableRecords": 21233,
-  "routeProofs": 195,
+  "invalidatedRows": 352,
+  "recomputedRows": 688,
+  "invalidatedApplicableRecords": 21209,
+  "routeProofs": 194,
   "componentProofs": 237,
-  "componentCases": 20539,
-  "componentUncoveredDiagnostics": 70236,
+  "componentCases": 20517,
+  "componentUncoveredDiagnostics": 70132,
   "closureFailures": 0,
   "denominatorFloor": {
     "outcome": "MEASURED",
@@ -17,8 +17,8 @@
     "subject": "closed final reader census rows"
   },
   "delivery": {
-    "RENDERED": 352,
-    "INTENTIONALLY_NOT_APPLICABLE": 592,
+    "RENDERED": 351,
+    "INTENTIONALLY_NOT_APPLICABLE": 593,
     "SOURCE/HOLDING_UNAVAILABLE": 49,
     "DELIVERY_UNPROVEN": 1,
     "STAGED_NOT_ELIGIBLE": 10,

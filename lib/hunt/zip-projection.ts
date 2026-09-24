@@ -17,12 +17,12 @@
  *
  * ## THE STATE DIVISION IS ALWAYS APPLICABLE, AND THAT IS NOT AN INFERENCE
  *
- * `data/derived/zip-division-ids.json` lists divisions whose TERRITORY overlaps
- * a ZIP's area, sampled on a lattice. It does not list
+ * The national ZIP index (`lib/geo/zip-division-index.ts`) lists divisions
+ * whose TERRITORY overlaps a ZIP's area, sampled on a lattice: counties,
+ * places, county subdivisions and school districts. It does not list
  * `ocd-division/country:us/state:az` for an Arizona ZIP, because the state
- * division covers every Arizona ZIP and the file's own scope note says it holds
- * ZIPs "whose ZCTA sits in state FIPS 04, 33, 34". Adding the state division
- * here is reading that scope, not guessing a geography.
+ * division covers every Arizona ZIP, and the caller names the ZIP's state.
+ * Adding the state division here is reading that, not guessing a geography.
  *
  * What this module will NOT do is invent a division a ZIP might be in. A ZIP
  * absent from the committed geometry gets the state division and nothing else,

@@ -131,6 +131,12 @@ export interface AskTrace {
    * Absent on an early return. Facts about our machinery, never about a reader.
    */
   stages?: Record<string, number>;
+  /**
+   * Which promoted sources this request loaded (2026-09-24): ESSENTIAL (the
+   * registry, the federal directory and the recorded outcomes) on a topic
+   * route, ALL otherwise. A fact about our machinery, never about a reader.
+   */
+  sourcesLoaded?: "ESSENTIAL" | "ALL";
   /** What the reader actually got. The single most important line here. */
   answerMode: AnswerMode;
   totalMs: number;

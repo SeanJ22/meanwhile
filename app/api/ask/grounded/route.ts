@@ -788,6 +788,22 @@ export async function POST(request: Request) {
    * govern the reader's divisions, with no model, exactly like the body route.
    */
   let areaTopicRoute = false;
+  /*
+   * The NAMED-BODY topic route (2026-09-24, the Rockaway latency repair): "is
+   * rockaway township voting on data centers" names its government by a class
+   * phrase ("township"), so the named-body decision below is lexical: the same
+   * question, the same national body index and the same confirmation give the
+   * same CONFIRM (or, once the reader confirms, the same bound body) whatever a
+   * model reads, because a class-phrase mention is never overridden by a model
+   * binding. The first request used to load all fourteen sources and call the
+   * model only to ask "did you mean the Rockaway Township Council?" — 27 s on a
+   * cold instance in production. Both requests now skip the eleven
+   * deferrable sources and the model; anything the lexical decision does not
+   * settle takes the full path exactly as before.
+   */
+  const explicitBodyClass = Boolean(classPhraseIn(question) && mentionBeforeClassPhrase(question));
+  const namedBodies = explicitBodyClass ? snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity) : bodies;
+  let namedBodyTopicRoute = false;
   if (topicRoute) {
     const probe = resolveInterpretation(interpretWithoutModel(question), question, bodies, { activeSubjects: [], priorSubjects: [] });
     deterministicTopicRoute = probe.binding.kind === "BOUND" && probe.binding.entity.level === "BODY" &&
@@ -797,16 +813,32 @@ export async function POST(request: Request) {
       readSubjectRefs(body.priorSubjects, 8).length === 0 &&
       (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0) &&
       !/\b(?:they|them|their|it|its|he|she|his|her|this|that|those)\b/i.test(question);
-    if (!deterministicTopicRoute && !areaTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
+    // The reader's own words match several bodies ("rockaway township": its
+    // council, its board of education...) or name one by a class phrase.
+    if (!deterministicTopicRoute && !areaTopicRoute && (explicitBodyClass || probe.binding.kind === "AMBIGUOUS")) {
+      const lexical = decideNamedBody(question, namedBodies, body.confirmation);
+      namedBodyTopicRoute = lexical.kind === "CONFIRM" || (lexical.kind === "BOUND" && lexical.confirmed);
+    }
+    if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
   }
+  trace.sourcesLoaded = !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
   const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
+  let namedPeople = 0;
   try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
       .flatMap((ref) => ref.id ? [ref.id] : []);
     const named = await namedOfficeholders(question, explicitIds);
+    namedPeople = named.length;
     for (const seat of named) if (!officeholders.seats.some((held) => held.id === seat.id)) officeholders.seats.push(seat);
   } catch {
     officeholders.loaderFailures += 1;
+  }
+  // A named person could bind in place of the body on the full path, so that
+  // question is decided there, with every source, exactly as before.
+  if (namedBodyTopicRoute && namedPeople > 0) {
+    namedBodyTopicRoute = false;
+    await settleGroundedSourcePreloads(deferrablePreloads);
+    trace.sourcesLoaded = "ALL";
   }
   const people = personEntities(officeholders.seats);
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
@@ -824,7 +856,7 @@ export async function POST(request: Request) {
    */
   // A topic question bound lexically to a body is not a ballot question; its
   // ballot is not read (loadBallotForDivisions([]) is the empty holding).
-  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute ? [] : ocdIds);
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute ? [] : ocdIds);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
@@ -910,7 +942,7 @@ export async function POST(request: Request) {
       : [],
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute;
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute;
   const interpretationKey = modelFreeTopicRoute ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
   const outcome = modelFreeTopicRoute ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
@@ -923,7 +955,7 @@ export async function POST(request: Request) {
     interpretation = { ...interpretWithoutModel(question), intent: "AGENDA_TOPIC", temporal: { kind: "NONE" } };
     trace.interpretation = {
       ran: false,
-      why: areaTopicRoute ? "deterministic-area-topic-route" : "deterministic-topic-route",
+      why: areaTopicRoute ? "deterministic-area-topic-route" : namedBodyTopicRoute ? "named-body-topic-route" : "deterministic-topic-route",
       ms: Date.now() - interpretationStarted,
       intent: interpretation.intent,
       temporal: interpretation.temporal,
@@ -974,8 +1006,6 @@ export async function POST(request: Request) {
     activeSubjects,
     priorSubjects,
   });
-  const explicitBodyClass = classPhraseIn(question) && mentionBeforeClassPhrase(question);
-  const namedBodies = explicitBodyClass ? snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity) : bodies;
   let bodyDecision = decideNamedBody(question, namedBodies, body.confirmation,
     initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
       ? interpretation.entityMentions : []);

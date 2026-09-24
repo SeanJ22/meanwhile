@@ -263,15 +263,36 @@ test("ROUTE, NEW JERSEY: a place named alone suggests its governing body, and th
       headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
       body: JSON.stringify({ question: "is rockaway township voting on data centers", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24", ...extra }),
     }));
-    return await response.json() as { mode: string; answer: string | null; confirmation?: { bodyId: string; name: string; question: string } };
+    return await response.json() as {
+      mode: string; answer: string | null; confirmation?: { bodyId: string; name: string; question: string };
+      trace: { interpretation: { ran: boolean; why?: string }; synthesis: { ran: boolean }; sourcesLoaded?: string };
+    };
   };
   const first = await post({});
   assert.equal(first.mode, "CLARIFY");
   assert.equal(first.confirmation?.bodyId, `${ROCKAWAY}#governing`, "the township's own council, not whichever body sorts first");
+  // The Rockaway latency repair (2026-09-24): the confirm step is lexical, so it
+  // loads only the essential sources and calls no model (27 s cold before).
+  assert.equal(first.trace.sourcesLoaded, "ESSENTIAL", "the confirm step does not load the eleven deferrable sources");
+  assert.equal(first.trace.interpretation.ran, false, "no model reads a question the named-body decision settles");
+  assert.equal(first.trace.interpretation.why, "named-body-topic-route");
   const confirmed = await post({ confirmation: first.confirmation });
   assert.equal(confirmed.mode, "GROUNDED_COMPOSED");
   assert.match(confirmed.answer ?? "", /O-26-23 .*DESIGNATE DATA CENTERS AS A PROHIBITED USE/);
   assert.match(confirmed.answer ?? "", /we have not read the recorded outcome of that item/);
+  assert.equal(confirmed.trace.sourcesLoaded, "ESSENTIAL");
+  assert.equal(confirmed.trace.interpretation.ran, false);
+  assert.equal(confirmed.trace.synthesis.ran, false, "the confirmed answer is composed, not synthesized");
+
+  // Control: a topic question the lexical decision cannot settle (a pronoun, no
+  // named government) still loads every source, exactly as before.
+  resetGroundedState();
+  const pronoun = await (await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "topic-timeline-route-test" },
+    body: JSON.stringify({ question: "are they voting on data centers", ocdIds: ["ocd-division/country:us/state:nj", "ocd-division/country:us/state:nj/county:morris", ROCKAWAY], approximateLocation: "07866", surface: "MAP", today: "2026-09-24" }),
+  }))).json() as { trace: { sourcesLoaded?: string } };
+  assert.equal(pronoun.trace.sourcesLoaded, "ALL", "an unsettled question takes the full path");
 });
 
 test("ROUTE, AREA: a topic question that names no government is answered from the area's body timelines, without a model", async () => {

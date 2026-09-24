@@ -12,11 +12,14 @@
  *   the Census unit territories   data/derived/census-unit-zips.json — the
  *                                 committed ZCTA territory of every Census of
  *                                 Governments unit, joined to the registries
- *                                 in `membership.ts` — with each registered
- *                                 unit's share of each ZCTA from the sampled
- *                                 overlap it was built from
- *                                 (data/derived/zip-governments.json)
+ *                                 in `membership.ts` — with each unit's share
+ *                                 of each ZCTA from the sampled overlap it was
+ *                                 built from (data/derived/zip-governments.json)
  * ```
+ *
+ * The same reads serve the work a scope materializes (MW-028,
+ * `dispatch-work.ts`): the territory index is returned with the plan, so it is
+ * read once per cycle, never twice.
  *
  * SERVER-ONLY (node:fs and the production data plane). Never imported by a
  * client module.
@@ -76,13 +79,17 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>): Map<s
   return out;
 }
 
-/** The territory index the runner uses: the preloaded registries, the committed units, and their sampled shares. */
+/**
+ * The territory index the runner uses: the preloaded registries, the committed
+ * units, and their sampled shares — for every unit, registered state or not
+ * (MW-028, 2026-09-23), so a geography in a state with no registry counts the
+ * governments it blocks by the same certain-overlap rule as a registered one,
+ * rather than by wholly-inside ZCTAs alone.
+ */
 export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[]): TerritoryIndex {
   const units = readCensusUnitTerritories(root);
-  const registered = new Set(registries.map((r) => r.stateCode.toUpperCase()));
   const wanted = new Set<string>();
   for (const unit of units) {
-    if (!registered.has(unit.state.toUpperCase())) continue;
     const key = unitShareKey(unit);
     if (key !== null) wanted.add(key);
   }
@@ -183,6 +190,14 @@ export interface ExpansionLoad {
   readonly plan: ExpansionPlan | null;
   /** Named runtime conditions for the research state. Empty when nothing went wrong. */
   readonly conditions: readonly string[];
+  /**
+   * The territory index the plan was placed with, for the work a scope
+   * materializes (MW-028, `dispatch-work.ts`) — read once, never twice. Null
+   * when no scope is selected, or with `territoryDetail` saying why it could
+   * not be built.
+   */
+  readonly territory?: TerritoryIndex | null;
+  readonly territoryDetail?: string | null;
 }
 
 /**
@@ -254,5 +269,7 @@ export async function loadExpansionPlan(input: {
       obligations: input.obligations,
     }),
     conditions,
+    territory,
+    territoryDetail,
   };
 }

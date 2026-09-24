@@ -101,7 +101,6 @@ import {
   parseDispatchTarget,
   unitMatchesTarget,
 } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { REGISTERED_STATES } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
@@ -114,6 +113,29 @@ import {
   candidateEnrichmentProvider,
   preloadCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import { meetingsDiscoveryProvider, paidDiscoveryHold } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
+import {
+  UNREAD_FREE_DISCOVERY_WALKS,
+  UNREAD_MEETING_PARTITIONS,
+  promotedRegistries,
+  trackedStatesFromOperationalReference,
+  type MaterializedReading,
+} from "../lib/control-plane/scheduler/provider-inputs.ts";
+import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
+import {
+  applyDispatchWork,
+  carriedDispatchTargets,
+  dispatchWorkReading,
+  dispatchWorkSentence,
+  dispatchWorkTarget,
+  ownerDispatchWorkOf,
+  scopeWorkTarget,
+  planDispatchWork,
+  type DispatchWorkReading,
+  type DispatchWorkTarget,
+  type DurableRowFacts,
+  type OwnerDispatchWork,
+} from "../lib/control-plane/expansion/dispatch-work.ts";
 import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
 import {
   factFreshnessFromPermanentMeetings,
@@ -249,7 +271,7 @@ import {
   withCycleCounts,
 } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
-import { loadExpansionPlan } from "../lib/control-plane/expansion/runner-load.ts";
+import { loadExpansionPlan, readCensusUnitTerritories, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
 import {
@@ -585,15 +607,42 @@ try {
  * may still project immutable evidence into a fail-closed receipt; it may not
  * open the same official feeds on a parallel schedule.
  */
+/*
+ * THE TRACKED STATES AND THE OWNER'S MATERIALIZED WORK, read before the
+ * registry is built (MW-028, 2026-09-23).
+ *
+ * Which states' registry work stands is DATA: the coverage set. Until the
+ * redesign's promoted coverage-set accessor is on main, the interim source is
+ * the promoted operational-reference bundle this cycle just preloaded — a state
+ * is tracked when its registry is promoted. When the accessor lands, await it
+ * here and hand `trackedStatesFrom(set.states, set.source)` to both providers.
+ *
+ * The obligations the owner's dispatch materialized are read back by their
+ * mark (one bounded query, only those rows), so the two providers that own them
+ * keep them in the corpus: scheduled, and never mistaken for rows the registry
+ * stopped emitting. A read that fails is named on both providers, which holds
+ * their retirement for the cycle rather than retiring the owner's work.
+ */
+const trackedStates = trackedStatesFromOperationalReference();
+let materialized: MaterializedReading;
+try {
+  const rows = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
+  materialized = { ids: new Set(rows.map((row) => row.id)) };
+} catch (error) {
+  materialized = { unreadable: error instanceof Error ? error.message : String(error) };
+}
 const registry = buildRegistry(
   [
     campaignFinanceProvider(),
     trackerIntakeProvider(),
-    localJurisdictionsProvider(),
-    candidateEnrichmentProvider(),
+    localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions: UNREAD_MEETING_PARTITIONS }),
+    candidateEnrichmentProvider({ trackedStates }),
+    meetingsDiscoveryProvider({ materialized: () => materialized }),
   ],
   { root: ROOT, nowIso: NOW },
 );
+const trackedReading = trackedStates.read();
+const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
 
 const allUnits = registry.units;
 const units = allUnits.filter(
@@ -942,11 +991,13 @@ for (const pending of intents.pendingRunNow) {
  * `--only` filter — and every matching unit goes FIRST in both lanes this
  * cycle: ahead of the oldest-first deterministic order, ahead of the Scout
  * lane's reader-impact bands, through the one `placeFirstRows` derivation the
- * dispatcher itself applies. Nothing else changes: not the ceilings, not the
- * budget, not per-host spacing, not a debt backoff, and not the universe — a
- * dispatch reorders; it never creates an obligation. A target that matches
- * nothing is honored with a sentence naming the missing registry, never with
- * a manufactured unit.
+ * dispatcher itself applies. Nothing else changes in the ORDER: not the
+ * ceilings, not the budget, not per-host spacing, not a debt backoff. What the
+ * target is MISSING is created further down, by the MW-028 step, from the
+ * registry's own requirement definitions (`dispatch-work.ts`), and the HONORED
+ * record is appended after that step so it carries both counts. A target that
+ * matches nothing registered is honored with a sentence naming the missing
+ * registry, never with a manufactured unit.
  */
 interface OwnerDispatchRecord {
   readonly intentId: string;
@@ -954,10 +1005,14 @@ interface OwnerDispatchRecord {
   readonly states: readonly string[];
   readonly matched: number;
   readonly registered: number;
+  /** MW-028: filled after the creation step, so the record carries what the DISPATCH created. */
+  readonly work?: OwnerDispatchWork | null;
 }
 const ownerDispatches: OwnerDispatchRecord[] = [];
 const honoredDispatch: string[] = [];
 const dispatchPriority = new Set<string>();
+/** The DISPATCH intents this cycle reads, with the matching sentence each HONORED record opens with. */
+const dispatchDetails: { readonly intent: ResearchIntentRequest; readonly detail: string }[] = [];
 for (const pending of intents.pendingDispatch) {
   const target = parseDispatchTarget(pending.note ?? "");
   const matched = allUnits.filter((u) =>
@@ -966,7 +1021,7 @@ for (const pending of intents.pendingDispatch) {
   const matchedIds = new Set(matched.map((u) => u.obligation.id));
   for (const id of matchedIds) dispatchPriority.add(id);
   const dueAmongMatched = dueThisCycle.filter((d) => matchedIds.has(d.obligation.id)).length;
-  const detail = describeDispatchMatch(target, matched.length, allUnits.length, REGISTERED_STATES);
+  const detail = describeDispatchMatch(target, matched.length, allUnits.length, trackedStateCodes);
   ownerDispatches.push({
     intentId: pending.intentId,
     target: target.text,
@@ -974,7 +1029,7 @@ for (const pending of intents.pendingDispatch) {
     matched: matched.length,
     registered: allUnits.length,
   });
-  if (!scheduledBlackout && await honorIntent(pending, detail)) honoredDispatch.push(pending.intentId);
+  dispatchDetails.push({ intent: pending, detail });
   if (scheduledBlackout) {
     console.log("  owner dispatch: SCHEDULED BLACKOUT; intent remains pending for the next eligible cycle.");
   }
@@ -993,14 +1048,28 @@ for (const pending of intents.pendingDispatch) {
  * the scope's ZCTAs) goes first: in the Scout lane by scope priority, 1 first;
  * in the plain-code lane every selected scope together, because the
  * dispatcher's `placeFirst` is a set — and a cycle with a pending DISPATCH
- * orders that lane by the DISPATCH alone, so ADM-8 still holds. A scope never
- * adds, skips or makes due a row, and never opens the paid lane.
+ * orders that lane by the DISPATCH alone, so ADM-8 still holds. The ORDER
+ * never adds, skips or makes due a row, and never opens the paid lane; what a
+ * scope is missing is created by the MW-028 step below, bounded and counted.
  */
+/*
+ * The promoted registries, read through the one accessor the standing providers
+ * use (MW-028): the territory index, the scope placement and the work a Send
+ * creates all see exactly the registries the providers can keep in the corpus.
+ * A registry the reader refuses is named, never used.
+ */
+const promoted = promotedRegistries();
+if ("refused" in promoted) {
+  for (const [state, why] of promoted.refused) {
+    runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
+  }
+}
 const expansionLoad = await loadExpansionPlan({
   repos,
   root: ROOT,
   now: NOW,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId })),
+  ...("registries" in promoted ? { loadTerritory: () => readTerritoryIndex(ROOT, [...promoted.registries.values()]) } : {}),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
@@ -1329,6 +1398,116 @@ let expansionReading: ExpansionCycleReading | null = expansionBudget === null ||
       gate: null,
     });
 
+/*
+ * **MW-028 — WHERE THE OWNER SENT THE FLEET, THE MISSING WORK IS CREATED.**
+ * (2026-09-23; `lib/control-plane/expansion/dispatch-work.ts` carries the
+ * design note.)
+ *
+ * The targets: this cycle's DISPATCH intents, the DISPATCH targets an earlier
+ * cycle left with work still owed, and every selected expansion scope. For each
+ * government in them, every requirement the promoted registry defines that no
+ * clock carries is written as a standing obligation, marked OWNER_DISPATCH, at
+ * most DISPATCH_WORK_WRITE_BUDGET rows this cycle and DISPATCH_WORK_TARGET_CAP
+ * for one target; the rest is deferred and counted. The new rows join the
+ * corpus next cycle through their providers. Nothing here calls a model,
+ * appends an intent, or reads a ceiling it could raise: created model-class
+ * work waits behind the same lane, the same Fleet ceiling and the same scope
+ * budgets as every other row. Only a full standing cycle writes.
+ */
+const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !scheduledBlackout && !intents.runnerPause.paused;
+const dispatchWorkPlanOnlyWhy = dispatchWorkWrites
+  ? null
+  : dry
+    ? "--dry writes nothing"
+    : canary
+      ? "a canary cycle writes only its one obligation"
+      : ONLY !== null || IDS !== null
+        ? "a filtered diagnostic cycle writes nothing it did not look at"
+        : scheduledBlackout
+          ? "the scheduled blackout"
+          : "the owner has paused the runner";
+const dispatchTargets: DispatchWorkTarget[] = [];
+{
+  const seen = new Set<string>();
+  const add = (t: DispatchWorkTarget): void => {
+    if (seen.has(t.key)) return;
+    seen.add(t.key);
+    dispatchTargets.push(t);
+  };
+  for (const { intent } of dispatchDetails) add(dispatchWorkTarget({ intentId: intent.intentId, note: intent.note ?? "", requestedAt: intent.requestedAt }));
+  for (const t of carriedDispatchTargets(priorResearchState?.dispatchWork ?? null)) add(t);
+  for (const scope of expansionPlan?.scopes ?? []) add(scopeWorkTarget(scope));
+}
+let dispatchWork: DispatchWorkReading | null = null;
+if (dispatchTargets.length > 0) {
+  try {
+    if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
+    const registries = promoted.registries;
+    let censusUnitsByState: Map<string, number> | null = null;
+    if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
+      try {
+        censusUnitsByState = new Map<string, number>();
+        for (const unit of readCensusUnitTerritories(ROOT)) {
+          const state = unit.state.toUpperCase();
+          censusUnitsByState.set(state, (censusUnitsByState.get(state) ?? 0) + 1);
+        }
+      } catch {
+        censusUnitsByState = null;
+      }
+    }
+    const durable = new Map<string, DurableRowFacts>();
+    for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy });
+    const plan = planDispatchWork({
+      targets: dispatchTargets,
+      world: {
+        registries,
+        territory: expansionLoad.territory ?? null,
+        territoryDetail: expansionLoad.territoryDetail ?? null,
+        corpus: allUnits.map((u) => ({ id: u.obligation.id, subjectId: u.obligation.subjectId })),
+        durable,
+        meetingPartitions: UNREAD_MEETING_PARTITIONS,
+        censusUnitsByState,
+        refusedRegistries: promoted.refused,
+      },
+    });
+    const applied = dispatchWorkWrites
+      ? await applyDispatchWork(repos, plan, { now: NOW, deadlineReached: () => Date.now() + 150_000 >= DISPATCH_DEADLINE_MS })
+      : null;
+    dispatchWork = dispatchWorkReading(plan, applied, {
+      at: NOW,
+      modelLaneClosed: laneDisabledReason,
+      ceilingUsd: effectiveCeilingUsd,
+      ceilingSource: rollingCeiling.source,
+      writes: dispatchWorkWrites ? "APPLIED" : "PLAN_ONLY",
+      planOnlyWhy: dispatchWorkPlanOnlyWhy,
+    });
+    console.log(
+      `  dispatch work: ${dispatchWork.targets.length} target(s); ${dispatchWork.written} obligation(s) created this cycle of a ${dispatchWork.writeBudget}-row budget, ` +
+        `${dispatchWork.deferred} deferred` + (dispatchWork.writes === "PLAN_ONLY" ? ` (plan only: ${dispatchWorkPlanOnlyWhy})` : ""),
+    );
+    for (const t of dispatchWork.targets) console.log(`      ${dispatchWorkSentence(t)}`);
+    if (dispatchWork.failed.length > 0) {
+      runtimeConditions.push(
+        `${dispatchWork.failed.length} obligation(s) the owner's dispatch owed could not be written (first: ${dispatchWork.failed[0]?.obligationId}: ${dispatchWork.failed[0]?.why}); they are written again next cycle`,
+      );
+    }
+  } catch (error) {
+    runtimeConditions.push(
+      `the work the owner sent the fleet to could not be planned (${error instanceof Error ? error.message : String(error)}); nothing was created, and the targets are planned again next cycle`,
+    );
+  }
+}
+/* The owner's dispatch records carry the step's counts; the full receipt is `dispatchWork`. */
+for (let i = 0; i < ownerDispatches.length; i += 1) {
+  ownerDispatches[i] = { ...ownerDispatches[i], work: ownerDispatchWorkOf(dispatchWork, ownerDispatches[i].intentId) };
+}
+/* Each DISPATCH is honored after the step, so its HONORED record says what was matched AND what was created. */
+for (const { intent, detail } of dispatchDetails) {
+  if (scheduledBlackout) continue;
+  const work = dispatchWork?.targets.find((t) => t.key === `dispatch:${intent.intentId}`) ?? null;
+  if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
+}
+
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
 const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
@@ -1628,6 +1807,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     fleetSafety: fleetSafety.snapshot(cycleFinishedAt ?? nowIso()),
     researchProgression,
     expansion: expansionReading,
+    dispatchWork,
   };
 }
 
@@ -1920,6 +2100,9 @@ const cycle = await runCycle({
     compareModelRows: compareScoutRows,
     admitScout: (row) => {
       if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
+      /* MW-028: a materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */
+      const freeWalkFirst = paidDiscoveryHold(row.obligation.id, UNREAD_FREE_DISCOVERY_WALKS);
+      if (freeWalkFirst !== null) return { admit: false, code: freeWalkFirst.code, why: freeWalkFirst.why };
       if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
       // The scout daily ceiling is the value IN FORCE (the owner's override, or
@@ -2809,6 +2992,8 @@ const runRecord = {
         /* ADM-8: every DISPATCH this cycle acted on, what it matched, and which were honored. */
         ownerDispatches,
         honoredDispatch,
+        /* MW-028: what this cycle created for every target the owner sent the fleet to. */
+        dispatchWork,
         honoredLaneIntents,
         hostSupervision,
         dispatchOrdering,

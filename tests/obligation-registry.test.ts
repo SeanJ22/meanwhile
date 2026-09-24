@@ -50,6 +50,7 @@ import {
   trackerIntakeProvider,
 } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { meetingsDiscoveryProvider } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { checkYield, routeExecutor, type OpenOne } from "../lib/control-plane/scheduler/route-executor.ts";
 import {
   NORMALIZERS,
@@ -132,6 +133,25 @@ test("the standing research registry is not a parallel tracked-meetings authorit
     false,
     "tracked jurisdiction meeting inventory must never produce a second standing meeting acquisition clock",
   );
+
+  /*
+   * MW-028 (2026-09-23): the meetings-DISCOVERY provider's ids and record class
+   * carry the word "meetings" on purpose, and the guard above deliberately does
+   * not cover it. The reason: it is discovery, not a second meetings clock.
+   * Every route it emits is not machine-executable — no client can fetch a
+   * meeting through it — so the one production meetings clock stays the
+   * source/body meeting partitions (RULING 282/283). This is what makes that so.
+   */
+  const discovery = buildRegistry(
+    [meetingsDiscoveryProvider({ materialized: () => ({ ids: new Set(["freshness:meetings-discovery:az:county:county-of-pima#own-site-meetings"]) }) })],
+    { root: ROOT, nowIso: NOW },
+  );
+  assert.equal(discovery.units.length, 1, "a materialized meetings-discovery need is scheduled");
+  for (const unit of discovery.units) {
+    assert.equal(unit.route.open.kind, "NOT_MACHINE_EXECUTABLE", "a discovery route can never open a meeting source: it is not an acquisition clock");
+    assert.equal(unit.route.executorClass, "BOUNDED_MODEL_WORKER");
+    assert.ok(unit.obligation.id.startsWith("freshness:meetings-discovery:"), "discovery owns its own namespace, never the retired meetings clocks'");
+  }
 
   const standing = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   const denominator = readFileSync(join(ROOT, "scripts", "scout-denominator.mts"), "utf8");

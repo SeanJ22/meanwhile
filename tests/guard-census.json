@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 754,
-    "named": 7434,
+    "files": 755,
+    "named": 7446,
     "dynamic": 30
   },
   "files": {
@@ -1375,10 +1375,15 @@
         "ANOTHER STATE, ANOTHER PLATFORM, HELD DATA: Rockaway Township (NJ, CivicPlus AgendaCenter) quotes the data-center ordinance, not its neighbour",
         "ANOTHER STATE, ANOTHER PLATFORM: a New Hampshire town calendar (iCal/schedule page) with a scheduled solar item and an unread recent sitting",
         "PIMA, after the September 22 read: the adopted moratorium leads, from the official record, with its tally",
+        "PIMA, agenda text and recorded outcome both held: September 22 is stated once, led by the recorded decision",
+        "PIMA, agenda text held and the outcome not yet read: September 22 leads as on the agenda with its outcome unread, and August 11 follows",
         "PIMA, as held before the September 22 read: the August 11 decision leads, and the unread September 22 sitting is named",
+        "ROUTE, AREA: a pronoun or an earlier turn keeps the model reading",
+        "ROUTE, AREA: a topic question that names no government is answered from the area's body timelines, without a model",
         "ROUTE, NEW JERSEY: a place named alone suggests its governing body, and the confirmed answer quotes the data-center ordinance",
         "ROUTE: a question pointing at one sitting keeps the sitting selection (no timeline)",
         "ROUTE: the exact reader question is answered from the timeline, composed without any model call, and passes validation",
+        "TWO ROUTES, ONE STALE: the upcoming listings are dated by their own read, not by a fresh route that carries none of them",
         "a canceled sitting is not named as an unread agenda, and a sitting beyond the window is not either",
         "a topic question is not a one-sitting question, and a one-sitting question is not a topic question",
         "an agenda line with no recorded outcome says exactly that, never that nothing happened",
@@ -2726,9 +2731,13 @@
     "tests/composite-failure-kind.test.ts": {
       "names": [
         "a JOB failure detail says whose failure it is, once",
+        "a calendar envelope holding no events is refused as the publisher's answer, not our extraction",
+        "a challenge served with HTTP 200 is the same wall",
+        "a real calendar we extract nothing from is still OUR zero-row JOB",
         "meeting partition receipts parse with and without the additive failureKind",
         "our own code and configuration failures are jobs, and so is an unknown",
-        "publisher-side failures are walls"
+        "publisher-side failures are walls",
+        "the town feed answering a Cloudflare challenge is the town's WALL, in its own words"
       ],
       "dynamic": 0
     },
@@ -3742,6 +3751,14 @@
         "ordinary district builds a numbered OCD-ID",
         "territory keeps the territory prefix and still carries a cd segment",
         "water and unassigned codes are dropped"
+      ],
+      "dynamic": 0
+    },
+    "tests/division-read-freshness.test.ts": {
+      "names": [
+        "a division is dated by its upcoming listings' oldest read, or by its newest read when nothing is upcoming",
+        "a read is dated only once it is older than a day and a half",
+        "the card dates an old read for divisions with listings on screen, never for one already named as failed"
       ],
       "dynamic": 0
     },

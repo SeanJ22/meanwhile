@@ -386,6 +386,7 @@
     "ci:certified": "node scripts/certified-tree.mjs",
     "ship:amplification": "tsx scripts/shipping-amplification.mts",
     "method:learn-legistar-outcomes": "tsx scripts/method/learn-legistar-outcome-routes.mts",
+    "method:learn-legistar-portal-documents": "tsx scripts/method/learn-legistar-portal-documents.mts",
     "method:learn-pima-schedule-union": "tsx scripts/method/learn-pima-schedule-union.mts"
   },
   "dependencies": {

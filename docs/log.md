@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-23 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-24 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **194 sessions.**
+Newest first. **195 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## civic-accuracy session 2026-09-24 · 2026-09-24
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH332** — When a reader asks what the Mesa City Council decided, the product cannot say. Mesa's clerk does not record the council's actions in the Legistar API: none of the 33 items on the council’s 14 September sitting carried an action or a pass flag when measured on 2026-09-24. The route that now answers Pima's questions therefore gives Mesa nothing. The decisions are in the council's minutes, which Mesa publishes on its own portal, and that portal permits us. Reading those minutes into dated decisions would give Mesa, and every Legistar body like it, the answers Pima now gets. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## Stop re-dispatching session (2026-09-23) · 2026-09-23
 

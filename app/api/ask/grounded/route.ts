@@ -115,7 +115,7 @@ import {
   refreshOutcomeSnapshotFromPromoted,
   sittingsForBody,
 } from "@/lib/outcomes/store";
-import { buildTopicTimeline, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
+import { buildTopicTimeline, composeAreaTopicAnswer, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
@@ -781,20 +781,64 @@ export async function POST(request: Request) {
    * and goes to the model exactly as before.
    */
   let deterministicTopicRoute = false;
+  /*
+   * The AREA topic route (2026-09-24): "is there a data center coming?" names
+   * no government, no pronoun and no earlier turn, and the reader has no body
+   * open on the map. It is answered from the topic timelines of the bodies that
+   * govern the reader's divisions, with no model, exactly like the body route.
+   */
+  let areaTopicRoute = false;
+  /*
+   * The NAMED-BODY topic route (2026-09-24, the Rockaway latency repair): "is
+   * rockaway township voting on data centers" names its government by a class
+   * phrase ("township"), so the named-body decision below is lexical: the same
+   * question, the same national body index and the same confirmation give the
+   * same CONFIRM (or, once the reader confirms, the same bound body) whatever a
+   * model reads, because a class-phrase mention is never overridden by a model
+   * binding. The first request used to load all fourteen sources and call the
+   * model only to ask "did you mean the Rockaway Township Council?" — 27 s on a
+   * cold instance in production. Both requests now skip the eleven
+   * deferrable sources and the model; anything the lexical decision does not
+   * settle takes the full path exactly as before.
+   */
+  const explicitBodyClass = Boolean(classPhraseIn(question) && mentionBeforeClassPhrase(question));
+  const namedBodies = explicitBodyClass ? snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity) : bodies;
+  let namedBodyTopicRoute = false;
   if (topicRoute) {
     const probe = resolveInterpretation(interpretWithoutModel(question), question, bodies, { activeSubjects: [], priorSubjects: [] });
     deterministicTopicRoute = probe.binding.kind === "BOUND" && probe.binding.entity.level === "BODY" &&
       (probe.basis === "WHOLE_QUESTION" || probe.basis === "READER_WORDS");
-    if (!deterministicTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
+    areaTopicRoute = !deterministicTopicRoute && probe.binding.kind === "NONE" && ocdIds.length > 0 &&
+      readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused) &&
+      readSubjectRefs(body.priorSubjects, 8).length === 0 &&
+      (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0) &&
+      !/\b(?:they|them|their|it|its|he|she|his|her|this|that|those)\b/i.test(question);
+    // The reader's own words match several bodies ("rockaway township": its
+    // council, its board of education...) or name one by a class phrase.
+    if (!deterministicTopicRoute && !areaTopicRoute && (explicitBodyClass || probe.binding.kind === "AMBIGUOUS")) {
+      const lexical = decideNamedBody(question, namedBodies, body.confirmation);
+      namedBodyTopicRoute = lexical.kind === "CONFIRM" || (lexical.kind === "BOUND" && lexical.confirmed);
+    }
+    if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
   }
+  trace.sourcesLoaded = !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
   const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
+  let namedPeople = 0;
   try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
       .flatMap((ref) => ref.id ? [ref.id] : []);
     const named = await namedOfficeholders(question, explicitIds);
+    namedPeople = named.length;
     for (const seat of named) if (!officeholders.seats.some((held) => held.id === seat.id)) officeholders.seats.push(seat);
   } catch {
     officeholders.loaderFailures += 1;
+  }
+  // A named person could bind in place of the body on the full path, so that
+  // question is decided there, with every source, exactly as before.
+  if (namedBodyTopicRoute && namedPeople > 0) {
+    namedBodyTopicRoute = false;
+    await settleGroundedSourcePreloads(deferrablePreloads);
+    trace.sourcesLoaded = "ALL";
   }
   const people = personEntities(officeholders.seats);
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
@@ -812,7 +856,7 @@ export async function POST(request: Request) {
    */
   // A topic question bound lexically to a body is not a ballot question; its
   // ballot is not read (loadBallotForDivisions([]) is the empty holding).
-  const ballot = await loadBallotForDivisions(deterministicTopicRoute ? [] : ocdIds);
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute ? [] : ocdIds);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
@@ -898,9 +942,10 @@ export async function POST(request: Request) {
       : [],
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
-  const interpretationKey = deterministicTopicRoute ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute;
+  const interpretationKey = modelFreeTopicRoute ? null : interpretationCacheKey(question, interpretContext, resolveAskModel());
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
-  const outcome = deterministicTopicRoute ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
+  const outcome = modelFreeTopicRoute ? null : cachedInterpretation ?? await interpretQuestion(question, interpretContext, { allowCall });
   if (interpretationKey && !cachedInterpretation && outcome?.kind === "READ") interpretationCache.set(interpretationKey, outcome);
 
   if (outcome === null) {
@@ -910,7 +955,7 @@ export async function POST(request: Request) {
     interpretation = { ...interpretWithoutModel(question), intent: "AGENDA_TOPIC", temporal: { kind: "NONE" } };
     trace.interpretation = {
       ran: false,
-      why: "deterministic-topic-route",
+      why: areaTopicRoute ? "deterministic-area-topic-route" : namedBodyTopicRoute ? "named-body-topic-route" : "deterministic-topic-route",
       ms: Date.now() - interpretationStarted,
       intent: interpretation.intent,
       temporal: interpretation.temporal,
@@ -961,8 +1006,6 @@ export async function POST(request: Request) {
     activeSubjects,
     priorSubjects,
   });
-  const explicitBodyClass = classPhraseIn(question) && mentionBeforeClassPhrase(question);
-  const namedBodies = explicitBodyClass ? snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity) : bodies;
   let bodyDecision = decideNamedBody(question, namedBodies, body.confirmation,
     initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
       ? interpretation.entityMentions : []);
@@ -1930,6 +1973,35 @@ export async function POST(request: Request) {
     meetings: sweepScope.meetings,
     scopeLabel: sweepScope.label,
   });
+  let areaTimelines: ReturnType<typeof buildTopicTimeline>[] = [];
+  if (areaTopicRoute && topicRoute && !subject) {
+    const inArea = meetings.filter((meeting) => meeting.ocdId !== null && ocdIds.includes(meeting.ocdId) && meeting.bodyId);
+    const byBody = new Map<string, MeetingLike[]>();
+    for (const meeting of inArea) byBody.set(meeting.bodyId!, [...(byBody.get(meeting.bodyId!) ?? []), meeting]);
+    const outcomesUnavailable = outcomeStoreLoadedFrom() === "EMPTY_STORE";
+    areaTimelines = [...byBody].map(([bodyId, bodyMeetings]) => {
+      const ids = new Set(bodyMeetings.map((meeting) => meeting.id));
+      const identity = canonicalBodyIdentity(bodyId);
+      return buildTopicTimeline({
+        topic: topicRoute,
+        bodyId,
+        bodyName: identity?.name ? titleCaseName(identity.name) : bodyMeetings[0]!.bodyName,
+        meetings: bodyMeetings,
+        documents: documents.filter((document) => ids.has(document.meetingId)),
+        sittings: sittingsForBody(bodyId),
+        now: selectionNow,
+        outcomesUnavailable,
+      });
+    });
+    for (const timeline of areaTimelines) {
+      records.push(...timeline.records);
+      // Unread-sitting gaps only for the bodies whose timeline has something;
+      // every body in the area would bury the answer in its own calendar.
+      if (timeline.entries.length > 0) gaps.push(...timeline.gaps);
+    }
+    denominators.topicAreaBodies = areaTimelines.length;
+    denominators.topicAreaBodiesWithMentions = areaTimelines.filter((timeline) => timeline.entries.length > 0).length;
+  }
   if (sweep.topic) {
     records.push(...sweep.records);
     gaps.push(...sweep.gaps);
@@ -1999,7 +2071,9 @@ export async function POST(request: Request) {
    * does; a rejection falls back exactly as a rejected model answer would.
    */
   lap("resolutionAndRetrieval");
-  const composed = topicTimeline ? composeTopicAnswer(topicTimeline, selectionNow) : null;
+  const composed = topicTimeline
+    ? composeTopicAnswer(topicTimeline, selectionNow)
+    : areaTimelines.length > 0 ? composeAreaTopicAnswer(areaTimelines, selectionNow) : null;
   const synthesisKey = composed ? null : synthesisCacheKey(pack, resolveAskModel(), resolveAskEffort());
   const cachedSynthesis = synthesisKey ? synthesisCache.get(synthesisKey) : null;
   const synthesis = composed ? null : cachedSynthesis ?? await synthesizeAnswer(pack, {

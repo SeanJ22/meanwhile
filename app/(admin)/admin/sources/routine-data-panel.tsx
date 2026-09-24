@@ -342,16 +342,17 @@ function EdgeServing({
   readonly edge: ReaderEdgeObservation;
   readonly preparedGeneratedAt: string | null;
 }) {
-  const behind =
-    edge.kind === "PUBLISHED" && preparedGeneratedAt !== null &&
-    Number.isFinite(Date.parse(preparedGeneratedAt)) && Number.isFinite(Date.parse(edge.generatedAt)) &&
-    Date.parse(preparedGeneratedAt) > Date.parse(edge.generatedAt);
+  /* Current or behind is a comparison with the DB prepared snapshot; without its generation time there is no comparison, and none is claimed. */
+  const preparedMs = preparedGeneratedAt === null ? Number.NaN : Date.parse(preparedGeneratedAt);
+  const edgeMs = edge.kind === "PUBLISHED" ? Date.parse(edge.generatedAt) : Number.NaN;
+  const compared = Number.isFinite(preparedMs) && Number.isFinite(edgeMs);
+  const behind = compared && preparedMs > edgeMs;
   const level =
-    edge.kind === "PUBLISHED" ? (behind ? "AMBER" : "GREEN")
+    edge.kind === "PUBLISHED" ? (!compared ? "UNKNOWN" : behind ? "AMBER" : "GREEN")
     : edge.kind === "ABSENT" || edge.kind === "NOT_CONFIGURED" ? "UNKNOWN"
     : "RED";
   const state =
-    edge.kind === "PUBLISHED" ? (behind ? "BEHIND" : "CURRENT")
+    edge.kind === "PUBLISHED" ? (!compared ? "PUBLISHED" : behind ? "BEHIND" : "CURRENT")
     : edge.kind === "ABSENT" ? "NOT PUBLISHED"
     : edge.kind === "NOT_CONFIGURED" ? "NOT CONFIGURED"
     : "UNREACHABLE";
@@ -364,7 +365,9 @@ function EdgeServing({
       </p>
       <p><strong>State:</strong> <Band level={level}>{state}</Band></p>
       <p className="note">{edge.kind === "PUBLISHED"
-        ? behind
+        ? !compared
+          ? `The edge manifest (sequence ${edge.sequence}) is published. It is not compared with the DB prepared snapshot here, because that snapshot's generation time was not read.`
+          : behind
           ? `The edge manifest (sequence ${edge.sequence}) is OLDER than the DB prepared snapshot — a publish is lagging; the last valid edge artifacts keep serving.`
           : `The edge manifest (sequence ${edge.sequence}) is current with the prepared snapshot.`
         : edge.detail}</p>
@@ -399,6 +402,28 @@ function EdgeServing({
           : "inspect the standing runner's edge publish; the CDN is serving older data than the DB holds",
       }} />
     </article>
+  );
+}
+
+/**
+ * What a visit shows in place of the full proof-based read (2026-09-23). That read selects every
+ * promotion's full payload and every selected candidate's history, cannot finish inside a page request,
+ * and was billed for whatever it had read when its timeout cancelled it, so opening the page no longer
+ * starts it. The owner can still ask for it by name, and the reader edge reading, which the timed-out
+ * read used to take down with it, stands on its own.
+ */
+export function RoutineDataNotRead({ edge, proofHref }: { readonly edge: ReaderEdgeObservation; readonly proofHref: string }) {
+  return (
+    <section aria-labelledby="routine-data-heading">
+      <h2 id="routine-data-heading">Canonical routine-data operations</h2>
+      <StatusBlock
+        what="Not read when this page opens — the full proof-based routine read is too large to finish inside a page request."
+        happened="It reads every promotion's full payload, tens of megabytes, and every selected candidate's history. Every visit used to start it, and it timed out after 1.5 seconds having already paid for what it had read. Published versus reader-visible, per routine contract, is the narrow read above."
+        next={<>Bounding this read is Admin engineering work. To try it anyway, <a href={proofHref}>run the full proof read</a>; it usually times out.</>}
+        needsYou={{ needed: false }}
+      />
+      <EdgeServing edge={edge} preparedGeneratedAt={null} />
+    </section>
   );
 }
 

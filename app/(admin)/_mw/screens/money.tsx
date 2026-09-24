@@ -39,6 +39,7 @@ import {
   perAttempt,
   placeWords,
   outcomeWords,
+  modelProviderWords,
   providerRows,
   reconciliation,
   resultTiles,
@@ -157,6 +158,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
         unpricedModelRows,
         byModel: ms.byModel.map((r) => ({ key: r.key, usd: r.usd, measuredRows: r.measuredRows, unmeasuredRows: r.unmeasuredRows })),
         byRole: ms.byRole.map((r) => ({ key: r.key, usd: r.usd, measuredRows: r.measuredRows, unmeasuredRows: r.unmeasuredRows })),
+        bySearchSource: ms.bySearchSource ? ms.bySearchSource.map((r) => ({ key: r.key, usd: r.usd, measuredRows: r.measuredRows, unmeasuredRows: r.unmeasuredRows })) : null,
       }
     : null;
   const rolling = safety ? { usd: safety.rolling24Hours.modelUsd, asOf: safety.rolling24Hours.asOf } : null;
@@ -292,7 +294,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
           title="AI usage, by provider and model"
           lede={
             month
-              ? `${month.label} (UTC) to ${eastern(month.asOf)}, from the charge ledger. Resets ${eastern(month.resetsAt)}. Every paid call so far went to one provider.`
+              ? `${month.label} (UTC) to ${eastern(month.asOf)}, from the charge ledger. Resets ${eastern(month.resetsAt)}. ${modelProviderWords(month)}`
               : undefined
           }
         />

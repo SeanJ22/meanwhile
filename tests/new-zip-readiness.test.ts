@@ -7,6 +7,7 @@ import { ROOT } from "./read-code.ts";
 import type { CandidateUniverse } from "../lib/hunt/candidate-universe.ts";
 import { newZipReadiness } from "../lib/hunt/source-universe.ts";
 import { applicableDivisions, projectOntoZip, stateDivision } from "../lib/hunt/zip-projection.ts";
+import { readAllZipDivisions } from "../lib/geo/zip-division-index.ts";
 
 /**
  * **THE NEW-ZIP READINESS INVARIANT, AS A PERMANENT CHECK.**
@@ -27,9 +28,9 @@ import { applicableDivisions, projectOntoZip, stateDivision } from "../lib/hunt/
  *
  * **85122 — Casa Grande, Pinal County.** It is outside the 85641/85701 pilot
  * pair, it is a real Arizona ZIP, and it is present in this repository's own
- * committed geometry (`data/derived/zip-division-ids.json`), so the divisions
- * it sits in are read rather than asserted. Picking a ZIP with no committed
- * geometry would have made the test pass for the wrong reason: the projection
+ * national ZIP index (`lib/geo/zip-division-index.ts`), so the divisions
+ * it sits in are read rather than asserted. Picking a ZIP with no indexed
+ * divisions would have made the test pass for the wrong reason: the projection
  * would fall back to the state division alone and the local half would never be
  * exercised.
  *
@@ -47,9 +48,9 @@ import { applicableDivisions, projectOntoZip, stateDivision } from "../lib/hunt/
  */
 
 const UNIVERSE = join(ROOT, "data", "states", "az", "hunt", "az-candidate-universe-2026.json");
-const ZIP_DIVISIONS = join(ROOT, "data", "derived", "zip-division-ids.json");
+let zipDivisions: ReturnType<typeof readAllZipDivisions> | null = null;
 
-/** Outside the pilot pair, and in this repository's committed geometry. */
+/** Outside the pilot pair, and in the national ZIP index (and this repository's committed geometry). */
 const NON_PILOT_ZIP = "85122";
 const PILOT_ZIPS = ["85641", "85701"] as const;
 
@@ -58,8 +59,9 @@ function universe(): CandidateUniverse {
 }
 
 function overlappingDivisions(zip: string): string[] | undefined {
-  const doc = JSON.parse(readFileSync(ZIP_DIVISIONS, "utf8")) as { zips: Record<string, string[]> };
-  return doc.zips[zip];
+  zipDivisions ??= readAllZipDivisions(ROOT);
+  const entry = zipDivisions.get(zip);
+  return entry === undefined ? undefined : [...entry.ids];
 }
 
 /**
@@ -95,8 +97,8 @@ test("the non-pilot ZIP is genuinely non-pilot, and its geometry is committed", 
   const overlapping = overlappingDivisions(NON_PILOT_ZIP);
   assert.ok(
     Array.isArray(overlapping) && overlapping.length > 0,
-    `${NON_PILOT_ZIP} is absent from data/derived/zip-division-ids.json. A ZIP with no committed ` +
-      "geometry would make this suite pass for the wrong reason: the projection would fall back to " +
+    `${NON_PILOT_ZIP} is absent from the national ZIP index. A ZIP with no indexed ` +
+      "divisions would make this suite pass for the wrong reason: the projection would fall back to " +
       "the state division alone and never exercise the local half.",
   );
 });

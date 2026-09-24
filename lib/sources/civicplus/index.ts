@@ -11,6 +11,7 @@ import {
   isPlacelessLocation,
   resolveVenue,
   soleVenueForBody,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetText } from "../http.ts";
@@ -287,10 +288,18 @@ export function makeCivicPlusSource(
         }
         const venue = online
           ? null
-          : resolveVenue(SOURCE_NAME, wiring.ocdId, eventLocation);
-        if (!online && !venue) {
+          : resolveVenue(SOURCE_NAME, wiring.ocdId, eventLocation) ?? null;
+        /*
+         * No reviewed venue never suppresses the sitting (the venue-gap class,
+         * 2026-09-23): it is published with no pin and its gap named — the
+         * feed's `LOCATION` verbatim (notice block removed), or the feed's
+         * silence where the event carries none — and counted as
+         * `unknownVenue`, kept. This used to `continue`.
+         */
+        const venueGap = !online && !venue ? unplacedVenueGap(eventLocation, wiring.publishingOrg) : null;
+        if (venueGap) {
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         const feedDay = startsAt.slice(0, 10);
@@ -313,6 +322,7 @@ export function makeCivicPlusSource(
               }
             : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           // The feed carries no per-meeting agenda link; the RSS channel lists
           // agendas for other township boards only, as observed. Null is the
           // honest value here — never a constructed AgendaCenter URL. The
@@ -370,8 +380,16 @@ export function makeCivicPlusSource(
           continue;
         }
         if (!venue) {
+          /*
+           * The archive states no place for any sitting — it is a dated
+           * document list — and this body has no one reviewed venue to place
+           * it with. That never suppresses the sitting (the venue-gap class,
+           * 2026-09-23): it is published with no place and our own
+           * place-not-recorded gap (there are no publisher words to quote),
+           * and counted as `unknownVenue`, kept. This used to `continue`.
+           */
           drops.unknownVenue++;
-          continue;
+          keptButPlaceless += 1;
         }
 
         const [y, m, d] = sitting.date.split("-").map(Number);
@@ -388,12 +406,14 @@ export function makeCivicPlusSource(
           startsAt,
           startPrecision: "DAY",
           timeZone: wiring.timeZone,
-          location: {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          },
+          location: venue
+            ? {
+                name: venue.name,
+                address: venue.address,
+                lat: venue.lat,
+                lng: venue.lng,
+              }
+            : null,
           agendaUrl: sitting.agendaHref
             ? new URL(sitting.agendaHref, archiveUrl).toString()
             : null,

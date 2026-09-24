@@ -39,8 +39,8 @@
  * sampled point of a ZCTA falls in exactly one. Verified across all 33,791 zips
  * in the national source before being relied on, rather than assumed.
  *
- * `scripts/build-zip-division-ids.mts` does that arithmetic at build time and
- * writes the `partial` list; this reads it.
+ * `scripts/build-zip-division-shards.mts` does that arithmetic at build time and
+ * writes each ZIP's `partial` list into its shard; this reads it.
  *
  * ## What this is NOT
  *
@@ -62,41 +62,18 @@
  * measurement into a proof.
  */
 
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-
-type Index = {
-  zips: Record<string, string[]>;
-  partial: Record<string, string[]>;
-  zipSamples: Record<string, number>;
-};
-
-let cache: Promise<Index | null> | null = null;
-
-async function index(): Promise<Index | null> {
-  cache ??= readFile(
-    join(process.cwd(), "data", "derived", "zip-division-ids.json"),
-    "utf8",
-  )
-    .then((text) => JSON.parse(text) as Index)
-    .catch(() => {
-      // OUR gap, and it degrades to "we cannot say", never to a claim.
-      cache = null;
-      return null;
-    });
-  return cache;
-}
+import { zipDivisionEntry } from "./zip-division-index.ts";
 
 /**
  * Three states, and the third is not a quiet version of the first.
  *
  * - `CERTAIN` — this division covers every sampled point of the zip.
  * - `AMBIGUOUS` — it covers part of the zip. The pill renders.
- * - `UNKNOWN` — we could not measure it: the zip is outside our committed
- *   geometry, the index is unreadable, or the division was never in the zip's
- *   list at all. **`UNKNOWN` renders the pill**, because the alternative is
- *   printing "this definitely governs you" on the strength of a measurement
- *   nobody took, and a render default may never manufacture a claim.
+ * - `UNKNOWN` — we could not measure it: the zip is not in the index, its
+ *   shard is unreadable, or the division was never in the zip's list at all.
+ *   **`UNKNOWN` renders the pill**, because the alternative is printing "this
+ *   definitely governs you" on the strength of a measurement nobody took, and
+ *   a render default may never manufacture a claim.
  */
 export type GovernCertainty = "CERTAIN" | "AMBIGUOUS" | "UNKNOWN";
 
@@ -140,14 +117,15 @@ export interface ZipCertainty {
 
 export async function zipCertainty(zip: string | null): Promise<ZipCertainty | null> {
   if (!zip || !/^\d{5}$/.test(zip)) return null;
-  const idx = await index();
-  const all = idx?.zips[zip];
-  if (!idx || !all) return null;
+  // An unindexed zip or an unreadable shard is OUR gap, and it degrades to "we cannot say", never to a claim.
+  const entry = await zipDivisionEntry(zip);
+  if (entry === null) return null;
 
-  const partial = idx.partial[zip] ?? [];
+  const all = [...entry.ids];
+  const partial = [...entry.partial];
   const partialSet = new Set(partial);
   const allSet = new Set(all);
-  const samples = idx.zipSamples[zip] ?? 0;
+  const samples = entry.samples;
 
   return {
     all,

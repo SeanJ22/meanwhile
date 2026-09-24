@@ -11,7 +11,11 @@ import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
-import { resolveVenue } from "../../meetings/venue-cache.ts";
+import {
+  isPlacelessLocation,
+  resolveVenue,
+  unplacedVenueGap,
+} from "../../meetings/venue-cache.ts";
 import {
   occurrenceId,
   occurrenceStampFromInstant,
@@ -23,8 +27,10 @@ import type {
   Meeting,
   MeetingQuery,
   MeetingStatus,
+  MeetingVenueGap,
   DuplicateIdentityCounts,
   NormalizeDropCounts,
+  OnlineAccess,
   PartialScopeFailure,
   RecurrenceReport,
   ReportingMeetingSource,
@@ -64,8 +70,10 @@ import {
  * ## What is dropped, and counted
  *
  * * An event with no parseable `DTSTART` → `unplaceableInTime`.
- * * An event whose `LOCATION` does not resolve to a curated venue →
- *   `unknownVenue`. Wilmot writes `LOCATION:NH` on nine of its
+ * * An event whose `LOCATION` does not resolve to a curated venue, and whose
+ *   row's `venueMatch` does not either → counted `unknownVenue` and KEPT, with
+ *   no pin and its venue gap named (the venue-gap class, 2026-09-23): never
+ *   suppressed, never placed. Wilmot writes `LOCATION:NH` on nine of its
  *   twenty-three, which is a state, not a building, and pinning a meeting on
  *   the middle of New Hampshire would be a fabricated location.
  * * An event whose `CATEGORIES` does not name a board this row serves →
@@ -658,6 +666,12 @@ export function makeIcalSource(
     let considered = 0;
     /** A-002 · events whose identity had already been produced. */
     let duplicates = 0;
+    /**
+     * A-002 · sittings TALLIED in `placeless` (online, D18) or `unknownVenue`
+     * (no reviewed place, the venue-gap class) that are then kept and go on to
+     * be produced or counted as duplicates — so the tally is not a drop.
+     */
+    let keptButPlaceless = 0;
     /** A-005 · the feed published the same UID twice. Its own doing. */
     let exactDuplicates = 0;
     /**
@@ -924,14 +938,10 @@ export function makeIcalSource(
          * published meeting place never got to use it.
          *
          * So an empty location falls through to `venueMatch` exactly as an
-         * unrecognised one does. With no `venueMatch` on the row it is still a
-         * `placeless` drop, because then we genuinely have nothing.
+         * unrecognised one does. With no `venueMatch` on the row it used to be
+         * a `placeless` drop; it is now KEPT with the feed's silence as its
+         * named gap, below (the venue-gap class, 2026-09-23).
          */
-        if (!rawLocation && !wiring.config.venueMatch) {
-          // Every sitting this event states is one record, and each is lost.
-          drops.placeless += sittings.length;
-          continue;
-        }
         /*
          * THE FEED'S OWN LOCATION FIRST, and the BODY'S OWN STANDING
          * STATEMENT second — never a guess between them.
@@ -956,9 +966,39 @@ export function makeIcalSource(
         if (!venue && wiring.config.venueMatch) {
           venue = resolveVenue(SOURCE_NAME, wiring.ocdId, wiring.config.venueMatch);
         }
+        /*
+         * **NEITHER RESOLVES: KEPT, NEVER PLACED, NEVER SUPPRESSED** (the
+         * venue-gap class, 2026-09-23). This used to `continue`, losing every
+         * sitting the event states. Now each is published with no pin:
+         *
+         * - a `LOCATION` that names no building ("Virtual Meeting") is online
+         *   (D18), counted `placeless`;
+         * - any other `LOCATION` is the town's own words for the place, and
+         *   they render as its named gap (`STATED_NOT_PLACED`);
+         * - no `LOCATION` and no `venueMatch` is the feed's silence, the
+         *   publisher's own gap (`NOT_STATED_BY_PUBLISHER`);
+         * - no `LOCATION`, and a `venueMatch` with no reviewed row: the body's
+         *   standing statement names a place we cannot place and cannot quote
+         *   (the match is our key, not the feed's words), so it keeps our own
+         *   place-not-recorded gap.
+         *
+         * Every one is counted as it was (`unknownVenue` for the last three)
+         * and is then produced — or collapsed as a duplicate — so the tally
+         * is `keptButPlaceless`, never a drop.
+         */
+        let online: OnlineAccess | null = null;
+        let venueGap: MeetingVenueGap | null = null;
         if (!venue) {
-          drops.unknownVenue += sittings.length;
-          continue;
+          if (rawLocation && isPlacelessLocation(rawLocation)) {
+            online = { label: rawLocation, joinUrl: null };
+            drops.placeless += sittings.length;
+          } else {
+            if (rawLocation || !wiring.config.venueMatch) {
+              venueGap = unplacedVenueGap(rawLocation, wiring.publishingOrg);
+            }
+            drops.unknownVenue += sittings.length;
+          }
+          keptButPlaceless += sittings.length;
         }
 
         const title = (event.summary ?? wiring.publishingOrg).trim();
@@ -1014,12 +1054,16 @@ export function makeIcalSource(
             startsAt: sitting.iso,
             startPrecision: sitting.dayOnly ? "DAY" : "MINUTE",
             timeZone: wiring.timeZone,
-            location: {
-              name: venue.name,
-              address: venue.address,
-              lat: venue.lat,
-              lng: venue.lng,
-            },
+            location: venue
+              ? {
+                  name: venue.name,
+                  address: venue.address,
+                  lat: venue.lat,
+                  lng: venue.lng,
+                }
+              : null,
+            ...(online ? { online } : {}),
+            ...(venueGap ? { venueGap } : {}),
             agendaUrl: null,
             jurisdiction: wiring.jurisdiction,
             status:
@@ -1121,6 +1165,7 @@ export function makeIcalSource(
         outOfWindow,
         logicalInput: considered,
         duplicates,
+        countedButProduced: keptButPlaceless,
       },
     );
   };

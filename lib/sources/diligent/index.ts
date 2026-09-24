@@ -14,6 +14,7 @@ import {
 import {
   isPlacelessLocation,
   resolveVenue,
+  unplacedVenueGap,
 } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetJson } from "../http.ts";
@@ -235,12 +236,17 @@ export function makeDiligentSource(
         const venue = online || !location
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, location, wiring.config.slug) ?? null;
-        if (!online && !venue) {
-          // The gap is NAMED, not hidden: `unknownVenue` still counts it, as
-          // `placeless` counts a kept online sitting (D18) — so the ingest
-          // report and the venue hunt still see an unreviewed place — and the
-          // row is PRODUCED with no place, which the Reader renders as its
-          // own gap ("We haven't recorded a place for this meeting yet").
+        // The gap is NAMED, not hidden: `unknownVenue` still counts it, as
+        // `placeless` counts a kept online sitting (D18) — so the ingest
+        // report and the venue hunt still see an unreviewed place — and the
+        // row is PRODUCED with no place and the gap the portal's own
+        // `MeetingLocation` states (the venue-gap class, 2026-09-23, one
+        // construction for every adapter): its words verbatim when it names a
+        // room we hold no reviewed row for, the portal's silence when it is
+        // blank. It used to carry no gap, so a stated room read as "We
+        // haven't recorded a place for this meeting yet".
+        const venueGap = !online && !venue ? unplacedVenueGap(location, wiring.publishingOrg) : null;
+        if (venueGap) {
           drops.unknownVenue++;
           keptButPlaceless += 1;
         }
@@ -286,6 +292,7 @@ export function makeDiligentSource(
               }
             : null,
           ...(online ? { online } : {}),
+          ...(venueGap ? { venueGap } : {}),
           // The meeting page hosts the agenda once the tenant publishes it;
           // `Published` is the service's own flag for exactly that. A body's
           // own permitted agenda record for a concluded sitting comes first.

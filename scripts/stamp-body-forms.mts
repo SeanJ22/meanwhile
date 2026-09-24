@@ -27,6 +27,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { definitionsForBody } from "../lib/officials/body-definitions.ts";
+import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { formFor, knownForms, type FormStamp } from "../lib/officials/body-form.ts";
 import type { BodyDivisionType } from "../lib/officials/body-description.ts";
 import { schoolDependency } from "../lib/officials/school-dependency.ts";
@@ -48,9 +49,10 @@ interface Body {
 
 function main(): void {
   const write = process.argv.includes("--write");
-  const registry = JSON.parse(
+  // A body minted on a Census "no district here" placeholder is not a government, so it is never stamped.
+  const registry = withoutPlaceholderBodies(JSON.parse(
     readFileSync(join(ROOT, "lib/registry/registry.json"), "utf8"),
-  ) as { divisions: Division[]; bodies: Body[] };
+  ) as { divisions: Division[]; bodies: Body[] });
 
   const byId = new Map(registry.divisions.map((d) => [d.ocdId, d]));
   const bodies = registry.bodies.filter((b) => b.ocdId !== null && byId.has(b.ocdId));

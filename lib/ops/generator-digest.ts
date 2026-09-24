@@ -156,7 +156,10 @@ export interface GeneratorDigest {
  * would miss it.
  */
 export function digestGenerator(root: string, entry: string): GeneratorDigest {
-  const files = sourceClosure(root, entry);
+  return digestFiles(root, entry, sourceClosure(root, entry));
+}
+
+function digestFiles(root: string, entry: string, files: readonly string[]): GeneratorDigest {
   const h = createHash("sha256");
   for (const file of files) {
     h.update(file);
@@ -169,6 +172,70 @@ export function digestGenerator(root: string, entry: string): GeneratorDigest {
     h.update("\0");
   }
   return { digest: h.digest("hex"), files: files.length, entry: repoPath(root, entry) };
+}
+
+const STATEMENT = /(?:^|\n)\s*(import|export)\s+([\s\S]{0,400}?)\s*from\s*["']([^"']+)["']/g;
+
+/**
+ * Whether an import or export statement carries a runtime value across. `import
+ * type …`, `export type … from`, and a braces list whose every name is `type`
+ * carry only types and cannot change behaviour. A default import, a namespace,
+ * `export *`, and any list naming one value do.
+ */
+function carriesValue(keyword: string, clause: string): boolean {
+  const c = clause.trim();
+  if (/^type\b/.test(c)) return false;
+  const braces = /^\{([\s\S]*)\}$/.exec(c);
+  if (braces === null) return true;
+  const names = braces[1].split(",").map((s) => s.trim()).filter((s) => s !== "");
+  return names.length === 0 ? keyword === "import" : names.some((s) => !/^type\b/.test(s));
+}
+
+/**
+ * Every repo file an entry's RUNTIME reaches, entry first, sorted. It is
+ * `sourceClosure` without the edges that carry only types (`carriesValue`). A
+ * file imported only for its types is left out. The same file still lands when
+ * any value import reaches it. Side-effect and dynamic imports are values.
+ */
+export function valueClosure(root: string, entry: string): string[] {
+  const seen = new Set<string>();
+  const queue = [entry];
+  while (queue.length > 0) {
+    const file = queue.pop() as string;
+    const key = repoPath(root, file);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    let src: string;
+    try {
+      src = readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+    if (file.endsWith(".json")) continue;
+    const specs: string[] = [];
+    STATEMENT.lastIndex = 0;
+    for (let m = STATEMENT.exec(src); m !== null; m = STATEMENT.exec(src)) {
+      if (carriesValue(m[1], m[2])) specs.push(m[3]);
+    }
+    for (const re of [BARE_IMPORT, DYNAMIC]) {
+      re.lastIndex = 0;
+      for (let m = re.exec(src); m !== null; m = re.exec(src)) specs.push(m[1]);
+    }
+    for (const spec of specs) {
+      const next = resolveLocal(file, spec, root);
+      if (next !== null) queue.push(next);
+    }
+  }
+  return [...seen].sort();
+}
+
+/**
+ * Digest what an entry does at runtime: `digestGenerator` over `valueClosure`.
+ * A change to a file the entry only reads types from does not move it; a change
+ * anywhere its runtime reaches does. Names and bytes, as `digestGenerator`.
+ */
+export function digestValueClosure(root: string, entry: string): GeneratorDigest {
+  return digestFiles(root, entry, valueClosure(root, entry));
 }
 
 export type StaleVerdict =

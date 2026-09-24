@@ -76,7 +76,17 @@ export type DerivedInputRef =
 
 /** Why a row's host may be read at all. A search find on a third-party host has none. */
 export type HostAttestation =
-  | { readonly kind: "RECORDED_ADDRESS"; readonly referenceVersionId: string }
+  | {
+      readonly kind: "RECORDED_ADDRESS";
+      /**
+       * Where the walked address was recorded: the promoted operational
+       * reference (dispatched needs) or the committed gap ledger (most walks),
+       * whose versionId is data/derived/gap-ledger.json's sha256 at the
+       * runtime's commit.
+       */
+      readonly source: "OPERATIONAL_REFERENCE" | "GAP_LEDGER";
+      readonly versionId: string;
+    }
   | { readonly kind: "REDIRECT_FROM_ATTESTED"; readonly fromUrl: string; readonly from: HostAttestation }
   | { readonly kind: "ROUTE_HINT"; readonly hintFingerprint: string }
   | { readonly kind: "LINKED_FROM_ATTESTED_PAGE"; readonly pageArtifactId: string; readonly page: HostAttestation };

@@ -1392,6 +1392,8 @@ let ceilingOverrideUsd: number | null = null;
  * governs this cycle. Absent, malformed or unreadable reads OFF.
  */
 let discoverySearchOn = false;
+/* The receipt of the decision applied, echoed into the heartbeat as the runner's acknowledgement; null means the default. */
+let discoverySearchReceiptId: string | null = null;
 let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
 try {
   const cfg = await repos.adminConfig.read(ADMIN_CONFIG_ID);
@@ -1399,6 +1401,7 @@ try {
   const config = cfg !== null && isAdminConfig(cfg.value) ? cfg.value : null;
   discoverySearchOn = discoverySearchEnabled(config);
   if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
+    discoverySearchReceiptId = config.discoverySearch.receiptId;
     discoverySearchDecision =
       `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
   }
@@ -2767,6 +2770,15 @@ const heartbeat: RunnerHeartbeat = {
   /* A working beat: the runner is not idling on a PAUSE_RUNNER (ADM-5). */
   pause: null,
   codeIdentity,
+  /* NS28: what this cycle applied for paid discovery search, so the console can show the runner acknowledged it. */
+  discoverySearch: {
+    receiptId: discoverySearchReceiptId,
+    enabled: discoverySearchOn,
+    perCycle: SEARCH_PER_CYCLE,
+    perDay: SEARCH_PER_DAY,
+    appliedAt: NOW,
+    detail: discoverySearchDecision,
+  },
 };
 try {
   await finalStep("heartbeat", CYCLE_FINALIZATION_BUDGETS_MS.heartbeat, DIGEST_AND_RECORD_RESERVE_MS, async () => {

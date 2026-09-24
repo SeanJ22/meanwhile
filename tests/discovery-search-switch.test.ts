@@ -25,7 +25,7 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -150,4 +150,71 @@ test("THE CONSOLE POSTS IT: the switch rides the search line, and turning it on 
   const screen = readFileSync(join(ROOT, "app/(admin)/_mw/screens/money.tsx"), "utf8");
   assert.match(screen, /searchSwitch=\{r\.key === "ledger-search" \? searchSwitch : null\}/, "only the search line carries it");
   assert.match(screen, /on: discoverySearchEnabled\(base\.adminConfig\)/, "the page reads the same row the runner reads");
+});
+
+/** Every source file under the given roots, repo-relative with forward slashes. */
+function sourceFiles(roots: readonly string[]): string[] {
+  const out: string[] = [];
+  const walk = (dir: string) => {
+    for (const name of readdirSync(join(ROOT, dir))) {
+      if (name === "node_modules" || name.startsWith(".")) continue;
+      const rel = `${dir}/${name}`;
+      if (statSync(join(ROOT, rel)).isDirectory()) walk(rel);
+      else if (/\.(ts|tsx|mts|mjs)$/.test(name)) out.push(rel);
+    }
+  };
+  for (const r of roots) walk(r);
+  return out.sort();
+}
+
+test("NO SILENT RESUME: only the owner's action writes the switch; no env var can turn it on; each paid search path sits behind its own gate", () => {
+  const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
+  const files = sourceFiles(["lib", "app", "scripts"]);
+  assert.deepEqual(
+    files.filter((f) => read(f).includes("withDiscoverySearch(")),
+    ["lib/control-plane/gateway/admin-config.ts", "lib/control-plane/gateway/registry.ts"],
+    "the decision is defined in one module and written by one other",
+  );
+  const registry = read("lib/control-plane/gateway/registry.ts");
+  assert.equal(registry.split("withDiscoverySearch(").length - 1, 1, "one write site");
+  const action = registry.slice(registry.indexOf('type: "config.setDiscoverySearch"'), registry.indexOf("/* ------------------------------------------------------ expansion.scope.set */"));
+  assert.ok(action.includes("withDiscoverySearch("), "and it is inside config.setDiscoverySearch");
+
+  const runner = read("scripts/freshness-shadow.mts");
+  assert.deepEqual(
+    [...runner.matchAll(/(let )?discoverySearchOn = ([^;]+);/g)].map((m) => `${m[1] ?? ""}= ${m[2]}`),
+    ["let = false", "= discoverySearchEnabled(config)"],
+    "the runner starts off and sets the switch once, from the owner's row",
+  );
+  assert.doesNotMatch(runner, /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");
+
+  assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), ["scripts/freshness-shadow.mts"]);
+  assert.match(runner, /searchBudget === null \? null : makeDiscoverySearch\(\{/, "discovery search exists only while the switch is on");
+  assert.deepEqual(files.filter((f) => read(f).includes("makeScoutSearch(") && !f.endsWith("scout-search.ts")), ["scripts/freshness-shadow.mts"]);
+  assert.match(runner, /const scoutFor = \(scheduled: ScheduledObligation\): DeclaredExecutor => modelLaneEnabled\s*\?/, "Scout search is reachable only while the paid research lane is open, which the research pause closes");
+});
+
+test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt", () => {
+  const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  assert.match(
+    runner,
+    /discoverySearch: \{\s*receiptId: discoverySearchReceiptId,\s*enabled: discoverySearchOn,\s*perCycle: SEARCH_PER_CYCLE,\s*perDay: SEARCH_PER_DAY,\s*appliedAt: NOW,\s*detail: discoverySearchDecision,\s*\}/,
+  );
+  const screen = readFileSync(join(ROOT, "app/(admin)/_mw/screens/money.tsx"), "utf8");
+  assert.match(screen, /searchApplied\.receiptId === decisionReceipt/, "applied means the same receipt, as a pause is matched");
+  assert.match(screen, /The runner applied it at /);
+  assert.match(screen, /The runner has not read this decision yet/);
+  const switchUi = readFileSync(join(ROOT, "app/(admin)/_mw/money-controls.tsx"), "utf8");
+  assert.match(switchUi, /The research pause does not stop it; only this switch does\./, "the switch says which control governs it");
+});
+
+test("THE LIMITS BESIDE IT: the search line reads the caps the runner acknowledged, and says the code's starting caps are only that until it has", async () => {
+  const { providerRows } = await import("@/lib/control-plane/admin-view/money-view.ts");
+  const how = (searchCaps: { perCycle: number; perDay: number; appliedAt: string } | null) =>
+    providerRows({ month: null, rolling: null, maptiler: null, facts: [], searchCaps }).find((r) => r.key === "ledger-search")?.how ?? "";
+  assert.match(how(null), /The runner starts with 50 requests a cycle and 200 a day across both/);
+  assert.match(how(null), /It has not yet said which limits it enforces/);
+  const applied = how({ perCycle: 0, perDay: 0, appliedAt: NOW });
+  assert.match(applied, /The runner enforces 0 requests a cycle and 0 a day across both — at most \$0\.00 a day, as it said at /);
+  assert.doesNotMatch(applied, /starts with/);
 });

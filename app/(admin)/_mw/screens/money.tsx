@@ -25,7 +25,7 @@ import Link from "next/link";
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
 import type { ReactNode } from "react";
 
-import { readFleetSafety, readMapTilerUsageDigests, readSnapshot } from "@/lib/control-plane/admin-data.ts";
+import { readFleetSafety, readHeartbeat, readMapTilerUsageDigests, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { billingFactsOf } from "@/lib/control-plane/billing-facts.ts";
 import { displayNameOf } from "@/lib/control-plane/display-name.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
@@ -140,7 +140,10 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
     </div>
   );
 
-  const [snapshotOut, safetyOut] = await Promise.all([readSnapshot(base.repos), readFleetSafety(base.repos)]);
+  const [snapshotOut, safetyOut, heartbeatOut] = await Promise.all([readSnapshot(base.repos), readFleetSafety(base.repos), readHeartbeat(base.repos)]);
+  /* What the runner last said it applied for paid discovery search (its heartbeat's acknowledgement), or null. */
+  const beat = heartbeatOut.kind === "HELD" ? heartbeatOut.value : null;
+  const searchApplied = beat?.discoverySearch ?? null;
   const snapshot = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
   const safety = safetyOut.kind === "HELD" ? safetyOut.value.fleetSafety ?? null : null;
   const facts = billingFactsOf(base.adminConfig);
@@ -169,9 +172,19 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
   if (view === "overall") {
     const resolved = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(base.adminConfig));
     /* The owner's paid discovery search switch, read from the same row the runner reads at cycle start. */
+    const decisionReceipt = base.adminConfig?.discoverySearch?.receiptId ?? null;
     const searchSwitch = {
       on: discoverySearchEnabled(base.adminConfig),
       decidedWords: base.adminConfig?.discoverySearch?.decidedAt ? formatEastern(base.adminConfig.discoverySearch.decidedAt) : null,
+      /* The runner's acknowledgement: it applied THIS decision (the same receipt), or it has not read it yet. */
+      acknowledgement:
+        searchApplied === null
+          ? beat === null
+            ? "The runner has not recorded a heartbeat, so it has not said what it applied."
+            : `The runner has not said what it applied yet (last beat ${formatEastern(beat.beatAt)}).`
+          : searchApplied.receiptId === decisionReceipt
+            ? `The runner applied it at ${formatEastern(searchApplied.appliedAt)}: ${searchApplied.enabled ? "on" : "off"}, at most ${searchApplied.perCycle} a cycle and ${searchApplied.perDay} a day.`
+            : `The runner has not read this decision yet (last beat ${formatEastern(beat?.beatAt ?? searchApplied.appliedAt)}); it last applied ${searchApplied.enabled ? "on" : "off"} at ${formatEastern(searchApplied.appliedAt)}.`,
     };
     const ceiling = {
       settingUsd: resolved.rollingCeilingUsd,
@@ -208,7 +221,13 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
             collectedAt: maptilerPanel.collectedAt,
             says: maptilerPanel.says,
           };
-    const rows = providerRows({ month, rolling, maptiler, facts: facts.facts });
+    const rows = providerRows({
+      month,
+      rolling,
+      maptiler,
+      facts: facts.facts,
+      searchCaps: searchApplied === null ? null : { perCycle: searchApplied.perCycle, perDay: searchApplied.perDay, appliedAt: searchApplied.appliedAt },
+    });
     const unread = unreadProviders(rows);
     const cards = ceilingCards({ ceiling, rolling, facts: facts.facts });
     const recon = reconciliation({
@@ -612,7 +631,7 @@ function ProviderRowCells({
   row: ReturnType<typeof providerRows>[number];
   returnTo: string;
   /** Only on the search line: the owner's switch for paid discovery search. */
-  searchSwitch: { readonly on: boolean; readonly decidedWords: string | null } | null;
+  searchSwitch: { readonly on: boolean; readonly decidedWords: string | null; readonly acknowledgement: string } | null;
 }) {
   return (
     <>
@@ -632,7 +651,7 @@ function ProviderRowCells({
         )}
         {searchSwitch && (
           <div>
-            <DiscoverySearchSwitch on={searchSwitch.on} decidedWords={searchSwitch.decidedWords} returnTo={returnTo} />
+            <DiscoverySearchSwitch on={searchSwitch.on} decidedWords={searchSwitch.decidedWords} acknowledgement={searchSwitch.acknowledgement} returnTo={returnTo} />
           </div>
         )}
       </div>

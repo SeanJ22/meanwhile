@@ -135,7 +135,13 @@ export function CeilingDial(props: { readonly currentUsd: number; readonly maxUs
  * free site walks run either way. Turning it ON spends money, so that direction
  * asks again before it posts.
  */
-export function DiscoverySearchSwitch(props: { readonly on: boolean; readonly decidedWords: string | null; readonly returnTo: string }) {
+export function DiscoverySearchSwitch(props: {
+  readonly on: boolean;
+  readonly decidedWords: string | null;
+  /** The runner's acknowledgement, in words the server composed from its heartbeat. */
+  readonly acknowledgement: string;
+  readonly returnTo: string;
+}) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [sending, setSending] = useState(false);
@@ -162,8 +168,9 @@ export function DiscoverySearchSwitch(props: { readonly on: boolean; readonly de
       <span className={s.note}>
         Paid discovery search is {props.on ? "on" : "off"}
         {props.decidedWords ? ` (you set it ${props.decidedWords}).` : " (the default)."} It runs only while this is on, and then only
-        inside the runner&apos;s caps. The free site walks run either way.
+        inside the runner&apos;s caps. The research pause does not stop it; only this switch does. The free site walks run either way.
       </span>
+      <span className={s.note}>{props.acknowledgement}</span>
       {props.on ? (
         <button type="button" className={s.btnSecondary} disabled={sending} onClick={() => void set(false)}>
           {sending ? "Turning it off…" : "Turn paid discovery search off"}

@@ -1,7 +1,5 @@
-import {
-  readMeetingsProjection,
-  type MeetingsSnapshot,
-} from "@/lib/meetings/snapshot";
+import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
+import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -697,7 +695,14 @@ export async function POST(request: Request) {
     "STORE_UNREACHABLE";
   let meetingDataDetail = "The meetings projection was not initialized.";
   try {
-    const read = await readMeetingsProjection();
+    /*
+     * 2026-09-24: the SAME meetings read the map uses — the runner-published
+     * edge artifacts, then the prepared row, then a live compose — instead of
+     * re-reading and re-composing all 124 partitions on every question
+     * (~1.4-2.3 s measured). One read path also means Ask and the map can
+     * never describe two different versions of a body's calendar.
+     */
+    const read = await readReaderEdgeMeetings();
     meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
     meetingDataDetail = read.kind === "PROMOTED"
       ? `Canonical meetings projection ${read.metadata.versionId ?? "unknown"} was read.`

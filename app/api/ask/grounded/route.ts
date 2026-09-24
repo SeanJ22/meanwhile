@@ -108,7 +108,9 @@ import {
 import {
   publicationObservationsFor,
   refreshOutcomeSnapshotFromPromoted,
+  sittingsForBody,
 } from "@/lib/outcomes/store";
+import { buildTopicTimeline, composeTopicAnswer, topicFocusedQuestion } from "@/lib/ask/topic-timeline";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
@@ -644,6 +646,12 @@ export async function POST(request: Request) {
     if (scope) stateVoteScopes.add(scope);
   }
 
+  /* Wall-clock per stage (2026-09-24): the time outside the model calls was
+     ~2 s and unmeasured. Facts about our machinery only, like the rest of the trace. */
+  const stageMs: Record<string, number> = {};
+  let stageMark = Date.now();
+  const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
+
   // Each authority owns its own read state and failure gap. A missing or
   // invalid pointer must fail that source closed without rejecting the whole
   // Ask request or relabelling every unrelated source as unavailable.
@@ -670,6 +678,7 @@ export async function POST(request: Request) {
     await refreshCommentAccessFromPromoted().catch(() => undefined);
   }
 
+  lap("sourcePreloads");
   let snapshot: MeetingsSnapshot | null = null;
   let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" =
     "STORE_UNREACHABLE";
@@ -687,6 +696,7 @@ export async function POST(request: Request) {
     meetingDataDetail =
       error instanceof Error ? error.message : "The meetings projection could not be validated.";
   }
+  lap("meetingsProjection");
   // A failed meeting read must not withhold an unrelated eligible ballot or money record.
   const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
   const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
@@ -797,9 +807,32 @@ export async function POST(request: Request) {
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
   const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
 
+  lap("officeholdersAndBallot");
   // ── 1. INTERPRETATION ────────────────────────────────────────────────
+  /*
+   * **THE DETERMINISTIC TOPIC ROUTE.** (2026-09-24, the Pima data-center miss.)
+   *
+   * A question that names a curated topic and names its government in plain
+   * words ("is pima county voting on data centers") needs nothing a model adds:
+   * the topic detector is curated code, and the body binds lexically from the
+   * question itself. The model interpretation cost ~3 s and, worse, turned
+   * "is … voting" into NEXT, which chose the wrong evidence. So the same
+   * resolver the route uses below is probed with the deterministic reading
+   * first; only a LEXICAL binding of a body (the reader's own words, never page
+   * context, a prior turn or a model expansion) takes this route. Anything
+   * else — a pronoun, a follow-up, an unnamed government — still goes to the
+   * model exactly as before.
+   */
+  const topicRoute = topicFocusedQuestion(question);
+  let deterministicTopicRoute = false;
+  if (topicRoute) {
+    const probe = resolveInterpretation(interpretWithoutModel(question), question, inventory, { activeSubjects, priorSubjects });
+    deterministicTopicRoute = probe.binding.kind === "BOUND" && probe.binding.entity.level === "BODY" &&
+      (probe.basis === "WHOLE_QUESTION" || probe.basis === "READER_WORDS");
+  }
   let interpretation: AskInterpretation = unavailableInterpretation();
-  const outcome = await interpretQuestion(
+  const interpretationStarted = Date.now();
+  const outcome = deterministicTopicRoute ? null : await interpretQuestion(
     question,
     {
       inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType })),
@@ -815,7 +848,20 @@ export async function POST(request: Request) {
     { allowCall },
   );
 
-  if (outcome.kind === "READ") {
+  if (outcome === null) {
+    /* The deterministic topic route above: the topic is curated code and the
+       body bound on the reader's own words, so no model reading is needed and
+       no tense is imposed — a topic spans what was decided and what is next. */
+    interpretation = { ...interpretWithoutModel(question), intent: "AGENDA_TOPIC", temporal: { kind: "NONE" } };
+    trace.interpretation = {
+      ran: false,
+      why: "deterministic-topic-route",
+      ms: Date.now() - interpretationStarted,
+      intent: interpretation.intent,
+      temporal: interpretation.temporal,
+      fellBackToDeterministic: true,
+    };
+  } else if (outcome.kind === "READ") {
     interpretation = outcome.interpretation;
     trace.interpretation = {
       ran: true,
@@ -846,6 +892,7 @@ export async function POST(request: Request) {
     };
   }
 
+  lap("interpretation");
   // A literal reader date outranks inferred tense, including a model's reading.
   const requestedMeetingDate = meetingDateInQuestion(question);
   if (requestedMeetingDate) {
@@ -970,7 +1017,18 @@ export async function POST(request: Request) {
   }
 
   // ── 3. DETERMINISTIC RETRIEVAL ───────────────────────────────────────
-  const agendaQuestion = resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY" && asksForBodyAgenda(question) && !outcomeQuestionClass(question);
+  /*
+   * A topic question bound to one body is answered from that body's topic
+   * timeline (every dated mention joined to its recorded outcome), never from
+   * the one sitting a tense word would pick. See `lib/ask/topic-timeline.ts`.
+   */
+  const topicFocus = topicRoute && !requestedMeetingDate && resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY"
+    ? topicRoute : null;
+  if (topicFocus) {
+    interpretation.intent = "AGENDA_TOPIC";
+    interpretation.temporal = { kind: "NONE" };
+  }
+  const agendaQuestion = !topicFocus && resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY" && asksForBodyAgenda(question) && !outcomeQuestionClass(question);
   if (agendaQuestion) interpretation.intent = "UPCOMING_AGENDA";
   const selection: AgendaSelection =
     requestedMeetingDate ? "DATE" : interpretation.temporal.kind === "LAST"
@@ -1001,6 +1059,8 @@ export async function POST(request: Request) {
   const records: EvidenceRecord[] = [];
   /** The sittings this request resolved, for the structured half of the payload. */
   const resolvedSittings: AskSitting[] = [];
+  /** A topic question's dated timeline for the bound body, when one was built. */
+  let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
   const gaps: EvidenceGap[] = [...holdingLoadGaps];
   const denominators: Record<string, number> = {
     ballotLoaderFailures: ballot.loaderFailures.length,
@@ -1172,7 +1232,7 @@ export async function POST(request: Request) {
     /* The SAME selection the deterministic agenda route uses — one rule, two
        callers, so the two surfaces can never disagree about which meeting a
        tensed question meant. */
-    const chosen = selectSitting(selection, forBody, selectionNow, requestedMeetingDate?.date);
+    const chosen = topicFocus ? null : selectSitting(selection, forBody, selectionNow, requestedMeetingDate?.date);
     const calendarIds = new Set(forBody.map((meeting) => meeting.id));
     const archivedOutcomes = requestedMeetingDate?.date && meetingRecordQuestionClass(question)
       ? outcomeSittingsOnDate(subject.id, requestedMeetingDate.date).filter((sitting) => !calendarIds.has(sitting.meetingId)) : [];
@@ -1185,7 +1245,24 @@ export async function POST(request: Request) {
     }
     denominators.archivedOutcomeSittingsForThatDate = archivedOutcomes.length;
 
-    if (!chosen && archivedOutcomes.length === 0) {
+    if (topicFocus) {
+      /* Every dated mention of the topic in this body's held agendas and
+         structured agenda records, each joined to the body's recorded outcome,
+         plus the recent sittings whose agenda we have not read. */
+      const bodyMeetingIds = new Set(forBody.map((meeting) => meeting.id));
+      topicTimeline = buildTopicTimeline({
+        topic: topicFocus,
+        bodyId: subject.id,
+        bodyName: subject.name,
+        meetings: forBody,
+        documents: documents.filter((document) => bodyMeetingIds.has(document.meetingId)),
+        sittings: sittingsForBody(subject.id),
+        now: selectionNow,
+      });
+      records.push(...topicTimeline.records);
+      gaps.push(...topicTimeline.gaps);
+      Object.assign(denominators, topicTimeline.denominators);
+    } else if (!chosen && archivedOutcomes.length === 0) {
       gaps.push({
         whose: "OURS",
         statement:
@@ -1824,13 +1901,17 @@ export async function POST(request: Request) {
   denominators.recordsExcludedOffSubject = relevant.excluded.length;
   const packRecords = relevant.records;
 
+  /* One named gap is said once: two same-day sittings used to put the identical
+     "not yet acquired" sentence in front of the reader twice. */
+  const packGaps = gaps.filter((gap, index) =>
+    gaps.findIndex((other) => other.whose === gap.whose && other.statement === gap.statement) === index);
   const pack: EvidencePack = {
     question,
     intent: interpretation.intent,
     temporal: interpretation.temporal,
     subject,
     records: packRecords,
-    gaps,
+    gaps: packGaps,
     denominators,
     today,
   };
@@ -1839,7 +1920,7 @@ export async function POST(request: Request) {
     selection,
     recordCount: packRecords.length,
     sourceCount: new Set(packRecords.map((r) => r.sourceUrl).filter(Boolean)).size,
-    gapCount: gaps.length,
+    gapCount: packGaps.length,
     denominators,
   };
 
@@ -1851,7 +1932,18 @@ export async function POST(request: Request) {
    * run under `prod-ask` and pool the reader suite's repeated questions with
    * real readers in the one number that exists to catch a regression.
    */
-  const synthesis = await synthesizeAnswer(pack, {
+  /*
+   * **A TOPIC TIMELINE IS COMPOSED IN CODE, NOT BY A MODEL.** (2026-09-24.)
+   *
+   * Every sentence it can write is a quoted clerk's line, a recorded action or
+   * a date we hold, so a model adds latency (~6-7 s) and a chance to write
+   * "we have no record of what the Board decided" over a pack that held the
+   * decision. The composed prose passes the SAME validator a model answer
+   * does; a rejection falls back exactly as a rejected model answer would.
+   */
+  lap("resolutionAndRetrieval");
+  const composed = topicTimeline ? composeTopicAnswer(topicTimeline, selectionNow) : null;
+  const synthesis = composed ? null : await synthesizeAnswer(pack, {
     allowCall,
     callerKey: askCallerKey(process.env, markerFromRequest(request).runClass),
   });
@@ -1864,7 +1956,23 @@ export async function POST(request: Request) {
      built from records the reader will never see. */
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
-  if (synthesis.kind === "WROTE") {
+  if (composed) {
+    trace.synthesis = { ran: false, why: "composed-from-structured-evidence", ms: 0 };
+    const verdict = validateAnswer(composed.answer, composed.citedUrls, pack, bodies);
+    validationPassed = verdict.kind === "PASSED";
+    trace.validation = {
+      ran: true,
+      passed: verdict.kind === "PASSED",
+      checked: verdict.checked,
+      failed: verdict.kind === "FAILED" ? verdict.failed : undefined,
+    };
+    if (verdict.kind === "PASSED") {
+      answer = composed.answer;
+      mode = "GROUNDED_COMPOSED";
+    } else {
+      mode = "REJECTED_FELL_BACK";
+    }
+  } else if (synthesis?.kind === "WROTE") {
     trace.synthesis = {
       ran: true,
       /* ITEM K §5: the RESOLVED model and effort, read off the outcome that
@@ -1916,7 +2024,7 @@ export async function POST(request: Request) {
        */
       mode = "REJECTED_FELL_BACK";
     }
-  } else {
+  } else if (synthesis) {
     /*
      * H1, 2026-09-01. The failure DETAIL travels with the reason. A bare
      * `error` was indistinguishable between a rate limit, an overload, a
@@ -1932,6 +2040,8 @@ export async function POST(request: Request) {
     };
   }
 
+  lap(composed ? "composition" : "synthesisAndValidation");
+  trace.stages = stageMs;
   trace.answerMode = mode;
   trace.totalMs = Date.now() - started;
 
@@ -1946,7 +2056,7 @@ export async function POST(request: Request) {
    * It ships gated. `captureAskInteraction` checks `ripcord.askSignalCapture`
    * itself, returns GATED, and builds no row at all.
    */
-  await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, gaps);
+  await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
 
   /*
    * **ONE DECLARED SHAPE, BUILT FROM THE PACK THAT PRODUCED IT.** (ASK-05.)

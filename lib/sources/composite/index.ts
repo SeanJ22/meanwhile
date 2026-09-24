@@ -14,6 +14,7 @@ import {
   type SourceAcquisitionEvidence,
 } from "../acquisition-trace.ts";
 import { runInSourceAcquisitionDomain } from "../acquisition-deadline.ts";
+import { fetchFailureKind, type FetchFailureKind } from "./failure-kind.ts";
 
 /**
  * The composite meeting source — trackers **D11**, **D12**, **M06**.
@@ -175,7 +176,7 @@ const ZERO_DROPS: NormalizeDropCounts = {
 interface CacheEntry {
   at: number;
   raw: TaggedRaw[];
-  fetchReports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
+  fetchReports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; failureKind?: FetchFailureKind; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
 }
 
 export interface CompositeOptions {
@@ -365,7 +366,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
 
     const fetchReports = new Map<
       string,
-      { ok: boolean; error: string | null; fetched: number; rung?: number; acquisitions?: readonly SourceAcquisitionEvidence[] }
+      { ok: boolean; error: string | null; fetched: number; rung?: number; failureKind?: FetchFailureKind; acquisitions?: readonly SourceAcquisitionEvidence[] }
     >();
     const tagged: TaggedRaw[] = [];
 
@@ -414,6 +415,9 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ok: false,
           error: String(result.reason?.message ?? result.reason),
           fetched: 0,
+          // Whose stopwatch ran out, decided from the thrown value — never
+          // assumed to be the publisher's (see ./failure-kind.ts).
+          failureKind: fetchFailureKind(result.reason),
           ...(typeof rung === "number" ? { rung } : {}),
           ...(this.captureAcquisitionEvidence
             ? { acquisitions: captured.evidence.filter((row) => row.source === child.name) }
@@ -428,7 +432,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
   }
 
   private pendingFetch: {
-    reports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
+    reports: Map<string, { ok: boolean; error: string | null; fetched: number; rung?: number; failureKind?: FetchFailureKind; acquisitions?: readonly SourceAcquisitionEvidence[] }>;
     fromCache: boolean;
   } | null = null;
 
@@ -461,13 +465,15 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           : { publishedLookbackDays: child.publishedLookbackDays };
 
       if (!fetched.ok) {
-        // The retrieval did not land. A wall, not a broken job — the run
-        // continues and carry-forward keeps this source's rows on screen.
+        // The retrieval did not land. A WALL when the publisher's side stopped
+        // it; a JOB when our own code or configuration threw first (2026-09-24:
+        // VENUE_RESOLUTIONS_MISSING was filed as a wall for ten days). Either
+        // way the run continues and the partition keeps its last-known-good.
         children.push({
           source: child.name,
           ok: false,
           error: fetched.error,
-          failure: "WALL",
+          failure: fetched.failureKind ?? "WALL",
           // The rung AND the ladder it is in, together — a number with no
           // ladder is what RULING 17 had to go back and mark 50 values for.
           ...(typeof fetched.rung === "number"

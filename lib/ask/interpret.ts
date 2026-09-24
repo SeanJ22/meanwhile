@@ -55,6 +55,9 @@ import {
  * The question is scrubbed before it leaves, exactly as the classifier's is.
  */
 
+/** The interpretation rung's whole budget, request to parsed reply. Measured median ~2.8-3.4 s. */
+export const ASK_INTERPRET_TIMEOUT_MS = 6_000;
+
 export interface InterpretContext {
   /**
    * What the reader could plausibly be naming — the search index and their own
@@ -268,6 +271,11 @@ export async function interpretQuestion(
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
+      // A bounded wait (2026-09-24): an unbounded model call is how the first
+      // live Pima request outlived the platform limit and reached the reader as
+      // "that didn't reach us". Past the bound, the deterministic reading
+      // stands in, exactly as it does for any other unavailable model.
+      signal: AbortSignal.timeout(ASK_INTERPRET_TIMEOUT_MS),
       body: JSON.stringify({
         model: askModel(),
         max_tokens: 1024,

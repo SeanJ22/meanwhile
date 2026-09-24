@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 750,
-    "named": 7414,
+    "files": 754,
+    "named": 7434,
     "dynamic": 30
   },
   "files": {
@@ -644,6 +644,18 @@
         "the ingest's agenda retrieval never requests a DISALLOWED host, and still requests a permitted one",
         "the recorded detail page's agenda link is read, never the accessible copy, and an unposted agenda reads as none",
         "the refused hosts are derived from the catalogue's own DISALLOWED routes"
+      ],
+      "dynamic": 0
+    },
+    "tests/agenda-retrieval-order.test.ts": {
+      "names": [
+        "a link never read goes first, re-reads by nearness to today, and another sitting's page last",
+        "a refused link read through its portal page ranks as read once the sitting holds the portal's link",
+        "one run reads all six Board Actions links and no landing page; the next run reads no link twice",
+        "read order is retrievedAt, then id, whatever order the rows arrive in",
+        "seeded in payload order an unchanged read is stored again; seeded in read order it is not",
+        "the recorded Sunnyside 167 rows are out of read order, as production holds them",
+        "two runs of seed, re-read and reconcile add no row and write the rows in read order"
       ],
       "dynamic": 0
     },
@@ -4903,6 +4915,13 @@
       ],
       "dynamic": 0
     },
+    "tests/ical-exdate-first-sitting.test.ts": {
+      "names": [
+        "a refused rule whose EXDATE is its first sitting publishes nothing for the series, and names both",
+        "an expanded series whose EXDATE is its first sitting publishes from the second, and names the first"
+      ],
+      "dynamic": 0
+    },
     "tests/ical-occurrence-identity.test.ts": {
       "names": [
         "ICAL-OCC · Warner's 8 September record is replaced by the edited sitting: not duplicated, not carried",
@@ -5946,6 +5965,7 @@
         "REDIRECT: each hop asks permission of its host, and a hop onto a refusing host is not followed",
         "ROBOTS REDIRECTS: robots.txt is followed through its redirects (RFC 9309), at most five, never to a private address; the rules found govern the host asked about",
         "ROTATION: every need comes round in turn from the cycle's hour, with no stored cursor",
+        "THE EVIDENCE KEY IS A LEGAL PATH ON THE RUNNER'S HOST: no character Windows refuses, two ids never share a directory, and a real vault write succeeds",
         "TIME, PASS: a walk cut short before any find is deferred, listed as cut short, and never recorded as a reading",
         "TIME: each request's timeout is cut to the time left; a walk the time runs out on concludes nothing unless it already confirmed a route",
         "WALL OR NOT: only a host's rules, a recorded wall, or 401/403/429 at robots.txt or the homepage make a walk BLOCKED and teach a dead door",
@@ -8776,6 +8796,16 @@
       ],
       "dynamic": 0
     },
+    "tests/routine-child-fatal-line.test.ts": {
+      "names": [
+        "a rejected top-level await exits 1 through one sanitized fatal line naming the step",
+        "an unhandled rejection and a thrown callback end the same way",
+        "the parent reads the child's fatal line and still never its raw stderr",
+        "the pilot's outer incident quotes the fatal line it reads",
+        "the routine runner installs the fatal line before its first statement that can throw"
+      ],
+      "dynamic": 0
+    },
     "tests/routine-civic-data-frontier.test.ts": {
       "names": [
         "a corrupt supervisor row is explicit and cannot erase valid fairness clocks",
@@ -9675,6 +9705,16 @@
         "the groups are stable — the same collision fans the same way every time",
         "the pool moves markers by OFFSET, and puts every one of them back",
         "two pins closer than the collision radius are one group"
+      ],
+      "dynamic": 0
+    },
+    "tests/stage-trace.test.ts": {
+      "names": [
+        "a child killed mid-call leaves that call, started and never settled, as its last stderr line",
+        "a failing call writes a failed line and rethrows the same error",
+        "a stage line names the process time and the step",
+        "a traced call writes a line when it starts and when it settles, and passes its result through",
+        "the method runs on the original object, and plain values and synchronous results pass through"
       ],
       "dynamic": 0
     },

@@ -165,6 +165,10 @@ export async function processRegisteredRoutineCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
+  // A caller turns confirmations on only once its receipt names the confirmed
+  // version (`routineReceiptFields`); an old receipt would name a candidate
+  // that was never written.
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   let boundedCandidate = durableCandidateSnapshot(candidate);
@@ -206,6 +210,7 @@ export async function processRegisteredRoutineCandidate(
       expectedBaseVersionId,
       REGISTERED_PRODUCTION_DOOR,
       sourceProjectionVerification,
+      options,
     ),
     now,
   );

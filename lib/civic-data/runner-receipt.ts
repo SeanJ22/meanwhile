@@ -5,6 +5,7 @@ import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts"
 import { parseValidationReceipt } from "./receipt.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
+import type { PromotionOutcome } from "./promotion.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 /**
@@ -29,6 +30,26 @@ export interface RoutineRunnerReceipt {
    * pointer's identity and its newest confirmation, never the dataset.
    */
   readonly confirmedAt?: string;
+}
+
+/**
+ * The receipt fields a promotion outcome proves: the candidate it wrote, or,
+ * for a confirmation, the pointed version it confirmed (no new candidate
+ * exists then) and the confirmation's instant.
+ */
+export function routineReceiptFields(
+  candidate: { readonly id: string },
+  outcome: PromotionOutcome,
+): Omit<RoutineRunnerReceipt, "source" | "structuralReleaseContract"> {
+  return {
+    candidateId: outcome.confirmed ? outcome.candidate.candidate.id : candidate.id,
+    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
+    state: outcome.candidate.state,
+    decision: outcome.candidate.receipt?.decision ?? null,
+    promotedVersion: outcome.promoted?.versionId ?? null,
+    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+    ...(outcome.confirmed ? { confirmedAt: outcome.confirmed.at } : {}),
+  };
 }
 
 /** Candidate plus canonical pointer/LKG proof needs at most four Neon requests. */

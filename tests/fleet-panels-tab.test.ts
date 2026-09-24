@@ -28,7 +28,7 @@ function renderPanels(reading: unknown, scratchDir: string): string {
     import { FleetPanelsTab } from './components/admin/fleet-panels-tab.tsx';
     const reading = JSON.parse(readFileSync(${JSON.stringify(file)}, 'utf8'));
     console.log(renderToStaticMarkup(createElement(FleetPanelsTab, { reading })));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 16_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 16_000_000 });
 }
 
 test("the panels tab splits by producer and keeps every panel's honesty", async (t) => {

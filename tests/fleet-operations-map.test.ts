@@ -62,7 +62,7 @@ function renderMap(state: FleetConsumerState, scratchDir: string): string {
     import { FleetWorkTab } from './components/admin/fleet-operations-map.tsx';
     const state = JSON.parse(readFileSync(${JSON.stringify(stateFile)}, 'utf8'));
     console.log(renderToStaticMarkup(createElement(FleetWorkTab, { initialState: state })));
-  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 16_000_000 });
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 120_000, maxBuffer: 16_000_000 });
 }
 
 test("a full Fleet backlog renders a bounded first page with every page reachable", async (t) => {

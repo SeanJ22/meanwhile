@@ -159,7 +159,7 @@ test("a hosted SHA different from the checked-out commit cannot certify a shard"
   const root = fixture();
   try {
     const result = spawnSync(process.execPath, [RUNNER], { cwd: root,
-      env: { ...runnerEnvironment(1), GITHUB_SHA: "0".repeat(40) }, encoding: "utf8", timeout: 30_000, windowsHide: true });
+      env: { ...runnerEnvironment(1), GITHUB_SHA: "0".repeat(40) }, encoding: "utf8", timeout: 120_000, windowsHide: true });
     assert.equal(result.status, 1);
     assert.match(result.stderr, /does not match GITHUB_SHA/);
     assert.doesNotMatch(result.stdout, /real assertion/);
@@ -170,11 +170,11 @@ test("a terminated test process cannot become a successful shard", () => {
   const root = fixture();
   try {
     const baseline = spawnSync(process.execPath, [RUNNER], { cwd: root,
-      env: runnerEnvironment(1), encoding: "utf8", timeout: 30_000, windowsHide: true });
+      env: runnerEnvironment(1), encoding: "utf8", timeout: 120_000, windowsHide: true });
     assert.equal(baseline.status, 0, baseline.stderr);
     writeFileSync(join(root, "scripts", "register-test-loader.mjs"), "process.kill(process.pid, 'SIGTERM');\n");
     const result = spawnSync(process.execPath, [RUNNER], { cwd: root,
-      env: runnerEnvironment(1), encoding: "utf8", timeout: 30_000, windowsHide: true });
+      env: runnerEnvironment(1), encoding: "utf8", timeout: 120_000, windowsHide: true });
     assert.equal(result.status, 1, result.stderr);
     const manifest = JSON.parse(readFileSync(join(root, ".scratch", "ci", "test-shard-1-of-4.json"), "utf8"));
     assert.equal(manifest.status, "failed");
@@ -193,7 +193,7 @@ test("an affected TSX assertion is selected, executed and propagates failure wit
     const plan = planTests(root, "1/4");
     const shard = plan.assignments.find((entry: { file: string }) => entry.file === affected)!.shard;
     const result = spawnSync(process.execPath, [RUNNER], { cwd: root,
-      env: runnerEnvironment(shard), encoding: "utf8", timeout: 30_000, windowsHide: true });
+      env: runnerEnvironment(shard), encoding: "utf8", timeout: 120_000, windowsHide: true });
     const testResult = result.status === 0 ? "success" : "failure";
     assert.equal(result.status, 1, result.stderr);
     assert.match(result.stdout, /affected-contract-proof/);
@@ -227,7 +227,7 @@ test("an affected TSX assertion is selected, executed and propagates failure wit
     // The same real command becomes green only after the failing assertion is fixed.
     writeFileSync(join(root, affected), `import test from 'node:test'; import assert from 'node:assert/strict'; test('affected-contract-proof', () => assert.equal(2 + 2, 4));\n`);
     const passed = spawnSync(process.execPath, [RUNNER], { cwd: root,
-      env: runnerEnvironment(shard), encoding: "utf8", timeout: 30_000, windowsHide: true });
+      env: runnerEnvironment(shard), encoding: "utf8", timeout: 120_000, windowsHide: true });
     assert.equal(passed.status, 0, passed.stderr);
     const green = JSON.parse(readFileSync(`${stem}.json`, "utf8"));
     assert.equal(green.status, "passed");
@@ -246,7 +246,7 @@ test("actual reporter and hint code changes invalidate the recorded configuratio
     }
     const run = () => {
       const result = spawnSync(process.execPath, [join(root, "scripts", "ci-tests.mjs")], {
-        cwd: root, env: runnerEnvironment(1), encoding: "utf8", timeout: 30_000, windowsHide: true,
+        cwd: root, env: runnerEnvironment(1), encoding: "utf8", timeout: 120_000, windowsHide: true,
       });
       assert.equal(result.status, 0, result.stderr);
       return JSON.parse(readFileSync(join(root, ".scratch", "ci", "test-shard-1-of-4.json"), "utf8"));

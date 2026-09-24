@@ -83,10 +83,16 @@ import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
+import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
+
+// An error nothing below catches ends this process through one sanitized
+// protocol line naming the step, which the parent quotes (lib/ops/fatal-line.ts).
+let step = "reading its task selection";
+installFatalLine("routine-civic-data-runner", () => step);
 
 const ROOT = process.cwd();
 const FORCE = process.argv.includes("--force");
@@ -114,6 +120,7 @@ if (!TASK_SELECTION.ok) {
 
 // Production scheduling authority must be proved before the singleton, store,
 // clocks, or any child capability can be opened.
+step = "proving its runtime authority";
 const RUNNING_CODE_SHA = TASK_SELECTION.ok
   ? assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha
   : null;
@@ -121,6 +128,7 @@ const RUNNING_CODE_SHA = TASK_SELECTION.ok
 // Manual invocation and the standing pilot share this same atomic host-local
 // door. A second runner fails before opening the store or reading due clocks;
 // the kernel releases the lease if this process dies.
+step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
     return await acquireProcessSingleton(
@@ -293,6 +301,7 @@ async function persistSupervisorOutcome(input: {
 }
 
 if (ROUTINE_DATA_PROCESS_LEASE !== null) {
+step = "opening the production store";
 const handle = resolveProductionWriteHandle();
 process.env.DATABASE_URL = handle.connection;
 process.env.WTP_DB_ROLE = "production";
@@ -332,6 +341,7 @@ function captureTaskReceipt(
 // from entering the next pass.
 const admissionNowMs = Date.now();
 const selectedTasks = ROUTINE_SOURCE_TASKS.filter((task) => !ONLY || ONLY.has(task.id));
+step = "reading the routine task clocks";
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
@@ -362,6 +372,7 @@ for (const read of clockReads) {
   });
 }
 
+step = "reading unreceipted supervisor attempts";
 let supervisorAttempts: ReadonlyMap<string, string> = new Map();
 try {
   const history = await latestUnreceiptedSupervisorAttempts();
@@ -410,6 +421,7 @@ console.log(
     `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}; ` +
     `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
 );
+step = "running the source pass";
 const childRuns = await runBoundedChildPass(
   pendingRuns.map((pending) => ({
     id: pending.id,
@@ -608,6 +620,7 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
   supervisorFailures.push(...reconciled.failures);
 }
 
+step = "running the Reader readbacks";
 const readerRuns = await runBoundedChildPass(
   readerDomains.map((domain) => ({
     id: domain.id,
@@ -682,6 +695,7 @@ for (const reference of readerReadbackReferences) {
   }
 }
 
+step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
     failures: supervisorFailures,
@@ -750,5 +764,6 @@ console.log("RCD_RUN=" + JSON.stringify({
 // A source refusal is a durable data-plane event, not a failed supervisor
 // process. Only a process/protocol failure makes the runner nonzero.
 if (supervisorFailures.length > 0) process.exitCode = 2;
+step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }

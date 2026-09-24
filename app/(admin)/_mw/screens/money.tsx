@@ -51,7 +51,7 @@ import {
   type RoutineDay,
 } from "@/lib/control-plane/admin-view/money-view.ts";
 import { FLEET_SPEND_CEILING_MAX_USD, resolveRollingCeiling } from "@/lib/control-plane/fleet-safety.ts";
-import { fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
+import { discoverySearchEnabled, fleetSpendCeilingOverrideUsd } from "@/lib/control-plane/gateway/admin-config.ts";
 import { MAPTILER_USAGE_FORMAT_VERSION, type MapTilerUsageSnapshot } from "@/lib/control-plane/maptiler/types.ts";
 import { maptilerHistoryNumbers, maptilerSectionNumbers, projectMapTilerAttemptHistory, projectPanel } from "@/lib/control-plane/maptiler/usage.ts";
 import { auditRenderedNumbers, checkStatedEqualsRendered, type CountClaim, type RenderedNumber } from "@/lib/control-plane/owner-surface.ts";
@@ -62,7 +62,7 @@ import { loadWatchedBodies } from "../data/load-bodies.ts";
 import { loadSpendFacts } from "../data/spend-store.ts";
 import { stateName } from "../load-shell.ts";
 import { MapTilerSection } from "../maptiler-panel.tsx";
-import { BillingEntry, CeilingDial, RemoveFact } from "../money-controls.tsx";
+import { BillingEntry, CeilingDial, DiscoverySearchSwitch, RemoveFact } from "../money-controls.tsx";
 import { openPage, param, type SearchParams } from "../page-base.ts";
 import { withScope, type MwArea, type MwScope } from "../scope.ts";
 import { MwShell } from "../shell.tsx";
@@ -168,6 +168,11 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
   let body: ReactNode;
   if (view === "overall") {
     const resolved = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(base.adminConfig));
+    /* The owner's paid discovery search switch, read from the same row the runner reads at cycle start. */
+    const searchSwitch = {
+      on: discoverySearchEnabled(base.adminConfig),
+      decidedWords: base.adminConfig?.discoverySearch?.decidedAt ? formatEastern(base.adminConfig.discoverySearch.decidedAt) : null,
+    };
     const ceiling = {
       settingUsd: resolved.rollingCeilingUsd,
       source: resolved.source,
@@ -266,7 +271,7 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
               </div>
             ))}
             {rows.map((r) => (
-              <ProviderRowCells key={r.key} row={r} returnTo={here} />
+              <ProviderRowCells key={r.key} row={r} returnTo={here} searchSwitch={r.key === "ledger-search" ? searchSwitch : null} />
             ))}
           </div>
         </div>
@@ -599,7 +604,16 @@ export async function MoneyScreen(props: { readonly area: MwArea; readonly searc
   );
 }
 
-function ProviderRowCells({ row, returnTo }: { row: ReturnType<typeof providerRows>[number]; returnTo: string }) {
+function ProviderRowCells({
+  row,
+  returnTo,
+  searchSwitch,
+}: {
+  row: ReturnType<typeof providerRows>[number];
+  returnTo: string;
+  /** Only on the search line: the owner's switch for paid discovery search. */
+  searchSwitch: { readonly on: boolean; readonly decidedWords: string | null } | null;
+}) {
   return (
     <>
       <div className={`${s.td} ${s.tdName}`}>
@@ -614,6 +628,11 @@ function ProviderRowCells({ row, returnTo }: { row: ReturnType<typeof providerRo
         {row.factId && (
           <div>
             <RemoveFact id={row.factId} returnTo={returnTo} />
+          </div>
+        )}
+        {searchSwitch && (
+          <div>
+            <DiscoverySearchSwitch on={searchSwitch.on} decidedWords={searchSwitch.decidedWords} returnTo={returnTo} />
           </div>
         )}
       </div>

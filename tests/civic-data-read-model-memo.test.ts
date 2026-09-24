@@ -27,10 +27,9 @@ import {
   readPromotedCivicDataBatch,
   type CivicDataReadStore,
 } from "../lib/civic-data/read-model.ts";
-import type { CandidateVersionReadback } from "../lib/civic-data/store.ts";
+import { promotedPointerIdentity, type CandidateVersionReadback } from "../lib/civic-data/store.ts";
 import type {
   CandidateVersionRecord,
-  PromotedPointerIdentity,
   PromotedProjection,
   RoutineRecordClass,
 } from "../lib/civic-data/types.ts";
@@ -132,18 +131,6 @@ interface SpyCounts {
   readPromotionIdentities: string[][];
 }
 
-function identityOf(projection: PromotedProjection): PromotedPointerIdentity {
-  return {
-    key: projection.key,
-    sourceId: projection.sourceId,
-    recordClass: projection.recordClass,
-    scope: projection.scope,
-    versionId: projection.versionId,
-    lastKnownGoodVersionId: projection.lastKnownGoodVersionId,
-    promotedAt: projection.promotedAt,
-  };
-}
-
 /**
  * A spy store over a MUTABLE pointer map (so a test can advance a pointer) and a
  * cumulative version→candidate map (old versions remain fetchable). Counts every
@@ -206,14 +193,14 @@ function spyStore(
           readPromotionIdentity: async (_recordClass: RoutineRecordClass, scope: string) => {
             counts.readPromotionIdentity += 1;
             const projection = pointers.get(scope)?.projection;
-            return projection ? identityOf(projection) : null;
+            return projection ? promotedPointerIdentity(projection) : null;
           },
           readPromotionIdentities: async (_recordClass: RoutineRecordClass, scopes: readonly string[]) => {
             counts.readPromotionIdentities.push([...scopes]);
             if (options.identitiesFail) throw new Error("identity read failed");
             return scopes.flatMap((scope) => {
               const projection = pointers.get(scope)?.projection;
-              return projection ? [identityOf(projection)] : [];
+              return projection ? [promotedPointerIdentity(projection)] : [];
             });
           },
         }

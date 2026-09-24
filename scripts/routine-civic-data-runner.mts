@@ -447,7 +447,7 @@ if (meetingPartitionRuns >= 2) {
         `for ${meetingPartitionRuns} meeting partition child(ren)`,
     );
   } catch (error) {
-    console.log(`RCD_PASS registry not attested; each meeting child proves it — ${safeFailure(error instanceof Error ? error.message : String(error))}`);
+    console.log(`RCD_PASS registry not attested; each meeting child proves it — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
   }
 }
 

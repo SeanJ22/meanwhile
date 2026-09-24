@@ -28,6 +28,7 @@ import {
 import {
   readPreparedMeetingsProjection,
 } from "./prepared-snapshot.ts";
+import { activeReaderProofMeetingPin } from "./proof-pin.ts";
 import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
@@ -384,6 +385,10 @@ export async function readReaderEdgeMeetings(
   // The DB prepared-row / compose fallback takes only the clock — never the
   // artifact store, which is a different store from the routine data store.
   const fallback = options.fallback ?? (() => readPreparedMeetingsProjection(options.now ? { now: options.now } : {}));
+  // Proof-only (lib/meetings/proof-pin.ts; null in every deployed build): an
+  // edge artifact names no partition versions, so it cannot be shown to be
+  // the pinned ones. The pinned run reads through the version-coupled fallback.
+  if (activeReaderProofMeetingPin() !== null) return fallback();
   const store = options.store ?? resolveReaderArtifactStore();
   if (!store) return fallback();
 

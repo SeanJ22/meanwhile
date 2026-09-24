@@ -7,12 +7,15 @@ import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts"
 import {
   CivicDataStoreUnavailableError,
   mayUseTestFixture,
+  readPinnedPromotedCivicDataBatch,
   readPromotedCivicDataBatch,
   readPromotedCivicData,
+  type CivicDataPinnedReadStore,
   type CivicDataReadMetadata,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
+import { activeReaderProofMeetingPin } from "./proof-pin.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
 import {
   HELD_MEETING_PARTITIONS,
@@ -710,11 +713,25 @@ export async function readMeetingsProjection(
     maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
     bypassCache: options.bypassCache,
   };
-  const partitionResults = await readPromotedCivicDataBatch<MeetingsSnapshot>(
-    MEETINGS_RECORD_CLASS,
-    MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
-    readOptions,
-  );
+  // Proof-only (lib/meetings/proof-pin.ts): null in every deployed build and
+  // outside the Reader proof harness, which leaves this read exactly as it was.
+  const pin = activeReaderProofMeetingPin();
+  const partitionResults = pin === null
+    ? await readPromotedCivicDataBatch<MeetingsSnapshot>(
+        MEETINGS_RECORD_CLASS,
+        MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope),
+        readOptions,
+      )
+    : await readPinnedPromotedCivicDataBatch<MeetingsSnapshot>(
+        MEETINGS_RECORD_CLASS,
+        pin.partitions.map(({ scope, versionId }) => ({ scope, versionId })),
+        {
+          now: readOptions.now,
+          maxAgeMs: readOptions.maxAgeMs,
+          bypassCache: readOptions.bypassCache,
+          ...(options.store ? { store: options.store as CivicDataPinnedReadStore } : {}),
+        },
+      );
   const ownResults = MEETING_PARTITION_CONTRACTS.map((partition, index) =>
     validateMeetingPartitionProjection(partition, partitionResults[index]!)
   );
@@ -722,6 +739,13 @@ export async function readMeetingsProjection(
   // composed in its successor's place only while the successor has none. It
   // is read only then — one more batch in that window, and none once every
   // successor has promoted.
+  //
+  // Under a Reader proof pin the successor's own disposition is the pinned one:
+  // a successor pinned with no pointer keeps composing its predecessor's held
+  // version for the whole run, even if the runner promotes the successor
+  // mid-run, and one pinned PROMOTED never reads a held version. The held
+  // pointer itself has no contract, clock or writer (RETIRED_MEETING_ROUTES),
+  // so this read of it returns the version the pin's capture composed.
   const awaiting = HELD_MEETING_PARTITIONS.filter((held) =>
     ownResults[MEETING_PARTITION_CONTRACTS.findIndex((partition) => partition.id === held.successorId)]?.kind === "NOT_RECORDED"
   );
@@ -875,7 +899,8 @@ export async function readMeetingsProjection(
       },
       partitions: partitionReadbacks,
       detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.` +
-        (heldCount > 0 ? ` ${heldCount} composed from a retired route's held version until its successor's first promotion (heldFrom).` : ""),
+        (heldCount > 0 ? ` ${heldCount} composed from a retired route's held version until its successor's first promotion (heldFrom).` : "") +
+        (pin === null ? "" : ` Reader proof meeting pin ${pin.partitionsSha256.slice(0, 12)} (captured ${pin.capturedAt}) selected every registered partition's version.`),
     };
   }
 

@@ -176,20 +176,28 @@ export function venueNotStatedLine(publisher: string): string {
 export const VENUE_NOT_STATED_MARK = "place not stated by the publisher";
 
 /**
+ * The place the publisher stated, verbatim, or null when its page states none.
+ * A STATED_NOT_PLACED gap with no words is read as the page stating none: the
+ * words are the whole claim, and there is nothing else to show.
+ */
+export function statedVenueText(gap: MeetingVenueGap): string | null {
+  const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
+  return stated ? stated : null;
+}
+
+/**
  * What a named venue gap says about where the sitting is held. A STATED place is
  * the publisher's own words, verbatim — the place IS recorded, as text, and it
  * renders as text (never a pin, and never "we haven't recorded a place"). A page
  * that states none gets the publisher's named gap.
  */
 export function venueGapLine(gap: MeetingVenueGap): string {
-  const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
-  return stated ? stated : venueNotStatedLine(gap.publisher);
+  return statedVenueText(gap) ?? venueNotStatedLine(gap.publisher);
 }
 
 /** The venue gap for a list row's metadata line: the stated place, or the publisher's gap. */
 export function venueGapMark(gap: MeetingVenueGap): string {
-  const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
-  return stated ? stated : VENUE_NOT_STATED_MARK;
+  return statedVenueText(gap) ?? VENUE_NOT_STATED_MARK;
 }
 
 /**

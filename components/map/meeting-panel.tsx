@@ -37,6 +37,9 @@ import {
   joinLine,
   onlineAccessFor,
   PLACE_UNRECORDED_LINE,
+  statedVenueText,
+  venueGapLine,
+  venueGapOf,
 } from "@/lib/meetings/online";
 
 import { MeetingStatusPill } from "./meeting-status-pill";
@@ -77,6 +80,19 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
   const rows = [...venue.meetings, ...placeless];
   const onlineCount = placeless.filter(isOnlineOnly).length;
   const unrecordedCount = placeless.filter(isPlaceUnrecorded).length;
+  // A named venue gap (official-page events, 2026-09-23) is a physical sitting
+  // with no pin: the publisher either stated its place in words, which the row
+  // shows, or stated none, which is the publisher's gap. Neither is online and
+  // neither is "no place recorded". With the two counts above, the four
+  // partition the building-less rows exactly.
+  const statedPlaceCount = placeless.filter((meeting) => {
+    const gap = venueGapOf(meeting);
+    return gap !== null && statedVenueText(gap) !== null;
+  }).length;
+  const notStatedCount = placeless.filter((meeting) => {
+    const gap = venueGapOf(meeting);
+    return gap !== null && statedVenueText(gap) === null;
+  }).length;
   const groups = groupMeetingsForReading(rows, now);
   // Markers follow RENDER order, so the groups are flattened in group order
   // before the notes are built — not `venue.meetings`, which is the order the
@@ -109,6 +125,10 @@ export function MeetingPanel({ venue, placeless = [], onClose, onOpenMeeting }: 
    */
   const elsewhere = [
     onlineCount > 0 ? `${onlineCount} online` : null,
+    statedPlaceCount > 0
+      ? `${statedPlaceCount} at ${statedPlaceCount === 1 ? "a place" : "places"} named below`
+      : null,
+    notStatedCount > 0 ? `${notStatedCount} with no place stated by the publisher` : null,
     unrecordedCount > 0 ? `${unrecordedCount} with no place recorded yet` : null,
   ].filter((part): part is string => part !== null);
   const eyebrow = listingCount.unresolved
@@ -511,16 +531,23 @@ function MeetingEntry({
  * Where a sitting with no building is held, on a panel whose header names one.
  *
  * Every string comes from `lib/meetings/online.ts`: the online mark and the
- * body's own published label (with the join-link gap when there is no link),
- * or `PLACE_UNRECORDED_LINE` when the body published neither a room nor an
- * online access.
+ * body's own published label (with the join-link gap when there is no link);
+ * for a named venue gap, the place the publisher stated, verbatim, or the
+ * publisher's own gap when its page states none; or `PLACE_UNRECORDED_LINE`
+ * when the body published neither a room nor an online access.
  */
 function PlacelessWhere({ meeting }: { meeting: Meeting }) {
   const access = onlineAccessFor(meeting);
+  const gap = access ? null : venueGapOf(meeting);
+  const where = access
+    ? "online"
+    : gap
+      ? statedVenueText(gap) !== null ? "stated" : "not-stated"
+      : "unrecorded";
   return (
     <p
       className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 pl-4 text-[0.75rem] leading-snug text-muted"
-      data-meeting-where={access ? "online" : "unrecorded"}
+      data-meeting-where={where}
     >
       {access ? (
         <>
@@ -538,6 +565,8 @@ function PlacelessWhere({ meeting }: { meeting: Meeting }) {
             <span>{joinLine(access)}</span>
           )}
         </>
+      ) : gap ? (
+        <span>{venueGapLine(gap)}</span>
       ) : (
         <span>{PLACE_UNRECORDED_LINE}</span>
       )}

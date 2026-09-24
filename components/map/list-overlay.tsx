@@ -7,7 +7,14 @@ import { MeetingListingNotice } from "./meeting-listing-notice";
 import { haversineKm } from "@/lib/geo/distance";
 import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
-import { isOnlineOnly, isPlaceUnrecorded, PLACE_UNRECORDED_MARK } from "@/lib/meetings/online";
+import {
+  isOnlineOnly,
+  isPlaceUnrecorded,
+  PLACE_UNRECORDED_MARK,
+  statedVenueText,
+  venueGapMark,
+  venueGapOf,
+} from "@/lib/meetings/online";
 import { focusList } from "@/lib/state/list-focus";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 import {
@@ -534,6 +541,21 @@ export function ListOverlay({
                         {isPlaceUnrecorded(meeting) && (
                           <span data-meeting-where="unrecorded">{` · ${PLACE_UNRECORDED_MARK}`}</span>
                         )}
+                        {/*
+                          A named venue gap (official-page events): a physical
+                          sitting with no pin and so no distance. The place the
+                          publisher stated, verbatim — it IS recorded, as text —
+                          or the publisher's own gap when its page states none.
+                          Never "online", never "place not recorded".
+                        */}
+                        {(() => {
+                          const gap = venueGapOf(meeting);
+                          return gap ? (
+                            <span data-meeting-where={statedVenueText(gap) !== null ? "stated" : "not-stated"}>
+                              {` · ${venueGapMark(gap)}`}
+                            </span>
+                          ) : null;
+                        })()}
                       </span>
                     </button>
                   );

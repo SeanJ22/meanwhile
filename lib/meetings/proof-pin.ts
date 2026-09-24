@@ -99,7 +99,20 @@ export function readerProofMeetingPinSha256(partitions: readonly ReaderProofMeet
   return createHash("sha256").update(canonicalPartitions(partitions)).digest("hex");
 }
 
-/** Build the pin from a fully proven, unpinned partition readback (the capture). */
+/**
+ * Build the pin from a fully proven, unpinned partition readback (the capture).
+ *
+ * A registered successor served from its retired predecessor's HELD version
+ * (`HELD_MEETING_PARTITIONS`, lib/civic-data/meeting-partitions.ts) reads back
+ * NOT_RECORDED with `heldFrom`, and is pinned NOT_RECORDED: the pin selects
+ * registered partitions' versions, and the held pointer is not one. The pinned
+ * run still composes exactly the held version the capture composed — the
+ * successor stays NOT_RECORDED under the pin even if the runner promotes it
+ * mid-run, and the retired route has no contract, clock or writer, so its
+ * pointer cannot move. A prepared serving copy coupled to a held version never
+ * equals the pin's PROMOTED rows, so while a succession is held the pinned run
+ * reads through the composing reader, which reads the pinned versions.
+ */
 export function readerProofMeetingPinFromReadback(
   partitions: readonly { readonly contractId: string; readonly scope: string; readonly kind: string; readonly versionId: string | null }[],
   capturedAt: string,

@@ -1,0 +1,215 @@
+/**
+ * **A MEETING WHOSE PLACE THE PUBLISHER STATED IN WORDS SHOWS THOSE WORDS ON
+ * EVERY READER SURFACE — NEVER "WE HAVEN'T RECORDED A PLACE", NEVER "ONLINE".**
+ * (Integration of the upcoming-meetings reader fix with official-page events,
+ * 2026-09-23.)
+ *
+ * The two changes met in `lib/meetings/online.ts`. The reader fix split the
+ * building-less sitting into ONLINE (an online access was published) and PLACE
+ * NOT RECORDED (nothing was), and the surfaces render our own gap,
+ * "We haven't recorded a place for this meeting yet.", for the second.
+ * Official-page events added a third kind of building-less sitting: a physical
+ * one whose room is a named gap (`venueGap`). Tucson Unified's reconfiguration
+ * page states "Cholla High School South Gym" for its 9/23 session — the place IS
+ * recorded, as the publisher's words, and we simply hold no reviewed
+ * coordinates for it. Read through the reader fix alone, that row would have
+ * said we had not recorded a place: a false statement about our own holdings,
+ * on the one row where the publisher told us exactly where to go. And the
+ * Oct 1 Joint Committee meeting, whose page names no place, is the
+ * PUBLISHER's gap, and has to say whose it is.
+ *
+ * The meetings here are produced by the real official-page events source from
+ * the committed page (tests/fixtures/official-page-events/), and rendered by the
+ * real list overlay, pin panel and meeting card beside the recorded 85701
+ * production response (tests/fixtures/reader-upcoming-meetings-85701.json),
+ * whose Duffy pin carries the same Tucson Unified body. No live calls.
+ */
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import test from "node:test";
+import { fileURLToPath } from "node:url";
+
+import {
+  isOnlineOnly,
+  isPlaceUnrecorded,
+  onlineAccessFor,
+  ONLINE_ONLY_LINE,
+  PLACE_UNRECORDED_LINE,
+  placelessWhereLine,
+  venueGapOf,
+} from "../lib/meetings/online.ts";
+import { wiringForMeetingSource } from "../lib/registry/source-wiring.ts";
+import { makeOfficialPageEventsSource, type OfficialPageRaw } from "../lib/sources/official-page-events/index.ts";
+import type { Meeting } from "../lib/sources/types.ts";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const FIXTURE = "tests/fixtures/reader-upcoming-meetings-85701.json";
+const PAGE = "tests/fixtures/official-page-events/tusd-reconfiguration.html";
+const COLLECTED = "2026-09-23T23:25:27.424Z";
+/** The recorded response's own instant; the reader's date window is pinned to it. */
+const RECORDED_NOW = Date.parse("2026-09-23T23:00:00.000Z");
+const CHOLLA = "Cholla High School South Gym";
+const TUCSON_HIGH = "Tucson High Magnet School East Gym";
+const NOT_STATED = "Tucson Unified School District's page doesn't say where this meeting is held.";
+
+function reconfigurationMeetings(): Meeting[] {
+  const rows = wiringForMeetingSource("official-page-events");
+  assert.equal(rows.length, 1, "Tucson Unified's reconfiguration page is the one wired official page");
+  const raw: OfficialPageRaw[] = [
+    { wiring: rows[0]!, html: readFileSync(join(ROOT, PAGE), "utf8"), ics: [], icsRefused: [], collectedAt: COLLECTED },
+  ];
+  return makeOfficialPageEventsSource(rows).normalizeWithDrops(raw, new Date(COLLECTED)).meetings;
+}
+
+test("a named venue gap is its own state: never online, never 'place not recorded', its words are the Where line", () => {
+  const meetings = reconfigurationMeetings();
+  const stated = meetings.filter((m) => m.venueGap?.kind === "STATED_NOT_PLACED");
+  const notStated = meetings.filter((m) => m.venueGap?.kind === "NOT_STATED_BY_PUBLISHER");
+  assert.deepEqual(stated.map((m) => m.venueGap?.publishedText).sort(), [CHOLLA, TUCSON_HIGH]);
+  assert.ok(notStated.length > 0, "the page's Joint Committee dates name no place");
+  for (const m of meetings) {
+    assert.equal(m.location, null);
+    assert.ok(venueGapOf(m), `${m.id} carries no named venue gap`);
+    assert.equal(isOnlineOnly(m), false, `${m.id}: a venue gap is labeled online`);
+    assert.equal(isPlaceUnrecorded(m), false, `${m.id}: a venue gap reads as a place we have not recorded`);
+    assert.equal(onlineAccessFor(m), null);
+    const where = placelessWhereLine(m);
+    assert.notEqual(where, PLACE_UNRECORDED_LINE, `${m.id}: the Where line says we have not recorded a place`);
+    assert.notEqual(where, ONLINE_ONLY_LINE, `${m.id}: the Where line says online`);
+    assert.equal(where, m.venueGap?.kind === "STATED_NOT_PLACED" ? m.venueGap.publishedText : NOT_STATED);
+  }
+  // The two earlier states are unchanged by the venue gap.
+  const base = { location: null } as const;
+  assert.equal(placelessWhereLine({ ...base, online: { label: "Via Zoom", joinUrl: null } }), ONLINE_ONLY_LINE);
+  assert.equal(placelessWhereLine(base), PLACE_UNRECORDED_LINE);
+  assert.equal(
+    isOnlineOnly({ ...base, online: { label: "Via Zoom", joinUrl: null }, venueGap: { kind: "NOT_STATED_BY_PUBLISHER", publishedText: null, publisher: "X" } }),
+    false,
+    "a named venue gap is never online, even beside an online block the verifier would refuse",
+  );
+});
+
+test("the list, the body's pin panel and the meeting card show the stated place as text and name the publisher's gap", () => {
+  const script = `
+    import { createElement as h } from 'react';
+    import { renderToStaticMarkup } from 'react-dom/server';
+    import { readFileSync } from 'node:fs';
+    import { DataProvider } from './lib/state/data.tsx';
+    import { UiProvider } from './lib/state/provider.tsx';
+    import { INITIAL_STATE } from './lib/state/defaults.ts';
+    import { applyFilters } from './lib/state/derive.ts';
+    import { ListOverlay } from './components/map/list-overlay.tsx';
+    import { MeetingPanel } from './components/map/meeting-panel.tsx';
+    import { MeetingPopup } from './components/map/popup/meeting-popup.tsx';
+    import { groupByVenue, placelessSittingsOfVenueBodies } from './lib/meetings/venues.ts';
+    import { wiringForMeetingSource } from './lib/registry/source-wiring.ts';
+    import { makeOfficialPageEventsSource } from './lib/sources/official-page-events/index.ts';
+    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
+    await installRegistryRuntimeFirstSeeds();
+
+    const fixture = JSON.parse(readFileSync(${JSON.stringify(FIXTURE)}, 'utf8'));
+    const rows = wiringForMeetingSource('official-page-events');
+    const page = readFileSync(${JSON.stringify(PAGE)}, 'utf8');
+    const events = makeOfficialPageEventsSource(rows).normalizeWithDrops(
+      [{ wiring: rows[0], html: page, ics: [], icsRefused: [], collectedAt: ${JSON.stringify(COLLECTED)} }],
+      new Date(${JSON.stringify(COLLECTED)}),
+    ).meetings;
+    const all = [...fixture.meetings, ...events];
+    const meetings = applyFilters({ meetings: all, ui: INITIAL_STATE, center: null, now: ${RECORDED_NOW} });
+    const venues = groupByVenue(meetings, fixture.listingIdentity);
+    const data = { allMeetings: all, meetings, venues, listingIdentity: fixture.listingIdentity,
+      result: { meetings: all, listingIdentity: fixture.listingIdentity, coverage: fixture.coverage, tier: 'exact', radiusKm: 25, requestedRadiusKm: 25, center: { lat: 32.2217, lng: -110.9695 } },
+      location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: 'ZIP' };
+    const render = (ui, child) => renderToStaticMarkup(h(DataProvider, { value: data }, h(UiProvider, { initial: ui }, child)));
+
+    const out = { events: events.map((m) => ({ id: m.id, gap: m.venueGap })), kept: meetings.filter((m) => m.venueGap).map((m) => m.id) };
+    out.list = render({ listOverlayOpen: true, listGroupBy: 'none' }, h(ListOverlay, { onPickMeeting: () => {} }));
+    const duffy = venues.find((v) => /Duffy Community Center/.test(v.name));
+    out.duffyPins = duffy ? duffy.meetings.map((m) => m.id) : null;
+    out.duffyPlaceless = duffy ? placelessSittingsOfVenueBodies(duffy, meetings).map((m) => m.id) : [];
+    out.duffy = duffy ? render({}, h(MeetingPanel, { venue: duffy, placeless: placelessSittingsOfVenueBodies(duffy, meetings), onClose: () => {}, onOpenMeeting: () => {} })) : '';
+    out.popups = Object.fromEntries(events.map((m) => [m.id, render({}, h(MeetingPopup, { meeting: m, onClose: () => {} }))]));
+    console.log(JSON.stringify(out));
+  `;
+  const output = execFileSync(
+    process.execPath,
+    [
+      "--import", "data:text/javascript,process.geteuid=()=>0",
+      "--import", "tsx",
+      "--import", "./scripts/register-test-loader.mjs",
+      "--input-type=module", "-e", script,
+    ],
+    { cwd: ROOT, encoding: "utf8", timeout: 240_000, maxBuffer: 16 * 1024 * 1024 },
+  );
+  const r = JSON.parse(output.trim().split("\n").pop()!) as {
+    events: { id: string; gap: Meeting["venueGap"] }[];
+    kept: string[];
+    list: string;
+    duffyPins: string[] | null;
+    duffyPlaceless: string[];
+    duffy: string;
+    popups: Record<string, string>;
+  };
+  const text = (html: string) =>
+    html.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  const rowIds = (html: string) => [...html.matchAll(/data-meeting-id="([^"]+)"/g)].map((m) => m[1]);
+  const rowMarkup = (html: string, id: string) => {
+    const start = html.indexOf(`data-meeting-id="${id}"`);
+    if (start < 0) return "";
+    const next = html.indexOf("data-meeting-id=", start + 20);
+    return html.slice(start, next < 0 ? undefined : next);
+  };
+  const fails: string[] = [];
+  const check = (ok: boolean, what: string) => {
+    if (!ok) fails.push(what);
+  };
+
+  const cholla = r.events.find((e) => e.gap?.publishedText === CHOLLA);
+  const joint = r.events.find((e) => e.gap?.kind === "NOT_STATED_BY_PUBLISHER");
+  assert.ok(cholla && joint, "the page's Cholla session and a Joint Committee date are produced");
+  check(r.kept.includes(cholla.id) && r.kept.includes(joint.id), "the reader's default filters drop a venue-gap sitting");
+
+  // ── The meeting list: listed, the stated place as text, never online. ──
+  for (const e of [cholla, joint]) {
+    const row = rowMarkup(r.list, e.id);
+    check(row.length > 0, `list: ${e.id} is not rendered`);
+    check(!/data-status="online"/.test(row), `list: ${e.id} is marked online`);
+    check(!/data-meeting-where="unrecorded"/.test(row), `list: ${e.id} says the place is not recorded`);
+  }
+  const chollaRow = text(rowMarkup(r.list, cholla.id));
+  check(/data-meeting-where="stated"/.test(chollaRow) && chollaRow.includes(` · ${CHOLLA}`), `list: the Cholla row does not show "${CHOLLA}"`);
+  const jointRow = text(rowMarkup(r.list, joint.id));
+  check(/data-meeting-where="not-stated"/.test(jointRow) && jointRow.includes("place not stated by the publisher"), "list: the Joint Committee row does not name the publisher's gap");
+
+  // ── The body's pin panel: listed, the place as text, stated N = rows. ──
+  check(!r.duffyPins?.includes(cholla.id), "Duffy pin: a venue-gap sitting was given the building's pin");
+  check(r.duffyPlaceless.includes(cholla.id) && r.duffyPlaceless.includes(joint.id), "Duffy panel: the district's venue-gap sittings are not handed to the panel");
+  const duffyIds = rowIds(r.duffy);
+  check(duffyIds.includes(cholla.id) && duffyIds.includes(joint.id), "Duffy panel: a venue-gap sitting is not rendered");
+  const chollaPanel = text(rowMarkup(r.duffy, cholla.id));
+  check(/data-meeting-where="stated"/.test(chollaPanel) && chollaPanel.includes(CHOLLA), `Duffy panel: the Cholla row does not show "${CHOLLA}"`);
+  check(!chollaPanel.includes(PLACE_UNRECORDED_LINE), "Duffy panel: the Cholla row says we have not recorded a place");
+  check(!/data-status="online"/.test(chollaPanel), "Duffy panel: the Cholla row is marked online");
+  const jointPanel = text(rowMarkup(r.duffy, joint.id));
+  check(/data-meeting-where="not-stated"/.test(jointPanel) && jointPanel.includes(NOT_STATED), "Duffy panel: the Joint Committee row does not name the publisher's gap");
+  const eyebrow = /class="notice-eyebrow[^"]*"[^>]*>([^<]*)</.exec(r.duffy)?.[1] ?? "";
+  const eyebrowText = text(eyebrow);
+  const stated = Number(/^(\d+) public meetings/.exec(eyebrowText)?.[1]);
+  check(stated === duffyIds.length, `Duffy panel: states ${stated}, renders ${duffyIds.length} rows`);
+  const parts = [...eyebrowText.matchAll(/ · (\d+) /g)].map((m) => Number(m[1]));
+  check(parts.reduce((a, b) => a + b, 0) === duffyIds.length, `Duffy panel: the split "${eyebrowText}" does not sum to ${duffyIds.length} rows`);
+  check(/places? named below/.test(eyebrowText) && /with no place stated by the publisher/.test(eyebrowText), `Duffy panel: the split "${eyebrowText}" does not name the venue-gap rows`);
+
+  // ── The meeting's own card. ──
+  const chollaCard = text(r.popups[cholla.id] ?? "");
+  check(chollaCard.includes(CHOLLA), `card: the Cholla session does not show "${CHOLLA}"`);
+  check(!chollaCard.includes(PLACE_UNRECORDED_LINE), "card: the Cholla session says we have not recorded a place");
+  check(!chollaCard.includes("Online only"), "card: the Cholla session is called online");
+  const jointCard = text(r.popups[joint.id] ?? "");
+  check(jointCard.includes(NOT_STATED), "card: the Joint Committee meeting does not name the publisher's gap");
+  check(!jointCard.includes(PLACE_UNRECORDED_LINE) && !jointCard.includes("Online only"), "card: the Joint Committee meeting says 'not recorded' or 'online'");
+
+  assert.deepEqual(fails, [], `\n  ${fails.join("\n  ")}`);
+});

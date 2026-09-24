@@ -2933,12 +2933,20 @@ const runRecord = {
       freeWalks: {
         dispatched: freeWalkSubjects.length,
         read: freeWalks !== UNREAD_FREE_DISCOVERY_WALKS,
-        source: freeWalks.source,
-        byReading: freeWalkSubjects.reduce<Record<string, number>>((m, s) => {
-          const reading = freeWalks.latestFor(s.jurisdictionId);
-          m[reading] = (m[reading] ?? 0) + 1;
-          return m;
-        }, {}),
+        source:
+          freeWalks !== UNREAD_FREE_DISCOVERY_WALKS
+            ? freeWalks.source
+            : freeWalkSubjects.length === 0
+              ? "not read: the owner's dispatch has materialized no meetings discovery"
+              : "not read: the paid lane is closed, so no admission reaches the hold",
+        byReading:
+          freeWalks === UNREAD_FREE_DISCOVERY_WALKS
+            ? {}
+            : freeWalkSubjects.reduce<Record<string, number>>((m, s) => {
+                const reading = freeWalks.latestFor(s.jurisdictionId);
+                m[reading] = (m[reading] ?? 0) + 1;
+                return m;
+              }, {}),
         registryFailures: dispatchedDiscovery.failures,
       },
       /* The unpaid meetings-discovery phase: whether it ran, and every walk it made (2026-09-23). */

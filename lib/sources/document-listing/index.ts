@@ -12,6 +12,7 @@ import {
 } from "../../meetings/constants.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { SourceHttpError, decodeEntities } from "../http.ts";
+import { dateOfDay, dayNumber } from "../ical/recurrence.ts";
 import { makePermissionGate, permittedText } from "../permission-gate.ts";
 import {
   accountedNormalize,
@@ -166,11 +167,14 @@ export interface DatedLabel {
 /** A document's own qualifier words, never part of a sitting's kind. */
 const QUALIFIER = /\b(?:draft|approved|amended|revised|cancell?ed)\b/gi;
 
-/** A calendar date that exists: 2/30 is not rolled into March. */
-function isoDate(year: number, month: number, day: number): string | null {
-  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-  const d = new Date(Date.UTC(year, month - 1, day));
-  if (d.getUTCFullYear() !== year || d.getUTCMonth() !== month - 1 || d.getUTCDate() !== day) return null;
+/**
+ * A calendar date that exists, read through the shared calendar arithmetic
+ * (`lib/sources/ical/recurrence.ts`): 2/30 is not rolled into March, because
+ * its day number does not come back as the date written.
+ */
+function existingDate(year: number, month: number, day: number): string | null {
+  const back = dateOfDay(dayNumber(year, month, day));
+  if (back.y !== year || back.m !== month || back.d !== day) return null;
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
@@ -190,7 +194,7 @@ export function datedLabel(label: string): DatedLabel | { readonly kind: string;
   const kind = m[1].replace(/^[\s,:–—-]+|[\s,:–—-]+$/g, "").trim();
   if (!/[A-Za-z]/.test(kind)) return null;
   const year = m[4].length === 2 ? 2000 + Number(m[4]) : Number(m[4]);
-  const date = isoDate(year, Number(m[2]), Number(m[3]));
+  const date = existingDate(year, Number(m[2]), Number(m[3]));
   if (!date) return { kind, date: null };
   let time: { hour: number; minute: number } | null = null;
   if (m[5] !== undefined) {

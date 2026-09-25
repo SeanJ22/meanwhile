@@ -21,8 +21,11 @@
  *  5. READER       a new version: a PASS Reader readback on it after the read, and the
  *                  composed Reader snapshot composed from it. An unchanged read: readers
  *                  stay on the pointed version, whose newest readback is PASS.
- *                  CHECK_TIME_AT_READER: the Reader snapshot's "Last checked" instant
- *                  (`generated_at`) is no older than this read's retrieval.
+ *                  CHECK_TIME_AT_READER: the public Reader manifest's "Last checked"
+ *                  is no older than this read's retrieval, and for a read that found
+ *                  nothing new, so is its route's check (`freshChecks`,
+ *                  lib/meetings/fresh-checks.ts). WAITING for 15 minutes after the
+ *                  read, while the pass's Reader repair publishes the edge.
  *  6. NEXT_DUE     the runner's own clock (the store's `clock()`, through the read-only
  *                  credential) and its own functions give the next deadline, and it is
  *                  the normal rule's: an hour after the read while hourly, twelve hours
@@ -32,8 +35,9 @@
  * `WTP_PRODUCTION_DATABASE_URL_READONLY` (a read-only role; the raw queries also
  * run inside a READ ONLY transaction), and the control plane is read inside a
  * READ ONLY transaction on `WTP_CONTROL_PLANE_DATABASE_URL`. Variable names
- * only; no value is printed. `--edge` also reads the public Reader manifest,
- * which writes nothing. A few kilobytes cross the wire.
+ * only; no value is printed. The public Reader manifest (`/api/reader/manifest`,
+ * about 140 KB) is read once and writes nothing; `--edge` also compares it with
+ * the database's serving copy. A few kilobytes cross the database wire.
  *
  * ```
  *   node --env-file=<checkout>/.env.local --experimental-strip-types \
@@ -48,6 +52,7 @@
 import { neon } from "@neondatabase/serverless";
 
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import {
   ROUTINE_SOURCE_TASKS,
   routineTaskDeadlineMs,
@@ -72,11 +77,13 @@ type Verdict = "PASS" | "FAIL" | "WAITING";
 const args = process.argv.slice(2);
 const arg = (name: string): string | undefined => args.find((value) => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const redact =(text: string): string => text.replace(/postgres(?:ql)?:\/\/\S+/gi, "<connection string redacted>");
+/** Arizona time: MST is UTC-7 all year (Arizona keeps no daylight time), so it is a fixed offset. */
+const MST_OFFSET_MS = 7 * 3_600_000;
 const mst = (value: string | number | null | undefined): string => {
   if (value === null || value === undefined) return "—";
   const ms = typeof value === "number" ? value : Date.parse(value);
   return Number.isFinite(ms)
-    ? `${new Date(ms).toLocaleString("en-US", { timeZone: "America/Phoenix", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", second: "2-digit" })} MST`
+    ? `${new Date(ms - MST_OFFSET_MS).toISOString().slice(0, 19).replace("T", " ")} MST`
     : String(value);
 };
 /** A column as text; the driver returns timestamps as Date objects, rendered here as ISO instants. */
@@ -367,7 +374,17 @@ else {
     `${read.kind === "NEW_VERSION" ? `pointer moved to ${read.candidateId}` : `unchanged confirmation of the pointed version ${read.candidateId}`}; pointer now ${pointed}; pass receipt ${text(receipt?.classification) || "not found"}${receiptBody?.confirmedAt ? ` (confirmedAt ${mst(text(receiptBody.confirmedAt))})` : ""}`);
 }
 
-// 5. Reader delivery.
+// 5. Reader delivery. The public Reader manifest is what readers are served;
+// reading it writes nothing (no search row; the header marks the probe).
+let publicManifest: Row | null = null;
+let publicManifestError = "";
+try {
+  const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/reader/manifest`, { headers: { [SYNTHETIC_RUN_HEADER]: "refresh-schedule-probe" } });
+  if (response.ok) publicManifest = await response.json() as Row;
+  else publicManifestError = `HTTP ${response.status}`;
+} catch (error) {
+  publicManifestError = error instanceof Error ? error.message : String(error);
+}
 const snapshot = production.snapshot![0];
 const member = snapshot?.member as Row | null | undefined;
 const parseReadback = (detail: string): Row | null => {
@@ -391,10 +408,20 @@ if (read && !read.kind.startsWith("FAILED")) {
     check("READER", ok ? "PASS" : "FAIL",
       `readers stay on ${read.candidateId}: snapshot v${String(snapshot?.sequence)} serves ${served || "no member"}; newest readback on it ${newest ? `${text(newest.status)} at ${mst(text(newest.observedAt))}` : "none"}`);
   }
-  const generated = Date.parse(text(snapshot?.generated_at));
-  check("CHECK_TIME_AT_READER", generated >= Date.parse(read.retrievedAt) ? "PASS" : "FAIL",
-    `the Reader's "Last checked" instant (snapshot generated_at) is ${mst(generated)}; this read retrieved at ${mst(read.retrievedAt)}` +
-      (generated >= Date.parse(read.retrievedAt) ? "" : " — an unchanged confirmation does not reach the Reader's freshness line (prepared-snapshot.ts recomposes on version changes only)"));
+  // What readers are told (lib/meetings/fresh-checks.ts): the public manifest's
+  // "Last checked", and for a read that found nothing new, its route's check.
+  const retrieved = Date.parse(read.retrievedAt);
+  const lastChecked = Date.parse(text(publicManifest?.generatedAt));
+  const partition = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === task.id);
+  const route = partition ? `${partition.meetingSource}|${partition.bodyId}` : "";
+  const routeCheck = Date.parse(text((publicManifest?.freshChecks as Row | undefined)?.[route]));
+  const delivered = lastChecked >= retrieved && (read.kind === "NEW_VERSION" || routeCheck >= retrieved);
+  // The edge publish runs in the same pass's Reader repair, minutes after the read.
+  const settling = nowMs - read.at < 15 * 60_000;
+  check("CHECK_TIME_AT_READER", delivered ? "PASS" : settling ? "WAITING" : "FAIL",
+    `public "Last checked" ${mst(lastChecked)}` +
+      (read.kind === "NEW_VERSION" ? "" : `, this route's check ${Number.isFinite(routeCheck) ? mst(routeCheck) : "absent"}`) +
+      `; this read retrieved at ${mst(read.retrievedAt)}`);
 } else check("READER", read ? "FAIL" : "WAITING", read ? "a failed read publishes nothing new; readers keep the last verified version" : "no read yet");
 
 // 6. The next due, from the runner's own clock and functions.
@@ -414,18 +441,13 @@ else {
       `(normal rule: ${mst(expected)}); due now: ${routineTaskDue(task, clock, nowMs, hot) ? "yes" : "no"}; request ${requestState ?? "none"}`);
 }
 
-// Optional: the public Reader manifest the edge serves (writes nothing).
+// `--edge`: the edge serves the database's composition (the same, or a later, generation instant).
 if (edge) {
-  try {
-    const response = await fetch(`${PUBLIC_SITE_ORIGIN}/api/reader/manifest`, { headers: { [SYNTHETIC_RUN_HEADER]: "refresh-schedule-probe" } });
-    const manifest = await response.json() as Row;
-    // The edge serves the database's composition when it carries the same (or a later) generation instant.
-    const edgeGenerated = Date.parse(text(manifest.generatedAt));
-    check("EDGE", response.ok && edgeGenerated >= Date.parse(text(snapshot?.generated_at)) ? "PASS" : "WAITING",
-      `public manifest ${response.status}: edge sequence ${String(manifest.sequence)}, generated ${mst(edgeGenerated)}; database snapshot v${String(snapshot?.sequence)} generated ${mst(text(snapshot?.generated_at))}`);
-  } catch (error) {
-    check("EDGE", "FAIL", `the public manifest could not be read: ${error instanceof Error ? error.message : String(error)}`);
-  }
+  const edgeGenerated = Date.parse(text(publicManifest?.generatedAt));
+  check("EDGE", publicManifest !== null && edgeGenerated >= Date.parse(text(snapshot?.generated_at)) ? "PASS" : publicManifest === null ? "FAIL" : "WAITING",
+    publicManifest === null
+      ? `the public manifest could not be read: ${publicManifestError}`
+      : `public manifest: edge sequence ${String(publicManifest.sequence)}, generated ${mst(edgeGenerated)}; database snapshot v${String(snapshot?.sequence)} generated ${mst(text(snapshot?.generated_at))}`);
 }
 
 console.log(`refresh-schedule-probe · ${task.id}`);

@@ -10,10 +10,17 @@ import type {
   PublishRegistrations,
 } from "../../lib/meetings/edge-serving.ts";
 import type { PrepareMeetingSnapshotResult } from "../../lib/meetings/prepared-snapshot.ts";
+import { sameMeetingFreshChecks } from "../../lib/meetings/fresh-checks.ts";
 
 export type ReaderEdgeCarry =
   | { readonly current: true; readonly sequence: number }
-  | { readonly current: false; readonly reason: string };
+  /**
+   * Everything the edge serves is carried except the quiet re-checks: the same
+   * composition, re-checked since. Only the manifest is republished
+   * (`publishReaderEdgeChecks`), and the prepared row is not read.
+   */
+  | { readonly current: false; readonly checksOnly: true; readonly reason: string }
+  | { readonly current: false; readonly checksOnly?: false; readonly reason: string };
 
 /** The embedded families exactly as `publishReaderEdgeArtifacts` fingerprints them. */
 function extrasFingerprint(extras: { readonly commentAccess?: unknown; readonly everydayRouting?: unknown }): string {
@@ -49,6 +56,14 @@ function extrasFingerprint(extras: { readonly commentAccess?: unknown; readonly 
  *
  * Any other case reads the row and publishes as before; nothing here decides a
  * publish, only that one would change nothing.
+ *
+ * **Quiet re-checks (2026-09-25, lib/meetings/fresh-checks.ts).** Since
+ * migration 0029 a re-check that finds nothing new confirms the version instead
+ * of promoting a copy, so "Last checked" and the route checks can move while the
+ * composition stands. The composition is named by `composition` (the exact
+ * partition versions); a manifest written before it existed is linked, as it
+ * always was, by the composition's own generation instant. When only the checks
+ * differ, the answer is `checksOnly`: republish the manifest alone.
  */
 export function readerEdgeCarriesForward(input: {
   readonly prepared: PrepareMeetingSnapshotResult;
@@ -64,8 +79,11 @@ export function readerEdgeCarriesForward(input: {
   if (manifest.formatVersion !== READER_ARTIFACT_FORMAT_VERSION) {
     return { current: false, reason: `served manifest format ${String(manifest.formatVersion)}` };
   }
-  if (manifest.generatedAt !== prepared.generatedAt) {
-    return { current: false, reason: `served manifest generated ${manifest.generatedAt}, prepared ${prepared.generatedAt}` };
+  const sameComposition = manifest.composition !== undefined
+    ? manifest.composition === prepared.composition
+    : manifest.generatedAt === prepared.generatedAt;
+  if (!sameComposition) {
+    return { current: false, reason: `served manifest generated ${manifest.generatedAt} from another composition than the prepared ${prepared.generatedAt}` };
   }
   if (extras === undefined) return { current: false, reason: "embedded families were not read" };
   if (extrasFingerprint(extras) !== extrasFingerprint(manifest)) {
@@ -92,5 +110,10 @@ export function readerEdgeCarriesForward(input: {
       return { current: false, reason: `registration ${state} moved` };
     }
   }
-  return { current: true, sequence: manifest.sequence };
+  const statesChecks = manifest.generatedAt === (prepared.servedGeneratedAt ?? prepared.generatedAt) &&
+    manifest.composition === prepared.composition &&
+    sameMeetingFreshChecks(manifest.freshChecks, prepared.freshChecks);
+  return statesChecks
+    ? { current: true, sequence: manifest.sequence }
+    : { current: false, checksOnly: true, reason: `re-checked since: last checked ${prepared.servedGeneratedAt ?? prepared.generatedAt}, served ${manifest.generatedAt}` };
 }

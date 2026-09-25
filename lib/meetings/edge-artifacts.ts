@@ -127,6 +127,21 @@ export interface ReaderManifest {
    * state from the database.
    */
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  /**
+   * **Quiet re-checks, applied when served** (2026-09-25, lib/meetings/fresh-checks.ts).
+   * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
+   * nothing new since its rows were written. The reader restamps that route's
+   * fresh rows with it; carried rows never. `generatedAt` above already states
+   * the newest check as "Last checked". Absent: no check since the artifacts.
+   */
+  readonly freshChecks?: Readonly<Record<string, string>>;
+  /**
+   * The partition versions these scope artifacts were composed from
+   * (`meetingCompositionId`): how the runner tells a quiet re-check, which
+   * republishes this manifest alone, from new data, which republishes the
+   * scopes. Absent on manifests written before it.
+   */
+  readonly composition?: string;
 }
 
 export type AuthorityFamily =

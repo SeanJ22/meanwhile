@@ -102,14 +102,14 @@ test("a family left out this pass that the manifest does not serve either change
   const without = <T extends PublishAuthority>(authority: T): PublishAuthority =>
     Object.fromEntries(Object.entries(authority).filter(([family]) => family !== "pima-finance"));
   const published = await publishReaderEdgeArtifacts(snapshot(), META, {
-    store, now: GENERATED_AT, extras: EXTRAS, authority: without(VALUES), registrations: REGISTRATION_VALUES,
+    store, now: GENERATED_AT, extras: EXTRAS, authority: without(VALUES), registrations: REGISTRATION_VALUES, checks: CHECKS,
   });
   assert.equal(published.status, "PUBLISHED");
   const manifest = (await store.readManifest())!.manifest;
   assert.equal(manifest.authorityArtifacts?.["pima-finance"], undefined);
   const input = { prepared: CURRENT_PREPARED, servedManifest: manifest, extras: { ...EXTRAS }, authority: without(CARRIED), registrations: REGISTRATIONS_CARRIED };
   assert.deepEqual(readerEdgeCarriesForward(input), { current: true, sequence: manifest.sequence });
-  const publish = await publishReaderEdgeArtifacts(snapshot(), META, { store, now: "2026-09-25T15:05:00.000Z", ...input });
+  const publish = await publishReaderEdgeArtifacts(snapshot(), META, { store, now: "2026-09-25T15:05:00.000Z", ...input, checks: CHECKS });
   assert.equal(publish.status, "CURRENT", "the publish would have changed the edge");
 });
 

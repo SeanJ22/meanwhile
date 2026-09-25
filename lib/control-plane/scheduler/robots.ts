@@ -1,24 +1,50 @@
 /**
  * **A robots.txt EVALUATOR. Pure; no network.** (Level 1 activation, 2026-09-01.)
  *
- * RULING 182: permission and transport are orthogonal, and the verdict here
- * never collapses them. Four verdicts:
+ * **ROBOTS.TXT IS READ AND RECORDED, NEVER A REFUSAL BY ITSELF.** Owner
+ * decision, Sean, 2026-09-25: "Robots.txt alone must not block acquisition. I
+ * explicitly authorize automated reading of publicly accessible pages even when
+ * robots.txt requests otherwise." It does not extend to bypassing
+ * authentication or other access controls, and existing spending limits and
+ * the paid-research pause remain in force.
+ *
+ * So every fetcher still reads the host's robots.txt, evaluates it here, and
+ * records the verdict with what the document said and when it was read — but
+ * `ROBOTS_BLOCKS_ACQUISITION` is `false`: no verdict below stops a request for a
+ * public page. `Crawl-delay` is still honoured as spacing. What does stop a
+ * request is an ACCESS CONTROL on the page itself (`lib/hunt/access-control.ts`):
+ * a login, a paywall, a 403 or bot challenge, a rate limit. Those are technical
+ * failures to investigate by other public routes, never something to defeat.
+ *
+ * Permission and transport stay orthogonal (RULING 182, historical), and the
+ * verdict here never collapses them. Four verdicts, all of them evidence:
  *
  * ```
  *   ALLOWED      a robots document was READ and its rules permit the path
- *   DISALLOWED   a robots document was READ and its rules refuse the path —
- *                honoured, and never re-walked on a clock
- *   NO_ROBOTS    the host serves NO robots document (404/410) — an absence of
- *                restrictions, never a grant; the path may be opened
+ *   DISALLOWED   a robots document was READ and its rules name the path —
+ *                recorded with the matched rule; a public page is still read
+ *   NO_ROBOTS    the host serves NO robots document (404/410)
  *   CANNOT_TELL  the document could not be read AS a robots document: a wall
  *                (401/403/429), a timeout, a 3xx, a 5xx, or a 200 that is an
- *                HTML page — FAILS SAFE; the caller does not open the host
+ *                HTML page — recorded as unread, never as "no robots file";
+ *                the page's own answer decides whether it can be read
  * ```
  *
  * Matching is Google/RFC 9309 semantics: the group for OUR product token if one
  * exists, else `*`; longest-match between Allow and Disallow, Allow winning a
  * tie; `*` wildcard and `$` end anchor in paths; an empty `Disallow:` is no rule.
  */
+
+/**
+ * The owner decision of 2026-09-25 as a value every gate reads: a robots.txt
+ * verdict is evidence to record, and never refuses a public page by itself.
+ * `tests/robots-recorded-not-blocking.test.ts` holds every fetcher to it.
+ */
+export const ROBOTS_BLOCKS_ACQUISITION = false as const;
+
+/** The citation a record carries when a public page was read over a robots.txt that names it. */
+export const ROBOTS_OWNER_DECISION =
+  "robots.txt recorded, not blocking (owner decision 2026-09-25, docs/rulings.md: public pages only; access controls are never bypassed)";
 
 export type PermissionVerdict = "ALLOWED" | "DISALLOWED" | "NO_ROBOTS" | "CANNOT_TELL";
 
@@ -246,33 +272,33 @@ export function evaluatePermission(
   });
 
   if (read.transportError !== null) {
-    return none("CANNOT_TELL", `robots.txt could not be retrieved with this client: ${read.transportError}. A transport failure is not a reading of the host's rules; fail safe`);
+    return none("CANNOT_TELL", `robots.txt could not be retrieved with this client: ${read.transportError}. A transport failure is not a reading of the host's rules; recorded as unread`);
   }
   const status = read.status;
-  if (status === null) return none("CANNOT_TELL", "robots.txt read returned no status and no error; fail safe");
+  if (status === null) return none("CANNOT_TELL", "robots.txt read returned no status and no error; recorded as unread");
   if (status === 404 || status === 410) {
-    return none("NO_ROBOTS", `robots.txt answered HTTP ${status}: the host serves no robots document. An absence of restrictions, never a grant`);
+    return none("NO_ROBOTS", `robots.txt answered HTTP ${status}: the host serves no robots document. Nothing to record beyond its absence`);
   }
   if (status >= 300 && status < 400) {
-    return none("CANNOT_TELL", `robots.txt answered HTTP ${status} (a redirect that was not followed to a robots document); fail safe`);
+    return none("CANNOT_TELL", `robots.txt answered HTTP ${status} (a redirect that was not followed to a robots document); recorded as unread`);
   }
   if (status === 401 || status === 403 || status === 429) {
-    return none("CANNOT_TELL", `robots.txt answered HTTP ${status} to this client — a wall in front of the permission document, not a rule. Fail safe: this client does not open the host`);
+    return none("CANNOT_TELL", `robots.txt answered HTTP ${status} to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides`);
   }
   if (status >= 400) {
-    return none("CANNOT_TELL", `robots.txt answered HTTP ${status}; not a robots document and not a 404. Fail safe`);
+    return none("CANNOT_TELL", `robots.txt answered HTTP ${status}; not a robots document and not a 404. Recorded as unread`);
   }
   if (status < 200 || status >= 300) {
-    return none("CANNOT_TELL", `robots.txt answered HTTP ${status}; fail safe`);
+    return none("CANNOT_TELL", `robots.txt answered HTTP ${status}; recorded as unread`);
   }
 
   const text = read.robotsText ?? "";
   if (looksLikeHtml(text, read.contentType)) {
-    return none("CANNOT_TELL", "robots.txt answered HTTP 200 with an HTML page, not a robots document (a redirect to a page, or a soft 404). Nothing was read; fail safe");
+    return none("CANNOT_TELL", "robots.txt answered HTTP 200 with an HTML page, not a robots document (a redirect to a page, or a soft 404). Recorded as unread");
   }
   const doc = parseRobots(text);
   if (doc.directiveCount === 0 && text.trim() !== "") {
-    return none("CANNOT_TELL", "robots.txt answered HTTP 200 with a body carrying no robots directive at all; not robots-shaped, so fail safe");
+    return none("CANNOT_TELL", "robots.txt answered HTTP 200 with a body carrying no robots directive at all; not robots-shaped, so recorded as unread");
   }
 
   let target: string;

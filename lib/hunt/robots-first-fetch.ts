@@ -1,48 +1,64 @@
 /**
- * **A RESEARCH FETCH THAT CANNOT SEND A REQUEST BEFORE ROBOTS.TXT.** (2026-09-24, R15.)
+ * **A RESEARCH FETCH THAT READS ROBOTS.TXT FIRST, RECORDS IT, AND NEVER DEFEATS
+ * AN ACCESS CONTROL.** (2026-09-24, R15; robots made evidence rather than a
+ * gate by the owner decision of 2026-09-25.)
  *
  * Research sessions and their agents read government sites to find and verify
  * routes: an official site, a meetings page, a feed. They did it with ad-hoc
  * curl, and robots-first was an instruction, not a property. On 2026-09-24 a
  * verification agent's own script mistook an unread second robots.txt redirect
- * for "no robots file" and sent four homepage requests (Brookline and Swanzey,
- * NH) before either host's rules were read. Every one answered 301, and both
- * towns were excluded, but the rule had been broken by construction.
+ * for "no robots file". Reading the rules first, and recording what they said,
+ * is still a property of construction here.
  *
- * This is the construction. Every request goes through `researchFetch`, which:
+ * What changed on 2026-09-25 is what the reading DOES. Sean: "Robots.txt alone
+ * must not block acquisition. I explicitly authorize automated reading of
+ * publicly accessible pages even when robots.txt requests otherwise." So the
+ * verdict is recorded with the fetch (`permissions`: verdict, matched rule, the
+ * document's sha256, when it was read) and the public page is requested. The
+ * same decision "does not extend to bypassing authentication or other access
+ * controls", and neither does this module. Every request goes through
+ * `researchFetch`, which:
  *
- * 1. refuses, with no request at all, a URL that is not public http(s), a host
- *    whose owner refused us (the discovery walk's RECORDED_WALLS), and a host
- *    whose use waits on the owner's decision (destinyhosted.com);
+ * 1. refuses, with no request at all, a URL that is not public http(s) and a
+ *    host recorded as walling this client by an access control (the discovery
+ *    walk's RECORDED_WALLS: a 403 to an identified client, never a robots line);
  * 2. reads the host's robots.txt before anything else on that origin, follows
- *    its redirects as RFC 9309 asks (at most five, public hops only), and
- *    evaluates it with the standing runner's own evaluator for the
- *    `we-the-people` token. DISALLOWED and CANNOT_TELL refuse; a robots.txt that
- *    could not be read is never "no robots file";
- * 3. follows a page's redirects one hop at a time, asking step 2 again of every
- *    new origin before requesting anything from it;
+ *    its redirects as RFC 9309 asks (at most five, public hops only), evaluates
+ *    it with the standing runner's own evaluator for the `we-the-people` token,
+ *    and RECORDS the verdict. No verdict refuses (`ROBOTS_BLOCKS_ACQUISITION`);
+ *    a robots.txt that could not be read is recorded CANNOT_TELL, never "no
+ *    robots file";
+ * 3. follows a page's redirects one hop at a time, reading and recording step 2
+ *    again for every new origin before requesting anything from it;
  * 4. spaces requests to one host (two seconds, or the host's own Crawl-delay
- *    when it asks for more), identifies itself as the project does, and hands
- *    every request, robots.txt included, to the caller's log.
+ *    when it asks for more), identifies itself as the project does, sends no
+ *    credential, cookie or session, and hands every request, robots.txt
+ *    included, to the caller's log;
+ * 5. names an access control on the answer (`accessControl`: 401/402/403/407/
+ *    429/451 or a bot challenge page, `lib/hunt/access-control.ts`). It is a
+ *    technical failure of this route, reported and never pushed through: a 429
+ *    backs the host off for `RATE_LIMIT_BACKOFF_MS` before anything else is
+ *    asked of it, and nothing is re-sent under another identity.
  *
- * There is no flag that skips a step. A caller that wants a page it may not
- * read gets a refusal with the reason, never the page.
+ * There is no flag that skips a step.
  */
 
 import { createHash } from "node:crypto";
 
+import { accessControlIn, RATE_LIMIT_BACKOFF_MS, type AccessControl } from "./access-control.ts";
 import { RECORDED_WALLS } from "./recorded-walls.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import { assertPublicUrl } from "./egress.ts";
 
-/** Hosts whose use waits on the owner's decision. Nothing is requested from them, robots.txt included. */
-export const OWNER_DECISION_HOSTS: readonly { readonly host: RegExp; readonly why: string }[] = [
-  {
-    host: /(^|\.)destinyhosted\.com$/i,
-    why: "its robots.txt reads as disallow-all (one line: User-agent: * Disallow: /); whether to ask or proceed is the owner's decision",
-  },
-];
+/**
+ * Hosts whose use waits on an owner decision. Nothing is requested from them, robots.txt included.
+ *
+ * Empty since 2026-09-25: its one entry, destinyhosted.com, waited only on whether a disallow-all robots.txt
+ * should stop us, and the owner decided that robots.txt alone never does. A host goes here only for a real,
+ * pending owner decision, never for a robots line.
+ */
+export const OWNER_DECISION_HOSTS: readonly { readonly host: RegExp; readonly why: string }[] = [];
 
 const MAX_ROBOTS_REDIRECTS = 5;
 const DEFAULT_MAX_HOPS = 4;
@@ -74,6 +90,8 @@ export interface RobotsMemo {
   readonly status: number | null;
   readonly transportError: string | null;
   readonly contentType: string | null;
+  /** sha256 of the bytes read; null on a transport failure. Absent on a memo written before 2026-09-25. */
+  readonly robotsSha256?: string | null;
   /** The redirects followed to reach it. */
   readonly via: readonly string[];
   readonly readAt: string;
@@ -110,6 +128,19 @@ export interface ResearchRuntime {
   readonly maxHops?: number;
 }
 
+/** One origin's robots.txt reading as it travels with the fetch: recorded evidence, never a refusal. */
+export interface RobotsPermissionRecord {
+  readonly origin: string;
+  readonly verdict: PermissionVerdict;
+  readonly detail: string;
+  /** The rule that decided the verdict, as written; null when none matched or nothing was read. */
+  readonly matchedRule?: string | null;
+  /** When the robots.txt this reading rests on was read. */
+  readonly readAt?: string;
+  /** sha256 of the robots.txt bytes as read; null when nothing was read. */
+  readonly robotsSha256?: string | null;
+}
+
 export type ResearchFetchResult =
   | {
       readonly outcome: "FETCHED";
@@ -120,8 +151,10 @@ export type ResearchFetchResult =
       readonly contentType: string;
       readonly body: Uint8Array;
       readonly sha256: string | null;
+      /** The access control this answer put in front of the page, or null. A technical failure, never defeated. */
+      readonly accessControl: AccessControl | null;
       readonly redirects: readonly { readonly from: string; readonly status: number; readonly to: string }[];
-      readonly permissions: readonly { readonly origin: string; readonly verdict: PermissionVerdict; readonly detail: string }[];
+      readonly permissions: readonly RobotsPermissionRecord[];
     }
   | {
       readonly outcome: "REFUSED";
@@ -130,7 +163,7 @@ export type ResearchFetchResult =
       readonly refusedUrl: string;
       readonly reason: string;
       readonly redirects: readonly { readonly from: string; readonly status: number; readonly to: string }[];
-      readonly permissions: readonly { readonly origin: string; readonly verdict: PermissionVerdict; readonly detail: string }[];
+      readonly permissions: readonly RobotsPermissionRecord[];
     };
 
 function refusalFor(url: URL): string | null {
@@ -151,7 +184,7 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
   const timeoutMs = runtime.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const maxHops = runtime.maxHops ?? DEFAULT_MAX_HOPS;
   const redirects: { from: string; status: number; to: string }[] = [];
-  const permissions: { origin: string; verdict: PermissionVerdict; detail: string }[] = [];
+  const permissions: RobotsPermissionRecord[] = [];
   const iso = (): string => new Date(runtime.now()).toISOString();
 
   async function send(url: URL, purpose: ResearchLogEntry["purpose"], accept: string, delayMs: number) {
@@ -162,11 +195,13 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
     runtime.memory.noteRequest(host, runtime.now());
     const got = await runtime.get({ url: url.toString(), headers: { "user-agent": DEFAULT_USER_AGENT, accept }, timeoutMs });
     runtime.log?.({ at: iso(), purpose, url: url.toString(), status: got.status, transportError: got.transportError, bytes: got.body.byteLength });
+    /* A rate limit is honoured, never pushed through: nothing else is asked of the host until the back-off passes. */
+    if (got.status === 429) runtime.memory.noteRequest(host, runtime.now() + RATE_LIMIT_BACKOFF_MS);
     return got;
   }
 
-  /** The origin's robots.txt, read before anything else is requested there, then evaluated for this URL's path. */
-  async function permission(url: URL): Promise<{ readonly verdict: PermissionVerdict; readonly detail: string; readonly crawlDelayMs: number | null }> {
+  /** The origin's robots.txt, read before anything else is requested there, then evaluated for this URL's path and recorded. */
+  async function permission(url: URL): Promise<RobotsPermissionRecord & { readonly crawlDelayMs: number | null }> {
     const origin = url.origin;
     let memo = runtime.memory.robots(origin);
     if (memo === undefined) {
@@ -188,6 +223,7 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
       }
       memo = {
         robotsText: got.transportError === null ? new TextDecoder().decode(got.body) : null,
+        robotsSha256: got.transportError === null ? createHash("sha256").update(got.body).digest("hex") : null,
         status: got.status,
         transportError: got.transportError,
         contentType: got.contentType,
@@ -196,14 +232,22 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
       };
       runtime.memory.rememberRobots(origin, memo);
     }
-    /* A chain that ended on a redirect was not read: the evaluator says CANNOT_TELL, never "no robots file". */
+    /* A chain that ended on a redirect was not read: the evaluator says CANNOT_TELL, never "no robots file". Either is recorded. */
     const reading = evaluatePermission(
       { robotsText: memo.robotsText, status: memo.status, transportError: memo.transportError, contentType: memo.contentType },
       url.toString(),
       DEFAULT_ROBOTS_TOKEN,
     );
     const detail = memo.via.length === 0 ? reading.detail : `${reading.detail} (followed ${memo.via.length} redirect(s): ${memo.via.join(" → ")})`;
-    return { verdict: reading.verdict, detail, crawlDelayMs: reading.crawlDelayMs };
+    return {
+      origin,
+      verdict: reading.verdict,
+      detail,
+      matchedRule: reading.matchedRule,
+      readAt: memo.readAt,
+      robotsSha256: memo.robotsSha256 ?? null,
+      crawlDelayMs: reading.crawlDelayMs,
+    };
   }
 
   let current = start;
@@ -216,12 +260,10 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
     }
     const refused = refusalFor(url);
     if (refused !== null) return { outcome: "REFUSED", url: start, refusedUrl: url.toString(), reason: `not requested: ${refused}`, redirects, permissions };
-    const allowed = await permission(url);
-    permissions.push({ origin: url.origin, verdict: allowed.verdict, detail: allowed.detail });
-    if (allowed.verdict === "DISALLOWED" || allowed.verdict === "CANNOT_TELL") {
-      return { outcome: "REFUSED", url: start, refusedUrl: url.toString(), reason: `not requested: robots.txt ${allowed.verdict} (${allowed.detail})`, redirects, permissions };
-    }
-    const got = await send(url, "page", ACCEPT_PAGE, allowed.crawlDelayMs ?? 0);
+    /* Recorded, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false (owner decision 2026-09-25). */
+    const { crawlDelayMs, ...reading } = await permission(url);
+    permissions.push(reading);
+    const got = await send(url, "page", ACCEPT_PAGE, crawlDelayMs ?? 0);
     if (got.status !== null && got.status >= 300 && got.status < 400 && got.location !== null) {
       const to = new URL(got.location, url).toString();
       redirects.push({ from: url.toString(), status: got.status, to });
@@ -237,6 +279,8 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
       contentType: got.contentType,
       body: got.body,
       sha256: got.transportError === null ? createHash("sha256").update(got.body).digest("hex") : null,
+      accessControl:
+        got.transportError === null ? accessControlIn({ status: got.status, text: new TextDecoder().decode(got.body.subarray(0, 65_536)) }) : null,
       redirects,
       permissions,
     };

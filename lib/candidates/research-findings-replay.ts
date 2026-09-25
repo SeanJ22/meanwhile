@@ -23,7 +23,7 @@
  */
 import { createHash } from "node:crypto";
 
-import { evaluatePermission, DEFAULT_ROBOTS_TOKEN } from "../control-plane/scheduler/robots.ts";
+import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 import { createMemoryRepositories } from "../control-plane/repository/memory.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 import { appendTransition, contextFromRepositories, scoutResultItemId } from "../control-plane/promotion/pipeline.ts";
@@ -132,7 +132,11 @@ function originOf(url: string): string | null {
   }
 }
 
-/** A lead read from HELD bytes only: robots-first against a held robots.txt reading, or NOT_READ. */
+/**
+ * A lead read from HELD bytes only, with the robots reading it was held under recorded beside it, or NOT_READ.
+ * The reading is evidence and never refuses the page (owner decision 2026-09-25: robots.txt alone must not block
+ * acquisition).
+ */
 function offlineRead(held: readonly HeldRead[], lead: CampaignSiteLead): LeadReadResult {
   const pre = campaignSiteHostRefusal(lead.url);
   if (pre !== null) return { ok: false, refusal: pre };
@@ -140,13 +144,12 @@ function offlineRead(held: readonly HeldRead[], lead: CampaignSiteLead): LeadRea
   const robots = origin === null ? null : latestBy(held.filter((h) => h.canonicalUrl === `${origin}/robots.txt`));
   const page = latestBy(held.filter((h) => h.canonicalUrl === lead.url && /html/i.test(h.contentType)));
   if (page === null) return { ok: false, refusal: { code: "NOT_READ", detail: `the vault holds no read of ${lead.url}; a live robots-first read is owed` } };
+  const recorded = heldVerdict(page.permission);
   const permission = robots !== null
     ? evaluatePermission({ robotsText: robots.body, status: robots.httpStatus, transportError: null, contentType: robots.contentType }, lead.url, DEFAULT_ROBOTS_TOKEN)
-    : page.permission === "ALLOWED" ? { verdict: "ALLOWED" as const, detail: `the held read ${page.artifactId} ran under ALLOWED` } : null;
+    : recorded !== null ? { verdict: recorded, detail: `the held read ${page.artifactId} ran under ${page.permission}` } : null;
   if (permission === null) return { ok: false, refusal: { code: "NOT_READ", detail: `no held robots reading covers ${origin}; a live robots-first read is owed` } };
-  if (permission.verdict === "DISALLOWED" || permission.verdict === "CANNOT_TELL") {
-    return { ok: false, refusal: { code: "ROBOTS_REFUSED", detail: `${origin}: ${permission.verdict} (${permission.detail})` } };
-  }
+  /* Recorded with the read, never a refusal: ROBOTS_BLOCKS_ACQUISITION is false. */
   return {
     ok: true,
     read: {
@@ -154,6 +157,20 @@ function offlineRead(held: readonly HeldRead[], lead: CampaignSiteLead): LeadRea
       permissions: [{ origin: origin!, verdict: permission.verdict, detail: permission.detail }],
     },
   };
+}
+
+/** The robots verdict a vaulted read recorded (a workstate permission state), as the evaluator names it; null when none was recorded. */
+function heldVerdict(permission: string | null): PermissionVerdict | null {
+  switch (permission) {
+    case "ALLOWED":
+    case "DISALLOWED":
+    case "CANNOT_TELL":
+      return permission;
+    case "NOT_APPLICABLE":
+      return "NO_ROBOTS";
+    default:
+      return null;
+  }
 }
 
 /** A held finding as the SCOUTED record production maps it to (`scoutedFromScoutResult`): same item id, same Scout actor. */

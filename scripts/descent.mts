@@ -11,10 +11,11 @@
  *
  * ## Permission first, always
  *
- * RULING 148: every host is judged by `robots.txt` BEFORE the first byte, and
- * `CANNOT_TELL` refuses. The permission read itself walks the ladder to rung 4,
- * because a host refusing our User-Agent is a WALL and reading it as a RULE
- * silently removed `az.gov` and `nh.gov` from this project on 2026-08-26.
+ * Every host's `robots.txt` is read BEFORE the first byte and its verdict is
+ * recorded on the edge. Since the owner decision of 2026-09-25 no verdict
+ * refuses a public page ("Robots.txt alone must not block acquisition"); an
+ * access control on the page itself (401, 403, 429, a challenge) is a wall the
+ * walk records and never bypasses.
  *
  * ## What it writes
  *
@@ -149,7 +150,8 @@ async function mayWalk(url: string): Promise<{ ok: boolean; verdict: string }> {
   }
   const cached = permission.get(host);
   const v = await judgeUrl(url);
-  const ok = v.verdict === "ALLOWED" || v.verdict === "NO_ROBOTS";
+  /* Recorded, never a refusal: robots.txt alone must not block acquisition (owner decision 2026-09-25). */
+  const ok = true;
   if (cached === undefined) permission.set(host, ok);
   return { ok, verdict: v.verdict };
 }

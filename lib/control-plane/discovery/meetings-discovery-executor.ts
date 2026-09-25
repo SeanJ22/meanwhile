@@ -10,12 +10,13 @@
  * For one need it:
  *
  * 1. reads robots.txt for the government's own origin before any other
- *    request, following its redirects as RFC 9309 asks, and walks only what
- *    the verdict allows (DISALLOWED and CANNOT_TELL send nothing). Only a real
- *    wall makes the walk BLOCKED; rules that could not be read make it
- *    COULD_NOT_READ;
- * 2. reads the homepage, following redirects one hop at a time. Each new host
- *    is asked for permission before anything is requested from it;
+ *    request, following its redirects as RFC 9309 asks, and RECORDS the
+ *    verdict on every step. No verdict stops the walk: robots.txt alone never
+ *    blocks reading a public page (owner decision 2026-09-25). Only a real
+ *    access control makes the walk BLOCKED — a recorded wall, or the site's
+ *    own 401, 403 or 429 to this client — and it is never pushed past;
+ * 2. reads the homepage, following redirects one hop at a time. Each new host's
+ *    robots.txt is read and recorded before anything is requested from it;
  * 3. names the meeting routes the page itself evidences
  *    (`lib/hunt/meetings-site-discovery.ts`) and requests the verifiable ones,
  *    confirming each by content;
@@ -193,9 +194,10 @@ export function searchCostEntry(input: {
 }
 
 /**
- * Hosts whose owners refused us, measured and recorded, so no request is sent,
- * robots.txt included. Robots alone would also refuse these; the list keeps a
- * recorded refusal from costing another request per walk.
+ * Hosts that wall this client by an access control (a 403 to an identified
+ * client), measured and recorded, so no request is sent, robots.txt included:
+ * the list keeps a recorded wall from costing another request per walk. Never a
+ * robots.txt line (owner decision 2026-09-25).
  */
 export { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
 import { RECORDED_WALLS } from "../../hunt/recorded-walls.ts";
@@ -430,7 +432,7 @@ export async function walkMeetingsDiscoveryNeed(
     return entry;
   }
 
-  /** GET one URL, one hop at a time, asking permission of every host first. Null when nothing usable came back. */
+  /** GET one URL, one hop at a time, reading and recording every host's robots.txt first. Null when nothing usable came back. */
   async function get(start: string, purpose: DiscoveryStep["purpose"], accept: string) {
     let current = start;
     /* Each redirect this request followed: the chain a derived wiring row's attestation cites (NH330). */
@@ -444,8 +446,12 @@ export async function walkMeetingsDiscoveryNeed(
         return null;
       }
       const permission = await permissionFor(url);
-      if (permission.verdict === "DISALLOWED" || permission.verdict === "CANNOT_TELL" || permission.verdict === "RECORDED_WALL") {
-        skipped(purpose, url.toString(), permission.verdict, `not requested: permission ${permission.verdict} (${permission.detail})`);
+      /*
+       * Only a recorded access-control wall stops the request. A robots.txt verdict (DISALLOWED, or CANNOT_TELL when
+       * the rules could not be read) is recorded on the step and never refuses a public page (owner decision 2026-09-25).
+       */
+      if (permission.verdict === "RECORDED_WALL") {
+        skipped(purpose, url.toString(), permission.verdict, `not requested: a recorded access-control wall (${permission.detail})`);
         return null;
       }
       if (requests >= maxRequests) {
@@ -820,11 +826,11 @@ function noteFor(
     case "NOTHING_DETECTED":
       return `${who}: the homepage was read and shows no route this walk recognises. Not an absence; due again at the recheck date.`;
     case "BLOCKED":
-      return `${who}: permission refused every origin, so nothing was requested. Not an absence; a wall, recorded.`;
+      return `${who}: every origin walled this client by an access control (a recorded wall, or its own 401, 403 or 429). Never bypassed; not an absence; a wall, recorded.`;
     default:
       return origins === 0
         ? `${who}: no usable website is recorded, so there was nothing to walk.`
-        : `${who}: the site could not be read this walk (a transport failure, a server error, or permission rules that could not be read). Not a wall; due again at the recheck date.`;
+        : `${who}: the site could not be read this walk (a transport failure or a server error). Not a wall; due again at the recheck date.`;
   }
 }
 
@@ -905,7 +911,7 @@ export function discoveryFieldManualEntries(attempt: MeetingsDiscoveryAttempt): 
       { attemptId: attempt.attemptId, ...l }));
   }
   if (attempt.outcome === "BLOCKED") {
-    /* What refused each origin: its rules or a recorded wall (the step's permission), or its own 401, 403 or 429 to this client. */
+    /* What walled each origin: a recorded wall (the step's permission), or its own 401, 403 or 429 to this client. A step a pre-2026-09-25 walk skipped for robots.txt still names its verdict. */
     const walls = attempt.steps.filter((s) =>
       s.purpose === "homepage" && (s.status === null ? s.permission !== "ALLOWED" && s.permission !== "NO_ROBOTS" : [401, 403, 429].includes(s.status)));
     const why = [...new Set(walls.map((s) => (s.status === null ? s.permission : `HTTP ${s.status}`)))].join(", ");

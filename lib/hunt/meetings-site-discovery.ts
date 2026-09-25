@@ -645,43 +645,35 @@ export interface MeetingsDiscoveryAttempt {
   };
 }
 
-const REFUSED: ReadonlySet<StepPermission> = new Set(["DISALLOWED", "CANNOT_TELL", "RECORDED_WALL"]);
+/**
+ * The step permission that refuses a request: a recorded access-control wall, and nothing else. A robots.txt
+ * verdict (DISALLOWED, CANNOT_TELL) is recorded on the step and never refuses a public page (owner decision
+ * 2026-09-25), so a walk no longer produces an unrequested step for one.
+ */
+const REFUSED: ReadonlySet<StepPermission> = new Set(["RECORDED_WALL"]);
 
-/** robots.txt answers that are the host refusing this client, as distinct from a failure to read its rules. */
+/** Answers that are the host walling this client by an access control, as distinct from a failure to reach it. */
 const WALL_STATUSES: ReadonlySet<number> = new Set([401, 403, 429]);
 
-function hostOf(raw: string): string | null {
-  try {
-    return new URL(raw).host.toLowerCase();
-  } catch {
-    return null;
-  }
-}
-
 /**
- * Whether a refused step is a wall. That is the host's own rules, a recorded
- * refusal, or a robots.txt that answered this client with 401, 403 or 429. A
- * robots.txt that could not be read (a transport failure, a server error, a
- * redirect chain that ended nowhere, a page where the rules should be, or the
- * walk's own request bound) also stops the request. But it says nothing about
- * the host's will: the walk could not read the site.
+ * Whether an unrequested step is a wall: a recorded access-control wall. The
+ * walk's own request bound also leaves a step unrequested, and says nothing
+ * about the host: the walk could not read the site. A robots.txt verdict is
+ * never a wall (owner decision 2026-09-25).
  */
-function isWall(step: DiscoveryStep, robots: readonly DiscoveryStep[]): boolean {
-  if (step.permission === "DISALLOWED" || step.permission === "RECORDED_WALL") return true;
-  if (step.permission !== "CANNOT_TELL") return false;
-  const host = hostOf(step.url);
-  const read = robots.find((r) => host !== null && hostOf(r.url) === host);
-  return read !== undefined && read.status !== null && WALL_STATUSES.has(read.status);
+function isWall(step: DiscoveryStep): boolean {
+  return step.permission === "RECORDED_WALL";
 }
 
 /**
  * The outcome a walk earned. The executor records one homepage step per
  * origin, whether it was requested or refused, so the homepage steps say
- * whether the site was read, refused, or unreachable. BLOCKED means every
- * origin is a wall: its rules or a recorded wall refused the request, or it
- * answered this client with 401, 403 or 429. A refusal that came from failing
- * to read the rules, a transport failure, or a server error is COULD_NOT_READ,
- * because a site nobody could reach has refused nothing.
+ * whether the site was read, walled, or unreachable. BLOCKED means every
+ * origin is walled by an access control: a recorded wall refused the request,
+ * or it answered this client with 401, 403 or 429. A robots.txt verdict never
+ * makes a wall (owner decision 2026-09-25). A transport failure, a server
+ * error or the walk's own bound is COULD_NOT_READ, because a site nobody could
+ * reach has refused nothing.
  */
 export function decideOutcome(input: {
   readonly found: readonly unknown[];
@@ -693,15 +685,9 @@ export function decideOutcome(input: {
   /* A redirect is a hop, not an answer: judge the steps each chain ended on. */
   const homepage = input.steps.filter((s) => s.purpose === "homepage" && !(s.status !== null && s.status >= 300 && s.status < 400));
   if (homepage.some((s) => s.status !== null && s.status >= 200 && s.status < 300)) return "NOTHING_DETECTED";
-  /*
-   * Each origin's homepage is a wall when permission refused it and the refusal
-   * is a wall, or when it answered this client with 401, 403 or 429.
-   */
-  const robots = input.steps.filter((s) => s.purpose === "robots");
+  /* Each origin's homepage is a wall when a recorded wall refused it, or when it answered this client with 401, 403 or 429. */
   const walled = (s: DiscoveryStep): boolean =>
-    s.status === null
-      ? s.transportError === null && REFUSED.has(s.permission) && isWall(s, robots)
-      : WALL_STATUSES.has(s.status);
+    s.status === null ? s.transportError === null && REFUSED.has(s.permission) && isWall(s) : WALL_STATUSES.has(s.status);
   if (homepage.length > 0 && homepage.every(walled)) return "BLOCKED";
   return "COULD_NOT_READ";
 }

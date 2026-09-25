@@ -39,6 +39,7 @@ import { auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-
 import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { unitOf } from "./helpers/ask-gap-unit.ts";
 
 /**
  * **A GAP ASK STATES IS A GAP THE SYSTEM IS WORKING.** (2026-09-25.)
@@ -141,11 +142,6 @@ const WITHOUT_MESA_MINUTES = { contracts: ROUTINE_SOURCE_CONTRACTS.filter((c) =>
 const enumerate = (h: AskGapHoldings, registered?: Parameters<typeof askGapCarriers>[2]) =>
   buildRegistry([askGapsProvider({ holdings: () => h, ...(registered ? { registered } : {}) })], { root: ".", nowIso: NOW_ISO });
 
-const unitOf = (pass: ReturnType<typeof enumerate>, bodyId: string, code: string) => {
-  const unit = pass.units.find((u) => u.obligation.id === `freshness:ask-gap:${bodyId}#${code}`);
-  assert.ok(unit, `no ${code} obligation for ${bodyId}; have ${pass.units.map((u) => u.obligation.id).join(", ")}`);
-  return unit;
-};
 
 /* ------------------------------------------------------------ Ask's own gaps */
 
@@ -481,8 +477,14 @@ test("ADMIN: open Ask gaps are counted by code, drawn with their denominators, a
     ["AGENDA_NOT_HELD", 1, 4],
     ["CALENDAR_STALE", 1, 4],
     ["OUTCOMES_UNREADABLE", 0, 4],
+    ["MEETINGS_NOT_HELD", 0, 4],
   ]);
-  assert.equal(askGapCountWords(view), "Open Ask gaps — 4: outcome not read 2 · agenda not held 1 · calendar read is stale 1 · recorded outcomes unreadable 0.");
+  assert.equal(
+    askGapCountWords(view),
+    "Open Ask gaps — 4: outcome not read 2 · agenda not held 1 · calendar read is stale 1 · recorded outcomes unreadable 0 · meetings not held 0." +
+      " How often readers were told them is not on this list: the Ask-gap observations were not read for it.",
+    "these sources carry no Ask-gap observations, and the words say so rather than implying nobody was told (tests/ask-gap-observation.test.ts)",
+  );
   assert.ok(auditRenderedNumbers(assignmentRenderedNumbers(view)).ok);
   assert.ok(checkStatedEqualsRendered(assignmentCountClaims(view)).ok);
 });

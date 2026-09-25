@@ -24,7 +24,7 @@ import type { ReactNode } from "react";
 import { readFleetSafety, readHeartbeat, readLatestDigest, readSnapshot } from "@/lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "@/lib/control-plane/assignment-read.ts";
 import { routineContractIdOf } from "@/lib/control-plane/assignment-routine.ts";
-import { askGapCountWords, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
+import { askGapCountWords, askGapRenderedNumbers, buildAssignments, type AssignmentListRow, type AssignmentState, type AssignmentView } from "@/lib/control-plane/assignment-view.ts";
 import type { BodyView } from "@/lib/control-plane/admin-view/bodies.ts";
 import {
   instructionKey,
@@ -237,9 +237,7 @@ export async function WorkScreen(props: { readonly area: MwArea; readonly search
   const claims: CountClaim[] = [{ label: "your instructions", stated: base.selected.length, rendered: instructions.length }];
   if (view) {
     numbers.push({ label: "assignments listed", value: rows.length, denominator: view.summary.total, contract: "rows the published assignment list carries, of every assignment the control plane holds" });
-    if (view.summary.askGaps?.held) {
-      for (const c of view.summary.askGaps.value.byCode) numbers.push({ label: `open Ask gaps · ${c.code}`, value: c.count.value, denominator: c.count.denominator, contract: c.count.contract });
-    }
+    numbers.push(...askGapRenderedNumbers(view));
     for (const g of groups) claims.push({ label: `listed ${g.state}`, stated: g.listed.length, rendered: g.listed.length });
   }
   const na = auditRenderedNumbers(numbers);

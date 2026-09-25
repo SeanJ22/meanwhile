@@ -95,7 +95,21 @@
  * one new table is created when the next installed runtime opens the durable
  * repository.
  */
-export const BOOTSTRAP_VERSION = 12;
+/*
+ * ## What version 13 adds, and why (Ask-gap observations, 2026-09-25)
+ *
+ * `cp_ask_gap_observations` — one aggregate per government body, Ask gap code
+ * and UTC day, holding exactly the body id, the code, its record class, the
+ * day and a count of the answers that told a reader that gap. The owner
+ * approved recording the body behind an unanswered Ask question so targeted
+ * work can be created (2026-09-25), and approved nothing personal: no
+ * question, no reader, no instant (`lib/control-plane/ask-gap-observations.ts`).
+ * Additive: no existing table, column or statement moved, and the one new
+ * table is created when the next installed runtime opens the durable
+ * repository. Until then Ask's write fails by name after the answer, and the
+ * reader is not told.
+ */
+export const BOOTSTRAP_VERSION = 13;
 
 /**
  * The tables, and the shape each one carries.
@@ -211,6 +225,16 @@ export const AGGREGATE_KINDS = [
    *                 consolidation that keeps every meaning cannot shrink it.
    */
   "field_manual",
+  /*
+   * WHAT READERS WERE TOLD ASK DOES NOT HOLD. (2026-09-25 — version 13.)
+   *
+   *   ask_gap_observations  one aggregate per body, gap code and UTC day, id
+   *                         `<body id>#<code>#<day>`: the body, the code, its
+   *                         record class, the day and a count. Nothing about a
+   *                         reader or a question. An AGGREGATE because a second
+   *                         ask the same day is a count, never a new row.
+   */
+  "ask_gap_observations",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

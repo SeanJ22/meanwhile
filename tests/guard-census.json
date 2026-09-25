@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 782,
-    "named": 7633,
+    "named": 7635,
     "dynamic": 30
   },
   "files": {
@@ -8038,9 +8038,11 @@
     },
     "tests/reader-edge-context.test.ts": {
       "names": [
-        "Ask reads the registry and the federal directory from the edge it entered",
+        "Ask reads the registry, the federal directory and the recorded outcomes from the edge it entered",
         "Campaign money reads the registry from the edge it entered, and names every read's time",
-        "Node 24: an edge entered inside a helper never reaches the reads chained on it; entered by the caller, it does"
+        "Node 24: an edge entered inside a helper never reaches the reads chained on it; entered by the caller, it does",
+        "a manifest without the outcomes family reads them from the database, and the trace says so",
+        "comment access is primed from the edge the caller entered, and read from the database without one"
       ],
       "dynamic": 0
     },

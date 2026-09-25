@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 784,
-    "named": 7657,
+    "named": 7658,
     "dynamic": 30
   },
   "files": {
@@ -5374,6 +5374,7 @@
     },
     "tests/keep-warm.test.ts": {
       "names": [
+        "KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask reads first, and never the database; an unmarked call loads nothing",
         "KEEP-WARM · a call that fails is counted as not answered and does not stop the others",
         "KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parameter are refused, never quietly held",
         "KEEP-WARM · a marked call holds its instance for the hold asked, so overlapping calls occupy separate instances",

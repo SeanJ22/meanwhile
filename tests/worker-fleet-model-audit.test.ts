@@ -7,6 +7,8 @@ import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-r
 import { ModelTransportError, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { AUDIT_CONTEXT_MAX_BYTES, AUDIT_RESPONSE_MAX_BYTES, auditReasoningContext, modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
+import { standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import type { CostEntry } from "../lib/control-plane/cost.ts";
 
 const NOW = "2026-09-03T10:00:00.000Z";
 const MODEL = assertStepMayInvokeModel("adversarial-audit").model;
@@ -36,7 +38,7 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.review.validationError, null);
   assert.deepEqual(result.review.challenges, [challenge]);
   assert.match(result.review.responseText ?? "", /record_audit/);
-  assert.deepEqual(request?.tool_choice, { type: "tool", name: "record_audit" });
+  assert.deepEqual(request?.tool_choice, { type: "auto" });
   assert.equal(request?.tools.length, 1);
   assert.equal(request?.model, MODEL);
   assert.equal(result.usage.inputTokens, 100);
@@ -47,19 +49,48 @@ test("typed record_audit output preserves grounded challenge, actual model usage
   assert.equal(result.review.contextHash, contentHash(String(request?.messages[0].content)));
 });
 
-test("strict JSON end_turn compatibility remains accepted and missing usage remains null", async () => {
+test("Opus 5.5 request: no forced tool choice — auto, a strict record_audit schema strict mode accepts, and the system prompt naming the tool", async () => {
+  let request: ModelRequest | undefined;
+  const transport: ModelTransport = async (value) => { request = value; return response({ verdict: "SURVIVED", challenges: [] }); };
+  await modelAuditReasoner(createMemoryRepositories(), transport, () => NOW).review(context(), "auditor-attempt");
+  assert.equal(MODEL, "claude-opus-5-5", "the auditor runs on the model that rejects a forced tool choice");
+  assert.deepEqual(request?.tool_choice, { type: "auto" }, "a forced {type:'tool'} is HTTP 400 on Claude Opus 5.5");
+  const tool = request?.tools[0];
+  assert.equal(tool?.name, "record_audit");
+  assert.equal(tool?.strict, true, "strict tool use keeps the schema-valid arguments the forced call gave");
+  const schema = JSON.stringify(tool?.input_schema);
+  assert.doesNotMatch(schema, /maxItems|minLength|maxLength|minimum|maximum/, "strict mode takes no length or numeric constraints; the 24-challenge limit is enforced client-side");
+  const objects = [tool?.input_schema, (tool?.input_schema as { properties: { challenges: { items: unknown } } }).properties.challenges.items] as { additionalProperties?: unknown }[];
+  for (const o of objects) assert.equal(o.additionalProperties, false, "strict mode requires additionalProperties:false on every object");
+  assert.match(request?.system[0].text ?? "", /Answer only by calling the record_audit tool, exactly once/);
+  assert.match(request?.system[0].text ?? "", /not recorded, and the audit fails closed/);
+});
+
+test("an answer without a record_audit call fails closed by name — even valid JSON saying SURVIVED — and missing usage remains null", async () => {
   const json = JSON.stringify({ verdict: "SURVIVED", challenges: [] });
   const result = await run(response(null, { stop_reason: "end_turn", content: [{ type: "text", text: json }], usage: {} }));
-  assert.equal(result.review.verdict, "SURVIVED");
-  assert.equal(result.review.validationError, null);
-  assert.equal(result.review.responseText, json);
+  assert.equal(result.review.verdict, "INCONCLUSIVE", "a text verdict is never read: the record is not approved");
+  assert.equal(result.review.validationError, "AUDIT_MODEL_NO_TOOL_CALL:end_turn");
+  assert.deepEqual(result.review.challenges, []);
+  assert.equal(result.review.responseText, json, "what the model said is kept as the response, not as a verdict");
   assert.equal(result.usd, null);
   assert.ok(Object.values(result.usage).every((value) => value === null));
+  /* The stop reason is named: thinking that ran to max_tokens, or a refusal, is not a verdict either. */
+  const cut = await run(response(null, { stop_reason: "max_tokens", content: [{ type: "thinking", thinking: "", signature: "sig" }] }));
+  assert.equal(cut.review.validationError, "AUDIT_MODEL_NO_TOOL_CALL:max_tokens");
+  assert.equal(cut.review.verdict, "INCONCLUSIVE");
+  const refused = await run(response(null, { stop_reason: "refusal", content: [] }));
+  assert.equal(refused.review.validationError, "AUDIT_MODEL_NO_TOOL_CALL:refusal");
+  /* The other outcome: a thinking block beside the record_audit call does not disturb the recorded verdict. */
+  const called = await run(response({ verdict: "SURVIVED", challenges: [] }, { content: [{ type: "thinking", thinking: "", signature: "sig" }, { type: "tool_use", id: "audit-call", name: "record_audit", input: { verdict: "SURVIVED", challenges: [] } }] }));
+  assert.equal(called.review.verdict, "SURVIVED");
+  assert.equal(called.review.validationError, null);
 });
 
 test("malformed, truncated, mismatched and unsupported responses retain exact named validation failures and measured cost", async () => {
   const cases: readonly [ModelResponse, string][] = [
-    [response(null, { stop_reason: "end_turn", content: [{ type: "text", text: "not JSON" }] }), "AUDIT_MODEL_JSON_INVALID"],
+    [response(null, { stop_reason: "end_turn", content: [{ type: "text", text: "not JSON" }] }), "AUDIT_MODEL_NO_TOOL_CALL:end_turn"],
+    [response({ verdict: "SURVIVED", challenges: Array.from({ length: 25 }, () => challenge) }), "AUDIT_MODEL_RESPONSE_SCHEMA_INVALID"],
     [response({ verdict: "SURVIVED", challenges: [] }, { stop_reason: "max_tokens" }), "AUDIT_MODEL_STOP_REASON_INVALID:max_tokens"],
     [response({ verdict: "SURVIVED", challenges: [] }, { model: "unapproved-model" }), "AUDIT_MODEL_IDENTITY_MISMATCH"],
     [response({ verdict: "PASS", challenges: [] }), "AUDIT_MODEL_RESPONSE_SCHEMA_INVALID"],
@@ -175,6 +206,44 @@ test("adaptive budget keeps five complete events and every exploratory route wit
     assert.ok(surface.excerpts.some((excerpt: { text: string }) => excerpt.text.includes(`Official agendas route ${index}`)));
     for (const excerpt of surface.excerpts) assert.equal(input.surfaceEvidence![index].text.slice(excerpt.start, excerpt.end), excerpt.text);
   }
+});
+
+/*
+ * 2026-09-25: the auditor admitted against the static RESEARCH_BOUNDS default
+ * ($100), so the owner's dial did not bind it. It now admits against the
+ * ceiling in force, and the standing runtime carries that number to it.
+ */
+async function reposWithAuditSpend(usd: number) {
+  const repos = createMemoryRepositories();
+  const cost: CostEntry = {
+    attemptId: "earlier-audit", workItemId: "audit-work", routeTaskId: null, routeId: null, source: null, jurisdiction: null,
+    project: "fleet", role: "ADVERSARIAL_AUDITOR", recordedAt: "2026-09-03T09:00:00.000Z",
+    cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false },
+  };
+  await repos.costs.append(cost.workItemId, cost.attemptId, cost, NOW);
+  return repos;
+}
+
+test("the auditor admits against the owner's ceiling in force, lowered or raised, not the static default", async () => {
+  let requests = 0;
+  const transport: ModelTransport = async () => { requests += 1; return response({ verdict: "SURVIVED", challenges: [] }); };
+  // $60 spent under a $50 dial: refused before any request. The $100 default would have admitted it.
+  await assert.rejects(modelAuditReasoner(await reposWithAuditSpend(60), transport, () => NOW, { ceilingUsd: 50 }).review(context(), "lowered"),
+    /DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; the rolling daily research ceiling is reached: \$60\.0000 of \$50/);
+  assert.equal(requests, 0);
+  // $102 spent under a $150 dial: admitted. The $100 default would have refused it.
+  const raised = await modelAuditReasoner(await reposWithAuditSpend(102), transport, () => NOW, { ceilingUsd: 150 }).review(context(), "raised");
+  assert.equal(raised.review.verdict, "SURVIVED");
+  assert.equal(requests, 1);
+  assert.throws(() => modelAuditReasoner(createMemoryRepositories(), transport, () => NOW, { ceilingUsd: 0 }), /AUDIT_CEILING_INVALID/);
+});
+
+test("the standing runtime hands the auditor the ceiling in force", async () => {
+  let requests = 0;
+  const transport: ModelTransport = async () => { requests += 1; return response({ verdict: "SURVIVED", challenges: [] }); };
+  const runtime = standingFleetRuntime({ root: process.cwd(), repos: await reposWithAuditSpend(60), transport, now: () => NOW, auditCeilingUsd: 50 });
+  await assert.rejects(runtime.auditReasoner!.review(context(), "standing"), /AUDIT_ROLLING_COST_CEILING/);
+  assert.equal(requests, 0);
 });
 
 test("an oversized primary projection is refused before transport instead of cutting through civic JSON", async () => {

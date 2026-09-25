@@ -24,14 +24,22 @@ import { runCycle, type PrewarmOutcome } from "../lib/control-plane/scheduler/sh
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
 import { SCOUT_CACHE_POLICY } from "../lib/control-plane/scheduler/model-routing.ts";
 import { MIN_DISTINCT_RUNGS } from "../lib/control-plane/scheduler/scout-result.ts";
-import { SCOUT_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { readFileSync } from "node:fs";
+import { SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
+import type { ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
+import { minimumCacheablePrefixTokensFor } from "../lib/control-plane/model-cost.ts";
 import {
+  ModelTransportError,
   SCOUT_PREWARM_PLACEHOLDER,
   SCOUT_PREWARM_ROUTE_ID,
+  SCOUT_THINKING,
   cacheTtlOrderProblems,
+  scoutExecutor,
+  scoutPrewarmPlan,
   scoutPrewarmRequest,
   scoutStaticPrefix,
   type ModelRequest,
+  type ModelTransport,
 } from "../lib/control-plane/scheduler/scout-executor.ts";
 
 const NOW = "2026-09-06T12:00:00.000Z";
@@ -49,6 +57,7 @@ test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 
   assert.equal(request.max_tokens, 0);
   assert.deepEqual(request.tool_choice, { type: "auto" }, "a forced tool_choice is refused with max_tokens 0 by the API");
   assert.deepEqual(request.output_config, { effort: "medium" }, "the same effort the Attempts send; a change would invalidate the cache");
+  assert.deepEqual(request.thinking, SCOUT_THINKING, "the same thinking setting the Attempts send; it is rendered into the prompt too");
   assert.equal(JSON.stringify(request.tools), JSON.stringify(prefix.tools), "byte-identical tools");
   assert.equal(JSON.stringify(request.system), JSON.stringify(prefix.system), "byte-identical system");
   assert.deepEqual(request.system.at(-1)?.cache_control, { type: "ephemeral" }, "the breakpoint is on the system block");
@@ -60,6 +69,60 @@ test("PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 
   assert.equal((request as { cache_control?: unknown }).cache_control, undefined, "no top-level marker either, for the same reason");
   assert.equal(cacheTtlOrderProblems(request).length, 0);
   assert.equal(SCOUT_PREWARM_ROUTE_ID, "scout:prewarm");
+});
+
+test("PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts actually send — the search tool included, the same thinking and effort — and the runner feeds one switch to both", async () => {
+  /* The Attempts' tool list, from the real builder, with the owner's paid-search switch on. */
+  const row = scheduleObligation(obligation("search-on"), NOW_MS);
+  assert.ok(isScheduled(row));
+  const searchSeam = async () => ({ hits: [], requestCount: 0, bytesFetched: 0, providersUsed: [], errors: [] });
+  const ctx = {
+    obligation: row, route: null, providerId: "t", attemptId: "at", workItemId: "wi", routeTaskId: "rt", holder: "h",
+    vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined, bound: RESEARCH_BOUNDS.perDispatch,
+    now: () => NOW, inherited: { artifactIds: [], summary: "" }, openOne: async () => { throw new Error("no network in this test"); },
+  } as unknown as ScoutToolContext;
+  const kit = buildScoutToolkit({ ...ctx, search: searchSeam as never });
+  assert.deepEqual(kit.specs.map((s) => s.name), [...SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC].map((s) => s.name), "search on: the Attempts offer the search tool");
+  assert.equal(JSON.stringify(kit.specs), JSON.stringify(scoutToolSpecsFor(true)), "the toolkit and the pre-warm read one answer");
+  assert.equal(JSON.stringify(buildScoutToolkit(ctx).specs), JSON.stringify(scoutToolSpecsFor(false)));
+
+  /* The loop's own first request over that toolkit, captured (no provider is reached). */
+  const captured: ModelRequest[] = [];
+  const capture: ModelTransport = async (request) => {
+    captured.push(request);
+    throw new ModelTransportError("captured", null);
+  };
+  await scoutExecutor({
+    transport: capture,
+    toolkitFor: () => kit,
+    contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
+    now: () => NOW,
+  }).run({ obligation: row, routeTaskId: "rt", workItemId: "wi", attemptId: "at", holder: "h", executor: "BOUNDED_MODEL_WORKER", bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 } } as never);
+  assert.equal(captured.length, 1);
+  const first = captured[0];
+
+  const plan = scoutPrewarmPlan({ toolkitSpecs: scoutToolSpecsFor(true), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  assert.equal(plan.kind, "SEND");
+  if (plan.kind !== "SEND") return;
+  assert.equal(plan.request.model, first.model, "the model the loop starts on");
+  assert.equal(JSON.stringify(plan.request.tools), JSON.stringify(first.tools), "byte-identical tools — search included");
+  assert.equal(JSON.stringify(plan.request.system), JSON.stringify(first.system), "byte-identical system");
+  assert.deepEqual(plan.request.thinking, first.thinking, "the same thinking setting: it is rendered into the prompt");
+  assert.deepEqual(plan.request.thinking, SCOUT_THINKING);
+  assert.deepEqual(plan.request.output_config, first.output_config, "the same effort");
+  /* The per-model minimum check still decides: Sonnet 5's is 1,024 (Opus 5.5's recorded 512). */
+  assert.equal(plan.minimumCacheablePrefixTokens, minimumCacheablePrefixTokensFor(first.model));
+  assert.equal(minimumCacheablePrefixTokensFor("claude-sonnet-5"), 1024);
+  assert.equal(minimumCacheablePrefixTokensFor("claude-opus-5-5"), 512);
+  /* Negative control: the list without search is a different prefix — the entry the old pre-warm wrote was never read. */
+  const without = scoutPrewarmPlan({ toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+  assert.notEqual(without.kind === "SEND" ? JSON.stringify(without.request.tools) : "", JSON.stringify(first.tools));
+
+  /* The runner: the pre-warm's list and the Scout's toolkit follow the same `scoutSearch` switch. */
+  const runner = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(runner, /scoutPrewarmPlan\(\{ toolkitSpecs: scoutToolSpecsFor\(scoutSearch !== null\),/, "the pre-warm warms the list the switch gives the Attempts");
+  assert.match(runner, /buildScoutToolkit\(scoutSearch !== null \? \{ \.\.\.toolCtx, search: scoutSearch \} : toolCtx\)/, "the toolkit offers search on the same switch");
+  assert.doesNotMatch(runner, /toolkitSpecs: SCOUT_TOOL_SPECS/, "no pre-warm from the list without search");
 });
 
 test("PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {

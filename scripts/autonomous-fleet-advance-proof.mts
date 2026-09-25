@@ -7,7 +7,7 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { defaultGrant, requireCapability } from "../lib/control-plane/capability.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
-import { dispatchOne, type DeclaredExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
+import { dispatchOne, proofChargeOf, type DeclaredExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { WORKER_CREDENTIAL_VAR } from "../lib/control-plane/scheduler/research-policy.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -80,7 +80,7 @@ if (parser) {
         dispatches.push(await dispatchOne(repos, { obligation: { obligation: { id: methodTask.id, recordClass: "INTERNAL_METHOD_KNOWLEDGE", subjectId: item.subject,
           routeId: methodTask.routeId, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, nextDueAt: methodTask.createdAt,
           cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "Engineering requires actual versioned method bytes." }, routeTaskId: methodTask.id,
-          holder: `method-proof:${process.pid}`, now: now(), leaseTtlMs: 300_000, maturity: () => "GRADUATED", executor, methodVersion, policyVersion: FLEET_POLICY_VERSION }));
+          holder: `method-proof:${process.pid}`, now: now(), leaseTtlMs: 300_000, maturity: () => "GRADUATED", executor, methodVersion, policyVersion: FLEET_POLICY_VERSION, ...proofChargeOf(item.project) }));
       }
       const method = (await repos.artifacts.readAll()).find(a => a.workItemId === item.id && a.routeTaskId === methodTask.id);
       if (!method) throw new Error("FLEET_METHOD_SNAPSHOT_MISSING");

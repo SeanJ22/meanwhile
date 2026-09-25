@@ -28,7 +28,8 @@ import {
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { decideExecutor, dispatchOne, type DeclaredExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
-import { scheduleObligation, isScheduled, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import { scheduledFixture } from "./control-plane-fixtures.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import {
   cacheTtlOrderProblems,
@@ -105,12 +106,6 @@ const OBLIGATION: FreshnessObligation = {
   observedChangeRateHours: null,
   lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString(),
 };
-
-function scheduled(o: FreshnessObligation = OBLIGATION): ScheduledObligation {
-  const row = scheduleObligation(o, NOW_MS);
-  if (!isScheduled(row)) throw new Error("fixture obligation did not schedule");
-  return row;
-}
 
 async function registered(repos = createMemoryRepositories(), o: FreshnessObligation = OBLIGATION) {
   const item = createWorkItem({
@@ -224,7 +219,8 @@ function scriptedTransport(turns: readonly ModelResponse["content"][]): ModelTra
     const content = turns[Math.min(i, turns.length - 1)];
     i += 1;
     return {
-      model: "claude-opus-5-5",
+      /* The provider reports the model it served: the one the request named. */
+      model: request.model,
       stop_reason: content.some((b) => b.type === "tool_use") ? "tool_use" : "end_turn",
       content,
       usage: { input_tokens: 1000, output_tokens: 100, cache_read_input_tokens: 500, cache_creation_input_tokens: 0 },
@@ -360,7 +356,7 @@ test("2. SEEDED: a model that called no tool and wrote prose is REFUSED", async 
   ]);
   const { exec, results } = executorWith(transport, fakeToolkit());
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -427,7 +423,7 @@ test("4. SEEDED: an early NO_PROGRESS below the rung minimum is refused, ABORTS,
   ]);
   const { exec, results } = executorWith(transport, toolkit, { bound: { maxTurns: 3 } });
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -461,7 +457,7 @@ test("5. the bound reached: the typed result carries rungs walked and next rungs
   ]);
   const { exec, results } = executorWith(transport, toolkit, { bound: { maxToolCalls: 2 } });
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -516,7 +512,7 @@ test("EARLY STOP: a walk that stalls past minRungs finishes early instead of run
   ) as ModelTransport & { requests: ModelRequest[] };
   const { exec, results } = executorWith(transport, toolkit, { minRungs: 2, bound: { maxTurns: 20, maxToolCalls: 20 } });
   await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -653,7 +649,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   ]);
   const { exec, results } = executorWith(transport, toolkit);
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -671,7 +667,7 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(attempt.outcome, "COMPLETED");
   assert.equal(attempt.worker.role, "SCOUT");
   assert.equal(attempt.worker.provider, "anthropic");
-  assert.equal(attempt.worker.version, "claude-opus-5-5");
+  assert.equal(attempt.worker.version, "claude-sonnet-5", "MW-033: the Scout loop starts on the cheapest suitable class, Sonnet 5");
   assert.equal(attempt.cost.inputTokens, 3 * 1500, "input tokens include cache reads, summed over turns");
   assert.equal(attempt.cost.outputTokens, 300);
   assert.ok((attempt.cost.usd ?? 0) > 0);
@@ -691,7 +687,9 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   const r = results[0];
   assert.equal(r.outcome, "ROUTE_CANDIDATE");
   assert.equal(r.rungs[1].note, "meetings page", "the model's per-rung note travels; the rung itself is machine-derived");
-  assert.equal(r.worker.modelReported, "claude-opus-5-5");
+  assert.equal(r.worker.modelReported, "claude-sonnet-5");
+  assert.equal(r.modelClass, "sonnet");
+  assert.equal(r.escalatedFrom, null, "a Sonnet attempt that finished never moved up");
   assert.equal(r.usage.turns, 3);
   assert.equal(r.usage.toolCalls, 2);
   const commit = (await repos.dispositions.readAll()).at(-1)!;
@@ -747,7 +745,7 @@ test("9. SEEDED (measured live): an artifact the log refuses does not leave the 
   ]);
   const { exec } = executorWith(transport, colliding);
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -773,7 +771,7 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   };
   const { exec, results } = executorWith(overloaded, fakeToolkit());
   const result = await dispatchOne(repos, {
-    obligation: scheduled(),
+    obligation: scheduledFixture(OBLIGATION, NOW_MS),
     routeTaskId: task.id,
     holder: "t",
     now: NOW,
@@ -801,7 +799,7 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   };
   const second = await registered();
   const { exec: exec2, results: results2 } = executorWith(failsSecond, fakeToolkit());
-  await dispatchOne(second.repos, { obligation: scheduled(), routeTaskId: second.task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec2 });
+  await dispatchOne(second.repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: second.task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec2 });
   assert.equal(results2[0].usage.turns, 1);
   assert.ok((results2[0].usd ?? 0) > 0, "the one served turn is the charge");
 });
@@ -828,7 +826,7 @@ const candidateWith = (over: Record<string, unknown> = {}) => ({
 
 async function dispatchScout(exec: DeclaredExecutor) {
   const { repos, task } = await registered();
-  const result = await dispatchOne(repos, { obligation: scheduled(), routeTaskId: task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+  const result = await dispatchOne(repos, { obligation: scheduledFixture(OBLIGATION, NOW_MS), routeTaskId: task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
   return { repos, task, result };
 }
 
@@ -1004,7 +1002,8 @@ test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED
   assert.throws(() => assertStepMayInvokeModel("date-parsing"), DeterministicStepInvokedModel);
   assert.throws(() => assertStepMayInvokeModel("made-up-step"), UnknownStepInvokedModel);
   const loop = assertStepMayInvokeModel("scout-research-loop");
-  assert.deepEqual(loop, { model: "claude-opus-5-5", modelClass: "frontier", effort: "medium", role: "SCOUT" });
+  assert.deepEqual(loop, { model: "claude-sonnet-5", modelClass: "sonnet", effort: "medium", role: "SCOUT" }, "MW-033: the loop starts on Sonnet 5");
+  assert.equal(assertStepMayInvokeModel("scout-research-loop", true).modelClass, "frontier", "and escalates to the frontier");
   const extraction = assertStepMayInvokeModel("extraction");
   assert.deepEqual(extraction, { model: "claude-haiku-4-5", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
   const escalated = assertStepMayInvokeModel("extraction", true);
@@ -1109,7 +1108,7 @@ test("19. every turn is a recorded step: model, effort, tokens by category and c
   assert.equal(model.length, 3);
   for (const [i, s] of model.entries()) {
     assert.equal(s.turn, i + 1);
-    assert.equal(s.model, "claude-opus-5-5");
+    assert.equal(s.model, "claude-sonnet-5", "MW-033: the loop's turns run on Sonnet 5 unless it escalates");
     assert.equal(s.effort, "medium");
     assert.deepEqual(s.tokens, { cacheRead: 500, cacheWrite: 0, uncachedInput: 1000, output: 100 });
     assert.ok((s.usd ?? 0) > 0);

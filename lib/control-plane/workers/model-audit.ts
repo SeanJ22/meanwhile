@@ -21,21 +21,38 @@ reader truth, operational integrity, neutrality symmetry, reproducibility, and c
 where they actually apply. Respect the declared capture scope: a top-N feed proves only those captured rows.
 A possible-quorum notice is not proof that a decision-making meeting happened. Future publisher dates must
 be preserved as source assertions, not presented as independently verified actual meetings.
-Call record_audit with verdict SURVIVED, BROKE, or INCONCLUSIVE and evidence-grounded challenges.
+Answer only by calling the record_audit tool, exactly once, with verdict SURVIVED, BROKE, or INCONCLUSIVE and
+evidence-grounded challenges. A verdict written as text instead of a record_audit call is not recorded, and the audit fails closed.
 Each challenge must quote exact supplied source evidence and name its artifact. A BROKE verdict requires
 at least one grounded challenge. SURVIVED means the scoped source assertions can be preserved with their
 stated limitations, never permission to publish. Source excerpts may be incomplete; omissions are stated,
 and the full immutable artifact is retained. Do not infer an absence from an omitted representation.
 Do not assert absence, completeness beyond the scope, legal outcomes, or provenance unsupported by evidence.`;
 
+/*
+ * NO FORCED TOOL CHOICE (2026-09-25). The auditor runs on Claude Opus 5.5,
+ * which answers `tool_choice` `{type:"tool"}` / `{type:"any"}` with HTTP 400
+ * (claude-api skill, model-migration.md, "Migrating to Claude Opus 5.5",
+ * breaking change 2) — every audit request since the 2026-09-22 switch would
+ * have failed. The replacement the skill gives for "steering toward a tool":
+ * `auto`, the system prompt naming the tool, and `strict: true` so the
+ * arguments are schema-valid. Chosen over structured outputs because
+ * `record_audit` is the audit's contract (its description grants no
+ * authority) and the validator already reads a tool call. `auto` does not
+ * guarantee a call, so a response without one FAILS CLOSED as
+ * `AUDIT_MODEL_NO_TOOL_CALL` — never a verdict read out of prose. Strict mode
+ * does not accept array-length constraints, so the 24-challenge limit is
+ * enforced by `validateAnswer` instead of the schema.
+ */
 const RECORD_AUDIT = {
   name: "record_audit",
   description: "Return the bounded independent evidence audit. This records a proposal only and grants no acquisition or promotion authority.",
+  strict: true,
   input_schema: {
     type: "object", additionalProperties: false, required: ["verdict", "challenges"],
     properties: {
       verdict: { type: "string", enum: ["SURVIVED", "BROKE", "INCONCLUSIVE"] },
-      challenges: { type: "array", maxItems: 24, items: {
+      challenges: { type: "array", items: {
         type: "object", additionalProperties: false, required: ["code", "detail", "artifactId", "quote"],
         properties: { code: { type: "string" }, detail: { type: "string" }, artifactId: { type: "string" }, quote: { type: "string" } },
       } },
@@ -183,18 +200,17 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
   if (response.model !== expectedModel) validationFailure("AUDIT_MODEL_IDENTITY_MISMATCH");
   if (!Array.isArray(response.content)) validationFailure("AUDIT_MODEL_CONTENT_INVALID");
   const tools = response.content.filter((block) => block.type === "tool_use");
-  let answer: unknown;
-  if (tools.length) {
-    if (tools.length !== 1) validationFailure("AUDIT_MODEL_MULTIPLE_TOOL_CALLS");
-    if (tools[0].name !== "record_audit") validationFailure("AUDIT_MODEL_UNEXPECTED_TOOL");
-    if (response.stop_reason !== "tool_use") validationFailure(`AUDIT_MODEL_STOP_REASON_INVALID:${String(response.stop_reason).slice(0, 80)}`);
-    answer = tools[0].input;
-  } else {
-    if (response.stop_reason !== "end_turn") validationFailure(`AUDIT_MODEL_STOP_REASON_INVALID:${String(response.stop_reason).slice(0, 80)}`);
-    const text = response.content.flatMap((block) => block.type === "text" && "text" in block ? [String(block.text)] : []).join("").trim();
-    try { answer = JSON.parse(text.replace(/^```(?:json)?\s*|\s*```$/g, "")); }
-    catch { validationFailure("AUDIT_MODEL_JSON_INVALID"); }
-  }
+  /*
+   * Under `tool_choice: auto` the model may answer in text. That answer is not
+   * the audit's contract, so it is never read as a verdict — even valid JSON
+   * saying SURVIVED. The review fails closed, named with the stop reason
+   * (`end_turn`, `max_tokens`, `refusal`, …), and the record is not approved.
+   */
+  if (tools.length === 0) validationFailure(`AUDIT_MODEL_NO_TOOL_CALL:${String(response.stop_reason).slice(0, 80)}`);
+  if (tools.length !== 1) validationFailure("AUDIT_MODEL_MULTIPLE_TOOL_CALLS");
+  if (tools[0].name !== "record_audit") validationFailure("AUDIT_MODEL_UNEXPECTED_TOOL");
+  if (response.stop_reason !== "tool_use") validationFailure(`AUDIT_MODEL_STOP_REASON_INVALID:${String(response.stop_reason).slice(0, 80)}`);
+  const answer: unknown = tools[0].input;
   if (!object(answer) || !["SURVIVED", "BROKE", "INCONCLUSIVE"].includes(String(answer.verdict)) ||
       !Array.isArray(answer.challenges) || answer.challenges.length > 24 || Object.keys(answer).some((key) => !["verdict", "challenges"].includes(key))) validationFailure("AUDIT_MODEL_RESPONSE_SCHEMA_INVALID");
   const challenges: Review["challenges"][number][] = [];
@@ -222,21 +238,39 @@ async function withinBound<T>(operation: (signal: AbortSignal) => Promise<T>, ti
   } finally { if (timer !== undefined) clearTimeout(timer); }
 }
 
+/**
+ * `ceilingUsd` is the rolling ceiling IN FORCE — the owner's console override,
+ * the same number the Scout admission reads (2026-09-25). Before this the
+ * auditor admitted against the static `RESEARCH_BOUNDS` default, so a dial set
+ * below $100 did not bind it. Absent (a manual proof), the default stands.
+ */
 export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: ModelTransport, now: () => string,
-  options: { readonly timeoutMs?: number } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
+  options: { readonly timeoutMs?: number; readonly ceilingUsd?: number } = {}): NonNullable<FleetRuntime["auditReasoner"]> {
+  /*
+   * THE AUDITOR STAYS ON THE FRONTIER (MW-033/MW-035, 2026-09-25). MW-035 lets
+   * an expensive step run only when it is selective, and this one is: it runs
+   * once per record the parser and validator already passed, on its way to
+   * promotion (workers/runtime.ts, ADVERSARIAL_AUDITOR) — never per page or rung.
+   * Its whole job is to break what the cheaper passes produced, so a cheaper
+   * auditor would share the blind spots it exists to catch; the registry gives
+   * it no cheaper class and no escalation (`adversarial-audit` in
+   * model-routing.ts), and the Scout loop's Sonnet-first ladder does not apply.
+   */
   const route = assertStepMayInvokeModel("adversarial-audit");
   const timeoutMs = options.timeoutMs ?? AUDIT_REVIEW_TIMEOUT_MS;
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > AUDIT_REVIEW_TIMEOUT_MS) throw new Error("AUDIT_REVIEW_BOUND_INVALID");
+  const ceilingUsd = options.ceilingUsd ?? RESEARCH_BOUNDS.dailyCeilingUsd;
+  if (!Number.isFinite(ceilingUsd) || ceilingUsd <= 0) throw new Error("AUDIT_CEILING_INVALID");
   return { workerProvider: "anthropic", workerVersion: route.model, review: async (context) => withinBound(async (signal) => {
     const started = performance.now();
     const spend = researchSpendInWindow(await repos.costs.readAll(), now());
     signal.throwIfAborted();
-    const admission = ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd);
+    const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:AUDIT_ROLLING_COST_CEILING; ${admission.why}`);
     const body = auditReasoningContext(context);
     const request: ModelRequest = { model: route.model, max_tokens: 2_048, output_config: { effort: route.effort },
       system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }], tools: [RECORD_AUDIT],
-      tool_choice: { type: "tool", name: "record_audit" },
+      tool_choice: { type: "auto" },
       messages: [{ role: "user", content: body }] };
     const response = await transport(request).catch((error) => {
       const status = error && typeof error === "object" && "status" in error && typeof error.status === "number" ? String(error.status) : "UNAVAILABLE";

@@ -27,6 +27,8 @@
  * PURE: rows in, views out; the only clock is `nowIso`.
  */
 
+import { routineRuledOut, type DeadEndGaps } from "./dead-ends.ts";
+
 export type BodyStatus = "WORKING" | "NEEDS ATTENTION" | "STUCK" | "NOT READ YET";
 export type ViewTone = "teal" | "gold" | "amber" | "cyan" | "slate" | "stone";
 export type FigureTone = "text" | "muted" | "gold" | "amber" | "teal" | "accent";
@@ -72,6 +74,50 @@ export interface VersionFacts {
   readonly changed: number;
   readonly removed: number;
   readonly held: number;
+  /**
+   * MW-017: the promoted candidate's horizon evidence. Null when the candidate
+   * records none; absent on a reading taken before it was read. Only a bounded
+   * read that claims it holds everything the publisher lists lets the page say
+   * where the publisher's own list ends.
+   */
+  readonly horizon?: PublisherHorizon | null;
+}
+
+/** The horizon slice of a civic-data candidate (`HorizonEvidence` in lib/civic-data/types.ts), as Admin reads it. */
+export interface PublisherHorizon {
+  readonly kind: "BOUNDED" | "OPEN_FACT_SET";
+  readonly returnedRecords: number | null;
+  readonly declaredTotal: number | null;
+  readonly paginationComplete: boolean;
+  readonly claimsComplete: boolean;
+}
+
+/**
+ * The horizon from its query columns (`horizon_kind`, `horizon_returned`,
+ * `horizon_declared`, `horizon_paginated`, `horizon_complete`). A kind this
+ * page does not know reads as no horizon, never as bounded; a flag that is not
+ * plainly true reads as false.
+ */
+export function horizonFromColumns(r: Readonly<Record<string, unknown>>): PublisherHorizon | null {
+  const kind = r.horizon_kind;
+  if (kind !== "BOUNDED" && kind !== "OPEN_FACT_SET") return null;
+  const n = (v: unknown): number | null => {
+    if (v === null || v === undefined || v === "") return null;
+    const x = Number(v);
+    return Number.isFinite(x) ? x : null;
+  };
+  return {
+    kind,
+    returnedRecords: n(r.horizon_returned),
+    declaredTotal: n(r.horizon_declared),
+    paginationComplete: r.horizon_paginated === "true" || r.horizon_paginated === true,
+    claimsComplete: r.horizon_complete === "true" || r.horizon_complete === true,
+  };
+}
+
+/** A horizon the page may call the publisher's own limit: bounded, paginated to its end, and claiming completeness. */
+export function horizonIsPublishersLimit(h: PublisherHorizon | null | undefined): boolean {
+  return h !== null && h !== undefined && h.kind === "BOUNDED" && h.paginationComplete && h.claimsComplete;
 }
 
 export interface AttemptFacts {
@@ -168,6 +214,8 @@ export interface BodyDeadEnd {
   readonly ruledOut: string | null;
   readonly wouldSettle: string | null;
   readonly whoMoves: string | null;
+  /** Why a null field is missing, named (MW-016); absent on a field that has a value. */
+  readonly gaps?: DeadEndGaps;
 }
 
 export interface BodyView {
@@ -371,7 +419,8 @@ export function readStateWords(state: string, failureCode: string | null, failur
     case "SEMANTIC_INVALID":
       return "got in but a record failed its meaning check";
     case "HORIZON_UNRESOLVED":
-      return "got in but could not tell how far ahead the source publishes";
+      /* A check we could not complete, not a limit the publisher set (MW-017). */
+      return "got in, but our check of how far ahead the source publishes could not be completed";
     case "DEPENDENT_CONSUMER_INVALID":
       return "got in but the reader's view of it failed its check";
     case "CANNOT_TELL":
@@ -714,22 +763,12 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     const from = lastSuccess ?? last;
     nextLook = `Due ${fmt(new Date(ms(from.attemptedAt) + cadenceMs(contract, l.nowMs)).toISOString())}`;
   }
-  const furthest = version?.furthestAhead ? Math.round((ms(version.furthestAhead) - l.nowMs) / DAY_MS) : null;
   const schedule: [string, string][] = [
     ["Last look", lastLook],
     ["Next look", nextLook],
     ["How often", cap(contract.cadence.description)],
     ["Reads that got in", day ? `${day.gotIn} of ${day.reads} in the last 24 hours` : "None in the last 24 hours"],
-    [
-      "Publishes ahead",
-      version === null
-        ? "Unknown — nothing has been read from this source"
-        : furthest === null
-          ? "Lists no dated meeting"
-          : furthest >= 0
-            ? `Lists meetings through ${fmtDate(version.furthestAhead)} — ${furthest} days ahead`
-            : `Lists nothing ahead — its latest meeting was ${fmtDate(version.furthestAhead)}`,
-    ],
+    ["Publishes ahead", publishesAheadWords(version, last, l.nowMs)],
   ];
 
   const costs = [
@@ -750,10 +789,23 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
   /* ---------------------------------------------------------------- dead end */
   let deadEnd: BodyDeadEnd | null = null;
   if (last !== null && lastFailed) {
+    /* What the run of reads ruled out, from the reads themselves (MW-016); a gap is named, never left blank. */
+    const ruled = routineRuledOut(
+      attempts.map((a) => ({
+        state: a.state,
+        failureCode: a.failureCode,
+        acquisitionSucceeded: a.acquisitionSucceeded,
+        attemptedAt: a.attemptedAt,
+        failed: !a.acquisitionSucceeded || FAILED_STATES.has(a.state),
+        jobFailure: isJobFailure(a.failureDetail),
+      })),
+      (a) => readStateWords(a.state, a.failureCode),
+    );
     deadEnd = {
       pill: version ? "LAST READ FAILED" : "CANNOT FINISH",
       title: `The last read ${readStateWords(last.state, last.failureCode, last.failureDetail)}${last.failureDetail ? ` — ${detailWords(last.failureDetail)}` : ""}`,
-      ruledOut: null,
+      ruledOut: ruled.ruledOut,
+      ...(ruled.gap !== null ? { gaps: { ruledOut: ruled.gap } } : {}),
       wouldSettle: wouldSettleWords(last.state, last.failureCode, source, contract.sourceUrl, last.failureDetail),
       whoMoves: isJobFailure(last.failureDetail)
         ? `Engineering: our adapter or its configuration has to change. The runner retries on its clock (${contract.retry.description} after a failure), but the same code fails the same way${version ? "; the last good version keeps serving meanwhile" : ""}.`
@@ -816,6 +868,46 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
 
 function cap(s: string): string {
   return s.length === 0 ? s : s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/**
+ * **A PUBLISHING LIMIT, OR A CHECK WE DID NOT MAKE.** (MW-017.)
+ *
+ * The furthest meeting in the version we hold is a fact about what WE hold.
+ * It is the publisher's own limit only when the read that produced it was
+ * bounded, paginated to its end, and claims it holds everything the publisher
+ * lists — then "the publisher lists through <date>" is true. Otherwise how far
+ * ahead the publisher lists was not checked, and the sentence says so beside
+ * what we hold, never as the publisher's limit. A read that failed its horizon
+ * check is our check failing, not the publisher stopping.
+ */
+export function publishesAheadWords(
+  version: Pick<VersionFacts, "furthestAhead" | "horizon"> | null,
+  last: Pick<AttemptFacts, "state"> | null,
+  nowMs: number,
+): string {
+  if (version === null) return "Unknown — nothing has been read from this source";
+  const furthest = version.furthestAhead ? Math.round((ms(version.furthestAhead) - nowMs) / DAY_MS) : null;
+  const held =
+    furthest === null
+      ? "the version we hold lists no dated meeting"
+      : furthest >= 0
+        ? `the version we hold lists meetings through ${fmtDate(version.furthestAhead)}, ${furthest} days ahead`
+        : `the latest meeting in the version we hold was ${fmtDate(version.furthestAhead)}`;
+  if (last?.state === "HORIZON_UNRESOLVED") {
+    return `Not checked — the last read could not complete our check of how far ahead the publisher lists (our check is incomplete; this is not a limit the publisher set); ${held}`;
+  }
+  const h = version.horizon;
+  if (horizonIsPublishersLimit(h)) {
+    const counted = h!.declaredTotal !== null && h!.returnedRecords !== null ? ` (the read holds ${h!.returnedRecords} of the ${h!.declaredTotal} it lists)` : "";
+    if (furthest === null) return `The publisher lists no dated meeting${counted}`;
+    return furthest >= 0
+      ? `The publisher lists through ${fmtDate(version.furthestAhead)} — ${furthest} days ahead${counted}`
+      : `The publisher lists nothing ahead — its latest meeting was ${fmtDate(version.furthestAhead)}${counted}`;
+  }
+  if (h === undefined) return `Unknown — whether the read holds everything the publisher lists was not read this time; ${held}`;
+  if (h === null) return `Unknown — the read records no horizon, so where the publisher's list ends is not known; ${held}`;
+  return `Not checked — the read does not claim it holds everything the publisher lists, so the publisher's own limit is unknown; ${held}`;
 }
 
 const FMT = new Intl.DateTimeFormat("en-US", {

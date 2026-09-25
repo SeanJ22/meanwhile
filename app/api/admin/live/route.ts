@@ -71,6 +71,7 @@ function unreadPulse(at: string): LivePulse {
       obligations: null,
       agentJobsRunning: null,
     },
+    lanes: null,
     unread: ["everything on this strip (the console could not reach its records just now)"],
   };
 }

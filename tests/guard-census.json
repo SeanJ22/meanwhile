@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
-    "dynamic": 30
+    "files": 796,
+    "named": 7747,
+    "dynamic": 31
   },
   "files": {
     "tests/abandoned-occurrences.test.ts": {
@@ -197,6 +197,19 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-dead-ends.test.ts": {
+      "names": [
+        "MW-015: an assignment is COMPLETE only when no member is refused or unsettled, and lists what remains",
+        "MW-016: a field the walk cannot answer stays null and names its gap",
+        "MW-016: a refused finish says what its walk ruled out and would try next",
+        "MW-016: a run of the same failed read rules out a one-off; our own failure rules out nothing about the site",
+        "MW-016: a walk's failed rungs are what it ruled out, its next rungs what would settle it, its outcome who moves",
+        "MW-016: an opened failed assignment reads its dead end from the latest walk, not the debt's backoff sentence",
+        "MW-031/MW-033: the Scout line states the class chosen, why, and an escalation's evidence and combined cost; the cost line counts escalations from the walks, never 'recorded nowhere'",
+        "MW-035: the Scout's 'why a paid model' is the executor decision's reason, not a fixed sentence"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-feedback-9-4-pm.test.ts": {
       "names": [
         "ADM-10: a role lead says what is happening, says plainly when nothing needs the owner, and names the work item when something does",
@@ -365,6 +378,13 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-paid-lane.test.ts": {
+      "names": [
+        "the paid lane line keeps the waiting count whichever closed reason the runner names first",
+        "the runner pause and an unreadable control each read in plain words, with the count"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-promoted-slices.test.ts": {
       "names": [
         "a code's memberships match the lookup's reverse index, and a code outside the universe says so",
@@ -375,6 +395,14 @@
         "one container carries the lookup's own codes and plan",
         "the registry slice carries each body's six fields and skips a row with no id",
         "the watched-bodies read opens no socket, runs read only, and decodes each change set once"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-publisher-horizon.test.ts": {
+      "names": [
+        "MW-017: only a bounded, fully paginated read that claims completeness names the publisher's own limit",
+        "MW-017: the body's schedule row uses the horizon, and the store reads five scalars off it, never the candidate",
+        "MW-017: the horizon columns parse to a slice; an unknown kind is no horizon, never bounded"
       ],
       "dynamic": 0
     },
@@ -1475,6 +1503,32 @@
         "RULING 20: no NEW portrait or PDF binary is committed to the repo",
         "RULING 20: reference data and provenance stay in git",
         "RULING 20: the sweep actually reaches the binaries it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/assignment-identity.test.ts": {
+      "names": [
+        "MW-015: a Send is complete only when every member is settled, and the instruction says which are not",
+        "Money splits paid charges by what each recorded it was for; older rows say so, and test runs are inside the total on their own line",
+        "REORDERED records share the per-cycle write budget after the creations, and the remainder is carried, not dropped",
+        "a Scout on a spent assignment is refused by the assignment's own name, with spent and held",
+        "a Send records itself on what it created and on what it found already on a clock — appended, never overwritten",
+        "a Send with no budget of its own adds no limit; work no Send reached passes",
+        "a created row whose creator is not on record is never guessed into a Send",
+        "a deployment may carry its own budget, kept on the DISPATCH intent",
+        "a policy row that is not a policy holds paid work, by name, instead of reading as no scope",
+        "a proof run charges under its own project, marked non-production — real money, kept apart",
+        "a round names its question from the obligation's own state, never from the job type, and none when that state is missing",
+        "an admitted Scout holds its worst case until it settles, and the next is refused on spent plus held",
+        "an assignment budget that cannot be checked holds the work, by name",
+        "an assignment's spend is its members' charges since they joined; a charge naming no obligation counts by its body",
+        "an instruction lists what it created and reordered from the work itself, and its own budget with the window",
+        "an opened piece of work names its question and the instructions recorded on it",
+        "every charge the dispatcher writes names its obligation, its Sends, its record class, its question and what it came to",
+        "syncObligations keeps the Sends a row records when a provider's signals move, and withAssignment only appends",
+        "the owner's questions travel typed through expansion.scope.set onto the decision, and onto every obligation the Send reaches",
+        "the runner's reading names what each Send reached and its budget — spent, held, left — with the window",
+        "work several Sends reached runs while any budgeted one has room — under the most recent — and is refused only when none does"
       ],
       "dynamic": 0
     },
@@ -3258,6 +3312,14 @@
       ],
       "dynamic": 0
     },
+    "tests/cost-by-model-split.test.ts": {
+      "names": [
+        "Money's cost-by-model gives each model its own part of an escalated charge, and the parts are counted once",
+        "a split that does not sum to the charge is not trusted: the row is read whole under its Attempt's model, never guessed",
+        "the dispatcher writes the worker's per-model split on the one ledger row — disposed and aborted alike — with the combined cost unchanged"
+      ],
+      "dynamic": 0
+    },
     "tests/cost-by-place.test.ts": {
       "names": [
         "a charge whose source names no place lands in a named overhead bucket, last",
@@ -3572,6 +3634,7 @@
     },
     "tests/delivery-trail.test.ts": {
       "names": [
+        "MW-053: each approved row says what changed, from its own SCOUTED and CONFIRMED records",
         "MW-054: an approved record becomes a promotion-history row with evidence, time, version and (honest) destination",
         "cumulative reached counts, between-stage failures bucketed, availability is a gap not zero",
         "empty pipeline: every stage is a named gap, the blockers are named, promotions empty"
@@ -4484,6 +4547,7 @@
         "Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and CIRCUIT BROKEN",
         "Saturday operational night is an explicit SCHEDULED BLACKOUT",
         "a Scout model request is admitted while a public read is in flight (the turn-0 abort, fixed)",
+        "a closed paid lane's reason refuses every model request by name, and never calls the transport",
         "a hard Neon response is host-latched before any second database probe",
         "a provider response with incomplete usage makes cycle spend UNMEASURED and stops later model work",
         "an in-flight public read reserves only a bounded slice, so a concurrent read still proceeds",
@@ -4496,6 +4560,7 @@
         "the guarded byte fetch answers the first hop with its location when asked not to follow, and follows by default",
         "the guarded fetch fails loud on a truncated 206 rather than handing up a partial document",
         "the largest recurring record's stream budget clears ~9.2 MiB while a full Scout lane holds reservations",
+        "the owner's runner pause refuses every model request, while free fetches and dispatches are still admitted",
         "the rolling ceiling is the injected owner override when given, the fallback otherwise — one value moves both gates",
         "transient 429/5xx/network failures do not spin and do not hard-latch"
       ],
@@ -5437,6 +5502,17 @@
       ],
       "dynamic": 0
     },
+    "tests/lane-accounting.test.ts": {
+      "names": [
+        "MW-014: each lane accounts for every due row by reason — dispatched + reasons = due",
+        "MW-014: reasons that do not add up produce a MISMATCH line naming the lane",
+        "MW-014: the coordinator's BLOCKED and STAGED decisions are counted, not silent",
+        "MW-014: the persisted reading's reasons sum to the skipped count on the runner card",
+        "MW-071: mid-cycle lanes count running Scouts as active and the oldest row neither started nor running",
+        "MW-071: the pulse carries the lane gauges from the research state it already reads"
+      ],
+      "dynamic": 0
+    },
     "tests/lead-adjudication.test.ts": {
       "names": [
         "a body may not be promoted straight from a lead",
@@ -5461,6 +5537,14 @@
         "triage rejects notices, assets and case records, each with its own reason",
         "unclassified counts leads AND the ones the method could not read",
         "verification without evidence is refused"
+      ],
+      "dynamic": 0
+    },
+    "tests/learning-trends.test.ts": {
+      "names": [
+        "MW-025: a handed door counts as used when its url matches a walked rung or its routeId a proposed candidate",
+        "MW-027: no rows means no weeks and no measured series, never a row of zeros",
+        "MW-027: the weeks run from the first record through now, and a week with no record is a gap in every series"
       ],
       "dynamic": 0
     },
@@ -6573,13 +6657,25 @@
       ],
       "dynamic": 0
     },
+    "tests/model-ladder-view.test.ts": {
+      "names": [
+        "a zero is honest: with paid research paused it says since when; with nothing run under the ladder, or nothing needing to move up, it says that",
+        "an escalation on record reads as the classes by name, the reason, the evidence, and what both tries cost together and each",
+        "every recorded reason and every refusal has owner words — the closed lists and the words cannot drift apart",
+        "one Scout result for an assignment's standing view: the class chosen, why, and for an escalated one the evidence and combined cost; a result before the ladder says it started at the top by the rule of the day"
+      ],
+      "dynamic": 0
+    },
     "tests/model-lane.test.ts": {
       "names": [
+        "PRODUCTION TODAY — research paused, delivery gate closed: the lane stays closed and now leads with the owner's pause",
+        "an owner control that could not be read holds the lane closed as if paused, names it, and says free work continues",
         "freshness-shadow derives modelLaneEnabled from modelLaneClosure and the activation gate",
         "promotion on with no record class open is still no delivery path",
-        "reasons are ordered: blackout, dry, no-model, credential, delivery, owner pause",
+        "reasons are ordered: blackout, dry, no-model, owner pause, runner pause, unreadable control, credential, delivery",
         "the lane is open only when nothing closes it and a delivery path is open",
         "the real activation gate decides: the lane is open exactly when a delivery path is",
+        "the runner-level PAUSE_RUNNER closes the paid lane, not only the research-lane PAUSE",
         "with promotion off, the lane closes and says why, and what keeps running"
       ],
       "dynamic": 0
@@ -7219,6 +7315,18 @@
         "R46: no ambiguous-extension JavaScript file has appeared",
         "R46: the package declares itself ESM",
         "R46: tracked source carries no CommonJS-only construct"
+      ],
+      "dynamic": 0
+    },
+    "tests/paid-work-fails-closed.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker",
+        "POSITIVE CONTROL: a runner that reads an unreadable log as silence, or never tells the child, fails its checker",
+        "PRODUCTION TODAY: routine intake, the free discovery walk and dispatch-work writes are gated exactly as before",
+        "an unreadable, invalid, or malformed-ceiling row holds paid work by name and never reaches the fallback",
+        "freshness-shadow.mts closes every paid path on an unreadable or ignored control (items 1, 3, 4, 5, 7, 8)",
+        "pilot-runner.mts never reads an unreadable intent log as 'not paused', and holds the next cycle's paid lane (item 2)",
+        "the config row for paid work: a clean read honors the owner's dial, and only a clean read with no override falls back"
       ],
       "dynamic": 0
     },
@@ -8720,6 +8828,15 @@
       ],
       "dynamic": 0
     },
+    "tests/readiness-standard.test.ts": {
+      "names": [
+        "MW-063: a snapshot measured under a superseded version stays readable and names that version",
+        "MW-063: every version is dated, exactly one is in force, and each superseded one hands over to the next",
+        "MW-063: the gates and taxonomy the code runs are exactly the manifest's current version",
+        "MW-063: the manifest's current version is the contract the code stamps and trusts"
+      ],
+      "dynamic": 0
+    },
     "tests/reference-data.test.ts": {
       "names": [
         "2c: the 13 Texas special districts with blank place are left as a stated gap",
@@ -9554,10 +9671,10 @@
     },
     "tests/scout-context-bound.test.ts": {
       "names": [
-        "a result with no artifact mapping (finish / record_rung) is never elided",
-        "elision is stable: a second pass changes nothing",
-        "nothing is elided when the whole conversation fits",
-        "older tool results are elided until the retained content is within budget"
+        "nothing is over the budget when the whole conversation fits, and small older results are carried whole",
+        "the carried-forward block is a pure function of the record: the same conversation gives the same bytes",
+        "the carried-forward block lists every rung with its artifact ids, keeps the newest representation whole, and fits older ones in half the budget",
+        "the most recent turn's finish refusal and record_rung answer are carried whole; an older one is not"
       ],
       "dynamic": 0
     },
@@ -9587,9 +9704,33 @@
       ],
       "dynamic": 0
     },
+    "tests/scout-model-ladder.test.ts": {
+      "names": [
+        "L1: the loop's first request goes to Sonnet 5 — the cheapest suitable class — with every cache breakpoint placed and a prefix that clears Sonnet's minimum",
+        "L2: a Sonnet attempt that produces an accepted typed result is the whole Attempt — no escalation, no reservation, one attempt's cost",
+        "L4: a provider overload (HTTP 529) is not the model's failing and never escalates — a dearer model is not a retry",
+        "L5 CEILING (positive control): under a ceiling that covers both attempts the real controller holds the escalation, and after it every cent of the hold is drawn or released",
+        "L5 CEILING: with the real FleetSafety controller, an escalation whose worst case the rolling ceiling cannot cover is refused before any frontier request, deferred by name, and recorded after the root cause",
+        "L5 FleetSafety.holdModelBudget: the hold counts against the rolling ceiling until drawn or released, and refuses over it",
+        "L5 WALL_CLOCK / UNMEASURED_SPEND / NOT_RESERVED: each refusal is named, recorded, and sends no frontier request",
+        "L6: the pre-warm warms the model the loop STARTS on — byte-identical to the loop's first request — and is skipped by name when the prefix cannot be shown to cache",
+        "L7: Opus 5.5 remains the maximum the ladder can reach, a Fable is refused, the auditor stays on the frontier, and an escalation needs a recorded reason below the top"
+      ],
+      "dynamic": 1
+    },
+    "tests/scout-preserved-thinking.test.ts": {
+      "names": [
+        "PT-1: the conversation is append-only — each request extends the one before byte-for-byte, except a restart, which replays no earlier turn or thinking block — and the payload stays bounded",
+        "PT-2: the escalation appends to the same conversation — Sonnet's reply, thinking blocks included, reaches Opus 5.5 unchanged — and both models state drop_block",
+        "PT-3: a prefix-binding drop — our history changed under a block — is recorded on the result and named on the outcome",
+        "PT-4: the transport sends the thinking-binding beta header exactly when the body carries block_binding — a request without it sends none"
+      ],
+      "dynamic": 0
+    },
     "tests/scout-prewarm.test.ts": {
       "names": [
         "PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule",
+        "PC-7 search on (2026-09-25): the pre-warm warms the prefix the Attempts actually send — the search tool included, the same thinking and effort — and the runner feeds one switch to both",
         "PC-7: no admitted Scout, no pre-warm; and a failed pre-warm is recorded while the Attempts still run",
         "PC-7: the cycle pre-warms ONCE, before the first admitted Scout, and both concurrent Scouts start after the entry exists",
         "PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder"
@@ -9600,10 +9741,13 @@
       "names": [
         "Brave request: correct endpoint, X-Subscription-Token header, count; returns url+title pointers",
         "Exa request: POST, Bearer auth, type fast, numResults, and NO contents / outputSchema / answer",
+        "a budget that cannot be read sends no paid request at all",
         "an empty query returns an empty result without calling any provider",
         "combined: both providers queried, results deduped by URL, errors named without failing the call",
         "combined: one provider erroring is named, the other's hits still return",
-        "makeScoutSearch is null when neither key is set — the tool stays inert"
+        "every paid provider request is admitted by the budget first; a refused provider sends nothing and is named",
+        "makeScoutSearch is null when neither key is set — the tool stays inert",
+        "the Scout search is admitted under the same hosts as the discovery walk's search, so one per-day cap binds both"
       ],
       "dynamic": 0
     },
@@ -11252,8 +11396,10 @@
     },
     "tests/worker-fleet-model-audit.test.ts": {
       "names": [
+        "Opus 5.5 request: no forced tool choice — auto, a strict record_audit schema strict mode accepts, and the system prompt naming the tool",
         "a valid grounded challenge survives beside a refused ungrounded challenge without certifying the whole response",
         "adaptive budget keeps five complete events and every exploratory route with eight large publisher surfaces",
+        "an answer without a record_audit call fails closed by name — even valid JSON saying SURVIVED — and missing usage remains null",
         "an injected transport cannot hang the review and the established bound cannot be enlarged",
         "an oversized primary projection is refused before transport instead of cutting through civic JSON",
         "first-party surface evidence is represented and exact surface quotes ground challenges",
@@ -11262,7 +11408,8 @@
         "malformed, truncated, mismatched and unsupported responses retain exact named validation failures and measured cost",
         "oversized response is bounded durably and never mistaken for a complete verdict",
         "provider outage is a named execution failure with no guessed usage or leaked transport body",
-        "strict JSON end_turn compatibility remains accepted and missing usage remains null",
+        "the auditor admits against the owner's ceiling in force, lowered or raised, not the static default",
+        "the standing runtime hands the auditor the ceiling in force",
         "typed record_audit output preserves grounded challenge, actual model usage and existing cost calculation"
       ],
       "dynamic": 0

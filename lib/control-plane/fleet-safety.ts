@@ -8,7 +8,7 @@
  */
 import type { CostEntry } from "./cost.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, usdForModelUsage } from "./model-cost.ts";
-import type { ModelRequest, ModelResponse, ModelTransport } from "./scheduler/scout-executor.ts";
+import type { ModelRequest, ModelResponse, ModelTransport, ScoutEscalationAdmission, ScoutEscalationRequest } from "./scheduler/scout-executor.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
 import type { OpenBytes } from "./scheduler/scout-contract.ts";
 import type { OpenOne } from "./scheduler/route-executor.ts";
@@ -54,8 +54,10 @@ export const FLEET_SAFETY_BOUNDS = {
   // The FALLBACK rolling 24-hour model-spend ceiling. The value in force is the
   // owner's console override (`AdminConfig.fleetSpendCeiling`), read at the start
   // of every cycle through `resolveRollingCeiling`; this constant governs only
-  // when no override stands or the row cannot be read — "a ceiling that
-  // disappears must not become no ceiling". Restored to $100 (the pre-2026-09-19
+  // when the row was read and carries no override — "a ceiling that disappears
+  // must not become no ceiling". A row that cannot be read or is malformed does
+  // not reach this fallback: the runner holds paid work instead, because the
+  // owner's dial may be set below it (2026-09-25). Restored to $100 (the pre-2026-09-19
   // value) now the console dial can move it with no deploy and no restart; the
   // interim $25 brake is retired into the dial.
   rolling24HourModelUsd: 100,
@@ -72,10 +74,12 @@ export const FLEET_SPEND_CEILING_MAX_USD = 10_000;
 
 /**
  * The rolling 24-hour model-spend ceiling in force, given the owner's override
- * (or null when none stands / it could not be read).
+ * (or null when none stands).
  *
- * The fallback is the built-in {@link FLEET_SAFETY_BOUNDS} value, so a missing or
- * unreadable override is still a real ceiling and never "no ceiling". A
+ * The fallback is the built-in {@link FLEET_SAFETY_BOUNDS} value, so a missing
+ * override is still a real ceiling and never "no ceiling". The runner calls this
+ * only for a row it read cleanly; an unreadable or malformed row holds paid work
+ * rather than fall back (`adminConfigForPaidWork` in gateway/admin-config.ts). A
  * non-positive or non-finite override is treated as no override, for the same
  * reason — a corrupt row must not read as "spend nothing" or "spend without
  * limit". `source` lets a surface show a live override apart from the fallback.
@@ -101,7 +105,9 @@ export type FleetStopCode =
   | "WALL_CLOCK_CEILING"
   | "UNMEASURED_MODEL_SPEND"
   | "SCHEDULED_BLACKOUT"
-  | "PROVIDER_CIRCUIT_BROKEN";
+  | "PROVIDER_CIRCUIT_BROKEN"
+  | "OWNER_PAUSED"
+  | "MODEL_LANE_CLOSED";
 
 export interface OperationalNight {
   readonly active: boolean;
@@ -322,6 +328,7 @@ export class FleetSafetyController {
   private readonly historicalRollingUsd: number | null;
   private readonly night: OperationalNight;
   private readonly paused: boolean;
+  private readonly modelHold: string | null;
   private readonly clock: () => number;
   private readonly deferrals: FleetNamedDeferral[] = [];
   private readonly stopReasons = new Set<string>();
@@ -337,7 +344,15 @@ export class FleetSafetyController {
   constructor(input: {
     readonly now: string;
     readonly costs: readonly CostEntry[];
+    /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
+    /**
+     * Why the cycle's paid model lane is closed, or null/undefined while it is
+     * open. Every model request is refused with this reason: the lane already
+     * builds no paid caller while closed, and this is the second lock, so a
+     * caller added later cannot spend past a pause or an unreadable control.
+     */
+    readonly modelHold?: string | null;
     readonly circuits?: readonly ProviderCircuit[];
     readonly lastSuccessfulActivity?: string | null;
     readonly costLedgerReadable?: boolean;
@@ -359,6 +374,7 @@ export class FleetSafetyController {
     this.startedMs = Date.parse(input.now);
     this.night = operationalNightAt(input.now);
     this.paused = input.paused ?? false;
+    this.modelHold = input.modelHold ?? null;
     this.clock = input.clock ?? Date.now;
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
     const nightSpend = aggregateModelSpend(input.costs, this.night.start, input.now);
@@ -440,6 +456,10 @@ export class FleetSafetyController {
   }
 
   reserveModelRequest(provider: string, work: string, request: ModelRequest): Reservation {
+    // Paid work only: a pause or a closed lane refuses model requests, while
+    // free fetches (`admitProviderRequest`, `guardedOpenBytes`) keep running.
+    if (this.paused) this.refuse(work, "OWNER_PAUSED", "the owner paused the runner; no model request is sent under the pause");
+    if (this.modelHold !== null) this.refuse(work, "MODEL_LANE_CLOSED", this.modelHold);
     if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
     const bodyBytes = Buffer.byteLength(JSON.stringify(request));
     const rate = rateFor(request.model);
@@ -753,4 +773,58 @@ export class FleetSafetyController {
       lastSuccessfulActivity: this.lastSuccessfulActivity,
     };
   }
+
+  /**
+   * **A HOLD FOR A MODEL ESCALATION, TAKEN BEFORE IT RUNS.** (MW-031, MW-033,
+   * 2026-09-25.) When a cheaper model attempt shows a recorded reason to move
+   * up a class, the second attempt's worst case is held against the SAME
+   * rolling-24h inequality `reserveModelRequest` enforces, before its first
+   * request — so the ceiling covers both attempts, and a concurrent Scout
+   * cannot spend the headroom the escalation was admitted on. Refuses (and
+   * defers the work by name) exactly as a request would. `draw` converts part
+   * of the hold into settled spend as each escalated turn is priced, so the
+   * hold and the spend are never counted twice; `release` returns the rest.
+   * Each escalated request is still reserved on its own on top of the hold.
+   */
+  holdModelBudget(work: string, usd: number): { readonly usd: number; readonly draw: (spentUsd: number) => void; readonly release: () => void } {
+    if (!Number.isFinite(usd) || usd < 0) this.refuse(work, "UNMEASURED_MODEL_SPEND", `an escalation hold of ${String(usd)} USD is not a measured amount`);
+    if (!this.cycleModelSpendMeasured) this.refuse(work, "UNMEASURED_MODEL_SPEND", "an earlier model response in this cycle omitted complete metered usage");
+    if (this.historicalRollingUsd === null) this.refuse(work, "UNMEASURED_MODEL_SPEND", "rolling-24-hour model spend is unmeasured");
+    if (this.historicalRollingUsd + this.cycleUsd + this.reservedUsd + usd > this.bounds.rolling24HourModelUsd) {
+      this.refuse(work, "ROLLING_24_HOUR_MODEL_SPEND_CEILING", `the escalation's worst case ($${usd.toFixed(2)}) would exceed the $${this.bounds.rolling24HourModelUsd.toFixed(2)} rolling-24-hour ceiling`);
+    }
+    this.reservedUsd += usd;
+    let held = usd;
+    return {
+      usd,
+      draw: (spentUsd) => {
+        const d = Math.min(held, Number.isFinite(spentUsd) ? Math.max(0, spentUsd) : 0);
+        held -= d;
+        this.reservedUsd -= d;
+      },
+      release: () => {
+        this.reservedUsd -= held;
+        held = 0;
+      },
+    };
+  }
+}
+
+/**
+ * The Scout executor's escalation seam (`ScoutExecutorDeps.reserveEscalation`),
+ * backed by this controller's hold (MW-033, 2026-09-25): admitted with the hold,
+ * or refused `CEILING` with the controller's own code and words. Any other
+ * failure is not a ceiling reading and is thrown to the executor, which records
+ * it as `NOT_RESERVED`.
+ */
+export function scoutEscalationReservation(controller: FleetSafetyController): (request: ScoutEscalationRequest) => ScoutEscalationAdmission {
+  return (request) => {
+    try {
+      const hold = controller.holdModelBudget(request.obligationId, request.worstCaseUsd);
+      return { admit: true, reservedUsd: hold.usd, draw: hold.draw, release: hold.release };
+    } catch (error) {
+      if (error instanceof FleetSafetyRefusal) return { admit: false, code: "CEILING", why: error.message };
+      throw error;
+    }
+  };
 }

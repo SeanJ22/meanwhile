@@ -95,7 +95,7 @@ import { join } from "node:path";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
   assertDurableRepositories,
   type ControlPlaneRepositories,
@@ -397,7 +397,11 @@ const BUDGET_MIN = Number.isFinite(requestedBudgetMin) && requestedBudgetMin >= 
   ? Math.min(requestedBudgetMin, FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000)
   : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
 
-async function runOneCycle(): Promise<{
+/**
+ * `ownerIntentsUnreadable`: the read before this cycle failed, so the child is
+ * told to keep its paid lane closed (`holdWhilePaused`).
+ */
+async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }): Promise<{
   readonly ok: boolean;
   readonly recordPath: string | null;
   readonly stdout: string;
@@ -425,6 +429,7 @@ async function runOneCycle(): Promise<{
     ...(idsArg ? [idsArg] : []),
     ...(scoutMaxArg ? [scoutMaxArg] : []),
     ...(canary ? ["--canary"] : []),
+    ...(owner.ownerIntentsUnreadable ? ["--owner-intents-unreadable"] : []),
   ];
   const [run] = await runBoundedChildPass([{
     id: "research-cycle",
@@ -1043,14 +1048,22 @@ const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms
  *              runs; RESUME_RUNNER is honored HERE, by the runner, because a
  *              resume is about the runner and not about any cycle.
  *   NOTHING    the ordinary interval stands.
+ *   UNREADABLE the log could not be read, or the control plane could not be
+ *              opened. An intent nobody can read is not an intent nobody sent,
+ *              so this is never read as "not paused" (2026-09-25): the interval
+ *              stands, and the next cycle is started with its paid model lane
+ *              held closed (`--owner-intents-unreadable`). The cycle still
+ *              runs because it also carries free work — plain-code refresh and
+ *              the free discovery walks — which the owner's rule keeps running
+ *              when a control cannot be read; only paid work fails closed. The
+ *              failure is printed, once.
  * ```
  *
- * A store that cannot be read keeps the ordinary behaviour — an intent nobody
- * can read is not an intent nobody sent, so the failure is printed, once. The
- * file provider is a local proof and carries no owner intents.
+ * The file provider is a local proof and carries no owner intents: NOTHING.
  *
- * The nightly window (RULING 242) keeps its own clock through a pause: a pause
- * holds CYCLES; the reader-truth door runs in shadow and catches up on its own.
+ * The nightly window (RULING 242) keeps its own clock, and the owner's
+ * PAUSE_RUNNER holds it as it holds cycles (see holdWhilePaused and
+ * sleepUnlessRunNow); a window skipped while paused catches up on its own.
  */
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
@@ -1425,25 +1438,28 @@ async function beatWhilePaused(repos: ControlPlaneRepositories, intent: Research
   else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, now);
 }
 
-type OwnerSays = "HOLD" | "START_NOW" | "NOTHING";
+type OwnerSays = "HOLD" | "START_NOW" | "NOTHING" | "UNREADABLE";
 
 /** ONE read of the intent log; every check above is answered from it. */
 async function ownerSays(): Promise<OwnerSays> {
+  /* The file provider is a local proof with no owner intents; nothing is unread. */
+  if (provider !== "postgres") return "NOTHING";
   let repos: ControlPlaneRepositories | null;
   let log: readonly ResearchIntent[];
   try {
     repos = await ownerRepositories();
-    if (repos === null) return "NOTHING";
+    if (repos === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not set, so the control plane cannot be opened`);
     log = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
   } catch (error) {
     if (!intentReadFailed) {
       intentReadFailed = true;
       console.error(
         `  research intents could not be read while waiting (${error instanceof Error ? error.message : String(error)}); ` +
-          "the ordinary interval stands. This is printed once.",
+          "the ordinary interval stands, and each cycle runs with its paid model lane held closed until the log reads again. " +
+          "This is printed once.",
       );
     }
-    return "NOTHING";
+    return "UNREADABLE";
   }
   const reading = readIntents(log);
   const pause = reading.runnerPause;
@@ -1636,7 +1652,10 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   while (Date.now() < until) {
     await sleep(Math.min(POLL_MS, until - Date.now()));
     /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
-    if ((await ownerSays()) === "START_NOW") return;
+    const says = await ownerSays();
+    if (says === "START_NOW") return;
+    /* The owner's PAUSE_RUNNER holds the window between cycles too (holdWhilePaused holds it before one). */
+    if (says === "HOLD") continue;
     /* LANE E — the nightly window runs between cycles, on this clock. */
     const decision = await windowDecision();
     if (decision.run) await runNightlyWindow(decision.trigger);
@@ -1646,19 +1665,32 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
 /**
  * Before a cycle starts: while the owner's PAUSE_RUNNER stands, idle here —
  * polling once a minute, beating every thirty — and return the moment it is
- * lifted. Not paused, or unreadable: return at once and the cycle starts.
+ * lifted. Not paused: return at once and the cycle starts. Unreadable: the
+ * cycle starts too, with `ownerIntentsUnreadable` set, so the child holds its
+ * paid lane closed (2026-09-25) — a pause nobody could read is never assumed
+ * lifted for paid work, and the cycle's free work still runs.
  *
- * The nightly window is held too. "I paused the runner" means the WHOLE
- * runner: the owner's stated reason on 9.4.26 was usage, and the shadow window
- * spends exactly as a cycle does. A window skipped while paused is caught up
+ * The nightly window is held too, here and between cycles. "I paused the
+ * runner" means the WHOLE runner: the owner's stated reason on 9.4.26 was
+ * usage. The window makes no model calls, but it uses the host and the
+ * databases like a cycle does. A window skipped while paused is caught up
  * by the next window decision after RESUME_RUNNER (it reads the last window
  * run, not this clock).
+ *
+ * A canary does not wait here: it is one operator-launched cycle, and idling
+ * in this loop would hang the command. It is not a way past a pause for paid
+ * work — the child reads the log itself, and its lane closes under either
+ * owner pause or an unreadable log, with FleetSafety refusing model requests
+ * on the same facts (freshness-shadow.mts, model-lane.ts).
  */
-async function holdWhilePaused(): Promise<void> {
-  if (canary) return;
-  while ((await ownerSays()) === "HOLD") {
+async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boolean }> {
+  if (canary) return { ownerIntentsUnreadable: false };
+  let says = await ownerSays();
+  while (says === "HOLD") {
     await sleep(POLL_MS);
+    says = await ownerSays();
   }
+  return { ownerIntentsUnreadable: says === "UNREADABLE" };
 }
 
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
@@ -1709,13 +1741,16 @@ await publishConsole();
 
 while (cycle < CYCLES) {
   /* ADM-5: PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
-  await holdWhilePaused();
+  const owner = await holdWhilePaused();
   cycle += 1;
   const startedAt = new Date().toISOString();
-  console.log(`\npilot-runner · cycle ${cycle} started ${startedAt}`);
+  console.log(
+    `\npilot-runner · cycle ${cycle} started ${startedAt}` +
+      (owner.ownerIntentsUnreadable ? " — the owner's intents could not be read, so its paid model lane is held closed" : ""),
+  );
 
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
-  const result = await runOneCycle();
+  const result = await runOneCycle(owner);
   if (result.circuit) {
     const c = result.circuit;
     const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;

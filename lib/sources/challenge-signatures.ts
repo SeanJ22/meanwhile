@@ -62,6 +62,12 @@ export const CHALLENGE_SIGNATURES: readonly {
   { name: "Imperva/Incapsula", test: /_Incapsula_Resource|Incapsula incident ID/i },
   { name: "PerimeterX", test: /px-captcha|PerimeterX/i },
   /*
+   * A bare CAPTCHA page. www.mojeek.com answered its search path with one on 2026-09-25 (HTTP 200, 5,513 bytes,
+   * `<title>Captcha</title>`, "JavaScript is required to complete this challenge"). Neither mark occurs in a real
+   * government page.
+   */
+  { name: "CAPTCHA page", test: /<title>\s*captcha\s*<\/title>|JavaScript is required to complete this challenge/i },
+  /*
    * The two that KEEP the floor, and why — corrected the same day the floor
    * was made per-signature, because the first version of that change removed
    * it from this one and broke two tests immediately.

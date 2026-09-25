@@ -127,9 +127,12 @@ export const WIKI_USER_AGENT = `we-the-people/1.0 (civic data for a public-recor
  * API's `rvslots=main` content field carried. Permission state and transport
  * state are orthogonal (RULING 182); this was never transport.
  *
- * The constant stays EXPORTED and unused so the guard in
- * `tests/wikipedia-permission.test.ts` can assert nothing composes a URL from
- * it. Deleting it would make the guard pass by having nothing to look at.
+ * **Since the owner decision of 2026-09-25 the Disallow is recorded, not
+ * blocking** ("Robots.txt alone must not block acquisition"). `/w/api.php` is
+ * no longer forbidden to this project; the `/wiki/` representation stays the
+ * route in use because it works and returns the same bytes, not because the
+ * other is refused. The constant stays EXPORTED as the recorded rule's path
+ * (`tests/wikipedia-permission.test.ts`).
  */
 export const WIKI_API_DISALLOWED = "https://en.wikipedia.org/w/api.php";
 

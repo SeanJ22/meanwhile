@@ -2166,11 +2166,18 @@ is enforced for exactly one population, the general search indexes in
 at once, so a session enumerating a state's sources answers the permission
 column for every one of them **before** it walks any of them.
 
-Four verdicts, and `CANNOT_TELL` refuses: `ALLOWED`, `DISALLOWED` (never
-re-walked on a clock — a disallow is a host saying do not ask), `NO_ROBOTS`,
-`CANNOT_TELL`. Run 2026-08-26 over 21 hosts from this brief: **17 walkable, 4
-refused** — `sos.nh.gov`, `cfs.sos.nh.gov`, `irc.az.gov` and `govtrack.us`, the
-last two of which then answered at rung 3.
+Four verdicts: `ALLOWED`, `DISALLOWED`, `NO_ROBOTS`, `CANNOT_TELL`. Run
+2026-08-26 over 21 hosts from this brief: **17 walkable, 4 refused** —
+`sos.nh.gov`, `cfs.sos.nh.gov`, `irc.az.gov` and `govtrack.us`, the last two of
+which then answered at rung 3.
+
+**Since the owner decision of 2026-09-25 no verdict refuses a walk.** "Robots.txt
+alone must not block acquisition." The sweep still reads and records every
+host's rules first, and `Crawl-delay` is still honoured as spacing; a
+`DISALLOWED` or `CANNOT_TELL` is evidence on the record, never a closed door.
+What does close a route is an access control on the page itself — a login, a
+403 or bot challenge, a 429 — and that is never bypassed
+(`lib/hunt/access-control.ts`).
 
 ## THE DESCENT — RULING 169, AND WHAT IT ADDS TO THIS FILE
 

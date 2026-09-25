@@ -37,9 +37,10 @@ import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
  * **It is deliberately NOT a record of everything a governor does.** Signed
  * bills and vetoes are a different publication with a different permission
  * story: the legislature's modern bill-status application lives on
- * `apps.azleg.gov`, which publishes `User-agent: * / Disallow: /`, so there is
- * no permitted route through it and none was attempted. `www.azleg.gov` is
- * allowed with a 120-second crawl delay and is the eligible branch that remains.
+ * `apps.azleg.gov`, which publishes `User-agent: * / Disallow: /`. Until the
+ * owner decision of 2026-09-25 that line kept it unread; it is now recorded and
+ * not blocking, and no adapter reads the application yet. `www.azleg.gov`
+ * (120-second crawl delay, honoured) is the branch this record is built from.
  *
  * ## The denominator travels, because a partial is a different answer
  *

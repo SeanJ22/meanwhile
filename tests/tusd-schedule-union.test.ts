@@ -161,9 +161,11 @@ test("a portal row with no published place is published, not dropped", () => {
   assert.equal(result.accounting.outcome, "CONSERVED");
 });
 
-test("the calendar is read only under a permission verdict; a refusal fails the run, never half a union", async () => {
+test("the calendar is read under a recorded robots verdict that never refuses it; a failed calendar read fails the run, never half a union", async () => {
+  const asked: string[] = [];
   const fetchImpl = (async (input: string | URL | Request) => {
     const url = String(input instanceof Request ? input.url : input);
+    asked.push(url);
     if (url.includes("MeetingsService.svc")) {
       return new Response("[]", { status: 200, headers: { "content-type": "application/json" } });
     }
@@ -173,13 +175,20 @@ test("the calendar is read only under a permission verdict; a refusal fails the 
     if (url === "https://govboard.tusd1.org/Actions") {
       return new Response("<html></html>", { status: 200, headers: { "content-type": "text/html" } });
     }
+    /* The disallowed calendar pages ARE requested now (owner decision 2026-09-25); this one fails, as a page can. */
+    if (url.startsWith("https://govboard.tusd1.org/")) {
+      return new Response("<html>Not found</html>", { status: 404, headers: { "content-type": "text/html" } });
+    }
     throw new Error(`unexpected request ${url}`);
   }) as typeof fetch;
   const source = makeDiligentSource([WIRING], fetchImpl);
   await assert.rejects(
     () => source.fetch({ lat: 32.22, lng: -110.97, radiusKm: 50 }),
-    (error: unknown) => error instanceof SourceHttpError && /PERMISSION DISALLOWED/.test(error.message),
+    (error: unknown) => error instanceof SourceHttpError && /HTTP 404/.test(error.message),
   );
+  const govboard = asked.filter((u) => u.startsWith("https://govboard.tusd1.org/"));
+  assert.equal(govboard[0], "https://govboard.tusd1.org/robots.txt", "the rules are read first");
+  assert.ok(govboard.some((u) => u.includes("/inflow/")), `the disallowed calendar path is requested: ${govboard.join(", ")}`);
 });
 
 test("Sunnyside: the district's own SmartSites calendar is unioned the same way, and a sitting with no stated place still publishes", () => {

@@ -193,14 +193,19 @@ test("HOLBROOK · the current year's page failing is the row failing, never an e
     () => makeDocumentListingSource([WIRING], gone, SEPT_25).fetch({ lat: 34.9, lng: -110.16, radiusKm: 25, startsAfter: "2026-06-27T00:00:00Z", startsBefore: "2027-01-23T00:00:00Z" }),
     /HTTP 404/,
   );
+  /* A Disallow is recorded and never stops the read (owner decision 2026-09-25): the page's own 404 is what fails the row. */
+  const disallowedAsked: string[] = [];
   const disallowed: typeof fetch = (async (input: string | URL | Request) => {
-    if (String(input).endsWith("/robots.txt")) return new Response("User-agent: *\nDisallow: /government/\n", { status: 200, headers: { "content-type": "text/plain" } });
-    throw new Error("nothing past the permission document may be requested");
+    const url = String(input);
+    disallowedAsked.push(url);
+    if (url.endsWith("/robots.txt")) return new Response("User-agent: *\nDisallow: /government/\n", { status: 200, headers: { "content-type": "text/plain" } });
+    return new Response("<html><body>Page not found</body></html>", { status: 404, headers: { "content-type": "text/html" } });
   }) as typeof fetch;
   await assert.rejects(
     () => makeDocumentListingSource([WIRING], disallowed, SEPT_25).fetch({ lat: 34.9, lng: -110.16, radiusKm: 25 }),
-    /PERMISSION DISALLOWED/,
+    /HTTP 404/,
   );
+  assert.ok(disallowedAsked[0]?.endsWith("/robots.txt") && disallowedAsked.length > 1, "the rules are read first, and the disallowed page is still requested");
   const failed: DocumentListingRaw = { ...raw([]), error: "HTTP 404" };
   const { meetings, unreachableOcdIds, accounting } = makeDocumentListingSource([WIRING]).normalizeWithDrops([failed], new Date("2026-09-25T18:00:00Z"));
   assert.deepEqual(meetings, []);

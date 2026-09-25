@@ -291,7 +291,7 @@ export async function walkMeetingsDiscoveryNeed(
   const maxRequests = runtime.maxRequestsPerWalk ?? DEFAULT_MAX_REQUESTS_PER_WALK;
   const timeoutMs = runtime.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const steps: DiscoveryStep[] = [];
-  const robotsByHost = new Map<string, { readonly verdict: StepPermission; readonly detail: string }>();
+  const robotsByHost = new Map<string, { readonly verdict: StepPermission; readonly detail: string; readonly rateLimited?: true }>();
   let requests = 0;
 
   const skipped = (purpose: DiscoveryStep["purpose"], url: string, permission: StepPermission, note: string): void => {
@@ -378,8 +378,8 @@ export async function walkMeetingsDiscoveryNeed(
     });
   }
 
-  /** The permission verdict for a URL's host, read once per walk. */
-  async function permissionFor(url: URL): Promise<{ readonly verdict: StepPermission; readonly detail: string }> {
+  /** The robots verdict for a URL's host, read once per walk and recorded; `rateLimited` when the host answered 429. */
+  async function permissionFor(url: URL): Promise<{ readonly verdict: StepPermission; readonly detail: string; readonly rateLimited?: true }> {
     const host = url.host.toLowerCase();
     const wall = RECORDED_WALLS.find((w) => w.host === url.hostname.toLowerCase());
     if (wall) return { verdict: "RECORDED_WALL", detail: wall.why };
@@ -427,7 +427,8 @@ export async function walkMeetingsDiscoveryNeed(
       note: (via.length === 0 ? reading.detail : `${reading.detail} (followed ${via.length} redirect(s): ${via.join(" → ")})`) +
         (kept?.note ? `; ${kept.note}` : ""),
     });
-    const entry = { verdict, detail: reading.detail };
+    /* A 429 is a rate limit, an access control: honoured for the rest of the walk, never pushed through. */
+    const entry = got.status === 429 ? { verdict, detail: reading.detail, rateLimited: true as const } : { verdict, detail: reading.detail };
     robotsByHost.set(host, entry);
     return entry;
   }
@@ -452,6 +453,10 @@ export async function walkMeetingsDiscoveryNeed(
        */
       if (permission.verdict === "RECORDED_WALL") {
         skipped(purpose, url.toString(), permission.verdict, `not requested: a recorded access-control wall (${permission.detail})`);
+        return null;
+      }
+      if (permission.rateLimited) {
+        skipped(purpose, url.toString(), permission.verdict, "not requested: the host answered HTTP 429 to robots.txt; a rate limit is honoured, never pushed through");
         return null;
       }
       if (requests >= maxRequests) {

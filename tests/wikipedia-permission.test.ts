@@ -4,7 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import {
   WIKI_API_DISALLOWED,
   WIKI_RAW_BASE,
@@ -35,68 +34,20 @@ import {
  * one route later than it should have, and ten requests reached the disallowed
  * path first.
  *
- * `docs/sources.md`'s reachability rule already says a disallow is honoured and
- * never re-walked on a clock. Nothing here is about a wall or about transport
- * (RULING 182): the host answers `/w/api.php` with 200 all day. It is about
- * permission, and permission is not something a 200 can grant.
+ * **Since the owner decision of 2026-09-25 that Disallow is recorded, not
+ * blocking** ("Robots.txt alone must not block acquisition"). The sweep that
+ * refused any committed `/w/` URL enforced the old rule and is replaced by
+ * `tests/robots-recorded-not-blocking.test.ts`. What stays true, and is held
+ * here: the host's rule is recorded, and the `/wiki/` route in use works.
  */
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/** The exact operative lines, quoted from the host on 2026-09-01. */
-const ALLOWED_UNDER_W = ["/w/api.php?action=mobileview&", "/w/load.php?"];
-
-test("no committed source composes a URL on Wikipedia's disallowed /w/ path", () => {
-  /*
-   * Read over what WOULD BE COMMITTED rather than over `git ls-files`: a new
-   * file is invisible to a tracked-only sweep until the very `git add` that
-   * ships it, which is the ordering defect `tests/asset-store.test.ts` already
-   * records for binaries.
-   */
-  const offenders: string[] = [];
-  for (const rel of filesThatWouldBeCommitted({ cwd: ROOT })) {
-    if (!/\.(ts|tsx|mts|mjs|js)$/.test(rel)) continue;
-    if (rel === "tests/wikipedia-permission.test.ts") continue;
-    let text: string;
-    try {
-      text = readFileSync(join(ROOT, rel), "utf8");
-    } catch {
-      continue;
-    }
-    if (!text.includes("wikipedia.org/w/")) continue;
-
-    /*
-     * `lib/hunt/wikipedia.ts` holds the literal ON PURPOSE, as
-     * `WIKI_API_DISALLOWED`, so this guard has something to look at. A guard
-     * that passes because the thing it hunts was deleted is a guard about
-     * nothing — the same reason `tests/asset-store.test.ts` asserts its own
-     * sweep reaches the portraits.
-     */
-    for (const line of text.split("\n")) {
-      if (!/wikipedia\.org\/w\//.test(line)) continue;
-      if (/^\s*[/*]/.test(line.trim())) continue; // a comment quoting the rule
-      if (rel === "lib/hunt/wikipedia.ts" && line.includes("WIKI_API_DISALLOWED =")) continue;
-      if (ALLOWED_UNDER_W.some((a) => line.includes(a))) continue;
-      offenders.push(`${rel}: ${line.trim().slice(0, 120)}`);
-    }
-  }
-
-  assert.deepEqual(
-    offenders,
-    [],
-    "en.wikipedia.org/robots.txt says `Disallow: /w/`, and allows exactly " +
-      `${ALLOWED_UNDER_W.join(" and ")} under it. Use /wiki/<Title>?action=raw, which is the ` +
-      "same record by another representation (RULING 206) and carries no Disallow.",
-  );
-});
-
-test("the guard is looking at something — the disallowed literal is still in the tree", () => {
+test("Wikipedia's Disallow: /w/ is recorded as evidence and no longer forbids a route (owner decision 2026-09-25)", () => {
   const src = readFileSync(join(ROOT, "lib/hunt/wikipedia.ts"), "utf8");
-  assert.ok(
-    src.includes('WIKI_API_DISALLOWED = "https://en.wikipedia.org/w/api.php"'),
-    "the literal is kept, exported and unused so the sweep above has a subject",
-  );
-  assert.equal(WIKI_API_DISALLOWED, "https://en.wikipedia.org/w/api.php");
+  assert.equal(WIKI_API_DISALLOWED, "https://en.wikipedia.org/w/api.php", "the recorded rule's path is kept");
+  assert.match(src, /Disallow: \/w\//, "the host's operative line is quoted as read");
+  assert.match(src, /recorded, not\s+\*?\s*blocking/, "and the module says it is recorded, not blocking");
 });
 
 test("the replacement route is under /wiki/, which carries no blanket Disallow", () => {

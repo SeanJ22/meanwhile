@@ -16,7 +16,7 @@ import {
   parseEventPage,
   type PimaEduRaw,
 } from "../lib/sources/pima-edu/index.ts";
-import { makePermissionGate } from "../lib/sources/permission-gate.ts";
+import { makePermissionGate, permittedText } from "../lib/sources/permission-gate.ts";
 import { SOURCE_WIRING, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
 /**
@@ -211,19 +211,25 @@ test("a place nothing sitting-specific states drops the sitting, counted, never 
   assert.equal(drops.unplaceableInTime, 1, "the Aug 10 sitting has no statement of its time without its agenda");
 });
 
-test("the permission gate refuses a disallowed path before any request to it", async () => {
+test("the permission gate reads robots.txt first, records a disallow, and still reads the public page (owner decision 2026-09-25)", async () => {
   const requested: string[] = [];
-  const fake: typeof fetch = (async (input: string | URL | Request) => {
+  const fake: typeof fetch = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
     requested.push(url);
+    const headers = new Headers(init?.headers);
+    assert.equal(headers.has("authorization") || headers.has("cookie"), false, "no credential or cookie is ever sent");
     if (url.endsWith("/robots.txt")) {
       return new Response("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain" } });
     }
-    return new Response("<html>should never be read</html>", { status: 200 });
+    return new Response("<html><h1>Governing Board</h1></html>", { status: 200, headers: { "content-type": "text/html" } });
   }) as typeof fetch;
-  const source = makePimaEduSource([WIRING], fake);
-  await assert.rejects(() => source.fetch({ lat: 32.22, lng: -110.89, radiusKm: 50 }), /PERMISSION DISALLOWED/);
-  assert.deepEqual(requested, ["https://www.pima.edu/robots.txt"], "only the permission document was read");
+  const gate = makePermissionGate({ fetchImpl: fake });
+  const html = await permittedText(gate, urlOf("documents-2026.html"), { fetchImpl: fake });
+  assert.match(html, /Governing Board/, "robots.txt alone never blocks a public page");
+  assert.deepEqual(requested, ["https://www.pima.edu/robots.txt", urlOf("documents-2026.html")], "the rules first, then the page");
+  const [recorded] = gate.readings();
+  assert.equal(recorded?.reading.verdict, "DISALLOWED", "the disallow is recorded");
+  assert.equal(recorded?.reading.matchedRule, "Disallow: /");
 });
 
 test("the gate reads robots once per origin and admits a permitted path", async () => {
@@ -241,7 +247,9 @@ test("the gate reads robots once per origin and admits a permitted path", async 
   assert.equal(a.verdict, "ALLOWED");
   assert.equal(b.verdict, "ALLOWED");
   assert.equal(robotsReads, 1);
-  await assert.rejects(() => gate.assertPermitted("https://www.pima.edu/secure/x.html"), /PERMISSION DISALLOWED/);
+  const secure = await gate.assertPermitted("https://www.pima.edu/secure/x.html");
+  assert.equal(secure.verdict, "DISALLOWED", "a disallowed path is recorded as such, and resolves: robots.txt is recorded, not blocking");
+  assert.equal(robotsReads, 1, "still one read of the origin's rules");
 });
 
 test("the wiring type is a registered agenda-source type (BodySourceWiring compiles)", () => {

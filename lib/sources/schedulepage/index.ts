@@ -507,6 +507,14 @@ export function parseDatedList(html: string): {
  * as a sitting of the Planning Board. Rows whose title does not carry the
  * match are counted as `notSittings`, which is what makes "this board has
  * nothing this month" distinguishable from "the parser matched nothing".
+ *
+ * `titleMatch` is a comma-separated list of the body's own spellings, as the
+ * `ical` adapter and `notice-feed` read it, compared with apostrophes set aside
+ * on both sides (2026-09-25). Until then this shape read the whole string as one
+ * phrase: the Firewards row's "Firewards,Fire Wards" matched nothing, and
+ * "Citizens' Committee" missed the town's "Citizens Committee" and "Citizen's
+ * Advisory Committee" — four New London bodies read as listing no meetings while
+ * the town's calendar carried their sittings.
  */
 export function parseEventTips(
   html: string,
@@ -514,9 +522,10 @@ export function parseEventTips(
 ): { sittings: ScheduledSitting[]; counts: ParseCounts } {
   const byDate = new Map<string, ScheduledSitting>();
   const counts: ParseCounts = { notSittings: 0, undated: 0 };
-  if (!titleMatch) return { sittings: [], counts };
+  const fold = (value: string) => value.toLowerCase().replace(/['’‘`]/g, "");
+  const needles = titleMatch.split(",").map((t) => fold(t.trim())).filter(Boolean);
+  if (needles.length === 0) return { sittings: [], counts };
 
-  const needle = titleMatch.toLowerCase();
   const blocks = html.matchAll(
     /<div class="tipTitle">([\s\S]*?)<\/div>([\s\S]*?)<\/div>/g,
   );
@@ -524,7 +533,8 @@ export function parseEventTips(
   for (const block of blocks) {
     const title = cellText(block[1]);
     const when = cellText(block[2]);
-    if (!title.toLowerCase().includes(needle)) {
+    const folded = fold(title);
+    if (!needles.some((needle) => folded.includes(needle))) {
       counts.notSittings += 1;
       continue;
     }

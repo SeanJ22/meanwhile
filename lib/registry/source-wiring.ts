@@ -1816,15 +1816,23 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       ["energy-committee", "Energy Committee", "Energy Committee"],
       ["housing-commission", "Housing Commission", "Housing Commission"],
       ["recreation-commission", "Recreation Commission", "Recreation Commission"],
+      // 2026-09-25: the town's own spellings, read off every event from
+      // February 2020 to March 2027 (the calendar's list view). Firewards also
+      // write "Fire Wards"; the committee is "Citizens Committee" and
+      // "Citizen's Advisory Committee" (apostrophes are set aside when
+      // matching); the trustees are "Trustees of the Trust Fund"; the bicycle
+      // committee is "Bike & Pedestrian Advisory Committee" and "Bicycles and
+      // Pedestrian Committee" — "Pedestrian" names it and nothing else there.
+      // The Archives Committee has no event in that whole list.
       ["board-of-firewards", "Firewards,Fire Wards", "Board of Firewards"],
       ["archives-committee", "Archives Committee", "Archives Committee"],
       [
         "bicycle-pedestrian-advisory-committee",
-        "Bicycle & Pedestrian",
+        "Pedestrian",
         "Bicycle & Pedestrian Advisory Committee",
       ],
-      ["citizens-committee", "Citizens' Committee", "Citizens' Committee"],
-      ["trustees-of-the-trust-funds", "Trust Funds", "Trustees of the Trust Funds"],
+      ["citizens-committee", "Citizens Committee,Citizens Advisory Committee", "Citizens' Committee"],
+      ["trustees-of-the-trust-funds", "Trust Fund", "Trustees of the Trust Funds"],
       [
         "tri-town-assessing-board",
         "Tri-Town Assessing",
@@ -1859,12 +1867,16 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       titleMatch,
       bodyName,
       // The hall the calendar names most often. A row naming a different
-      // room resolves on its own string via `otherVenueMarkers`.
+      // room resolves on its own string via `otherVenueMarkers`. The trustees
+      // sit in the Syd (Sydney) Crook Room, the Firewards at the Fire
+      // Department, and the Tri-Town board at the Newbury and Sunapee offices
+      // in turn (2026-09-25): each is its own room, never the hall.
       venueMatch: "Whipple Memorial Town Hall",
       otherVenueMarkers:
-        "Whipple Memorial Hall,Whipple Hall,New London Town Office",
+        "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department," +
+        "Newbury Town Office,Sunapee Town Offices",
     },
-    verifiedAt: "2026-08-19",
+    verifiedAt: "2026-09-25",
   })),
 
   /*

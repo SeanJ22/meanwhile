@@ -135,6 +135,9 @@ function holdings(over: Partial<AskGapHoldings> = {}): AskGapHoldings {
   };
 }
 
+/** The registry as it stood before Mesa's minutes reader (NH332), for the engineering-owned path. */
+const WITHOUT_MESA_MINUTES = { contracts: ROUTINE_SOURCE_CONTRACTS.filter((c) => c.id !== "mesa-legistar-minutes-outcomes") };
+
 const enumerate = (h: AskGapHoldings, registered?: Parameters<typeof askGapCarriers>[2]) =>
   buildRegistry([askGapsProvider({ holdings: () => h, ...(registered ? { registered } : {}) })], { root: ".", nowIso: NOW_ISO });
 
@@ -223,8 +226,8 @@ test("PIMA: a concluded sitting with no outcome read is the RUNNER's routine out
   assert.equal(pass.units.some((u) => u.obligation.id.endsWith(`${PIMA}#CALENDAR_STALE`)), false, "Pima's calendar was read two hours ago");
 });
 
-test("MESA: a concluded sitting with no decision and no outcomes route is ENGINEERING's, awaiting a named adapter — and becomes the RUNNER's when one is registered", () => {
-  const pass = enumerate(holdings());
+test("MESA: a concluded sitting with no decision and no outcomes route is ENGINEERING's, awaiting a named adapter — and the RUNNER's once Mesa's minutes reader is registered", () => {
+  const pass = enumerate(holdings(), WITHOUT_MESA_MINUTES);
   const unit = unitOf(pass, MESA, "OUTCOME_NOT_READ");
   assert.equal(unit.route.open.kind, "NOT_MACHINE_EXECUTABLE");
   assert.equal(unit.route.awaitingAdapter, "Mesa: minutes reader");
@@ -234,14 +237,12 @@ test("MESA: a concluded sitting with no decision and no outcomes route is ENGINE
     assert.match(unit.route.open.reason, /legistar-insite:mesa:2000/);
   }
 
-  // A minutes-outcomes contract that follows Mesa's partition is all it takes: no edit to the provider.
-  const mesaOutcomes = { id: "mesa-minutes-outcomes", recordClass: "MEETING_OUTCOME" as const, schedule: { kind: "SITTING_WINDOW" as const, windowMs: 1, hotEveryMs: 1, baseEveryMs: 1, follows: [{ meetingSource: "legistar-insite", bodyId: MESA }] } };
-  const registered = { contracts: [...ROUTINE_SOURCE_CONTRACTS, mesaOutcomes] };
-  assert.deepEqual(askGapCarriers(MESA, "MEETING_OUTCOME", registered), ["mesa-minutes-outcomes"]);
-  const after = unitOf(enumerate(holdings(), registered), MESA, "OUTCOME_NOT_READ");
+  // Mesa's minutes-outcomes contract (NH332) follows its partition, and that is all it takes: no edit to the provider.
+  assert.deepEqual(askGapCarriers(MESA, "MEETING_OUTCOME", { contracts: ROUTINE_SOURCE_CONTRACTS }), ["mesa-legistar-minutes-outcomes"]);
+  const after = unitOf(enumerate(holdings()), MESA, "OUTCOME_NOT_READ");
   assert.equal(after.obligation.id, unit.obligation.id, "the same obligation, re-routed");
   assert.equal(after.route.open.kind, "ROUTINE_READ");
-  if (after.route.open.kind === "ROUTINE_READ") assert.deepEqual(after.route.open.contractIds, ["mesa-minutes-outcomes"]);
+  if (after.route.open.kind === "ROUTINE_READ") assert.deepEqual(after.route.open.contractIds, ["mesa-legistar-minutes-outcomes"]);
 });
 
 test("a stale calendar is the RUNNER's, and a carrying read behind the owner's cadence is a named CADENCE_BROKEN failure", async () => {
@@ -293,7 +294,9 @@ test("gap gone: when a read holds the decision, the provider stops emitting it a
   const down = enumerate(holdings({ sittings: [], outcomesUnreadable: "STORE_UNREACHABLE: connect timeout" }));
   assert.match(down.byProvider[0]!.readFailure ?? "", /recorded outcomes Ask reads could not be read/);
   assert.ok(down.units.some((u) => u.obligation.id === `freshness:ask-gap:${PIMA}#OUTCOMES_UNREADABLE`));
-  assert.equal(down.units.some((u) => u.obligation.id === `freshness:ask-gap:${MESA}#OUTCOMES_UNREADABLE`), false);
+  assert.ok(down.units.some((u) => u.obligation.id === `freshness:ask-gap:${MESA}#OUTCOMES_UNREADABLE`), "Mesa's minutes reader makes its outcome store Ask's too");
+  const downWithoutMesa = enumerate(holdings({ sittings: [], outcomesUnreadable: "STORE_UNREACHABLE: connect timeout" }), WITHOUT_MESA_MINUTES);
+  assert.equal(downWithoutMesa.units.some((u) => u.obligation.id === `freshness:ask-gap:${MESA}#OUTCOMES_UNREADABLE`), false);
   const held = planSupersededRetirement({
     outside: before.units.map((u) => standing(u.obligation, NOW_ISO)).filter((o) => !down.units.some((u) => u.obligation.id === o.id)),
     corpus: down.units.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id })),
@@ -428,7 +431,7 @@ test("ADMIN: an Ask-gap obligation reads as an Ask gap, with the owner and the n
   assert.equal(providerOfObligation(`freshness:ask-gap:${MESA}#OUTCOME_NOT_READ`), "ask-gaps");
   assert.ok(OBLIGATION_PROVIDER_PREFIXES.some((p) => p.prefix === "freshness:ask-gap:" && p.providerId === "ask-gaps"));
 
-  const pass = enumerate(holdings());
+  const pass = enumerate(holdings(), WITHOUT_MESA_MINUTES);
   const adapter = await dispatchedRound(unitOf(pass, MESA, "OUTCOME_NOT_READ"), 1);
   const broken = await dispatchedRound(unitOf(pass, MESA, "CALENDAR_STALE"), 2);
   const carried = await dispatchedRound(unitOf(pass, PIMA, "OUTCOME_NOT_READ"), 3);

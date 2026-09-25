@@ -374,7 +374,7 @@ export function buildTopicTimeline(input: {
      * reached, so a read sitting is not an unread one.
      */
     if (sitting.agenda.length > 0 || sitting.extraction !== "RETRIEVED") continue;
-    if (sitting.outcomes.some((outcome) => outcome.quote)) readDays.add(day);
+    // Whether a minutes-read sitting counts as read is decided once, in heldBodyGaps (held-gaps.ts).
     for (const outcome of sitting.outcomes) {
       if (!outcome.quote || !outcome.itemQuote || !matchesTopic(outcome.itemQuote, topic)) continue;
       structuredDays.add(day);

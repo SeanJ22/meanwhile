@@ -156,6 +156,11 @@ export function heldBodyGaps(input: {
   for (const sitting of input.sittings) {
     if (!sitting.startsAt || !Number.isFinite(Date.parse(sitting.startsAt))) continue;
     if (sitting.agenda.length > 0) readDays.add(sitting.startsAt.slice(0, 10));
+    // … or it was read off its MINUTES (NH332): minutes list every item the body
+    // reached, so a sitting whose recorded actions carry their passages is read.
+    else if (sitting.extraction === "RETRIEVED" && sitting.outcomes.some((outcome) => outcome.quote)) {
+      readDays.add(sitting.startsAt.slice(0, 10));
+    }
   }
   // … or an agenda document with text is held for one of its meetings.
   const agendaDocuments = heldAgendaDocuments(input.documents, bodyId);

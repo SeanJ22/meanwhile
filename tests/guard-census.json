@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 821,
-    "named": 7923,
+    "files": 822,
+    "named": 7936,
     "dynamic": 31
   },
   "files": {
@@ -1272,6 +1272,24 @@
         "readSubjectRefs refuses anything that is neither a name nor an id",
         "the grounded route prints sittings through the shared formatter",
         "the unified input's SEARCH half is untouched — an exact name still navigates"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-latency-shape.test.ts": {
+      "names": [
+        "ROUTE: a lexically read question whose records need summarising makes ONE call — synthesis, never interpretation",
+        "ROUTE: a meeting-time question is read in code and answered from the sitting — no model call at all",
+        "ROUTE: a model answer that fails validation still fails closed",
+        "ROUTE: any other question reaches the model exactly as before — one reading, then one answer that depends on it",
+        "ROUTE: the same question over unchanged records is served from the cache, with no new call",
+        "a composed answer ships only on a passing verdict, against the SAME validator",
+        "a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap",
+        "composition steps aside whenever there is something to summarise or a fact it cannot state",
+        "gap wording is kept; only a machine timestamp is spelled out in the body's zone",
+        "the canonical shapes are read, and anything with more in it is not",
+        "the lexical reading binds exactly what every binder binds, with the tense the model returned",
+        "the lexical reading refuses what it cannot settle, so the model reads it as before",
+        "with no sitting, the named gap is the whole answer"
       ],
       "dynamic": 0
     },

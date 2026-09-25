@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "exactHead": "76e59c99402187cb11f520df628468fd65feb4a9",
-  "buildId": "lG3nN8r6Etd7jmCOAKvSU",
+  "exactHead": "31052a9376bbe5dd1b8914e1b356b6b9e7ac0f04",
+  "buildId": "leq60eVt1N6xvo5hX9OI-",
   "base": "http://localhost:3210",
-  "runId": "reader-last-mile-final-render@2026-09-25T01:57:45.953Z",
+  "runId": "reader-last-mile-final-render@2026-09-25T05:43:40.729Z",
   "sourceHashes": [
     {
       "path": "app/about-area/page.tsx",
@@ -23,7 +23,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "0152083ced02c0a3bfeaed17380aad1dd5336fb0a4f2b62d73fb7486e512b8e0"
+      "sha256": "fe0afbd9ded19eecefc65911a6dd4d97868ccd4a6186045805e9876d9b5701c7"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -1399,11 +1399,11 @@
     },
     {
       "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-      "sha256": "5e3c92a961e1be6d40b849f94f31c10ce3f358b6ba654fb6f37b71d36635ed1f"
+      "sha256": "20508c0b0a2b9c9bb536664c2fc3d86095159bc701c2e6f26c57ff4f7266f668"
     },
     {
       "path": "data/states/nj/ballot/nj-morris-2026.json",
-      "sha256": "73d198f9ffd262e677f543f90a09d2b66471fdc8643f329aa0a84a5de9fd7fa9"
+      "sha256": "e617fadf527c12760f9b3703edcd09ead80c644ea39655a9d485b2e7dea26cfc"
     },
     {
       "path": "data/states/nj/campaign-finance/nj-elec-entity-corpus-2026.json",
@@ -1943,7 +1943,7 @@
     },
     {
       "path": "lib/ask/trace.ts",
-      "sha256": "b8aecc2487377130dc97231458e2cc08186c527fa8ddaaac401ad80cecd8daba"
+      "sha256": "31b8c07853e44be44b68744ed6ca0b682ec61a0a497514fac010bf1b58c9a3cb"
     },
     {
       "path": "lib/ask/validate.ts",
@@ -2567,11 +2567,11 @@
     },
     {
       "path": "lib/meetings/edge-artifacts.ts",
-      "sha256": "e55af7a252cadc03d5e89559790dad9b61492b6f6cc1cf4e493356fc83e1d504"
+      "sha256": "05b750e4edc1402d6249db2fc5bcc52361a65a60b577d814456fbcca4857d3ed"
     },
     {
       "path": "lib/meetings/edge-serving.ts",
-      "sha256": "eacf20fa0dc589a8a3f06b53a2f0fd78e84529f77233b1d336d15f9521f1169a"
+      "sha256": "21a8fd81fc66468f21db0d4dcfe4e43c1b81ca5883d8b8955ef3bcdd1d5a136a"
     },
     {
       "path": "lib/meetings/edge-store.ts",
@@ -2827,7 +2827,7 @@
     },
     {
       "path": "lib/outcomes/store.ts",
-      "sha256": "574f3750ab9e359684c28f3de8bc33d025f28de38d37858a23062f241bb70299"
+      "sha256": "0777c234fa90a7345b84b950dc6618e7cd3bfcd9fcd0f2ecba7665451c821b24"
     },
     {
       "path": "lib/photos/person.ts",
@@ -2955,7 +2955,7 @@
     },
     {
       "path": "lib/registry/runtime-edge.ts",
-      "sha256": "e3a2b1f48b3a8054e0b3147e40be0ad5be95b209902e134b3bf66b74c24246da"
+      "sha256": "2271ace991b5e046c1010b10e158854b4faa97e6f2181b44459217ad3e9f87d5"
     },
     {
       "path": "lib/registry/runtime-read-model.ts",
@@ -2963,7 +2963,7 @@
     },
     {
       "path": "lib/registry/server.ts",
-      "sha256": "182203b5c43ade295f2e68e51e2e6ceac76b6650400dd969e37cf7cea3798f61"
+      "sha256": "2936c698d30cb1c1bc38115edcfb0c160e1290647206dde7918a9f581cd8e592"
     },
     {
       "path": "lib/registry/source-wiring.ts",
@@ -8582,14 +8582,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42976",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44076.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44076",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8610,14 +8610,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42981",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44081.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44081",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8638,14 +8638,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42986",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44086.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44086",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8666,14 +8666,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42991",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44091.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44091",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8694,14 +8694,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/42996",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44096.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44096",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8722,14 +8722,14 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/43001",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44101.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44101",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
@@ -8750,20 +8750,20 @@
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/43006",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             },
             {
               "id": "ical:newbury-ical-governing:calendar.44106.field_date_and_time.0@www.newbury.nh.gov",
               "sourceOrg": "Town of Newbury",
               "sourceUrl": "https://www.newbury.nh.gov/home/events/44106",
               "verifiedAt": null,
-              "collectedAt": "2026-09-25T01:01:13.665Z"
+              "collectedAt": "2026-09-25T04:36:27.412Z"
             }
           ],
           "reason": "2 calendar listings share this body, time and other recorded details. We have not established how many distinct meetings they describe."
         }
       ],
-      "renderedListingRows": 388,
+      "renderedListingRows": 392,
       "failedRefreshDisclosure": {
         "carried": {
           "count": 13,

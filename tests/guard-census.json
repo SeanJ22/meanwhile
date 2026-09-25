@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 784,
-    "named": 7660,
+    "files": 787,
+    "named": 7677,
     "dynamic": 30
   },
   "files": {
@@ -3921,6 +3921,18 @@
       ],
       "dynamic": 0
     },
+    "tests/document-listing-source.test.ts": {
+      "names": [
+        "HOLBROOK · a sitting whose agenda is posted is upcoming until its day ends; two on one day stay two",
+        "HOLBROOK · every agenda and minutes link on the 2026 page is read as the sitting its label names",
+        "HOLBROOK · in-window sittings reach readers date-only, each citing its own agenda, with no time or place invented",
+        "HOLBROOK · labels: dates as a clerk writes them, minutes labelled only in the city's own words",
+        "HOLBROOK · the current year's page failing is the row failing, never an empty council",
+        "HOLBROOK · the serving window's years are read; next year's missing page is the city not having posted it",
+        "HOLBROOK · the wired body is Holbrook's registered governing body, on the city's reviewed site, in its own partition"
+      ],
+      "dynamic": 0
+    },
     "tests/dom-evaluation.test.ts": {
       "names": [
         "ABSENT and the counting assertions ARE answerable at zero matches",
@@ -5096,6 +5108,16 @@
         "ICAL-OCC · two recorded reads 42 seconds apart serve the same events in different orders"
       ],
       "dynamic": 1
+    },
+    "tests/ical-publisher-relisted.test.ts": {
+      "names": [
+        "RELISTED · only the publisher's record-keeping and the URL's own id are set aside",
+        "RELISTED · the answer does not depend on which listing the feed serves first",
+        "RELISTED · the listing the merge retires yields to the one kept, and is never carried as a second sitting",
+        "RELISTED · the town's seven twice-listed Selectboard sittings are seven sittings, each keeping both listings",
+        "RELISTED · two listings that differ in ANY published field stay two listings"
+      ],
+      "dynamic": 0
     },
     "tests/ical-source.test.ts": {
       "names": [
@@ -10442,6 +10464,16 @@
         "places still carry LSAD, so a CDP can be told from a city",
         "the municipalities behind two target zips have geometry",
         "the same name in two counties gets two identifiers"
+      ],
+      "dynamic": 0
+    },
+    "tests/suiteone-source.test.ts": {
+      "names": [
+        "WINSLOW · a portal that no longer carries the council's own panel is never read as a council with no meetings",
+        "WINSLOW · permission is asked first; a host with no robots.txt states no restriction",
+        "WINSLOW · the council's in-window sittings reach readers with their own time, agenda and cancellations",
+        "WINSLOW · the portal's two lists are read as printed, and each panel's own count is met",
+        "WINSLOW · the wired body is Winslow's registered governing body, read from its portal in its own partition"
       ],
       "dynamic": 0
     },

@@ -232,7 +232,8 @@ test("PDC: readiness authority coverage accounts for every production contract",
   // 161 from 2026-09-24: + the Newbury Library Trustees' and Energy Committee's own pages (C9).
   // 162 from 2026-09-24: + meetings:schedulepage for Chandler's City Council schedule table (C14).
   // 167 from 2026-09-24: + the meeting-source wiring, three derived state families and the meeting-body crosswalk (C16).
-  assert.equal(contracts.length, 167 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
+  // 169 from 2026-09-25: + Holbrook's (document listing) and Winslow's (SuiteOne) City Council partitions.
+  assert.equal(contracts.length, 169 + 56, "the coverage guard must move when the production contract denominator moves (56: one registration per FIPS state, DC and territory)");
   assert.deepEqual(
     ROUTINE_SOURCE_CONTRACTS.map(({ id }) => id),
     [
@@ -242,7 +243,7 @@ test("PDC: readiness authority coverage accounts for every production contract",
     ],
     "the guard must move when the canonical contract denominator moves",
   );
-  assert.equal(MEETING_PARTITION_CONTRACTS.length, 131);
+  assert.equal(MEETING_PARTITION_CONTRACTS.length, 133);
   assert.equal(contracts.some(({ id }) => id === "meetings"), false);
   assert.deepEqual(readinessAuthorityCoverageIssues(), []);
   assert.deepEqual(

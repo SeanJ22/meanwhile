@@ -1,0 +1,43 @@
+{
+  "note": "Recorded 2026-09-25 with `pnpm research:fetch` (robots.txt first by construction). Bytes are exactly as served.",
+  "robots": {
+    "url": "https://holbrookaz.gov/robots.txt",
+    "file": "robots.txt",
+    "status": 200,
+    "readAt": "2026-09-25T17:46:23.318Z",
+    "verdict": "ALLOWED: `User-agent: *` with an empty `Disallow:` (Yoast block)"
+  },
+  "pages": [
+    {
+      "file": "council-2026-agendas-minutes.html",
+      "url": "https://holbrookaz.gov/government/council-agenda/2026-agendas-minutes/",
+      "finalUrl": "https://holbrookaz.gov/government/council-agenda/2026-agendas-minutes/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "51b55e9e3bc12da11c88ec1196dc7af71fedc23774fb64108b966107f4e31c82",
+      "bytes": 139453
+    }
+  ],
+  "alsoRead": [
+    {
+      "url": "https://holbrookaz.gov/government/council-agenda/",
+      "status": 200,
+      "finding": "the Agendas & Minutes index: one page per year 2021-2026 and a Planning & Zoning Commission page; no meeting time or place stated"
+    },
+    {
+      "url": "https://holbrookaz.gov/government/councilmembers/",
+      "status": 200,
+      "finding": "\"City council meetings are held on the 2nd Wednesday of each month.\" No hour, no room."
+    },
+    {
+      "url": "https://drive.google.com/uc?export=download&id=1M_HnC-Qbg9Pm9Jp1ohE99fq5-37-9zFD",
+      "status": null,
+      "finding": "NOT REQUESTED: drive.google.com robots.txt disallows /uc (longest match `Disallow: /`)"
+    },
+    {
+      "url": "https://drive.google.com/file/d/1M_HnC-Qbg9Pm9Jp1ohE99fq5-37-9zFD/view?usp=sharing",
+      "status": 200,
+      "finding": "robots.txt `Allow: /file`; the page is the Drive viewer shell titled \"Regular Meeting 9-9-2026.pdf - Google Drive\" and carries none of the agenda's text"
+    }
+  ]
+}

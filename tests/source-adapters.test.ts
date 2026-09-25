@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import registryFile from "../lib/registry/registry.json" with { type: "json" };
+import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import {
   SOURCE_WIRING,
   wiringForTypes,
@@ -38,8 +39,31 @@ const fixture = (name: string) =>
 // name a body the registry actually has. This has failed silently four times
 // in this project; here the denominator prints in the assertion message.
 
+/**
+ * The bodies the committed REGISTRATION reference registers beyond the
+ * reviewed registry (lib/registration/candidate.ts): each government the 2022
+ * Census of Governments pairs to a division gets `<division>#governing`
+ * (`#board` for a school district). The runtime registry is the reviewed
+ * registry plus these, so a wired body outside the frozen registry.json must
+ * be one of them — minted exactly as the registration writer mints it.
+ */
+function registeredBodyIds(): Set<string> {
+  const ids = new Set<string>();
+  for (const state of ["az", "nh", "nj"]) {
+    const { reference } = loadRegistrationReference(join(dirname(fileURLToPath(import.meta.url)), ".."), state);
+    for (const [, , , govType, division] of reference.governments) {
+      if (govType === "STATE" || division < 0) continue;
+      const school = govType === "SCHOOL DISTRICT" || govType === "DEPENDENT SCHOOL SYSTEM";
+      ids.add(`${reference.divisions[division][0]}#${school ? "board" : "governing"}`);
+    }
+  }
+  return ids;
+}
+
 test("every source-wiring row names a real registry body", () => {
-  const bodyIds = new Set(registryFile.bodies.map((b: { id: string }) => b.id));
+  // The frozen reviewed registry, or a body the committed registration
+  // reference registers (Holbrook and Winslow, AZ, 2026-09-25).
+  const bodyIds = new Set([...registryFile.bodies.map((b: { id: string }) => b.id), ...registeredBodyIds()]);
   const missing = SOURCE_WIRING.filter((w) => !bodyIds.has(w.bodyId));
   assert.deepEqual(
     missing.map((w) => w.bodyId),

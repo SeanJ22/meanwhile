@@ -435,6 +435,10 @@ export const SOURCE_AUTHORITIES = {
       "https://www.chandleraz.gov/robots.txt",
       "https://www.chandleraz.gov/government/departments/city-clerks-office/city-council-meetings",
       "https://www.chandleraz.gov/rest/events/day/",
+      // The Council's Destiny Agenda month lists (2026-09-25), scoped to the
+      // tenant and the one meeting type wired; read once robots.txt stopped
+      // blocking public pages (owner decision, 2026-09-25).
+      "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
       // Two Newbury bodies the town calendar never carries, read from their
       // own publications (C9, 2026-09-24), each scoped to the one route wired:
       // the Library Trustees' notices feed on the library's site, and the
@@ -463,7 +467,7 @@ export const SOURCE_AUTHORITIES = {
       "www.cap-az.com", "www.kearsarge.org", "www.merrimackcounty.net", "www.mesaaz.gov", "www.mhrd.org",
       "www.newbury.nh.gov", "www.rockawaytownship.org", "www.suttonnh.gov", "www.wilmotnh.org",
       "www.tusd1.org",
-      "www.chandleraz.gov",
+      "www.chandleraz.gov", "public.destinyhosted.com",
       "newburynhlibrary.net", "www.newburyenergynh.org",
       "holbrookaz.gov", "winslowaz.suiteonemedia.com",
     ],

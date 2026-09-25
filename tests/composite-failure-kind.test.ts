@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { CompositeSource, childFailureMessage } from "../lib/sources/composite/index.ts";
+import { ACCOUNTED } from "../lib/sources/normalize-account.ts";
+import type { ReportingMeetingSource } from "../lib/sources/types.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { fetchFailureKind, jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
@@ -171,8 +173,38 @@ test("a calendar envelope holding no events is refused as the publisher's answer
 
 test("a real calendar we extract nothing from is still OUR zero-row JOB", async () => {
   // The guard's other half: a document genuinely in hand and zero rows out of
-  // it stays a failed extraction of ours (RULING 43/269). One row, so the
-  // event cannot be accounted as another board's notConfigured drop.
+  // it, with nothing counted to say why, stays a failed extraction of ours
+  // (RULING 43/269). An adapter's own guard refuses that shape, so it reaches
+  // the composite only from an adapter that bypassed its guard: forged here.
+  const forged = Object.assign(
+    { meetings: [], drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } },
+    {
+      [ACCOUNTED]: true as const,
+      accounting: { logicalInput: null, produced: 0, dropped: 0, outOfWindow: 0, duplicates: 0, unretrieved: 0, outcome: "COULD_NOT_ASSERT" as const, accountedFor: 0 },
+    },
+  );
+  const silent: ReportingMeetingSource<unknown> = {
+    name: "silent",
+    fetch: async () => ["<html>a calendar page</html>"],
+    normalize: () => [],
+    normalizeWithDrops: () => forged as never,
+    upsert: async (m) => ({ inserted: 0, updated: m.length }),
+  };
+  const composite = new CompositeSource([silent]);
+  composite.normalize(await composite.fetch(SUTTON_QUERY), AFTER_THE_CHALLENGE);
+  const child = composite.lastReport?.children.find((report) => report.source === "silent");
+  assert.equal(child?.ok, false);
+  assert.equal(child?.failure, "JOB");
+  assert.match(child?.error ?? "", /extracted 0 meeting/);
+});
+
+test("a calendar whose every sitting falls outside the window is a counted clip, never our zero-row JOB (2026-09-25)", async () => {
+  // Tucson's Industrial Development Authority publishes a schedule whose every
+  // date had passed; the adapter counted each as outside the window, and the
+  // composite, reading only drops, called it our failed extraction on every
+  // read. The composite now reads the adapter's own out-of-window count, the
+  // term the adapter's guard already read. One row, so the event cannot be
+  // accounted as another board's notConfigured drop.
   const planningBoard = suttonRows().filter((row) => row.config.bodyName === "Planning Board");
   assert.equal(planningBoard.length, 1);
   const served: typeof fetch = async () =>
@@ -191,8 +223,9 @@ test("a real calendar we extract nothing from is still OUR zero-row JOB", async 
       ].join("\r\n"),
       { status: 200, headers: { "content-type": "text/calendar" } },
     );
-  const { child } = await icalChildReport(served, planningBoard);
-  assert.equal(child.ok, false);
-  assert.equal(child.failure, "JOB");
-  assert.match(child.error ?? "", /extracted 0 meeting/);
+  const { child, meetings } = await icalChildReport(served, planningBoard);
+  assert.equal(meetings.length, 0);
+  assert.equal(child.ok, true, "nothing failed: the one sitting is from 2019");
+  assert.doesNotMatch(child.error ?? "", /extracted 0 meeting/);
+  assert.notEqual(child.failure, "JOB");
 });

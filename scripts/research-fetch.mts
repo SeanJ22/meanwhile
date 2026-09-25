@@ -24,7 +24,8 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { nodeResearchGet, researchFetch, type ResearchMemory, type RobotsMemo } from "../lib/hunt/robots-first-fetch.ts";
+import { researchFetch, type ResearchMemory, type RobotsMemo } from "../lib/hunt/robots-first-fetch.ts";
+import { identifiedResearchGet } from "../lib/hunt/research-transport.ts";
 
 function arg(name: string): string | null {
   const i = process.argv.indexOf(name);
@@ -63,7 +64,8 @@ const result = await researchFetch(target, {
   now: () => Date.now(),
   sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   log: logPath === null ? undefined : (e) => appendFileSync(logPath, `${e.at}\t${e.purpose}\t${e.url}\t${e.status ?? ""}\t${e.transportError ?? ""}\t${e.bytes}\n`),
-  get: nodeResearchGet,
+  // Node first; a 403 is asked once more through curl as who we are (2026-09-25).
+  get: identifiedResearchGet(),
 });
 
 const out = arg("--out");

@@ -652,3 +652,93 @@ registry.** `pnpm bodies:census-gap` promotes a body only when the page names
 the entity, which is why none of these five was written in — and why a walk
 that had trusted an HTTP 200 would have pointed readers at a stranger's blog
 and a parked server.
+
+## 2026-09-25 — CLOUDFLARE CHALLENGES NODE ON THREE TOWN HOSTS, AND ADMITS US BY NAME THROUGH CURL
+
+(The failing-sources session. Append-only.)
+
+**What failed.** The runner's reads of `www.suttonnh.gov/calendar/ical/calendar.ics`,
+`www.newbury.nh.gov/calendar/ical/export.ics` and Kearsarge's school-board schedule
+(`www.kearsarge.org`) ended "HTTP 403" intermittently: Sutton since
+2026-09-24T22:48Z (0 refusals in the ten days before), Newbury about one read in
+eight since at least 09-14, Kearsarge about two reads in three. The towns' HTML
+pages (Sutton's homepage included) answered 403 the same way.
+
+**Measured, one variable at a time (2026-09-25 22:05-22:20Z, both the Windows
+and the Git curl, Schannel):**
+
+| client | result |
+|---|---|
+| Node fetch, any header set (ours, browser, clean browser + `X-Purpose`, none) | **403**, `cf-mitigated: challenge` ("Just a moment...") every time |
+| curl, Chrome UA + our suffix (the old rung-4 set) | admitted about **7 in 10** |
+| curl, our UA alone | admitted about **6 in 10** |
+| curl, our UA + `X-Purpose` + `X-Contact` | admitted **30 of 30** |
+| curl, clean Chrome UA + `X-Purpose` + `X-Contact` | admitted **15 of 15** |
+
+**Why earlier reads worked.** Sutton's feed answered Node at rung 2 until
+2026-09-24 ~22:48Z; its Cloudflare settings changed then. Newbury and Kearsarge
+had refused Node since August (recorded 08-15/08-20), and their reads succeeded
+whenever the old rung-4 curl set happened to be admitted.
+
+**The method (transferable).** When a Cloudflare host challenges Node on every
+header set, ask through `curl` with the project's OWN name in the `User-Agent`
+and its purpose and contact in `X-Purpose` / `X-Contact`. It is the most honest
+request this project can send, and it is the one the filter admits. Rung 4 in
+`lib/sources/http.ts` (`curlRungHeaderSets`) now walks that set first, then the
+old set, then the clean browser set for the `*.nh.gov` family; `pnpm
+research:fetch` asks the same way on a 403 (`lib/hunt/research-transport.ts`).
+Nothing answers or evades a challenge: a set that is challenged is set aside.
+Live after the change: 20 of 20 feed and schedule reads, and every Sutton and
+Newbury HTML page read, returned the document.
+
+### The "source listed no meetings" bodies, read against every public route
+
+- **New London** (town calendar, `event-tip`): four bodies were ours to fix. The
+  shape read `titleMatch` as ONE phrase (so "Firewards,Fire Wards" matched
+  nothing), and three rows used spellings the town never writes. The town writes
+  "Trustees of the Trust Fund", "Citizens Committee" / "Citizen's Advisory
+  Committee", "Bike & Pedestrian Advisory Committee" / "Bicycles and Pedestrian
+  Committee". The calendar's list view (`index.asp?SEC=D43F63EA-…&MODE=LIST`)
+  holds every event back to February 2020: read it once to learn a body's
+  spellings. The Archives Committee has no event there at all.
+- **Warner**: the Village Water District's commissioners are the feed's
+  "Precinct Commissioners" series (2nd and 4th Wednesday, 3:30 PM, 55 West Joppa
+  Rd); the town's notices page states the same schedule. The River Local
+  Advisory Committee's series is on the Pillsbury Free Library's "Warner Events"
+  Google calendar (`mq5sbbdfvg3le9ddpc76qpo5d8@group.calendar.google.com`),
+  embedded beside the town's on library.warnernh.gov.
+- **Titles the feeds use and the rows missed**: Newbury "Budget Advisory
+  Committee", Sutton "Fire Safety Municipal Bldg", Lake Todd "LTVD". Lake Todd's
+  2026 meetings sit in Bradford's feed as "1st Fl Reserved" with the district
+  only in the description; the district's own site no longer resolves.
+- **Published elsewhere, not machine-readable yet**: Newbury's Joint Loss
+  Management Committee states its next meeting in its minutes PDF ("Next Meeting
+  on November 19, at 9:00 at town office"); Newbury's Joint Assessing Board is
+  New London's calendar's "Tri-Town Assessing" board (3 December 2026, Newbury
+  Town Office), already wired under New London.
+- **A membership club, not wired**: the Newbury Beautification Committee's own
+  site (newburybeautification.org, which the town's page redirects to) publishes
+  an iCal feed, but the committee has members, a Board of Directors and emailed
+  agendas; whether it is a public body is unsettled, so its feed is a lead.
+- **No meetings published anywhere checked**: Bradford's Community Power (now an
+  Energy Committee agenda item), Facilities Use (work finished 2025), Hazard
+  Mitigation (plan adopted 2025) and Parks and Recreation (all seats vacant);
+  Newbury's Cemetery Trustees, Septic Committee (ordinance passed 2025) and
+  Trustees of the Trust Funds; Sutton's Hazard Mitigation and Ad Hoc Fire Safety
+  committees; Warner's Auditor Search (auditor engaged August 2025), Chandler
+  Reservation (meets irregularly) and Supervisors of the Checklist (the October
+  session is not posted yet).
+
+### Two adapter lessons from the same walk
+
+- **A standing venue stands in only for silence.** The ical adapter used a row's
+  `venueMatch` for ANY location with no reviewed row, so a feed naming the
+  treatment plant, the library or the highway garage was pinned at Warner Town
+  Hall (15 sittings across all 59 ICAL rows). Now only a blank LOCATION or a
+  bare state reaches it.
+- **Restated-rule evidence is a body's own.** Newbury's exporter restates each
+  series' RRULE on every sitting, and the adapter looked for that evidence across
+  the whole feed. A Google calendar's ordinary history (a series split "this and
+  following", a series entered twice) supplied it by accident and switched off
+  every rule in the library's feed. The evidence is now read from the body's own
+  series.

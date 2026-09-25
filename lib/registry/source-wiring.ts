@@ -805,8 +805,14 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   },
 
   // Chandler, AZ — City Council (C14, 2026-09-24). Every agenda, result and
-  // minutes set is published only on destinyhosted.com, whose robots.txt reads
-  // as disallow-all and which is never requested. The city's own City Clerk
+  // minutes set is published only on destinyhosted.com. Its robots.txt reads
+  // as disallow-all, and the host was never requested until the owner's
+  // 2026-09-25 decision that robots.txt no longer blocks reading public pages;
+  // measured that day it answers the project's identified client with HTTP 200
+  // and no challenge. `destinyAgenda` reads the Council's month lists (type
+  // `CC`) and joins each listed agenda, result and video to the sitting the
+  // city's own pages dated, on the date and the name the city printed. The
+  // city's own City Clerk
   // page publishes the year's sittings as the "2026 City Council Meeting Dates"
   // table (Resolution No. 5937, Exhibit A): 33 full dates in three columns
   // (Regular and Study Sessions, Study Sessions, Regular Meetings). The table
@@ -837,8 +843,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       // calendar, so the filter is the Council's own name as its events print it.
       dayJson: "https://www.chandleraz.gov/rest/events/day/",
       titleMatch: "City Council",
+      // The Council's own Destiny Agenda list (tenant 24263, meeting type CC),
+      // the page every "View Current Agenda" link on the city's event pages
+      // leads to. One request per month in reach; no sitting is made from it.
+      destinyAgenda: "https://public.destinyhosted.com/agenda_publish.cfm?id=24263&mt=CC",
     },
-    verifiedAt: "2026-09-24",
+    verifiedAt: "2026-09-25",
   },
 
   // Holbrook, AZ — City Council (R21's replacement route, 2026-09-25). The
@@ -1159,7 +1169,10 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "newbury-advisory-budget-committee",
       feedUrl: "https://www.newbury.nh.gov/calendar/ical/export.ics",
-      titleMatch: "Advisory Budget Committee",
+      // "Budget Advisory Committee" (2026-09-25): the feed's 22 September 2025
+      // sitting, which the committee's own minutes list. The feed's bare
+      // "Budget Committee Meeting" is not claimed: it names no advisory body.
+      titleMatch: "Advisory Budget Committee,Budget Advisory Committee",
       bodyName: "2026 Advisory Budget Committee",
       // Every event on this feed publishes an EMPTY `LOCATION`, so every row
       // reaches the standing venue. See `lib/meetings/venue-cache.ts`.
@@ -1744,7 +1757,9 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       [
         "ad-hoc-fire-safety-municipal-building-committee",
         "Ad Hoc Fire Safety Municipal Building Committee",
-        "Fire Safety Municipal Building",
+        // Since 2025-10-16 the feed writes "Ad Hoc Fire Safety Municipal Bldg
+        // Comm Mtg" (six sittings to 2026-04-02), read 2026-09-25.
+        "Fire Safety Municipal Building,Fire Safety Municipal Bldg",
         "Joint",
       ],
       [
@@ -1806,15 +1821,23 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       ["energy-committee", "Energy Committee", "Energy Committee"],
       ["housing-commission", "Housing Commission", "Housing Commission"],
       ["recreation-commission", "Recreation Commission", "Recreation Commission"],
+      // 2026-09-25: the town's own spellings, read off every event from
+      // February 2020 to March 2027 (the calendar's list view). Firewards also
+      // write "Fire Wards"; the committee is "Citizens Committee" and
+      // "Citizen's Advisory Committee" (apostrophes are set aside when
+      // matching); the trustees are "Trustees of the Trust Fund"; the bicycle
+      // committee is "Bike & Pedestrian Advisory Committee" and "Bicycles and
+      // Pedestrian Committee" — "Pedestrian" names it and nothing else there.
+      // The Archives Committee has no event in that whole list.
       ["board-of-firewards", "Firewards,Fire Wards", "Board of Firewards"],
       ["archives-committee", "Archives Committee", "Archives Committee"],
       [
         "bicycle-pedestrian-advisory-committee",
-        "Bicycle & Pedestrian",
+        "Pedestrian",
         "Bicycle & Pedestrian Advisory Committee",
       ],
-      ["citizens-committee", "Citizens' Committee", "Citizens' Committee"],
-      ["trustees-of-the-trust-funds", "Trust Funds", "Trustees of the Trust Funds"],
+      ["citizens-committee", "Citizens Committee,Citizens Advisory Committee", "Citizens' Committee"],
+      ["trustees-of-the-trust-funds", "Trust Fund", "Trustees of the Trust Funds"],
       [
         "tri-town-assessing-board",
         "Tri-Town Assessing",
@@ -1849,12 +1872,16 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
       titleMatch,
       bodyName,
       // The hall the calendar names most often. A row naming a different
-      // room resolves on its own string via `otherVenueMarkers`.
+      // room resolves on its own string via `otherVenueMarkers`. The trustees
+      // sit in the Syd (Sydney) Crook Room, the Firewards at the Fire
+      // Department, and the Tri-Town board at the Newbury and Sunapee offices
+      // in turn (2026-09-25): each is its own room, never the hall.
       venueMatch: "Whipple Memorial Town Hall",
       otherVenueMarkers:
-        "Whipple Memorial Hall,Whipple Hall,New London Town Office",
+        "Whipple Memorial Hall,Whipple Hall,New London Town Office,Syd Crook,Sydney Crook,Fire Department," +
+        "Newbury Town Office,Sunapee Town Offices",
     },
-    verifiedAt: "2026-08-19",
+    verifiedAt: "2026-09-25",
   })),
 
   /*
@@ -2402,26 +2429,37 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     noticeUrl: "https://warnernh.gov/calendar/",
     verifiedAt: "2026-08-21",
   },
-  // Warner, NH — Warner River Local Advisory Committee: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
+  // Warner, NH — Warner River Local Advisory Committee, off the "Warner Events"
+  // calendar (2026-09-25). The town's own feed carried only three of its
+  // sittings (2025-11-19, 2026-03-25, 2026-05-27) and none after May. The
+  // Pillsbury Free Library's public Google calendar — embedded with the town's
+  // on library.warnernh.gov/news-and-events and reached from the town's
+  // "Calendar - Warner Events" menu — carries the committee's series: every
+  // other month on the 4th Wednesday at 7 PM at the library from 2026-01-28,
+  // with 25 November moved to 18 November. The committee's own site
+  // (wrlac.com) and its 22 July 2026 agenda state the same 23 September and
+  // 18 November sittings. One feed, so no sitting is listed twice. The library
+  // writes the committee "Warner River LAC" and "WRLAC"; entries it prefixes
+  // "NO"/"NOT" (2020-2021) are the library saying a sitting will not happen.
   {
     bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-river-local-advisory-committee",
     ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:warner_town" as OcdId,
     agendaSourceType: "ICAL",
     jurisdiction: "Warner, NH",
-    publishingOrg: "Town of Warner",
+    publishingOrg: "Pillsbury Free Library (Warner, NH)",
     timeZone: "America/New_York",
     config: {
       slug: "warner-warner-river-local-advisory-committee",
-      feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-      titleMatch: "Warner River Local Advisory,WRLAC",
+      feedUrl: "https://calendar.google.com/calendar/ical/mq5sbbdfvg3le9ddpc76qpo5d8%40group.calendar.google.com/public/basic.ics",
+      titleMatch: "WRLAC,Warner River LAC,Warner River Local Advisory,Warner Local River Advisory",
+      titleExclude: "NO Warner River,NOT Warner River",
       bodyName: "Warner River Local Advisory Committee",
-      // The hall the Select Board's own page gives as its address, and the
-      // building this calendar names on 47 of its board sittings. Reached only
-      // when the event itself carried no location at all.
+      // Reached only when the event itself carried no location at all; the
+      // library's events name the library.
       venueMatch: "Warner Town Hall",
     },
     noticeUrl: "https://warnernh.gov/calendar/",
-    verifiedAt: "2026-08-21",
+    verifiedAt: "2026-09-25",
   },
   // Warner, NH — Warner Village Water District: 2 sitting(s) in the feed on 2026-08-21, 0 upcoming.
   {
@@ -2434,7 +2472,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "warner-warner-village-water-district",
       feedUrl: "https://calendar.google.com/calendar/ical/4550fa96f9a1e211bad70b5ea77be1c4e926eeeb164d25bd76571e7de8251fcd%40group.calendar.google.com/public/basic.ics",
-      titleMatch: "Warner Village Water,WVWD",
+      // "Precinct Commissioners" (2026-09-25): the district's commissioners'
+      // two standing series on this feed, the 2nd and 4th Wednesday at 3:30 PM
+      // at 55 West Joppa Rd. The town's notices page states the same schedule
+      // for the WVWD Commissioners at the treatment plant there, and the
+      // district's page calls its area "the Precinct".
+      titleMatch: "Warner Village Water,WVWD,Precinct Commissioners",
       titleExclude: "Budget Comm",
       bodyName: "Warner Village Water District",
       // The hall the Select Board's own page gives as its address, and the
@@ -2494,7 +2537,12 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: {
       slug: "lake-todd-village-district-newbury",
       feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-      titleMatch: "Lake Todd",
+      // "LTVD Annual Mtg" (2025-09-06) is the district's own abbreviation
+      // (read 2026-09-25). Its 2026 budget and annual meetings sit in the feed
+      // as "1st Fl Reserved" with the district named only in the description,
+      // which this adapter does not read; the district meets in spring, so no
+      // sitting falls in the current window either way.
+      titleMatch: "Lake Todd,LTVD",
       bodyName: "Lake Todd Village District",
     },
     // Read 2026-08-21: the district's own page is HTTP 404 at every rung and

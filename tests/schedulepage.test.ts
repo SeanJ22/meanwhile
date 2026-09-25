@@ -506,6 +506,45 @@ test("event-tip: an empty titleMatch matches NOTHING rather than everything", ()
   // `titleMatch` filing every event in the town as a sitting of one board.
   const { sittings } = parseEventTips(NEWLONDON, "");
   assert.equal(sittings.length, 0);
+  assert.equal(parseEventTips(NEWLONDON, " , ").sittings.length, 0, "a list of blanks is no match either");
+});
+
+test("event-tip: titleMatch is a list of the body's spellings, and apostrophes do not decide a match (2026-09-25)", () => {
+  // The Firewards row's "Firewards,Fire Wards" was read as one phrase and
+  // matched nothing, while this very fixture carries both spellings.
+  const wired = (slug: string) => {
+    const row = wiringForTypes(["SCHEDULEPAGE"]).find((r) => r.config.slug === `new-london-${slug}`);
+    assert.ok(row, `new-london-${slug} is wired`);
+    return row.config.titleMatch ?? "";
+  };
+  const firewards = parseEventTips(NEWLONDON, wired("board-of-firewards")).sittings;
+  assert.equal(firewards.length, 2, "both spellings are read");
+  assert.ok(firewards.some((s) => /Fire Wards/.test(s.note ?? "")) && firewards.some((s) => /Firewards/.test(s.note ?? "")));
+  const trustees = parseEventTips(NEWLONDON, wired("trustees-of-the-trust-funds")).sittings;
+  assert.equal(trustees.length, 1, "'Trustees of the Trust Fund' is the town's spelling");
+  assert.deepEqual(trustees[0].time, { hour: 10, minute: 0 });
+
+  const tip = (title: string, when: string) => `<div class="eventTip"><div class="tipTitle">${title}</div>${when}</div>`;
+  const page = [
+    tip("Citizens Committee - 7:30 AM - Whipple Memorial Hall", "Saturday, June 6, 2026 at 7:30 AM"),
+    tip("Citizen&#039;s Advisory Committee - Whipple Memorial Town Hall - 7:30am", "Saturday, October 3, 2026 at 7:30 AM"),
+    tip("Bike &amp; Pedestrian Advisory Committee - Whipple Memorial Town Hall", "Thursday, July 9, 2026 at 5:00 PM"),
+    tip("Bicycles and Pedestrian Committee - 5:00 PM - Whipple Memorial Hall", "Thursday, September 10, 2026 at 5:00 PM"),
+  ].join("");
+  assert.deepEqual(parseEventTips(page, wired("citizens-committee")).sittings.map((s) => s.date), ["2026-06-06", "2026-10-03"]);
+  assert.deepEqual(parseEventTips(page, wired("bicycle-pedestrian-advisory-committee")).sittings.map((s) => s.date), ["2026-07-09", "2026-09-10"]);
+});
+
+test("event-tip: a sitting in the Syd Crook Room or at the Fire Department is its own room, never the hall", () => {
+  const row = wiringForTypes(["SCHEDULEPAGE"]).find((r) => r.config.slug === "new-london-trustees-of-the-trust-funds");
+  assert.ok(row);
+  const { meetings } = makeSchedulePageSource([row]).normalizeWithDrops(
+    [{ wiring: row, schedule: NEWLONDON, collectedAt: "2026-08-19T12:00:00Z" }],
+    new Date("2026-08-19T12:00:00-04:00"),
+  );
+  assert.equal(meetings.length, 1);
+  assert.equal(meetings[0].location, null, "the Whipple Memorial Town Hall pin is not inherited");
+  assert.match(JSON.stringify(meetings[0].venueGap), /Syd Crook/);
 });
 
 test("event-tip: four New London boards are wired, each with its own match", () => {

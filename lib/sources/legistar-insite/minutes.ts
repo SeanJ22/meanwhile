@@ -56,6 +56,18 @@
 import type { NeverRead, ReadStamp } from "../../ops/freshness.ts";
 import type { LegistarOutcomeRecord, OutcomeDisposition } from "../legistar/outcomes.ts";
 
+/**
+ * **WHICH READING OF THE MINUTES THIS IS.** (2026-09-25.)
+ *
+ * A minutes document whose reading failed, or left an "It was moved" passage
+ * unread, is read again when this differs from the revision that read it
+ * (`lib/outcomes/minutes-ingest.ts`), and otherwise is not downloaded again
+ * until the document changes. So a change to what this file extracts must
+ * change this string; `tests/mesa-minutes-outcomes.test.ts` pins this file's
+ * digest beside it, so an edit cannot land without that decision.
+ */
+export const MINUTES_PARSER_REVISION = "2026-09-25.motion-clauses";
+
 /** One page of extracted text, as `lib/extract/text-layer.ts` yields it. */
 export interface MinutesPage {
   readonly page: number;
@@ -315,7 +327,17 @@ function headersIn(text: string): HeaderHit[] {
   return hits;
 }
 
-const MOTION_START = /It was moved by ([^,]{3,60}), seconded by ([^,]{3,60}), that /g;
+/**
+ * "It was moved by <member>, seconded by <member>, " and then the motion's own words, in the three
+ * forms the clerk writes (2026-09-25): "that Resolution No. 12559 be adopted" (the usual form),
+ * "receipt of the above listed minutes be acknowledged" (no "that": the 2026-06-04 study session),
+ * and "to direct the City Attorney to pursue litigation …" (an infinitive: the 2026-08-13 study
+ * session's executive-session direction). The motion is read from the first word after the
+ * seconder, so "that" stays part of the quoted motion where the clerk wrote it. The clause must
+ * begin with a lower-case word that is not a conjunction; any other continuation stays an unread
+ * passage, named, never guessed.
+ */
+const MOTION_START = /It was moved by ([^,]{3,60}), seconded by ([^,]{3,60}), (?!(?:and|but|or)\b)(?=[a-z])/g;
 
 /**
  * The end of a motion's clause: a sentence end that is not an abbreviation.
@@ -452,7 +474,7 @@ export function parseCouncilMinutes(pages: readonly MinutesPage[]): ParsedCounci
 
   const motions: MinutesMotion[] = motionHits.map((hit, index) => {
     const segmentEnd = motionHits[index + 1]?.start ?? text.length;
-    const motion = text.slice(hit.clauseStart - "that ".length, hit.clauseEnd).replace(/\.$/, "");
+    const motion = text.slice(hit.clauseStart, hit.clauseEnd).replace(/\.$/, "");
     const tallyMatch = TALLY.exec(text.slice(hit.clauseEnd, segmentEnd));
     const tallyStart = tallyMatch ? hit.clauseEnd + tallyMatch.index : null;
     const tallyEnd = tallyMatch && tallyStart !== null ? tallyStart + tallyMatch[0].length : null;

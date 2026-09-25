@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -63,8 +64,49 @@ const FRESH = readFileSync(`${DIR}/calendar-2026-09-25.html`, "utf8");
 const THIS_YEAR = readFileSync("tests/fixtures/legistar-insite-mesa-calendar-this-year-paged.html", "utf8");
 const THIS_YEAR_PAGE_2 = readFileSync("tests/fixtures/legistar-insite-mesa-calendar-this-year-page2.html", "utf8");
 
-/** A recorded Mesa portal. A number answers that document with that status. */
-function recordedPortal(options: { readonly calendarStatus?: number; readonly documents?: Readonly<Record<string, number>> } = {}) {
+/**
+ * A one-page PDF whose text layer is exactly `lines` (Helvetica, no embedded font): the shape of a minutes
+ * document that records no motion, built here so a test needs no 18.8 MB fixture.
+ */
+function textPdf(lines: readonly string[]): Uint8Array {
+  const escape = (line: string) => line.replace(/[\\()]/g, (c) => `\\${c}`);
+  const stream = `BT /F1 10 Tf 40 760 Td ${lines.map((line, i) => `${i === 0 ? "" : "0 -14 Td "}(${escape(line)}) Tj`).join(" ")} ET`;
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+    `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+  let pdf = "%PDF-1.4\n";
+  const offsets: number[] = [];
+  objects.forEach((body, i) => {
+    offsets.push(pdf.length);
+    pdf += `${i + 1} 0 obj\n${body}\nendobj\n`;
+  });
+  const xref = pdf.length;
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`;
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return new TextEncoder().encode(pdf);
+}
+
+/** Minutes that record no motion and do not say no action was taken: a failed extraction by rule. */
+const MOTIONLESS = textPdf([
+  "OFFICE OF THE CITY CLERK COUNCIL MINUTES July 20, 2026",
+  "The City Council of the City of Mesa met in the Council Chambers on July 20, 2026, at 5:45 p.m.",
+  "Mayor Freeman conducted a roll call and welcomed the Council and staff.",
+  "Staff displayed a presentation and the Council discussed it.",
+  "Adjournment. Without objection, the Regular Council Meeting adjourned at 7:02 p.m.",
+]);
+
+/** A recorded Mesa portal. A number answers that document with that status; bytes serve those bytes. */
+function recordedPortal(options: {
+  readonly calendarStatus?: number;
+  readonly documents?: Readonly<Record<string, number>>;
+  readonly bytes?: Readonly<Record<string, Uint8Array>>;
+  /** A HEAD answered with this status (405: the portal refuses the check). */
+  readonly headStatus?: number;
+} = {}) {
   const requests: string[] = [];
   const html = (body: string) => new Response(body, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
   const fetchImpl = async (input: Parameters<typeof fetch>[0], init?: RequestInit): Promise<Response> => {
@@ -87,7 +129,13 @@ function recordedPortal(options: { readonly calendarStatus?: number; readonly do
       const id = parsed.searchParams.get("ID")!;
       const status = options.documents?.[id];
       if (status !== undefined) return new Response("refused", { status });
-      return new Response(new Uint8Array(readFileSync(`${DIR}/minutes-${id}.pdf`)), { status: 200, headers: { "content-type": "application/pdf" } });
+      const bytes = options.bytes?.[id] ?? new Uint8Array(readFileSync(`${DIR}/minutes-${id}.pdf`));
+      // Mesa's portal answers HEAD with the length and type and no ETag or Last-Modified (measured 2026-09-25).
+      if (method === "HEAD") {
+        if (options.headStatus) return new Response(null, { status: options.headStatus });
+        return new Response(null, { status: 200, headers: { "content-type": "application/pdf", "content-length": String(bytes.byteLength) } });
+      }
+      return new Response(new Uint8Array(bytes), { status: 200, headers: { "content-type": "application/pdf" } });
     }
     throw new Error(`unrecorded portal route ${method} ${url}`);
   };
@@ -252,6 +300,89 @@ test("a failed minutes read is a held attempt that leaves the last good pointer 
   assert.equal(heldRecord?.state, "SOURCE_BLOCKED");
   assert.equal(heldRecord?.lastKnownGoodVersion, live?.versionId);
   assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, live?.versionId, "a failed calendar read moves nothing");
+  resetOutcomeSnapshotCache();
+});
+
+test("minutes whose extraction fails are held as a failed extraction and not downloaded again until they change (2026-09-25)", async () => {
+  // Production: the 2026-05-28 strategic planning minutes (18.8 MB) failed by rule on every read, refused the
+  // candidate, and were downloaded again on every hourly retry.
+  const store = new MemoryRoutineDataStore();
+  const first = await pass(store, recordedPortal({ bytes: { "1336056": MOTIONLESS } }), JULY_20, "2026-09-25T17:50:00.000Z");
+  assert.equal(first.result.exitCode, 0, `a held failed extraction is a named result, not a refused run:\n${first.lines.join("\n")}`);
+  assert.equal(first.result.documentsRead, 1);
+  assert.deepEqual(first.result.refusedSittings, []);
+  const proof = await verdict(store, first.result.receiptLine, first.result.exitCode);
+  assert.deepEqual({ outcome: proof.outcome, issue: proof.issue }, { outcome: "SUCCESS", issue: null }, "no hourly retry is scheduled for it");
+  const candidate = await store.readCandidate(proof.candidateId);
+  assert.ok(
+    candidate?.candidate.excludedFacts?.some((fact) => fact.key === "legistar-insite:mesa:1336056:minutes-extraction" && fact.code === "MINUTES_EXTRACTION_FAILED_HELD"),
+    "the failure stays visible on every candidate while it is held",
+  );
+  const read = await readMesaOutcomeProjection({ store, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") return;
+  const held = read.value.sittings.find(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056")!;
+  assert.equal(held.extraction, "ZERO_ROWS_FAILED", "the fail-closed rule: never 'nothing was decided'");
+  assert.deepEqual(held.outcomes, []);
+  assert.match(held.extractionNote ?? "", /yielded no motion, and they do not say that no action was taken/);
+  assert.equal(held.failedMinutesRead?.byteCount, MOTIONLESS.byteLength);
+  assert.equal(held.failedMinutesRead?.sha256, createHash("sha256").update(MOTIONLESS).digest("hex"));
+  assert.equal(held.failedMinutesRead?.contentType, "application/pdf");
+  const pointer = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+
+  // An hour later: one HEAD, no download, the same pointer.
+  const hourLater = recordedPortal({ bytes: { "1336056": MOTIONLESS } });
+  const second = await pass(store, hourLater, JULY_20, "2026-09-25T18:50:00.000Z");
+  assert.equal(second.result.exitCode, 0, second.lines.join("\n"));
+  assert.deepEqual(hourLater.requests.filter((request) => request.includes("View.ashx")), [
+    "HEAD https://mesa.legistar.com/View.ashx?M=M&ID=1336056&GUID=4857278C-CC37-46A5-A15A-F34A2E577C70",
+  ]);
+  assert.equal(second.result.documentsRead, 0);
+  assert.equal(second.result.heldFailedExtractions, 1);
+  assert.match(second.lines.join("\n"), /FAILED_DOCUMENT_UNCHANGED/);
+  const secondProof = await verdict(store, second.result.receiptLine, second.result.exitCode);
+  assert.equal((await store.readCandidate(secondProof.candidateId))?.candidate.changeSet?.outcome, "UNCHANGED");
+  assert.deepEqual((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.payload, pointer?.payload);
+
+  // The portal does not answer the check: still no download; the failure stays held.
+  const unanswered = recordedPortal({ bytes: { "1336056": MOTIONLESS }, headStatus: 405 });
+  const third = await pass(store, unanswered, JULY_20, "2026-09-25T19:50:00.000Z");
+  assert.equal(third.result.exitCode, 0);
+  assert.ok(!unanswered.requests.some((request) => request.startsWith("GET") && request.includes("View.ashx")));
+  assert.match(third.lines.join("\n"), /FAILED_DOCUMENT_UNCHECKED/);
+
+  // The clerk replaces the document: the check sees a new length, and it is read at once.
+  const replaced = recordedPortal();
+  const fourth = await pass(store, replaced, JULY_20, "2026-09-25T20:50:00.000Z");
+  assert.equal(fourth.result.exitCode, 0, fourth.lines.join("\n"));
+  assert.deepEqual(replaced.requests.filter((request) => request.includes("View.ashx")).map((request) => request.split(" ")[0]), ["HEAD", "GET"]);
+  assert.match(fourth.lines.join("\n"), /FAILED_DOCUMENT_CHANGED \(length/);
+  const after = await readMesaOutcomeProjection({ store, bypassCache: true });
+  assert.equal(after.kind, "PROMOTED");
+  if (after.kind !== "PROMOTED") return;
+  const now = after.value.sittings.find(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056")!;
+  assert.equal(now.extraction, "RETRIEVED");
+  assert.ok(now.outcomes.length > 0);
+  assert.equal(now.failedMinutesRead, undefined, "a read that succeeds clears the remembered failure");
+  resetOutcomeSnapshotCache();
+});
+
+test("a held failed extraction's bytes are read again after a week, whatever the check would say", async () => {
+  const store = new MemoryRoutineDataStore();
+  // Both clocks in the past: the store refuses a candidate dated after the wall clock.
+  const first = await pass(store, recordedPortal({ bytes: { "1336056": MOTIONLESS } }), JULY_20, "2026-09-17T17:50:00.000Z");
+  assert.equal(first.result.exitCode, 0);
+  const weekLater = recordedPortal({ bytes: { "1336056": MOTIONLESS } });
+  const again = await pass(store, weekLater, JULY_20, "2026-09-24T17:50:05.000Z");
+  assert.equal(again.result.exitCode, 0, again.lines.join("\n"));
+  assert.deepEqual(weekLater.requests.filter((request) => request.includes("View.ashx")).map((request) => request.split(" ")[0]), ["GET"], "re-verified by its bytes, with no HEAD first");
+  assert.match(again.lines.join("\n"), /FAILED_DOCUMENT_REVERIFY/);
+  const read = await readMesaOutcomeProjection({ store, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") return;
+  const held = read.value.sittings.find(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056")!;
+  assert.equal(held.extraction, "ZERO_ROWS_FAILED");
+  assert.equal(held.failedMinutesRead?.readAt.slice(0, 10), "2026-09-24", "the week starts again from the re-read");
   resetOutcomeSnapshotCache();
 });
 

@@ -440,6 +440,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
               publicationObservations: sitting.publicationObservations,
               // Minutes-route sittings only (NH332): the document read and its standing.
               ...(sitting.minutesDocument !== undefined ? { minutesDocument: sitting.minutesDocument } : {}),
+              // A held failed minutes extraction and the bytes it failed on (2026-09-25): a change to it is a change.
+              ...(sitting.failedMinutesRead !== undefined ? { failedMinutesRead: sitting.failedMinutesRead } : {}),
             },
           },
           ...array(sitting.agenda).map((record, index) => ({ key: `agenda:${meetingId}:${textKey(record, ["eventItemId"]) ?? `row-${index}`}`, record })),

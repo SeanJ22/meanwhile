@@ -7,19 +7,27 @@ import { NEVER_READ } from "../lib/ops/freshness.ts";
 import {
   applyMinutesApprovals,
   concludedSittingRows,
+  FAILED_MINUTES_REVERIFY_DAYS,
+  failedDocumentCheck,
+  failedMinutesReadFor,
+  isHeldFailedExtraction,
   minutesLinkFor,
   minutesRefreshDecision,
   minutesSitting,
   notYetPublishedSitting,
   readMinutesDocument,
+  sittingAfterRead,
+  type MinutesDocumentHead,
   type MinutesDocumentRead,
 } from "../lib/outcomes/minutes-ingest.ts";
+import { mesaLegistarMinutesOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import { mergeSnapshot } from "../lib/outcomes/ingest.ts";
 import { outcomeEvidenceFor, outcomeGapWhose, resetOutcomeSnapshotCache, useOutcomeSnapshotForTests } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { parseCalendarRows, type InSiteCalendarRow } from "../lib/sources/legistar-insite/calendar.ts";
 import {
   consentItems,
+  MINUTES_PARSER_REVISION,
   minutesBodyText,
   minutesOutcomeRecords,
   parseCouncilMinutes,
@@ -37,6 +45,8 @@ import { findTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
  */
 
 const DIR = "tests/fixtures/legistar-insite-mesa-minutes";
+/** sha256 of lib/sources/legistar-insite/minutes.ts (LF line endings) at MINUTES_PARSER_REVISION "2026-09-25.motion-clauses". */
+const PINNED_MINUTES_PARSER_DIGEST = "63ef8d519cb796784f77698194cbd6147796b3f968a4a8a17ebaa5dc87bea782";
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const tenant = findTenant("mesa")!;
 const CALENDAR_URL = "https://mesa.legistar.com/Calendar.aspx";
@@ -325,4 +335,260 @@ test("the concluded sittings a pass considers: the wired bodies, in the window, 
   assert.ok(!rows.some((candidate) => candidate.insiteId === "1336055"), "the 9/28 sitting has not happened yet");
   assert.ok(!rows.some((candidate) => candidate.insiteId === "1336059"), "7/27 is outside this window");
   resetOutcomeSnapshotCache();
+});
+
+/*
+ * THE CLERK'S OTHER TWO WORDINGS (2026-09-25). Mesa's first production minutes pass (3:23-3:26 PM MST) held
+ * two sittings as failed extractions. Read through the InSite route that evening (22:30Z): the 2026-06-04
+ * study session writes its one motion without "that" ("… seconded by Councilmember Taylor, receipt of the
+ * above listed minutes be acknowledged."), and the 2026-08-13 study session, already promoted with three
+ * motions, wrote its fourth as an infinitive ("… seconded by Councilmember Duff, to direct the City Attorney
+ * to pursue litigation …") and published it as an unread passage. The 2026-05-28 strategic planning session
+ * records no motion and does not say no action was taken: it stays a failed extraction.
+ *
+ * A scan of all 21 documents the promoted projection cites (fetched the same evening) found no other motion
+ * passage the parser did not read: the other motion-vocabulary hits are "Motion Industries", "any motion to
+ * approve would …", a clerk's parenthetical note, and "will be voted on in one motion" ahead of a read motion.
+ */
+
+/** The grid row as Mesa's calendar printed it on 2026-09-25 (22:30Z) for a sitting the recorded grids do not carry. */
+function printedRow(insiteId: string, date: string, kind: string, guid: string): InSiteCalendarRow {
+  return {
+    bodyName: "City Council",
+    bodyHref: null,
+    date,
+    time: "7:30 AM",
+    location: "",
+    kind,
+    insiteId,
+    insiteGuid: null,
+    icalHref: null,
+    detailHref: null,
+    notViewable: false,
+    agenda: { status: "", href: null },
+    accessibleAgenda: { status: "", href: null },
+    minutes: { status: "Minutes", href: `View.ashx?M=M&ID=${insiteId}&GUID=${guid}` },
+    accessibleMinutes: { status: "Not available", href: null },
+  };
+}
+
+function printedSitting(insiteId: string, printed: InSiteCalendarRow): PersistedSittingOutcomes {
+  const fixture = pagesFixture(insiteId);
+  const link = minutesLinkFor(printed, tenant.host)!;
+  assert.equal(link.url, fixture.url, "the printed row links the document the fixture was read from");
+  const document: MinutesDocumentRead = { link, sha256: fixture.sha256, byteCount: fixture.byteCount, pageCount: fixture.pageCount, pages: fixture.pages, unreadable: null };
+  return minutesSitting({ tenant, row: printed, calendarUrl: CALENDAR_URL, observedAt: "2026-09-25T22:30:58.000Z", document, readOn: NEVER_READ }).sitting;
+}
+
+test("a motion written without 'that' is read: the 2026-06-04 study session acknowledges its boards' minutes", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1343167").pages);
+  assert.equal(parsed.sittingDate, "2026-06-04");
+  assert.deepEqual(parsed.unreadMotions, [], "no passage beginning 'It was moved' is left unread");
+  assert.equal(parsed.motions.length, 1);
+  const [receipt] = parsed.motions;
+  assert.equal(receipt.mover, "Councilmember Duff");
+  assert.equal(receipt.seconder, "Councilmember Taylor");
+  assert.equal(receipt.motion, "receipt of the above listed minutes be acknowledged", "the motion is the clerk's own words, no 'that' supplied");
+  assert.equal(receipt.disposition, "PASSED");
+  assert.match(receipt.result ?? "", /declared the motion carried unanimously by those present/);
+  assert.ok(minutesBodyText(pagesFixture("1343167").pages).includes(receipt.quote), "the quote is a substring of the page");
+
+  const sitting = printedSitting("1343167", printedRow("1343167", "6/4/2026", "Study Session", "93E1C4BC-0679-46E0-BC3E-504D43EA97AD"));
+  assert.equal(sitting.extraction, "RETRIEVED", "it was a failed extraction in production; the minutes record a motion");
+  assert.equal(sitting.outcomes.length, 1);
+});
+
+test("a motion written as an infinitive is read: the 2026-08-13 study session's direction to the City Attorney", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1343172").pages);
+  assert.deepEqual(parsed.unreadMotions, []);
+  assert.equal(parsed.motions.length, 4, "three motions were promoted; the fourth was an unread passage");
+  const direction = parsed.motions[3]!;
+  assert.equal(direction.mover, "Councilmember Adams");
+  assert.equal(direction.seconder, "Councilmember Duff");
+  assert.match(direction.motion, /^to direct the City Attorney to pursue litigation on behalf of the City of Mesa/);
+  assert.equal(direction.disposition, "PASSED");
+  // The usual form still quotes its "that".
+  assert.match(parsed.motions[0]!.motion, /^that the Council concur with the Mayor’s recommendations/);
+});
+
+test("minutes that record no motion and do not say no action was taken stay a failed extraction: the 2026-05-28 strategic planning session", () => {
+  const parsed = parseCouncilMinutes(pagesFixture("1343166").pages);
+  assert.equal(parsed.title, "COUNCIL STRATEGIC PLANNING MINUTES");
+  assert.deepEqual(parsed.motions, []);
+  assert.deepEqual(parsed.unreadMotions, []);
+  assert.equal(parsed.statesNoFormalAction, false);
+  const sitting = printedSitting("1343166", printedRow("1343166", "5/28/2026", "Strategic Planning Session", "F1571C51-0D0D-4537-9B82-C6F355A76A24"));
+  assert.equal(sitting.extraction, "ZERO_ROWS_FAILED", "the fail-closed rule holds for genuinely motion-free text");
+});
+
+test("a held sitting whose note names unread passages is read again once a newer parser is in force, and never again under the same one", () => {
+  const printed = printedRow("1343172", "8/13/2026", "Study Session", "DABA0407-10BF-4893-B11D-B037EB724A63");
+  const link = minutesLinkFor(printed, tenant.host)!;
+  const now = printedSitting("1343172", printed);
+  assert.equal(now.extractionNote, null, "this parser leaves no passage unread");
+  assert.equal(now.minutesDocument?.parserRevision, MINUTES_PARSER_REVISION, "the reading records the parser that made it");
+  assert.deepEqual(minutesRefreshDecision(link, now), { walk: false, reason: "UNCHANGED_SKIP" });
+  // As production held it on 2026-09-25 (22:26Z): three motions, the fourth named unread, read before parser revisions existed.
+  const { parserRevision: _revision, ...olderDocument } = now.minutesDocument!;
+  const unread =
+    ' 1 passage(s) beginning "It was moved" were not in the clerk\'s usual form and were not read: "It was moved by Councilmember Adams, seconded by Councilmember Duff, to direct the City Attorney …"';
+  const heldThen = { ...now, extractionNote: unread, minutesDocument: olderDocument };
+  assert.deepEqual(minutesRefreshDecision(link, heldThen), { walk: true, reason: "UNREAD_PASSAGES_HELD" });
+  // The same unread passage under the parser in force is not downloaded again every pass.
+  assert.deepEqual(minutesRefreshDecision(link, { ...now, extractionNote: unread }), { walk: false, reason: "UNCHANGED_SKIP" });
+});
+
+/*
+ * A HELD FAILED EXTRACTION IS NOT DOWNLOADED AND FAILED AGAIN EVERY HOUR (2026-09-25). Mesa's 2026-05-28
+ * strategic planning minutes (18,779,714 bytes) record no motion and do not say no action was taken, so every
+ * read fails by rule; each failure refused the candidate, the contract retried an hour later, and each retry
+ * downloaded the same 18.8 MB again. The failure is now held with the bytes' identity, the portal is asked by
+ * HEAD whether the document changed (Mesa answers with its length and type, no ETag or Last-Modified), and the
+ * bytes are read again only when it changed, the parser changed, or the failure is a week old.
+ */
+const STRATEGIC = () => printedRow("1343166", "5/28/2026", "Strategic Planning Session", "F1571C51-0D0D-4537-9B82-C6F355A76A24");
+const FAILED_AT = "2026-09-25T22:31:11.000Z";
+
+function heldStrategicFailure(): PersistedSittingOutcomes {
+  const fixture = pagesFixture("1343166");
+  const printed = STRATEGIC();
+  const link = minutesLinkFor(printed, tenant.host)!;
+  const document: MinutesDocumentRead = { link, sha256: fixture.sha256, byteCount: fixture.byteCount, pageCount: fixture.pageCount, pages: fixture.pages, unreadable: null };
+  const fresh = minutesSitting({ tenant, row: printed, calendarUrl: CALENDAR_URL, observedAt: FAILED_AT, document, readOn: NEVER_READ }).sitting;
+  const failed = failedMinutesReadFor(fresh, document, { contentType: "application/pdf", etag: null, lastModified: null }, FAILED_AT);
+  assert.ok(failed, "a read whose extraction failed is remembered");
+  return sittingAfterRead(undefined, fresh, failed);
+}
+
+const MESA_HEAD = (overrides: Partial<MinutesDocumentHead> = {}): MinutesDocumentHead => ({
+  status: 200, contentType: "application/pdf", contentLength: 18_779_714, etag: null, lastModified: null, ...overrides,
+});
+
+test("a document read whose extraction failed is held with the identity of the bytes it failed on", () => {
+  const held = heldStrategicFailure();
+  assert.equal(held.extraction, "ZERO_ROWS_FAILED", "the fail-closed rule: a failed extraction, never 'nothing was decided'");
+  assert.deepEqual(held.outcomes, []);
+  assert.equal(isHeldFailedExtraction(held), true);
+  const failed = held.failedMinutesRead!;
+  assert.deepEqual(
+    { url: failed.url, label: failed.publisherLabel, sha256: failed.sha256, bytes: failed.byteCount, type: failed.contentType, etag: failed.etag, lastModified: failed.lastModified, parser: failed.parserRevision, at: failed.readAt },
+    {
+      url: "https://mesa.legistar.com/View.ashx?M=M&ID=1343166&GUID=F1571C51-0D0D-4537-9B82-C6F355A76A24",
+      label: "Minutes",
+      sha256: "82be9aab1e9df35331762ae8ba501fc2bb658cc0900467a2f8e8ceb873e7c796",
+      bytes: 18_779_714,
+      type: "application/pdf",
+      etag: null,
+      lastModified: null,
+      parser: MINUTES_PARSER_REVISION,
+      at: FAILED_AT,
+    },
+  );
+  assert.match(failed.reason, /yielded no motion/);
+  // A request that failed read no bytes: nothing is remembered, and it stays a retryable request.
+  const requestFailed = { ...held, extraction: "REQUEST_FAILED" as const, failedMinutesRead: undefined };
+  assert.equal(isHeldFailedExtraction(requestFailed), false);
+});
+
+test("the next pass asks the portal first: an unchanged document is not downloaded, a changed one is read at once", () => {
+  const held = heldStrategicFailure();
+  const link = minutesLinkFor(STRATEGIC(), tenant.host)!;
+  const hourLater = new Date("2026-09-25T23:31:11.000Z");
+  const decision = minutesRefreshDecision(link, held, hourLater);
+  assert.equal(decision.walk, false);
+  assert.equal(decision.reason, "FAILED_DOCUMENT_CHECK");
+  assert.equal(decision.check, held.failedMinutesRead);
+
+  const failed = held.failedMinutesRead!;
+  assert.deepEqual(failedDocumentCheck(failed, MESA_HEAD()), { walk: false, reason: "FAILED_DOCUMENT_UNCHANGED", detail: "the same 18779714 bytes by length, type and validators" });
+  assert.equal(failedDocumentCheck(failed, MESA_HEAD({ contentType: "application/pdf; charset=binary" })).reason, "FAILED_DOCUMENT_UNCHANGED", "the type's parameters are not the type");
+  for (const [changed, why] of [
+    [MESA_HEAD({ contentLength: 18_779_715 }), /length 18779714 → 18779715/],
+    [MESA_HEAD({ contentType: "text/html" }), /type application\/pdf → text\/html/],
+    [MESA_HEAD({ etag: '"abc"' }), /ETag none → "abc"/],
+    [MESA_HEAD({ lastModified: "Fri, 25 Sep 2026 23:00:00 GMT" }), /Last-Modified none →/],
+  ] as const) {
+    const check = failedDocumentCheck(failed, changed);
+    assert.equal(check.walk, true, why.source);
+    assert.equal(check.reason, "FAILED_DOCUMENT_CHANGED");
+    assert.match(check.detail, why);
+  }
+  // A check the portal does not answer says nothing: the failure stays held, nothing is downloaded.
+  for (const unanswered of [null, MESA_HEAD({ status: 405 }), MESA_HEAD({ contentLength: null })]) {
+    const check = failedDocumentCheck(failed, unanswered);
+    assert.deepEqual({ walk: check.walk, reason: check.reason }, { walk: false, reason: "FAILED_DOCUMENT_UNCHECKED" });
+  }
+});
+
+test("a held failed extraction is read again at once when the parser changes, when its link changes, and after a week", () => {
+  const held = heldStrategicFailure();
+  const link = minutesLinkFor(STRATEGIC(), tenant.host)!;
+  const soon = new Date("2026-09-26T12:00:00.000Z");
+  const olderParser = { ...held, failedMinutesRead: { ...held.failedMinutesRead!, parserRevision: "2026-09-24.before-motion-clauses" } };
+  assert.deepEqual(minutesRefreshDecision(link, olderParser, soon), { walk: true, reason: "FAILED_DOCUMENT_PARSER_CHANGED" });
+  assert.deepEqual(minutesRefreshDecision({ ...link, url: `${link.url}&v=2` }, held, soon), { walk: true, reason: "PRIOR_EXTRACTION_FAILED" }, "a new link is a new document");
+  assert.deepEqual(minutesRefreshDecision({ ...link, label: "Results" }, held, soon), { walk: true, reason: "PRIOR_EXTRACTION_FAILED" });
+  const justUnder = new Date(Date.parse(FAILED_AT) + FAILED_MINUTES_REVERIFY_DAYS * 86_400_000 - 1);
+  assert.equal(minutesRefreshDecision(link, held, justUnder).reason, "FAILED_DOCUMENT_CHECK");
+  const aWeek = new Date(Date.parse(FAILED_AT) + FAILED_MINUTES_REVERIFY_DAYS * 86_400_000);
+  assert.deepEqual(minutesRefreshDecision(link, held, aWeek), { walk: true, reason: "FAILED_DOCUMENT_REVERIFY" });
+});
+
+test("a failure over verified minutes keeps the verified reading and remembers the failed document beside it; a success clears it", () => {
+  const verified = sittingFrom("1336059", textDocument("1336059"));
+  assert.equal(verified.extraction, "RETRIEVED");
+  const strategic = heldStrategicFailure();
+  const failed = strategic.failedMinutesRead!;
+  const relabeled = sittingAfterRead(verified, strategic, failed);
+  assert.equal(relabeled.extraction, "RETRIEVED", "a relabel to a document that fails never replaces what was verified");
+  assert.deepEqual(relabeled.outcomes, verified.outcomes);
+  assert.equal(relabeled.failedMinutesRead, failed);
+  assert.equal(sittingAfterRead(strategic, verified, null).failedMinutesRead, undefined, "a read that succeeds clears the remembered failure");
+});
+
+test("the Mesa candidate admits a held failed extraction, names it, and still refuses a failure with no document identity", () => {
+  const held = heldStrategicFailure();
+  const snapshot = snapshotOf([held]);
+  const candidate = mesaLegistarMinutesOutcomesCandidate({ snapshot, acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
+  assert.deepEqual(candidate.semantics.violations, []);
+  const named = candidate.excludedFacts?.find((fact) => fact.code === "MINUTES_EXTRACTION_FAILED_HELD");
+  assert.ok(named, "the held failure is named on the candidate");
+  assert.equal(named.key, "legistar-insite:mesa:1343166:minutes-extraction");
+  assert.match(named.detail, /18779714 bytes, sha256 82be9aab1e9df353…, parser 2026-09-25\.motion-clauses/);
+
+  const unremembered = { ...held, failedMinutesRead: undefined };
+  const refused = mesaLegistarMinutesOutcomesCandidate({ snapshot: snapshotOf([unremembered]), acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
+  assert.match(refused.semantics.violations.join(" "), /1 minutes read\(s\) failed \(legistar-insite:mesa:1343166\)/);
+  const withRecords = { ...held, outcomes: sittingFrom("1336059", textDocument("1336059")).outcomes };
+  const invented = mesaLegistarMinutesOutcomesCandidate({ snapshot: snapshotOf([withRecords]), acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
+  assert.match(invented.semantics.violations.join(" "), /is a failed extraction and carries records/);
+});
+
+test("a reader asking what the 2026-05-28 session decided is told we could not read it, never that nothing was decided", () => {
+  useOutcomeSnapshotForTests(snapshotOf([heldStrategicFailure()]));
+  const evidence = outcomeEvidenceFor({ meetingId: "legistar-insite:mesa:1343166", questionClass: "WHAT_WAS_DECIDED" });
+  assert.equal(evidence.state, "EXTRACTION_FAILED");
+  assert.equal(outcomeGapWhose(evidence.state), "OURS");
+  assert.match(evidence.gap ?? "", /could not find in them what was decided/);
+  assert.doesNotMatch(evidence.gap ?? "", /agenda items|has not been retried/);
+  assert.equal(evidence.records.length, 0);
+  useOutcomeSnapshotForTests(null);
+});
+
+test("the parser's revision is pinned to its source: an edit to the minutes parser has to decide whether held readings are re-read", () => {
+  const source = readFileSync("lib/sources/legistar-insite/minutes.ts", "utf8").replace(/\r\n/g, "\n");
+  const digest = createHash("sha256").update(source).digest("hex");
+  assert.deepEqual(
+    { revision: MINUTES_PARSER_REVISION, digest },
+    { revision: "2026-09-25.motion-clauses", digest: PINNED_MINUTES_PARSER_DIGEST },
+    "lib/sources/legistar-insite/minutes.ts changed. If what it extracts changed, change MINUTES_PARSER_REVISION " +
+      "(held failed and unread readings are then read again); either way record the new digest and revision here.",
+  );
+});
+
+test("a continuation that is not a motion's own words stays an unread passage, never a guessed motion", () => {
+  const pages = [{ page: 1, text: "OFFICE OF THE CITY CLERK COUNCIL MINUTES June 4, 2026 1. Item. It was moved by Councilmember Duff, seconded by Councilmember Taylor, and the item was discussed. Carried unanimously. It was moved by Councilmember Duff, seconded by Councilmember Taylor, Resolution No. 12001 be adopted." }];
+  const parsed = parseCouncilMinutes(pages);
+  assert.deepEqual(parsed.motions, []);
+  assert.equal(parsed.unreadMotions.length, 2);
 });

@@ -40,6 +40,16 @@ import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 export const INSITE_CRAWL_DELAY_SECONDS = 2;
 export const INSITE_SPACING_MS = INSITE_CRAWL_DELAY_SECONDS * 1000;
 
+/** A response's own cache validators, as served; null where the host sends none. */
+export interface DocumentValidators {
+  readonly etag: string | null;
+  readonly lastModified: string | null;
+}
+
+function validatorsOf(response: Response): DocumentValidators {
+  return { etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") };
+}
+
 /**
  * One tenant's session for the length of one fetch.
  *
@@ -156,7 +166,7 @@ export class InSiteSession {
   async getBytes(
     url: string,
     accept = "*/*",
-  ): Promise<{ status: number; contentType: string; finalUrl: string; bytes: Uint8Array }> {
+  ): Promise<{ status: number; contentType: string; finalUrl: string; bytes: Uint8Array } & DocumentValidators> {
     await this.pace();
     const response = await this.impl(url, {
       headers: this.headers({ Accept: accept }),
@@ -174,7 +184,40 @@ export class InSiteSession {
     if (bytes.byteLength === 0) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url} carried zero bytes`, response.status, url, 2);
     }
-    return { status: response.status, contentType: response.headers.get("content-type") ?? "", finalUrl: response.url || url, bytes };
+    return { status: response.status, contentType: response.headers.get("content-type") ?? "", finalUrl: response.url || url, bytes, ...validatorsOf(response) };
+  }
+
+  /**
+   * A document's identity without its bytes (2026-09-25): one paced HEAD, for
+   * a minutes document whose last read failed, so an unchanged 18.8 MB PDF is
+   * not downloaded again to fail again. Mesa's portal answers HEAD with the
+   * status, `Content-Length` and `Content-Type` and no `ETag` or
+   * `Last-Modified` (measured that day). Never throws for the site: a failed
+   * request is `null`, and the caller decides what an unchecked document means.
+   */
+  async head(url: string, accept = "*/*"): Promise<({ status: number; contentType: string; contentLength: number | null } & DocumentValidators) | null> {
+    await this.pace();
+    try {
+      const response = await this.impl(url, {
+        method: "HEAD",
+        headers: this.headers({ Accept: accept }),
+        signal: this.signal,
+        ...(this.followRedirects ? {} : { redirect: "manual" as const }),
+      });
+      this.store(response);
+      await response.body?.cancel().catch(() => undefined);
+      this.retrieved.push(`HEAD ${url}`);
+      const length = Number(response.headers.get("content-length"));
+      return {
+        status: response.status,
+        contentType: response.headers.get("content-type") ?? "",
+        contentLength: response.headers.has("content-length") && Number.isFinite(length) ? length : null,
+        ...validatorsOf(response),
+      };
+    } catch {
+      this.signal?.throwIfAborted();
+      return null;
+    }
   }
 
   /**
